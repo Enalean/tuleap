@@ -25,7 +25,6 @@ namespace Tuleap\CrossTracker\Query\Advanced;
 use BaseLanguageFactory;
 use ForgeConfig;
 use Tracker_Semantic_ContributorFactory;
-use Tracker_Semantic_StatusFactory;
 use Tuleap\CrossTracker\Query\Advanced\QueryValidation\DuckTypedField\DuckTypedFieldChecker;
 use Tuleap\CrossTracker\Query\Advanced\QueryValidation\Metadata\ArtifactIdMetadataChecker;
 use Tuleap\CrossTracker\Query\Advanced\QueryValidation\Metadata\AssignedToChecker;
@@ -60,6 +59,7 @@ use Tuleap\Tracker\Report\Query\Advanced\SelectLimitExceededException;
 use Tuleap\Tracker\Report\Query\Advanced\UgroupLabelConverter;
 use Tuleap\Tracker\Semantic\Contributor\ContributorFieldRetriever;
 use Tuleap\Tracker\Semantic\Status\StatusFieldRetriever;
+use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatusFactory;
 use Tuleap\Tracker\Test\Stub\Permission\RetrieveUserPermissionOnFieldsStub;
 use Tuleap\Tracker\Test\Stub\RetrieveFieldTypeStub;
 use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
@@ -128,7 +128,7 @@ final class InvalidSelectablesCollectionBuilderTest extends TestCase
                     new ArtifactIdMetadataChecker(),
                 ),
                 new InvalidOrderByListChecker(
-                    new StatusFieldRetriever(Tracker_Semantic_StatusFactory::instance()),
+                    new StatusFieldRetriever(TrackerSemanticStatusFactory::instance()),
                     new ContributorFieldRetriever(Tracker_Semantic_ContributorFactory::instance()),
                 ),
             )),

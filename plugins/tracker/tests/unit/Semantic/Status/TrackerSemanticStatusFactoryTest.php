@@ -21,15 +21,13 @@
 
 namespace Tuleap\Tracker\Semantic\Status;
 
-use Tracker_Semantic_StatusFactory;
 use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-//phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Tracker_Semantic_StatusFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
+final class TrackerSemanticStatusFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    public function testImport()
+    public function testImport(): void
     {
         $xml = simplexml_load_string(
             file_get_contents(__DIR__ . '/../../_fixtures/Status/ImportTrackerSemanticStatusTest.xml')
@@ -57,7 +55,7 @@ final class Tracker_Semantic_StatusFactoryTest extends \Tuleap\Test\PHPUnit\Test
             'F14-V68' => 808,
             'F14-V69' => 809,
         ];
-        $semantic_status = Tracker_Semantic_StatusFactory::instance()->getInstanceFromXML(
+        $semantic_status = TrackerSemanticStatusFactory::instance()->getInstanceFromXML(
             $xml,
             $all_semantics_xml,
             $mapping,

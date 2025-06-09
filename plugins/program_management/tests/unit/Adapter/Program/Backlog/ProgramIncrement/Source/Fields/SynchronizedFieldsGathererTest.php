@@ -55,7 +55,7 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $description_factory;
     /**
-     * @var \PHPUnit\Framework\MockObject\Stub&\Tracker_Semantic_StatusFactory
+     * @var \PHPUnit\Framework\MockObject\Stub&\Tuleap\Tracker\Semantic\Status\TrackerSemanticStatusFactory
      */
     private $status_factory;
     /**
@@ -70,7 +70,7 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->title_factory           = $this->createStub(\Tuleap\Tracker\Semantic\Title\TrackerSemanticTitleFactory::class);
         $this->description_factory     = $this->createStub(\Tuleap\Tracker\Semantic\Description\TrackerSemanticDescriptionFactory::class);
-        $this->status_factory          = $this->createStub(\Tracker_Semantic_StatusFactory::class);
+        $this->status_factory          = $this->createStub(\Tuleap\Tracker\Semantic\Status\TrackerSemanticStatusFactory::class);
         $this->timeframe_builder       = $this->createStub(SemanticTimeframeBuilder::class);
         $this->artifact_link_retriever = RetrieveFullArtifactLinkFieldStub::withNoField();
 
@@ -156,7 +156,7 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsWhenStatusFieldCantBeFound(): void
     {
-        $status_semantic = new \Tracker_Semantic_Status($this->tracker);
+        $status_semantic = new \Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus($this->tracker);
         $this->status_factory->method('getByTracker')->willReturn($status_semantic);
 
         $this->expectException(FieldRetrievalException::class);
@@ -165,7 +165,7 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsStatusReference(): void
     {
-        $status_semantic = new \Tracker_Semantic_Status($this->tracker, $this->getSelectboxField(525, 'Kettle'));
+        $status_semantic = new \Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus($this->tracker, $this->getSelectboxField(525, 'Kettle'));
         $this->status_factory->method('getByTracker')->willReturn($status_semantic);
 
         $status = $this->getGatherer()->getStatusField($this->tracker_identifier);

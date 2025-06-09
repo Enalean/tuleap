@@ -75,7 +75,7 @@ final class DefinitionRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Tes
 
     protected function tearDown(): void
     {
-        \Tracker_Semantic_Status::clearInstances();
+        \Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus::clearInstances();
 
         parent::tearDown();
     }
@@ -298,9 +298,9 @@ final class DefinitionRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Tes
 
     private function mockArtifactRepresentationBuilder(Artifact $definition_artifact): void
     {
-        $semantic_status = $this->createMock(\Tracker_Semantic_Status::class);
+        $semantic_status = $this->createMock(\Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus::class);
         $semantic_status->method('getColor');
-        \Tracker_Semantic_Status::setInstance(
+        \Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus::setInstance(
             $semantic_status,
             $definition_artifact->getTracker(),
         );

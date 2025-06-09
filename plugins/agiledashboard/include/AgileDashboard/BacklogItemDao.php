@@ -27,8 +27,8 @@ declare(strict_types=1);
 namespace Tuleap\AgileDashboard;
 
 use ParagonIE\EasyDB\EasyStatement;
-use Tracker_Semantic_Status;
 use Tuleap\DB\DataAccessObject;
+use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
 use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle;
 
 class BacklogItemDao extends DataAccessObject
@@ -343,7 +343,7 @@ class BacklogItemDao extends DataAccessObject
             $select_fields[] = '"" as title';
         }
 
-        if (in_array(Tracker_Semantic_Status::NAME, $semantics)) {
+        if (in_array(TrackerSemanticStatus::NAME, $semantics)) {
             $select_fields[] = '(SS0.open_value_id IS NOT NULL OR SS1.open_value_id IS NULL) as status';
             $join_fields[]   = <<<SQL
             LEFT JOIN (

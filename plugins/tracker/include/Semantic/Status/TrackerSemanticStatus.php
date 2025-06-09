@@ -1,12 +1,12 @@
 <?php
-/**
- * Copyright (c) Enalean, 2015-Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2015 - Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
- * it under the terms of the GNU GeLneral Public License as published by
+ * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
@@ -19,16 +19,31 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\Tracker\Semantic\Status;
+
+use Codendi_HTMLPurifier;
+use Codendi_Request;
+use Feedback;
+use PFUser;
+use SimpleXMLElement;
+use TemplateRendererFactory;
+use Tracker;
+use Tracker_Artifact_Changeset;
+use Tracker_FormElement_Field;
+use Tracker_FormElement_Field_List;
+use Tracker_FormElement_Field_List_Bind_Static;
+use Tracker_FormElementFactory;
+use Tracker_Semantic;
+use Tracker_Semantic_StatusDao;
+use Tracker_SemanticManager;
+use TrackerManager;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\SemanticStatusRepresentation;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneDao;
 use Tuleap\Tracker\Semantic\Status\Open\AdminPresenterBuilder;
-use Tuleap\Tracker\Semantic\Status\SemanticStatusNotDefinedException;
-use Tuleap\Tracker\Semantic\Status\StatusColorForChangesetProvider;
-use Tuleap\Tracker\Semantic\Status\StatusValueForChangesetProvider;
 
-class Tracker_Semantic_Status extends Tracker_Semantic
+class TrackerSemanticStatus extends Tracker_Semantic
 {
     public const NAME   = 'status';
     public const OPEN   = 'Open';
@@ -44,9 +59,9 @@ class Tracker_Semantic_Status extends Tracker_Semantic
     /**
      * Constructor
      *
-     * @param Tracker                        $tracker     The tracker
-     * @param Tracker_FormElement_Field_List $list_field  The field
-     * @param array                          $open_values The values with the meaning "Open"
+     * @param Tracker $tracker The tracker
+     * @param Tracker_FormElement_Field_List $list_field The field
+     * @param array $open_values The values with the meaning "Open"
      */
     public function __construct(Tracker $tracker, ?Tracker_FormElement_Field_List $list_field = null, $open_values = [])
     {
@@ -167,8 +182,8 @@ class Tracker_Semantic_Status extends Tracker_Semantic
     }
 
     /**
-     * @deprecated in favor of getLocalizedStatusLabel
      * @return string
+     * @deprecated in favor of getLocalizedStatusLabel
      */
     public function getStatus(Artifact $artifact)
     {
@@ -345,7 +360,7 @@ class Tracker_Semantic_Status extends Tracker_Semantic
 
     private function doesTrackerNotificationUseStatusSemantic()
     {
-        return $this->tracker->getNotificationsLevel() === \Tracker::NOTIFICATIONS_LEVEL_STATUS_CHANGE;
+         return $this->tracker->getNotificationsLevel() === \Tracker::NOTIFICATIONS_LEVEL_STATUS_CHANGE;
     }
 
     /**
@@ -393,13 +408,14 @@ class Tracker_Semantic_Status extends Tracker_Semantic
         return $this->save();
     }
 
-    protected static $_instances;
+    protected static $_instances; // phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
+
     /**
      * Load an instance of a Tracker_Semantic_Status
      *
      * @param Tracker $tracker the tracker
      *
-     * @return Tracker_Semantic_Status
+     * @return TrackerSemanticStatus
      */
     public static function load(Tracker $tracker)
     {
@@ -428,7 +444,7 @@ class Tracker_Semantic_Status extends Tracker_Semantic
         $fef   = Tracker_FormElementFactory::instance();
         $field = $fef->getFieldById($field_id);
 
-        self::$_instances[$tracker->getId()] = new Tracker_Semantic_Status($tracker, $field, $open_values);
+        self::$_instances[$tracker->getId()] = new TrackerSemanticStatus($tracker, $field, $open_values);
 
         return self::$_instances[$tracker->getId()];
     }
@@ -436,8 +452,8 @@ class Tracker_Semantic_Status extends Tracker_Semantic
     /**
      * Export semantic to XML
      *
-     * @param SimpleXMLElement &$root      the node to which the semantic is attached (passed by reference)
-     * @param array            $xml_mapping correspondance between real ids and xml IDs
+     * @param SimpleXMLElement &$root the node to which the semantic is attached (passed by reference)
+     * @param array $xml_mapping correspondance between real ids and xml IDs
      *
      * @return void
      */
@@ -460,7 +476,7 @@ class Tracker_Semantic_Status extends Tracker_Semantic
         }
     }
 
-     /**
+    /**
      * Is the field used in semantics?
      *
      * @param Tracker_FormElement_Field the field to test if it is used in semantics or not
@@ -503,7 +519,7 @@ class Tracker_Semantic_Status extends Tracker_Semantic
     /**
      * Allows to inject a fake Semantic for tests. DO NOT USE IT IN PRODUCTION!
      */
-    public static function setInstance(Tracker_Semantic_Status $status, Tracker $tracker)
+    public static function setInstance(TrackerSemanticStatus $status, Tracker $tracker)
     {
         self::$_instances[$tracker->getId()] = $status;
     }

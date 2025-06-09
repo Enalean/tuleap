@@ -57,7 +57,7 @@ final class VisitRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $glyph_finder;
     /**
-     * @var \Tracker_Semantic_StatusFactory&Stub
+     * @var \Tuleap\Tracker\Semantic\Status\TrackerSemanticStatusFactory&Stub
      */
     private $status_factory;
     /**
@@ -74,8 +74,8 @@ final class VisitRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->user         = UserTestBuilder::buildWithId(self::USER_ID);
         $this->glyph_finder = $this->createStub(\Tuleap\Glyph\GlyphFinder::class);
         $this->glyph_finder->method('get')->willReturn(new Glyph('<svg>icon</svg>'));
-        $this->status_factory = $this->createStub(\Tracker_Semantic_StatusFactory::class);
-        $semantic_status      = $this->createStub(\Tracker_Semantic_Status::class);
+        $this->status_factory = $this->createStub(\Tuleap\Tracker\Semantic\Status\TrackerSemanticStatusFactory::class);
+        $semantic_status      = $this->createStub(\Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus::class);
         $semantic_status->method('getField')->willReturn(null);
         $this->status_factory->method('getByTracker')->willReturn($semantic_status);
         $this->artifact_factory     = $this->createStub(\Tracker_ArtifactFactory::class);

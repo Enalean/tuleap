@@ -31,7 +31,7 @@ final class AdminPresenterBuilder
     {
     }
 
-    public function build(\Tracker_Semantic_Status $semantic_status, \Tracker $tracker, CSRFSynchronizerToken $csrf_token): AdminPresenter
+    public function build(\Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus $semantic_status, \Tracker $tracker, CSRFSynchronizerToken $csrf_token): AdminPresenter
     {
         $list_fields = $this->tracker_form_element_factory->getUsedListFields($tracker);
 

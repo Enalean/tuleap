@@ -113,6 +113,7 @@ use Tuleap\Tracker\FormElement\View\Admin\FilterFormElementsThatCanBeCreatedForT
 use Tuleap\Tracker\REST\v1\Workflow\PostAction\CheckPostActionsForTracker;
 use Tuleap\Tracker\Rule\FirstValidValueAccordingToDependenciesRetriever;
 use Tuleap\Tracker\Semantic\Status\StatusValueRetriever;
+use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatusFactory;
 use Tuleap\Tracker\TrackerEventTrackersDuplicated;
 use Tuleap\Tracker\Workflow\FirstPossibleValueInListRetriever;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
@@ -481,7 +482,7 @@ class testmanagementPlugin extends Plugin implements PluginWithService, \Tuleap\
             ),
             new StatusUpdater(
                 new StatusValueRetriever(
-                    Tracker_Semantic_StatusFactory::instance(),
+                    TrackerSemanticStatusFactory::instance(),
                     $this->getFirstPossibleValueInListRetriever()
                 )
             )
@@ -498,7 +499,7 @@ class testmanagementPlugin extends Plugin implements PluginWithService, \Tuleap\
             ),
             new StatusUpdater(
                 new StatusValueRetriever(
-                    Tracker_Semantic_StatusFactory::instance(),
+                    TrackerSemanticStatusFactory::instance(),
                     $this->getFirstPossibleValueInListRetriever()
                 )
             )

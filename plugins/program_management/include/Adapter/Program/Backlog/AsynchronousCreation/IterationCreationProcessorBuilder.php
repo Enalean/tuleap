@@ -114,7 +114,7 @@ final class IterationCreationProcessorBuilder implements BuildIterationCreationP
             $tracker_retriever,
             new \Tuleap\Tracker\Semantic\Title\TrackerSemanticTitleFactory(),
             new \Tuleap\Tracker\Semantic\Description\TrackerSemanticDescriptionFactory(),
-            new \Tracker_Semantic_StatusFactory(),
+            new \Tuleap\Tracker\Semantic\Status\TrackerSemanticStatusFactory(),
             new SemanticTimeframeBuilder(
                 new SemanticTimeframeDao(),
                 $form_element_factory,

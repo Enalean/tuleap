@@ -25,9 +25,9 @@ namespace Tuleap\Velocity;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue;
 use Tracker_FormElement_Field_List;
-use Tracker_Semantic_Status;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDone;
+use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
 use Tuleap\Tracker\Workflow\BeforeEvent;
 use Tuleap\Velocity\Semantic\SemanticVelocity;
 
@@ -39,7 +39,7 @@ final class VelocityComputationCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     private Artifact&\PHPUnit\Framework\MockObject\MockObject $artifact;
     private BeforeEvent&\PHPUnit\Framework\MockObject\MockObject $before_event;
     private \PHPUnit\Framework\MockObject\MockObject&Tracker_FormElement_Field_List $semantic_velocity_field;
-    private Tracker_Semantic_Status&\PHPUnit\Framework\MockObject\MockObject $semantic_status;
+    private TrackerSemanticStatus&\PHPUnit\Framework\MockObject\MockObject $semantic_status;
     private int $semantic_status_field_id;
     private \PHPUnit\Framework\MockObject\MockObject&SemanticVelocity $semantic_velocity;
     private \PHPUnit\Framework\MockObject\MockObject&SemanticDone $semantic_done;
@@ -55,7 +55,7 @@ final class VelocityComputationCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->before_event->method('getArtifact')->willReturn($this->artifact);
 
         $this->semantic_velocity_field  = $this->createMock(Tracker_FormElement_Field_List::class);
-        $this->semantic_status          = $this->createMock(Tracker_Semantic_Status::class);
+        $this->semantic_status          = $this->createMock(TrackerSemanticStatus::class);
         $this->semantic_status_field_id = 100;
         $this->semantic_velocity_field->method('getId')->willReturn($this->semantic_status_field_id);
 

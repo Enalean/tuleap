@@ -29,7 +29,6 @@ use Tracker_Artifact_PriorityHistoryDao;
 use Tracker_ArtifactDao;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
-use Tracker_Semantic_Status;
 use Tracker_SemanticCollection;
 use Tracker_SemanticManager;
 use TrackerFactory;
@@ -55,6 +54,7 @@ use Tuleap\Tracker\REST\Helpers\IdsFromBodyAreNotUniqueException;
 use Tuleap\Tracker\REST\Helpers\OrderIdOutOfBoundException;
 use Tuleap\Tracker\REST\Helpers\OrderRepresentation;
 use Tuleap\Tracker\REST\Helpers\OrderValidator;
+use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
 use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle;
 use UserManager;
 
@@ -199,7 +199,7 @@ class BacklogItemResource extends AuthenticatedResource
         BacklogItem $backlog_item,
         Tracker_SemanticCollection $semantics,
     ) {
-        $semantic_status = $semantics[Tracker_Semantic_Status::NAME];
+        $semantic_status = $semantics[TrackerSemanticStatus::NAME];
 
         if (
             $semantic_status && $semantic_status->getField() && $semantic_status->getField()->userCanRead(

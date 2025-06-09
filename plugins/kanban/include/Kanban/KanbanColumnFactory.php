@@ -26,8 +26,8 @@ namespace Tuleap\Kanban;
 use PFUser;
 use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Tracker_FormElement_Field_List_BindValue;
-use Tracker_Semantic_Status;
 use TrackerFactory;
+use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
 
 class KanbanColumnFactory
 {
@@ -115,7 +115,7 @@ class KanbanColumnFactory
         return $field->getBind()->canValueBeHiddenWithoutCheckingSemanticStatus($value) && ! $semantic->isBasedOnASharedField();
     }
 
-    private function getOpenValues(Tracker_Semantic_Status $semantic): array
+    private function getOpenValues(TrackerSemanticStatus $semantic): array
     {
         return $semantic->getOpenValues();
     }
@@ -123,7 +123,7 @@ class KanbanColumnFactory
     /**
      * @return Tracker_FormElement_Field_List_BindValue[]
      */
-    private function getFieldValues(Tracker_Semantic_Status $semantic): array
+    private function getFieldValues(TrackerSemanticStatus $semantic): array
     {
         $field = $semantic->getField();
         if (! $field) {
@@ -132,14 +132,14 @@ class KanbanColumnFactory
         return $field->getAllValues();
     }
 
-    private function getSemanticStatus(Kanban $kanban): ?Tracker_Semantic_Status
+    private function getSemanticStatus(Kanban $kanban): ?TrackerSemanticStatus
     {
         $tracker = TrackerFactory::instance()->getTrackerById($kanban->getTrackerId());
         if (! $tracker) {
             return null;
         }
 
-        $semantic = Tracker_Semantic_Status::forceLoad($tracker);
+        $semantic = TrackerSemanticStatus::forceLoad($tracker);
         if (! $semantic->getFieldId()) {
             return null;
         }

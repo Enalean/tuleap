@@ -21,9 +21,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Kanban\RealTimeMercure;
 
-use Tracker_Semantic_Status;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\RealtimeMercure\RealTimeMercureArtifactMessageSender;
+use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
 
 class KanbanArtifactMessageSenderMercure
 {
@@ -59,7 +59,7 @@ class KanbanArtifactMessageSenderMercure
         );
     }
 
-    public function sendMessageArtifactMoved(Artifact $artifact, int $kanban_id, Tracker_Semantic_Status $tracker_semantic): void
+    public function sendMessageArtifactMoved(Artifact $artifact, int $kanban_id, TrackerSemanticStatus $tracker_semantic): void
     {
         $data_artifact = $this->kanban_artifact_message_builder->buildArtifactMoved($artifact, $tracker_semantic);
         if ($data_artifact === null) {
@@ -72,7 +72,7 @@ class KanbanArtifactMessageSenderMercure
             );
     }
 
-    public function sendMessageArtifactReordered(Artifact $artifact, int $kanban_id, Tracker_Semantic_Status $tracker_semantic): void
+    public function sendMessageArtifactReordered(Artifact $artifact, int $kanban_id, TrackerSemanticStatus $tracker_semantic): void
     {
         $data_artifact = $this->kanban_artifact_message_builder->buildArtifactReordered($artifact, $tracker_semantic);
         if ($data_artifact === null) {

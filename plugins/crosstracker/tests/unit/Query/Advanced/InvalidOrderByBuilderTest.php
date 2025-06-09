@@ -26,8 +26,6 @@ use BaseLanguageFactory;
 use TestHelper;
 use Tracker;
 use Tracker_Semantic_ContributorFactory;
-use Tracker_Semantic_Status;
-use Tracker_Semantic_StatusFactory;
 use Tuleap\CrossTracker\Query\Advanced\QueryValidation\DuckTypedField\DuckTypedFieldChecker;
 use Tuleap\CrossTracker\Query\Advanced\QueryValidation\Metadata\ArtifactIdMetadataChecker;
 use Tuleap\CrossTracker\Query\Advanced\QueryValidation\Metadata\ArtifactSubmitterChecker;
@@ -63,6 +61,8 @@ use Tuleap\Tracker\Report\Query\Advanced\ListFieldBindValueNormalizer;
 use Tuleap\Tracker\Report\Query\Advanced\UgroupLabelConverter;
 use Tuleap\Tracker\Semantic\Contributor\ContributorFieldRetriever;
 use Tuleap\Tracker\Semantic\Status\StatusFieldRetriever;
+use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
+use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatusFactory;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -91,7 +91,7 @@ final class InvalidOrderByBuilderTest extends TestCase
 
     protected function tearDown(): void
     {
-        Tracker_Semantic_Status::clearInstances();
+        TrackerSemanticStatus::clearInstances();
     }
 
     private function checkOrderBy(OrderBy $order_by): ?InvalidOrderBy
@@ -151,7 +151,7 @@ final class InvalidOrderByBuilderTest extends TestCase
                     new ArtifactIdMetadataChecker(),
                 ),
                 new InvalidOrderByListChecker(
-                    new StatusFieldRetriever(Tracker_Semantic_StatusFactory::instance()),
+                    new StatusFieldRetriever(TrackerSemanticStatusFactory::instance()),
                     new ContributorFieldRetriever(Tracker_Semantic_ContributorFactory::instance()),
                 ),
             ),
@@ -182,8 +182,8 @@ final class InvalidOrderByBuilderTest extends TestCase
     public function testItReturnsErrorIfSemanticListWithMultipleValues(): void
     {
         $tracker = TrackerTestBuilder::aTracker()->build();
-        Tracker_Semantic_Status::setInstance(
-            new Tracker_Semantic_Status($tracker, ListFieldBuilder::aListField(102)->withMultipleValues()->build()),
+        TrackerSemanticStatus::setInstance(
+            new TrackerSemanticStatus($tracker, ListFieldBuilder::aListField(102)->withMultipleValues()->build()),
             $tracker
         );
         $this->trackers = [$tracker];

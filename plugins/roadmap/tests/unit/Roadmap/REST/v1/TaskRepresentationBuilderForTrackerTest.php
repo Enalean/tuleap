@@ -66,14 +66,14 @@ final class TaskRepresentationBuilderForTrackerTest extends \Tuleap\Test\PHPUnit
             ->withColor(TrackerColor::fromName('fiesta-red'))
             ->build();
 
-        $semantic_status = $this->createMock(\Tracker_Semantic_Status::class);
+        $semantic_status = $this->createMock(\Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus::class);
         $semantic_status->method('isOpen')->willReturn(true);
-        \Tracker_Semantic_Status::setInstance($semantic_status, $this->tracker);
+        \Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus::setInstance($semantic_status, $this->tracker);
     }
 
     protected function tearDown(): void
     {
-        \Tracker_Semantic_Status::clearInstances();
+        \Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus::clearInstances();
     }
 
     public function testBuildRepresentation(): void

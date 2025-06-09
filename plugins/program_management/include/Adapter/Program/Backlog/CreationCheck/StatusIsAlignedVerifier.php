@@ -23,21 +23,21 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\CreationCheck;
 
 use Tracker_Semantic_StatusDao;
-use Tracker_Semantic_StatusFactory;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\VerifyStatusIsAligned;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Source\SourceTrackerCollection;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
+use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatusFactory;
 
 final class StatusIsAlignedVerifier implements VerifyStatusIsAligned
 {
     private Tracker_Semantic_StatusDao $semantic_status_dao;
-    private Tracker_Semantic_StatusFactory $semantic_status_factory;
+    private TrackerSemanticStatusFactory $semantic_status_factory;
     private \TrackerFactory $tracker_factory;
 
     public function __construct(
         Tracker_Semantic_StatusDao $semantic_status_dao,
-        Tracker_Semantic_StatusFactory $semantic_status_factory,
+        TrackerSemanticStatusFactory $semantic_status_factory,
         \TrackerFactory $tracker_factory,
     ) {
         $this->semantic_status_dao     = $semantic_status_dao;

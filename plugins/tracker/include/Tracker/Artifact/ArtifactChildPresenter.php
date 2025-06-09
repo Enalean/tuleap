@@ -20,11 +20,12 @@
 
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeIsChildLinkRetriever;
+use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
 
 /**
  * Presenter of the child of an artifact
  */
-class Tracker_ArtifactChildPresenter
+class Tracker_ArtifactChildPresenter // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /** @var string */
     public $xref;
@@ -50,12 +51,12 @@ class Tracker_ArtifactChildPresenter
     /**
      * @param Artifact                $artifact The child
      * @param Artifact                $parent   The parent
-     * @param Tracker_Semantic_Status $semantic The status semantic used by the corresponding tracker
+     * @param TrackerSemanticStatus $semantic The status semantic used by the corresponding tracker
      */
     public function __construct(
         Artifact $artifact,
         Artifact $parent,
-        Tracker_Semantic_Status $semantic,
+        TrackerSemanticStatus $semantic,
         TypeIsChildLinkRetriever $retriever,
     ) {
         $base_url = \Tuleap\ServerHostname::HTTPSUrl();

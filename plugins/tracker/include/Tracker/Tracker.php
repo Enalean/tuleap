@@ -131,6 +131,8 @@ use Tuleap\Tracker\PromotedTrackerDao;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkChangesetValueBuilder;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValueBuilder;
 use Tuleap\Tracker\Semantic\Description\TrackerSemanticDescription;
+use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
+use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatusFactory;
 use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle;
 use Tuleap\Tracker\Semantic\Tooltip\SemanticTooltip;
 use Tuleap\Tracker\Tooltip\TrackerStats;
@@ -1192,7 +1194,7 @@ class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignore PSR1.Clas
                 new RecentlyVisitedDao(),
                 $this->getTrackerArtifactFactory(),
                 new \Tuleap\Glyph\GlyphFinder($event_manager),
-                new \Tuleap\Tracker\Artifact\StatusBadgeBuilder(Tracker_Semantic_StatusFactory::instance()),
+                new \Tuleap\Tracker\Artifact\StatusBadgeBuilder(TrackerSemanticStatusFactory::instance()),
                 $event_manager
             );
             $recently_visited_artifacts = $visit_retriever->getMostRecentlySeenArtifacts(
@@ -3087,7 +3089,7 @@ class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignore PSR1.Clas
      */
     public function hasSemanticsStatus()
     {
-        return Tracker_Semantic_Status::load($this)->getFieldId() ? true : false;
+        return TrackerSemanticStatus::load($this)->getFieldId() ? true : false;
     }
 
     /**
@@ -3097,7 +3099,7 @@ class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignore PSR1.Clas
      */
     public function getStatusField()
     {
-        $status_field = Tracker_Semantic_Status::load($this)->getField();
+        $status_field = TrackerSemanticStatus::load($this)->getField();
         if ($status_field) {
             return $status_field;
         } else {

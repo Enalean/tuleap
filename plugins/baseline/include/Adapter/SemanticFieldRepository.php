@@ -28,8 +28,8 @@ use Tracker;
 use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_Text;
-use Tracker_Semantic_Status;
 use Tuleap\Tracker\Semantic\Description\TrackerSemanticDescription;
+use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
 use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle;
 
 /**
@@ -54,6 +54,6 @@ class SemanticFieldRepository
 
     public function findStatusByTracker(Tracker $tracker): ?Tracker_FormElement_Field_List
     {
-        return Tracker_Semantic_Status::load($tracker)->getField();
+        return TrackerSemanticStatus::load($tracker)->getField();
     }
 }

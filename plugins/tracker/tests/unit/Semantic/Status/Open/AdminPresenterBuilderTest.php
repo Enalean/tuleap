@@ -50,7 +50,7 @@ final class AdminPresenterBuilderTest extends TestCase
 
     public function testItBuildsAPresenterWhenNoFieldsArePossible(): void
     {
-        $semantic_status = new \Tracker_Semantic_Status($this->tracker, null);
+        $semantic_status = new \Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus($this->tracker, null);
         $this->form_element_factory->method('getUsedListFields')->willReturn([]);
         $this->dao->method('getSelectedValues')->willReturn([]);
         $presenter = $this->presenter_builder->build($semantic_status, $this->tracker, $this->csrf_token);
@@ -78,7 +78,7 @@ final class AdminPresenterBuilderTest extends TestCase
         $field_A = $this->getFieldWithIdAndLabel(1, 'field A');
         $field_B = $this->getFieldWithIdAndLabel(2, 'field B');
         $this->form_element_factory->method('getUsedListFields')->willReturn([$field_A, $field_B]);
-        $semantic_status = new \Tracker_Semantic_Status($this->tracker, null);
+        $semantic_status = new \Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus($this->tracker, null);
         $this->dao->method('getSelectedValues')->willReturn([]);
         $presenter = $this->presenter_builder->build($semantic_status, $this->tracker, $this->csrf_token);
 
@@ -115,7 +115,7 @@ final class AdminPresenterBuilderTest extends TestCase
         $field_A = $this->getFieldWithIdAndLabel(1, 'field A');
         $field_B = $status_field;
         $this->form_element_factory->method('getUsedListFields')->willReturn([$field_A, $field_B]);
-        $semantic_status = new \Tracker_Semantic_Status($this->tracker, $field_B, [1]);
+        $semantic_status = new \Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus($this->tracker, $field_B, [1]);
         $this->dao->method('getSelectedValues')->willReturn([['value_id' => 2]]);
         $presenter = $this->presenter_builder->build($semantic_status, $this->tracker, $this->csrf_token);
 

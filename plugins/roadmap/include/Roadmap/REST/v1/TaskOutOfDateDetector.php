@@ -24,10 +24,10 @@ namespace Tuleap\Roadmap\REST\v1;
 
 use DateTimeImmutable;
 use Psr\Log\LoggerInterface;
-use Tracker_Semantic_Status;
 use Tuleap\Date\DatePeriodWithOpenDays;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Status\SemanticStatusRetriever;
+use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 
@@ -83,7 +83,7 @@ final class TaskOutOfDateDetector implements IDetectIfArtifactIsOutOfDate
 
     private function hasBeenClosedMoreThanOneYearAgo(
         Artifact $artifact,
-        \Tracker_Semantic_Status $semantic_status,
+        \Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus $semantic_status,
         \Tracker_FormElement_Field_List $status_field,
         DateTimeImmutable $now,
         \PFUser $user,
@@ -161,7 +161,7 @@ final class TaskOutOfDateDetector implements IDetectIfArtifactIsOutOfDate
         return $diff_from_now->days > 365;
     }
 
-    private function isAnOpenValue(int $value_id, Tracker_Semantic_Status $semantic_status): bool
+    private function isAnOpenValue(int $value_id, TrackerSemanticStatus $semantic_status): bool
     {
         return in_array($value_id, $semantic_status->getOpenValues());
     }

@@ -25,7 +25,6 @@ namespace Tuleap\Tracker\Semantic\Status;
 use PFUser;
 use Tracker;
 use Tracker_FormElement_Field_List_BindValue;
-use Tracker_Semantic_StatusFactory;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Workflow\FirstPossibleValueInListRetriever;
 use Tuleap\Tracker\Workflow\NoPossibleValueException;
@@ -33,11 +32,11 @@ use Tuleap\Tracker\Workflow\NoPossibleValueException;
 class StatusValueRetriever
 {
     /**
-     * @var Tracker_Semantic_StatusFactory
+     * @var TrackerSemanticStatusFactory
      */
     private $semantic_status_factory;
 
-    public function __construct(Tracker_Semantic_StatusFactory $semantic_status_factory, private FirstPossibleValueInListRetriever $first_possible_value_retriever)
+    public function __construct(TrackerSemanticStatusFactory $semantic_status_factory, private FirstPossibleValueInListRetriever $first_possible_value_retriever)
     {
         $this->semantic_status_factory = $semantic_status_factory;
     }

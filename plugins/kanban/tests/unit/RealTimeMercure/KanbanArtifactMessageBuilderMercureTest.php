@@ -35,7 +35,7 @@ final class KanbanArtifactMessageBuilderMercureTest extends TestCase
     private \Tuleap\Kanban\KanbanItemDao&MockObject $kanban_item_dao;
     private Tracker_Artifact_ChangesetFactory&MockObject $changeset_factory;
     private KanbanArtifactMessageBuilderMercure $message_builder;
-    private \Tracker_Semantic_Status&MockObject $tracker_semantic;
+    private \Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus&MockObject $tracker_semantic;
     private \Tracker_FormElement_Field_List&MockObject $status_field;
     protected function setUp(): void
     {
@@ -43,7 +43,7 @@ final class KanbanArtifactMessageBuilderMercureTest extends TestCase
         $this->kanban_item_dao   = $this->createMock(\Tuleap\Kanban\KanbanItemDao::class);
         $this->changeset_factory = $this->createMock(Tracker_Artifact_ChangesetFactory::class);
         $this->message_builder   = new KanbanArtifactMessageBuilderMercure($this->kanban_item_dao, $this->changeset_factory);
-        $this->tracker_semantic  = $this->createMock(\Tracker_Semantic_Status::class);
+        $this->tracker_semantic  = $this->createMock(\Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus::class);
         $this->status_field      = $this->createMock(\Tracker_FormElement_Field_List::class);
         $this->status_field->method('getId')->willReturn(1);
     }

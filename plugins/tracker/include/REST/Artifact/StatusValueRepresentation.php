@@ -46,7 +46,7 @@ final class StatusValueRepresentation
 
     public static function buildFromArtifact(Artifact $artifact, \PFUser $user): self
     {
-        $semantic_status = \Tracker_Semantic_Status::load($artifact->getTracker());
+        $semantic_status = \Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus::load($artifact->getTracker());
         return new self($artifact->getStatus(), $semantic_status->getColor($artifact->getLastChangeset(), $user));
     }
 

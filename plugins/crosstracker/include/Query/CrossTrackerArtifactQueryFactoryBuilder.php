@@ -31,7 +31,6 @@ use Tracker_FormElementFactory;
 use Tracker_Semantic_ContributorDao;
 use Tracker_Semantic_ContributorFactory;
 use Tracker_Semantic_StatusDao;
-use Tracker_Semantic_StatusFactory;
 use TrackerFactory;
 use Tuleap\CrossTracker\CrossTrackerInstrumentation;
 use Tuleap\CrossTracker\Query\Advanced\DuckTypedField\FieldTypeRetrieverWrapper;
@@ -136,6 +135,7 @@ use Tuleap\Tracker\Semantic\Contributor\ContributorFieldRetriever;
 use Tuleap\Tracker\Semantic\Description\DescriptionSemanticDAO;
 use Tuleap\Tracker\Semantic\Description\TrackerSemanticDescriptionFactory;
 use Tuleap\Tracker\Semantic\Status\StatusFieldRetriever;
+use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatusFactory;
 use Tuleap\Tracker\Semantic\Title\TitleSemanticDAO;
 use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitleFactory;
 use UGroupManager;
@@ -214,7 +214,7 @@ final class CrossTrackerArtifactQueryFactoryBuilder
                 new ArtifactIdMetadataChecker(),
             ),
             new InvalidOrderByListChecker(
-                new StatusFieldRetriever(Tracker_Semantic_StatusFactory::instance()),
+                new StatusFieldRetriever(TrackerSemanticStatusFactory::instance()),
                 new ContributorFieldRetriever(Tracker_Semantic_ContributorFactory::instance()),
             ),
         );
@@ -376,7 +376,7 @@ final class CrossTrackerArtifactQueryFactoryBuilder
             new MetadataFromOrderBuilder(
                 TrackerSemanticTitleFactory::instance(),
                 TrackerSemanticDescriptionFactory::instance(),
-                new StatusFieldRetriever(Tracker_Semantic_StatusFactory::instance()),
+                new StatusFieldRetriever(TrackerSemanticStatusFactory::instance()),
                 new ContributorFieldRetriever(Tracker_Semantic_ContributorFactory::instance()),
                 $text_order_builder,
                 $static_list_order_builder,

@@ -26,7 +26,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Tracker;
 use Tracker_FormElement_Field_List_Value;
 use Tracker_FormElement_InvalidFieldValueException;
-use Tracker_Semantic_Status;
+use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -36,13 +36,13 @@ final class SemanticDoneLoaderTest extends \Tuleap\Test\PHPUnit\TestCase
     private SemanticDoneDao&MockObject $dao;
     private SemanticDoneLoader $loader;
     private Tracker $tracker;
-    private Tracker_Semantic_Status&MockObject $semantic_status;
+    private TrackerSemanticStatus&MockObject $semantic_status;
 
     public function setUp(): void
     {
         $this->tracker = TrackerTestBuilder::aTracker()->build();
 
-        $this->semantic_status = $this->createMock(Tracker_Semantic_Status::class);
+        $this->semantic_status = $this->createMock(TrackerSemanticStatus::class);
 
         $this->dao           = $this->createMock(SemanticDoneDao::class);
         $this->value_checker = $this->createMock(SemanticDoneValueChecker::class);

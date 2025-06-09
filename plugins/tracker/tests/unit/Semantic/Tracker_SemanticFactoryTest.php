@@ -23,9 +23,9 @@ namespace Tuleap\Tracker\Semantic;
 
 use Tracker_Semantic_Contributor;
 use Tracker_Semantic_ContributorFactory;
-use Tracker_Semantic_Status;
-use Tracker_Semantic_StatusFactory;
 use Tracker_SemanticFactory;
+use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
+use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatusFactory;
 use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle;
 use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitleFactory;
 use Tuleap\Tracker\Semantic\Tooltip\SemanticTooltip;
@@ -40,11 +40,11 @@ final class Tracker_SemanticFactoryTest extends \Tuleap\Test\PHPUnit\TestCase //
         $xml_status              = simplexml_load_string(file_get_contents(__DIR__ . '/../_fixtures/ImportTrackerSemanticStatusTest.xml'));
         $xml_tooltip             = simplexml_load_string(file_get_contents(__DIR__ . '/../_fixtures/ImportTrackerSemanticTooltipTest.xml'));
         $xml_contributor         = simplexml_load_string(file_get_contents(__DIR__ . '/../_fixtures/ImportTrackerSemanticContributorTest.xml'));
-        $semantic_status         = $this->createMock(Tracker_Semantic_Status::class);
+        $semantic_status         = $this->createMock(TrackerSemanticStatus::class);
         $semantic_title          = $this->createMock(TrackerSemanticTitle::class);
         $semantic_contributor    = $this->createMock(Tracker_Semantic_Contributor::class);
         $semantic_tooltip        = $this->createMock(SemanticTooltip::class);
-        $semantic_status_factory = $this->createMock(Tracker_Semantic_StatusFactory::class);
+        $semantic_status_factory = $this->createMock(TrackerSemanticStatusFactory::class);
         $semantic_status_factory->method('getInstanceFromXML')->willReturn($semantic_status);
         $semantic_title_factory = $this->createMock(TrackerSemanticTitleFactory::class);
         $semantic_title_factory->method('getInstanceFromXML')->willReturn($semantic_title);

@@ -62,10 +62,10 @@ final class SearchResultRetrieverTest extends TestCase
         $glyph_finder = $this->createStub(GlyphFinder::class);
         $glyph_finder->method('get')->willReturn(null);
 
-        $semantic_status = $this->createMock(\Tracker_Semantic_Status::class);
+        $semantic_status = $this->createMock(\Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus::class);
         $semantic_status->method('getField')->willReturn(null);
 
-        $status_factory = $this->createMock(\Tracker_Semantic_StatusFactory::class);
+        $status_factory = $this->createMock(\Tuleap\Tracker\Semantic\Status\TrackerSemanticStatusFactory::class);
         $status_factory->method('getByTracker')->willReturn($semantic_status);
 
         $this->retriever = new SearchResultRetriever(

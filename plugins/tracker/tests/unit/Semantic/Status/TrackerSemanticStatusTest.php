@@ -24,13 +24,11 @@ namespace Tuleap\Tracker\Semantic\Status;
 use SimpleXMLElement;
 use Tracker;
 use Tracker_FormElement_Field_List;
-use Tracker_Semantic_Status;
 use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-//phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Tracker_Semantic_StatusTest extends \Tuleap\Test\PHPUnit\TestCase
+final class TrackerSemanticStatusTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private Tracker $tracker;
     private Tracker_FormElement_Field_List $field;
@@ -41,12 +39,12 @@ final class Tracker_Semantic_StatusTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->field   = ListFieldBuilder::aListField(103)->build();
     }
 
-    public function testExport()
+    public function testExport(): void
     {
         $xml      = simplexml_load_string(
             file_get_contents(__DIR__ . '/../../_fixtures/Status/ImportTrackerSemanticStatusTest.xml')
         );
-        $semantic = new Tracker_Semantic_Status($this->tracker, $this->field, [806, 807, 808, 809]);
+        $semantic = new TrackerSemanticStatus($this->tracker, $this->field, [806, 807, 808, 809]);
         $root     = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
 
         $array_xml_mapping = [
@@ -68,9 +66,9 @@ final class Tracker_Semantic_StatusTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals(count($xml->open_values), count($root->semantic->open_values));
     }
 
-    public function testItDoesNotExportIfFieldIsNotExported()
+    public function testItDoesNotExportIfFieldIsNotExported(): void
     {
-        $semantic = new Tracker_Semantic_Status($this->tracker, $this->field);
+        $semantic = new TrackerSemanticStatus($this->tracker, $this->field);
         $root     = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
 
         $array_xml_mapping = [];

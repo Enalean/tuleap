@@ -219,7 +219,7 @@ final class BacklogRequiredTrackerCollectionTest extends \Tuleap\Test\PHPUnit\Te
         $GLOBALS['Language']->method('getText')->willReturn('Initial effort');
         $semantic_done = new SemanticDone(
             $this->createMock(Tracker::class),
-            $this->createMock(\Tracker_Semantic_Status::class),
+            $this->createMock(\Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus::class),
             $this->createMock(SemanticDoneDao::class),
             $this->createMock(SemanticDoneValueChecker::class),
             []

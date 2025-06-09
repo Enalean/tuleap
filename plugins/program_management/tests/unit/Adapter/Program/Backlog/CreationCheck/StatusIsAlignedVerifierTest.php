@@ -24,9 +24,7 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\CreationCheck;
 
 use Tracker;
 use Tracker_FormElement_Field_List;
-use Tracker_Semantic_Status;
 use Tracker_Semantic_StatusDao;
-use Tracker_Semantic_StatusFactory;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Source\SourceTrackerCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
@@ -39,6 +37,8 @@ use Tuleap\ProgramManagement\Tests\Stub\RetrieveVisibleProgramIncrementTrackerSt
 use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
+use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
+use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatusFactory;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -50,7 +50,7 @@ final class StatusIsAlignedVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $semantic_status_dao;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&Tracker_Semantic_StatusFactory
+     * @var \PHPUnit\Framework\MockObject\MockObject&TrackerSemanticStatusFactory
      */
     private $semantic_status_factory;
     private TrackerCollection $collection;
@@ -59,7 +59,7 @@ final class StatusIsAlignedVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
     private SourceTrackerCollection $source_trackers;
     private Tracker $timebox_tracker;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&Tracker_Semantic_Status
+     * @var \PHPUnit\Framework\MockObject\MockObject&TrackerSemanticStatus
      */
     private $timebox_tracker_semantic_status;
     private Tracker $program_increment;
@@ -73,7 +73,7 @@ final class StatusIsAlignedVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
     protected function setUp(): void
     {
         $this->semantic_status_dao     = $this->createMock(Tracker_Semantic_StatusDao::class);
-        $this->semantic_status_factory = $this->createMock(Tracker_Semantic_StatusFactory::class);
+        $this->semantic_status_factory = $this->createMock(TrackerSemanticStatusFactory::class);
         $this->tracker_factory         = $this->createMock(\TrackerFactory::class);
 
         $this->verifier = new StatusIsAlignedVerifier(
@@ -87,7 +87,7 @@ final class StatusIsAlignedVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->timebox_program_tracker         = TrackerReferenceStub::withDefaults();
         $this->timebox_tracker                 = TrackerTestBuilder::aTracker()->withId(1)->build();
-        $this->timebox_tracker_semantic_status = $this->createMock(Tracker_Semantic_Status::class);
+        $this->timebox_tracker_semantic_status = $this->createMock(TrackerSemanticStatus::class);
         $this->timebox_tracker_semantic_status->method('getOpenLabels')->willReturn(['open', 'review']);
 
         $this->program_increment         = TrackerTestBuilder::aTracker()->withId(104)->build();
@@ -121,7 +121,7 @@ final class StatusIsAlignedVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $list_field = $this->createMock(Tracker_FormElement_Field_List::class);
 
-        $top_planning_tracker_semantic_status = $this->createMock(Tracker_Semantic_Status::class);
+        $top_planning_tracker_semantic_status = $this->createMock(TrackerSemanticStatus::class);
         $top_planning_tracker_semantic_status->method('getField')
             ->willReturn($list_field);
 
@@ -133,19 +133,19 @@ final class StatusIsAlignedVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('getOpenLabels')
             ->willReturn(['open', 'review']);
 
-        $tracker_01_semantic_status = $this->createMock(Tracker_Semantic_Status::class);
+        $tracker_01_semantic_status = $this->createMock(TrackerSemanticStatus::class);
         $tracker_01_semantic_status->expects($this->once())
             ->method('getOpenLabels')
             ->willReturn(['open', 'review']);
 
-        $tracker_02_semantic_status = $this->createMock(Tracker_Semantic_Status::class);
+        $tracker_02_semantic_status = $this->createMock(TrackerSemanticStatus::class);
         $tracker_02_semantic_status->expects($this->once())
             ->method('getOpenLabels')
             ->willReturn(['open', 'in progress', 'review']);
 
         $this->semantic_status_factory->method('getByTracker')
             ->willReturnCallback(
-                fn (Tracker $tracker): Tracker_Semantic_Status => match ($tracker) {
+                fn (Tracker $tracker): TrackerSemanticStatus => match ($tracker) {
                     $this->program_increment => $top_planning_tracker_semantic_status,
                     $this->timebox_tracker => $this->timebox_tracker_semantic_status,
                     $this->tracker_team_01 => $tracker_01_semantic_status,
@@ -177,7 +177,7 @@ final class StatusIsAlignedVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsFalseIfProgramTrackerDoesNotHaveStatusSemantic(): void
     {
-        $top_planning_tracker_semantic_status = $this->createMock(Tracker_Semantic_Status::class);
+        $top_planning_tracker_semantic_status = $this->createMock(TrackerSemanticStatus::class);
         $this->semantic_status_factory->method('getByTracker')
             ->with($this->program_increment)
             ->willReturn($top_planning_tracker_semantic_status);
@@ -200,7 +200,7 @@ final class StatusIsAlignedVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsFalseIfSomeTeamTrackersDoNotHaveSemanticStatusDefined(): void
     {
-        $top_planning_tracker_semantic_status = $this->createMock(Tracker_Semantic_Status::class);
+        $top_planning_tracker_semantic_status = $this->createMock(TrackerSemanticStatus::class);
         $this->semantic_status_factory->method('getByTracker')
             ->with($this->program_increment)
             ->willReturn($top_planning_tracker_semantic_status);
@@ -230,7 +230,7 @@ final class StatusIsAlignedVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $list_field = $this->createMock(Tracker_FormElement_Field_List::class);
 
-        $top_planning_tracker_semantic_status = $this->createMock(Tracker_Semantic_Status::class);
+        $top_planning_tracker_semantic_status = $this->createMock(TrackerSemanticStatus::class);
         $top_planning_tracker_semantic_status->method('getField')
             ->willReturn($list_field);
 
@@ -242,10 +242,10 @@ final class StatusIsAlignedVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('getOpenLabels')
             ->willReturn(['open', 'review']);
 
-        $tracker_01_semantic_status = $this->createMock(Tracker_Semantic_Status::class);
+        $tracker_01_semantic_status = $this->createMock(TrackerSemanticStatus::class);
         $this->semantic_status_factory->method('getByTracker')
             ->willReturnCallback(
-                fn (Tracker $tracker): Tracker_Semantic_Status => match ($tracker) {
+                fn (Tracker $tracker): TrackerSemanticStatus => match ($tracker) {
                     $this->program_increment => $top_planning_tracker_semantic_status,
                     $this->timebox_tracker => $this->timebox_tracker_semantic_status,
                     $this->tracker_team_01 => $tracker_01_semantic_status,

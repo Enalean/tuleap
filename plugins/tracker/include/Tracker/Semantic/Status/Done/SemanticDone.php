@@ -36,11 +36,11 @@ use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Value;
 use Tracker_Semantic;
-use Tracker_Semantic_Status;
 use Tracker_SemanticManager;
 use TrackerManager;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\JavascriptAsset;
+use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
 use XML_SimpleXMLCDATAFactory;
 
 class SemanticDone extends Tracker_Semantic
@@ -48,7 +48,7 @@ class SemanticDone extends Tracker_Semantic
     public const NAME = 'done';
 
     /**
-     * @var Tracker_Semantic_Status
+     * @var TrackerSemanticStatus
      */
     private $semantic_status;
 
@@ -69,7 +69,7 @@ class SemanticDone extends Tracker_Semantic
 
     public function __construct(
         Tracker $tracker,
-        Tracker_Semantic_Status $semantic_status,
+        TrackerSemanticStatus $semantic_status,
         SemanticDoneDao $dao,
         SemanticDoneValueChecker $value_checker,
         array $done_values,
@@ -498,7 +498,7 @@ class SemanticDone extends Tracker_Semantic
 
     private static function forceLoad(Tracker $tracker): SemanticDone
     {
-        $semantic_status = Tracker_Semantic_Status::load($tracker);
+        $semantic_status = TrackerSemanticStatus::load($tracker);
         $dao             = new SemanticDoneDao();
         $value_checker   = new SemanticDoneValueChecker();
 
@@ -510,7 +510,7 @@ class SemanticDone extends Tracker_Semantic
     }
 
     /**
-     * @return Tracker_Semantic_Status
+     * @return TrackerSemanticStatus
      */
     public function getSemanticStatus()
     {

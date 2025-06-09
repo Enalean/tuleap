@@ -20,7 +20,16 @@
 namespace Tuleap\Kanban\REST\v1;
 
 use BackendLogger;
+use EventManager;
+use Luracast\Restler\RestException;
+use PFUser;
+use Tracker;
 use Tracker_Artifact_Changeset_InitialChangesetFieldsValidator;
+use Tracker_ArtifactFactory;
+use Tracker_FormElement_Field_List;
+use Tracker_FormElementFactory;
+use TrackerFactory;
+use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\Kanban\Kanban;
 use Tuleap\Kanban\KanbanCannotAccessException;
 use Tuleap\Kanban\KanbanDao;
@@ -29,16 +38,6 @@ use Tuleap\Kanban\KanbanItemDao;
 use Tuleap\Kanban\KanbanItemManager;
 use Tuleap\Kanban\KanbanNotFoundException;
 use Tuleap\Kanban\KanbanStatisticsAggregator;
-use EventManager;
-use Luracast\Restler\RestException;
-use PFUser;
-use Tracker;
-use Tracker_ArtifactFactory;
-use Tracker_FormElement_Field_List;
-use Tracker_FormElementFactory;
-use Tracker_Semantic_Status;
-use TrackerFactory;
-use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\ProjectStatusVerificator;
@@ -60,6 +59,7 @@ use Tuleap\Tracker\REST\Artifact\ChangesetValue\FieldsDataBuilder;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\FieldsDataFromValuesByFieldBuilder;
 use Tuleap\Tracker\REST\TrackerReference;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
+use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
 use UserManager;
 use WrapperLogger;
 
@@ -321,7 +321,7 @@ final class KanbanItemsResource extends AuthenticatedResource
 
         $value = Tracker_FormElement_Field_List::NONE_VALUE;
         if (! empty($item->column_id)) {
-            $semantic = Tracker_Semantic_Status::load($tracker);
+            $semantic = TrackerSemanticStatus::load($tracker);
 
             if (! $semantic->getFieldId()) {
                 throw new RestException(403);

@@ -24,11 +24,11 @@ namespace Tuleap\TestManagement\REST\v1;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use Tracker_FormElementFactory;
-use Tracker_Semantic_Status;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\TestManagement\Campaign\Campaign;
 use Tuleap\TestManagement\LabelFieldNotFoundException;
 use Tuleap\Tracker\Semantic\Status\StatusValueRetriever;
+use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
@@ -62,7 +62,7 @@ final class CampaignArtifactUpdateFieldValuesBuilderTest extends \Tuleap\Test\PH
 
     protected function tearDown(): void
     {
-        \Tracker_Semantic_Status::clearInstances();
+        \Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus::clearInstances();
     }
 
     public function testItBuildsFieldValueForLabel(): void
@@ -70,8 +70,8 @@ final class CampaignArtifactUpdateFieldValuesBuilderTest extends \Tuleap\Test\PH
         $tracker = TrackerTestBuilder::aTracker()->build();
         $user    = UserTestBuilder::aUser()->build();
 
-        \Tracker_Semantic_Status::setInstance(
-            new Tracker_Semantic_Status($tracker, null),
+        \Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus::setInstance(
+            new TrackerSemanticStatus($tracker, null),
             $tracker,
         );
 
@@ -96,8 +96,8 @@ final class CampaignArtifactUpdateFieldValuesBuilderTest extends \Tuleap\Test\PH
         $tracker = TrackerTestBuilder::aTracker()->build();
         $user    = UserTestBuilder::aUser()->build();
 
-        \Tracker_Semantic_Status::setInstance(
-            new Tracker_Semantic_Status($tracker, ListFieldBuilder::aListField(98)->build()),
+        \Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus::setInstance(
+            new TrackerSemanticStatus($tracker, ListFieldBuilder::aListField(98)->build()),
             $tracker,
         );
 
@@ -131,8 +131,8 @@ final class CampaignArtifactUpdateFieldValuesBuilderTest extends \Tuleap\Test\PH
         $tracker = TrackerTestBuilder::aTracker()->build();
         $user    = UserTestBuilder::aUser()->build();
 
-        \Tracker_Semantic_Status::setInstance(
-            new Tracker_Semantic_Status($tracker, ListFieldBuilder::aListField(98)->build()),
+        \Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus::setInstance(
+            new TrackerSemanticStatus($tracker, ListFieldBuilder::aListField(98)->build()),
             $tracker,
         );
 

@@ -36,7 +36,7 @@ final class StatusValueForChangesetProviderTest extends \Tuleap\Test\PHPUnit\Tes
     private StatusValueForChangesetProvider&MockObject $provider;
     private Tracker_Artifact_Changeset $changeset;
     private PFUser $user;
-    private \Tracker_Semantic_Status&MockObject $semantic;
+    private \Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus&MockObject $semantic;
 
     protected function setUp(): void
     {
@@ -44,7 +44,7 @@ final class StatusValueForChangesetProviderTest extends \Tuleap\Test\PHPUnit\Tes
 
         $this->user = UserTestBuilder::buildWithDefaults();
 
-        $this->semantic = $this->createMock(\Tracker_Semantic_Status::class);
+        $this->semantic = $this->createMock(\Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus::class);
 
         $this->provider = $this->createPartialMock(StatusValueForChangesetProvider::class, ['loadSemantic']);
         $this->provider->method('loadSemantic')->willReturn($this->semantic);

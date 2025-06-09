@@ -22,8 +22,8 @@ declare(strict_types=1);
 namespace Tuleap\Kanban\RealTimeMercure;
 
 use Tuleap\Kanban\KanbanFactory;
-use Tracker_Semantic_Status;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
 
 class RealTimeArtifactMessageControllerMercure
 {
@@ -61,14 +61,14 @@ class RealTimeArtifactMessageControllerMercure
                 $this->kanban_artifact_message_sender->sendMessageArtifactMoved(
                     $artifact,
                     $kanban_id,
-                    Tracker_Semantic_Status::load($artifact->getTracker())
+                    TrackerSemanticStatus::load($artifact->getTracker())
                 );
                 break;
             case self::EVENT_NAME_ARTIFACT_REORDERED:
                 $this->kanban_artifact_message_sender->sendMessageArtifactReordered(
                     $artifact,
                     $kanban_id,
-                    Tracker_Semantic_Status::load($artifact->getTracker())
+                    TrackerSemanticStatus::load($artifact->getTracker())
                 );
                 break;
         }
