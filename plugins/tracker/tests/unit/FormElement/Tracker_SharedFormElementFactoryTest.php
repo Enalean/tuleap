@@ -18,291 +18,289 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Mockery\MockInterface;
+declare(strict_types=1);
 
-class Tracker_SharedFormElementFactoryTest extends \PHPUnit\Framework\TestCase // @codingStandardsIgnoreLine
+namespace Tuleap\Tracker\FormElement;
+
+use Exception;
+use PFUser;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use PHPUnit\Framework\MockObject\MockObject;
+use Project;
+use Tracker;
+use Tracker_FormElement_Field;
+use Tracker_FormElement_Field_List_BindFactory;
+use Tracker_FormElement_Field_Selectbox;
+use Tracker_FormElementFactory;
+use Tracker_SharedFormElementFactory;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListUserBindBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SharedFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
+
+#[DisableReturnValueGenerationForTestDoubles]
+final class Tracker_SharedFormElementFactoryTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /**
-     * @var Project|MockInterface
-     */
-    private $project;
-    /**
-     * @var Tracker|MockInterface
-     */
-    private $tracker;
+    private Project&MockObject $project;
+    private Tracker&MockObject $tracker;
 
     protected function setUp(): void
     {
-        $this->project = Mockery::mock(Project::class);
-        $this->tracker = Mockery::mock(Tracker::class);
-        $this->tracker->shouldReceive('getProject')->andReturn($this->project);
-        $this->tracker->shouldReceive('getId')->andReturn(1);
+        $this->project = $this->createMock(Project::class);
+        $this->tracker = $this->createMock(Tracker::class);
+        $this->tracker->method('getProject')->willReturn($this->project);
+        $this->tracker->method('getId')->willReturn(1);
     }
 
-    public function testCreateFormElementExtractsDataFromOriginalFieldThenForwardsToFactory()
+    public function testCreateFormElementExtractsDataFromOriginalFieldThenForwardsToFactory(): void
     {
-        $field_id = 321;
+        $field_id             = 321;
+        $original_field       = $this->givenASelectBoxField($field_id, null);
+        $user                 = UserTestBuilder::buildWithDefaults();
+        $form_element_factory = $this->createMock(Tracker_FormElementFactory::class);
+        $form_element_factory->method('getType')->willReturn('sb');
+        $bind_factory   = $this->createMock(Tracker_FormElement_Field_List_BindFactory::class);
+        $shared_factory = new Tracker_SharedFormElementFactory($form_element_factory, $bind_factory);
+        $this->setFieldAndTrackerPermissions($original_field, $user, true, true);
 
-        $original_field                                                     = $this->givenASelectBoxField(321, null);
-        list($shared_factory, $form_element_factory, $user, $bound_factory) = $this->givenASharedFormElementFactory();
-        $this->setFieldAndTrackerPermissions($original_field, true, true);
+        $form_element_factory->method('getFormElementById')->with($field_id)->willReturn($original_field);
 
-        $original_field->shouldReceive('getId')->andReturn($field_id);
-        $original_field->shouldReceive('getOriginalField')->andReturn(null);
+        $this->project->method('isActive')->willReturn(true);
 
-        $form_element_factory->shouldReceive('getFormElementById')->withArgs([$field_id])->andReturn($original_field);
-
-        $this->project->shouldReceive('isActive')->andReturn(true);
-
-        $bound_factory->shouldReceive('duplicateByReference')->andReturn(null);
+        $bind_factory->method('duplicateByReference')->willReturn(null);
 
         $formElement_data = [
             'field_id' => $original_field->getId(),
         ];
 
-        $form_element_factory->shouldReceive(
-            'createFormElement'
-        )->withArgs(
+        $form_element_factory->expects($this->once())->method('createFormElement')->with(
+            $this->tracker,
+            'sb',
             [
-                $this->tracker,
-                'sb',
-                [
-                    'type'              => 'sb',
-                    'label'             => $original_field->getLabel(),
-                    'description'       => $original_field->getDescription(),
-                    'use_it'            => $original_field->isUsed(),
-                    'scope'             => $original_field->getScope(),
-                    'required'          => $original_field->isRequired(),
-                    'notifications'     => $original_field->hasNotifications(),
-                    'original_field_id' => $original_field->getId(),
-                ],
-                false,
-                false,
-            ]
-        )->once();
+                'type'              => 'sb',
+                'label'             => $original_field->getLabel(),
+                'description'       => $original_field->getDescription(),
+                'use_it'            => $original_field->isUsed(),
+                'scope'             => $original_field->getScope(),
+                'required'          => $original_field->isRequired(),
+                'notifications'     => $original_field->hasNotifications(),
+                'original_field_id' => $original_field->getId(),
+            ],
+            false,
+            false,
+        );
 
         $shared_factory->createFormElement($this->tracker, $formElement_data, $user, false, false);
     }
 
-    /**
-     * @return MockInterface|Tracker_FormElement_Field_Selectbox
-     */
-    private function givenASelectBoxField($id, $original_field)
+    private function givenASelectBoxField(int $id, ?Tracker_FormElement_Field $original_field): Tracker_FormElement_Field_Selectbox
     {
-        $bind = Mockery::mock(Tracker_FormElement_Field_List_Bind_Static::class);
-
-        $field = Mockery::mock(Tracker_FormElement_Field_Selectbox::class);
-        $field->shouldReceive('getLabel')->andReturn('Label');
-        $field->shouldReceive('getDescription')->andReturn('Description');
-        $field->shouldReceive('isUsed')->andReturn(true);
-        $field->shouldReceive('getScope')->andReturn('P');
-        $field->shouldReceive('isRequired')->andReturn(true);
-        $field->shouldReceive('hasNotifications')->andReturn(true);
-        $field->shouldReceive('getTracker')->andReturn($this->tracker);
-        $field->shouldReceive('getBind')->andReturn($bind);
-        $field->shouldReceive('getId')->andReturn($id);
-        if ($original_field) {
-            $field->shouldReceive('getOriginalFieldId')->andReturn($original_field->getId());
-            $field->shouldReceive('getOriginalField')->andReturn($original_field);
+        if ($original_field !== null) {
+            $field = SharedFieldBuilder::aSharedField($id, $original_field)
+                ->withLabel('Label')
+                ->thatIsRequired()
+                ->inTracker($this->tracker)
+                ->build();
         } else {
-            $field->shouldReceive('getOriginalFieldId')->andReturn(null);
-            $field->shouldReceive('getOriginalField')->andReturn(null);
+            $field = ListFieldBuilder::aListField($id)
+                ->withLabel('Label')
+                ->thatIsRequired()
+                ->inTracker($this->tracker)
+                ->build();
         }
-
+        ListStaticBindBuilder::aStaticBind($field)->build()->getField();
+        $field->notifications = true;
         return $field;
-    }
-
-    private function givenASharedFormElementFactory()
-    {
-        $user                 = Mockery::mock(PFUser::class);
-        $form_element_factory = Mockery::mock(Tracker_FormElementFactory::class);
-        $form_element_factory->shouldReceive('getType')->andReturn('sb');
-
-        $bound_factory  = Mockery::mock(Tracker_FormElement_Field_List_BindFactory::class);
-        $shared_factory = new Tracker_SharedFormElementFactory(
-            $form_element_factory,
-            $bound_factory
-        );
-        return [$shared_factory, $form_element_factory, $user, $bound_factory];
     }
 
     private function setFieldAndTrackerPermissions(
         Tracker_FormElement_Field $field,
-        $user_can_read_field,
-        $user_can_view_tracker,
-    ) {
-        $field->shouldReceive('userCanRead')->andReturn($user_can_read_field);
-        $this->tracker->shouldReceive('userCanView')->andReturn($user_can_view_tracker);
+        PFUser $user,
+        bool $user_can_read_field,
+        bool $user_can_view_tracker,
+    ): void {
+        $field->setUserCanRead($user, $user_can_read_field);
+        $this->tracker->method('userCanView')->willReturn($user_can_view_tracker);
     }
 
-    public function testUnreadableFieldCannotBeCopied()
+    public function testUnreadableFieldCannotBeCopied(): void
     {
-        $field_id                                                           = 321;
-        $original_field                                                     = $this->givenASelectBoxField($field_id, null);
-        list($shared_factory, $form_element_factory, $user, $bound_factory) = $this->givenASharedFormElementFactory();
-        $this->setFieldAndTrackerPermissions($original_field, false, true);
+        $original_field       = $this->givenASelectBoxField(321, null);
+        $user                 = UserTestBuilder::buildWithDefaults();
+        $form_element_factory = $this->createMock(Tracker_FormElementFactory::class);
+        $form_element_factory->method('getType')->willReturn('sb');
+        $form_element_factory->method('getFormElementById')->willReturn($original_field);
+        $this->project->method('isActive')->willReturn(true);
+
+        $bind_factory   = $this->createMock(Tracker_FormElement_Field_List_BindFactory::class);
+        $shared_factory = new Tracker_SharedFormElementFactory($form_element_factory, $bind_factory);
+        $this->setFieldAndTrackerPermissions($original_field, $user, false, true);
 
         $this->expectException(Exception::class);
         $shared_factory->createFormElement($this->tracker, ['field_id' => $original_field->getId()], $user, false, false);
     }
 
-    public function testFieldInInaccessibleTrackerCannotBeCopied()
+    public function testFieldInInaccessibleTrackerCannotBeCopied(): void
     {
-        $field_id                                                           = 321;
-        $original_field                                                     = $this->givenASelectBoxField($field_id, null);
-        list($shared_factory, $form_element_factory, $user, $bound_factory) = $this->givenASharedFormElementFactory();
-        $this->setFieldAndTrackerPermissions($original_field, true, false);
+        $original_field       = $this->givenASelectBoxField(321, null);
+        $user                 = UserTestBuilder::buildWithDefaults();
+        $form_element_factory = $this->createMock(Tracker_FormElementFactory::class);
+        $form_element_factory->method('getType')->willReturn('sb');
+        $form_element_factory->method('getFormElementById')->willReturn($original_field);
+        $this->project->method('isActive')->willReturn(true);
+
+        $bind_factory   = $this->createMock(Tracker_FormElement_Field_List_BindFactory::class);
+        $shared_factory = new Tracker_SharedFormElementFactory($form_element_factory, $bind_factory);
+        $this->setFieldAndTrackerPermissions($original_field, $user, true, false);
 
         $this->expectException(Exception::class);
         $shared_factory->createFormElement($this->tracker, ['field_id' => $original_field->getId()], $user, false, false);
     }
 
-    public function testDuplicatesAnyValuesThatAreBoundToTheOriginalField()
+    public function testDuplicatesAnyValuesThatAreBoundToTheOriginalField(): void
     {
         $field_id     = 321;
         $new_field_id = 999;
 
-        $original_field                                                     = $this->givenASelectBoxField($field_id, null);
-        list($shared_factory, $form_element_factory, $user, $bound_factory) = $this->givenASharedFormElementFactory();
-        $this->setFieldAndTrackerPermissions($original_field, true, true);
+        $original_field       = $this->givenASelectBoxField($field_id, null);
+        $user                 = UserTestBuilder::buildWithDefaults();
+        $form_element_factory = $this->createMock(Tracker_FormElementFactory::class);
+        $form_element_factory->method('getType')->willReturn('sb');
 
-        $form_element_factory->shouldReceive('getFormElementById')->withArgs([$field_id])->andReturn($original_field);
+        $bind_factory   = $this->createMock(Tracker_FormElement_Field_List_BindFactory::class);
+        $shared_factory = new Tracker_SharedFormElementFactory($form_element_factory, $bind_factory);
+        $this->setFieldAndTrackerPermissions($original_field, $user, true, true);
 
-        $this->project->shouldReceive('isActive')->andReturn(true);
+        $form_element_factory->method('getFormElementById')->with($field_id)->willReturn($original_field);
 
-        $form_element_factory->shouldReceive('createFormElement')->andReturn($new_field_id);
-        $bound_factory->shouldReceive(
-            'duplicateByReference'
-        )->withArgs([$original_field->getId(), $new_field_id])->once();
+        $this->project->method('isActive')->willReturn(true);
+
+        $form_element_factory->method('createFormElement')->willReturn($new_field_id);
+        $bind_factory->expects($this->once())->method('duplicateByReference')->with($original_field->getId(), $new_field_id);
 
         $shared_factory->createFormElement($this->tracker, ['field_id' => $original_field->getId()], $user, false, false);
     }
 
-    public function testSharedFieldsShouldRespectChaslesTheorem()
+    public function testSharedFieldsShouldRespectChaslesTheorem(): void
     {
-        list($field, $original_field, $shared_factory, $bound_factory, $user, $form_element_factory) = $this->givenTwoFieldsThatAreShared();
-        $form_element_data                                                                           = $this->whenIShareTheCopy($field);
+        $user           = UserTestBuilder::buildWithDefaults();
+        $original_field = $this->givenASelectBoxField(123, null);
+        $this->setFieldAndTrackerPermissions($original_field, $user, true, true);
+
+        $field_id = 456;
+        $field    = $this->givenASelectBoxField($field_id, $original_field);
+        $this->setFieldAndTrackerPermissions($field, $user, true, true);
+
+        $form_element_factory = $this->createMock(Tracker_FormElementFactory::class);
+        $form_element_factory->method('getType')->willReturn('sb');
+
+        $bind_factory   = $this->createMock(Tracker_FormElement_Field_List_BindFactory::class);
+        $shared_factory = new Tracker_SharedFormElementFactory($form_element_factory, $bind_factory);
+        $form_element_factory->method('getType')->with($original_field)->willReturn('string');
+        $form_element_factory->method('getFormElementById')->with($field_id)->willReturn($field);
+
+        $this->project->method('isActive')->willReturn(true);
+        $form_element_data = ['field_id' => $field->getId()];
         $this->thenTheOriginalShouldBeUsed(
             $form_element_factory,
             $original_field,
             $shared_factory,
             $form_element_data,
             $user,
-            $bound_factory
+            $bind_factory,
         );
     }
 
-    private function givenTwoFieldsThatAreShared()
-    {
-        $original_field_id = 123;
-        $original_field    = $this->givenASelectBoxField($original_field_id, null);
-        $this->setFieldAndTrackerPermissions($original_field, true, true);
-
-        $field_id = 456;
-        $field    = $this->givenASelectBoxField($field_id, $original_field);
-        $this->setFieldAndTrackerPermissions($field, true, true);
-
-        list($shared_factory, $form_element_factory, $user, $bound_factory) = $this->givenASharedFormElementFactory();
-        $form_element_factory->shouldReceive('getType')->withArgs([$original_field])->andReturn('string');
-        $form_element_factory->shouldReceive('getFormElementById')->withArgs([$field_id])->andReturn($field);
-
-        $this->project->shouldReceive('isActive')->andReturn(true);
-
-        return [$field, $original_field, $shared_factory, $bound_factory, $user, $form_element_factory];
-    }
-
-    private function whenIShareTheCopy(Tracker_FormElement_Field $field)
-    {
-        $form_element_data = [
-            'field_id' => $field->getId(),
-        ];
-        return $form_element_data;
-    }
-
     private function thenTheOriginalShouldBeUsed(
-        Tracker_FormElementFactory $form_element_factory,
+        Tracker_FormElementFactory&MockObject $form_element_factory,
         Tracker_FormElement_Field $original_field,
         Tracker_SharedFormElementFactory $shared_form_element_factory,
         array $form_element_data,
         PFUser $user,
-        Tracker_FormElement_Field_List_BindFactory $bind_factory,
-    ) {
-        $form_element_factory->shouldReceive('createFormElement')->withArgs(
+        Tracker_FormElement_Field_List_BindFactory&MockObject $bind_factory,
+    ): void {
+        $form_element_factory->expects($this->once())->method('createFormElement')->with(
+            $this->tracker,
+            'sb',
             [
-                $this->tracker,
-                'sb',
-                [
-                    'type'              => 'sb',
-                    'label'             => $original_field->getLabel(),
-                    'description'       => $original_field->getDescription(),
-                    'use_it'            => $original_field->isUsed(),
-                    'scope'             => $original_field->getScope(),
-                    'required'          => $original_field->isRequired(),
-                    'notifications'     => $original_field->hasNotifications(),
-                    'original_field_id' => $original_field->getId(),
-                ],
-                false,
-                false,
-            ]
-        )->once();
+                'type'              => 'sb',
+                'label'             => $original_field->getLabel(),
+                'description'       => $original_field->getDescription(),
+                'use_it'            => $original_field->isUsed(),
+                'scope'             => $original_field->getScope(),
+                'required'          => $original_field->isRequired(),
+                'notifications'     => $original_field->hasNotifications(),
+                'original_field_id' => $original_field->getId(),
+            ],
+            false,
+            false,
+        );
 
-        $bind_factory->shouldReceive('duplicateByReference');
+        $bind_factory->method('duplicateByReference');
 
         $shared_form_element_factory->createFormElement($this->tracker, $form_element_data, $user, false, false);
     }
 
-    public function testCreateSharedFieldNotPossibleIfFieldNotSelectbox()
+    public function testCreateSharedFieldNotPossibleIfFieldNotSelectbox(): void
     {
-        $field                                      = $this->givenAStringField();
-        list($decorator, $factory, $tracker, $user) = $this->givenASharedFormElementFactory();
-        $this->setFieldAndTrackerPermissions($field, true, true);
+        $field                = StringFieldBuilder::aStringField(456)->inTracker($this->tracker)->build();
+        $user                 = UserTestBuilder::buildWithDefaults();
+        $form_element_factory = $this->createMock(Tracker_FormElementFactory::class);
+        $form_element_factory->method('getType')->willReturn('sb');
+        $form_element_factory->method('getFormElementById')->willReturn($field);
+        $this->project->method('isActive')->willReturn(true);
+
+        $bind_factory   = $this->createMock(Tracker_FormElement_Field_List_BindFactory::class);
+        $shared_factory = new Tracker_SharedFormElementFactory($form_element_factory, $bind_factory);
+        $this->setFieldAndTrackerPermissions($field, $user, true, true);
 
         $this->expectException(Exception::class);
-        $decorator->createFormElement($tracker, ['field_id' => $field->getId()], $user, false, false);
+        $shared_factory->createFormElement($this->tracker, ['field_id' => $field->getId()], $user, false, false);
     }
 
-    private function givenAStringField()
+    public function testCreateSharedFieldNotPossibleIfFieldNotStaticSelectbox(): void
     {
-        $field = Mockery::mock(Tracker_FormElement_Field_String::class);
-        $field->shouldReceive('getTracker')->andReturn($this->tracker);
+        $field                = $this->givenASelectBoxBoundToUsers();
+        $user                 = UserTestBuilder::buildWithDefaults();
+        $form_element_factory = $this->createMock(Tracker_FormElementFactory::class);
+        $form_element_factory->method('getType')->willReturn('sb');
+        $form_element_factory->method('getFormElementById')->willReturn($field);
+        $this->project->method('isActive')->willReturn(true);
 
+        $bind_factory   = $this->createMock(Tracker_FormElement_Field_List_BindFactory::class);
+        $shared_factory = new Tracker_SharedFormElementFactory($form_element_factory, $bind_factory);
+        $this->setFieldAndTrackerPermissions($field, $user, true, true);
+
+        $this->expectException(Exception::class);
+        $shared_factory->createFormElement($this->tracker, ['field_id' => $field->getId()], $user, false, false);
+    }
+
+    private function givenASelectBoxBoundToUsers(): Tracker_FormElement_Field_Selectbox
+    {
+        $field = ListUserBindBuilder::aUserBind(ListFieldBuilder::aListField(654)->inTracker($this->tracker)->build())->build()->getField();
+        self::assertInstanceOf(Tracker_FormElement_Field_Selectbox::class, $field);
         return $field;
     }
 
-    public function testCreateSharedFieldNotPossibleIfFieldNotStaticSelectbox()
-    {
-        $field                                      = $this->givenASelectBoxBoundToUsers();
-        list($decorator, $factory, $tracker, $user) = $this->givenASharedFormElementFactory();
-        $this->setFieldAndTrackerPermissions($field, true, true);
-
-        $this->expectException(Exception::class);
-        $decorator->createFormElement($tracker, ['field_id' => $field->getId()], $user, false, false);
-    }
-
-    private function givenASelectBoxBoundToUsers()
-    {
-        $field = Mockery::mock(Tracker_FormElement_Field_Selectbox::class);
-        $field->shouldReceive('getTracker')->andReturn($this->tracker);
-        $field->shouldReceive('getBind')->andReturn(Mockery::mock(Tracker_FormElement_Field_List_Bind_Users::class));
-        return $field;
-    }
-
-    public function testCreateSharedFieldNotPossibleWhenProjectIsNotActive()
+    public function testCreateSharedFieldNotPossibleWhenProjectIsNotActive(): void
     {
         $field_id = 321;
 
-        $original_field                                                     = $this->givenASelectBoxField(321, null);
-        list($shared_factory, $form_element_factory, $user, $bound_factory) = $this->givenASharedFormElementFactory();
-        $this->setFieldAndTrackerPermissions($original_field, true, true);
+        $original_field       = $this->givenASelectBoxField($field_id, null);
+        $user                 = UserTestBuilder::buildWithDefaults();
+        $form_element_factory = $this->createMock(Tracker_FormElementFactory::class);
+        $form_element_factory->method('getType')->willReturn('sb');
 
-        $original_field->shouldReceive('getId')->andReturn($field_id);
-        $original_field->shouldReceive('getOriginalField')->andReturn(null);
+        $bind_factory   = $this->createMock(Tracker_FormElement_Field_List_BindFactory::class);
+        $shared_factory = new Tracker_SharedFormElementFactory($form_element_factory, $bind_factory);
+        $this->setFieldAndTrackerPermissions($original_field, $user, true, true);
 
-        $form_element_factory->shouldReceive('getFormElementById')->withArgs([$field_id])->andReturn($original_field);
+        $form_element_factory->method('getFormElementById')->with($field_id)->willReturn($original_field);
 
-        $this->project->shouldReceive('isActive')->andReturn(false);
+        $this->project->method('isActive')->willReturn(false);
 
         $formElement_data = [
             'field_id' => $original_field->getId(),

@@ -18,17 +18,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\FormElement;
 
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use SimpleXMLElement;
+use Tracker_FormElement_Field_String;
+use Tuleap\Test\PHPUnit\TestCase;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class TrackerFormElementExportPermissionsToXmlTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class TrackerFormElementExportPermissionsToXmlTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
-
-    public function testPermissionsExport()
+    public function testPermissionsExport(): void
     {
         $ugroups = [
             'UGROUP_1' => 1,
@@ -38,32 +40,32 @@ class TrackerFormElementExportPermissionsToXmlTest extends \Tuleap\Test\PHPUnit\
             'UGROUP_5' => 5,
         ];
 
-        $field_01 = \Mockery::mock(\Tracker_FormElement_Field_String::class)->makePartial()->shouldAllowMockingProtectedMethods();
+        $field_01 = $this->createPartialMock(Tracker_FormElement_Field_String::class, [
+            'getId', 'getPermissionsByUgroupId', 'isUsed',
+        ]);
 
-        $field_01->shouldReceive('getId')->andReturn(10);
-        $field_01->shouldReceive('getPermissionsByUgroupId')->andReturn(
-            [
-                2 => ['FIELDPERM_1'],
-                4 => ['FIELDPERM_2'],
-            ]
-        );
-        $field_01->shouldReceive('isUsed')->andReturn(true);
+        $field_01->method('getId')->willReturn(10);
+        $field_01->method('getPermissionsByUgroupId')->willReturn([
+            2 => ['FIELDPERM_1'],
+            4 => ['FIELDPERM_2'],
+        ]);
+        $field_01->method('isUsed')->willReturn(true);
 
         $xmlMapping['F' . $field_01->getId()] = $field_01->getId();
         $xml                                  = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><permissions/>');
         $field_01->exportPermissionsToXML($xml, $ugroups, $xmlMapping);
 
-        $this->assertTrue(isset($xml->permission[0]));
-        $this->assertTrue(isset($xml->permission[1]));
+        self::assertTrue(isset($xml->permission[0]));
+        self::assertTrue(isset($xml->permission[1]));
 
-        $this->assertEquals('field', (string) $xml->permission[0]['scope']);
-        $this->assertEquals('UGROUP_2', (string) $xml->permission[0]['ugroup']);
-        $this->assertEquals('FIELDPERM_1', (string) $xml->permission[0]['type']);
-        $this->assertEquals('F10', (string) $xml->permission[0]['REF']);
+        self::assertEquals('field', (string) $xml->permission[0]['scope']);
+        self::assertEquals('UGROUP_2', (string) $xml->permission[0]['ugroup']);
+        self::assertEquals('FIELDPERM_1', (string) $xml->permission[0]['type']);
+        self::assertEquals('F10', (string) $xml->permission[0]['REF']);
 
-        $this->assertEquals('field', (string) $xml->permission[1]['scope']);
-        $this->assertEquals('UGROUP_4', (string) $xml->permission[1]['ugroup']);
-        $this->assertEquals('FIELDPERM_2', (string) $xml->permission[1]['type']);
-        $this->assertEquals('F10', (string) $xml->permission[1]['REF']);
+        self::assertEquals('field', (string) $xml->permission[1]['scope']);
+        self::assertEquals('UGROUP_4', (string) $xml->permission[1]['ugroup']);
+        self::assertEquals('FIELDPERM_2', (string) $xml->permission[1]['type']);
+        self::assertEquals('F10', (string) $xml->permission[1]['REF']);
     }
 }
