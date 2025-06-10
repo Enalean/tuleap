@@ -55,6 +55,7 @@ final readonly class ArtifactResultBuilder
             $number_of_forward_link = count($artifact->getLinkedArtifacts($user));
             $number_of_reverse_link = count($artifact->getLinkedAndReverseArtifacts($user)) - $number_of_forward_link;
             $values[$id]            = new SelectedValue('@artifact', new ArtifactRepresentation(
+                $artifact->getId(),
                 $artifact->getUri(),
                 $number_of_forward_link,
                 $number_of_reverse_link,

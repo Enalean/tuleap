@@ -489,8 +489,8 @@ EOL
         );
         self::assertCount(2, $result->values);
         self::assertEqualsCanonicalizing([
-            131 => new SelectedValue('@artifact', new ArtifactRepresentation('/plugins/tracker/?aid=131', 0, 0)),
-            132 => new SelectedValue('@artifact', new ArtifactRepresentation('/plugins/tracker/?aid=132', 1, 0)),
+            131 => new SelectedValue('@artifact', new ArtifactRepresentation(131, '/plugins/tracker/?aid=131', 0, 0)),
+            132 => new SelectedValue('@artifact', new ArtifactRepresentation(132, '/plugins/tracker/?aid=132', 1, 0)),
         ], $result->values);
     }
 }

@@ -27,6 +27,8 @@ import type { ColumnName } from "../../../domain/ColumnName";
 import { PRETTY_TITLE_COLUMN_NAME } from "../../../domain/ColumnName";
 import { DATE_CELL, PRETTY_TITLE_CELL } from "../../../domain/ArtifactsTable";
 import ArtifactLinkRowSkeleton from "./ArtifactLinkRowSkeleton.vue";
+import EmptyEditCell from "./EmptyEditCell.vue";
+import EmptySelectableCell from "./EmptySelectableCell.vue";
 
 const DATE_COLUMN_NAME = "start_date";
 const columns = new Set<ColumnName>().add(PRETTY_TITLE_COLUMN_NAME).add(DATE_COLUMN_NAME);
@@ -66,10 +68,8 @@ describe("ArtifactLinkRowSkeleton", () => {
             link_type = "forward";
             const wrapper = getWrapper();
 
-            expect(wrapper.findAll("[data-test=empty-edit-cell]")).toHaveLength(
-                number_of_forward_link,
-            );
-            expect(wrapper.findAll("[data-test=empty-selectable-cell]")).toHaveLength(
+            expect(wrapper.findAllComponents(EmptyEditCell)).toHaveLength(number_of_forward_link);
+            expect(wrapper.findAllComponents(EmptySelectableCell)).toHaveLength(
                 number_of_forward_link * columns.size,
             );
         });
@@ -81,10 +81,8 @@ describe("ArtifactLinkRowSkeleton", () => {
             link_type = "reverse";
             const wrapper = getWrapper();
 
-            expect(wrapper.findAll("[data-test=empty-edit-cell]")).toHaveLength(
-                number_of_reverse_link,
-            );
-            expect(wrapper.findAll("[data-test=empty-selectable-cell]")).toHaveLength(
+            expect(wrapper.findAllComponents(EmptyEditCell)).toHaveLength(number_of_reverse_link);
+            expect(wrapper.findAllComponents(EmptySelectableCell)).toHaveLength(
                 number_of_reverse_link * columns.size,
             );
         });

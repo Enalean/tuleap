@@ -90,8 +90,8 @@ final class ArtifactSelectTest extends CrossTrackerFieldTestCase
         );
 
         $this->expected_results = [
-            $release_artifact_id => new ArtifactRepresentation("/plugins/tracker/?aid=$release_artifact_id", 0, 0),
-            $sprint_artifact_id  => new ArtifactRepresentation("/plugins/tracker/?aid=$sprint_artifact_id", 1, 0),
+            $release_artifact_id => new ArtifactRepresentation($release_artifact_id, "/plugins/tracker/?aid=$release_artifact_id", 0, 0),
+            $sprint_artifact_id  => new ArtifactRepresentation($sprint_artifact_id, "/plugins/tracker/?aid=$sprint_artifact_id", 1, 0),
         ];
     }
 

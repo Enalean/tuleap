@@ -1,6 +1,5 @@
-<?php
 /**
- * Copyright (c) Enalean, 2024-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,22 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+import type { ResultAsync } from "neverthrow";
+import type { Fault } from "@tuleap/fault";
+import type { ArtifactsTableWithTotal } from "./RetrieveArtifactsTable";
 
-namespace Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Representations;
-
-use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\SelectedValueRepresentation;
-
-/**
- * @psalm-immutable
- */
-final readonly class ArtifactRepresentation implements SelectedValueRepresentation
-{
-    public function __construct(
-        public int $id,
-        public string $uri,
-        public int $number_of_forward_link,
-        public int $number_of_reverse_link,
-    ) {
-    }
-}
+export type RetrieveArtifactLinks = {
+    getForwardLinks(
+        query_id: string,
+        artifact_id: number,
+    ): ResultAsync<ArtifactsTableWithTotal, Fault>;
+};
