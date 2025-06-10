@@ -18,33 +18,38 @@
  */
 
 import { describe, expect, it } from "vitest";
-import type { Tracker } from "@/stores/configuration-store";
-import { ConfigurationStoreStub } from "@/helpers/stubs/ConfigurationStoreStub";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import { useConfigurationScreenHelper } from "@/composables/useConfigurationScreenHelper";
+import type { Tracker } from "@/stores/configuration-store";
 import { createGettext } from "vue3-gettext";
+import { Option } from "@tuleap/option";
 import TrackerSelectionIntroductoryText from "@/components/configuration/TrackerSelectionIntroductoryText.vue";
 import { TrackerStub } from "@/helpers/stubs/TrackerStub";
 
 describe("TrackerSelectionIntroductoryText", () => {
-    it.each<[Tracker, boolean]>([
-        [TrackerStub.withoutTitleAndDescription(), true],
-        [TrackerStub.withTitle(), true],
-        [TrackerStub.withDescription(), true],
-        [TrackerStub.withTitleAndDescription(), false],
-    ])(
-        `Given the tracker %s Then warning will be displayed = %s`,
-        (tracker: Tracker, expected: boolean) => {
-            const wrapper = shallowMount(TrackerSelectionIntroductoryText, {
-                props: {
-                    configuration_helper: useConfigurationScreenHelper(
-                        ConfigurationStoreStub.withSelectedTracker(tracker),
-                    ),
-                },
-                global: { plugins: [createGettext({ silent: true })] },
-            });
+    function getWrapper(selected_tracker: Tracker): VueWrapper {
+        return shallowMount(TrackerSelectionIntroductoryText, {
+            global: { plugins: [createGettext({ silent: true })] },
+            props: { selected_tracker: Option.fromValue(selected_tracker) },
+        });
+    }
 
-            expect(wrapper.find("[data-test=warning]").exists()).toBe(expected);
+    function* generateTrackersWithMissingSemantics(): Generator<Tracker> {
+        yield TrackerStub.withoutTitleAndDescription();
+        yield TrackerStub.withTitle();
+        yield TrackerStub.withDescription();
+    }
+
+    it.each([...generateTrackersWithMissingSemantics()])(
+        `Given trackers with missing semantics, it will display a warning`,
+        (tracker: Tracker) => {
+            const wrapper = getWrapper(tracker);
+            expect(wrapper.find("[data-test=warning]").exists()).toBe(true);
         },
     );
+
+    it(`When the tracker has a title and description, then no warning will be shown`, () => {
+        const wrapper = getWrapper(TrackerStub.withTitleAndDescription());
+        expect(wrapper.find("[data-test=warning]").exists()).toBe(false);
+    });
 });

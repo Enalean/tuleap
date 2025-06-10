@@ -21,29 +21,32 @@ import { beforeEach, describe, expect, it } from "vitest";
 import { createGettext } from "vue3-gettext";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import { ConfigurationStoreStub } from "@/helpers/stubs/ConfigurationStoreStub";
+import { Option } from "@tuleap/option";
 import TrackerSelection from "@/components/configuration/TrackerSelection.vue";
-import { useConfigurationScreenHelper } from "@/composables/useConfigurationScreenHelper";
+import type { Tracker } from "@/stores/configuration-store";
+import { TrackerStub } from "@/helpers/stubs/TrackerStub";
 
 describe("TrackerSelection", () => {
-    let disabled: boolean;
+    let allowed_trackers: Tracker[], is_tracker_selection_disabled: boolean;
 
     beforeEach(() => {
-        disabled = false;
+        allowed_trackers = [TrackerStub.withTitleAndDescription()];
+        is_tracker_selection_disabled = false;
     });
 
     function getWrapper(): VueWrapper {
         return shallowMount(TrackerSelection, {
-            props: {
-                configuration_helper: useConfigurationScreenHelper(
-                    ConfigurationStoreStub.withoutAllowedTrackers(),
-                ),
-                is_tracker_selection_disabled: disabled,
-            },
             global: { plugins: [createGettext({ silent: true })] },
+            props: {
+                allowed_trackers,
+                selected_tracker: Option.nothing<Tracker>(),
+                is_tracker_selection_disabled,
+            },
         });
     }
+
     it("should display error if there is no allowed trackers", () => {
+        allowed_trackers = [];
         const wrapper = getWrapper();
 
         expect(
@@ -58,9 +61,22 @@ describe("TrackerSelection", () => {
     });
 
     it("should not display text information if the tracker selection is saved", () => {
-        disabled = true;
+        is_tracker_selection_disabled = true;
         const wrapper = getWrapper();
 
         expect(wrapper.find("[data-test=information-message]").exists()).toBe(false);
+    });
+
+    it(`emits an event when the selected tracker changes`, async () => {
+        const wrapper = getWrapper();
+        await wrapper
+            .get("[data-test=artidoc-configuration-tracker]")
+            .setValue(allowed_trackers[0]);
+        const emitted_event = wrapper.emitted("select-tracker");
+        if (emitted_event === undefined) {
+            throw Error("Expected event to be emitted");
+        }
+        const option = emitted_event[0][0] as Option<Tracker>;
+        expect(option.unwrapOr(null)).toStrictEqual(allowed_trackers[0]);
     });
 });

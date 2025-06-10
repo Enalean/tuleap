@@ -19,10 +19,12 @@
 
 <template>
     <div class="tlp-modal-body">
-        <tracker-selection-introductory-text v-bind:configuration_helper="configuration_helper" />
+        <tracker-selection-introductory-text v-bind:selected_tracker="new_selected_tracker" />
         <tracker-selection
-            v-bind:configuration_helper="configuration_helper"
+            v-bind:allowed_trackers="configuration_helper.allowed_trackers"
+            v-bind:selected_tracker="new_selected_tracker"
             v-bind:is_tracker_selection_disabled="configuration_helper.is_success.value"
+            v-on:select-tracker="onSelectTracker"
         />
     </div>
     <configuration-modal-footer
@@ -34,14 +36,27 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from "vue";
+import { Option } from "@tuleap/option";
 import type { ConfigurationScreenHelper } from "@/composables/useConfigurationScreenHelper";
 import { TRACKER_SELECTION_TAB } from "@/components/configuration/configuration-modal";
-
 import TrackerSelectionIntroductoryText from "@/components/configuration/TrackerSelectionIntroductoryText.vue";
 import TrackerSelection from "@/components/configuration/TrackerSelection.vue";
 import ConfigurationModalFooter from "@/components/configuration/ConfigurationModalFooter.vue";
+import type { Tracker } from "@/stores/configuration-store";
 
-defineProps<{
+const props = defineProps<{
     configuration_helper: ConfigurationScreenHelper;
 }>();
+
+const new_selected_tracker = computed(() =>
+    Option.fromNullable(props.configuration_helper.new_selected_tracker.value),
+);
+
+function onSelectTracker(tracker: Option<Tracker>): void {
+    tracker.apply((new_tracker) => {
+        // eslint-disable-next-line vue/no-mutating-props
+        props.configuration_helper.new_selected_tracker.value = new_tracker;
+    });
+}
 </script>

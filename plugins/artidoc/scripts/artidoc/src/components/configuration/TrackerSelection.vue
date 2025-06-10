@@ -36,7 +36,7 @@
             v-bind:disabled="is_tracker_selection_disabled"
             v-model="new_selected_tracker"
         >
-            <option v-bind:value="NO_SELECTED_TRACKER" disabled>
+            <option value="" disabled>
                 {{ $gettext("Choose a tracker") }}
             </option>
             <option
@@ -66,16 +66,28 @@
 </template>
 
 <script setup lang="ts">
+import { ref, watch } from "vue";
 import { useGettext } from "vue3-gettext";
-import type { ConfigurationScreenHelper } from "@/composables/useConfigurationScreenHelper";
+import { Option } from "@tuleap/option";
+import type { Tracker } from "@/stores/configuration-store";
 
 const { $gettext } = useGettext();
 
 const props = defineProps<{
-    configuration_helper: ConfigurationScreenHelper;
+    allowed_trackers: ReadonlyArray<Tracker>;
+    selected_tracker: Option<Tracker>;
     is_tracker_selection_disabled: boolean;
 }>();
 
-const { NO_SELECTED_TRACKER, allowed_trackers, no_allowed_trackers, new_selected_tracker } =
-    props.configuration_helper;
+const new_selected_tracker = ref<Tracker | null>(props.selected_tracker.unwrapOr(null));
+
+const emit = defineEmits<{
+    (e: "select-tracker", tracker: Option<Tracker>): void;
+}>();
+
+watch(new_selected_tracker, () => {
+    emit("select-tracker", Option.fromNullable(new_selected_tracker.value));
+});
+
+const no_allowed_trackers = props.allowed_trackers.length === 0;
 </script>
