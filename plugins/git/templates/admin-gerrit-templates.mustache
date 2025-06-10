@@ -27,13 +27,13 @@
         <div class="control-group info">
             <div class="controls">
                 <div class="btn-group dropdown" id="git_admin_config_btn_create">
-                     <span class="dropdown-toggle btn btn-primary" id="dLabel" role="button" data-toggle="dropdown">
+                     <span class="dropdown-toggle btn btn-primary" id="dLabel" role="button" data-toggle="dropdown" data-test="create-new-gerrit-template">
                             {{ create_new_template_text }}
                             <b class="caret"></b>
                     </span>
                     <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
                         <li role="menuitem" id="git_admin_config_from_gerrit">
-                            <a href="">{{ template_from_gerrit_text }}</a>
+                            <a href="" data-test="from-gerrit-config">{{ template_from_gerrit_text }}</a>
                         </li>
                         <li role="menuitem" id="git_admin_config_from_template">
                             <a href="">{{ template_from_template_text }}</a>
@@ -119,7 +119,7 @@
                 </div>
                 <div class="control-group">
                     <div class="controls">
-                        <textarea id="git_admin_config_data" name="git_admin_config_data" rows="15" cols="70"></textarea>
+                        <textarea id="git_admin_config_data" name="git_admin_config_data" rows="15" cols="70" data-test="git-admin-config-data"></textarea>
                     </div>
                 </div>
                 <div class="control-group">
@@ -127,14 +127,14 @@
                         {{ file_name_text }}
                     </label>
                     <div class="controls">
-                        <input type="text" id="git_admin_file_name" name="git_admin_file_name"/>
+                        <input type="text" id="git_admin_file_name" name="git_admin_file_name" data-test="git-admin-file-name"/>
                         <b><span id="git_admin_config_template_name"></span></b>
                         <input type="hidden" id="git_admin_template_id" name="git_admin_template_id"/>
                     </div>
                 </div>
                 <div class="control-group">
                     <div class="controls">
-                        <input type="submit" value="{{ save_text }}" class="btn btn-primary" name="save" id="git_admin_save_button"/>
+                        <input type="submit" value="{{ save_text }}" class="btn btn-primary" name="save" id="git_admin_save_button" data-test="save-gerrit-config"/>
                         <input type="button" value="{{ cancel }}" id="git_admin_config_cancel" class="btn btn-default"/>
                         <input type="submit" value="{{ delete_label }}" id="git_admin_config_delete" class="btn btn-danger" name="delete"/>
                     </div>
