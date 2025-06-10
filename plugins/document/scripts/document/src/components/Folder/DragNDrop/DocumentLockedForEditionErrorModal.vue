@@ -18,38 +18,48 @@
   -->
 
 <template>
-    <error-modal v-on:error-modal-hidden="bubbleErrorModalHidden">
+    <error-modal v-on:close="bubbleErrorModalHidden">
         <p v-dompurify-html="lock_message"></p>
     </error-modal>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import ErrorModal from "./ErrorModal.vue";
+import { computed, onMounted } from "vue";
+import type { Reason } from "../../../type";
+import { useGettext } from "vue3-gettext";
 
-export default {
-    components: { ErrorModal },
-    props: {
-        reasons: Array,
-    },
-    computed: {
-        lock_owner() {
-            return this.reasons[0].lock_owner;
-        },
-        lock_message() {
-            let translated = this
-                .$gettext(`%{ filename } has been locked for edition by <a href="%{ lock_owner_url }">%{ lock_owner_name }</a>.
+const { $gettext, $gettextInterpolate } = useGettext();
+
+const props = defineProps<{
+    reasons: Array<Reason>;
+}>();
+const emit = defineEmits<{
+    (e: "error-modal-hidden"): void;
+}>();
+
+const lock_owner = computed(() => props.reasons[0].lock_owner);
+const lock_message = computed(() => {
+    let translated =
+        $gettext(`%{ filename } has been locked for edition by <a href="%{ lock_owner_url }">%{ lock_owner_name }</a>.
                 You can't upload a new version of this file until the lock is released.`);
-            return this.$gettextInterpolate(translated, {
-                filename: this.reasons[0].filename,
-                lock_owner_url: this.lock_owner.user_url,
-                lock_owner_name: this.lock_owner.display_name,
-            });
-        },
-    },
-    methods: {
-        bubbleErrorModalHidden() {
-            this.$emit("error-modal-hidden");
-        },
-    },
-};
+    return $gettextInterpolate(translated, {
+        filename: props.reasons[0].filename,
+        lock_owner_url: lock_owner.value.user_url,
+        lock_owner_name: lock_owner.value.display_name,
+    });
+});
+
+onMounted(() => {
+    if (props.reasons.length === 0) {
+        throw new Error("This error modal should not be mounted without reason");
+    }
+    if (props.reasons[0].lock_owner === undefined) {
+        throw new Error("This error modal should be mounted with a lock reason");
+    }
+});
+
+function bubbleErrorModalHidden(): void {
+    emit("error-modal-hidden");
+}
 </script>
