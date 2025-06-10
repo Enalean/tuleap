@@ -28,8 +28,8 @@ use Tuleap\TestManagement\Campaign\CampaignSaver;
 use Tuleap\TestManagement\LabelFieldNotFoundException;
 use Tuleap\Tracker\Artifact\Changeset\Comment\CommentContentNotValidException;
 use Tuleap\Tracker\REST\Artifact\ArtifactUpdater;
-use Tuleap\Tracker\Semantic\Status\SemanticStatusNotDefinedException;
 use Tuleap\Tracker\Semantic\Status\SemanticStatusClosedValueNotFoundException;
+use Tuleap\Tracker\Semantic\Status\SemanticStatusNotDefinedException;
 
 /**
  * @psalm-import-type StatusAcceptableValue from CampaignArtifactUpdateFieldValuesBuilder

@@ -272,6 +272,7 @@ use Tuleap\Tracker\REST\v1\Event\GetExternalPostActionJsonParserEvent;
 use Tuleap\Tracker\REST\v1\Event\PostActionVisitExternalActionsEvent;
 use Tuleap\Tracker\REST\v1\Workflow\PostAction\CheckPostActionsForTracker;
 use Tuleap\Tracker\Semantic\Description\DescriptionSemanticDAO;
+use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatusDao;
 use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatusFactory;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
@@ -534,7 +535,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
                 new TitleSemanticDAO(),
                 new DescriptionSemanticDAO(),
                 new StatusIsAlignedVerifier(
-                    new Tracker_Semantic_StatusDao(),
+                    new TrackerSemanticStatusDao(),
                     $semantic_status_factory,
                     $tracker_factory
                 ),
@@ -1531,7 +1532,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
                 new TitleSemanticDAO(),
                 new DescriptionSemanticDAO(),
                 new StatusIsAlignedVerifier(
-                    new Tracker_Semantic_StatusDao(),
+                    new TrackerSemanticStatusDao(),
                     $semantic_status_factory,
                     $tracker_factory
                 ),

@@ -20,7 +20,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class Tracker_Semantic_StatusDao extends DataAccessObject
+namespace Tuleap\Tracker\Semantic\Status;
+
+use DataAccessObject;
+
+class TrackerSemanticStatusDao extends DataAccessObject
 {
     public function __construct()
     {

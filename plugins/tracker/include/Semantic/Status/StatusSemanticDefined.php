@@ -3,7 +3,7 @@
  * Copyright (c) Enalean, 2021 - Present. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
- * it under the terms of the GNU GeLneral Public License as published by
+ * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
@@ -18,14 +18,14 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Semantic\Status\Done;
+namespace Tuleap\Tracker\Semantic\Status;
 
 use Tracker_FormElement_Field_List;
 
 /**
  * @psalm-immutable
  */
-class DoneSemanticDefined
+class StatusSemanticDefined
 {
     /**
      * @var Tracker_FormElement_Field_List
@@ -34,12 +34,12 @@ class DoneSemanticDefined
     /**
      * @var int[]
      */
-    private $done_values;
+    private $open_values;
 
-    public function __construct(Tracker_FormElement_Field_List $field, array $done_values)
+    public function __construct(Tracker_FormElement_Field_List $field, array $open_values)
     {
         $this->field       = $field;
-        $this->done_values = $done_values;
+        $this->open_values = $open_values;
     }
 
     public function getField(): Tracker_FormElement_Field_List
@@ -50,8 +50,8 @@ class DoneSemanticDefined
     /**
      * @return int[]
      */
-    public function getDoneValues(): array
+    public function getOpenValues(): array
     {
-        return $this->done_values;
+        return $this->open_values;
     }
 }

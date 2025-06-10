@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -16,42 +16,37 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Semantic\Status\XML;
+namespace Tuleap\Tracker\Semantic\Status\Done\XML;
 
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\XML\XMLBindValueReference;
 use Tuleap\Tracker\FormElement\XML\XMLFormElementFlattenedCollection;
-use Tuleap\Tracker\FormElement\XML\XMLReference;
+use Tuleap\Tracker\Semantic\Status\Done\SemanticDone;
 use Tuleap\Tracker\Semantic\XML\XMLSemantic;
 
-final class XMLStatusSemantic extends XMLSemantic
+final class XMLDoneSemantic extends XMLSemantic
 {
     /**
      * @var XMLBindValueReference[]
      * @readonly
      */
-    private array $open_values = [];
+    private array $done_values = [];
 
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private XMLReference $reference,
-    ) {
-        parent::__construct(\Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus::NAME);
+    public function __construct()
+    {
+        parent::__construct(SemanticDone::NAME);
     }
 
     /**
      * @psalm-mutation-free
      */
-    public function withOpenValues(XMLBindValueReference ...$open_values): self
+    public function withDoneValues(XMLBindValueReference ...$done_values): self
     {
         $new              = clone $this;
-        $new->open_values = array_merge($new->open_values, $open_values);
+        $new->done_values = array_merge($new->done_values, $done_values);
         return $new;
     }
 
@@ -60,15 +55,15 @@ final class XMLStatusSemantic extends XMLSemantic
         $semantic = parent::export($parent_node, $form_elements);
 
         $cdata = new \XML_SimpleXMLCDATAFactory();
-        $cdata->insert($semantic, 'shortname', \Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus::NAME);
-        $cdata->insert($semantic, 'label', 'Status');
-        $cdata->insert($semantic, 'description', 'Define the status of an artifact');
-        $semantic->addChild('field')->addAttribute('REF', $this->reference->getId($form_elements));
+        $cdata->insert($semantic, 'shortname', SemanticDone::NAME);
+        $cdata->insert($semantic, 'label', 'Done');
+        $cdata->insert($semantic, 'description', 'Define the closed status that are considered Done');
 
-        $open_values = $semantic->addChild('open_values');
-        foreach ($this->open_values as $open_value) {
-            $xml_open_value = $open_values->addChild('open_value');
-            $xml_open_value->addAttribute('REF', $open_value->getId($form_elements));
+        $closed_values = $semantic->addChild('closed_values');
+        foreach ($this->done_values as $done_value) {
+            $closed_values
+                ->addChild('closed_value')
+                ->addAttribute('REF', $done_value->getId($form_elements));
         }
 
         return $semantic;
