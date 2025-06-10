@@ -26,7 +26,11 @@ import type { RootState } from "../../../store/type";
 import TimePeriodControl from "./TimePeriodControl.vue";
 
 describe("TimePeriodControl", () => {
-    let has_at_least_one_row_shown = true;
+    let has_at_least_one_row_shown: boolean;
+
+    beforeEach(() => {
+        has_at_least_one_row_shown = true;
+    });
 
     async function getWrapper(): Promise<Wrapper<Vue>> {
         return shallowMount(TimePeriodControl, {
