@@ -33,12 +33,16 @@ import TimePeriodYears from "./TimePeriodYears.vue";
 Settings.defaultZone = "UTC";
 
 describe("TimePeriodHeader", () => {
-    let nb_additional_units = 2,
-        time_period: TimePeriodMonth = new TimePeriodMonth(
+    let nb_additional_units: number, time_period: TimePeriodMonth;
+
+    beforeEach(() => {
+        nb_additional_units = 2;
+        time_period = new TimePeriodMonth(
             DateTime.fromISO("2020-03-31T22:00:00.000Z"),
             DateTime.fromISO("2020-04-30T22:00:00.000Z"),
             "en-US",
         );
+    });
 
     async function getWrapper(): Promise<Wrapper<Vue>> {
         return shallowMount(TimePeriodHeader, {
