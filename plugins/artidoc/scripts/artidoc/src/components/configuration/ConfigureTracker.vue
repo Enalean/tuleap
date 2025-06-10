@@ -21,42 +21,50 @@
     <div class="tlp-modal-body">
         <tracker-selection-introductory-text v-bind:selected_tracker="new_selected_tracker" />
         <tracker-selection
-            v-bind:allowed_trackers="configuration_helper.allowed_trackers"
+            v-bind:allowed_trackers="allowed_trackers"
             v-bind:selected_tracker="new_selected_tracker"
-            v-bind:is_tracker_selection_disabled="configuration_helper.is_success.value"
+            v-bind:is_tracker_selection_disabled="is_success"
             v-on:select-tracker="onSelectTracker"
         />
     </div>
     <configuration-modal-footer
         v-bind:current_tab="TRACKER_SELECTION_TAB"
-        v-bind:configuration_helper="configuration_helper"
-        v-bind:is_submit_button_disabled="configuration_helper.is_submit_button_disabled.value"
-        v-bind:on_save_callback="configuration_helper.onSubmit"
+        v-bind:is_submit_button_disabled="is_submit_button_disabled"
+        v-bind:on_save_callback="onSubmit"
     />
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
+import { ref, computed } from "vue";
 import { Option } from "@tuleap/option";
-import type { ConfigurationScreenHelper } from "@/composables/useConfigurationScreenHelper";
+import { strictInject } from "@tuleap/vue-strict-inject";
 import { TRACKER_SELECTION_TAB } from "@/components/configuration/configuration-modal";
 import TrackerSelectionIntroductoryText from "@/components/configuration/TrackerSelectionIntroductoryText.vue";
 import TrackerSelection from "@/components/configuration/TrackerSelection.vue";
 import ConfigurationModalFooter from "@/components/configuration/ConfigurationModalFooter.vue";
 import type { Tracker } from "@/stores/configuration-store";
+import { CONFIGURATION_STORE } from "@/stores/configuration-store";
 
-const props = defineProps<{
-    configuration_helper: ConfigurationScreenHelper;
-}>();
+const { allowed_trackers, is_saving, is_success, saveTrackerConfiguration, selected_tracker } =
+    strictInject(CONFIGURATION_STORE);
 
-const new_selected_tracker = computed(() =>
-    Option.fromNullable(props.configuration_helper.new_selected_tracker.value),
+const new_selected_tracker = ref<Option<Tracker>>(Option.fromNullable(selected_tracker.value));
+
+const is_submit_button_disabled = computed(
+    () =>
+        allowed_trackers.length === 0 ||
+        is_saving.value ||
+        new_selected_tracker.value.mapOr(
+            (tracker) => tracker.id === selected_tracker.value?.id,
+            false,
+        ),
 );
 
+function onSubmit(): void {
+    new_selected_tracker.value.apply(saveTrackerConfiguration);
+}
+
 function onSelectTracker(tracker: Option<Tracker>): void {
-    tracker.apply((new_tracker) => {
-        // eslint-disable-next-line vue/no-mutating-props
-        props.configuration_helper.new_selected_tracker.value = new_tracker;
-    });
+    new_selected_tracker.value = tracker;
 }
 </script>

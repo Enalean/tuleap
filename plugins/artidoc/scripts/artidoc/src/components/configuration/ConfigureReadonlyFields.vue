@@ -28,7 +28,6 @@
 
     <configuration-modal-footer
         v-bind:current_tab="READONLY_FIELDS_SELECTION_TAB"
-        v-bind:configuration_helper="configuration_helper"
         v-bind:on_save_callback="onFieldsSubmit"
         v-bind:is_submit_button_disabled="is_submit_button_disabled"
     />
@@ -41,12 +40,10 @@ import FieldsSelectionIntroductoryText from "@/components/configuration/FieldsSe
 import FieldsSelection from "@/components/configuration/FieldsSelection.vue";
 import ConfigurationModalFooter from "@/components/configuration/ConfigurationModalFooter.vue";
 import { READONLY_FIELDS_SELECTION_TAB } from "@/components/configuration/configuration-modal";
-import type { ConfigurationScreenHelper } from "@/composables/useConfigurationScreenHelper";
 import type { ConfigurationField } from "@/sections/readonly-fields/AvailableReadonlyFields";
 
 const props = defineProps<{
     configuration_store: ConfigurationStore;
-    configuration_helper: ConfigurationScreenHelper;
     selected_tracker: Tracker;
 }>();
 
