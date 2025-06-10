@@ -18,28 +18,29 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class Tracker_Artifact_ChangesetValue_StringTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
-{
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+declare(strict_types=1);
 
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
+
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
+final class Tracker_Artifact_ChangesetValue_StringTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+{
     public function testItReturnsTheRESTValue(): void
     {
-        $field = Mockery::mock(Tracker_FormElement_Field_String::class);
-        $field->shouldReceive('getId')->andReturn(10);
-        $field->shouldReceive('getLabel')->andReturn('field_string');
-        $user = Mockery::mock(PFUser::class);
+        $field = StringFieldBuilder::aStringField(10)->withLabel('field_string')->build();
 
         $changeset      = new Tracker_Artifact_ChangesetValue_String(
             111,
-            \Mockery::spy(\Tracker_Artifact_Changeset::class),
+            ChangesetTestBuilder::aChangeset(472)->build(),
             $field,
             true,
             'myxedemic enthymematic',
             'text'
         );
-        $representation = $changeset->getRESTValue($user);
+        $representation = $changeset->getRESTValue(UserTestBuilder::buildWithDefaults());
 
-        $this->assertEquals('myxedemic enthymematic', $representation->value);
+        self::assertEquals('myxedemic enthymematic', $representation->value);
     }
 }
