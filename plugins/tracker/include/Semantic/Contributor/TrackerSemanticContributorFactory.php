@@ -24,7 +24,6 @@ namespace Tuleap\Tracker\Semantic\Contributor;
 use SimpleXMLElement;
 use Tracker;
 use Tracker_Semantic;
-use Tracker_Semantic_ContributorDao;
 use Tuleap\Tracker\Semantic\IBuildSemanticFromXML;
 use Tuleap\Tracker\Semantic\IDuplicateSemantic;
 
@@ -74,11 +73,11 @@ class TrackerSemanticContributorFactory implements IBuildSemanticFromXML, IDupli
     /**
      * Return the Dao
      *
-     * @return Tracker_Semantic_ContributorDao The dao
+     * @return TrackerSemanticContributorDao The dao
      */
     public function getDao()
     {
-        return new Tracker_Semantic_ContributorDao();
+        return new TrackerSemanticContributorDao();
     }
 
     /**

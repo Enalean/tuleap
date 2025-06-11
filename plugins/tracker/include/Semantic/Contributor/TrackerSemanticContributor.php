@@ -31,7 +31,6 @@ use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElementFactory;
 use Tracker_Semantic;
-use Tracker_Semantic_ContributorDao;
 use Tracker_SemanticManager;
 use TrackerManager;
 
@@ -200,13 +199,13 @@ class TrackerSemanticContributor extends Tracker_Semantic
      */
     public function save()
     {
-        $dao = new Tracker_Semantic_ContributorDao();
+        $dao = new TrackerSemanticContributorDao();
         return $dao->save($this->tracker->getId(), $this->getFieldId());
     }
 
     public function delete()
     {
-        $dao = new Tracker_Semantic_ContributorDao();
+        $dao = new TrackerSemanticContributorDao();
         return $dao->delete($this->tracker->getId());
     }
 
@@ -220,7 +219,7 @@ class TrackerSemanticContributor extends Tracker_Semantic
     {
         if (! isset(self::$instances[$tracker->getId()])) {
             $field_id = null;
-            $dao      = new Tracker_Semantic_ContributorDao();
+            $dao      = new TrackerSemanticContributorDao();
             if ($row = $dao->searchByTrackerId($tracker->getId())->getRow()) {
                 $field_id = $row['field_id'];
             }

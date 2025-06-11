@@ -33137,6 +33137,34 @@
       <code><![CDATA[$field_id]]></code>
     </RiskyTruthyFalsyComparison>
   </file>
+  <file src="plugins/tracker/include/Semantic/Contributor/TrackerSemanticContributorDao.php">
+    <DeprecatedMethod>
+      <code><![CDATA[escapeInt]]></code>
+      <code><![CDATA[escapeInt]]></code>
+      <code><![CDATA[escapeInt]]></code>
+      <code><![CDATA[escapeInt]]></code>
+      <code><![CDATA[escapeIntImplode]]></code>
+      <code><![CDATA[parent::__construct()]]></code>
+      <code><![CDATA[retrieve]]></code>
+      <code><![CDATA[retrieveFirstRow]]></code>
+      <code><![CDATA[update]]></code>
+      <code><![CDATA[update]]></code>
+    </DeprecatedMethod>
+    <MissingParamType>
+      <code><![CDATA[$field_id]]></code>
+      <code><![CDATA[$tracker_id]]></code>
+      <code><![CDATA[$tracker_id]]></code>
+      <code><![CDATA[$tracker_id]]></code>
+    </MissingParamType>
+    <MissingReturnType>
+      <code><![CDATA[delete]]></code>
+      <code><![CDATA[save]]></code>
+      <code><![CDATA[searchByTrackerId]]></code>
+    </MissingReturnType>
+    <PossiblyInvalidArrayAccess>
+      <code><![CDATA[$row['nb']]]></code>
+    </PossiblyInvalidArrayAccess>
+  </file>
   <file src="plugins/tracker/include/Semantic/Contributor/TrackerSemanticContributorFactory.php">
     <MissingReturnType>
       <code><![CDATA[getByTracker]]></code>
@@ -33148,6 +33176,11 @@
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[$to_contributor_field_id]]></code>
     </RiskyTruthyFalsyComparison>
+  </file>
+  <file src="plugins/tracker/include/Semantic/Contributor/XML/XMLContributorSemantic.php">
+    <PossiblyNullReference>
+      <code><![CDATA[addAttribute]]></code>
+    </PossiblyNullReference>
   </file>
   <file src="plugins/tracker/include/Semantic/Description/TrackerSemanticDescription.php">
     <MissingPropertyType>
@@ -45097,11 +45130,6 @@
       <code><![CDATA[add]]></code>
     </UndefinedInterfaceMethod>
   </file>
-  <file src="plugins/tracker/include/Tracker/Semantic/Contributor/XML/XMLContributorSemantic.php">
-    <PossiblyNullReference>
-      <code><![CDATA[addAttribute]]></code>
-    </PossiblyNullReference>
-  </file>
   <file src="plugins/tracker/include/Tracker/Semantic/Progress/MethodBasedOnEffort.php">
     <InvalidOperand>
       <code><![CDATA[1 - ($remaining_effort / $total_effort)]]></code>
@@ -45348,34 +45376,6 @@
     <PossiblyNullReference>
       <code><![CDATA[addAttribute]]></code>
     </PossiblyNullReference>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Semantic/dao/Tracker_Semantic_ContributorDao.php">
-    <DeprecatedMethod>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeIntImplode]]></code>
-      <code><![CDATA[parent::__construct()]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieveFirstRow]]></code>
-      <code><![CDATA[update]]></code>
-      <code><![CDATA[update]]></code>
-    </DeprecatedMethod>
-    <MissingParamType>
-      <code><![CDATA[$field_id]]></code>
-      <code><![CDATA[$tracker_id]]></code>
-      <code><![CDATA[$tracker_id]]></code>
-      <code><![CDATA[$tracker_id]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[delete]]></code>
-      <code><![CDATA[save]]></code>
-      <code><![CDATA[searchByTrackerId]]></code>
-    </MissingReturnType>
-    <PossiblyInvalidArrayAccess>
-      <code><![CDATA[$row['nb']]]></code>
-    </PossiblyInvalidArrayAccess>
   </file>
   <file src="plugins/tracker/include/Tracker/Service/ServiceActivator.php">
     <MissingReturnType>
