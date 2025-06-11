@@ -19,8 +19,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\Tracker\Semantic\Contributor;
 
-class Tracker_Semantic_Contributor extends Tracker_Semantic
+use Codendi_HTMLPurifier;
+use Codendi_Request;
+use PFUser;
+use SimpleXMLElement;
+use TemplateRendererFactory;
+use Tracker;
+use Tracker_FormElement_Field;
+use Tracker_FormElement_Field_List;
+use Tracker_FormElementFactory;
+use Tracker_Semantic;
+use Tracker_Semantic_ContributorDao;
+use Tracker_SemanticManager;
+use TrackerManager;
+
+class TrackerSemanticContributor extends Tracker_Semantic
 {
     public const CONTRIBUTOR_SEMANTIC_SHORTNAME = 'contributor';
 
@@ -37,7 +52,7 @@ class Tracker_Semantic_Contributor extends Tracker_Semantic
     /**
      * Cosntructor
      *
-     * @param Tracker                        $tracker    The tracker
+     * @param Tracker $tracker The tracker
      * @param Tracker_FormElement_Field_List $list_field The field
      */
     public function __construct(Tracker $tracker, ?Tracker_FormElement_Field_List $list_field = null)
@@ -139,10 +154,10 @@ class Tracker_Semantic_Contributor extends Tracker_Semantic
     /**
      * Process the form
      *
-     * @param Tracker_SemanticManager $semantic_manager              The semantic manager
-     * @param TrackerManager          $tracker_manager The tracker manager
-     * @param Codendi_Request         $request         The request
-     * @param PFUser                    $current_user    The user who made the request
+     * @param Tracker_SemanticManager $semantic_manager The semantic manager
+     * @param TrackerManager $tracker_manager The tracker manager
+     * @param Codendi_Request $request The request
+     * @param PFUser $current_user The user who made the request
      *
      * @return void
      */
@@ -199,7 +214,7 @@ class Tracker_Semantic_Contributor extends Tracker_Semantic
      * Load an instance of a Tracker_Semantic_Contributor
      *
      *
-     * @return Tracker_Semantic_Contributor
+     * @return TrackerSemanticContributor
      */
     public static function load(Tracker $tracker): self
     {
@@ -223,8 +238,8 @@ class Tracker_Semantic_Contributor extends Tracker_Semantic
     /**
      * Export semantic to XML
      *
-     * @param SimpleXMLElement &$root      the node to which the semantic is attached (passed by reference)
-     * @param array            $xml_mapping correspondance between real ids and xml IDs
+     * @param SimpleXMLElement &$root the node to which the semantic is attached (passed by reference)
+     * @param array $xml_mapping correspondance between real ids and xml IDs
      *
      * @return void
      */
@@ -241,7 +256,7 @@ class Tracker_Semantic_Contributor extends Tracker_Semantic
         }
     }
 
-     /**
+    /**
      * Is the field used in semantics?
      *
      * @param Tracker_FormElement_Field the field to test if it is used in semantics or not
@@ -256,7 +271,7 @@ class Tracker_Semantic_Contributor extends Tracker_Semantic
     /**
      * Allows to inject a fake factory for test. DO NOT USE IT IN PRODUCTION!
      */
-    public static function setInstance(Tracker_Semantic_Contributor $semantic_contributor, Tracker $tracker)
+    public static function setInstance(TrackerSemanticContributor $semantic_contributor, Tracker $tracker)
     {
         self::$instances[$tracker->getId()] = $semantic_contributor;
     }

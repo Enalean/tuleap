@@ -28,7 +28,7 @@ final class AdminPresenterBuilder
     {
     }
 
-    public function build(\Tracker_Semantic_Contributor $semantic_contributor, \Tracker $tracker, \CSRFSynchronizerToken $csrf_token): AdminPresenter
+    public function build(\Tuleap\Tracker\Semantic\Contributor\TrackerSemanticContributor $semantic_contributor, \Tracker $tracker, \CSRFSynchronizerToken $csrf_token): AdminPresenter
     {
         $list_user_fields = $this->tracker_form_element_factory->searchUsedUserClosedListFields($tracker);
 

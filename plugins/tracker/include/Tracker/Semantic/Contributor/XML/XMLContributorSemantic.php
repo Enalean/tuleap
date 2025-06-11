@@ -24,8 +24,8 @@ namespace Tuleap\Tracker\Semantic\Contributor\XML;
 
 use Tuleap\Tracker\FormElement\XML\XMLFormElementFlattenedCollection;
 use Tuleap\Tracker\FormElement\XML\XMLReference;
+use Tuleap\Tracker\Semantic\Contributor\TrackerSemanticContributor;
 use Tuleap\Tracker\Semantic\XML\XMLSemantic;
-use Tracker_Semantic_Contributor;
 
 final class XMLContributorSemantic extends XMLSemantic
 {
@@ -35,7 +35,7 @@ final class XMLContributorSemantic extends XMLSemantic
          */
         private XMLReference $reference,
     ) {
-        parent::__construct(Tracker_Semantic_Contributor::CONTRIBUTOR_SEMANTIC_SHORTNAME);
+        parent::__construct(TrackerSemanticContributor::CONTRIBUTOR_SEMANTIC_SHORTNAME);
     }
 
     public function export(\SimpleXMLElement $parent_node, XMLFormElementFlattenedCollection $form_elements): \SimpleXMLElement
@@ -43,7 +43,7 @@ final class XMLContributorSemantic extends XMLSemantic
         $child = parent::export($parent_node, $form_elements);
 
         $cdata = new \XML_SimpleXMLCDATAFactory();
-        $cdata->insert($child, 'shortname', Tracker_Semantic_Contributor::CONTRIBUTOR_SEMANTIC_SHORTNAME);
+        $cdata->insert($child, 'shortname', TrackerSemanticContributor::CONTRIBUTOR_SEMANTIC_SHORTNAME);
         $cdata->insert($child, 'label', 'Contributor/assignee');
         $cdata->insert($child, 'description', 'Define the contributor/assignee of an artifact');
         $child->addChild('field')->addAttribute('REF', $this->reference->getId($form_elements));

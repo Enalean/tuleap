@@ -33114,6 +33114,41 @@
       <code><![CDATA[function ($group_id) {]]></code>
     </MissingClosureReturnType>
   </file>
+  <file src="plugins/tracker/include/Semantic/Contributor/TrackerSemanticContributor.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$field]]></code>
+    </ArgumentTypeCoercion>
+    <MissingReturnType>
+      <code><![CDATA[clearInstances]]></code>
+      <code><![CDATA[delete]]></code>
+      <code><![CDATA[setInstance]]></code>
+    </MissingReturnType>
+    <PossiblyFalseArgument>
+      <code><![CDATA[array_search($this->getFieldId(), $xml_mapping)]]></code>
+    </PossiblyFalseArgument>
+    <PossiblyNullPropertyAssignmentValue>
+      <code><![CDATA[$list_field]]></code>
+    </PossiblyNullPropertyAssignmentValue>
+    <PossiblyNullReference>
+      <code><![CDATA[addAttribute]]></code>
+      <code><![CDATA[addAttribute]]></code>
+    </PossiblyNullReference>
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[$field_id]]></code>
+    </RiskyTruthyFalsyComparison>
+  </file>
+  <file src="plugins/tracker/include/Semantic/Contributor/TrackerSemanticContributorFactory.php">
+    <MissingReturnType>
+      <code><![CDATA[getByTracker]]></code>
+    </MissingReturnType>
+    <PossiblyNullArrayAccess>
+      <code><![CDATA[$xml_field_attributes['REF']]]></code>
+      <code><![CDATA[$xml_field_attributes['REF']]]></code>
+    </PossiblyNullArrayAccess>
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[$to_contributor_field_id]]></code>
+    </RiskyTruthyFalsyComparison>
+  </file>
   <file src="plugins/tracker/include/Semantic/Description/TrackerSemanticDescription.php">
     <MissingPropertyType>
       <code><![CDATA[$_instances]]></code>
@@ -45302,41 +45337,6 @@
     </PossiblyNullReference>
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[$timeframe_dao->getSemanticsImpliedFromGivenTracker($this->tracker->getId())]]></code>
-    </RiskyTruthyFalsyComparison>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Semantic/Tracker_Semantic_Contributor.php">
-    <ArgumentTypeCoercion>
-      <code><![CDATA[$field]]></code>
-    </ArgumentTypeCoercion>
-    <MissingReturnType>
-      <code><![CDATA[clearInstances]]></code>
-      <code><![CDATA[delete]]></code>
-      <code><![CDATA[setInstance]]></code>
-    </MissingReturnType>
-    <PossiblyFalseArgument>
-      <code><![CDATA[array_search($this->getFieldId(), $xml_mapping)]]></code>
-    </PossiblyFalseArgument>
-    <PossiblyNullPropertyAssignmentValue>
-      <code><![CDATA[$list_field]]></code>
-    </PossiblyNullPropertyAssignmentValue>
-    <PossiblyNullReference>
-      <code><![CDATA[addAttribute]]></code>
-      <code><![CDATA[addAttribute]]></code>
-    </PossiblyNullReference>
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[$field_id]]></code>
-    </RiskyTruthyFalsyComparison>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Semantic/Tracker_Semantic_ContributorFactory.php">
-    <MissingReturnType>
-      <code><![CDATA[getByTracker]]></code>
-    </MissingReturnType>
-    <PossiblyNullArrayAccess>
-      <code><![CDATA[$xml_field_attributes['REF']]]></code>
-      <code><![CDATA[$xml_field_attributes['REF']]]></code>
-    </PossiblyNullArrayAccess>
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[$to_contributor_field_id]]></code>
     </RiskyTruthyFalsyComparison>
   </file>
   <file src="plugins/tracker/include/Tracker/Semantic/XML/XMLFieldsBasedSemantic.php">
