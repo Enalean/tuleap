@@ -86,6 +86,7 @@
             v-on:toggle-links="emit('toggle-links')"
             class="cell"
             v-bind:class="getCommonClasses()"
+            v-bind:level="level"
             data-test="cell"
         />
 
@@ -136,6 +137,7 @@ const props = defineProps<{
     number_of_reverse_link: number;
     even: boolean;
     last_of_row: boolean;
+    level: number;
 }>();
 
 const emit = defineEmits<ToggleLinks>();

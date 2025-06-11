@@ -37,6 +37,7 @@ describe("EmptySelectableCell", () => {
             global: { ...getGlobalTestOptions() },
             props: {
                 cell,
+                level: 0,
             },
         });
     }

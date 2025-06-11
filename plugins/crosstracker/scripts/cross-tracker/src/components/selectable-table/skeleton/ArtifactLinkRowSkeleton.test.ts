@@ -58,6 +58,7 @@ describe("ArtifactLinkRowSkeleton", () => {
                     .buildWithNumberOfLinks(number_of_forward_link, number_of_reverse_link),
                 columns,
                 link_type,
+                level: 0,
             },
         });
     }

@@ -45,6 +45,7 @@
                     v-bind:even="isEven(index)"
                     v-bind:last_of_row="isLastCellOfRow(column_index, columns.size)"
                     v-on:toggle-links="toggleLinks(row)"
+                    v-bind:level="0"
                 />
                 <div v-if="row.is_expanded">The artifacts links will soon be here.</div>
             </template>

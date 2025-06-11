@@ -20,6 +20,7 @@
 
 <template>
     <span v-if="props.cell && props.cell.type === PRETTY_TITLE_CELL" data-test="cell">
+        <caret-indentation v-bind:level="level" />
         <button
             type="button"
             v-if="can_display_artifact_link"
@@ -46,11 +47,12 @@
 
 <script setup lang="ts">
 import { computed, ref } from "vue";
+import { useGettext } from "vue3-gettext";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { type Cell, PRETTY_TITLE_CELL, type PrettyTitleCell } from "../../domain/ArtifactsTable";
 import { CAN_DISPLAY_ARTIFACT_LINK } from "../../injection-symbols";
 import type { ToggleLinks } from "../../helpers/ToggleLinksEmit";
-import { useGettext } from "vue3-gettext";
+import CaretIndentation from "./CaretIndentation.vue";
 
 const { $gettext } = useGettext();
 
@@ -61,6 +63,7 @@ const props = defineProps<{
     artifact_uri: string;
     number_of_forward_link: number;
     number_of_reverse_link: number;
+    level: number;
 }>();
 
 const emit = defineEmits<ToggleLinks>();
