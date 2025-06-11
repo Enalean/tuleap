@@ -28,7 +28,6 @@ use EventManager;
 use ProjectManager;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
-use Tracker_Semantic_ContributorDao;
 use TrackerFactory;
 use Tuleap\CrossTracker\CrossTrackerInstrumentation;
 use Tuleap\CrossTracker\Query\Advanced\DuckTypedField\FieldTypeRetrieverWrapper;
@@ -130,6 +129,7 @@ use Tuleap\Tracker\Report\Query\Advanced\UgroupLabelConverter;
 use Tuleap\Tracker\Report\TrackerReportConfig;
 use Tuleap\Tracker\Report\TrackerReportConfigDao;
 use Tuleap\Tracker\Semantic\Contributor\ContributorFieldRetriever;
+use Tuleap\Tracker\Semantic\Contributor\TrackerSemanticContributorDao;
 use Tuleap\Tracker\Semantic\Contributor\TrackerSemanticContributorFactory;
 use Tuleap\Tracker\Semantic\Description\DescriptionSemanticDAO;
 use Tuleap\Tracker\Semantic\Description\TrackerSemanticDescriptionFactory;
@@ -201,7 +201,7 @@ final class CrossTrackerArtifactQueryFactoryBuilder
                 new TitleSemanticDAO(),
                 new DescriptionSemanticDAO(),
                 new TrackerSemanticStatusDao(),
-                new Tracker_Semantic_ContributorDao(),
+                new TrackerSemanticContributorDao(),
             ),
             new InvalidMetadataChecker(
                 new TextSemanticChecker(),
