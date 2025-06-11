@@ -31,24 +31,23 @@
             v-bind:current_tab="current_tab"
             v-bind:selected_tracker="configuration_store.selected_tracker.value"
         />
-        <configure-tracker
-            v-if="current_tab === TRACKER_SELECTION_TAB"
-            v-bind:configuration_helper="configuration_helper"
-        />
+        <configure-tracker v-if="current_tab === TRACKER_SELECTION_TAB && is_modal_shown" />
         <configure-readonly-fields
-            v-else-if="configuration_store.selected_tracker.value !== null && is_modal_shown"
+            v-if="
+                current_tab === READONLY_FIELDS_SELECTION_TAB &&
+                configuration_store.selected_tracker.value !== null &&
+                is_modal_shown
+            "
             v-bind:configuration_store="configuration_store"
-            v-bind:configuration_helper="configuration_helper"
             v-bind:selected_tracker="configuration_store.selected_tracker.value"
         />
     </div>
 </template>
 
 <script setup lang="ts">
-import { ref, toRaw, provide } from "vue";
+import { ref, provide } from "vue";
 import type { Modal } from "@tuleap/tlp-modal";
 import { createModal } from "@tuleap/tlp-modal";
-import { useConfigurationScreenHelper } from "@/composables/useConfigurationScreenHelper";
 import { OPEN_CONFIGURATION_MODAL_BUS } from "@/stores/useOpenConfigurationModalBusStore";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { CONFIGURATION_STORE } from "@/stores/configuration-store";
@@ -60,20 +59,20 @@ import ConfigureReadonlyFields from "@/components/configuration/ConfigureReadonl
 import {
     CLOSE_CONFIGURATION_MODAL,
     TRACKER_SELECTION_TAB,
+    READONLY_FIELDS_SELECTION_TAB,
 } from "@/components/configuration/configuration-modal";
 import type { ConfigurationTab } from "@/components/configuration/configuration-modal";
 import ConfigurationModalTabs from "@/components/configuration/ConfigurationModalTabs.vue";
 
 const are_fields_enabled = strictInject(ARE_FIELDS_ENABLED);
 const configuration_store = strictInject(CONFIGURATION_STORE);
-const configuration_helper = useConfigurationScreenHelper(configuration_store);
 
 const modal_element = ref<HTMLElement | undefined>(undefined);
 const current_tab = ref<ConfigurationTab>(TRACKER_SELECTION_TAB);
 
 const noop = (): void => {};
 
-let onSuccessfulSaveCallback: () => void = noop;
+let onSuccessfulSaveCallback = noop;
 
 strictInject(OPEN_CONFIGURATION_MODAL_BUS).registerHandler(openModal);
 provide(CLOSE_CONFIGURATION_MODAL, closeModal);
@@ -82,32 +81,32 @@ let modal: Modal | null = null;
 const is_modal_shown = ref(false);
 
 function openModal(onSuccessfulSaved?: () => void): void {
-    onSuccessfulSaveCallback = onSuccessfulSaved || noop;
-    if (modal === null && modal_element.value) {
-        modal = createModal(toRaw(modal_element.value), { dismiss_on_backdrop_click: false });
+    onSuccessfulSaveCallback = onSuccessfulSaved ?? noop;
+    if (!modal_element.value) {
+        return;
     }
-
-    if (modal) {
-        configuration_helper.resetSelection();
-        modal.show();
-        is_modal_shown.value = true;
+    if (!modal) {
+        modal = createModal(modal_element.value, {
+            dismiss_on_backdrop_click: false,
+        });
     }
+    configuration_store.resetSuccessFlagFromPreviousCalls();
+    modal.show();
+    is_modal_shown.value = true;
 }
 
 function closeModal(): void {
-    if (modal) {
-        modal.hide();
-        is_modal_shown.value = false;
-    }
+    modal?.hide();
+    is_modal_shown.value = false;
 
-    if (configuration_helper.is_success.value) {
+    if (configuration_store.is_success.value) {
         onSuccessfulSaveCallback();
     }
 }
 
 function switchTab(tab: ConfigurationTab): void {
     current_tab.value = tab;
-    configuration_helper.resetSelection();
+    configuration_store.resetSuccessFlagFromPreviousCalls();
 }
 </script>
 

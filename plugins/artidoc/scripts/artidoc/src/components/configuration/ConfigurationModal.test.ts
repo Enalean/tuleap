@@ -54,12 +54,13 @@ describe("ConfigurationModal", () => {
         });
     }
 
-    it("When the modal is closed after a successful save, then it should execute onSuccessfulSaveCallback", () => {
+    it("When the modal is closed after a successful save, then it should execute onSuccessfulSaveCallback", async () => {
         const bus = useOpenConfigurationModalBusStore();
         const wrapper = getWrapper(ConfigurationStoreStub.withSuccessfulSave(), bus);
         const onSuccessfulSaveCallback = vi.fn();
 
         bus.openModal(onSuccessfulSaveCallback);
+        await wrapper.vm.$nextTick();
 
         wrapper.find("[data-test=close-modal-after-success]").trigger("click");
 

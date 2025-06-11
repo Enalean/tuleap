@@ -22,21 +22,18 @@ import { shallowMount } from "@vue/test-utils";
 import type { VueWrapper } from "@vue/test-utils";
 import { createGettext } from "vue3-gettext";
 import type { ConfigurationStore, Tracker } from "@/stores/configuration-store";
+import { CONFIGURATION_STORE } from "@/stores/configuration-store";
 import { ConfigurationStoreStub } from "@/helpers/stubs/ConfigurationStoreStub";
 import SuccessFeedback from "@/components/configuration/SuccessFeedback.vue";
 import ErrorFeedback from "@/components/configuration/ErrorFeedback.vue";
 import ConfigurationModalFooter from "@/components/configuration/ConfigurationModalFooter.vue";
-import type { ConfigurationScreenHelper } from "@/composables/useConfigurationScreenHelper";
-import { useConfigurationScreenHelper } from "@/composables/useConfigurationScreenHelper";
 import {
     CLOSE_CONFIGURATION_MODAL,
     TRACKER_SELECTION_TAB,
 } from "@/components/configuration/configuration-modal";
 
 describe("ConfigurationModalFooter", () => {
-    let configuration_helper: ConfigurationScreenHelper,
-        onSaveCallback: () => void,
-        closeModal: () => void;
+    let onSaveCallback: () => void, closeModal: () => void;
 
     beforeEach(() => {
         onSaveCallback = vi.fn();
@@ -44,11 +41,8 @@ describe("ConfigurationModalFooter", () => {
     });
 
     const getWrapper = (configuration_store: ConfigurationStore): VueWrapper => {
-        configuration_helper = useConfigurationScreenHelper(configuration_store);
-
         return shallowMount(ConfigurationModalFooter, {
             props: {
-                configuration_helper,
                 current_tab: TRACKER_SELECTION_TAB,
                 on_save_callback: onSaveCallback,
                 is_submit_button_disabled: false,
@@ -56,6 +50,7 @@ describe("ConfigurationModalFooter", () => {
             global: {
                 provide: {
                     [CLOSE_CONFIGURATION_MODAL.valueOf()]: closeModal,
+                    [CONFIGURATION_STORE.valueOf()]: configuration_store,
                 },
                 plugins: [createGettext({ silent: true })],
             },
@@ -92,13 +87,10 @@ describe("ConfigurationModalFooter", () => {
         expect(closeModal).toHaveBeenCalledOnce();
     });
 
-    it("When the submit button is clicked, then it should execute the onSave() callback", async () => {
+    it("When the submit button is clicked, then it should execute the onSave() callback", () => {
         const wrapper = getWrapper(
             ConfigurationStoreStub.withSelectedTracker({ id: 102 } as Tracker),
         );
-
-        configuration_helper.new_selected_tracker.value = { id: 103 } as Tracker;
-        await wrapper.vm.$nextTick();
 
         wrapper.get("[data-test=submit]").trigger("click");
 

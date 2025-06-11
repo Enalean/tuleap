@@ -62,26 +62,30 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from "vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import {
     TRACKER_SELECTION_TAB,
     CLOSE_CONFIGURATION_MODAL,
 } from "@/components/configuration/configuration-modal";
-import type { ConfigurationScreenHelper } from "@/composables/useConfigurationScreenHelper";
 import type { ConfigurationTab } from "@/components/configuration/configuration-modal";
 import ErrorFeedback from "@/components/configuration/ErrorFeedback.vue";
 import SuccessFeedback from "@/components/configuration/SuccessFeedback.vue";
+import { CONFIGURATION_STORE } from "@/stores/configuration-store";
 
 const closeModal = strictInject(CLOSE_CONFIGURATION_MODAL);
 
-const props = defineProps<{
-    configuration_helper: ConfigurationScreenHelper;
-    on_save_callback: () => void;
+const { error_message, is_error, is_saving, is_success } = strictInject(CONFIGURATION_STORE);
+
+defineProps<{
+    on_save_callback(): void;
     current_tab: ConfigurationTab;
     is_submit_button_disabled: boolean;
 }>();
 
-const { submit_button_icon, is_success, is_error, error_message } = props.configuration_helper;
+const submit_button_icon = computed(() =>
+    is_saving.value ? "fa-solid fa-spin fa-circle-notch" : "fa-solid fa-floppy-disk",
+);
 </script>
 
 <style scoped lang="scss">
