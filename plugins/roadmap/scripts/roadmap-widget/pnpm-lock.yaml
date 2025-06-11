@@ -155,6 +155,16 @@ packages:
       chalk: 4.1.2
     dev: true
 
+  /@nolyfill/abab@1.0.44:
+    resolution: {integrity: sha512-ZQFi9RSKHKnXM4lLtazYx7otLcqEpQ6sSzs7yzb6zlcimyFIv3CV4s2G+CaA3GnPDTmUFugCn2wWap4jynGQow==}
+    engines: {node: '>=12.4.0'}
+    dev: true
+
+  /@nolyfill/safer-buffer@1.0.44:
+    resolution: {integrity: sha512-Ouw1fMwjAy1V4MpnDASfu1DCPgkP0nNFteiiWbFoEGSqa7Vnmkb6if2c522N2WcMk+RuaaabQbC1F1D4/kTXcg==}
+    engines: {node: '>=12.4.0'}
+    dev: true
+
   /@sinclair/typebox@0.27.8:
     resolution: {integrity: sha512-+Fj43pSMwJs4KRrH/938Uf+uAELIgVBmQzg/q1YG10djyfA3TnrU8N8XzqCh/okZdszqBQTZf96idMfE5lnwTA==}
     dev: true
@@ -297,11 +307,6 @@ packages:
       vue: 2.7.8
       vue-demi: 0.14.1(vue@2.7.8)
     dev: false
-
-  /abab@2.0.6:
-    resolution: {integrity: sha512-j2afSsaIENvHZN2B8GOpF566vZ5WVk5opAiMTvWgaQT8DkbOqsTfvNAvHoRGU2zzP8cPoqys+xHTRDWW8L+/BA==}
-    deprecated: Use your platform's native atob() and btoa() methods instead
-    dev: true
 
   /abbrev@1.1.1:
     resolution: {integrity: sha512-nne9/IiQ/hzIhY6pdDnbBtz7DjPTKrY00P/zvPSm5pOFkl6xuGrGnXn/VtTNNfNtAfZ9/1RtehkszU9qcTii0Q==}
@@ -466,7 +471,7 @@ packages:
     resolution: {integrity: sha512-Jy/tj3ldjZJo63sVAvg6LHt2mHvl4V6AgRAmNDtLdm7faqtsx+aJG42rsyCo9JCoRVKwPFzKlIPx3DIibwSIaQ==}
     engines: {node: '>=12'}
     dependencies:
-      abab: 2.0.6
+      abab: /@nolyfill/abab@1.0.44
       whatwg-mimetype: 3.0.0
       whatwg-url: 11.0.0
     dev: true
@@ -641,7 +646,7 @@ packages:
     resolution: {integrity: sha512-4fCk79wshMdzMp2rH06qWrJE4iolqLhCUH+OiuIgU++RB0+94NlDL81atO7GX55uUKueo0txHNtvEyI6D7WdMw==}
     engines: {node: '>=0.10.0'}
     dependencies:
-      safer-buffer: 2.1.2
+      safer-buffer: /@nolyfill/safer-buffer@1.0.44
     dev: true
 
   /inflight@1.0.6:
@@ -765,7 +770,7 @@ packages:
       canvas:
         optional: true
     dependencies:
-      abab: 2.0.6
+      abab: /@nolyfill/abab@1.0.44
       acorn: 8.11.3
       acorn-globals: 7.0.1
       cssom: 0.5.0
@@ -941,10 +946,6 @@ packages:
 
   /requires-port@1.0.0:
     resolution: {integrity: sha512-KigOCHcocU3XODJxsu8i/j8T9tzT4adHiecwORRQ0ZZFcp7ahwXuRU1m+yuO90C5ZUyGeGfocHDI14M3L3yDAQ==}
-    dev: true
-
-  /safer-buffer@2.1.2:
-    resolution: {integrity: sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==}
     dev: true
 
   /saxes@6.0.0:

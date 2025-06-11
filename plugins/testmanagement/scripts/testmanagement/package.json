@@ -53,6 +53,12 @@
     "angular-mocks": "^1.8.2",
     "jquery": "^3.6.0"
   },
+  "pnpm": {
+    "overrides": {
+      "isarray": "npm:@nolyfill/isarray@^1",
+      "safe-buffer": "npm:@nolyfill/safe-buffer@^1"
+    }
+  },
   "scripts": {
     "typecheck": "tsc --noEmit",
     "build": "webpack --config webpack.prod.js",

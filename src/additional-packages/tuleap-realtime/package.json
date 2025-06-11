@@ -14,14 +14,18 @@
   "devDependencies": {
     "esbuild": "^0.25.1"
   },
-  "scripts": {
-    "build": "esbuild src/server.js --platform=node --bundle --minify --outfile=dist/tuleap-realtime.js",
-    "test": "vitest"
-  },
   "pnpm": {
     "overrides": {
       "cookie": "^0.7.2",
-      "ws": "^8.17.1"
+      "ws": "^8.17.1",
+      "array-flatten": "npm:@nolyfill/array-flatten@^1",
+      "safe-buffer": "npm:@nolyfill/safe-buffer@^1",
+      "safer-buffer": "npm:@nolyfill/safer-buffer@^1",
+      "side-channel": "npm:@nolyfill/side-channel@^1"
     }
+  },
+  "scripts": {
+    "build": "esbuild src/server.js --platform=node --bundle --minify --outfile=dist/tuleap-realtime.js",
+    "test": "vitest"
   }
 }

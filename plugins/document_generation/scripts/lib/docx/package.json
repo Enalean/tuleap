@@ -4,17 +4,10 @@
   "homepage": "https://tuleap.org",
   "license": "GPL-2.0-or-later",
   "private": true,
-  "version": "0.0.0",
   "type": "module",
-  "module": "dist/plugin-docgen-docx.js",
-  "main": "dist/plugin-docgen-docx.umd.cjs",
-  "types": "dist/index.d.ts",
-  "scripts": {
-    "typecheck": "tsc --noEmit",
-    "build": "vite build",
-    "watch": "vite build --watch --mode development --minify false",
-    "test": "vitest"
-  },
+  "module": "./dist/plugin-docgen-docx.js",
+  "main": "./dist/plugin-docgen-docx.umd.cjs",
+  "types": "./dist/index.d.ts",
   "dependencies": {
     "@tuleap/concurrency-limit-pool": "workspace:*",
     "@tuleap/plugin-tracker-constants": "workspace:*",
@@ -27,5 +20,17 @@
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*",
     "@types/sprintf-js": "^1.1.2"
+  },
+  "pnpm": {
+    "overrides": {
+      "isarray": "npm:@nolyfill/isarray@^1",
+      "safe-buffer": "npm:@nolyfill/safe-buffer@^1"
+    }
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "vite build",
+    "watch": "vite build --watch --mode development --minify false",
+    "test": "vitest"
   }
 }

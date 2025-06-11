@@ -34,6 +34,12 @@
     "@vue/test-utils": "^2.3",
     "vue-loader": "^17.2.2"
   },
+  "pnpm": {
+    "overrides": {
+      "isarray": "npm:@nolyfill/isarray@^1",
+      "safe-buffer": "npm:@nolyfill/safe-buffer@^1"
+    }
+  },
   "scripts": {
     "typecheck": "vue-tsc --noEmit",
     "build": "webpack --config webpack.prod.mjs",
