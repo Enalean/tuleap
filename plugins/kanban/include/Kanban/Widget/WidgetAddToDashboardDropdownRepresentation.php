@@ -39,12 +39,13 @@ class WidgetAddToDashboardDropdownRepresentation
     /**
      * @param DashboardRepresentation[] $user_dashboards
      * @param DashboardRepresentation[] $project_dashboards_representation
+     * @param array<string, string> $my_dashboard_form_settings
      */
     public function __construct(
         PFUser $user,
         Project $project,
-        public readonly string $my_dashboard_url,
-        public string $project_dashboard_url,
+        public readonly array $my_dashboard_form_settings,
+        public array $project_dashboard_form_settings,
         public readonly array $user_dashboards,
         array $project_dashboards_representation,
     ) {
@@ -55,7 +56,7 @@ class WidgetAddToDashboardDropdownRepresentation
 
             $this->project_dashboard = dgettext('tuleap-kanban', 'Add to project dashboard');
         } else {
-            $this->project_dashboard_url = '';
+            $this->project_dashboard_form_settings = [];
         }
 
         $this->my_dashboard = dgettext('tuleap-kanban', 'Add to my dashboard');

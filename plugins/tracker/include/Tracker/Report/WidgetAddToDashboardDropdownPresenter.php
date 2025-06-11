@@ -26,8 +26,14 @@ use Project;
 class WidgetAddToDashboardDropdownPresenter
 {
     public $is_admin;
-    public $my_dashboard_url;
-    public $project_dashboard_url;
+    /**
+     * @var array<array{name:string, value:string}>
+     */
+    public readonly array $my_dashboard_form_settings;
+    /**
+     * @var array<array{name:string, value:string}>
+     */
+    public readonly array $project_dashboard_form_settings;
     public $project_dashboard;
     public $my_dashboard;
     public $dashboard;
@@ -52,26 +58,44 @@ class WidgetAddToDashboardDropdownPresenter
      */
     public $project_dashboards_presenter;
 
+    /**
+     * @param array<string,string> $my_dashboard_form_settings
+     * @param array<string,string> $project_dashboard_form_settings
+     */
     public function __construct(
         PFUser $user,
         Project $project,
-        $my_dashboard_url,
-        $project_dashboard_url,
+        array $my_dashboard_form_settings,
+        array $project_dashboard_form_settings,
         array $user_dashboards_presenter,
         array $project_dashboards_presenter,
     ) {
-        $this->is_admin                       = $user->isAdmin($project->getID());
-        $this->my_dashboard_url               = $my_dashboard_url;
-        $this->project_dashboard_url          = $project_dashboard_url;
-        $this->user_dashboards_presenter      = $user_dashboards_presenter;
-        $this->has_user_dashboard             = count($user_dashboards_presenter) > 0;
-        $this->has_only_one_user_dashboard    = count($user_dashboards_presenter) === 1;
-        $this->project_dashboards_presenter   = $project_dashboards_presenter;
-        $this->has_project_dashboard          = count($project_dashboards_presenter) > 0;
-        $this->has_only_one_project_dashboard = count($project_dashboards_presenter) === 1;
+        $this->is_admin                        = $user->isAdmin($project->getID());
+        $this->my_dashboard_form_settings      = self::prepareFormSettings($my_dashboard_form_settings);
+        $this->project_dashboard_form_settings = self::prepareFormSettings($project_dashboard_form_settings);
+        $this->user_dashboards_presenter       = $user_dashboards_presenter;
+        $this->has_user_dashboard              = count($user_dashboards_presenter) > 0;
+        $this->has_only_one_user_dashboard     = count($user_dashboards_presenter) === 1;
+        $this->project_dashboards_presenter    = $project_dashboards_presenter;
+        $this->has_project_dashboard           = count($project_dashboards_presenter) > 0;
+        $this->has_only_one_project_dashboard  = count($project_dashboards_presenter) === 1;
 
         $this->my_dashboard      = dgettext('tuleap-tracker', 'Add to my dashboard');
         $this->project_dashboard = dgettext('tuleap-tracker', 'Add to project dashboard');
         $this->dashboard         = dgettext('tuleap-tracker', 'Add to dashboard');
+    }
+
+    /**
+     * @psalm-pure
+     * @param array<string,string> $form_settings
+     * @return array<array{name:string, value:string}>
+     */
+    private static function prepareFormSettings(array $form_settings): array
+    {
+        $name_value_form_settings = [];
+        foreach ($form_settings as $key => $value) {
+            $name_value_form_settings[] = ['name' => $key, 'value' => $value];
+        }
+        return $name_value_form_settings;
     }
 }

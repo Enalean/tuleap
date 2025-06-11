@@ -26,10 +26,15 @@
                 {{# has_one_user_dashboard }}
                     {{# user_dashboards }}
                         <li>
-                            <a title="{{ add_to_my_dashboard_label }}"
-                               href="{{ my_dashboard_url }}&dashboard-id={{ getId }}">
-                                {{ add_to_my_dashboard_label }}
-                            </a>
+                            <form method="post" action="/widgets/">
+                                {{# my_dashboard_form_settings }}
+                                    <input type="hidden" name="{{ name }}" value="{{ value }}">
+                                {{/ my_dashboard_form_settings }}
+                                <input type="hidden" name="dashboard-id" value="{{ getId }}" />
+                                <button class="btn-link" type="submit">
+                                    {{ add_to_my_dashboard_label }}
+                                </button>
+                            </form>
                         </li>
                     {{/ user_dashboards }}
                 {{/ has_one_user_dashboard }}
@@ -39,9 +44,13 @@
                     </li>
                     {{# user_dashboards }}
                     <li>
-                        <a title="{{ getName }}" href="{{ my_dashboard_url }}&dashboard-id={{ getId }}">
-                            {{ getName }}
-                        </a>
+                        <form method="post" action="/widgets/">
+                            {{# my_dashboard_form_settings }}
+                                <input type="hidden" name="{{ name }}" value="{{ value }}">
+                            {{/ my_dashboard_form_settings }}
+                            <input type="hidden" name="dashboard-id" value="{{ getId }}" />
+                            <button class="btn-link" type="submit">{{ getName }}</button>
+                        </form>
                     </li>
                     {{/ user_dashboards }}
                 {{/ has_one_user_dashboard }}
@@ -51,10 +60,15 @@
                 {{# has_one_project_dashboard }}
                     {{# project_dashboards }}
                         <li>
-                            <a title="{{ add_to_project_dashboard_label }}"
-                               href="{{ project_dashboard_url }}&dashboard-id={{ getId }}">
-                                {{ add_to_project_dashboard_label }}
-                            </a>
+                            <form method="post" action="/widgets/">
+                                {{# project_dashboard_form_settings }}
+                                    <input type="hidden" name="{{ name }}" value="{{ value }}">
+                                {{/ project_dashboard_form_settings }}
+                                <input type="hidden" name="dashboard-id" value="{{ getId }}" />
+                                <button class="btn-link" type="submit">
+                                    {{ add_to_project_dashboard_label }}
+                                </button>
+                            </form>
                         </li>
                     {{/ project_dashboards }}
                 {{/ has_one_project_dashboard }}
@@ -65,9 +79,13 @@
                     </li>
                     {{# project_dashboards }}
                         <li>
-                            <a title="{{ getName }}" href="{{ project_dashboard_url }}&dashboard-id={{ getId }}">
-                                {{ getName }}
-                            </a>
+                            <form method="post" action="/widgets/">
+                                {{# project_dashboard_form_settings }}
+                                    <input type="hidden" name="{{ name }}" value="{{ value }}">
+                                {{/ project_dashboard_form_settings }}
+                                <input type="hidden" name="dashboard-id" value="{{ getId }}" />
+                                <button class="btn-link" type="submit">{{ getName }}</button>
+                            </form>
                         </li>
                     {{/ project_dashboards }}
                 {{/ has_one_project_dashboard }}

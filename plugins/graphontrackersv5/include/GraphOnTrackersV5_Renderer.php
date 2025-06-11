@@ -199,9 +199,6 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer
             $html .= '</ul>';
             $html .= '</div>';
             $html .= '</div>';
-            $html .= '<form action="" method="POST">
-                <input type="hidden" name="func" VALUE="renderer" />
-                <input type="hidden" name="renderer" VALUE="' . $this->id . '" />';
         }
 
         $report_charts = $this->getChartFactory()->getCharts($this);
@@ -224,10 +221,6 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer
         }
 
         $html .= '</div>';
-
-        if (! $readonly) {
-            $html .= '</form>';
-        }
 
         return $html;
     }

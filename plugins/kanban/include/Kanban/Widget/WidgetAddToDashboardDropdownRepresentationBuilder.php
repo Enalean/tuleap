@@ -46,17 +46,20 @@ class WidgetAddToDashboardDropdownRepresentationBuilder
         return new WidgetAddToDashboardDropdownRepresentation(
             $user,
             $project,
-            $this->getAddToMyDashboardURL($kanban),
-            $this->getAddToProjectDashboardURL($kanban, $project),
+            $this->getAddToMyDashboardFormSettings($kanban),
+            $this->getAddToProjectDashboardFormSettings($kanban, $project),
             $my_dashboards_presenters,
             $project_dashboards_presenters
         );
     }
 
-    private function getAddToMyDashboardURL(Kanban $kanban): string
+    /**
+     * @return array<string, string>
+     */
+    private function getAddToMyDashboardFormSettings(Kanban $kanban): array
     {
         $csrf = new CSRFSynchronizerToken('/my/');
-        return $this->getAddToDashboardURL(
+        return $this->getAddToDashboardFormSettings(
             $csrf,
             $kanban,
             MyKanban::NAME,
@@ -64,35 +67,40 @@ class WidgetAddToDashboardDropdownRepresentationBuilder
         );
     }
 
-    private function getAddToProjectDashboardURL(Kanban $kanban, Project $project): string
+    /**
+     * @return array<string,string>
+     */
+    private function getAddToProjectDashboardFormSettings(Kanban $kanban, Project $project): array
     {
         $csrf = new CSRFSynchronizerToken('/project/');
-        return $this->getAddToDashboardURL(
-            $csrf,
-            $kanban,
-            ProjectKanban::NAME,
-            ProjectDashboardController::DASHBOARD_TYPE
-        ) . '&group_id=' . urlencode((string) $project->getID());
+        return [
+            ...$this->getAddToDashboardFormSettings(
+                $csrf,
+                $kanban,
+                ProjectKanban::NAME,
+                ProjectDashboardController::DASHBOARD_TYPE
+            ),
+            'group_id' => (string) $project->getID(),
+        ];
     }
 
-    private function getAddToDashboardURL(
+    /**
+     * @return array<string, string>
+     */
+    private function getAddToDashboardFormSettings(
         CSRFSynchronizerToken $csrf,
         Kanban $kanban,
         string $widget_id,
         string $type,
-    ): string {
-        return '/widgets/?' . http_build_query(
-            [
-                'dashboard-type'      => $type,
-                'action'              => 'add-widget',
-                'kanban'              => [
-                    'title' => $kanban->getName(),
-                    'id'    => $kanban->getId(),
-                ],
-                'widget-name'         => $widget_id,
-                $csrf->getTokenName() => $csrf->getToken(),
-            ]
-        );
+    ): array {
+        return [
+            'dashboard-type'      => $type,
+            'action'              => 'add-widget',
+            'kanban[title]'       => $kanban->getName(),
+            'kanban[id]'       => (string) $kanban->getId(),
+            'widget-name'         => $widget_id,
+            $csrf->getTokenName() => $csrf->getToken(),
+        ];
     }
 
     /**
