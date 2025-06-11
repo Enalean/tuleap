@@ -34,8 +34,14 @@ class GraphOnTrackersV5_GraphActionsPresenter
     /** @var GraphOnTrackersV5_Chart */
     private $chart;
     public $can_be_updated;
-    public $my_dashboard_url;
-    public $project_dashboard_url;
+    /**
+     * @var array<array{name:string, value:string}>
+     */
+    public readonly array $my_dashboard_form_settings;
+    /**
+     * @var array<array{name:string, value:string}>
+     */
+    public readonly array $project_dashboard_form_settings;
     public $delete_url;
     public $edit_url;
 
@@ -49,22 +55,26 @@ class GraphOnTrackersV5_GraphActionsPresenter
      */
     public $project_dashboards;
 
+    /**
+     * @param array<string,string> $my_dashboard_form_settings
+     * @param array<string,string> $project_dashboard_form_settings
+     */
     public function __construct(
         GraphOnTrackersV5_Chart $chart,
         $can_be_updated,
-        $my_dashboard_url,
-        $project_dashboard_url,
+        array $my_dashboard_form_settings,
+        array $project_dashboard_form_settings,
         $delete_url,
         $edit_url,
         array $user_dashboards,
         array $project_dashboards,
     ) {
-        $this->chart                 = $chart;
-        $this->can_be_updated        = $can_be_updated;
-        $this->my_dashboard_url      = $my_dashboard_url;
-        $this->project_dashboard_url = $project_dashboard_url;
-        $this->delete_url            = $delete_url;
-        $this->edit_url              = $edit_url;
+        $this->chart                           = $chart;
+        $this->can_be_updated                  = $can_be_updated;
+        $this->my_dashboard_form_settings      = self::prepareFormSettings($my_dashboard_form_settings);
+        $this->project_dashboard_form_settings = self::prepareFormSettings($project_dashboard_form_settings);
+        $this->delete_url                      = $delete_url;
+        $this->edit_url                        = $edit_url;
 
         $this->user_dashboards           = $user_dashboards;
         $this->has_user_dashboard        = count($user_dashboards) > 0;
@@ -102,5 +112,19 @@ class GraphOnTrackersV5_GraphActionsPresenter
     public function report_is_created()
     {
         return $this->chart->getId() > 0;
+    }
+
+    /**
+     * @psalm-pure
+     * @param array<string,string> $form_settings
+     * @return array<array{name:string, value:string}>
+     */
+    private static function prepareFormSettings(array $form_settings): array
+    {
+        $name_value_form_settings = [];
+        foreach ($form_settings as $key => $value) {
+            $name_value_form_settings[] = ['name' => $key, 'value' => $value];
+        }
+        return $name_value_form_settings;
     }
 }

@@ -322,15 +322,12 @@ abstract class GraphOnTrackersV5_Chart implements Visitable
         return $html;
     }
 
-    protected function fetchActionButtons(GraphOnTrackersV5_Renderer $renderer, PFUser $current_user, $readonly)
+    protected function fetchActionButtons(GraphOnTrackersV5_Renderer $renderer, PFUser $current_user, $readonly): string
     {
         $add_to_dashboard_params = [
             'action' => 'add-widget',
-            'chart'  => [
-                'title'    => $this->getTitle(),
-                'chart_id' => $this->getId(),
-            ],
-
+            'chart[title]' => (string) $this->getTitle(),
+            'chart[chart_id]' => (string) $this->getId(),
         ];
 
         $url = '?' . http_build_query([
@@ -339,36 +336,25 @@ abstract class GraphOnTrackersV5_Chart implements Visitable
             'func'     => 'renderer',
         ]);
 
-        $csrf             = new CSRFSynchronizerToken('/my/');
-        $my_dashboard_url = '/widgets/?' .
-            http_build_query(
-                array_merge(
-                    [
-                        'dashboard-type'      => UserDashboardController::DASHBOARD_TYPE,
-                        'widget-name'         => 'my_plugin_graphontrackersv5_chart',
-                        $csrf->getTokenName() => $csrf->getToken(),
-                    ],
-                    $add_to_dashboard_params
-                )
-            );
+        $csrf                       = new CSRFSynchronizerToken('/my/');
+        $my_dashboard_form_settings = [
+            ...$add_to_dashboard_params,
+            'dashboard-type'      => UserDashboardController::DASHBOARD_TYPE,
+            'widget-name'         => 'my_plugin_graphontrackersv5_chart',
+            $csrf->getTokenName() => $csrf->getToken(),
+        ];
 
-        $project_dashboard_url = '';
-        $project               = $renderer->report->getTracker()->getProject();
+        $project_dashboard_form_settings = [];
+        $project                         = $renderer->report->getTracker()->getProject();
         if ($project->userIsAdmin($current_user)) {
-            $csrf                  = new CSRFSynchronizerToken('/project/');
-            $project_dashboard_url = '/widgets/?' .
-                http_build_query(
-                    array_merge(
-                        [
-                            'widget-name'         => 'project_plugin_graphontrackersv5_chart',
-                            'dashboard-type'      => ProjectDashboardController::DASHBOARD_TYPE,
-                            $csrf->getTokenName() => $csrf->getToken(),
-                            'group_id'            => $project->getID(),
-
-                        ],
-                        $add_to_dashboard_params
-                    )
-                );
+            $csrf                            = new CSRFSynchronizerToken('/project/');
+            $project_dashboard_form_settings = [
+                ...$add_to_dashboard_params,
+                'widget-name'         => 'project_plugin_graphontrackersv5_chart',
+                'dashboard-type'      => ProjectDashboardController::DASHBOARD_TYPE,
+                $csrf->getTokenName() => $csrf->getToken(),
+                'group_id'            => (string) $project->getID(),
+            ];
         }
 
         $delete_chart_url = $url . '&renderer_plugin_graphontrackersv5[delete_chart][' . $this->getId() . ']';
@@ -382,8 +368,8 @@ abstract class GraphOnTrackersV5_Chart implements Visitable
             new GraphOnTrackersV5_GraphActionsPresenter(
                 $this,
                 $this->graphCanBeUpdated($readonly, $current_user),
-                $my_dashboard_url,
-                $project_dashboard_url,
+                $my_dashboard_form_settings,
+                $project_dashboard_form_settings,
                 $delete_chart_url,
                 $edit_chart_url,
                 $my_dashboards_presenters,
