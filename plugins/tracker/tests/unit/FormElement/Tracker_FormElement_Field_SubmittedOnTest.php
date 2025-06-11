@@ -18,26 +18,32 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
 declare(strict_types=1);
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Tracker_FormElement_Field_SubmittedOnTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
-{
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+namespace Tuleap\Tracker\FormElement;
 
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetValueDateTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SubmittedOnFieldBuilder;
+
+#[DisableReturnValueGenerationForTestDoubles]
+final class Tracker_FormElement_Field_SubmittedOnTest extends TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+{
     public function testhasChanges(): void
     {
-        $f = \Mockery::mock(\Tracker_FormElement_Field_SubmittedOn::class)
-            ->makePartial()->shouldAllowMockingProtectedMethods();
-        $v = \Mockery::spy(\Tracker_Artifact_ChangesetValue_Date::class);
-        $this->assertFalse($f->hasChanges(\Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class), $v, null));
+        $field = SubmittedOnFieldBuilder::aSubmittedOnField(456)->build();
+        $value = ChangesetValueDateTestBuilder::aValue(12, ChangesetTestBuilder::aChangeset(65)->build(), $field)->build();
+        self::assertFalse($field->hasChanges(ArtifactTestBuilder::anArtifact(987)->build(), $value, null));
     }
 
     public function testisValid(): void
     {
-        $f = \Mockery::mock(\Tracker_FormElement_Field_SubmittedOn::class)
-            ->makePartial()->shouldAllowMockingProtectedMethods();
-        $a = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
-        $this->assertTrue($f->isValid($a, null));
+        $field    = SubmittedOnFieldBuilder::aSubmittedOnField(456)->build();
+        $artifact = ArtifactTestBuilder::anArtifact(987)->build();
+        self::assertTrue($field->isValid($artifact, null));
     }
 }

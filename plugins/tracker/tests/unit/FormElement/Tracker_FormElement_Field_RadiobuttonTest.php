@@ -24,48 +24,74 @@
 
 declare(strict_types=1);
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Tracker_FormElement_Field_RadiobuttonTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+namespace Tuleap\Tracker\FormElement;
+
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use Tracker_FormElement_Field_List_Bind_StaticValue_None;
+use Tracker_FormElement_Field_Radiobutton;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetValueListTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
+
+#[DisableReturnValueGenerationForTestDoubles]
+final class Tracker_FormElement_Field_RadiobuttonTest extends TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    private function getField(): Tracker_FormElement_Field_Radiobutton
+    {
+        return new Tracker_FormElement_Field_Radiobutton(
+            1147,
+            111,
+            1,
+            'name',
+            'label',
+            'description',
+            true,
+            'S',
+            false,
+            false,
+            1,
+        );
+    }
 
     public function testItIsNotNoneWhenArrayContainsAValue(): void
     {
-        $field = Mockery::mock(Tracker_FormElement_Field_Radiobutton::class)->makePartial();
-        $this->assertFalse($field->isNone(['1' => '555']));
+        $field = $this->getField();
+        self::assertFalse($field->isNone(['1' => '555']));
     }
 
     public function testItHasNoChangesWhenSubmittedValuesAreTheSameAsStored(): void
     {
-        $previous = \Mockery::mock(\Tracker_Artifact_ChangesetValue_List::class)->shouldReceive('getValue')->andReturns(
-            [5123]
-        )->getMock();
-        $field    = Mockery::mock(Tracker_FormElement_Field_Radiobutton::class)->makePartial();
-        $this->assertFalse($field->hasChanges(\Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class), $previous, ['5123']));
+        $field    = $this->getField();
+        $previous = ChangesetValueListTestBuilder::aListOfValue(12, ChangesetTestBuilder::aChangeset(98)->build(), $field)
+            ->withValues([ListStaticValueBuilder::aStaticValue('value')->withId(5123)->build()])
+            ->build();
+        self::assertFalse($field->hasChanges(ArtifactTestBuilder::anArtifact(654)->build(), $previous, ['5123']));
     }
 
     public function testItDetectsChangesEvenWhenCSVImportValueIsNull(): void
     {
-        $previous = \Mockery::mock(\Tracker_Artifact_ChangesetValue_List::class)->shouldReceive('getValue')->andReturns(
-            [5123]
-        )->getMock();
-        $field    = Mockery::mock(Tracker_FormElement_Field_Radiobutton::class)->makePartial();
-        $this->assertTrue($field->hasChanges(\Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class), $previous, null));
+        $field    = $this->getField();
+        $previous = ChangesetValueListTestBuilder::aListOfValue(12, ChangesetTestBuilder::aChangeset(98)->build(), $field)
+            ->withValues([ListStaticValueBuilder::aStaticValue('value')->withId(5123)->build()])
+            ->build();
+        self::assertTrue($field->hasChanges(ArtifactTestBuilder::anArtifact(654)->build(), $previous, null));
     }
 
     public function testItHasChangesWhenSubmittedValuesContainsDifferentValues(): void
     {
-        $previous = \Mockery::mock(\Tracker_Artifact_ChangesetValue_List::class)->shouldReceive('getValue')->andReturns(
-            ['5123']
-        )->getMock();
-        $field    = Mockery::mock(Tracker_FormElement_Field_Radiobutton::class)->makePartial();
-        $this->assertTrue($field->hasChanges(\Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class), $previous, ['5122']));
+        $field    = $this->getField();
+        $previous = ChangesetValueListTestBuilder::aListOfValue(12, ChangesetTestBuilder::aChangeset(98)->build(), $field)
+            ->withValues([ListStaticValueBuilder::aStaticValue('value')->withId(5123)->build()])
+            ->build();
+        self::assertTrue($field->hasChanges(ArtifactTestBuilder::anArtifact(654)->build(), $previous, ['5122']));
     }
 
     public function testItReplaceCSVNullValueByNone(): void
     {
-        $field = Mockery::spy(Tracker_FormElement_Field_Radiobutton::class)->makePartial();
-        $this->assertEquals(
+        $field = $this->getField();
+        self::assertEquals(
             Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID,
             $field->getFieldDataFromCSVValue(null, null)
         );
