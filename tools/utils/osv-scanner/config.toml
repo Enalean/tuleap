@@ -104,6 +104,11 @@ reason = "Vue 2 is EOL. Nothing in the codebase can trigger this ReDoS issue."
 id = "GHSA-g974-hxvm-x689" # CVE-2024-21528
 reason = "No exploitation path in the Tuleap context for this prototype pollution issue."
 
+# brace-expansion, transitive dep of eslint, jest, vue3-gettext, etc.
+[[IgnoredVulns]]
+id = "GHSA-v6h2-p8h4-qcjw" # CVE-2025-5889
+reason = "Fixed in v2.0.2 but advisory range does not take it into account."
+
 ### TO BE FIXED
 
 # wasmtime
