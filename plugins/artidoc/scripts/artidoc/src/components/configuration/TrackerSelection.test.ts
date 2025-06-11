@@ -23,7 +23,8 @@ import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import { Option } from "@tuleap/option";
 import TrackerSelection from "@/components/configuration/TrackerSelection.vue";
-import type { Tracker } from "@/stores/configuration-store";
+import type { Tracker } from "@/configuration/AllowedTrackersCollection";
+import { buildAllowedTrackersCollection } from "@/configuration/AllowedTrackersCollection";
 import { TrackerStub } from "@/helpers/stubs/TrackerStub";
 
 describe("TrackerSelection", () => {
@@ -38,7 +39,7 @@ describe("TrackerSelection", () => {
         return shallowMount(TrackerSelection, {
             global: { plugins: [createGettext({ silent: true })] },
             props: {
-                allowed_trackers,
+                allowed_trackers: buildAllowedTrackersCollection(allowed_trackers),
                 selected_tracker: Option.nothing<Tracker>(),
                 is_tracker_selection_disabled,
             },

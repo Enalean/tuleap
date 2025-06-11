@@ -43,7 +43,7 @@
 <script setup lang="ts">
 import { useGettext } from "vue3-gettext";
 import { computed } from "vue";
-import type { Tracker } from "@/stores/configuration-store";
+import type { Tracker } from "@/configuration/AllowedTrackersCollection";
 
 const { $gettext, interpolate } = useGettext();
 

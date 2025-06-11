@@ -67,6 +67,10 @@ import { getHeadingsButtonState } from "@/toolbar/HeadingsButtonState";
 import { watchUpdateSectionsLevels } from "@/sections/levels/SectionsNumbersWatcher";
 import { getSectionsNumberer } from "@/sections/levels/SectionsNumberer";
 import { ARE_FIELDS_ENABLED } from "@/are-fields-enabled";
+import {
+    ALLOWED_TRACKERS,
+    buildAllowedTrackersCollection,
+} from "@/configuration/AllowedTrackersCollection";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const vue_mount_point = document.getElementById("artidoc-mountpoint");
@@ -103,10 +107,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     const sections_collection = buildSectionsCollection(states_collection);
     sections_collection.replaceAll(skeleton_sections_collection);
 
+    const allowed_trackers = buildAllowedTrackersCollection(
+        JSON.parse(getAttributeOrThrow(vue_mount_point, "data-allowed-trackers")),
+    );
+
     const configuration_store = initConfigurationStore(
         item_id,
         selected_tracker,
-        JSON.parse(getAttributeOrThrow(vue_mount_point, "data-allowed-trackers")),
         JSON.parse(getAttributeOrThrow(vue_mount_point, "data-selected-fields")),
     );
 
@@ -122,42 +129,43 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     watchUpdateSectionsLevels(sections_collection, getSectionsNumberer(sections_collection));
 
-    app.provide(SECTIONS_COLLECTION, sections_collection);
-    app.provide(SECTIONS_STATES_COLLECTION, states_collection);
-    app.provide(FILE_UPLOADS_COLLECTION, file_uploads_collection);
-    app.provide(NOTIFICATION_COLLECTION, buildNotificationsCollection());
-    app.provide(CURRENT_LOCALE, current_locale);
-    app.provide(CAN_USER_EDIT_DOCUMENT, can_user_edit_document);
-    app.provide(OPEN_CONFIGURATION_MODAL_BUS, useOpenConfigurationModalBusStore());
-    app.provide(OPEN_ADD_EXISTING_SECTION_MODAL_BUS, useOpenAddExistingSectionModalBus());
-    app.provide(REMOVE_FREETEXT_SECTION_MODAL, useRemoveFreetextSectionModal());
-    app.provide(DOCUMENT_ID, item_id);
-    app.provide(TITLE, getAttributeOrThrow(vue_mount_point, "data-title"));
-    app.provide(
-        UPLOAD_MAX_SIZE,
-        Number.parseInt(getAttributeOrThrow(vue_mount_point, "data-upload-max-size"), 10),
-    );
-    app.provide(
-        ARE_FIELDS_ENABLED,
-        Number.parseInt(getAttributeOrThrow(vue_mount_point, "data-are-fields-enabled"), 10),
-    );
-    app.provide(CONFIGURATION_STORE, configuration_store);
-    app.provide(
-        PDF_TEMPLATES_STORE,
-        initPdfTemplatesStore(
-            JSON.parse(getAttributeOrThrow(vue_mount_point, "data-pdf-templates")),
-        ),
-    );
-    app.provide(
-        IS_USER_ANONYMOUS,
-        Number(getAttributeOrThrow(document.body, "data-user-id")) === 0,
-    );
+    app.provide(SECTIONS_COLLECTION, sections_collection)
+        .provide(SECTIONS_STATES_COLLECTION, states_collection)
+        .provide(FILE_UPLOADS_COLLECTION, file_uploads_collection)
+        .provide(NOTIFICATION_COLLECTION, buildNotificationsCollection())
+        .provide(CURRENT_LOCALE, current_locale)
+        .provide(CAN_USER_EDIT_DOCUMENT, can_user_edit_document)
+        .provide(OPEN_CONFIGURATION_MODAL_BUS, useOpenConfigurationModalBusStore())
+        .provide(OPEN_ADD_EXISTING_SECTION_MODAL_BUS, useOpenAddExistingSectionModalBus())
+        .provide(REMOVE_FREETEXT_SECTION_MODAL, useRemoveFreetextSectionModal())
+        .provide(DOCUMENT_ID, item_id)
+        .provide(TITLE, getAttributeOrThrow(vue_mount_point, "data-title"))
+        .provide(
+            UPLOAD_MAX_SIZE,
+            Number.parseInt(getAttributeOrThrow(vue_mount_point, "data-upload-max-size"), 10),
+        )
+        .provide(
+            ARE_FIELDS_ENABLED,
+            Number.parseInt(getAttributeOrThrow(vue_mount_point, "data-are-fields-enabled"), 10),
+        )
+        .provide(ALLOWED_TRACKERS, allowed_trackers)
+        .provide(CONFIGURATION_STORE, configuration_store)
+        .provide(
+            PDF_TEMPLATES_STORE,
+            initPdfTemplatesStore(
+                JSON.parse(getAttributeOrThrow(vue_mount_point, "data-pdf-templates")),
+            ),
+        )
+        .provide(
+            IS_USER_ANONYMOUS,
+            Number(getAttributeOrThrow(document.body, "data-user-id")) === 0,
+        )
 
-    app.provide(PROJECT_ID, getAttributeOrThrow(vue_mount_point, "data-project-id"));
-    app.provide(IS_LOADING_SECTIONS_FAILED, is_loading_failed);
-    app.use(gettext);
-    app.use(VueDOMPurifyHTML);
-    app.mount(vue_mount_point);
+        .provide(PROJECT_ID, getAttributeOrThrow(vue_mount_point, "data-project-id"))
+        .provide(IS_LOADING_SECTIONS_FAILED, is_loading_failed)
+        .use(gettext)
+        .use(VueDOMPurifyHTML)
+        .mount(vue_mount_point);
 
     preventPageLeave(states_collection);
 });

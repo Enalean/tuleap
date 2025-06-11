@@ -28,7 +28,7 @@ import NoAccessState from "@/views/NoAccessState.vue";
 import DocumentView from "@/views/DocumentView.vue";
 import ConfigurationPanel from "@/components/configuration/ConfigurationPanel.vue";
 import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
-import type { Tracker } from "@/stores/configuration-store";
+import type { Tracker } from "@/configuration/AllowedTrackersCollection";
 import { CONFIGURATION_STORE } from "@/stores/configuration-store";
 import { ConfigurationStoreStub } from "@/helpers/stubs/ConfigurationStoreStub";
 import { SECTIONS_COLLECTION } from "@/sections/states/sections-collection-injection-key";

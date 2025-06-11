@@ -73,20 +73,16 @@ import TrackerSelectionIntroductoryText from "@/components/configuration/Tracker
 import ErrorFeedback from "@/components/configuration/ErrorFeedback.vue";
 import { TITLE } from "@/title-injection-key";
 import TrackerSelection from "@/components/configuration/TrackerSelection.vue";
-import type { Tracker } from "@/stores/configuration-store";
+import type { Tracker } from "@/configuration/AllowedTrackersCollection";
+import { ALLOWED_TRACKERS } from "@/configuration/AllowedTrackersCollection";
 import { CONFIGURATION_STORE } from "@/stores/configuration-store";
 
 const { $gettext } = useGettext();
 
 const title = strictInject(TITLE);
-const {
-    allowed_trackers,
-    error_message,
-    is_error,
-    is_saving,
-    saveTrackerConfiguration,
-    selected_tracker,
-} = strictInject(CONFIGURATION_STORE);
+const { error_message, is_error, is_saving, saveTrackerConfiguration, selected_tracker } =
+    strictInject(CONFIGURATION_STORE);
+const allowed_trackers = strictInject(ALLOWED_TRACKERS);
 
 const pane_title = $gettext("Configuration of %{ title }", { title });
 
@@ -94,7 +90,7 @@ const new_selected_tracker = ref<Option<Tracker>>(Option.fromNullable(selected_t
 
 const is_submit_button_disabled = computed(
     () =>
-        allowed_trackers.length === 0 ||
+        allowed_trackers.isEmpty() ||
         is_saving.value ||
         new_selected_tracker.value.mapOr(
             (tracker) => tracker.id === selected_tracker.value?.id,

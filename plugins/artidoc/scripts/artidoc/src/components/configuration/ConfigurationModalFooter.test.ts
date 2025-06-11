@@ -21,7 +21,7 @@ import { describe, it, expect, beforeEach, vi } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import type { VueWrapper } from "@vue/test-utils";
 import { createGettext } from "vue3-gettext";
-import type { ConfigurationStore, Tracker } from "@/stores/configuration-store";
+import type { ConfigurationStore } from "@/stores/configuration-store";
 import { CONFIGURATION_STORE } from "@/stores/configuration-store";
 import { ConfigurationStoreStub } from "@/helpers/stubs/ConfigurationStoreStub";
 import SuccessFeedback from "@/components/configuration/SuccessFeedback.vue";
@@ -31,6 +31,7 @@ import {
     CLOSE_CONFIGURATION_MODAL,
     TRACKER_SELECTION_TAB,
 } from "@/components/configuration/configuration-modal";
+import { TrackerStub } from "@/helpers/stubs/TrackerStub";
 
 describe("ConfigurationModalFooter", () => {
     let onSaveCallback: () => void, closeModal: () => void;
@@ -73,7 +74,7 @@ describe("ConfigurationModalFooter", () => {
 
     it("When the cancel button is clicked, then it should execute the closeModal() callback", () => {
         const wrapper = getWrapper(
-            ConfigurationStoreStub.withSelectedTracker({ id: 102 } as Tracker),
+            ConfigurationStoreStub.withSelectedTracker(TrackerStub.build(102, "Requirements")),
         );
         wrapper.get("[data-test=cancel-modal-button]").trigger("click");
 
@@ -89,7 +90,7 @@ describe("ConfigurationModalFooter", () => {
 
     it("When the submit button is clicked, then it should execute the onSave() callback", () => {
         const wrapper = getWrapper(
-            ConfigurationStoreStub.withSelectedTracker({ id: 102 } as Tracker),
+            ConfigurationStoreStub.withSelectedTracker(TrackerStub.build(102, "Requirements")),
         );
 
         wrapper.get("[data-test=submit]").trigger("click");

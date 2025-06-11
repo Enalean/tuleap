@@ -35,7 +35,8 @@
 
 <script setup lang="ts">
 import { ref, toRaw, watch } from "vue";
-import type { ConfigurationStore, Tracker } from "@/stores/configuration-store";
+import type { Tracker } from "@/configuration/AllowedTrackersCollection";
+import type { ConfigurationStore } from "@/stores/configuration-store";
 import FieldsSelectionIntroductoryText from "@/components/configuration/FieldsSelectionIntroductoryText.vue";
 import FieldsSelection from "@/components/configuration/FieldsSelection.vue";
 import ConfigurationModalFooter from "@/components/configuration/ConfigurationModalFooter.vue";

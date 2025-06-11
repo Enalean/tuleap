@@ -24,54 +24,10 @@ import type { StrictInjectionKey } from "@tuleap/vue-strict-inject";
 import type { Project } from "@/helpers/project.type";
 import type { ConfigurationField } from "@/sections/readonly-fields/AvailableReadonlyFields";
 import { getAvailableFields } from "@/sections/readonly-fields/AvailableReadonlyFields";
-
-export interface TitleFieldDefinition {
-    readonly field_id: number;
-    readonly label: string;
-    readonly type: "string" | "text";
-    readonly default_value: string;
-}
-
-interface DescriptionFieldDefinition {
-    readonly label: string;
-    readonly type: "text";
-    readonly default_value: {
-        readonly format: "text" | "html" | "commonmark";
-        readonly content: string;
-    };
-}
-
-interface FileFieldDefinition {
-    readonly label: string;
-    readonly type: "file";
-    readonly upload_url: string;
-}
-
-export interface Tracker {
-    readonly id: number;
-    readonly label: string;
-    readonly color: string;
-    readonly item_name: string;
-    readonly title: null | TitleFieldDefinition;
-    readonly description: null | DescriptionFieldDefinition;
-    readonly file: null | FileFieldDefinition;
-    readonly project: Project;
-}
-
-export interface TrackerWithSubmittableSection extends Tracker {
-    readonly title: TitleFieldDefinition;
-    readonly description: DescriptionFieldDefinition;
-}
-
-export function isTrackerWithSubmittableSection(
-    tracker: Tracker,
-): tracker is TrackerWithSubmittableSection {
-    return tracker.title !== null && tracker.description !== null;
-}
+import type { Tracker } from "@/configuration/AllowedTrackersCollection";
 
 export interface ConfigurationStore {
     selected_tracker: Ref<Tracker | null>;
-    allowed_trackers: readonly Tracker[];
     selected_fields: Ref<ConfigurationField[]>;
     available_fields: Ref<ConfigurationField[]>;
     is_saving: Ref<boolean>;
@@ -90,7 +46,6 @@ export const CONFIGURATION_STORE: StrictInjectionKey<ConfigurationStore> =
 export function initConfigurationStore(
     document_id: number,
     selected_tracker: Tracker | null,
-    allowed_trackers: readonly Tracker[],
     selected_fields: ConfigurationField[],
 ): ConfigurationStore {
     const currently_selected_tracker = ref(selected_tracker);
@@ -174,7 +129,6 @@ export function initConfigurationStore(
     }
 
     return {
-        allowed_trackers,
         selected_tracker: currently_selected_tracker,
         selected_fields: currently_selected_fields,
         available_fields,

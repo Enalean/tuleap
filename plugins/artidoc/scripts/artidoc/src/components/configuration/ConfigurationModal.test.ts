@@ -34,6 +34,10 @@ import { ARE_FIELDS_ENABLED } from "@/are-fields-enabled";
 import { TITLE } from "@/title-injection-key";
 import { SECTIONS_STATES_COLLECTION } from "@/sections/states/sections-states-collection-injection-key";
 import { SectionsStatesCollectionStub } from "@/sections/stubs/SectionsStatesCollectionStub";
+import {
+    ALLOWED_TRACKERS,
+    buildAllowedTrackersCollection,
+} from "@/configuration/AllowedTrackersCollection";
 
 describe("ConfigurationModal", () => {
     function getWrapper(
@@ -45,6 +49,7 @@ describe("ConfigurationModal", () => {
                 plugins: [createGettext({ silent: true })],
                 provide: {
                     [CONFIGURATION_STORE.valueOf()]: store,
+                    [ALLOWED_TRACKERS.valueOf()]: buildAllowedTrackersCollection([]),
                     [OPEN_CONFIGURATION_MODAL_BUS.valueOf()]: bus,
                     [ARE_FIELDS_ENABLED.valueOf()]: true,
                     [TITLE.valueOf()]: "My artidoc",

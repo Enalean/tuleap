@@ -27,13 +27,14 @@ import {
     READONLY_FIELDS_SELECTION_TAB,
     TRACKER_SELECTION_TAB,
 } from "@/components/configuration/configuration-modal";
-import type { Tracker } from "@/stores/configuration-store";
+import type { Tracker } from "@/configuration/AllowedTrackersCollection";
 import { ARE_FIELDS_ENABLED } from "@/are-fields-enabled";
 import { SECTIONS_STATES_COLLECTION } from "@/sections/states/sections-states-collection-injection-key";
 import { SectionsStatesCollectionStub } from "@/sections/stubs/SectionsStatesCollectionStub";
 import type { SectionsStatesCollection } from "@/sections/states/SectionsStatesCollection";
 import { ReactiveStoredArtidocSectionStub } from "@/sections/stubs/ReactiveStoredArtidocSectionStub";
 import FreetextSectionFactory from "@/helpers/freetext-section.factory";
+import { TrackerStub } from "@/helpers/stubs/TrackerStub";
 
 describe("ConfigurationModalTabs", () => {
     let current_tab: ConfigurationTab,
@@ -42,7 +43,7 @@ describe("ConfigurationModalTabs", () => {
 
     beforeEach(() => {
         current_tab = TRACKER_SELECTION_TAB;
-        selected_tracker = { id: 102 } as Tracker;
+        selected_tracker = TrackerStub.build(102, "Requirements");
         states_collection = SectionsStatesCollectionStub.build();
     });
 
@@ -109,7 +110,7 @@ describe("ConfigurationModalTabs", () => {
     });
 
     it("Given that a tracker has been configured, When the user clicks the fields selection tab, then it should emit a 'switch-configuration-tab' event", () => {
-        selected_tracker = { id: 102 } as Tracker;
+        selected_tracker = TrackerStub.build(102, "Requirements");
         current_tab = TRACKER_SELECTION_TAB;
 
         const wrapper = getWrapper();
@@ -131,7 +132,7 @@ describe("ConfigurationModalTabs", () => {
         });
 
         it("When the document has unsaved content, then it should be disabled", () => {
-            selected_tracker = { id: 102 } as Tracker;
+            selected_tracker = TrackerStub.build(102, "Requirements");
             current_tab = TRACKER_SELECTION_TAB;
             states_collection.createStateForSection(
                 ReactiveStoredArtidocSectionStub.fromSection(FreetextSectionFactory.pending()),

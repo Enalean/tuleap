@@ -67,11 +67,12 @@ import { useGettext } from "vue3-gettext";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { OPEN_CONFIGURATION_MODAL_BUS } from "@/stores/useOpenConfigurationModalBusStore";
 import { OPEN_ADD_EXISTING_SECTION_MODAL_BUS } from "@/composables/useOpenAddExistingSectionModalBus";
-import { isTrackerWithSubmittableSection, CONFIGURATION_STORE } from "@/stores/configuration-store";
+import { isTrackerWithSubmittableSection } from "@/configuration/AllowedTrackersCollection";
+import { CONFIGURATION_STORE } from "@/stores/configuration-store";
 import type { PositionForSection } from "@/sections/save/SectionsPositionsForSaveRetriever";
 import type { ArtidocSection, PendingArtifactSection } from "@/helpers/artidoc-section.type";
 import PendingArtifactSectionFactory from "@/helpers/pending-artifact-section.factory";
-import { computed, ref, onMounted, onUnmounted } from "vue";
+import { computed, onMounted, onUnmounted, ref } from "vue";
 import type { Dropdown } from "@tuleap/tlp-dropdown";
 import { createDropdown } from "@tuleap/tlp-dropdown";
 import FreetextSectionFactory from "@/helpers/freetext-section.factory";
@@ -173,17 +174,17 @@ function openConfigurationModalBeforeInsertingNewSection(): void {
 }
 
 function insertNewSection(): void {
-    if (!configuration_store.selected_tracker.value) {
+    const selected_tracker = configuration_store.selected_tracker.value;
+    if (!selected_tracker) {
         return;
     }
 
-    if (!isTrackerWithSubmittableSection(configuration_store.selected_tracker.value)) {
+    if (!isTrackerWithSubmittableSection(selected_tracker)) {
         return;
     }
 
-    const section: PendingArtifactSection = PendingArtifactSectionFactory.overrideFromTracker(
-        configuration_store.selected_tracker.value,
-    );
+    const section: PendingArtifactSection =
+        PendingArtifactSectionFactory.overrideFromTracker(selected_tracker);
 
     props.sections_inserter.insertSection(section, props.position);
 }

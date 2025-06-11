@@ -47,7 +47,7 @@
 import { computed } from "vue";
 import { useGettext } from "vue3-gettext";
 import type { Option } from "@tuleap/option";
-import type { Tracker } from "@/stores/configuration-store";
+import type { Tracker } from "@/configuration/AllowedTrackersCollection";
 
 const { $gettext } = useGettext();
 

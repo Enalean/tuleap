@@ -19,7 +19,7 @@
 
 import type { PendingArtifactSection } from "@/helpers/artidoc-section.type";
 import { v4 as uuidv4 } from "uuid";
-import type { TrackerWithSubmittableSection } from "@/stores/configuration-store";
+import type { TrackerWithSubmittableSection } from "@/configuration/AllowedTrackersCollection";
 import { TrackerStub } from "@/helpers/stubs/TrackerStub";
 import { parse } from "marked";
 
