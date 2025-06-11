@@ -21,72 +21,76 @@
 
 declare(strict_types=1);
 
+namespace Tuleap\Tracker\FormElement;
+
+use ParagonIE\EasyDB\EasyDB;
+use PFUser;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use PHPUnit\Framework\MockObject\MockObject;
+use ReflectionClass;
+use TestHelper;
+use Tracker_Artifact_ChangesetValue_Text;
+use Tracker_FormElement_Field_Text;
+use Tracker_Report_Criteria_Text_ValueDao;
 use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface;
+use Tuleap\GlobalResponseMock;
 use Tuleap\Option\Option;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\FormElement\Field\Text\TextValueDao;
 use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetValueTextTestBuilder;
+use Tuleap\Tracker\Test\Builders\ReportTestBuilder;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Tracker_FormElement_Field_TextTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+#[DisableReturnValueGenerationForTestDoubles]
+final class Tracker_FormElement_Field_TextTest extends TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-    use \Tuleap\GlobalResponseMock;
+    use GlobalResponseMock;
 
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|null
-     */
-    private $previous_value;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|TextValueDao
-     */
-    private $value_dao;
-    /**
-     * @var \Mockery\Mock | Tracker_FormElement_Field_Text
-     */
-    private $text_field;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|PFUser
-     */
-    private $user;
+    private Tracker_Artifact_ChangesetValue_Text $previous_value;
+    private TextValueDao&MockObject $value_dao;
+    private Tracker_FormElement_Field_Text&MockObject $text_field;
+    private PFUser $user;
 
     protected function setUp(): void
     {
-        $this->user = \Mockery::spy(\PFUser::class);
+        $this->user = UserTestBuilder::buildWithDefaults();
 
+        $this->text_field = $this->createPartialMock(Tracker_FormElement_Field_Text::class, [
+            'getCurrentUser', 'getDb', 'getValueDao', 'getProperty', 'isRequired', 'getCriteriaDao',
+        ]);
+        $this->text_field->method('getCurrentUser')->willReturn($this->user);
 
-        $this->text_field = \Mockery::mock(\Tracker_FormElement_Field_Text::class)
-            ->makePartial()->shouldAllowMockingProtectedMethods();
-        $this->text_field->shouldReceive('getCurrentUser')->andReturn($this->user);
-
-        $db = $this->createMock(\ParagonIE\EasyDB\EasyDB::class);
+        $db = $this->createMock(EasyDB::class);
         $db->method('escapeLikeValue')->willReturnArgument(0);
-        $this->text_field->shouldReceive('getDb')->andReturn($db);
+        $this->text_field->method('getDb')->willReturn($db);
 
-        $this->value_dao = \Mockery::spy(\Tuleap\Tracker\FormElement\Field\Text\TextValueDao::class);
-        $this->text_field->shouldReceive('getValueDao')->andReturns($this->value_dao);
+        $this->value_dao = $this->createMock(TextValueDao::class);
+        $this->text_field->method('getValueDao')->willReturn($this->value_dao);
 
-        $this->previous_value = \Mockery::spy(\Tracker_Artifact_ChangesetValue_Text::class)
-            ->shouldReceive('getText')->andReturns('1')->getMock();
+        $this->previous_value = ChangesetValueTextTestBuilder::aValue(1, ChangesetTestBuilder::aChangeset(1)->build(), $this->text_field)
+            ->withValue('1', Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT)->build();
     }
 
     public function testNoDefaultValue(): void
     {
-        $this->text_field->shouldReceive('getProperty')->with('default_value')
-            ->andReturns(null)->once();
+        $this->text_field->expects($this->once())->method('getProperty')->with('default_value')->willReturn(null);
 
-        $this->assertFalse($this->text_field->hasDefaultValue());
+        self::assertFalse($this->text_field->hasDefaultValue());
     }
 
     public function testDefaultValue(): void
     {
-        $this->text_field->shouldReceive('getProperty')->with('default_value')
-            ->andReturns('foo bar long text with nice stories');
+        $this->text_field->method('getProperty')->with('default_value')
+            ->willReturn('foo bar long text with nice stories');
 
-        $this->assertTrue($this->text_field->hasDefaultValue());
-        $this->assertEquals(
+        self::assertTrue($this->text_field->hasDefaultValue());
+        self::assertEquals(
             [
                 'content' => 'foo bar long text with nice stories',
-                'format'  => 'commonmark',
+                'format'  => Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT,
             ],
             $this->text_field->getDefaultValue()
         );
@@ -94,15 +98,14 @@ final class Tracker_FormElement_Field_TextTest extends \Tuleap\Test\PHPUnit\Test
 
     public function testDefaultFormatIsCommonMark(): void
     {
-        $this->text_field->shouldReceive('getProperty')->with('default_value')
-            ->andReturns(Mockery::any());
-        $this->user->shouldReceive('getPreference')->andReturnFalse();
+        $this->text_field->method('getProperty')->with('default_value')->willReturn('any');
+        $this->user->setPreference(PFUser::EDITION_DEFAULT_FORMAT, '');
 
-        $this->assertTrue($this->text_field->hasDefaultValue());
-        $this->assertEquals(
+        self::assertTrue($this->text_field->hasDefaultValue());
+        self::assertEquals(
             [
-                'content' => Mockery::any(),
-                'format'  => 'commonmark',
+                'content' => 'any',
+                'format'  => Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT,
             ],
             $this->text_field->getDefaultValue()
         );
@@ -110,15 +113,14 @@ final class Tracker_FormElement_Field_TextTest extends \Tuleap\Test\PHPUnit\Test
 
     public function testTheFormatIsCommonMarkWhenTheUserHasCommonMarkFormatPreference(): void
     {
-        $this->text_field->shouldReceive('getProperty')->with('default_value')
-            ->andReturns(Mockery::any());
-        $this->user->shouldReceive('getPreference')->andReturn('commonmark');
+        $this->text_field->method('getProperty')->with('default_value')->willReturn('any');
+        $this->user->setPreference(PFUser::EDITION_DEFAULT_FORMAT, Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT);
 
-        $this->assertTrue($this->text_field->hasDefaultValue());
-        $this->assertEquals(
+        self::assertTrue($this->text_field->hasDefaultValue());
+        self::assertEquals(
             [
-                'content' => Mockery::any(),
-                'format'  => 'commonmark',
+                'content' => 'any',
+                'format'  => Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT,
             ],
             $this->text_field->getDefaultValue()
         );
@@ -126,15 +128,14 @@ final class Tracker_FormElement_Field_TextTest extends \Tuleap\Test\PHPUnit\Test
 
     public function testTheFormatIsHTMLAndContentConvertedToHTMLWhenTheUserHasHTMLFormatPreference(): void
     {
-        $this->text_field->shouldReceive('getProperty')->with('default_value')
-            ->andReturns("Eeny, meeny,\nminy, <b>moe");
-        $this->user->shouldReceive('getPreference')->andReturn('html');
+        $this->text_field->method('getProperty')->with('default_value')->willReturn("Eeny, meeny,\nminy, <b>moe");
+        $this->user->setPreference(PFUser::EDITION_DEFAULT_FORMAT, Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT);
 
-        $this->assertTrue($this->text_field->hasDefaultValue());
-        $this->assertEquals(
+        self::assertTrue($this->text_field->hasDefaultValue());
+        self::assertEquals(
             [
                 'content' => "<p>Eeny, meeny,<br />\nminy, &lt;b&gt;moe</p>",
-                'format'  => 'html',
+                'format'  => Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT,
             ],
             $this->text_field->getDefaultValue()
         );
@@ -142,15 +143,14 @@ final class Tracker_FormElement_Field_TextTest extends \Tuleap\Test\PHPUnit\Test
 
     public function testTheFormatIsTextWhenTheUserHasTextFormatPreference(): void
     {
-        $this->text_field->shouldReceive('getProperty')->with('default_value')
-            ->andReturns(Mockery::any());
-        $this->user->shouldReceive('getPreference')->andReturn('text');
+        $this->text_field->method('getProperty')->with('default_value')->willReturn('any');
+        $this->user->setPreference(PFUser::EDITION_DEFAULT_FORMAT, Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT);
 
-        $this->assertTrue($this->text_field->hasDefaultValue());
-        $this->assertEquals(
+        self::assertTrue($this->text_field->hasDefaultValue());
+        self::assertEquals(
             [
-                'content' => Mockery::any(),
-                'format'  => 'text',
+                'content' => 'any',
+                'format'  => Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT,
             ],
             $this->text_field->getDefaultValue()
         );
@@ -159,49 +159,49 @@ final class Tracker_FormElement_Field_TextTest extends \Tuleap\Test\PHPUnit\Test
     public function testGetChangesetValue(): void
     {
         $result = ['id' => 123, 'field_id' => 1, 'value' => 'My Text', 'body_format' => 'text'];
-        $this->value_dao->shouldReceive('searchById')->andReturns(TestHelper::arrayToDar($result));
+        $this->value_dao->method('searchById')->willReturn(TestHelper::arrayToDar($result));
 
-        $this->assertInstanceOf(
+        self::assertInstanceOf(
             Tracker_Artifact_ChangesetValue_Text::class,
-            $this->text_field->getChangesetValue(\Mockery::spy(\Tracker_Artifact_Changeset::class), 123, false)
+            $this->text_field->getChangesetValue(ChangesetTestBuilder::aChangeset(1)->build(), 123, false)
         );
     }
 
     public function testGetChangesetValueDoesntExist(): void
     {
         $result = [];
-        $this->value_dao->shouldReceive('searchById')->andReturns(TestHelper::arrayToDar($result));
+        $this->value_dao->method('searchById')->willReturn(TestHelper::arrayToDar($result));
 
-        $this->assertNull($this->text_field->getChangesetValue(null, 123, false));
+        self::assertNull($this->text_field->getChangesetValue(ChangesetTestBuilder::aChangeset(1)->build(), 123, false));
     }
 
     public function testSpecialCharactersInCSVExport(): void
     {
-        $whatever_report = \Mockery::spy(\Tracker_Report::class);
+        $whatever_report = ReportTestBuilder::aPublicReport()->build();
         $artifact_id     = 1;
         $changeset_id    = 100;
 
-        $this->assertEquals(
+        self::assertEquals(
             'Une chaine sans accent',
             $this->text_field->fetchCSVChangesetValue($artifact_id, $changeset_id, 'Une chaine sans accent', $whatever_report)
         );
-        $this->assertEquals(
+        self::assertEquals(
             'Lé chaîne avé lê àccent dô où ça',
             $this->text_field->fetchCSVChangesetValue($artifact_id, $changeset_id, 'Lé chaîne avé lê àccent dô où ça', $whatever_report)
         );
-        $this->assertEquals(
+        self::assertEquals(
             'This, or that',
             $this->text_field->fetchCSVChangesetValue($artifact_id, $changeset_id, 'This, or that', $whatever_report)
         );
-        $this->assertEquals(
+        self::assertEquals(
             'This; or that',
             $this->text_field->fetchCSVChangesetValue($artifact_id, $changeset_id, 'This; or that', $whatever_report)
         );
-        $this->assertEquals(
+        self::assertEquals(
             'This thing is > that thing',
             $this->text_field->fetchCSVChangesetValue($artifact_id, $changeset_id, 'This thing is > that thing', $whatever_report)
         );
-        $this->assertEquals(
+        self::assertEquals(
             'This thing & that thing',
             $this->text_field->fetchCSVChangesetValue($artifact_id, $changeset_id, 'This thing & that thing', $whatever_report)
         );
@@ -209,37 +209,39 @@ final class Tracker_FormElement_Field_TextTest extends \Tuleap\Test\PHPUnit\Test
 
     public function testHasChanges(): void
     {
-        $value = \Mockery::spy(\Tracker_Artifact_ChangesetValue_Text::class);
-        $value->shouldReceive('getText')->andReturns('v1');
+        $value = ChangesetValueTextTestBuilder::aValue(1, ChangesetTestBuilder::aChangeset(1)->build(), $this->text_field)
+            ->withValue('v1', Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT)
+            ->build();
 
-        $this->assertTrue(
-            $this->text_field->hasChanges(\Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class), $value, ['content' => 'v2'])
+        self::assertTrue(
+            $this->text_field->hasChanges(ArtifactTestBuilder::anArtifact(987)->build(), $value, ['content' => 'v2'])
         );
     }
 
     public function testHasChangesWithoutFormat(): void
     {
-        $value = \Mockery::spy(\Tracker_Artifact_ChangesetValue_Text::class);
-        $value->shouldReceive('getText')->andReturns('v1');
+        $value = ChangesetValueTextTestBuilder::aValue(1, ChangesetTestBuilder::aChangeset(1)->build(), $this->text_field)
+            ->withValue('v1', Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT)
+            ->build();
 
-        $this->assertTrue(
-            $this->text_field->hasChanges(\Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class), $value, 'v2')
+        self::assertTrue(
+            $this->text_field->hasChanges(ArtifactTestBuilder::anArtifact(987)->build(), $value, 'v2')
         );
     }
 
     public function testIsValidRequiredField(): void
     {
-        $this->text_field->shouldReceive('isRequired')->andReturns(true);
+        $this->text_field->method('isRequired')->willReturn(true);
 
-        $artifact = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $this->assertTrue($this->text_field->isValid($artifact, 'This is a text'));
-        $this->assertTrue($this->text_field->isValid($artifact, '2009-08-45'));
-        $this->assertFalse($this->text_field->isValid($artifact, 25));
+        $artifact = ArtifactTestBuilder::anArtifact(987)->build();
+        self::assertTrue($this->text_field->isValid($artifact, 'This is a text'));
+        self::assertTrue($this->text_field->isValid($artifact, '2009-08-45'));
+        self::assertFalse($this->text_field->isValid($artifact, 25));
     }
 
     public function testIsValidNotRequiredField(): void
     {
-        $this->text_field->shouldReceive('isRequired')->andReturns(false);
+        $this->text_field->method('isRequired')->willReturn(false);
 
         $value_1 = [
             'content' => 'This is a text',
@@ -266,7 +268,7 @@ final class Tracker_FormElement_Field_TextTest extends \Tuleap\Test\PHPUnit\Test
             'format'  => 'text',
         ];
 
-        $artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
+        $artifact = ArtifactTestBuilder::anArtifact(987)->build();
         self::assertTrue($this->text_field->isValid($artifact, $value_1));
         self::assertTrue($this->text_field->isValid($artifact, $value_2));
         self::assertFalse($this->text_field->isValid($artifact, $value_3));
@@ -276,49 +278,48 @@ final class Tracker_FormElement_Field_TextTest extends \Tuleap\Test\PHPUnit\Test
 
     public function testGetFieldData(): void
     {
-        $this->assertEquals('this is a text value', $this->text_field->getFieldData('this is a text value'));
+        self::assertEquals('this is a text value', $this->text_field->getFieldData('this is a text value'));
     }
 
     public function testBuildMatchExpression(): void
     {
-        $data_access = Mockery::mock(LegacyDataAccessInterface::class);
-        $data_access->shouldReceive('quoteLikeValueSurround')->with(
-            'tutu'
-        )->andReturns("'%tutu%'")->getMock();
-        $data_access->shouldReceive('quoteLikeValueSurround')->with('toto')->andReturns("'%toto%'");
-        $data_access->shouldReceive('quoteSmart')->with('regexp')->andReturns("'regexp'");
+        $data_access = $this->createMock(LegacyDataAccessInterface::class);
+        $data_access->method('quoteLikeValueSurround')->willReturnCallback(static fn(string $str) => "'%$str%'");
+        $data_access->method('quoteSmart')->with('regexp')->willReturn("'regexp'");
 
-        $dao = \Mockery::spy(\Tracker_Report_Criteria_Text_ValueDao::class)->shouldReceive('getDa')->andReturns(
-            $data_access
-        )->getMock();
-        $this->text_field->shouldReceive('getCriteriaDao')->andReturns($dao);
+        $dao = $this->createMock(Tracker_Report_Criteria_Text_ValueDao::class);
+        $dao->method('getDa')->willReturn($data_access);
+        $this->text_field->method('getCriteriaDao')->willReturn($dao);
+        $reflection = new ReflectionClass($this->text_field::class);
+        $method     = $reflection->getMethod('buildMatchExpression');
+        $method->setAccessible(true);
 
-        $this->assertFragment(
+        self::assertFragment(
             'field LIKE ?',
             ['%tutu%'],
-            $this->text_field->buildMatchExpression('field', 'tutu'),
+            $method->invoke($this->text_field, 'field', 'tutu'),
         );
-        $this->assertFragment(
+        self::assertFragment(
             'field LIKE ? AND field LIKE ?',
             ['%tutu%', '%toto%'],
-            $this->text_field->buildMatchExpression('field', 'tutu toto'),
+            $method->invoke($this->text_field, 'field', 'tutu toto'),
         );
-        $this->assertFragment(
+        self::assertFragment(
             'field RLIKE ?',
             ['regexp'],
-            $this->text_field->buildMatchExpression('field', '/regexp/'),
+            $method->invoke($this->text_field, 'field', '/regexp/'),
         );
-        $this->assertFragment(
+        self::assertFragment(
             'field NOT RLIKE ?',
             ['regexp'],
-            $this->text_field->buildMatchExpression('field', '!/regexp/'),
+            $method->invoke($this->text_field, 'field', '!/regexp/'),
         );
     }
 
     /**
      * @param Option<ParametrizedSQLFragment> $fragment
      */
-    private function assertFragment(string $expected_sql, array $expected_parameters, Option $fragment): void
+    private static function assertFragment(string $expected_sql, array $expected_parameters, Option $fragment): void
     {
         $fragment = $fragment->unwrapOr(null);
         if ($fragment === null) {
@@ -329,61 +330,61 @@ final class Tracker_FormElement_Field_TextTest extends \Tuleap\Test\PHPUnit\Test
         self::assertEquals($expected_parameters, $fragment->parameters);
     }
 
-    public function testIsValidRegardingRequiredPropertyWhichIsTrue()
+    public function testIsValidRegardingRequiredPropertyWhichIsTrue(): void
     {
-        $artifact       = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
+        $artifact       = ArtifactTestBuilder::anArtifact(987)->build();
         $submited_value = ['format' => 'html', 'content' => 'is content'];
 
-        $this->text_field->shouldReceive('isRequired')->andReturn(true);
-        $this->assertTrue($this->text_field->isValidRegardingRequiredProperty($artifact, $submited_value));
-    }
-
-    public function testItIsNotValidRegardingRequiredPropertyWhichIsTrue()
-    {
-        $artifact = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-
-        $this->text_field->shouldReceive('isRequired')->andReturn(true);
-        $this->assertFalse($this->text_field->isValidRegardingRequiredProperty($artifact, ['format' => 'html', 'content' => '']));
-        $this->assertFalse($this->text_field->isValidRegardingRequiredProperty($artifact, ['format' => 'html', 'content' => null]));
-        $this->assertFalse($this->text_field->isValidRegardingRequiredProperty($artifact, ['format' => 'html']));
-        $this->assertFalse($this->text_field->isValidRegardingRequiredProperty($artifact, null));
-    }
-
-    public function testItIsValidRegardingRequiredPropertyWhichIsFalse()
-    {
-        $artifact = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-
-        $this->text_field->shouldReceive('isRequired')->andReturn(false);
-        $this->assertTrue($this->text_field->isValidRegardingRequiredProperty($artifact, ['format' => 'html', 'content' => 'the content']));
-        $this->assertTrue($this->text_field->isValidRegardingRequiredProperty($artifact, ['format' => 'html', 'content' => '']));
-        $this->assertTrue($this->text_field->isValidRegardingRequiredProperty($artifact, ['format' => 'html', 'content' => null]));
-        $this->assertTrue($this->text_field->isValidRegardingRequiredProperty($artifact, null));
-    }
-
-    public function testIsValidRegardingRequiredPropertyWhichIsFalseAndNoContent()
-    {
-        $artifact       = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $submited_value = ['format' => 'html', 'content' => ''];
-
-        $this->text_field->shouldReceive('isRequired')->andReturn(false);
-        $this->assertTrue($this->text_field->isValidRegardingRequiredProperty($artifact, $submited_value));
-    }
-
-    public function testIsValidRegardingRequiredPropertyInCSVContext()
-    {
-        $artifact       = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $submited_value = 'my content';
-
-        $this->text_field->shouldReceive('isRequired')->andReturn(true);
+        $this->text_field->method('isRequired')->willReturn(true);
         self::assertTrue($this->text_field->isValidRegardingRequiredProperty($artifact, $submited_value));
     }
 
-    public function testIsNotValidRegardingRequiredPropertyInCSVContext()
+    public function testItIsNotValidRegardingRequiredPropertyWhichIsTrue(): void
     {
-        $artifact       = \Mockery::mock(\Tuleap\Tracker\Artifact\Artifact::class);
+        $artifact = ArtifactTestBuilder::anArtifact(987)->build();
+
+        $this->text_field->method('isRequired')->willReturn(true);
+        self::assertFalse($this->text_field->isValidRegardingRequiredProperty($artifact, ['format' => 'html', 'content' => '']));
+        self::assertFalse($this->text_field->isValidRegardingRequiredProperty($artifact, ['format' => 'html', 'content' => null]));
+        self::assertFalse($this->text_field->isValidRegardingRequiredProperty($artifact, ['format' => 'html']));
+        self::assertFalse($this->text_field->isValidRegardingRequiredProperty($artifact, null));
+    }
+
+    public function testItIsValidRegardingRequiredPropertyWhichIsFalse(): void
+    {
+        $artifact = ArtifactTestBuilder::anArtifact(987)->build();
+
+        $this->text_field->method('isRequired')->willReturn(false);
+        self::assertTrue($this->text_field->isValidRegardingRequiredProperty($artifact, ['format' => 'html', 'content' => 'the content']));
+        self::assertTrue($this->text_field->isValidRegardingRequiredProperty($artifact, ['format' => 'html', 'content' => '']));
+        self::assertTrue($this->text_field->isValidRegardingRequiredProperty($artifact, ['format' => 'html', 'content' => null]));
+        self::assertTrue($this->text_field->isValidRegardingRequiredProperty($artifact, null));
+    }
+
+    public function testIsValidRegardingRequiredPropertyWhichIsFalseAndNoContent(): void
+    {
+        $artifact       = ArtifactTestBuilder::anArtifact(987)->build();
+        $submited_value = ['format' => 'html', 'content' => ''];
+
+        $this->text_field->method('isRequired')->willReturn(false);
+        self::assertTrue($this->text_field->isValidRegardingRequiredProperty($artifact, $submited_value));
+    }
+
+    public function testIsValidRegardingRequiredPropertyInCSVContext(): void
+    {
+        $artifact       = ArtifactTestBuilder::anArtifact(987)->build();
+        $submited_value = 'my content';
+
+        $this->text_field->method('isRequired')->willReturn(true);
+        self::assertTrue($this->text_field->isValidRegardingRequiredProperty($artifact, $submited_value));
+    }
+
+    public function testIsNotValidRegardingRequiredPropertyInCSVContext(): void
+    {
+        $artifact       = ArtifactTestBuilder::anArtifact(987)->build();
         $submited_value = '';
 
-        $this->text_field->shouldReceive('isRequired')->andReturn(true);
+        $this->text_field->method('isRequired')->willReturn(true);
         self::assertFalse($this->text_field->isValidRegardingRequiredProperty($artifact, $submited_value));
     }
 
@@ -392,8 +393,8 @@ final class Tracker_FormElement_Field_TextTest extends \Tuleap\Test\PHPUnit\Test
      */
     public function testItIsEmptyWhenThereIsNoContent(): void
     {
-        $artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
-        $this->assertTrue(
+        $artifact = ArtifactTestBuilder::anArtifact(987)->build();
+        self::assertTrue(
             $this->text_field->isEmpty(
                 [
                     'format'  => 'text',
@@ -409,8 +410,8 @@ final class Tracker_FormElement_Field_TextTest extends \Tuleap\Test\PHPUnit\Test
      */
     public function testItIsEmptyWhenThereIsOnlyWhitespaces(): void
     {
-        $artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
-        $this->assertTrue(
+        $artifact = ArtifactTestBuilder::anArtifact(987)->build();
+        self::assertTrue(
             $this->text_field->isEmpty(
                 [
                     'format'  => 'text',
@@ -426,8 +427,8 @@ final class Tracker_FormElement_Field_TextTest extends \Tuleap\Test\PHPUnit\Test
      */
     public function testItIsNotEmptyWhenThereIsContent(): void
     {
-        $artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
-        $this->assertFalse(
+        $artifact = ArtifactTestBuilder::anArtifact(987)->build();
+        self::assertFalse(
             $this->text_field->isEmpty(
                 [
                     'format'  => 'text',
@@ -440,14 +441,14 @@ final class Tracker_FormElement_Field_TextTest extends \Tuleap\Test\PHPUnit\Test
 
     public function testItIsEmptyWhenValueIsAnEmptyString(): void
     {
-        $artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
-        $this->assertTrue($this->text_field->isEmpty('', $artifact));
+        $artifact = ArtifactTestBuilder::anArtifact(987)->build();
+        self::assertTrue($this->text_field->isEmpty('', $artifact));
     }
 
     public function testItIsNotEmptyWhenValueIsAStringWithContent(): void
     {
-        $artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
-        $this->assertFalse($this->text_field->isEmpty('aaa', $artifact));
+        $artifact = ArtifactTestBuilder::anArtifact(987)->build();
+        self::assertFalse($this->text_field->isEmpty('aaa', $artifact));
     }
 
     public function testItReturnsTheValueIndexedByFieldName(): void
@@ -462,8 +463,8 @@ final class Tracker_FormElement_Field_TextTest extends \Tuleap\Test\PHPUnit\Test
 
         $fields_data = $this->text_field->getFieldDataFromRESTValueByField($value);
 
-        $this->assertEquals('My awesome content', $fields_data['content']);
-        $this->assertEquals('text', $fields_data['format']);
+        self::assertEquals('My awesome content', $fields_data['content']);
+        self::assertEquals('text', $fields_data['format']);
     }
 
     public function testItReturnsTrueIfThereIsAChange(): void
@@ -473,8 +474,8 @@ final class Tracker_FormElement_Field_TextTest extends \Tuleap\Test\PHPUnit\Test
             'format'  => 'text',
         ];
 
-        $this->assertTrue(
-            $this->text_field->hasChanges(\Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class), $this->previous_value, $new_value)
+        self::assertTrue(
+            $this->text_field->hasChanges(ArtifactTestBuilder::anArtifact(987)->build(), $this->previous_value, $new_value)
         );
     }
 
@@ -485,8 +486,8 @@ final class Tracker_FormElement_Field_TextTest extends \Tuleap\Test\PHPUnit\Test
             'format'  => 'text',
         ];
 
-        $this->assertFalse(
-            $this->text_field->hasChanges(\Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class), $this->previous_value, $new_value)
+        self::assertFalse(
+            $this->text_field->hasChanges(ArtifactTestBuilder::anArtifact(987)->build(), $this->previous_value, $new_value)
         );
     }
 
@@ -497,8 +498,8 @@ final class Tracker_FormElement_Field_TextTest extends \Tuleap\Test\PHPUnit\Test
             'format'  => 'html',
         ];
 
-        $this->assertFalse(
-            $this->text_field->hasChanges(\Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class), $this->previous_value, $new_value)
+        self::assertFalse(
+            $this->text_field->hasChanges(ArtifactTestBuilder::anArtifact(987)->build(), $this->previous_value, $new_value)
         );
     }
 
@@ -506,7 +507,7 @@ final class Tracker_FormElement_Field_TextTest extends \Tuleap\Test\PHPUnit\Test
     {
         $value = [
             'content' => 'I am happy because I am well formatted',
-            'format' => Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT,
+            'format'  => Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT,
         ];
 
         self::assertEquals($value, $this->text_field->getRestFieldData($value));
@@ -517,11 +518,11 @@ final class Tracker_FormElement_Field_TextTest extends \Tuleap\Test\PHPUnit\Test
         $content = 'I am sad because I am not well formatted :( ';
         $value   = [
             'content' => $content,
-            'format' => 'indignity_format',
+            'format'  => 'indignity_format',
         ];
 
-        $this->user->shouldReceive('getPreference')->andReturn('commonmark');
-        $this->text_field->shouldReceive('getProperty')->with('default_value')->andReturn('wololo');
+        $this->user->setPreference(PFUser::EDITION_DEFAULT_FORMAT, 'commonmark');
+        $this->text_field->method('getProperty')->with('default_value')->willReturn('wololo');
 
         $rest_field_data = $this->text_field->getRestFieldData($value);
 
@@ -531,10 +532,10 @@ final class Tracker_FormElement_Field_TextTest extends \Tuleap\Test\PHPUnit\Test
 
     public function testItReturnsTheContentAndTheUserDefaultFormatIffValueIsNotAnArray(): void
     {
-        $value =  'I am sad because :(';
+        $value = 'I am sad because :(';
 
-        $this->user->shouldReceive('getPreference')->andReturn('commonmark');
-        $this->text_field->shouldReceive('getProperty')->with('default_value')->andReturn('wololo');
+        $this->user->setPreference(PFUser::EDITION_DEFAULT_FORMAT, 'commonmark');
+        $this->text_field->method('getProperty')->with('default_value')->willReturn('wololo');
 
         $rest_field_data = $this->text_field->getRestFieldData($value);
 
