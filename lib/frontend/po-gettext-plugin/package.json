@@ -4,15 +4,8 @@
   "homepage": "https://tuleap.org",
   "license": "GPL-2.0-or-later",
   "private": true,
-  "version": "0.0.0",
   "type": "module",
-  "main": "dist/po-gettext-plugin.js",
-  "scripts": {
-    "typecheck": "tsc --noEmit",
-    "build": "rm -rf dist/ && tsc --project tsconfig-build.json",
-    "watch": "rm -rf dist/ && tsc --watch --project tsconfig-build.json",
-    "test": "vitest"
-  },
+  "main": "./dist/po-gettext-plugin.js",
   "dependencies": {
     "@rollup/pluginutils": "^4.1.0",
     "gettext-parser": "^4.0.4",
@@ -21,5 +14,17 @@
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*",
     "@types/gettext-parser": "^4.0.0"
+  },
+  "pnpm": {
+    "overrides": {
+      "safe-buffer": "npm:@nolyfill/safe-buffer@^1",
+      "safer-buffer": "npm:@nolyfill/safer-buffer@^1"
+    }
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "rm -rf dist/ && tsc --project tsconfig-build.json",
+    "watch": "rm -rf dist/ && tsc --watch --project tsconfig-build.json",
+    "test": "vitest"
   }
 }

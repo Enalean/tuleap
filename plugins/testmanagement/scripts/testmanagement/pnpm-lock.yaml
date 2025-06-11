@@ -4,6 +4,10 @@ settings:
   autoInstallPeers: false
   excludeLinksFromLockfile: false
 
+overrides:
+  isarray: npm:@nolyfill/isarray@^1
+  safe-buffer: npm:@nolyfill/safe-buffer@^1
+
 dependencies:
   '@microsoft/fetch-event-source':
     specifier: ^2.0.1
@@ -147,6 +151,16 @@ packages:
 
   /@microsoft/fetch-event-source@2.0.1:
     resolution: {integrity: sha512-W6CLUJ2eBMw3Rec70qrsEW0jOm/3twwJv21mrmj2yORiaVmVYGS4sSS5yUwvQc1ZlDLYGPnClVWmUUMagKNsfA==}
+    dev: false
+
+  /@nolyfill/isarray@1.0.44:
+    resolution: {integrity: sha512-NTSBKMkzaaVG3lVR5/lMTnW2y26XRQAgkdHMNaBviexwHgmtPsONFJ/HhQDak16BOrpYLasGMKGsgk3oKez57g==}
+    engines: {node: '>=12.4.0'}
+    dev: false
+
+  /@nolyfill/safe-buffer@1.0.44:
+    resolution: {integrity: sha512-SqlKXtlhNTDMeZKey9jnnuPhi8YTl1lJuEcY9zbm5i4Pqe79UJJ8IJ9oiD6DhgI8KjYc+HtLzpQJNRdNYqb/hw==}
+    engines: {node: '>=12.4.0'}
     dev: false
 
   /@socket.io/component-emitter@3.1.2:
@@ -401,10 +415,6 @@ packages:
     engines: {node: '>=8'}
     dev: false
 
-  /isarray@1.0.0:
-    resolution: {integrity: sha512-VLghIWNM6ELQzo7zwmcg0NmTVyWKYjvIeM83yjp0wRDTmUnrM678fQbcKBo6n2CJEF0szoG//ytg+TKla89ALQ==}
-    dev: false
-
   /jquery@3.6.0:
     resolution: {integrity: sha512-JVzAR/AjBvVt2BmYhxRCSYysDsPcssdmTFnzyLEts9qNwmjmu4JTAMYubEfwVOSwpQ1I1sKKFcxhZCI2buerfw==}
     dev: true
@@ -522,9 +532,9 @@ packages:
     dependencies:
       core-util-is: 1.0.3
       inherits: 2.0.4
-      isarray: 1.0.0
+      isarray: /@nolyfill/isarray@1.0.44
       process-nextick-args: 2.0.1
-      safe-buffer: 5.1.2
+      safe-buffer: /@nolyfill/safe-buffer@1.0.44
       string_decoder: 1.1.1
       util-deprecate: 1.0.2
     dev: false
@@ -536,10 +546,6 @@ packages:
   /retry@0.12.0:
     resolution: {integrity: sha512-9LkiTwjUh6rT555DtE9rTX+BKByPfrMzEAtnlEtdEwr3Nkffwiihqe2bWADg+OQRjt9gl6ICdmB/ZFDCGAtSow==}
     engines: {node: '>= 4'}
-    dev: false
-
-  /safe-buffer@5.1.2:
-    resolution: {integrity: sha512-Gd2UZBJDkXlY7GbJxfsE8/nvKkUEU1G38c1siN6QP6a9PT9MmHB8GnpscSmMJSoF8LOIrt8ud/wPtojys4G6+g==}
     dev: false
 
   /sax@1.2.4:
@@ -585,7 +591,7 @@ packages:
   /string_decoder@1.1.1:
     resolution: {integrity: sha512-n/ShnvDi6FHbbVfviro+WojiFzv+s8MPMHBczVePfUpDJLwoLT0ht1l4YwBCbi8pJAveEEdnkHyPyTP/mzRfwg==}
     dependencies:
-      safe-buffer: 5.1.2
+      safe-buffer: /@nolyfill/safe-buffer@1.0.44
     dev: false
 
   /tus-js-client@3.1.0:

@@ -4,8 +4,8 @@
   "homepage": "https://tuleap.org",
   "license": "GPL-2.0-or-later",
   "private": true,
-  "main": "dist/main.js",
-  "types": "dist/main.d.ts",
+  "main": "./dist/main.js",
+  "types": "./dist/main.d.ts",
   "exports": {
     ".": {
       "types": "./dist/main.d.ts",
@@ -22,6 +22,11 @@
   },
   "devDependencies": {
     "@types/webpack": "^5.28.5"
+  },
+  "pnpm": {
+    "overrides": {
+      "safe-buffer": "npm:@nolyfill/safe-buffer@^1"
+    }
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
