@@ -47,6 +47,7 @@
                 v-bind:is_text_displayed_outside_bar="is_text_displayed_outside_bar"
                 v-bind:is_error_sign_displayed_inside_bar="is_error_sign_displayed_inside_bar"
                 v-bind:is_error_sign_displayed_outside_bar="is_error_sign_displayed_outside_bar"
+                v-bind:popover_element_id="popover_element_id"
                 ref="bar"
             />
         </template>
@@ -54,10 +55,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount, computed } from "vue";
+import { computed } from "vue";
 import { useNamespacedGetters, useState } from "vuex-composition-helpers";
-import { createPopover } from "@tuleap/tlp-popovers";
-import type { Popover } from "@tuleap/tlp-popovers";
 import type { Task, TaskDimensionMap, TasksDependencies } from "../../../type";
 import { Styles } from "../../../helpers/styles";
 import { doesTaskHaveEndDateGreaterOrEqualToStartDate } from "../../../helpers/task-has-valid-dates";
@@ -78,38 +77,10 @@ const props = defineProps<{
     popover_element_id: string;
 }>();
 
-const bar = ref<InstanceType<typeof TaskBar> | undefined>();
-const popover = ref<Popover | undefined>();
-
 const doesTextFitsIn = (width: number) =>
     width > Styles.TEXT_PERCENTAGE_IN_PROGRESS_BAR_THRESOLD_IN_PX;
 
 const is_task_valid = computed(() => doesTaskHaveEndDateGreaterOrEqualToStartDate(props.task));
-
-onMounted(() => {
-    const popover_element = document.getElementById(props.popover_element_id);
-    if (
-        is_task_valid.value &&
-        bar.value?.$el instanceof HTMLElement &&
-        popover_element instanceof HTMLElement
-    ) {
-        popover.value = createPopover(bar.value.$el, popover_element, {
-            placement: "right-start",
-            middleware: {
-                flip: {
-                    fallbackPlacements: ["left-start", "top"],
-                },
-                offset: {
-                    alignmentAxis: 0,
-                },
-            },
-        });
-    }
-});
-
-onBeforeUnmount(() => {
-    popover.value?.destroy();
-});
 
 function getDependencyKey(dependency: Task): string {
     return (
