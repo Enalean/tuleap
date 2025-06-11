@@ -25,12 +25,12 @@ use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Tracker_Semantic_ContributorFactoryTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+final class TrackerSemanticContributorFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testImport(): void
     {
         $xml = simplexml_load_string(
-            file_get_contents(__DIR__ . '/../_fixtures/ImportTrackerSemanticContributorTest.xml')
+            file_get_contents(__DIR__ . '/../../_fixtures/ImportTrackerSemanticContributorTest.xml')
         );
 
         $all_semantics_xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><foo/>');
@@ -54,7 +54,7 @@ final class Tracker_Semantic_ContributorFactoryTest extends \Tuleap\Test\PHPUnit
             []
         );
 
-        $this->assertEquals('contributor', $semantic_contributor->getShortName());
-        $this->assertEquals(112, $semantic_contributor->getFieldId());
+        self::assertEquals('contributor', $semantic_contributor->getShortName());
+        self::assertEquals(112, $semantic_contributor->getFieldId());
     }
 }
