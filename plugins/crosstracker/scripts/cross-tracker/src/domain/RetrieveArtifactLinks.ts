@@ -26,4 +26,8 @@ export type RetrieveArtifactLinks = {
         query_id: string,
         artifact_id: number,
     ): ResultAsync<ArtifactsTableWithTotal, Fault>;
+    getReverseLinks(
+        query_id: string,
+        artifact_id: number,
+    ): ResultAsync<ArtifactsTableWithTotal, Fault>;
 };
