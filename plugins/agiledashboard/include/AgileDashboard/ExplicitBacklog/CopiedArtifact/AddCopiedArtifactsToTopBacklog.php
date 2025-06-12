@@ -27,13 +27,17 @@ use Tracker_XML_Importer_ArtifactImportedMapping;
 use Tuleap\AgileDashboard\Artifact\PlannedArtifactDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
+use Tuleap\AgileDashboard\Planning\PlanningDao;
+use Tuleap\Tracker\Artifact\RetrieveArtifact;
 
-class AddCopiedArtifactsToTopBacklog
+final readonly class AddCopiedArtifactsToTopBacklog
 {
     public function __construct(
         private ExplicitBacklogDao $explicit_backlog_dao,
         private ArtifactsInExplicitBacklogDao $artifacts_in_explicit_backlog_dao,
         private PlannedArtifactDao $planned_artifact_dao,
+        private RetrieveArtifact $artifact_retriever,
+        private PlanningDao $planning_dao,
     ) {
     }
 
@@ -48,6 +52,14 @@ class AddCopiedArtifactsToTopBacklog
         }
 
         foreach ($artifact_imported_mapping->getMapping() as $source_artifact_id => $copied_artifact_id) {
+            $source_artifact = $this->artifact_retriever->getArtifactById($source_artifact_id);
+            if ($source_artifact === null) {
+                continue;
+            }
+            if ($this->planning_dao->searchBacklogTrackersByTrackerId($source_artifact->getTrackerId()) === []) {
+                continue;
+            }
+
             if (
                 $this->artifacts_in_explicit_backlog_dao->isArtifactInTopBacklogOfProject($source_artifact_id, $project_id) ||
                 $this->planned_artifact_dao->isArtifactPlannedInAMilestoneOfTheProject($source_artifact_id, $project_id)

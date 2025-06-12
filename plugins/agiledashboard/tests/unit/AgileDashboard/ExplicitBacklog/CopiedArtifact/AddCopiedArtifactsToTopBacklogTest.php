@@ -22,14 +22,20 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\ExplicitBacklog\CopiedArtifact;
 
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tracker_XML_Importer_ArtifactImportedMapping;
 use Tuleap\AgileDashboard\Artifact\PlannedArtifactDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
+use Tuleap\AgileDashboard\Planning\PlanningDao;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Artifact\RetrieveArtifact;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Stub\RetrieveArtifactStub;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
+#[DisableReturnValueGenerationForTestDoubles]
 final class AddCopiedArtifactsToTopBacklogTest extends TestCase
 {
     private const SOURCE_ARTIFACT_ID = 9930;
@@ -38,32 +44,27 @@ final class AddCopiedArtifactsToTopBacklogTest extends TestCase
     private const SOURCE_CHILD_ARTIFACT_ID = 9931;
     private const COPIED_CHILD_ARTIFACT_ID = 9946;
 
-    private AddCopiedArtifactsToTopBacklog $adder;
-    /**
-     * @var ExplicitBacklogDao&\PHPUnit\Framework\MockObject\MockObject
-     */
-    private $explicit_backlog_dao;
-    /**
-     * @var ArtifactsInExplicitBacklogDao&\PHPUnit\Framework\MockObject\MockObject
-     */
-    private $artifacts_in_explicit_backlog_dao;
-    /**
-     * @var PlannedArtifactDao&\PHPUnit\Framework\MockObject\MockObject
-     */
-    private $planned_artifact_dao;
+    private ExplicitBacklogDao&MockObject $explicit_backlog_dao;
+    private ArtifactsInExplicitBacklogDao&MockObject $artifacts_in_explicit_backlog_dao;
+    private PlannedArtifactDao&MockObject $planned_artifact_dao;
+    private PlanningDao&MockObject $planning_dao;
 
     protected function setUp(): void
     {
-        parent::setUp();
-
         $this->explicit_backlog_dao              = $this->createMock(ExplicitBacklogDao::class);
         $this->artifacts_in_explicit_backlog_dao = $this->createMock(ArtifactsInExplicitBacklogDao::class);
         $this->planned_artifact_dao              = $this->createMock(PlannedArtifactDao::class);
+        $this->planning_dao                      = $this->createMock(PlanningDao::class);
+    }
 
-        $this->adder = new AddCopiedArtifactsToTopBacklog(
+    private function buildAddCopiedArtifactsToTopBacklog(RetrieveArtifact $artifact_retriever): AddCopiedArtifactsToTopBacklog
+    {
+        return new AddCopiedArtifactsToTopBacklog(
             $this->explicit_backlog_dao,
             $this->artifacts_in_explicit_backlog_dao,
             $this->planned_artifact_dao,
+            $artifact_retriever,
+            $this->planning_dao,
         );
     }
 
@@ -75,8 +76,42 @@ final class AddCopiedArtifactsToTopBacklogTest extends TestCase
 
         $this->artifacts_in_explicit_backlog_dao->expects($this->never())->method('addArtifactToProjectBacklog');
 
-        $this->adder->addCopiedArtifactsToTopBacklog(
+        $adder = $this->buildAddCopiedArtifactsToTopBacklog(RetrieveArtifactStub::withNoArtifact());
+        $adder->addCopiedArtifactsToTopBacklog(
             new Tracker_XML_Importer_ArtifactImportedMapping(),
+            $project,
+        );
+    }
+
+    public function testItDoesNothingIfCopiedArtifactsAreNotExisting(): void
+    {
+        $project = ProjectTestBuilder::aProject()->build();
+
+        $this->mockProjectUsesExplicitBacklog();
+
+        $this->artifacts_in_explicit_backlog_dao->expects($this->never())->method('addArtifactToProjectBacklog');
+
+        $adder = $this->buildAddCopiedArtifactsToTopBacklog(RetrieveArtifactStub::withNoArtifact());
+        $adder->addCopiedArtifactsToTopBacklog(
+            $this->buildMappingWithOneLevelContent(),
+            $project,
+        );
+    }
+
+    public function testItDoesNothingIfCopiedArtifactsTrackersAreNotInPlanning(): void
+    {
+        $project = ProjectTestBuilder::aProject()->build();
+
+        $this->mockProjectUsesExplicitBacklog();
+        $this->planning_dao->method('searchBacklogTrackersByTrackerId')->willReturn([]);
+
+        $this->artifacts_in_explicit_backlog_dao->expects($this->never())->method('addArtifactToProjectBacklog');
+
+        $adder = $this->buildAddCopiedArtifactsToTopBacklog(
+            RetrieveArtifactStub::withArtifacts(ArtifactTestBuilder::anArtifact(self::SOURCE_ARTIFACT_ID)->build()),
+        );
+        $adder->addCopiedArtifactsToTopBacklog(
+            $this->buildMappingWithOneLevelContent(),
             $project,
         );
     }
@@ -86,11 +121,15 @@ final class AddCopiedArtifactsToTopBacklogTest extends TestCase
         $project = ProjectTestBuilder::aProject()->build();
 
         $this->mockProjectUsesExplicitBacklog();
+        $this->planning_dao->method('searchBacklogTrackersByTrackerId')->willReturn([['planning_id' => 1, 'tracker_id' => 34]]);
         $this->mockArtifactIsNotPlanned(self::SOURCE_ARTIFACT_ID);
 
         $this->artifacts_in_explicit_backlog_dao->expects($this->never())->method('addArtifactToProjectBacklog');
 
-        $this->adder->addCopiedArtifactsToTopBacklog(
+        $adder = $this->buildAddCopiedArtifactsToTopBacklog(
+            RetrieveArtifactStub::withArtifacts(ArtifactTestBuilder::anArtifact(self::SOURCE_ARTIFACT_ID)->build()),
+        );
+        $adder->addCopiedArtifactsToTopBacklog(
             $this->buildMappingWithOneLevelContent(),
             $project,
         );
@@ -101,11 +140,15 @@ final class AddCopiedArtifactsToTopBacklogTest extends TestCase
         $project = ProjectTestBuilder::aProject()->build();
 
         $this->mockProjectUsesExplicitBacklog();
+        $this->planning_dao->method('searchBacklogTrackersByTrackerId')->willReturn([['planning_id' => 1, 'tracker_id' => 34]]);
         $this->mockArtifactIsInBacklog(self::SOURCE_ARTIFACT_ID);
 
         $this->artifacts_in_explicit_backlog_dao->expects($this->once())->method('addArtifactToProjectBacklog');
 
-        $this->adder->addCopiedArtifactsToTopBacklog(
+        $adder = $this->buildAddCopiedArtifactsToTopBacklog(
+            RetrieveArtifactStub::withArtifacts(ArtifactTestBuilder::anArtifact(self::SOURCE_ARTIFACT_ID)->build()),
+        );
+        $adder->addCopiedArtifactsToTopBacklog(
             $this->buildMappingWithOneLevelContent(),
             $project,
         );
@@ -116,11 +159,15 @@ final class AddCopiedArtifactsToTopBacklogTest extends TestCase
         $project = ProjectTestBuilder::aProject()->build();
 
         $this->mockProjectUsesExplicitBacklog();
+        $this->planning_dao->method('searchBacklogTrackersByTrackerId')->willReturn([['planning_id' => 1, 'tracker_id' => 34]]);
         $this->mockArtifactIsInMilestone(self::SOURCE_ARTIFACT_ID);
 
         $this->artifacts_in_explicit_backlog_dao->expects($this->once())->method('addArtifactToProjectBacklog');
 
-        $this->adder->addCopiedArtifactsToTopBacklog(
+        $adder = $this->buildAddCopiedArtifactsToTopBacklog(
+            RetrieveArtifactStub::withArtifacts(ArtifactTestBuilder::anArtifact(self::SOURCE_ARTIFACT_ID)->build()),
+        );
+        $adder->addCopiedArtifactsToTopBacklog(
             $this->buildMappingWithOneLevelContent(),
             $project,
         );
@@ -131,6 +178,7 @@ final class AddCopiedArtifactsToTopBacklogTest extends TestCase
         $project = ProjectTestBuilder::aProject()->build();
 
         $this->mockProjectUsesExplicitBacklog();
+        $this->planning_dao->method('searchBacklogTrackersByTrackerId')->willReturn([['planning_id' => 1, 'tracker_id' => 34]]);
         $this->mockBothArtifactAndChildPlanned(
             self::SOURCE_ARTIFACT_ID,
             self::SOURCE_CHILD_ARTIFACT_ID,
@@ -138,7 +186,13 @@ final class AddCopiedArtifactsToTopBacklogTest extends TestCase
 
         $this->artifacts_in_explicit_backlog_dao->expects($this->exactly(2))->method('addArtifactToProjectBacklog');
 
-        $this->adder->addCopiedArtifactsToTopBacklog(
+        $adder = $this->buildAddCopiedArtifactsToTopBacklog(
+            RetrieveArtifactStub::withArtifacts(
+                ArtifactTestBuilder::anArtifact(self::SOURCE_ARTIFACT_ID)->build(),
+                ArtifactTestBuilder::anArtifact(self::SOURCE_CHILD_ARTIFACT_ID)->build(),
+            ),
+        );
+        $adder->addCopiedArtifactsToTopBacklog(
             $this->buildMappingWithTwoLevelsContent(),
             $project,
         );
