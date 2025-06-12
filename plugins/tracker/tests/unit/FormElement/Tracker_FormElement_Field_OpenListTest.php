@@ -20,116 +20,118 @@
  *
  */
 
+declare(strict_types=1);
+
+namespace Tuleap\Tracker\FormElement;
+
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use PHPUnit\Framework\MockObject\MockObject;
+use ReflectionClass;
+use TestHelper;
+use Tracker_Artifact_ChangesetValue_OpenList;
+use Tracker_FormElement_Field_List;
+use Tracker_FormElement_Field_List_Bind_Static;
+use Tracker_FormElement_Field_List_BindValue;
+use Tracker_FormElement_Field_List_OpenValue;
+use Tracker_FormElement_Field_OpenList;
 use Tuleap\DB\DatabaseUUIDV7Factory;
+use Tuleap\GlobalLanguageMock;
+use Tuleap\GlobalResponseMock;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
-use Tuleap\Tracker\FormElement\Field\ListFields\OpenListValueDao;
 use Tuleap\Tracker\FormElement\Field\ListFields\OpenListChangesetValueDao;
+use Tuleap\Tracker\FormElement\Field\ListFields\OpenListValueDao;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Tracker_FormElement_Field_OpenListTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+#[DisableReturnValueGenerationForTestDoubles]
+final class Tracker_FormElement_Field_OpenListTest extends TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-    use \Tuleap\GlobalLanguageMock;
-    use \Tuleap\GlobalResponseMock;
+    use GlobalLanguageMock;
+    use GlobalResponseMock;
 
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|OpenListValueDao
-     */
-    private $dao;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_FormElement_Field_List_Bind_Static
-     */
-    private $bind;
-
-    /**
-     * @var \Mockery\Mock | Tracker_FormElement_Field_OpenList
-     */
-    private $field;
+    private OpenListValueDao&MockObject $dao;
+    private Tracker_FormElement_Field_List_Bind_Static&MockObject $bind;
+    private Tracker_FormElement_Field_OpenList $field;
 
     protected function setUp(): void
     {
-        $this->field = Mockery::mock(Tracker_FormElement_Field_OpenList::class)
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
+        $this->field = $this->createPartialMock(Tracker_FormElement_Field_OpenList::class, ['getId', 'getBind', 'getOpenValueDao']);
+        $this->bind  = $this->createMock(Tracker_FormElement_Field_List_Bind_Static::class);
+        $this->dao   = $this->createMock(OpenListValueDao::class);
 
-        $this->bind = Mockery::mock(Tracker_FormElement_Field_List_Bind_Static::class);
-        $this->dao  = Mockery::mock(OpenListValueDao::class);
-
-        $this->field->shouldReceive('getBind')->andReturn($this->bind);
-        $this->field->shouldReceive('getOpenValueDao')->andReturn($this->dao);
+        $this->field->method('getId')->willReturn(852);
+        $this->field->method('getBind')->willReturn($this->bind);
+        $this->field->method('getOpenValueDao')->willReturn($this->dao);
     }
 
     public function testGetChangesetValue(): void
     {
-        $open_value_dao = Mockery::mock(OpenListChangesetValueDao::class);
-        $open_value_dao->shouldReceive('searchById')->andReturn(
+        $open_value_dao = $this->createMock(OpenListChangesetValueDao::class);
+        $open_value_dao->method('searchById')->willReturn(
             TestHelper::arrayToDar(
                 ['id' => '10', 'field_id' => '1', 'label' => 'Open_1', 'is_hidden' => false],
                 ['id' => '10', 'field_id' => '1', 'label' => 'Open_2', 'is_hidden' => false]
             )
         );
 
-        $open_value_dao->shouldReceive('searchById')->andReturn([1, '10']); //, $odar_10,
-        $open_value_dao->shouldReceive('searchById')->andReturn([1, '20']); //, $odar_20,
-
-        $value_dao = Mockery::mock(OpenListChangesetValueDao::class);
-        $results   = TestHelper::arrayToDar(
+        $value_dao = $this->createMock(OpenListChangesetValueDao::class);
+        $value_dao->method('searchById')->willReturn(TestHelper::arrayToDar(
             ['id' => '123', 'field_id' => '1', 'bindvalue_id' => '1000', 'openvalue_id' => null],
             ['id' => '123', 'field_id' => '1', 'bindvalue_id' => '1001', 'openvalue_id' => null],
             ['id' => '123', 'field_id' => '1', 'bindvalue_id' => null, 'openvalue_id' => '10'],
             ['id' => '123', 'field_id' => '1', 'bindvalue_id' => null, 'openvalue_id' => '20'],
             ['id' => '123', 'field_id' => '1', 'bindvalue_id' => '1002', 'openvalue_id' => null]
-        );
-
-        $value_dao->shouldReceive('searchById')->andReturn($results);
+        ));
 
         $bind_values = [
-            Mockery::mock(Tracker_FormElement_Field_List_BindValue::class),
-            Mockery::mock(Tracker_FormElement_Field_List_BindValue::class),
-            Mockery::mock(Tracker_FormElement_Field_List_BindValue::class),
+            ListStaticValueBuilder::aStaticValue('a')->build(),
+            ListStaticValueBuilder::aStaticValue('b')->build(),
+            ListStaticValueBuilder::aStaticValue('c')->build(),
         ];
 
-        $bind = Mockery::mock(Tracker_FormElement_Field_List_Bind_Static::class, [new DatabaseUUIDV7Factory(), $this->aRequiredOpenListField(), true, [], $bind_values, []]);
-        $bind->shouldReceive('getBindValuesForIds')
-            ->withArgs([[0 => '1000', 1 => '1001', 2 => '1002']])
-            ->andReturn(
-                [
-                    '1000' => Mockery::mock(Tracker_FormElement_Field_List_BindValue::class),
-                    '1001' => Mockery::mock(Tracker_FormElement_Field_List_BindValue::class),
-                    '1002' => Mockery::mock(Tracker_FormElement_Field_List_BindValue::class),
-                ]
-            );
+        $bind = $this->getMockBuilder(Tracker_FormElement_Field_List_Bind_Static::class)
+            ->setConstructorArgs([new DatabaseUUIDV7Factory(), $this->aRequiredOpenListField(), true, [], $bind_values, []])
+            ->onlyMethods(['getBindValuesForIds'])
+            ->getMock();
+        $bind->method('getBindValuesForIds')->with([0 => '1000', 1 => '1001', 2 => '1002'])
+            ->willReturn([
+                '1000' => ListStaticValueBuilder::aStaticValue('1000')->build(),
+                '1001' => ListStaticValueBuilder::aStaticValue('1001')->build(),
+                '1002' => ListStaticValueBuilder::aStaticValue('1002')->build(),
+            ]);
 
-        $list_field = Mockery::mock(Tracker_FormElement_Field_OpenList::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $list_field->shouldReceive('getId')->andReturn(1);
-        $list_field->shouldReceive('getValueDao')->andReturn($value_dao);
-        $list_field->shouldReceive('getOpenValueDao')->andReturn($open_value_dao);
-        $list_field->shouldReceive('getBind')->andReturn($bind);
+        $list_field = $this->createPartialMock(Tracker_FormElement_Field_OpenList::class, ['getId', 'getValueDao', 'getOpenValueDao', 'getBind']);
+        $list_field->method('getId')->willReturn(1);
+        $list_field->method('getValueDao')->willReturn($value_dao);
+        $list_field->method('getOpenValueDao')->willReturn($open_value_dao);
+        $list_field->method('getBind')->willReturn($bind);
 
-        $changeset_value = $list_field->getChangesetValue(Mockery::mock(Tracker_Artifact_Changeset::class), 123, false);
-        $this->assertInstanceOf(Tracker_Artifact_ChangesetValue_OpenList::class, $changeset_value);
-        $this->assertCount(5, $changeset_value->getListValues());
+        $changeset_value = $list_field->getChangesetValue(ChangesetTestBuilder::aChangeset(45)->build(), 123, false);
+        self::assertInstanceOf(Tracker_Artifact_ChangesetValue_OpenList::class, $changeset_value);
+        self::assertCount(5, $changeset_value->getListValues());
 
         $list_values = $changeset_value->getListValues();
-        $this->assertInstanceOf(Tracker_FormElement_Field_List_BindValue::class, $list_values[0]);
-        $this->assertInstanceOf(Tracker_FormElement_Field_List_BindValue::class, $list_values[1]);
-        $this->assertInstanceOf(Tracker_FormElement_Field_List_OpenValue::class, $list_values[2]);
-        $this->assertInstanceOf(Tracker_FormElement_Field_List_OpenValue::class, $list_values[3]);
-        $this->assertInstanceOf(Tracker_FormElement_Field_List_BindValue::class, $list_values[4]);
+        self::assertInstanceOf(Tracker_FormElement_Field_List_BindValue::class, $list_values[0]);
+        self::assertInstanceOf(Tracker_FormElement_Field_List_BindValue::class, $list_values[1]);
+        self::assertInstanceOf(Tracker_FormElement_Field_List_OpenValue::class, $list_values[2]);
+        self::assertInstanceOf(Tracker_FormElement_Field_List_OpenValue::class, $list_values[3]);
+        self::assertInstanceOf(Tracker_FormElement_Field_List_BindValue::class, $list_values[4]);
     }
 
     public function testGetChangesetValueDoesntExist(): void
     {
-        $value_dao = Mockery::mock(OpenListChangesetValueDao::class);
-        $value_dao->shouldReceive('searchbyId')->andReturn(TestHelper::arrayToDar());
+        $value_dao = $this->createMock(OpenListChangesetValueDao::class);
+        $value_dao->method('searchbyId')->willReturn(TestHelper::arrayToDar());
 
-        $list_field = Mockery::mock(Tracker_FormElement_Field_OpenList::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $list_field->shouldReceive('getId')->andReturn(1);
-        $list_field->shouldReceive('getValueDao')->andReturn($value_dao);
+        $list_field = $this->createPartialMock(Tracker_FormElement_Field_OpenList::class, ['getId', 'getValueDao']);
+        $list_field->method('getId')->willReturn(1);
+        $list_field->method('getValueDao')->willReturn($value_dao);
 
-        $changeset_value = $list_field->getChangesetValue(Mockery::mock(Tracker_Artifact_Changeset::class), 123, false);
-        $this->assertCount(0, $changeset_value->getListValues());
+        $changeset_value = $list_field->getChangesetValue(ChangesetTestBuilder::aChangeset(45)->build(), 123, false);
+        self::assertCount(0, $changeset_value->getListValues());
     }
 
     public function testSaveValue(): void
@@ -148,128 +150,120 @@ final class Tracker_FormElement_Field_OpenListTest extends \Tuleap\Test\PHPUnit\
         $submitted_value[] = '!new_2'; //new open value
         $submitted_value   = implode(',', $submitted_value);
 
-        $open_value_dao = Mockery::mock(OpenListChangesetValueDao::class);
-        $open_value_dao->shouldReceive('create')->andReturn([1, 'new_1'])->once()->andReturn(901);
-        $open_value_dao->shouldReceive('create')->andReturn([1, 'new_2'])->once()->andReturn(902);
+        $open_value_dao = $this->createMock(OpenListChangesetValueDao::class);
+        $open_value_dao->expects($this->exactly(2))->method('create')->with(1, self::isString())
+            ->willReturnCallback(static fn(int $changeset_id, string $label) => match ($label) {
+                'new_1' => 901,
+                'new_2' => 902,
+            });
 
-        $value_dao = Mockery::mock(OpenListChangesetValueDao::class);
-        $value_dao->shouldReceive('create')->withArgs(
+        $value_dao = $this->createMock(OpenListChangesetValueDao::class);
+        $value_dao->expects($this->once())->method('create')->with(
+            $changeset_id,
             [
-                $changeset_id,
-                [
-                    ['bindvalue_id' => 101, 'openvalue_id' => null],
-                    ['bindvalue_id' => 102, 'openvalue_id' => null],
-                    ['bindvalue_id' => null, 'openvalue_id' => 301],
-                    ['bindvalue_id' => null, 'openvalue_id' => 302],
-                    ['bindvalue_id' => 103, 'openvalue_id' => null],
-                    ['bindvalue_id' => null, 'openvalue_id' => 901],
-                    ['bindvalue_id' => null, 'openvalue_id' => 902],
-                ],
-            ]
-        )->once();
+                ['bindvalue_id' => 101, 'openvalue_id' => null],
+                ['bindvalue_id' => 102, 'openvalue_id' => null],
+                ['bindvalue_id' => null, 'openvalue_id' => 301],
+                ['bindvalue_id' => null, 'openvalue_id' => 302],
+                ['bindvalue_id' => 103, 'openvalue_id' => null],
+                ['bindvalue_id' => null, 'openvalue_id' => 901],
+                ['bindvalue_id' => null, 'openvalue_id' => 902],
+            ],
+        );
 
-        $list_field = Mockery::mock(Tracker_FormElement_Field_OpenList::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $list_field->shouldReceive('getId')->andReturn(1);
-        $list_field->shouldReceive('getValueDao')->andReturn($value_dao);
-        $list_field->shouldReceive('getOpenValueDao')->andReturn($open_value_dao);
+        $list_field = $this->createPartialMock(Tracker_FormElement_Field_OpenList::class, ['getId', 'getValueDao', 'getOpenValueDao']);
+        $list_field->method('getId')->willReturn(1);
+        $list_field->method('getValueDao')->willReturn($value_dao);
+        $list_field->method('getOpenValueDao')->willReturn($open_value_dao);
+        $reflection = new ReflectionClass($list_field::class);
+        $method     = $reflection->getMethod('saveValue');
+        $method->setAccessible(true);
 
-        $list_field->saveValue($artifact, $changeset_id, $submitted_value, null, Mockery::mock(CreatedFileURLMapping::class));
+        $method->invoke($list_field, $artifact, $changeset_id, $submitted_value, null, new CreatedFileURLMapping());
     }
 
     public function testItResetsTheFieldValueWhenSubmittedValueIsEmpty(): void
     {
-        $this->assertEquals('', $this->field->getFieldData(''));
+        self::assertEquals('', $this->field->getFieldData(''));
     }
 
     public function testItCreatesOneValue(): void
     {
-        $this->bind->shouldReceive('getFieldData')
-            ->withArgs(['new value', Mockery::any()])->andReturn(null)->once();
+        $this->bind->expects($this->once())->method('getFieldData')
+            ->with('new value', self::anything())->willReturn(null);
 
-        $this->dao->shouldReceive('searchByExactLabel')
-            ->withArgs([Mockery::any(), 'new value'])->andReturn(TestHelper::arrayToDar())->once();
+        $this->dao->expects($this->once())->method('searchByExactLabel')
+            ->with(self::anything(), 'new value')->willReturn(TestHelper::arrayToDar());
 
-        $this->assertEquals('!new value', $this->field->getFieldData('new value'));
+        self::assertEquals('!new value', $this->field->getFieldData('new value'));
     }
 
     public function testItUsesOneValueDefinedByAdmin(): void
     {
-        $this->bind->shouldReceive('getFieldData')
-            ->withArgs(['existing value', Mockery::any()])->andReturn(115)->once();
+        $this->bind->expects($this->once())->method('getFieldData')
+            ->with('existing value', self::anything())->willReturn(115);
 
-        $this->dao->shouldReceive('searchByExactLabel')->never();
+        $this->dao->expects($this->never())->method('searchByExactLabel');
 
-        $this->assertEquals('b115', $this->field->getFieldData('existing value'));
+        self::assertEquals('b115', $this->field->getFieldData('existing value'));
     }
 
     public function testItUsesOneOpenValueDefinedPreviously(): void
     {
-        $this->bind->shouldReceive('getFieldData')
-            ->withArgs(['existing open value', Mockery::any()])->andReturn(null)->once();
+        $this->bind->expects($this->once())->method('getFieldData')
+            ->with('existing open value', self::anything())->willReturn(null);
 
-        $this->dao->shouldReceive('searchByExactLabel')
-            ->withArgs([Mockery::any(), 'existing open value'])
-            ->andReturn(TestHelper::arrayToDar(['id' => '30', 'field_id' => '1', 'label' => 'existing open value']))
-            ->once();
+        $this->dao->expects($this->once())->method('searchByExactLabel')
+            ->with(self::anything(), 'existing open value')
+            ->willReturn(TestHelper::arrayToDar(['id' => '30', 'field_id' => '1', 'label' => 'existing open value']));
 
-        $this->assertEquals('o30', $this->field->getFieldData('existing open value'));
+        self::assertEquals('o30', $this->field->getFieldData('existing open value'));
     }
 
     public function testItCreatesTwoNewValues(): void
     {
-        $this->bind->shouldReceive('getFieldData')
-            ->withArgs(['new value', Mockery::any()])->andReturn(null)->once();
-        $this->bind->shouldReceive('getFieldData')
-            ->withArgs(['yet another new value', Mockery::any()])->andReturn(null)->once();
+        $this->bind->expects($this->exactly(2))->method('getFieldData')
+            ->willReturnCallback(static fn(string $value) => match ($value) {
+                'new value', 'yet another new value' => null,
+            });
 
-        $this->dao->shouldReceive('searchByExactLabel')
-            ->withArgs([Mockery::any(), 'new value'])
-            ->andReturn(TestHelper::arrayToDar([]))
-            ->once();
+        $this->dao->expects($this->exactly(2))->method('searchByExactLabel')
+            ->willReturnCallback(static fn(int $id, string $label) => match ($label) {
+                'new value', 'yet another new value' => TestHelper::emptyDar(),
+            });
 
-        $this->dao->shouldReceive('searchByExactLabel')
-            ->withArgs([Mockery::any(), 'yet another new value'])
-            ->andReturn(TestHelper::arrayToDar([]))
-            ->once();
-
-        $this->assertEquals('!new value,!yet another new value', $this->field->getFieldData('new value,yet another new value'));
+        self::assertEquals('!new value,!yet another new value', $this->field->getFieldData('new value,yet another new value'));
     }
 
     public function testItCreatesANewValueAndReuseABindValueSetByAdmin(): void
     {
-        $this->bind->shouldReceive('getFieldData')
-            ->withArgs(['new value', Mockery::any()])->andReturn(null)->once();
-        $this->bind->shouldReceive('getFieldData')
-            ->withArgs(['existing value', Mockery::any()])->andReturn(115)->once();
+        $this->bind->expects($this->exactly(2))->method('getFieldData')
+            ->willReturnCallback(static fn(string $value) => match ($value) {
+                'new value'      => null,
+                'existing value' => 115,
+            });
 
-        $this->dao->shouldReceive('searchByExactLabel')
-            ->withArgs([Mockery::any(), 'new value'])
-            ->andReturn(TestHelper::arrayToDar([]))
-            ->once();
+        $this->dao->expects($this->once())->method('searchByExactLabel')
+            ->with(self::anything(), 'new value')->willReturn(TestHelper::arrayToDar([]));
 
-        $this->assertEquals('!new value,b115', $this->field->getFieldData('new value,existing value'));
+        self::assertEquals('!new value,b115', $this->field->getFieldData('new value,existing value'));
     }
 
     public function testItCreatesANewValueAndReuseABindValueAndCreatesAnOpenValue(): void
     {
-        $this->bind->shouldReceive('getFieldData')
-            ->withArgs(['new value', Mockery::any()])->andReturn(null)->once();
-        $this->bind->shouldReceive('getFieldData')
-            ->withArgs(['existing open value', Mockery::any()])->andReturn(null)->once();
-        $this->bind->shouldReceive('getFieldData')
-            ->withArgs(['existing value', Mockery::any()])->andReturn(115)->once();
+        $this->bind->expects($this->exactly(3))->method('getFieldData')
+            ->willReturnCallback(static fn(string $value) => match ($value) {
+                'new value', 'existing open value' => null,
+                'existing value'                   => 115,
+            });
 
-        $this->dao->shouldReceive('searchByExactLabel')
-            ->withArgs([Mockery::any(), 'new value'])
-            ->andReturn(TestHelper::arrayToDar([]))
-            ->once();
+        $this->dao->expects($this->exactly(2))->method('searchByExactLabel')
+            ->willReturnCallback(static fn(int $id, string $label) => match ($label) {
+                'new value'           => TestHelper::emptyDar(),
+                'existing open value' => TestHelper::arrayToDar(['id' => '30', 'field_id' => '1', 'label' => 'existing open value']),
+            });
 
-        $this->dao->shouldReceive('searchByExactLabel')
-            ->withArgs([Mockery::any(), 'existing open value'])
-            ->andReturn(TestHelper::arrayToDar(['id' => '30', 'field_id' => '1', 'label' => 'existing open value']))
-            ->once();
-
-        $this->assertEquals('!new value,o30,b115', $this->field->getFieldData('new value,existing open value,existing value'));
+        self::assertEquals('!new value,o30,b115', $this->field->getFieldData('new value,existing open value,existing value'));
     }
 
     public function testItThrowsAnExceptionWhenReturningValueIndexedByFieldName(): void
@@ -297,21 +291,19 @@ final class Tracker_FormElement_Field_OpenListTest extends \Tuleap\Test\PHPUnit\
 
     public function testItAcceptsValidValues(): void
     {
-        $artifact = Mockery::mock(Artifact::class);
-        $field    = Mockery::mock(Tracker_FormElement_Field_OpenList::class)
-            ->makePartial()
-            ->shouldAllowMockingProtectedMethods();
-        $field->shouldReceive('validate')->andReturnTrue();
+        $artifact = ArtifactTestBuilder::anArtifact(963)->build();
+        $field    = $this->createPartialMock(Tracker_FormElement_Field_OpenList::class, ['validate']);
+        $field->method('validate')->willReturn(true);
 
-        $this->assertTrue($field->isValid($artifact, ''));
-        $this->assertTrue($field->isValid($artifact, 'b101'));
-        $this->assertTrue(
+        self::assertTrue($field->isValid($artifact, ''));
+        self::assertTrue($field->isValid($artifact, 'b101'));
+        self::assertTrue(
             $field->isValid(
                 $artifact,
-                Tracker_FormElement_Field_OpenList::BIND_PREFIX . Tracker_FormElement_Field_OpenList::NONE_VALUE
+                Tracker_FormElement_Field_OpenList::BIND_PREFIX . Tracker_FormElement_Field_List::NONE_VALUE
             )
         );
-        $this->assertTrue($field->isValid($artifact, ['b101', 'b102']));
+        self::assertTrue($field->isValid($artifact, ['b101', 'b102']));
     }
 
     public function testWhenFieldIsRequiredItDoesNotAcceptInvalidValues(): void
@@ -319,16 +311,13 @@ final class Tracker_FormElement_Field_OpenListTest extends \Tuleap\Test\PHPUnit\
         $artifact = $this->createMock(Artifact::class);
         $field    = $this->aRequiredOpenListField();
 
-        $GLOBALS['Response']->method('addFeedback')->willReturnCallback(
-            function (string $level, string $message): void {
-                match (true) {
-                    $level === 'error' &&
-                    ($message === 'Invalid value dummytext for field My Open List (openlist).' || $message === 'The field My Open List (openlist) is required.') => true,
-                };
-            }
-        );
+        $GLOBALS['Response']->method('addFeedback')
+            ->with(
+                'error',
+                self::callback(static fn(string $message) => $message === 'Invalid value dummytext for field My Open List (openlist).' || $message === 'The field My Open List (openlist) is required.'),
+            );
 
-        $this->assertFalse($field->isValidRegardingRequiredProperty($artifact, 'dummytext'));
+        self::assertFalse($field->isValidRegardingRequiredProperty($artifact, 'dummytext'));
     }
 
     public function testWhenFieldIsRequiredItDoesNotAcceptInvalidBindOrOpenValues(): void
@@ -340,7 +329,7 @@ final class Tracker_FormElement_Field_OpenListTest extends \Tuleap\Test\PHPUnit\
             ->method('addFeedback')
             ->with('error', 'The field My Open List (openlist) is required.');
 
-        $this->assertFalse($field->isValidRegardingRequiredProperty($artifact, 'bdummy,otext'));
+        self::assertFalse($field->isValidRegardingRequiredProperty($artifact, 'bdummy,otext'));
     }
 
     /**
@@ -354,12 +343,12 @@ final class Tracker_FormElement_Field_OpenListTest extends \Tuleap\Test\PHPUnit\
         $artifact = $this->createMock(Artifact::class);
         $field    = $this->aRequiredOpenListField();
 
-        $this->assertTrue($field->isValidRegardingRequiredProperty($artifact, $value));
+        self::assertTrue($field->isValidRegardingRequiredProperty($artifact, $value));
     }
 
-    private function aRequiredOpenListField(): \Tracker_FormElement_Field_OpenList
+    private function aRequiredOpenListField(): Tracker_FormElement_Field_OpenList
     {
-        return new \Tracker_FormElement_Field_OpenList(
+        return new Tracker_FormElement_Field_OpenList(
             102,
             null,
             null,

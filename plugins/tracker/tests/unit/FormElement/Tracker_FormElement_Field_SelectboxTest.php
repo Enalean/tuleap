@@ -22,29 +22,26 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement;
 
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Bind;
 use Tracker_FormElement_Field_List_Bind_StaticValue_None;
 use Tracker_FormElement_Field_Selectbox;
+use Tracker_FormElement_InvalidFieldValueException;
 use Tracker_FormElement_RESTValueByField_NotImplementedException;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\GlobalResponseMock;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
 
-// phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Tracker_FormElement_Field_SelectboxTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class Tracker_FormElement_Field_SelectboxTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
     use GlobalResponseMock;
 
-    /**
-     * @var Tracker_FormElement_Field_Selectbox
-     */
-    private $field;
+    private Tracker_FormElement_Field_Selectbox $field;
 
     protected function setUp(): void
     {
@@ -66,40 +63,37 @@ final class Tracker_FormElement_Field_SelectboxTest extends \Tuleap\Test\PHPUnit
     public function testEmptyCSVStringIsRecognizedAsTheNoneValue(): void
     {
         $value = $this->field->getFieldDataFromCSVValue('');
-        $this->assertEquals(Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID, $value);
+        self::assertEquals(Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID, $value);
     }
 
     public function testCSVString100CanBeUsedAsACSVValue(): void
     {
-        $bind = Mockery::mock(Tracker_FormElement_Field_List_Bind::class);
-        $bind->shouldReceive('getFieldData')->andReturn('bind_value');
-        $this->field->setBind($bind);
-
+        ListStaticBindBuilder::aStaticBind($this->field)->withStaticValues([153 => '100'])->build();
         $value = $this->field->getFieldDataFromCSVValue('100');
-        $this->assertEquals('bind_value', $value);
+        self::assertEquals(153, $value);
     }
 
     public function testGetFieldDataFromRESTValueThrowsExceptionIfBindValueIdsAreNotPresent(): void
     {
-        $this->expectException(\Tracker_FormElement_InvalidFieldValueException::class);
+        $this->expectException(Tracker_FormElement_InvalidFieldValueException::class);
         $this->field->getFieldDataFromRESTValue([]);
     }
 
     public function testGetFieldDataFromRESTValueThrowsExceptionIfBindValueIdsIsAString(): void
     {
-        $this->expectException(\Tracker_FormElement_InvalidFieldValueException::class);
+        $this->expectException(Tracker_FormElement_InvalidFieldValueException::class);
         $this->field->getFieldDataFromRESTValue(['bind_value_ids' => '']);
     }
 
     public function testGetFieldDataFromRESTValueThrowsExceptionIfBindValueIdsAreMultiple(): void
     {
-        $this->expectException(\Tracker_FormElement_InvalidFieldValueException::class);
+        $this->expectException(Tracker_FormElement_InvalidFieldValueException::class);
         $this->field->getFieldDataFromRESTValue(['bind_value_ids' => [123, 124]]);
     }
 
     public function testGetFieldDataFromRESTValueReturns100IfBindValueIdsIsEmpty(): void
     {
-        $this->assertEquals(
+        self::assertEquals(
             Tracker_FormElement_Field_List::NONE_VALUE,
             $this->field->getFieldDataFromRESTValue(['bind_value_ids' => []])
         );
@@ -107,7 +101,7 @@ final class Tracker_FormElement_Field_SelectboxTest extends \Tuleap\Test\PHPUnit
 
     public function testGetFieldDataFromRESTValueReturns100IfValueIs100(): void
     {
-        $this->assertEquals(
+        self::assertEquals(
             Tracker_FormElement_Field_List::NONE_VALUE,
             $this->field->getFieldDataFromRESTValue(['bind_value_ids' => [100]])
         );
@@ -115,25 +109,21 @@ final class Tracker_FormElement_Field_SelectboxTest extends \Tuleap\Test\PHPUnit
 
     public function testGetFieldDataFromRESTValueThrowsExceptionIfValueIsUnknown(): void
     {
-        $this->field->setBind(
-            Mockery::mock(Tracker_FormElement_Field_List_Bind::class)
-                ->shouldReceive(['getFieldDataFromRESTValue' => 0])
-                ->getMock()
-        );
+        $bind = $this->createMock(Tracker_FormElement_Field_List_Bind::class);
+        $bind->method('getFieldDataFromRESTValue')->willReturn(0);
+        $this->field->setBind($bind);
 
-        $this->expectException(\Tracker_FormElement_InvalidFieldValueException::class);
+        $this->expectException(Tracker_FormElement_InvalidFieldValueException::class);
         $this->field->getFieldDataFromRESTValue(['bind_value_ids' => [112]]);
     }
 
     public function testGetFieldDataFromRESTValueReturnsValue(): void
     {
-        $this->field->setBind(
-            Mockery::mock(Tracker_FormElement_Field_List_Bind::class)
-                ->shouldReceive(['getFieldDataFromRESTValue' => 112])
-                ->getMock()
-        );
+        $bind = $this->createMock(Tracker_FormElement_Field_List_Bind::class);
+        $bind->method('getFieldDataFromRESTValue')->willReturn(112);
+        $this->field->setBind($bind);
 
-        $this->assertEquals(
+        self::assertEquals(
             112,
             $this->field->getFieldDataFromRESTValue(['bind_value_ids' => [112]])
         );
@@ -141,13 +131,11 @@ final class Tracker_FormElement_Field_SelectboxTest extends \Tuleap\Test\PHPUnit
 
     public function testGetFieldDataFromRESTValueReturnsValueForDynamicGroup(): void
     {
-        $this->field->setBind(
-            Mockery::mock(Tracker_FormElement_Field_List_Bind::class)
-                ->shouldReceive(['getFieldDataFromRESTValue' => 3])
-                ->getMock()
-        );
+        $bind = $this->createMock(Tracker_FormElement_Field_List_Bind::class);
+        $bind->method('getFieldDataFromRESTValue')->willReturn(3);
+        $this->field->setBind($bind);
 
-        $this->assertEquals(
+        self::assertEquals(
             3,
             $this->field->getFieldDataFromRESTValue(['bind_value_ids' => ['103_3']])
         );
@@ -202,6 +190,6 @@ final class Tracker_FormElement_Field_SelectboxTest extends \Tuleap\Test\PHPUnit
             1
         );
 
-        $this->assertFalse($field->isValidRegardingRequiredProperty($artifact, $value));
+        self::assertFalse($field->isValidRegardingRequiredProperty($artifact, $value));
     }
 }
