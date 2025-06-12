@@ -21,55 +21,68 @@
 
 declare(strict_types=1);
 
+namespace Tuleap\Tracker\FormElement;
+
+use HTTPRequest;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use PHPUnit\Framework\MockObject\MockObject;
+use SimpleXMLElement;
+use TestHelper;
+use Tracker_Artifact_ChangesetValue_List;
+use Tracker_FormElement_Field_List;
+use Tracker_FormElement_Field_List_Bind_Static;
+use Tracker_FormElement_Field_List_BindFactory;
+use Tracker_FormElement_Field_List_BindValue;
+use Tracker_FormElement_InvalidFieldValueException;
+use Tracker_FormElement_RESTValueByField_NotImplementedException;
+use Tracker_IDisplayTrackerLayout;
+use Tracker_Report_Criteria;
+use Tracker_Report_InvalidRESTCriterionException;
+use Tracker_Report_REST;
+use Tuleap\GlobalLanguageMock;
+use Tuleap\GlobalResponseMock;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\User\XML\Import\IFindUserFromXMLReferenceStub;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\ListFields\ListValueDao;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\ListFieldSpecificPropertiesDAO;
-use Tuleap\Tracker\FormElement\TransitionListValidator;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetValueListTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
+use Tuleap\Tracker\Test\Builders\ReportTestBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
+use Workflow;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Tracker_FormElement_Field_ListTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+#[DisableReturnValueGenerationForTestDoubles]
+final class Tracker_FormElement_Field_ListTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use \Tuleap\GlobalResponseMock;
-    use \Tuleap\GlobalLanguageMock;
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use GlobalResponseMock;
+    use GlobalLanguageMock;
 
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_Artifact_ChangesetValue_List
-     */
-    private $changeset_value;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_FormElement_Field_List
-     */
-    private $list_field;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_FormElement_Field_List_BindValue
-     */
-    private $bind_value;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_FormElement_Field_List_Bind_Static
-     */
-    private $bind;
-
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ListValueDao
-     */
-    private $value_dao;
+    private Tracker_Artifact_ChangesetValue_List&MockObject $changeset_value;
+    private Tracker_FormElement_Field_List&MockObject $list_field;
+    private Tracker_FormElement_Field_List_BindValue $bind_value;
+    private Tracker_FormElement_Field_List_Bind_Static&MockObject $bind;
+    private ListValueDao&MockObject $value_dao;
 
     protected function setUp(): void
     {
-        $this->list_field      = Mockery::mock(Tracker_FormElement_Field_List::class)
-            ->shouldAllowMockingProtectedMethods()->makePartial();
-        $this->value_dao       = Mockery::spy(ListValueDao::class);
-        $this->changeset_value = Mockery::spy(Tracker_Artifact_ChangesetValue_List::class);
-        $this->bind            = Mockery::spy(Tracker_FormElement_Field_List_Bind_Static::class);
-        $this->bind_value      = Mockery::spy(Tracker_FormElement_Field_List_BindValue::class);
+        $this->list_field      = $this->createPartialMock(Tracker_FormElement_Field_List::class, [
+            'getValueDao', 'getBind', 'isNone', 'getFactoryLabel', 'getFactoryDescription', 'getFactoryIconUseIt',
+            'getFactoryIconCreate', 'accept', 'isAlwaysInEditMode', 'fieldHasEnableWorkflow', 'getWorkflow',
+            'getBindFactory', 'isRequired', 'getTransitionListValidator', 'getListDao', 'getId',
+        ]);
+        $this->value_dao       = $this->createMock(ListValueDao::class);
+        $this->changeset_value = $this->createMock(Tracker_Artifact_ChangesetValue_List::class);
+        $this->bind            = $this->createMock(Tracker_FormElement_Field_List_Bind_Static::class);
+        $this->bind_value      = ListStaticValueBuilder::aStaticValue('value')->build();
 
-        $this->list_field->shouldReceive('getValueDao')->andReturn($this->value_dao);
-        $this->list_field->shouldReceive('getBind')->andReturn($this->bind);
+        $this->list_field->method('getValueDao')->willReturn($this->value_dao);
+        $this->list_field->method('getBind')->willReturn($this->bind);
+        $this->list_field->method('getId')->willReturn(66);
     }
 
     protected function tearDown(): void
@@ -79,56 +92,50 @@ final class Tracker_FormElement_Field_ListTest extends \Tuleap\Test\PHPUnit\Test
 
     public function testGetChangesetValue(): void
     {
-        $this->value_dao->shouldReceive('searchById')->andReturn(
-            TestHelper::arrayToDar(
-                ['id' => '123', 'field_id' => '1', 'bindvalue_id' => '1000'],
-                ['id' => '123', 'field_id' => '1', 'bindvalue_id' => '1001'],
-                ['id' => '123', 'field_id' => '1', 'bindvalue_id' => '1002']
-            )
-        );
+        $this->value_dao->method('searchById')->willReturn(TestHelper::arrayToDar(
+            ['id' => '123', 'field_id' => '1', 'bindvalue_id' => '1000'],
+            ['id' => '123', 'field_id' => '1', 'bindvalue_id' => '1001'],
+            ['id' => '123', 'field_id' => '1', 'bindvalue_id' => '1002']
+        ));
 
-        $this->bind->shouldReceive('getBindValues')->andReturn(
-            array_fill(0, 3, $this->bind_value)
-        );
+        $this->bind->method('getBindValues')->willReturn(array_fill(0, 3, $this->bind_value));
 
         $changeset_value = $this->list_field->getChangesetValue(
-            Mockery::mock(Tracker_Artifact_Changeset::class),
+            ChangesetTestBuilder::aChangeset(58)->build(),
             123,
             false
         );
-        $this->assertInstanceOf(Tracker_Artifact_ChangesetValue_List::class, $changeset_value);
-        $this->assertIsArray($changeset_value->getListValues());
-        $this->assertCount(3, $changeset_value->getListValues());
+        self::assertInstanceOf(Tracker_Artifact_ChangesetValue_List::class, $changeset_value);
+        self::assertIsArray($changeset_value->getListValues());
+        self::assertCount(3, $changeset_value->getListValues());
         foreach ($changeset_value->getListValues() as $bv) {
-            $this->assertInstanceOf(Tracker_FormElement_Field_List_BindValue::class, $bv);
+            self::assertInstanceOf(Tracker_FormElement_Field_List_BindValue::class, $bv);
         }
     }
 
     public function testGetChangesetValueDoesntExist(): void
     {
-        $this->value_dao->shouldReceive('searchById')->andReturn(false);
+        $this->value_dao->method('searchById')->willReturn(false);
 
-        $this->bind->shouldReceive('getBindValues')->andReturn(
-            array_fill(0, 3, $this->bind_value)
-        );
+        $this->bind->method('getBindValues')->willReturn(array_fill(0, 3, $this->bind_value));
 
         $changeset_value = $this->list_field->getChangesetValue(
-            Mockery::mock(Tracker_Artifact_Changeset::class),
+            ChangesetTestBuilder::aChangeset(58)->build(),
             123,
             false
         );
-        $this->assertInstanceOf(Tracker_Artifact_ChangesetValue_List::class, $changeset_value);
-        $this->assertIsArray($changeset_value->getListValues());
-        $this->assertCount(0, $changeset_value->getListValues());
+        self::assertInstanceOf(Tracker_Artifact_ChangesetValue_List::class, $changeset_value);
+        self::assertIsArray($changeset_value->getListValues());
+        self::assertCount(0, $changeset_value->getListValues());
     }
 
     public function testHasChangesNoChangesReverseOrderMSB(): void
     {
         $old_value = ['107', '108'];
         $new_value = ['108', '107'];
-        $this->changeset_value->shouldReceive('getValue')->andReturn($old_value);
-        $this->assertFalse(
-            $this->list_field->hasChanges(Mockery::mock(Artifact::class), $this->changeset_value, $new_value)
+        $this->changeset_value->method('getValue')->willReturn($old_value);
+        self::assertFalse(
+            $this->list_field->hasChanges(ArtifactTestBuilder::anArtifact(456)->build(), $this->changeset_value, $new_value)
         );
     }
 
@@ -136,9 +143,9 @@ final class Tracker_FormElement_Field_ListTest extends \Tuleap\Test\PHPUnit\Test
     {
         $old_value = ['107', '108'];
         $new_value = ['107', '108'];
-        $this->changeset_value->shouldReceive('getValue')->andReturn($old_value);
-        $this->assertFalse(
-            $this->list_field->hasChanges(Mockery::mock(Artifact::class), $this->changeset_value, $new_value)
+        $this->changeset_value->method('getValue')->willReturn($old_value);
+        self::assertFalse(
+            $this->list_field->hasChanges(ArtifactTestBuilder::anArtifact(456)->build(), $this->changeset_value, $new_value)
         );
     }
 
@@ -146,9 +153,9 @@ final class Tracker_FormElement_Field_ListTest extends \Tuleap\Test\PHPUnit\Test
     {
         $old_value = [];
         $new_value = [];
-        $this->changeset_value->shouldReceive('getValue')->andReturn($old_value);
-        $this->assertFalse(
-            $this->list_field->hasChanges(Mockery::mock(Artifact::class), $this->changeset_value, $new_value)
+        $this->changeset_value->method('getValue')->willReturn($old_value);
+        self::assertFalse(
+            $this->list_field->hasChanges(ArtifactTestBuilder::anArtifact(456)->build(), $this->changeset_value, $new_value)
         );
     }
 
@@ -156,9 +163,9 @@ final class Tracker_FormElement_Field_ListTest extends \Tuleap\Test\PHPUnit\Test
     {
         $old_value = ['108'];
         $new_value = '108';
-        $this->changeset_value->shouldReceive('getValue')->andReturn($old_value);
-        $this->assertFalse(
-            $this->list_field->hasChanges(Mockery::mock(Artifact::class), $this->changeset_value, $new_value)
+        $this->changeset_value->method('getValue')->willReturn($old_value);
+        self::assertFalse(
+            $this->list_field->hasChanges(ArtifactTestBuilder::anArtifact(456)->build(), $this->changeset_value, $new_value)
         );
     }
 
@@ -166,9 +173,9 @@ final class Tracker_FormElement_Field_ListTest extends \Tuleap\Test\PHPUnit\Test
     {
         $old_value = ['107', '108'];
         $new_value = ['107', '110'];
-        $this->changeset_value->shouldReceive('getValue')->andReturn($old_value);
-        $this->assertTrue(
-            $this->list_field->hasChanges(Mockery::mock(Artifact::class), $this->changeset_value, $new_value)
+        $this->changeset_value->method('getValue')->willReturn($old_value);
+        self::assertTrue(
+            $this->list_field->hasChanges(ArtifactTestBuilder::anArtifact(456)->build(), $this->changeset_value, $new_value)
         );
     }
 
@@ -176,9 +183,9 @@ final class Tracker_FormElement_Field_ListTest extends \Tuleap\Test\PHPUnit\Test
     {
         $old_value = [];
         $new_value = ['107', '110'];
-        $this->changeset_value->shouldReceive('getValue')->andReturn($old_value);
-        $this->assertTrue(
-            $this->list_field->hasChanges(Mockery::mock(Artifact::class), $this->changeset_value, $new_value)
+        $this->changeset_value->method('getValue')->willReturn($old_value);
+        self::assertTrue(
+            $this->list_field->hasChanges(ArtifactTestBuilder::anArtifact(456)->build(), $this->changeset_value, $new_value)
         );
     }
 
@@ -186,9 +193,9 @@ final class Tracker_FormElement_Field_ListTest extends \Tuleap\Test\PHPUnit\Test
     {
         $old_value = ['107'];
         $new_value = '110';
-        $this->changeset_value->shouldReceive('getValue')->andReturn($old_value);
-        $this->assertTrue(
-            $this->list_field->hasChanges(Mockery::mock(Artifact::class), $this->changeset_value, $new_value)
+        $this->changeset_value->method('getValue')->willReturn($old_value);
+        self::assertTrue(
+            $this->list_field->hasChanges(ArtifactTestBuilder::anArtifact(456)->build(), $this->changeset_value, $new_value)
         );
     }
 
@@ -196,149 +203,182 @@ final class Tracker_FormElement_Field_ListTest extends \Tuleap\Test\PHPUnit\Test
     {
         $old_value = [];
         $new_value = '110';
-        $this->changeset_value->shouldReceive('getValue')->andReturn($old_value);
-        $this->assertTrue(
-            $this->list_field->hasChanges(Mockery::mock(Artifact::class), $this->changeset_value, $new_value)
+        $this->changeset_value->method('getValue')->willReturn($old_value);
+        self::assertTrue(
+            $this->list_field->hasChanges(ArtifactTestBuilder::anArtifact(456)->build(), $this->changeset_value, $new_value)
         );
     }
 
     public function testTransitionIsValidWhenWorkflowIsNotEnabled(): void
     {
-        $value_from = Mockery::spy(Tracker_FormElement_Field_List_BindValue::class);
-        $value_to   = Mockery::spy(Tracker_FormElement_Field_List_BindValue::class);
+        $this->bind->method('isExistingValue')->willReturn(true);
+        $this->list_field->method('fieldHasEnableWorkflow')->willReturn(false);
 
-        $this->list_field->shouldReceive('fieldHasEnableWorkflow')->andReturnFalse();
-
-        $this->assertTrue($this->list_field->isTransitionValid($value_from, $value_to));
+        self::assertTrue($this->list_field->isValid(ArtifactTestBuilder::anArtifact(65)->build(), 'to'));
     }
 
     public function testTransitionIsValidWhenTransitionExistsInWorkflow(): void
     {
-        $value_from = Mockery::spy(Tracker_FormElement_Field_List_BindValue::class);
-        $value_to   = Mockery::spy(Tracker_FormElement_Field_List_BindValue::class);
+        $value_from = ListStaticValueBuilder::aStaticValue('from')->build();
+        $value_to   = ListStaticValueBuilder::aStaticValue('to')->build();
 
-        $this->list_field->shouldReceive('fieldHasEnableWorkflow')->andReturnTrue();
-        $workflow = Mockery::mock(Workflow::class);
-        $this->list_field->shouldReceive('getWorkflow')->andReturn($workflow);
-        $workflow->shouldReceive('isTransitionExist')->withArgs([$value_from, $value_to])->andReturnTrue();
+        $changeset = ChangesetTestBuilder::aChangeset(85)->build();
+        $artifact  = ArtifactTestBuilder::anArtifact(65)->withChangesets($changeset)->build();
+        $changeset->setFieldValue(
+            $this->list_field,
+            ChangesetValueListTestBuilder::aListOfValue(1, $changeset, $this->list_field)->withValues([$value_from])->build(),
+        );
+        $this->bind->method('isExistingValue')->willReturn(true);
+        $this->bind->method('getValue')->with('to')->willReturn($value_to);
+        $this->list_field->method('fieldHasEnableWorkflow')->willReturn(true);
+        $workflow = $this->createMock(Workflow::class);
+        $this->list_field->method('getWorkflow')->willReturn($workflow);
+        $workflow->method('isTransitionExist')->with($value_from, $value_to)->willReturn(true);
+        $validator = $this->createMock(TransitionListValidator::class);
+        $validator->expects($this->once())->method('checkTransition')->willReturn(true);
+        $this->list_field->method('getTransitionListValidator')->willReturn($validator);
 
-        $this->assertTrue($this->list_field->isTransitionValid($value_from, $value_to));
+        self::assertTrue($this->list_field->isValid($artifact, 'to'));
     }
 
     public function testTransitionIsValidWhenTransitionDoesNotExistsInWorkflow(): void
     {
-        $value_from = Mockery::spy(Tracker_FormElement_Field_List_BindValue::class);
-        $value_to   = Mockery::spy(Tracker_FormElement_Field_List_BindValue::class);
+        $value_from = ListStaticValueBuilder::aStaticValue('from')->build();
+        $value_to   = ListStaticValueBuilder::aStaticValue('to')->build();
 
-        $this->list_field->shouldReceive('fieldHasEnableWorkflow')->andReturnTrue();
-        $workflow = Mockery::mock(Workflow::class);
-        $this->list_field->shouldReceive('getWorkflow')->andReturn($workflow);
-        $workflow->shouldReceive('isTransitionExist')->withArgs([$value_from, $value_to])->andReturnFalse();
+        $changeset = ChangesetTestBuilder::aChangeset(85)->build();
+        $artifact  = ArtifactTestBuilder::anArtifact(65)->withChangesets($changeset)->build();
+        $changeset->setFieldValue(
+            $this->list_field,
+            ChangesetValueListTestBuilder::aListOfValue(1, $changeset, $this->list_field)->withValues([$value_from])->build(),
+        );
+        $this->bind->method('isExistingValue')->willReturn(true);
+        $this->bind->method('getValue')->with('to')->willReturn($value_to);
+        $this->list_field->method('fieldHasEnableWorkflow')->willReturn(true);
+        $workflow = $this->createMock(Workflow::class);
+        $this->list_field->method('getWorkflow')->willReturn($workflow);
+        $workflow->method('isTransitionExist')->with($value_from, $value_to)->willReturn(false);
 
-        $this->assertFalse($this->list_field->isTransitionValid($value_from, $value_to));
+        self::assertFalse($this->list_field->isValid($artifact, 'to'));
     }
 
     public function testItHasErrorWhenValueIsNotAPossibleValue(): void
     {
-        $artifact = Mockery::mock(Artifact::class);
-        $this->list_field->shouldReceive('isPossibleValue')->andReturnFalse();
+        $artifact = ArtifactTestBuilder::anArtifact(456)->build();
+        $this->bind->method('isExistingValue')->willReturn(false);
 
-        $this->assertFalse($this->list_field->isValid($artifact, 'impossible'));
+        self::assertFalse($this->list_field->isValid($artifact, 'impossible'));
     }
 
     public function testItHasErrorWhenItIsNotValid(): void
     {
-        $artifact = Mockery::mock(Artifact::class);
-        $this->list_field->shouldReceive('isPossibleValue')->andReturnTrue();
-        $this->list_field->shouldReceive('validate')->andReturnFalse();
+        $artifact = $this->createMock(Artifact::class);
+        $artifact->method('getLastChangeset')->willReturn(null);
+        $this->bind->method('isExistingValue')->willReturn(true);
+        $this->bind->method('getValue')->willReturn(null);
+        $workflow = $this->createMock(Workflow::class);
+        $workflow->method('isTransitionExist')->willReturn(false);
+        $this->list_field->method('getWorkflow')->willReturn($workflow);
+        $this->list_field->method('fieldHasEnableWorkflow')->willReturn(true);
 
-        $this->assertFalse($this->list_field->isValid($artifact, 'invalid'));
+        self::assertFalse($this->list_field->isValid($artifact, 'invalid'));
     }
 
     public function testItIsValid(): void
     {
-        $artifact = Mockery::mock(Artifact::class);
-        $this->list_field->shouldReceive('isPossibleValue')->andReturnTrue();
-        $this->list_field->shouldReceive('validate')->andReturnTrue();
+        $artifact = ArtifactTestBuilder::anArtifact(456)->build();
+        $this->bind->method('isExistingValue')->willReturn(true);
+        $this->list_field->method('fieldHasEnableWorkflow')->willReturn(false);
 
-        $this->assertTrue($this->list_field->isValid($artifact, 'valid'));
+        self::assertTrue($this->list_field->isValid($artifact, 'valid'));
     }
 
     public function testExistingValueOfArrayIsAPossibleValue(): void
     {
-        $this->bind->shouldReceive('isExistingValue')->andReturnTrue();
-        $this->assertTrue($this->list_field->isPossibleValue(['valid']));
+        $this->bind->method('isExistingValue')->willReturn(true);
+        $this->list_field->method('fieldHasEnableWorkflow')->willReturn(false);
+        self::assertTrue($this->list_field->isValid(ArtifactTestBuilder::anArtifact(87)->build(), ['valid']));
     }
 
     public function testNonExistingValueOfArrayIsNotAPossibleValue(): void
     {
-        $this->bind->shouldReceive('isExistingValue')->andReturnFalse();
-        self::assertFalse($this->list_field->isPossibleValue(['invalid']));
+        $this->bind->method('isExistingValue')->willReturn(false);
+        self::assertFalse($this->list_field->isValid(ArtifactTestBuilder::anArtifact(87)->build(), ['invalid']));
     }
 
     public function testExistingStringIsAPossibleValue(): void
     {
-        $this->bind->shouldReceive('isExistingValue')->andReturnTrue();
-        $this->assertTrue($this->list_field->isPossibleValue('valid'));
+        $this->bind->method('isExistingValue')->willReturn(true);
+        $this->list_field->method('fieldHasEnableWorkflow')->willReturn(false);
+        self::assertTrue($this->list_field->isValid(ArtifactTestBuilder::anArtifact(87)->build(), 'valid'));
     }
 
     public function testNonExistingStringIsNotAPossibleValue(): void
     {
-        $this->bind->shouldReceive('isExistingValue')->andReturnFalse();
-        self::assertFalse($this->list_field->isPossibleValue('invalid'));
+        $this->bind->method('isExistingValue')->willReturn(false);
+        self::assertFalse($this->list_field->isValid(ArtifactTestBuilder::anArtifact(87)->build(), 'invalid'));
     }
 
     public function testNullIsAPossibleValue(): void
     {
-        $this->bind->shouldReceive('isExistingValue')->andReturnFalse();
-        self::assertTrue($this->list_field->isPossibleValue(null));
+        $this->bind->method('isExistingValue')->willReturn(false);
+        $this->list_field->method('fieldHasEnableWorkflow')->willReturn(false);
+        self::assertTrue($this->list_field->isValid(ArtifactTestBuilder::anArtifact(87)->build(), null));
     }
 
     public function testNoneIsAPossibleValue(): void
     {
-        $this->bind->shouldReceive('isExistingValue')->andReturnFalse();
-        self::assertTrue($this->list_field->isPossibleValue('100'));
+        $this->bind->method('isExistingValue')->willReturn(false);
+        $this->list_field->method('fieldHasEnableWorkflow')->willReturn(false);
+        self::assertTrue($this->list_field->isValid(ArtifactTestBuilder::anArtifact(87)->build(), '100'));
     }
 
     public function testValidateIsOkWhenNoWorkflowIsSet(): void
     {
-        $artifact = Mockery::mock(Artifact::class);
+        $artifact = ArtifactTestBuilder::anArtifact(456)->build();
         $value    = 'value';
-        $this->list_field->shouldReceive('fieldHasEnableWorkflow')->andReturnFalse();
+        $this->bind->method('isExistingValue')->willReturn(true);
+        $this->list_field->method('fieldHasEnableWorkflow')->willReturn(false);
 
-        $this->assertTrue($this->list_field->validate($artifact, $value));
+        self::assertTrue($this->list_field->isValid($artifact, $value));
     }
 
     public function testItChecksTransitionIsValidWhenArtifactDoesNotHaveAnExistingChangeset(): void
     {
-        $artifact = Mockery::mock(Artifact::class);
-        $artifact->shouldReceive('getLastChangeset')->andReturn(null);
-        $this->bind->shouldReceive('getValue')->andReturn(null);
+        $artifact = $this->createMock(Artifact::class);
+        $artifact->method('getLastChangeset')->willReturn(null);
+        $this->bind->method('getValue')->willReturn(null);
+        $this->bind->method('isExistingValue')->willReturn(true);
         $value = 'value';
-        $this->list_field->shouldReceive('fieldHasEnableWorkflow')->andReturnTrue();
-        $this->list_field->shouldReceive('isTransitionValid')->andReturnTrue();
+        $this->list_field->method('fieldHasEnableWorkflow')->willReturn(true);
+        $workflow = $this->createMock(Workflow::class);
+        $this->list_field->method('getWorkflow')->willReturn($workflow);
+        $workflow->method('isTransitionExist')->willReturn(true);
 
-        $validator = Mockery::mock(TransitionListValidator::class);
-        $validator->shouldReceive('checkTransition')->once()->andReturnTrue();
-        $this->list_field->shouldReceive('getTransitionListValidator')->andReturn($validator);
+        $validator = $this->createMock(TransitionListValidator::class);
+        $validator->expects($this->once())->method('checkTransition')->willReturn(true);
+        $this->list_field->method('getTransitionListValidator')->willReturn($validator);
 
-        $this->assertTrue($this->list_field->validate($artifact, $value));
+        self::assertTrue($this->list_field->isValid($artifact, $value));
     }
 
     public function testItChecksAllFieldsValueWhenLastChangesetHasAValue(): void
     {
-        $artifact = Mockery::mock(Artifact::class);
-        $artifact->shouldReceive('getLastChangeset')->andReturn(null);
-        $this->bind->shouldReceive('getValue')->andReturn([$this->bind_value]);
+        $artifact = $this->createMock(Artifact::class);
+        $artifact->method('getLastChangeset')->willReturn(null);
+        $this->bind->method('getValue')->willReturn([$this->bind_value]);
+        $this->bind->method('isExistingValue')->willReturn(true);
         $value = 'value';
-        $this->list_field->shouldReceive('fieldHasEnableWorkflow')->andReturnTrue();
-        $this->list_field->shouldReceive('isTransitionValid')->andReturnTrue();
+        $this->list_field->method('fieldHasEnableWorkflow')->willReturn(true);
+        $worflow = $this->createMock(Workflow::class);
+        $this->list_field->method('getWorkflow')->willReturn($worflow);
+        $worflow->method('isTransitionExist')->willReturn(true);
 
-        $validator = Mockery::mock(TransitionListValidator::class);
-        $validator->shouldReceive('checkTransition')->once()->andReturnTrue();
-        $this->list_field->shouldReceive('getTransitionListValidator')->andReturn($validator);
+        $validator = $this->createMock(TransitionListValidator::class);
+        $validator->expects($this->once())->method('checkTransition')->willReturn(true);
+        $this->list_field->method('getTransitionListValidator')->willReturn($validator);
 
-        $this->assertTrue($this->list_field->validate($artifact, $value));
+        self::assertTrue($this->list_field->isValid($artifact, $value));
     }
 
     //testing field import
@@ -357,106 +397,103 @@ final class Tracker_FormElement_Field_ListTest extends \Tuleap\Test\PHPUnit\Test
 
         $mapping = [];
 
-        $factory            = \Mockery::mock(Tracker_FormElement_Field_List_BindFactory::class);
-        $user_finder        = \Mockery::mock(User\XML\Import\IFindUserFromXMLReference::class);
-        $feedback_collector = \Mockery::mock(TrackerXmlImportFeedbackCollector::class);
+        $factory            = $this->createMock(Tracker_FormElement_Field_List_BindFactory::class);
+        $user_finder        = IFindUserFromXMLReferenceStub::buildWithUser(UserTestBuilder::buildWithDefaults());
+        $feedback_collector = new TrackerXmlImportFeedbackCollector();
 
-        $this->list_field->shouldReceive('getBindFactory')->andReturn($factory);
+        $this->list_field->method('getBindFactory')->willReturn($factory);
 
-        $factory->shouldReceive('getInstanceFromXML')->andReturn($this->bind);
+        $factory->method('getInstanceFromXML')->willReturn($this->bind);
 
         $this->list_field->continueGetInstanceFromXML($xml, $mapping, $user_finder, $feedback_collector);
-        $this->assertEquals($this->bind, $this->list_field->getBind());
+        self::assertEquals($this->bind, $this->list_field->getBind());
     }
 
     public function testAfterSaveObject(): void
     {
-        $tracker = Mockery::mock(Tracker::class);
-        $factory = Mockery::mock(Tracker_FormElement_Field_List_BindFactory::class);
-        $dao     = Mockery::mock(ListFieldSpecificPropertiesDAO::class);
+        $tracker = TrackerTestBuilder::aTracker()->build();
+        $factory = $this->createMock(Tracker_FormElement_Field_List_BindFactory::class);
+        $dao     = $this->createMock(ListFieldSpecificPropertiesDAO::class);
 
-        $this->list_field->shouldReceive('getBindFactory')->andReturn($factory);
-        $this->list_field->shouldReceive('getListDao')->andReturn($dao);
-        $this->list_field->shouldReceive('getId')->andReturn(66);
+        $this->list_field->method('getBindFactory')->willReturn($factory);
+        $this->list_field->method('getListDao')->willReturn($dao);
 
-        $factory->shouldReceive('getType')->with($this->bind)->andReturn('users')->once();
+        $factory->expects($this->once())->method('getType')->with($this->bind)->willReturn('users');
 
-        $this->bind->shouldReceive('saveObject')->once();
+        $this->bind->expects($this->once())->method('saveObject');
 
-        $dao->shouldReceive('saveBindForFieldId')->withArgs([66, 'users']);
+        $dao->expects($this->once())->method('saveBindForFieldId')->with(66, 'users');
 
         $this->list_field->afterSaveObject($tracker, false, false);
     }
 
     public function testItIsValidWhenIsRequiredAndHaveAValue(): void
     {
-        $artifact = Mockery::mock(Artifact::class);
+        $artifact = ArtifactTestBuilder::anArtifact(456)->build();
         $value    = 102;
-        $this->list_field->shouldReceive('isRequired')->andReturnTrue();
-        $this->list_field->shouldReceive('isNone')->andReturnFalse();
-        $this->assertTrue($this->list_field->isValidRegardingRequiredProperty($artifact, $value));
+        $this->list_field->method('isRequired')->willReturn(true);
+        $this->list_field->method('isNone')->willReturn(false);
+        self::assertTrue($this->list_field->isValidRegardingRequiredProperty($artifact, $value));
     }
 
     public function testItIsInvalidWhenIsRequiredAndEmpty(): void
     {
-        $artifact = Mockery::mock(Artifact::class);
+        $artifact = ArtifactTestBuilder::anArtifact(456)->build();
         $value    = 100;
-        $this->list_field->shouldReceive('isRequired')->andReturnTrue();
-        $this->list_field->shouldReceive('isNone')->andReturnTrue();
-        $this->assertFalse($this->list_field->isValidRegardingRequiredProperty($artifact, $value));
+        $this->list_field->method('isRequired')->willReturn(true);
+        $this->list_field->method('isNone')->willReturn(true);
+        self::assertFalse($this->list_field->isValidRegardingRequiredProperty($artifact, $value));
     }
 
     public function testItIsValidWhenIsNotRequiredAndEmpty(): void
     {
-        $artifact = Mockery::mock(Artifact::class);
+        $artifact = ArtifactTestBuilder::anArtifact(456)->build();
         $value    = 102;
-        $this->list_field->shouldReceive('isRequired')->andReturnFalse();
-        $this->list_field->shouldReceive('isNone')->andReturnFalse();
-        $this->assertTrue($this->list_field->isValidRegardingRequiredProperty($artifact, $value));
+        $this->list_field->method('isRequired')->willReturn(false);
+        $this->list_field->method('isNone')->willReturn(false);
+        self::assertTrue($this->list_field->isValidRegardingRequiredProperty($artifact, $value));
     }
 
     public function testItDoesNothingIfTheRequestDoesNotContainTheParameter(): void
     {
-        $layout = Mockery::mock(Tracker_IDisplayTrackerLayout::class);
-        $user   = Mockery::mock(PFUser::class);
+        $layout = $this->createMock(Tracker_IDisplayTrackerLayout::class);
+        $user   = UserTestBuilder::buildWithDefaults();
 
         $request = $this->createStub(HTTPRequest::class);
         $request->method('get')->willReturn('stuff');
         $request->method('isPost')->willReturn(false);
 
-        $this->bind->shouldReceive('fetchFormattedForJson')->never();
+        $this->bind->expects($this->never())->method('fetchFormattedForJson');
         $this->list_field->process($layout, $request, $user);
     }
 
     public function testItSendsWhateverBindReturns(): void
     {
-        $layout = Mockery::mock(Tracker_IDisplayTrackerLayout::class);
-        $user   = Mockery::mock(PFUser::class);
+        $layout = $this->createMock(Tracker_IDisplayTrackerLayout::class);
+        $user   = UserTestBuilder::buildWithDefaults();
 
         $request = $this->createStub(HTTPRequest::class);
         $request->method('get')->willReturn('get-values');
         $request->method('isPost')->willReturn(false);
 
-        $this->bind->shouldReceive('fetchFormattedForJson')->once();
+        $this->bind->expects($this->once())->method('fetchFormattedForJson');
         $this->list_field->process($layout, $request, $user);
     }
 
     public function testItHasValuesInAdditionToCommonFormat(): void
     {
-        $this->bind->shouldReceive('fetchFormattedForJson')->andReturn([])->once();
+        $this->bind->expects($this->once())->method('fetchFormattedForJson')->willReturn([]);
 
         $json = $this->list_field->fetchFormattedForJson();
-        $this->assertEquals([], $json['values']);
+        self::assertEquals([], $json['values']);
     }
 
     public function testItThrowsAnExceptionIfValueIsNotUsable(): void
     {
         $this->expectException(Tracker_Report_InvalidRESTCriterionException::class);
 
-        $criteria             = Mockery::mock(Tracker_Report_Criteria::class);
-        $criteria->report     = Mockery::mock(Tracker_Report::class);
-        $criteria->report->id = 1;
-        $rest_criteria_value  = [
+        $criteria            = new Tracker_Report_Criteria(65, ReportTestBuilder::aPublicReport()->withId(1)->build(), $this->list_field, 1, false);
+        $rest_criteria_value = [
             Tracker_Report_REST::VALUE_PROPERTY_NAME    => [[1234]],
             Tracker_Report_REST::OPERATOR_PROPERTY_NAME => Tracker_Report_REST::OPERATOR_CONTAINS,
         ];
@@ -468,10 +505,8 @@ final class Tracker_FormElement_Field_ListTest extends \Tuleap\Test\PHPUnit\Test
     {
         $this->expectException(Tracker_Report_InvalidRESTCriterionException::class);
 
-        $criteria             = Mockery::mock(Tracker_Report_Criteria::class);
-        $criteria->report     = Mockery::mock(Tracker_Report::class);
-        $criteria->report->id = 1;
-        $rest_criteria_value  = [
+        $criteria            = new Tracker_Report_Criteria(65, ReportTestBuilder::aPublicReport()->withId(1)->build(), $this->list_field, 1, false);
+        $rest_criteria_value = [
             Tracker_Report_REST::VALUE_PROPERTY_NAME    => 'I am a string',
             Tracker_Report_REST::OPERATOR_PROPERTY_NAME => Tracker_Report_REST::OPERATOR_CONTAINS,
         ];
@@ -481,11 +516,8 @@ final class Tracker_FormElement_Field_ListTest extends \Tuleap\Test\PHPUnit\Test
 
     public function testItAddsACriterion(): void
     {
-        $this->bind->shouldReceive('getAllValues')->andReturn([101 => 101, 102 => 102, 103 => 103]);
-        $criteria = Mockery::mock(Tracker_Report_Criteria::class);
-        $report   = Mockery::mock(Tracker_Report::class);
-        $criteria->shouldReceive('getReport')->andReturn($report);
-        $report->shouldReceive('getId')->andReturn(1);
+        $this->bind->method('getAllValues')->willReturn([101 => 101, 102 => 102, 103 => 103]);
+        $criteria = new Tracker_Report_Criteria(65, ReportTestBuilder::aPublicReport()->withId(1)->build(), $this->list_field, 1, false);
 
         $rest_criteria_value = [
             Tracker_Report_REST::VALUE_PROPERTY_NAME    => '101',
@@ -493,21 +525,18 @@ final class Tracker_FormElement_Field_ListTest extends \Tuleap\Test\PHPUnit\Test
         ];
 
         $set = $this->list_field->setCriteriaValueFromREST($criteria, $rest_criteria_value);
-        $this->assertTrue($set);
+        self::assertTrue($set);
 
         $res = $this->list_field->getCriteriaValue($criteria);
 
-        $this->assertCount(1, $res);
-        $this->assertContains(101, $res);
+        self::assertCount(1, $res);
+        self::assertContains(101, $res);
     }
 
     public function testItAddsCriteria(): void
     {
-        $this->bind->shouldReceive('getAllValues')->andReturn([101 => 101, 102 => 102, 103 => 103]);
-        $criteria = Mockery::mock(Tracker_Report_Criteria::class);
-        $report   = Mockery::mock(Tracker_Report::class);
-        $criteria->shouldReceive('getReport')->andReturn($report);
-        $report->shouldReceive('getId')->andReturn(1);
+        $this->bind->method('getAllValues')->willReturn([101 => 101, 102 => 102, 103 => 103]);
+        $criteria = new Tracker_Report_Criteria(65, ReportTestBuilder::aPublicReport()->withId(1)->build(), $this->list_field, 1, false);
 
         $rest_criteria_value = [
             Tracker_Report_REST::VALUE_PROPERTY_NAME    => ['101', 103],
@@ -515,13 +544,13 @@ final class Tracker_FormElement_Field_ListTest extends \Tuleap\Test\PHPUnit\Test
         ];
 
         $set = $this->list_field->setCriteriaValueFromREST($criteria, $rest_criteria_value);
-        $this->assertTrue($set);
+        self::assertTrue($set);
 
         $res = $this->list_field->getCriteriaValue($criteria);
 
-        $this->assertCount(2, $res);
-        $this->assertContains('101', $res);
-        $this->assertContains(103, $res);
+        self::assertCount(2, $res);
+        self::assertContains('101', $res);
+        self::assertContains(103, $res);
     }
 
     public function testItThrowsAnExceptionWhenReturningValueIndexedByFieldName(): void
@@ -535,20 +564,20 @@ final class Tracker_FormElement_Field_ListTest extends \Tuleap\Test\PHPUnit\Test
 
     public function testItDoesNotAcceptIncorrectValues(): void
     {
-        $artifact = Mockery::mock(Artifact::class);
-        $this->assertFalse($this->list_field->isValid($artifact, 9999));
-        $this->assertFalse($this->list_field->isValid($artifact, [9998, 9999]));
-        $this->assertFalse($this->list_field->isValid($artifact, [101, 9999]));
+        $artifact = ArtifactTestBuilder::anArtifact(456)->build();
+        $this->bind->method('isExistingValue')->willReturn(false);
+        self::assertFalse($this->list_field->isValid($artifact, 9999));
+        self::assertFalse($this->list_field->isValid($artifact, [9998, 9999]));
+        self::assertFalse($this->list_field->isValid($artifact, [101, 9999]));
     }
 
     public function testDoestExportCriteriaInvalidValueToXML(): void
     {
         $xml_element = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><root/>');
-        $report      = $this->createStub(Tracker_Report::class);
-        $report->method('getId')->willReturn(12);
-        $criteria = new Tracker_Report_Criteria(1, $report, $this->list_field, 1, false);
+        $report      = ReportTestBuilder::aPublicReport()->withId(12)->build();
+        $criteria    = new Tracker_Report_Criteria(1, $report, $this->list_field, 1, false);
 
-        $this->bind->shouldReceive('getValue')->andThrow(new Tracker_FormElement_InvalidFieldValueException());
+        $this->bind->method('getValue')->willThrowException(new Tracker_FormElement_InvalidFieldValueException());
 
         $this->list_field->setCriteriaValue(['404'], 12);
 
