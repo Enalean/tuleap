@@ -42,17 +42,19 @@ import { TRACKER_SELECTION_TAB } from "@/components/configuration/configuration-
 import TrackerSelectionIntroductoryText from "@/components/configuration/TrackerSelectionIntroductoryText.vue";
 import TrackerSelection from "@/components/configuration/TrackerSelection.vue";
 import ConfigurationModalFooter from "@/components/configuration/ConfigurationModalFooter.vue";
-import type { Tracker } from "@/stores/configuration-store";
+import type { Tracker } from "@/configuration/AllowedTrackersCollection";
+import { ALLOWED_TRACKERS } from "@/configuration/AllowedTrackersCollection";
 import { CONFIGURATION_STORE } from "@/stores/configuration-store";
 
-const { allowed_trackers, is_saving, is_success, saveTrackerConfiguration, selected_tracker } =
+const { is_saving, is_success, saveTrackerConfiguration, selected_tracker } =
     strictInject(CONFIGURATION_STORE);
+const allowed_trackers = strictInject(ALLOWED_TRACKERS);
 
 const new_selected_tracker = ref<Option<Tracker>>(Option.fromNullable(selected_tracker.value));
 
 const is_submit_button_disabled = computed(
     () =>
-        allowed_trackers.length === 0 ||
+        allowed_trackers.isEmpty() ||
         is_saving.value ||
         new_selected_tracker.value.mapOr(
             (tracker) => tracker.id === selected_tracker.value?.id,

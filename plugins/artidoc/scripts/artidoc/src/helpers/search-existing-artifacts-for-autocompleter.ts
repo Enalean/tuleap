@@ -18,7 +18,7 @@
  */
 
 import type { GroupOfItems, LazyAutocompleter, LazyboxItem } from "@tuleap/lazybox";
-import type { TitleFieldDefinition, Tracker } from "@/stores/configuration-store";
+import type { TitleFieldDefinition, Tracker } from "@/configuration/AllowedTrackersCollection";
 import { getJSON, uri } from "@tuleap/fetch-result";
 import { isArtifactSection } from "@/helpers/artidoc-section.type";
 import type { Language } from "vue3-gettext";

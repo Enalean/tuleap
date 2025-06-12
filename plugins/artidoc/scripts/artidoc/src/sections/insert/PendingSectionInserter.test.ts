@@ -24,7 +24,7 @@ import { flushPromises } from "@vue/test-utils";
 import { isPendingArtifactSection, isPendingFreetextSection } from "@/helpers/artidoc-section.type";
 import { TrackerStub } from "@/helpers/stubs/TrackerStub";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
-import type { Tracker } from "@/stores/configuration-store";
+import type { Tracker } from "@/configuration/AllowedTrackersCollection";
 import type { SectionsCollection } from "@/sections/SectionsCollection";
 import { buildSectionsCollection } from "@/sections/SectionsCollection";
 import { watchForNeededPendingSectionInsertion } from "@/sections/insert/PendingSectionInserter";

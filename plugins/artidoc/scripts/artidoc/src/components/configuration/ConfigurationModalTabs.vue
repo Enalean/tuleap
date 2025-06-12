@@ -46,7 +46,7 @@
 import { computed } from "vue";
 import { useGettext } from "vue3-gettext";
 import { strictInject } from "@tuleap/vue-strict-inject";
-import type { Tracker } from "@/stores/configuration-store";
+import type { Tracker } from "@/configuration/AllowedTrackersCollection";
 import type { ConfigurationTab } from "@/components/configuration/configuration-modal";
 import { ARE_FIELDS_ENABLED } from "@/are-fields-enabled";
 import { SECTIONS_STATES_COLLECTION } from "@/sections/states/sections-states-collection-injection-key";

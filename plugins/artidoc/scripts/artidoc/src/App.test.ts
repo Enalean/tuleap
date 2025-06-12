@@ -30,6 +30,10 @@ import { SECTIONS_COLLECTION } from "@/sections/states/sections-collection-injec
 import { SectionsCollectionStub } from "@/sections/stubs/SectionsCollectionStub";
 import * as rest_querier from "./helpers/rest-querier";
 import { IS_LOADING_SECTIONS_FAILED } from "@/is-loading-sections-injection-key";
+import {
+    ALLOWED_TRACKERS,
+    buildAllowedTrackersCollection,
+} from "@/configuration/AllowedTrackersCollection";
 
 describe("App", () => {
     it("should load and display the document view", () => {
@@ -37,8 +41,8 @@ describe("App", () => {
         const wrapper = shallowMount(App, {
             global: {
                 provide: {
-                    [CONFIGURATION_STORE.valueOf()]:
-                        ConfigurationStoreStub.withoutAllowedTrackers(),
+                    [CONFIGURATION_STORE.valueOf()]: ConfigurationStoreStub.buildEmpty(),
+                    [ALLOWED_TRACKERS.valueOf()]: buildAllowedTrackersCollection([]),
                     [CAN_USER_EDIT_DOCUMENT.valueOf()]: true,
                     [DOCUMENT_ID.valueOf()]: 1,
                     [SECTIONS_COLLECTION.valueOf()]: SectionsCollectionStub.withSections([]),

@@ -17,10 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { ref, watch } from "vue";
 import type { Ref } from "vue";
-import type { Tracker } from "@/stores/configuration-store";
-import { isTrackerWithSubmittableSection } from "@/stores/configuration-store";
+import { ref, watch } from "vue";
+import type { Tracker } from "@/configuration/AllowedTrackersCollection";
+import { isTrackerWithSubmittableSection } from "@/configuration/AllowedTrackersCollection";
 import type { SectionsCollection } from "@/sections/SectionsCollection";
 import { injectInternalId } from "@/helpers/inject-internal-id";
 import PendingArtifactSectionFactory from "@/helpers/pending-artifact-section.factory";
@@ -44,9 +44,8 @@ export const watchForNeededPendingSectionInsertion = (
         }
 
         const selected_tracker = tracker.value;
-        const is_configured_tracker_valid = isTrackerWithSubmittableSection(selected_tracker);
         const section = ref(
-            is_configured_tracker_valid
+            isTrackerWithSubmittableSection(selected_tracker)
                 ? injectInternalId(
                       PendingArtifactSectionFactory.overrideFromTracker(selected_tracker),
                   )

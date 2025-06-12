@@ -17,7 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Tracker, TrackerWithSubmittableSection } from "@/stores/configuration-store";
+import type {
+    Tracker,
+    TrackerWithSubmittableSection,
+} from "@/configuration/AllowedTrackersCollection";
 
 const base: Tracker = {
     id: 101,

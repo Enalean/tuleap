@@ -69,12 +69,12 @@
 import { ref, watch } from "vue";
 import { useGettext } from "vue3-gettext";
 import { Option } from "@tuleap/option";
-import type { Tracker } from "@/stores/configuration-store";
+import type { AllowedTrackersCollection, Tracker } from "@/configuration/AllowedTrackersCollection";
 
 const { $gettext } = useGettext();
 
 const props = defineProps<{
-    allowed_trackers: ReadonlyArray<Tracker>;
+    allowed_trackers: AllowedTrackersCollection;
     selected_tracker: Option<Tracker>;
     is_tracker_selection_disabled: boolean;
 }>();
@@ -89,5 +89,5 @@ watch(new_selected_tracker, () => {
     emit("select-tracker", Option.fromNullable(new_selected_tracker.value));
 });
 
-const no_allowed_trackers = props.allowed_trackers.length === 0;
+const no_allowed_trackers = props.allowed_trackers.isEmpty();
 </script>

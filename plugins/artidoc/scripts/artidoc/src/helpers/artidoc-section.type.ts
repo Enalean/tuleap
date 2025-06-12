@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Tracker } from "@/stores/configuration-store";
+import type { Tracker } from "@/configuration/AllowedTrackersCollection";
 import type { Project } from "@/helpers/project.type";
 import type { Level } from "@/sections/levels/SectionsNumberer";
 import type { FileIdentifier } from "@tuleap/file-upload/dist/file-upload-options";

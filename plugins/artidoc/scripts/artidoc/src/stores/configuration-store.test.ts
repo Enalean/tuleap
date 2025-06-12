@@ -18,7 +18,8 @@
  */
 
 import { describe, it, vi, expect, beforeEach } from "vitest";
-import type { ConfigurationStore, Tracker } from "@/stores/configuration-store";
+import type { Tracker } from "@/configuration/AllowedTrackersCollection";
+import type { ConfigurationStore } from "@/stores/configuration-store";
 import { initConfigurationStore } from "@/stores/configuration-store";
 import { TrackerStub } from "@/helpers/stubs/TrackerStub";
 import * as rest from "@/helpers/rest-querier";
@@ -34,11 +35,10 @@ const tracker_for_fields = {
 
 describe("configuration-store", () => {
     const bugs: Tracker = TrackerStub.build(101, "Bugs");
-    const tasks: Tracker = TrackerStub.build(102, "Tasks");
     let store: ConfigurationStore;
 
     beforeEach(() => {
-        store = initConfigurationStore(1, null, [bugs, tasks], []);
+        store = initConfigurationStore(1, null, []);
     });
 
     describe("saveTrackerConfiguration", () => {
@@ -96,7 +96,7 @@ describe("configuration-store", () => {
             vi.spyOn(rest, "putConfiguration").mockReturnValue(okAsync(new Response()));
             vi.spyOn(rest, "getTracker").mockReturnValue(okAsync(tracker_for_fields));
 
-            const store = initConfigurationStore(1, bugs, [bugs, tasks], []);
+            const store = initConfigurationStore(1, bugs, []);
 
             expect(store.selected_fields.value).toStrictEqual([]);
 
