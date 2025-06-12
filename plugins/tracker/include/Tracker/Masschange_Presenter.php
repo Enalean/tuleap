@@ -51,6 +51,7 @@ class Tracker_Masschange_Presenter
         $javascript_rules,
         array $external_actions,
         public readonly bool $has_notifications,
+        public readonly CSRFSynchronizerToken $csrf_token,
     ) {
         $this->project_id       = (int) $project->getID();
         $this->masschange_aids  = $masschange_aids;

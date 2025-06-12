@@ -33,6 +33,9 @@
     {{# can_save }}
         <div class="modal hide fade" id="tracker_report_updater_saveas-modal" role="dialog" aria-labelledby="tracker_report_updater_saveas-modal-label" aria-hidden="true" tabindex="-1">
             <form id="tracker_report_form_modal" action="{{ saveas_url }}" method="POST">
+                {{# csrf_token }}
+                    {{> csrf_token_input }}
+                {{/ csrf_token }}
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                         <i class="fas fa-times modal-close-icon" aria-hidden="true"></i>
@@ -67,7 +70,12 @@
                         {{> split_button_dropdowns }}
                     {{/ save_dropdown }}
                     {{ or_lbl }}
-                    <a href="{{ revert_url }}" class="btn btn-danger">{{ revert }}</a>
+                    <form method="post" action="{{ revert_url }}">
+                        {{# csrf_token }}
+                            {{> csrf_token_input }}
+                        {{/ csrf_token }}
+                        <button type="submit" class="btn btn-danger">{{ revert }}</button>
+                    </form>
                 </div>
         </div>
     {{/ can_save }}

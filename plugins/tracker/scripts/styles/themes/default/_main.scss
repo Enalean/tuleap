@@ -123,6 +123,16 @@ button[name="tracker_query_submit"] {
 
 #tracker_report_save_or_revert_buttons {
     display: inline-block;
+
+    form {
+        display: inline-block;
+        margin: revert;
+    }
+
+    .btn-group > form > .btn {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+    }
 }
 
 /* Hack to make "Add criteria" button appears on the same line than search */
@@ -157,8 +167,13 @@ button[name="tracker_query_submit"] {
             }
         }
 
+        > .tracker_report_table_sortby_panel > form {
+            display: inline-block;
+            margin: revert;
+        }
+
         > p > strong,
-        > .tracker_report_table_sortby_panel > a {
+        > .tracker_report_table_sortby_panel > form > .btn-link {
             color: #333333;
             font-size: 1.2em;
             font-weight: normal;
@@ -516,9 +531,16 @@ button[name="tracker_query_submit"] {
         padding: 0;
         border: 0;
 
-        > a {
-            display: block;
-            text-decoration: none;
+        > form {
+            margin: revert;
+
+            > .btn-link {
+                display: block;
+                padding: 0;
+                border-top: 0;
+                font-weight: bold;
+                text-decoration: none;
+            }
         }
 
         &.tracker_report_table_column_grip {
@@ -2552,6 +2574,10 @@ body.in_tracker_report .main .content {
 
 #tracker_report_renderer_view_controls {
     float: right;
+
+    > form.btn-group {
+        margin-bottom: revert;
+    }
 }
 
 #tracker-settings {

@@ -15,6 +15,9 @@
         {{# masschange_aids }}
             <input type="hidden" name="masschange_aids[]" value="{{ . }}" />
         {{/ masschange_aids }}
+        {{# csrf_token }}
+            {{> csrf_token_input }}
+        {{/ csrf_token }}
 
         <div class="masschange-notifications">
             <label class="checkbox" for="masschange-unsubscribe-option">

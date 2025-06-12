@@ -562,6 +562,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface // phpcs:ignore P
         $html_purifier = Codendi_HTMLPurifier::instance();
         $form_post_url = $html_purifier->purify('/plugins/tracker/?' . http_build_query($query_params));
         $html         .= '<form action="' . $form_post_url . '" method="POST" id="tracker_report_query_form" class="tracker-report-query-form">';
+        $html         .= $this->getCSRFTokenReportChange($this->getTracker())->fetchHTMLInput();
         $html         .= '<input type="hidden" name="report" value="' . $this->id . '" />';
         $id            = 'tracker_report_query_' . $this->id;
         $html         .= '<h4 class="backlog-planning-search-title ' . Toggler::getClassname($id, $this->is_query_displayed ? true : false) . '" id="' . $id . '">';
@@ -650,8 +651,9 @@ class Tracker_Report implements Tracker_Dispatchable_Interface // phpcs:ignore P
     {
         $id            = 'tracker-report-expert-query-' . $this->id;
         $class_toggler = Toggler::getClassname($id, $this->is_query_displayed ? true : false);
+        $tracker       = $this->getTracker();
         $fields        = $this->getFormElementFactory()->getUsedFieldsForExpertModeUserCanRead(
-            $this->getTracker(),
+            $tracker,
             $this->getCurrentUser()
         );
 
@@ -665,7 +667,8 @@ class Tracker_Report implements Tracker_Dispatchable_Interface // phpcs:ignore P
             $this->expert_query,
             $fields,
             $is_normal_mode_button_displayed,
-            $is_query_modifiable
+            $is_query_modifiable,
+            $this->getCSRFTokenReportChange($tracker),
         );
 
         $renderer = TemplateRendererFactory::build()->getRenderer(
@@ -702,7 +705,9 @@ class Tracker_Report implements Tracker_Dispatchable_Interface // phpcs:ignore P
         $fields_for_criteria = [];
         $fields_for_sort     = [];
 
-        foreach ($this->getFormElementFactory()->getFields($this->getTracker()) as $field) {
+        $tracker = $this->getTracker();
+
+        foreach ($this->getFormElementFactory()->getFields($tracker) as $field) {
             if ($dropdown_type === self::TYPE_CRITERIA && ! $field->canBeUsedAsReportCriterion()) {
                 continue;
             }
@@ -720,6 +725,8 @@ class Tracker_Report implements Tracker_Dispatchable_Interface // phpcs:ignore P
         $criteria_options          = [];
         $criteria_advanced_options = [];
 
+        $csrf_token = $this->getCSRFTokenReportChange($tracker);
+
         foreach ($fields_for_sort as $id => $nop) {
             $option     = new Templating_Presenter_ButtonDropdownsOption(
                 $id_prefix . '_' . $id,
@@ -730,6 +737,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface // phpcs:ignore P
             $parameters = [
                 'data-field-id'      => $id,
                 'data-field-is-used' => intval(isset($used[$id])),
+                'data-challenge' => $csrf_token->getToken(),
             ];
             if ($dropdown_type !== self::TYPE_CRITERIA) {
                 $parameters['data-column-id'] = $id;
@@ -763,9 +771,11 @@ class Tracker_Report implements Tracker_Dispatchable_Interface // phpcs:ignore P
 
     private function getOptionsForCustomColumn($id, $used)
     {
-        $project = $this->getTracker()->getProject();
-        $options = [];
-        $types   = $this->getTypePresenterFactory()->getAllTypesEditableInProject($project);
+        $tracker    = $this->getTracker();
+        $csrf_token = $this->getCSRFTokenReportChange($tracker);
+        $project    = $tracker->getProject();
+        $options    = [];
+        $types      = $this->getTypePresenterFactory()->getAllTypesEditableInProject($project);
 
         $column_id = $id . '_';
         $option    = new Templating_Presenter_ButtonDropdownsOption(
@@ -780,6 +790,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface // phpcs:ignore P
                 'data-field-id'           => $id,
                 'data-field-is-used'      => intval(isset($used[$column_id])),
                 'data-field-artlink-type' => '',
+                'data-challenge'          => $csrf_token->getToken(),
             ]
         );
         $options[] = $option;
@@ -807,6 +818,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface // phpcs:ignore P
                     'data-field-id'           => $id,
                     'data-field-is-used'      => intval(isset($used[$column_id])),
                     'data-field-artlink-type' => $type->shortname,
+                    'data-challenge'          => $csrf_token->getToken(),
                 ]
             );
             $options[] = $option;
@@ -1335,9 +1347,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface // phpcs:ignore P
                 dgettext('tuleap-tracker', 'The request is not valid.')
             );
 
-            $GLOBALS['Response']->redirect('?' . http_build_query([
-                'tracker'   => $tracker->getId(),
-            ]));
+            $this->redirectToTracker($tracker);
         }
 
         switch ($request->get('func')) {
@@ -1366,6 +1376,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface // phpcs:ignore P
                 }
                 break;
             case 'update-masschange-aids':
+                $this->checkReportUpdateRequest($request, $tracker);
                 $form_element_factory = $this->getFormElementFactory();
                 $artifact_factory     = Tracker_ArtifactFactory::instance();
 
@@ -1383,12 +1394,14 @@ class Tracker_Report implements Tracker_Dispatchable_Interface // phpcs:ignore P
                 $masschange_updater->updateArtifacts($current_user, $request);
                 break;
             case 'remove-criteria':
+                $this->checkReportUpdateRequest($request, $tracker);
                 if ($request->get('field') && ! $current_user->isAnonymous()) {
                     $this->report_session->removeCriterion($request->get('field'));
                     $this->report_session->setHasChanged();
                 }
                 break;
             case 'add-criteria':
+                $this->checkReportUpdateRequest($request, $tracker);
                 if ($request->get('field') && ! $current_user->isAnonymous()) {
                     //TODO: make sure that the formElement exists and the user can read it
                     if ($request->isAjax()) {
@@ -1402,6 +1415,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface // phpcs:ignore P
                 }
                 break;
             case 'toggle-advanced':
+                $this->checkReportUpdateRequest($request, $tracker);
                 if ($request->get('field') && ! $current_user->isAnonymous()) {
                     $this->toggleAdvancedCriterion($request->get('field'));
                     $this->report_session->setHasChanged();
@@ -1414,6 +1428,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface // phpcs:ignore P
                 }
                 break;
             case self::ACTION_CLEANSESSION:
+                $this->checkReportUpdateRequest($request, $tracker);
                 $this->report_session->clean();
                 $GLOBALS['Response']->redirect('?' . http_build_query([
                     'tracker'   => $this->tracker_id,
@@ -1429,6 +1444,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface // phpcs:ignore P
                 }
                 break;
             case 'rename-renderer':
+                $this->checkReportUpdateRequest($request, $tracker);
                 if ($request->get('new_name') == '') {
                     $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'Renderer name is mandatory.'));
                 } elseif (! $current_user->isAnonymous() && (int) $request->get('renderer') && trim($request->get('new_name'))) {
@@ -1440,6 +1456,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface // phpcs:ignore P
                 ]));
                 break;
             case 'delete-renderer':
+                $this->checkReportUpdateRequest($request, $tracker);
                 if (! $current_user->isAnonymous() && (int) $request->get('renderer')) {
                     $this->report_session->removeRenderer((int) $request->get('renderer'));
                     $this->report_session->setHasChanged();
@@ -1449,6 +1466,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface // phpcs:ignore P
                 }
                 break;
             case 'move-renderer':
+                $this->checkReportUpdateRequest($request, $tracker);
                 if (! $current_user->isAnonymous() && (int) $request->get('renderer')) {
                     if ($request->isAjax()) {
                         $this->report_session->moveRenderer($request->get('tracker_report_renderers'));
@@ -1464,6 +1482,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface // phpcs:ignore P
                 }
                 break;
             case 'add-renderer':
+                $this->checkReportUpdateRequest($request, $tracker);
                 $new_name        = trim($request->get('new_name'));
                 $new_description = trim($request->get('new_description'));
                 $new_type        = trim($request->get('new_type'));
@@ -1476,6 +1495,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface // phpcs:ignore P
                 }
                 break;
             case self::ACTION_SAVE:
+                $this->checkReportUpdateRequest($request, $tracker);
                 Tracker_ReportFactory::instance()->save($this);
                 $this->saveCriteria();
                 $this->saveAdditionalCriteria();
@@ -1489,6 +1509,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface // phpcs:ignore P
                 ]));
                 break;
             case self::ACTION_SAVEAS:
+                $this->checkReportUpdateRequest($request, $tracker);
                 $redirect_to_report_id = $this->id;
                 $report_copy_name      = trim($request->get('report_copy_name'));
                 if ($report_copy_name) {
@@ -1518,15 +1539,15 @@ class Tracker_Report implements Tracker_Dispatchable_Interface // phpcs:ignore P
                 ]));
                 break;
             case self::ACTION_DELETE:
+                $this->checkReportUpdateRequest($request, $tracker);
                 $transaction = new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection());
                 $transaction->execute(function () {
                     $this->delete();
                 });
-                $GLOBALS['Response']->redirect('?' . http_build_query([
-                    'tracker'   => $this->tracker_id,
-                ]));
-                break;
+                $this->redirectToTracker($tracker);
+                // No break here, redirectToTracker never returns but PHPCS cannot see it
             case self::ACTION_SCOPE:
+                $this->checkReportUpdateRequest($request, $tracker);
                 if ($this->getTracker()->userIsAdmin($current_user) && (! $this->user_id || $this->user_id == $current_user->getId())) {
                     if ($request->exist('report_scope_public')) {
                         $is_scope_public = $request->get('report_scope_public');
@@ -1551,6 +1572,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface // phpcs:ignore P
                 }
                 break;
             case self::ACTION_DEFAULT:
+                $this->checkReportUpdateRequest($request, $tracker);
                 if ($this->getTracker()->userIsAdmin($current_user)) {
                     if ($request->exist('report_default')) {
                         if ($request->get('report_default')) {
@@ -1566,25 +1588,24 @@ class Tracker_Report implements Tracker_Dispatchable_Interface // phpcs:ignore P
                 }
                 break;
             case 'store-expert-mode':
+                $this->checkReportUpdateRequest($request, $tracker);
                 if (! $current_user->isAnonymous()) {
-                    if ($request->isPost()) {
-                        $this->report_session->storeExpertMode();
-                        $this->report_session->setHasChanged();
-                        $this->is_in_expert_mode = true;
-                    }
+                    $this->report_session->storeExpertMode();
+                    $this->report_session->setHasChanged();
+                    $this->is_in_expert_mode = true;
                 }
                 break;
             case 'store-normal-mode':
+                $this->checkReportUpdateRequest($request, $tracker);
                 if (! $current_user->isAnonymous()) {
-                    if ($request->isPost()) {
-                        $this->report_session->storeNormalMode();
-                        $this->report_session->setHasChanged();
-                        $this->is_in_expert_mode = false;
-                    }
+                    $this->report_session->storeNormalMode();
+                    $this->report_session->setHasChanged();
+                    $this->is_in_expert_mode = false;
                 }
                 break;
             default:
                 if ($request->exist('tracker_query_submit')) {
+                    $this->checkReportUpdateRequest($request, $tracker);
                     $criteria_values = $request->get('criteria');
                     if (! empty($criteria_values)) {
                         $this->updateCriteriaValues($criteria_values);
@@ -1598,6 +1619,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface // phpcs:ignore P
                     $this->report_session->setHasChanged();
                 }
                 if ($request->exist('tracker_expert_query_submit') && ! $current_user->isAnonymous()) {
+                    $this->checkReportUpdateRequest($request, $tracker);
                     $expert_query = $request->get('expert_query');
                     $this->report_session->storeExpertQuery($expert_query);
 
@@ -1633,6 +1655,29 @@ class Tracker_Report implements Tracker_Dispatchable_Interface // phpcs:ignore P
                 $this->display($layout, $request, $current_user);
                 break;
         }
+    }
+
+    private function checkReportUpdateRequest(HTTPRequest $request, Tracker $tracker): void
+    {
+        if (! $request->isPost()) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                dgettext('tuleap-tracker', 'The request is not valid.')
+            );
+            $this->redirectToTracker($tracker);
+        }
+        $this->getCSRFTokenReportChange($tracker)->check();
+    }
+
+    private function getCSRFTokenReportChange(Tracker $tracker): CSRFSynchronizerToken
+    {
+        return new CSRFSynchronizerToken($tracker->getUri());
+    }
+
+    private function redirectToTracker(Tracker $tracker): never
+    {
+        $GLOBALS['Response']->redirect($tracker->getUri());
+        exit;
     }
 
     public function setDefaultReport(): void

@@ -1,5 +1,8 @@
 <div id="tracker-report-expert-query" class="{{^ is_in_expert_mode }}tracker-report-query-undisplayed{{/ is_in_expert_mode }}" data-report-id="{{ id }}">
     <form action="" method="post" id="tracker-report-expert-query-form" class="tracker-report-query-form" data-test="expert-report-form">
+        {{# csrf_token }}
+            {{> csrf_token_input }}
+        {{/ csrf_token }}
         <input type="hidden" name="report" value="{{ id }}" />
         <h4 class="backlog-planning-search-title {{ class_toggler }}" id="{{ id }}">{{ title }}</h4>
         <div class="pull-right">

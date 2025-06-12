@@ -59,15 +59,30 @@ function initializeTrackerReportQuery() {
 
         codeMirrorifyQueryArea();
 
-        sendRequestNewMode("store-expert-mode");
+        sendRequestNewMode(
+            "store-expert-mode",
+            getFormChallengeAssociatedWithButton(tracker_report_expert_query_button),
+        );
     });
 
     tracker_report_normal_query_button.addEventListener("click", () => {
         tracker_report_normal_query.classList.remove("tracker-report-query-undisplayed");
         tracker_report_expert_query.classList.add("tracker-report-query-undisplayed");
 
-        sendRequestNewMode("store-normal-mode");
+        sendRequestNewMode(
+            "store-normal-mode",
+            getFormChallengeAssociatedWithButton(tracker_report_normal_query_button),
+        );
     });
+}
+
+function getFormChallengeAssociatedWithButton(button) {
+    if (!(button instanceof HTMLButtonElement)) {
+        return "";
+    }
+
+    const form_data = new FormData(button.form);
+    return form_data.get("challenge");
 }
 
 function initializeTrackerReportAllowedFields() {
@@ -81,14 +96,14 @@ function initializeTrackerReportAllowedFields() {
     );
 }
 
-async function sendRequestNewMode(mode) {
-    let url = location.href + "&func=" + mode;
+async function sendRequestNewMode(mode, challenge) {
+    const form_data = new FormData();
+    form_data.set("challenge", challenge);
+    form_data.set("func", mode);
 
-    if (location.search === "") {
-        url = location.href + "?func=" + mode;
-    }
-
-    await post(url);
+    await post(location.href, {
+        body: form_data,
+    });
     codendi.tracker.report.setHasChanged();
 }
 
