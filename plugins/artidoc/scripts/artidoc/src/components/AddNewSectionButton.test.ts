@@ -17,15 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, beforeEach, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
-import type { ArtidocSection } from "@/helpers/artidoc-section.type";
-import { isPendingFreetextSection, isPendingArtifactSection } from "@/helpers/artidoc-section.type";
 import { shallowMount } from "@vue/test-utils";
+import { Option } from "@tuleap/option";
+import type { ArtidocSection } from "@/helpers/artidoc-section.type";
+import { isPendingArtifactSection, isPendingFreetextSection } from "@/helpers/artidoc-section.type";
 import AddNewSectionButton from "@/components/AddNewSectionButton.vue";
-import type { ConfigurationStore } from "@/stores/configuration-store";
-import { CONFIGURATION_STORE } from "@/stores/configuration-store";
-import { ConfigurationStoreStub } from "@/helpers/stubs/ConfigurationStoreStub";
+import type { SelectedTrackerRef } from "@/configuration/SelectedTracker";
+import { SELECTED_TRACKER } from "@/configuration/SelectedTracker";
 import type { OpenConfigurationModalBusStore } from "@/stores/useOpenConfigurationModalBusStore";
 import {
     OPEN_CONFIGURATION_MODAL_BUS,
@@ -41,6 +41,7 @@ import {
     useOpenAddExistingSectionModalBus,
 } from "@/composables/useOpenAddExistingSectionModalBus";
 import { SectionsInserterStub } from "@/sections/stubs/SectionsInserterStub";
+import { SelectedTrackerStub } from "@/helpers/stubs/SelectedTrackerStub";
 
 vi.mock("@tuleap/tlp-dropdown");
 
@@ -55,7 +56,7 @@ describe("AddNewSectionButton", () => {
 
     function getWrapper(
         sections_inserter: InsertSections,
-        configuration_store: ConfigurationStore,
+        selected_tracker: SelectedTrackerRef,
         configuration_bus: OpenConfigurationModalBusStore,
         add_existing_section_bus: OpenAddExistingSectionModalBus,
     ): VueWrapper {
@@ -64,7 +65,7 @@ describe("AddNewSectionButton", () => {
             global: {
                 plugins: [createGettext({ silent: true })],
                 provide: {
-                    [CONFIGURATION_STORE.valueOf()]: configuration_store,
+                    [SELECTED_TRACKER.valueOf()]: selected_tracker,
                     [OPEN_CONFIGURATION_MODAL_BUS.valueOf()]: configuration_bus,
                     [OPEN_ADD_EXISTING_SECTION_MODAL_BUS.valueOf()]: add_existing_section_bus,
                 },
@@ -102,7 +103,7 @@ describe("AddNewSectionButton", () => {
 
             const wrapper = getWrapper(
                 SectionsInserterStub.withoutExpectedCall(),
-                ConfigurationStoreStub.withSelectedTracker(null),
+                SelectedTrackerStub.withNoTracker(),
                 configuration_bus,
                 add_existing_section_bus,
             );
@@ -113,19 +114,19 @@ describe("AddNewSectionButton", () => {
         });
 
         it("should insert a pending artifact section after the configuration is saved", async () => {
-            const store = ConfigurationStoreStub.withSelectedTracker(null);
+            const selected_tracker = SelectedTrackerStub.withNoTracker();
 
             let has_modal_been_opened = false;
             configuration_bus.registerHandler((onSuccessfulSaved: () => void) => {
                 has_modal_been_opened = true;
-                store.selected_tracker.value = TrackerStub.withTitleAndDescription();
+                selected_tracker.value = Option.fromValue(TrackerStub.withTitleAndDescription());
                 onSuccessfulSaved();
             });
 
             const inserter = SectionsInserterStub.withExpectedCall();
             const wrapper = getWrapper(
                 inserter,
-                store,
+                selected_tracker,
                 configuration_bus,
                 add_existing_section_bus,
             );
@@ -145,19 +146,10 @@ describe("AddNewSectionButton", () => {
             configuration_bus.registerHandler(() => {
                 has_modal_been_opened = true;
             });
-            const store = ConfigurationStoreStub.withSelectedTracker({
-                ...ConfigurationStoreStub.bugs,
-                title: null,
-                description: {
-                    label: "Description",
-                    type: "text",
-                    default_value: { format: "html", content: "" },
-                },
-            });
 
             const wrapper = getWrapper(
                 SectionsInserterStub.withoutExpectedCall(),
-                store,
+                SelectedTrackerStub.withTracker(TrackerStub.withDescription()),
                 configuration_bus,
                 add_existing_section_bus,
             );
@@ -168,27 +160,19 @@ describe("AddNewSectionButton", () => {
         });
 
         it("should insert a pending artifact section after the configuration is saved", async () => {
-            const store = ConfigurationStoreStub.withSelectedTracker({
-                ...ConfigurationStoreStub.bugs,
-                title: null,
-                description: {
-                    label: "Description",
-                    type: "text",
-                    default_value: { format: "html", content: "" },
-                },
-            });
+            const selected_tracker = SelectedTrackerStub.withTracker(TrackerStub.withDescription());
 
             let has_modal_been_opened = false;
             configuration_bus.registerHandler((onSuccessfulSaved: () => void) => {
                 has_modal_been_opened = true;
-                store.selected_tracker.value = TrackerStub.withTitleAndDescription();
+                selected_tracker.value = Option.fromValue(TrackerStub.withTitleAndDescription());
                 onSuccessfulSaved();
             });
 
             const inserter = SectionsInserterStub.withExpectedCall();
             const wrapper = getWrapper(
                 inserter,
-                store,
+                selected_tracker,
                 configuration_bus,
                 add_existing_section_bus,
             );
@@ -207,20 +191,10 @@ describe("AddNewSectionButton", () => {
             configuration_bus.registerHandler(() => {
                 has_modal_been_opened = true;
             });
-            const store = ConfigurationStoreStub.withSelectedTracker({
-                ...ConfigurationStoreStub.bugs,
-                title: {
-                    field_id: 1001,
-                    label: "Summary",
-                    type: "string",
-                    default_value: "",
-                },
-                description: null,
-            });
 
             const wrapper = getWrapper(
                 SectionsInserterStub.withoutExpectedCall(),
-                store,
+                SelectedTrackerStub.withTracker(TrackerStub.withTitle()),
                 configuration_bus,
                 add_existing_section_bus,
             );
@@ -231,28 +205,19 @@ describe("AddNewSectionButton", () => {
         });
 
         it("should insert a pending artifact section after the configuration is saved", async () => {
-            const store = ConfigurationStoreStub.withSelectedTracker({
-                ...ConfigurationStoreStub.bugs,
-                title: {
-                    field_id: 1001,
-                    label: "Summary",
-                    type: "string",
-                    default_value: "",
-                },
-                description: null,
-            });
+            const selected_tracker = SelectedTrackerStub.withTracker(TrackerStub.withTitle());
 
             let has_modal_been_opened = false;
             configuration_bus.registerHandler((onSuccessfulSaved: () => void) => {
                 has_modal_been_opened = true;
-                store.selected_tracker.value = TrackerStub.withTitleAndDescription();
+                selected_tracker.value = Option.fromValue(TrackerStub.withTitleAndDescription());
                 onSuccessfulSaved();
             });
 
             const inserter = SectionsInserterStub.withExpectedCall();
             const wrapper = getWrapper(
                 inserter,
-                store,
+                selected_tracker,
                 configuration_bus,
                 add_existing_section_bus,
             );
@@ -271,25 +236,11 @@ describe("AddNewSectionButton", () => {
             configuration_bus.registerHandler(() => {
                 has_modal_been_opened = true;
             });
-            const store = ConfigurationStoreStub.withSelectedTracker({
-                ...ConfigurationStoreStub.bugs,
-                title: {
-                    field_id: 1001,
-                    label: "Summary",
-                    type: "string",
-                    default_value: "",
-                },
-                description: {
-                    label: "Description",
-                    type: "text",
-                    default_value: { format: "html", content: "" },
-                },
-            });
 
             const inserter = SectionsInserterStub.withExpectedCall();
             const wrapper = getWrapper(
                 inserter,
-                store,
+                SelectedTrackerStub.build(),
                 configuration_bus,
                 add_existing_section_bus,
             );
@@ -308,24 +259,10 @@ describe("AddNewSectionButton", () => {
             add_existing_section_bus.registerHandler(() => {
                 has_modal_been_opened = true;
             });
-            const store = ConfigurationStoreStub.withSelectedTracker({
-                ...ConfigurationStoreStub.bugs,
-                title: {
-                    field_id: 1001,
-                    label: "Summary",
-                    type: "string",
-                    default_value: "",
-                },
-                description: {
-                    label: "Description",
-                    type: "text",
-                    default_value: { format: "html", content: "" },
-                },
-            });
 
             const wrapper = getWrapper(
                 SectionsInserterStub.withoutExpectedCall(),
-                store,
+                SelectedTrackerStub.build(),
                 configuration_bus,
                 add_existing_section_bus,
             );
@@ -343,7 +280,7 @@ describe("AddNewSectionButton", () => {
 
             const wrapper = getWrapper(
                 SectionsInserterStub.withoutExpectedCall(),
-                ConfigurationStoreStub.withSelectedTracker(null),
+                SelectedTrackerStub.withNoTracker(),
                 configuration_bus,
                 add_existing_section_bus,
             );
@@ -355,20 +292,20 @@ describe("AddNewSectionButton", () => {
         });
 
         it("should open the AddExistingSectionModal after the configuration is saved", async () => {
-            const store = ConfigurationStoreStub.withSelectedTracker(null);
+            const selected_tracker = SelectedTrackerStub.withNoTracker();
 
             const openAddExistingSectionModal = vi.spyOn(add_existing_section_bus, "openModal");
 
             let has_modal_been_opened = false;
             configuration_bus.registerHandler((onSuccessfulSaved: () => void) => {
                 has_modal_been_opened = true;
-                store.selected_tracker.value = TrackerStub.withTitleAndDescription();
+                selected_tracker.value = Option.fromValue(TrackerStub.withTitleAndDescription());
                 onSuccessfulSaved();
             });
 
             const wrapper = getWrapper(
                 SectionsInserterStub.withoutExpectedCall(),
-                store,
+                selected_tracker,
                 configuration_bus,
                 add_existing_section_bus,
             );
@@ -385,7 +322,7 @@ describe("AddNewSectionButton", () => {
             const inserter = SectionsInserterStub.withExpectedCall();
             const wrapper = getWrapper(
                 inserter,
-                ConfigurationStoreStub.withSelectedTracker(null),
+                SelectedTrackerStub.withNoTracker(),
                 configuration_bus,
                 add_existing_section_bus,
             );

@@ -40,7 +40,6 @@ export const ConfigurationStoreStub = {
     tasks,
     bugs,
     buildEmpty: (): ConfigurationStore => ({
-        selected_tracker: ref(null),
         selected_fields: ref([]),
         available_fields: ref([]),
         is_saving: ref(false),
@@ -53,24 +52,19 @@ export const ConfigurationStoreStub = {
         current_project: ref(null),
     }),
 
-    withSelectedTracker: (selected_tracker: Tracker | null): ConfigurationStore => ({
-        ...ConfigurationStoreStub.buildEmpty(),
-        selected_tracker: ref(selected_tracker),
-    }),
-
     withSuccessfulSave: (): ConfigurationStore => ({
-        ...ConfigurationStoreStub.withSelectedTracker(bugs),
+        ...ConfigurationStoreStub.buildEmpty(),
         is_success: ref(true),
     }),
 
     withError: (): ConfigurationStore => ({
-        ...ConfigurationStoreStub.withSelectedTracker(bugs),
+        ...ConfigurationStoreStub.buildEmpty(),
         is_error: ref(true),
         error_message: ref("Oh no!"),
     }),
 
     withSelectedFields: (selected_fields: ConfigurationField[]): ConfigurationStore => ({
-        ...ConfigurationStoreStub.withSelectedTracker(bugs),
+        ...ConfigurationStoreStub.buildEmpty(),
         selected_fields: ref(selected_fields),
     }),
 };

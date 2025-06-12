@@ -17,25 +17,26 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, it, expect, beforeEach } from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
 import { ref, unref } from "vue";
-import type { Ref } from "vue";
 import { flushPromises } from "@vue/test-utils";
+import { Option } from "@tuleap/option";
 import { isPendingArtifactSection, isPendingFreetextSection } from "@/helpers/artidoc-section.type";
 import { TrackerStub } from "@/helpers/stubs/TrackerStub";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
-import type { Tracker } from "@/configuration/AllowedTrackersCollection";
+import type { SelectedTrackerRef } from "@/configuration/SelectedTracker";
 import type { SectionsCollection } from "@/sections/SectionsCollection";
 import { buildSectionsCollection } from "@/sections/SectionsCollection";
 import { watchForNeededPendingSectionInsertion } from "@/sections/insert/PendingSectionInserter";
 import type { SectionsStatesCollection } from "@/sections/states/SectionsStatesCollection";
 import { SectionsStatesCollectionStub } from "@/sections/stubs/SectionsStatesCollectionStub";
 import { ReactiveStoredArtidocSectionStub } from "@/sections/stubs/ReactiveStoredArtidocSectionStub";
+import { SelectedTrackerStub } from "@/helpers/stubs/SelectedTrackerStub";
 
 describe("PendingSectionInserter", () => {
     let sections_collection: SectionsCollection,
         sections_states: SectionsStatesCollection,
-        selected_tracker: Ref<Tracker | null>,
+        selected_tracker: SelectedTrackerRef,
         can_user_edit_document: boolean,
         is_loading_failed: boolean;
 
@@ -46,7 +47,7 @@ describe("PendingSectionInserter", () => {
             ReactiveStoredArtidocSectionStub.fromCollection([ArtifactSectionFactory.create()]),
         );
 
-        selected_tracker = ref(null);
+        selected_tracker = SelectedTrackerStub.withNoTracker();
         can_user_edit_document = true;
         is_loading_failed = false;
     });
@@ -74,7 +75,7 @@ describe("PendingSectionInserter", () => {
         - can submit artifacts in the selected tracker
         When the document is emptied
         Then it should insert a pending artifact section`, async () => {
-        selected_tracker.value = TrackerStub.withTitleAndDescription();
+        selected_tracker = SelectedTrackerStub.withTracker(TrackerStub.withTitleAndDescription());
 
         watchAndInsertPendingSectionIfNeeded();
 
@@ -92,7 +93,7 @@ describe("PendingSectionInserter", () => {
         - CANNOT submit the title field of the selected tracker
         When the document is emptied
         Then it should insert a pending freetext section`, async () => {
-        selected_tracker.value = TrackerStub.withDescription();
+        selected_tracker = SelectedTrackerStub.withTracker(TrackerStub.withDescription());
 
         watchAndInsertPendingSectionIfNeeded();
 
@@ -110,7 +111,7 @@ describe("PendingSectionInserter", () => {
         - CANNOT submit the description field of the selected tracker
         When the document is emptied
         Then it should insert a pending freetext section`, async () => {
-        selected_tracker.value = TrackerStub.withTitle();
+        selected_tracker = SelectedTrackerStub.withTracker(TrackerStub.withTitle());
 
         watchAndInsertPendingSectionIfNeeded();
 
@@ -128,7 +129,7 @@ describe("PendingSectionInserter", () => {
         - CANNOT submit the title nor the description field of the selected tracker
         When the document is emptied
         Then it should insert a pending freetext section`, async () => {
-        selected_tracker.value = TrackerStub.withoutTitleAndDescription();
+        selected_tracker = SelectedTrackerStub.withTracker(TrackerStub.build(210, "Requirements"));
 
         watchAndInsertPendingSectionIfNeeded();
 
@@ -146,7 +147,7 @@ describe("PendingSectionInserter", () => {
         - can submit artifacts in the selected tracker
         When a section is added
         Then it should not insert a pending artifact section`, async () => {
-        selected_tracker.value = TrackerStub.withTitleAndDescription();
+        selected_tracker = SelectedTrackerStub.withTracker(TrackerStub.withTitleAndDescription());
 
         watchAndInsertPendingSectionIfNeeded();
 
@@ -168,7 +169,7 @@ describe("PendingSectionInserter", () => {
 
         watchAndInsertPendingSectionIfNeeded();
 
-        selected_tracker.value = TrackerStub.withTitleAndDescription();
+        selected_tracker.value = Option.fromValue(TrackerStub.withTitleAndDescription());
         await flushPromises();
 
         expect(sections_collection.sections.value).toHaveLength(1);
@@ -183,7 +184,7 @@ describe("PendingSectionInserter", () => {
         - can submit artifacts in the selected tracker
         When the loading of the sections has failed
         Then it should not insert a pending artifact section`, async () => {
-        selected_tracker.value = TrackerStub.withTitleAndDescription();
+        selected_tracker = SelectedTrackerStub.withTracker(TrackerStub.withTitleAndDescription());
 
         is_loading_failed = true;
         watchAndInsertPendingSectionIfNeeded();

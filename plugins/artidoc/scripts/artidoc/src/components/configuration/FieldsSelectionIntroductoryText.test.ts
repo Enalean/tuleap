@@ -22,19 +22,21 @@ import { createGettext } from "vue3-gettext";
 import { shallowMount } from "@vue/test-utils";
 import { TrackerStub } from "@/helpers/stubs/TrackerStub";
 import FieldsSelectionIntroductoryText from "@/components/configuration/FieldsSelectionIntroductoryText.vue";
+import { SELECTED_TRACKER } from "@/configuration/SelectedTracker";
+import { SelectedTrackerStub } from "@/helpers/stubs/SelectedTrackerStub";
 
 describe("FieldsSelectionIntroductoryText", () => {
     it("should display the tracker label in the information message", () => {
         const tracker = TrackerStub.build(3, "Hello");
         const wrapper = shallowMount(FieldsSelectionIntroductoryText, {
-            props: {
-                tracker: tracker,
+            global: {
+                plugins: [createGettext({ silent: true })],
+                provide: {
+                    [SELECTED_TRACKER.valueOf()]: SelectedTrackerStub.withTracker(tracker),
+                },
             },
-            global: { plugins: [createGettext({ silent: true })] },
         });
 
-        expect(wrapper.find("[data-test=tracker-information]").text().includes(tracker.label)).toBe(
-            true,
-        );
+        expect(wrapper.find("[data-test=tracker-information]").text()).toContain(tracker.label);
     });
 });

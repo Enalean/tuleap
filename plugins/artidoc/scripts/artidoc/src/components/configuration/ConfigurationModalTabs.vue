@@ -46,7 +46,7 @@
 import { computed } from "vue";
 import { useGettext } from "vue3-gettext";
 import { strictInject } from "@tuleap/vue-strict-inject";
-import type { Tracker } from "@/configuration/AllowedTrackersCollection";
+import { SELECTED_TRACKER } from "@/configuration/SelectedTracker";
 import type { ConfigurationTab } from "@/components/configuration/configuration-modal";
 import { ARE_FIELDS_ENABLED } from "@/are-fields-enabled";
 import { SECTIONS_STATES_COLLECTION } from "@/sections/states/sections-states-collection-injection-key";
@@ -57,30 +57,26 @@ import {
 
 const are_fields_enabled = strictInject(ARE_FIELDS_ENABLED);
 const states_collection = strictInject(SECTIONS_STATES_COLLECTION);
+const selected_tracker = strictInject(SELECTED_TRACKER);
 
 const { $gettext } = useGettext();
 
 const props = defineProps<{
     current_tab: ConfigurationTab;
-    selected_tracker: Tracker | null;
 }>();
 
 const emit = defineEmits<{
     (e: "switch-configuration-tab", value: ConfigurationTab): void;
 }>();
 
-const is_tracker_configured = computed(() => {
-    return props.selected_tracker !== null;
-});
-
 const is_fields_selection_button_disabled = computed(
     () =>
-        !is_tracker_configured.value ||
+        selected_tracker.value.isNothing() ||
         states_collection.has_at_least_one_section_in_edit_mode.value,
 );
 
 const tooltip_message = computed(() => {
-    if (!is_tracker_configured.value) {
+    if (selected_tracker.value.isNothing()) {
         return $gettext("Please select a tracker first");
     }
 

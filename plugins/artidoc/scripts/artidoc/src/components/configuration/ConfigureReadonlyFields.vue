@@ -19,7 +19,7 @@
 
 <template>
     <div class="tlp-modal-body">
-        <fields-selection-introductory-text v-bind:tracker="selected_tracker" />
+        <fields-selection-introductory-text />
         <fields-selection
             v-bind:selected_fields="selected_fields"
             v-bind:available_fields="available_fields"
@@ -35,7 +35,6 @@
 
 <script setup lang="ts">
 import { ref, toRaw, watch } from "vue";
-import type { Tracker } from "@/configuration/AllowedTrackersCollection";
 import type { ConfigurationStore } from "@/stores/configuration-store";
 import FieldsSelectionIntroductoryText from "@/components/configuration/FieldsSelectionIntroductoryText.vue";
 import FieldsSelection from "@/components/configuration/FieldsSelection.vue";
@@ -45,7 +44,6 @@ import type { ConfigurationField } from "@/sections/readonly-fields/AvailableRea
 
 const props = defineProps<{
     configuration_store: ConfigurationStore;
-    selected_tracker: Tracker;
 }>();
 
 const selected_fields = ref<ConfigurationField[]>(

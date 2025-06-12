@@ -68,7 +68,7 @@ import { strictInject } from "@tuleap/vue-strict-inject";
 import { OPEN_CONFIGURATION_MODAL_BUS } from "@/stores/useOpenConfigurationModalBusStore";
 import { OPEN_ADD_EXISTING_SECTION_MODAL_BUS } from "@/composables/useOpenAddExistingSectionModalBus";
 import { isTrackerWithSubmittableSection } from "@/configuration/AllowedTrackersCollection";
-import { CONFIGURATION_STORE } from "@/stores/configuration-store";
+import { SELECTED_TRACKER } from "@/configuration/SelectedTracker";
 import type { PositionForSection } from "@/sections/save/SectionsPositionsForSaveRetriever";
 import type { ArtidocSection, PendingArtifactSection } from "@/helpers/artidoc-section.type";
 import PendingArtifactSectionFactory from "@/helpers/pending-artifact-section.factory";
@@ -83,24 +83,28 @@ const props = defineProps<{
     sections_inserter: InsertSections;
 }>();
 
-const configuration_store = strictInject(CONFIGURATION_STORE);
+const selected_tracker = strictInject(SELECTED_TRACKER);
 
-const { $gettext, interpolate } = useGettext();
+const { $gettext } = useGettext();
 
 const add_new_section_label = $gettext("Add new section");
-const add_new_requirement_label = computed(() =>
-    configuration_store.selected_tracker.value
-        ? interpolate($gettext("Add new %{tracker_label}"), {
-              tracker_label: configuration_store.selected_tracker.value.item_name,
-          })
-        : add_new_section_label,
+const add_new_requirement_label = computed((): string =>
+    selected_tracker.value.mapOr(
+        (tracker) =>
+            $gettext("Add new %{tracker_label}", {
+                tracker_label: tracker.item_name,
+            }),
+        add_new_section_label,
+    ),
 );
-const add_existing_section_label = computed(() =>
-    configuration_store.selected_tracker.value
-        ? interpolate($gettext("Import existing %{tracker_label}"), {
-              tracker_label: configuration_store.selected_tracker.value.item_name,
-          })
-        : $gettext("Import existing section"),
+const add_existing_section_label = computed((): string =>
+    selected_tracker.value.mapOr(
+        (tracker) =>
+            $gettext("Import existing %{tracker_label}", {
+                tracker_label: tracker.item_name,
+            }),
+        $gettext("Import existing section"),
+    ),
 );
 
 const configuration_bus = strictInject(OPEN_CONFIGURATION_MODAL_BUS);
@@ -110,10 +114,8 @@ const trigger_element = ref<HTMLElement>();
 const dropdown_element = ref<HTMLElement>();
 let dropdown: Dropdown | null = null;
 
-const is_tracker_with_submittable_section = computed(
-    () =>
-        configuration_store.selected_tracker.value &&
-        isTrackerWithSubmittableSection(configuration_store.selected_tracker.value),
+const is_tracker_with_submittable_section = computed(() =>
+    selected_tracker.value.mapOr(isTrackerWithSubmittableSection, false),
 );
 
 onMounted(() => {
@@ -127,20 +129,16 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
-    if (dropdown) {
-        dropdown.destroy();
-    }
+    dropdown?.destroy();
 });
 
 function addExistingSection(): void {
     dropdown?.hide();
 
-    if (configuration_store.selected_tracker.value === null) {
-        openConfigurationModalBeforeInsertingExistingSection();
-        return;
-    }
-
-    openAddExistingSectionModal();
+    selected_tracker.value.match(
+        openAddExistingSectionModal,
+        openConfigurationModalBeforeInsertingExistingSection,
+    );
 }
 
 function openAddExistingSectionModal(): void {
@@ -174,19 +172,15 @@ function openConfigurationModalBeforeInsertingNewSection(): void {
 }
 
 function insertNewSection(): void {
-    const selected_tracker = configuration_store.selected_tracker.value;
-    if (!selected_tracker) {
-        return;
-    }
+    selected_tracker.value.apply((tracker) => {
+        if (!isTrackerWithSubmittableSection(tracker)) {
+            return;
+        }
+        const section: PendingArtifactSection =
+            PendingArtifactSectionFactory.overrideFromTracker(tracker);
 
-    if (!isTrackerWithSubmittableSection(selected_tracker)) {
-        return;
-    }
-
-    const section: PendingArtifactSection =
-        PendingArtifactSectionFactory.overrideFromTracker(selected_tracker);
-
-    props.sections_inserter.insertSection(section, props.position);
+        props.sections_inserter.insertSection(section, props.position);
+    });
 }
 </script>
 
