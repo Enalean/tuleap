@@ -29,10 +29,12 @@ import type { WidgetTitleUpdater } from "./WidgetTitleUpdater";
 import type { UpdateQuery } from "./domain/UpdateQuery";
 import type { Emitter } from "mitt";
 import type { Events } from "./helpers/widget-events";
+import type { RetrieveArtifactLinks } from "./domain/RetrieveArtifactLinks";
 
 export const DATE_FORMATTER: StrictInjectionKey<IntlFormatter> = Symbol();
 export const DATE_TIME_FORMATTER: StrictInjectionKey<IntlFormatter> = Symbol();
 export const RETRIEVE_ARTIFACTS_TABLE: StrictInjectionKey<RetrieveArtifactsTable> = Symbol();
+export const RETRIEVE_ARTIFACT_LINKS: StrictInjectionKey<RetrieveArtifactLinks> = Symbol();
 export const IS_EXPORT_ALLOWED: StrictInjectionKey<Ref<boolean>> = Symbol();
 export const WIDGET_ID: StrictInjectionKey<number> = Symbol();
 export const IS_USER_ADMIN: StrictInjectionKey<boolean> = Symbol();

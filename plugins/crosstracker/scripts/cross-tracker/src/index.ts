@@ -39,6 +39,7 @@ import {
     QUERY_UPDATER,
     WIDGET_CONTAINER,
     CAN_DISPLAY_ARTIFACT_LINK,
+    RETRIEVE_ARTIFACT_LINKS,
 } from "./injection-symbols";
 import { ArtifactsTableRetriever } from "./api/ArtifactsTableRetriever";
 import { ArtifactsTableBuilder } from "./api/ArtifactsTableBuilder";
@@ -52,6 +53,7 @@ import { NewQueryCreator } from "./api/NewQueryCreator";
 import type { WidgetData } from "./type";
 import { WidgetTitleUpdater } from "./WidgetTitleUpdater";
 import { QueryUpdater } from "./api/QueryUpdater";
+import { ArtifactLinksRetriever } from "./api/ArtifactLinksRetriever";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const locale = getLocaleOrThrow(document);
@@ -90,6 +92,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         );
 
         const vue_mount_point = selectOrThrow(widget_element, ".vue-mount-point");
+        const artifacts_table_builder = ArtifactsTableBuilder();
 
         createApp(CrossTrackerWidget)
             .use(gettext_plugin)
@@ -98,8 +101,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             .provide(DATE_TIME_FORMATTER, date_time_formatter)
             .provide(
                 RETRIEVE_ARTIFACTS_TABLE,
-                ArtifactsTableRetriever(widget_data.widget_id, ArtifactsTableBuilder()),
+                ArtifactsTableRetriever(widget_data.widget_id, artifacts_table_builder),
             )
+            .provide(RETRIEVE_ARTIFACT_LINKS, ArtifactLinksRetriever(artifacts_table_builder))
             .provide(WIDGET_ID, widget_data.widget_id)
             .provide(IS_USER_ADMIN, widget_data.is_widget_admin)
             .provide(DOCUMENTATION_BASE_URL, widget_data.documentation_base_url)

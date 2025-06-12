@@ -148,6 +148,14 @@ function findArtifactURI(selectable: ArtifactSelectable, artifact: ArtifactRepre
     return artifact_value.uri;
 }
 
+function findArtifactId(selectable: ArtifactSelectable, artifact: ArtifactRepresentation): number {
+    const artifact_value = artifact[selectable.name];
+    if (!isArtifactSelectableRepresentation(artifact_value)) {
+        throw Error(getErrorMessageToWarnTuleapDevs(selectable));
+    }
+    return artifact_value.id;
+}
+
 function findNumberOfForwardLink(
     selectable: ArtifactSelectable,
     artifact: ArtifactRepresentation,
@@ -279,6 +287,7 @@ export const ArtifactsTableBuilder = (): ArtifactsTableBuilder => {
                 initial_table.columns.add(artifact_selectable.name);
                 return query_content.artifacts.reduce((accumulator, artifact) => {
                     const artifact_uri = findArtifactURI(artifact_selectable, artifact);
+                    const artifact_id = findArtifactId(artifact_selectable, artifact);
                     const number_of_forward_link = findNumberOfForwardLink(
                         artifact_selectable,
                         artifact,
@@ -289,6 +298,7 @@ export const ArtifactsTableBuilder = (): ArtifactsTableBuilder => {
                     );
 
                     const row: ArtifactRow = {
+                        id: artifact_id,
                         number_of_forward_link,
                         number_of_reverse_link,
                         is_expanded: false,

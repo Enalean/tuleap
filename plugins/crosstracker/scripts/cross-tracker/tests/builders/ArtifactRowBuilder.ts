@@ -21,6 +21,7 @@ import type { ArtifactRow, Cell } from "../../src/domain/ArtifactsTable";
 
 export class ArtifactRowBuilder {
     #row: ArtifactRow = {
+        id: 698,
         number_of_forward_link: 2,
         number_of_reverse_link: 1,
         is_expanded: false,
@@ -38,6 +39,7 @@ export class ArtifactRowBuilder {
         number_of_reverse_link: number,
     ): ArtifactRow {
         return {
+            id: 698,
             number_of_forward_link,
             number_of_reverse_link,
             is_expanded: false,

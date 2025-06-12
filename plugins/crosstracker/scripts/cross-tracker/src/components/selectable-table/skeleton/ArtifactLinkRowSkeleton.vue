@@ -20,12 +20,11 @@
 
 <template>
     <template v-for="index of number_of_link" v-bind:key="row.number_of_forward_link + index">
-        <empty-edit-cell class="tlp-skeleton-icon" data-test="empty-edit-cell" />
+        <empty-edit-cell class="tlp-skeleton-icon" />
         <empty-selectable-cell
             v-for="column_name of columns"
             v-bind:key="column_name + index"
             v-bind:cell="row.cells.get(column_name)"
-            data-test="empty-selectable-cell"
         />
     </template>
 </template>

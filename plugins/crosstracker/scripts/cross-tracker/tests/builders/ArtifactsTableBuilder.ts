@@ -18,6 +18,7 @@
  */
 
 import type { ArtifactRow, ArtifactsTable } from "../../src/domain/ArtifactsTable";
+import type { ArtifactsTableWithTotal } from "../../src/domain/RetrieveArtifactsTable";
 
 export class ArtifactsTableBuilder {
     #columns: Set<string> = new Set();
@@ -31,6 +32,13 @@ export class ArtifactsTableBuilder {
     public withArtifactRow(row: ArtifactRow): this {
         this.#rows.push(row);
         return this;
+    }
+
+    public buildWithTotal(total: number): ArtifactsTableWithTotal {
+        return {
+            table: this.build(),
+            total: total,
+        };
     }
 
     public build(): ArtifactsTable {

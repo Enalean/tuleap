@@ -19,33 +19,86 @@
   -->
 
 <template>
-    <template v-if="is_loading">
+    <template v-if="are_forward_links_loading">
         <artifact-link-row-skeleton
             v-if="row.number_of_forward_link > 0"
             v-bind:row="row"
             v-bind:columns="columns"
             v-bind:link_type="'forward'"
-            data-test="forward-link-skeleton"
         />
+    </template>
+    <template v-else>
+        <template v-for="(row, index) of forward_links" v-bind:key="row.uri">
+            <edit-cell v-bind:uri="row.uri" v-bind:even="false" data-test="edit-cell-icon" />
+            <selectable-cell
+                v-for="(column_name, column_index) of columns"
+                v-bind:key="column_name + index"
+                v-bind:cell="row.cells.get(column_name)"
+                v-bind:artifact_uri="row.uri"
+                v-bind:number_of_forward_link="row.number_of_forward_link"
+                v-bind:number_of_reverse_link="row.number_of_reverse_link"
+                v-bind:even="false"
+                v-bind:last_of_row="isLastCellOfRow(column_index, columns.size)"
+                v-on:toggle-links="toggleLinks(row)"
+            />
+            <artifact-link-rows
+                v-if="row.is_expanded"
+                v-bind:row="row"
+                v-bind:columns="columns"
+                v-bind:artifact_id="row.id"
+                v-bind:query_id="query_id"
+            />
+        </template>
+    </template>
+    <template v-if="are_reverse_links_loading">
         <artifact-link-row-skeleton
             v-if="row.number_of_reverse_link > 0"
             v-bind:row="row"
             v-bind:columns="columns"
             v-bind:link_type="'reverse'"
-            data-test="reverse-link-skeleton"
         />
     </template>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
+import { strictInject } from "@tuleap/vue-strict-inject";
 import type { ArtifactRow, ArtifactsTable } from "../../domain/ArtifactsTable";
 import ArtifactLinkRowSkeleton from "./skeleton/ArtifactLinkRowSkeleton.vue";
+import type { ArtifactsTableWithTotal } from "../../domain/RetrieveArtifactsTable";
+import EditCell from "./EditCell.vue";
+import SelectableCell from "./SelectableCell.vue";
+import { RETRIEVE_ARTIFACT_LINKS } from "../../injection-symbols";
 
-defineProps<{
+const props = defineProps<{
+    artifact_id: number;
+    query_id: string;
     row: ArtifactRow;
     columns: ArtifactsTable["columns"];
 }>();
 
-const is_loading = ref(true);
+const forward_links = ref<ReadonlyArray<ArtifactRow>>([]);
+const are_forward_links_loading = ref(true);
+const are_reverse_links_loading = ref(true);
+
+const artifact_links_retriever = strictInject(RETRIEVE_ARTIFACT_LINKS);
+
+onMounted(() => {
+    artifact_links_retriever
+        .getForwardLinks(props.query_id, props.artifact_id)
+        .map((artifacts: ArtifactsTableWithTotal) => {
+            forward_links.value = artifacts.table.rows;
+        })
+        .then(() => {
+            are_forward_links_loading.value = false;
+        });
+});
+
+function isLastCellOfRow(index: number, size: number): boolean {
+    return index + 1 === size;
+}
+
+function toggleLinks(row: ArtifactRow): void {
+    row.is_expanded = !row.is_expanded;
+}
 </script>

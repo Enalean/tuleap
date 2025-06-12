@@ -50,6 +50,8 @@
                     v-if="row.is_expanded"
                     v-bind:row="row"
                     v-bind:columns="columns"
+                    v-bind:artifact_id="row.id"
+                    v-bind:query_id="query.id"
                 />
             </template>
         </div>
