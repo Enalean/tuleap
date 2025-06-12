@@ -6,37 +6,52 @@ settings:
 
 dependencies:
   peggy:
-    specifier: ^3.0.2
-    version: 3.0.2
+    specifier: ^5.0.3
+    version: 5.0.3
   phpeggy:
-    specifier: ^2.0.1
-    version: 2.0.1(peggy@3.0.2)
+    specifier: ^3.0.0
+    version: 3.0.0(peggy@5.0.3)
 
 packages:
 
-  /commander@10.0.1:
-    resolution: {integrity: sha512-y4Mg2tXshplEbSGzx7amzPwKKOCGuoSRP/CjEdwwk0FOGlUbq6lKuoyDZTNZkmxHdJtp54hdfY/JUrdL7Xfdug==}
-    engines: {node: '>=14'}
+  /@peggyjs/from-mem@2.0.0:
+    resolution: {integrity: sha512-f+pL/s2DiT+2dxwheSoJT0P/KJy/s0klzE+ZqRdXHlkeyFk/DpKtyjLZIiA79kx56g3oEPA8Zu9EzEKzAwuvhw==}
+    engines: {node: '>=20'}
+    dependencies:
+      semver: 7.7.1
     dev: false
 
-  /peggy@3.0.2:
-    resolution: {integrity: sha512-n7chtCbEoGYRwZZ0i/O3t1cPr6o+d9Xx4Zwy2LYfzv0vjchMBU0tO+qYYyvZloBPcgRgzYvALzGWHe609JjEpg==}
-    engines: {node: '>=14'}
+  /commander@14.0.0:
+    resolution: {integrity: sha512-2uM9rYjPvyq39NwLRqaiLtWHyDC1FvryJDa2ATTVims5YAS4PupsEQsDvP14FqhFr0P49CYDugi59xaxJlTXRA==}
+    engines: {node: '>=20'}
+    dev: false
+
+  /peggy@5.0.3:
+    resolution: {integrity: sha512-QErYmLjj/ehiNNJRqx2qb36hzkanuascpMqREs2RQqaXhU3cflIRScP/u2BoobIfu/FaeI3GGxNB/vFX/Ar9lg==}
+    engines: {node: '>=20'}
     hasBin: true
     dependencies:
-      commander: 10.0.1
-      source-map-generator: 0.8.0
+      '@peggyjs/from-mem': 2.0.0
+      commander: 14.0.0
+      source-map-generator: 2.0.0
     dev: false
 
-  /phpeggy@2.0.1(peggy@3.0.2):
-    resolution: {integrity: sha512-y7dALxM6XiWq49FNYfTMN66XvUTGBVWp/hoU2RDoJ04fd+W3KLw1iIVAEVp8fKfxL7Bn9Ym+FEWDe+IeQLQ/uw==}
+  /phpeggy@3.0.0(peggy@5.0.3):
+    resolution: {integrity: sha512-k44yM6wPapQ9CES3QZCYxa5+twu+qXawillJHxXuXc7GiLd+JrlkPeXHx32WeVjkWWv+7YVX7qsNxrT6v7kjEg==}
+    engines: {node: '>=20'}
     peerDependencies:
-      peggy: ^3.0.0
+      peggy: ^5.0.3
     dependencies:
-      peggy: 3.0.2
+      peggy: 5.0.3
     dev: false
 
-  /source-map-generator@0.8.0:
-    resolution: {integrity: sha512-psgxdGMwl5MZM9S3FWee4EgsEaIjahYV5AzGnwUvPhWeITz/j6rKpysQHlQ4USdxvINlb8lKfWGIXwfkrgtqkA==}
-    engines: {node: '>= 10'}
+  /semver@7.7.1:
+    resolution: {integrity: sha512-hlq8tAfn0m/61p4BVRcPzIGr6LKiMwo4VM6dGi6pt4qcRkmNzTcWq6eCEjEh+qXjkMDvPlOFFSGwQjoEa6gyMA==}
+    engines: {node: '>=10'}
+    hasBin: true
+    dev: false
+
+  /source-map-generator@2.0.0:
+    resolution: {integrity: sha512-4KomB7QsJti7dFBAVF6SXHzuCNQauk4gE2CummcqPzl+eJqXz1CkkiBdVXXW3g8VGh23bxcdEVACOzrxpIqnUg==}
+    engines: {node: '>=20'}
     dev: false
