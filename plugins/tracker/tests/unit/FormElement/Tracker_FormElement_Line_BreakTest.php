@@ -18,33 +18,40 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
 declare(strict_types=1);
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Tracker_FormElement_Line_BreakTest extends \Tuleap\Test\PHPUnit\TestCase
+namespace Tuleap\Tracker\FormElement;
+
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use Tracker_FormElement_StaticField_LineBreak;
+use Tuleap\GlobalLanguageMock;
+use Tuleap\Test\PHPUnit\TestCase;
+
+#[DisableReturnValueGenerationForTestDoubles]
+final class Tracker_FormElement_Line_BreakTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-    use \Tuleap\GlobalLanguageMock;
+    use GlobalLanguageMock;
 
     public function testFetchDescription(): void
     {
-        $id             = 2;
-        $tracker_id     = 254;
-        $parent_id      = 0;
-        $name           = 'linebreak2';
-        $label          = 'Line Break Label';
-        $description    = 'Line Break Description that should not be kept';
-        $use_it         = true;
-        $scope          = 'S';
-        $required       = false;
-        $notififcations = false;
-        $rank           = 25;
-        $original_field = null;
+        $line_break = new Tracker_FormElement_StaticField_LineBreak(
+            2,
+            254,
+            0,
+            'linebreak2',
+            'Line Break Label',
+            'Line Break Description that should not be kept',
+            true,
+            'S',
+            false,
+            false,
+            25,
+            null,
+        );
 
-        $line_break = new Tracker_FormElement_StaticField_LineBreak($id, $tracker_id, $parent_id, $name, $label, $description, $use_it, $scope, $required, $notififcations, $rank, $original_field);
-
-        $this->assertEquals('Line Break Label', $line_break->getLabel());
-        $this->assertEquals('', $line_break->getDescription());
-        $this->assertEquals('', $line_break->getCannotRemoveMessage());
+        self::assertEquals('Line Break Label', $line_break->getLabel());
+        self::assertEquals('', $line_break->getDescription());
+        self::assertEquals('', $line_break->getCannotRemoveMessage());
     }
 }
