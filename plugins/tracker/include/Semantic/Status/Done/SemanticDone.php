@@ -154,7 +154,7 @@ class SemanticDone extends Tracker_Semantic
         $csrf = $this->getCSRFSynchronizerToken();
 
         $GLOBALS['HTML']->addJavascriptAsset(new JavascriptAsset(
-            new IncludeAssets(__DIR__ . '/../../../../../scripts/tracker-admin/frontend-assets', '/assets/trackers/tracker-admin'),
+            new IncludeAssets(__DIR__ . '/../../../../scripts/tracker-admin/frontend-assets', '/assets/trackers/tracker-admin'),
             'done-semantic.js'
         ));
         $renderer  = TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR . '/semantics');

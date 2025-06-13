@@ -37,7 +37,7 @@ module.exports = [
         context: __dirname,
         output: webpack_configurator.configureOutput(
             path.resolve(__dirname, "./frontend-assets/"),
-            "/assets/trackers/tracker-admin",
+            "/assets/trackers/tracker-admin/",
         ),
         externals: {
             codendi: "codendi",
