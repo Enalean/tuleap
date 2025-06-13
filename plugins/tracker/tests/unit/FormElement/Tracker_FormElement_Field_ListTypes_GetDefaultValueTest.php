@@ -19,199 +19,208 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Tracker_FormElement_Field_ListTypes_GetDefaultValueTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
-{
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+declare(strict_types=1);
 
-    /**
-     *
-     * @var Tracker_FormElement_Field_List_Bind_Static
-     */
-    private $bind;
+namespace Tuleap\Tracker\FormElement;
+
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tracker_FormElement_Field_List_Bind;
+use Tracker_FormElement_Field_List_Bind_Static;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\Fields\CheckboxFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\OpenListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\RadioButtonFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SubmittedByFieldBuilder;
+
+#[DisableReturnValueGenerationForTestDoubles]
+final class Tracker_FormElement_Field_ListTypes_GetDefaultValueTest extends TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+{
+    private Tracker_FormElement_Field_List_Bind_Static&MockObject $bind;
 
     protected function setUp(): void
     {
-        $this->bind = \Mockery::spy(\Tracker_FormElement_Field_List_Bind_Static::class);
+        $this->bind = $this->createMock(Tracker_FormElement_Field_List_Bind_Static::class);
     }
 
     public function testSelectBoxWithOneValue(): void
     {
-        $this->bind->shouldReceive('getDefaultValues')->andReturns([300 => 0]);
+        $this->bind->method('getDefaultValues')->willReturn([300 => 0]);
 
-        $field = \Mockery::mock(\Tracker_FormElement_Field_Selectbox::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $field->shouldReceive('getBind')->andReturns($this->bind);
+        $field = ListFieldBuilder::aListField(456)->build();
+        $field->setBind($this->bind);
 
-        $this->assertEquals(300, $field->getDefaultValue());
+        self::assertEquals(300, $field->getDefaultValue());
     }
 
     public function testSelectBoxWithMultipleValues(): void
     {
-        $this->bind->shouldReceive('getDefaultValues')->andReturns([300 => 0, 200 => 4]);
+        $this->bind->method('getDefaultValues')->willReturn([300 => 0, 200 => 4]);
 
-        $field = \Mockery::mock(\Tracker_FormElement_Field_Selectbox::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $field->shouldReceive('getBind')->andReturns($this->bind);
+        $field = ListFieldBuilder::aListField(456)->build();
+        $field->setBind($this->bind);
 
-        $this->assertEquals(Tracker_FormElement_Field_List_Bind::NONE_VALUE, $field->getDefaultValue());
+        self::assertEquals(Tracker_FormElement_Field_List_Bind::NONE_VALUE, $field->getDefaultValue());
     }
 
     public function testSelectBoxWithNoValue(): void
     {
-        $this->bind->shouldReceive('getDefaultValues')->andReturns([]);
+        $this->bind->method('getDefaultValues')->willReturn([]);
 
-        $field = \Mockery::mock(\Tracker_FormElement_Field_Selectbox::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $field->shouldReceive('getBind')->andReturns($this->bind);
+        $field = ListFieldBuilder::aListField(456)->build();
+        $field->setBind($this->bind);
 
-        $this->assertEquals(Tracker_FormElement_Field_List_Bind::NONE_VALUE, $field->getDefaultValue());
+        self::assertEquals(Tracker_FormElement_Field_List_Bind::NONE_VALUE, $field->getDefaultValue());
     }
 
     public function testMultiSelectBoxWithOneValue(): void
     {
-        $this->bind->shouldReceive('getDefaultValues')->andReturns([300 => 0]);
+        $this->bind->method('getDefaultValues')->willReturn([300 => 0]);
 
-        $field = \Mockery::mock(\Tracker_FormElement_Field_MultiSelectbox::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $field->shouldReceive('getBind')->andReturns($this->bind);
+        $field = ListFieldBuilder::aListField(789)->withMultipleValues()->build();
+        $field->setBind($this->bind);
 
-        $this->assertEquals([300], $field->getDefaultValue());
+        self::assertEquals([300], $field->getDefaultValue());
     }
 
     public function testMultiSelectBoxWithMultipleValues(): void
     {
-        $this->bind->shouldReceive('getDefaultValues')->andReturns([300 => 0, 200 => 4]);
+        $this->bind->method('getDefaultValues')->willReturn([300 => 0, 200 => 4]);
 
-        $field = \Mockery::mock(\Tracker_FormElement_Field_MultiSelectbox::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $field->shouldReceive('getBind')->andReturns($this->bind);
+        $field = ListFieldBuilder::aListField(789)->withMultipleValues()->build();
+        $field->setBind($this->bind);
 
-        $this->assertEquals([300, 200], $field->getDefaultValue());
+        self::assertEquals([300, 200], $field->getDefaultValue());
     }
 
     public function testMultiSelectBoxWithNoValue(): void
     {
-        $this->bind->shouldReceive('getDefaultValues')->andReturns([]);
+        $this->bind->method('getDefaultValues')->willReturn([]);
 
-        $field = \Mockery::mock(\Tracker_FormElement_Field_MultiSelectbox::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $field->shouldReceive('getBind')->andReturns($this->bind);
+        $field = ListFieldBuilder::aListField(789)->withMultipleValues()->build();
+        $field->setBind($this->bind);
 
-        $this->assertEquals([Tracker_FormElement_Field_List_Bind::NONE_VALUE], $field->getDefaultValue());
+        self::assertEquals([Tracker_FormElement_Field_List_Bind::NONE_VALUE], $field->getDefaultValue());
     }
 
     public function testRadioWithOneValue(): void
     {
-        $this->bind->shouldReceive('getDefaultValues')->andReturns([300 => 0]);
+        $this->bind->method('getDefaultValues')->willReturn([300 => 0]);
 
-        $field = \Mockery::mock(\Tracker_FormElement_Field_Radiobutton::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $field->shouldReceive('getBind')->andReturns($this->bind);
+        $field = RadioButtonFieldBuilder::aRadioButtonField(963)->build();
+        $field->setBind($this->bind);
 
-        $this->assertEquals(300, $field->getDefaultValue());
+        self::assertEquals(300, $field->getDefaultValue());
     }
 
     public function testRadioWithMultipleValues(): void
     {
-        $this->bind->shouldReceive('getDefaultValues')->andReturns([300 => 0, 200 => 4]);
+        $this->bind->method('getDefaultValues')->willReturn([300 => 0, 200 => 4]);
 
-        $field = \Mockery::mock(\Tracker_FormElement_Field_Radiobutton::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $field->shouldReceive('getBind')->andReturns($this->bind);
+        $field = RadioButtonFieldBuilder::aRadioButtonField(963)->build();
+        $field->setBind($this->bind);
 
-        $this->assertEquals(Tracker_FormElement_Field_List_Bind::NONE_VALUE, $field->getDefaultValue());
+        self::assertEquals(Tracker_FormElement_Field_List_Bind::NONE_VALUE, $field->getDefaultValue());
     }
 
     public function testRadioWithNoValue(): void
     {
-        $this->bind->shouldReceive('getDefaultValues')->andReturns([]);
+        $this->bind->method('getDefaultValues')->willReturn([]);
 
-        $field = \Mockery::mock(\Tracker_FormElement_Field_Radiobutton::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $field->shouldReceive('getBind')->andReturns($this->bind);
+        $field = RadioButtonFieldBuilder::aRadioButtonField(963)->build();
+        $field->setBind($this->bind);
 
-        $this->assertEquals(Tracker_FormElement_Field_List_Bind::NONE_VALUE, $field->getDefaultValue());
+        self::assertEquals(Tracker_FormElement_Field_List_Bind::NONE_VALUE, $field->getDefaultValue());
     }
 
     public function testCheckboxWithOneValue(): void
     {
-        $this->bind->shouldReceive('getDefaultValues')->andReturns([300 => 0]);
+        $this->bind->method('getDefaultValues')->willReturn([300 => 0]);
 
-        $field = \Mockery::mock(\Tracker_FormElement_Field_Checkbox::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $field->shouldReceive('getBind')->andReturns($this->bind);
+        $field = CheckboxFieldBuilder::aCheckboxField(852)->build();
+        $field->setBind($this->bind);
 
-        $this->assertEquals([300], $field->getDefaultValue());
+        self::assertEquals([300], $field->getDefaultValue());
     }
 
     public function testCheckboxWithMultipleValues(): void
     {
-        $this->bind->shouldReceive('getDefaultValues')->andReturns([300 => 0, 200 => 4]);
+        $this->bind->method('getDefaultValues')->willReturn([300 => 0, 200 => 4]);
 
-        $field = \Mockery::mock(\Tracker_FormElement_Field_Checkbox::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $field->shouldReceive('getBind')->andReturns($this->bind);
+        $field = CheckboxFieldBuilder::aCheckboxField(852)->build();
+        $field->setBind($this->bind);
 
-        $this->assertEquals([300, 200], $field->getDefaultValue());
+        self::assertEquals([300, 200], $field->getDefaultValue());
     }
 
     public function testCheckboxWithNoValue(): void
     {
-        $this->bind->shouldReceive('getDefaultValues')->andReturns([]);
+        $this->bind->method('getDefaultValues')->willReturn([]);
 
-        $field = \Mockery::mock(\Tracker_FormElement_Field_Checkbox::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $field->shouldReceive('getBind')->andReturns($this->bind);
+        $field = CheckboxFieldBuilder::aCheckboxField(852)->build();
+        $field->setBind($this->bind);
 
-        $this->assertEquals([Tracker_FormElement_Field_List_Bind::NONE_VALUE], $field->getDefaultValue());
+        self::assertEquals([Tracker_FormElement_Field_List_Bind::NONE_VALUE], $field->getDefaultValue());
     }
 
     public function testOpenListWithOneValue(): void
     {
-        $this->bind->shouldReceive('getDefaultValues')->andReturns([300 => 0]);
+        $this->bind->method('getDefaultValues')->willReturn([300 => 0]);
 
-        $field = \Mockery::mock(\Tracker_FormElement_Field_OpenList::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $field->shouldReceive('getBind')->andReturns($this->bind);
+        $field = OpenListFieldBuilder::anOpenListField()->build();
+        $field->setBind($this->bind);
 
-        $this->assertEquals('b300', $field->getDefaultValue());
+        self::assertEquals('b300', $field->getDefaultValue());
     }
 
     public function testOpenListWithMultipleValues(): void
     {
-        $this->bind->shouldReceive('getDefaultValues')->andReturns([300 => 0, 200 => 4]);
+        $this->bind->method('getDefaultValues')->willReturn([300 => 0, 200 => 4]);
 
-        $field = \Mockery::mock(\Tracker_FormElement_Field_OpenList::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $field->shouldReceive('getBind')->andReturns($this->bind);
+        $field = OpenListFieldBuilder::anOpenListField()->build();
+        $field->setBind($this->bind);
 
-        $this->assertEquals('b300,b200', $field->getDefaultValue());
+        self::assertEquals('b300,b200', $field->getDefaultValue());
     }
 
     public function testItVerifiesThatOpenListDefaultValueIsNotBindedToSomethingWhenAnAdministratorHaveNotDefinedAPreference(): void
     {
-        $this->bind->shouldReceive('getDefaultValues')->andReturns([]);
+        $this->bind->method('getDefaultValues')->willReturn([]);
 
-        $field = \Mockery::mock(\Tracker_FormElement_Field_OpenList::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $field->shouldReceive('getBind')->andReturns($this->bind);
+        $field = OpenListFieldBuilder::anOpenListField()->build();
+        $field->setBind($this->bind);
 
-        $this->assertEquals('', $field->getDefaultValue());
+        self::assertEquals('', $field->getDefaultValue());
     }
 
     public function testSubmittedByWithOneValue(): void
     {
-        $this->bind->shouldReceive('getDefaultValues')->andReturns([300 => 0]);
+        $this->bind->method('getDefaultValues')->willReturn([300 => 0]);
 
-        $field = \Mockery::mock(\Tracker_FormElement_Field_SubmittedBy::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $field->shouldReceive('getBind')->andReturns($this->bind);
+        $field = SubmittedByFieldBuilder::aSubmittedByField(458)->build();
+        $field->setBind($this->bind);
 
-        $this->assertEquals(Tracker_FormElement_Field_List_Bind::NONE_VALUE, $field->getDefaultValue());
+        self::assertEquals(Tracker_FormElement_Field_List_Bind::NONE_VALUE, $field->getDefaultValue());
     }
 
     public function testSubmittedByWithMultipleValues(): void
     {
-        $this->bind->shouldReceive('getDefaultValues')->andReturns([300 => 0, 200 => 4]);
+        $this->bind->method('getDefaultValues')->willReturn([300 => 0, 200 => 4]);
 
-        $field = \Mockery::mock(\Tracker_FormElement_Field_SubmittedBy::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $field->shouldReceive('getBind')->andReturns($this->bind);
+        $field = SubmittedByFieldBuilder::aSubmittedByField(458)->build();
+        $field->setBind($this->bind);
 
-        $this->assertEquals(Tracker_FormElement_Field_List_Bind::NONE_VALUE, $field->getDefaultValue());
+        self::assertEquals(Tracker_FormElement_Field_List_Bind::NONE_VALUE, $field->getDefaultValue());
     }
 
     public function testSubmittedByWithNoValue(): void
     {
-        $this->bind->shouldReceive('getDefaultValues')->andReturns([]);
+        $this->bind->method('getDefaultValues')->willReturn([]);
 
-        $field = \Mockery::mock(\Tracker_FormElement_Field_SubmittedBy::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $field->shouldReceive('getBind')->andReturns($this->bind);
+        $field = SubmittedByFieldBuilder::aSubmittedByField(458)->build();
+        $field->setBind($this->bind);
 
-        $this->assertEquals(Tracker_FormElement_Field_List_Bind::NONE_VALUE, $field->getDefaultValue());
+        self::assertEquals(Tracker_FormElement_Field_List_Bind::NONE_VALUE, $field->getDefaultValue());
     }
 }
