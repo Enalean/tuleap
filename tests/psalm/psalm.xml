@@ -1103,6 +1103,8 @@
             <file name="plugins/tracker/tests/unit/Semantic/CollectionOfCreationSemanticToCheckTest.php"/>
             <file name="plugins/tracker/tests/unit/Semantic/CollectionOfSemanticsUsingAParticularTrackerFieldTest.php"/>
             <file name="plugins/tracker/tests/unit/Semantic/Contributor/AdminPresenterBuilderTest.php"/>
+            <file name="plugins/tracker/tests/unit/Semantic/Contributor/TrackerSemanticContributorFactoryTest.php"/>
+            <file name="plugins/tracker/tests/unit/Semantic/Contributor/TrackerSemanticContributorTest.php"/>
             <file name="plugins/tracker/tests/unit/Semantic/CreationSemanticToCheckTest.php"/>
             <file name="plugins/tracker/tests/unit/Semantic/Description/AdminPresenterBuilderTest.php"/>
             <file name="plugins/tracker/tests/unit/Semantic/Progress/Administration/SemanticProgressAdminPresenterBuilderTest.php"/>
@@ -1151,9 +1153,7 @@
             <file name="plugins/tracker/tests/unit/Semantic/Tooltip/TooltipFetcherTest.php"/>
             <file name="plugins/tracker/tests/unit/Semantic/Tooltip/Tracker_TooltipFactoryTest.php"/>
             <file name="plugins/tracker/tests/unit/Semantic/TrackerSemanticCollectionTest.php"/>
-            <file name="plugins/tracker/tests/unit/Semantic/TrackerSemanticContributorTest.php"/>
             <file name="plugins/tracker/tests/unit/Semantic/Tracker_SemanticFactoryTest.php"/>
-            <file name="plugins/tracker/tests/unit/Semantic/Tracker_Semantic_ContributorFactoryTest.php"/>
             <file name="plugins/tracker/tests/unit/Service/CheckPromotedTrackerConfigurationTest.php"/>
             <file name="plugins/tracker/tests/unit/Service/ServiceActivatorTest.php"/>
             <file name="plugins/tracker/tests/unit/Service/SidebarPromotedTrackerRetrieverTest.php"/>

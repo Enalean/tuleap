@@ -42,16 +42,16 @@ final class TrackerSemanticContributorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testExport(): void
     {
-        $xml           = simplexml_load_string(file_get_contents(__DIR__ . '/../_fixtures/ImportTrackerSemanticContributorTest.xml'));
+        $xml           = simplexml_load_string(file_get_contents(__DIR__ . '/../../_fixtures/ImportTrackerSemanticContributorTest.xml'));
         $root          = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
         $array_mapping = ['F13' => '102'];
 
         $this->semantic->exportToXML($root, $array_mapping);
 
-        $this->assertEquals((string) $xml->shortname, (string) $root->semantic->shortname);
-        $this->assertEquals((string) $xml->label, (string) $root->semantic->label);
-        $this->assertEquals((string) $xml->description, (string) $root->semantic->description);
-        $this->assertEquals((string) $xml->field['REF'], (string) $root->semantic->field['REF']);
+        self::assertEquals((string) $xml->shortname, (string) $root->semantic->shortname);
+        self::assertEquals((string) $xml->label, (string) $root->semantic->label);
+        self::assertEquals((string) $xml->description, (string) $root->semantic->description);
+        self::assertEquals((string) $xml->field['REF'], (string) $root->semantic->field['REF']);
     }
 
     public function testItDoesNotExportIfFieldIsNotExported(): void
@@ -61,6 +61,6 @@ final class TrackerSemanticContributorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->semantic->exportToXML($root, $array_xml_mapping);
 
-        $this->assertEquals($root->count(), 0);
+        self::assertEquals(0, $root->count());
     }
 }
