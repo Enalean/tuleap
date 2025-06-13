@@ -41,17 +41,21 @@
 </template>
 
 <script setup lang="ts">
-import { useGettext } from "vue3-gettext";
 import { computed } from "vue";
-import type { Tracker } from "@/configuration/AllowedTrackersCollection";
+import { useGettext } from "vue3-gettext";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { SELECTED_TRACKER } from "@/configuration/SelectedTracker";
 
-const { $gettext, interpolate } = useGettext();
+const selected_tracker = strictInject(SELECTED_TRACKER);
+const { $gettext } = useGettext();
 
-const props = defineProps<{ tracker: Tracker }>();
-
-const tracker_information = computed(() => {
-    return interpolate($gettext('Your artidoc is currently set up on "%{ tracker_name }"'), {
-        tracker_name: props.tracker.label,
-    });
-});
+const tracker_information = computed(() =>
+    selected_tracker.value.mapOr(
+        (tracker) =>
+            $gettext('Your artidoc is currently set up on "%{ tracker_name }"', {
+                tracker_name: tracker.label,
+            }),
+        "",
+    ),
+);
 </script>

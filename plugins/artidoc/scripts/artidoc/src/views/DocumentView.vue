@@ -36,7 +36,7 @@ import ConfigurationPanel from "@/components/configuration/ConfigurationPanel.vu
 import EmptyState from "@/views/EmptyState.vue";
 import NoAccessState from "@/views/NoAccessState.vue";
 import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
-import { CONFIGURATION_STORE } from "@/stores/configuration-store";
+import { SELECTED_TRACKER } from "@/configuration/SelectedTracker";
 import { SECTIONS_COLLECTION } from "@/sections/states/sections-collection-injection-key";
 import {
     IS_LOADING_SECTIONS,
@@ -47,9 +47,9 @@ const is_loading_sections = strictInject(IS_LOADING_SECTIONS);
 const is_loading_failed = strictInject(IS_LOADING_SECTIONS_FAILED);
 const sections_collection = strictInject(SECTIONS_COLLECTION);
 const can_user_edit_document = strictInject(CAN_USER_EDIT_DOCUMENT);
-const { selected_tracker } = strictInject(CONFIGURATION_STORE);
+const selected_tracker = strictInject(SELECTED_TRACKER);
 
 const should_display_configuration_panel = computed(
-    () => can_user_edit_document && !selected_tracker.value,
+    () => can_user_edit_document && selected_tracker.value.isNothing(),
 );
 </script>

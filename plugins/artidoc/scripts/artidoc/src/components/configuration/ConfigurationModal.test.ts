@@ -38,6 +38,8 @@ import {
     ALLOWED_TRACKERS,
     buildAllowedTrackersCollection,
 } from "@/configuration/AllowedTrackersCollection";
+import { SELECTED_TRACKER } from "@/configuration/SelectedTracker";
+import { SelectedTrackerStub } from "@/helpers/stubs/SelectedTrackerStub";
 
 describe("ConfigurationModal", () => {
     function getWrapper(
@@ -50,6 +52,7 @@ describe("ConfigurationModal", () => {
                 provide: {
                     [CONFIGURATION_STORE.valueOf()]: store,
                     [ALLOWED_TRACKERS.valueOf()]: buildAllowedTrackersCollection([]),
+                    [SELECTED_TRACKER.valueOf()]: SelectedTrackerStub.build(),
                     [OPEN_CONFIGURATION_MODAL_BUS.valueOf()]: bus,
                     [ARE_FIELDS_ENABLED.valueOf()]: true,
                     [TITLE.valueOf()]: "My artidoc",

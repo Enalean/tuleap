@@ -68,7 +68,7 @@
 import { computed, ref } from "vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { useGettext } from "vue3-gettext";
-import { Option } from "@tuleap/option";
+import type { Option } from "@tuleap/option";
 import TrackerSelectionIntroductoryText from "@/components/configuration/TrackerSelectionIntroductoryText.vue";
 import ErrorFeedback from "@/components/configuration/ErrorFeedback.vue";
 import { TITLE } from "@/title-injection-key";
@@ -76,24 +76,26 @@ import TrackerSelection from "@/components/configuration/TrackerSelection.vue";
 import type { Tracker } from "@/configuration/AllowedTrackersCollection";
 import { ALLOWED_TRACKERS } from "@/configuration/AllowedTrackersCollection";
 import { CONFIGURATION_STORE } from "@/stores/configuration-store";
+import { SELECTED_TRACKER } from "@/configuration/SelectedTracker";
 
 const { $gettext } = useGettext();
 
 const title = strictInject(TITLE);
-const { error_message, is_error, is_saving, saveTrackerConfiguration, selected_tracker } =
+const { error_message, is_error, is_saving, saveTrackerConfiguration } =
     strictInject(CONFIGURATION_STORE);
+const saved_tracker = strictInject(SELECTED_TRACKER);
 const allowed_trackers = strictInject(ALLOWED_TRACKERS);
 
 const pane_title = $gettext("Configuration of %{ title }", { title });
 
-const new_selected_tracker = ref<Option<Tracker>>(Option.fromNullable(selected_tracker.value));
+const new_selected_tracker = ref<Option<Tracker>>(saved_tracker.value);
 
 const is_submit_button_disabled = computed(
     () =>
         allowed_trackers.isEmpty() ||
         is_saving.value ||
         new_selected_tracker.value.mapOr(
-            (tracker) => tracker.id === selected_tracker.value?.id,
+            (tracker) => tracker.id === saved_tracker.value.mapOr((saved) => saved.id, Number.NaN),
             false,
         ),
 );

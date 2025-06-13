@@ -25,8 +25,6 @@ import type {
     ReactiveStoredArtidocSection,
     SectionsCollection,
 } from "@/sections/SectionsCollection";
-import { CONFIGURATION_STORE } from "@/stores/configuration-store";
-import { ConfigurationStoreStub } from "@/helpers/stubs/ConfigurationStoreStub";
 import { SECTIONS_COLLECTION } from "@/sections/states/sections-collection-injection-key";
 import FreetextSectionFactory from "@/helpers/freetext-section.factory";
 import { SectionsCollectionStub } from "@/sections/stubs/SectionsCollectionStub";
@@ -63,8 +61,6 @@ describe("RemoveFreetextSectionModal", () => {
             global: {
                 plugins: [createGettext({ silent: true })],
                 provide: {
-                    [CONFIGURATION_STORE.valueOf()]:
-                        ConfigurationStoreStub.withSelectedTracker(null),
                     [SECTIONS_COLLECTION.valueOf()]: sections_collection,
                     [REMOVE_FREETEXT_SECTION_MODAL.valueOf()]: bus,
                     [SET_GLOBAL_ERROR_MESSAGE.valueOf()]: noop,

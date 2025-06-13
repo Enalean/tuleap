@@ -36,7 +36,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from "vue";
-import { Option } from "@tuleap/option";
+import type { Option } from "@tuleap/option";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { TRACKER_SELECTION_TAB } from "@/components/configuration/configuration-modal";
 import TrackerSelectionIntroductoryText from "@/components/configuration/TrackerSelectionIntroductoryText.vue";
@@ -45,19 +45,20 @@ import ConfigurationModalFooter from "@/components/configuration/ConfigurationMo
 import type { Tracker } from "@/configuration/AllowedTrackersCollection";
 import { ALLOWED_TRACKERS } from "@/configuration/AllowedTrackersCollection";
 import { CONFIGURATION_STORE } from "@/stores/configuration-store";
+import { SELECTED_TRACKER } from "@/configuration/SelectedTracker";
 
-const { is_saving, is_success, saveTrackerConfiguration, selected_tracker } =
-    strictInject(CONFIGURATION_STORE);
+const { is_saving, is_success, saveTrackerConfiguration } = strictInject(CONFIGURATION_STORE);
+const saved_tracker = strictInject(SELECTED_TRACKER);
 const allowed_trackers = strictInject(ALLOWED_TRACKERS);
 
-const new_selected_tracker = ref<Option<Tracker>>(Option.fromNullable(selected_tracker.value));
+const new_selected_tracker = ref<Option<Tracker>>(saved_tracker.value);
 
 const is_submit_button_disabled = computed(
     () =>
         allowed_trackers.isEmpty() ||
         is_saving.value ||
         new_selected_tracker.value.mapOr(
-            (tracker) => tracker.id === selected_tracker.value?.id,
+            (tracker) => tracker.id === saved_tracker.value.mapOr((saved) => saved.id, Number.NaN),
             false,
         ),
 );

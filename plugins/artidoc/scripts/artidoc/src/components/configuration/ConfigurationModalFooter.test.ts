@@ -31,7 +31,6 @@ import {
     CLOSE_CONFIGURATION_MODAL,
     TRACKER_SELECTION_TAB,
 } from "@/components/configuration/configuration-modal";
-import { TrackerStub } from "@/helpers/stubs/TrackerStub";
 
 describe("ConfigurationModalFooter", () => {
     let onSaveCallback: () => void, closeModal: () => void;
@@ -73,9 +72,7 @@ describe("ConfigurationModalFooter", () => {
     });
 
     it("When the cancel button is clicked, then it should execute the closeModal() callback", () => {
-        const wrapper = getWrapper(
-            ConfigurationStoreStub.withSelectedTracker(TrackerStub.build(102, "Requirements")),
-        );
+        const wrapper = getWrapper(ConfigurationStoreStub.buildEmpty());
         wrapper.get("[data-test=cancel-modal-button]").trigger("click");
 
         expect(closeModal).toHaveBeenCalledOnce();
@@ -89,9 +86,7 @@ describe("ConfigurationModalFooter", () => {
     });
 
     it("When the submit button is clicked, then it should execute the onSave() callback", () => {
-        const wrapper = getWrapper(
-            ConfigurationStoreStub.withSelectedTracker(TrackerStub.build(102, "Requirements")),
-        );
+        const wrapper = getWrapper(ConfigurationStoreStub.buildEmpty());
 
         wrapper.get("[data-test=submit]").trigger("click");
 

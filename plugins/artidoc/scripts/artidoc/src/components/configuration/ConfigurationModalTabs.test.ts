@@ -27,36 +27,36 @@ import {
     READONLY_FIELDS_SELECTION_TAB,
     TRACKER_SELECTION_TAB,
 } from "@/components/configuration/configuration-modal";
-import type { Tracker } from "@/configuration/AllowedTrackersCollection";
 import { ARE_FIELDS_ENABLED } from "@/are-fields-enabled";
 import { SECTIONS_STATES_COLLECTION } from "@/sections/states/sections-states-collection-injection-key";
 import { SectionsStatesCollectionStub } from "@/sections/stubs/SectionsStatesCollectionStub";
 import type { SectionsStatesCollection } from "@/sections/states/SectionsStatesCollection";
 import { ReactiveStoredArtidocSectionStub } from "@/sections/stubs/ReactiveStoredArtidocSectionStub";
 import FreetextSectionFactory from "@/helpers/freetext-section.factory";
-import { TrackerStub } from "@/helpers/stubs/TrackerStub";
+import { SELECTED_TRACKER } from "@/configuration/SelectedTracker";
+import { SelectedTrackerStub } from "@/helpers/stubs/SelectedTrackerStub";
 
 describe("ConfigurationModalTabs", () => {
     let current_tab: ConfigurationTab,
-        selected_tracker: Tracker | null,
+        is_tracker_configured: boolean,
         states_collection: SectionsStatesCollection;
 
     beforeEach(() => {
         current_tab = TRACKER_SELECTION_TAB;
-        selected_tracker = TrackerStub.build(102, "Requirements");
+        is_tracker_configured = true;
         states_collection = SectionsStatesCollectionStub.build();
     });
 
     const getWrapper = (): VueWrapper =>
         shallowMount(ConfigurationModalTabs, {
-            props: {
-                current_tab,
-                selected_tracker,
-            },
+            props: { current_tab },
             global: {
                 provide: {
                     [ARE_FIELDS_ENABLED.valueOf()]: true,
                     [SECTIONS_STATES_COLLECTION.valueOf()]: states_collection,
+                    [SELECTED_TRACKER.valueOf()]: is_tracker_configured
+                        ? SelectedTrackerStub.build()
+                        : SelectedTrackerStub.withNoTracker(),
                 },
                 plugins: [createGettext({ silent: true })],
             },
@@ -100,7 +100,7 @@ describe("ConfigurationModalTabs", () => {
     });
 
     it("Given that no tracker has been configured, When the user clicks the fields selection tab, then it should NOT emit a 'switch-configuration-tab' event", () => {
-        selected_tracker = null;
+        is_tracker_configured = false;
         current_tab = TRACKER_SELECTION_TAB;
 
         const wrapper = getWrapper();
@@ -110,7 +110,7 @@ describe("ConfigurationModalTabs", () => {
     });
 
     it("Given that a tracker has been configured, When the user clicks the fields selection tab, then it should emit a 'switch-configuration-tab' event", () => {
-        selected_tracker = TrackerStub.build(102, "Requirements");
+        is_tracker_configured = true;
         current_tab = TRACKER_SELECTION_TAB;
 
         const wrapper = getWrapper();
@@ -123,7 +123,7 @@ describe("ConfigurationModalTabs", () => {
 
     describe("Disabled fields selection tab", () => {
         it("When no tracker has been configured, then it should be disabled", () => {
-            selected_tracker = null;
+            is_tracker_configured = false;
             current_tab = TRACKER_SELECTION_TAB;
 
             expect(
@@ -132,7 +132,7 @@ describe("ConfigurationModalTabs", () => {
         });
 
         it("When the document has unsaved content, then it should be disabled", () => {
-            selected_tracker = TrackerStub.build(102, "Requirements");
+            is_tracker_configured = true;
             current_tab = TRACKER_SELECTION_TAB;
             states_collection.createStateForSection(
                 ReactiveStoredArtidocSectionStub.fromSection(FreetextSectionFactory.pending()),

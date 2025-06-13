@@ -22,6 +22,7 @@ import { createApp, ref } from "vue";
 import VueDOMPurifyHTML from "vue-dompurify-html";
 import { createGettext } from "vue3-gettext";
 import { getAttributeOrThrow } from "@tuleap/dom";
+import { Option } from "@tuleap/option";
 import App from "./App.vue";
 
 import { SECTIONS_COLLECTION } from "@/sections/states/sections-collection-injection-key";
@@ -67,10 +68,12 @@ import { getHeadingsButtonState } from "@/toolbar/HeadingsButtonState";
 import { watchUpdateSectionsLevels } from "@/sections/levels/SectionsNumbersWatcher";
 import { getSectionsNumberer } from "@/sections/levels/SectionsNumberer";
 import { ARE_FIELDS_ENABLED } from "@/are-fields-enabled";
+import type { Tracker } from "@/configuration/AllowedTrackersCollection";
 import {
     ALLOWED_TRACKERS,
     buildAllowedTrackersCollection,
 } from "@/configuration/AllowedTrackersCollection";
+import { buildSelectedTracker, SELECTED_TRACKER } from "@/configuration/SelectedTracker";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const vue_mount_point = document.getElementById("artidoc-mountpoint");
@@ -97,8 +100,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     const can_user_edit_document = Boolean(
         getAttributeOrThrow(vue_mount_point, "data-can-user-edit-document"),
     );
-    const selected_tracker = JSON.parse(
-        getAttributeOrThrow(vue_mount_point, "data-selected-tracker"),
+    const saved_tracker = Option.fromNullable<Tracker>(
+        JSON.parse(getAttributeOrThrow(vue_mount_point, "data-selected-tracker")),
     );
     const file_uploads_collection = getFileUploadsCollection();
     const states_collection = getSectionsStatesCollection(
@@ -110,6 +113,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const allowed_trackers = buildAllowedTrackersCollection(
         JSON.parse(getAttributeOrThrow(vue_mount_point, "data-allowed-trackers")),
     );
+    const selected_tracker = buildSelectedTracker(saved_tracker);
 
     const configuration_store = initConfigurationStore(
         item_id,
@@ -122,7 +126,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     watchForNeededPendingSectionInsertion(
         sections_collection,
         states_collection,
-        configuration_store.selected_tracker,
+        selected_tracker,
         can_user_edit_document,
         is_loading_failed,
     );
@@ -149,6 +153,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             Number.parseInt(getAttributeOrThrow(vue_mount_point, "data-are-fields-enabled"), 10),
         )
         .provide(ALLOWED_TRACKERS, allowed_trackers)
+        .provide(SELECTED_TRACKER, selected_tracker)
         .provide(CONFIGURATION_STORE, configuration_store)
         .provide(
             PDF_TEMPLATES_STORE,

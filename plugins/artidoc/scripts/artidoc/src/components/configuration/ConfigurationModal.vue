@@ -29,46 +29,46 @@
         <configuration-modal-tabs
             v-on:switch-configuration-tab="switchTab"
             v-bind:current_tab="current_tab"
-            v-bind:selected_tracker="configuration_store.selected_tracker.value"
         />
         <configure-tracker v-if="current_tab === TRACKER_SELECTION_TAB && is_modal_shown" />
         <configure-readonly-fields
             v-if="
                 current_tab === READONLY_FIELDS_SELECTION_TAB &&
-                configuration_store.selected_tracker.value !== null &&
+                is_tracker_configured &&
                 is_modal_shown
             "
             v-bind:configuration_store="configuration_store"
-            v-bind:selected_tracker="configuration_store.selected_tracker.value"
         />
     </div>
 </template>
 
 <script setup lang="ts">
-import { ref, provide } from "vue";
+import { computed, provide, ref } from "vue";
 import type { Modal } from "@tuleap/tlp-modal";
 import { createModal } from "@tuleap/tlp-modal";
 import { OPEN_CONFIGURATION_MODAL_BUS } from "@/stores/useOpenConfigurationModalBusStore";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { CONFIGURATION_STORE } from "@/stores/configuration-store";
+import { SELECTED_TRACKER } from "@/configuration/SelectedTracker";
 import { ARE_FIELDS_ENABLED } from "@/are-fields-enabled";
-
 import ConfigurationModalHeader from "@/components/configuration/ConfigurationModalHeader.vue";
 import ConfigureTracker from "@/components/configuration/ConfigureTracker.vue";
 import ConfigureReadonlyFields from "@/components/configuration/ConfigureReadonlyFields.vue";
+import type { ConfigurationTab } from "@/components/configuration/configuration-modal";
 import {
     CLOSE_CONFIGURATION_MODAL,
-    TRACKER_SELECTION_TAB,
     READONLY_FIELDS_SELECTION_TAB,
+    TRACKER_SELECTION_TAB,
 } from "@/components/configuration/configuration-modal";
-import type { ConfigurationTab } from "@/components/configuration/configuration-modal";
 import ConfigurationModalTabs from "@/components/configuration/ConfigurationModalTabs.vue";
 
 const are_fields_enabled = strictInject(ARE_FIELDS_ENABLED);
 const configuration_store = strictInject(CONFIGURATION_STORE);
+const selected_tracker = strictInject(SELECTED_TRACKER);
 
 const modal_element = ref<HTMLElement | undefined>(undefined);
 const current_tab = ref<ConfigurationTab>(TRACKER_SELECTION_TAB);
+const is_tracker_configured = computed(() => selected_tracker.value.isValue());
 
 const noop = (): void => {};
 
