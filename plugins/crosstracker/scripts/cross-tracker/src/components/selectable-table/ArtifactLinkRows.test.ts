@@ -36,15 +36,20 @@ import EditCell from "./EditCell.vue";
 import ArtifactLinkRowSkeleton from "./skeleton/ArtifactLinkRowSkeleton.vue";
 
 const RetrieveArtifactLinksTableStub = {
-    withContent(forward_links: ArtifactsTableWithTotal): RetrieveArtifactLinks {
+    withContent(
+        forward_links: ArtifactsTableWithTotal,
+        reverse_links: ArtifactsTableWithTotal,
+    ): RetrieveArtifactLinks {
         return {
             getForwardLinks: () => okAsync(forward_links),
+            getReverseLinks: () => okAsync(reverse_links),
         };
     },
 
     withDefaultContent(): RetrieveArtifactLinks {
         return {
             getForwardLinks: () => okAsync(new ArtifactsTableBuilderForTests().buildWithTotal(0)),
+            getReverseLinks: () => okAsync(new ArtifactsTableBuilderForTests().buildWithTotal(0)),
         };
     },
 };
@@ -52,11 +57,37 @@ const RetrieveArtifactLinksTableStub = {
 vi.useFakeTimers();
 
 const NUMERIC_COLUMN_NAME = "remaining_effort";
+const artifact_row = new ArtifactRowBuilder()
+    .addCell(PRETTY_TITLE_COLUMN_NAME, {
+        type: PRETTY_TITLE_CELL,
+        title: "earthmaking",
+        tracker_name: "lifesome",
+        artifact_id: 512,
+        color: "inca-silver",
+    })
+    .addCell(NUMERIC_COLUMN_NAME, {
+        type: NUMERIC_CELL,
+        value: Option.fromValue(74),
+    })
+    .build();
 
 describe("ArtifactLinkRows", () => {
     let number_of_forward_link: number,
         number_of_reverse_link: number,
         artifact_links_table_retriever: RetrieveArtifactLinks;
+
+    const forward_table = new ArtifactsTableBuilderForTests()
+        .withColumn(PRETTY_TITLE_COLUMN_NAME)
+        .withColumn(NUMERIC_COLUMN_NAME)
+        .withArtifactRow(artifact_row)
+        .withArtifactRow(artifact_row)
+        .buildWithTotal(2);
+
+    const reverse_table = new ArtifactsTableBuilderForTests()
+        .withColumn(PRETTY_TITLE_COLUMN_NAME)
+        .withColumn(NUMERIC_COLUMN_NAME)
+        .withArtifactRow(artifact_row)
+        .buildWithTotal(1);
 
     beforeEach(() => {
         number_of_forward_link = 0;
@@ -123,61 +154,21 @@ describe("ArtifactLinkRows", () => {
         expect(skeletons[0].props("link_type")).toBe("reverse");
     });
 
-    it("should display 2 forward links and one skeleton reverse link", async () => {
+    it("should display 2 forward links and one reverse link after a successful request", async () => {
         number_of_forward_link = 2;
         number_of_reverse_link = 1;
 
-        const table = new ArtifactsTableBuilderForTests()
-            .withColumn(PRETTY_TITLE_COLUMN_NAME)
-            .withColumn(NUMERIC_COLUMN_NAME)
-            .withArtifactRow(
-                new ArtifactRowBuilder()
-                    .addCell(PRETTY_TITLE_COLUMN_NAME, {
-                        type: PRETTY_TITLE_CELL,
-                        title: "earthmaking",
-                        tracker_name: "lifesome",
-                        artifact_id: 512,
-                        color: "inca-silver",
-                    })
-                    .addCell(NUMERIC_COLUMN_NAME, {
-                        type: NUMERIC_CELL,
-                        value: Option.fromValue(74),
-                    })
-                    .build(),
-            )
-            .withArtifactRow(
-                new ArtifactRowBuilder()
-                    .addCell(PRETTY_TITLE_COLUMN_NAME, {
-                        type: PRETTY_TITLE_CELL,
-                        title: "earthmaking",
-                        tracker_name: "lifesome",
-                        artifact_id: 512,
-                        color: "inca-silver",
-                    })
-                    .addCell(NUMERIC_COLUMN_NAME, {
-                        type: NUMERIC_CELL,
-                        value: Option.fromValue(74),
-                    })
-                    .build(),
-            )
-            .buildWithTotal(2);
-
-        artifact_links_table_retriever = RetrieveArtifactLinksTableStub.withContent(table);
+        artifact_links_table_retriever = RetrieveArtifactLinksTableStub.withContent(
+            forward_table,
+            reverse_table,
+        );
 
         const wrapper = getWrapper();
-        const skeletons_before_call = wrapper.findAllComponents(ArtifactLinkRowSkeleton);
-
-        expect(skeletons_before_call.length).toBe(2);
-        expect(skeletons_before_call[0].props("link_type")).toBe("forward");
-        expect(skeletons_before_call[1].props("link_type")).toBe("reverse");
-
         await vi.runOnlyPendingTimersAsync();
 
-        const skeletons_after_call = wrapper.findAllComponents(ArtifactLinkRowSkeleton);
+        const skeletons = wrapper.findAllComponents(ArtifactLinkRowSkeleton);
 
-        expect(skeletons_after_call.length).toBe(1);
-        expect(skeletons_after_call[0].props("link_type")).toBe("reverse");
-
-        expect(wrapper.findAllComponents(EditCell)).toHaveLength(2);
+        expect(skeletons.length).toBe(0);
+        expect(wrapper.findAllComponents(EditCell)).toHaveLength(3);
     });
 });

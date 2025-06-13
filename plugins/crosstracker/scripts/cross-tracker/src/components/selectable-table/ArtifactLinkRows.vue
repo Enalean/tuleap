@@ -28,24 +28,24 @@
         />
     </template>
     <template v-else>
-        <template v-for="(row, index) of forward_links" v-bind:key="row.uri">
-            <edit-cell v-bind:uri="row.uri" v-bind:even="false" data-test="edit-cell-icon" />
+        <template v-for="(link, index) of forward_links" v-bind:key="link.uri">
+            <edit-cell v-bind:uri="link.uri" v-bind:even="false" data-test="edit-cell-icon" />
             <selectable-cell
                 v-for="(column_name, column_index) of columns"
                 v-bind:key="column_name + index"
-                v-bind:cell="row.cells.get(column_name)"
-                v-bind:artifact_uri="row.uri"
-                v-bind:number_of_forward_link="row.number_of_forward_link"
-                v-bind:number_of_reverse_link="row.number_of_reverse_link"
+                v-bind:cell="link.cells.get(column_name)"
+                v-bind:artifact_uri="link.uri"
+                v-bind:number_of_forward_link="link.number_of_forward_link"
+                v-bind:number_of_reverse_link="link.number_of_reverse_link"
                 v-bind:even="false"
                 v-bind:last_of_row="isLastCellOfRow(column_index, columns.size)"
-                v-on:toggle-links="toggleLinks(row)"
+                v-on:toggle-links="toggleLinks(link)"
             />
             <artifact-link-rows
-                v-if="row.is_expanded"
-                v-bind:row="row"
+                v-if="link.is_expanded"
+                v-bind:row="link"
                 v-bind:columns="columns"
-                v-bind:artifact_id="row.id"
+                v-bind:artifact_id="link.id"
                 v-bind:query_id="query_id"
             />
         </template>
@@ -57,6 +57,29 @@
             v-bind:columns="columns"
             v-bind:link_type="'reverse'"
         />
+    </template>
+    <template v-else>
+        <template v-for="(link, index) of reverse_links" v-bind:key="link.uri">
+            <edit-cell v-bind:uri="link.uri" v-bind:even="false" data-test="edit-cell-icon" />
+            <selectable-cell
+                v-for="(column_name, column_index) of columns"
+                v-bind:key="column_name + index"
+                v-bind:cell="link.cells.get(column_name)"
+                v-bind:artifact_uri="link.uri"
+                v-bind:number_of_forward_link="link.number_of_forward_link"
+                v-bind:number_of_reverse_link="link.number_of_reverse_link"
+                v-bind:even="false"
+                v-bind:last_of_row="isLastCellOfRow(column_index, columns.size)"
+                v-on:toggle-links="toggleLinks(link)"
+            />
+            <artifact-link-rows
+                v-if="link.is_expanded"
+                v-bind:row="link"
+                v-bind:columns="columns"
+                v-bind:artifact_id="link.id"
+                v-bind:query_id="query_id"
+            />
+        </template>
     </template>
 </template>
 
@@ -78,6 +101,7 @@ const props = defineProps<{
 }>();
 
 const forward_links = ref<ReadonlyArray<ArtifactRow>>([]);
+const reverse_links = ref<ReadonlyArray<ArtifactRow>>([]);
 const are_forward_links_loading = ref(true);
 const are_reverse_links_loading = ref(true);
 
@@ -91,6 +115,15 @@ onMounted(() => {
         })
         .then(() => {
             are_forward_links_loading.value = false;
+        });
+
+    artifact_links_retriever
+        .getReverseLinks(props.query_id, props.artifact_id)
+        .map((artifacts: ArtifactsTableWithTotal) => {
+            reverse_links.value = artifacts.table.rows;
+        })
+        .then(() => {
+            are_reverse_links_loading.value = false;
         });
 });
 

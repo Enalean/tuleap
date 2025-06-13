@@ -18,24 +18,28 @@
  */
 
 import { describe, it, vi, expect } from "vitest";
-import * as fetch_result from "@tuleap/fetch-result";
 import { okAsync } from "neverthrow";
-import { ArtifactsTableBuilder } from "./ArtifactsTableBuilder";
-import type { RetrieveArtifactLinks } from "../domain/RetrieveArtifactLinks";
-import { ArtifactLinksRetriever } from "./ArtifactLinksRetriever";
+import * as fetch_result from "@tuleap/fetch-result";
 import { SelectableQueryContentRepresentationStub } from "../../tests/builders/SelectableQueryContentRepresentationStub";
 import { ArtifactRepresentationStub } from "../../tests/builders/ArtifactRepresentationStub";
+import type { RetrieveArtifactLinks } from "../domain/RetrieveArtifactLinks";
+import { ArtifactLinksRetriever } from "./ArtifactLinksRetriever";
+import { ArtifactsTableBuilder } from "./ArtifactsTableBuilder";
 
 describe("ArtifactsLinksRetriever", () => {
-    describe("getForwardLinks()", () => {
-        const query_id = "0194dfd6-a489-703b-aabd-9d473212d908";
-        const artifact_id = 34;
+    const query_id = "0194dfd6-a489-703b-aabd-9d473212d908";
+    const artifact_id = 34;
 
-        const getRetriever = (): RetrieveArtifactLinks => {
-            return ArtifactLinksRetriever(ArtifactsTableBuilder());
-        };
+    const getRetriever = (): RetrieveArtifactLinks => {
+        return ArtifactLinksRetriever(ArtifactsTableBuilder());
+    };
 
-        it("should call for the forward links linked to an artifact and return an ArtifactTable accordingly", async () => {
+    it.each([
+        ["forward", getRetriever().getForwardLinks, { source_artifact_id: artifact_id }],
+        ["reverse", getRetriever().getReverseLinks, { target_artifact_id: artifact_id }],
+    ])(
+        "should call for the %s links linked to an artifact and return an ArtifactTable accordingly",
+        async (direction, retriever_call, params) => {
             const total = 45;
             const date_field_name = "start_date";
             const first_date_value = "2022-04-27T11:54:15+07:00";
@@ -57,14 +61,12 @@ describe("ArtifactsLinksRetriever", () => {
                 } as Response),
             );
 
-            const result = await getRetriever().getForwardLinks(query_id, artifact_id);
+            const result = await retriever_call(query_id, artifact_id);
 
             expect(getResponse).toHaveBeenCalledWith(
-                fetch_result.uri`/api/v1/crosstracker_query/${query_id}/forward_links`,
+                fetch_result.uri`/api/v1/crosstracker_query/${query_id}/${direction}_links`,
                 {
-                    params: {
-                        source_artifact_id: artifact_id,
-                    },
+                    params,
                 },
             );
             if (!result.isOk()) {
@@ -74,6 +76,6 @@ describe("ArtifactsLinksRetriever", () => {
             const table = result.value.table;
             expect(table.columns).toHaveLength(2);
             expect(table.rows).toHaveLength(2);
-        });
-    });
+        },
+    );
 });
