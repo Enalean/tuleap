@@ -23,43 +23,36 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker;
 
-use Mockery;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue_List;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_BindValue;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class Tracker_Artifact_ChangesetValue_ListTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+#[DisableReturnValueGenerationForTestDoubles]
+final class Tracker_Artifact_ChangesetValue_ListTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_FormElement_Field_List
-     */
-    private $field;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_Artifact_Changeset
-     */
-    private $changeset;
+    private Tracker_FormElement_Field_List $field;
+    private Tracker_Artifact_Changeset $changeset;
 
     protected function setUp(): void
     {
-        parent::setUp();
-
-        $this->changeset = Mockery::mock(Tracker_Artifact_Changeset::class);
-        $this->field     = Mockery::mock(Tracker_FormElement_Field_List::class);
+        $this->changeset = ChangesetTestBuilder::aChangeset(12)->build();
+        $this->field     = ListFieldBuilder::aListField(852)->build();
     }
 
     public function testNoDiff(): void
     {
-        $bind_value = Mockery::mock(Tracker_FormElement_Field_List_BindValue::class);
+        $bind_value = ListStaticValueBuilder::aStaticValue('value')->build();
 
         $list_1 = new Tracker_Artifact_ChangesetValue_List(111, $this->changeset, $this->field, false, [$bind_value]);
         $list_2 = new Tracker_Artifact_ChangesetValue_List(111, $this->changeset, $this->field, false, [$bind_value]);
-        $this->assertFalse($list_1->diff($list_2));
-        $this->assertFalse($list_2->diff($list_1));
+        self::assertFalse($list_1->diff($list_2));
+        self::assertFalse($list_2->diff($list_1));
     }
 
     public function testDiffCleared(): void
@@ -68,7 +61,7 @@ class Tracker_Artifact_ChangesetValue_ListTest extends \Tuleap\Test\PHPUnit\Test
         $list_1     = new Tracker_Artifact_ChangesetValue_List(111, $this->changeset, $this->field, false, []);
         $list_2     = new Tracker_Artifact_ChangesetValue_List(111, $this->changeset, $this->field, false, [$bind_value]);
 
-        $this->assertEquals(' cleared values: Sandra', $list_1->diff($list_2));
+        self::assertEquals(' cleared values: Sandra', $list_1->diff($list_2));
     }
 
     public function testDiffSetto(): void
@@ -79,7 +72,7 @@ class Tracker_Artifact_ChangesetValue_ListTest extends \Tuleap\Test\PHPUnit\Test
         $list_1 = new Tracker_Artifact_ChangesetValue_List(111, $this->changeset, $this->field, false, [$bind_value_1, $bind_value_2]);
         $list_2 = new Tracker_Artifact_ChangesetValue_List(111, $this->changeset, $this->field, false, []);
 
-        $this->assertEquals(' set to Sandra, Manon', $list_1->diff($list_2));
+        self::assertEquals(' set to Sandra, Manon', $list_1->diff($list_2));
     }
 
     public function testDiffChangedfrom(): void
@@ -90,8 +83,8 @@ class Tracker_Artifact_ChangesetValue_ListTest extends \Tuleap\Test\PHPUnit\Test
         $list_1 = new Tracker_Artifact_ChangesetValue_List(111, $this->changeset, $this->field, false, [$bind_value_1]);
         $list_2 = new Tracker_Artifact_ChangesetValue_List(111, $this->changeset, $this->field, false, [$bind_value_2]);
 
-        $this->assertEquals(' changed from Manon to Sandra', $list_1->diff($list_2));
-        $this->assertEquals(' changed from Sandra to Manon', $list_2->diff($list_1));
+        self::assertEquals(' changed from Manon to Sandra', $list_1->diff($list_2));
+        self::assertEquals(' changed from Sandra to Manon', $list_2->diff($list_1));
     }
 
     public function testDifChangedfromWithPurification()
@@ -102,8 +95,8 @@ class Tracker_Artifact_ChangesetValue_ListTest extends \Tuleap\Test\PHPUnit\Test
         $list_1 = new Tracker_Artifact_ChangesetValue_List(111, $this->changeset, $this->field, false, [$bind_value_1]);
         $list_2 = new Tracker_Artifact_ChangesetValue_List(111, $this->changeset, $this->field, false, [$bind_value_2]);
 
-        $this->assertEquals(' changed from Manon  &lt;b&gt; to Sandra &lt;b&gt;', $list_1->diff($list_2));
-        $this->assertEquals(' changed from Sandra &lt;b&gt; to Manon  &lt;b&gt;', $list_2->diff($list_1));
+        self::assertEquals(' changed from Manon  &lt;b&gt; to Sandra &lt;b&gt;', $list_1->diff($list_2));
+        self::assertEquals(' changed from Sandra &lt;b&gt; to Manon  &lt;b&gt;', $list_2->diff($list_1));
     }
 
     public function testDiffAdded(): void
@@ -114,7 +107,7 @@ class Tracker_Artifact_ChangesetValue_ListTest extends \Tuleap\Test\PHPUnit\Test
         $list_1 = new Tracker_Artifact_ChangesetValue_List(111, $this->changeset, $this->field, false, [$bind_value_1, $bind_value_2]);
         $list_2 = new Tracker_Artifact_ChangesetValue_List(111, $this->changeset, $this->field, false, [$bind_value_1]);
 
-        $this->assertEquals('Manon added', $list_1->diff($list_2));
+        self::assertEquals('Manon added', $list_1->diff($list_2));
     }
 
     public function testDiffRemoved(): void
@@ -125,7 +118,7 @@ class Tracker_Artifact_ChangesetValue_ListTest extends \Tuleap\Test\PHPUnit\Test
         $list_1 = new Tracker_Artifact_ChangesetValue_List(111, $this->changeset, $this->field, false, [$bind_value_1]);
         $list_2 = new Tracker_Artifact_ChangesetValue_List(111, $this->changeset, $this->field, false, [$bind_value_1, $bind_value_2]);
 
-        $this->assertEquals('Manon removed', $list_1->diff($list_2));
+        self::assertEquals('Manon removed', $list_1->diff($list_2));
     }
 
     public function testDiffAddedAndRemoved(): void
@@ -143,29 +136,21 @@ class Tracker_Artifact_ChangesetValue_ListTest extends \Tuleap\Test\PHPUnit\Test
         Marc, Nicolas added
         EOT;
 
-        $this->assertEquals($expected_diff, $list_1->diff($list_2));
+        self::assertEquals($expected_diff, $list_1->diff($list_2));
     }
 
-    /**
-     * @return Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_FormElement_Field_List_BindValue
-     */
     private function getBindValueForLabel(string $label): Tracker_FormElement_Field_List_BindValue
     {
-        $bind_value = Mockery::mock(Tracker_FormElement_Field_List_BindValue::class);
-        $bind_value->shouldReceive('getLabel')->andReturn($label);
-
-        return $bind_value;
+        return ListStaticValueBuilder::aStaticValue($label)->build();
     }
 
     public function testLists(): void
     {
-        $bind_value = Mockery::mock(Tracker_FormElement_Field_List_BindValue::class);
-        $bind_value->shouldReceive('getAPIValue')->andReturn('Reopen');
-        $bind_value->shouldReceive('getId')->andReturn(106);
+        $bind_value = ListStaticValueBuilder::aStaticValue('Reopen')->withId(106)->build();
 
         $value_list = new Tracker_Artifact_ChangesetValue_List(111, $this->changeset, $this->field, false, [$bind_value]);
-        $this->assertEquals(count($value_list), 1);
-        $this->assertEquals($value_list[0], $bind_value);
-        $this->assertEquals($value_list->getValue(), [106]);
+        self::assertCount(1, $value_list);
+        self::assertEquals($value_list[0], $bind_value);
+        self::assertEquals([106], $value_list->getValue());
     }
 }
