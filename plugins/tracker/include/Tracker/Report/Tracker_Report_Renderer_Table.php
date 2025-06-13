@@ -689,23 +689,26 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         $html         = '<div class="tracker_report_table_sortby_panel">';
         $sort_columns = SortWithIntegrityChecked::getSortOnUsedFields($this->getSort());
         if (count($sort_columns) > 0) {
-            $html .= dgettext('tuleap-tracker', 'Sort by:');
-            $html .= ' ';
-            $sort  = [];
+            $html      .= dgettext('tuleap-tracker', 'Sort by:');
+            $html      .= ' ';
+            $sort       = [];
+            $csrf_token = $this->getCSRFTokenReportChange($this->report->getTracker());
             foreach ($sort_columns as $row) {
-                $sort[] = '<a id="tracker_report_table_sort_by_' . $purifier->purify($row['field_id']) . '"
-                              href="?' .
-                    $purifier->purify(http_build_query([
-                        'report' => $this->report->id,
-                        'renderer' => $this->id,
-                        'func' => 'renderer',
-                        'renderer_table[sort_by]' => $row['field_id'],
-                    ])) . '">' .
-                    $purifier->purify($row['field']->getLabel()) .
-                    $this->getSortIcon($row['is_desc']) .
-                    '</a>';
+                $sort[] = '<form method="post">';
+                $sort[] = $csrf_token->fetchHTMLInput();
+                $sort[] = '<input type="hidden" name="func" value="renderer" />';
+                $sort[] = '<input type="hidden" name="report" value="' . $purifier->purify($this->report->id) . '" />';
+                $sort[] = '<input type="hidden" name="renderer" value="' . $purifier->purify($this->id) . '" />';
+                $sort[] = '<input type="hidden" name="renderer_table[sort_by]" value="' . $purifier->purify($row['field_id']) . '" />';
+                $sort[] = '<button type="submit" class="btn-link" id="tracker_report_table_sort_by_' . $purifier->purify($row['field_id']) . '">';
+                $sort[] = $purifier->purify($row['field']->getLabel()) .
+                    $this->getSortIcon($row['is_desc']);
+                $sort[] = '</button>';
+                $sort[] = '</form>';
+                $sort[] = ' <i class="fa fa-angle-right"></i> ';
             }
-            $html .= implode(' <i class="fa fa-angle-right"></i> ', $sort);
+            array_pop($sort);
+            $html .= implode('', $sort);
         }
         $html .= '</div>';
         return $html;
@@ -758,6 +761,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
             if ($report_can_be_modified) {
                 $chunk .= '<div class="input-append">';
                 $chunk .= '<input id="renderer_table_chunksz_input" type="text" name="renderer_table[chunksz]" size="1" maxlength="5" value="' . (int) $this->chunksz . '" />';
+                $chunk .= $this->getCSRFTokenReportChange($this->report->getTracker())->fetchHTMLInput();
                 $chunk .= '<button type="submit" class="btn btn-small">Ok</button> ';
                 $chunk .= '</div> ';
             } else {
@@ -884,6 +888,12 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
             $html .= ' id="tracker_report_table' . $id_suffix . '"  width="100%" data-test="artifact-report-table"';
         }
 
+        $csrf_token = $this->getCSRFTokenReportChange($this->getReport()->getTracker());
+
+        $purifier = Codendi_HTMLPurifier::instance();
+
+        $html .= ' data-challenge="' . $purifier->purify($csrf_token->getToken()) . '"';
+
         $classnames = '';
         if ($with_sort_links && ! $current_user->isAnonymous()) {
             $classnames .= ' reorderable resizable';
@@ -921,13 +931,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
             $html .= '<th></th>';
         }
 
-        $ff  = $this->getFieldFactory();
-        $url = '?' . http_build_query([
-            'report'                  => $this->report->id,
-            'renderer'                => $this->id,
-            'func'                    => 'renderer',
-            'renderer_table[sort_by]' => '',
-        ]);
+        $ff = $this->getFieldFactory();
         if ($use_data_from_db) {
             $all_columns = $this->reorderColumnsByRank($this->getColumnsFromDb());
         } else {
@@ -948,7 +952,6 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         }
         $sort_columns = SortWithIntegrityChecked::getSort($this->getSort($store_in_session));
 
-        $purifier               = Codendi_HTMLPurifier::instance();
         $type_presenter_factory = $this->getTypePresenterFactory();
         foreach ($columns as $key => $column) {
             if ($column['width']) {
@@ -986,8 +989,14 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                 }
                 $label = $purifier->purify($field_label);
 
+                $sort_settings = [
+                    'report'                  => $this->report->id,
+                    'renderer'                => $this->id,
+                    'func'                    => 'renderer',
+                ];
+
                 if ($with_sort_links) {
-                    $sort_url = $url . $column['field']->id;
+                    $sort_settings['renderer_table[sort_by]'] = $column['field']->id;
 
                     $html .= '<table width="100%" border="0" cellpadding="0" cellspacing="0"><tbody><tr>';
 
@@ -997,9 +1006,15 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
 
                     $html .= '<td class="tracker_report_table_column_title">';
                     if (! isset($column['artlink_nature']) && $column['field']->canBeUsedToSortReport()) {
-                        $html .= '<a href="' . $purifier->purify($sort_url) . '">';
+                        $html .= '<form method="post">';
+                        $html .= $csrf_token->fetchHTMLInput();
+                        foreach ($sort_settings as $sort_setting_name => $sort_setting_value) {
+                            $html .= '<input type="hidden" name="' . $purifier->purify($sort_setting_name) . '" value="' . $purifier->purify($sort_setting_value) . '"/>';
+                        }
+                        $html .= '<button class="btn-link" type="submit">';
                         $html .= $label;
-                        $html .= '</a>';
+                        $html .= '</button>';
+                        $html .= '</form>';
                     } else {
                         $html .= $label;
                     }
@@ -1008,9 +1023,15 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                     if (! isset($column['artlink_nature']) && isset($sort_columns[$key])) {
                         $html .= '<td class="tracker_report_table_column_caret">';
                         if ($column['field']->canBeUsedToSortReport()) {
-                            $html .= '<a href="' . $purifier->purify($sort_url) . '">';
+                            $html .= '<form method="post">';
+                            $html .= $csrf_token->fetchHTMLInput();
+                            foreach ($sort_settings as $sort_setting_name => $sort_setting_value) {
+                                $html .= '<input type="hidden" name="' . $purifier->purify($sort_setting_name) . '" value="' . $purifier->purify($sort_setting_value) . '"/>';
+                            }
+                            $html .= '<button class="btn-link" type="submit">';
                             $html .= $this->getSortIcon($sort_columns[$column['field']->getId()]['is_desc']);
-                            $html .= '</a>';
+                            $html .= '</button>';
+                            $html .= '</form>';
                         } else {
                             $warning_message = dgettext(
                                 'tuleap-tracker',
@@ -1549,48 +1570,41 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
             return;
         }
 
-        $html  = '';
-        $html .= '<div class="btn-group">';
-        $html .= '<a
+        $html       = '';
+        $html      .= '<div class="btn-group">';
+        $html      .= '<a
             class="btn btn-mini dropdown-toggle"
             title="' . dgettext('tuleap-tracker', 'Toggle an aggregate function') . '"
             data-toggle="dropdown">';
-        $html .= '<i class="fa fa-plus"></i> ';
-        $html .= '<span class="caret"></span>';
-        $html .= '</a>';
-        $html .= '<ul class="dropdown-menu ' . ($is_first ? '' : 'pull-right') . '">';
+        $html      .= '<i class="fa fa-plus"></i> ';
+        $html      .= '<span class="caret"></span>';
+        $html      .= '</a>';
+        $html      .= '<ul class="dropdown-menu ' . ($is_first ? '' : 'pull-right') . '">';
+        $csrf_token = $this->getCSRFTokenReportChange($this->report->getTracker());
+        $purifier   = Codendi_HTMLPurifier::instance();
         foreach ($aggregate_functions as $function) {
             $is_used = isset($used_aggregates[$field->getId()]) && in_array($function, $used_aggregates[$field->getId()]);
-            $url     = $this->getAggregateURL($field, $function);
             $html   .= '<li>';
-            $html   .= '<a href="' . $url . '">';
+
+            $html .= '<form method="post" action="' . TRACKER_BASE_URL . '">';
+            $html .= $csrf_token->fetchHTMLInput();
+            $html .= '<input type="hidden" name="func" value="renderer"/>';
+            $html .= '<input type="hidden" name="report" value="' . $purifier->purify($this->report->getId()) . '"/>';
+            $html .= '<input type="hidden" name="renderer" value="' . $purifier->purify($this->getId()) . '"/>';
+            $html .= '<input type="hidden" name="renderer_table[add_aggregate][' . $purifier->purify($field->getId()) .  ']" value="' . $purifier->purify($function) . '"/>';
+            $html .= '<button class="btn-link" type="submit">';
             if ($is_used) {
                 $html .= '<i class="fa fa-check"></i> ';
             }
-            $html .= $this->getAggregateLabel($function);
-            $html .= '</a>';
+            $html .= $purifier->purify($this->getAggregateLabel($function));
+            $html .= '</button>';
+            $html .= '</form>';
             $html .= '</li>';
         }
         $html .= '</ul>';
         $html .= '</div>';
 
         return $html;
-    }
-
-    private function getAggregateURL($field, $function)
-    {
-        $field_id = $field->getId();
-        $params   = [
-            'func'       => 'renderer',
-            'report'     => $this->report->getId(),
-            'renderer'   => $this->getId(),
-            'renderer_table' => [
-                'add_aggregate' => [
-                    $field_id => $function,
-                ],
-            ],
-        ];
-        return TRACKER_BASE_URL . '/?' . http_build_query($params);
     }
 
     private function fetchAggregatesExtraColumns($extracolumn, $only_one_column, PFUser $current_user)
@@ -1837,6 +1851,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         if ($renderer_parameters && is_array($renderer_parameters)) {
             //Update the chunksz parameter
             if (isset($renderer_parameters['chunksz'])) {
+                $this->checkReportRendererUpdateRequest($request);
                 $new_chunksz = abs((int) $renderer_parameters['chunksz']);
                 if ($new_chunksz && ($this->chunksz != $new_chunksz)) {
                     $this->report_session->set("{$this->id}.chunksz", $new_chunksz);
@@ -1847,6 +1862,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
 
             //Add an aggregate function
             if (isset($renderer_parameters['add_aggregate']) && is_array($renderer_parameters['add_aggregate'])) {
+                $this->checkReportRendererUpdateRequest($request);
                 $column_id = key($renderer_parameters['add_aggregate']);
                 $agg       = current($renderer_parameters['add_aggregate']);
                 //Is the field used by the tracker?
@@ -1882,6 +1898,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
 
             //toggle a sort column
             if (isset($renderer_parameters['sort_by'])) {
+                $this->checkReportRendererUpdateRequest($request);
                 $sort_by = (int) $renderer_parameters['sort_by'];
                 if ($sort_by) {
                     if ($field = $ff->getUsedFormElementById($sort_by)) {
@@ -1920,6 +1937,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
 
             //Reset sort
             if (isset($renderer_parameters['resetsort'])) {
+                $this->checkReportRendererUpdateRequest($request);
                 //Drop existing sort
                 $this->report_session->remove("{$this->id}", 'sort');
                 $this->report_session->setHasChanged();
@@ -1927,6 +1945,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
 
             //Toggle multisort
             if (isset($renderer_parameters['multisort'])) {
+                $this->checkReportRendererUpdateRequest($request);
                 $sort_fields     = $this->getSort();
                 $keep_it         = key($sort_fields);
                 $this->multisort = ! $this->multisort;
@@ -1944,6 +1963,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
 
             //Remove column
             if (isset($renderer_parameters['remove-column'])) {
+                $this->checkReportRendererUpdateRequest($request);
                 $column_id = $renderer_parameters['remove-column'];
                 if ($column_id) {
                     $columns = $this->getColumns();
@@ -1964,6 +1984,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
 
             //Add column
             if (isset($renderer_parameters['add-column']['field-id'])) {
+                $this->checkReportRendererUpdateRequest($request);
                 if ($field_id = (int) $renderer_parameters['add-column']['field-id']) {
                     if ($field = $ff->getUsedFormElementById($field_id)) {
                         $columns      = $this->getColumns();
@@ -2023,6 +2044,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
 
             //Reorder columns
             if (isset($renderer_parameters['reorder-column']) && is_array($renderer_parameters['reorder-column'])) {
+                $this->checkReportRendererUpdateRequest($request);
                 $column_id    = key($renderer_parameters['reorder-column']);
                 $new_position = (int) current($renderer_parameters['reorder-column']);
                 if ($column_id) {
@@ -2073,6 +2095,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
 
             //Resize column
             if (isset($renderer_parameters['resize-column']) && is_array($renderer_parameters['resize-column'])) {
+                $this->checkReportRendererUpdateRequest($request);
                 foreach ($renderer_parameters['resize-column'] as $column_id => $new_width) {
                     $new_width = (int) $new_width;
                     if ($column_id) {
@@ -2089,6 +2112,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
 
             // Define format of column
             if (isset($renderer_parameters['configure-column']) && is_array($renderer_parameters['configure-column'])) {
+                $this->checkReportRendererUpdateRequest($request);
                 foreach ($renderer_parameters['configure-column'] as $column_id => $format) {
                     if ($column_id) {
                         $columns = $this->getColumns();
@@ -2110,6 +2134,30 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                 $this->exportToCSV($only_columns);
             }
         }
+    }
+
+    private function checkReportRendererUpdateRequest(HTTPRequest $request): void
+    {
+        $tracker = $this->getReport()->getTracker();
+        if (! $request->isPost()) {
+            $GLOBALS['Response']->addFeedback(
+                Feedback::ERROR,
+                dgettext('tuleap-tracker', 'The request is not valid.')
+            );
+            $this->redirectToTracker($tracker);
+        }
+        $this->getCSRFTokenReportChange($tracker)->check();
+    }
+
+    private function getCSRFTokenReportChange(Tracker $tracker): CSRFSynchronizerToken
+    {
+        return new CSRFSynchronizerToken($tracker->getUri());
+    }
+
+    private function redirectToTracker(Tracker $tracker): never
+    {
+        $GLOBALS['Response']->redirect($tracker->getUri());
+        exit;
     }
 
     private function addColumnsRequiredForSorting(array $columns): array
@@ -2586,32 +2634,34 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         $html .= '<div id="tracker_report_renderer_view_controls">';
         if ($this->sortHasUsedField()) {
             //reset sort
-            $reset_sort_params = [
-                'report'                    => $this->report->id,
-                'renderer'                  => $this->id,
-                'func'                      => 'renderer',
-                'renderer_table[resetsort]' => 1,
-            ];
-            $html             .= '<div class="btn-group"><a class="btn btn-mini" href="?' . http_build_query($reset_sort_params) . '">'
-                . '<i class="fa fa-reply"></i> '
-                . dgettext('tuleap-tracker', 'Reset sort')
-                . '</a></div> ';
+            $csrf_token = $this->getCSRFTokenReportChange($this->report->getTracker());
+            $purifier   = Codendi_HTMLPurifier::instance();
+            $html      .= '<form class="btn-group" method="post">';
+            $html      .= $csrf_token->fetchHTMLInput();
+            $html      .= '<input type="hidden" name="func" value="renderer"/>';
+            $html      .= '<input type="hidden" name="report" value="' . $purifier->purify($this->report->getId()) . '"/>';
+            $html      .= '<input type="hidden" name="renderer" value="' . $purifier->purify($this->getId()) . '"/>';
+            $html      .= '<input type="hidden" name="renderer_table[resetsort]" value="1"/>';
+            $html      .= '<button type="submit" class="btn btn-mini">';
+            $html      .= '<i class="fa fa-reply"></i> ' . $purifier->purify(dgettext('tuleap-tracker', 'Reset sort'));
+            $html      .= '</button>';
+            $html      .= '</form>';
 
             //toggle multisort
-            $multisort_params = [
-                'report'                    => $this->report->id,
-                'renderer'                  => $this->id,
-                'func'                      => 'renderer',
-                'renderer_table[multisort]' => 1,
-            ];
-            $multisort_label  = dgettext('tuleap-tracker', 'Enable multisort');
+            $multisort_label = dgettext('tuleap-tracker', 'Enable multisort');
             if ($this->multisort) {
                 $multisort_label = dgettext('tuleap-tracker', 'Disable multisort');
             }
-            $html .= '<div class="btn-group"><a class="btn btn-mini" href="?' . http_build_query($multisort_params) . '">'
-                . '<i class="fa fa-sort"></i> '
-                . $multisort_label
-                . '</a></div> ';
+            $html .= '<form class="btn-group" method="post">';
+            $html .= $csrf_token->fetchHTMLInput();
+            $html .= '<input type="hidden" name="func" value="renderer"/>';
+            $html .= '<input type="hidden" name="report" value="' . $purifier->purify($this->report->getId()) . '"/>';
+            $html .= '<input type="hidden" name="renderer" value="' . $purifier->purify($this->getId()) . '"/>';
+            $html .= '<input type="hidden" name="renderer_table[multisort]" value="1"/>';
+            $html .= '<button type="submit" class="btn btn-mini">';
+            $html .= '<i class="fa fa-sort"></i> ' . $purifier->purify($multisort_label);
+            $html .= '</button>';
+            $html .= '</form>';
         }
 
         if ($report_can_be_modified && ! $current_user->isAnonymous()) {

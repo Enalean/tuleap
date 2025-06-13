@@ -88,6 +88,7 @@ codendi.ReorderColumns = Class.create({
                     var parameters = {
                             func: "renderer",
                             renderer: renderer_id,
+                            challenge: cell.closest("table").readAttribute("data-challenge"),
                         },
                         param_name =
                             "renderer_table[reorder-column][" +

@@ -1,0 +1,56 @@
+<div class="btn-group button_dropdowns" id="{{ id }}">
+    <a class="btn {{# class_names }}{{ . }} {{/ class_names }}dropdown-toggle" data-test="{{ id }}" data-toggle="dropdown">
+        <i class="{{ icon }}"></i> {{ label }}
+        <span class="caret"></span>
+    </a>
+    <ul class="dropdown-menu pull-right">
+        {{# options }}
+            {{# divider }}
+            <li class="divider"></li>
+            {{/ divider }}
+
+            {{# title }}
+            <li class="dropdown-menu-title">{{ label }}</li>
+            {{/ title }}
+
+            {{# submenu }}
+            <li class="dropdown-submenu pull-left glued">
+                <a href="#" id="{{ id }}" data-test="{{ id }}">{{ label }}</a>
+                <ul class="dropdown-menu">
+                    {{# sub_options }}
+                        {{# divider }}
+                        <li class="divider"></li>
+                        {{/ divider }}
+                        {{# simple }}
+                            <li {{# li_parameters }} {{ parameter }}="{{ value }}"{{/ li_parameters }}>
+                                <a href="{{ url }}" data-test="{{ id }}" id="{{ id }}" data-toggle="{{ data_toggle }}">{{# selected }}<i class="fa fa-check"></i>{{/ selected }} {{ label }}</a>
+                            </li>
+                        {{/ simple }}
+                    {{/ sub_options }}
+                </ul>
+            </li>
+            {{/ submenu }}
+
+            {{# simple }}
+            <li {{# li_parameters }} {{ parameter }}="{{ value }}"{{/ li_parameters }}>
+                {{# data_toggle }}
+                    <a href="{{ url }}" data-test="{{ id }}" id="{{ id }}" data-toggle="{{ data_toggle }}">{{# selected }}<i class="fa fa-check"></i>{{/ selected }} {{ label }}</a>
+                {{/ data_toggle }}
+                {{^ data_toggle }}
+                    {{# submits_data }}
+                        <form method="post" action="{{ url }}">
+                            {{# csrf_token }}
+                                {{> csrf_token_input }}
+                            {{/ csrf_token }}
+                            <button type="submit" class="btn-link" data-test="{{ id }}" id="{{ id }}">{{# selected }}<i class="fa fa-check"></i>{{/ selected }} {{ label }}</button>
+                        </form>
+                    {{/ submits_data }}
+                    {{^ submits_data }}
+                        <a href="{{ url }}" data-test="{{ id }}" id="{{ id }}">{{# selected }}<i class="fa fa-check"></i>{{/ selected }} {{ label }}</a>
+                    {{/ submits_data }}
+                {{/ data_toggle }}
+            </li>
+            {{/ simple }}
+        {{/ options }}
+    </ul>
+</div>

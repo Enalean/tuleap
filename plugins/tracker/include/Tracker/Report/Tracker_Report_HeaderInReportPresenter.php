@@ -79,6 +79,8 @@ class Tracker_Report_HeaderInReportPresenter
      */
     public $warnings;
 
+    public readonly CSRFSynchronizerToken $csrf_token;
+
     public function __construct(
         string $browse_instructions,
         string $title,
@@ -103,9 +105,11 @@ class Tracker_Report_HeaderInReportPresenter
         $this->has_changed_classname = $has_changed_classname;
         $this->report_name           = $report->getName();
         $this->warnings              = $warnings;
-        $this->item_name             = $report->getTracker()->getItemName();
+        $tracker                     = $report->getTracker();
+        $this->item_name             = $tracker->getItemName();
         $this->is_user_anonymous     = $user->isAnonymous();
-        $this->artifact_creation_url = $report->getTracker()->getSubmitUrl();
+        $this->artifact_creation_url = $tracker->getSubmitUrl();
+        $this->csrf_token            = new CSRFSynchronizerToken($tracker->getUri());
     }
 
     public function has_browse_instructions(): bool

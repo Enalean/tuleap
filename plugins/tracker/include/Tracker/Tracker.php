@@ -1662,6 +1662,7 @@ class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignore PSR1.Clas
                 $this->displayRulesAsJavascript(),
                 $event->getExternalActions(),
                 ! $this->isNotificationStopped(),
+                new CSRFSynchronizerToken($this->getUri()),
             )
         );
 

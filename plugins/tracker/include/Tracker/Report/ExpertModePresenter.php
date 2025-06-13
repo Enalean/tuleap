@@ -53,6 +53,7 @@ class ExpertModePresenter
         array $allowed_fields,
         $is_normal_mode_button_displayed,
         $is_query_modifiable,
+        public readonly \CSRFSynchronizerToken $csrf_token,
     ) {
         $this->id                              = $id;
         $this->class_toggler                   = $class_toggler;

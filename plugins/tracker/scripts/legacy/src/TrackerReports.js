@@ -88,6 +88,7 @@ codendi.tracker.report.table.saveColumnsWidth = function (table, onComplete) {
     var parameters = {
         func: "renderer",
         renderer: $("tracker_report_renderer_current").readAttribute("data-renderer-id"),
+        challenge: table.readAttribute("data-challenge"),
     };
     var cells = table.rows[0].cells;
     var n = cells.length;
@@ -163,6 +164,7 @@ codendi.tracker.report.table.AddRemoveColumn = Class.create({
      * Add a column to the table
      */
     add: function (dropdown, li) {
+        const challenge = li.readAttribute("data-challenge");
         var column_id = li.readAttribute("data-column-id"),
             field_id = li.readAttribute("data-field-id"),
             artlink_type = li.readAttribute("data-field-artlink-type"),
@@ -188,6 +190,7 @@ codendi.tracker.report.table.AddRemoveColumn = Class.create({
                         "data-renderer-id",
                     ),
                     "renderer_table[add-column][field-id]": field_id,
+                    challenge,
                 };
             if (artlink_type !== null) {
                 parameters["renderer_table[add-column][artlink-type]"] = artlink_type;
@@ -247,6 +250,7 @@ codendi.tracker.report.table.AddRemoveColumn = Class.create({
      * remove a column to the table
      */
     remove: function (dropdown, li) {
+        const challenge = li.readAttribute("data-challenge");
         var column_id = li.readAttribute("data-column-id"),
             field_id = li.readAttribute("data-field-id");
         if ($("tracker_report_table_sort_by_" + field_id)) {
@@ -290,6 +294,7 @@ codendi.tracker.report.table.AddRemoveColumn = Class.create({
                             "data-renderer-id",
                         ),
                         "renderer_table[remove-column]": column_id,
+                        challenge,
                     },
                     onSuccess: function () {
                         $$("th[data-column-id=" + column_id + "]").each(function (col) {
@@ -336,6 +341,7 @@ codendi.tracker.report.AddRemoveCriteria = Class.create({
         if (!this.request_sent) {
             this.request_sent = true;
             var field_id = li.readAttribute("data-field-id");
+            const challenge = li.readAttribute("data-challenge");
             if ($("tracker_report_crit_" + field_id)) {
                 $$(".tracker_report_crit_" + field_id).invoke("show");
                 $("tracker_report_crit_" + field_id).show();
@@ -345,6 +351,7 @@ codendi.tracker.report.AddRemoveCriteria = Class.create({
                     parameters: {
                         func: "add-criteria",
                         field: field_id,
+                        challenge,
                     },
                     onComplete: function () {
                         self.request_sent = false;
@@ -355,6 +362,7 @@ codendi.tracker.report.AddRemoveCriteria = Class.create({
                     parameters: {
                         func: "add-criteria",
                         field: field_id,
+                        challenge,
                     },
                     onComplete: function () {
                         self.request_sent = false;
@@ -389,10 +397,12 @@ codendi.tracker.report.AddRemoveCriteria = Class.create({
      */
     remove: function (dropdown, li) {
         var field_id = li.readAttribute("data-field-id");
+        const challenge = li.readAttribute("data-challenge");
         new Ajax.Request(location.href, {
             parameters: {
                 func: "remove-criteria",
                 field: field_id,
+                challenge,
             },
             onSuccess: function () {
                 $$(".tracker_report_crit_" + field_id).invoke("hide");
@@ -422,11 +432,14 @@ codendi.tracker.report.loadAdvancedCriteria = function (element) {
                 .next()
                 .down("label")
                 .htmlFor.match(/_(\d+)$/)[1];
+            const form = li.closest("form");
+            const form_data = new FormData(form);
             //eslint-disable-next-line @typescript-eslint/no-unused-vars
             var req = new Ajax.Updater(li, location.href, {
                 parameters: {
                     func: "toggle-advanced",
                     field: field_id,
+                    challenge: form_data.get("challenge"),
                 },
                 onComplete: function (transport) {
                     //Force refresh of decorators and calendar

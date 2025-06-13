@@ -46,7 +46,19 @@
             format = "";
         }
 
-        content += '<form action="#" method="get" class="save-type-column-format">';
+        content += '<form action="#" method="post" class="save-type-column-format">';
+
+        for (const table of cog.parents("table")) {
+            const challenge = table.readAttribute("data-challenge");
+            if (challenge !== null) {
+                const input = document.createElement("input");
+                input.type = "hidden";
+                input.name = "challenge";
+                input.value = challenge;
+                content += input.outerHTML;
+                break;
+            }
+        }
 
         content +=
             '<p class="alert alert-danger">' +
@@ -100,7 +112,7 @@
 
         var form = $(this);
 
-        $.get(codendi.tracker.base_url, form.serialize())
+        $.post(codendi.tracker.base_url, form.serialize())
             .done(function () {
                 location.reload();
             })

@@ -100,4 +100,9 @@ class Templating_Presenter_ButtonDropdownsOption
     {
         return $this->li_parameters;
     }
+
+    public function submits_data(): bool
+    {
+        return $this->url !== '#';
+    }
 }

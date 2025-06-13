@@ -80,7 +80,7 @@
     }
 
     /* stylelint-disable-next-line selector-max-compound-selectors */
-    > thead > tr > th > table > tbody > tr > td > a {
+    > thead > tr > th > table > tbody > tr > td > form > .btn-link {
         color: var(--tlp-main-color);
     }
 

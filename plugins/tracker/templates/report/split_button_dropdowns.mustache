@@ -1,9 +1,14 @@
 <div class="btn-group" id="{{ id }}">
-    <a href="{{ default_option.url }}"
-        class="btn {{ btn_class }}"
-        id="{{ default_option.id }}"
-        data-test="{{ id }}"
-        data-toggle="{{ default_option.data_toggle }}">{{default_option.label}}</a>
+    <form method="post" action="{{ default_option.url }}">
+        {{# csrf_token }}
+            {{> csrf_token_input }}
+        {{/ csrf_token }}
+        <button type="submit"
+           class="btn {{ btn_class }}"
+           id="{{ default_option.id }}"
+           data-test="{{ id }}"
+           data-toggle="{{ default_option.data_toggle }}">{{default_option.label}}</button>
+    </form>
     {{# has_options }}
         <button class="btn dropdown-toggle {{ btn_class }}" data-toggle="dropdown">
             <span class="caret"></span>
