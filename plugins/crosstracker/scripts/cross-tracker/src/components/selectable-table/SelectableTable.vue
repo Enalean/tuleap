@@ -45,6 +45,7 @@
                     v-bind:even="isEven(index)"
                     v-bind:last_of_row="isLastCellOfRow(column_index, columns.size)"
                     v-on:toggle-links="toggleLinks(row)"
+                    v-bind:level="0"
                 />
                 <artifact-link-rows
                     v-if="row.is_expanded"
@@ -52,6 +53,7 @@
                     v-bind:columns="columns"
                     v-bind:artifact_id="row.id"
                     v-bind:query_id="query.id"
+                    v-bind:level="1"
                 />
             </template>
         </div>

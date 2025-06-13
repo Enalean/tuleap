@@ -29,6 +29,7 @@
         class="cell tlp-skeleton-text"
         data-test="pretty-title-empty_cell"
     >
+        <caret-indentation v-bind:level="level" />
         <i
             class="pretty-title-caret tlp-skeleton-icon"
             v-bind:class="caret_class"
@@ -43,9 +44,11 @@
 import { computed } from "vue";
 import type { Cell } from "../../../domain/ArtifactsTable";
 import { PRETTY_TITLE_CELL } from "../../../domain/ArtifactsTable";
+import CaretIndentation from "../CaretIndentation.vue";
 
 defineProps<{
     cell: Cell | undefined;
+    level: number;
 }>();
 
 const caret_class = computed((): string => {

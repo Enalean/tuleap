@@ -68,6 +68,7 @@ describe(`SelectableCell`, () => {
                 number_of_reverse_link: 1,
                 even: is_even,
                 last_of_row: is_last_of_row,
+                level: 0,
             },
         });
     };

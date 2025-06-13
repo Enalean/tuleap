@@ -25,6 +25,7 @@
             v-for="column_name of columns"
             v-bind:key="column_name + index"
             v-bind:cell="row.cells.get(column_name)"
+            v-bind:level="level"
         />
     </template>
 </template>
@@ -38,6 +39,7 @@ const props = defineProps<{
     row: ArtifactRow;
     columns: ArtifactsTable["columns"];
     link_type: "forward" | "reverse";
+    level: number;
 }>();
 
 const number_of_link =

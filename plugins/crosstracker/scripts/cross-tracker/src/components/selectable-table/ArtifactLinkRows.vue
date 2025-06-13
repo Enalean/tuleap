@@ -25,6 +25,7 @@
             v-bind:row="row"
             v-bind:columns="columns"
             v-bind:link_type="'forward'"
+            v-bind:level="level"
         />
     </template>
     <template v-else>
@@ -40,6 +41,7 @@
                 v-bind:even="false"
                 v-bind:last_of_row="isLastCellOfRow(column_index, columns.size)"
                 v-on:toggle-links="toggleLinks(link)"
+                v-bind:level="level"
             />
             <artifact-link-rows
                 v-if="link.is_expanded"
@@ -47,6 +49,7 @@
                 v-bind:columns="columns"
                 v-bind:artifact_id="link.id"
                 v-bind:query_id="query_id"
+                v-bind:level="level + 1"
             />
         </template>
     </template>
@@ -56,6 +59,7 @@
             v-bind:row="row"
             v-bind:columns="columns"
             v-bind:link_type="'reverse'"
+            v-bind:level="level"
         />
     </template>
     <template v-else>
@@ -71,6 +75,7 @@
                 v-bind:even="false"
                 v-bind:last_of_row="isLastCellOfRow(column_index, columns.size)"
                 v-on:toggle-links="toggleLinks(link)"
+                v-bind:level="level"
             />
             <artifact-link-rows
                 v-if="link.is_expanded"
@@ -78,6 +83,7 @@
                 v-bind:columns="columns"
                 v-bind:artifact_id="link.id"
                 v-bind:query_id="query_id"
+                v-bind:level="level + 1"
             />
         </template>
     </template>
@@ -98,6 +104,7 @@ const props = defineProps<{
     query_id: string;
     row: ArtifactRow;
     columns: ArtifactsTable["columns"];
+    level: number;
 }>();
 
 const forward_links = ref<ReadonlyArray<ArtifactRow>>([]);
