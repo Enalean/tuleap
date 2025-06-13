@@ -1,0 +1,126 @@
+/**
+ * Copyright (c) Enalean, 2025 - Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+import { describe, it, expect, beforeEach } from "vitest";
+import { okAsync } from "neverthrow";
+import { shallowMount } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
+import { Option } from "@tuleap/option";
+import { ArtifactsTableBuilder } from "../../../tests/builders/ArtifactsTableBuilder";
+import { ArtifactRowBuilder } from "../../../tests/builders/ArtifactRowBuilder";
+import { DATE_CELL, NUMERIC_CELL, TEXT_CELL } from "../../domain/ArtifactsTable";
+import type { ArtifactsTable } from "../../domain/ArtifactsTable";
+import { getGlobalTestOptions } from "../../helpers/global-options-for-tests";
+import { RETRIEVE_ARTIFACT_LINKS } from "../../injection-symbols";
+import type { RetrieveArtifactLinks } from "../../domain/RetrieveArtifactLinks";
+import ArtifactRows from "./ArtifactRows.vue";
+import ArtifactRow from "./ArtifactRow.vue";
+
+const DATE_COLUMN_NAME = "start_date";
+const NUMERIC_COLUMN_NAME = "remaining_effort";
+const TEXT_COLUMN_NAME = "details";
+
+const RetrieveArtifactLinksTableStub = {
+    withDefaultContent(): RetrieveArtifactLinks {
+        return {
+            getForwardLinks: () => okAsync(new ArtifactsTableBuilder().buildWithTotal(0)),
+            getReverseLinks: () => okAsync(new ArtifactsTableBuilder().buildWithTotal(0)),
+        };
+    },
+};
+
+describe("ArtifactRows", () => {
+    let table: ArtifactsTable, artifact_links_table_retriever: RetrieveArtifactLinks;
+
+    beforeEach(() => {
+        artifact_links_table_retriever = RetrieveArtifactLinksTableStub.withDefaultContent();
+
+        table = new ArtifactsTableBuilder()
+            .withColumn(DATE_COLUMN_NAME)
+            .withColumn(NUMERIC_COLUMN_NAME)
+            .withColumn(TEXT_COLUMN_NAME)
+            .withArtifactRow(
+                new ArtifactRowBuilder()
+                    .addCell(DATE_COLUMN_NAME, {
+                        type: DATE_CELL,
+                        value: Option.fromValue("2021-09-26T07:40:03+09:00"),
+                        with_time: true,
+                    })
+                    .addCell(NUMERIC_COLUMN_NAME, {
+                        type: NUMERIC_CELL,
+                        value: Option.fromValue(74),
+                    })
+                    .addCell(TEXT_COLUMN_NAME, {
+                        type: TEXT_CELL,
+                        value: "<p>Griffith</p>",
+                    })
+                    .buildWithNumberOfLinks(2, 1),
+            )
+            .withArtifactRow(
+                new ArtifactRowBuilder()
+                    .addCell(DATE_COLUMN_NAME, {
+                        type: DATE_CELL,
+                        value: Option.fromValue("2025-09-19T13:54:07+10:00"),
+                        with_time: true,
+                    })
+                    .addCell(NUMERIC_COLUMN_NAME, {
+                        type: NUMERIC_CELL,
+                        value: Option.fromValue(3),
+                    })
+                    .build(),
+            )
+            .build();
+    });
+
+    const getWrapper = (
+        artifacts_table: ArtifactsTable,
+    ): VueWrapper<InstanceType<typeof ArtifactRows>> => {
+        return shallowMount(ArtifactRows, {
+            global: {
+                ...getGlobalTestOptions(),
+                provide: {
+                    [RETRIEVE_ARTIFACT_LINKS.valueOf()]: artifact_links_table_retriever,
+                },
+            },
+            props: {
+                rows: artifacts_table.rows,
+                columns: artifacts_table.columns,
+                query_id: "WhateverQueryId",
+                level: 0,
+            },
+        });
+    };
+
+    it(`will show a table-like grid with the selected columns and artifact values`, () => {
+        const wrapper = getWrapper(table);
+
+        expect(wrapper.findAllComponents(ArtifactRow)).toHaveLength(2);
+    });
+
+    it("should propagate its own level to each ArtifactRow", () => {
+        const wrapper = getWrapper(table);
+
+        const artifact_rows = wrapper.findAllComponents(ArtifactRow);
+
+        expect(artifact_rows).not.toHaveLength(0);
+        artifact_rows.forEach((artifact_row) => {
+            expect(artifact_row.props("level")).toBe(wrapper.props("level"));
+        });
+    });
+});

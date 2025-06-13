@@ -34,11 +34,7 @@ const DATE_COLUMN_NAME = "start_date";
 const columns = new Set<ColumnName>().add(PRETTY_TITLE_COLUMN_NAME).add(DATE_COLUMN_NAME);
 
 describe("ArtifactLinkRowSkeleton", () => {
-    let number_of_forward_link = 0,
-        number_of_reverse_link = 0,
-        link_type: "forward" | "reverse" = "forward";
-
-    function getWrapper(): VueWrapper {
+    function getWrapper(number_of_link: number): VueWrapper {
         return shallowMount(ArtifactLinkRowSkeleton, {
             global: { ...getGlobalTestOptions() },
             props: {
@@ -55,37 +51,23 @@ describe("ArtifactLinkRowSkeleton", () => {
                         value: Option.fromValue("2021-09-26T07:40:03+09:00"),
                         with_time: true,
                     })
-                    .buildWithNumberOfLinks(number_of_forward_link, number_of_reverse_link),
+                    .build(),
                 columns,
-                link_type,
+                number_of_link,
                 level: 0,
             },
         });
     }
 
-    describe("Forward links", () => {
-        it("should display the correct number of row and the correct number of cell", () => {
-            number_of_forward_link = 4;
-            link_type = "forward";
-            const wrapper = getWrapper();
+    it.each([6, 0])(
+        "should display the correct number of row and the correct number of cell when there are %s links",
+        (number_of_link) => {
+            const wrapper = getWrapper(number_of_link);
 
-            expect(wrapper.findAllComponents(EmptyEditCell)).toHaveLength(number_of_forward_link);
+            expect(wrapper.findAllComponents(EmptyEditCell)).toHaveLength(number_of_link);
             expect(wrapper.findAllComponents(EmptySelectableCell)).toHaveLength(
-                number_of_forward_link * columns.size,
+                number_of_link * columns.size,
             );
-        });
-    });
-
-    describe("Reverse links", () => {
-        it("should display the correct number of row and the correct number of cell", () => {
-            number_of_reverse_link = 2;
-            link_type = "reverse";
-            const wrapper = getWrapper();
-
-            expect(wrapper.findAllComponents(EmptyEditCell)).toHaveLength(number_of_reverse_link);
-            expect(wrapper.findAllComponents(EmptySelectableCell)).toHaveLength(
-                number_of_reverse_link * columns.size,
-            );
-        });
-    });
+        },
+    );
 });
