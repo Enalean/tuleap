@@ -1797,6 +1797,8 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
             new ExplicitBacklogDao(),
             new ArtifactsInExplicitBacklogDao(),
             new PlannedArtifactDao(),
+            Tracker_ArtifactFactory::instance(),
+            new PlanningDao(),
         );
 
         $adder->addCopiedArtifactsToTopBacklog(
