@@ -22,36 +22,41 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker;
 
-use Mockery;
-use Tuleap\Layout\BaseLayout;
+use PFUser;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tracker;
+use Tracker_ArtifactFactory;
+use Tracker_FormElement_Field_String;
+use Tracker_FormElementFactory;
+use Tracker_RulesManager;
+use Tracker_Workflow_GlobalRulesViolationException;
+use Tuleap\GlobalResponseMock;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Artifact\Artifact;
+use UserManager;
+use Workflow;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class TrackerBlockingErrorTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class TrackerBlockingErrorTest extends TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use GlobalResponseMock;
 
-    /**
-     * @var Mockery\Mock | \Tracker
-     */
-    private $tracker;
-    private $formelement_factory;
-    private $workflow_factory;
+    private Tracker&MockObject $tracker;
+    private Tracker_FormElementFactory&MockObject $formelement_factory;
+    private Workflow&MockObject $workflow;
 
     public function setUp(): void
     {
-        $GLOBALS['Response']    = Mockery::mock(BaseLayout::class);
-        $this->workflow_factory = \Mockery::spy(\WorkflowFactory::class);
+        $this->workflow = $this->createMock(Workflow::class);
 
-        $this->formelement_factory = \Mockery::mock(\Tracker_FormElementFactory::class);
+        $this->formelement_factory = $this->createMock(Tracker_FormElementFactory::class);
 
-        $this->tracker = \Mockery::mock(\Tracker::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $this->tracker->shouldReceive('getFormElementFactory')->andReturns($this->formelement_factory);
-        $this->tracker->shouldReceive('getId')->andReturns(110);
-    }
-
-    public function tearDown(): void
-    {
-        unset($GLOBALS['Response']);
+        $this->tracker = $this->createPartialMock(Tracker::class, [
+            'getFormElementFactory', 'getId', 'getTrackerArtifactFactory', 'aidExists', 'getWorkflow', 'getUserManager',
+        ]);
+        $this->tracker->method('getFormElementFactory')->willReturn($this->formelement_factory);
+        $this->tracker->method('getId')->willReturn(110);
     }
 
     public function testGetSubmitUrlWithParameters(): void
@@ -71,47 +76,58 @@ class TrackerBlockingErrorTest extends \Tuleap\Test\PHPUnit\TestCase
             ['summary 1', 'details 1'],
             ['summary 2', 'details 2'],
         ];
-        $field1 = \Mockery::spy(\Tracker_FormElement_Field_String::class);
-        $field2 = \Mockery::spy(\Tracker_FormElement_Field_String::class);
-        $this->formelement_factory->shouldReceive('getUsedFields')->andReturns([$field1, $field2]);
+        $field1 = $this->createMock(Tracker_FormElement_Field_String::class);
+        $field2 = $this->createMock(Tracker_FormElement_Field_String::class);
+        $this->formelement_factory->method('getUsedFields')->willReturn([$field1, $field2]);
+        $field1->method('isRequired')->willReturn(false);
+        $field2->method('isRequired')->willReturn(false);
 
-        $field1->shouldReceive('validateFieldWithPermissionsAndRequiredStatus')->andReturns(true);
-        $field2->shouldReceive('validateFieldWithPermissionsAndRequiredStatus')->andReturns(true);
+        $field1->method('validateFieldWithPermissionsAndRequiredStatus')->willReturn(true);
+        $field2->method('validateFieldWithPermissionsAndRequiredStatus')->willReturn(true);
 
-        $field1->shouldReceive('getId')->andReturns(1);
-        $field2->shouldReceive('getId')->andReturns(2);
+        $field1->method('getId')->willReturn(1);
+        $field2->method('getId')->willReturn(2);
 
-        $artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
-        $artifact->shouldReceive('getId')->andReturn(101);
-        $artifact->shouldReceive('getTracker')->andReturn($this->tracker);
-        $tracker_artifact_factory = \Mockery::mock(\Tracker_ArtifactFactory::class);
-        $this->tracker->shouldReceive('getTrackerArtifactFactory')->andReturns($tracker_artifact_factory);
-        $this->tracker->shouldReceive('aidExists')->with('0')->andReturns(false);
+        $artifact = $this->createMock(Artifact::class);
+        $artifact->method('getId')->willReturn(101);
+        $artifact->method('getTracker')->willReturn($this->tracker);
+        $artifact->method('getLastChangeset')->willReturn(null);
+        $artifact->method('getWorkflow')->willReturn(null);
+        $tracker_artifact_factory = $this->createMock(Tracker_ArtifactFactory::class);
+        $this->tracker->method('getTrackerArtifactFactory')->willReturn($tracker_artifact_factory);
+        $this->tracker->method('aidExists')->with('0')->willReturn(false);
 
-        $field1->shouldReceive('getFieldDataFromCSVValue')->with('summary 1', $artifact)->andReturns('summary 1')->once();
-        $field1->shouldReceive('getFieldDataFromCSVValue')->with('summary 2', $artifact)->andReturns('summary 2')->once();
+        $field1->expects($this->exactly(2))->method('getFieldDataFromCSVValue')->with(
+            self::callback(static fn(string $value) => $value === 'summary 1' || $value === 'summary 2'),
+            $artifact,
+        )->willReturnArgument(0);
 
-        $field2->shouldReceive('getFieldDataFromCSVValue')->with('details 1', $artifact)->andReturns('details 1')->once();
-        $field2->shouldReceive('getFieldDataFromCSVValue')->with('details 2', $artifact)->andReturns('details 2')->once();
+        $field2->expects($this->exactly(2))->method('getFieldDataFromCSVValue')->with(
+            self::callback(static fn(string $value) => $value === 'details 1' || $value === 'details 2'),
+            $artifact,
+        )->willReturnArgument(0);
 
-        $field1->shouldReceive('isCSVImportable')->andReturns(true);
-        $field2->shouldReceive('isCSVImportable')->andReturns(true);
+        $field1->method('isCSVImportable')->willReturn(true);
+        $field2->method('isCSVImportable')->willReturn(true);
 
-        $this->formelement_factory->shouldReceive('getUsedFieldByName')->with(110, 'summary')->andReturns($field1);
-        $this->formelement_factory->shouldReceive('getUsedFieldByName')->with(110, 'details')->andReturns($field2);
-        $this->tracker->shouldReceive('getWorkflow')->andReturns($this->workflow_factory);
+        $this->formelement_factory->method('getUsedFieldByName')->with(110, self::isString())
+            ->willReturnCallback(static fn(int $tracker_id, string $name) => match ($name) {
+                'summary' => $field1,
+                'details' => $field2,
+            });
+        $this->tracker->method('getWorkflow')->willReturn($this->workflow);
 
-        $user_manager = \Mockery::mock(\UserManager::class);
-        $user         = \Mockery::mock(\PFUser::class);
-        $user->shouldReceive('getId')->andReturns('107');
-        $this->tracker->shouldReceive('getUserManager')->andReturns($user_manager);
-        $user_manager->shouldReceive('getCurrentUser')->andReturns($user);
+        $user_manager = $this->createMock(UserManager::class);
+        $user         = $this->createMock(PFUser::class);
+        $user->method('getId')->willReturn('107');
+        $this->tracker->method('getUserManager')->willReturn($user_manager);
+        $user_manager->method('getCurrentUser')->willReturn($user);
 
-        $tracker_artifact_factory->shouldReceive('getInstanceFromRow')->andReturns($artifact);
+        $tracker_artifact_factory->method('getInstanceFromRow')->willReturn($artifact);
 
-        $this->workflow_factory->shouldReceive('getGlobalRulesManager')->andThrows(\Mockery::spy(\Tracker_Workflow_GlobalRulesViolationException::class));
+        $this->workflow->method('checkGlobalRules')->willThrowException($this->createMock(Tracker_Workflow_GlobalRulesViolationException::class));
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->with('error', Mockery::any(), Mockery::any());
+        $GLOBALS['Response']->method('addFeedback')->with('error', self::anything(), self::anything());
         $this->assertFalse($this->tracker->hasBlockingError($header, $lines));
     }
 
@@ -122,47 +138,59 @@ class TrackerBlockingErrorTest extends \Tuleap\Test\PHPUnit\TestCase
             ['summary 1', 'details 1'],
             ['summary 2', 'details 2'],
         ];
-        $field1 = \Mockery::spy(\Tracker_FormElement_Field_String::class);
-        $field2 = \Mockery::spy(\Tracker_FormElement_Field_String::class);
-        $this->formelement_factory->shouldReceive('getUsedFields')->andReturns([$field1, $field2]);
+        $field1 = $this->createMock(Tracker_FormElement_Field_String::class);
+        $field2 = $this->createMock(Tracker_FormElement_Field_String::class);
+        $this->formelement_factory->method('getUsedFields')->willReturn([$field1, $field2]);
+        $field1->method('isRequired')->willReturn(false);
+        $field2->method('isRequired')->willReturn(false);
 
-        $field1->shouldReceive('validateFieldWithPermissionsAndRequiredStatus')->andReturns(true);
-        $field2->shouldReceive('validateFieldWithPermissionsAndRequiredStatus')->andReturns(true);
+        $field1->method('validateFieldWithPermissionsAndRequiredStatus')->willReturn(true);
+        $field2->method('validateFieldWithPermissionsAndRequiredStatus')->willReturn(true);
 
-        $field1->shouldReceive('getId')->andReturns(1);
-        $field2->shouldReceive('getId')->andReturns(2);
+        $field1->method('getId')->willReturn(1);
+        $field2->method('getId')->willReturn(2);
 
-        $artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
-        $artifact->shouldReceive('getId')->andReturn(101);
-        $artifact->shouldReceive('getTracker')->andReturn($this->tracker);
-        $tracker_artifact_factory = \Mockery::mock(\Tracker_ArtifactFactory::class);
-        $this->tracker->shouldReceive('getTrackerArtifactFactory')->andReturns($tracker_artifact_factory);
-        $this->tracker->shouldReceive('aidExists')->with('0')->andReturns(false);
+        $artifact = $this->createMock(Artifact::class);
+        $artifact->method('getId')->willReturn(101);
+        $artifact->method('getTracker')->willReturn($this->tracker);
+        $artifact->method('getLastChangeset')->willReturn(null);
+        $artifact->method('getWorkflow')->willReturn(null);
+        $tracker_artifact_factory = $this->createMock(Tracker_ArtifactFactory::class);
+        $this->tracker->method('getTrackerArtifactFactory')->willReturn($tracker_artifact_factory);
+        $this->tracker->method('aidExists')->with('0')->willReturn(false);
 
-        $field1->shouldReceive('getFieldDataFromCSVValue')->with('summary 1', $artifact)->andReturns('summary 1')->once();
-        $field1->shouldReceive('getFieldDataFromCSVValue')->with('summary 2', $artifact)->andReturns('summary 2')->once();
+        $field1->expects($this->exactly(2))->method('getFieldDataFromCSVValue')->with(
+            self::callback(static fn(string $value) => $value === 'summary 1' || $value === 'summary 2'),
+            $artifact,
+        )->willReturnArgument(0);
 
-        $field2->shouldReceive('getFieldDataFromCSVValue')->with('details 1', $artifact)->andReturns('details 1')->once();
-        $field2->shouldReceive('getFieldDataFromCSVValue')->with('details 2', $artifact)->andReturns('details 2')->once();
+        $field2->expects($this->exactly(2))->method('getFieldDataFromCSVValue')->with(
+            self::callback(static fn(string $value) => $value === 'details 1' || $value === 'details 2'),
+            $artifact,
+        )->willReturnArgument(0);
 
-        $field1->shouldReceive('isCSVImportable')->andReturns(true);
-        $field2->shouldReceive('isCSVImportable')->andReturns(true);
+        $field1->method('isCSVImportable')->willReturn(true);
+        $field2->method('isCSVImportable')->willReturn(true);
 
-        $this->formelement_factory->shouldReceive('getUsedFieldByName')->with(110, 'summary')->andReturns($field1);
-        $this->formelement_factory->shouldReceive('getUsedFieldByName')->with(110, 'details')->andReturns($field2);
-        $this->tracker->shouldReceive('getWorkflow')->andReturns($this->workflow_factory);
+        $this->formelement_factory->method('getUsedFieldByName')->with(110, self::isString())
+            ->willReturnCallback(static fn(int $tracker_id, string $name) => match ($name) {
+                'summary' => $field1,
+                'details' => $field2,
+            });
+        $this->tracker->method('getWorkflow')->willReturn($this->workflow);
 
-        $user_manager = \Mockery::mock(\UserManager::class);
-        $user         = \Mockery::mock(\PFUser::class);
-        $user->shouldReceive('getId')->andReturns('107');
-        $this->tracker->shouldReceive('getUserManager')->andReturns($user_manager);
-        $user_manager->shouldReceive('getCurrentUser')->andReturns($user);
+        $user_manager = $this->createMock(UserManager::class);
+        $user         = $this->createMock(PFUser::class);
+        $user->method('getId')->willReturn('107');
+        $this->tracker->method('getUserManager')->willReturn($user_manager);
+        $user_manager->method('getCurrentUser')->willReturn($user);
 
-        $tracker_artifact_factory->shouldReceive('getInstanceFromRow')->andReturns($artifact);
+        $tracker_artifact_factory->method('getInstanceFromRow')->willReturn($artifact);
 
-        $this->workflow_factory->shouldReceive('getGlobalRulesManager')->andReturns(\Mockery::spy(\Tracker_RulesManager::class));
+        $this->workflow->method('checkGlobalRules')->willReturn(true);
+        $this->workflow->method('getGlobalRulesManager')->willReturn($this->createMock(Tracker_RulesManager::class));
 
-        $GLOBALS['Response']->shouldNotReceive('addFeedback')->with('error', Mockery::any(), Mockery::any());
+        $GLOBALS['Response']->expects($this->never())->method('addFeedback')->with('error', self::anything(), self::anything());
         $this->assertFalse($this->tracker->hasBlockingError($header, $lines));
     }
 
@@ -173,47 +201,59 @@ class TrackerBlockingErrorTest extends \Tuleap\Test\PHPUnit\TestCase
             ['summary 1', 'details 1'],
             ['summary 2', ''],
         ];
-        $field1 = \Mockery::spy(\Tracker_FormElement_Field_String::class);
-        $field2 = \Mockery::spy(\Tracker_FormElement_Field_String::class);
-        $this->formelement_factory->shouldReceive('getUsedFields')->andReturns([$field1, $field2]);
+        $field1 = $this->createMock(Tracker_FormElement_Field_String::class);
+        $field2 = $this->createMock(Tracker_FormElement_Field_String::class);
+        $this->formelement_factory->method('getUsedFields')->willReturn([$field1, $field2]);
+        $field1->method('isRequired')->willReturn(false);
+        $field2->method('isRequired')->willReturn(false);
 
-        $field1->shouldReceive('validateFieldWithPermissionsAndRequiredStatus')->andReturns(true);
-        $field2->shouldReceive('validateFieldWithPermissionsAndRequiredStatus')->andReturns(true);
+        $field1->method('validateFieldWithPermissionsAndRequiredStatus')->willReturn(true);
+        $field2->method('validateFieldWithPermissionsAndRequiredStatus')->willReturn(true);
 
-        $field1->shouldReceive('getId')->andReturns(1);
-        $field2->shouldReceive('getId')->andReturns(2);
+        $field1->method('getId')->willReturn(1);
+        $field2->method('getId')->willReturn(2);
 
-        $artifact = \Mockery::spy(\Tuleap\Tracker\Artifact\Artifact::class);
-        $artifact->shouldReceive('getId')->andReturn(101);
-        $artifact->shouldReceive('getTracker')->andReturn($this->tracker);
-        $tracker_artifact_factory = \Mockery::mock(\Tracker_ArtifactFactory::class);
-        $this->tracker->shouldReceive('getTrackerArtifactFactory')->andReturns($tracker_artifact_factory);
-        $this->tracker->shouldReceive('aidExists')->with('0')->andReturns(false);
+        $artifact = $this->createMock(Artifact::class);
+        $artifact->method('getId')->willReturn(101);
+        $artifact->method('getTracker')->willReturn($this->tracker);
+        $artifact->method('getLastChangeset')->willReturn(null);
+        $artifact->method('getWorkflow')->willReturn(null);
+        $tracker_artifact_factory = $this->createMock(Tracker_ArtifactFactory::class);
+        $this->tracker->method('getTrackerArtifactFactory')->willReturn($tracker_artifact_factory);
+        $this->tracker->method('aidExists')->with('0')->willReturn(false);
 
-        $field1->shouldReceive('getFieldDataFromCSVValue')->with('summary 1', $artifact)->andReturns('summary 1')->once();
-        $field1->shouldReceive('getFieldDataFromCSVValue')->with('summary 2', $artifact)->andReturns('summary 2')->once();
+        $field1->expects($this->exactly(2))->method('getFieldDataFromCSVValue')->with(
+            self::callback(static fn(string $value) => $value === 'summary 1' || $value === 'summary 2'),
+            $artifact,
+        )->willReturnArgument(0);
 
-        $field2->shouldReceive('getFieldDataFromCSVValue')->with('details 1', $artifact)->andReturns('details 1')->once();
-        $field2->shouldReceive('getFieldDataFromCSVValue')->with('', $artifact)->andReturns(100)->once();
+        $field2->expects($this->exactly(2))->method('getFieldDataFromCSVValue')->with(
+            self::callback(static fn(string $value) => $value === 'details 1' || $value === ''),
+            $artifact,
+        )->willReturnCallback(static fn(string $value) => $value === '' ? 100 : $value);
 
-        $field1->shouldReceive('isCSVImportable')->andReturns(true);
-        $field2->shouldReceive('isCSVImportable')->andReturns(true);
+        $field1->method('isCSVImportable')->willReturn(true);
+        $field2->method('isCSVImportable')->willReturn(true);
 
-        $this->formelement_factory->shouldReceive('getUsedFieldByName')->with(110, 'summary')->andReturns($field1);
-        $this->formelement_factory->shouldReceive('getUsedFieldByName')->with(110, 'details')->andReturns($field2);
-        $this->tracker->shouldReceive('getWorkflow')->andReturns($this->workflow_factory);
+        $this->formelement_factory->method('getUsedFieldByName')->with(110, self::isString())
+            ->willReturnCallback(static fn(int $tracker_id, string $name) => match ($name) {
+                'summary' => $field1,
+                'details' => $field2,
+            });
+        $this->tracker->method('getWorkflow')->willReturn($this->workflow);
 
-        $user_manager = \Mockery::mock(\UserManager::class);
-        $user         = \Mockery::mock(\PFUser::class);
-        $user->shouldReceive('getId')->andReturns('107');
-        $this->tracker->shouldReceive('getUserManager')->andReturns($user_manager);
-        $user_manager->shouldReceive('getCurrentUser')->andReturns($user);
+        $user_manager = $this->createMock(UserManager::class);
+        $user         = $this->createMock(PFUser::class);
+        $user->method('getId')->willReturn('107');
+        $this->tracker->method('getUserManager')->willReturn($user_manager);
+        $user_manager->method('getCurrentUser')->willReturn($user);
 
-        $tracker_artifact_factory->shouldReceive('getInstanceFromRow')->andReturns($artifact);
+        $tracker_artifact_factory->method('getInstanceFromRow')->willReturn($artifact);
 
-        $this->workflow_factory->shouldReceive('getGlobalRulesManager')->andReturns(\Mockery::spy(\Tracker_RulesManager::class));
+        $this->workflow->method('checkGlobalRules')->willReturn(true);
+        $this->workflow->method('getGlobalRulesManager')->willReturn($this->createMock(Tracker_RulesManager::class));
 
-        $GLOBALS['Response']->shouldNotReceive('addFeedback')->with('error', Mockery::any(), Mockery::any());
+        $GLOBALS['Response']->expects($this->never())->method('addFeedback')->with('error', self::anything(), self::anything());
         $this->assertFalse($this->tracker->hasBlockingError($header, $lines));
     }
 }
