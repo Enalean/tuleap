@@ -74,6 +74,7 @@ import {
     SEARCH_ARTIFACTS_EVENT,
     NOTIFY_FAULT_EVENT,
     REFRESH_ARTIFACTS_EVENT,
+    SEARCH_ARTIFACTS_SUCCESS_EVENT,
 } from "../../helpers/widget-events";
 import ArtifactRows from "./ArtifactRows.vue";
 
@@ -166,6 +167,7 @@ function getSelectableQueryContent(tql_query: string): void {
                 number_of_selected_columns.value = columns.value.size - 1;
                 rows.value = content_with_total.table.rows;
                 total.value = content_with_total.total;
+                emitter.emit(SEARCH_ARTIFACTS_SUCCESS_EVENT);
             },
             (fault) => {
                 emitter.emit(NOTIFY_FAULT_EVENT, {
