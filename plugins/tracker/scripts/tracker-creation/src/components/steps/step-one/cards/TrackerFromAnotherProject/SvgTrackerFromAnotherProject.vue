@@ -17,7 +17,7 @@
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<template functional>
+<template>
     <svg width="79" height="67" viewBox="0 0 79 67" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path
             d="M4.53846 10.0278C3.69712 10.0278 2 10.3502 2 9.53241V3.49537C2 2.67759 2.69712 2 3.53846 2H40.4615C41.3029 2 42 2.67759 42 3.49537V9.53241C42 10.3502 40.3029 10.0278 39.4615 10.0278M4.53846 10.0278H39.4615M4.53846 10.0278V34.5046C4.53846 35.3224 5.23558 36 6.07692 36H37.9231C38.7644 36 39.4615 35.3224 39.4615 34.5046V10.0278"
@@ -46,3 +46,5 @@
         />
     </svg>
 </template>
+
+<script setup lang="ts"></script>
