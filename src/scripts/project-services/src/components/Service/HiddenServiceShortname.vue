@@ -22,7 +22,7 @@
 </template>
 <script>
 export default {
-    name: "ServiceId",
+    name: "HiddenServiceShortname",
     props: {
         value: {
             type: String,

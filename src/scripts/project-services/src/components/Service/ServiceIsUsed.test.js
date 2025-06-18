@@ -19,7 +19,7 @@
 
 import { shallowMount } from "@vue/test-utils";
 import ServiceIsUsed from "./ServiceIsUsed.vue";
-import { createLocalVueForTests } from "../../support/local-vue";
+import { getGlobalTestOptions } from "../../support/global-options-for-tests.js";
 
 describe(`ServiceIsUsed`, () => {
     let service_is_used, service_activation_disabled_message;
@@ -29,7 +29,7 @@ describe(`ServiceIsUsed`, () => {
         service_activation_disabled_message = "";
     });
 
-    const getWrapper = async () => {
+    const getWrapper = () => {
         const props = {
             id: 138,
             value: service_is_used,
@@ -37,13 +37,13 @@ describe(`ServiceIsUsed`, () => {
         };
 
         return shallowMount(ServiceIsUsed, {
-            localVue: await createLocalVueForTests(),
-            propsData: props,
+            global: { ...getGlobalTestOptions() },
+            props,
         });
     };
 
-    it(`keeps the checkbox enabled`, async () => {
-        const wrapper = await getWrapper();
+    it(`keeps the checkbox enabled`, () => {
+        const wrapper = getWrapper();
         const checkbox = wrapper.get("[data-test=service-is-used]");
         const message = wrapper.find("[data-test=service-disabled-message]");
         expect(checkbox.attributes("disabled")).toBeUndefined();
@@ -51,11 +51,11 @@ describe(`ServiceIsUsed`, () => {
     });
 
     it(`when the service is not used and there is a reason to prevent its activation,
-        it will disable the checkbox and show the reason message`, async () => {
+        it will disable the checkbox and show the reason message`, () => {
         service_is_used = false;
         service_activation_disabled_message = "It cannot be enabled";
 
-        const wrapper = await getWrapper();
+        const wrapper = getWrapper();
 
         const checkbox = wrapper.get("[data-test=service-is-used]");
         const message = wrapper.find("[data-test=service-disabled-message]");
@@ -66,10 +66,10 @@ describe(`ServiceIsUsed`, () => {
 
     it(`when the service is used and there is a reason to prevent its activation,
         it will keep the checkbox enabled and won't show the message
-        to prevent locking between mutually-exclusive services`, async () => {
+        to prevent locking between mutually-exclusive services`, () => {
         service_activation_disabled_message = "It cannot be enabled";
 
-        const wrapper = await getWrapper();
+        const wrapper = getWrapper();
 
         const checkbox = wrapper.get("[data-test=service-is-used]");
         const message = wrapper.find("[data-test=service-disabled-message]");

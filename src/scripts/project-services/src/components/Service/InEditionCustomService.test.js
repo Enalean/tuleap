@@ -19,17 +19,10 @@
 
 import { shallowMount } from "@vue/test-utils";
 import InEditionCustomService from "./InEditionCustomService.vue";
-import { createLocalVueForTests } from "../../support/local-vue.js";
-
-async function createWrapper(props) {
-    return shallowMount(InEditionCustomService, {
-        localVue: await createLocalVueForTests(),
-        propsData: props,
-    });
-}
+import { getGlobalTestOptions } from "../../support/global-options-for-tests.js";
 
 describe(`InEditionCustomService`, () => {
-    let wrapper, props;
+    let props;
 
     beforeEach(() => {
         props = {
@@ -51,58 +44,69 @@ describe(`InEditionCustomService`, () => {
         };
     });
 
-    describe(`When the service is already open in an iframe`, () => {
-        let iframe_switch;
-
-        beforeEach(async () => {
-            props.service.is_in_iframe = true;
-            wrapper = await createWrapper(props);
-
-            iframe_switch = wrapper.get("[data-test=iframe-switch]");
+    function createWrapper() {
+        return shallowMount(InEditionCustomService, {
+            global: { ...getGlobalTestOptions() },
+            props,
         });
+    }
 
+    describe(`When the service is already open in an iframe`, () => {
         it(`will show the switch input`, () => {
+            props.service.is_in_iframe = true;
+            const wrapper = createWrapper();
+
+            const iframe_switch = wrapper.find("[data-test=iframe-switch]");
             expect(iframe_switch.exists()).toBe(true);
         });
 
         it(`when I switch off "Open in iframe", it will show a deprecation warning`, async () => {
-            iframe_switch.setChecked(false);
+            props.service.is_in_iframe = true;
+            const wrapper = createWrapper();
+
+            wrapper.get("[data-test=iframe-switch]").setChecked(false);
             const updated_service = { ...props.service, is_in_iframe: false };
             const new_props = { minimal_rank: 10, service: updated_service, allowed_icons: {} };
             await wrapper.setProps(new_props);
 
-            const deprecation_message = wrapper.get("[data-test=iframe-deprecation-warning");
+            const deprecation_message = wrapper.find("[data-test=iframe-deprecation-warning]");
             expect(deprecation_message.exists()).toBe(true);
         });
 
         it(`when I also check "Is in new tab",
             it will disable "is in iframe" and show a warning`, async () => {
-            wrapper.vm.onNewTabChange({ target: { checked: true } });
+            props.service.is_in_iframe = true;
+            const wrapper = createWrapper();
+
+            wrapper.vm.onNewTabChange(true);
             await wrapper.vm.$nextTick();
 
-            const new_tab_warning = wrapper.get("[data-test=new-tab-warning");
+            const new_tab_warning = wrapper.find("[data-test=new-tab-warning]");
             expect(new_tab_warning.exists()).toBe(true);
         });
 
         it(`When the warning is shown and I uncheck "Is in new tab",
             it will hide the warning`, async () => {
-            wrapper.vm.onNewTabChange({ target: { checked: true } });
+            props.service.is_in_iframe = true;
+            const wrapper = createWrapper();
+
+            wrapper.vm.onNewTabChange(true);
             await wrapper.vm.$nextTick();
 
-            let new_tab_warning = wrapper.find("[data-test=new-tab-warning");
+            let new_tab_warning = wrapper.find("[data-test=new-tab-warning]");
             expect(new_tab_warning.exists()).toBe(true);
 
-            wrapper.vm.onNewTabChange({ target: { checked: false } });
+            wrapper.vm.onNewTabChange(false);
             await wrapper.vm.$nextTick();
-            new_tab_warning = wrapper.find("[data-test=new-tab-warning");
+            new_tab_warning = wrapper.find("[data-test=new-tab-warning]");
 
             expect(new_tab_warning.exists()).toBe(false);
         });
     });
 
     it(`When the service is not already open in an iframe,
-        the switch input won't be displayed`, async () => {
-        wrapper = await createWrapper(props);
+        the switch input won't be displayed`, () => {
+        const wrapper = createWrapper();
 
         const iframe_switch = wrapper.find("[data-test=iframe-switch]");
         expect(iframe_switch.exists()).toBe(false);

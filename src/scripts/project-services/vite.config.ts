@@ -18,7 +18,7 @@
  */
 
 import { vite } from "@tuleap/build-system-configurator";
-import vue from "@vitejs/plugin-vue2";
+import vue from "@vitejs/plugin-vue";
 import * as path from "node:path";
 import POGettextPlugin from "@tuleap/po-gettext-plugin";
 

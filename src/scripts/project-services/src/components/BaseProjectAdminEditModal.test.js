@@ -21,15 +21,7 @@ import { shallowMount } from "@vue/test-utils";
 import BaseProjectAdminEditModal from "./BaseProjectAdminEditModal.vue";
 import InEditionCustomService from "./Service/InEditionCustomService.vue";
 import ReadOnlySystemService from "./Service/ReadOnlySystemService.vue";
-import { createLocalVueForTests } from "../support/local-vue.js";
-
-async function createWrapper(props, stubs) {
-    return shallowMount(BaseProjectAdminEditModal, {
-        stubs,
-        localVue: await createLocalVueForTests(),
-        propsData: props,
-    });
-}
+import { getGlobalTestOptions } from "../support/global-options-for-tests.js";
 
 function createFakeButton(service) {
     return {
@@ -40,30 +32,36 @@ function createFakeButton(service) {
 }
 
 describe(`BaseProjectAdminEdit`, () => {
-    let wrapper, modal;
-    beforeEach(async () => {
-        modal = {
-            template: `<div><slot name="content"/></div>`,
-            methods: {
-                show: jest.fn(),
-            },
+    let props;
+    beforeEach(() => {
+        props = {
+            project_id: "101",
+            minimal_rank: 10,
+            csrf_token: "csrf",
+            csrf_token_name: "challenge",
+            allowed_icons: {},
         };
-
-        wrapper = await createWrapper(
-            {
-                project_id: "101",
-                minimal_rank: 10,
-                csrf_token: "csrf",
-                csrf_token_name: "challenge",
-                allowed_icons: {},
-            },
-            {
-                "edit-modal": modal,
-            },
-        );
     });
 
-    it(`When the modal is not shown, it does not instanciate service components`, () => {
+    function createWrapper() {
+        return shallowMount(BaseProjectAdminEditModal, {
+            global: {
+                ...getGlobalTestOptions(),
+                stubs: {
+                    "edit-modal": {
+                        template: `<div><slot name="content"/></div>`,
+                        methods: {
+                            show: jest.fn(),
+                        },
+                    },
+                },
+            },
+            props,
+        });
+    }
+
+    it(`When the modal is not shown, it does not instantiate service components`, () => {
+        const wrapper = createWrapper();
         const project_service = wrapper.findComponent(InEditionCustomService);
         const system_service = wrapper.findComponent(ReadOnlySystemService);
         expect(project_service.exists()).toBe(false);
@@ -71,7 +69,8 @@ describe(`BaseProjectAdminEdit`, () => {
     });
 
     describe(`when the show() method is called`, () => {
-        it(`and it's a custom service, it will instanciate the custom service component`, async () => {
+        it(`and it's a custom service, it will instantiate the custom service component`, async () => {
+            const wrapper = createWrapper();
             const fake_button = createFakeButton({ is_project_scope: true });
             wrapper.vm.show(fake_button);
             await wrapper.vm.$nextTick();
@@ -80,7 +79,8 @@ describe(`BaseProjectAdminEdit`, () => {
             expect(project_service.exists()).toBe(true);
         });
 
-        it(`and it's a system service, it will instanciate the read-only system service component`, async () => {
+        it(`and it's a system service, it will instantiate the read-only system service component`, async () => {
+            const wrapper = createWrapper();
             const fake_button = createFakeButton({ is_project_scope: false });
             wrapper.vm.show(fake_button);
             await wrapper.vm.$nextTick();

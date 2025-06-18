@@ -33,7 +33,7 @@
                 class="tlp-modal-close"
                 type="button"
                 data-dismiss="modal"
-                v-bind:aria-label="close_label"
+                v-bind:aria-label="$gettext('Close')"
             >
                 <i class="fas fa-times tlp-modal-close-icon" aria-hidden="true"></i>
             </button>
@@ -65,15 +65,11 @@ export default {
             required: true,
         },
     },
+    emits: ["reset-modal"],
     data() {
         return {
             modal: null,
         };
-    },
-    computed: {
-        close_label() {
-            return this.$gettext("Close");
-        },
     },
     mounted() {
         this.modal = createModal(this.$el);

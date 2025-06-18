@@ -28,9 +28,6 @@ export const add_modal_mixin = {
         form_url() {
             return `/project/${encodeURIComponent(this.project_id)}/admin/services/add`;
         },
-        preview_label() {
-            return this.service.label === "" ? this.$gettext("Preview") : this.service.label;
-        },
     },
     data() {
         return {

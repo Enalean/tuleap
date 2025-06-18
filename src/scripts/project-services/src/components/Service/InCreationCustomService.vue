@@ -19,10 +19,15 @@
 
 <template>
     <div class="tlp-modal-body">
-        <service-label id="project-service-add-modal-label" v-model="service.label" />
+        <service-label
+            id="project-service-add-modal-label"
+            v-bind:value="service.label"
+            v-on:input="onEditServiceLabel"
+        />
         <icon-selector
             id="project-service-add-modal-icon"
-            v-model="service.icon_name"
+            v-bind:value="service.icon_name"
+            v-on:input="onEditIcon"
             v-bind:allowed_icons="allowed_icons"
         />
         <service-is-used
@@ -48,7 +53,7 @@
         <service-open-in-new-tab
             id="project-service-add-modal-new-tab"
             v-bind:value="service.is_in_new_tab"
-            v-on:change="onNewTabChange"
+            v-on:input="onNewTabChange"
         />
     </div>
 </template>
@@ -83,8 +88,14 @@ export default {
         },
     },
     methods: {
-        onNewTabChange($event) {
-            this.service.is_in_new_tab = $event.target.checked;
+        onEditServiceLabel(new_label) {
+            this.service.label = new_label;
+        },
+        onEditIcon(new_icon) {
+            this.service.icon_name = new_icon;
+        },
+        onNewTabChange(new_tab) {
+            this.service.is_in_new_tab = new_tab;
         },
     },
 };

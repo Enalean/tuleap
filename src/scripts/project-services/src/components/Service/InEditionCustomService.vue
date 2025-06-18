@@ -20,10 +20,15 @@
 <template>
     <div class="tlp-modal-body">
         <service-id v-bind:value="service.id" />
-        <service-label id="project-service-edit-modal-label" v-model="service.label" />
+        <service-label
+            id="project-service-edit-modal-label"
+            v-bind:value="service.label"
+            v-on:input="onEditServiceLabel"
+        />
         <icon-selector
             id="project-service-edit-modal-icon"
-            v-model="service.icon_name"
+            v-bind:value="service.icon_name"
+            v-on:input="onEditIcon"
             v-bind:allowed_icons="allowed_icons"
         />
         <service-is-used
@@ -48,7 +53,7 @@
         <service-open-in-new-tab
             id="project-service-edit-modal-new-tab"
             v-bind:value="service.is_in_new_tab"
-            v-on:change="onNewTabChange"
+            v-on:input="onNewTabChange"
         />
 
         <div
@@ -143,10 +148,15 @@ export default {
         },
     },
     methods: {
-        onNewTabChange($event) {
-            const is_in_new_tab = $event.target.checked;
-            this.service.is_in_new_tab = is_in_new_tab;
-            if (this.service.is_in_iframe === true && is_in_new_tab === true) {
+        onEditServiceLabel(new_label) {
+            this.service.label = new_label;
+        },
+        onEditIcon(new_icon) {
+            this.service.icon_name = new_icon;
+        },
+        onNewTabChange(new_tab) {
+            this.service.is_in_new_tab = new_tab;
+            if (this.service.is_in_iframe === true && new_tab === true) {
                 this.service.is_in_iframe = false;
                 this.is_new_tab_warning_shown = true;
                 this.scrollWarningsIntoView();

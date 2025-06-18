@@ -21,7 +21,11 @@
     <div class="tlp-modal-body">
         <service-id v-bind:value="service.id" />
         <hidden-service-shortname v-if="service.short_name" v-bind:value="service.short_name" />
-        <service-label id="project-service-edit-modal-label" v-model="service.label" />
+        <service-label
+            id="project-service-edit-modal-label"
+            v-bind:value="service.label"
+            v-on:input="onEditServiceLabel"
+        />
         <read-only-service-icon v-bind:value="service.icon_name" />
         <service-is-used
             v-if="can_update_is_used"
@@ -80,5 +84,10 @@ export default {
         ReadOnlyServiceIcon,
     },
     mixins: [service_mixin, system_service_mixin],
+    methods: {
+        onEditServiceLabel(new_label) {
+            this.service.label = new_label;
+        },
+    },
 };
 </script>

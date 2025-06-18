@@ -19,7 +19,7 @@
 
 <template>
     <add-modal v-bind:form_url="form_url" ref="modal" v-on:reset-modal="resetModal">
-        <template slot="content">
+        <template v-slot:content>
             <input type="hidden" v-bind:name="csrf_token_name" v-bind:value="csrf_token" />
             <sidebar-previewer
                 v-bind:label="preview_label"
@@ -46,5 +46,10 @@ export default {
     name: "BaseProjectAdminAddModal",
     components: { AddModal, SidebarPreviewer, InCreationCustomService },
     mixins: [service_modal_mixin, add_modal_mixin],
+    computed: {
+        preview_label() {
+            return this.service.label === "" ? this.$gettext("Preview") : this.service.label;
+        },
+    },
 };
 </script>
