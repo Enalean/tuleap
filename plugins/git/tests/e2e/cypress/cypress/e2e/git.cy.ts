@@ -90,11 +90,12 @@ describe("Git", function () {
             it("can create a new repository and delete it", function () {
                 cy.projectAdministratorSession();
                 visitGitService();
+                const repository_name = `Aquali-${now}`;
                 cy.get("[data-test=create-repository-button]").click();
-                cy.get("[data-test=create_repository_name]").type("Aquali");
+                cy.get("[data-test=create_repository_name]").type(repository_name);
                 cy.get("[data-test=create_repository]").click();
 
-                cy.get("[data-test=git_repo_name]").contains("Aquali", {
+                cy.get("[data-test=git_repo_name]").contains(repository_name, {
                     timeout: 20000,
                 });
                 cy.log("shows the new repository in the list");
@@ -104,10 +105,10 @@ describe("Git", function () {
                     .should("not.exist");
                 cy.get("[data-test=git-repositories-page]")
                     .find("[data-test=git-repository]")
-                    .should("contain.text", "Aquali");
+                    .should("contain.text", repository_name);
 
                 cy.log("delete the repository");
-                cy.getContains("[data-test=git-repository]", "Aquali")
+                cy.getContains("[data-test=git-repository]", repository_name)
                     .get("[data-test=git-repository-card-admin-link]")
                     .click();
                 cy.get("[data-test=delete]").click();
@@ -130,10 +131,30 @@ describe("Git", function () {
                     "Timed out while checking if the git repository can be deleted",
                 );
 
+                cy.log("User can checkout the repository");
+                const repository_path = `tuleap/plugins/git/${git_project_name}/${repository_name}`;
+                cy.cloneRepository("ProjectAdministrator", repository_path, repository_name);
+
+                cy.log("Delete the repository");
+
                 cy.get("[data-test=confirm-repository-deletion-button]").click();
                 cy.get("[data-test=deletion-confirmation-button]").click();
 
                 cy.get("[data-test=no-repositories]").should("be.visible");
+
+                cy.log("User can no longer checkout the repository");
+                const uri = encodeURI(
+                    `https://ProjectAdministrator:Correct Horse Battery Staple@${repository_path}`,
+                );
+                const clone_command = `cd /tmp &&
+                    git -c http.sslVerify=false clone ${uri} ${repository_name} &&
+                    cd /tmp/${repository_name} &&
+                    git config user.name "admin" &&
+                    git config user.email "admin@example.com"
+                `;
+                cy.exec(clone_command, { failOnNonZeroExit: false })
+                    .its("stderr")
+                    .should("contain", "fatal");
             });
 
             it("other groups can be defined as git admin", function () {
