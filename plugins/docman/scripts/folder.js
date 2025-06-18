@@ -78,7 +78,7 @@ function folder_collapse(caller, node) {
 
 function HTTPRequest() {
     this.request = window.location.search;
-    this.params = new Array();
+    this.params = [];
 
     const paramArray = this.request.slice(1).split("&");
     for (var i = 0; i < paramArray.length; i++) {

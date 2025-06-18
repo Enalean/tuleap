@@ -18,7 +18,7 @@
  */
 
 import { element } from "angular";
-// eslint-disable-next-line you-dont-need-lodash-underscore/map
+// lodash usage is deprecated, replace by native JavaScript API
 import { map } from "lodash-es";
 import { escaper } from "@tuleap/html-escaper";
 

@@ -1,8 +1,27 @@
-const fs = require('fs')
+/*
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
 
-const prettier_config = JSON.parse(fs.readFileSync("./.prettierrc", { encoding: "utf-8"}));
+import fs from "node:fs";
 
-module.exports = {
+const prettier_config = JSON.parse(fs.readFileSync("./.prettierrc", { encoding: "utf-8" }));
+
+export default {
     extends: [
         "stylelint-config-recommended",
         "stylelint-config-sass-guidelines",
@@ -19,15 +38,15 @@ module.exports = {
         "comment-word-disallowed-list": [
             [/^!/],
             {
-                message: `Never use the "/*!" style of comments. Those comments are output in compressed CSS. (comment-word-disallowed-list)`
-            }
+                message: `Never use the "/*!" style of comments. Those comments are output in compressed CSS. (comment-word-disallowed-list)`,
+            },
         ],
         "color-hex-length": ["long"],
         "color-named": [
             "never",
             {
-                message: "Colors should be written in hexadecimal format (color-named)"
-            }
+                message: "Colors should be written in hexadecimal format (color-named)",
+            },
         ],
         "declaration-block-no-duplicate-properties": true,
         "function-calc-no-unspaced-operator": true,
@@ -37,16 +56,16 @@ module.exports = {
             "^[a-z0-9\\-]+$",
             {
                 message:
-                    "Selector should be written in lowercase with hyphens (selector-id-pattern)"
-            }
+                    "Selector should be written in lowercase with hyphens (selector-id-pattern)",
+            },
         ],
         "selector-max-compound-selectors": [5],
         "selector-max-id": null,
         "selector-no-qualifying-type": [
             true,
             {
-                ignore: ["attribute"]
-            }
+                ignore: ["attribute"],
+            },
         ],
         "unit-allowed-list": [
             "em",
@@ -63,7 +82,7 @@ module.exports = {
             "ms",
             "s",
             "%",
-            "fr"
+            "fr",
         ],
         "media-feature-range-notation": "prefix",
         // Disabled rules because already handled by Prettier
@@ -95,6 +114,6 @@ module.exports = {
         "font-family-no-missing-generic-family-keyword": null,
         "no-descending-specificity": null, // Need a lot of work with existing files
         "no-invalid-position-at-import-rule": null, // Need work with existing files
-        "prettier/prettier": [true, prettier_config]
+        "prettier/prettier": [true, prettier_config],
     },
 };

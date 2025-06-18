@@ -17,10 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-// eslint-disable-next-line you-dont-need-lodash-underscore/some
+// lodash usage is deprecated, replace by native JavaScript API
 import { has, isEmpty, some } from "lodash-es";
 import angular from "angular";
-
 import { sortAlphabetically } from "../ksort.js";
 import { setError } from "../feedback-state.js";
 import { createDropdown } from "@tuleap/tlp-dropdown";
