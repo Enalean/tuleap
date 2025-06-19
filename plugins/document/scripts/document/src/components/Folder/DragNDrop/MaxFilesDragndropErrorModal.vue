@@ -18,37 +18,41 @@
   -->
 
 <template>
-    <error-modal v-on:error-modal-hidden="bubbleErrorModalHidden">
+    <error-modal v-on:close="bubbleErrorModalHidden">
         <p>{{ error_message }}</p>
         <p>{{ $gettext("Please start again.") }}</p>
     </error-modal>
 </template>
 
-<script lang="ts">
-import { mapState } from "vuex";
+<script setup lang="ts">
 import ErrorModal from "./ErrorModal.vue";
 import { useGettext } from "vue3-gettext";
+import { useNamespacedState } from "vuex-composition-helpers";
+import type { ConfigurationState } from "../../../store/configuration";
+import { computed } from "vue";
 
 const { interpolate, $ngettext } = useGettext();
 
-export default {
-    components: { ErrorModal },
-    computed: {
-        ...mapState("configuration", ["max_files_dragndrop"]),
-        error_message() {
-            const translated = $ngettext(
-                "You are not allowed to drag 'n drop more than %{ nb } file at once.",
-                "You are not allowed to drag 'n drop more than %{ nb } files at once.",
-                this.max_files_dragndrop,
-            );
+const emit = defineEmits<{
+    (e: "error-modal-hidden"): void;
+}>();
 
-            return interpolate(translated, { nb: this.max_files_dragndrop });
-        },
-    },
-    methods: {
-        bubbleErrorModalHidden() {
-            this.$emit("error-modal-hidden");
-        },
-    },
-};
+const { max_files_dragndrop } = useNamespacedState<Pick<ConfigurationState, "max_files_dragndrop">>(
+    "configuration",
+    ["max_files_dragndrop"],
+);
+
+const error_message = computed(() => {
+    const translated = $ngettext(
+        "You are not allowed to drag 'n drop more than %{ nb } file at once.",
+        "You are not allowed to drag 'n drop more than %{ nb } files at once.",
+        max_files_dragndrop.value,
+    );
+
+    return interpolate(translated, { nb: max_files_dragndrop.value });
+});
+
+function bubbleErrorModalHidden() {
+    emit("error-modal-hidden");
+}
 </script>
