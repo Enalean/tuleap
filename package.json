@@ -31,7 +31,7 @@
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-cypress": "^2.15.1",
-    "eslint-plugin-import": "^2.28.1",
+    "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-jest": "^28.14.0",
     "eslint-plugin-monorepo-cop": "^1.0.2",
     "eslint-plugin-no-only-tests": "^3.3.0",
@@ -114,7 +114,8 @@
       "is-core-module": "npm:@nolyfill/is-core-module@^1",
       "safe-buffer": "npm:@nolyfill/safe-buffer@^1",
       "safer-buffer": "npm:@nolyfill/safer-buffer@^1",
-      "es-set-tostringtag": "npm:@nolyfill/es-set-tostringtag@^1"
+      "es-set-tostringtag": "npm:@nolyfill/es-set-tostringtag@^1",
+      "string.prototype.trimend": "npm:@nolyfill/string.prototype.trimend@^1"
     }
   }
 }
