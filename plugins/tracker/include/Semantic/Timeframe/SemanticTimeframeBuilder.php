@@ -26,7 +26,6 @@ use Tracker_FormElement_Field_Date;
 use Tracker_FormElement_Field_Numeric;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\LinksRetriever;
-use Tuleap\Tracker\Semantic\TimeframeConfigInvalid;
 use Tuleap\Tracker\Tracker;
 
 class SemanticTimeframeBuilder implements BuildSemanticTimeframe

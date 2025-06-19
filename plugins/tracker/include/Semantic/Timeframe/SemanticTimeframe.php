@@ -85,7 +85,7 @@ class SemanticTimeframe extends Tracker_Semantic
         $GLOBALS['HTML']->addJavascriptAsset(
             new JavascriptViteAsset(
                 new IncludeViteAssets(
-                    __DIR__ . '/../../../../scripts/semantics-timeframe/frontend-assets',
+                    __DIR__ . '/../../../scripts/semantics-timeframe/frontend-assets',
                     '/assets/trackers/semantics-timeframe'
                 ),
                 'src/index.ts'
@@ -209,7 +209,7 @@ class SemanticTimeframe extends Tracker_Semantic
     private function getRenderer(): \TemplateRenderer
     {
         return \TemplateRendererFactory::build()->getRenderer(
-            __DIR__ . '/../../../../templates/timeframe-semantic'
+            __DIR__ . '/../../../templates/timeframe-semantic'
         );
     }
 

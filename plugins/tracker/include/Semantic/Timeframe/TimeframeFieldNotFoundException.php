@@ -1,10 +1,6 @@
 <?php
-/**
- * Copyright Enalean (c) 2019 - Present. All rights reserved.
- *
- * Tuleap and Enalean names and logos are registrated trademarks owned by
- * Enalean SAS. All other trademarks or names are properties of their respective
- * owners.
+/*
+ * Copyright (c) Enalean, 2019 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -28,6 +24,6 @@ namespace Tuleap\Tracker\Semantic\Timeframe;
 
 use Exception;
 
-class TimeframeFieldNoValueException extends Exception
+class TimeframeFieldNotFoundException extends Exception
 {
 }

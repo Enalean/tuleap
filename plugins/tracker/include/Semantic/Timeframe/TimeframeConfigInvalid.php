@@ -20,13 +20,10 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Semantic;
+namespace Tuleap\Tracker\Semantic\Timeframe;
 
 use Psr\Log\LoggerInterface;
 use Tuleap\Date\DatePeriodWithOpenDays;
-use Tuleap\Tracker\Semantic\Timeframe\IComputeTimeframes;
-use Tuleap\Tracker\Semantic\Timeframe\IRepresentSemanticTimeframe;
-use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 
 class TimeframeConfigInvalid implements IComputeTimeframes
 {
