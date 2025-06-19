@@ -23,18 +23,12 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Admin\GlobalAdmin;
 
 use Tuleap\Tracker\ForgeUserGroupPermission\TrackerAdminAllProjects;
-use User_ForgeUserGroupPermissionsManager;
+use Tuleap\User\ForgePermissionsRetriever;
 
 class GlobalAdminPermissionsChecker
 {
-    /**
-     * @var User_ForgeUserGroupPermissionsManager
-     */
-    private $forge_user_group_permissions_manager;
-
-    public function __construct(User_ForgeUserGroupPermissionsManager $forge_user_group_permissions_manager)
+    public function __construct(private readonly ForgePermissionsRetriever $forge_user_group_permissions_manager)
     {
-        $this->forge_user_group_permissions_manager = $forge_user_group_permissions_manager;
     }
 
     public function doesUserHaveTrackerGlobalAdminRightsOnTheWholePlatform(\PFUser $user): bool
