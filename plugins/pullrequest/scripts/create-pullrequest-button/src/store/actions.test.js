@@ -91,13 +91,6 @@ describe("Store actions", () => {
             });
 
             expect(context.commit).toHaveBeenCalledWith("setDestinationBranches", [
-                { display_name: "master", repository_id: 42, project_id: 101, name: "master" },
-                {
-                    display_name: "feature/branch",
-                    repository_id: 42,
-                    project_id: 101,
-                    name: "feature/branch",
-                },
                 {
                     display_name: "ledepot : master",
                     repository_id: 66,
@@ -105,6 +98,13 @@ describe("Store actions", () => {
                     name: "master",
                 },
                 { display_name: "ledepot : dev", repository_id: 66, project_id: 102, name: "dev" },
+                { display_name: "master", repository_id: 42, project_id: 101, name: "master" },
+                {
+                    display_name: "feature/branch",
+                    repository_id: 42,
+                    project_id: 101,
+                    name: "feature/branch",
+                },
             ]);
         });
 

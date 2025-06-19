@@ -40,7 +40,7 @@ export async function init(
             const parent_repository_branches = (await getBranches(parent_repository_id)).map(
                 extendBranchForParent,
             );
-            context.commit("setDestinationBranches", branches.concat(parent_repository_branches));
+            context.commit("setDestinationBranches", parent_repository_branches.concat(branches));
         } else {
             context.commit("setDestinationBranches", branches);
         }
