@@ -15720,15 +15720,10 @@
     </MissingReturnType>
     <PossiblyNullArgument>
       <code><![CDATA[$this->params['file']]]></code>
-      <code><![CDATA[$this->params['hash']]]></code>
       <code><![CDATA[preg_replace('/[^(\x20-\x7F)]*/', '', $save_as)]]></code>
     </PossiblyNullArgument>
-    <PossiblyNullReference>
-      <code><![CDATA[PathToHash]]></code>
-    </PossiblyNullReference>
     <PossiblyUndefinedArrayOffset>
       <code><![CDATA[$this->params['file']]]></code>
-      <code><![CDATA[$this->params['hash']]]></code>
     </PossiblyUndefinedArrayOffset>
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[$mime]]></code>
@@ -19241,7 +19236,6 @@
       <code><![CDATA[duplicate]]></code>
       <code><![CDATA[exportToXml]]></code>
       <code><![CDATA[fetch]]></code>
-      <code><![CDATA[fetchActionButtons]]></code>
       <code><![CDATA[fetchAdditionnalButton]]></code>
       <code><![CDATA[fetchAsArray]]></code>
       <code><![CDATA[fetchContentD3Graph]]></code>
@@ -20046,8 +20040,6 @@
       <code><![CDATA[$can_be_updated]]></code>
       <code><![CDATA[$delete_url]]></code>
       <code><![CDATA[$edit_url]]></code>
-      <code><![CDATA[$my_dashboard_url]]></code>
-      <code><![CDATA[$project_dashboard_url]]></code>
     </MissingParamType>
     <MissingPropertyType>
       <code><![CDATA[$can_be_updated]]></code>
@@ -20057,8 +20049,6 @@
       <code><![CDATA[$has_one_user_dashboard]]></code>
       <code><![CDATA[$has_project_dashboard]]></code>
       <code><![CDATA[$has_user_dashboard]]></code>
-      <code><![CDATA[$my_dashboard_url]]></code>
-      <code><![CDATA[$project_dashboard_url]]></code>
     </MissingPropertyType>
     <MissingReturnType>
       <code><![CDATA[add_to_my_dashboard_label]]></code>
@@ -33207,6 +33197,30 @@
       <code><![CDATA[$xml_field_attributes['REF']]]></code>
     </PossiblyNullArrayAccess>
   </file>
+  <file src="plugins/tracker/include/Semantic/Progress/MethodBasedOnEffort.php">
+    <InvalidOperand>
+      <code><![CDATA[1 - ($remaining_effort / $total_effort)]]></code>
+    </InvalidOperand>
+    <PossiblyNullReference>
+      <code><![CDATA[addAttribute]]></code>
+      <code><![CDATA[addAttribute]]></code>
+      <code><![CDATA[addAttribute]]></code>
+    </PossiblyNullReference>
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[! $remaining_effort_field_ref]]></code>
+      <code><![CDATA[! $total_effort]]></code>
+      <code><![CDATA[! $total_effort_field_ref]]></code>
+    </RiskyTruthyFalsyComparison>
+  </file>
+  <file src="plugins/tracker/include/Semantic/Progress/MethodBasedOnLinksCount.php">
+    <DeprecatedMethod>
+      <code><![CDATA[getAnArtifactLinkField]]></code>
+    </DeprecatedMethod>
+    <PossiblyNullReference>
+      <code><![CDATA[addAttribute]]></code>
+      <code><![CDATA[addAttribute]]></code>
+    </PossiblyNullReference>
+  </file>
   <file src="plugins/tracker/include/Semantic/Status/Done/SemanticDone.php">
     <PossiblyNullReference>
       <code><![CDATA[addAttribute]]></code>
@@ -43374,9 +43388,7 @@
       <code><![CDATA[display]]></code>
       <code><![CDATA[displayHeader]]></code>
       <code><![CDATA[duplicate]]></code>
-      <code><![CDATA[fetchAddRendererForm]]></code>
       <code><![CDATA[fetchDisplayQuery]]></code>
-      <code><![CDATA[fetchUpdateRendererForm]]></code>
       <code><![CDATA[fieldAllowsCustomColumnForTableReport]]></code>
       <code><![CDATA[getAddCriteriaDropdown]]></code>
       <code><![CDATA[getCollector]]></code>
@@ -43418,10 +43430,7 @@
       <code><![CDATA[updateCriteriaValues]]></code>
     </MissingReturnType>
     <PossiblyInvalidOperand>
-      <code><![CDATA[$current_renderer_id]]></code>
       <code><![CDATA[$new_report->id]]></code>
-      <code><![CDATA[$this->id]]></code>
-      <code><![CDATA[$this->id]]></code>
       <code><![CDATA[$this->id]]></code>
       <code><![CDATA[$this->id]]></code>
       <code><![CDATA[$this->id]]></code>
@@ -43791,7 +43800,6 @@
       <code><![CDATA[$extracolumn]]></code>
       <code><![CDATA[$extracolumn]]></code>
       <code><![CDATA[$extracolumn]]></code>
-      <code><![CDATA[$field]]></code>
       <code><![CDATA[$field_id]]></code>
       <code><![CDATA[$field_mapping]]></code>
       <code><![CDATA[$from]]></code>
@@ -43799,7 +43807,6 @@
       <code><![CDATA[$from_aid]]></code>
       <code><![CDATA[$from_report_id]]></code>
       <code><![CDATA[$func]]></code>
-      <code><![CDATA[$function]]></code>
       <code><![CDATA[$id]]></code>
       <code><![CDATA[$id_suffix]]></code>
       <code><![CDATA[$is_desc]]></code>
@@ -43885,7 +43892,6 @@
       <code><![CDATA[fetchViewButtons]]></code>
       <code><![CDATA[fetchWidget]]></code>
       <code><![CDATA[formatAggregateResult]]></code>
-      <code><![CDATA[getAggregateURL]]></code>
       <code><![CDATA[getAggregates]]></code>
       <code><![CDATA[getAggregatesDao]]></code>
       <code><![CDATA[getAllUsableTypesInProjectWithCache]]></code>
@@ -44026,9 +44032,6 @@
     </UnsupportedReferenceUsage>
   </file>
   <file src="plugins/tracker/include/Tracker/Report/WidgetAddToDashboardDropdownBuilder.php">
-    <InvalidScalarArgument>
-      <code><![CDATA[$project->getID()]]></code>
-    </InvalidScalarArgument>
     <MissingParamType>
       <code><![CDATA[$type]]></code>
       <code><![CDATA[$widget_id]]></code>
@@ -44038,19 +44041,11 @@
       <code><![CDATA[$renderer->report->name]]></code>
     </MissingPropertyType>
     <MissingReturnType>
-      <code><![CDATA[build]]></code>
-      <code><![CDATA[getAddToDashboardURL]]></code>
-      <code><![CDATA[getAddToMyDashboardURL]]></code>
-      <code><![CDATA[getAddToProjectDashboardURL]]></code>
       <code><![CDATA[getAvailableDashboardsForProject]]></code>
       <code><![CDATA[getAvailableDashboardsForUser]]></code>
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/Report/WidgetAddToDashboardDropdownPresenter.php">
-    <MissingParamType>
-      <code><![CDATA[$my_dashboard_url]]></code>
-      <code><![CDATA[$project_dashboard_url]]></code>
-    </MissingParamType>
     <MissingPropertyType>
       <code><![CDATA[$cancel_label]]></code>
       <code><![CDATA[$dashboard]]></code>
@@ -44061,9 +44056,7 @@
       <code><![CDATA[$has_user_dashboard]]></code>
       <code><![CDATA[$is_admin]]></code>
       <code><![CDATA[$my_dashboard]]></code>
-      <code><![CDATA[$my_dashboard_url]]></code>
       <code><![CDATA[$project_dashboard]]></code>
-      <code><![CDATA[$project_dashboard_url]]></code>
     </MissingPropertyType>
     <PossiblyInvalidArgument>
       <code><![CDATA[$project->getID()]]></code>
@@ -45129,30 +45122,6 @@
     <UndefinedInterfaceMethod>
       <code><![CDATA[add]]></code>
     </UndefinedInterfaceMethod>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Semantic/Progress/MethodBasedOnEffort.php">
-    <InvalidOperand>
-      <code><![CDATA[1 - ($remaining_effort / $total_effort)]]></code>
-    </InvalidOperand>
-    <PossiblyNullReference>
-      <code><![CDATA[addAttribute]]></code>
-      <code><![CDATA[addAttribute]]></code>
-      <code><![CDATA[addAttribute]]></code>
-    </PossiblyNullReference>
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[! $remaining_effort_field_ref]]></code>
-      <code><![CDATA[! $total_effort]]></code>
-      <code><![CDATA[! $total_effort_field_ref]]></code>
-    </RiskyTruthyFalsyComparison>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Semantic/Progress/MethodBasedOnLinksCount.php">
-    <DeprecatedMethod>
-      <code><![CDATA[getAnArtifactLinkField]]></code>
-    </DeprecatedMethod>
-    <PossiblyNullReference>
-      <code><![CDATA[addAttribute]]></code>
-      <code><![CDATA[addAttribute]]></code>
-    </PossiblyNullReference>
   </file>
   <file src="plugins/tracker/include/Tracker/Semantic/Timeframe/Administration/SemanticTimeframeAdministrationPresenter.php">
     <PossiblyFalsePropertyAssignmentValue>
@@ -51397,18 +51366,6 @@
     </MissingReturnType>
   </file>
   <file src="src/common/Dashboard/Widget/PreferencesController.php">
-    <MissingParamType>
-      <code><![CDATA[$row]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[checkCSRF]]></code>
-      <code><![CDATA[checkWidgetCanBeEdited]]></code>
-      <code><![CDATA[display]]></code>
-      <code><![CDATA[forceContentIdToBePresentInRequest]]></code>
-      <code><![CDATA[forceGroupIdToBePresentInRequest]]></code>
-      <code><![CDATA[redirectToDashboard]]></code>
-      <code><![CDATA[update]]></code>
-    </MissingReturnType>
     <PossiblyNullPropertyAssignment>
       <code><![CDATA[$widget]]></code>
       <code><![CDATA[$widget]]></code>
@@ -51418,10 +51375,6 @@
     </PossiblyNullReference>
   </file>
   <file src="src/common/Dashboard/Widget/Router.php">
-    <MissingReturnType>
-      <code><![CDATA[getWidgetFromUrl]]></code>
-      <code><![CDATA[route]]></code>
-    </MissingReturnType>
     <PossiblyNullArgument>
       <code><![CDATA[$name]]></code>
     </PossiblyNullArgument>

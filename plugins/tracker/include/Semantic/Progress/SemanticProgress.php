@@ -106,7 +106,7 @@ class SemanticProgress extends \Tracker_Semantic
         );
 
         $GLOBALS['HTML']->addJavascriptAsset(new JavascriptAsset(
-            new IncludeAssets(__DIR__ . '/../../../../scripts/tracker-admin/frontend-assets', '/assets/trackers/tracker-admin'),
+            new IncludeAssets(__DIR__ . '/../../../scripts/tracker-admin/frontend-assets', '/assets/trackers/tracker-admin'),
             'progress-semantic.js'
         ));
 
@@ -195,7 +195,7 @@ class SemanticProgress extends \Tracker_Semantic
     private function getTemplateRenderer(): \TemplateRenderer
     {
         $renderer = \TemplateRendererFactory::build()->getRenderer(
-            __DIR__ . '/../../../../templates/semantic-progress'
+            __DIR__ . '/../../../templates/semantic-progress'
         );
         return $renderer;
     }
