@@ -32,29 +32,18 @@
                 <slot name="interactive_content_advanced"></slot>
             </div>
             <step-navigation-buttons
-                v-bind:previous-step-name="previousStepName"
-                v-bind:next-step-name="nextStepName"
+                v-bind:previous-step-name="previous_step_name"
+                v-bind:next-step-name="next_step_name"
             />
         </div>
     </div>
 </template>
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+<script setup lang="ts">
 import StepLayoutSvgIllustration from "./StepLayoutSvgIllustration.vue";
 import StepNavigationButtons from "./StepNavigationButtons.vue";
 
-@Component({
-    components: {
-        StepLayoutSvgIllustration,
-        StepNavigationButtons,
-    },
-})
-export default class StepLayout extends Vue {
-    @Prop({ required: false })
-    readonly nextStepName!: string;
-
-    @Prop({ required: false })
-    readonly previousStepName!: string;
-}
+defineProps<{
+    next_step_name?: string;
+    previous_step_name?: string;
+}>();
 </script>

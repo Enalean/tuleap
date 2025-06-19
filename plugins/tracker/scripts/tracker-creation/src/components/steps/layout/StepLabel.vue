@@ -19,16 +19,11 @@
 
 <template>
     <div class="tracker-creation-step-info-label">
-        <span class="tracker-creation-step-label">{{ stepLabel }}</span>
+        <span class="tracker-creation-step-label">{{ step_label }}</span>
     </div>
 </template>
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
-
-@Component
-export default class StepLabel extends Vue {
-    @Prop({ required: true })
-    readonly stepLabel!: string;
-}
+<script lang="ts" setup>
+defineProps<{
+    step_label: string;
+}>();
 </script>
