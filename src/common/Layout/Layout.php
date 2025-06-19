@@ -660,7 +660,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
         $current_user = UserManager::instance()->getCurrentUser();
         $user_locale  = $current_user->getLocale();
         echo '
-<body class="bg_help" data-user-locale="' . $hp->purify($user_locale) . '">
+<body class="bg_help" data-user-locale="' . $hp->purify($user_locale) . '" data-user-id="' . $hp->purify($current_user->getId()) . '">
 ';
         if (isset($params['pv']) && $params['pv'] < 2) {
             if (isset($params['title']) && $params['title']) {
