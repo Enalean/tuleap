@@ -19,353 +19,176 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker;
 
-use HTTPRequest;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use PHPUnit\Framework\MockObject\MockObject;
 use Project;
 use Tracker;
-use Tracker_CannedResponseFactory;
 use Tracker_CannedResponseManager;
 use Tracker_DateReminderManager;
-use Tracker_FormElementFactory;
-use Tracker_Hierarchy;
-use Tracker_HierarchyFactory;
-use Tracker_NotificationsManager;
 use Tracker_Permission_PermissionController;
-use Tracker_ReportFactory;
 use Tracker_SemanticManager;
-use TrackerFactory;
 use TrackerManager;
 use Tuleap\GlobalLanguageMock;
-use Tuleap\Layout\BaseLayout;
+use Tuleap\GlobalResponseMock;
+use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\User\ForgePermissionsRetrieverStub;
 use Tuleap\Tracker\Admin\GlobalAdmin\GlobalAdminPermissionsChecker;
 use Tuleap\Tracker\Test\Stub\VerifySubmissionPermissionStub;
-use User_ForgeUserGroupPermissionsManager;
-use UserManager;
 use Workflow;
-use WorkflowFactory;
 use WorkflowManager;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class TrackerPermissionsTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class TrackerPermissionsTest extends TestCase
 {
-    use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
+    use GlobalResponseMock;
 
-    private $all_trackers_admin_user;
+    private const PUBLIC_PROJECT_ID = 101;
 
-    private Project $project;
+    private PFUser $all_trackers_admin_user;
     private Project $project_private;
-    /**
-     * @var Mockery\Mock|Tracker
-     */
-    private $tracker;
-    /**
-     * @var Mockery\Mock|Tracker
-     */
-    private $tracker1;
-    /**
-     * @var Mockery\Mock|Tracker
-     */
-    private $tracker2;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TrackerManager
-     */
-    private $tracker_manager;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TrackerFactory
-     */
-    private $tf;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_NotificationsManager
-     */
-    private $tnm;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_SemanticManager
-     */
-    private $tsm;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_DateReminderManager
-     */
-    private $trr;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_CannedResponseManager
-     */
-    private $tcrm;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|WorkflowManager
-     */
-    private $wm;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PFUser
-     */
-    private $site_admin_user;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PFUser
-     */
-    private $project_admin_user;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PFUser
-     */
-    private $tracker1_admin_user;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PFUser
-     */
-    private $tracker2_admin_user;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PFUser
-     */
-    private $project_member_user;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PFUser
-     */
-    private $registered_user;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|WorkflowFactory
-     */
-    private $workflow_factory;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_FormElementFactory
-     */
-    private $formelement_factory;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_ReportFactory
-     */
-    private $report_factory;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_CannedResponseFactory
-     */
-    private $canned_response_factory;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_Permission_PermissionController
-     */
-    private $permission_controller;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_Permission_PermissionController
-     */
-    private $permission_controller1;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_Permission_PermissionController
-     */
-    private $permission_controller2;
-    /**
-     * @var Tracker_Hierarchy
-     */
-    private $hierarchy;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|UserManager
-     */
-    private $user_manager;
+    private Tracker&MockObject $tracker;
+    private Tracker&MockObject $tracker1;
+    private Tracker&MockObject $tracker2;
+    private TrackerManager&MockObject $tracker_manager;
+    private Tracker_SemanticManager&MockObject $tracker_semantic_manager;
+    private Tracker_DateReminderManager&MockObject $tracker_date_reminder_manager;
+    private Tracker_CannedResponseManager&MockObject $tracker_canned_response_manager;
+    private WorkflowManager&MockObject $workflow_manager;
+    private PFUser $site_admin_user;
+    private PFUser $project_admin_user;
+    private PFUser $tracker1_admin_user;
+    private PFUser $tracker2_admin_user;
+    private PFUser $project_member_user;
+    private PFUser $registered_user;
+    private Tracker_Permission_PermissionController&MockObject $permission_controller;
+    private Tracker_Permission_PermissionController&MockObject $permission_controller1;
+    private Tracker_Permission_PermissionController&MockObject $permission_controller2;
 
     protected function setUp(): void
     {
-        $this->project         = ProjectTestBuilder::aProject()->withAccess(\Project::ACCESS_PUBLIC)->withId(101)->build();
-        $this->project_private = ProjectTestBuilder::aProject()->withAccess(\Project::ACCESS_PRIVATE)->withId(102)->build();
+        $public_project        = ProjectTestBuilder::aProject()->withAccess(Project::ACCESS_PUBLIC)->withId(self::PUBLIC_PROJECT_ID)->build();
+        $this->project_private = ProjectTestBuilder::aProject()->withAccess(Project::ACCESS_PRIVATE)->withId(102)->build();
 
-        $this->tracker         = Mockery::mock(Tracker::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $this->tracker1        = Mockery::mock(Tracker::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $this->tracker2        = Mockery::mock(Tracker::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $this->tracker_manager = Mockery::mock(TrackerManager::class);
+        $tracker_methods       = [
+            'getGlobalAdminPermissionsChecker', 'getTrackerSemanticManager',
+            'getCannedResponseManager', 'getWorkflowManager', 'getGroupId', 'getId', 'getColor', 'getPermissionsByUgroupId',
+            'getPermissionController', 'getTrackerArtifactSubmissionPermission', 'displaySubmit',
+            'displayAdminFormElements', 'displayAdminOptions',
+        ];
+        $this->tracker         = $this->createPartialMock(Tracker::class, $tracker_methods);
+        $this->tracker1        = $this->createPartialMock(Tracker::class, $tracker_methods);
+        $this->tracker2        = $this->createPartialMock(Tracker::class, $tracker_methods);
+        $this->tracker_manager = $this->createMock(TrackerManager::class);
 
-        $forge_user_group_permissions_manager = Mockery::mock(User_ForgeUserGroupPermissionsManager::class);
-        $permissions_checker                  = new GlobalAdminPermissionsChecker($forge_user_group_permissions_manager);
+        $permissions_checker = new GlobalAdminPermissionsChecker(ForgePermissionsRetrieverStub::withoutPermission());
+        $this->tracker->method('getGlobalAdminPermissionsChecker')->willReturn($permissions_checker);
+        $this->tracker1->method('getGlobalAdminPermissionsChecker')->willReturn($permissions_checker);
+        $this->tracker2->method('getGlobalAdminPermissionsChecker')->willReturn($permissions_checker);
 
-        $this->tracker->shouldReceive('getGlobalAdminPermissionsChecker')->andReturns($permissions_checker);
-        $this->tracker1->shouldReceive('getGlobalAdminPermissionsChecker')->andReturns($permissions_checker);
-        $this->tracker2->shouldReceive('getGlobalAdminPermissionsChecker')->andReturns($permissions_checker);
+        $this->tracker->setProject($public_project);
+        $this->tracker1->setProject($public_project);
+        $this->tracker2->setProject($public_project);
 
-        $forge_user_group_permissions_manager->shouldReceive('doesUserHavePermission')->andReturn(false);
+        $this->tracker_semantic_manager = $this->createMock(Tracker_SemanticManager::class);
+        $this->tracker->method('getTrackerSemanticManager')->willReturn($this->tracker_semantic_manager);
+        $this->tracker1->method('getTrackerSemanticManager')->willReturn($this->tracker_semantic_manager);
+        $this->tracker2->method('getTrackerSemanticManager')->willReturn($this->tracker_semantic_manager);
+        $this->tracker_date_reminder_manager   = $this->createMock(Tracker_DateReminderManager::class);
+        $this->tracker_canned_response_manager = $this->createMock(Tracker_CannedResponseManager::class);
+        $this->tracker->method('getCannedResponseManager')->willReturn($this->tracker_canned_response_manager);
+        $this->tracker1->method('getCannedResponseManager')->willReturn($this->tracker_canned_response_manager);
+        $this->tracker2->method('getCannedResponseManager')->willReturn($this->tracker_canned_response_manager);
+        $this->workflow_manager = $this->createMock(WorkflowManager::class);
+        $this->tracker->method('getWorkflowManager')->willReturn($this->workflow_manager);
+        $this->tracker1->method('getWorkflowManager')->willReturn($this->workflow_manager);
+        $this->tracker2->method('getWorkflowManager')->willReturn($this->workflow_manager);
+        $this->tracker->method('getGroupId')->willReturn(self::PUBLIC_PROJECT_ID);
+        $this->tracker->method('getId')->willReturn(110);
+        $this->tracker->method('getColor')->willReturn(TrackerColor::default());
+        $this->tracker1->method('getGroupId')->willReturn(self::PUBLIC_PROJECT_ID);
+        $this->tracker1->method('getId')->willReturn(111);
+        $this->tracker2->method('getGroupId')->willReturn(self::PUBLIC_PROJECT_ID);
+        $this->tracker2->method('getId')->willReturn(112);
 
-        $this->tracker->setProject($this->project);
-        $this->tracker1->setProject($this->project);
-        $this->tracker2->setProject($this->project);
+        $this->tracker->method('getPermissionsByUgroupId')->willReturn([
+            1   => ['PERM_1'],
+            3   => ['PERM_2'],
+            5   => ['PERM_3'],
+            115 => ['PERM_3'],
+        ]);
+        $this->tracker1->method('getPermissionsByUgroupId')->willReturn([
+            1001 => [101 => 'PLUGIN_TRACKER_ADMIN'],
+        ]);
+        $this->tracker2->method('getPermissionsByUgroupId')->willReturn([
+            1002 => [102 => 'PLUGIN_TRACKER_ADMIN'],
+        ]);
 
-        $this->tf = Mockery::mock(TrackerFactory::class);
-        $this->tracker->shouldReceive('getTrackerFactory')->andReturns($this->tf);
-        $this->tracker1->shouldReceive('getTrackerFactory')->andReturns($this->tf);
-        $this->tracker2->shouldReceive('getTrackerFactory')->andReturns($this->tf);
-        $this->tsm = Mockery::mock(Tracker_SemanticManager::class);
-        $this->tracker->shouldReceive('getTrackerSemanticManager')->andReturns($this->tsm);
-        $this->tracker1->shouldReceive('getTrackerSemanticManager')->andReturns($this->tsm);
-        $this->tracker2->shouldReceive('getTrackerSemanticManager')->andReturns($this->tsm);
-        $this->tnm = Mockery::mock(Tracker_NotificationsManager::class);
-        $this->tracker->shouldReceive('getNotificationsManager')->andReturns($this->tnm);
-        $this->tracker1->shouldReceive('getNotificationsManager')->andReturns($this->tnm);
-        $this->tracker2->shouldReceive('getNotificationsManager')->andReturns($this->tnm);
-        $this->trr = Mockery::mock(Tracker_DateReminderManager::class);
-        $this->tracker->shouldReceive('getDateReminderManager')->andReturns($this->trr);
-        $this->tracker1->shouldReceive('getDateReminderManager')->andReturns($this->trr);
-        $this->tracker2->shouldReceive('getDateReminderManager')->andReturns($this->trr);
-        $this->tcrm = Mockery::mock(Tracker_CannedResponseManager::class);
-        $this->tracker->shouldReceive('getCannedResponseManager')->andReturns($this->tcrm);
-        $this->tracker1->shouldReceive('getCannedResponseManager')->andReturns($this->tcrm);
-        $this->tracker2->shouldReceive('getCannedResponseManager')->andReturns($this->tcrm);
-        $this->wm = Mockery::mock(WorkflowManager::class);
-        $this->tracker->shouldReceive('getWorkflowManager')->andReturns($this->wm);
-        $this->tracker1->shouldReceive('getWorkflowManager')->andReturns($this->wm);
-        $this->tracker2->shouldReceive('getWorkflowManager')->andReturns($this->wm);
-        $group_id = 101;
-        $this->tracker->shouldReceive('getGroupId')->andReturns($group_id);
-        $this->tracker->shouldReceive('getId')->andReturns(110);
-        $this->tracker->shouldReceive('getColor')->andReturns(TrackerColor::default());
-        $this->tracker1->shouldReceive('getGroupId')->andReturns($group_id);
-        $this->tracker1->shouldReceive('getId')->andReturns(111);
-        $this->tracker2->shouldReceive('getGroupId')->andReturns($group_id);
-        $this->tracker2->shouldReceive('getId')->andReturns(112);
+        $this->site_admin_user = UserTestBuilder::anActiveUser()
+            ->withId(1)
+            ->withoutMemberOfProjects()
+            ->withSiteAdministrator()
+            ->build();
 
-        $this->tracker->shouldReceive('getPermissionsByUgroupId')->andReturns(
-            [
-                1   => ['PERM_1'],
-                3   => ['PERM_2'],
-                5   => ['PERM_3'],
-                115 => ['PERM_3'],
-            ]
-        );
-        $this->tracker1->shouldReceive('getPermissionsByUgroupId')->andReturns(
-            [
-                1001 => [101 => 'PLUGIN_TRACKER_ADMIN'],
-            ]
-        );
-        $this->tracker2->shouldReceive('getPermissionsByUgroupId')->andReturns(
-            [
-                1002 => [102 => 'PLUGIN_TRACKER_ADMIN'],
-            ]
-        );
+        $this->project_admin_user = UserTestBuilder::anActiveUser()
+            ->withId(123)
+            ->withMemberOf($public_project)
+            ->withAdministratorOf($public_project)
+            ->build();
 
-        $this->site_admin_user = Mockery::mock(PFUser::class);
-        $this->site_admin_user->shouldReceive('getId')->andReturns(1);
-        $this->site_admin_user->shouldReceive('isMember')->andReturns(false);
-        $this->site_admin_user->shouldReceive('isAdmin')->andReturns(false);
-        $this->site_admin_user->shouldReceive('isAnonymous')->andReturns(false);
-        $this->site_admin_user->shouldReceive('isSuperUser')->andReturns(true);
-        $this->site_admin_user->shouldReceive('isMemberOfUGroup')->withArgs([1001, Mockery::any()])->andReturns(false);
-        $this->site_admin_user->shouldReceive('isMemberOfUGroup')->withArgs([1002, Mockery::any()])->andReturns(false);
-        $this->site_admin_user->shouldReceive('isLoggedIn')->andReturns(true);
+        $this->all_trackers_admin_user = UserTestBuilder::anActiveUser()
+            ->withId(222)
+            ->withMemberOf($public_project)
+            ->withUserGroupMembership($public_project, 1001, true)
+            ->withUserGroupMembership($public_project, 1002, true)
+            ->build();
 
-        $this->project_admin_user = Mockery::mock(PFUser::class);
-        $this->project_admin_user->shouldReceive('getId')->andReturns(123);
-        $this->project_admin_user->shouldReceive('isAdmin')->with($group_id)->andReturns(true);
-        $this->project_admin_user->shouldReceive('isMember')->withArgs([102])->andReturns(false);
-        $this->project_admin_user->shouldReceive('isAnonymous')->andReturns(false);
-        $this->project_admin_user->shouldReceive('isSuperUser')->andReturns(false);
-        $this->project_admin_user->shouldReceive('isMemberOfUGroup')->withArgs([1001, Mockery::any()])->andReturns(
-            false
-        );
-        $this->project_admin_user->shouldReceive('isMemberOfUGroup')->withArgs([1002, Mockery::any()])->andReturns(
-            false
-        );
-        $this->project_admin_user->shouldReceive('isLoggedIn')->andReturns(true);
+        $this->tracker1_admin_user = UserTestBuilder::anActiveUser()
+            ->withId(333)
+            ->withMemberOf($public_project)
+            ->withUserGroupMembership($public_project, 1001, true)
+            ->withUserGroupMembership($public_project, 1002, false)
+            ->build();
 
-        $this->all_trackers_admin_user = Mockery::mock(PFUser::class);
-        $this->all_trackers_admin_user->shouldReceive('getId')->andReturns(222);
-        $this->all_trackers_admin_user->shouldReceive('isAdmin')->with($group_id)->andReturns(false);
-        $this->all_trackers_admin_user->shouldReceive('isAnonymous')->andReturns(false);
-        $this->all_trackers_admin_user->shouldReceive('isMember')->withArgs([102])->andReturns(false);
-        $this->all_trackers_admin_user->shouldReceive('isSuperUser')->andReturns(false);
-        $this->all_trackers_admin_user->shouldReceive('isMember')->withArgs([$group_id, 0])->andReturns(true);
-        $this->all_trackers_admin_user->shouldReceive('isMemberOfUGroup')->withArgs([1001, Mockery::any()])->andReturns(
-            true
-        ); //1001 = ugroup who has ADMIN perm on tracker
-        $this->all_trackers_admin_user->shouldReceive('isMemberOfUGroup')->withArgs([1002, Mockery::any()])->andReturns(
-            true
-        ); //1002 = ugroup who has ADMIN perm on tracker
-        $this->all_trackers_admin_user->shouldReceive('isLoggedIn')->andReturns(true);
+        $this->tracker2_admin_user = UserTestBuilder::anActiveUser()
+            ->withId(444)
+            ->withMemberOf($public_project)
+            ->withUserGroupMembership($public_project, 1001, false)
+            ->withUserGroupMembership($public_project, 1002, true)
+            ->build();
 
-        $this->tracker1_admin_user = Mockery::mock(PFUser::class);
-        $this->tracker1_admin_user->shouldReceive('getId')->andReturns(333);
-        $this->tracker1_admin_user->shouldReceive('isAdmin')->with($group_id)->andReturns(false);
-        $this->tracker1_admin_user->shouldReceive('isMember')->withArgs([102])->andReturns(false);
-        $this->tracker1_admin_user->shouldReceive('isAnonymous')->andReturns(false);
-        $this->tracker1_admin_user->shouldReceive('isSuperUser')->andReturns(false);
-        $this->tracker1_admin_user->shouldReceive('isMember')->withArgs([$group_id, 0])->andReturns(true);
-        $this->tracker1_admin_user->shouldReceive('isMemberOfUGroup')->withArgs([1001, Mockery::any()])->andReturns(
-            true
-        );
-        $this->tracker1_admin_user->shouldReceive('isMemberOfUGroup')->withArgs([1002, Mockery::any()])->andReturns(
-            false
-        );
-        $this->tracker1_admin_user->shouldReceive('isLoggedIn')->andReturns(true);
+        $this->project_member_user = UserTestBuilder::anActiveUser()
+            ->withId(555)
+            ->withMemberOf($public_project)
+            ->withUserGroupMembership($public_project, 1001, false)
+            ->withUserGroupMembership($public_project, 1002, false)
+            ->build();
 
-        $this->tracker2_admin_user = Mockery::mock(PFUser::class);
-        $this->tracker2_admin_user->shouldReceive('getId')->andReturns(444);
-        $this->tracker2_admin_user->shouldReceive('isAdmin')->with($group_id)->andReturns(false);
-        $this->tracker2_admin_user->shouldReceive('isMember')->withArgs([102])->andReturns(false);
-        $this->tracker2_admin_user->shouldReceive('isAnonymous')->andReturns(false);
-        $this->tracker2_admin_user->shouldReceive('isSuperUser')->andReturns(false);
-        $this->tracker2_admin_user->shouldReceive('isMember')->withArgs([$group_id, 0])->andReturns(true);
-        $this->tracker2_admin_user->shouldReceive('isMemberOfUGroup')->withArgs([1001, Mockery::any()])->andReturns(
-            false
-        );
-        $this->tracker2_admin_user->shouldReceive('isMemberOfUGroup')->withArgs([1002, Mockery::any()])->andReturns(
-            true
-        );
-        $this->tracker2_admin_user->shouldReceive('isLoggedIn')->andReturns(true);
+        $this->registered_user = UserTestBuilder::anActiveUser()
+            ->withId(777)
+            ->withoutMemberOfProjects()
+            ->withUserGroupMembership($public_project, 1001, false)
+            ->withUserGroupMembership($public_project, 1002, false)
+            ->build();
 
-        $this->project_member_user = Mockery::mock(PFUser::class);
-        $this->project_member_user->shouldReceive('getId')->andReturns(555);
-        $this->project_member_user->shouldReceive('isAdmin')->with($group_id)->andReturns(false);
-        $this->project_member_user->shouldReceive('isMember')->withArgs([102])->andReturns(false);
-        $this->project_member_user->shouldReceive('isAnonymous')->andReturns(false);
-        $this->project_member_user->shouldReceive('isSuperUser')->andReturns(false);
-        $this->project_member_user->shouldReceive('isMember')->withArgs([$group_id, 0])->andReturns(true);
-        $this->project_member_user->shouldReceive('isMemberOfUGroup')->withArgs([1001, Mockery::any()])->andReturns(
-            false
-        );
-        $this->project_member_user->shouldReceive('isMemberOfUGroup')->withArgs([1002, Mockery::any()])->andReturns(
-            false
-        );
-        $this->project_member_user->shouldReceive('isTrackerAdmin')->andReturns(false);
-        $this->project_member_user->shouldReceive('isLoggedIn')->andReturns(true);
+        $this->permission_controller = $this->createMock(Tracker_Permission_PermissionController::class);
+        $this->tracker->method('getPermissionController')->willReturn($this->permission_controller);
 
-        $this->registered_user = Mockery::mock(PFUser::class);
-        $this->registered_user->shouldReceive('getId')->andReturns(777);
-        $this->registered_user->shouldReceive('isAdmin')->andReturns(false);
-        $this->registered_user->shouldReceive('isMember')->andReturns(false);
-        $this->registered_user->shouldReceive('isAnonymous')->andReturns(false);
-        $this->registered_user->shouldReceive('isSuperUser')->andReturns(false);
-        $this->registered_user->shouldReceive('isMemberOfUGroup')->withArgs([1001, Mockery::any()])->andReturns(false);
-        $this->registered_user->shouldReceive('isMemberOfUGroup')->withArgs([1002, Mockery::any()])->andReturns(false);
-        $this->registered_user->shouldReceive('isLoggedIn')->andReturns(true);
+        $this->permission_controller1 = $this->createMock(Tracker_Permission_PermissionController::class);
+        $this->tracker1->method('getPermissionController')->willReturn($this->permission_controller1);
 
-        $this->workflow_factory = Mockery::mock(WorkflowFactory::class);
-        $this->tracker->shouldReceive('getWorkflowFactory')->andReturns($this->workflow_factory);
+        $this->permission_controller2 = $this->createMock(Tracker_Permission_PermissionController::class);
+        $this->tracker2->method('getPermissionController')->willReturn($this->permission_controller2);
 
-        $this->formelement_factory = Mockery::mock(Tracker_FormElementFactory::class);
-        $this->tracker->shouldReceive('getFormElementFactory')->andReturns($this->formelement_factory);
-
-        $this->report_factory = Mockery::mock(Tracker_ReportFactory::class);
-        $this->tracker->shouldReceive('getReportFactory')->andReturns($this->report_factory);
-
-        $this->canned_response_factory = Mockery::mock(Tracker_CannedResponseFactory::class);
-        $this->tracker->shouldReceive('getCannedResponseFactory')->andReturns($this->canned_response_factory);
-
-        $this->permission_controller = Mockery::mock(Tracker_Permission_PermissionController::class);
-        $this->tracker->shouldReceive('getPermissionController')->andReturns($this->permission_controller);
-
-        $this->permission_controller1 = Mockery::mock(Tracker_Permission_PermissionController::class);
-        $this->tracker1->shouldReceive('getPermissionController')->andReturn($this->permission_controller1);
-
-        $this->permission_controller2 = Mockery::mock(Tracker_Permission_PermissionController::class);
-        $this->tracker2->shouldReceive('getPermissionController')->andReturn($this->permission_controller2);
-
-        $this->hierarchy   = new Tracker_Hierarchy();
-        $hierarchy_factory = Mockery::mock(Tracker_HierarchyFactory::class);
-        $hierarchy_factory->shouldReceive('getHierarchy')->andReturn($this->hierarchy);
-        $this->tracker->shouldReceive('getHierarchyFactory')->andReturns($hierarchy_factory);
-
-        $this->workflow_factory = Mockery::mock(WorkflowFactory::class);
-        WorkflowFactory::setInstance($this->workflow_factory);
-
-        $this->user_manager = Mockery::mock(UserManager::class);
-        UserManager::setInstance($this->user_manager);
-
-        $GLOBALS['Response'] = Mockery::mock(BaseLayout::class);
-
-        $GLOBALS['UGROUPS'] = [
+        $GLOBALS['UGROUPS']        = [
             'UGROUP_NONE'               => 100,
             'UGROUP_ANONYMOUS'          => 1,
             'UGROUP_REGISTERED'         => 2,
@@ -376,189 +199,161 @@ final class TrackerPermissionsTest extends \Tuleap\Test\PHPUnit\TestCase
             'UGROUP_WIKI_ADMIN'         => 14,
             'UGROUP_TRACKER_ADMIN'      => 15,
         ];
+        $_SERVER['REQUEST_METHOD'] = 'GET';
     }
 
     protected function tearDown(): void
     {
-        WorkflowFactory::clearInstance();
-        UserManager::clearInstance();
-        unset($GLOBALS['Response'], $GLOBALS['_SESSION']);
-        parent::tearDown();
+        unset($_SERVER['REQUEST_METHOD']);
     }
 
     // New artifact permissions
     public function testItDelegatesPermissionToVerifier(): void
     {
-        $request_new_artifact = Mockery::mock(HTTPRequest::class);
-        $request_new_artifact->shouldReceive('get')->withArgs(['func'])->andReturns('new-artifact');
+        $request_new_artifact = HTTPRequestBuilder::get()->withParam('func', 'new-artifact')->build();
 
-        $this->tracker->shouldReceive('getTrackerArtifactSubmissionPermission')->andReturns(VerifySubmissionPermissionStub::withSubmitPermission());
-        $this->tracker->shouldReceive('displaySubmit')->once();
+        $this->tracker->method('getTrackerArtifactSubmissionPermission')->willReturn(VerifySubmissionPermissionStub::withSubmitPermission());
+        $this->tracker->expects($this->once())->method('displaySubmit');
         $this->tracker->process($this->tracker_manager, $request_new_artifact, $this->site_admin_user);
     }
 
     public function testItDoesNotDIsplaySubmitWhenUserHasNoPermissions(): void
     {
-        $request_new_artifact = Mockery::mock(HTTPRequest::class);
-        $request_new_artifact->shouldReceive('get')->withArgs(['func'])->andReturns('new-artifact');
+        $request_new_artifact = HTTPRequestBuilder::get()->withParam('func', 'new-artifact')->build();
 
-        $this->tracker->shouldReceive('getTrackerArtifactSubmissionPermission')->andReturns(VerifySubmissionPermissionStub::withoutSubmitPermission());
-        $this->tracker->shouldReceive('displaySubmit')->never();
+        $this->tracker->method('getTrackerArtifactSubmissionPermission')->willReturn(VerifySubmissionPermissionStub::withoutSubmitPermission());
+        $this->tracker->expects($this->never())->method('displaySubmit');
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', Mockery::any()])->once();
-        $GLOBALS['Response']->shouldReceive('redirect')->once();
+        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('error', self::anything());
+        $GLOBALS['Response']->expects($this->once())->method('redirect');
 
         $this->tracker->process($this->tracker_manager, $request_new_artifact, $this->site_admin_user);
     }
 
     // Tracker admin permissions
-    public function testPermsAdminTrackerSiteAdmin()
+    public function testPermsAdminTrackerSiteAdmin(): void
     {
-        $request_admin_tracker = Mockery::mock(HTTPRequest::class);
-        $request_admin_tracker->shouldReceive('get')->withArgs(['func'])->andReturns('admin');
-        $request_admin_tracker->shouldReceive('get')->withArgs(['add-formElement']);
-        $request_admin_tracker->shouldReceive('get')->withArgs(['create-formElement']);
-        $request_admin_tracker->shouldReceive('isPost')->andReturns(false);
+        $request_admin_tracker = HTTPRequestBuilder::get()->withParam('func', 'admin')->build();
 
         // site admin can access tracker admin part
-        $this->tracker->shouldReceive('displayAdminFormElements')->once();
+        $this->tracker->expects($this->once())->method('displayAdminFormElements');
         $this->tracker->process($this->tracker_manager, $request_admin_tracker, $this->site_admin_user);
     }
 
-    public function testPermsAdminTrackerProjectAdmin()
+    public function testPermsAdminTrackerProjectAdmin(): void
     {
-        $request_admin_tracker = Mockery::mock(HTTPRequest::class);
-        $request_admin_tracker->shouldReceive('get')->withArgs(['func'])->andReturns('admin');
-        $request_admin_tracker->shouldReceive('get')->withArgs(['add-formElement']);
-        $request_admin_tracker->shouldReceive('get')->withArgs(['create-formElement']);
-        $request_admin_tracker->shouldReceive('isPost')->andReturns(false);
+        $request_admin_tracker = HTTPRequestBuilder::get()->withParam('func', 'admin')->build();
 
         // project admin can access tracker admin part
-        $this->tracker->shouldReceive('displayAdminFormElements')->once();
+        $this->tracker->expects($this->once())->method('displayAdminFormElements');
         $this->tracker->process($this->tracker_manager, $request_admin_tracker, $this->project_admin_user);
     }
 
-    public function testPermsAdminTrackerTrackerAdmin()
+    public function testPermsAdminTrackerTrackerAdmin(): void
     {
-        $request_admin_tracker = Mockery::mock(HTTPRequest::class);
-        $request_admin_tracker->shouldReceive('get')->withArgs(['func'])->andReturns('admin');
-        $request_admin_tracker->shouldReceive('get')->withArgs(['add-formElement']);
-        $request_admin_tracker->shouldReceive('get')->withArgs(['create-formElement']);
-        $request_admin_tracker->shouldReceive('isPost')->andReturns(false);
+        $request_admin_tracker = HTTPRequestBuilder::get()->withParam('func', 'admin')->build();
 
         // tracker admin can access tracker admin part
-        $this->tracker1->shouldReceive('displayAdminFormElements')->once();
+        $this->tracker1->expects($this->once())->method('displayAdminFormElements');
         $this->tracker1->process($this->tracker_manager, $request_admin_tracker, $this->all_trackers_admin_user);
-        $this->tracker2->shouldReceive('displayAdminFormElements')->once();
+        $this->tracker2->expects($this->once())->method('displayAdminFormElements');
         $this->tracker2->process($this->tracker_manager, $request_admin_tracker, $this->all_trackers_admin_user);
     }
 
-    public function testPermsAdminTrackerTracker1Admin()
+    public function testPermsAdminTrackerTracker1Admin(): void
     {
-        $request_admin_tracker = Mockery::mock(HTTPRequest::class);
-        $request_admin_tracker->shouldReceive('get')->withArgs(['func'])->andReturns('admin');
-        $request_admin_tracker->shouldReceive('isPost')->andReturns(false);
+        $request_admin_tracker = HTTPRequestBuilder::get()->withParam('func', 'admin')->build();
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', Mockery::any()])->once();
-        $GLOBALS['Response']->shouldReceive('redirect')->once();
+        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('error', self::anything());
+        $GLOBALS['Response']->expects($this->once())->method('redirect');
 
         // tracker admin can access tracker admin part
-        $this->tracker1->shouldReceive('displayAdminFormElements')->once();
+        $this->tracker1->expects($this->once())->method('displayAdminFormElements');
         $this->tracker1->process($this->tracker_manager, $request_admin_tracker, $this->tracker1_admin_user);
-        $this->tracker2->shouldReceive('displayAdminFormElements')->never();
+        $this->tracker2->expects($this->never())->method('displayAdminFormElements');
         $this->tracker2->process($this->tracker_manager, $request_admin_tracker, $this->tracker1_admin_user);
     }
 
-    public function testPermsAdminTrackerTracker2Admin()
+    public function testPermsAdminTrackerTracker2Admin(): void
     {
-        $request_admin_tracker = Mockery::mock(HTTPRequest::class);
-        $request_admin_tracker->shouldReceive('get')->withArgs(['func'])->andReturns('admin');
-        $request_admin_tracker->shouldReceive('isPost')->andReturns(false);
+        $request_admin_tracker = HTTPRequestBuilder::get()->withParam('func', 'admin')->build();
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', Mockery::any()])->once();
-        $GLOBALS['Response']->shouldReceive('redirect')->once();
+        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('error', self::anything());
+        $GLOBALS['Response']->expects($this->once())->method('redirect');
 
         // tracker admin can access tracker admin part
-        $this->tracker1->shouldReceive('displayAdminFormElements')->never();
+        $this->tracker1->expects($this->never())->method('displayAdminFormElements');
         $this->tracker1->process($this->tracker_manager, $request_admin_tracker, $this->tracker2_admin_user);
-        $this->tracker2->shouldReceive('displayAdminFormElements')->once();
+        $this->tracker2->expects($this->once())->method('displayAdminFormElements');
         $this->tracker2->process($this->tracker_manager, $request_admin_tracker, $this->tracker2_admin_user);
     }
 
-    public function testPermsAdminTrackerProjectMember()
+    public function testPermsAdminTrackerProjectMember(): void
     {
-        $request_admin_tracker = Mockery::mock(HTTPRequest::class);
-        $request_admin_tracker->shouldReceive('get')->withArgs(['func'])->andReturns('admin');
+        $request_admin_tracker = HTTPRequestBuilder::get()->withParam('func', 'admin')->build();
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', Mockery::any()])->once();
-        $GLOBALS['Response']->shouldReceive('redirect')->once();
+        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('error', self::anything());
+        $GLOBALS['Response']->expects($this->once())->method('redirect');
 
         // project member can NOT access tracker admin part
-        $this->tracker->shouldReceive('displayAdminFormElements')->never();
+        $this->tracker->expects($this->never())->method('displayAdminFormElements');
         $this->tracker->process($this->tracker_manager, $request_admin_tracker, $this->project_member_user);
     }
 
-    public function testPermsAdminTrackerRegisteredUser()
+    public function testPermsAdminTrackerRegisteredUser(): void
     {
-        $request_admin_tracker = Mockery::mock(HTTPRequest::class);
-        $request_admin_tracker->shouldReceive('get')->withArgs(['func'])->andReturns('admin');
+        $request_admin_tracker = HTTPRequestBuilder::get()->withParam('func', 'admin')->build();
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', Mockery::any()])->once();
-        $GLOBALS['Response']->shouldReceive('redirect')->once();
+        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('error', self::anything());
+        $GLOBALS['Response']->expects($this->once())->method('redirect');
 
         // registered user can NOT access tracker admin part
-        $this->tracker->shouldReceive('displayAdminFormElements')->never();
+        $this->tracker->expects($this->never())->method('displayAdminFormElements');
         $this->tracker->process($this->tracker_manager, $request_admin_tracker, $this->registered_user);
     }
 
-    public function testItCachesTrackerAdminPermission()
+    public function testItCachesTrackerAdminPermission(): void
     {
-        $user = Mockery::mock(PFUser::class);
-        $user->shouldReceive('getId')->andReturn(101);
-        $user->shouldReceive('isSuperUser')->once();
-        $user->shouldReceive('isAdmin')->once()->andReturn(false);
+        $user = $this->createMock(PFUser::class);
+        $user->method('getId')->willReturn(101);
+        $user->expects($this->once())->method('isSuperUser');
+        $user->expects($this->once())->method('isAdmin')->willReturn(false);
 
         $this->tracker->userIsAdmin($user);
         $this->tracker->userIsAdmin($user);
     }
 
     // Tracker admin edit option permissions
-    public function testPermsAdminEditOptionsTrackerSiteAdmin()
+    public function testPermsAdminEditOptionsTrackerSiteAdmin(): void
     {
-        $request_admin_editoptions_tracker = Mockery::mock(HTTPRequest::class);
-        $request_admin_editoptions_tracker->shouldReceive('get')->withArgs(['func'])->andReturns('admin-editoptions');
-        $request_admin_editoptions_tracker->shouldReceive('get')->withArgs(['update']);
+        $request_admin_editoptions_tracker = HTTPRequestBuilder::get()->withParam('func', 'admin-editoptions')->build();
 
         // site admin can access tracker admin part
-        $this->tracker->shouldReceive('displayAdminOptions')->once();
+        $this->tracker->expects($this->once())->method('displayAdminOptions');
         $this->tracker->process($this->tracker_manager, $request_admin_editoptions_tracker, $this->site_admin_user);
     }
 
-    public function testPermsAdminEditOptionsTrackerProjectAdmin()
+    public function testPermsAdminEditOptionsTrackerProjectAdmin(): void
     {
-        $request_admin_editoptions_tracker = Mockery::mock(HTTPRequest::class);
-        $request_admin_editoptions_tracker->shouldReceive('get')->withArgs(['func'])->andReturns('admin-editoptions');
-        $request_admin_editoptions_tracker->shouldReceive('get')->withArgs(['update']);
+        $request_admin_editoptions_tracker = HTTPRequestBuilder::get()->withParam('func', 'admin-editoptions')->build();
 
         // project admin can access tracker admin part
-        $this->tracker->shouldReceive('displayAdminOptions')->once();
+        $this->tracker->expects($this->once())->method('displayAdminOptions');
         $this->tracker->process($this->tracker_manager, $request_admin_editoptions_tracker, $this->project_admin_user);
     }
 
-    public function testPermsAdminEditOptionsTrackerTrackerAdmin()
+    public function testPermsAdminEditOptionsTrackerTrackerAdmin(): void
     {
-        $request_admin_editoptions_tracker = Mockery::mock(HTTPRequest::class);
-        $request_admin_editoptions_tracker->shouldReceive('get')->withArgs(['func'])->andReturns('admin-editoptions');
-        $request_admin_editoptions_tracker->shouldReceive('get')->withArgs(['update'])->twice();
+        $request_admin_editoptions_tracker = HTTPRequestBuilder::get()->withParam('func', 'admin-editoptions')->build();
 
         // tracker admin can access tracker admin part
-        $this->tracker1->shouldReceive('displayAdminOptions')->once();
+        $this->tracker1->expects($this->once())->method('displayAdminOptions');
         $this->tracker1->process(
             $this->tracker_manager,
             $request_admin_editoptions_tracker,
             $this->all_trackers_admin_user
         );
-        $this->tracker2->shouldReceive('displayAdminOptions')->once();
+        $this->tracker2->expects($this->once())->method('displayAdminOptions');
         $this->tracker2->process(
             $this->tracker_manager,
             $request_admin_editoptions_tracker,
@@ -566,23 +361,21 @@ final class TrackerPermissionsTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testPermsAdminEditOptionsTrackerTracker1Admin()
+    public function testPermsAdminEditOptionsTrackerTracker1Admin(): void
     {
-        $request_admin_editoptions_tracker = Mockery::mock(HTTPRequest::class);
-        $request_admin_editoptions_tracker->shouldReceive('get')->withArgs(['func'])->andReturns('admin-editoptions');
-        $request_admin_editoptions_tracker->shouldReceive('get')->withArgs(['update'])->once();
+        $request_admin_editoptions_tracker = HTTPRequestBuilder::get()->withParam('func', 'admin-editoptions')->build();
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', Mockery::any()])->once();
-        $GLOBALS['Response']->shouldReceive('redirect')->once();
+        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('error', self::anything());
+        $GLOBALS['Response']->expects($this->once())->method('redirect');
 
         // tracker admin can access tracker admin part
-        $this->tracker1->shouldReceive('displayAdminOptions')->once();
+        $this->tracker1->expects($this->once())->method('displayAdminOptions');
         $this->tracker1->process(
             $this->tracker_manager,
             $request_admin_editoptions_tracker,
             $this->tracker1_admin_user
         );
-        $this->tracker2->shouldReceive('displayAdminOptions')->never();
+        $this->tracker2->expects($this->never())->method('displayAdminOptions');
         $this->tracker2->process(
             $this->tracker_manager,
             $request_admin_editoptions_tracker,
@@ -590,23 +383,21 @@ final class TrackerPermissionsTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testPermsAdminEditOptionsTrackerTracker2Admin()
+    public function testPermsAdminEditOptionsTrackerTracker2Admin(): void
     {
-        $request_admin_editoptions_tracker = Mockery::mock(HTTPRequest::class);
-        $request_admin_editoptions_tracker->shouldReceive('get')->withArgs(['func'])->andReturns('admin-editoptions');
-        $request_admin_editoptions_tracker->shouldReceive('get')->withArgs(['update'])->once();
+        $request_admin_editoptions_tracker = HTTPRequestBuilder::get()->withParam('func', 'admin-editoptions')->build();
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', Mockery::any()])->once();
-        $GLOBALS['Response']->shouldReceive('redirect')->once();
+        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('error', self::anything());
+        $GLOBALS['Response']->expects($this->once())->method('redirect');
 
         // tracker admin can access tracker admin part
-        $this->tracker1->shouldReceive('displayAdminOptions')->never();
+        $this->tracker1->expects($this->never())->method('displayAdminOptions');
         $this->tracker1->process(
             $this->tracker_manager,
             $request_admin_editoptions_tracker,
             $this->tracker2_admin_user
         );
-        $this->tracker2->shouldReceive('displayAdminOptions')->once();
+        $this->tracker2->expects($this->once())->method('displayAdminOptions');
         $this->tracker2->process(
             $this->tracker_manager,
             $request_admin_editoptions_tracker,
@@ -614,142 +405,127 @@ final class TrackerPermissionsTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testPermsAdminEditOptionsTrackerProjectMember()
+    public function testPermsAdminEditOptionsTrackerProjectMember(): void
     {
-        $request_admin_editoptions_tracker = Mockery::mock(HTTPRequest::class);
-        $request_admin_editoptions_tracker->shouldReceive('get')->withArgs(['func'])->andReturns('admin-editoptions');
+        $request_admin_editoptions_tracker = HTTPRequestBuilder::get()->withParam('func', 'admin-editoptions')->build();
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', Mockery::any()])->once();
-        $GLOBALS['Response']->shouldReceive('redirect')->once();
+        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('error', self::anything());
+        $GLOBALS['Response']->expects($this->once())->method('redirect');
 
         // project member can NOT access tracker admin part
-        $this->tracker->shouldReceive('displayAdminOptions')->never();
+        $this->tracker->expects($this->never())->method('displayAdminOptions');
         $this->tracker->process($this->tracker_manager, $request_admin_editoptions_tracker, $this->project_member_user);
     }
 
-    public function testPermsAdminEditOptionsTrackerRegisteredUser()
+    public function testPermsAdminEditOptionsTrackerRegisteredUser(): void
     {
-        $request_admin_editoptions_tracker = Mockery::mock(HTTPRequest::class);
-        $request_admin_editoptions_tracker->shouldReceive('get')->withArgs(['func'])->andReturns('admin-editoptions');
+        $request_admin_editoptions_tracker = HTTPRequestBuilder::get()->withParam('func', 'admin-editoptions')->build();
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', Mockery::any()])->once();
-        $GLOBALS['Response']->shouldReceive('redirect')->once();
+        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('error', self::anything());
+        $GLOBALS['Response']->expects($this->once())->method('redirect');
 
         // registered user can NOT access tracker admin part
-        $this->tracker->shouldReceive('displayAdminOptions')->never();
+        $this->tracker->expects($this->never())->method('displayAdminOptions');
         $this->tracker->process($this->tracker_manager, $request_admin_editoptions_tracker, $this->registered_user);
     }
 
     // Tracker "admin perms" permissions
-    public function testPermsAdminPermsTrackerSiteAdmin()
+    public function testPermsAdminPermsTrackerSiteAdmin(): void
     {
-        $request_admin_perms_tracker = Mockery::mock(HTTPRequest::class);
-        $request_admin_perms_tracker->shouldReceive('get')->withArgs(['func'])->andReturns('admin-perms');
+        $request_admin_perms_tracker = HTTPRequestBuilder::get()->withParam('func', 'admin-perms')->build();
 
         // site admin can access tracker admin part
-        $this->permission_controller->shouldReceive('process')->once();
+        $this->permission_controller->expects($this->once())->method('process');
         $this->tracker->process($this->tracker_manager, $request_admin_perms_tracker, $this->site_admin_user);
     }
 
-    public function testPermsAdminPermsTrackerProjectAdmin()
+    public function testPermsAdminPermsTrackerProjectAdmin(): void
     {
-        $request_admin_perms_tracker = Mockery::mock(HTTPRequest::class);
-        $request_admin_perms_tracker->shouldReceive('get')->withArgs(['func'])->andReturns('admin-perms');
+        $request_admin_perms_tracker = HTTPRequestBuilder::get()->withParam('func', 'admin-perms')->build();
 
         // project admin can access tracker admin part
-        $this->permission_controller->shouldReceive('process')->once();
+        $this->permission_controller->expects($this->once())->method('process');
         $this->tracker->process($this->tracker_manager, $request_admin_perms_tracker, $this->project_admin_user);
     }
 
-    public function testPermsAdminPermsTrackerTrackerAdmin()
+    public function testPermsAdminPermsTrackerTrackerAdmin(): void
     {
-        $request_admin_perms_tracker = Mockery::mock(HTTPRequest::class);
-        $request_admin_perms_tracker->shouldReceive('get')->withArgs(['func'])->andReturns('admin-perms');
+        $request_admin_perms_tracker = HTTPRequestBuilder::get()->withParam('func', 'admin-perms')->build();
 
         // tracker admin can access tracker admin part
-        $this->permission_controller1->shouldReceive('process')->once();
+        $this->permission_controller1->expects($this->once())->method('process');
         $this->tracker1->process($this->tracker_manager, $request_admin_perms_tracker, $this->all_trackers_admin_user);
-        $this->permission_controller2->shouldReceive('process')->once();
+        $this->permission_controller2->expects($this->once())->method('process');
         $this->tracker2->process($this->tracker_manager, $request_admin_perms_tracker, $this->all_trackers_admin_user);
     }
 
-    public function testPermsAdminPermsTrackerTracker1Admin()
+    public function testPermsAdminPermsTrackerTracker1Admin(): void
     {
-        $request_admin_perms_tracker = Mockery::mock(HTTPRequest::class);
-        $request_admin_perms_tracker->shouldReceive('get')->withArgs(['func'])->andReturns('admin-perms');
+        $request_admin_perms_tracker = HTTPRequestBuilder::get()->withParam('func', 'admin-perms')->build();
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', Mockery::any()])->once();
-        $GLOBALS['Response']->shouldReceive('redirect')->once();
+        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('error', self::anything());
+        $GLOBALS['Response']->expects($this->once())->method('redirect');
         // tracker admin can access tracker admin part
-        $this->permission_controller1->shouldReceive('process')->once();
+        $this->permission_controller1->expects($this->once())->method('process');
         $this->tracker1->process($this->tracker_manager, $request_admin_perms_tracker, $this->tracker1_admin_user);
-        $this->permission_controller2->shouldReceive('process')->never();
+        $this->permission_controller2->expects($this->never())->method('process');
         $this->tracker2->process($this->tracker_manager, $request_admin_perms_tracker, $this->tracker1_admin_user);
     }
 
-    public function testPermsAdminPermsTrackerTracker2Admin()
+    public function testPermsAdminPermsTrackerTracker2Admin(): void
     {
-        $request_admin_perms_tracker = Mockery::mock(HTTPRequest::class);
-        $request_admin_perms_tracker->shouldReceive('get')->withArgs(['func'])->andReturns('admin-perms');
+        $request_admin_perms_tracker = HTTPRequestBuilder::get()->withParam('func', 'admin-perms')->build();
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', Mockery::any()])->once();
-        $GLOBALS['Response']->shouldReceive('redirect')->once();
+        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('error', self::anything());
+        $GLOBALS['Response']->expects($this->once())->method('redirect');
 
         // tracker admin can access tracker admin part
-        $this->permission_controller1->shouldReceive('process')->never();
+        $this->permission_controller1->expects($this->never())->method('process');
         $this->tracker1->process($this->tracker_manager, $request_admin_perms_tracker, $this->tracker2_admin_user);
-        $this->permission_controller2->shouldReceive('process')->once();
+        $this->permission_controller2->expects($this->once())->method('process');
         $this->tracker2->process($this->tracker_manager, $request_admin_perms_tracker, $this->tracker2_admin_user);
     }
 
-    public function testPermsAdminPermsTrackerProjectMember()
+    public function testPermsAdminPermsTrackerProjectMember(): void
     {
-        $request_admin_perms_tracker = Mockery::mock(HTTPRequest::class);
-        $request_admin_perms_tracker->shouldReceive('get')->withArgs(['func'])->andReturns('admin-perms');
+        $request_admin_perms_tracker = HTTPRequestBuilder::get()->withParam('func', 'admin-perms')->build();
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', Mockery::any()])->once();
-        $GLOBALS['Response']->shouldReceive('redirect')->once();
+        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('error', self::anything());
+        $GLOBALS['Response']->expects($this->once())->method('redirect');
 
         // project member can NOT access tracker admin part
-        $this->permission_controller->shouldReceive('process')->never();
+        $this->permission_controller->expects($this->never())->method('process');
         $this->tracker->process($this->tracker_manager, $request_admin_perms_tracker, $this->project_member_user);
     }
 
-    public function testPermsAdminPermsTrackerRegisteredUser()
+    public function testPermsAdminPermsTrackerRegisteredUser(): void
     {
-        $request_admin_perms_tracker = Mockery::mock(HTTPRequest::class);
-        $request_admin_perms_tracker->shouldReceive('get')->withArgs(['func'])->andReturns('admin-perms');
+        $request_admin_perms_tracker = HTTPRequestBuilder::get()->withParam('func', 'admin-perms')->build();
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', Mockery::any()])->once();
-        $GLOBALS['Response']->shouldReceive('redirect')->once();
+        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('error', self::anything());
+        $GLOBALS['Response']->expects($this->once())->method('redirect');
 
         // registered user can NOT access tracker admin part
-        $this->permission_controller->shouldReceive('process')->never();
+        $this->permission_controller->expects($this->never())->method('process');
         $this->tracker->process($this->tracker_manager, $request_admin_perms_tracker, $this->registered_user);
     }
 
     // Tracker "admin perms tracker" permissions
-    public function testPermsAdminPermsTrackerTrackerSiteAdmin()
+    public function testPermsAdminPermsTrackerTrackerSiteAdmin(): void
     {
-        $request_admin_perms_tracker_tracker = Mockery::mock(HTTPRequest::class);
-        $request_admin_perms_tracker_tracker->shouldReceive('get')->withArgs(['func'])->andReturns(
-            'admin-perms-tracker'
-        );
+        $request_admin_perms_tracker_tracker = HTTPRequestBuilder::get()->withParam('func', 'admin-perms-tracker')->build();
 
         // site admin can access tracker admin part
-        $this->permission_controller->shouldReceive('process')->once();
+        $this->permission_controller->expects($this->once())->method('process');
         $this->tracker->process($this->tracker_manager, $request_admin_perms_tracker_tracker, $this->site_admin_user);
     }
 
-    public function testPermsAdminPermsTrackerTrackerProjectAdmin()
+    public function testPermsAdminPermsTrackerTrackerProjectAdmin(): void
     {
-        $request_admin_perms_tracker_tracker = Mockery::mock(HTTPRequest::class);
-        $request_admin_perms_tracker_tracker->shouldReceive('get')->withArgs(['func'])->andReturns(
-            'admin-perms-tracker'
-        );
+        $request_admin_perms_tracker_tracker = HTTPRequestBuilder::get()->withParam('func', 'admin-perms-tracker')->build();
 
         // project admin can access tracker admin part
-        $this->permission_controller->shouldReceive('process')->once();
+        $this->permission_controller->expects($this->once())->method('process');
         $this->tracker->process(
             $this->tracker_manager,
             $request_admin_perms_tracker_tracker,
@@ -757,21 +533,18 @@ final class TrackerPermissionsTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testPermsAdminPermsTrackerTrackerTrackerAdmin()
+    public function testPermsAdminPermsTrackerTrackerTrackerAdmin(): void
     {
-        $request_admin_perms_tracker_tracker = Mockery::mock(HTTPRequest::class);
-        $request_admin_perms_tracker_tracker->shouldReceive('get')->withArgs(['func'])->andReturns(
-            'admin-perms-tracker'
-        );
+        $request_admin_perms_tracker_tracker = HTTPRequestBuilder::get()->withParam('func', 'admin-perms-tracker')->build();
 
         // tracker admin can access tracker admin part
-        $this->permission_controller1->shouldReceive('process')->once();
+        $this->permission_controller1->expects($this->once())->method('process');
         $this->tracker1->process(
             $this->tracker_manager,
             $request_admin_perms_tracker_tracker,
             $this->all_trackers_admin_user
         );
-        $this->permission_controller2->shouldReceive('process')->once();
+        $this->permission_controller2->expects($this->once())->method('process');
         $this->tracker2->process(
             $this->tracker_manager,
             $request_admin_perms_tracker_tracker,
@@ -779,24 +552,21 @@ final class TrackerPermissionsTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testPermsAdminPermsTrackerTrackerTracker1Admin()
+    public function testPermsAdminPermsTrackerTrackerTracker1Admin(): void
     {
-        $request_admin_perms_tracker_tracker = Mockery::mock(HTTPRequest::class);
-        $request_admin_perms_tracker_tracker->shouldReceive('get')->withArgs(['func'])->andReturns(
-            'admin-perms-tracker'
-        );
+        $request_admin_perms_tracker_tracker = HTTPRequestBuilder::get()->withParam('func', 'admin-perms-tracker')->build();
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', Mockery::any()])->once();
-        $GLOBALS['Response']->shouldReceive('redirect')->once();
+        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('error', self::anything());
+        $GLOBALS['Response']->expects($this->once())->method('redirect');
 
         // tracker admin can access tracker admin part
-        $this->permission_controller1->shouldReceive('process')->once();
+        $this->permission_controller1->expects($this->once())->method('process');
         $this->tracker1->process(
             $this->tracker_manager,
             $request_admin_perms_tracker_tracker,
             $this->tracker1_admin_user
         );
-        $this->permission_controller2->shouldReceive('process')->never();
+        $this->permission_controller2->expects($this->never())->method('process');
         $this->tracker2->process(
             $this->tracker_manager,
             $request_admin_perms_tracker_tracker,
@@ -804,24 +574,21 @@ final class TrackerPermissionsTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testPermsAdminPermsTrackerTrackerTracker2Admin()
+    public function testPermsAdminPermsTrackerTrackerTracker2Admin(): void
     {
-        $request_admin_perms_tracker_tracker = Mockery::mock(HTTPRequest::class);
-        $request_admin_perms_tracker_tracker->shouldReceive('get')->withArgs(['func'])->andReturns(
-            'admin-perms-tracker'
-        );
+        $request_admin_perms_tracker_tracker = HTTPRequestBuilder::get()->withParam('func', 'admin-perms-tracker')->build();
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', Mockery::any()])->once();
-        $GLOBALS['Response']->shouldReceive('redirect')->once();
+        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('error', self::anything());
+        $GLOBALS['Response']->expects($this->once())->method('redirect');
 
         // tracker admin can access tracker admin part
-        $this->permission_controller1->shouldReceive('process')->never();
+        $this->permission_controller1->expects($this->never())->method('process');
         $this->tracker1->process(
             $this->tracker_manager,
             $request_admin_perms_tracker_tracker,
             $this->tracker2_admin_user
         );
-        $this->permission_controller2->shouldReceive('process')->once();
+        $this->permission_controller2->expects($this->once())->method('process');
         $this->tracker2->process(
             $this->tracker_manager,
             $request_admin_perms_tracker_tracker,
@@ -829,18 +596,15 @@ final class TrackerPermissionsTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testPermsAdminPermsTrackerTrackerProjectMember()
+    public function testPermsAdminPermsTrackerTrackerProjectMember(): void
     {
-        $request_admin_perms_tracker_tracker = Mockery::mock(HTTPRequest::class);
-        $request_admin_perms_tracker_tracker->shouldReceive('get')->withArgs(['func'])->andReturns(
-            'admin-perms-tracker'
-        );
+        $request_admin_perms_tracker_tracker = HTTPRequestBuilder::get()->withParam('func', 'admin-perms-tracker')->build();
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', Mockery::any()])->once();
-        $GLOBALS['Response']->shouldReceive('redirect')->once();
+        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('error', self::anything());
+        $GLOBALS['Response']->expects($this->once())->method('redirect');
 
         // project member can NOT access tracker admin part
-        $this->permission_controller->shouldReceive('process')->never();
+        $this->permission_controller->expects($this->never())->method('process');
         $this->tracker->process(
             $this->tracker_manager,
             $request_admin_perms_tracker_tracker,
@@ -848,58 +612,49 @@ final class TrackerPermissionsTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testPermsAdminPermsTrackerTrackerRegisteredUser()
+    public function testPermsAdminPermsTrackerTrackerRegisteredUser(): void
     {
-        $request_admin_perms_tracker_tracker = Mockery::mock(HTTPRequest::class);
-        $request_admin_perms_tracker_tracker->shouldReceive('get')->withArgs(['func'])->andReturns(
-            'admin-perms-tracker'
-        );
+        $request_admin_perms_tracker_tracker = HTTPRequestBuilder::get()->withParam('func', 'admin-perms-tracker')->build();
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', Mockery::any()])->once();
-        $GLOBALS['Response']->shouldReceive('redirect')->once();
+        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('error', self::anything());
+        $GLOBALS['Response']->expects($this->once())->method('redirect');
 
         // registered user can NOT access tracker admin part
-        $this->permission_controller->shouldReceive('process')->never();
+        $this->permission_controller->expects($this->never())->method('process');
         $this->tracker->process($this->tracker_manager, $request_admin_perms_tracker_tracker, $this->registered_user);
     }
 
     // Tracker "admin form elements" permissions
-    public function testPermsAdminFormElementTrackerSiteAdmin()
+    public function testPermsAdminFormElementTrackerSiteAdmin(): void
     {
-        $request_admin_formelement_tracker = Mockery::mock(HTTPRequest::class);
-        $request_admin_formelement_tracker->shouldReceive('get')->withArgs(['func'])->andReturns('admin-formElements');
-        $request_admin_formelement_tracker->shouldReceive('isPost')->andReturns(false);
+        $request_admin_formelement_tracker = HTTPRequestBuilder::get()->withParam('func', 'admin-formElements')->build();
 
         // site admin can access tracker admin part
-        $this->tracker->shouldReceive('displayAdminFormElements')->once();
+        $this->tracker->expects($this->once())->method('displayAdminFormElements');
         $this->tracker->process($this->tracker_manager, $request_admin_formelement_tracker, $this->site_admin_user);
     }
 
-    public function testPermsAdminFormElementTrackerProjectAdmin()
+    public function testPermsAdminFormElementTrackerProjectAdmin(): void
     {
-        $request_admin_formelement_tracker = Mockery::mock(HTTPRequest::class);
-        $request_admin_formelement_tracker->shouldReceive('get')->withArgs(['func'])->andReturns('admin-formElements');
-        $request_admin_formelement_tracker->shouldReceive('isPost')->andReturns(false);
+        $request_admin_formelement_tracker = HTTPRequestBuilder::get()->withParam('func', 'admin-formElements')->build();
 
         // project admin can access tracker admin part
-        $this->tracker->shouldReceive('displayAdminFormElements')->once();
+        $this->tracker->expects($this->once())->method('displayAdminFormElements');
         $this->tracker->process($this->tracker_manager, $request_admin_formelement_tracker, $this->project_admin_user);
     }
 
-    public function testPermsAdminFormElementTrackerTrackerAdmin()
+    public function testPermsAdminFormElementTrackerTrackerAdmin(): void
     {
-        $request_admin_formelement_tracker = Mockery::mock(HTTPRequest::class);
-        $request_admin_formelement_tracker->shouldReceive('get')->withArgs(['func'])->andReturns('admin-formElements');
-        $request_admin_formelement_tracker->shouldReceive('isPost')->andReturns(false);
+        $request_admin_formelement_tracker = HTTPRequestBuilder::get()->withParam('func', 'admin-formElements')->build();
 
         // tracker admin can access tracker admin part
-        $this->tracker1->shouldReceive('displayAdminFormElements')->once();
+        $this->tracker1->expects($this->once())->method('displayAdminFormElements');
         $this->tracker1->process(
             $this->tracker_manager,
             $request_admin_formelement_tracker,
             $this->all_trackers_admin_user
         );
-        $this->tracker2->shouldReceive('displayAdminFormElements')->once();
+        $this->tracker2->expects($this->once())->method('displayAdminFormElements');
         $this->tracker2->process(
             $this->tracker_manager,
             $request_admin_formelement_tracker,
@@ -907,23 +662,21 @@ final class TrackerPermissionsTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testPermsAdminFormElementTrackerTracker1Admin()
+    public function testPermsAdminFormElementTrackerTracker1Admin(): void
     {
-        $request_admin_formelement_tracker = Mockery::mock(HTTPRequest::class);
-        $request_admin_formelement_tracker->shouldReceive('get')->withArgs(['func'])->andReturns('admin-formElements');
-        $request_admin_formelement_tracker->shouldReceive('isPost')->andReturns(false);
+        $request_admin_formelement_tracker = HTTPRequestBuilder::get()->withParam('func', 'admin-formElements')->build();
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', Mockery::any()])->once();
-        $GLOBALS['Response']->shouldReceive('redirect')->once();
+        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('error', self::anything());
+        $GLOBALS['Response']->expects($this->once())->method('redirect');
 
         // tracker admin can access tracker admin part
-        $this->tracker1->shouldReceive('displayAdminFormElements')->once();
+        $this->tracker1->expects($this->once())->method('displayAdminFormElements');
         $this->tracker1->process(
             $this->tracker_manager,
             $request_admin_formelement_tracker,
             $this->tracker1_admin_user
         );
-        $this->tracker2->shouldReceive('displayAdminFormElements')->never();
+        $this->tracker2->expects($this->never())->method('displayAdminFormElements');
         $this->tracker2->process(
             $this->tracker_manager,
             $request_admin_formelement_tracker,
@@ -931,22 +684,20 @@ final class TrackerPermissionsTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testPermsAdminFormElementTrackerTracker2Admin()
+    public function testPermsAdminFormElementTrackerTracker2Admin(): void
     {
-        $request_admin_formelement_tracker = Mockery::mock(HTTPRequest::class);
-        $request_admin_formelement_tracker->shouldReceive('get')->withArgs(['func'])->andReturns('admin-formElements');
-        $request_admin_formelement_tracker->shouldReceive('isPost')->andReturns(false);
+        $request_admin_formelement_tracker = HTTPRequestBuilder::get()->withParam('func', 'admin-formElements')->build();
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', Mockery::any()])->once();
-        $GLOBALS['Response']->shouldReceive('redirect')->once();
+        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('error', self::anything());
+        $GLOBALS['Response']->expects($this->once())->method('redirect');
         // tracker admin can access tracker admin part
-        $this->tracker1->shouldReceive('displayAdminFormElements')->never();
+        $this->tracker1->expects($this->never())->method('displayAdminFormElements');
         $this->tracker1->process(
             $this->tracker_manager,
             $request_admin_formelement_tracker,
             $this->tracker2_admin_user
         );
-        $this->tracker2->shouldReceive('displayAdminFormElements')->once();
+        $this->tracker2->expects($this->once())->method('displayAdminFormElements');
         $this->tracker2->process(
             $this->tracker_manager,
             $request_admin_formelement_tracker,
@@ -954,60 +705,55 @@ final class TrackerPermissionsTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testPermsAdminFormElementTrackerProjectMember()
+    public function testPermsAdminFormElementTrackerProjectMember(): void
     {
-        $request_admin_formelement_tracker = Mockery::mock(HTTPRequest::class);
-        $request_admin_formelement_tracker->shouldReceive('get')->withArgs(['func'])->andReturns('admin-formElements');
+        $request_admin_formelement_tracker = HTTPRequestBuilder::get()->withParam('func', 'admin-formElements')->build();
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', Mockery::any()])->once();
-        $GLOBALS['Response']->shouldReceive('redirect')->once();
+        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('error', self::anything());
+        $GLOBALS['Response']->expects($this->once())->method('redirect');
 
         // project member can NOT access tracker admin part
-        $this->tracker->shouldReceive('displayAdminFormElements')->never();
+        $this->tracker->expects($this->never())->method('displayAdminFormElements');
         $this->tracker->process($this->tracker_manager, $request_admin_formelement_tracker, $this->project_member_user);
     }
 
-    public function testPermsAdminFormElementTrackerRegisteredUser()
+    public function testPermsAdminFormElementTrackerRegisteredUser(): void
     {
-        $request_admin_formelement_tracker = Mockery::mock(HTTPRequest::class);
-        $request_admin_formelement_tracker->shouldReceive('get')->withArgs(['func'])->andReturns('admin-formElements');
+        $request_admin_formelement_tracker = HTTPRequestBuilder::get()->withParam('func', 'admin-formElements')->build();
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', Mockery::any()])->once();
-        $GLOBALS['Response']->shouldReceive('redirect')->once();
+        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('error', self::anything());
+        $GLOBALS['Response']->expects($this->once())->method('redirect');
 
         // registered user can NOT access tracker admin part
-        $this->tracker->shouldReceive('displayAdminFormElements')->never();
+        $this->tracker->expects($this->never())->method('displayAdminFormElements');
         $this->tracker->process($this->tracker_manager, $request_admin_formelement_tracker, $this->registered_user);
     }
 
     // Tracker "admin semantic" permissions
-    public function testPermsAdminSemanticTrackerSiteAdmin()
+    public function testPermsAdminSemanticTrackerSiteAdmin(): void
     {
-        $request_admin_semantic_tracker = Mockery::mock(HTTPRequest::class);
-        $request_admin_semantic_tracker->shouldReceive('get')->withArgs(['func'])->andReturns('admin-semantic');
+        $request_admin_semantic_tracker = HTTPRequestBuilder::get()->withParam('func', 'admin-semantic')->build();
 
         // site admin can access tracker admin part
-        $this->tsm->shouldReceive('process')->once();
+        $this->tracker_semantic_manager->expects($this->once())->method('process');
         $this->tracker->process($this->tracker_manager, $request_admin_semantic_tracker, $this->site_admin_user);
     }
 
-    public function testPermsAdminSemanticTrackerProjectAdmin()
+    public function testPermsAdminSemanticTrackerProjectAdmin(): void
     {
-        $request_admin_semantic_tracker = Mockery::mock(HTTPRequest::class);
-        $request_admin_semantic_tracker->shouldReceive('get')->withArgs(['func'])->andReturns('admin-semantic');
+        $request_admin_semantic_tracker = HTTPRequestBuilder::get()->withParam('func', 'admin-semantic')->build();
 
         // project admin can access tracker admin part
-        $this->tsm->shouldReceive('process')->once();
+        $this->tracker_semantic_manager->expects($this->once())->method('process');
         $this->tracker->process($this->tracker_manager, $request_admin_semantic_tracker, $this->project_admin_user);
     }
 
-    public function testPermsAdminSemanticTrackerTrackerAdmin()
+    public function testPermsAdminSemanticTrackerTrackerAdmin(): void
     {
-        $request_admin_semantic_tracker = Mockery::mock(HTTPRequest::class);
-        $request_admin_semantic_tracker->shouldReceive('get')->withArgs(['func'])->andReturns('admin-semantic');
+        $request_admin_semantic_tracker = HTTPRequestBuilder::get()->withParam('func', 'admin-semantic')->build();
 
         // tracker admin can access tracker admin part
-        $this->tsm->shouldReceive('process')->times(2);
+        $this->tracker_semantic_manager->expects($this->exactly(2))->method('process');
         $this->tracker1->process(
             $this->tracker_manager,
             $request_admin_semantic_tracker,
@@ -1020,180 +766,160 @@ final class TrackerPermissionsTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testPermsAdminSemanticTrackerTracker1Admin()
+    public function testPermsAdminSemanticTrackerTracker1Admin(): void
     {
-        $request_admin_semantic_tracker = Mockery::mock(HTTPRequest::class);
-        $request_admin_semantic_tracker->shouldReceive('get')->withArgs(['func'])->andReturns('admin-semantic');
+        $request_admin_semantic_tracker = HTTPRequestBuilder::get()->withParam('func', 'admin-semantic')->build();
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', Mockery::any()])->once();
-        $GLOBALS['Response']->shouldReceive('redirect')->once();
+        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('error', self::anything());
+        $GLOBALS['Response']->expects($this->once())->method('redirect');
 
         // tracker admin can access tracker admin part
-        $this->tsm->shouldReceive('process')->once();
+        $this->tracker_semantic_manager->expects($this->once())->method('process');
         $this->tracker1->process($this->tracker_manager, $request_admin_semantic_tracker, $this->tracker1_admin_user);
         $this->tracker2->process($this->tracker_manager, $request_admin_semantic_tracker, $this->tracker1_admin_user);
     }
 
-    public function testPermsAdminSemanticTrackerTracker2Admin()
+    public function testPermsAdminSemanticTrackerTracker2Admin(): void
     {
-        $request_admin_semantic_tracker = Mockery::mock(HTTPRequest::class);
-        $request_admin_semantic_tracker->shouldReceive('get')->withArgs(['func'])->andReturns('admin-semantic');
+        $request_admin_semantic_tracker = HTTPRequestBuilder::get()->withParam('func', 'admin-semantic')->build();
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', Mockery::any()])->once();
-        $GLOBALS['Response']->shouldReceive('redirect')->once();
+        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('error', self::anything());
+        $GLOBALS['Response']->expects($this->once())->method('redirect');
 
         // tracker admin can access tracker admin part
         $this->tracker1->process($this->tracker_manager, $request_admin_semantic_tracker, $this->tracker2_admin_user);
-        $this->tsm->shouldReceive('process')->once();
+        $this->tracker_semantic_manager->expects($this->once())->method('process');
         $this->tracker2->process($this->tracker_manager, $request_admin_semantic_tracker, $this->tracker2_admin_user);
     }
 
-    public function testPermsAdminSemanticTrackerProjectMember()
+    public function testPermsAdminSemanticTrackerProjectMember(): void
     {
-        $request_admin_semantic_tracker = Mockery::mock(HTTPRequest::class);
-        $request_admin_semantic_tracker->shouldReceive('get')->withArgs(['func'])->andReturns('admin-semantic');
+        $request_admin_semantic_tracker = HTTPRequestBuilder::get()->withParam('func', 'admin-semantic')->build();
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', Mockery::any()])->once();
-        $GLOBALS['Response']->shouldReceive('redirect')->once();
+        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('error', self::anything());
+        $GLOBALS['Response']->expects($this->once())->method('redirect');
 
         // project member can NOT access tracker admin part
-        $this->tsm->shouldReceive('process')->never();
+        $this->tracker_semantic_manager->expects($this->never())->method('process');
         $this->tracker->process($this->tracker_manager, $request_admin_semantic_tracker, $this->project_member_user);
     }
 
-    public function testPermsAdminSemanticTrackerRegisteredUser()
+    public function testPermsAdminSemanticTrackerRegisteredUser(): void
     {
-        $request_admin_semantic_tracker = Mockery::mock(HTTPRequest::class);
-        $request_admin_semantic_tracker->shouldReceive('get')->withArgs(['func'])->andReturns('admin-semantic');
+        $request_admin_semantic_tracker = HTTPRequestBuilder::get()->withParam('func', 'admin-semantic')->build();
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', Mockery::any()])->once();
-        $GLOBALS['Response']->shouldReceive('redirect')->once();
+        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('error', self::anything());
+        $GLOBALS['Response']->expects($this->once())->method('redirect');
 
         // registered user can NOT access tracker admin part
-        $this->tsm->shouldReceive('process')->never();
+        $this->tracker_semantic_manager->expects($this->never())->method('process');
         $this->tracker->process($this->tracker_manager, $request_admin_semantic_tracker, $this->registered_user);
     }
 
     // Tracker "admin canned" permissions
-    public function testPermsAdminCannedTrackerSiteAdmin()
+    public function testPermsAdminCannedTrackerSiteAdmin(): void
     {
-        $request_admin_canned_tracker = Mockery::mock(HTTPRequest::class);
-        $request_admin_canned_tracker->shouldReceive('get')->withArgs(['func'])->andReturns('admin-canned');
+        $request_admin_canned_tracker = HTTPRequestBuilder::get()->withParam('func', 'admin-canned')->build();
 
         // site admin can access tracker admin part
-        $this->tcrm->shouldReceive('process')->once();
+        $this->tracker_canned_response_manager->expects($this->once())->method('process');
         $this->tracker->process($this->tracker_manager, $request_admin_canned_tracker, $this->site_admin_user);
     }
 
-    public function testPermsAdminCannedTrackerProjectAdmin()
+    public function testPermsAdminCannedTrackerProjectAdmin(): void
     {
-        $request_admin_canned_tracker = Mockery::mock(HTTPRequest::class);
-        $request_admin_canned_tracker->shouldReceive('get')->withArgs(['func'])->andReturns('admin-canned');
+        $request_admin_canned_tracker = HTTPRequestBuilder::get()->withParam('func', 'admin-canned')->build();
 
         // project admin can access tracker admin part
-        $this->tcrm->shouldReceive('process')->once();
+        $this->tracker_canned_response_manager->expects($this->once())->method('process');
         $this->tracker->process($this->tracker_manager, $request_admin_canned_tracker, $this->project_admin_user);
     }
 
-    public function testPermsAdminCannedTrackerTrackerAdmin()
+    public function testPermsAdminCannedTrackerTrackerAdmin(): void
     {
-        $request_admin_canned_tracker = Mockery::mock(HTTPRequest::class);
-        $request_admin_canned_tracker->shouldReceive('get')->withArgs(['func'])->andReturns('admin-canned');
+        $request_admin_canned_tracker = HTTPRequestBuilder::get()->withParam('func', 'admin-canned')->build();
 
         // tracker admin can access tracker admin part
-        $this->tcrm->shouldReceive('process')->times(2);
+        $this->tracker_canned_response_manager->expects($this->exactly(2))->method('process');
         $this->tracker1->process($this->tracker_manager, $request_admin_canned_tracker, $this->all_trackers_admin_user);
         $this->tracker2->process($this->tracker_manager, $request_admin_canned_tracker, $this->all_trackers_admin_user);
     }
 
-    public function testPermsAdminCannedTrackerTracker1Admin()
+    public function testPermsAdminCannedTrackerTracker1Admin(): void
     {
-        $request_admin_canned_tracker = Mockery::mock(HTTPRequest::class);
-        $request_admin_canned_tracker->shouldReceive('get')->withArgs(['func'])->andReturns('admin-canned');
+        $request_admin_canned_tracker = HTTPRequestBuilder::get()->withParam('func', 'admin-canned')->build();
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', Mockery::any()])->once();
-        $GLOBALS['Response']->shouldReceive('redirect')->once();
+        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('error', self::anything());
+        $GLOBALS['Response']->expects($this->once())->method('redirect');
 
         // tracker admin can access tracker admin part
-        $this->tcrm->shouldReceive('process')->once();
+        $this->tracker_canned_response_manager->expects($this->once())->method('process');
         $this->tracker1->process($this->tracker_manager, $request_admin_canned_tracker, $this->tracker1_admin_user);
         $this->tracker2->process($this->tracker_manager, $request_admin_canned_tracker, $this->tracker1_admin_user);
     }
 
-    public function testPermsAdminCannedTrackerTracker2Admin()
+    public function testPermsAdminCannedTrackerTracker2Admin(): void
     {
-        $request_admin_canned_tracker = Mockery::mock(HTTPRequest::class);
-        $request_admin_canned_tracker->shouldReceive('get')->withArgs(['func'])->andReturns('admin-canned');
+        $request_admin_canned_tracker = HTTPRequestBuilder::get()->withParam('func', 'admin-canned')->build();
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', Mockery::any()])->once();
-        $GLOBALS['Response']->shouldReceive('redirect')->once();
+        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('error', self::anything());
+        $GLOBALS['Response']->expects($this->once())->method('redirect');
 
         // tracker admin can access tracker admin part
         $this->tracker1->process($this->tracker_manager, $request_admin_canned_tracker, $this->tracker2_admin_user);
-        $this->tcrm->shouldReceive('process')->once();
+        $this->tracker_canned_response_manager->expects($this->once())->method('process');
         $this->tracker2->process($this->tracker_manager, $request_admin_canned_tracker, $this->tracker2_admin_user);
     }
 
-    public function testPermsAdminCannedTrackerProjectMember()
+    public function testPermsAdminCannedTrackerProjectMember(): void
     {
-        $request_admin_canned_tracker = Mockery::mock(HTTPRequest::class);
-        $request_admin_canned_tracker->shouldReceive('get')->withArgs(['func'])->andReturns('admin-canned');
+        $request_admin_canned_tracker = HTTPRequestBuilder::get()->withParam('func', 'admin-canned')->build();
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', Mockery::any()])->once();
-        $GLOBALS['Response']->shouldReceive('redirect')->once();
+        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('error', self::anything());
+        $GLOBALS['Response']->expects($this->once())->method('redirect');
 
         // project member can NOT access tracker admin part
-        $this->tcrm->shouldReceive('process')->never();
+        $this->tracker_canned_response_manager->expects($this->never())->method('process');
         $this->tracker->process($this->tracker_manager, $request_admin_canned_tracker, $this->project_member_user);
     }
 
-    public function testPermsAdminCannedTrackerRegisteredUser()
+    public function testPermsAdminCannedTrackerRegisteredUser(): void
     {
-        $request_admin_canned_tracker = Mockery::mock(HTTPRequest::class);
-        $request_admin_canned_tracker->shouldReceive('get')->withArgs(['func'])->andReturns('admin-canned');
+        $request_admin_canned_tracker = HTTPRequestBuilder::get()->withParam('func', 'admin-canned')->build();
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', Mockery::any()])->once();
-        $GLOBALS['Response']->shouldReceive('redirect')->once();
+        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('error', self::anything());
+        $GLOBALS['Response']->expects($this->once())->method('redirect');
 
         // registered user can NOT access tracker admin part
-        $this->tcrm->shouldReceive('process')->never();
+        $this->tracker_canned_response_manager->expects($this->never())->method('process');
         $this->tracker->process($this->tracker_manager, $request_admin_canned_tracker, $this->registered_user);
     }
 
     // Tracker "admin workflow" permissions
-    public function testPermsAdminWorkflowTrackerSiteAdmin()
+    public function testPermsAdminWorkflowTrackerSiteAdmin(): void
     {
-        $request_admin_workflow_tracker = Mockery::mock(HTTPRequest::class);
-        $request_admin_workflow_tracker->shouldReceive('get')->withArgs(['func'])->andReturns(
-            Workflow::FUNC_ADMIN_TRANSITIONS
-        );
+        $request_admin_workflow_tracker = HTTPRequestBuilder::get()->withParam('func', Workflow::FUNC_ADMIN_TRANSITIONS)->build();
 
         // site admin can access tracker admin part
-        $this->wm->shouldReceive('process')->once();
+        $this->workflow_manager->expects($this->once())->method('process');
         $this->tracker->process($this->tracker_manager, $request_admin_workflow_tracker, $this->site_admin_user);
     }
 
-    public function testPermsAdminWorkflowTrackerProjectAdmin()
+    public function testPermsAdminWorkflowTrackerProjectAdmin(): void
     {
-        $request_admin_workflow_tracker = Mockery::mock(HTTPRequest::class);
-        $request_admin_workflow_tracker->shouldReceive('get')->withArgs(['func'])->andReturns(
-            Workflow::FUNC_ADMIN_TRANSITIONS
-        );
+        $request_admin_workflow_tracker = HTTPRequestBuilder::get()->withParam('func', Workflow::FUNC_ADMIN_TRANSITIONS)->build();
 
         // project admin can access tracker admin part
-        $this->wm->shouldReceive('process')->once();
+        $this->workflow_manager->expects($this->once())->method('process');
         $this->tracker->process($this->tracker_manager, $request_admin_workflow_tracker, $this->project_admin_user);
     }
 
-    public function testPermsAdminWorkflowTrackerTrackerAdmin()
+    public function testPermsAdminWorkflowTrackerTrackerAdmin(): void
     {
-        $request_admin_workflow_tracker = Mockery::mock(HTTPRequest::class);
-        $request_admin_workflow_tracker->shouldReceive('get')->withArgs(['func'])->andReturns(
-            Workflow::FUNC_ADMIN_TRANSITIONS
-        );
+        $request_admin_workflow_tracker = HTTPRequestBuilder::get()->withParam('func', Workflow::FUNC_ADMIN_TRANSITIONS)->build();
 
         // tracker admin can access tracker admin part
-        $this->wm->shouldReceive('process')->times(2);
+        $this->workflow_manager->expects($this->exactly(2))->method('process');
         $this->tracker1->process(
             $this->tracker_manager,
             $request_admin_workflow_tracker,
@@ -1206,65 +932,53 @@ final class TrackerPermissionsTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public function testPermsAdminWorkflowTrackerTracker1Admin()
+    public function testPermsAdminWorkflowTrackerTracker1Admin(): void
     {
-        $request_admin_workflow_tracker = Mockery::mock(HTTPRequest::class);
-        $request_admin_workflow_tracker->shouldReceive('get')->withArgs(['func'])->andReturns(
-            Workflow::FUNC_ADMIN_TRANSITIONS
-        );
+        $request_admin_workflow_tracker = HTTPRequestBuilder::get()->withParam('func', Workflow::FUNC_ADMIN_TRANSITIONS)->build();
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', Mockery::any()])->once();
-        $GLOBALS['Response']->shouldReceive('redirect')->once();
+        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('error', self::anything());
+        $GLOBALS['Response']->expects($this->once())->method('redirect');
 
         // tracker admin can access tracker admin part
-        $this->wm->shouldReceive('process')->once();
+        $this->workflow_manager->expects($this->once())->method('process');
         $this->tracker1->process($this->tracker_manager, $request_admin_workflow_tracker, $this->tracker1_admin_user);
         $this->tracker2->process($this->tracker_manager, $request_admin_workflow_tracker, $this->tracker1_admin_user);
     }
 
-    public function testPermsAdminWorkflowTrackerTracker2Admin()
+    public function testPermsAdminWorkflowTrackerTracker2Admin(): void
     {
-        $request_admin_workflow_tracker = Mockery::mock(HTTPRequest::class);
-        $request_admin_workflow_tracker->shouldReceive('get')->withArgs(['func'])->andReturns(
-            Workflow::FUNC_ADMIN_TRANSITIONS
-        );
+        $request_admin_workflow_tracker = HTTPRequestBuilder::get()->withParam('func', Workflow::FUNC_ADMIN_TRANSITIONS)->build();
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', Mockery::any()])->once();
-        $GLOBALS['Response']->shouldReceive('redirect')->once();
+        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('error', self::anything());
+        $GLOBALS['Response']->expects($this->once())->method('redirect');
 
         // tracker admin can access tracker admin part
         $this->tracker1->process($this->tracker_manager, $request_admin_workflow_tracker, $this->tracker2_admin_user);
-        $this->wm->shouldReceive('process')->once();
+        $this->workflow_manager->expects($this->once())->method('process');
         $this->tracker2->process($this->tracker_manager, $request_admin_workflow_tracker, $this->tracker2_admin_user);
     }
 
-    public function testPermsAdminWorkflowTrackerProjectMember()
+    public function testPermsAdminWorkflowTrackerProjectMember(): void
     {
-        $request_admin_workflow_tracker = Mockery::mock(HTTPRequest::class);
-        $request_admin_workflow_tracker->shouldReceive('get')->withArgs(['func'])->andReturns(
-            Workflow::FUNC_ADMIN_TRANSITIONS
-        );
+        $request_admin_workflow_tracker = HTTPRequestBuilder::get()->withParam('func', Workflow::FUNC_ADMIN_TRANSITIONS)->build();
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', Mockery::any()])->once();
-        $GLOBALS['Response']->shouldReceive('redirect')->once();
+        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('error', self::anything());
+        $GLOBALS['Response']->expects($this->once())->method('redirect');
 
         // project member can NOT access tracker admin part
-        $this->wm->shouldReceive('process')->never();
+        $this->workflow_manager->expects($this->never())->method('process');
         $this->tracker->process($this->tracker_manager, $request_admin_workflow_tracker, $this->project_member_user);
     }
 
-    public function testPermsAdminWorkflowTrackerRegisteredUser()
+    public function testPermsAdminWorkflowTrackerRegisteredUser(): void
     {
-        $request_admin_workflow_tracker = Mockery::mock(HTTPRequest::class);
-        $request_admin_workflow_tracker->shouldReceive('get')->withArgs(['func'])->andReturns(
-            Workflow::FUNC_ADMIN_TRANSITIONS
-        );
+        $request_admin_workflow_tracker = HTTPRequestBuilder::get()->withParam('func', Workflow::FUNC_ADMIN_TRANSITIONS)->build();
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', Mockery::any()])->once();
-        $GLOBALS['Response']->shouldReceive('redirect')->once();
+        $GLOBALS['Response']->expects($this->once())->method('addFeedback')->with('error', self::anything());
+        $GLOBALS['Response']->expects($this->once())->method('redirect');
 
         // registered user can NOT access tracker admin part
-        $this->wm->shouldReceive('process')->never();
+        $this->workflow_manager->expects($this->never())->method('process');
         $this->tracker->process($this->tracker_manager, $request_admin_workflow_tracker, $this->registered_user);
     }
 }
