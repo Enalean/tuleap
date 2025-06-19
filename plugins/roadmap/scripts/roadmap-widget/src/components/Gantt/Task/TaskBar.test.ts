@@ -18,7 +18,7 @@
  */
 
 import { DateTime } from "luxon";
-import { shallowMount } from "@vue/test-utils";
+import { mount } from "@vue/test-utils";
 import type { Wrapper } from "@vue/test-utils";
 import type { Task } from "../../../type";
 import MilestoneBar from "./MilestoneBar.vue";
@@ -63,7 +63,7 @@ describe("TaskBar", () => {
             is_milestone,
         } as Task;
 
-        return shallowMount(TaskBar, {
+        return mount(TaskBar, {
             propsData: {
                 task,
                 left: 42,
@@ -74,6 +74,7 @@ describe("TaskBar", () => {
                 is_text_displayed_outside_bar,
                 is_error_sign_displayed_outside_bar,
                 is_error_sign_displayed_inside_bar,
+                popover_element_id: "10",
             },
         });
     }
