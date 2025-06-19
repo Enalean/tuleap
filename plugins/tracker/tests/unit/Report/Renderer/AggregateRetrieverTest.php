@@ -59,7 +59,7 @@ final class AggregateRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $result = $this->retriever->retrieve(true, $columns);
 
-        $this->assertEquals(
+        self::assertEquals(
             [
                 200 => ['SUM'],
                 300 => ['AVG'],
@@ -81,7 +81,7 @@ final class AggregateRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $result = $this->retriever->retrieve(false, $columns);
 
-        $this->assertEquals(
+        self::assertEquals(
             [
                 400 => ['MAX'],
                 500 => ['MIN'],
@@ -103,7 +103,7 @@ final class AggregateRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $result = $this->retriever->retrieve(false, $columns);
 
-        $this->assertEquals(
+        self::assertEquals(
             [
                 600 => ['SUM'],
             ],
@@ -135,11 +135,22 @@ final class AggregateRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $result = $this->retriever->retrieve(false, $columns);
 
-        $this->assertEquals(
+        self::assertEquals(
             [
                 900 => ['SUM', 'AVG'],
             ],
             $result
         );
+    }
+
+    public function testItReturnsEmptyWhenAggregatesAreNull(): void
+    {
+        $this->renderer->method('getAggregates')->willReturn(null);
+
+        $columns = [900 => 'Deleted'];
+
+        $result = $this->retriever->retrieve(false, $columns);
+
+        self::assertEquals([], $result);
     }
 }
