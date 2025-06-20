@@ -23,27 +23,33 @@
     </error-modal>
 </template>
 
-<script lang="ts">
-import { mapState } from "vuex";
+<script setup lang="ts">
 import ErrorModal from "./ErrorModal.vue";
 import { sprintf } from "sprintf-js";
 import prettyKibibytes from "pretty-kibibytes";
+import { useNamespacedState } from "vuex-composition-helpers";
+import type { ConfigurationState } from "../../../store/configuration";
+import { useGettext } from "vue3-gettext";
+import { computed } from "vue";
 
-export default {
-    components: { ErrorModal },
-    computed: {
-        ...mapState("configuration", ["max_size_upload"]),
-        error_message() {
-            return sprintf(
-                this.$gettext("You are not allowed to upload files bigger than %s."),
-                prettyKibibytes(this.max_size_upload),
-            );
-        },
-    },
-    methods: {
-        bubbleErrorModalHidden() {
-            this.$emit("error-modal-hidden");
-        },
-    },
-};
+const { $gettext } = useGettext();
+
+const emit = defineEmits<{
+    (e: "error-modal-hidden"): void;
+}>();
+
+const { max_size_upload } = useNamespacedState<Pick<ConfigurationState, "max_size_upload">>(
+    "configuration",
+    ["max_size_upload"],
+);
+const error_message = computed(() =>
+    sprintf(
+        $gettext("You are not allowed to upload files bigger than %s."),
+        prettyKibibytes(max_size_upload.value),
+    ),
+);
+
+function bubbleErrorModalHidden(): void {
+    emit("error-modal-hidden");
+}
 </script>
