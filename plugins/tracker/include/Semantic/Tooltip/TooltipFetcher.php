@@ -61,7 +61,7 @@ final class TooltipFetcher
         return Option::fromValue(
             TooltipJSON::fromHtmlTitleAndHtmlBody(
                 $this->renderer_factory
-                    ->getRenderer(__DIR__ . '/../../../../templates/tooltip/')
+                    ->getRenderer(__DIR__ . '/../../../templates/tooltip/')
                     ->renderToString(
                         'artifact-tooltip-title',
                         ['title' => $artifact->getTitle(), 'xref' => $artifact->getXRef()]

@@ -33440,6 +33440,75 @@
       <code><![CDATA[$xml_field_attributes['REF']]]></code>
     </PossiblyNullArrayAccess>
   </file>
+  <file src="plugins/tracker/include/Semantic/Tooltip/OtherSemantic/ProgressTooltipEntry.php">
+    <InvalidOperand>
+      <code><![CDATA[$progress_result->getValue() * 100]]></code>
+    </InvalidOperand>
+  </file>
+  <file src="plugins/tracker/include/Semantic/Tooltip/OtherSemantic/TimeframeTooltipEntry.php">
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[$end_date]]></code>
+      <code><![CDATA[$start_date]]></code>
+    </RiskyTruthyFalsyComparison>
+  </file>
+  <file src="plugins/tracker/include/Semantic/Tooltip/SemanticTooltip.php">
+    <InvalidReturnType>
+      <code><![CDATA[bool]]></code>
+    </InvalidReturnType>
+    <MissingParamType>
+      <code><![CDATA[$fields]]></code>
+    </MissingParamType>
+    <MissingPropertyType>
+      <code><![CDATA[$fields]]></code>
+      <code><![CDATA[$this->tracker->id]]></code>
+      <code><![CDATA[$this->tracker->id]]></code>
+      <code><![CDATA[$this->tracker->id]]></code>
+      <code><![CDATA[$this->tracker->id]]></code>
+    </MissingPropertyType>
+    <MissingReturnType>
+      <code><![CDATA[getDao]]></code>
+      <code><![CDATA[setFields]]></code>
+    </MissingReturnType>
+    <PossiblyFalseArgument>
+      <code><![CDATA[array_search($field->id, $xml_mapping)]]></code>
+    </PossiblyFalseArgument>
+    <PossiblyNullReference>
+      <code><![CDATA[addAttribute]]></code>
+      <code><![CDATA[addAttribute]]></code>
+    </PossiblyNullReference>
+  </file>
+  <file src="plugins/tracker/include/Semantic/Tooltip/SemanticTooltipDao.php">
+    <DeprecatedMethod>
+      <code><![CDATA[escapeInt]]></code>
+      <code><![CDATA[escapeInt]]></code>
+      <code><![CDATA[escapeInt]]></code>
+      <code><![CDATA[escapeInt]]></code>
+      <code><![CDATA[escapeInt]]></code>
+      <code><![CDATA[escapeInt]]></code>
+      <code><![CDATA[parent::__construct()]]></code>
+      <code><![CDATA[prepareRanking]]></code>
+      <code><![CDATA[retrieve]]></code>
+      <code><![CDATA[update]]></code>
+      <code><![CDATA[update]]></code>
+    </DeprecatedMethod>
+    <MissingParamType>
+      <code><![CDATA[$field_id]]></code>
+      <code><![CDATA[$field_id]]></code>
+      <code><![CDATA[$rank]]></code>
+      <code><![CDATA[$tracker_id]]></code>
+      <code><![CDATA[$tracker_id]]></code>
+    </MissingParamType>
+    <MissingReturnType>
+      <code><![CDATA[add]]></code>
+      <code><![CDATA[remove]]></code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/tracker/include/Semantic/Tooltip/SemanticTooltipFactory.php">
+    <PossiblyNullArrayAccess>
+      <code><![CDATA[$att['REF']]]></code>
+      <code><![CDATA[$att['REF']]]></code>
+    </PossiblyNullArrayAccess>
+  </file>
   <file src="plugins/tracker/include/ServiceTracker.php">
     <MissingParamType>
       <code><![CDATA[$breadcrumbs]]></code>
@@ -45417,75 +45486,6 @@
     <UndefinedInterfaceMethod>
       <code><![CDATA[add]]></code>
     </UndefinedInterfaceMethod>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Semantic/Tooltip/OtherSemantic/ProgressTooltipEntry.php">
-    <InvalidOperand>
-      <code><![CDATA[$progress_result->getValue() * 100]]></code>
-    </InvalidOperand>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Semantic/Tooltip/OtherSemantic/TimeframeTooltipEntry.php">
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[$end_date]]></code>
-      <code><![CDATA[$start_date]]></code>
-    </RiskyTruthyFalsyComparison>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Semantic/Tooltip/SemanticTooltip.php">
-    <InvalidReturnType>
-      <code><![CDATA[bool]]></code>
-    </InvalidReturnType>
-    <MissingParamType>
-      <code><![CDATA[$fields]]></code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$fields]]></code>
-      <code><![CDATA[$this->tracker->id]]></code>
-      <code><![CDATA[$this->tracker->id]]></code>
-      <code><![CDATA[$this->tracker->id]]></code>
-      <code><![CDATA[$this->tracker->id]]></code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code><![CDATA[getDao]]></code>
-      <code><![CDATA[setFields]]></code>
-    </MissingReturnType>
-    <PossiblyFalseArgument>
-      <code><![CDATA[array_search($field->id, $xml_mapping)]]></code>
-    </PossiblyFalseArgument>
-    <PossiblyNullReference>
-      <code><![CDATA[addAttribute]]></code>
-      <code><![CDATA[addAttribute]]></code>
-    </PossiblyNullReference>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Semantic/Tooltip/SemanticTooltipDao.php">
-    <DeprecatedMethod>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[parent::__construct()]]></code>
-      <code><![CDATA[prepareRanking]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[update]]></code>
-      <code><![CDATA[update]]></code>
-    </DeprecatedMethod>
-    <MissingParamType>
-      <code><![CDATA[$field_id]]></code>
-      <code><![CDATA[$field_id]]></code>
-      <code><![CDATA[$rank]]></code>
-      <code><![CDATA[$tracker_id]]></code>
-      <code><![CDATA[$tracker_id]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[add]]></code>
-      <code><![CDATA[remove]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Semantic/Tooltip/SemanticTooltipFactory.php">
-    <PossiblyNullArrayAccess>
-      <code><![CDATA[$att['REF']]]></code>
-      <code><![CDATA[$att['REF']]]></code>
-    </PossiblyNullArrayAccess>
   </file>
   <file src="plugins/tracker/include/Tracker/Semantic/Tracker_Semantic.php">
     <MissingReturnType>

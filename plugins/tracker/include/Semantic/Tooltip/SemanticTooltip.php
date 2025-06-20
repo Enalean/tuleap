@@ -220,7 +220,7 @@ class SemanticTooltip extends Tracker_Semantic implements TooltipFields
         $select_options = (new SelectOptionsBuilder(Tracker_FormElementFactory::instance()))
             ->build($this->tracker, $current_user, $fields);
 
-        $renderer  = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../../../templates/semantics');
+        $renderer  = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../../templates/semantics');
         $presenter = new SemanticTooltipAdminPresenter(
             $this->getOtherSemanticsLabels(),
             $this->getCSRFToken(),
