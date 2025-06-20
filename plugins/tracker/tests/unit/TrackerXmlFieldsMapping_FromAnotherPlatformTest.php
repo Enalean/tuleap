@@ -20,13 +20,22 @@
 
 declare(strict_types=1);
 
+namespace Tuleap\Tracker;
+
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use Tracker_FormElement_Field_List_Bind_StaticValue;
+use Tracker_FormElement_Field_List_Bind_UgroupsValue;
+use TrackerXmlFieldsMapping_FromAnotherPlatform;
+use TrackerXmlFieldsMapping_ValueNotFoundException;
 use Tuleap\Test\Builders\ProjectUGroupTestBuilder;
+use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserGroupValueBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\OpenListFieldBuilder;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class TrackerXmlFieldsMapping_FromAnotherPlatformTest extends \Monolog\Test\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+#[DisableReturnValueGenerationForTestDoubles]
+final class TrackerXmlFieldsMapping_FromAnotherPlatformTest extends TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
     private TrackerXmlFieldsMapping_FromAnotherPlatform $xml_open_fields_mapping;
 
@@ -74,7 +83,7 @@ final class TrackerXmlFieldsMapping_FromAnotherPlatformTest extends \Monolog\Tes
         $static_value_02 = ListStaticValueBuilder::aStaticValue('02')->withId(24077)->build();
         $static_value_03 = ListStaticValueBuilder::aStaticValue('03')->withXMLId('bug_label')->build();
 
-        $open_list_field  = Mockery::mock(Tracker_FormElement_Field_OpenList::class);
+        $open_list_field  = OpenListFieldBuilder::anOpenListField()->build();
         $open_xml_mapping = [
             'F21840'     => $open_list_field,
             'V24058'     => $static_value_01,
@@ -89,17 +98,17 @@ final class TrackerXmlFieldsMapping_FromAnotherPlatformTest extends \Monolog\Tes
     {
         $new_value_id = $this->xml_static_fields_mapping->getNewValueId(24058);
 
-        $this->assertEquals(24076, $new_value_id);
+        self::assertEquals(24076, $new_value_id);
     }
 
     public function testItThrowsAnExceptionIfTheNewValueIsNotFound(): void
     {
-        $this->expectException(\TrackerXmlFieldsMapping_ValueNotFoundException::class);
+        $this->expectException(TrackerXmlFieldsMapping_ValueNotFoundException::class);
 
         $this->xml_static_fields_mapping->getNewValueId(12345);
     }
 
-    private function getBindValueWithId(int $bind_value_id): \Tracker_FormElement_Field_List_Bind_StaticValue
+    private function getBindValueWithId(int $bind_value_id): Tracker_FormElement_Field_List_Bind_StaticValue
     {
         return ListStaticValueBuilder::aStaticValue('static')->withId($bind_value_id)->build();
     }
@@ -113,12 +122,12 @@ final class TrackerXmlFieldsMapping_FromAnotherPlatformTest extends \Monolog\Tes
     {
         $new_value_id = $this->xml_ugroup_fields_mapping->getNewValueId(200);
 
-        $this->assertEquals(301, $new_value_id);
+        self::assertEquals(301, $new_value_id);
     }
 
     public function testItThrowsAnExceptionIfTheNewValueForUgroupIsNotFound(): void
     {
-        $this->expectException(\TrackerXmlFieldsMapping_ValueNotFoundException::class);
+        $this->expectException(TrackerXmlFieldsMapping_ValueNotFoundException::class);
 
         $this->xml_ugroup_fields_mapping->getNewValueId(12345);
     }
@@ -136,7 +145,7 @@ final class TrackerXmlFieldsMapping_FromAnotherPlatformTest extends \Monolog\Tes
 
     public function testItThrowsAnExceptionIfTheNewValueOfOpenStatisIsNotFound(): void
     {
-        $this->expectException(\TrackerXmlFieldsMapping_ValueNotFoundException::class);
+        $this->expectException(TrackerXmlFieldsMapping_ValueNotFoundException::class);
 
         $this->xml_open_fields_mapping->getNewValueId('12345');
     }
