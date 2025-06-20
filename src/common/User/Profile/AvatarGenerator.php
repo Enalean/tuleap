@@ -22,9 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\User\Profile;
 
+use Laravolt\Avatar\Avatar;
 use Tuleap\Color\AllowedColorsCollection;
 use Tuleap\User\Avatar\AvatarHashStorage;
 use Tuleap\User\Avatar\ComputeAvatarHash;
+use voku\helper\ASCII;
 
 class AvatarGenerator
 {
@@ -39,13 +41,13 @@ class AvatarGenerator
             return;
         }
 
-        $this->getImage($user)->save($path, null, 'png');
+        $this->getImage($user)->encodeByMediaType('image/png')->save($path);
         $this->storage->store($user, $this->compute_avatar_hash->computeAvatarHash($path));
     }
 
     public function generateAsDataUrl(\PFUser $user): string
     {
-        return (string) $this->getImage($user)->encode('data-url');
+        return $this->getImage($user)->encodeByMediaType('image/png')->toDataUri();
     }
 
     private function getImage(\PFUser $user): \Intervention\Image\Image
@@ -55,14 +57,18 @@ class AvatarGenerator
         $nb_colors        = count($colors);
         $current_color    = array_keys($colors)[$user->getId() % $nb_colors];
 
-        $image = (new \LasseRafn\InitialAvatarGenerator\InitialAvatar())
-            ->autoFont()
-            ->size(128)
-            ->background($colors[$current_color]['secondary'])
-            ->color($colors[$current_color]['text'])
-            ->name($user->getRealName())
-            ->generate();
+        $avatar_generator = new Avatar();
+        $avatar_generator->applyTheme([
+            'uppercase' => true,
+            'border' => ['size' => 0],
+        ]);
 
-        return $image;
+        return $avatar_generator->create(ASCII::to_transliterate($user->getRealName(), ''))
+            ->setDimension(128)
+            ->setFontSize(54)
+            ->setShape('square')
+            ->setBackground($colors[$current_color]['secondary'])
+            ->setForeground($colors[$current_color]['text'])
+            ->getImageObject();
     }
 }
