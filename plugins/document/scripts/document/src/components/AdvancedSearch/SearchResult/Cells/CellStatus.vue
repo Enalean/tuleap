@@ -24,7 +24,7 @@
 
 <script setup lang="ts">
 import CellString from "./CellString.vue";
-import type { ItemSearchResult } from "plugins/document/scripts/document/type";
+import type { ItemSearchResult } from "../../../../type";
 import { computed } from "vue";
 import { useGettext } from "vue3-gettext";
 
