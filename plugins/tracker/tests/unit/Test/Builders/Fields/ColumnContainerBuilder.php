@@ -29,6 +29,7 @@ final class ColumnContainerBuilder
 {
     /** @var Tracker_FormElement[] */
     private array $form_elements = [];
+    private string $name         = 'Column';
 
     private function __construct(private readonly int $id)
     {
@@ -46,13 +47,19 @@ final class ColumnContainerBuilder
         return $this;
     }
 
+    public function withName(string $name): self
+    {
+        $this->name = $name;
+        return $this;
+    }
+
     public function build(): Tracker_FormElement_Container_Column
     {
         $column = new Tracker_FormElement_Container_Column(
             $this->id,
             51,
             15,
-            'Column',
+            $this->name,
             'label',
             '',
             true,

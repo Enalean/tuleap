@@ -19,90 +19,57 @@
  *
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker;
 
-use Mockery;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use SimpleXMLElement;
 use Tracker_FormElement_Container_Column;
-use Tracker_FormElement_Field_List_Bind_Static;
+use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Tracker_FormElement_Field_Selectbox;
 use Tracker_FormElement_Field_Text;
+use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\Fields\ColumnContainerBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\TextFieldBuilder;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class TrackerXMLFieldMappingFromExistingTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class TrackerXMLFieldMappingFromExistingTrackerTest extends TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /**
-     * @var array
-     */
-    private $fields = [];
-    /**
-     * @var TrackerXMLFieldMappingFromExistingTracker
-     */
-    private $xml_mapping;
-    /**
-     * @var \SimpleXMLElement
-     */
-    private $xml_input;
-
+    /** @var Tracker_FormElement_Field[] */
+    private array $fields = [];
+    private TrackerXMLFieldMappingFromExistingTracker $xml_mapping;
+    private SimpleXMLElement $xml_input;
     private Tracker_FormElement_Field_List_Bind_StaticValue $bind_value_1;
     private Tracker_FormElement_Field_List_Bind_StaticValue $bind_value_2;
     private Tracker_FormElement_Field_List_Bind_StaticValue $bind_value_3;
     private Tracker_FormElement_Field_List_Bind_StaticValue $bind_value_4;
     private Tracker_FormElement_Field_List_Bind_StaticValue $bind_value_5;
     private Tracker_FormElement_Field_List_Bind_StaticValue $bind_value_6;
-    /**
-     * @var Tracker_FormElement_Field_Selectbox
-     */
-    private $select_box;
-    /**
-     * @var Tracker_FormElement_Container_Column
-     */
-    private $column_1;
-    /**
-     * @var Tracker_FormElement_Container_Column
-     */
-    private $column_2;
-    /**
-     * @var Tracker_FormElement_Container_Column
-     */
-    private $column_3;
-    /**
-     * @var Tracker_FormElement_Container_Column
-     */
-    private $column_4;
-    /**
-     * @var Tracker_FormElement_Field_Text
-     */
-    private $text_value_1;
-    /**
-     * @var Tracker_FormElement_Field_Text
-     */
-    private $text_value_2;
-    /**
-     * @var Tracker_FormElement_Field_Text
-     */
-    private $text_value_3;
-    /**
-     * @var Tracker_FormElement_Field_Text
-     */
-    private $text_value_4;
-    /**
-     * @var Tracker_FormElement_Field_Text
-     */
-    private $text_value_5;
+    private Tracker_FormElement_Field_Selectbox $select_box;
+    private Tracker_FormElement_Container_Column $column_1;
+    private Tracker_FormElement_Container_Column $column_2;
+    private Tracker_FormElement_Container_Column $column_3;
+    private Tracker_FormElement_Container_Column $column_4;
+    private Tracker_FormElement_Field_Text $text_value_1;
+    private Tracker_FormElement_Field_Text $text_value_2;
+    private Tracker_FormElement_Field_Text $text_value_3;
+    private Tracker_FormElement_Field_Text $text_value_4;
+    private Tracker_FormElement_Field_Text $text_value_5;
 
     public function setUp(): void
     {
         $xml_field_mapping = file_get_contents(dirname(__FILE__) . '/_fixtures/TestFieldMapping.xml');
         $this->xml_input   = simplexml_load_string($xml_field_mapping);
 
-        $this->column_1 = $this->mockAColumn('stepA');
-        $this->column_2 = $this->mockAColumn('stepB');
-        $this->column_3 = $this->mockAColumn('stepC');
-        $this->column_4 = $this->mockAColumn('stepD');
+        $this->column_1 = $this->buildAColumn('stepA');
+        $this->column_2 = $this->buildAColumn('stepB');
+        $this->column_3 = $this->buildAColumn('stepC');
+        $this->column_4 = $this->buildAColumn('stepD');
 
         $this->bind_value_1 = $this->buildListStaticValue('To be done');
         $this->bind_value_2 = $this->buildListStaticValue('On going');
@@ -111,65 +78,60 @@ class TrackerXMLFieldMappingFromExistingTrackerTest extends \Tuleap\Test\PHPUnit
         $this->bind_value_5 = $this->buildListStaticValue('Functional review');
         $this->bind_value_6 = $this->buildListStaticValue('Code review');
 
-        $bind_values = Mockery::mock(Tracker_FormElement_Field_List_Bind_Static::class);
-        $bind_values->shouldReceive('getAllValues')->andReturn(
-            [
-                $this->bind_value_1,
-                $this->bind_value_2,
-                $this->bind_value_3,
-                $this->bind_value_4,
-                $this->bind_value_5,
-                $this->bind_value_6,
-            ]
-        );
+        $list_field = ListStaticBindBuilder::aStaticBind(ListFieldBuilder::aListField(65)->withName('stepE')->build())
+            ->withBuildStaticValues([
+                1 => $this->bind_value_1,
+                2 => $this->bind_value_2,
+                3 => $this->bind_value_3,
+                4 => $this->bind_value_4,
+                5 => $this->bind_value_5,
+                6 => $this->bind_value_6,
+            ])->build()->getField();
+        self::assertInstanceOf(Tracker_FormElement_Field_Selectbox::class, $list_field);
+        $this->select_box = $list_field;
+        $this->fields[]   = $this->select_box;
 
-        $this->select_box = Mockery::mock(Tracker_FormElement_Field_Selectbox::class);
-        $this->select_box->shouldReceive('getName')->andReturn('stepE');
-        $this->select_box->shouldReceive('getBind')->andReturn($bind_values);
-        $this->fields[] = $this->select_box;
-
-        $this->text_value_1 = $this->mockAText('stepF');
-        $this->text_value_2 = $this->mockAText('stepG');
-        $this->text_value_3 = $this->mockAText('stepH');
-        $this->text_value_4 = $this->mockAText('stepI');
-        $this->text_value_5 = $this->mockAText('stepJ');
+        $this->text_value_1 = $this->buildATextField('stepF');
+        $this->text_value_2 = $this->buildATextField('stepG');
+        $this->text_value_3 = $this->buildATextField('stepH');
+        $this->text_value_4 = $this->buildATextField('stepI');
+        $this->text_value_5 = $this->buildATextField('stepJ');
 
         $this->xml_mapping = new TrackerXMLFieldMappingFromExistingTracker();
     }
 
-    public function testGetsAllMappingField()
+    public function testGetsAllMappingField(): void
     {
-        $expected =
-            [
-                'F1' => $this->column_1,
-                'F2' => $this->column_2,
-                'F3' => $this->column_3,
-                'F4' => $this->column_4,
-                'F5' => $this->select_box,
-                'V1' => $this->bind_value_1,
-                'V2' => $this->bind_value_2,
-                'V3' => $this->bind_value_3,
-                'V4' => $this->bind_value_4,
-                'V5' => $this->bind_value_5,
-                'V6' => $this->bind_value_6,
-                'F6' => $this->text_value_1,
-                'F7' => $this->text_value_2,
-                'F8' => $this->text_value_3,
-                'F9' => $this->text_value_4,
-                'F10' => $this->text_value_5,
-            ];
+        $expected = [
+            'F1'  => $this->column_1,
+            'F2'  => $this->column_2,
+            'F3'  => $this->column_3,
+            'F4'  => $this->column_4,
+            'F5'  => $this->select_box,
+            'V1'  => $this->bind_value_1,
+            'V2'  => $this->bind_value_2,
+            'V3'  => $this->bind_value_3,
+            'V4'  => $this->bind_value_4,
+            'V5'  => $this->bind_value_5,
+            'V6'  => $this->bind_value_6,
+            'F6'  => $this->text_value_1,
+            'F7'  => $this->text_value_2,
+            'F8'  => $this->text_value_3,
+            'F9'  => $this->text_value_4,
+            'F10' => $this->text_value_5,
+        ];
 
-        $this->assertEquals($expected, $this->xml_mapping->getXmlFieldsMapping($this->xml_input, $this->fields));
+        self::assertEquals($expected, $this->xml_mapping->getXmlFieldsMapping($this->xml_input, $this->fields));
     }
 
-    public function testGetsFieldMappingButOnlyMatchingFormElement()
+    public function testGetsFieldMappingButOnlyMatchingFormElement(): void
     {
         unset($this->fields);
 
-        $this->mockAColumn('stuffA');
-        $this->mockAColumn('stuffB');
-        $this->mockAColumn('stuffC');
-        $this->mockAColumn('stuffD');
+        $this->buildAColumn('stuffA');
+        $this->buildAColumn('stuffB');
+        $this->buildAColumn('stuffC');
+        $this->buildAColumn('stuffD');
 
         $this->buildListStaticValue('stuff1');
         $this->buildListStaticValue('stuff2');
@@ -178,43 +140,37 @@ class TrackerXMLFieldMappingFromExistingTrackerTest extends \Tuleap\Test\PHPUnit
         $this->buildListStaticValue('stuff5');
         $this->buildListStaticValue('stuff5');
 
-        $bind_values = Mockery::mock(Tracker_FormElement_Field_List_Bind_Static::class);
-        $bind_values->shouldReceive('getAllValues')->andReturn(
-            [
-                $this->bind_value_1,
-                $this->bind_value_2,
-                $this->bind_value_3,
-                $this->bind_value_4,
-                $this->bind_value_5,
-                $this->bind_value_6,
-            ]
-        );
-
-        $select_box = Mockery::mock(Tracker_FormElement_Field_Selectbox::class);
-        $select_box->shouldReceive('getName')->andReturn('stuffE');
-        $select_box->shouldReceive('getBind')->andReturn($bind_values);
+        $select_box     = ListStaticBindBuilder::aStaticBind(ListFieldBuilder::aListField(74)->withName('stuffE')->build())
+            ->withBuildStaticValues([
+                1 => $this->bind_value_1,
+                2 => $this->bind_value_2,
+                3 => $this->bind_value_3,
+                4 => $this->bind_value_4,
+                5 => $this->bind_value_5,
+                6 => $this->bind_value_6,
+            ])->build()->getField();
         $this->fields[] = $select_box;
 
         $this->fields[] = $this->text_value_1;
 
-        $this->mockAText('stuffG');
-        $this->mockAText('stuffH');
-        $this->mockAText('stuffI');
-        $this->mockAText('stuffJ');
+        $this->buildATextField('stuffG');
+        $this->buildATextField('stuffH');
+        $this->buildATextField('stuffI');
+        $this->buildATextField('stuffJ');
 
         $expected = ['F6' => $this->text_value_1];
 
-        $this->assertEquals($expected, $this->xml_mapping->getXmlFieldsMapping($this->xml_input, $this->fields));
+        self::assertEquals($expected, $this->xml_mapping->getXmlFieldsMapping($this->xml_input, $this->fields));
     }
 
-    public function testGetsNothingIfNoMatchingFormElement()
+    public function testGetsNothingIfNoMatchingFormElement(): void
     {
         unset($this->fields);
 
-        $this->mockAColumn('stuffA');
-        $this->mockAColumn('stuffB');
-        $this->mockAColumn('stuffC');
-        $this->mockAColumn('stuffD');
+        $this->buildAColumn('stuffA');
+        $this->buildAColumn('stuffB');
+        $this->buildAColumn('stuffC');
+        $this->buildAColumn('stuffD');
 
         $this->buildListStaticValue('stuff1');
         $this->buildListStaticValue('stuff2');
@@ -223,40 +179,29 @@ class TrackerXMLFieldMappingFromExistingTrackerTest extends \Tuleap\Test\PHPUnit
         $this->buildListStaticValue('stuff5');
         $this->buildListStaticValue('stuff5');
 
-        $bind_values = Mockery::mock(Tracker_FormElement_Field_List_Bind_Static::class);
-        $bind_values->shouldReceive('getAllValues')->andReturn(
-            [
-                $this->bind_value_1,
-                $this->bind_value_2,
-                $this->bind_value_3,
-                $this->bind_value_4,
-                $this->bind_value_5,
-                $this->bind_value_6,
-            ]
-        );
-
-        $select_box = Mockery::mock(Tracker_FormElement_Field_Selectbox::class);
-        $select_box->shouldReceive('getName')->andReturn('stuffE');
-        $select_box->shouldReceive('getBind')->andReturn($bind_values);
+        $select_box     = ListStaticBindBuilder::aStaticBind(ListFieldBuilder::aListField(74)->withName('stuffE')->build())
+            ->withBuildStaticValues([
+                1 => $this->bind_value_1,
+                2 => $this->bind_value_2,
+                3 => $this->bind_value_3,
+                4 => $this->bind_value_4,
+                5 => $this->bind_value_5,
+                6 => $this->bind_value_6,
+            ])->build()->getField();
         $this->fields[] = $select_box;
 
-        $this->mockAText('stuffF');
-        $this->mockAText('stuffG');
-        $this->mockAText('stuffH');
-        $this->mockAText('stuffI');
-        $this->mockAText('stuffJ');
+        $this->buildATextField('stuffF');
+        $this->buildATextField('stuffG');
+        $this->buildATextField('stuffH');
+        $this->buildATextField('stuffI');
+        $this->buildATextField('stuffJ');
 
-        $this->assertEquals([], $this->xml_mapping->getXmlFieldsMapping($this->xml_input, $this->fields));
+        self::assertEquals([], $this->xml_mapping->getXmlFieldsMapping($this->xml_input, $this->fields));
     }
 
-    /**
-     * @param $name
-     * @return Mockery\MockInterface
-     */
-    private function mockAColumn($name)
+    private function buildAColumn(string $name): Tracker_FormElement_Container_Column
     {
-        $column = Mockery::mock(Tracker_FormElement_Container_Column::class);
-        $column->shouldReceive('getName')->andReturn($name);
+        $column         = ColumnContainerBuilder::aColumn(15)->withName($name)->build();
         $this->fields[] = $column;
         return $column;
     }
@@ -266,14 +211,9 @@ class TrackerXMLFieldMappingFromExistingTrackerTest extends \Tuleap\Test\PHPUnit
         return ListStaticValueBuilder::aStaticValue($label)->build();
     }
 
-    /**
-     * @param $name
-     * @return Mockery\MockInterface
-     */
-    private function mockAText($name)
+    private function buildATextField(string $name): Tracker_FormElement_Field_Text
     {
-        $text_value = Mockery::mock(Tracker_FormElement_Field_Text::class);
-        $text_value->shouldReceive('getName')->andReturn($name);
+        $text_value     = TextFieldBuilder::aTextField(85)->withName($name)->build();
         $this->fields[] = $text_value;
         return $text_value;
     }
