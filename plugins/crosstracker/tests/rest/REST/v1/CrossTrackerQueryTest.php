@@ -159,6 +159,38 @@ final class CrossTrackerQueryTest extends RestBase
         self::assertEquals($this->release_artifact_ids[1], $json_response['artifacts'][0]['@id']['value']);
     }
 
+    #[\PHPUnit\Framework\Attributes\Depends('testPut')]
+    public function testGetForwardAndReverseLinksFromCrossTrackerQuery(): void
+    {
+        $tql_query = "SELECT @pretty_title, @status, @last_update_date, @submitted_by FROM @project = 'self' WHERE @status = OPEN() ORDER BY @last_update_date DESC";
+        $response  = $this->getResponse(
+            $this->request_factory->createRequest('GET', 'crosstracker_widget/' . self::WIDGET_ID . '/forward_links?source_artifact_id=' . $this->release_artifact_ids[1] . '&tql_query=' . (urlencode($tql_query)) .  '&limit=50&offset=0'),
+        );
+
+        self::assertSame(200, $response->getStatusCode());
+        $json_response = decode($response->getBody()->getContents());
+
+        self::assertGreaterThan(1, $json_response['artifacts']);
+
+        $parent_id = $json_response['artifacts'][0]['@artifact']['id'];
+
+        $response = $this->getResponse(
+            $this->request_factory->createRequest('GET', 'crosstracker_widget/' . self::WIDGET_ID . '/reverse_links?target_artifact_id=' . $parent_id . '&tql_query=' . (urlencode($tql_query)) .  '&limit=50&offset=0'),
+        );
+
+        self::assertSame(200, $response->getStatusCode());
+        $json_response = decode($response->getBody()->getContents());
+
+        self::assertGreaterThan(1, $json_response['artifacts']);
+        self::assertTrue(
+            in_array(
+                $this->release_artifact_ids[1],
+                array_column(array_column($json_response['artifacts'], '@artifact'), 'id')
+            ),
+            sprintf('Artifact ID %s not found in the list of reverse links', $this->release_artifact_ids[1])
+        );
+    }
+
     public function testGetQueryWithoutArtifacts(): void
     {
         $params       = [
