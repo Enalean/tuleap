@@ -26,7 +26,7 @@
             <span class="tlp-wizard-step-current">{{ $gettext("Information") }}</span>
         </nav>
 
-        <step-label v-bind:step-label="$gettext('Give your tracker some basic info')" />
+        <step-label v-bind:step_label="$gettext('Give your tracker some basic info')" />
     </div>
 </template>
 <script lang="ts">

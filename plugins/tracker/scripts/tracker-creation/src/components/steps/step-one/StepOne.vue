@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <step-layout next-step-name="step-2">
+    <step-layout next_step_name="step-2">
         <template v-slot:step_info>
             <step-one-info />
         </template>

@@ -24,7 +24,7 @@
             <span class="tlp-wizard-step-next">{{ $gettext("Information") }} </span>
         </nav>
 
-        <step-label v-bind:step-label="$gettext('Choose a starting point')" />
+        <step-label v-bind:step_label="$gettext('Choose a starting point')" />
         <p>
             {{
                 $gettext(
