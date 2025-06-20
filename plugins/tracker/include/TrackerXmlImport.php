@@ -18,9 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\NeverThrow\Err;
-use Tuleap\NeverThrow\Ok;
-use Tuleap\NeverThrow\Result;
 use Tuleap\Project\UGroupRetrieverWithLegacy;
 use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
 use Tuleap\Project\XML\Import\ImportConfig;
@@ -30,15 +27,16 @@ use Tuleap\Tracker\Artifact\XMLImport\MoveImportConfig;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerXmlImportConfig;
 use Tuleap\Tracker\CreateTrackerFromXMLEvent;
 use Tuleap\Tracker\Creation\TrackerCreationDataChecker;
-use Tuleap\Tracker\Creation\TrackerCreationNotificationsSettings;
 use Tuleap\Tracker\Creation\TrackerCreationNotificationsSettingsFromXmlBuilder;
-use Tuleap\Tracker\Creation\TrackerCreationSettings;
 use Tuleap\Tracker\Events\XMLImportArtifactLinkTypeCanBeDisabled;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
-use Tuleap\Tracker\FormElement\Field\XMLCriteriaValueCache;
 use Tuleap\Tracker\Hierarchy\HierarchyDAO;
+use Tuleap\Tracker\Tracker\XML\Importer\CreateFromXml;
+use Tuleap\Tracker\Tracker\XML\Importer\FromXmlCreator;
 use Tuleap\Tracker\Tracker\XML\Importer\GetInstanceFromXml;
+use Tuleap\Tracker\Tracker\XML\Importer\InstantiateTrackerFromXml;
+use Tuleap\Tracker\Tracker\XML\Importer\TrackerFromXmlInstantiator;
 use Tuleap\Tracker\TrackerColor;
 use Tuleap\Tracker\TrackerIsInvalidException;
 use Tuleap\Tracker\TrackerXMLFieldMappingFromExistingTracker;
@@ -66,9 +64,6 @@ class TrackerXmlImport
 
     /** @var HierarchyDAO */
     private $hierarchy_dao;
-
-    /** @var Tracker_FormElementFactory */
-    private $formelement_factory;
 
     /** @var XML_RNGValidator */
     private $rng_validator;
@@ -104,11 +99,6 @@ class TrackerXmlImport
     private $artifact_links_usage_dao;
 
     /**
-     * @var TrackerXMLFieldMappingFromExistingTracker
-     */
-    private $existing_tracker_field_mapping;
-
-    /**
      * @var ExternalFieldsExtractor
      */
     private $external_fields_extractor;
@@ -116,17 +106,12 @@ class TrackerXmlImport
      * @var TrackerXmlImportFeedbackCollector
      */
     private $feedback_collector;
-    /**
-     * @var \Tuleap\Tracker\Creation\TrackerCreationDataChecker
-     */
-    private $creation_data_checker;
 
     public function __construct(
         TrackerFactory $tracker_factory,
         EventManager $event_manager,
         HierarchyDAO $hierarchy_dao,
         private readonly GetInstanceFromXml $get_instance_from_xml,
-        Tracker_FormElementFactory $formelement_factory,
         XML_RNGValidator $rng_validator,
         Tracker_Workflow_Trigger_RulesManager $trigger_rulesmanager,
         Tracker_Artifact_XMLImport $xml_import,
@@ -134,27 +119,24 @@ class TrackerXmlImport
         \Psr\Log\LoggerInterface $logger,
         ArtifactLinksUsageUpdater $artifact_links_usage_updater,
         ArtifactLinksUsageDao $artifact_links_usage_dao,
-        TrackerXMLFieldMappingFromExistingTracker $tracker_XML_field_mapping_from_existing_tracker,
+        private readonly TrackerXMLFieldMappingFromExistingTracker $existing_tracker_field_mapping,
         ExternalFieldsExtractor $external_fields_extractor,
         TrackerXmlImportFeedbackCollector $feedback_collector,
-        TrackerCreationDataChecker $creation_data_checker,
-        private readonly TrackerCreationNotificationsSettingsFromXmlBuilder $notifications_settings_from_xml_builder,
+        private readonly CreateFromXml $from_xml_creator,
+        private readonly InstantiateTrackerFromXml $instantiate_tracker_from_xml,
     ) {
-        $this->tracker_factory                = $tracker_factory;
-        $this->event_manager                  = $event_manager;
-        $this->hierarchy_dao                  = $hierarchy_dao;
-        $this->formelement_factory            = $formelement_factory;
-        $this->rng_validator                  = $rng_validator;
-        $this->trigger_rulesmanager           = $trigger_rulesmanager;
-        $this->xml_import                     = $xml_import;
-        $this->user_finder                    = $user_finder;
-        $this->logger                         = $logger;
-        $this->artifact_links_usage_updater   = $artifact_links_usage_updater;
-        $this->artifact_links_usage_dao       = $artifact_links_usage_dao;
-        $this->existing_tracker_field_mapping = $tracker_XML_field_mapping_from_existing_tracker;
-        $this->external_fields_extractor      = $external_fields_extractor;
-        $this->feedback_collector             = $feedback_collector;
-        $this->creation_data_checker          = $creation_data_checker;
+        $this->tracker_factory              = $tracker_factory;
+        $this->event_manager                = $event_manager;
+        $this->hierarchy_dao                = $hierarchy_dao;
+        $this->rng_validator                = $rng_validator;
+        $this->trigger_rulesmanager         = $trigger_rulesmanager;
+        $this->xml_import                   = $xml_import;
+        $this->user_finder                  = $user_finder;
+        $this->logger                       = $logger;
+        $this->artifact_links_usage_updater = $artifact_links_usage_updater;
+        $this->artifact_links_usage_dao     = $artifact_links_usage_dao;
+        $this->external_fields_extractor    = $external_fields_extractor;
+        $this->feedback_collector           = $feedback_collector;
     }
 
     /**
@@ -167,49 +149,80 @@ class TrackerXmlImport
         $builder         = new Tracker_Artifact_XMLImportBuilder();
         $tracker_factory = TrackerFactory::instance();
 
-        $logger = $logger === null ? new \Psr\Log\NullLogger() : $logger;
+        $logger = new WrapperLogger(
+            $logger ?? new \Psr\Log\NullLogger(),
+            'TrackerXMLImport'
+        );
 
         $artifact_links_usage_dao     = new ArtifactLinksUsageDao();
         $artifact_links_usage_updater = new ArtifactLinksUsageUpdater($artifact_links_usage_dao);
         $event_manager                = EventManager::instance();
         $ugroup_manager               = new UGroupManager();
 
+        $form_element_factory = Tracker_FormElementFactory::instance();
+
+        $feedback_collector = new TrackerXmlImportFeedbackCollector();
+
+        $get_instance_from_xml = new GetInstanceFromXml(
+            $tracker_factory,
+            Tracker_CannedResponseFactory::instance(),
+            $form_element_factory,
+            $user_finder,
+            $feedback_collector,
+            Tracker_SemanticFactory::instance(),
+            new Tracker_RuleFactory(
+                new Tracker_RuleDao()
+            ),
+            Tracker_ReportFactory::instance(),
+            WorkflowFactory::instance(),
+            new WebhookFactory(new WebhookDao()),
+            new UGroupRetrieverWithLegacy($ugroup_manager),
+            $logger,
+        );
+
+        $rng_validator = new XML_RNGValidator();
+
+        $tracker_creation_data_checker = TrackerCreationDataChecker::build();
+
+
+        $external_fields_extractor = new ExternalFieldsExtractor($event_manager);
+        $from_xml_creator          = new FromXmlCreator(
+            $tracker_factory,
+            $form_element_factory,
+            $get_instance_from_xml,
+            $rng_validator,
+            $external_fields_extractor,
+            $tracker_creation_data_checker,
+            new TrackerCreationNotificationsSettingsFromXmlBuilder(),
+            $feedback_collector,
+            $logger,
+        );
         return new TrackerXmlImport(
             $tracker_factory,
             $event_manager,
             new HierarchyDAO(),
-            new GetInstanceFromXml(
-                $tracker_factory,
-                Tracker_CannedResponseFactory::instance(),
-                Tracker_FormElementFactory::instance(),
-                $user_finder,
-                new TrackerXmlImportFeedbackCollector(),
-                Tracker_SemanticFactory::instance(),
-                new Tracker_RuleFactory(
-                    new Tracker_RuleDao()
-                ),
-                Tracker_ReportFactory::instance(),
-                WorkflowFactory::instance(),
-                new WebhookFactory(new WebhookDao()),
-                new UGroupRetrieverWithLegacy($ugroup_manager),
-                $logger,
-            ),
-            Tracker_FormElementFactory::instance(),
-            new XML_RNGValidator(),
+            $get_instance_from_xml,
+            $rng_validator,
             $tracker_factory->getTriggerRulesManager(),
             $builder->build(
                 $user_finder,
                 $logger
             ),
             $user_finder,
-            new WrapperLogger($logger, 'TrackerXMLImport'),
+            $logger,
             $artifact_links_usage_updater,
             $artifact_links_usage_dao,
             new TrackerXMLFieldMappingFromExistingTracker(),
-            new ExternalFieldsExtractor($event_manager),
-            new TrackerXmlImportFeedbackCollector(),
-            TrackerCreationDataChecker::build(),
-            new TrackerCreationNotificationsSettingsFromXmlBuilder(),
+            $external_fields_extractor,
+            $feedback_collector,
+            $from_xml_creator,
+            new TrackerFromXmlInstantiator(
+                $tracker_factory,
+                $form_element_factory,
+                $from_xml_creator,
+                $feedback_collector,
+                $logger,
+            ),
         );
     }
 
@@ -265,7 +278,17 @@ class TrackerXmlImport
         $ordered_xml_trackers = $this->getAllXmlTrackersOrderedByPriority($xml_input);
 
         foreach ($ordered_xml_trackers as $xml_tracker_id => $ordered_xml_tracker) {
-            $tracker_created                           = $this->instantiateTrackerFromXml($project, $ordered_xml_tracker, $configuration, $created_trackers_mapping);
+            $tracker_created = $this->instantiate_tracker_from_xml->instantiateTrackerFromXml(
+                $project,
+                $ordered_xml_tracker,
+                $configuration,
+                $created_trackers_mapping,
+                $this->existing_tracker_field_mapping,
+                $this->xml_fields_mapping,
+                $this->reports_xml_mapping,
+                $this->renderers_xml_mapping,
+            );
+
             $created_trackers_objects[$xml_tracker_id] = $tracker_created;
             $created_trackers_mapping                  = $created_trackers_mapping + [(string) $xml_tracker_id => $tracker_created->getId()];
             $registery->addReference($xml_tracker_id, $tracker_created->getId());
@@ -522,83 +545,6 @@ class TrackerXmlImport
     }
 
     /**
-     * protected for testing purpose
-     *
-     * @throws TrackerFromXmlException
-     * @throws TrackerFromXmlImportCannotBeCreatedException
-     * @throws Tracker_Exception
-     * @throws XML_ParseException
-     */
-    protected function instantiateTrackerFromXml(
-        Project $project,
-        SimpleXMLElement $xml_tracker,
-        ImportConfig $configuration,
-        array $created_trackers_mapping,
-    ): Tracker {
-        $tracker_existing = $this->getTrackerToReUse($project, $xml_tracker, $configuration);
-        if ($tracker_existing !== null) {
-            return $tracker_existing;
-        }
-
-        try {
-            return $this->createFromXML(
-                $xml_tracker,
-                $project,
-                (string) $xml_tracker->name,
-                (string) $xml_tracker->description,
-                (string) $xml_tracker->item_name,
-                (string) $xml_tracker->color,
-                $created_trackers_mapping
-            );
-        } catch (\Tuleap\Tracker\TrackerIsInvalidException $exception) {
-            $this->feedback_collector->addErrors($exception->getTranslatedMessage());
-            $this->feedback_collector->displayErrors($this->logger);
-            throw new TrackerFromXmlImportCannotBeCreatedException((string) $xml_tracker->name);
-        }
-    }
-
-    /**
-     * @return null|Tracker
-     */
-    private function getTrackerToReUse(
-        Project $project,
-        SimpleXMLElement $xml_tracker,
-        ImportConfig $configuration,
-    ) {
-        foreach ($configuration->getExtraConfiguration() as $extra_configuration) {
-            if ($extra_configuration->getServiceName() !== trackerPlugin::SERVICE_SHORTNAME) {
-                continue;
-            }
-
-            $tracker_shortname = (string) $xml_tracker->item_name;
-
-            if (in_array($tracker_shortname, $extra_configuration->getValue())) {
-                $tracker_existing = $this->tracker_factory->getTrackerByShortnameAndProjectId(
-                    $tracker_shortname,
-                    (int) $project->getID()
-                );
-
-                if ($tracker_existing) {
-                    $this->fillFieldMappingFromExistingTracker($tracker_existing, $xml_tracker);
-
-                    return $tracker_existing;
-                }
-            }
-        }
-
-        return null;
-    }
-
-    private function fillFieldMappingFromExistingTracker(Tracker $tracker, SimpleXMLElement $xml_tracker)
-    {
-        $form_elements_existing   = $this->formelement_factory->getFields($tracker);
-        $this->xml_fields_mapping = $this->existing_tracker_field_mapping->getXmlFieldsMapping(
-            $xml_tracker,
-            $form_elements_existing
-        );
-    }
-
-    /**
      * @return Tracker|null
      * @throws TrackerFromXmlException
      * @throws Tracker_Exception
@@ -616,7 +562,18 @@ class TrackerXmlImport
             $description = (string) $tracker_xml->description;
             $item_name   = (string) $tracker_xml->item_name;
 
-            return $this->createFromXML($tracker_xml, $project, $name, $description, $item_name, TrackerColor::default()->getName(), []);
+            return $this->from_xml_creator->createFromXML(
+                $tracker_xml,
+                $project,
+                $name,
+                $description,
+                $item_name,
+                TrackerColor::default()->getName(),
+                [],
+                $this->xml_fields_mapping,
+                $this->reports_xml_mapping,
+                $this->renderers_xml_mapping,
+            );
         } catch (\Tuleap\Tracker\TrackerIsInvalidException $exception) {
             $this->feedback_collector->addErrors($exception->getTranslatedMessage());
             $this->feedback_collector->displayErrors($this->logger);
@@ -645,102 +602,18 @@ class TrackerXmlImport
         $event = new CreateTrackerFromXMLEvent($project, $tracker_xml);
         $this->event_manager->processEvent($event);
 
-        return $this->createFromXML($tracker_xml, $project, $name, $description, $item_name, $color, []);
-    }
-
-    /**
-     * First, creates a new Tracker Object by importing its structure from an XML file,
-     * then, imports it into the Database, before verifying the consistency
-     *
-     * @throws TrackerFromXmlException
-     * @throws Tracker_Exception
-     * @throws XML_ParseException
-     * @throws \Tuleap\Tracker\TrackerIsInvalidException
-     */
-    public function createFromXML(
-        SimpleXMLElement $xml_element,
-        Project $project,
-        string $name,
-        string $description,
-        string $itemname,
-        ?string $color,
-        array $created_trackers_mapping,
-    ): Tracker {
-        $this->creation_data_checker->checkAtProjectCreation((int) $project->getId(), $name, $itemname);
-
-        $partial_element = SimpleXMLElementBuilder::buildSimpleXMLElementToLoadHugeFiles((string) $xml_element->asXml());
-        $this->external_fields_extractor->extractExternalFieldsFromTracker($partial_element);
-        $this->rng_validator->validate(
-            $partial_element,
-            realpath(__DIR__ . '/../resources/tracker.rng')
-        );
-
-        $tracker = $this->get_instance_from_xml->getInstanceFromXML(
-            $xml_element,
+        return $this->from_xml_creator->createFromXML(
+            $tracker_xml,
             $project,
             $name,
             $description,
-            $itemname,
+            $item_name,
             $color,
-            $created_trackers_mapping,
+            [],
             $this->xml_fields_mapping,
             $this->reports_xml_mapping,
             $this->renderers_xml_mapping,
         );
-        //Testing consistency of the imported tracker before updating database
-        if ($tracker->testImport()) {
-            $attributes                   = $xml_element->attributes();
-            $is_displayed_in_new_dropdown = isset($attributes['is_displayed_in_new_dropdown']) ?
-                (bool) $attributes['is_displayed_in_new_dropdown'] : false;
-            $is_private_comment_used      = isset($attributes['use_private_comments']) ?
-                PHPCast::toBoolean($attributes['use_private_comments']) : true;
-            $is_move_artifacts_enabled    = (isset($attributes['enable_move_artifacts']) && $attributes['enable_move_artifacts'] !== null) ?
-                PHPCast::toBoolean($attributes['enable_move_artifacts']) : true;
-
-            $settings = new TrackerCreationSettings(
-                $is_displayed_in_new_dropdown,
-                $is_private_comment_used,
-                $is_move_artifacts_enabled,
-            );
-
-            $this->notifications_settings_from_xml_builder
-                ->getCreationNotificationsSettings($attributes, $tracker)
-                ->andThen(fn (TrackerCreationNotificationsSettings $notifications_settings) => $this->saveTracker($tracker, $settings, $notifications_settings))
-                ->match(
-                    static fn (int $tracker_id)  => $tracker->setId($tracker_id),
-                    function (string $error): void {
-                        throw new TrackerFromXmlException($error);
-                    }
-                );
-        } else {
-            throw new TrackerFromXmlException('XML file cannot be imported');
-        }
-
-        $this->displayWarnings();
-
-        XMLCriteriaValueCache::clearInstances();
-        $this->formelement_factory->clearCaches();
-        $this->tracker_factory->clearCaches();
-
-        return $tracker;
-    }
-
-    /**
-     * @return Ok<int>|Err<string>
-     */
-    private function saveTracker(Tracker $tracker, TrackerCreationSettings $settings, TrackerCreationNotificationsSettings $notifications_settings): Ok|Err
-    {
-        $tracker_id = $this->tracker_factory->saveObject($tracker, $settings, $notifications_settings);
-        if (! $tracker_id) {
-            return Result::err(
-                dgettext(
-                    'tuleap-tracker',
-                    'Oops. Something weird occured. Unable to create the tracker. Please try again.'
-                )
-            );
-        }
-
-        return Result::ok($tracker_id);
     }
 
     /**
@@ -777,15 +650,6 @@ class TrackerXmlImport
         foreach ($all_hierarchies as $parent_id => $hierarchy) {
             $this->hierarchy_dao->updateChildren($parent_id, $hierarchy);
         }
-    }
-
-    private function displayWarnings()
-    {
-        if (empty($this->feedback_collector->getWarnings())) {
-            return;
-        }
-
-        $this->feedback_collector->displayWarnings($this->logger);
     }
 
     /**

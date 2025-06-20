@@ -25,11 +25,11 @@ use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
 use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
-use Tuleap\Tracker\Creation\TrackerCreationDataChecker;
-use Tuleap\Tracker\Creation\TrackerCreationNotificationsSettingsFromXmlBuilder;
 use Tuleap\Tracker\Events\XMLImportArtifactLinkTypeCanBeDisabled;
 use Tuleap\Tracker\Hierarchy\HierarchyDAO;
+use Tuleap\Tracker\Tracker\XML\Importer\CreateFromXml;
 use Tuleap\Tracker\Tracker\XML\Importer\GetInstanceFromXml;
+use Tuleap\Tracker\Tracker\XML\Importer\InstantiateTrackerFromXml;
 use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
 use Tuleap\XML\MappingsRegistry;
 
@@ -87,7 +87,6 @@ final class TrackerXmlImportArtifactLinkV2ActivationTest extends \Tuleap\Test\PH
             $this->event_manager,
             $this->hierarchy_dao,
             $this->get_instance_from_xml,
-            $form_element_factory,
             $rng_validator,
             $this->createMock(\Tracker_Workflow_Trigger_RulesManager::class),
             $this->createMock(\Tracker_Artifact_XMLImport::class),
@@ -98,8 +97,8 @@ final class TrackerXmlImportArtifactLinkV2ActivationTest extends \Tuleap\Test\PH
             $this->createMock(\Tuleap\Tracker\TrackerXMLFieldMappingFromExistingTracker::class),
             $this->external_validator,
             $this->createMock(TrackerXmlImportFeedbackCollector::class),
-            $this->createMock(TrackerCreationDataChecker::class),
-            new TrackerCreationNotificationsSettingsFromXmlBuilder(),
+            $this->createMock(CreateFromXml::class),
+            $this->createMock(InstantiateTrackerFromXml::class),
         );
 
         $this->external_validator->method('extractExternalFieldFromProjectElement');
