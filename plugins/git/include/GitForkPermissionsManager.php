@@ -29,7 +29,7 @@ use Tuleap\Git\Permissions\RegexpFineGrainedRetriever;
 /**
  * GitForkPermissionsManager
  */
-class GitForkPermissionsManager
+class GitForkPermissionsManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     /**
      * @var GitPermissionsManager
@@ -182,7 +182,7 @@ class GitForkPermissionsManager
         } else {
             $form .= $this->displayAccessControlWhileForkingASingleRepository($groupId);
         }
-        $form .= '<input type="submit" class="btn btn-primary" value="' . dgettext('tuleap-git', 'Fork repositories') . '" />';
+        $form .= '<input type="submit" class="btn btn-primary" value="' . dgettext('tuleap-git', 'Fork repositories') . '" data-test="create-fork-with-permissions-button" />';
         $form .= '</form></div>';
         return $form;
     }

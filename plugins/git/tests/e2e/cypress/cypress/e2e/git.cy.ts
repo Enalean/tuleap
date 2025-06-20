@@ -17,6 +17,28 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+function waitForRepositoryCreation(): void {
+    cy.get("[data-test=delete]").click();
+    cy.reloadUntilCondition(
+        () => {
+            cy.log("Wait 10 seconds for the Git system event to be finished");
+            // eslint-disable-next-line cypress/no-unnecessary-waiting -- the system event to create the git repo can be long
+            cy.wait(10000);
+            cy.reload();
+        },
+        (number_of_attempts, max_attempts) => {
+            cy.log(
+                `Check that the git repository can be deleted (attempt ${number_of_attempts}/${max_attempts})`,
+            );
+            return cy
+                .get("[data-test=confirm-repository-deletion-button]")
+                .invoke("attr", "disabled")
+                .then((disabled) => disabled === undefined);
+        },
+        "Timed out while checking if the git repository can be deleted",
+    );
+}
+
 describe("Git", function () {
     const now = Date.now();
     const git_project_name = `git-project-${now}`;
@@ -27,6 +49,23 @@ describe("Git", function () {
         cy.createNewPublicProject(`gnotif-${now}`, "agile_alm");
         cy.getProjectId(git_project_name).as("gnotif_project_id");
         cy.createNewPublicProject(`gadmin-${now}`, "agile_alm");
+
+        cy.visitProjectService(`git-fork`, "Git");
+        cy.log("Create a repository and fork it");
+        cy.get("[data-test=create-repository-button]").click();
+        cy.get("[data-test=create-repository-modal-form]").within(() => {
+            cy.get("[data-test=create_repository_name]").type("ToBeForked");
+            cy.root().submit();
+        });
+
+        cy.regularUserSession();
+        cy.createNewPublicProject(`ruser-fork-${now}`, "agile_alm");
+        cy.visitProjectService(`ruser-fork-${now}`, "Git");
+        cy.get("[data-test=create-repository-button]").click();
+        cy.get("[data-test=create-repository-modal-form]").within(() => {
+            cy.get("[data-test=create_repository_name]").type("RegularUserRepo");
+            cy.root().submit();
+        });
     });
 
     context("Project administrators", function () {
@@ -111,25 +150,7 @@ describe("Git", function () {
                 cy.getContains("[data-test=git-repository]", repository_name)
                     .get("[data-test=git-repository-card-admin-link]")
                     .click();
-                cy.get("[data-test=delete]").click();
-                cy.reloadUntilCondition(
-                    () => {
-                        cy.log("Wait 10 seconds for the Git system event to be finished");
-                        // eslint-disable-next-line cypress/no-unnecessary-waiting -- the system event to create the git repo can be long
-                        cy.wait(10000);
-                        cy.reload();
-                    },
-                    (number_of_attempts, max_attempts) => {
-                        cy.log(
-                            `Check that the git repository can be deleted (attempt ${number_of_attempts}/${max_attempts})`,
-                        );
-                        return cy
-                            .get("[data-test=confirm-repository-deletion-button]")
-                            .invoke("attr", "disabled")
-                            .then((disabled) => disabled === undefined);
-                    },
-                    "Timed out while checking if the git repository can be deleted",
-                );
+                waitForRepositoryCreation();
 
                 cy.log("User can checkout the repository");
                 const repository_path = `tuleap/plugins/git/${git_project_name}/${repository_name}`;
@@ -390,6 +411,129 @@ describe("Git", function () {
                 cy.cloneRepository("ProjectMember", repository_path, repository_name);
                 cy.log("Integrator should be able to push tags on official v1 branch");
                 cy.createAndPushTag(repository_name, "official/v1");
+            });
+        });
+        context("Git forks", function () {
+            it("Non project members can fork repository of public project", function () {
+                cy.log("You can see forks in the repository");
+                cy.projectMemberSession();
+                cy.visitProjectService(`git-fork`, "Git");
+
+                cy.log("You can create a new fork");
+                cy.get("[data-test=fork-repositories-link]").click({ force: true });
+                cy.get("[data-test=fork-reporitory-selectbox]").select("MyRepository");
+                cy.get("[data-test=fork-repository-path]").type(`MyRepository${now}`);
+                cy.get("[data-test=create-fork-button]").click();
+                cy.get("[data-test=create-fork-with-permissions-button]").click();
+                cy.log("Check that fork is displayed in repository list");
+                cy.get("[data-test=select-fork-of-user]").select("ProjectMember (ProjectMember)");
+                cy.get("[data-test=git-repository-path]").should("contain", `MyRepository${now}`);
+
+                cy.log(
+                    "You can change description, permissions, mail prefix and notifications on your fork",
+                );
+                cy.projectAdministratorSession();
+                visitGitService();
+                cy.visit(`plugins/git/git-fork/u/ProjectMember/MyRepository${now}/MyRepository`);
+                cy.get("[data-test=git-repository-parent]").contains("MyRepository");
+                cy.get("[data-test=git-repository-settings]").click();
+                cy.get("[data-test=repository-description]").type("My new fork description");
+                cy.get("[data-test=save-settings-button]").click();
+
+                cy.get("[data-test=perms]").click();
+                cy.get("[data-test=git-repository-read-permissions]").select("Anonymous");
+                cy.get("[data-test=git-repository-write-permissions]").select(
+                    "Project administrators",
+                );
+                cy.get("[data-test=git-repository-rewind-permissions]").select("Nobody");
+                cy.get("[data-test=git-permissions-submit]").click();
+
+                cy.get("[data-test=mail]").click();
+                cy.get("[data-test=git-mail-prefix]").type("[My new fork prefix]");
+
+                disableSpecificErrorThrownDueToConflictBetweenCypressAndPrototype();
+
+                addToNotifiedPeople("private");
+                cy.get("[data-test=submit-git-notifications]").click();
+
+                cy.log(
+                    "Description, permissions, mail prefix and notifications on parent repository are not changed",
+                );
+                cy.projectAdministratorSession();
+                cy.visitProjectService(`git-fork`, "Git");
+                cy.get("[data-test=git-repository-card-admin-link]").first().click();
+                cy.get("[data-test=repository-description]").contains("-- Default description --");
+
+                cy.get("[data-test=perms]").click();
+                cy.get("[data-test=git-repository-read-permissions]")
+                    .find(":selected")
+                    .contains("Registered users");
+
+                cy.get("[data-test=git-repository-write-permissions]")
+                    .find(":selected")
+                    .contains("Project members");
+
+                cy.get("[data-test=mail]").click();
+                cy.get("[data-test=git-mail-prefix]").should("have.value", "[SCM]");
+
+                cy.get("[data-test=git-no-notifications]").contains("No notifications");
+
+                cy.log("Switch user to a non project member");
+                cy.regularUserSession();
+                cy.visitProjectService(`git-fork`, "Git");
+
+                cy.log("Non project members can see the repositories");
+                cy.get("[data-test=git-repository-path]").its("length").should("be.gte", 1);
+
+                cy.log("You can see forks in the repository");
+                cy.get("[data-test=git-repositories-page]")
+                    .find("[data-test=git-repository]")
+                    .should("contain.text", "MyRepository");
+                cy.get("[data-test=select-fork-of-user]").select("ProjectMember (ProjectMember)");
+                cy.get("[data-test=git-repository-path]").its("length").should("be.gte", 1);
+
+                cy.log("You can NOT create new fork in public project");
+                cy.visitProjectService(`git-fork`, "Git");
+                cy.get("[data-test=fork-repositories-link]").click({ force: true });
+                cy.get("[data-test=fork-reporitory-selectbox]").select("MyRepository");
+                cy.get("[data-test=in-this-project]").should("have.attr", "disabled");
+
+                cy.log(
+                    "But you can create new fork from public project in an other project you are admin of",
+                );
+                cy.get("[data-test=fork-destination-project]").select(`ruser-fork-${now}`);
+                cy.get("[data-test=create-fork-button]").click();
+                cy.get("[data-test=create-fork-with-permissions-button]").click();
+                cy.get("[data-test=feedback]").contains("Successfully forked");
+            });
+
+            it("When parent repository is deleted, fork is still usable", function () {
+                cy.projectAdministratorSession();
+                cy.visitProjectService(`git-fork`, "Git");
+
+                cy.get("[data-test=fork-repositories-link]").click({ force: true });
+                cy.get("[data-test=fork-reporitory-selectbox]").select("ToBeForked");
+                cy.get('[data-test="create-fork-button"]').click();
+                cy.get("[data-test=create-fork-with-permissions-button]").click();
+
+                cy.log("Delete the parent repository");
+                cy.visit("/plugins/git/git-fork/ToBeForked");
+                cy.get("[data-test=git-repository-settings]").click();
+                waitForRepositoryCreation();
+                cy.get("[data-test=confirm-repository-deletion-button]").click();
+                cy.get("[data-test=deletion-confirmation-button]").click();
+
+                cy.log("User can still browse the fork, page does not throw a fatal error");
+                cy.visit("plugins/git/git-fork/u/ProjectAdministrator/ToBeForked");
+
+                cy.log("User can push some content in a fork");
+                cy.get("[data-test=git-repository-settings]").click();
+                waitForRepositoryCreation();
+                const repository_path =
+                    "tuleap/plugins/git/git-fork/u/ProjectAdministrator/ToBeForked";
+                const repository_name = `MyRepositoryClone${now}`;
+                cy.cloneRepository("ProjectAdministrator", repository_path, repository_name);
+                cy.pushGitCommit(repository_name);
             });
         });
     });

@@ -19,6 +19,7 @@
                 <select
                     multiple="multiple"
                     id="{{ read_select_box_id }}"
+                    data-test="git-repository-read-permissions"
                     name="{{ read_select_box_id }}[]"
                     size="6"
                     class="plugin_git_permissions_select"
@@ -33,6 +34,7 @@
                     multiple="multiple"
                     id="{{ write_select_box_id }}"
                     name="{{ write_select_box_id }}[]"
+                    data-test="git-repository-write-permissions"
                     size="6"
                     {{# cannot_define_per_repo_permissions }}disabled{{/ cannot_define_per_repo_permissions }}
                     class="plugin_git_permissions_select plugin_git_write_permissions_select"
@@ -47,6 +49,7 @@
                     multiple="multiple"
                     id="{{ rewrite_select_box_id }}"
                     name="{{ rewrite_select_box_id }}[]"
+                    data-test="git-repository-rewind-permissions"
                     size="6"
                     {{# cannot_define_per_repo_permissions }}disabled{{/ cannot_define_per_repo_permissions }}
                     class="plugin_git_permissions_select plugin_git_rewind_permissions_select"
