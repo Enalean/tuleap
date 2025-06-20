@@ -20,28 +20,80 @@
 
 <template>
     <tr>
-        <component
-            v-for="column of columns"
-            v-bind:key="'cell-' + item.id + '-' + column.name"
-            v-bind:is="getComponentName(column)"
-            v-bind:item="item"
-            v-bind:column_name="column.name"
-        />
+        <template v-for="column of columns">
+            <cell-custom-property
+                v-if="isAdditionalFieldNumber(column.name)"
+                v-bind:item="item"
+                v-bind:column_name="column.name"
+                v-bind:key="'cell-' + item.id + '-' + column.name"
+            />
+
+            <cell-id
+                v-if="column.name === 'id'"
+                v-bind:item="item"
+                v-bind:key="'cell-' + item.id + '-' + column.name"
+            />
+
+            <cell-title
+                v-if="column.name === 'title'"
+                v-bind:item="item"
+                v-bind:key="'cell-' + item.id + '-' + column.name"
+            />
+
+            <cell-description
+                v-if="column.name === 'description'"
+                v-bind:item="item"
+                v-bind:key="'cell-' + item.id + '-' + column.name"
+            />
+
+            <cell-owner
+                v-if="column.name === 'owner'"
+                v-bind:item="item"
+                v-bind:key="'cell-' + item.id + '-' + column.name"
+            />
+
+            <cell-update-date
+                v-if="column.name === 'update_date'"
+                v-bind:item="item"
+                v-bind:key="'cell-' + item.id + '-' + column.name"
+            />
+
+            <cell-create-date
+                v-if="column.name === 'create_date'"
+                v-bind:item="item"
+                v-bind:key="'cell-' + item.id + '-' + column.name"
+            />
+
+            <cell-obsolescence-date
+                v-if="column.name === 'obsolescence_date'"
+                v-bind:item="item"
+                v-bind:key="'cell-' + item.id + '-' + column.name"
+            />
+
+            <cell-location
+                v-if="column.name === 'location'"
+                v-bind:item="item"
+                v-bind:key="'cell-' + item.id + '-' + column.name"
+            />
+
+            <cell-filename
+                v-if="column.name === 'filename'"
+                v-bind:item="item"
+                v-bind:key="'cell-' + item.id + '-' + column.name"
+            />
+
+            <cell-status
+                v-if="column.name === 'status'"
+                v-bind:item="item"
+                v-bind:key="'cell-' + item.id + '-' + column.name"
+            />
+        </template>
     </tr>
 </template>
 
 <script setup lang="ts">
-import type {
-    ItemSearchResult,
-    ListOfSearchResultColumnDefinition,
-    SearchResultColumnDefinition,
-} from "../../../type";
-
-defineProps<{ item: ItemSearchResult; columns: ListOfSearchResultColumnDefinition }>();
-</script>
-
-<script lang="ts">
-import { defineComponent } from "vue";
+import type { ItemSearchResult, ListOfSearchResultColumnDefinition } from "../../../type";
+import { isAdditionalFieldNumber } from "../../../helpers/additional-custom-properties";
 import CellId from "./Cells/CellId.vue";
 import CellTitle from "./Cells/CellTitle.vue";
 import CellDescription from "./Cells/CellDescription.vue";
@@ -53,30 +105,6 @@ import CellLocation from "./Cells/CellLocation.vue";
 import CellFilename from "./Cells/CellFilename.vue";
 import CellStatus from "./Cells/CellStatus.vue";
 import CellCustomProperty from "./Cells/CellCustomProperty.vue";
-import { isAdditionalFieldNumber } from "../../../helpers/additional-custom-properties";
 
-export default defineComponent({
-    components: {
-        CellId,
-        CellTitle,
-        CellDescription,
-        CellOwner,
-        CellUpdateDate,
-        CellCreateDate,
-        CellObsolescenceDate,
-        CellLocation,
-        CellFilename,
-        CellStatus,
-        CellCustomProperty,
-    },
-    methods: {
-        getComponentName(column: SearchResultColumnDefinition): string {
-            if (isAdditionalFieldNumber(column.name)) {
-                return "cell-custom-property";
-            }
-
-            return "cell-" + column.name.replace("_", "-");
-        },
-    },
-});
+defineProps<{ item: ItemSearchResult; columns: ListOfSearchResultColumnDefinition }>();
 </script>
