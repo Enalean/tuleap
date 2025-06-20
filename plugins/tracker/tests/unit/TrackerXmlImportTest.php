@@ -43,6 +43,7 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Tracker\XML\Importer\CreateFromXml;
 use Tuleap\Tracker\Tracker\XML\Importer\GetInstanceFromXml;
 use Tuleap\Tracker\Tracker\XML\Importer\InstantiateTrackerFromXml;
+use Tuleap\Tracker\Tracker\XML\Importer\XmlTrackersByPriorityOrderer;
 use Tuleap\Tracker\XML\Importer\ImportXMLProjectTrackerDone;
 use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
 use Tuleap\XML\MappingsRegistry;
@@ -174,8 +175,9 @@ final class TrackerXmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
                 $this->feedback_collector,
                 $this->create_from_xml,
                 $this->instantiate_tracker_from_xml,
+                new XmlTrackersByPriorityOrderer(),
             ]
-        )->makePartial()->shouldAllowMockingProtectedMethods();
+        )->makePartial();
 
         $this->external_validator->shouldReceive('extractExternalFieldFromProjectElement');
 
@@ -361,47 +363,6 @@ final class TrackerXmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals($expected_tracker_mapping, $created_trackers_mapping);
     }
 
-    public function testItReturnsEachSimpleXmlTrackerFromTheXmlInput(): void
-    {
-        $xml             = simplexml_load_string(file_get_contents(__DIR__ . '/_fixtures/TrackersList.xml'));
-        $trackers_result = $this->tracker_xml_importer->getAllXmlTrackersOrderedByPriority($xml);
-
-        $xml_tracker1 = new SimpleXMLElement(
-            '<tracker id="T101" parent_id="0" instantiate_for_new_projects="1">
-                    <name>name10</name>
-                    <item_name>item11</item_name>
-                    <description>desc12</description>
-                    <color>inca-silver</color>
-                    <cannedResponses />
-                  </tracker>'
-        );
-
-        $xml_tracker2 = new SimpleXMLElement(
-            '<tracker id="T102" parent_id="T101" instantiate_for_new_projects="1">
-                    <name>name20</name>
-                    <item_name>item21</item_name>
-                    <description>desc22</description>
-                    <color>inca-silver</color>
-                    <cannedResponses />
-                  </tracker>'
-        );
-
-        $xml_tracker3 = new SimpleXMLElement(
-            '<tracker id="T103" parent_id="T102" instantiate_for_new_projects="1">
-                    <name>name30</name>
-                    <item_name>item31</item_name>
-                    <description>desc32</description>
-                    <color>inca-silver</color>
-                    <cannedResponses />
-                  </tracker>'
-        );
-
-        $expected_trackers = ['T101' => $xml_tracker1, 'T102' => $xml_tracker2, 'T103' => $xml_tracker3];
-
-        $this->assertCount(3, $trackers_result);
-        $this->assertEquals($expected_trackers, $trackers_result);
-    }
-
     public function testItBuildsTrackersHierarchy(): void
     {
         $tracker            = new SimpleXMLElement(
@@ -584,9 +545,6 @@ final class TrackerXmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
                      </trackers>'
         );
 
-        $tracker = TrackerTestBuilder::aTracker()->withId(10)->build();
-
-        $this->tracker_xml_importer->shouldReceive('updateFromXML')->andReturns($tracker);
         $this->artifact_XML_import->shouldReceive('importBareArtifactsFromXML')->andReturn([]);
         $configuration = new ImportConfig();
         $this->tracker_xml_importer->import(
