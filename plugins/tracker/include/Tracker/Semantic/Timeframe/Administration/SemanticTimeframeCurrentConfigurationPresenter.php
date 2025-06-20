@@ -43,7 +43,7 @@ final class SemanticTimeframeCurrentConfigurationPresenter
     public function __construct(
         string $current_config_description,
         array $semantics_implied_from_current_tracker,
-        ?\Tracker $tracker_from_which_we_imply_the_semantic,
+        ?\Tuleap\Tracker\Tracker $tracker_from_which_we_imply_the_semantic,
     ) {
         $this->current_config_description                         = $current_config_description;
         $this->semantics_implied_from_current_tracker             = $semantics_implied_from_current_tracker;
@@ -56,7 +56,7 @@ final class SemanticTimeframeCurrentConfigurationPresenter
         }
     }
 
-    private function getTrackerSemanticTimeframeAdminUrl(?\Tracker $tracker_from_which_we_imply_the_semantic): string
+    private function getTrackerSemanticTimeframeAdminUrl(?\Tuleap\Tracker\Tracker $tracker_from_which_we_imply_the_semantic): string
     {
         if ($tracker_from_which_we_imply_the_semantic === null) {
             return '';

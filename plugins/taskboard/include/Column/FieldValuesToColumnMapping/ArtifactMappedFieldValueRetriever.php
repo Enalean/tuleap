@@ -34,7 +34,7 @@ final readonly class ArtifactMappedFieldValueRetriever
 
     /** @return Option<\Tracker_FormElement_Field_List_BindValue> */
     public function getFirstValueAtLastChangeset(
-        \Tracker $milestone_tracker,
+        \Tuleap\Tracker\Tracker $milestone_tracker,
         Artifact $artifact,
         \PFUser $user,
     ): Option {

@@ -171,7 +171,7 @@ class ProjectTrackersResource extends AuthenticatedResource
             ),
             new PermissionsRepresentationBuilder($ugroup_manager, $tracker_permission_wrapper),
             new WorkflowRestBuilder(),
-            static fn(\Tracker $tracker) => new \Tracker_SemanticManager($tracker),
+            static fn(\Tuleap\Tracker\Tracker $tracker) => new \Tracker_SemanticManager($tracker),
             new ParentInHierarchyRetriever(new HierarchyDAO(), $tracker_factory),
             TrackersPermissionsRetriever::build()
         );

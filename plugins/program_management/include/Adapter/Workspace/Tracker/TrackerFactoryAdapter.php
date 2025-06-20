@@ -50,12 +50,12 @@ final class TrackerFactoryAdapter implements SearchTrackersOfProgram, RetrieveFu
         return $tracker_references;
     }
 
-    public function getTrackerFromId(int $tracker_id): ?\Tracker
+    public function getTrackerFromId(int $tracker_id): ?\Tuleap\Tracker\Tracker
     {
         return $this->tracker_factory->getTrackerById($tracker_id);
     }
 
-    public function getNonNullTracker(TrackerIdentifier $tracker_identifier): \Tracker
+    public function getNonNullTracker(TrackerIdentifier $tracker_identifier): \Tuleap\Tracker\Tracker
     {
         $tracker = $this->tracker_factory->getTrackerById($tracker_identifier->getId());
         if (! $tracker) {

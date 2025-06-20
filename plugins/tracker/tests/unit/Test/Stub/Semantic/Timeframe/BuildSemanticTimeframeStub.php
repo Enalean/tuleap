@@ -22,13 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Test\Stub\Semantic\Timeframe;
 
-use Tracker;
 use Tuleap\Tracker\Semantic\Timeframe\BuildSemanticTimeframe;
 use Tuleap\Tracker\Semantic\Timeframe\IComputeTimeframes;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeNotConfigured;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeWithEndDate;
 use Tuleap\Tracker\Semantic\TimeframeConfigInvalid;
+use Tuleap\Tracker\Tracker;
 
 final class BuildSemanticTimeframeStub implements BuildSemanticTimeframe
 {

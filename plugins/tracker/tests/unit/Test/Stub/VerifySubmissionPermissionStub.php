@@ -24,8 +24,8 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Test\Stub;
 
 use PFUser;
-use Tracker;
 use Tuleap\Tracker\Permission\VerifySubmissionPermissions;
+use Tuleap\Tracker\Tracker;
 
 final class VerifySubmissionPermissionStub implements VerifySubmissionPermissions
 {

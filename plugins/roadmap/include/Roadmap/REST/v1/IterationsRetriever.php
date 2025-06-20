@@ -203,7 +203,7 @@ class IterationsRetriever
      *
      * @throws I18NRestException
      */
-    private function checkTrackerHasTitleSemantic(\Tracker $tracker, \PFUser $user): void
+    private function checkTrackerHasTitleSemantic(\Tuleap\Tracker\Tracker $tracker, \PFUser $user): void
     {
         $title_field = $tracker->getTitleField();
         if (! $title_field || ! $title_field->userCanRead($user)) {

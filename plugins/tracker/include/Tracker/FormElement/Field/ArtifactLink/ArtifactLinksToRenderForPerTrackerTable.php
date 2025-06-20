@@ -23,7 +23,7 @@ namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
 class ArtifactLinksToRenderForPerTrackerTable
 {
     /**
-     * @var \Tracker
+     * @var \Tuleap\Tracker\Tracker
      */
     private $tracker;
     /**
@@ -35,7 +35,7 @@ class ArtifactLinksToRenderForPerTrackerTable
      */
     private $renderer;
 
-    public function __construct(\Tracker $tracker, array $matching_ids, ?\Tracker_Report_Renderer_Table $renderer = null)
+    public function __construct(\Tuleap\Tracker\Tracker $tracker, array $matching_ids, ?\Tracker_Report_Renderer_Table $renderer = null)
     {
         $this->tracker      = $tracker;
         $this->matching_ids = $matching_ids;
@@ -43,7 +43,7 @@ class ArtifactLinksToRenderForPerTrackerTable
     }
 
     /**
-     * @return \Tracker
+     * @return \Tuleap\Tracker\Tracker
      */
     public function getTracker()
     {

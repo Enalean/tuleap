@@ -24,9 +24,9 @@ namespace Tuleap\Tracker\REST\v1\Move;
 
 use PFUser;
 use Psr\Log\LoggerInterface;
-use Tracker;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\v1\ArtifactPatchResponseRepresentation;
+use Tuleap\Tracker\Tracker;
 
 interface MoveDryRun
 {

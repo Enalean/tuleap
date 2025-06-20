@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Tracker\Artifact\Workflow\GlobalRules\GlobalRulesHistoryEntry;
+use Tuleap\Tracker\Tracker;
 
 require_once __DIR__ . '/../../../../../../src/www/include/html.php';
 

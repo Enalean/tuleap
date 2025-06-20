@@ -20,10 +20,10 @@
 
 namespace Tuleap\Tracker\REST;
 
-use Tracker;
 use Tuleap\Project\REST\ProjectReference;
 use Tuleap\REST\JsonCast;
 use Tuleap\Tracker\Semantic\CollectionOfCannotCreateArtifactReason;
+use Tuleap\Tracker\Tracker;
 
 /**
  * @psalm-immutable

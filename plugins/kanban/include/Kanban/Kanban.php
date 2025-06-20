@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Kanban;
 
-use Tracker;
+use Tuleap\Tracker\Tracker;
 
 class Kanban
 {

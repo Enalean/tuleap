@@ -63,7 +63,7 @@ class UserNotificationSettingsRetriever
     /**
      * @return UserNotificationSettings
      */
-    public function getUserNotificationSettings(\PFUser $user, \Tracker $tracker)
+    public function getUserNotificationSettings(\PFUser $user, \Tuleap\Tracker\Tracker $tracker)
     {
         $has_unsubscribed = $this->unsubscribers_notification_dao->doesUserIDHaveUnsubscribedFromTrackerNotifications(
             $user->getId(),
@@ -94,7 +94,7 @@ class UserNotificationSettingsRetriever
     /**
      * @return GlobalNotification[]
      */
-    private function getGlobalNotifications(\PFUser $user, \Tracker $tracker)
+    private function getGlobalNotifications(\PFUser $user, \Tuleap\Tracker\Tracker $tracker)
     {
         $global_notification_rows = $this->tracker_global_notification_dao->searchByUserIdAndTrackerId(
             $user->getId(),

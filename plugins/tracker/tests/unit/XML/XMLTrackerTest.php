@@ -149,7 +149,7 @@ class XMLTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testExportFromTrackerObject(): void
     {
-        $tracker = XMLTracker::fromTracker(new \Tracker(
+        $tracker = XMLTracker::fromTracker(new \Tuleap\Tracker\Tracker(
             23,
             115,
             'Bugs',

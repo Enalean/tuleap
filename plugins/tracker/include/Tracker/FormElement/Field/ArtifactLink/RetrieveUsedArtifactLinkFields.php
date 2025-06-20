@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
 
-use Tracker;
+use Tuleap\Tracker\Tracker;
 
 interface RetrieveUsedArtifactLinkFields
 {

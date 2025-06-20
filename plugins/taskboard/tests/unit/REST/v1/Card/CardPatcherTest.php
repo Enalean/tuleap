@@ -25,7 +25,6 @@ namespace Tuleap\Taskboard\REST\v1\Card;
 use Luracast\Restler\RestException;
 use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
-use Tracker;
 use Tracker_FormElement_Field_Computed;
 use Tracker_FormElement_Field_Float;
 use Tracker_FormElement_Field_Integer;
@@ -39,6 +38,7 @@ use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ArtifactValuesRepresentationBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CardPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -70,7 +70,7 @@ final class CardPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->factory
             ->expects($this->once())
             ->method('getNumericFieldByNameForUser')
-            ->with($this->tracker, $this->user, \Tracker::REMAINING_EFFORT_FIELD_NAME)
+            ->with($this->tracker, $this->user, \Tuleap\Tracker\Tracker::REMAINING_EFFORT_FIELD_NAME)
             ->willReturn(null);
 
         $this->expectException(RestException::class);
@@ -88,7 +88,7 @@ final class CardPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->factory
             ->expects($this->once())
             ->method('getNumericFieldByNameForUser')
-            ->with($this->tracker, $this->user, \Tracker::REMAINING_EFFORT_FIELD_NAME)
+            ->with($this->tracker, $this->user, \Tuleap\Tracker\Tracker::REMAINING_EFFORT_FIELD_NAME)
             ->willReturn($field);
 
         $this->expectException(RestException::class);
@@ -136,7 +136,7 @@ final class CardPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->factory
             ->expects($this->once())
             ->method('getNumericFieldByNameForUser')
-            ->with($this->tracker, $this->user, \Tracker::REMAINING_EFFORT_FIELD_NAME)
+            ->with($this->tracker, $this->user, \Tuleap\Tracker\Tracker::REMAINING_EFFORT_FIELD_NAME)
             ->willReturn($field);
 
         $this->updater
@@ -159,7 +159,7 @@ final class CardPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->factory
             ->expects($this->once())
             ->method('getNumericFieldByNameForUser')
-            ->with($this->tracker, $this->user, \Tracker::REMAINING_EFFORT_FIELD_NAME)
+            ->with($this->tracker, $this->user, \Tuleap\Tracker\Tracker::REMAINING_EFFORT_FIELD_NAME)
             ->willReturn($field);
 
         $this->updater

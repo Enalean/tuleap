@@ -23,8 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment;
 
 use PFUser;
-use Tracker;
 use Tracker_Artifact_Changeset_Comment;
+use Tuleap\Tracker\Tracker;
 
 class PermissionChecker
 {

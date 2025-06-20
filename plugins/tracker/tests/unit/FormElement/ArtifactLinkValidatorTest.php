@@ -26,7 +26,6 @@ use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use PHPUnit\Framework\MockObject\MockObject;
 use Project;
 use Psr\EventDispatcher\EventDispatcherInterface;
-use Tracker;
 use Tracker_ArtifactFactory;
 use Tracker_ArtifactLinkInfo;
 use Tuleap\GlobalResponseMock;
@@ -45,6 +44,7 @@ use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueArtifactLinkTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ArtifactLinkFieldBuilder;
+use Tuleap\Tracker\Tracker;
 
 #[DisableReturnValueGenerationForTestDoubles]
 final class ArtifactLinkValidatorTest extends TestCase

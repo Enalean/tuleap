@@ -20,7 +20,7 @@
 
 namespace Tuleap\Timetracking\Time;
 
-use Tracker;
+use Tuleap\Tracker\Tracker;
 
 require_once __DIR__ . '/../bootstrap.php';
 

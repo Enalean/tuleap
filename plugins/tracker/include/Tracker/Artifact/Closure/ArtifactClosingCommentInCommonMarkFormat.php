@@ -38,7 +38,7 @@ final class ArtifactClosingCommentInCommonMarkFormat
     public static function fromParts(
         string $user_name,
         ?ClosingKeyword $closing_keyword,
-        \Tracker $tracker,
+        \Tuleap\Tracker\Tracker $tracker,
         ReferenceString $origin_reference,
     ): self {
         if (! $closing_keyword) {

@@ -24,8 +24,8 @@ namespace Tuleap\Tracker\Test\Stub;
 
 use PFUser;
 use SimpleXMLElement;
-use Tracker;
 use Tuleap\Tracker\Action\DuckTypedMoveFieldCollection;
+use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\Tracker\XML\Updater\UpdateMoveChangesetXMLDuckTyping;
 
 final class UpdateMoveChangesetXMLDuckTypingStub implements UpdateMoveChangesetXMLDuckTyping

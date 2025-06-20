@@ -38,7 +38,7 @@ final class DefinitionRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
         $artifact->method('getTrackerId')->willReturn($tracker_id);
         $artifact->method('getId')->willReturn(1);
         $artifact->method('getLastChangeset')->willReturn(null);
-        $tracker = $this->createMock(\Tracker::class);
+        $tracker = $this->createMock(\Tuleap\Tracker\Tracker::class);
         $tracker->method('getGroupId')->willReturn(107);
         $artifact->method('getTracker')->willReturn($tracker);
 

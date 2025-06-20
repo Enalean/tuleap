@@ -20,9 +20,10 @@
  */
 
 use Tuleap\Tracker\Rule\InvolvedFieldsInRule;
-use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
-use Tuleap\Tracker\Rule\TrackerRulesListValidator;
 use Tuleap\Tracker\Rule\TrackerRulesDateValidator;
+use Tuleap\Tracker\Rule\TrackerRulesListValidator;
+use Tuleap\Tracker\Tracker;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 
 /**
 * Manager of rules

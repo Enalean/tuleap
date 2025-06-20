@@ -23,13 +23,13 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Test\Builders;
 
 use ParagonIE\EasyDB\EasyDB;
-use Tracker;
 use Tracker_FormElement;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Description\DescriptionSemanticDAO;
 use Tuleap\Tracker\Semantic\Title\TitleSemanticDAO;
+use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\TrackerColor;
 use function Psl\Str\lowercase;
 

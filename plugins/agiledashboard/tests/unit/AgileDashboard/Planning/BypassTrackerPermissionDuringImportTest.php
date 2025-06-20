@@ -32,7 +32,7 @@ final class BypassTrackerPermissionDuringImportTest extends TestCase
     {
         $verifier = new BypassTrackerPermissionDuringImport();
 
-        $tracker = $this->createMock(\Tracker::class);
+        $tracker = $this->createMock(\Tuleap\Tracker\Tracker::class);
         $tracker->method('userCanView')->willReturn(false);
 
         self::assertTrue(

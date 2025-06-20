@@ -23,9 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\Roadmap\REST\v1;
 
 use Psr\Log\LoggerInterface;
-use Tracker;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgressBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
+use Tuleap\Tracker\Tracker;
 
 final class TaskRepresentationBuilderForTrackerCache implements ICacheTaskRepresentationBuilderForTracker
 {

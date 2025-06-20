@@ -24,5 +24,5 @@ namespace Tuleap\TrackerFunctions\Administration;
 
 interface LogFunctionDeactivated
 {
-    public function logFunctionDeactivated(\PFUser $user, \Tracker $tracker): void;
+    public function logFunctionDeactivated(\PFUser $user, \Tuleap\Tracker\Tracker $tracker): void;
 }

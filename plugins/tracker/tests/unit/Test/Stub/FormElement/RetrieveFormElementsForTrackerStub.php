@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Test\Stub\FormElement;
 
-use Tracker;
+use Tuleap\Tracker\Tracker;
 
 final class RetrieveFormElementsForTrackerStub implements \Tuleap\Tracker\FormElement\RetrieveFormElementsForTracker
 {

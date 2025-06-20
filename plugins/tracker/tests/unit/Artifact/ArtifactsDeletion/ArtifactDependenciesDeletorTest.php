@@ -26,8 +26,8 @@ use PermissionsManager;
 use Tracker_ArtifactDao;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\Artifact\PriorityManager;
+use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\FormElement\Field\Computed\ComputedFieldDaoCache;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -37,7 +37,7 @@ final class ArtifactDependenciesDeletorTest extends TestCase
 {
     private const PROJECT_ID = 109;
     private ArtifactDependenciesCleaner $deletor;
-    private \Tracker|\PHPUnit\Framework\MockObject\Stub $tracker;
+    private \Tuleap\Tracker\Tracker|\PHPUnit\Framework\MockObject\Stub $tracker;
     private \Tracker_FormElement_Field_File $file_field;
     private \PFUser $user;
     private \PHPUnit\Framework\MockObject\MockObject&PostArtifactMoveReferencesCleaner $post_move_deletor;

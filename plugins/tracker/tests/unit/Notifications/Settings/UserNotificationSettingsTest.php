@@ -22,8 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Notifications\Settings;
 
-use Tracker;
 use Tuleap\Tracker\Notifications\GlobalNotification;
+use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class UserNotificationSettingsTest extends \Tuleap\Test\PHPUnit\TestCase

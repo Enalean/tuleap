@@ -22,6 +22,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Tracker;
+
 abstract class Tracker_Artifact_SubmitAbstractRenderer extends Tracker_Artifact_ArtifactRenderer
 {
     public function __construct(Tracker $tracker, EventManager $event_manager)

@@ -205,7 +205,7 @@ class MethodBasedOnEffort implements IComputeProgression
         $xml_semantic_progress->addChild('remaining_effort_field')->addAttribute('REF', $remaining_effort_field_ref);
     }
 
-    public function saveSemanticForTracker(\Tracker $tracker): bool
+    public function saveSemanticForTracker(\Tuleap\Tracker\Tracker $tracker): bool
     {
         return $this->dao->save(
             $tracker->getId(),
@@ -215,7 +215,7 @@ class MethodBasedOnEffort implements IComputeProgression
         );
     }
 
-    public function deleteSemanticForTracker(\Tracker $tracker): bool
+    public function deleteSemanticForTracker(\Tuleap\Tracker\Tracker $tracker): bool
     {
         return $this->dao->delete($tracker->getId());
     }

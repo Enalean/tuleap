@@ -23,9 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Permission;
 
 use ParagonIE\EasyDB\EasyStatement;
-use Tracker;
 use Tuleap\DB\DataAccessObject;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Tracker;
 
 final class TrackersPermissionsDao extends DataAccessObject implements SearchUserGroupsPermissionOnFields, SearchUserGroupsPermissionOnTrackers, SearchUserGroupsPermissionOnArtifacts
 {

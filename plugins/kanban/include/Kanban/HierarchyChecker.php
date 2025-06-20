@@ -22,9 +22,9 @@
 namespace Tuleap\Kanban;
 
 use Project;
-use Tracker;
 use Tracker_Hierarchy;
 use TrackerFactory;
+use Tuleap\Tracker\Tracker;
 
 final class HierarchyChecker
 {

@@ -107,7 +107,7 @@ final class ArtifactCollectionFormatterTest extends TestCase
         $artifact->method('getLastUpdateDate')->willReturn(12);
         $artifact->method('isOpen')->willReturn(false);
         $artifact->method('getTitle')->willReturn('title');
-        $tracker = $this->createStub(\Tracker::class);
+        $tracker = $this->createStub(\Tuleap\Tracker\Tracker::class);
         $tracker->method('getProject')->willReturn(ProjectTestBuilder::aProject()->build());
         $artifact->method('getTracker')->willReturn($tracker);
 

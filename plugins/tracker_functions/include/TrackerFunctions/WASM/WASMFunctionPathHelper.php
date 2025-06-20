@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\TrackerFunctions\WASM;
 
-use Tracker;
+use Tuleap\Tracker\Tracker;
 
 interface WASMFunctionPathHelper
 {

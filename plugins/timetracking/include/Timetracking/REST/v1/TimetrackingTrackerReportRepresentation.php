@@ -26,9 +26,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Timetracking\REST\v1;
 
-use Tracker;
 use Tuleap\Project\REST\MinimalProjectRepresentation;
 use Tuleap\REST\JsonCast;
+use Tuleap\Tracker\Tracker;
 
 /**
  * @psalm-immutable

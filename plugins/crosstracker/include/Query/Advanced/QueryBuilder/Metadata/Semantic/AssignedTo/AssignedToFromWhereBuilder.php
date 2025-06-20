@@ -25,7 +25,6 @@ namespace Tuleap\CrossTracker\Query\Advanced\QueryBuilder\Metadata\Semantic\Assi
 use LogicException;
 use ParagonIE\EasyDB\EasyStatement;
 use PFUser;
-use Tracker;
 use Tracker_FormElement_Field_List;
 use Tuleap\CrossTracker\Query\Advanced\QueryBuilder\Metadata\MetadataValueWrapperParameters;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenValueWrapper;
@@ -39,6 +38,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperVisitor;
 use Tuleap\Tracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
 use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
+use Tuleap\Tracker\Tracker;
 use Tuleap\User\RetrieveUserByUserName;
 
 /**

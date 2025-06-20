@@ -22,5 +22,5 @@ namespace Tuleap\AgileDashboard\AgileDashboard\Planning;
 
 interface VerifyTrackerAccessDuringImportStrategy
 {
-    public function canUserViewTracker(\PFUser $user, \Tracker $tracker): bool;
+    public function canUserViewTracker(\PFUser $user, \Tuleap\Tracker\Tracker $tracker): bool;
 }

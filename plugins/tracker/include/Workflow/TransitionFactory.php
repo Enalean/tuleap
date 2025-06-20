@@ -23,6 +23,7 @@ use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Project\Duplication\DuplicationUserGroupMapping;
+use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\Workflow\Event\TransitionDeletionEvent;
 use Tuleap\Tracker\Workflow\Event\WorkflowDeletionEvent;
 use Tuleap\Tracker\Workflow\Transition\TransitionCreationParameters;

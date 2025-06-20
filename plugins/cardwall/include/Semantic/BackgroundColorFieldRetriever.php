@@ -20,8 +20,8 @@
 
 namespace Tuleap\Cardwall\Semantic;
 
-use Tracker;
 use Tracker_FormElementFactory;
+use Tuleap\Tracker\Tracker;
 
 class BackgroundColorFieldRetriever
 {

@@ -27,7 +27,6 @@ use AgileDashboard_Semantic_InitialEffortFactory;
 use PHPUnit\Framework\MockObject\MockObject;
 use Planning;
 use PlanningFactory;
-use Tracker;
 use Tracker_FormElement_Field;
 use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -36,6 +35,7 @@ use Tuleap\Tracker\Semantic\Status\Done\SemanticDone;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneFactory;
 use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MessageFetcherTest extends TestCase

@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\XML;
 
 use SimpleXMLElement;
-use Tracker;
 use Tuleap\Tracker\Artifact\XML\XMLArtifact;
 use Tuleap\Tracker\Creation\TrackerCreationDataChecker;
 use Tuleap\Tracker\FormElement\Container\XML\XMLContainer;
@@ -32,6 +31,7 @@ use Tuleap\Tracker\FormElement\XML\XMLFormElement;
 use Tuleap\Tracker\FormElement\XML\XMLFormElementFlattenedCollection;
 use Tuleap\Tracker\Report\XML\XMLReport;
 use Tuleap\Tracker\Semantic\XML\XMLSemantic;
+use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\TrackerColor;
 use Tuleap\Tracker\TrackerIsInvalidException;
 use Tuleap\Tracker\Workflow\XML\XMLWorkflow;

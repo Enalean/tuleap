@@ -24,7 +24,6 @@ namespace Tuleap\Tracker\Artifact;
 
 use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
-use Tracker;
 use Tracker_FileInfo;
 use Tracker_FormElementFactory;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -32,6 +31,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\FileFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]

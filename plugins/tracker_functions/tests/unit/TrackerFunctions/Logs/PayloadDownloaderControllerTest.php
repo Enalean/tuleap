@@ -39,7 +39,7 @@ final class PayloadDownloaderControllerTest extends TestCase
 {
     public function testRetrievesPayloadsForTrackerAdmins(): void
     {
-        $tracker = $this->createStub(\Tracker::class);
+        $tracker = $this->createStub(\Tuleap\Tracker\Tracker::class);
         $tracker->method('getId')->willReturn(102);
         $tracker->method('userIsAdmin')->willReturn(true);
 
@@ -62,7 +62,7 @@ final class PayloadDownloaderControllerTest extends TestCase
 
     public function testRejectsWhenNonAdminTriesToAccessThePayload(): void
     {
-        $tracker = $this->createStub(\Tracker::class);
+        $tracker = $this->createStub(\Tuleap\Tracker\Tracker::class);
         $tracker->method('getId')->willReturn(102);
         $tracker->method('userIsAdmin')->willReturn(false);
 
@@ -92,7 +92,7 @@ final class PayloadDownloaderControllerTest extends TestCase
         $controller->handle($request);
     }
 
-    private function buildController(\Tracker $tracker, RetrievePayloadsForChangeset $payload_retriever): PayloadDownloaderController
+    private function buildController(\Tuleap\Tracker\Tracker $tracker, RetrievePayloadsForChangeset $payload_retriever): PayloadDownloaderController
     {
         return new PayloadDownloaderController(
             new NoopSapiEmitter(),

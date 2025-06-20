@@ -20,8 +20,8 @@
 
 namespace Tuleap\Velocity;
 
-use Tracker;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Tracker;
 
 class VelocityCollection
 {

@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Tracker\FormElement\ProvideFactoryButtonInformation;
+use Tuleap\Tracker\Tracker;
 
 class Tracker_FormElement_Shared extends ProvideFactoryButtonInformation
 {

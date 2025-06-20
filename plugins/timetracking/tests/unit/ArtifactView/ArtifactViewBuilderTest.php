@@ -22,9 +22,9 @@ namespace Tuleap\Timetracking\ArtifactView;
 
 use Project;
 use timetrackingPlugin;
-use Tracker;
 use Tuleap\Timetracking\Time\DateFormatter;
 use Tuleap\Timetracking\Time\TimePresenterBuilder;
+use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactViewBuilderTest extends \Tuleap\Test\PHPUnit\TestCase

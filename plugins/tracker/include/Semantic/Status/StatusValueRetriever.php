@@ -23,9 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Semantic\Status;
 
 use PFUser;
-use Tracker;
 use Tracker_FormElement_Field_List_BindValue;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\Workflow\FirstPossibleValueInListRetriever;
 use Tuleap\Tracker\Workflow\NoPossibleValueException;
 

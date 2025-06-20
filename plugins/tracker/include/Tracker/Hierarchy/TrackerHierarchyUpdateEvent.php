@@ -22,8 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Hierarchy;
 
-use Tracker;
 use Tuleap\Event\Dispatchable;
+use Tuleap\Tracker\Tracker;
 
 class TrackerHierarchyUpdateEvent implements Dispatchable
 {

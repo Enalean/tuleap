@@ -23,12 +23,12 @@ declare(strict_types=1);
 namespace Tuleap\Velocity;
 
 use PFUser;
-use Tracker;
 use Tracker_Artifact_Changeset;
 use Tracker_FormElement_Field;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDone;
 use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
+use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\Workflow\BeforeEvent;
 use Tuleap\Velocity\Semantic\SemanticVelocity;
 

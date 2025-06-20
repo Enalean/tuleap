@@ -111,13 +111,13 @@ final class RequiredFieldVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
         $required_title->method('getLabel')->willReturn('Title');
         $non_required_artifact_link = ArtifactLinkFieldBuilder::anArtifactLinkField(self::ARTIFACT_LINK_FIELD_ID)->withLabel('artlink')->build();
 
-        $tracker = $this->createMock(\Tracker::class);
+        $tracker = $this->createMock(\Tuleap\Tracker\Tracker::class);
         $tracker->method('getFormElementFields')->willReturn([$required_title, $non_required_artifact_link]);
         $tracker->method('getId')->willReturn(1);
         $tracker->method('getName')->willReturn('Tracker 1');
         $tracker->method('getGroupId')->willReturn(101);
 
-        $other_tracker_with_no_required_field = $this->createMock(\Tracker::class);
+        $other_tracker_with_no_required_field = $this->createMock(\Tuleap\Tracker\Tracker::class);
         $other_tracker_with_no_required_field->method('getId')->willReturn(2);
         $other_tracker_with_no_required_field->method('getName')->willReturn('Tracker 2');
         $other_tracker_with_no_required_field->method('getGroupId')->willReturn(101);
@@ -169,7 +169,7 @@ final class RequiredFieldVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
         $other_required_field->method('getLabel')->willReturn('some_label');
         $other_required_field->method('getTrackerId')->willReturn(412);
 
-        $tracker = $this->createMock(\Tracker::class);
+        $tracker = $this->createMock(\Tuleap\Tracker\Tracker::class);
         $tracker->method('getId')->willReturn(412);
         $tracker->method('getName')->willReturn('Tracker 1');
         $tracker->method('getGroupId')->willReturn(147);

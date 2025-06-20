@@ -21,9 +21,10 @@
 declare(strict_types=1);
 
 use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
-use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
@@ -67,7 +68,7 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \Tuleap\Test\PHP
     {
         $this->date_factory = $this->createMock(\Tracker_Rule_Date_Factory::class);
 
-        $this->tracker = $this->createMock(\Tracker::class);
+        $this->tracker = $this->createMock(\Tuleap\Tracker\Tracker::class);
         $this->tracker->method('getId')->willReturn($this->tracker_id);
         $this->tracker->method('displayAdminItemHeader');
         $this->tracker->method('displayFooter');

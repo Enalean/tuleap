@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Tracker;
+
 /**
  * This allows to define a planning
  * A planning is composed of a list of tracker ids (eg: Sprints, Tasks...) that represent what is in the backlog

@@ -22,8 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Semantic\Status\Done;
 
-use Tracker;
 use Tuleap\Event\Dispatchable;
+use Tuleap\Tracker\Tracker;
 
 class SemanticDoneUsedExternalServiceEvent implements Dispatchable
 {

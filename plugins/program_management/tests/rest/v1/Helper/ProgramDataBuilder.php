@@ -57,11 +57,11 @@ final class ProgramDataBuilder extends REST_TestDataBuilder
 
     private ProgramIncrementCreationDispatcher $creation_dispatcher;
     private ?\PFUser $user;
-    private \Tracker $program_increment;
-    private \Tracker $user_story;
-    private \Tracker $feature;
-    private \Tracker $iteration;
-    private \Tracker $mirrored_iteration;
+    private \Tuleap\Tracker\Tracker $program_increment;
+    private \Tuleap\Tracker\Tracker $user_story;
+    private \Tuleap\Tracker\Tracker $feature;
+    private \Tuleap\Tracker\Tracker $iteration;
+    private \Tuleap\Tracker\Tracker $mirrored_iteration;
     private \Tracker_ArtifactFactory $artifact_factory;
     private ProgramIncrementsDAO $program_increment_DAO;
 
@@ -185,9 +185,9 @@ final class ProgramDataBuilder extends REST_TestDataBuilder
     }
 
     /**
-     * @param \Tracker[] $trackers
+     * @param \Tuleap\Tracker\Tracker[] $trackers
      */
-    private function getTrackerByName(array $trackers, string $name): \Tracker
+    private function getTrackerByName(array $trackers, string $name): \Tuleap\Tracker\Tracker
     {
         foreach ($trackers as $tracker) {
             if ($tracker->getItemName() === $name) {

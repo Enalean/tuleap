@@ -22,5 +22,5 @@ namespace Tuleap\TrackerFunctions\Administration;
 
 interface LogFunctionUploaded
 {
-    public function logFunctionUploaded(\PFUser $user, \Tracker $tracker): void;
+    public function logFunctionUploaded(\PFUser $user, \Tuleap\Tracker\Tracker $tracker): void;
 }

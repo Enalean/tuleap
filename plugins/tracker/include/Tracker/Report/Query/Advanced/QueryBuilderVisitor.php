@@ -19,12 +19,9 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced;
 
-use Tracker;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\AndOperand;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenComparison;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\Parenthesis;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\TermVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\GreaterThanComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\GreaterThanOrEqualComparison;
@@ -37,6 +34,8 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\NotEqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\NotInComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrExpression;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrOperand;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\Parenthesis;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\TermVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithForwardLink;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithoutForwardLink;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithoutReverseLink;
@@ -45,6 +44,8 @@ use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\ArtifactLink\ForwardLinkFr
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\ArtifactLink\ReverseLinkFromWhereBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\BetweenFieldComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\EqualFieldComparisonVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\FromWhereSearchableVisitor;
+use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\FromWhereSearchableVisitorParameter;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\GreaterThanFieldComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\GreaterThanOrEqualFieldComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\InFieldComparisonVisitor;
@@ -61,11 +62,10 @@ use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\MetadataNotEqualComparison
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\MetadataNotInComparisonFromWhereBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\NotEqualFieldComparisonVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\NotInFieldComparisonVisitor;
-use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\FromWhereSearchableVisitor;
-use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\FromWhereSearchableVisitorParameter;
 use Tuleap\Tracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
 use Tuleap\Tracker\Report\Query\ParametrizedAndFromWhere;
 use Tuleap\Tracker\Report\Query\ParametrizedOrFromWhere;
+use Tuleap\Tracker\Tracker;
 
 /**
  * @template-implements LogicalVisitor<QueryBuilderParameters, IProvideParametrizedFromAndWhereSQLFragments>

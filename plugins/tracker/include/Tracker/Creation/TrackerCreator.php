@@ -25,7 +25,6 @@ namespace Tuleap\Tracker\Creation;
 
 use Feedback;
 use Project;
-use Tracker;
 use Tracker_Exception;
 use TrackerFactory;
 use TrackerFromXmlException;
@@ -34,6 +33,7 @@ use Tuleap\Project\MappingRegistry;
 use Tuleap\Tracker\Creation\JiraImporter\PendingJiraImportDao;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDuplicator;
+use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\TrackerIsInvalidException;
 use UserManager;
 use XML_ParseException;

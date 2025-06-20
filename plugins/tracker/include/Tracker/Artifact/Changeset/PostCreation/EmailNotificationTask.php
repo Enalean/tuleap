@@ -124,7 +124,7 @@ final class EmailNotificationTask implements PostCreationTask
     /**
      * @return bool
      */
-    private function isNotificationAssignedToEnabled(\Tracker $tracker)
+    private function isNotificationAssignedToEnabled(\Tuleap\Tracker\Tracker $tracker)
     {
         return $this->config_notification_assigned_to->isAssignedToSubjectEnabled($tracker);
     }

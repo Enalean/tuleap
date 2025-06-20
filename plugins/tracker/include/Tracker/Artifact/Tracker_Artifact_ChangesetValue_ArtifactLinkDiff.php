@@ -18,11 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
-use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\RemovedLinkCollection;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\AddedLinkByTypeCollection;
-use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\UpdatedTypeLinkCollection;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfLinksFormatter;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\RemovedLinkCollection;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\UpdatedTypeLinkCollection;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
+use Tuleap\Tracker\Tracker;
 
 class Tracker_Artifact_ChangesetValue_ArtifactLinkDiff
 {

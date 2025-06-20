@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Cardwall\OnTop\Config\ColumnCollection;
+use Tuleap\Tracker\Tracker;
 
 class Cardwall_OnTop_Config_TrackerMappingFactory
 {

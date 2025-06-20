@@ -25,5 +25,5 @@ namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\Type;
 interface RetrieveCurrentlyUsedArtifactLinkTypesInTracker
 {
     /** @return TypePresenter[] */
-    public function getAllCurrentlyUsedTypePresentersByTracker(\Tracker $tracker): array;
+    public function getAllCurrentlyUsedTypePresentersByTracker(\Tuleap\Tracker\Tracker $tracker): array;
 }

@@ -22,8 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\REST\v1\Workflow\PostAction;
 
-use Tracker;
 use Tuleap\Event\Dispatchable;
+use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\Workflow\PostAction\Update\PostActionCollection;
 
 class CheckPostActionsForTracker implements Dispatchable

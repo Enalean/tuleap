@@ -21,6 +21,7 @@
 
 use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\Tracker\Rule\InvolvedFieldsInRule;
+use Tuleap\Tracker\Tracker;
 
 /**
 * Factory of rules

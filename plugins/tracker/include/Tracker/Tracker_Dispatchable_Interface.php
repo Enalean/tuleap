@@ -19,6 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Tracker\Tracker;
 
 /**
  * All elements that must be dispatched from TrackerManager have to implement this

@@ -22,11 +22,11 @@ namespace Tuleap\Tracker\FormElement;
 
 use Codendi_HTMLPurifier;
 use EventManager;
-use Tracker;
 use Tracker_FormElement_Chart_Field_Exception;
 use Tracker_FormElement_Field;
 use Tracker_HierarchyFactory;
 use Tuleap\Tracker\FormElement\Event\MessageFetcherAdditionalWarnings;
+use Tuleap\Tracker\Tracker;
 use Tuleap\User\ProvideCurrentUser;
 
 class ChartMessageFetcher

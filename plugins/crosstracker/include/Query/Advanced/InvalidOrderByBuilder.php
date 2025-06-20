@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\CrossTracker\Query\Advanced;
 
 use PFUser;
-use Tracker;
 use Tuleap\CrossTracker\Query\Advanced\QueryValidation\DuckTypedField\DuckTypedFieldChecker;
 use Tuleap\CrossTracker\Query\Advanced\QueryValidation\InvalidQueryException;
 use Tuleap\CrossTracker\Query\Advanced\QueryValidation\Metadata\MetadataChecker;
@@ -34,6 +33,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrderBy;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SelectableVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\IBuildInvalidOrderBy;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidOrderBy;
+use Tuleap\Tracker\Tracker;
 
 /**
  * @template-implements SelectableVisitor<InvalidOrderByBuilderParameters, ?InvalidOrderBy>

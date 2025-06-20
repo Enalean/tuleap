@@ -26,12 +26,12 @@ use ForgeConfig;
 use ParagonIE\EasyDB\EasyStatement;
 use PFUser;
 use ProjectUGroup;
-use Tracker;
 use Tracker_ReportDao;
 use Tuleap\DB\DataAccessObject;
 use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Report\dao\TooManyMatchingArtifactsException;
+use Tuleap\Tracker\Tracker;
 
 final class QueryDao extends DataAccessObject
 {

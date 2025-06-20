@@ -27,7 +27,6 @@ use AgileDashboard_Planning_NearestPlanningTrackerProvider;
 use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
 use PlanningFactory;
-use Tracker;
 use Tracker_ArtifactFactory;
 use Tracker_HierarchyFactory;
 use TrackerFactory;
@@ -36,6 +35,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MilestoneReportCriterionOptionsProviderTest extends TestCase

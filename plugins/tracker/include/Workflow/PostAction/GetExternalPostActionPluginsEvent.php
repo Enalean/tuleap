@@ -23,8 +23,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Workflow\PostAction;
 
-use Tracker;
 use Tuleap\Event\Dispatchable;
+use Tuleap\Tracker\Tracker;
 
 class GetExternalPostActionPluginsEvent implements Dispatchable
 {

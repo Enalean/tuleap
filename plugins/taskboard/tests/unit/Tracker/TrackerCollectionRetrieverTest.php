@@ -27,9 +27,9 @@ use Cardwall_OnTop_ConfigFactory;
 use PHPUnit\Framework\MockObject\MockObject;
 use Planning;
 use Planning_Milestone;
-use Tracker;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TrackerCollectionRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase

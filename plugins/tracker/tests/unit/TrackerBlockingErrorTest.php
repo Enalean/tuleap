@@ -25,7 +25,6 @@ namespace Tuleap\Tracker;
 use PFUser;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use PHPUnit\Framework\MockObject\MockObject;
-use Tracker;
 use Tracker_ArtifactFactory;
 use Tracker_FormElement_Field_String;
 use Tracker_FormElementFactory;

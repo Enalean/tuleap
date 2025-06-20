@@ -23,6 +23,7 @@
 
 use Tuleap\Cardwall\Semantic\CardFieldXmlExtractor;
 use Tuleap\Tracker\Semantic\IBuildSemanticFromXML;
+use Tuleap\Tracker\Tracker;
 
 class Cardwall_Semantic_CardFieldsFactory implements IBuildSemanticFromXML
 {

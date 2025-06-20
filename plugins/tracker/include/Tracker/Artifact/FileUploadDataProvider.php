@@ -23,8 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Artifact;
 
 use PFUser;
-use Tracker;
 use Tracker_FormElementFactory;
+use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
 
 class FileUploadDataProvider implements GetFileUploadData

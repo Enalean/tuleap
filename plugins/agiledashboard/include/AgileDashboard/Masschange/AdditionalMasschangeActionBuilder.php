@@ -25,9 +25,9 @@ namespace Tuleap\AgileDashboard\Masschange;
 use PFUser;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use TemplateRenderer;
-use Tracker;
 use Tuleap\AgileDashboard\ExplicitBacklog\VerifyProjectUsesExplicitBacklog;
 use Tuleap\AgileDashboard\Planning\RetrieveRootPlanning;
+use Tuleap\Tracker\Tracker;
 
 class AdditionalMasschangeActionBuilder
 {

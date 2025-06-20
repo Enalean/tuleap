@@ -20,8 +20,8 @@
 
 namespace Tuleap\Tracker\FormElement\View\Admin;
 
-use Tracker;
 use Tuleap\Event\Dispatchable;
+use Tuleap\Tracker\Tracker;
 
 class FilterFormElementsThatCanBeCreatedForTracker implements Dispatchable
 {

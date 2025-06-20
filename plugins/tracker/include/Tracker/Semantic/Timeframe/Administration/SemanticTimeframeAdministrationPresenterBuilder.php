@@ -22,12 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Semantic\Timeframe\Administration;
 
-use Tracker;
 use Tuleap\Tracker\Notifications\Settings\CheckEventShouldBeSentInNotification;
 use Tuleap\Tracker\Semantic\Timeframe\Events\DoesAPluginRenderAChartBasedOnSemanticTimeframeForTrackerEvent;
 use Tuleap\Tracker\Semantic\Timeframe\Events\GetSemanticTimeframeUsageEvent;
 use Tuleap\Tracker\Semantic\Timeframe\IComputeTimeframes;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeSuitableTrackersOtherSemanticsCanBeImpliedFromRetriever;
+use Tuleap\Tracker\Tracker;
 
 class SemanticTimeframeAdministrationPresenterBuilder
 {

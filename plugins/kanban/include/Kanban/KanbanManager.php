@@ -24,8 +24,8 @@ declare(strict_types=1);
 namespace Tuleap\Kanban;
 
 use PFUser;
-use Tracker;
 use TrackerFactory;
+use Tuleap\Tracker\Tracker;
 
 class KanbanManager
 {

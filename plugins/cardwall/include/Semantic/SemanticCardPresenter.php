@@ -21,7 +21,7 @@
 namespace Tuleap\Cardwall\Semantic;
 
 use PFUser;
-use Tracker;
+use Tuleap\Tracker\Tracker;
 
 class SemanticCardPresenter
 {

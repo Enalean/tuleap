@@ -50,7 +50,7 @@ final class PostArtifactDeletionCleanerTest extends TestCase
         $this->artifact_dao->expects($this->once())->method('deleteArtifactLinkReference');
 
         $file_field = FileFieldBuilder::aFileField(1)->build();
-        $tracker    = $this->createStub(\Tracker::class);
+        $tracker    = $this->createStub(\Tuleap\Tracker\Tracker::class);
         $tracker->method('getFormElementFields')->willReturn([$file_field]);
         $tracker->method('getId')->willReturn(987);
         $tracker->method('getGroupId')->willReturn(109);

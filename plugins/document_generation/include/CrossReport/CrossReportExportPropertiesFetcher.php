@@ -24,7 +24,7 @@ namespace Tuleap\DocumentGeneration\CrossReport;
 
 class CrossReportExportPropertiesFetcher
 {
-    public function fetchExportProperties(\Tracker $tracker, \Tracker_Report $tracker_report, \Tracker_Report_Renderer_Table $tracker_report_renderer_table): CrossReportExportProperties
+    public function fetchExportProperties(\Tuleap\Tracker\Tracker $tracker, \Tracker_Report $tracker_report, \Tracker_Report_Renderer_Table $tracker_report_renderer_table): CrossReportExportProperties
     {
         return new CrossReportExportProperties(
             (int) $tracker->getGroupId(),

@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Semantic\Description;
 
-use Tracker;
+use Tuleap\Tracker\Tracker;
 
 interface GetDescriptionSemantic
 {

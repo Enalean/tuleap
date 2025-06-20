@@ -26,14 +26,14 @@ use HTTPRequest;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerInterface;
 use Tuleap\Artidoc\Document\ArtidocBreadcrumbsProvider;
+use Tuleap\Artidoc\Document\ConfiguredTrackerRetriever;
 use Tuleap\Artidoc\Document\Field\ConfiguredField;
 use Tuleap\Artidoc\Document\Field\ConfiguredFieldCollectionBuilder;
-use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
-use Tuleap\Artidoc\Document\ConfiguredTrackerRetriever;
-use Tuleap\Artidoc\Domain\Document\RetrieveArtidocWithContext;
 use Tuleap\Artidoc\Document\Field\ConfiguredFieldRepresentation;
 use Tuleap\Artidoc\Document\Tracker\DocumentTrackerRepresentation;
 use Tuleap\Artidoc\Document\Tracker\SuitableTrackersForDocumentRetriever;
+use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
+use Tuleap\Artidoc\Domain\Document\RetrieveArtidocWithContext;
 use Tuleap\Config\ConfigKeyString;
 use Tuleap\Config\FeatureFlagConfigKey;
 use Tuleap\Docman\ServiceDocman;
@@ -140,7 +140,7 @@ final readonly class ArtidocController implements DispatchableWithRequest, Dispa
                     $title,
                     $this->getTrackerRepresentation($configured_tracker, $user),
                     array_map(
-                        fn (\Tracker $tracker): DocumentTrackerRepresentation => $this->getTrackerRepresentation($tracker, $user),
+                        fn (\Tuleap\Tracker\Tracker $tracker): DocumentTrackerRepresentation => $this->getTrackerRepresentation($tracker, $user),
                         $this->suitable_trackers_retriever->getTrackers($document_information, $user),
                     ),
                     array_map(
@@ -158,7 +158,7 @@ final readonly class ArtidocController implements DispatchableWithRequest, Dispa
     /**
      * @psalm-return ($tracker is null ? null : DocumentTrackerRepresentation)
      */
-    private function getTrackerRepresentation(?\Tracker $tracker, \PFUser $user): ?DocumentTrackerRepresentation
+    private function getTrackerRepresentation(?\Tuleap\Tracker\Tracker $tracker, \PFUser $user): ?DocumentTrackerRepresentation
     {
         if ($tracker) {
             return DocumentTrackerRepresentation::fromTracker($this->file_upload_provider, $tracker, $user);

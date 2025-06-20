@@ -34,7 +34,7 @@ final class HierarchyCheckerTest extends TestCase
 
         $project = ProjectTestBuilder::aProject()->build();
 
-        $tracker = $this->createMock(\Tracker::class);
+        $tracker = $this->createMock(\Tuleap\Tracker\Tracker::class);
         $tracker->method('getHierarchy')->willReturn($hierarchy);
         $tracker->method('getProject')->willReturn($project);
 
@@ -52,7 +52,7 @@ final class HierarchyCheckerTest extends TestCase
 
         $project = ProjectTestBuilder::aProject()->build();
 
-        $tracker = $this->createMock(\Tracker::class);
+        $tracker = $this->createMock(\Tuleap\Tracker\Tracker::class);
         $tracker->method('getHierarchy')->willReturn($hierarchy);
         $tracker->method('getProject')->willReturn($project);
 

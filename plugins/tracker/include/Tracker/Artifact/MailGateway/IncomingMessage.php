@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Tracker;
 
 class Tracker_Artifact_MailGateway_IncomingMessage
 {

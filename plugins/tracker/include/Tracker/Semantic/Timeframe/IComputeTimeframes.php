@@ -35,7 +35,7 @@ interface IComputeTimeframes
 
     public function getDurationField(): ?\Tracker_FormElement_Field_Numeric;
 
-    public function getTrackerFromWhichTimeframeIsImplied(): ?\Tracker;
+    public function getTrackerFromWhichTimeframeIsImplied(): ?\Tuleap\Tracker\Tracker;
 
     public function buildDatePeriodWithoutWeekendForChangesetForREST(?\Tracker_Artifact_Changeset $changeset, \PFUser $user, LoggerInterface $logger): DatePeriodWithOpenDays;
 
@@ -50,7 +50,7 @@ interface IComputeTimeframes
 
     public function exportToREST(\PFUser $user): ?IRepresentSemanticTimeframe;
 
-    public function save(\Tracker $tracker, SemanticTimeframeDao $dao): bool;
+    public function save(\Tuleap\Tracker\Tracker $tracker, SemanticTimeframeDao $dao): bool;
 
     public function isFieldUsed(\Tracker_FormElement_Field $field): bool;
 

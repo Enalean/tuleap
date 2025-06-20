@@ -24,7 +24,7 @@ namespace Tuleap\Tracker\Semantic\Status;
 
 class SemanticStatusRetriever
 {
-    public function retrieveSemantic(\Tracker $tracker): \Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus
+    public function retrieveSemantic(\Tuleap\Tracker\Tracker $tracker): \Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus
     {
         return \Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus::load($tracker);
     }

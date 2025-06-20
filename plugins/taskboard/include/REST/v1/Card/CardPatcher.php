@@ -44,9 +44,9 @@ use Tuleap\Tracker\Artifact\Changeset\Comment\CommentCreator;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionDao;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
-use Tuleap\Tracker\Artifact\Changeset\NewChangesetPostProcessor;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetFieldValueSaver;
+use Tuleap\Tracker\Artifact\Changeset\NewChangesetPostProcessor;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetValidator;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsQueuer;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ArtifactForwardLinksRetriever;
@@ -201,7 +201,7 @@ class CardPatcher
         $remaining_effort_field = $this->form_element_factory->getNumericFieldByNameForUser(
             $artifact->getTracker(),
             $user,
-            \Tracker::REMAINING_EFFORT_FIELD_NAME
+            \Tuleap\Tracker\Tracker::REMAINING_EFFORT_FIELD_NAME
         );
         if (! $remaining_effort_field instanceof Tracker_FormElement_Field_Numeric) {
             throw new I18NRestException(

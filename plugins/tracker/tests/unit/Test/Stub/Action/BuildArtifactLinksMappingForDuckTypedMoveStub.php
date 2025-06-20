@@ -23,11 +23,11 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Test\Stub\Action;
 
 use PFUser;
-use Tracker;
 use Tracker_XML_Importer_ArtifactImportedMapping;
 use Tuleap\Tracker\Action\BuildArtifactLinksMappingForDuckTypedMove;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\ArtifactImportedMappingBuilder;
+use Tuleap\Tracker\Tracker;
 
 final class BuildArtifactLinksMappingForDuckTypedMoveStub implements BuildArtifactLinksMappingForDuckTypedMove
 {

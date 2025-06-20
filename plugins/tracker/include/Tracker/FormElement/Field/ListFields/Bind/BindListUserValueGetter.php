@@ -212,7 +212,7 @@ class BindListUserValueGetter
     protected function getUGroupUtilsDynamicMembers(
         $ugroup_name,
         array $bindvalue_ids,
-        \Tracker $tracker,
+        \Tuleap\Tracker\Tracker $tracker,
     ): ?string {
         return ugroup_db_get_dynamic_members(
             $ugroup_name,

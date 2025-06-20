@@ -27,7 +27,7 @@ use Psr\Log\LoggerInterface;
 final class TrackersWithUnreadableStatusCollection
 {
     /**
-     * @var \Tracker[]
+     * @var \Tuleap\Tracker\Tracker[]
      */
     private array $trackers = [];
     private LoggerInterface $logger;
@@ -37,7 +37,7 @@ final class TrackersWithUnreadableStatusCollection
         $this->logger = $logger;
     }
 
-    public function add(\Tracker $tracker): void
+    public function add(\Tuleap\Tracker\Tracker $tracker): void
     {
         $this->trackers[$tracker->getId()] = $tracker;
     }
@@ -57,7 +57,7 @@ final class TrackersWithUnreadableStatusCollection
             $message = sprintf(
                 '[Roadmap widget] User cannot read status of trackers %s. Hence, their artifacts won\'t be displayed.',
                 implode(', ', array_map(
-                    static fn(\Tracker $tracker): string => '#' . $tracker->getId(),
+                    static fn(\Tuleap\Tracker\Tracker $tracker): string => '#' . $tracker->getId(),
                     $this->trackers,
                 ))
             );

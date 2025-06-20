@@ -23,9 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Test\Builders;
 
 use Project;
-use Tracker;
 use Tuleap\Tracker\Permission\VerifySubmissionPermissions;
 use Tuleap\Tracker\Test\Stub\VerifySubmissionPermissionStub;
+use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\TrackerColor;
 
 final class TrackerTestBuilder

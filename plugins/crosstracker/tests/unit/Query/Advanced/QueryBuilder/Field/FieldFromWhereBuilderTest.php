@@ -55,8 +55,8 @@ final class FieldFromWhereBuilderTest extends TestCase
 
     private const FIELD_NAME = 'my_field';
     private \PFUser $user;
-    private \Tracker $first_tracker;
-    private \Tracker $second_tracker;
+    private \Tuleap\Tracker\Tracker $first_tracker;
+    private \Tuleap\Tracker\Tracker $second_tracker;
 
     protected function setUp(): void
     {

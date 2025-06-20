@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\CrossTracker\Query\Advanced;
 
 use PFUser;
-use Tracker;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Field\FieldResultBuilder;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Metadata\MetadataResultBuilder;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\ResultBuilderVisitorParameters;
@@ -32,6 +31,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Selectable;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SelectableVisitor;
+use Tuleap\Tracker\Tracker;
 
 /**
  * @template-implements SelectableVisitor<ResultBuilderVisitorParameters, SelectedValuesCollection>

@@ -20,6 +20,7 @@
  */
 
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Tracker\Tracker;
 
 class Tracker_CannedResponseManager
 {

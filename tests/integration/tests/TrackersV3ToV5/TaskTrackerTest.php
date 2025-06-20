@@ -26,7 +26,6 @@ namespace Tuleap\TrackersV3ToV5;
 use ArtifactType;
 use ProjectManager;
 use ProjectUGroup;
-use Tracker;
 use Tracker_DateReminder;
 use Tracker_DateReminder_Role_Submitter;
 use Tracker_DateReminderFactory;
@@ -48,6 +47,7 @@ use Tuleap\Disposable\Dispose;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\Helpers\CodendiLogSwitcher;
 use Tuleap\Tracker\DateReminder\DateReminderDao;
+use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TaskTrackerTest extends \Tuleap\Test\PHPUnit\TestCase

@@ -25,8 +25,8 @@ namespace Tuleap\Taskboard\Column;
 use Cardwall_Column;
 use Cardwall_OnTop_ColumnDao;
 use PHPUnit\Framework\MockObject\MockObject;
-use Tracker;
 use TrackerFactory;
+use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MilestoneTrackerRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase

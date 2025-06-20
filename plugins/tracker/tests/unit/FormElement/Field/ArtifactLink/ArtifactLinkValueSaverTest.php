@@ -26,7 +26,6 @@ use EventManager;
 use PFUser;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use PHPUnit\Framework\MockObject\MockObject;
-use Tracker;
 use Tracker_ArtifactFactory;
 use Tracker_ArtifactLinkInfo;
 use Tracker_ReferenceManager;
@@ -43,6 +42,7 @@ use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueArtifactLinkTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ArtifactLinkFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Tracker;
 
 #[DisableReturnValueGenerationForTestDoubles]
 final class ArtifactLinkValueSaverTest extends TestCase

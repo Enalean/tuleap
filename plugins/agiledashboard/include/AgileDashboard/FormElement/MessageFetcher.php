@@ -23,8 +23,8 @@ namespace Tuleap\AgileDashboard\FormElement;
 use AgileDashboard_Semantic_InitialEffortFactory;
 use Codendi_HTMLPurifier;
 use PlanningFactory;
-use Tracker;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneFactory;
+use Tuleap\Tracker\Tracker;
 
 class MessageFetcher
 {

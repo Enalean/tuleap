@@ -27,10 +27,10 @@ use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
 use Planning;
 use PlanningFactory;
-use Tracker;
 use Tracker_Artifact_Changeset;
 use Tuleap\Baseline\Support\CurrentUserContext;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
+use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactLinkRepositoryTest extends \Tuleap\Test\PHPUnit\TestCase

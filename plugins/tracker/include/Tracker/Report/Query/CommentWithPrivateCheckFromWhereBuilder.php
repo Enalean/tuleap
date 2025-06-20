@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Report\Query;
 
 use ParagonIE\EasyDB\EasyStatement;
-use Tracker;
+use Tuleap\Tracker\Tracker;
 
 final class CommentWithPrivateCheckFromWhereBuilder implements CommentFromWhereBuilder
 {

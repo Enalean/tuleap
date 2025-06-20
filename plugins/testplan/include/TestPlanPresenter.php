@@ -132,7 +132,7 @@ class TestPlanPresenter
         int $project_id,
         string $project_name,
         bool $user_can_create_campaign,
-        ?\Tracker $test_definition_tracker,
+        ?\Tuleap\Tracker\Tracker $test_definition_tracker,
         int $expand_backlog_item_id,
         int $highlight_test_definition_id,
         string $platform_name,

@@ -22,7 +22,7 @@
 namespace Tuleap\Tracker\Webhook\Actions;
 
 use CSRFSynchronizerToken;
-use Tracker;
+use Tuleap\Tracker\Tracker;
 
 class AdminPresenter
 {

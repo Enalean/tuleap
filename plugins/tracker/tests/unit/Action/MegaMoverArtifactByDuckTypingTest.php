@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Action;
 
 use Psr\Log\NullLogger;
-use Tracker;
 use Tracker_Artifact_XMLImport;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -38,6 +37,7 @@ use Tuleap\Tracker\Test\Builders\ArtifactImportedMappingBuilder;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\UpdateMoveChangesetXMLDuckTypingStub;
+use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\Tracker\XML\Updater\UpdateMoveChangesetXMLDuckTyping;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]

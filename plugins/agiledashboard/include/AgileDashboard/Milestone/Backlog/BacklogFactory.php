@@ -23,6 +23,7 @@
  */
 
 use Tuleap\AgileDashboard\BacklogItemDao;
+use Tuleap\Tracker\Tracker;
 
 /**
  * I build AgileDashboard_Milestone_Backlog_Backlog

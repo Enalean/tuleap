@@ -27,7 +27,6 @@ use PFUser;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use PHPUnit\Framework\MockObject\MockObject;
 use Project;
-use Tracker;
 use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_List_BindFactory;
 use Tracker_FormElement_Field_Selectbox;
@@ -40,6 +39,7 @@ use Tuleap\Tracker\Test\Builders\Fields\List\ListUserBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\SharedFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
+use Tuleap\Tracker\Tracker;
 
 #[DisableReturnValueGenerationForTestDoubles]
 final class Tracker_SharedFormElementFactoryTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps

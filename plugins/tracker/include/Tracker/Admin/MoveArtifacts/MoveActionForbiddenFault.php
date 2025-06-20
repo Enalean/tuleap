@@ -22,8 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Admin\MoveArtifacts;
 
-use Tracker;
 use Tuleap\NeverThrow\Fault;
+use Tuleap\Tracker\Tracker;
 
 /**
  * @psalm-immutable

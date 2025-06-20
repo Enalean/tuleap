@@ -23,11 +23,11 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Semantic\Status\Done;
 
 use PHPUnit\Framework\MockObject\MockObject;
-use Tracker;
 use Tracker_FormElement_Field_List_Value;
 use Tracker_FormElement_InvalidFieldValueException;
 use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SemanticDoneLoaderTest extends \Tuleap\Test\PHPUnit\TestCase

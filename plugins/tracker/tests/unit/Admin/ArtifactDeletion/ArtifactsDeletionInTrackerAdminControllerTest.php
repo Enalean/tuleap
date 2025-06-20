@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Admin\ArtifactDeletion;
 
-use Tracker;
 use Tuleap\Request\NotFoundException;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\LayoutInspector;
@@ -35,6 +34,7 @@ use Tuleap\Tracker\Admin\ArtifactsDeletion\ArtifactsDeletionInTrackerAdminPresen
 use Tuleap\Tracker\Test\Stub\ConfigurationArtifactsDeletionStub;
 use Tuleap\Tracker\Test\Stub\RetrieveTrackerStub;
 use Tuleap\Tracker\Test\Stub\RetrieveUserDeletionForLastDayStub;
+use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactsDeletionInTrackerAdminControllerTest extends TestCase

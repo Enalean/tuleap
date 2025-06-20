@@ -45,8 +45,8 @@ final class ActivateFunctionController extends DispatchablePSR15Compatible
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $tracker = $request->getAttribute(\Tracker::class);
-        if (! $tracker instanceof \Tracker) {
+        $tracker = $request->getAttribute(\Tuleap\Tracker\Tracker::class);
+        if (! $tracker instanceof \Tuleap\Tracker\Tracker) {
             throw new \LogicException('Tracker is missing');
         }
 
@@ -78,7 +78,7 @@ final class ActivateFunctionController extends DispatchablePSR15Compatible
         }
     }
 
-    public static function getUrl(\Tracker $tracker): string
+    public static function getUrl(\Tuleap\Tracker\Tracker $tracker): string
     {
         return '/tracker_functions/' . urlencode((string) $tracker->getId()) . '/admin/activate';
     }

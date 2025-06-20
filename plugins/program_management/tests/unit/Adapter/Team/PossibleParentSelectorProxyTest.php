@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Team;
 
 use PFUser;
-use Tracker;
 use Tuleap\AgileDashboard\Planning\RetrieveRootPlanning;
 use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\FeatureIdentifier;
@@ -40,6 +39,7 @@ use Tuleap\Tracker\Artifact\RetrieveArtifact;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveArtifactStub;
+use Tuleap\Tracker\Tracker;
 use function PHPUnit\Framework\assertEquals;
 use function PHPUnit\Framework\assertFalse;
 use function PHPUnit\Framework\assertTrue;

@@ -28,7 +28,6 @@ use Project_AccessException;
 use Project_AccessProjectNotFoundException;
 use ProjectManager;
 use Psr\Log\NullLogger;
-use Tracker;
 use TrackerFactory;
 use Tuleap\Roadmap\RoadmapWidgetDao;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -40,6 +39,7 @@ use Tuleap\Tracker\Semantic\Timeframe\TimeframeNotConfigured;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeWithDuration;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeWithEndDate;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase

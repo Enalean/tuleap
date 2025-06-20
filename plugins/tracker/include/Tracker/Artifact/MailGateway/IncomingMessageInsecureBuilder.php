@@ -20,6 +20,7 @@
 
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\MailGateway\IncomingMail;
+use Tuleap\Tracker\Tracker;
 
 class Tracker_Artifact_IncomingMessageInsecureBuilder
 {

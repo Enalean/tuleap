@@ -20,13 +20,14 @@
 
 declare(strict_types=1);
 
-use Tuleap\DB\DatabaseUUIDV7Factory;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
+use Tuleap\Tracker\Tracker;
 
 #[DisableReturnValueGenerationForTestDoubles]
 final class Tracker_Workflow_Trigger_RulesFactoryTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps

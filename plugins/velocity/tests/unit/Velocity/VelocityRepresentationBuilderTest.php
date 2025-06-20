@@ -25,7 +25,6 @@ namespace Tuleap\Velocity;
 use PFUser;
 use Planning_Milestone;
 use Planning_MilestoneFactory;
-use Tracker;
 use Tracker_Artifact_Changeset;
 use Tracker_FormElement_Field_Float;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -33,6 +32,7 @@ use Tuleap\Tracker\Semantic\Status\Done\SemanticDone;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneFactory;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
+use Tuleap\Tracker\Tracker;
 use Tuleap\Velocity\Semantic\SemanticVelocity;
 use Tuleap\Velocity\Semantic\SemanticVelocityFactory;
 

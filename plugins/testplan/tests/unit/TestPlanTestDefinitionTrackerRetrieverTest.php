@@ -50,7 +50,7 @@ final class TestPlanTestDefinitionTrackerRetrieverTest extends \Tuleap\Test\PHPU
     public function testCanRetrievesTestDefinitionsTracker(): void
     {
         $this->testmanagement_config->method('getTestDefinitionTrackerId')->willReturn(146);
-        $expected_tracker = $this->createMock(\Tracker::class);
+        $expected_tracker = $this->createMock(\Tuleap\Tracker\Tracker::class);
         $this->tracker_factory->method('getTrackerById')->willReturn($expected_tracker);
 
         $expected_tracker->method('userCanView')->willReturn(true);
@@ -63,7 +63,7 @@ final class TestPlanTestDefinitionTrackerRetrieverTest extends \Tuleap\Test\PHPU
     public function testTestDefTrackerCannotBeRetrievedWhenTheUserCannotAccessIt(): void
     {
         $this->testmanagement_config->method('getTestDefinitionTrackerId')->willReturn(146);
-        $tracker = $this->createMock(\Tracker::class);
+        $tracker = $this->createMock(\Tuleap\Tracker\Tracker::class);
         $this->tracker_factory->method('getTrackerById')->willReturn($tracker);
 
         $tracker->method('userCanView')->willReturn(false);

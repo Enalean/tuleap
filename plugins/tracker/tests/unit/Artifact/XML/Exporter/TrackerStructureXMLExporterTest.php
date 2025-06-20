@@ -25,7 +25,6 @@ namespace Tuleap\Tracker\Artifact\XML\Exporter;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use SimpleXMLElement;
-use Tracker;
 use Tracker_RulesManager;
 use Tuleap\Project\UGroupRetrieverWithLegacy;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -37,6 +36,7 @@ use Tuleap\Tracker\PromotedTrackerDao;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\FormElement\RetrieveFormElementsForTrackerStub;
 use Tuleap\Tracker\Test\Stub\Notifications\Settings\CheckEventShouldBeSentInNotificationStub;
+use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\TrackerColor;
 use Tuleap\Tracker\Webhook\WebhookXMLExporter;
 use Tuleap\Tracker\Workflow\SimpleMode\SimpleWorkflowDao;

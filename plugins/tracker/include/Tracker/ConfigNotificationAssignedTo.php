@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Tracker\Notifications\ConfigNotificationAssignedToDao;
+use Tuleap\Tracker\Tracker;
 
 class ConfigNotificationAssignedTo
 {

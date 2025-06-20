@@ -23,8 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\Timetracking\Permissions;
 
 use PFUser;
-use Tracker;
 use Tuleap\Timetracking\Admin\TimetrackingUgroupRetriever;
+use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PermissionsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase

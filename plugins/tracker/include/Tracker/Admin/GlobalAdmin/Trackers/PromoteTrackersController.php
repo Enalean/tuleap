@@ -119,7 +119,7 @@ class PromoteTrackersController implements DispatchableWithRequest, Dispatchable
 
     public static function getURL(Project $project): string
     {
-        return \Tracker::getTrackerGlobalAdministrationURL($project) . '/' . self::URL;
+        return \Tuleap\Tracker\Tracker::getTrackerGlobalAdministrationURL($project) . '/' . self::URL;
     }
 
     public function getProject(array $variables): Project

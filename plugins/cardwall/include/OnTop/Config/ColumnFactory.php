@@ -23,11 +23,11 @@ declare(strict_types=1);
 namespace Tuleap\Cardwall\OnTop\Config;
 
 use Cardwall_Column;
-use Tracker;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Bind_StaticValue_None;
 use Tracker_FormElement_InvalidFieldValueException;
 use Tuleap\Cardwall\Column\ColumnColorRetriever;
+use Tuleap\Tracker\Tracker;
 
 class ColumnFactory
 {

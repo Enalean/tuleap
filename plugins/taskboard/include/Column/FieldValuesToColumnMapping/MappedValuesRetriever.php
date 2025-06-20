@@ -23,10 +23,10 @@ declare(strict_types=1);
 namespace Tuleap\Taskboard\Column\FieldValuesToColumnMapping;
 
 use Cardwall_Column;
-use Tracker;
 use Tuleap\Option\Option;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle\FreestyleMappedFieldValuesRetriever;
 use Tuleap\Taskboard\Tracker\TaskboardTracker;
+use Tuleap\Tracker\Tracker;
 
 final readonly class MappedValuesRetriever
 {

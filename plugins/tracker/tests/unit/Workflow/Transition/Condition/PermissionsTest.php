@@ -25,9 +25,9 @@ namespace Tuleap\Tracker\Workflow\Transition\Condition;
 use PermissionsManager;
 use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
-use Tracker;
 use Tracker_Workflow_WorkflowUser;
 use Transition;
+use Tuleap\Tracker\Tracker;
 use Workflow_Transition_Condition_Permissions;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]

@@ -22,8 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Semantic\Contributor;
 
-use Tracker;
 use Tracker_FormElement_Field_List;
+use Tuleap\Tracker\Tracker;
 
 final readonly class ContributorFieldRetriever implements RetrieveContributorField
 {

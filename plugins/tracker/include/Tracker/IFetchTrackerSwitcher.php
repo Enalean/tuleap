@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Tracker;
+
 /**
  * Render a tracker switching selectbox. Also display headers and footers
  * See:

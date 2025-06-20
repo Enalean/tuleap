@@ -24,7 +24,6 @@ namespace Tuleap\Tracker\FormElement\Field\File;
 
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use PHPUnit\Framework\MockObject\MockObject;
-use Tracker;
 use Tracker_Artifact_Attachment_AlreadyLinkedToAnotherArtifactException;
 use Tracker_Artifact_Attachment_FileNotFoundException;
 use Tracker_Artifact_Attachment_TemporaryFile;
@@ -41,6 +40,7 @@ use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueFileTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\FileFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Tracker;
 use UserManager;
 
 #[DisableReturnValueGenerationForTestDoubles]

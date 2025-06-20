@@ -23,10 +23,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Test\Stub;
 
-use Tracker;
 use Tuleap\Tracker\Artifact\ActionButtons\MoveArtifactActionAllowedByPluginRetriever;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\v1\Move\CheckBeforeMove;
+use Tuleap\Tracker\Tracker;
 
 final class CheckBeforeMoveStub implements CheckBeforeMove
 {

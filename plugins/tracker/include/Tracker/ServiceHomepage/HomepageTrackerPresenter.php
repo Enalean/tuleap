@@ -41,7 +41,7 @@ final readonly class HomepageTrackerPresenter
      * @param Option<TrackerStats>          $stats
      * @param Option<TooltipStatsPresenter> $tooltip_presenter
      */
-    public function __construct(\Tracker $tracker, Option $stats, Option $tooltip_presenter)
+    public function __construct(\Tuleap\Tracker\Tracker $tracker, Option $stats, Option $tooltip_presenter)
     {
         $this->tracker_id     = $tracker->getId();
         $this->color          = $tracker->getColor()->getName();

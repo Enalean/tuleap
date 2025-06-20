@@ -23,10 +23,10 @@ declare(strict_types=1);
 
 namespace Tuleap\TestManagement\REST\v1\DefinitionRepresentations\StepDefinitionRepresentations;
 
-use Tracker;
 use Tuleap\Markdown\ContentInterpretor;
 use Tuleap\TestManagement\Step\Step;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class StepDefinitionRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase

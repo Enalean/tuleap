@@ -28,7 +28,7 @@ interface RetrieveUsedFields
      * All fields used by the tracker
      * @return \Tracker_FormElement_Field[]
      */
-    public function getUsedFields(\Tracker $tracker): array;
+    public function getUsedFields(\Tuleap\Tracker\Tracker $tracker): array;
 
     public function getUsedFormElementFieldById(int $id): ?Tracker_FormElement_Field;
 

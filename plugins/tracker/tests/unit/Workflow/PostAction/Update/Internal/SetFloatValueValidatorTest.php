@@ -65,7 +65,7 @@ final class SetFloatValueValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $second_float_value = new SetFloatValue(2, 42.1);
 
         $this->set_float_value_validator->validate(
-            $this->createMock(\Tracker::class),
+            $this->createMock(\Tuleap\Tracker\Tracker::class),
             $first_float_value,
             $second_float_value
         );
@@ -83,7 +83,7 @@ final class SetFloatValueValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->expectException(InvalidPostActionException::class);
         $this->set_float_value_validator->validate(
-            $this->createMock(\Tracker::class),
+            $this->createMock(\Tuleap\Tracker\Tracker::class),
             $first_same_field_id,
             $second_same_field_id
         );
@@ -104,7 +104,7 @@ final class SetFloatValueValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->expectException(InvalidPostActionException::class);
         $this->set_float_value_validator->validate(
-            $this->createMock(\Tracker::class),
+            $this->createMock(\Tuleap\Tracker\Tracker::class),
             $invalid_field_id
         );
     }

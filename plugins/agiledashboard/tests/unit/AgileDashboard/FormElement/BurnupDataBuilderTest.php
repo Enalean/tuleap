@@ -27,7 +27,6 @@ use ForgeConfig;
 use PHPUnit\Framework\MockObject\MockObject;
 use PlanningFactory;
 use Psr\Log\NullLogger;
-use Tracker;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsCacheDao;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsCalculator;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsInfo;
@@ -42,6 +41,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\FormElement\ChartConfigurationValueRetriever;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class BurnupDataBuilderTest extends TestCase

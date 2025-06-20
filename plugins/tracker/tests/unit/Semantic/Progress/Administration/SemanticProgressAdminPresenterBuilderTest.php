@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Semantic\Progress\Administration;
 
 use PHPUnit\Framework\MockObject\MockObject;
-use Tracker;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\Semantic\Progress\InvalidMethod;
 use Tuleap\Tracker\Semantic\Progress\MethodBasedOnEffort;
@@ -32,6 +31,7 @@ use Tuleap\Tracker\Semantic\Progress\MethodNotConfigured;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgressDao;
 use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SemanticProgressAdminPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase

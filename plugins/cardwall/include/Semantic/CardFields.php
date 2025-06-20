@@ -32,6 +32,7 @@ use Tuleap\Cardwall\Semantic\CardsPreviewBuilder;
 use Tuleap\Cardwall\Semantic\FieldUsedInSemanticObjectChecker;
 use Tuleap\Cardwall\Semantic\SemanticCardPresenter;
 use Tuleap\Cardwall\Semantic\SingleCardPreviewDetailsBuilder;
+use Tuleap\Tracker\Tracker;
 
 class Cardwall_Semantic_CardFields extends Tracker_Semantic
 {

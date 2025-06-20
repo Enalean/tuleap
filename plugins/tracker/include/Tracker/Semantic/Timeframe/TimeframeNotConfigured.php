@@ -58,7 +58,7 @@ class TimeframeNotConfigured implements IComputeTimeframes
         return false;
     }
 
-    public function save(\Tracker $tracker, SemanticTimeframeDao $dao): bool
+    public function save(\Tuleap\Tracker\Tracker $tracker, SemanticTimeframeDao $dao): bool
     {
         return false;
     }
@@ -122,7 +122,7 @@ class TimeframeNotConfigured implements IComputeTimeframes
         );
     }
 
-    public function getTrackerFromWhichTimeframeIsImplied(): ?\Tracker
+    public function getTrackerFromWhichTimeframeIsImplied(): ?\Tuleap\Tracker\Tracker
     {
         return null;
     }

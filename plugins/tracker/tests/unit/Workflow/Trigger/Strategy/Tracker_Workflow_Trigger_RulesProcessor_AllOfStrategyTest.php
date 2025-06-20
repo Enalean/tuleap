@@ -25,6 +25,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
+use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\TrackerColor;
 use Tuleap\Tracker\Workflow\Trigger\Siblings\SiblingsRetriever;
 

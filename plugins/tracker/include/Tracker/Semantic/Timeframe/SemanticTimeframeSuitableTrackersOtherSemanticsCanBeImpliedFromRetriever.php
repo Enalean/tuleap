@@ -39,9 +39,9 @@ class SemanticTimeframeSuitableTrackersOtherSemanticsCanBeImpliedFromRetriever
     }
 
     /**
-     * @return \Tracker[]
+     * @return \Tuleap\Tracker\Tracker[]
      */
-    public function getTrackersWeCanUseToImplyTheSemanticOfTheCurrentTrackerFrom(\Tracker $current_tracker): array
+    public function getTrackersWeCanUseToImplyTheSemanticOfTheCurrentTrackerFrom(\Tuleap\Tracker\Tracker $current_tracker): array
     {
         $project_trackers  = $this->tracker_factory->getTrackersByGroupId((int) $current_tracker->getGroupId());
         $suitable_trackers = [];
@@ -58,7 +58,7 @@ class SemanticTimeframeSuitableTrackersOtherSemanticsCanBeImpliedFromRetriever
         return $suitable_trackers;
     }
 
-    private function isTrackerEligible(\Tracker $project_tracker): bool
+    private function isTrackerEligible(\Tuleap\Tracker\Tracker $project_tracker): bool
     {
         if (! $this->hasTrackerAnArtifactLinkField($project_tracker)) {
             return false;
@@ -74,7 +74,7 @@ class SemanticTimeframeSuitableTrackersOtherSemanticsCanBeImpliedFromRetriever
         return true;
     }
 
-    private function hasTrackerAnArtifactLinkField(\Tracker $tracker): bool
+    private function hasTrackerAnArtifactLinkField(\Tuleap\Tracker\Tracker $tracker): bool
     {
         $artifact_link_field = $this->form_element_factory->getUsedArtifactLinkFields($tracker);
         return ! empty($artifact_link_field);

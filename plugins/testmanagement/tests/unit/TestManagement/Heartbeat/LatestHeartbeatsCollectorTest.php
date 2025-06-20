@@ -88,7 +88,7 @@ final class LatestHeartbeatsCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->dao->method('searchLastTestExecUpdate')->willReturn([$row_artifact]);
 
         $color   = TrackerColor::fromName('chrome-silver');
-        $tracker = $this->createMock(\Tracker::class);
+        $tracker = $this->createMock(\Tuleap\Tracker\Tracker::class);
         $tracker->method('getColor')->willReturn($color);
 
         $artifact = $this->createMock(Artifact::class);

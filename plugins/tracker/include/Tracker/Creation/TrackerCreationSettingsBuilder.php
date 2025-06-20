@@ -35,7 +35,7 @@ class TrackerCreationSettingsBuilder
     ) {
     }
 
-    public function build(\Tracker $tracker): TrackerCreationSettings
+    public function build(\Tuleap\Tracker\Tracker $tracker): TrackerCreationSettings
     {
         $is_displayed_in_new_dropdown = false;
         if ($this->in_new_dropdown_dao->isContaining($tracker->getId())) {

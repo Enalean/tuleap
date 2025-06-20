@@ -24,13 +24,13 @@ namespace Tuleap\Timetracking\XML;
 
 use PFUser;
 use SimpleXMLElement;
-use Tracker;
 use Tracker_ArtifactFactory;
 use Tuleap\Timetracking\Admin\TimetrackingEnabler;
 use Tuleap\Timetracking\Admin\TimetrackingUgroupRetriever;
 use Tuleap\Timetracking\Time\Time;
 use Tuleap\Timetracking\Time\TimeRetriever;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Tracker;
 use UserManager;
 use UserXMLExportedCollection;
 use UserXMLExporter;

@@ -22,10 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Test\Builders\Fields;
 
-use Tracker;
 use Tracker_FormElement;
 use Tracker_FormElement_Container_Fieldset;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Tracker;
 
 final class FieldsetContainerBuilder
 {

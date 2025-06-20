@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker;
 
-use Tracker;
 use Tracker_CannedResponse;
 use Tracker_CannedResponseFactory;
 use TrackerFactory;

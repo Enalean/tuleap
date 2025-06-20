@@ -19,8 +19,8 @@
 
 namespace Tuleap\CrossTracker\Query\Advanced;
 
-use Tracker;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\VisitorParameters;
+use Tuleap\Tracker\Tracker;
 
 final class QueryBuilderVisitorParameters implements VisitorParameters
 {

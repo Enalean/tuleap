@@ -42,7 +42,7 @@ final class TrackerManagerTest extends \Tuleap\Test\PHPUnit\TestCase
     use GlobalLanguageMock;
     use GlobalResponseMock;
 
-    private \Tracker&MockObject $tracker;
+    private \Tuleap\Tracker\Tracker&MockObject $tracker;
     private \PFUser $user;
     private \Tracker_URL&Stub $url;
     private Artifact&MockObject $artifact;
@@ -68,7 +68,7 @@ final class TrackerManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $rf           = $this->createMock(\Tracker_ReportFactory::class);
         $rf->method('getReportById')->with('2', $this->user->getId(), true)->willReturn($this->report);
 
-        $this->tracker = $this->createMock(\Tracker::class);
+        $this->tracker = $this->createMock(\Tuleap\Tracker\Tracker::class);
         $this->tracker->method('isActive')->willReturn(true);
         $this->tracker->method('getTracker')->willReturn($this->tracker);
 
@@ -240,7 +240,7 @@ final class TrackerManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $tm->method('getReferenceManager')->willReturn($rm);
 
         $t1 = TrackerTestBuilder::aTracker()->withShortName('bug')->build();
-        $t2 = $this->createMock(\Tracker::class);
+        $t2 = $this->createMock(\Tuleap\Tracker\Tracker::class);
         $t2->method('getItemName')->willReturn('task');
         $t2->method('mustBeInstantiatedForNewProjects')->willReturn(false);
 

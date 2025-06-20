@@ -22,10 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\TestPlan\TestDefinition;
 
-use Tracker;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\TestManagement\ArtifactDao;
 use Tuleap\TestManagement\Config;
+use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TestPlanLinkedTestDefinitionsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase

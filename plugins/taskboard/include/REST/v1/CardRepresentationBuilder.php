@@ -70,7 +70,7 @@ final readonly class CardRepresentationBuilder
 
     /** @return Option<MappedListValueRepresentation> */
     private function getMappedListValue(
-        \Tracker $milestone_tracker,
+        \Tuleap\Tracker\Tracker $milestone_tracker,
         Artifact $artifact,
         PFUser $user,
     ): Option {

@@ -24,7 +24,6 @@ namespace Tuleap\Tracker\REST\v1\Report;
 
 use Luracast\Restler\RestException;
 use Project;
-use Tracker;
 use Tracker_Artifact_Changeset;
 use Tracker_FormElement_Field;
 use Tracker_Report;
@@ -40,6 +39,7 @@ use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFullRepresentation;
 use Tuleap\Tracker\REST\v1\ArtifactMatchingReportCollection;
 use Tuleap\Tracker\REST\v1\ReportArtifactFactory;
 use Tuleap\Tracker\Semantic\Status\StatusColorForChangesetProvider;
+use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\TrackerColor;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]

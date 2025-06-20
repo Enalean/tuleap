@@ -36,7 +36,7 @@ final class SelectOptionsBuilder
     /**
      * @param array<int, \Tracker_FormElement> $to_exclude
      */
-    public function build(\Tracker $tracker, \PFUser $user, array $to_exclude): SelectOptionsRoot
+    public function build(\Tuleap\Tracker\Tracker $tracker, \PFUser $user, array $to_exclude): SelectOptionsRoot
     {
         $form_elements = $this->retriever->getUsedFormElementForTracker($tracker);
 

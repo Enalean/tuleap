@@ -30,7 +30,6 @@ use Planning_MilestoneFactory;
 use PlanningFactory;
 use PlanningPermissionsManager;
 use Psr\Log\NullLogger;
-use Tracker;
 use Tracker_Artifact_Changeset;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
@@ -47,6 +46,7 @@ use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\Semantic\Timeframe\BuildSemanticTimeframeStub;
+use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MilestoneFactoryTest extends TestCase

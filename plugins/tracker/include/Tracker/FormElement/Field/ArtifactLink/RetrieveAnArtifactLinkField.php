@@ -21,7 +21,7 @@
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
 
 use PFUser;
-use Tracker;
+use Tuleap\Tracker\Tracker;
 
 interface RetrieveAnArtifactLinkField
 {

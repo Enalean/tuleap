@@ -27,6 +27,7 @@ use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
+use Tuleap\Tracker\Tracker;
 
 class PlanningFactory implements RetrievePlannings, RetrieveRootPlanning
 {
@@ -571,7 +572,7 @@ class PlanningFactory implements RetrievePlannings, RetrieveRootPlanning
     /**
      * @param int $group_id the project id the trackers to retrieve belong to
      *
-     * @return \Tracker[]
+     * @return \Tuleap\Tracker\Tracker[]
      */
     public function getAvailableBacklogTrackers(PFUser $user, $group_id)
     {

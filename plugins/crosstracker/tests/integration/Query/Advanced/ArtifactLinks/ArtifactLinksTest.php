@@ -24,7 +24,6 @@ namespace Tuleap\CrossTracker\Query\Advanced\ArtifactLinks;
 
 use PFUser;
 use ProjectUGroup;
-use Tracker;
 use Tuleap\CrossTracker\Query\Advanced\CrossTrackerFieldTestCase;
 use Tuleap\CrossTracker\Tests\CrossTrackerQueryTestBuilder;
 use Tuleap\DB\DBFactory;
@@ -32,6 +31,7 @@ use Tuleap\DB\UUID;
 use Tuleap\Test\Builders\CoreDatabaseBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\SearchablesAreInvalidException;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
+use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactLinksTest extends CrossTrackerFieldTestCase

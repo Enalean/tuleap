@@ -170,8 +170,8 @@ final class HomepagePresenterBuilderTest extends TestCase
     private function mockTracker(
         bool $user_can_view,
         bool $user_has_full_access,
-    ): Stub&\Tracker {
-        $tracker = $this->createStub(\Tracker::class);
+    ): Stub&\Tuleap\Tracker\Tracker {
+        $tracker = $this->createStub(\Tuleap\Tracker\Tracker::class);
         $tracker->method('getId')->willReturn(15);
         $tracker->method('getColor')->willReturn(TrackerColor::fromName('sherwood-green'));
         $tracker->method('getName')->willReturn('task');

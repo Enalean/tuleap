@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Semantic\Progress;
 
-use Tracker;
+use Tuleap\Tracker\Tracker;
 
 class SemanticProgressBuilder
 {

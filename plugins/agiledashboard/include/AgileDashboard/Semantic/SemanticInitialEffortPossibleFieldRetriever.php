@@ -21,8 +21,8 @@
 declare(strict_types=1);
 namespace Tuleap\AgileDashboard\Semantic;
 
-use Tracker;
 use Tracker_FormElementFactory;
+use Tuleap\Tracker\Tracker;
 
 class SemanticInitialEffortPossibleFieldRetriever
 {

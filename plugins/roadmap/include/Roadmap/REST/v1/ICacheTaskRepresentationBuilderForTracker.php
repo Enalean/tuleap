@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Roadmap\REST\v1;
 
-use Tracker;
+use Tuleap\Tracker\Tracker;
 
 interface ICacheTaskRepresentationBuilderForTracker
 {

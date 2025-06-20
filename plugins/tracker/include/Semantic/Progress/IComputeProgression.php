@@ -44,7 +44,7 @@ interface IComputeProgression
 
     public function exportToXMl(\SimpleXMLElement $root, array $xml_mapping): void;
 
-    public function saveSemanticForTracker(\Tracker $tracker): bool;
+    public function saveSemanticForTracker(\Tuleap\Tracker\Tracker $tracker): bool;
 
-    public function deleteSemanticForTracker(\Tracker $tracker): bool;
+    public function deleteSemanticForTracker(\Tuleap\Tracker\Tracker $tracker): bool;
 }

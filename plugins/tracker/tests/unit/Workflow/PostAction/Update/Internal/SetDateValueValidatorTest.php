@@ -64,7 +64,7 @@ final class SetDateValueValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $second_date_value = new SetDateValue(2, 0);
 
         $this->set_date_value_validator->validate(
-            $this->createMock(\Tracker::class),
+            $this->createMock(\Tuleap\Tracker\Tracker::class),
             $first_date_value,
             $second_date_value
         );
@@ -81,7 +81,7 @@ final class SetDateValueValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->expectException(InvalidPostActionException::class);
 
         $this->set_date_value_validator->validate(
-            $this->createMock(\Tracker::class),
+            $this->createMock(\Tuleap\Tracker\Tracker::class),
             $first_same_field_id,
             $second_same_field_id
         );
@@ -101,6 +101,6 @@ final class SetDateValueValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->expectException(InvalidPostActionException::class);
 
-        $this->set_date_value_validator->validate($this->createMock(\Tracker::class), $invalid_field_id);
+        $this->set_date_value_validator->validate($this->createMock(\Tuleap\Tracker\Tracker::class), $invalid_field_id);
     }
 }

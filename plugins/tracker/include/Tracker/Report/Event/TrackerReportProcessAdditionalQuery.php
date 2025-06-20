@@ -20,9 +20,9 @@
 namespace Tuleap\Tracker\Report\Event;
 
 use PFUser;
-use Tracker;
 use Tracker_Report;
 use Tuleap\Event\Dispatchable;
+use Tuleap\Tracker\Tracker;
 
 class TrackerReportProcessAdditionalQuery implements Dispatchable
 {

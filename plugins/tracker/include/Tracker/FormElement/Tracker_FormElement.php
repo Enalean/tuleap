@@ -33,6 +33,7 @@ use Tuleap\Tracker\FormElement\FormElementTypeUpdateErrorException;
 use Tuleap\Tracker\FormElement\ProvideFactoryButtonInformation;
 use Tuleap\Tracker\FormElement\XML\XMLFormElement;
 use Tuleap\Tracker\FormElement\XML\XMLFormElementImpl;
+use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
 
 /**

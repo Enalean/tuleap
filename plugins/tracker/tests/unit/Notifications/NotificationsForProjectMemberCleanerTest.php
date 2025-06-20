@@ -44,8 +44,8 @@ final class NotificationsForProjectMemberCleanerTest extends \Tuleap\Test\PHPUni
 
         $this->emails_to_notify_manager = $this->createMock(\Tracker_NotificationsManager::class);
         $this->factory                  = $this->createMock(\TrackerFactory::class);
-        $this->unreadable_tracker       = $this->createMock(\Tracker::class);
-        $this->readable_tracker         = $this->createMock(\Tracker::class);
+        $this->unreadable_tracker       = $this->createMock(\Tuleap\Tracker\Tracker::class);
+        $this->readable_tracker         = $this->createMock(\Tuleap\Tracker\Tracker::class);
 
         $this->unreadable_tracker->method('getId')->willReturn(1);
         $this->readable_tracker->method('getId')->willReturn(2);

@@ -37,7 +37,7 @@ final class TrackerCreationNotificationsSettingsFromXmlBuilder
      */
     public function getCreationNotificationsSettings(
         ?\SimpleXMLElement $attributes,
-        \Tracker $tracker,
+        \Tuleap\Tracker\Tracker $tracker,
     ): Ok|Err {
         $should_send_event_in_notification = isset($attributes['should_send_event_in_notification']) && $attributes['should_send_event_in_notification'] !== null
             ? PHPCast::toBoolean($attributes['should_send_event_in_notification'])

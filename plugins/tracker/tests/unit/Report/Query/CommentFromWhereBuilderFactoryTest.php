@@ -23,9 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Report\Query;
 
 use PHPUnit\Framework\MockObject\MockObject;
-use Tracker;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\PermissionChecker;
+use Tuleap\Tracker\Tracker;
 use function PHPUnit\Framework\assertInstanceOf;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]

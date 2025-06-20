@@ -61,7 +61,7 @@ final class CollectionOfUserInvolvedInNotificationPresenterBuilderTest extends \
             $user_manager
         );
 
-        $tracker = $this->createMock(\Tracker::class);
+        $tracker = $this->createMock(\Tuleap\Tracker\Tracker::class);
         $tracker->method('getId')->willReturn(101);
 
         $user_helper = $this->createMock(\UserHelper::class);

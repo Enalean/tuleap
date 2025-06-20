@@ -47,7 +47,7 @@ final class ConfiguredFieldCollectionBuilderTest extends TestCase
     private SectionIdentifier $section_id;
     private ArtidocWithContext $artidoc;
     private PFUser $user;
-    private \Tracker $tracker;
+    private \Tuleap\Tracker\Tracker $tracker;
 
     protected function setUp(): void
     {

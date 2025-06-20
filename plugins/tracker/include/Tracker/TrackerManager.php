@@ -40,6 +40,7 @@ use Tuleap\Tracker\PermissionsPerGroup\TrackerPermissionPerGroupPermissionRepres
 use Tuleap\Tracker\PermissionsPerGroup\TrackerPermissionPerGroupRepresentationBuilder;
 use Tuleap\Tracker\ServiceHomepage\HomepagePresenterBuilder;
 use Tuleap\Tracker\ServiceHomepage\HomepageRenderer;
+use Tuleap\Tracker\Tracker;
 
 class TrackerManager implements Tracker_IFetchTrackerSwitcher
 {

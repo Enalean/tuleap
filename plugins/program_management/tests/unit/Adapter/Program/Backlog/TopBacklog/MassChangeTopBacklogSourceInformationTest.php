@@ -62,9 +62,9 @@ final class MassChangeTopBacklogSourceInformationTest extends \Tuleap\Test\PHPUn
         self::assertEquals($expected, MassChangeTopBacklogSourceInformation::fromProcessExternalActionEvent($event));
     }
 
-    private static function buildTracker(): \Tracker
+    private static function buildTracker(): \Tuleap\Tracker\Tracker
     {
-        return new \Tracker(
+        return new \Tuleap\Tracker\Tracker(
             '140',
             '102',
             'Test',

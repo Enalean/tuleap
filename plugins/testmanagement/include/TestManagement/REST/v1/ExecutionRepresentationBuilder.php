@@ -121,7 +121,7 @@ class ExecutionRepresentationBuilder
     public function getPaginatedExecutionsRepresentationsForCampaign(
         PFUser $user,
         Artifact $artifact,
-        \Tracker $execution_tracker,
+        \Tuleap\Tracker\Tracker $execution_tracker,
         int $limit,
         int $offset,
         DefinitionRepresentationFormat $definition_representation_format,
@@ -229,7 +229,7 @@ class ExecutionRepresentationBuilder
     private function getListOfRepresentations(
         PFUser $user,
         PaginatedExecutions $executions,
-        \Tracker $execution_tracker,
+        \Tuleap\Tracker\Tracker $execution_tracker,
         DefinitionRepresentationFormat $definition_representation_format,
     ): array {
         $executions_representations = [];
@@ -259,7 +259,7 @@ class ExecutionRepresentationBuilder
     private function getSlicedExecutionsForCampaign(
         Artifact $campaign_artifact,
         PFUser $user,
-        \Tracker $execution_tracker,
+        \Tuleap\Tracker\Tracker $execution_tracker,
         int $limit,
         int $offset,
     ) {

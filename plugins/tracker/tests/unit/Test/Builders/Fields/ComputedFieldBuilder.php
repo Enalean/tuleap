@@ -30,7 +30,7 @@ final class ComputedFieldBuilder
     use FieldBuilderWithPermissions;
     use FieldBuilderWithSpecificProperties;
 
-    private \Tracker $tracker;
+    private \Tuleap\Tracker\Tracker $tracker;
     private bool $required = false;
 
     private function __construct(private readonly int $id)

@@ -18,6 +18,7 @@
  */
 
 use Tuleap\Tracker\DateReminder\DateReminderDao;
+use Tuleap\Tracker\Tracker;
 
 class Tracker_DateReminderFactory
 {

@@ -23,9 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Semantic\Progress;
 
 use SimpleXMLElement;
-use Tracker;
 use Tracker_Semantic;
 use Tuleap\Tracker\Semantic\IBuildSemanticFromXML;
+use Tuleap\Tracker\Tracker;
 
 class SemanticProgressFromXMLBuilder implements IBuildSemanticFromXML
 {

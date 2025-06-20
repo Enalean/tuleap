@@ -21,9 +21,9 @@
 namespace Tuleap\Tracker\Notifications;
 
 use Iterator;
-use Tracker;
 use Tracker_GlobalNotification;
 use Tuleap\Notification\UserInvolvedInNotificationPresenter;
+use Tuleap\Tracker\Tracker;
 
 class CollectionOfUserInvolvedInNotificationPresenterBuilder
 {

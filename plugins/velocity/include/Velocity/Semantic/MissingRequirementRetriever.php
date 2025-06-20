@@ -20,10 +20,10 @@
 
 namespace Tuleap\Velocity\Semantic;
 
-use Tracker;
 use Tracker_HierarchyFactory;
 use TrackerFactory;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneFactory;
+use Tuleap\Tracker\Tracker;
 
 class MissingRequirementRetriever
 {

@@ -25,12 +25,12 @@ namespace Tuleap\Roadmap\REST\v1;
 use DateTimeImmutable;
 use Luracast\Restler\RestException;
 use Psr\Log\NullLogger;
-use Tracker;
 use Tuleap\Project\REST\ProjectReference;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Tracker;
 use UserManager;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]

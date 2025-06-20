@@ -81,7 +81,7 @@ class SemanticTimeframeSuitableTrackersOtherSemanticsCanBeImpliedFromRetrieverTe
         $this->form_element_factory->expects($this->exactly(5))
             ->method('getUsedArtifactLinkFields')
             ->willReturnCallback(
-                fn (\Tracker $tracker): array => match ($tracker) {
+                fn (\Tuleap\Tracker\Tracker $tracker): array => match ($tracker) {
                     $tasks_tracker, $bugs_tracker, $activities_tracker, $sprints_tracker => [$this->createStub(\Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::class)],
                     $requests_tracker => []
                 }
@@ -115,11 +115,11 @@ class SemanticTimeframeSuitableTrackersOtherSemanticsCanBeImpliedFromRetrieverTe
     }
 
     /**
-     * @return \PHPUnit\Framework\MockObject\MockObject|\Tracker
+     * @return \PHPUnit\Framework\MockObject\MockObject|\Tuleap\Tracker\Tracker
      */
     private function getMockedTracker(int $id)
     {
-        $mock = $this->createMock(\Tracker::class);
+        $mock = $this->createMock(\Tuleap\Tracker\Tracker::class);
         $mock->expects($this->any())->method('getId')->willReturn($id);
         return $mock;
     }

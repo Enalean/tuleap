@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Tracker\Hierarchy\HierarchyDAO;
+use Tuleap\Tracker\Tracker;
 
 class Tracker_Hierarchy_HierarchicalTrackerFactory
 {

@@ -25,11 +25,11 @@ namespace Tuleap\Cardwall\OnTop\Config;
 use Cardwall_OnTop_ColumnDao;
 use PHPUnit\Framework\MockObject\MockObject;
 use TestHelper;
-use Tracker;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ColumnFactoryTest extends TestCase

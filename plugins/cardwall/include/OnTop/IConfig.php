@@ -20,6 +20,7 @@
 
 use Tuleap\Cardwall\OnTop\Config\ColumnCollection;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Tracker;
 
 /**
  * Provide a link between a Tracker_Artifact and a Tracker_FormElement_Field

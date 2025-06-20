@@ -25,7 +25,6 @@ namespace Tuleap\Artidoc\REST\v1;
 use PFUser;
 use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\MockObject\MockObject;
-use Tracker;
 use Tracker_Artifact_Changeset;
 use Tracker_FormElement_Field_File;
 use Tracker_FormElement_Field_String;
@@ -64,6 +63,7 @@ use Tuleap\Tracker\Test\Builders\Fields\TextFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\Artifact\GetFileUploadDataStub;
 use Tuleap\Tracker\Test\Stub\RetrieveArtifactStub;
+use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RetrievedSectionsToRepresentationTransformerTest extends TestCase

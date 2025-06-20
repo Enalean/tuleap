@@ -22,9 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
 
-use Tracker;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
+use Tuleap\Tracker\Tracker;
 use function Psl\Json\encode;
 
 /**

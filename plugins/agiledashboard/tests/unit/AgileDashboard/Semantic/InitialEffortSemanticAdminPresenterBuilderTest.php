@@ -38,7 +38,7 @@ final class InitialEffortSemanticAdminPresenterBuilderTest extends TestCase
      * @var CSRFSynchronizerToken|(CSRFSynchronizerToken&\PHPUnit\Framework\MockObject\MockObject)|\PHPUnit\Framework\MockObject\MockObject
      */
     private \PHPUnit\Framework\MockObject\MockObject|CSRFSynchronizerToken $csrf_token;
-    private \Tracker $tracker;
+    private \Tuleap\Tracker\Tracker $tracker;
     private InitialEffortSemanticAdminPresenterBuilder $builder;
 
     protected function setUp(): void

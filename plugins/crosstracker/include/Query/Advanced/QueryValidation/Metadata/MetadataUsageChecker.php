@@ -22,7 +22,6 @@ namespace Tuleap\CrossTracker\Query\Advanced\QueryValidation\Metadata;
 
 use LogicException;
 use PFUser;
-use Tracker;
 use Tracker_FormElement;
 use Tracker_FormElementFactory;
 use Tuleap\CrossTracker\Query\Advanced\AllowedMetadata;
@@ -31,6 +30,7 @@ use Tuleap\Tracker\Semantic\Contributor\TrackerSemanticContributorDao;
 use Tuleap\Tracker\Semantic\Description\SearchTrackersWithoutDescriptionSemantic;
 use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatusDao;
 use Tuleap\Tracker\Semantic\Title\SearchTrackersWithoutTitleSemantic;
+use Tuleap\Tracker\Tracker;
 
 final class MetadataUsageChecker implements CheckMetadataUsage
 {

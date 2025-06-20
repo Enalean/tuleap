@@ -28,7 +28,7 @@ namespace Tuleap\Tracker\Artifact;
 final readonly class RichTextareaConfiguration
 {
     private function __construct(
-        public \Tracker $tracker,
+        public \Tuleap\Tracker\Tracker $tracker,
         public ?Artifact $artifact,
         public \PFUser $user,
         public string $id,
@@ -41,7 +41,7 @@ final readonly class RichTextareaConfiguration
     }
 
     public static function fromNewFollowUpComment(
-        \Tracker $tracker,
+        \Tuleap\Tracker\Tracker $tracker,
         Artifact $artifact,
         \PFUser $user,
         string $comment,
@@ -60,7 +60,7 @@ final readonly class RichTextareaConfiguration
     }
 
     public static function fromTextField(
-        \Tracker $tracker,
+        \Tuleap\Tracker\Tracker $tracker,
         ?Artifact $artifact,
         \PFUser $user,
         \Tracker_FormElement_Field_Text $field,

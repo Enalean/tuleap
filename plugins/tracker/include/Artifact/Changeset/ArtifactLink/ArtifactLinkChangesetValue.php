@@ -22,7 +22,6 @@
 namespace Tuleap\Tracker\Artifact\Changeset\ArtifactLink;
 
 use PFUser;
-use Tracker;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue;
 use Tracker_Artifact_ChangesetValue_ArtifactLinkDiff;
@@ -35,6 +34,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueArtifactLinksFullRepresentation;
 use Tuleap\Tracker\REST\Artifact\ArtifactReferenceWithType;
+use Tuleap\Tracker\Tracker;
 use Tuleap\User\ProvideCurrentUser;
 use UserManager;
 

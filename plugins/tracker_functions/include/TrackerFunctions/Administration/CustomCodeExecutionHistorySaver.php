@@ -64,22 +64,22 @@ final class CustomCodeExecutionHistorySaver implements LogFunctionRemoved, LogFu
         $params['subEvents']['event_others'][] = self::FUNCTION_DEACTIVATED;
     }
 
-    public function logFunctionRemoved(\PFUser $user, \Tracker $tracker): void
+    public function logFunctionRemoved(\PFUser $user, \Tuleap\Tracker\Tracker $tracker): void
     {
         $this->logActionOnTracker(self::FUNCTION_REMOVED, $user, $tracker);
     }
 
-    public function logFunctionUploaded(\PFUser $user, \Tracker $tracker): void
+    public function logFunctionUploaded(\PFUser $user, \Tuleap\Tracker\Tracker $tracker): void
     {
         $this->logActionOnTracker(self::FUNCTION_UPLOADED, $user, $tracker);
     }
 
-    public function logFunctionActivated(\PFUser $user, \Tracker $tracker): void
+    public function logFunctionActivated(\PFUser $user, \Tuleap\Tracker\Tracker $tracker): void
     {
         $this->logActionOnTracker(self::FUNCTION_ACTIVATED, $user, $tracker);
     }
 
-    public function logFunctionDeactivated(\PFUser $user, \Tracker $tracker): void
+    public function logFunctionDeactivated(\PFUser $user, \Tuleap\Tracker\Tracker $tracker): void
     {
         $this->logActionOnTracker(self::FUNCTION_DEACTIVATED, $user, $tracker);
     }
@@ -87,7 +87,7 @@ final class CustomCodeExecutionHistorySaver implements LogFunctionRemoved, LogFu
     /**
      * @param self::FUNCTION_* $action
      */
-    private function logActionOnTracker(string $action, \PFUser $user, \Tracker $tracker): void
+    private function logActionOnTracker(string $action, \PFUser $user, \Tuleap\Tracker\Tracker $tracker): void
     {
         $this->dao->addHistory(
             $tracker->getProject(),

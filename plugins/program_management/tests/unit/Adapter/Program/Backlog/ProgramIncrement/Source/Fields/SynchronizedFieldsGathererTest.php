@@ -63,7 +63,7 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $timeframe_builder;
     private RetrieveFullArtifactLinkFieldStub $artifact_link_retriever;
-    private \Tracker $tracker;
+    private \Tuleap\Tracker\Tracker $tracker;
     private ProgramIncrementTrackerIdentifier $tracker_identifier;
 
     protected function setUp(): void

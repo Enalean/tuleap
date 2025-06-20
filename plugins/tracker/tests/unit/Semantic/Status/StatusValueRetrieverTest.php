@@ -24,13 +24,13 @@ namespace Tuleap\Tracker\Semantic\Status;
 
 use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
-use Tracker;
 use Tracker_FormElement_Field_List_BindValue;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\TrackerColor;
 use Tuleap\Tracker\Workflow\FirstPossibleValueInListRetriever;
 use Tuleap\Tracker\Workflow\NoPossibleValueException;

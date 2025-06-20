@@ -40,7 +40,7 @@ final class MappedValuesRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     private \Cardwall_FieldProviders_SemanticStatusFieldRetriever&MockObject $status_retriever;
     private VerifyMappingExistsStub $verify_mapping_exists;
     private SearchMappedFieldValuesForColumnStub $search_values;
-    private \Tracker $user_stories_tracker;
+    private \Tuleap\Tracker\Tracker $user_stories_tracker;
     private TaskboardTracker $taskboard_tracker;
     private \Cardwall_Column $column;
 

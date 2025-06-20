@@ -23,8 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Report\Query;
 
 use PFUser;
-use Tracker;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\PermissionChecker;
+use Tuleap\Tracker\Tracker;
 
 final class CommentFromWhereBuilderFactory
 {

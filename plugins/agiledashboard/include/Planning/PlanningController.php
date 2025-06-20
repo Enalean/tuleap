@@ -49,6 +49,7 @@ use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Tracker\Report\TrackerNotFoundException;
+use Tuleap\Tracker\Tracker;
 
 /**
  * Handles the HTTP actions related to a planning.

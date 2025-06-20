@@ -23,6 +23,7 @@
  */
 
 use Tuleap\AgileDashboard\BacklogItemDao;
+use Tuleap\Tracker\Tracker;
 
 /**
  * I retrieve the content of the backlog

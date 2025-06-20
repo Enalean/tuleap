@@ -26,7 +26,6 @@ use Cardwall_Column;
 use Cardwall_OnTop_ColumnMappingFieldValueDao;
 use Cardwall_OnTop_Config_ValueMappingFactory;
 use TestHelper;
-use Tracker;
 use Tracker_FormElement_Field;
 use Tracker_FormElementFactory;
 use Tuleap\GlobalLanguageMock;
@@ -36,6 +35,7 @@ use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class Cardwall_OnTop_Config_ValueMappingFactoryTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps

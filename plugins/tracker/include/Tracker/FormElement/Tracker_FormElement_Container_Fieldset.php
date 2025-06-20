@@ -180,7 +180,7 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
             $csrf_token = $this->getCSRFTokenForElementUpdate();
             $html      .= '<form method="POST" action="?">';
             $html      .= $csrf_token->fetchHTMLInput();
-            $html      .= '<input type="hidden" name="func" value="' . $hp->purify(\Tracker::TRACKER_ACTION_NAME_FORM_ELEMENT_REMOVE) . '" />';
+            $html      .= '<input type="hidden" name="func" value="' . $hp->purify(\Tuleap\Tracker\Tracker::TRACKER_ACTION_NAME_FORM_ELEMENT_REMOVE) . '" />';
             $html      .= '<input type="hidden" name="tracker" value="' . $hp->purify((string) $tracker->getId()) . '" />';
             $html      .= '<input type="hidden" name="formElement" value="' . $hp->purify((string) $this->id) . '" />';
             $html      .= '<button type="submit" class="btn-link">' . $GLOBALS['HTML']->getImage('ic/cross.png', ['alt' => 'remove']) . '</button>';

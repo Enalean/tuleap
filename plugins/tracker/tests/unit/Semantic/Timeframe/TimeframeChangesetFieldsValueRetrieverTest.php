@@ -36,7 +36,7 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TimeframeChangesetFieldsValueRetrieverTest extends TestCase
 {
-    private \Tracker $tracker;
+    private \Tuleap\Tracker\Tracker $tracker;
     private Artifact $artifact;
     private \Tracker_Artifact_Changeset $changeset;
     private \PFUser $user;

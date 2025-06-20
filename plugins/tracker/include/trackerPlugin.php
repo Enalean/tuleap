@@ -276,6 +276,7 @@ use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Service\CheckPromotedTrackerConfiguration;
 use Tuleap\Tracker\Service\PromotedTrackerConfiguration;
 use Tuleap\Tracker\Service\ServiceActivator;
+use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\User\NotificationOnAllUpdatesRetriever;
 use Tuleap\Tracker\User\NotificationOnOwnActionRetriever;
 use Tuleap\Tracker\User\UserPreferencesPostController;

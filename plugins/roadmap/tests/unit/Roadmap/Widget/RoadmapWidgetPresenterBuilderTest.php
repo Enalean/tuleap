@@ -60,7 +60,7 @@ final class RoadmapWidgetPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestC
 
         $user = UserTestBuilder::aUser()->build();
 
-        $iteration_tracker = $this->createMock(\Tracker::class);
+        $iteration_tracker = $this->createMock(\Tuleap\Tracker\Tracker::class);
         $iteration_tracker->method('isActive')->willReturn(true);
         $iteration_tracker->method('userCanView')->willReturn(true);
 
@@ -85,7 +85,7 @@ final class RoadmapWidgetPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestC
 
         $user = UserTestBuilder::aUser()->build();
 
-        $iteration_tracker = $this->createMock(\Tracker::class);
+        $iteration_tracker = $this->createMock(\Tuleap\Tracker\Tracker::class);
         $iteration_tracker->method('isActive')->willReturn(true);
         $iteration_tracker->method('userCanView')->willReturn(true);
 
@@ -143,7 +143,7 @@ final class RoadmapWidgetPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestC
 
         $user = UserTestBuilder::aUser()->build();
 
-        $iteration_tracker = $this->createMock(\Tracker::class);
+        $iteration_tracker = $this->createMock(\Tuleap\Tracker\Tracker::class);
         $iteration_tracker->method('isActive')->willReturn(false);
 
         $tracker_factory = $this->createMock(\TrackerFactory::class);
@@ -173,7 +173,7 @@ final class RoadmapWidgetPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestC
 
         $user = UserTestBuilder::aUser()->build();
 
-        $iteration_tracker = $this->createMock(\Tracker::class);
+        $iteration_tracker = $this->createMock(\Tuleap\Tracker\Tracker::class);
         $iteration_tracker->method('isActive')->willReturn(true);
         $iteration_tracker->method('userCanView')->willReturn(false);
 

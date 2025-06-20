@@ -25,6 +25,7 @@ use Tuleap\Tracker\Artifact\XML\Exporter\TrackerEventExportFullXML;
 use Tuleap\Tracker\Artifact\XML\Exporter\TrackerEventExportStructureXML;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
+use Tuleap\Tracker\Tracker;
 
 class TrackerXmlExport // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {

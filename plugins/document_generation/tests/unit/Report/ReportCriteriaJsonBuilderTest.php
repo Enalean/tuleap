@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\DocumentGeneration\Report;
 
 use ProjectUGroup;
-use Tracker;
 use Tracker_FormElement_Field_Date;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Bind_Static;
@@ -41,8 +40,9 @@ use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\List\ListUserValueBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserGroupValueBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListUserValueBuilder;
+use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ReportCriteriaJsonBuilderTest extends TestCase

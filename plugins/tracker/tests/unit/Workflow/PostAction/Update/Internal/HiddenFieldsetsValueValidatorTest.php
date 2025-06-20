@@ -55,7 +55,7 @@ final class HiddenFieldsetsValueValidatorTest extends \Tuleap\Test\PHPUnit\TestC
 
         $hidden_fieldsets_values = new HiddenFieldsetsValue([648, 701]);
 
-        $tracker = $this->createMock(\Tracker::class);
+        $tracker = $this->createMock(\Tuleap\Tracker\Tracker::class);
         $tracker->method('getId')->willReturn(101);
 
         $workflow = $this->createMock(\Workflow::class);
@@ -77,7 +77,7 @@ final class HiddenFieldsetsValueValidatorTest extends \Tuleap\Test\PHPUnit\TestC
 
         $hidden_fieldsets_values = new HiddenFieldsetsValue([648, 648, 701]);
 
-        $tracker = $this->createMock(\Tracker::class);
+        $tracker = $this->createMock(\Tuleap\Tracker\Tracker::class);
         $tracker->method('getId')->willReturn(101);
 
         $this->expectException(InvalidPostActionException::class);
@@ -102,7 +102,7 @@ final class HiddenFieldsetsValueValidatorTest extends \Tuleap\Test\PHPUnit\TestC
 
         $hidden_fieldsets_values = new HiddenFieldsetsValue([648, 702]);
 
-        $tracker = $this->createMock(\Tracker::class);
+        $tracker = $this->createMock(\Tuleap\Tracker\Tracker::class);
         $tracker->method('getId')->willReturn(101);
 
         $workflow = $this->createMock(\Workflow::class);

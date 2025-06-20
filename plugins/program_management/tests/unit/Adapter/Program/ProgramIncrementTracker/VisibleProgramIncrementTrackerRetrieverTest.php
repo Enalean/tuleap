@@ -80,7 +80,7 @@ final class VisibleProgramIncrementTrackerRetrieverTest extends \Tuleap\Test\PHP
 
     public function testItThrowsAnExceptionIfUserCanNotSeeProgramIncrementTracker(): void
     {
-        $tracker = $this->createStub(\Tracker::class);
+        $tracker = $this->createStub(\Tuleap\Tracker\Tracker::class);
         $tracker->method('getId')->willReturn(1);
         $tracker->method('userCanView')->willReturn(false);
         $this->tracker_factory->method('getTrackerById')->with(1)->willReturn($tracker);
@@ -91,7 +91,7 @@ final class VisibleProgramIncrementTrackerRetrieverTest extends \Tuleap\Test\PHP
 
     public function testItBuildProgramIncrementTracker(): void
     {
-        $tracker = $this->createStub(\Tracker::class);
+        $tracker = $this->createStub(\Tuleap\Tracker\Tracker::class);
         $tracker->method('getId')->willReturn(1);
         $tracker->method('getName')->willReturn('Tracker');
         $tracker->method('getGroupId')->willReturn(101);

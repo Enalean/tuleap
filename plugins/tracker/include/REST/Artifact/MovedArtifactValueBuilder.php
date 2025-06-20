@@ -20,10 +20,10 @@
 
 namespace Tuleap\Tracker\REST\Artifact;
 
-use Tracker;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Exception\SemanticTitleNotDefinedException;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
+use Tuleap\Tracker\Tracker;
 
 class MovedArtifactValueBuilder
 {

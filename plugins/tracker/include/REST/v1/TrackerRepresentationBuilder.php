@@ -24,12 +24,12 @@ namespace Tuleap\Tracker\REST\v1;
 
 use Luracast\Restler\RestException;
 use PFUser;
-use Tracker;
 use Tuleap\Tracker\REST\CompleteTrackerRepresentation;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 use Tuleap\Tracker\REST\TrackerRepresentation;
 use Tuleap\Tracker\Semantic\ArtifactCannotBeCreatedReasonsGetter;
 use Tuleap\Tracker\Semantic\CollectionOfCreationSemanticToCheck;
+use Tuleap\Tracker\Tracker;
 
 final class TrackerRepresentationBuilder
 {

@@ -36,6 +36,7 @@ use Tuleap\Tracker\FormElement\TransitionListValidator;
 use Tuleap\Tracker\Report\Criteria\CriteriaListValueDAO;
 use Tuleap\Tracker\Report\Criteria\DeleteReportCriteriaValue;
 use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
+use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps

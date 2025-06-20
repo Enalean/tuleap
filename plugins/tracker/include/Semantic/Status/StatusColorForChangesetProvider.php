@@ -29,7 +29,7 @@ class StatusColorForChangesetProvider
     {
     }
 
-    public function provideColor(\Tracker_Artifact_Changeset $changeset, \Tracker $tracker, \PFUser $user): ?string
+    public function provideColor(\Tracker_Artifact_Changeset $changeset, \Tuleap\Tracker\Tracker $tracker, \PFUser $user): ?string
     {
         $status_field = $tracker->getStatusField();
         if (! $status_field) {

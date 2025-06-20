@@ -20,7 +20,7 @@
 
 namespace Tuleap\Timetracking\Admin;
 
-use Tracker;
+use Tuleap\Tracker\Tracker;
 
 class TimetrackingEnabler
 {

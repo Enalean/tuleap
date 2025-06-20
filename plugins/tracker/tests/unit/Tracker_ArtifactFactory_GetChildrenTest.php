@@ -28,7 +28,6 @@ namespace Tuleap\Tracker;
 
 use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
-use Tracker;
 use Tracker_ArtifactDao;
 use Tracker_ArtifactFactory;
 use Tuleap\Test\Builders\UserTestBuilder;

@@ -21,11 +21,11 @@
 namespace Tuleap\Tracker\REST\Artifact;
 
 use PHPUnit\Framework\MockObject\MockObject;
-use Tracker;
 use Tracker_FormElement_Field_String;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\ArtifactValuesRepresentationBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
+use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MovedArtifactValueBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -42,7 +42,7 @@ final class MovedArtifactValueBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->builder      = new MovedArtifactValueBuilder();
         $this->artifact     = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $this->tracker      = $this->createMock(\Tracker::class);
+        $this->tracker      = $this->createMock(\Tuleap\Tracker\Tracker::class);
         $this->field_string = StringFieldBuilder::aStringField(101)->build();
     }
 

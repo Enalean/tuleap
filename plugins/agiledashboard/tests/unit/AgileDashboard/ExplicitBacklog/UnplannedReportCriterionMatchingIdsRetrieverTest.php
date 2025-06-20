@@ -24,7 +24,6 @@ namespace Tuleap\AgileDashboard\ExplicitBacklog;
 
 use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
-use Tracker;
 use Tracker_ArtifactFactory;
 use Tuleap\AgileDashboard\Artifact\PlannedArtifactDao;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -32,6 +31,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UnplannedReportCriterionMatchingIdsRetrieverTest extends TestCase

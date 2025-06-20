@@ -22,7 +22,7 @@ namespace Tuleap\Timetracking\Admin;
 
 use Project;
 use ProjectUGroup;
-use Tracker;
+use Tuleap\Tracker\Tracker;
 use UGroupManager;
 
 class TimetrackingUgroupRetriever

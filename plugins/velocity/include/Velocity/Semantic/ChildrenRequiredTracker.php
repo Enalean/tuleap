@@ -20,7 +20,7 @@
 
 namespace Tuleap\Velocity\Semantic;
 
-use Tracker;
+use Tuleap\Tracker\Tracker;
 
 class ChildrenRequiredTracker
 {

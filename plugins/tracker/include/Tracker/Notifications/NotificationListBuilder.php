@@ -21,7 +21,7 @@
 namespace Tuleap\Tracker\Notifications;
 
 use ProjectUGroup;
-use Tracker;
+use Tuleap\Tracker\Tracker;
 use UGroupDao;
 
 class NotificationListBuilder

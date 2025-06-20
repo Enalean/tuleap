@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\AgileDashboard\Tracker;
 
 use Planning;
-use Tracker;
+use Tuleap\Tracker\Tracker;
 
 final class TrackersCannotBeLinkedWithHierarchyException extends \Exception
 {

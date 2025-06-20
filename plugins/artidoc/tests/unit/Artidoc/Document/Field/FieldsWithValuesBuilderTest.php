@@ -46,7 +46,7 @@ final class FieldsWithValuesBuilderTest extends TestCase
     use GlobalLanguageMock;
 
     private const TRACKER_ID = 66;
-    private \Tracker $tracker;
+    private \Tuleap\Tracker\Tracker $tracker;
     private ConfiguredFieldCollection $field_collection;
     private \Tracker_Artifact_Changeset $changeset;
 

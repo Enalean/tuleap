@@ -36,7 +36,7 @@ final class InvalidSearchableCollectorParametersBuilder
 {
     private Comparison $comparison;
     private \PFUser $user;
-    /** @var list<\Tracker> */
+    /** @var list<\Tuleap\Tracker\Tracker> */
     private array $trackers;
 
     private function __construct()
@@ -73,7 +73,7 @@ final class InvalidSearchableCollectorParametersBuilder
     /**
      * @no-named-arguments
      */
-    public function onTrackers(\Tracker $tracker, \Tracker ...$other_trackers): self
+    public function onTrackers(\Tuleap\Tracker\Tracker $tracker, \Tuleap\Tracker\Tracker ...$other_trackers): self
     {
         $this->trackers = [$tracker, ...$other_trackers];
         return $this;

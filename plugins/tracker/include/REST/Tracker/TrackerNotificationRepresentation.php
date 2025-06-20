@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\REST\Tracker;
 
-use Tracker;
+use Tuleap\Tracker\Tracker;
 
 /**
  * @psalm-immutable

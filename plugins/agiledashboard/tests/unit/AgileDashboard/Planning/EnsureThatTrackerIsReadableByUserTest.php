@@ -34,11 +34,11 @@ final class EnsureThatTrackerIsReadableByUserTest extends TestCase
 
         $user = UserTestBuilder::buildWithDefaults();
 
-        $tracker1 = $this->createMock(\Tracker::class);
+        $tracker1 = $this->createMock(\Tuleap\Tracker\Tracker::class);
         $tracker1->method('userCanView')->willReturn(false);
         self::assertFalse($verifier->canUserViewTracker($user, $tracker1));
 
-        $tracker2 = $this->createMock(\Tracker::class);
+        $tracker2 = $this->createMock(\Tuleap\Tracker\Tracker::class);
         $tracker2->method('userCanView')->willReturn(true);
         self::assertTrue($verifier->canUserViewTracker($user, $tracker2));
     }

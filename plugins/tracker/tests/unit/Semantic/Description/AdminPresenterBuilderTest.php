@@ -33,7 +33,7 @@ final class AdminPresenterBuilderTest extends TestCase
     private \Tuleap\Tracker\Semantic\Description\TrackerSemanticDescription $semantic_description;
     private CSRFSynchronizerToken $csrf_token;
     private AdminPresenterBuilder $presenter_builder;
-    private \Tracker $tracker;
+    private \Tuleap\Tracker\Tracker $tracker;
 
     protected function setUp(): void
     {

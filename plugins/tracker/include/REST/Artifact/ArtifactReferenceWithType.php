@@ -28,7 +28,7 @@ use Tuleap\Tracker\Artifact\Artifact;
  */
 final class ArtifactReferenceWithType extends ArtifactReference
 {
-    private function __construct(public ?string $type, Artifact $artifact, \Tracker $tracker)
+    private function __construct(public ?string $type, Artifact $artifact, \Tuleap\Tracker\Tracker $tracker)
     {
         parent::__construct($artifact, $tracker, '');
     }

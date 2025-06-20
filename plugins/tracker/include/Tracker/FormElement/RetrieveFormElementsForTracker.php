@@ -20,8 +20,8 @@
 
 namespace Tuleap\Tracker\FormElement;
 
-use Tracker;
 use Tracker_FormElement;
+use Tuleap\Tracker\Tracker;
 
 interface RetrieveFormElementsForTracker
 {

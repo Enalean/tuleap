@@ -63,7 +63,7 @@ class TrackerCreationBreadCrumbsBuilder
     {
         $global_admin_link = new BreadCrumbLink(
             dgettext('tuleap-tracker', 'Administration'),
-            \Tracker::getTrackerGlobalAdministrationURL($project)
+            \Tuleap\Tracker\Tracker::getTrackerGlobalAdministrationURL($project)
         );
 
         $link_collection = new BreadCrumbLinkCollection();

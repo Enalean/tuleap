@@ -23,10 +23,10 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment;
 
 use PHPUnit\Framework\MockObject\MockObject;
-use Tracker;
 use Tuleap\Test\Builders\ProjectUGroupTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Tracker;
 use UGroupManager;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]

@@ -23,12 +23,12 @@ declare(strict_types=1);
 namespace Tuleap\Kanban;
 
 use PFUser;
-use Tracker;
 use Tuleap\Tracker\FormElement\Field\RetrieveUsedFields;
 use Tuleap\Tracker\Permission\VerifySubmissionPermissions;
 use Tuleap\Tracker\RetrieveTracker;
 use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
 use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle;
+use Tuleap\Tracker\Tracker;
 
 class KanbanActionsChecker
 {

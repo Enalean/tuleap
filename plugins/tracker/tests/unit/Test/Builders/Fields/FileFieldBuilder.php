@@ -30,7 +30,7 @@ final class FileFieldBuilder
     use FieldBuilderWithPermissions;
 
     private string $name = 'file';
-    private \Tracker $tracker;
+    private \Tuleap\Tracker\Tracker $tracker;
 
     private function __construct(private readonly int $id)
     {
@@ -48,7 +48,7 @@ final class FileFieldBuilder
         return $this;
     }
 
-    public function inTracker(\Tracker $tracker): self
+    public function inTracker(\Tuleap\Tracker\Tracker $tracker): self
     {
         $this->tracker = $tracker;
         return $this;

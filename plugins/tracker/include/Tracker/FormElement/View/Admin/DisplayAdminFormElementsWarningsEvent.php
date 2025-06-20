@@ -21,8 +21,8 @@
 namespace Tuleap\Tracker\FormElement\View\Admin;
 
 use Response;
-use Tracker;
 use Tuleap\Event\Dispatchable;
+use Tuleap\Tracker\Tracker;
 
 class DisplayAdminFormElementsWarningsEvent implements Dispatchable
 {

@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\REST\v1\Workflow\PostAction;
 
 use Psr\EventDispatcher\EventDispatcherInterface;
-use Tracker;
+use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\Workflow\PostAction\Update\PostActionCollection;
 
 final readonly class TrackerChecker

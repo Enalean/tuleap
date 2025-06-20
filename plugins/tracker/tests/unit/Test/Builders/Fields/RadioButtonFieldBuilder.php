@@ -28,7 +28,7 @@ final class RadioButtonFieldBuilder
 {
     private string $name      = 'radio_button';
     private bool $is_required = false;
-    private \Tracker $tracker;
+    private \Tuleap\Tracker\Tracker $tracker;
     /** @var list<\PFUser> */
     private array $user_with_read_permissions = [];
     /** @var array<int, bool> */
@@ -58,7 +58,7 @@ final class RadioButtonFieldBuilder
         return $this;
     }
 
-    public function inTracker(\Tracker $tracker): self
+    public function inTracker(\Tuleap\Tracker\Tracker $tracker): self
     {
         $this->tracker = $tracker;
         return $this;

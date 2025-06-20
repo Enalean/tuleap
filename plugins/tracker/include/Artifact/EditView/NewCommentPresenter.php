@@ -32,7 +32,7 @@ final readonly class NewCommentPresenter
     public RichTextareaPresenter $textarea;
     public bool $are_at_mentions_effective;
 
-    public function __construct(\Tracker $tracker, RichTextareaPresenter $textarea_presenter)
+    public function __construct(\Tuleap\Tracker\Tracker $tracker, RichTextareaPresenter $textarea_presenter)
     {
         $this->are_at_mentions_effective = ! $tracker->isNotificationStopped();
         $this->textarea                  = $textarea_presenter;

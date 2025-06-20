@@ -25,8 +25,8 @@
 namespace Tuleap\Tracker\PermissionsPerGroup;
 
 use Project;
-use Tracker;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupRepresentationBuilder;
+use Tuleap\Tracker\Tracker;
 use UGroupManager;
 
 class TrackerPermissionPerGroupPermissionRepresentationBuilder

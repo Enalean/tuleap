@@ -57,7 +57,7 @@ final class FieldsDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     private \Tracker_FormElement_Field_String $string_field;
     private \Tracker_FormElement_Field_Text $text_field;
     private RetrieveUsedFieldsStub $fields_retriever;
-    private \Tracker $tracker;
+    private \Tuleap\Tracker\Tracker $tracker;
 
     protected function setUp(): void
     {

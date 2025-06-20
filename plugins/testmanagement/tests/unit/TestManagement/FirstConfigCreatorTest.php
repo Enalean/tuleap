@@ -22,12 +22,12 @@ namespace Tuleap\TestManagement;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use Project;
-use Tracker;
 use TrackerFactory;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\TestManagement\Administration\TrackerChecker;
 use Tuleap\TestManagement\Administration\TrackerHasAtLeastOneFrozenFieldsPostActionException;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FirstConfigCreatorTest extends \Tuleap\Test\PHPUnit\TestCase

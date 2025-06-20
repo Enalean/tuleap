@@ -23,9 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\Taskboard\Tracker;
 
 use PHPUnit\Framework\MockObject\MockObject;
-use Tracker;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class AddInPlaceRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -321,7 +321,7 @@ class AddInPlaceRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertSame($artifact_link_field, $add_in_place->getParentArtifactLinkField());
     }
 
-    private function mockSemanticTitle(\Tracker $child_tracker, bool $is_set, bool $user_can_submit): void
+    private function mockSemanticTitle(\Tuleap\Tracker\Tracker $child_tracker, bool $is_set, bool $user_can_submit): void
     {
         \Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle::setInstance($this->semantic_title, $child_tracker);
 
@@ -349,7 +349,7 @@ class AddInPlaceRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     }
 
     private function mockTrackerFields(
-        \Tracker $tracker,
+        \Tuleap\Tracker\Tracker $tracker,
         bool $is_title_field_required,
         bool $is_desc_field_required,
         bool $is_mapped_field_required,

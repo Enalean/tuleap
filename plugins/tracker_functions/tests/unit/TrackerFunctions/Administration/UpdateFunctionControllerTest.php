@@ -78,7 +78,7 @@ final class UpdateFunctionControllerTest extends TestCase
         );
 
         $request = (new NullServerRequest())
-            ->withAttribute(\Tracker::class, $tracker);
+            ->withAttribute(\Tuleap\Tracker\Tracker::class, $tracker);
 
         $this->expectException(\LogicException::class);
 
@@ -103,7 +103,7 @@ final class UpdateFunctionControllerTest extends TestCase
         );
 
         $request = (new NullServerRequest())
-            ->withAttribute(\Tracker::class, $tracker)
+            ->withAttribute(\Tuleap\Tracker\Tracker::class, $tracker)
             ->withAttribute(\PFUser::class, $user);
 
         $response = $controller->handle($request);
@@ -131,7 +131,7 @@ final class UpdateFunctionControllerTest extends TestCase
         );
 
         $request = (new NullServerRequest())
-            ->withAttribute(\Tracker::class, $tracker)
+            ->withAttribute(\Tuleap\Tracker\Tracker::class, $tracker)
             ->withAttribute(\PFUser::class, $user)
             ->withUploadedFiles(['wasm-function' => UploadedFileStub::buildWithError($error)]);
 
@@ -172,7 +172,7 @@ final class UpdateFunctionControllerTest extends TestCase
         );
 
         $request = (new NullServerRequest())
-            ->withAttribute(\Tracker::class, $tracker)
+            ->withAttribute(\Tuleap\Tracker\Tracker::class, $tracker)
             ->withAttribute(\PFUser::class, $user)
             ->withUploadedFiles(['wasm-function' => UploadedFileStub::buildWithExceptionOnMove()]);
 
@@ -202,7 +202,7 @@ final class UpdateFunctionControllerTest extends TestCase
         );
 
         $request = (new NullServerRequest())
-            ->withAttribute(\Tracker::class, $tracker)
+            ->withAttribute(\Tuleap\Tracker\Tracker::class, $tracker)
             ->withAttribute(\PFUser::class, $user)
             ->withUploadedFiles(['wasm-function' => UploadedFileStub::buildGreatSuccess()]);
 
@@ -239,7 +239,7 @@ final class UpdateFunctionControllerTest extends TestCase
         $uploaded_file = UploadedFileStub::buildGreatSuccess();
 
         $request = (new NullServerRequest())
-            ->withAttribute(\Tracker::class, $tracker)
+            ->withAttribute(\Tuleap\Tracker\Tracker::class, $tracker)
             ->withAttribute(\PFUser::class, $user)
             ->withUploadedFiles(['wasm-function' => $uploaded_file]);
 

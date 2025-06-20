@@ -23,8 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\CrossTracker\Query\Advanced\QueryValidation\Metadata;
 
 use PFUser;
-use Tracker;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
+use Tuleap\Tracker\Tracker;
 
 interface CheckMetadataUsage
 {

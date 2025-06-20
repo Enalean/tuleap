@@ -25,12 +25,12 @@ namespace Tuleap\AgileDashboard\Milestone;
 use PHPUnit\Framework\MockObject\MockObject;
 use Planning_VirtualTopMilestone;
 use PlanningFactory;
-use Tracker;
 use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ParentTrackerRetrieverTest extends TestCase

@@ -25,9 +25,9 @@ namespace Tuleap\Tracker\Permission;
 
 use EventManager;
 use PFUser;
-use Tracker;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\Artifact\CanSubmitNewArtifact;
+use Tuleap\Tracker\Tracker;
 
 final class SubmissionPermissionVerifier implements VerifySubmissionPermissions
 {

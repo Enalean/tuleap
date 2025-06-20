@@ -20,7 +20,7 @@
 
 namespace Tuleap\Tracker\Notifications;
 
-use Tracker;
+use Tuleap\Tracker\Tracker;
 
 class GlobalNotificationSubscribersFilter
 {

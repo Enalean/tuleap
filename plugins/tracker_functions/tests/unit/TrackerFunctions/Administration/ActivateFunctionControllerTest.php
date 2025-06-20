@@ -67,7 +67,7 @@ final class ActivateFunctionControllerTest extends TestCase
         );
 
         $request = (new NullServerRequest())
-            ->withAttribute(\Tracker::class, $tracker);
+            ->withAttribute(\Tuleap\Tracker\Tracker::class, $tracker);
 
         $this->expectException(\LogicException::class);
 
@@ -95,7 +95,7 @@ final class ActivateFunctionControllerTest extends TestCase
         );
 
         $request = (new NullServerRequest())
-            ->withAttribute(\Tracker::class, $tracker)
+            ->withAttribute(\Tuleap\Tracker\Tracker::class, $tracker)
             ->withAttribute(\PFUser::class, $user)
             ->withParsedBody(['activate-function' => '1']);
 
@@ -130,7 +130,7 @@ final class ActivateFunctionControllerTest extends TestCase
         );
 
         $request = (new NullServerRequest())
-            ->withAttribute(\Tracker::class, $tracker)
+            ->withAttribute(\Tuleap\Tracker\Tracker::class, $tracker)
             ->withAttribute(\PFUser::class, $user)
             ->withParsedBody(['activate-function' => '0']);
 

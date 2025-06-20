@@ -26,13 +26,13 @@ use CSRFSynchronizerToken;
 use Feedback;
 use HTTPRequest;
 use TemplateRenderer;
-use Tracker;
 use TrackerFactory;
 use TrackerManager;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\NotFoundException;
+use Tuleap\Tracker\Tracker;
 
 final readonly class NotificationsUserSettingsDisplayController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {

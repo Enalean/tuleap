@@ -27,7 +27,6 @@ use DateTime;
 use ForgeConfig;
 use LogicException;
 use PFUser;
-use Tracker;
 use Tuleap\Config\ConfigurationVariables;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Metadata\AlwaysThereField\ArtifactId\ArtifactIdResultBuilder;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Metadata\Date\MetadataDateResultBuilder;
@@ -65,6 +64,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveArtifactStub;
+use Tuleap\Tracker\Tracker;
 use UserHelper;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]

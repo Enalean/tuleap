@@ -27,8 +27,8 @@ namespace Tuleap\Tracker\PermissionsPerGroup;
 require_once __DIR__ . '/../tracker_permissions.php';
 
 use Project;
-use Tracker;
 use TrackerFactory;
+use Tuleap\Tracker\Tracker;
 
 class TrackerPermissionPerGroupRepresentationBuilder
 {

@@ -25,7 +25,6 @@ namespace Tuleap\CrossTracker\Query;
 use LogicException;
 use PFUser;
 use Psr\EventDispatcher\EventDispatcherInterface;
-use Tracker;
 use Tuleap\CrossTracker\Query\Advanced\FromBuilderVisitor;
 use Tuleap\CrossTracker\Query\Advanced\InvalidFromCollectionBuilder;
 use Tuleap\CrossTracker\Query\Advanced\InvalidFromProjectCollectorVisitor;
@@ -41,6 +40,7 @@ use Tuleap\Tracker\Report\Query\Advanced\FromIsInvalidException;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SyntaxError;
 use Tuleap\Tracker\Report\Query\Advanced\MissingFromException;
 use Tuleap\Tracker\RetrieveTracker;
+use Tuleap\Tracker\Tracker;
 
 final readonly class QueryTrackersRetriever implements RetrieveQueryTrackers, InstantiateRetrievedQueryTrackerIds
 {

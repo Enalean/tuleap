@@ -22,11 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Admin\MoveArtifacts;
 
-use Tracker;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
+use Tuleap\Tracker\Tracker;
 
 final class MoveActionAllowedChecker
 {

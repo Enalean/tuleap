@@ -18,11 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\AgileDashboard\AgileDashboard\Planning\VerifyTrackerAccessDuringImportStrategy;
 use Tuleap\AgileDashboard\AgileDashboard\Planning\EnsureThatTrackerIsReadableByUser;
+use Tuleap\AgileDashboard\AgileDashboard\Planning\VerifyTrackerAccessDuringImportStrategy;
 use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Tracker;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -199,7 +200,7 @@ final class Planning_RequestValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->validator->isValid(
                 $request,
                 new class implements VerifyTrackerAccessDuringImportStrategy {
-                    public function canUserViewTracker(\PFUser $user, \Tracker $tracker): bool
+                    public function canUserViewTracker(\PFUser $user, \Tuleap\Tracker\Tracker $tracker): bool
                     {
                         return true;
                     }

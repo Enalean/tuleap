@@ -34,7 +34,7 @@ class SuccessPresenter
      */
     public $tracker_admin_url;
 
-    public function __construct(\Tracker $tracker)
+    public function __construct(\Tuleap\Tracker\Tracker $tracker)
     {
         $this->tracker_name      = $tracker->getName();
         $this->tracker_admin_url = $tracker->getAdministrationUrl();

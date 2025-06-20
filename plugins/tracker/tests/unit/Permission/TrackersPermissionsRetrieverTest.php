@@ -25,7 +25,6 @@ namespace Tuleap\Tracker\Permission;
 use PFUser;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
-use Tracker;
 use Tracker_UserWithReadAllPermission;
 use Tracker_Workflow_WorkflowUser;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -41,6 +40,7 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\Permission\SearchUserGroupsPermissionOnArtifactsStub;
 use Tuleap\Tracker\Test\Stub\Permission\SearchUserGroupsPermissionOnFieldsStub;
 use Tuleap\Tracker\Test\Stub\Permission\SearchUserGroupsPermissionOnTrackersStub;
+use Tuleap\Tracker\Tracker;
 use Tuleap\User\TuleapFunctionsUser;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]

@@ -19,6 +19,92 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\Tracker;
+
+use BackendLogger;
+use Codendi_HTMLPurifier;
+use Codendi_Request;
+use Codendi_Session;
+use CSRFSynchronizerToken;
+use EventManager;
+use Exception;
+use Feedback;
+use ForgeConfig;
+use HTTPRequest;
+use InvalidArgumentException;
+use PFUser;
+use Project;
+use ProjectHistoryDao;
+use ProjectManager;
+use ReferenceManager;
+use SimpleXMLElement;
+use TemplateRenderer;
+use TemplateRendererFactory;
+use Tracker_Action_CopyArtifact;
+use Tracker_Action_CreateArtifactFromModal;
+use Tracker_Artifact_Changeset_AtGivenDateFieldsValidator;
+use Tracker_Artifact_Changeset_ChangesetDataInitializator;
+use Tracker_Artifact_Changeset_CommentDao;
+use Tracker_Artifact_Changeset_InitialChangesetFieldsValidator;
+use Tracker_Artifact_Changeset_NewChangesetFieldsValidator;
+use Tracker_Artifact_Renderer_CreateInPlaceRenderer;
+use Tracker_Artifact_SubmitOverlayRenderer;
+use Tracker_Artifact_SubmitRenderer;
+use Tracker_Artifact_XMLImport;
+use Tracker_ArtifactByEmailStatus;
+use Tracker_ArtifactDao;
+use Tracker_ArtifactFactory;
+use Tracker_CannedResponseFactory;
+use Tracker_CannedResponseManager;
+use Tracker_ColorPresenterCollection;
+use Tracker_Dispatchable_Interface;
+use Tracker_Exception;
+use Tracker_FormElement;
+use Tracker_FormElement_Field;
+use Tracker_FormElement_Field_List;
+use Tracker_FormElement_Field_List_BindFactory;
+use Tracker_FormElement_Field_Text;
+use Tracker_FormElementFactory;
+use Tracker_GeneralSettings_Presenter;
+use Tracker_GlobalNotificationDao;
+use Tracker_Hierarchy;
+use Tracker_Hierarchy_HierarchicalTrackerFactory;
+use Tracker_HierarchyFactory;
+use Tracker_IDisplayTrackerLayout;
+use Tracker_IFetchTrackerSwitcher;
+use Tracker_Masschange_Presenter;
+use Tracker_NoChangeException;
+use Tracker_NotificationsManager;
+use Tracker_PermDao;
+use Tracker_Permission_PermissionChecker;
+use Tracker_Permission_PermissionController;
+use Tracker_Report;
+use Tracker_ReportFactory;
+use Tracker_RulesManager;
+use Tracker_SemanticManager;
+use Tracker_SharedFormElementFactory;
+use Tracker_Workflow_GlobalRulesViolationException;
+use Tracker_Workflow_Trigger_RulesDao;
+use Tracker_XML_ChildrenCollector;
+use Tracker_XML_Importer_ArtifactImportedMapping;
+use Tracker_XML_Importer_CopyArtifactInformationsAggregator;
+use Tracker_XML_Updater_ChangesetXMLUpdater;
+use Tracker_XML_Updater_FieldChange_FieldChangeDateXMLUpdater;
+use Tracker_XML_Updater_FieldChange_FieldChangeFloatXMLUpdater;
+use Tracker_XML_Updater_FieldChange_FieldChangeIntegerXMLUpdater;
+use Tracker_XML_Updater_FieldChange_FieldChangeListXMLUpdater;
+use Tracker_XML_Updater_FieldChange_FieldChangeOpenListXMLUpdater;
+use Tracker_XML_Updater_FieldChange_FieldChangePermissionsOnArtifactXMLUpdater;
+use Tracker_XML_Updater_FieldChange_FieldChangeStringXMLUpdater;
+use Tracker_XML_Updater_FieldChange_FieldChangeTextXMLUpdater;
+use Tracker_XML_Updater_FieldChange_FieldChangeUnknownXMLUpdater;
+use Tracker_XML_Updater_FieldChangeXMLUpdaterVisitor;
+use Tracker_XML_Updater_TemporaryFileCreator;
+use Tracker_XML_Updater_TemporaryFileXMLUpdater;
+use TrackerDao;
+use TrackerFactory;
+use trackerPlugin;
+use TransitionFactory;
 use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
@@ -127,7 +213,6 @@ use Tuleap\Tracker\Notifications\UserNotificationOnlyStatusChangeDAO;
 use Tuleap\Tracker\Notifications\UsersToNotifyDao;
 use Tuleap\Tracker\Permission\SubmissionPermissionVerifier;
 use Tuleap\Tracker\Permission\VerifySubmissionPermissions;
-use Tuleap\Tracker\PromotedTrackerDao;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkChangesetValueBuilder;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValueBuilder;
 use Tuleap\Tracker\Semantic\Contributor\TrackerSemanticContributor;
@@ -137,9 +222,6 @@ use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatusFactory;
 use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle;
 use Tuleap\Tracker\Semantic\Tooltip\SemanticTooltip;
 use Tuleap\Tracker\Tooltip\TrackerStats;
-use Tuleap\Tracker\TrackerColor;
-use Tuleap\Tracker\TrackerCrumbInContext;
-use Tuleap\Tracker\TrackerIsInvalidException;
 use Tuleap\Tracker\User\NotificationOnAllUpdatesRetriever;
 use Tuleap\Tracker\User\NotificationOnOwnActionRetriever;
 use Tuleap\Tracker\Webhook\Actions\AdminWebhooks;
@@ -157,8 +239,25 @@ use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
 use Tuleap\Tracker\Workflow\WorkflowMenuPresenterBuilder;
 use Tuleap\Tracker\Workflow\WorkflowUpdateChecker;
 use Tuleap\Tracker\XML\Updater\FieldChange\FieldChangeComputedXMLUpdater;
+use UGroupDao;
+use UGroupManager;
+use User_ForgeUserGroupPermissionsDao;
+use User_ForgeUserGroupPermissionsManager;
+use UserManager;
+use UserPreferencesDao;
+use UserXMLExportedCollection;
+use UserXMLExporter;
+use Valid_String;
+use Widget_Static;
+use Workflow;
+use WorkflowFactory;
+use WorkflowManager;
+use WrapperLogger;
+use XML_RNGValidator;
+use XML_SimpleXMLCDATAFactory;
+use XMLImportHelper;
 
-class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+class Tracker implements Tracker_Dispatchable_Interface
 {
     public const PERMISSION_ADMIN          = 'PLUGIN_TRACKER_ADMIN';
     public const PERMISSION_FULL           = 'PLUGIN_TRACKER_ACCESS_FULL';
@@ -205,7 +304,7 @@ class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignore PSR1.Clas
      *  'tracker_id'      int (IN)
      */
     public final const TRACKER_EVENT_FETCH_ADMIN_BUTTONS = 'tracker_event_fetch_admin_buttons';
-    private const PROMOTED_ITEM_PREFIX                   = 'tracker-';
+    private const      PROMOTED_ITEM_PREFIX              = 'tracker-';
 
     public final const TRACKER_ACTION_NAME_FORM_ELEMENT_UPDATE_VIEW = 'admin-formElement-update-view';
     public final const TRACKER_ACTION_NAME_FORM_ELEMENT_UPDATE      = 'admin-formElement-update';
@@ -501,7 +600,7 @@ class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignore PSR1.Clas
 
     /**
      * @param string $name
-     * @param mixed  $type A field type name, or an array of field type names, e.g. 'float', or array('float', 'int').
+     * @param mixed $type A field type name, or an array of field type names, e.g. 'float', or array('float', 'int').
      *
      * @return bool true if the tracker contains an element of the given name and type
      */
@@ -530,7 +629,7 @@ class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignore PSR1.Clas
      * fetch FormElements
      *
      * @param Artifact $artifact
-     * @param array    $submitted_values the values already submitted
+     * @param array $submitted_values the values already submitted
      *
      * @return string
      */
@@ -546,7 +645,7 @@ class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignore PSR1.Clas
     /**
      * fetch FormElements
      * @param Artifact $artifact
-     * @param array    $submitted_values the values already submitted
+     * @param array $submitted_values the values already submitted
      *
      * @return string
      */
@@ -563,7 +662,7 @@ class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignore PSR1.Clas
      * Fetch FormElements in HTML without the container and column rendering
      *
      * @param Artifact $artifact
-     * @param array    $submitted_values the values already submitted
+     * @param array $submitted_values the values already submitted
      *
      * @return string
      */
@@ -651,9 +750,9 @@ class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignore PSR1.Clas
     /**
      * Return self
      *
+     * @return Tracker
      * @see plugins/tracker/include/Tracker/Tracker_Dispatchable_Interface::getTracker()
      *
-     * @return Tracker
      */
     public function getTracker()
     {
@@ -776,7 +875,7 @@ class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignore PSR1.Clas
                 }
                 break;
             case 'admin-canned':
-            // TODO : project members can access this part ?
+                // TODO : project members can access this part ?
                 if ($this->userIsAdmin($current_user)) {
                     $this->getCannedResponseManager()->process($layout, $request, $current_user);
                 } else {
@@ -1102,9 +1201,9 @@ class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignore PSR1.Clas
      * If the user request a 'link-artifact-id' then display also manual and recent
      * panels to ease the selection of artifacts to link
      *
-     * @param Tracker_IDisplayTrackerLayout  $layout          Displays the page header and footer
-     * @param Codendi_Request                $request         The request
-     * @param PFUser                           $current_user    The user who made the request
+     * @param Tracker_IDisplayTrackerLayout $layout Displays the page header and footer
+     * @param Codendi_Request $request The request
+     * @param PFUser $current_user The user who made the request
      *
      * @return void
      */
@@ -1244,11 +1343,11 @@ class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignore PSR1.Clas
                 $action = '?tracker=' . (int) $this->getID() . '&func=create_new_public_report';
 
                 echo '<form class="form-inline" action="' . $action . '" method="POST">'
-                    . '<fieldset>'
-                        . '<legend>' . dgettext('tuleap-tracker', 'Create a new one') . '</legend>'
-                        . '<input required type="text" name="new_report_name" placeholder="' . dgettext('tuleap-tracker', 'name') . '" />'
-                        . '<button type="submit" class="btn">' . dgettext('tuleap-tracker', 'Create Report') . '</button>'
-                    . '</fieldset></form>';
+                     . '<fieldset>'
+                     . '<legend>' . dgettext('tuleap-tracker', 'Create a new one') . '</legend>'
+                     . '<input required type="text" name="new_report_name" placeholder="' . dgettext('tuleap-tracker', 'name') . '" />'
+                     . '<button type="submit" class="btn">' . dgettext('tuleap-tracker', 'Create Report') . '</button>'
+                     . '</fieldset></form>';
             }
 
             $this->displayFooter($layout);
@@ -1305,7 +1404,7 @@ class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignore PSR1.Clas
                 $base_layout->addJavascriptAsset(
                     new \Tuleap\Layout\JavascriptViteAsset(
                         new \Tuleap\Layout\IncludeViteAssets(
-                            __DIR__ . '/../../scripts/header/frontend-assets',
+                            __DIR__ . '/../scripts/header/frontend-assets',
                             '/assets/trackers/header'
                         ),
                         'src/main.ts'
@@ -1332,7 +1431,7 @@ class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignore PSR1.Clas
             $layout->displayHeader($project, $title, $breadcrumbs, $params);
 
             if ($is_email_creation_allowed) {
-                $renderer = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../templates/artifact');
+                $renderer = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates/artifact');
                 $renderer->renderToPage(
                     'create-by-mail-modal-info',
                     [
@@ -1473,7 +1572,7 @@ class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignore PSR1.Clas
                 [
                     [
                         'title' => dgettext('tuleap-tracker', 'Administration'),
-                        'url' => $this->getAdministrationUrl(),
+                        'url'   => $this->getAdministrationUrl(),
                     ],
                 ],
                 $breadcrumbs
@@ -1539,7 +1638,7 @@ class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignore PSR1.Clas
     public function displayAdminFormElementsHeader(Tracker_IDisplayTrackerLayout $layout, $title)
     {
         $assets = new IncludeAssets(
-            __DIR__ . '/../../scripts/tracker-admin/frontend-assets',
+            __DIR__ . '/../scripts/tracker-admin/frontend-assets',
             '/assets/trackers/tracker-admin'
         );
 
@@ -1964,7 +2063,7 @@ class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignore PSR1.Clas
      * Set the cache permission for the ugroup_id
      * Use during the two-step xml import
      *
-     * @param int    $ugroup_id The ugroup id
+     * @param int $ugroup_id The ugroup id
      * @param string $permission_type The permission type
      *
      * @return void
@@ -2125,8 +2224,8 @@ class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignore PSR1.Clas
         EventManager::instance()->processEvent(
             self::TRACKER_USAGE,
             [
-                'tracker'   => $this,
-                'result'    => &$result,
+                'tracker' => $this,
+                'result'  => &$result,
             ]
         );
 
@@ -2154,7 +2253,7 @@ class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignore PSR1.Clas
                 foreach ($permission_types as $permission_type) {
                     if ($permission_type == self::PERMISSION_FULL || $permission_type == self::PERMISSION_ADMIN) {
                         if ($user->isMemberOfUGroup($ugroup_id, $this->getGroupId())) {
-                                return true;
+                            return true;
                         }
                     }
                 }
@@ -2346,20 +2445,20 @@ class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignore PSR1.Clas
                         if (count($lines) > 1) {
                             $html_table  = '';
                             $html_table .= '<table class="table csv-import-preview">';
-                            $html_table .=  '<thead>';
+                            $html_table .= '<thead>';
                             $header      = array_shift($lines);
-                            $html_table .=  '<tr class="boxtable">';
-                            $html_table .=  '<th class="boxtitle"></th>';
+                            $html_table .= '<tr class="boxtable">';
+                            $html_table .= '<th class="boxtitle"></th>';
                             $fields      = $this->getCSVFields($header);
 
                             foreach ($header as $field_name) {
-                                $html_table .=  '<th class="boxtitle tracker_report_table_column">';
-                                $html_table .=  $purifier->purify($field_name);
-                                $html_table .=  '</th>';
+                                $html_table .= '<th class="boxtitle tracker_report_table_column">';
+                                $html_table .= $purifier->purify($field_name);
+                                $html_table .= '</th>';
                             }
-                            $html_table          .=  '</tr>';
-                            $html_table          .=  '</thead>';
-                            $html_table          .=  '<tbody>';
+                            $html_table          .= '</tr>';
+                            $html_table          .= '</thead>';
+                            $html_table          .= '<tbody>';
                             $nb_lines             = 0;
                             $nb_artifact_creation = 0;
                             $nb_artifact_update   = 0;
@@ -2383,9 +2482,9 @@ class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignore PSR1.Clas
                                         }
                                         $displayed_data = $purifier->purify($data_cell);
                                     }
-                                    $html_table .=  '<td class="tracker_report_table_column">' . $displayed_data . '</td>';
+                                    $html_table .= '<td class="tracker_report_table_column">' . $displayed_data . '</td>';
                                 }
-                                $html_table .=  '</tr>';
+                                $html_table .= '</tr>';
                                 $nb_lines++;
                                 if ($mode == 'creation') {
                                     $nb_artifact_creation++;
@@ -2393,8 +2492,8 @@ class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignore PSR1.Clas
                                     $nb_artifact_update++;
                                 }
                             }
-                            $html_table .=  '</tbody>';
-                            $html_table .=  '</table>';
+                            $html_table .= '</tbody>';
+                            $html_table .= '</table>';
 
                             echo '<p>';
                             echo dgettext('tuleap-tracker', 'Please, check your data before importing, especially the dates.') . '<br />';
@@ -2530,8 +2629,8 @@ class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignore PSR1.Clas
     /**
      * Check if CSV file contains unknown aid
      *
-     * @param Array $header_line, the CSV file header line
-     * @param Array $lines, the CSV file lines
+     * @param Array $header_line , the CSV file header line
+     * @param Array $lines , the CSV file lines
      *
      * @return bool true if has unknown fields, false otherwise
      */
@@ -2556,7 +2655,7 @@ class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignore PSR1.Clas
     /**
      * Check if CSV file contains unknown fields
      *
-     * @param Array $lines, the CSV file lines
+     * @param Array $lines , the CSV file lines
      *
      * @return bool true if has unknown fields, false otherwise
      */
@@ -2674,7 +2773,7 @@ class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignore PSR1.Clas
     /**
      * Check if CSV contains all the required fields and values associated
      *
-     * @param Array $lines, the CSV file lines
+     * @param Array $lines , the CSV file lines
      *
      * @return bool true if missing required fields, false otherwise
      */
@@ -2708,7 +2807,7 @@ class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignore PSR1.Clas
     /**
      * Check if aid exists in update mode in CSV import
      *
-     * @param Int $aid, the artifact id
+     * @param Int $aid , the artifact id
      *
      * @return String $error_message
      */
@@ -3513,7 +3612,7 @@ class Tracker implements Tracker_Dispatchable_Interface //phpcs:ignore PSR1.Clas
     private function includeJavascriptAssetsForMassChange(): void
     {
         $assets = new \Tuleap\Layout\IncludeViteAssets(
-            __DIR__ . '/../../scripts/artifact/frontend-assets',
+            __DIR__ . '/../scripts/artifact/frontend-assets',
             '/assets/trackers/artifact'
         );
         $GLOBALS['HTML']->addJavascriptAsset(

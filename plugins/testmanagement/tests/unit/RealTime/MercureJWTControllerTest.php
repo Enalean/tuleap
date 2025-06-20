@@ -26,22 +26,22 @@ use Lcobucci\JWT\Signer\Hmac\Sha256;
 use Lcobucci\JWT\Signer\Key;
 use Project;
 use Psr\Log\NullLogger;
-use Tracker;
-use Tuleap\Http\Server\NullServerRequest;
-use Tuleap\Test\Builders\ProjectTestBuilder;
-use Tuleap\Test\Stubs\User\Avatar\ProvideUserAvatarUrlStub;
-use Tuleap\TestManagement\Campaign\ArtifactNotFoundException;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\JWT\generators\MercureJWTGeneratorImpl;
 use Tuleap\RealTimeMercure\MercureClient;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Helpers\NoopSapiEmitter;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\ProvideCurrentUserStub;
+use Tuleap\Test\Stubs\User\Avatar\ProvideUserAvatarUrlStub;
+use Tuleap\TestManagement\Campaign\ArtifactNotFoundException;
 use Tuleap\TestManagement\Campaign\CampaignRetriever;
 use Tuleap\TestManagement\ConfigConformanceValidator;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MercureJWTControllerTest extends TestCase

@@ -18,9 +18,9 @@
  */
 namespace Tuleap\Kanban;
 
-use Tracker;
-use Tuleap\RealTime\MessageRightsPresenter;
 use Tracker_Permission_PermissionsSerializer;
+use Tuleap\RealTime\MessageRightsPresenter;
+use Tuleap\Tracker\Tracker;
 
 final class KanbanRightsPresenter implements MessageRightsPresenter
 {

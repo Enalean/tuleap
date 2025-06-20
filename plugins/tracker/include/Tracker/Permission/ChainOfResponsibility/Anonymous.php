@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Tracker;
+
 /**
  * When someone grant full access to anonymous, it automatically remove
  * all permissions (except admin) to other groups (if anonymous has access it

@@ -23,10 +23,10 @@ declare(strict_types=1);
 namespace Tuleap\CrossTracker\Query;
 
 use PFUser;
-use Tracker;
 use Tuleap\Tracker\Report\Query\Advanced\FromIsInvalidException;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SyntaxError;
 use Tuleap\Tracker\Report\Query\Advanced\MissingFromException;
+use Tuleap\Tracker\Tracker;
 
 interface RetrieveQueryTrackers
 {

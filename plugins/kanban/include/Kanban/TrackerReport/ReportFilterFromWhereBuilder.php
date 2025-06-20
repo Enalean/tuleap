@@ -22,10 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Kanban\TrackerReport;
 
-use Tracker;
 use Tuleap\Kanban\ColumnIdentifier;
 use Tuleap\Tracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
 use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
+use Tuleap\Tracker\Tracker;
 
 final class ReportFilterFromWhereBuilder
 {

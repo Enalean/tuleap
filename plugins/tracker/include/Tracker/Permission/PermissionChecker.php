@@ -21,6 +21,7 @@
 use Tuleap\Project\CheckProjectAccess;
 use Tuleap\Tracker\Admin\GlobalAdmin\GlobalAdminPermissionsChecker;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Tracker;
 use Tuleap\User\RetrieveUserById;
 
 class Tracker_Permission_PermissionChecker

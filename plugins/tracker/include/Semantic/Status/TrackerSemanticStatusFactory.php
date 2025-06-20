@@ -22,10 +22,10 @@
 namespace Tuleap\Tracker\Semantic\Status;
 
 use SimpleXMLElement;
-use Tracker;
 use Tracker_Semantic;
 use Tuleap\Tracker\Semantic\IBuildSemanticFromXML;
 use Tuleap\Tracker\Semantic\IDuplicateSemantic;
+use Tuleap\Tracker\Tracker;
 
 class TrackerSemanticStatusFactory implements IBuildSemanticFromXML, IDuplicateSemantic
 {

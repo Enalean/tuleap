@@ -30,5 +30,5 @@ interface RetrieveFullTracker
     /**
      * @throws TrackerNotFoundException
      */
-    public function getNonNullTracker(TrackerIdentifier $tracker_identifier): \Tracker;
+    public function getNonNullTracker(TrackerIdentifier $tracker_identifier): \Tuleap\Tracker\Tracker;
 }

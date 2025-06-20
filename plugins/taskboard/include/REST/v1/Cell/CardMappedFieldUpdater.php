@@ -25,7 +25,6 @@ namespace Tuleap\Taskboard\REST\v1\Cell;
 use Cardwall_Column;
 use Luracast\Restler\RestException;
 use PFUser;
-use Tracker;
 use Tracker_Exception;
 use Tracker_FormElement_Field_Selectbox;
 use Tracker_FormElement_InvalidFieldException;
@@ -42,6 +41,7 @@ use Tuleap\Taskboard\Tracker\TaskboardTracker;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\Artifact\ArtifactUpdater;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
+use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\Workflow\FirstPossibleValueInListRetriever;
 use Tuleap\Tracker\Workflow\NoPossibleValueException;
 

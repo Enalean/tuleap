@@ -26,7 +26,6 @@ namespace Tuleap\Tracker;
 use PFUser;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use PHPUnit\Framework\MockObject\MockObject;
-use Tracker;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_Changeset_Comment;
 use Tracker_Artifact_Changeset_CommentDao;

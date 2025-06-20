@@ -26,13 +26,13 @@ use Codendi_Request;
 use PFUser;
 use SimpleXMLElement;
 use TemplateRendererFactory;
-use Tracker;
 use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElementFactory;
 use Tracker_Semantic;
 use Tracker_SemanticManager;
 use TrackerManager;
+use Tuleap\Tracker\Tracker;
 
 class TrackerSemanticContributor extends Tracker_Semantic
 {

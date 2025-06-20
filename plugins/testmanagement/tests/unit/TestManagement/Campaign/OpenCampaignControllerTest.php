@@ -25,10 +25,10 @@ namespace Tuleap\TestManagement\Campaign;
 use HTTPRequest;
 use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
-use Tracker;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\NotFoundException;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\Workflow\NoPossibleValueException;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]

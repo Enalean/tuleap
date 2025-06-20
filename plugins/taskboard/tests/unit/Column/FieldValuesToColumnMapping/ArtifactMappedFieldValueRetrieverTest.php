@@ -45,7 +45,7 @@ final class ArtifactMappedFieldValueRetrieverTest extends \Tuleap\Test\PHPUnit\T
     private RetrieveUsedListFieldStub $field_retriever;
     private Artifact $user_story_artifact;
     private \PFUser $user;
-    private \Tracker $user_story_tracker;
+    private \Tuleap\Tracker\Tracker $user_story_tracker;
 
     protected function setUp(): void
     {

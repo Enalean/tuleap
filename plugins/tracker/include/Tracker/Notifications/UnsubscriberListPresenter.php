@@ -20,8 +20,8 @@
 
 namespace Tuleap\Tracker\Notifications;
 
-use Tracker;
 use Tuleap\Notification\UserInvolvedInNotificationPresenter;
+use Tuleap\Tracker\Tracker;
 
 class UnsubscriberListPresenter
 {

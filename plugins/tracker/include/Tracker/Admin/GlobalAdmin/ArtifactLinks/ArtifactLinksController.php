@@ -223,7 +223,7 @@ class ArtifactLinksController implements DispatchableWithRequest, DispatchableWi
 
     public static function getURL(Project $project): string
     {
-        return \Tracker::getTrackerGlobalAdministrationURL($project) . '/' . self::URL;
+        return \Tuleap\Tracker\Tracker::getTrackerGlobalAdministrationURL($project) . '/' . self::URL;
     }
 
     private function buildFormattedTypes(Project $project): array

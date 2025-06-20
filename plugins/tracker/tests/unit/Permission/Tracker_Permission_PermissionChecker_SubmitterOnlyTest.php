@@ -27,6 +27,7 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Stubs\RetrieveUserByIdStub;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class Tracker_Permission_PermissionChecker_SubmitterOnlyTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
@@ -63,7 +64,7 @@ final class Tracker_Permission_PermissionChecker_SubmitterOnlyTest extends \Tule
             $this->createMock(\Tuleap\Tracker\Admin\GlobalAdmin\GlobalAdminPermissionsChecker::class),
         );
 
-        $tracker = $this->createMock(\Tracker::class);
+        $tracker = $this->createMock(\Tuleap\Tracker\Tracker::class);
         $tracker->method('getId')->willReturn(666);
         $tracker->method('getGroupId')->willReturn($project->getID());
         $tracker->method('getProject')->willReturn($project);

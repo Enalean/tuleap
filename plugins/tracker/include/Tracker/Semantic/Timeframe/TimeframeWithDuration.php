@@ -106,7 +106,7 @@ class TimeframeWithDuration implements IComputeTimeframes
         );
     }
 
-    public function save(\Tracker $tracker, SemanticTimeframeDao $dao): bool
+    public function save(\Tuleap\Tracker\Tracker $tracker, SemanticTimeframeDao $dao): bool
     {
         return $dao->save(
             $tracker->getId(),
@@ -234,7 +234,7 @@ class TimeframeWithDuration implements IComputeTimeframes
         return DatePeriodWithOpenDays::buildFromDuration($start_date, $duration);
     }
 
-    public function getTrackerFromWhichTimeframeIsImplied(): ?\Tracker
+    public function getTrackerFromWhichTimeframeIsImplied(): ?\Tuleap\Tracker\Tracker
     {
         return null;
     }

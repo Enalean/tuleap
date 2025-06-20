@@ -23,12 +23,12 @@ declare(strict_types=1);
 namespace Tuleap\TrackerFunctions\Notification;
 
 use ColinODell\PsrTestLogger\TestLogger;
-use Tracker;
 use Tracker_Artifact_Changeset;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
+use Tuleap\Tracker\Tracker;
 use Tuleap\TrackerFunctions\Stubs\Notification\MessageBuilderStub;
 use Tuleap\TrackerFunctions\Stubs\Notification\MessageSenderStub;
 use Tuleap\TrackerFunctions\Stubs\Notification\TrackerAdminRecipientsRetrieverStub;

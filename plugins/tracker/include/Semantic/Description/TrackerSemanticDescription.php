@@ -26,7 +26,6 @@ use Feedback;
 use PFUser;
 use SimpleXMLElement;
 use TemplateRendererFactory;
-use Tracker;
 use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_Text;
 use Tracker_FormElementFactory;
@@ -34,6 +33,7 @@ use Tracker_Semantic;
 use Tracker_SemanticManager;
 use TrackerManager;
 use Tuleap\Option\Option;
+use Tuleap\Tracker\Tracker;
 
 class TrackerSemanticDescription extends Tracker_Semantic
 {

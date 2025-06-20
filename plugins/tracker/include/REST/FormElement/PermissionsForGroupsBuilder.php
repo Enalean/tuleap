@@ -84,7 +84,7 @@ class PermissionsForGroupsBuilder
         return $this->permissions_functions_wrapper->getFieldUGroupsPermissions($form_element);
     }
 
-    private function addUserGroupRepresentationToArray(array &$ugroups_collection, \Tracker $tracker, $result_array): void
+    private function addUserGroupRepresentationToArray(array &$ugroups_collection, \Tuleap\Tracker\Tracker $tracker, $result_array): void
     {
         $ugroup = $this->ugroup_manager->getUGroup($tracker->getProject(), $result_array['ugroup']['id']);
         if ($ugroup) {

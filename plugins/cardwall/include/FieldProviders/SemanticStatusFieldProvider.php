@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatusFactory;
+use Tuleap\Tracker\Tracker;
 
 /**
  * Retrieves the semantic status field of the given artifact

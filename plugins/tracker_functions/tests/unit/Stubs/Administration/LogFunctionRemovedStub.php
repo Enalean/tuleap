@@ -37,7 +37,7 @@ final class LogFunctionRemovedStub implements LogFunctionRemoved
         return new self();
     }
 
-    public function logFunctionRemoved(\PFUser $user, \Tracker $tracker): void
+    public function logFunctionRemoved(\PFUser $user, \Tuleap\Tracker\Tracker $tracker): void
     {
         $this->logged = true;
     }

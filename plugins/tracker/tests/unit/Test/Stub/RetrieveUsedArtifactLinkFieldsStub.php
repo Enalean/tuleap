@@ -37,7 +37,7 @@ final readonly class RetrieveUsedArtifactLinkFieldsStub implements RetrieveUsedA
     /**
      * @return array{0?: ArtifactLinkField}
      */
-    public function getUsedArtifactLinkFields(\Tracker $tracker): array
+    public function getUsedArtifactLinkFields(\Tuleap\Tracker\Tracker $tracker): array
     {
         foreach ($this->fields as $field) {
             if ($field->getTrackerId() === $tracker->getId()) {

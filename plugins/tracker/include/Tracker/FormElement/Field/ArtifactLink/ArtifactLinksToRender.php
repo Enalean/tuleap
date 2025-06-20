@@ -20,9 +20,9 @@
 
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
 
-use Tracker;
 use Tracker_ArtifactLinkInfo;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
+use Tuleap\Tracker\Tracker;
 
 class ArtifactLinksToRender
 {

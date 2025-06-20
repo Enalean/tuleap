@@ -24,7 +24,6 @@ namespace Tuleap\CrossTracker\Query\Advanced\QueryBuilder\Metadata;
 
 use LogicException;
 use PFUser;
-use Tracker;
 use Tracker_FormElementFactory;
 use Tuleap\CrossTracker\Query\Advanced\AllowedMetadata;
 use Tuleap\CrossTracker\Query\Advanced\QueryBuilder\Metadata\AlwaysThereField\ArtifactId\ArtifactIdFromWhereBuilder;
@@ -37,6 +36,7 @@ use Tuleap\CrossTracker\Query\Advanced\QueryBuilder\Metadata\Semantic\Title\Titl
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 use Tuleap\Tracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
+use Tuleap\Tracker\Tracker;
 
 final readonly class MetadataFromWhereBuilder
 {

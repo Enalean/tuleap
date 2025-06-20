@@ -21,7 +21,7 @@
 namespace Tuleap\Tracker\Webhook;
 
 use SimpleXMLElement;
-use Tracker;
+use Tuleap\Tracker\Tracker;
 
 class WebhookFactory
 {

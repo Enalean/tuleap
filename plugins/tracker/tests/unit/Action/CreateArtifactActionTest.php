@@ -28,7 +28,6 @@ use PFUser;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use PHPUnit\Framework\MockObject\MockObject;
 use ProjectManager;
-use Tracker;
 use Tracker_Artifact_Redirect;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
@@ -48,6 +47,7 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\Hierarchy\SearchParentTrackerStub;
 use Tuleap\Tracker\Test\Stub\RetrieveTrackerStub;
 use Tuleap\Tracker\Test\Stub\VerifySubmissionPermissionStub;
+use Tuleap\Tracker\Tracker;
 
 #[DisableReturnValueGenerationForTestDoubles]
 final class CreateArtifactActionTest extends TestCase

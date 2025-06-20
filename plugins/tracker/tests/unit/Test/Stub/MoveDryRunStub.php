@@ -24,10 +24,10 @@ namespace Tuleap\Tracker\Test\Stub;
 
 use PFUser;
 use Psr\Log\LoggerInterface;
-use Tracker;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\v1\ArtifactPatchResponseRepresentation;
 use Tuleap\Tracker\REST\v1\Move\MoveDryRun;
+use Tuleap\Tracker\Tracker;
 
 final class MoveDryRunStub implements MoveDryRun
 {

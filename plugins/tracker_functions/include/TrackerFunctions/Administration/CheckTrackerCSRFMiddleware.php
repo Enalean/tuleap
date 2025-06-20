@@ -35,7 +35,7 @@ final class CheckTrackerCSRFMiddleware implements MiddlewareInterface
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $tracker = $request->getAttribute(\Tracker::class);
+        $tracker = $request->getAttribute(\Tuleap\Tracker\Tracker::class);
         if ($tracker === null) {
             throw new \LogicException('This middleware needs a Tracker.');
         }

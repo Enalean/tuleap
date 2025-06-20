@@ -20,6 +20,7 @@
 
 use Tuleap\AgileDashboard\ExplicitBacklog\UnplannedCriterionOptionsProvider;
 use Tuleap\AgileDashboard\ExplicitBacklog\UnplannedReportCriterionChecker;
+use Tuleap\Tracker\Tracker;
 
 /**
  * I am a helper to provide a selectbox as a criterion in the tracker report to choose a milestone for a given tracker

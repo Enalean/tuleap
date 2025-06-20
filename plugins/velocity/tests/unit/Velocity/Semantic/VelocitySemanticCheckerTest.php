@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Velocity\Semantic;
 
-use Tracker;
+use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class VelocitySemanticCheckerTest extends \Tuleap\Test\PHPUnit\TestCase

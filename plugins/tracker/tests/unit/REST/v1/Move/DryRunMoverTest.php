@@ -24,7 +24,6 @@ namespace Tuleap\Tracker\REST\v1\Move;
 
 use PFUser;
 use Psr\Log\NullLogger;
-use Tracker;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Action\DuckTypedMoveFieldCollection;
@@ -35,6 +34,7 @@ use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\CollectDryRunTypingFieldStub;
+use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DryRunMoverTest extends TestCase

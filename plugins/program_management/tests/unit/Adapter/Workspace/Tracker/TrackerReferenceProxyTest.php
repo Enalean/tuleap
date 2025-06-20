@@ -44,7 +44,7 @@ final class TrackerReferenceProxyTest extends \Tuleap\Test\PHPUnit\TestCase
             ->build();
     }
 
-    private function getTracker(): \Tracker
+    private function getTracker(): \Tuleap\Tracker\Tracker
     {
         return TrackerTestBuilder::aTracker()
             ->withId(self::TRACKER_ID)

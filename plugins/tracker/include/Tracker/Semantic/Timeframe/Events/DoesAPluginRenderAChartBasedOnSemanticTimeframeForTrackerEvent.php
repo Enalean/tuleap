@@ -27,7 +27,7 @@ class DoesAPluginRenderAChartBasedOnSemanticTimeframeForTrackerEvent
     public const NAME = 'doesAPluginRenderAChartBasedOnSemanticTimeframeForTracker';
 
     /**
-     * @var \Tracker
+     * @var \Tuleap\Tracker\Tracker
      */
     private $tracker;
 
@@ -36,12 +36,12 @@ class DoesAPluginRenderAChartBasedOnSemanticTimeframeForTrackerEvent
      */
     private $does_a_plugin_render_a_chart_for_tracker = false;
 
-    public function __construct(\Tracker $tracker)
+    public function __construct(\Tuleap\Tracker\Tracker $tracker)
     {
         $this->tracker = $tracker;
     }
 
-    public function getTracker(): \Tracker
+    public function getTracker(): \Tuleap\Tracker\Tracker
     {
         return $this->tracker;
     }

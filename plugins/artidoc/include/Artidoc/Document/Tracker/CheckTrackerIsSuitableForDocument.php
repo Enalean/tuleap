@@ -21,11 +21,11 @@
 namespace Tuleap\Artidoc\Document\Tracker;
 
 use PFUser;
-use Tracker;
 use Tuleap\Artidoc\Domain\Document\Artidoc;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
+use Tuleap\Tracker\Tracker;
 
 interface CheckTrackerIsSuitableForDocument
 {

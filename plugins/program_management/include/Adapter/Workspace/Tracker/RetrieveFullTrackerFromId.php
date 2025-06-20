@@ -24,5 +24,5 @@ namespace Tuleap\ProgramManagement\Adapter\Workspace\Tracker;
 
 interface RetrieveFullTrackerFromId
 {
-    public function getTrackerFromId(int $tracker_id): ?\Tracker;
+    public function getTrackerFromId(int $tracker_id): ?\Tuleap\Tracker\Tracker;
 }

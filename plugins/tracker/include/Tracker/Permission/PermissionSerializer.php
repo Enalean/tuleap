@@ -20,6 +20,7 @@
 
 use Tuleap\Project\UGroupLiteralizer;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Tracker;
 
 class Tracker_Permission_PermissionsSerializer
 {

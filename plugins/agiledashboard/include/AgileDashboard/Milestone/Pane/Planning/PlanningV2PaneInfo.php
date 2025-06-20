@@ -21,8 +21,8 @@
 namespace Tuleap\AgileDashboard\Milestone\Pane\Planning;
 
 use Planning_Milestone;
-use Tracker;
 use Tuleap\Tracker\Milestone\PaneInfo;
+use Tuleap\Tracker\Tracker;
 
 class PlanningV2PaneInfo extends PaneInfo
 {

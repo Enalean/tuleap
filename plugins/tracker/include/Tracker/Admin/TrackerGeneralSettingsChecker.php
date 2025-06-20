@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Admin;
 
-use Tracker;
+use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\TrackerIsInvalidException;
 
 class TrackerGeneralSettingsChecker

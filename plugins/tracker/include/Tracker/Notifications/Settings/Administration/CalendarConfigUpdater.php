@@ -44,7 +44,7 @@ final class CalendarConfigUpdater
     /**
      * @return Ok<bool>|Err<string>
      */
-    public function updateConfigAccordingToRequest(\Tracker $tracker, HTTPRequest $request): Ok|Err
+    public function updateConfigAccordingToRequest(\Tuleap\Tracker\Tracker $tracker, HTTPRequest $request): Ok|Err
     {
         if (! $request->exist(self::ENABLE_CALENDAR_EVENTS)) {
             return Result::ok(false);
@@ -60,7 +60,7 @@ final class CalendarConfigUpdater
     /**
      * @return Ok<bool>
      */
-    private function deactivate(\Tracker $tracker): Ok
+    private function deactivate(\Tuleap\Tracker\Tracker $tracker): Ok
     {
         $events_are_sent = $this->current_config->shouldSendEventInNotification($tracker->getId());
 
@@ -76,7 +76,7 @@ final class CalendarConfigUpdater
     /**
      * @return Ok<bool>|Err<string>
      */
-    private function activate(\Tracker $tracker): Ok|Err
+    private function activate(\Tuleap\Tracker\Tracker $tracker): Ok|Err
     {
         $events_are_already_sent = $this->current_config->shouldSendEventInNotification($tracker->getId());
 

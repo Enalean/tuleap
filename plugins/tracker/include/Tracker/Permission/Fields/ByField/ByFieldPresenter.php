@@ -65,7 +65,7 @@ class ByFieldPresenter
      */
     public $has_permissions;
 
-    public function __construct(\Tracker $tracker, int $selected_id, array $ugroup_list, bool $might_not_have_access)
+    public function __construct(\Tuleap\Tracker\Tracker $tracker, int $selected_id, array $ugroup_list, bool $might_not_have_access)
     {
         $this->self_url              = ByFieldController::getUrl($tracker);
         $this->update_url            = PermissionsOnFieldsUpdateController::getUrl($tracker);

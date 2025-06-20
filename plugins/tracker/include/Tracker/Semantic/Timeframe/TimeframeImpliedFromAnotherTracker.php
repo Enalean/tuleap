@@ -33,14 +33,14 @@ class TimeframeImpliedFromAnotherTracker implements IComputeTimeframes
 {
     public const NAME = 'timeframe-implied-from-another-tracker';
 
-    private \Tracker $tracker;
+    private \Tuleap\Tracker\Tracker $tracker;
 
     private SemanticTimeframe $semantic_timeframe_implied_from_tracker;
 
     private LinksRetriever $links_retriever;
 
     public function __construct(
-        \Tracker $tracker,
+        \Tuleap\Tracker\Tracker $tracker,
         SemanticTimeframe $semantic_timeframe_implied_from_tracker,
         LinksRetriever $links_retriever,
     ) {
@@ -152,7 +152,7 @@ class TimeframeImpliedFromAnotherTracker implements IComputeTimeframes
 
         $semantic = $root->addChild('semantic');
         $semantic->addAttribute('type', SemanticTimeframe::NAME);
-        $semantic->addChild('inherited_from_tracker')->addAttribute('id', \Tracker::XML_ID_PREFIX . $implied_from_tracker_id);
+        $semantic->addChild('inherited_from_tracker')->addAttribute('id', \Tuleap\Tracker\Tracker::XML_ID_PREFIX . $implied_from_tracker_id);
     }
 
     public function exportToREST(\PFUser $user): ?IRepresentSemanticTimeframe
@@ -167,7 +167,7 @@ class TimeframeImpliedFromAnotherTracker implements IComputeTimeframes
         );
     }
 
-    public function save(\Tracker $tracker, SemanticTimeframeDao $dao): bool
+    public function save(\Tuleap\Tracker\Tracker $tracker, SemanticTimeframeDao $dao): bool
     {
         return $dao->save(
             $tracker->getId(),
@@ -216,7 +216,7 @@ class TimeframeImpliedFromAnotherTracker implements IComputeTimeframes
         return $reversely_linked_artifacts[0];
     }
 
-    public function getTrackerFromWhichTimeframeIsImplied(): ?\Tracker
+    public function getTrackerFromWhichTimeframeIsImplied(): ?\Tuleap\Tracker\Tracker
     {
         return $this->semantic_timeframe_implied_from_tracker->getTracker();
     }

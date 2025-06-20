@@ -25,7 +25,7 @@ namespace Tuleap\Tracker\FormElement\Field\ListFields;
 interface RetrieveUsedListField
 {
     public function getUsedListFieldById(
-        \Tracker $tracker,
+        \Tuleap\Tracker\Tracker $tracker,
         int $field_id,
     ): \Tracker_FormElement_Field_Selectbox|\Tracker_FormElement_Field_OpenList|null;
 }

@@ -22,7 +22,7 @@ namespace Tuleap\Cardwall\Semantic;
 
 use Cardwall_Semantic_CardFields;
 use SimpleXMLElement;
-use Tracker;
+use Tuleap\Tracker\Tracker;
 
 class CardFieldXmlExporter
 {

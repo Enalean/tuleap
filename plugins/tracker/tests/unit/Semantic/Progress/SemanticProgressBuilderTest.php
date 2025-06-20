@@ -23,9 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Semantic\Progress;
 
 use PHPUnit\Framework\MockObject\MockObject;
-use Tracker;
 use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SemanticProgressBuilderTest extends \Tuleap\Test\PHPUnit\TestCase

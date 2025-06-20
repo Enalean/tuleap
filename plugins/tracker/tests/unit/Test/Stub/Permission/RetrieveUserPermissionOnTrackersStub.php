@@ -23,10 +23,10 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Test\Stub\Permission;
 
 use PFUser;
-use Tracker;
 use Tuleap\Tracker\Permission\RetrieveUserPermissionOnTrackers;
 use Tuleap\Tracker\Permission\TrackerPermissionType;
 use Tuleap\Tracker\Permission\UserPermissionsOnItems;
+use Tuleap\Tracker\Tracker;
 
 final class RetrieveUserPermissionOnTrackersStub implements RetrieveUserPermissionOnTrackers
 {

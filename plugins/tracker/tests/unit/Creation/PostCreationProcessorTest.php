@@ -35,7 +35,7 @@ final class PostCreationProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
     use GlobalLanguageMock;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&\Tracker
+     * @var \PHPUnit\Framework\MockObject\MockObject&\Tuleap\Tracker\Tracker
      */
     private $tracker;
     /**

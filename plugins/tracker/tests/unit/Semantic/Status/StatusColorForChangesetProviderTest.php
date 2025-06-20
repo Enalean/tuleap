@@ -41,7 +41,7 @@ final class StatusColorForChangesetProviderTest extends \Tuleap\Test\PHPUnit\Tes
     private \PFUser $user;
     private \Tracker_FormElement_Field_List_BindValue $bind_value;
     /**
-     * @var \Tracker&\PHPUnit\Framework\MockObject\MockObject
+     * @var \Tuleap\Tracker\Tracker&\PHPUnit\Framework\MockObject\MockObject
      */
     private $tracker;
     private Artifact $artifact;
@@ -57,7 +57,7 @@ final class StatusColorForChangesetProviderTest extends \Tuleap\Test\PHPUnit\Tes
         $this->color_provider               = new StatusColorForChangesetProvider($this->value_for_changeset_provider);
 
         $this->user    = UserTestBuilder::anActiveUser()->build();
-        $this->tracker = $this->createMock(\Tracker::class);
+        $this->tracker = $this->createMock(\Tuleap\Tracker\Tracker::class);
         $this->tracker->method('getId')->willReturn($tracker_id);
         $this->artifact  = new Artifact($artifact_id, $this->tracker->getId(), $this->user->getId(), 1669714644, false);
         $this->changeset = new \Tracker_Artifact_Changeset($changset_id, $this->artifact, $this->user->getId(), 1669714644, 'example@email.com');

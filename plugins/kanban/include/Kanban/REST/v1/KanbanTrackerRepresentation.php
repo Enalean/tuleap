@@ -22,8 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Kanban\REST\v1;
 
-use Tuleap\Kanban\Kanban;
 use TrackerFactory;
+use Tuleap\Kanban\Kanban;
 use Tuleap\Project\REST\ProjectReference;
 use Tuleap\Tracker\REST\CompleteTrackerRepresentation;
 
@@ -57,7 +57,7 @@ final class KanbanTrackerRepresentation
         );
     }
 
-    private static function getTracker(TrackerFactory $tracker_factory, Kanban $kanban): \Tracker
+    private static function getTracker(TrackerFactory $tracker_factory, Kanban $kanban): \Tuleap\Tracker\Tracker
     {
         $tracker_id = $kanban->getTrackerId();
         $tracker    = $tracker_factory->getTrackerById($tracker_id);

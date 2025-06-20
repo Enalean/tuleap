@@ -24,7 +24,6 @@ namespace Tuleap\Gitlab\Artifact\Action;
 
 use Cocur\Slugify\Slugify;
 use PFUser;
-use Tracker;
 use Tuleap\Gitlab\Artifact\BranchNameCreatorFromArtifact;
 use Tuleap\Gitlab\Plugin\GitlabIntegrationAvailabilityChecker;
 use Tuleap\Gitlab\REST\v1\GitlabRepositoryRepresentation;
@@ -34,6 +33,7 @@ use Tuleap\Test\Builders\IncludeAssetsBuilder;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CreateBranchButtonFetcherTest extends TestCase

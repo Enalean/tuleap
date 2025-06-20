@@ -29,6 +29,7 @@ use Tuleap\Tracker\REST\StructureElementRepresentation;
 use Tuleap\Tracker\REST\Tracker\PermissionsRepresentationBuilder;
 use Tuleap\Tracker\REST\v1\BuildCompleteTrackerRESTRepresentation;
 use Tuleap\Tracker\REST\WorkflowRestBuilder;
+use Tuleap\Tracker\Tracker;
 
 class Tracker_REST_TrackerRestBuilder implements BuildCompleteTrackerRESTRepresentation // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {

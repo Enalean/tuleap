@@ -22,5 +22,5 @@ namespace Tuleap\Tracker\Workflow;
 
 interface RetrieveWorkflow
 {
-    public function getNonNullWorkflow(\Tracker $tracker): \Workflow|\WorkflowWithoutTransition;
+    public function getNonNullWorkflow(\Tuleap\Tracker\Tracker $tracker): \Workflow|\WorkflowWithoutTransition;
 }

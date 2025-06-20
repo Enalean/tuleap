@@ -21,8 +21,8 @@
 namespace Tuleap\Tracker\Masschange;
 
 use PFUser;
-use Tracker;
 use Tuleap\Event\Dispatchable;
+use Tuleap\Tracker\Tracker;
 
 class TrackerMasschangeGetExternalActionsEvent implements Dispatchable
 {

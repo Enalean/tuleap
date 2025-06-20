@@ -27,11 +27,11 @@ use Feedback;
 use PFUser;
 use Project;
 use Psr\EventDispatcher\EventDispatcherInterface;
-use Tracker;
 use Tuleap\AgileDashboard\Artifact\PlannedArtifactDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactAlreadyPlannedException;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\UnplannedArtifactsAdder;
+use Tuleap\Tracker\Tracker;
 
 class AdditionalMasschangeActionProcessor
 {

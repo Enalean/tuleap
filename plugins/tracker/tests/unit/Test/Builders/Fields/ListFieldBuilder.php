@@ -30,7 +30,7 @@ final class ListFieldBuilder
     private string $name      = 'list';
     private bool $is_required = false;
     private bool $is_multiple = false;
-    private \Tracker $tracker;
+    private \Tuleap\Tracker\Tracker $tracker;
     /** @var list<\PFUser> */
     private array $user_with_read_permissions = [];
     /** @var array<int, bool> */
@@ -72,7 +72,7 @@ final class ListFieldBuilder
         return $this;
     }
 
-    public function inTracker(\Tracker $tracker): self
+    public function inTracker(\Tuleap\Tracker\Tracker $tracker): self
     {
         $this->tracker = $tracker;
         return $this;

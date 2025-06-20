@@ -77,12 +77,12 @@ class MethodNotConfigured implements IComputeProgression
     {
     }
 
-    public function saveSemanticForTracker(\Tracker $tracker): bool
+    public function saveSemanticForTracker(\Tuleap\Tracker\Tracker $tracker): bool
     {
         return false;
     }
 
-    public function deleteSemanticForTracker(\Tracker $tracker): bool
+    public function deleteSemanticForTracker(\Tuleap\Tracker\Tracker $tracker): bool
     {
         return false;
     }

@@ -24,7 +24,6 @@ namespace Tuleap\Tracker\Artifact;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use SimpleXMLElement;
-use Tracker;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue_Text;
 use Tracker_Artifact_XMLExport;
@@ -38,6 +37,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\ChangesetCommentTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\TextFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Tracker;
 use UserManager;
 use UserXMLExportedCollection;
 use UserXMLExporter;

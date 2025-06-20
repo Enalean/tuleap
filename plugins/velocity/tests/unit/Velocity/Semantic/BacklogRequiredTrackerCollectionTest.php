@@ -22,11 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\Velocity\Semantic;
 
-use Tracker;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDone;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneDao;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneValueChecker;
+use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class BacklogRequiredTrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase

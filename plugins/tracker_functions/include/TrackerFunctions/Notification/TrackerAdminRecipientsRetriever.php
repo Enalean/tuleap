@@ -23,10 +23,10 @@ declare(strict_types=1);
 namespace Tuleap\TrackerFunctions\Notification;
 
 use PFUser;
-use Tracker;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
+use Tuleap\Tracker\Tracker;
 
 interface TrackerAdminRecipientsRetriever
 {

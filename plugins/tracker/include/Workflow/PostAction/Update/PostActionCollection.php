@@ -115,7 +115,7 @@ class PostActionCollection implements PostActionVisitor
     /**
      * @throws Internal\InvalidPostActionException
      */
-    public function validateFrozenFieldsActions(FrozenFieldsValueValidator $validator, \Tracker $tracker): void
+    public function validateFrozenFieldsActions(FrozenFieldsValueValidator $validator, \Tuleap\Tracker\Tracker $tracker): void
     {
         $validator->validate($tracker, ...$this->frozen_fields_actions);
     }
@@ -123,7 +123,7 @@ class PostActionCollection implements PostActionVisitor
     /**
      * @throws Internal\InvalidPostActionException
      */
-    public function validateHiddenFieldsetsActions(HiddenFieldsetsValueValidator $validator, \Tracker $tracker): void
+    public function validateHiddenFieldsetsActions(HiddenFieldsetsValueValidator $validator, \Tuleap\Tracker\Tracker $tracker): void
     {
         $validator->validate($tracker, ...$this->hidden_fieldsets_actions);
     }
@@ -139,7 +139,7 @@ class PostActionCollection implements PostActionVisitor
     /**
      * @throws Internal\InvalidPostActionException
      */
-    public function validateSetDateValueActions(SetDateValueValidator $validator, \Tracker $tracker): void
+    public function validateSetDateValueActions(SetDateValueValidator $validator, \Tuleap\Tracker\Tracker $tracker): void
     {
         $validator->validate($tracker, ...$this->set_date_value_actions);
     }
@@ -147,7 +147,7 @@ class PostActionCollection implements PostActionVisitor
     /**
      * @throws Internal\InvalidPostActionException
      */
-    public function validateSetIntValueActions(SetIntValueValidator $validator, \Tracker $tracker): void
+    public function validateSetIntValueActions(SetIntValueValidator $validator, \Tuleap\Tracker\Tracker $tracker): void
     {
         $validator->validate($tracker, ...$this->set_int_value_actions);
     }
@@ -155,7 +155,7 @@ class PostActionCollection implements PostActionVisitor
     /**
      * @throws Internal\InvalidPostActionException
      */
-    public function validateSetFloatValueActions(SetFloatValueValidator $validator, \Tracker $tracker): void
+    public function validateSetFloatValueActions(SetFloatValueValidator $validator, \Tuleap\Tracker\Tracker $tracker): void
     {
         $validator->validate($tracker, ...$this->set_float_value_actions);
     }

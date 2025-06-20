@@ -23,11 +23,11 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Action;
 
 use PFUser;
-use Tracker;
 use Tracker_XML_Importer_ArtifactImportedMapping;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\RetrieveForwardLinks;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\RetrieveAnArtifactLinkField;
+use Tuleap\Tracker\Tracker;
 
 final class DuckTypedMoveArtifactLinksMappingBuilder implements BuildArtifactLinksMappingForDuckTypedMove
 {

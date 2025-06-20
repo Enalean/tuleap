@@ -23,12 +23,12 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Test\Stub;
 
 use PFUser;
-use Tracker;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\CompleteTrackerRepresentation;
 use Tuleap\Tracker\REST\v1\BuildCompleteTrackerRESTRepresentation;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Tracker;
 
 final class BuildCompleteTrackerRESTRepresentationStub implements BuildCompleteTrackerRESTRepresentation
 {

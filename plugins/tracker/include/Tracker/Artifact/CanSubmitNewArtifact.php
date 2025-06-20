@@ -24,8 +24,8 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Artifact;
 
 use PFUser;
-use Tracker;
 use Tuleap\Event\Dispatchable;
+use Tuleap\Tracker\Tracker;
 
 final class CanSubmitNewArtifact implements Dispatchable
 {

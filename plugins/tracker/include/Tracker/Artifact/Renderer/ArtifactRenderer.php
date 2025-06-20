@@ -24,6 +24,7 @@
 
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Renderer\BuildArtifactFormActionEvent;
+use Tuleap\Tracker\Tracker;
 
 /**
  * I'm responsible of rendering artifact to user (creation, update, view...)

@@ -30,7 +30,7 @@ final class AdminPresenterBuilder
     {
     }
 
-    public function build(\Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus $semantic_status, \Tracker $tracker, CSRFSynchronizerToken $csrf_token): AdminPresenter
+    public function build(\Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus $semantic_status, \Tuleap\Tracker\Tracker $tracker, CSRFSynchronizerToken $csrf_token): AdminPresenter
     {
         $list_fields = $this->tracker_form_element_factory->getUsedListFields($tracker);
 
@@ -71,7 +71,7 @@ final class AdminPresenterBuilder
         );
     }
 
-    private function getDisabledValues(\Tracker $tracker): array
+    private function getDisabledValues(\Tuleap\Tracker\Tracker $tracker): array
     {
         $disabled_values = [];
         foreach ($this->semantic_done_dao->getSelectedValues($tracker->getId()) as $value_row) {

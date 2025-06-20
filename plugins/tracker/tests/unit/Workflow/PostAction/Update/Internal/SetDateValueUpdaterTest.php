@@ -24,9 +24,9 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Workflow\PostAction\Update\Internal;
 
 use PHPUnit\Framework\MockObject\MockObject;
-use Tracker;
 use Transition;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\Workflow\PostAction\Update\PostActionCollection;
 use Tuleap\Tracker\Workflow\PostAction\Update\SetDateValue;
 use Workflow;

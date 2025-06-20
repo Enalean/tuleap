@@ -175,7 +175,7 @@ class TrackersDisplayController implements DispatchableWithRequest, Dispatchable
 
     public static function getURL(Project $project): string
     {
-        return \Tracker::getTrackerGlobalAdministrationURL($project);
+        return \Tuleap\Tracker\Tracker::getTrackerGlobalAdministrationURL($project);
     }
 
     public function getProject(array $variables): Project

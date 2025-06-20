@@ -150,7 +150,7 @@ final class TrackerFactoryDuplicationTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testDuplicateIgnoresNonDuplicatableTrackers(): void
     {
-        $t1 = $this->createStub(\Tracker::class);
+        $t1 = $this->createStub(\Tuleap\Tracker\Tracker::class);
         $t1->method('mustBeInstantiatedForNewProjects')->willReturn(false);
         $t1->method('getId')->willReturn(5678);
         $trackers = [$t1];

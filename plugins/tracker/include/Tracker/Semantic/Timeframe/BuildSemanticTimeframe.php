@@ -20,7 +20,7 @@
 
 namespace Tuleap\Tracker\Semantic\Timeframe;
 
-use Tracker;
+use Tuleap\Tracker\Tracker;
 
 interface BuildSemanticTimeframe
 {

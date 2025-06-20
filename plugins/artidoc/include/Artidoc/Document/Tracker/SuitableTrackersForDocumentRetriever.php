@@ -22,10 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Document\Tracker;
 
-use Tracker;
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\Docman\ServiceDocman;
 use Tuleap\Tracker\RetrieveTrackersByProjectIdUserCanView;
+use Tuleap\Tracker\Tracker;
 
 final readonly class SuitableTrackersForDocumentRetriever
 {

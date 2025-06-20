@@ -26,7 +26,6 @@ use DateTimeImmutable;
 use PFUser;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use RuntimeException;
-use Tracker;
 use Tracker_Artifact_Changeset;
 use Tracker_ArtifactDao;
 use Tracker_ArtifactNotificationSubscriber;
@@ -42,6 +41,7 @@ use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
 use Tuleap\Tracker\Artifact\RetrieveArtifact;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\ListFields\RetrieveUsedListField;
+use Tuleap\Tracker\Tracker;
 
 final readonly class MasschangeUpdater
 {

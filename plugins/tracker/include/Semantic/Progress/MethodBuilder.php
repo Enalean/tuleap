@@ -34,7 +34,7 @@ class MethodBuilder
     }
 
     public function buildMethodBasedOnEffort(
-        \Tracker $tracker,
+        \Tuleap\Tracker\Tracker $tracker,
         int $total_effort_field_id,
         int $remaining_effort_field_id,
     ): IComputeProgression {
@@ -79,7 +79,7 @@ class MethodBuilder
     }
 
     public function buildMethodBasedOnChildCount(
-        \Tracker $tracker,
+        \Tuleap\Tracker\Tracker $tracker,
         string $link_type,
     ): IComputeProgression {
         $artifact_links_fields = $this->form_element_factory->getUsedArtifactLinkFields($tracker);
@@ -123,7 +123,7 @@ class MethodBuilder
         );
     }
 
-    public function buildMethodFromRequest(\Tracker $tracker, \Codendi_Request $request): IComputeProgression
+    public function buildMethodFromRequest(\Tuleap\Tracker\Tracker $tracker, \Codendi_Request $request): IComputeProgression
     {
         $method = $request->get('computation-method');
 

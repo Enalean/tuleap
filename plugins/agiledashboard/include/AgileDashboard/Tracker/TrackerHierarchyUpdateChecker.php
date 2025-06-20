@@ -25,8 +25,8 @@ namespace Tuleap\AgileDashboard\Tracker;
 use LogicException;
 use PFUser;
 use PlanningFactory;
-use Tracker;
 use TrackerFactory;
+use Tuleap\Tracker\Tracker;
 
 class TrackerHierarchyUpdateChecker
 {

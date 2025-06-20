@@ -26,7 +26,6 @@ use DateTimeImmutable;
 use EventManager;
 use Feedback;
 use PFUser;
-use Tracker;
 use Tracker_Artifact_ReadOnlyRenderer;
 use Tracker_Artifact_Redirect;
 use Tracker_Exception;
@@ -48,6 +47,7 @@ use Tuleap\Tracker\FormElement\ArtifactLinkFieldDoesNotExistFault;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeIsChildLinkRetriever;
 use Tuleap\Tracker\Permission\ArtifactPermissionType;
 use Tuleap\Tracker\Permission\RetrieveUserPermissionOnArtifacts;
+use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDetector;
 
 final readonly class UpdateArtifactAction

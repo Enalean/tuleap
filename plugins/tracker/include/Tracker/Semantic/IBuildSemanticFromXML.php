@@ -21,8 +21,8 @@
 namespace Tuleap\Tracker\Semantic;
 
 use SimpleXMLElement;
-use Tracker;
 use Tracker_Semantic;
+use Tuleap\Tracker\Tracker;
 
 interface IBuildSemanticFromXML
 {

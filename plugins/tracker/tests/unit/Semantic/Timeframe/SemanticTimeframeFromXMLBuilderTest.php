@@ -20,8 +20,8 @@
 
 namespace Tuleap\Tracker\Semantic\Timeframe;
 
-use Tracker;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
+use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SemanticTimeframeFromXMLBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -431,9 +431,9 @@ final class SemanticTimeframeFromXMLBuilderTest extends \Tuleap\Test\PHPUnit\Tes
         return $this->getMockBuilder($type)->disableOriginalConstructor()->getMock();
     }
 
-    private function getMockedTracker(): \Tracker
+    private function getMockedTracker(): \Tuleap\Tracker\Tracker
     {
-        $mock = $this->getMockBuilder(\Tracker::class)->disableOriginalConstructor()->getMock();
+        $mock = $this->getMockBuilder(\Tuleap\Tracker\Tracker::class)->disableOriginalConstructor()->getMock();
         $mock->expects($this->any())->method('getId')->willReturn(113);
         return $mock;
     }

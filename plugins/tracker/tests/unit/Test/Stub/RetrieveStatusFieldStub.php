@@ -51,7 +51,7 @@ final class RetrieveStatusFieldStub implements \Tuleap\Tracker\Semantic\Status\R
         return new self(true, false, []);
     }
 
-    public function getStatusField(\Tracker $tracker): ?\Tracker_FormElement_Field_List
+    public function getStatusField(\Tuleap\Tracker\Tracker $tracker): ?\Tracker_FormElement_Field_List
     {
         if ($this->return_null) {
             return null;

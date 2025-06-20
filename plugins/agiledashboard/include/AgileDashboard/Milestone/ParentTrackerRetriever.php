@@ -23,7 +23,7 @@ namespace Tuleap\AgileDashboard\Milestone;
 use PFUser;
 use Planning_Milestone;
 use PlanningFactory;
-use Tracker;
+use Tuleap\Tracker\Tracker;
 
 class ParentTrackerRetriever
 {

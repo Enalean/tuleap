@@ -26,6 +26,7 @@ use Tuleap\Tracker\Artifact\ChangesetValue\InitialChangesetValuesContainer;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
 use Tuleap\Tracker\Artifact\MailGateway\IncomingMail;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayFilter;
+use Tuleap\Tracker\Tracker;
 
 abstract class Tracker_Artifact_MailGateway_MailGateway
 {

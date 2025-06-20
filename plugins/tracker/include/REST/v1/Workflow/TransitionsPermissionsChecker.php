@@ -23,9 +23,9 @@ namespace Tuleap\Tracker\REST\v1\Workflow;
 
 use Luracast\Restler\RestException;
 use PFUser;
-use Tracker;
 use Transition;
 use Tuleap\Tracker\REST\v1\TrackerPermissionsChecker;
+use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\Workflow\Transition\OrphanTransitionException;
 
 /**

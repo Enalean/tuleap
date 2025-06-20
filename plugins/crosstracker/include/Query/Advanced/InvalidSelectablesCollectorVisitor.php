@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\CrossTracker\Query\Advanced;
 
 use PFUser;
-use Tracker;
 use Tuleap\CrossTracker\Query\Advanced\DuckTypedField\FieldNotFoundInAnyTrackerFault;
 use Tuleap\CrossTracker\Query\Advanced\DuckTypedField\FieldTypeIsNotSupportedFault;
 use Tuleap\CrossTracker\Query\Advanced\QueryValidation\DuckTypedField\DuckTypedFieldChecker;
@@ -35,6 +34,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Selectable;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SelectableVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidSelectablesCollection;
+use Tuleap\Tracker\Tracker;
 
 /**
  * @template-implements SelectableVisitor<InvalidSelectableCollectorParameters, void>

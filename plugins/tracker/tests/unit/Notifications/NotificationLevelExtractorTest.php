@@ -20,8 +20,8 @@
 
 namespace Tuleap\Tracker\Notifications;
 
-use Tracker;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
+use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class NotificationLevelExtractorTest extends \Tuleap\Test\PHPUnit\TestCase

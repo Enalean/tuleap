@@ -26,11 +26,11 @@ use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\RetrieveFullTrackerFromId
 
 final class RetrieveFullTrackerFromIdStub implements RetrieveFullTrackerFromId
 {
-    public function __construct(private ?\Tracker $tracker)
+    public function __construct(private ?\Tuleap\Tracker\Tracker $tracker)
     {
     }
 
-    public static function withTracker(\Tracker $tracker): self
+    public static function withTracker(\Tuleap\Tracker\Tracker $tracker): self
     {
         return new self($tracker);
     }
@@ -40,7 +40,7 @@ final class RetrieveFullTrackerFromIdStub implements RetrieveFullTrackerFromId
         return new self(null);
     }
 
-    public function getTrackerFromId(int $tracker_id): ?\Tracker
+    public function getTrackerFromId(int $tracker_id): ?\Tuleap\Tracker\Tracker
     {
         return $this->tracker;
     }

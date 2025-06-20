@@ -34,7 +34,7 @@ final class TrackerIdentifierProxy implements TrackerIdentifier
     {
     }
 
-    public static function fromTracker(\Tracker $tracker): self
+    public static function fromTracker(\Tuleap\Tracker\Tracker $tracker): self
     {
         return new self($tracker->getId());
     }

@@ -23,11 +23,11 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Semantic\Timeframe;
 
 use SimpleXMLElement;
-use Tracker;
+use TrackerFactory;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\LinksRetriever;
 use Tuleap\Tracker\Semantic\IBuildSemanticFromXML;
-use TrackerFactory;
+use Tuleap\Tracker\Tracker;
 
 class SemanticTimeframeFromXMLBuilder implements IBuildSemanticFromXML
 {

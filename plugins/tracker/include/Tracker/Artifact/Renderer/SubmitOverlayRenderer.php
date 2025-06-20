@@ -23,6 +23,7 @@
  */
 
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Tracker;
 
 class Tracker_Artifact_SubmitOverlayRenderer extends Tracker_Artifact_SubmitAbstractRenderer // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {

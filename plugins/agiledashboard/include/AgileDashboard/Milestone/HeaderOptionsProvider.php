@@ -97,7 +97,7 @@ class HeaderOptionsProvider
     }
 
     /**
-     * @param \Tracker[] $trackers
+     * @param \Tuleap\Tracker\Tracker[] $trackers
      * @param Option<NewDropdownLinkSectionPresenter> $current_context_section
      * @return Option<NewDropdownLinkSectionPresenter>
      */

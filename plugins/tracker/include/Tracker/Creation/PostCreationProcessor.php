@@ -47,7 +47,7 @@ class PostCreationProcessor
         );
     }
 
-    public function postCreationProcess(\Tracker $tracker, TrackerCreationSettings $settings): void
+    public function postCreationProcess(\Tuleap\Tracker\Tracker $tracker, TrackerCreationSettings $settings): void
     {
         $this->forceReferenceCreation($tracker);
         $this->addTrackerInNewDropDown($tracker, $settings);
@@ -55,7 +55,7 @@ class PostCreationProcessor
         $this->addTrackerDoestNotAllowArtifactCopy($tracker, $settings);
     }
 
-    private function forceReferenceCreation(\Tracker $tracker): void
+    private function forceReferenceCreation(\Tuleap\Tracker\Tracker $tracker): void
     {
         $keyword   = strtolower($tracker->getItemName());
         $reference = new Tracker_Reference(
@@ -67,21 +67,21 @@ class PostCreationProcessor
         $this->reference_manager->createReference($reference, true);
     }
 
-    private function addTrackerInNewDropDown(\Tracker $tracker, TrackerCreationSettings $settings): void
+    private function addTrackerInNewDropDown(\Tuleap\Tracker\Tracker $tracker, TrackerCreationSettings $settings): void
     {
         if ($settings->isDisplayedInNewDropdown() === true) {
             $this->in_new_dropdown_dao->insert($tracker->getId());
         }
     }
 
-    private function addTrackerDoestNotUsePrivateComment(\Tracker $tracker, TrackerCreationSettings $settings): void
+    private function addTrackerDoestNotUsePrivateComment(\Tuleap\Tracker\Tracker $tracker, TrackerCreationSettings $settings): void
     {
         if ($settings->isPrivateCommentUsed() === false) {
             $this->private_comment_dao->disabledPrivateCommentOnTracker($tracker->getId());
         }
     }
 
-    private function addTrackerDoestNotAllowArtifactCopy(\Tracker $tracker, TrackerCreationSettings $settings): void
+    private function addTrackerDoestNotAllowArtifactCopy(\Tuleap\Tracker\Tracker $tracker, TrackerCreationSettings $settings): void
     {
         if ($settings->isMoveArtifactsEnabled() === false) {
             $this->move_action_allowed_dao->forbidMoveArtifactInTracker($tracker->getId());

@@ -27,7 +27,7 @@ class CollectionOfSemanticsUsingAParticularTrackerFieldTest extends \Tuleap\Test
     private const TRACKER_ID = 10;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\Tracker
+     * @var \PHPUnit\Framework\MockObject\MockObject|\Tuleap\Tracker\Tracker
      */
     private $tracker;
 
@@ -43,7 +43,7 @@ class CollectionOfSemanticsUsingAParticularTrackerFieldTest extends \Tuleap\Test
     protected function setUp(): void
     {
         $this->field   = $this->createMock(\Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::class);
-        $this->tracker = $this->createMock(\Tracker::class);
+        $this->tracker = $this->createMock(\Tuleap\Tracker\Tracker::class);
         $this->project = $this->createMock(\Project::class);
 
         $this->field->expects($this->any())->method('getTracker')->willReturn($this->tracker);
@@ -60,7 +60,7 @@ class CollectionOfSemanticsUsingAParticularTrackerFieldTest extends \Tuleap\Test
 
     public function testItReturnsUsages(): void
     {
-        $tracker_from_same_project = $this->createMock(\Tracker::class);
+        $tracker_from_same_project = $this->createMock(\Tuleap\Tracker\Tracker::class);
         $tracker_from_same_project->expects($this->any())->method('getId')->willReturn(11);
         $tracker_from_same_project->expects($this->any())->method('getProject')->willReturn($this->project);
         $tracker_from_same_project->expects($this->any())->method('getName')->willReturn('User stories');
@@ -69,7 +69,7 @@ class CollectionOfSemanticsUsingAParticularTrackerFieldTest extends \Tuleap\Test
         $another_project->expects($this->any())->method('getID')->willReturn(150);
         $another_project->expects($this->any())->method('getPublicName')->willReturn('Project X');
 
-        $tracker_from_another_project = $this->createMock(\Tracker::class);
+        $tracker_from_another_project = $this->createMock(\Tuleap\Tracker\Tracker::class);
         $tracker_from_another_project->expects($this->any())->method('getId')->willReturn(12);
         $tracker_from_another_project->expects($this->any())->method('getProject')->willReturn($another_project);
         $tracker_from_another_project->expects($this->any())->method('getName')->willReturn('Sprints');
@@ -89,7 +89,7 @@ class CollectionOfSemanticsUsingAParticularTrackerFieldTest extends \Tuleap\Test
         );
     }
 
-    private function getMockedSemantic(string $semantic_label, \Tracker $tracker)
+    private function getMockedSemantic(string $semantic_label, \Tuleap\Tracker\Tracker $tracker)
     {
         $semantic = $this->createMock(\Tracker_Semantic::class);
         $semantic->expects($this->any())->method('getLabel')->willReturn($semantic_label);

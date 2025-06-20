@@ -24,13 +24,13 @@ namespace Tuleap\Tracker\Semantic\Progress;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use Project;
-use Tracker;
 use Tracker_FormElementFactory;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MethodBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -38,7 +38,7 @@ final class MethodBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     private SemanticProgressDao&MockObject $dao;
     private Tracker_FormElementFactory&MockObject $form_element_factory;
     private MethodBuilder $method_builder;
-    private \Tracker $tracker;
+    private \Tuleap\Tracker\Tracker $tracker;
     private Project $project;
     private TypePresenterFactory&MockObject $natures_factory;
 

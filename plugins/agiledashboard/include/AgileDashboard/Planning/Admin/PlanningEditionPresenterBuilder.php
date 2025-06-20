@@ -136,7 +136,7 @@ class PlanningEditionPresenterBuilder
         return array_values(array_merge($warning_list, $this->getOtherWarnings($milestone_tracker)));
     }
 
-    private function getBurnupWarning(\Tracker $planning_tracker): ?PlanningWarningPossibleMisconfigurationPresenter
+    private function getBurnupWarning(\Tuleap\Tracker\Tracker $planning_tracker): ?PlanningWarningPossibleMisconfigurationPresenter
     {
         $burnup_fields = $this->tracker_form_element_factory->getFormElementsByType($planning_tracker, Burnup::TYPE);
 
@@ -158,7 +158,7 @@ class PlanningEditionPresenterBuilder
     /**
      * @return PlanningWarningPossibleMisconfigurationPresenter[]
      */
-    private function getOtherWarnings(\Tracker $planning_tracker): array
+    private function getOtherWarnings(\Tuleap\Tracker\Tracker $planning_tracker): array
     {
         $event = new AdditionalPlanningConfigurationWarningsRetriever($planning_tracker);
         $this->event_manager->processEvent($event);

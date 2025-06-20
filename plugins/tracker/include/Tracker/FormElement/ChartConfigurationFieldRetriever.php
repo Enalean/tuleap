@@ -21,12 +21,12 @@
 namespace Tuleap\Tracker\FormElement;
 
 use PFUser;
-use Tracker;
 use Tracker_FormElement_Chart_Field_Exception;
 use Tracker_FormElement_Field;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
+use Tuleap\Tracker\Tracker;
 
 class ChartConfigurationFieldRetriever
 {

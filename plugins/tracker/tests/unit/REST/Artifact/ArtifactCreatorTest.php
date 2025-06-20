@@ -25,7 +25,6 @@ namespace Tuleap\Tracker\REST\Artifact;
 use Luracast\Restler\RestException;
 use PFUser;
 use PHPUnit\Framework\Attributes\DataProvider;
-use Tracker;
 use Tuleap\GlobalResponseMock;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -57,6 +56,7 @@ use Tuleap\Tracker\Test\Stub\RetrieveForwardLinksStub;
 use Tuleap\Tracker\Test\Stub\RetrieveTrackerStub;
 use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
 use Tuleap\Tracker\Test\Stub\VerifySubmissionPermissionStub;
+use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactCreatorTest extends TestCase
@@ -486,7 +486,7 @@ final class ArtifactCreatorTest extends TestCase
         RetrieveTracker $tracker_factory,
     ): ArtifactCreator {
         $default_values_adder = new class implements AddDefaultValuesToFieldsData {
-            public function getUsedFieldsWithDefaultValue(\Tracker $tracker, array $fields_data, \PFUser $user): array
+            public function getUsedFieldsWithDefaultValue(\Tuleap\Tracker\Tracker $tracker, array $fields_data, \PFUser $user): array
             {
                 return $fields_data;
             }

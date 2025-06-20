@@ -20,9 +20,9 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder;
 
-use Tracker;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\VisitorParameters;
+use Tuleap\Tracker\Tracker;
 
 final class FromWhereSearchableVisitorParameter implements VisitorParameters
 {

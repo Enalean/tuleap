@@ -35,7 +35,7 @@ final class RetrieveWorkflowStub implements RetrieveWorkflow
         return new self($workflow);
     }
 
-    public function getNonNullWorkflow(\Tracker $tracker): \Workflow|\WorkflowWithoutTransition
+    public function getNonNullWorkflow(\Tuleap\Tracker\Tracker $tracker): \Workflow|\WorkflowWithoutTransition
     {
         return $this->workflow;
     }

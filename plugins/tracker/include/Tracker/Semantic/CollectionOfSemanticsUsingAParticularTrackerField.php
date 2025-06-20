@@ -24,7 +24,7 @@ namespace Tuleap\Tracker\Semantic;
 
 final class CollectionOfSemanticsUsingAParticularTrackerField
 {
-    private \Tracker $tracker;
+    private \Tuleap\Tracker\Tracker $tracker;
     /**
      * @var \Tracker_Semantic[]
      */
@@ -79,7 +79,7 @@ final class CollectionOfSemanticsUsingAParticularTrackerField
         return join(', ', $names);
     }
 
-    private function getSemanticNameWithTrackerNameAndProjectNameIfNeeded(\Tracker $semantic_tracker, string $semantic_label): string
+    private function getSemanticNameWithTrackerNameAndProjectNameIfNeeded(\Tuleap\Tracker\Tracker $semantic_tracker, string $semantic_label): string
     {
         if ($this->tracker->getProject()->getID() !== $semantic_tracker->getProject()->getID()) {
             return sprintf(

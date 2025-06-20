@@ -18,9 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Cardwall\OnTop\Config\ColumnFactory;
 use Tuleap\Cardwall\OnTop\Config\ColumnCollection;
+use Tuleap\Cardwall\OnTop\Config\ColumnFactory;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Tracker;
 
 /**
  * Manage configuration of a cardwall on top of a tracker

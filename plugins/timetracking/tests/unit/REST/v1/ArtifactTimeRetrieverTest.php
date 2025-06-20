@@ -56,7 +56,7 @@ final class ArtifactTimeRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $project;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&\Tracker
+     * @var \PHPUnit\Framework\MockObject\MockObject&\Tuleap\Tracker\Tracker
      */
     private $tracker;
     /**
@@ -81,7 +81,7 @@ final class ArtifactTimeRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->timetracking_enabler  = $this->createMock(TimetrackingEnabler::class);
         $this->project_verificator   = $this->createMock(ProjectStatusVerificator::class);
         $this->project               = $this->createMock(\Project::class);
-        $this->tracker               = $this->createMock(\Tracker::class);
+        $this->tracker               = $this->createMock(\Tuleap\Tracker\Tracker::class);
         $this->artifact              = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
         $this->artifact_factory      = $this->createMock(\Tracker_ArtifactFactory::class);
         $this->user                  = $this->createMock(\PFUser::class);

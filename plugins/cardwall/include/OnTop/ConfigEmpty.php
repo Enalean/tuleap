@@ -20,6 +20,7 @@
 
 use Tuleap\Cardwall\OnTop\Config\ColumnCollection;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Tracker;
 
 /**
  * Manage configuration of a cardwall on top of a tracker

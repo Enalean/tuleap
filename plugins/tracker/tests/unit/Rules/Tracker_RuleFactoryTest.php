@@ -22,7 +22,6 @@
 namespace Tuleap\Tracker\Rule;
 
 use SimpleXMLElement;
-use Tracker;
 use Tracker_FormElement_Field_List;
 use Tracker_Rule_Date;
 use Tracker_Rule_Date_Dao;
@@ -34,6 +33,7 @@ use Tracker_RuleDao;
 use Tracker_RuleFactory;
 use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class Tracker_RuleFactoryTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps

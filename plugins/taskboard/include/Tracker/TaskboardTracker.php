@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Taskboard\Tracker;
 
-use Tracker;
+use Tuleap\Tracker\Tracker;
 
 final class TaskboardTracker
 {

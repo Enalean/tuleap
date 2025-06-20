@@ -24,10 +24,10 @@ namespace Tuleap\TestManagement\Administration;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use Project;
-use Tracker;
 use TrackerFactory;
 use Tuleap\TestManagement\Config;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AdminTrackersRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase

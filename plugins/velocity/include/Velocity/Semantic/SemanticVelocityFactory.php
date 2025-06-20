@@ -21,8 +21,8 @@
 namespace Tuleap\Velocity\Semantic;
 
 use SimpleXMLElement;
-use Tracker;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDone;
+use Tuleap\Tracker\Tracker;
 
 class SemanticVelocityFactory
 {

@@ -46,7 +46,7 @@ class SetIntValueValidator
     /**
      * @throws InvalidPostActionException
      */
-    public function validate(\Tracker $tracker, SetIntValue ...$set_int_values): void
+    public function validate(\Tuleap\Tracker\Tracker $tracker, SetIntValue ...$set_int_values): void
     {
         try {
             $this->field_ids_validator->validate(...$set_int_values);
@@ -83,7 +83,7 @@ class SetIntValueValidator
         }
     }
 
-    private function extractIntFieldIds(\Tracker $tracker)
+    private function extractIntFieldIds(\Tuleap\Tracker\Tracker $tracker)
     {
         $int_fields    = $this->form_element_factory->getUsedIntFields($tracker);
         $int_field_ids = [];

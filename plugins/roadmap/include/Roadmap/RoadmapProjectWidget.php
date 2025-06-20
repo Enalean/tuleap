@@ -400,7 +400,7 @@ final class RoadmapProjectWidget extends \Widget
 
         if ($this->tracker_ids) {
             foreach ($this->tracker_ids as $tracker_id) {
-                $this->addPreferenceXmlNodeValue($preference, 'tracker_id', \Tracker::XML_ID_PREFIX . $tracker_id);
+                $this->addPreferenceXmlNodeValue($preference, 'tracker_id', \Tuleap\Tracker\Tracker::XML_ID_PREFIX . $tracker_id);
             }
         }
 
@@ -410,11 +410,11 @@ final class RoadmapProjectWidget extends \Widget
         }
 
         if ($this->lvl1_iteration_tracker_id) {
-            $this->addPreferenceXmlNodeValue($preference, 'lvl1_iteration_tracker_id', \Tracker::XML_ID_PREFIX . $this->lvl1_iteration_tracker_id);
+            $this->addPreferenceXmlNodeValue($preference, 'lvl1_iteration_tracker_id', \Tuleap\Tracker\Tracker::XML_ID_PREFIX . $this->lvl1_iteration_tracker_id);
         }
 
         if ($this->lvl2_iteration_tracker_id) {
-            $this->addPreferenceXmlNodeValue($preference, 'lvl2_iteration_tracker_id', \Tracker::XML_ID_PREFIX . $this->lvl2_iteration_tracker_id);
+            $this->addPreferenceXmlNodeValue($preference, 'lvl2_iteration_tracker_id', \Tuleap\Tracker\Tracker::XML_ID_PREFIX . $this->lvl2_iteration_tracker_id);
         }
 
         return $widget;

@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Tracker\FormElement\Field\RetrieveUsedFields;
+use Tuleap\Tracker\Tracker;
 
 /**
  * Build a PHP representation of a Rule out of json

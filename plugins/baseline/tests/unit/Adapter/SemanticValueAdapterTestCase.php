@@ -25,10 +25,10 @@ namespace Tuleap\Baseline\Adapter;
 
 use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\MockObject\MockObject;
-use Tracker;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue;
 use Tuleap\Baseline\Support\CurrentUserContext;
+use Tuleap\Tracker\Tracker;
 
 abstract class SemanticValueAdapterTestCase extends \Tuleap\Test\PHPUnit\TestCase
 {

@@ -24,7 +24,6 @@ namespace Tuleap\CrossTracker\Query\Advanced\QueryValidation\DuckTypedField;
 
 use BaseLanguageFactory;
 use PFUser;
-use Tracker;
 use Tuleap\CrossTracker\Query\Advanced\DuckTypedField\FieldLinkedToMetadataFault;
 use Tuleap\CrossTracker\Query\Advanced\DuckTypedField\FieldNotFoundInAnyTrackerFault;
 use Tuleap\CrossTracker\Query\Advanced\DuckTypedField\FieldTypesAreIncompatibleFault;
@@ -73,6 +72,7 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\Permission\RetrieveUserPermissionOnFieldsStub;
 use Tuleap\Tracker\Test\Stub\RetrieveFieldTypeStub;
 use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
+use Tuleap\Tracker\Tracker;
 use UserManager;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]

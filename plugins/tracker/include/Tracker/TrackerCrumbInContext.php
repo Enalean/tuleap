@@ -36,7 +36,7 @@ class TrackerCrumbInContext implements Dispatchable
     public const TRACKER_CRUMB_IDENTIFIER = 'tracker';
 
     /**
-     * @var \Tracker
+     * @var \Tuleap\Tracker\Tracker
      */
     private $tracker;
 
@@ -49,7 +49,7 @@ class TrackerCrumbInContext implements Dispatchable
      */
     private $user;
 
-    public function __construct(\Tracker $tracker, \PFUser $user)
+    public function __construct(\Tuleap\Tracker\Tracker $tracker, \PFUser $user)
     {
         $this->tracker                                     = $tracker;
         $this->go_to_links[self::TRACKER_CRUMB_IDENTIFIER] = new TrackerCrumbLinkInContext(
@@ -60,7 +60,7 @@ class TrackerCrumbInContext implements Dispatchable
         $this->user                                        = $user;
     }
 
-    public function getTracker(): \Tracker
+    public function getTracker(): \Tuleap\Tracker\Tracker
     {
         return $this->tracker;
     }

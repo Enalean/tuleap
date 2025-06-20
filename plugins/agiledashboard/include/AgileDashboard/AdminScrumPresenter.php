@@ -23,8 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\AgileDashboard;
 
 use CSRFSynchronizerToken;
-use Tracker;
 use Tuleap\AgileDashboard\Event\IScrumAdminSectionControllers;
+use Tuleap\Tracker\Tracker;
 
 final readonly class AdminScrumPresenter
 {

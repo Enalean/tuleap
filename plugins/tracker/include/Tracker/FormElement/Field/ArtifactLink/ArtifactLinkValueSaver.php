@@ -23,13 +23,13 @@ namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
 use EventManager;
 use Feedback;
 use PFUser;
-use Tracker;
 use Tracker_ArtifactFactory;
 use Tracker_ArtifactLinkInfo;
 use Tracker_ReferenceManager;
 use Tracker_Workflow_Trigger_RulesManager;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Tracker;
 
 class ArtifactLinkValueSaver
 {

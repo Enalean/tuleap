@@ -194,7 +194,7 @@ final class CreateKanbanControllerTest extends TestCase
     private function getController(
         ISerializeFeedback $feedback_serializer,
         KanbanManager $kanban_manager,
-        ?\Tracker $tracker,
+        ?\Tuleap\Tracker\Tracker $tracker,
     ): CreateKanbanController {
         $tracker_factory = $this->createMock(\TrackerFactory::class);
         $tracker_factory->method('getTrackerById')->willReturn($tracker);

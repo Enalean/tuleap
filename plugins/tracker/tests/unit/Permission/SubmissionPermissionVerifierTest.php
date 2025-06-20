@@ -23,10 +23,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Permission;
 
-use Tracker;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\CanSubmitNewArtifact;
+use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SubmissionPermissionVerifierTest extends TestCase

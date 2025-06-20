@@ -31,6 +31,7 @@ use Tuleap\Tracker\Artifact\Dao\PriorityDao;
 use Tuleap\Tracker\Permission\RetrieveUserPermissionOnArtifacts;
 use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
 use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle;
+use Tuleap\Tracker\Tracker;
 
 /**
  * I build collections of IBacklogItem

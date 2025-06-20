@@ -73,7 +73,7 @@ final class VisibleIterationTrackerRetrieverTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testGetNullIfUserCanNotSeeTracker(): void
     {
-        $tracker = $this->createStub(\Tracker::class);
+        $tracker = $this->createStub(\Tuleap\Tracker\Tracker::class);
         $tracker->method('getId')->willReturn(self::ITERATION_TRACKER_ID);
         $tracker->method('userCanView')->willReturn(false);
         $this->tracker_factory->method('getTrackerById')->with(self::ITERATION_TRACKER_ID)->willReturn($tracker);
@@ -83,7 +83,7 @@ final class VisibleIterationTrackerRetrieverTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testGetTrackerWhenItIsExistAndUserSeeIt(): void
     {
-        $tracker = $this->createStub(\Tracker::class);
+        $tracker = $this->createStub(\Tuleap\Tracker\Tracker::class);
         $tracker->method('getId')->willReturn(self::ITERATION_TRACKER_ID);
         $tracker->method('getName')->willReturn('Tracker 1');
         $tracker->method('getGroupId')->willReturn(101);

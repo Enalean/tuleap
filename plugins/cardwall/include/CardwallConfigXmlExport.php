@@ -23,6 +23,7 @@ use Tuleap\Cardwall\XML\XMLCardwallColumn;
 use Tuleap\Cardwall\XML\XMLCardwallMapping;
 use Tuleap\Cardwall\XML\XMLCardwallMappingValue;
 use Tuleap\Cardwall\XML\XMLCardwallTracker;
+use Tuleap\Tracker\Tracker;
 
 class CardwallConfigXmlExport
 {

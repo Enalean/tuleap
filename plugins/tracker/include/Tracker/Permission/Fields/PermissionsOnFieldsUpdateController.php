@@ -29,8 +29,8 @@ use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
-use Tuleap\Tracker\Permission\Fields\ByGroup\ByGroupController;
 use Tuleap\Tracker\Permission\Fields\ByField\ByFieldController;
+use Tuleap\Tracker\Permission\Fields\ByGroup\ByGroupController;
 
 class PermissionsOnFieldsUpdateController implements DispatchableWithRequest
 {
@@ -86,7 +86,7 @@ class PermissionsOnFieldsUpdateController implements DispatchableWithRequest
         }
     }
 
-    public static function getUrl(\Tracker $tracker)
+    public static function getUrl(\Tuleap\Tracker\Tracker $tracker)
     {
         return TRACKER_BASE_URL . self::URL . '/' . $tracker->getId();
     }

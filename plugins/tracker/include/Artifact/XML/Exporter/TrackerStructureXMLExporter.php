@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact\XML\Exporter;
 
-use Tracker;
 use Tracker_CannedResponseFactory;
 use Tracker_ReportFactory;
 use Tracker_RulesManager;
@@ -31,6 +30,7 @@ use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateComme
 use Tuleap\Tracker\FormElement\RetrieveFormElementsForTracker;
 use Tuleap\Tracker\Notifications\Settings\CheckEventShouldBeSentInNotification;
 use Tuleap\Tracker\PromotedTrackerDao;
+use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\Webhook\WebhookXMLExporter;
 use Tuleap\Tracker\Workflow\SimpleMode\SimpleWorkflowXMLExporter;
 use Tuleap\Tracker\XML\XMLTracker;
