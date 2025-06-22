@@ -72,6 +72,15 @@ final class ListStaticBindBuilder
     }
 
     /**
+     * @param array<int, Tracker_FormElement_Field_List_Bind_StaticValue> $values
+     */
+    public function withBuildStaticValues(array $values): self
+    {
+        $this->bind_values = $values;
+        return $this;
+    }
+
+    /**
      * @param Tracker_FormElement_Field_List_BindDecorator[] $decorators
      */
     public function withDecorators(array $decorators): self
