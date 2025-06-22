@@ -33,12 +33,14 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\Hierarchy\HierarchyDAO;
 use Tuleap\Tracker\Tracker;
+use Tuleap\Tracker\Tracker\XML\Importer\BuildTrackersHierarchy;
 use Tuleap\Tracker\Tracker\XML\Importer\CreateFromXml;
 use Tuleap\Tracker\Tracker\XML\Importer\FromXmlCreator;
 use Tuleap\Tracker\Tracker\XML\Importer\GetInstanceFromXml;
 use Tuleap\Tracker\Tracker\XML\Importer\InstantiateTrackerFromXml;
 use Tuleap\Tracker\Tracker\XML\Importer\OrderXmlTrackersByPriority;
 use Tuleap\Tracker\Tracker\XML\Importer\TrackerFromXmlInstantiator;
+use Tuleap\Tracker\Tracker\XML\Importer\TrackersHierarchyBuilder;
 use Tuleap\Tracker\Tracker\XML\Importer\XmlTrackersByPriorityOrderer;
 use Tuleap\Tracker\TrackerColor;
 use Tuleap\Tracker\TrackerIsInvalidException;
@@ -55,8 +57,6 @@ use Tuleap\XML\SimpleXMLElementBuilder;
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class TrackerXmlImport
 {
-    public const XML_PARENT_ID_EMPTY = '0';
-
     public const DEFAULT_NOTIFICATIONS_LEVEL = 0;
 
     /** @var TrackerFactory */
@@ -128,6 +128,7 @@ class TrackerXmlImport
         private readonly CreateFromXml $from_xml_creator,
         private readonly InstantiateTrackerFromXml $instantiate_tracker_from_xml,
         private readonly OrderXmlTrackersByPriority $xml_trackers_by_priority_orderer,
+        private readonly BuildTrackersHierarchy $hierarchy_builder,
     ) {
         $this->tracker_factory              = $tracker_factory;
         $this->event_manager                = $event_manager;
@@ -228,19 +229,8 @@ class TrackerXmlImport
                 $logger,
             ),
             new XmlTrackersByPriorityOrderer(),
+            new TrackersHierarchyBuilder(),
         );
-    }
-
-    /**
-     * @return String | bool the attribute value in String, False if this attribute does not exist
-     */
-    private function getXmlTrackerAttribute(SimpleXMLElement $xml_tracker, string $attribute_name)
-    {
-        $tracker_attributes = $xml_tracker->attributes();
-        if (! $tracker_attributes[$attribute_name]) {
-            return false;
-        }
-        return (string) $tracker_attributes[$attribute_name];
     }
 
     /**
@@ -543,7 +533,11 @@ class TrackerXmlImport
     {
         $all_hierarchies = [];
         foreach ($this->xml_trackers_by_priority_orderer->getAllXmlTrackersOrderedByPriority($xml_input) as $xml_tracker) {
-            $all_hierarchies = $this->buildTrackersHierarchy($all_hierarchies, $xml_tracker, $created_trackers_list);
+            $all_hierarchies = $this->hierarchy_builder->buildTrackersHierarchy(
+                $all_hierarchies,
+                $xml_tracker,
+                $created_trackers_list,
+            );
         }
 
         $this->storeHierarchyInDB($all_hierarchies);
@@ -619,29 +613,6 @@ class TrackerXmlImport
             $this->reports_xml_mapping,
             $this->renderers_xml_mapping,
         );
-    }
-
-    /**
-     *
-     *
-     * @return array The hierarchy array with new elements added
-     */
-    protected function buildTrackersHierarchy(array $hierarchy, SimpleXMLElement $xml_tracker, array $mapper)
-    {
-        $xml_parent_id = $this->getXmlTrackerAttribute($xml_tracker, 'parent_id');
-
-        if ($xml_parent_id != self::XML_PARENT_ID_EMPTY) {
-            $parent_id  = $mapper[$xml_parent_id];
-            $tracker_id = $mapper[$this->getXmlTrackerAttribute($xml_tracker, 'id')];
-
-            if (! isset($hierarchy[$parent_id])) {
-                $hierarchy[$parent_id] = [];
-            }
-
-            array_push($hierarchy[$parent_id], $tracker_id);
-        }
-
-        return $hierarchy;
     }
 
     /**
