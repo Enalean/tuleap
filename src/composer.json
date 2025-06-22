@@ -114,7 +114,6 @@
   "require-dev": {
     "colinodell/psr-testlogger": "^1.2",
     "mikey179/vfsstream": "^1.6",
-    "mockery/mockery": "^1.6.2",
     "php-http/mock-client": "^1.2",
     "php-standard-library/psalm-plugin": "^2.2",
     "phpunit/phpunit": "^11.5",
