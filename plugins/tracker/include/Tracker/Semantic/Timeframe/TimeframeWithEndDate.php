@@ -106,7 +106,7 @@ class TimeframeWithEndDate implements IComputeTimeframes
         );
     }
 
-    public function save(\Tracker $tracker, SemanticTimeframeDao $dao): bool
+    public function save(\Tuleap\Tracker\Tracker $tracker, SemanticTimeframeDao $dao): bool
     {
         return $dao->save(
             $tracker->getId(),
@@ -223,7 +223,7 @@ class TimeframeWithEndDate implements IComputeTimeframes
         return DatePeriodWithOpenDays::buildFromEndDate($start_date, $end_date, $logger);
     }
 
-    public function getTrackerFromWhichTimeframeIsImplied(): ?\Tracker
+    public function getTrackerFromWhichTimeframeIsImplied(): ?\Tuleap\Tracker\Tracker
     {
         return null;
     }

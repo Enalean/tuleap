@@ -22,9 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Test\Stub;
 
-use Tracker;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\RetrieveAnArtifactLinkField;
+use Tuleap\Tracker\Tracker;
 
 final class RetrieveAnArtifactLinkFieldStub implements RetrieveAnArtifactLinkField
 {

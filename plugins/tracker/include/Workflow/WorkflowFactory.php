@@ -22,6 +22,7 @@
 use Tuleap\Project\Duplication\DuplicationUserGroupMapping;
 use Tuleap\Tracker\Rule\TrackerRulesDateValidator;
 use Tuleap\Tracker\Rule\TrackerRulesListValidator;
+use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\RetrieveWorkflow;
 use Tuleap\Tracker\Workflow\SimpleMode\SimpleWorkflowDao;

@@ -48,7 +48,7 @@ class ArtifactReference
      */
     private $artifact;
 
-    protected function __construct(Artifact $artifact, \Tracker $tracker, string $format = '')
+    protected function __construct(Artifact $artifact, \Tuleap\Tracker\Tracker $tracker, string $format = '')
     {
         $this->id  = JsonCast::toInt($artifact->getId());
         $this->uri = ArtifactRepresentation::ROUTE . '/' . $this->id;

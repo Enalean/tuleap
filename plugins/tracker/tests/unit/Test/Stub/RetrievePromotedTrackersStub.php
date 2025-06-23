@@ -27,7 +27,7 @@ use Tuleap\Tracker\RetrievePromotedTrackers;
 final class RetrievePromotedTrackersStub implements RetrievePromotedTrackers
 {
     /**
-     * @param \Tracker[] $trackers
+     * @param \Tuleap\Tracker\Tracker[] $trackers
      */
     private function __construct(private readonly array $trackers)
     {
@@ -38,7 +38,7 @@ final class RetrievePromotedTrackersStub implements RetrievePromotedTrackers
         return new self([]);
     }
 
-    public static function withTrackers(\Tracker $tracker, \Tracker ...$other_trackers): self
+    public static function withTrackers(\Tuleap\Tracker\Tracker $tracker, \Tuleap\Tracker\Tracker ...$other_trackers): self
     {
         return new self([$tracker, ...$other_trackers]);
     }

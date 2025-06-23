@@ -316,7 +316,7 @@ class ArtifactsResource extends AuthenticatedResource
             ),
             new PermissionsRepresentationBuilder($ugroup_manager, $permissions_functions_wrapper),
             new WorkflowRestBuilder(),
-            static fn(\Tracker $tracker) => new \Tracker_SemanticManager($tracker),
+            static fn(\Tuleap\Tracker\Tracker $tracker) => new \Tracker_SemanticManager($tracker),
             new ParentInHierarchyRetriever(new HierarchyDAO(), $this->tracker_factory),
             TrackersPermissionsRetriever::build()
         );

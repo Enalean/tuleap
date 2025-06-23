@@ -70,8 +70,8 @@ final class MoveChangesetXMLDuckTypingUpdaterTest extends TestCase
     private MoveChangesetXMLDuckTypingUpdater $updater;
     private \PFUser $current_user;
     private \PFUser $artifact_submitter;
-    private \Tracker $source_tracker;
-    private \Tracker $destination_tracker;
+    private \Tuleap\Tracker\Tracker $source_tracker;
+    private \Tuleap\Tracker\Tracker $destination_tracker;
 
     protected function setUp(): void
     {

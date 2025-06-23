@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\CrossTracker\Query\Advanced\SelectBuilder\Field;
 
 use PFUser;
-use Tracker;
 use Tracker_FormElement_Field;
 use Tuleap\CrossTracker\Query\Advanced\DuckTypedField\Select\DuckTypedFieldSelect;
 use Tuleap\CrossTracker\Query\Advanced\DuckTypedField\Select\DuckTypedFieldTypeSelect;
@@ -40,6 +39,7 @@ use Tuleap\Tracker\FormElement\RetrieveFieldType;
 use Tuleap\Tracker\Permission\FieldPermissionType;
 use Tuleap\Tracker\Permission\RetrieveUserPermissionOnFields;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
+use Tuleap\Tracker\Tracker;
 
 final readonly class FieldSelectFromBuilder
 {

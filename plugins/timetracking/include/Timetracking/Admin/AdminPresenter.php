@@ -21,7 +21,7 @@
 namespace Tuleap\Timetracking\Admin;
 
 use CSRFSynchronizerToken;
-use Tracker;
+use Tuleap\Tracker\Tracker;
 
 class AdminPresenter
 {

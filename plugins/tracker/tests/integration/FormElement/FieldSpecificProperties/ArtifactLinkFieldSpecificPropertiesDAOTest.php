@@ -43,12 +43,12 @@ final class ArtifactLinkFieldSpecificPropertiesDAOTest extends TestIntegrationTe
         $this->dao             = new ArtifactLinkFieldSpecificPropertiesDAO();
     }
 
-    private function createTrackerInProject(Project $project, string $name): \Tracker
+    private function createTrackerInProject(Project $project, string $name): \Tuleap\Tracker\Tracker
     {
         return $this->tracker_builder->buildTracker((int) $project->getId(), $name);
     }
 
-    private function createArtifactLinksFieldInTracker(\Tracker $tracker): int
+    private function createArtifactLinksFieldInTracker(\Tuleap\Tracker\Tracker $tracker): int
     {
         return $this->tracker_builder->buildArtifactLinkField($tracker->getId());
     }

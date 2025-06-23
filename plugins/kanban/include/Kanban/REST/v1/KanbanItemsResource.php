@@ -23,7 +23,6 @@ use BackendLogger;
 use EventManager;
 use Luracast\Restler\RestException;
 use PFUser;
-use Tracker;
 use Tracker_Artifact_Changeset_InitialChangesetFieldsValidator;
 use Tracker_ArtifactFactory;
 use Tracker_FormElement_Field_List;
@@ -60,6 +59,7 @@ use Tuleap\Tracker\REST\Artifact\ChangesetValue\FieldsDataFromValuesByFieldBuild
 use Tuleap\Tracker\REST\TrackerReference;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
+use Tuleap\Tracker\Tracker;
 use UserManager;
 use WrapperLogger;
 

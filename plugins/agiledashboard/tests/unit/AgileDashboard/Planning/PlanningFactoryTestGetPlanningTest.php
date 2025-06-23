@@ -28,13 +28,13 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Planning;
 use PlanningFactory;
 use PlanningPermissionsManager;
-use Tracker;
 use Tracker_Hierarchy;
 use TrackerFactory;
 use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PlanningFactoryTestGetPlanningTest extends TestCase

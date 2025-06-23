@@ -22,8 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Admin\ArtifactsDeletion;
 
-use Tracker;
 use Tuleap\Request\CSRFSynchronizerTokenInterface;
+use Tuleap\Tracker\Tracker;
 
 final class ArtifactsConfirmDeletionInTrackerAdminUrlBuilder
 {

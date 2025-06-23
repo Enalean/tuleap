@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Tracker;
+
 /**
  * Provide a link between a Tracker_Artifact and a Tracker_FormElement_Field
  */

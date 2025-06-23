@@ -20,8 +20,8 @@
 
 namespace Tuleap\Tracker\Admin;
 
-use Tracker;
 use Tuleap\Tracker\Admin\ArtifactsDeletion\ArtifactsDeletionInTrackerAdminUrlBuilder;
+use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\Workflow\WorkflowMenuPresenter;
 
 class HeaderPresenter

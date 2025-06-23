@@ -27,7 +27,6 @@ use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
 use Project;
 use ProjectUGroup;
-use Tracker;
 use Tuleap\CrossTracker\Query\Advanced\CrossTrackerFieldTestCase;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Representations\TrackerRepresentation;
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerQueryContentRepresentation;
@@ -40,6 +39,7 @@ use Tuleap\Test\Builders\CoreDatabaseBuilder;
 use Tuleap\Test\Stubs\CheckProjectAccessStub;
 use Tuleap\Test\Stubs\SearchLinkedProjectsStub;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
+use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FromProjectAggregatedTest extends CrossTrackerFieldTestCase

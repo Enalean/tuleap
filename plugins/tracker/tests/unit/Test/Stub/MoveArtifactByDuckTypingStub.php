@@ -24,11 +24,11 @@ namespace Tuleap\Tracker\Test\Stub;
 
 use PFUser;
 use Psr\Log\LoggerInterface;
-use Tracker;
 use Tracker_XML_Importer_ArtifactImportedMapping;
 use Tuleap\Tracker\Action\DuckTypedMoveFieldCollection;
 use Tuleap\Tracker\Action\MoveArtifactByDuckTyping;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Tracker;
 
 final class MoveArtifactByDuckTypingStub implements MoveArtifactByDuckTyping
 {

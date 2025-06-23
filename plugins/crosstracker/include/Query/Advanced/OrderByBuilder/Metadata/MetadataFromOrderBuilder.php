@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\CrossTracker\Query\Advanced\OrderByBuilder\Metadata;
 
 use LogicException;
-use Tracker;
 use Tuleap\CrossTracker\Query\Advanced\AllowedMetadata;
 use Tuleap\CrossTracker\Query\Advanced\OrderByBuilder\Field\StaticList\StaticListFromOrderBuilder;
 use Tuleap\CrossTracker\Query\Advanced\OrderByBuilder\Field\Text\TextFromOrderBuilder;
@@ -36,6 +35,7 @@ use Tuleap\Tracker\Semantic\Contributor\RetrieveContributorField;
 use Tuleap\Tracker\Semantic\Description\GetDescriptionSemantic;
 use Tuleap\Tracker\Semantic\Status\RetrieveStatusField;
 use Tuleap\Tracker\Semantic\Title\GetTitleSemantic;
+use Tuleap\Tracker\Tracker;
 
 final readonly class MetadataFromOrderBuilder
 {

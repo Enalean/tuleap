@@ -42,7 +42,7 @@ final class TaskRepresentationBuilderForTrackerTest extends \Tuleap\Test\PHPUnit
     private \PHPUnit\Framework\MockObject\MockObject&SemanticProgressBuilder $progress_builder;
     private \PHPUnit\Framework\MockObject\MockObject&IRetrieveDependencies $dependencies_retriever;
     private \PHPUnit\Framework\MockObject\MockObject&TimeframeImpliedFromAnotherTracker $timeframe_calculator;
-    private \Tracker $tracker;
+    private \Tuleap\Tracker\Tracker $tracker;
 
     protected function setUp(): void
     {

@@ -24,12 +24,12 @@ namespace Tuleap\CrossTracker\Query\Advanced;
 
 use ForgeConfig;
 use PFUser;
-use Tracker;
 use Tuleap\CrossTracker\Query\CrossTrackerArtifactQueryFactory;
 use Tuleap\Tracker\Report\Query\Advanced\IBuildInvalidSelectablesCollection;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidSelectablesCollection;
 use Tuleap\Tracker\Report\Query\Advanced\SelectablesMustBeUniqueException;
 use Tuleap\Tracker\Report\Query\Advanced\SelectLimitExceededException;
+use Tuleap\Tracker\Tracker;
 
 final readonly class InvalidSelectablesCollectionBuilder implements IBuildInvalidSelectablesCollection
 {

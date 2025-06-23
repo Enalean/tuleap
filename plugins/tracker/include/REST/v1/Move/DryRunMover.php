@@ -24,11 +24,11 @@ namespace Tuleap\Tracker\REST\v1\Move;
 
 use PFUser;
 use Psr\Log\LoggerInterface;
-use Tracker;
 use Tuleap\Tracker\Action\CollectDryRunTypingField;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Exception\MoveArtifactSemanticsException;
 use Tuleap\Tracker\REST\v1\ArtifactPatchResponseRepresentation;
+use Tuleap\Tracker\Tracker;
 
 final class DryRunMover implements MoveDryRun
 {

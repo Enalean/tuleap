@@ -37,8 +37,8 @@ final class RejectNonTrackerAdministratorMiddleware implements MiddlewareInterfa
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $tracker = $request->getAttribute(\Tracker::class);
-        if (! $tracker instanceof \Tracker) {
+        $tracker = $request->getAttribute(\Tuleap\Tracker\Tracker::class);
+        if (! $tracker instanceof \Tuleap\Tracker\Tracker) {
             throw new \LogicException('This middleware needs a Tracker.');
         }
 

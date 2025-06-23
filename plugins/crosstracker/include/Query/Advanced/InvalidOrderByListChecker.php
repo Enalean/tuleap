@@ -23,11 +23,11 @@ declare(strict_types=1);
 namespace Tuleap\CrossTracker\Query\Advanced;
 
 use LogicException;
-use Tracker;
 use Tracker_FormElement_Field_List;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 use Tuleap\Tracker\Semantic\Contributor\RetrieveContributorField;
 use Tuleap\Tracker\Semantic\Status\RetrieveStatusField;
+use Tuleap\Tracker\Tracker;
 
 final readonly class InvalidOrderByListChecker
 {

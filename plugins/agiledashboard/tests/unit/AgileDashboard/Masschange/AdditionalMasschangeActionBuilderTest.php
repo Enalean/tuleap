@@ -26,7 +26,6 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Planning;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use TemplateRenderer;
-use Tracker;
 use Tuleap\AgileDashboard\BlockScrumAccess;
 use Tuleap\AgileDashboard\Stub\VerifyProjectUsesExplicitBacklogStub;
 use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
@@ -37,6 +36,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\EventDispatcherStub;
 use Tuleap\Test\Stubs\TemplateRendererStub;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AdditionalMasschangeActionBuilderTest extends TestCase

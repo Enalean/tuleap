@@ -23,12 +23,12 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Permission;
 
 use ProjectUGroup;
-use Tracker;
 use Tracker_ArtifactFactory;
 use Tuleap\DB\DBFactory;
 use Tuleap\Test\Builders\CoreDatabaseBuilder;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
+use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TrackersPermissionsDaoOnArtifactsTest extends TestIntegrationTestCase

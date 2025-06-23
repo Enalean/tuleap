@@ -27,7 +27,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Timetracking\Time;
 
-use Tracker;
+use Tuleap\Tracker\Tracker;
 
 class TimetrackingReport
 {

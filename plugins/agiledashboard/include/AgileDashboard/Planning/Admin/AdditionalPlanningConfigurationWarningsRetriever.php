@@ -20,8 +20,8 @@
 
 namespace Tuleap\AgileDashboard\Planning\Admin;
 
-use Tracker;
 use Tuleap\Event\Dispatchable;
+use Tuleap\Tracker\Tracker;
 
 final class AdditionalPlanningConfigurationWarningsRetriever implements Dispatchable
 {

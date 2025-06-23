@@ -26,7 +26,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 
 class ArtifactHasTooManyLinksToArtifactsOfTargetTracker extends \Exception
 {
-    public function __construct(Artifact $artifact, \Tracker $target_tracker)
+    public function __construct(Artifact $artifact, \Tuleap\Tracker\Tracker $target_tracker)
     {
         parent::__construct(
             sprintf(

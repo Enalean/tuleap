@@ -76,6 +76,7 @@ use Tuleap\Tracker\Report\Query\QueryDao;
 use Tuleap\Tracker\Report\TrackerCreationSuccess\SuccessPresenter;
 use Tuleap\Tracker\Report\TrackerReportConfig;
 use Tuleap\Tracker\Report\TrackerReportConfigDao;
+use Tuleap\Tracker\Tracker;
 
 /**
  * Set of criteria + set of Renderer to search and display artifacts

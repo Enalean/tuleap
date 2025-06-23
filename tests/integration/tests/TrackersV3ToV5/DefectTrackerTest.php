@@ -26,7 +26,6 @@ namespace Tuleap\TrackersV3ToV5;
 use ArtifactType;
 use ProjectManager;
 use ProjectUGroup;
-use Tracker;
 use Tracker_FormElement;
 use Tracker_FormElement_Field_Date;
 use Tracker_FormElement_Field_List;
@@ -43,6 +42,7 @@ use Tuleap\DB\DBFactory;
 use Tuleap\Disposable\Dispose;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\Helpers\CodendiLogSwitcher;
+use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DefectTrackerTest extends \Tuleap\Test\PHPUnit\TestCase

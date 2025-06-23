@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Query\Advanced\OrderByBuilder\Field;
 
-use Tracker;
 use Tuleap\CrossTracker\Query\Advanced\DuckTypedField\OrderBy\DuckTypedFieldOrderBy;
 use Tuleap\CrossTracker\Query\Advanced\DuckTypedField\OrderBy\DuckTypedFieldTypeOrderBy;
 use Tuleap\CrossTracker\Query\Advanced\OrderByBuilder\Field\Date\DateFromOrderBuilder;
@@ -37,6 +36,7 @@ use Tuleap\CrossTracker\Query\Advanced\ReadableFieldRetriever;
 use Tuleap\Tracker\FormElement\RetrieveFieldType;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrderByDirection;
+use Tuleap\Tracker\Tracker;
 
 final readonly class FieldFromOrderBuilder
 {

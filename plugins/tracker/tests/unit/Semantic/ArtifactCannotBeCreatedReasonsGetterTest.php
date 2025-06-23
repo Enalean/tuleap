@@ -39,7 +39,7 @@ final class ArtifactCannotBeCreatedReasonsGetterTest extends TestCase
     private RetrieveUsedFieldsStub $used_fields_retriever;
     private GetTitleSemanticStub $semantic_title_factory;
     private Tracker_FormElement_Field_Text $semantic_title_field;
-    private \Tracker $tracker;
+    private \Tuleap\Tracker\Tracker $tracker;
 
     protected function setUp(): void
     {

@@ -343,7 +343,7 @@ final class ArtifactRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestC
         self::assertEquals([$second_representation, $first_representation], $representation->toArray());
     }
 
-    private function buildTrackerMock(): \Tracker
+    private function buildTrackerMock(): \Tuleap\Tracker\Tracker
     {
         $project = ProjectTestBuilder::aProject()->withId(1478)->build();
 

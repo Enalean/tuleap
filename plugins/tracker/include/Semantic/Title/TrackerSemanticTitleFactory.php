@@ -22,11 +22,11 @@
 namespace Tuleap\Tracker\Semantic\Title;
 
 use SimpleXMLElement;
-use Tracker;
 use Tracker_Semantic;
 use Tuleap\Option\Option;
 use Tuleap\Tracker\Semantic\IBuildSemanticFromXML;
 use Tuleap\Tracker\Semantic\IDuplicateSemantic;
+use Tuleap\Tracker\Tracker;
 
 class TrackerSemanticTitleFactory implements IBuildSemanticFromXML, IDuplicateSemantic, GetTitleSemantic
 {

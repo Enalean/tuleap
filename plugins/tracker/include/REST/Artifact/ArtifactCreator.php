@@ -21,7 +21,6 @@
 namespace Tuleap\Tracker\REST\Artifact;
 
 use PFUser;
-use Tracker;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\ArtifactDoesNotExistException;
 use Tuleap\Tracker\Artifact\ChangesetValue\AddDefaultValuesToFieldsData;
@@ -34,6 +33,7 @@ use Tuleap\Tracker\REST\Artifact\ChangesetValue\FieldsDataFromValuesByFieldBuild
 use Tuleap\Tracker\REST\TrackerReference;
 use Tuleap\Tracker\RetrieveTracker;
 use Tuleap\Tracker\Semantic\SemanticNotSupportedException;
+use Tuleap\Tracker\Tracker;
 
 class ArtifactCreator implements CreateArtifact
 {

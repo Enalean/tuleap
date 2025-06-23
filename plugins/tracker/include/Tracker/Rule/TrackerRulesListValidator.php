@@ -24,10 +24,10 @@ namespace Tuleap\Tracker\Rule;
 
 use Feedback;
 use Psr\Log\LoggerInterface;
-use Tracker;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElementFactory;
 use Tracker_Rule_List;
+use Tuleap\Tracker\Tracker;
 
 class TrackerRulesListValidator
 {

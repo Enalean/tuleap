@@ -24,7 +24,6 @@ namespace Tuleap\CrossTracker\Query\Advanced\QueryValidation\Metadata;
 
 use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
-use Tracker;
 use Tracker_FormElement_Field_SubmittedOn;
 use Tracker_FormElementFactory;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -36,6 +35,7 @@ use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\Semantic\Description\SearchTrackersWithoutDescriptionSemanticStub;
 use Tuleap\Tracker\Test\Stub\Semantic\Title\SearchTrackersWithoutTitleSemanticStub;
+use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MetadataUsageCheckerTest extends TestCase

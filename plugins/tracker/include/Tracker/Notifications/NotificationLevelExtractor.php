@@ -21,7 +21,7 @@
 namespace Tuleap\Tracker\Notifications;
 
 use HTTPRequest;
-use Tracker;
+use Tuleap\Tracker\Tracker;
 
 class NotificationLevelExtractor
 {

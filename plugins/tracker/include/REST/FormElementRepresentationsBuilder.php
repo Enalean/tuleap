@@ -21,7 +21,6 @@
 namespace Tuleap\Tracker\REST;
 
 use PFUser;
-use Tracker;
 use Tracker_FormElement;
 use Tracker_FormElement_Container_Fieldset;
 use Tracker_FormElement_Field_Date;
@@ -37,6 +36,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\IRetrieveAllUsableTypesIn
 use Tuleap\Tracker\REST\FormElement\FieldFileRepresentation;
 use Tuleap\Tracker\REST\FormElement\LinksFieldRepresentation;
 use Tuleap\Tracker\REST\FormElement\PermissionsForGroupsBuilder;
+use Tuleap\Tracker\Tracker;
 
 class FormElementRepresentationsBuilder
 {

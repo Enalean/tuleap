@@ -33,7 +33,6 @@ use Cardwall_CardPresenter;
 use Cardwall_OnTop_Config_TrackerMapping;
 use Cardwall_SingleCard;
 use Cardwall_UserPreferences_UserPreferencesDisplayUser;
-use Tracker;
 use Tracker_Artifact_Changeset_Null;
 use Tracker_FormElement_Field_Float;
 use Tracker_FormElement_Field_Selectbox;
@@ -42,6 +41,7 @@ use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class Cardwall_CardControllerTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps

@@ -25,9 +25,9 @@ namespace Tuleap\Tracker\Artifact\XML\Exporter;
 use PFUser;
 use Project;
 use SimpleXMLElement;
-use Tracker;
 use Tuleap\Event\Dispatchable;
 use Tuleap\Project\XML\Export\ArchiveInterface;
+use Tuleap\Tracker\Tracker;
 
 class TrackerEventExportFullXML implements Dispatchable
 {

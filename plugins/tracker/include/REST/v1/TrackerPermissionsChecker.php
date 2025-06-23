@@ -21,8 +21,8 @@ namespace Tuleap\Tracker\REST\v1;
 
 use Luracast\Restler\RestException;
 use PFUser;
-use Tracker;
 use Tuleap\REST\ProjectAuthorization;
+use Tuleap\Tracker\Tracker;
 use URLVerification;
 
 /**

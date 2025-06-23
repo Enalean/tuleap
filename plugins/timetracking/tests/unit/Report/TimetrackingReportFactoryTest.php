@@ -59,7 +59,7 @@ final class TimetrackingReportFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testGetReportByIdRetrievesTimeTrackingReport(): void
     {
-        $tracker = $this->createMock(\Tracker::class);
+        $tracker = $this->createMock(\Tuleap\Tracker\Tracker::class);
         $tracker->method('userCanView')->willReturn(true);
 
         $this->timetracking_report_dao->method('searchReportById')->willReturn(1);

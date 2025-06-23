@@ -263,7 +263,7 @@ class MilestoneRepresentation
         $representation_type,
         ?\Planning $sub_planning,
         PaneInfoCollector $pane_info_collector,
-        ?\Tracker $sub_milestone_tracker,
+        ?\Tuleap\Tracker\Tracker $sub_milestone_tracker,
         OriginalProjectCollector $original_project_collector,
         ProjectBackgroundConfiguration $project_background_configuration,
     ): self {

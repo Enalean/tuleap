@@ -27,11 +27,11 @@ use Tuleap\Artidoc\Domain\Document\Artidoc;
 
 final readonly class RetrieveConfiguredTrackerStub implements RetrieveConfiguredTracker
 {
-    private function __construct(private ?\Tracker $tracker)
+    private function __construct(private ?\Tuleap\Tracker\Tracker $tracker)
     {
     }
 
-    public static function withTracker(\Tracker $tracker): self
+    public static function withTracker(\Tuleap\Tracker\Tracker $tracker): self
     {
         return new self($tracker);
     }
@@ -41,7 +41,7 @@ final readonly class RetrieveConfiguredTrackerStub implements RetrieveConfigured
         return new self(null);
     }
 
-    public function getTracker(Artidoc $document): ?\Tracker
+    public function getTracker(Artidoc $document): ?\Tuleap\Tracker\Tracker
     {
         return $this->tracker;
     }

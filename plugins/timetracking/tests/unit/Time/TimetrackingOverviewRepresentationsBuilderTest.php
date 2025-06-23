@@ -26,13 +26,13 @@
 namespace Tuleap\Timetracking\Time;
 
 use Project;
-use Tracker;
 use Tracker_REST_TrackerRestBuilder;
 use TrackerFactory;
 use Tuleap\Timetracking\Admin\AdminDao;
 use Tuleap\Timetracking\Permissions\PermissionsRetriever;
 use Tuleap\Timetracking\REST\v1\TimetrackingOverviewRepresentationsBuilder;
 use Tuleap\Tracker\REST\CompleteTrackerRepresentation;
+use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\TrackerColor;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]

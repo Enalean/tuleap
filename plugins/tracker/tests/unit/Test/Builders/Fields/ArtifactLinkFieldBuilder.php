@@ -37,7 +37,7 @@ final class ArtifactLinkFieldBuilder
     private bool $is_required     = false;
     private string $notifications = '';
     private int $rank             = 1;
-    private \Tracker $tracker;
+    private \Tuleap\Tracker\Tracker $tracker;
 
     private function __construct(private int $id)
     {
@@ -74,7 +74,7 @@ final class ArtifactLinkFieldBuilder
         return $this;
     }
 
-    public function inTracker(\Tracker $tracker): self
+    public function inTracker(\Tuleap\Tracker\Tracker $tracker): self
     {
         $this->tracker = $tracker;
         return $this;

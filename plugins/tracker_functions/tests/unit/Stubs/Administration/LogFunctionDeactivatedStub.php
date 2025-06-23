@@ -37,7 +37,7 @@ final class LogFunctionDeactivatedStub implements LogFunctionDeactivated
         return new self();
     }
 
-    public function logFunctionDeactivated(\PFUser $user, \Tracker $tracker): void
+    public function logFunctionDeactivated(\PFUser $user, \Tuleap\Tracker\Tracker $tracker): void
     {
         $this->logged = true;
     }

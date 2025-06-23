@@ -24,8 +24,8 @@ namespace Tuleap\TestManagement;
 
 use Project;
 use Psr\Log\LoggerInterface;
-use Tracker;
 use TrackerXmlImport;
+use Tuleap\Tracker\Tracker;
 
 class TestmanagementTrackersCreator
 {

@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\REST\v1\Move;
 
 use Psr\Log\LoggerInterface;
-use Tracker;
 use Tuleap\Tracker\Action\BuildArtifactLinksMappingForDuckTypedMove;
 use Tuleap\Tracker\Action\CollectDryRunTypingField;
 use Tuleap\Tracker\Action\MoveArtifactByDuckTyping;
@@ -34,6 +33,7 @@ use Tuleap\Tracker\Exception\MoveArtifactNotDoneException;
 use Tuleap\Tracker\Exception\MoveArtifactNoValuesToProcessException;
 use Tuleap\Tracker\Exception\MoveArtifactSemanticsException;
 use Tuleap\Tracker\Exception\MoveArtifactTargetProjectNotActiveException;
+use Tuleap\Tracker\Tracker;
 
 final class RestArtifactMover implements MoveRestArtifact
 {

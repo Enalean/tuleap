@@ -21,10 +21,10 @@
 
 namespace Tuleap\Tracker\Semantic\Tooltip;
 
-use Tracker;
 use Tracker_Semantic;
 use Tracker_Semantic_CollectionOfFieldsDuplicator;
 use Tuleap\Tracker\Semantic\IBuildSemanticFromXML;
+use Tuleap\Tracker\Tracker;
 
 class SemanticTooltipFactory implements IBuildSemanticFromXML
 {

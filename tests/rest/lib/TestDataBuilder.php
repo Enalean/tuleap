@@ -22,6 +22,7 @@
 use Tuleap\admin\ProjectCreation\ProjectFields\ProjectFieldsDao;
 use Tuleap\admin\ProjectEdit\ProjectEditDao;
 use Tuleap\Project\Admin\ProjectDetails\ProjectDetailsDAO;
+use Tuleap\Tracker\Tracker;
 use Tuleap\User\ForgeUserGroupPermission\RestProjectManagementPermission;
 use Tuleap\User\ForgeUserGroupPermission\RESTReadOnlyAdmin\RestReadOnlyAdminPermission;
 

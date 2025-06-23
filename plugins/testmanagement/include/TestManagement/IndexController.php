@@ -124,7 +124,7 @@ class IndexController extends TestManagementController
             return $empty_config;
         }
 
-        assert($issue_tracker instanceof \Tracker);
+        assert($issue_tracker instanceof \Tuleap\Tracker\Tracker);
 
         $execution_tracker_id = $this->config->getTestExecutionTrackerId($this->project);
 

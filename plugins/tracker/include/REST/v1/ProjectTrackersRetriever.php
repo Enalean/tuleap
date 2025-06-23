@@ -23,9 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\REST\v1;
 
 use Project;
-use Tracker;
 use Tuleap\Tracker\RetrieveTrackersByProjectIdUserCanAdministrate;
 use Tuleap\Tracker\RetrieveTrackersByProjectIdUserCanView;
+use Tuleap\Tracker\Tracker;
 
 final class ProjectTrackersRetriever
 {

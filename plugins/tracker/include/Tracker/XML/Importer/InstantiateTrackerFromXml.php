@@ -22,11 +22,11 @@ namespace Tuleap\Tracker\Tracker\XML\Importer;
 
 use Project;
 use SimpleXMLElement;
-use Tracker;
 use Tracker_Exception;
 use TrackerFromXmlException;
 use TrackerFromXmlImportCannotBeCreatedException;
 use Tuleap\Project\XML\Import\ImportConfig;
+use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\TrackerXMLFieldMappingFromExistingTracker;
 use XML_ParseException;
 

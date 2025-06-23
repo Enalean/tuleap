@@ -23,9 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\AgileDashboard\ExplicitBacklog;
 
 use PFUser;
-use Tracker;
 use Tracker_ArtifactFactory;
 use Tuleap\AgileDashboard\Artifact\PlannedArtifactDao;
+use Tuleap\Tracker\Tracker;
 
 class UnplannedReportCriterionMatchingIdsRetriever
 {

@@ -31,7 +31,6 @@ use Cardwall_OnTop_Config_TrackerMappingStatus;
 use Cardwall_OnTop_Config_ValueMappingFactory;
 use PHPUnit\Framework\MockObject\MockObject;
 use TestHelper;
-use Tracker;
 use Tracker_FormElement_Field_Selectbox;
 use Tracker_FormElementFactory;
 use TrackerFactory;
@@ -40,6 +39,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
 use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class Cardwall_OnTop_Config_TrackerMappingFactoryTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps

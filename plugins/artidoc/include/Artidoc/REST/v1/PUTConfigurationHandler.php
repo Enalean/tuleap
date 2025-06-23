@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\Artidoc\REST\v1;
 
 use PFUser;
-use Tracker;
 use Tuleap\Artidoc\Document\Field\SuitableFieldRetriever;
 use Tuleap\Artidoc\Document\SaveConfiguration;
 use Tuleap\Artidoc\Document\Tracker\CheckTrackerIsSuitableForDocument;
@@ -39,6 +38,7 @@ use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Tracker\RetrieveTracker;
+use Tuleap\Tracker\Tracker;
 
 final readonly class PUTConfigurationHandler
 {

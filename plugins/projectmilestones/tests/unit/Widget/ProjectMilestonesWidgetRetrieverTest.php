@@ -22,16 +22,16 @@ declare(strict_types=1);
 
 namespace Tuleap\ProjectMilestones\Widget;
 
-use Tuleap\Project\ProjectAccessChecker;
-use HTTPRequest;
-use ProjectManager;
-use Tuleap\ProjectMilestones\Milestones\ProjectMilestonesDao;
 use CSRFSynchronizerToken;
-use TemplateRenderer;
-use Project;
+use HTTPRequest;
 use PFUser;
-use Project_AccessProjectNotFoundException;
 use Planning;
+use Project;
+use Project_AccessProjectNotFoundException;
+use ProjectManager;
+use TemplateRenderer;
+use Tuleap\Project\ProjectAccessChecker;
+use Tuleap\ProjectMilestones\Milestones\ProjectMilestonesDao;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBrokenConfigurationException;
@@ -123,7 +123,7 @@ final class ProjectMilestonesWidgetRetrieverTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testGetExceptionContentWhenThereIsNoProject(): void
     {
-        $tracker = $this->createMock(\Tracker::class);
+        $tracker = $this->createMock(\Tuleap\Tracker\Tracker::class);
         $tracker->method('getId')->willReturn(110);
         $this->presenter_builder->method('getProjectMilestonePresenter')->willThrowException(new TimeframeBrokenConfigurationException($tracker));
         $content = $this->retriever->getContent(null, null);

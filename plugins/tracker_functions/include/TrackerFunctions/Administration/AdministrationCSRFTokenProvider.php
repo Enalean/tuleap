@@ -26,7 +26,7 @@ use Tuleap\Request\CSRFSynchronizerTokenInterface;
 
 final class AdministrationCSRFTokenProvider implements TrackerCSRFTokenProvider
 {
-    public function getToken(\Tracker $tracker): CSRFSynchronizerTokenInterface
+    public function getToken(\Tuleap\Tracker\Tracker $tracker): CSRFSynchronizerTokenInterface
     {
         return new \CSRFSynchronizerToken(AdministrationController::getUrl($tracker));
     }

@@ -23,6 +23,7 @@
 
 use Tuleap\AgileDashboard\Semantic\InitialEffortSemanticAdminPresenterBuilder;
 use Tuleap\AgileDashboard\Semantic\SemanticInitialEffortPossibleFieldRetriever;
+use Tuleap\Tracker\Tracker;
 
 class AgileDashBoard_Semantic_InitialEffort extends Tracker_Semantic
 {

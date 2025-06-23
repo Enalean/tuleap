@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Field;
 
 use PFUser;
-use Tracker;
 use Tuleap\CrossTracker\Query\Advanced\DuckTypedField\Select\DuckTypedFieldSelect;
 use Tuleap\CrossTracker\Query\Advanced\DuckTypedField\Select\DuckTypedFieldTypeSelect;
 use Tuleap\CrossTracker\Query\Advanced\ReadableFieldRetriever;
@@ -36,6 +35,7 @@ use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Field\UserList\UserListResu
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\SelectedValuesCollection;
 use Tuleap\Tracker\FormElement\RetrieveFieldType;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
+use Tuleap\Tracker\Tracker;
 
 final readonly class FieldResultBuilder
 {

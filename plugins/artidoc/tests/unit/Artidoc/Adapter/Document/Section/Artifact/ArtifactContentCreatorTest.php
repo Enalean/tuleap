@@ -58,7 +58,7 @@ final class ArtifactContentCreatorTest extends TestCase
     private Tracker_FormElement_Field_Text $readonly_description_field;
     private Tracker_FormElement_Field_Text $submitatable_description_field;
     private ArtidocWithContext $artidoc;
-    private \Tracker $tracker;
+    private \Tuleap\Tracker\Tracker $tracker;
 
     protected function setUp(): void
     {

@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Cardwall\OnTop\Config\ColumnCollection;
+use Tuleap\Tracker\Tracker;
 
 require_once dirname(__FILE__) . '/../../constants.php';
 

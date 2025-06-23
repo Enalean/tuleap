@@ -24,7 +24,6 @@ use Codendi_Request;
 use CSRFSynchronizerToken;
 use Feedback;
 use PFUser;
-use Tracker;
 use Tracker_ArtifactFactory;
 use TrackerFactory;
 use Tuleap\Timetracking\Admin\AdminController;
@@ -38,6 +37,7 @@ use Tuleap\Timetracking\Exceptions\TimeTrackingNotBelongToUserException;
 use Tuleap\Timetracking\Exceptions\TimeTrackingNoTimeException;
 use Tuleap\Timetracking\Time\TimeController;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Tracker;
 
 class Router
 {

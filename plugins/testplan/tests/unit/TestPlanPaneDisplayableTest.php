@@ -26,9 +26,9 @@ use AgileDashboardPlugin;
 use PFUser;
 use Project;
 use testmanagementPlugin;
-use Tracker;
 use TrackerFactory;
 use Tuleap\TestManagement\Config;
+use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TestPlanPaneDisplayableTest extends \Tuleap\Test\PHPUnit\TestCase

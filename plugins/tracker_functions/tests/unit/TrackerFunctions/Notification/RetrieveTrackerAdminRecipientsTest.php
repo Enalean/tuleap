@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\TrackerFunctions\Notification;
 
-use Tracker;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\ProjectUGroupTestBuilder;
@@ -30,6 +29,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\Project\ProjectAdminsUGroupRetrieverStub;
 use Tuleap\Test\Stubs\UGroupRetrieverStub;
+use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RetrieveTrackerAdminRecipientsTest extends TestCase

@@ -73,7 +73,7 @@ final class FrozenFieldsValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $frozen_fields_value = new FrozenFieldsValue([1, 2]);
 
-        $tracker = $this->createMock(\Tracker::class);
+        $tracker = $this->createMock(\Tuleap\Tracker\Tracker::class);
         $tracker->method('getId')->willReturn(101);
 
         $workflow = $this->createMock(\Workflow::class);
@@ -102,7 +102,7 @@ final class FrozenFieldsValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $frozen_fields_value = new FrozenFieldsValue([1, 1, 2]);
 
-        $tracker = $this->createMock(\Tracker::class);
+        $tracker = $this->createMock(\Tuleap\Tracker\Tracker::class);
         $tracker->method('getId')->willReturn(101);
 
         $this->expectException(InvalidPostActionException::class);
@@ -136,7 +136,7 @@ final class FrozenFieldsValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $frozen_fields_value = new FrozenFieldsValue([1, 3]);
 
-        $tracker  = $this->createMock(\Tracker::class);
+        $tracker  = $this->createMock(\Tuleap\Tracker\Tracker::class);
         $workflow = $this->createMock(\Workflow::class);
 
         $workflow->expects($this->once())->method('getFieldId')->willReturn(2);
@@ -176,7 +176,7 @@ final class FrozenFieldsValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->expectException(InvalidPostActionException::class);
 
-        $tracker  = $this->createMock(\Tracker::class);
+        $tracker  = $this->createMock(\Tuleap\Tracker\Tracker::class);
         $workflow = $this->createMock(\Workflow::class);
 
         $workflow->expects($this->once())->method('getFieldId')->willReturn(1);
@@ -224,7 +224,7 @@ final class FrozenFieldsValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->expectException(InvalidPostActionException::class);
 
-        $tracker  = $this->createMock(\Tracker::class);
+        $tracker  = $this->createMock(\Tuleap\Tracker\Tracker::class);
         $workflow = $this->createMock(\Workflow::class);
 
         $workflow->expects($this->once())->method('getFieldId')->willReturn(1);

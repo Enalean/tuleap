@@ -36,7 +36,7 @@ final class TrackerCSRFTokenProviderStub implements TrackerCSRFTokenProvider
         return new self($token);
     }
 
-    public function getToken(\Tracker $tracker): CSRFSynchronizerTokenInterface
+    public function getToken(\Tuleap\Tracker\Tracker $tracker): CSRFSynchronizerTokenInterface
     {
         return $this->token;
     }

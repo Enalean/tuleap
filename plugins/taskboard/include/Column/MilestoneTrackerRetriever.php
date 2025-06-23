@@ -24,8 +24,8 @@ namespace Tuleap\Taskboard\Column;
 
 use Cardwall_Column;
 use Cardwall_OnTop_ColumnDao;
-use Tracker;
 use TrackerFactory;
+use Tuleap\Tracker\Tracker;
 
 class MilestoneTrackerRetriever
 {

@@ -57,8 +57,8 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
     private const DESTINATION_TRACKER_ID = 105;
     private const SOURCE_TRACKER_ID      = 609;
 
-    private \Tracker $source_tracker;
-    private \Tracker $destination_tracker;
+    private \Tuleap\Tracker\Tracker $source_tracker;
+    private \Tuleap\Tracker\Tracker $destination_tracker;
     private Artifact $artifact;
     private \PFUser $user;
     /** @var list<\Tracker_FormElement_Field> */

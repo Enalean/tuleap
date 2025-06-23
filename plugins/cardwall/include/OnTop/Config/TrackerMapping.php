@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Tracker;
 
 abstract class Cardwall_OnTop_Config_TrackerMapping
 {

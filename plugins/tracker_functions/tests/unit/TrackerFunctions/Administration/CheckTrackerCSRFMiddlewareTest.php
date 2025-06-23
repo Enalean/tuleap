@@ -44,7 +44,7 @@ final class CheckTrackerCSRFMiddlewareTest extends TestCase
         $handler = CaptureRequestHandler::withResponse($response);
 
         $request = (new NullServerRequest())
-            ->withAttribute(\Tracker::class, TrackerTestBuilder::aTracker()->build());
+            ->withAttribute(\Tuleap\Tracker\Tracker::class, TrackerTestBuilder::aTracker()->build());
 
         self::assertSame(
             $response,

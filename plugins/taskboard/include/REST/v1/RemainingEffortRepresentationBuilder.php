@@ -51,7 +51,7 @@ class RemainingEffortRepresentationBuilder
         $remaining_effort_field = $this->form_element_factory->getNumericFieldByNameForUser(
             $artifact->getTracker(),
             $current_user,
-            \Tracker::REMAINING_EFFORT_FIELD_NAME
+            \Tuleap\Tracker\Tracker::REMAINING_EFFORT_FIELD_NAME
         );
         if (! $remaining_effort_field) {
             return null;

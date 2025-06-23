@@ -34,6 +34,7 @@ use Tuleap\Tracker\FormElement\FormElementDeletedEvent;
 use Tuleap\Tracker\FormElement\RetrieveFieldType;
 use Tuleap\Tracker\FormElement\RetrieveFormElementsForTracker;
 use Tuleap\Tracker\FormElement\View\Admin\FilterFormElementsThatCanBeCreatedForTracker;
+use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
 
 require_once __DIR__ . '/../../tracker_permissions.php';
@@ -528,7 +529,7 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
      * All fields used by the tracker
      * @return Tracker_FormElement_Field[]
      */
-    public function getUsedFields(\Tracker $tracker): array
+    public function getUsedFields(\Tuleap\Tracker\Tracker $tracker): array
     {
         return $this->getUsedFormElementsByType($tracker, $this->getFieldsSQLTypes());
     }
@@ -778,7 +779,7 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
     }
 
     public function getUsedListFieldById(
-        \Tracker $tracker,
+        \Tuleap\Tracker\Tracker $tracker,
         int $field_id,
     ): \Tracker_FormElement_Field_Selectbox|\Tracker_FormElement_Field_OpenList|null {
         $field = $this->getUsedFieldByIdAndType(

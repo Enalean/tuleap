@@ -100,7 +100,7 @@ class Tracker_Workflow_Trigger_FieldValue
     public function getAsChangesetComment($condition)
     {
         $tracker = $this->getField()->getTracker();
-        assert($tracker instanceof \Tracker);
+        assert($tracker instanceof \Tuleap\Tracker\Tracker);
         if ($condition === 'all_of') {
             return sprintf(dgettext('tuleap-tracker', 'all of <strong>%1$s %2$s</strong> are set to <strong>%3$s</strong>'), $tracker->getName(), $this->getField()->getLabel(), $this->getValue()->getLabel());
         }

@@ -43,7 +43,7 @@ final class FieldsDataBuilder
      * @throws \Tracker_FormElement_InvalidFieldException
      * @throws \Tracker_FormElement_InvalidFieldValueException
      */
-    public function getFieldsDataOnCreate(array $values, \Tracker $tracker): InitialChangesetValuesContainer
+    public function getFieldsDataOnCreate(array $values, \Tuleap\Tracker\Tracker $tracker): InitialChangesetValuesContainer
     {
         $new_values     = [];
         $artifact_link  = Option::nothing(NewArtifactLinkInitialChangesetValue::class);
@@ -111,7 +111,7 @@ final class FieldsDataBuilder
         return $indexed_fields[$value['field_id']];
     }
 
-    private function getIndexedFields(\Tracker $tracker): array
+    private function getIndexedFields(\Tuleap\Tracker\Tracker $tracker): array
     {
         $indexed_fields = [];
         foreach ($this->fields_retriever->getUsedFields($tracker) as $field) {

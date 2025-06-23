@@ -23,6 +23,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Tracker\Admin\GlobalAdmin\GlobalAdminPermissionsChecker;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class Tracker_Permission_PermissionCheckerTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
@@ -154,7 +155,7 @@ final class Tracker_Permission_PermissionCheckerTest extends \Tuleap\Test\PHPUni
             }
         );
 
-        $this->tracker = $this->createMock(\Tracker::class);
+        $this->tracker = $this->createMock(\Tuleap\Tracker\Tracker::class);
         $this->tracker->method('getId')->willReturn(666);
         $this->tracker->method('getGroupId')->willReturn(222);
         $this->tracker->method('getProject')->willReturn($this->project);
@@ -274,7 +275,7 @@ final class Tracker_Permission_PermissionCheckerTest extends \Tuleap\Test\PHPUni
 
     public function testAccessPermsAnonymousFullAccess(): void
     {
-        $t_access_anonymous = $this->createPartialMock(\Tracker::class, [
+        $t_access_anonymous = $this->createPartialMock(\Tuleap\Tracker\Tracker::class, [
             'getId',
             'getGroupId',
             'getProject',
@@ -308,7 +309,7 @@ final class Tracker_Permission_PermissionCheckerTest extends \Tuleap\Test\PHPUni
 
     public function testAccessPermsRegisteredFullAccess(): void
     {
-        $t_access_registered = $this->createPartialMock(\Tracker::class, [
+        $t_access_registered = $this->createPartialMock(\Tuleap\Tracker\Tracker::class, [
             'getId',
             'getGroupId',
             'getProject',
@@ -342,7 +343,7 @@ final class Tracker_Permission_PermissionCheckerTest extends \Tuleap\Test\PHPUni
 
     public function testAccessPermsMemberFullAccess(): void
     {
-        $t_access_members = $this->createPartialMock(\Tracker::class, [
+        $t_access_members = $this->createPartialMock(\Tuleap\Tracker\Tracker::class, [
             'getId',
             'getGroupId',
             'getProject',
@@ -376,7 +377,7 @@ final class Tracker_Permission_PermissionCheckerTest extends \Tuleap\Test\PHPUni
 
     public function testAccessPermsTrackerAdminAllProjects(): void
     {
-        $t_access_members = $this->createPartialMock(\Tracker::class, [
+        $t_access_members = $this->createPartialMock(\Tuleap\Tracker\Tracker::class, [
             'getId',
             'getGroupId',
             'getProject',
@@ -410,7 +411,7 @@ final class Tracker_Permission_PermissionCheckerTest extends \Tuleap\Test\PHPUni
 
     public function testAccessPermsAdminFullAccess(): void
     {
-        $t_access_admin = $this->createPartialMock(\Tracker::class, [
+        $t_access_admin = $this->createPartialMock(\Tuleap\Tracker\Tracker::class, [
             'getId',
             'getGroupId',
             'getProject',
@@ -444,7 +445,7 @@ final class Tracker_Permission_PermissionCheckerTest extends \Tuleap\Test\PHPUni
 
     public function testAccessPermsSubmitterFullAccess(): void
     {
-        $t_access_submitter = $this->createPartialMock(\Tracker::class, [
+        $t_access_submitter = $this->createPartialMock(\Tuleap\Tracker\Tracker::class, [
             'getId',
             'getGroupId',
             'getProject',
@@ -479,7 +480,7 @@ final class Tracker_Permission_PermissionCheckerTest extends \Tuleap\Test\PHPUni
 
     public function testAccessPermsAssigneeFullAccess(): void
     {
-        $t_access_assignee = $this->createPartialMock(\Tracker::class, [
+        $t_access_assignee = $this->createPartialMock(\Tuleap\Tracker\Tracker::class, [
             'getId',
             'getGroupId',
             'getProject',
@@ -514,7 +515,7 @@ final class Tracker_Permission_PermissionCheckerTest extends \Tuleap\Test\PHPUni
 
     public function testAccessPermsSubmitterAssigneeFullAccess(): void
     {
-        $t_access_submitterassignee = $this->createPartialMock(\Tracker::class, [
+        $t_access_submitterassignee = $this->createPartialMock(\Tuleap\Tracker\Tracker::class, [
             'getId',
             'getGroupId',
             'getProject',
@@ -551,7 +552,7 @@ final class Tracker_Permission_PermissionCheckerTest extends \Tuleap\Test\PHPUni
 
     public function testAccessPermsPrivateProject(): void
     {
-        $t_access_registered = $this->createPartialMock(\Tracker::class, [
+        $t_access_registered = $this->createPartialMock(\Tuleap\Tracker\Tracker::class, [
             'getId',
             'getGroupId',
             'getProject',
@@ -595,7 +596,7 @@ final class Tracker_Permission_PermissionCheckerTest extends \Tuleap\Test\PHPUni
     {
         $project = \Tuleap\Test\Builders\ProjectTestBuilder::aProject()->withId(42)->build();
 
-        $tracker = $this->createPartialMock(\Tracker::class, [
+        $tracker = $this->createPartialMock(\Tuleap\Tracker\Tracker::class, [
             'getId',
             'getGroupId',
             'getProject',

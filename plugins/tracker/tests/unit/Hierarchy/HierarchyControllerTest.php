@@ -25,7 +25,6 @@ namespace Tuleap\Tracker\Hierarchy;
 use Codendi_Request;
 use PHPUnit\Framework\MockObject\MockObject;
 use ProjectHistoryDao;
-use Tracker;
 use Tracker_Hierarchy_HierarchicalTracker;
 use Tracker_Hierarchy_HierarchicalTrackerFactory;
 use Tracker_Workflow_Trigger_RulesDao;
@@ -40,6 +39,7 @@ use Tuleap\Test\Stubs\CSRFSynchronizerTokenStub;
 use Tuleap\Test\Stubs\EventDispatcherStub;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class HierarchyControllerTest extends \Tuleap\Test\PHPUnit\TestCase

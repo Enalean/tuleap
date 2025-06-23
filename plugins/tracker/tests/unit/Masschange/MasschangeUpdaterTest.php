@@ -24,7 +24,6 @@ namespace Tuleap\Tracker\Masschange;
 
 use Codendi_Request;
 use PHPUnit\Framework\MockObject\MockObject;
-use Tracker;
 use Tracker_ArtifactDao;
 use Tracker_Report;
 use Tracker_Rule_List;
@@ -44,6 +43,7 @@ use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 use Tuleap\Tracker\Test\Stub\CreateNewChangesetStub;
 use Tuleap\Tracker\Test\Stub\FormElement\Field\ListFields\RetrieveUsedListFieldStub;
 use Tuleap\Tracker\Test\Stub\RetrieveArtifactStub;
+use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MasschangeUpdaterTest extends TestCase

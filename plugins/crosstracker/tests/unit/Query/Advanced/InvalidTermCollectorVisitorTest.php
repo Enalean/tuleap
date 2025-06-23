@@ -114,8 +114,8 @@ final class InvalidTermCollectorVisitorTest extends TestCase
     private Comparison $comparison;
     private ?Logical $parsed_query;
     private \PFUser $user;
-    private \Tracker $first_tracker;
-    private \Tracker $second_tracker;
+    private \Tuleap\Tracker\Tracker $first_tracker;
+    private \Tuleap\Tracker\Tracker $second_tracker;
     private RetrieveUsedFieldsStub $fields_retriever;
 
     protected function setUp(): void
@@ -639,7 +639,7 @@ final class InvalidTermCollectorVisitorTest extends TestCase
     #[\PHPUnit\Framework\Attributes\DataProvider('generateFieldsThatCannotBeComparedToMyself')]
     public function testItRejectsInvalidFieldComparisonsToMyself(
         \Tracker_FormElement_Field $field,
-        \Tracker $tracker,
+        \Tuleap\Tracker\Tracker $tracker,
         \PFUser $user,
     ): void {
         $this->fields_retriever = RetrieveUsedFieldsStub::withFields($field);

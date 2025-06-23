@@ -28,10 +28,10 @@ use AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory;
 use PFUser;
 use Planning_Milestone;
 use PlanningFactory;
-use Tracker;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\Tracker\Artifact\Dao\ArtifactDao;
+use Tuleap\Tracker\Tracker;
 
 /**
  * Returns all tasks id in a Release

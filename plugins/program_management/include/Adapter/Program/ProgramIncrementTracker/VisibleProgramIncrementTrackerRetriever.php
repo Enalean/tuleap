@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\ProgramIncrementTracker;
 
+use Tuleap\ProgramManagement\Adapter\Workspace\RetrieveUser;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\TrackerReferenceProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\RetrieveProgramIncrementTracker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrementTracker\RetrieveVisibleProgramIncrementTracker;
@@ -29,7 +30,6 @@ use Tuleap\ProgramManagement\Domain\Program\Plan\ProgramHasNoProgramIncrementTra
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
 use Tuleap\ProgramManagement\Domain\Program\ProgramTrackerNotFoundException;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
-use Tuleap\ProgramManagement\Adapter\Workspace\RetrieveUser;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 
 final class VisibleProgramIncrementTrackerRetriever implements RetrieveVisibleProgramIncrementTracker
@@ -65,7 +65,7 @@ final class VisibleProgramIncrementTrackerRetriever implements RetrieveVisiblePr
     /**
      * @throws ProgramTrackerNotFoundException
      */
-    private function getValidTracker(int $tracker_id): \Tracker
+    private function getValidTracker(int $tracker_id): \Tuleap\Tracker\Tracker
     {
         $tracker = $this->tracker_factory->getTrackerById($tracker_id);
 

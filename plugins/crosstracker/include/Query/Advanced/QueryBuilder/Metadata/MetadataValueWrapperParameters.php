@@ -23,9 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\CrossTracker\Query\Advanced\QueryBuilder\Metadata;
 
 use PFUser;
-use Tracker;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperParameters;
+use Tuleap\Tracker\Tracker;
 
 /**
  * @psalm-immutable

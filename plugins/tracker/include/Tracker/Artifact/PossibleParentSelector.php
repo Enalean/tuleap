@@ -37,7 +37,7 @@ final class PossibleParentSelector implements Dispatchable
     /**
      * @readonly
      */
-    public \Tracker $tracker;
+    public \Tuleap\Tracker\Tracker $tracker;
     /**
      * @readonly
      */
@@ -52,7 +52,7 @@ final class PossibleParentSelector implements Dispatchable
     private string $parent_label                                   = '';
     private bool $can_create                                       = true;
 
-    public function __construct(\PFUser $user, \Tracker $tracker, int $offset, int $limit)
+    public function __construct(\PFUser $user, \Tuleap\Tracker\Tracker $tracker, int $offset, int $limit)
     {
         $this->user    = $user;
         $this->tracker = $tracker;

@@ -28,7 +28,7 @@ final class StatusFieldRetriever implements RetrieveStatusField
     {
     }
 
-    public function getStatusField(\Tracker $tracker): ?\Tracker_FormElement_Field_List
+    public function getStatusField(\Tuleap\Tracker\Tracker $tracker): ?\Tracker_FormElement_Field_List
     {
         return $this->status_factory->getByTracker($tracker)->getField();
     }

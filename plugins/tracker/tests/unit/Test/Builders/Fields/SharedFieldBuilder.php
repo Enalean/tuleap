@@ -22,9 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Test\Builders\Fields;
 
-use Tracker;
 use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_Selectbox;
+use Tuleap\Tracker\Tracker;
 
 final class SharedFieldBuilder
 {

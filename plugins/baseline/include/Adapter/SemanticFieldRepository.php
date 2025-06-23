@@ -24,13 +24,13 @@ declare(strict_types=1);
 namespace Tuleap\Baseline\Adapter;
 
 use AgileDashBoard_Semantic_InitialEffort;
-use Tracker;
 use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_Text;
 use Tuleap\Tracker\Semantic\Description\TrackerSemanticDescription;
 use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
 use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle;
+use Tuleap\Tracker\Tracker;
 
 /**
  * Wrap tracker semantic static functions to enable dependency injections which makes classes testable (even if this one is not).

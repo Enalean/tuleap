@@ -20,9 +20,9 @@
 namespace Tuleap\CrossTracker\Query\Advanced;
 
 use PFUser;
-use Tracker;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\VisitorParameters;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidSearchablesCollection;
+use Tuleap\Tracker\Tracker;
 
 final class InvalidComparisonCollectorParameters implements VisitorParameters
 {

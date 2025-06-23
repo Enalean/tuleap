@@ -46,8 +46,8 @@ final class DuckTypedFieldWhereTest extends TestCase
     private const SECOND_TRACKER_ID = 74;
     private const INT_FIELD_ID      = 459;
     private const FLOAT_FIELD_ID    = 643;
-    private \Tracker $first_tracker;
-    private \Tracker $second_tracker;
+    private \Tuleap\Tracker\Tracker $first_tracker;
+    private \Tuleap\Tracker\Tracker $second_tracker;
     /** @var list<\Tracker_FormElement_Field> */
     private array $fields;
 

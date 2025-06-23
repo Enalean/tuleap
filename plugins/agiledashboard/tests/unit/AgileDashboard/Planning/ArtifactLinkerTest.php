@@ -26,7 +26,6 @@ use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
 use Planning_ArtifactLinker;
 use PlanningFactory;
-use Tracker;
 use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -35,6 +34,7 @@ use Tuleap\Tracker\Artifact\RetrieveArtifact;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveArtifactStub;
+use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactLinkerTest extends TestCase

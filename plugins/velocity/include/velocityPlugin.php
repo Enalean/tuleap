@@ -30,6 +30,7 @@ use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneValueChecker;
 use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
 use Tuleap\Tracker\Semantic\Timeframe\Events\DoesAPluginRenderAChartBasedOnSemanticTimeframeForTrackerEvent;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
+use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\Workflow\BeforeEvent;
 use Tuleap\Velocity\JiraImporter\AddVelocityToScrumTemplate;
 use Tuleap\Velocity\Semantic\SemanticVelocity;

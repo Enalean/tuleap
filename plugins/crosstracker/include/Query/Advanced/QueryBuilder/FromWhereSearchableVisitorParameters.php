@@ -30,7 +30,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\VisitorParameters;
 final class FromWhereSearchableVisitorParameters implements VisitorParameters
 {
     /**
-     * @param \Tracker[] $trackers
+     * @param \Tuleap\Tracker\Tracker[] $trackers
      */
     public function __construct(
         public readonly Comparison $comparison,

@@ -25,6 +25,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\TrackerColor;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -62,9 +63,9 @@ final class TrackerTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PS
             'hasBlockingError',
             'getParentId',
         ];
-        $this->tracker = $this->createPartialMock(\Tracker::class, $methods);
-        $tracker1      = $this->createPartialMock(\Tracker::class, $methods);
-        $tracker2      = $this->createPartialMock(\Tracker::class, $methods);
+        $this->tracker = $this->createPartialMock(\Tuleap\Tracker\Tracker::class, $methods);
+        $tracker1      = $this->createPartialMock(\Tuleap\Tracker\Tracker::class, $methods);
+        $tracker2      = $this->createPartialMock(\Tuleap\Tracker\Tracker::class, $methods);
 
         $this->tracker_factory = $this->createMock(\TrackerFactory::class);
         $this->tracker->method('getTrackerFactory')->willReturn($this->tracker_factory);

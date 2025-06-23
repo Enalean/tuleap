@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Tracker;
+
 /**
  * When someone grant full access to registered users, it automatically remove
  * the permissions (except admin) for other groups (except anonymous) as they are included into

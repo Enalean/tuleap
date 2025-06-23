@@ -22,5 +22,5 @@ namespace Tuleap\TrackerFunctions\Administration;
 
 interface LogFunctionActivated
 {
-    public function logFunctionActivated(\PFUser $user, \Tracker $tracker): void;
+    public function logFunctionActivated(\PFUser $user, \Tuleap\Tracker\Tracker $tracker): void;
 }

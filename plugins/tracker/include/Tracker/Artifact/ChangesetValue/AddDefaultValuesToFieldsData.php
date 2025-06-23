@@ -26,5 +26,5 @@ interface AddDefaultValuesToFieldsData
      * Augment fields_data with fields which have a default value defined
      * @return array $fields_data
      */
-    public function getUsedFieldsWithDefaultValue(\Tracker $tracker, array $fields_data, \PFUser $user): array;
+    public function getUsedFieldsWithDefaultValue(\Tuleap\Tracker\Tracker $tracker, array $fields_data, \PFUser $user): array;
 }

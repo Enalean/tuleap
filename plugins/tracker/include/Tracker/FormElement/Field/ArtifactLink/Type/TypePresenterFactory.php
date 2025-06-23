@@ -159,7 +159,7 @@ class TypePresenterFactory implements AllTypesRetriever, VisibleTypesRetriever, 
     }
 
     /** @return TypePresenter[] */
-    public function getAllCurrentlyUsedTypePresentersByTracker(\Tracker $tracker): array
+    public function getAllCurrentlyUsedTypePresentersByTracker(\Tuleap\Tracker\Tracker $tracker): array
     {
         $types = [];
 

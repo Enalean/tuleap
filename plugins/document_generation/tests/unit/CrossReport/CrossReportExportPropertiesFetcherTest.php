@@ -62,7 +62,7 @@ final class CrossReportExportPropertiesFetcherTest extends TestCase
         self::assertEquals(136, $props->current_renderer_id);
     }
 
-    private static function buildReport(\Tracker $tracker, int $id, string $name, ?\PFUser $owned_by): \Tracker_Report
+    private static function buildReport(\Tuleap\Tracker\Tracker $tracker, int $id, string $name, ?\PFUser $owned_by): \Tracker_Report
     {
         $owned_by_id = $owned_by?->getId();
         return new \Tracker_Report(

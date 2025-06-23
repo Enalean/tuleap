@@ -34,7 +34,7 @@ final class DateFieldBuilder
     /** @var array<int, bool> */
     private array $read_permissions = [];
     private bool $is_time_displayed = false;
-    private \Tracker $tracker;
+    private \Tuleap\Tracker\Tracker $tracker;
 
     private function __construct(private readonly int $id)
     {
@@ -72,7 +72,7 @@ final class DateFieldBuilder
         return $this;
     }
 
-    public function inTracker(\Tracker $tracker): self
+    public function inTracker(\Tuleap\Tracker\Tracker $tracker): self
     {
         $this->tracker = $tracker;
         return $this;

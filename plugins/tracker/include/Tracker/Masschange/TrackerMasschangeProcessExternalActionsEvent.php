@@ -22,8 +22,8 @@ namespace Tuleap\Tracker\Masschange;
 
 use Codendi_Request;
 use PFUser;
-use Tracker;
 use Tuleap\Event\Dispatchable;
+use Tuleap\Tracker\Tracker;
 
 class TrackerMasschangeProcessExternalActionsEvent implements Dispatchable
 {

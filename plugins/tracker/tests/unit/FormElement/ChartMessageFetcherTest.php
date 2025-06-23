@@ -25,7 +25,6 @@ namespace Tuleap\Tracker\FormElement;
 use EventManager;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use PHPUnit\Framework\MockObject\MockObject;
-use Tracker;
 use Tracker_FormElement_Chart_Field_Exception;
 use Tracker_FormElement_Field_Integer;
 use Tracker_HierarchyFactory;
@@ -34,6 +33,7 @@ use Tuleap\Test\Stubs\ProvideCurrentUserStub;
 use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Tracker;
 
 #[DisableReturnValueGenerationForTestDoubles]
 final class ChartMessageFetcherTest extends TestCase

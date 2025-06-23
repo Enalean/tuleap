@@ -23,8 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Test\Stub;
 
 use PFUser;
-use Tracker;
 use Tuleap\Tracker\RetrieveTrackersByProjectIdUserCanAdministrate;
+use Tuleap\Tracker\Tracker;
 
 final class RetrieveTrackersByProjectIdUserCanAdministrateStub implements RetrieveTrackersByProjectIdUserCanAdministrate
 {

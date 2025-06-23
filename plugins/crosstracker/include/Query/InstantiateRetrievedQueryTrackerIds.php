@@ -20,7 +20,7 @@
 
 namespace Tuleap\CrossTracker\Query;
 
-use Tracker;
+use Tuleap\Tracker\Tracker;
 
 interface InstantiateRetrievedQueryTrackerIds
 {

@@ -23,9 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Workflow\PostAction\Update\Internal;
 
 use LogicException;
-use Tracker;
 use Tracker_FormElementFactory;
 use Tracker_RuleFactory;
+use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\Workflow\PostAction\Update\FrozenFieldsValue;
 
 class FrozenFieldsValueValidator

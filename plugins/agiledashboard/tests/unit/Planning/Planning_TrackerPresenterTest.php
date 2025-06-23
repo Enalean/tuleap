@@ -25,9 +25,9 @@ namespace Tuleap\AgileDashboard\Planning;
 use PHPUnit\Framework\MockObject\MockObject;
 use Planning;
 use Planning_TrackerPresenter;
-use Tracker;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class Planning_TrackerPresenterTest extends TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps

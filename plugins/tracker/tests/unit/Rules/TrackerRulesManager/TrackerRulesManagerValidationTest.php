@@ -24,7 +24,6 @@ namespace Tuleap\Tracker\Rule;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\NullLogger;
-use Tracker;
 use Tracker_FormElementFactory;
 use Tracker_Rule_Date;
 use Tracker_Rule_Date_Factory;
@@ -36,6 +35,7 @@ use TrackerFactory;
 use Tuleap\GlobalResponseMock;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]

@@ -24,7 +24,6 @@ namespace Tuleap\CrossTracker\Query\Advanced\DuckTypedField;
 
 use PFUser;
 use ProjectUGroup;
-use Tracker;
 use Tracker_FormElement_Field_List;
 use Tuleap\CrossTracker\Query\Advanced\CrossTrackerFieldTestCase;
 use Tuleap\CrossTracker\Tests\CrossTrackerQueryTestBuilder;
@@ -33,6 +32,7 @@ use Tuleap\DB\UUID;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\Builders\CoreDatabaseBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
+use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class StaticListDuckTypedFieldTest extends CrossTrackerFieldTestCase

@@ -26,12 +26,12 @@ namespace Tuleap\AgileDashboard\Planning;
 use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
 use PlanningFactory;
-use Tracker;
 use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PlanningTrackerBacklogCheckerTest extends TestCase

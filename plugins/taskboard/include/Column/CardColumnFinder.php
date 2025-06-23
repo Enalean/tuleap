@@ -40,7 +40,7 @@ final readonly class CardColumnFinder
 
     /** @return Option<\Cardwall_Column> */
     public function findColumnOfCard(
-        \Tracker $milestone_tracker,
+        \Tuleap\Tracker\Tracker $milestone_tracker,
         Artifact $card_artifact,
         \PFUser $user,
     ): Option {

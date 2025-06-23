@@ -29,7 +29,6 @@ use PDOException;
 use PFUser;
 use SimpleXMLElement;
 use TemplateRendererFactory;
-use Tracker;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue_List;
 use Tracker_FormElement_Field;
@@ -41,6 +40,7 @@ use TrackerManager;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
+use Tuleap\Tracker\Tracker;
 use XML_SimpleXMLCDATAFactory;
 
 class SemanticDone extends Tracker_Semantic

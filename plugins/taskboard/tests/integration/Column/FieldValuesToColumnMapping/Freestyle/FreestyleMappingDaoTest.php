@@ -44,7 +44,7 @@ final class FreestyleMappingDaoTest extends \Tuleap\Test\PHPUnit\TestIntegration
     private const TASKS_STATUS_ONGOING_ID        = 1956;
 
     private FreestyleMappingDao $dao;
-    private \Tracker $release;
+    private \Tuleap\Tracker\Tracker $release;
     private \Cardwall_Column $todo_column;
     private \Cardwall_Column $ongoing_column;
 

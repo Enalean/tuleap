@@ -19,10 +19,6 @@
  */
 
 use Tuleap\Option\Option;
-use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValue;
-use Tuleap\Tracker\Artifact\ChangesetValue\InitialChangesetValuesContainer;
-use Tuleap\Tracker\Artifact\XMLImport\MoveImportConfig;
-use Tuleap\XML\SimpleXMLElementBuilder;
 use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\Comment\CommentFormatIdentifier;
@@ -30,13 +26,18 @@ use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\XMLImport\TrackerPr
 use Tuleap\Tracker\Artifact\Changeset\NewChangeset;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
+use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValue;
+use Tuleap\Tracker\Artifact\ChangesetValue\InitialChangesetValuesContainer;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
+use Tuleap\Tracker\Artifact\XMLImport\MoveImportConfig;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerImportConfig;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerXmlImportConfig;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
+use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\XML\Importer\ImportedChangesetMapping;
+use Tuleap\XML\SimpleXMLElementBuilder;
 
 class Tracker_Artifact_XMLImport
 {

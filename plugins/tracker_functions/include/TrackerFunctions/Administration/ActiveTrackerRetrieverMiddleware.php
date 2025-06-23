@@ -46,7 +46,7 @@ final class ActiveTrackerRetrieverMiddleware implements MiddlewareInterface
             throw new NotFoundException();
         }
 
-        $enriched_request = $request->withAttribute(\Tracker::class, $tracker);
+        $enriched_request = $request->withAttribute(\Tuleap\Tracker\Tracker::class, $tracker);
 
         return $handler->handle($enriched_request);
     }

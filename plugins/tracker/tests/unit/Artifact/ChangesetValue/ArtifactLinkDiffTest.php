@@ -25,7 +25,6 @@ namespace Tuleap\Tracker\Artifact\ChangesetValue;
 
 use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
-use Tracker;
 use Tracker_Artifact_ChangesetValue_ArtifactLinkDiff;
 use Tracker_ArtifactLinkInfo;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -36,6 +35,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactLinkDiffTest extends TestCase

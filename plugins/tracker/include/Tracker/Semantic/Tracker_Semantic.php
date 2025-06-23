@@ -20,6 +20,7 @@
  */
 
 use Tuleap\Tracker\REST\SemanticRepresentation;
+use Tuleap\Tracker\Tracker;
 
 abstract class Tracker_Semantic
 {

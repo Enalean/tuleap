@@ -197,7 +197,7 @@ class RecipientsManager
      */
     private function isTrackerInStatusUpdateOnlyNotificationsMode(Tracker_Artifact_Changeset $changeset)
     {
-        return (int) $changeset->getTracker()->getNotificationsLevel() === \Tracker::NOTIFICATIONS_LEVEL_STATUS_CHANGE;
+        return (int) $changeset->getTracker()->getNotificationsLevel() === \Tuleap\Tracker\Tracker::NOTIFICATIONS_LEVEL_STATUS_CHANGE;
     }
 
     /**
@@ -222,7 +222,7 @@ class RecipientsManager
         }
     }
 
-    public function getAllRecipientsWhoHaveCustomSettingsForATracker(\Tracker $tracker)
+    public function getAllRecipientsWhoHaveCustomSettingsForATracker(\Tuleap\Tracker\Tracker $tracker)
     {
         $user_ids_of_tracker_recipients         = $this->extractUserIdFromGlobalNotificationsRecipientList($tracker->getRecipients());
         $user_ids_of_tracker_unsubscribers      = $this->unsubscribers_notification_dao->searchUserIDHavingUnsubcribedFromNotificationByTrackerID($tracker->getId());

@@ -20,9 +20,9 @@
 
 namespace Tuleap\Velocity\Semantic;
 
-use Tracker;
 use Tracker_FormElement_Field;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDone;
+use Tuleap\Tracker\Tracker;
 
 class SemanticVelocityPresenterBuilder
 {

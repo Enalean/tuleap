@@ -34,7 +34,7 @@ final readonly class ConfiguredFieldCollection
     /**
      * @return list<ConfiguredField>
      */
-    public function getFields(\Tracker $tracker): array
+    public function getFields(\Tuleap\Tracker\Tracker $tracker): array
     {
         return $this->fields[$tracker->getId()] ?? [];
     }

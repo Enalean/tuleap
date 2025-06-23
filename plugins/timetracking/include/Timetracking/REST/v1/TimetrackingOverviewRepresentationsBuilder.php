@@ -128,7 +128,7 @@ class TimetrackingOverviewRepresentationsBuilder
         return $tracker_representations;
     }
 
-    private function checkTrackerAndPermissions(\Tracker $tracker, PFUser $user)
+    private function checkTrackerAndPermissions(\Tuleap\Tracker\Tracker $tracker, PFUser $user)
     {
         return $tracker !== null
             && $tracker->userCanView($user)

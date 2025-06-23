@@ -45,7 +45,7 @@ final class ArtifactLinkerTest extends TestCase
     private RetrieveUsedArtifactLinkFieldsStub $form_element_factory;
     private CreateNewChangesetStub $changeset_creator;
     private RetrieveForwardLinksStub $links_retriever;
-    private \Tracker $tracker;
+    private \Tuleap\Tracker\Tracker $tracker;
 
     protected function setUp(): void
     {

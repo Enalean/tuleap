@@ -28,7 +28,6 @@ use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
-use Tracker;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_MailGateway_Recipient;
 use Tracker_Artifact_MailGateway_RecipientFactory;
@@ -42,6 +41,7 @@ use Tuleap\Tracker\Notifications\ConfigNotificationEmailCustomSender;
 use Tuleap\Tracker\Notifications\RecipientsManager;
 use Tuleap\Tracker\Test\Stub\Artifact\Changeset\PostCreation\ProvideEmailNotificationAttachmentStub;
 use Tuleap\Tracker\Test\Stub\Artifact\Changeset\PostCreation\SendMailStub;
+use Tuleap\Tracker\Tracker;
 use UserHelper;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]

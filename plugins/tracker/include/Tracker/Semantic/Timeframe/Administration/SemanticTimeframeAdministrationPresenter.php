@@ -47,7 +47,7 @@ class SemanticTimeframeAdministrationPresenter
 
     public function __construct(
         \CSRFSynchronizerToken $csrf,
-        \Tracker $tracker,
+        \Tuleap\Tracker\Tracker $tracker,
         string $target_url,
         bool $has_tracker_charts,
         bool $has_artifact_link_field,

@@ -56,7 +56,7 @@ final readonly class HomepagePresenterBuilder
         return new HomepagePresenter($project, $is_tracker_admin, $tracker_presenters);
     }
 
-    private function canTrackerBeDisplayed(\Tracker $tracker, \PFUser $user): bool
+    private function canTrackerBeDisplayed(\Tuleap\Tracker\Tracker $tracker, \PFUser $user): bool
     {
         return $tracker->userCanView($user) && ! $this->migration_manager->isTrackerUnderMigration($tracker);
     }
@@ -64,7 +64,7 @@ final readonly class HomepagePresenterBuilder
     /**
      * @return Option<TrackerStats>
      */
-    private function getStats(\Tracker $tracker, \PFUser $user): Option
+    private function getStats(\Tuleap\Tracker\Tracker $tracker, \PFUser $user): Option
     {
         $user_has_full_access = $tracker->userHasFullAccess($user);
         if (! $user_has_full_access) {

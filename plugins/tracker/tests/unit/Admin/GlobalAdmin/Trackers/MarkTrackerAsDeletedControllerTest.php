@@ -33,7 +33,6 @@ use Project;
 use ProjectHistoryDao;
 use Reference;
 use ReferenceManager;
-use Tracker;
 use TrackerFactory;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\GlobalLanguageMock;
@@ -48,6 +47,7 @@ use Tuleap\Test\Stubs\CSRFSynchronizerTokenStub;
 use Tuleap\Tracker\Admin\GlobalAdmin\GlobalAdminPermissionsChecker;
 use Tuleap\Tracker\FormElement\Field\FieldDao;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\Tracker\Widget\SearchWidgetsByTrackerId;
 use Tuleap\Tracker\Workflow\Trigger\TriggersDao;
 

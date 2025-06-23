@@ -23,10 +23,10 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Artifact\ActionButtons;
 
 use PFUser;
-use Tracker;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\Tracker\Admin\MoveArtifacts\MoveActionAllowedChecker;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Tracker;
 
 class ArtifactMoveButtonPresenterBuilder
 {

@@ -47,7 +47,7 @@ final class ArtifactViewCollectionBuilder
     {
     }
 
-    public function build(Artifact $artifact, \Tracker $tracker, Codendi_Request $request, PFUser $user, \Tracker_Artifact_EditRenderer $renderer): ViewCollection
+    public function build(Artifact $artifact, \Tuleap\Tracker\Tracker $tracker, Codendi_Request $request, PFUser $user, \Tracker_Artifact_EditRenderer $renderer): ViewCollection
     {
         $view_collection = new ViewCollection($this->event_manager);
         $view_collection->add(new ArtifactViewEdit($artifact, $request, $user, $renderer));

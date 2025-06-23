@@ -24,11 +24,11 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Creation;
 
 use Cocur\Slugify\Slugify;
-use Tracker;
 use TrackerDao;
 use TrackerFactory;
 use Tuleap\Tracker\Creation\JiraImporter\PendingJiraImportDao;
 use Tuleap\Tracker\RetrieveTracker;
+use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\TrackerIsInvalidException;
 
 class TrackerCreationDataChecker

@@ -33,7 +33,7 @@ final class StringFieldBuilder
     private string $name      = 'title';
     private bool $is_required = false;
     private bool $use_it      = true;
-    private \Tracker $tracker;
+    private \Tuleap\Tracker\Tracker $tracker;
     /** @var array<string, mixed> */
     private array $specific_properties                        = [];
     private ?Tracker_FormElement_Field_String $original_field = null;
@@ -60,7 +60,7 @@ final class StringFieldBuilder
         return $this;
     }
 
-    public function inTracker(\Tracker $tracker): self
+    public function inTracker(\Tuleap\Tracker\Tracker $tracker): self
     {
         $this->tracker = $tracker;
         return $this;

@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Workflow\PostAction\Update\Internal;
 
-use Tracker;
+use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\Workflow\PostAction\Update\SetDateValue;
 
 class SetDateValueValidator

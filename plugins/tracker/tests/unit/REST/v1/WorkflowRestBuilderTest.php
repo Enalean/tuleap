@@ -35,7 +35,7 @@ final class WorkflowRestBuilderTest extends TestCase
 {
     private WorkflowRestBuilder $builder;
     private \PFUser $user;
-    private \Tracker $tracker;
+    private \Tuleap\Tracker\Tracker $tracker;
     private \PHPUnit\Framework\MockObject\MockObject|\Workflow $workflow;
     private \PHPUnit\Framework\MockObject\MockObject|\Tracker_FormElement_Field_List $field;
     private Workflow_Transition_Condition_Permissions|\PHPUnit\Framework\MockObject\MockObject $condition_permissions;

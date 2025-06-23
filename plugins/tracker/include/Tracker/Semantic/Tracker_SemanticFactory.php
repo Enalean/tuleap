@@ -40,6 +40,7 @@ use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeFromXMLBuilder;
 use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitleFactory;
 use Tuleap\Tracker\Semantic\Tooltip\SemanticTooltip;
 use Tuleap\Tracker\Semantic\Tooltip\SemanticTooltipFactory;
+use Tuleap\Tracker\Tracker;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_SemanticFactory

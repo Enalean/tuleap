@@ -21,8 +21,8 @@
 
 namespace Tuleap\Tracker\REST\v1\Workflow\PostAction;
 
-use Tracker;
 use Tuleap\Test\Stubs\EventDispatcherStub;
+use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\Workflow\PostAction\Update\PostActionCollection;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]

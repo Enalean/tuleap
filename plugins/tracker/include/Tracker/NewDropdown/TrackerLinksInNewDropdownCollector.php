@@ -57,7 +57,7 @@ final class TrackerLinksInNewDropdownCollector
     /**
      * @param NewDropdownLinkPresenter[] $current_context_links
      */
-    private function isTrackerInCurrentContextSection(\Tracker $tracker, array $current_context_links): bool
+    private function isTrackerInCurrentContextSection(\Tuleap\Tracker\Tracker $tracker, array $current_context_links): bool
     {
         if (empty($current_context_links)) {
             return false;

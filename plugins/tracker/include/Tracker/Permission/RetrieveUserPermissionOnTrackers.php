@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Permission;
 
 use PFUser;
-use Tracker;
+use Tuleap\Tracker\Tracker;
 
 interface RetrieveUserPermissionOnTrackers
 {

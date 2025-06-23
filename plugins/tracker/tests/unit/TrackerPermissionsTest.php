@@ -27,7 +27,6 @@ use PFUser;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use PHPUnit\Framework\MockObject\MockObject;
 use Project;
-use Tracker;
 use Tracker_CannedResponseManager;
 use Tracker_DateReminderManager;
 use Tracker_Permission_PermissionController;

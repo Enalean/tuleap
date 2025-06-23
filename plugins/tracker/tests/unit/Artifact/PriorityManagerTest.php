@@ -25,13 +25,13 @@ namespace Tuleap\Tracker\Artifact;
 use ParagonIE\EasyDB\EasyDB;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use PHPUnit\Framework\MockObject\MockObject;
-use Tracker;
 use Tracker_Artifact_PriorityHistoryDao;
 use Tracker_ArtifactFactory;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Dao\PriorityDao;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Tracker;
 use UserManager;
 
 #[DisableReturnValueGenerationForTestDoubles]

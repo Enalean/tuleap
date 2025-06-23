@@ -22,7 +22,6 @@ namespace Tuleap\TestManagement\REST\v1;
 
 use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
-use Tracker;
 use Tracker_FormElementFactory;
 use Tuleap\Project\ProjectByIDFactory;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -38,6 +37,7 @@ use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveTrackerStub;
+use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CampaignCreatorTest extends \Tuleap\Test\PHPUnit\TestCase

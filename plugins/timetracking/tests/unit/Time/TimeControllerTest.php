@@ -21,9 +21,9 @@
 namespace Tuleap\Timetracking\Time;
 
 use Codendi_Request;
-use Tracker;
 use Tuleap\Test\Stubs\CSRFSynchronizerTokenStub;
 use Tuleap\Timetracking\Exceptions\TimeTrackingNoTimeException;
+use Tuleap\Tracker\Tracker;
 
 require_once __DIR__ . '/../bootstrap.php';
 

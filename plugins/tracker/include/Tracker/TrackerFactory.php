@@ -44,6 +44,7 @@ use Tuleap\Tracker\RetrieveTrackersByProjectIdUserCanAdministrate;
 use Tuleap\Tracker\RetrieveTrackersByProjectIdUserCanView;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDuplicator;
+use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\TrackerColor;
 use Tuleap\Tracker\TrackerDuplicationUserGroupMapping;
 use Tuleap\Tracker\TrackerEventTrackersDuplicated;

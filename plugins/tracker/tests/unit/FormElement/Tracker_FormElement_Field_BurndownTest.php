@@ -29,7 +29,6 @@ use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\NullLogger;
 use SystemEventManager;
-use Tracker;
 use Tracker_ArtifactFactory;
 use Tracker_Chart_BurndownView;
 use Tracker_Chart_Data_Burndown;
@@ -50,6 +49,7 @@ use Tuleap\Tracker\Test\Builders\ChangesetValueIntegerTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Tracker;
 
 #[DisableReturnValueGenerationForTestDoubles]
 final class Tracker_FormElement_Field_BurndownTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps

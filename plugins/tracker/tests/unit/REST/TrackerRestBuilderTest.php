@@ -148,7 +148,7 @@ final class TrackerRestBuilderTest extends TestCase
         $rules_manager->method('getAllListRulesByTrackerWithOrder')->willReturn([]);
         $workflow->method('getGlobalRulesManager')->willReturn($rules_manager);
 
-        $tracker = $this->createConfiguredMock(\Tracker::class, [
+        $tracker = $this->createConfiguredMock(\Tuleap\Tracker\Tracker::class, [
             'getId' => self::TRACKER_ID,
             'getUri' => '/plugins/tracker/?tracker=' . self::TRACKER_ID,
             'getDescription' => 'Tracks User Stories for developers',

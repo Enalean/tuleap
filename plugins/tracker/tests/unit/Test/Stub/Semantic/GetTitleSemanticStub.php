@@ -22,10 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Test\Stub\Semantic;
 
-use Tracker;
 use Tracker_FormElement_Field_Text;
 use Tuleap\Tracker\Semantic\Title\GetTitleSemantic;
 use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle;
+use Tuleap\Tracker\Tracker;
 
 final class GetTitleSemanticStub implements GetTitleSemantic
 {

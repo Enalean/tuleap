@@ -26,7 +26,7 @@ final class GeneralSettingsEvent implements \Tuleap\Event\Dispatchable
 {
     public bool $cannot_configure_instantiate_for_new_projects = false;
 
-    public function __construct(public readonly \Tracker $tracker)
+    public function __construct(public readonly \Tuleap\Tracker\Tracker $tracker)
     {
     }
 }

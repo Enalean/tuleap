@@ -27,7 +27,6 @@ use Feedback;
 use PFUser;
 use SimpleXMLElement;
 use TemplateRendererFactory;
-use Tracker;
 use Tracker_Artifact_Changeset;
 use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_List;
@@ -41,6 +40,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\SemanticStatusRepresentation;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneDao;
 use Tuleap\Tracker\Semantic\Status\Open\AdminPresenterBuilder;
+use Tuleap\Tracker\Tracker;
 
 class TrackerSemanticStatus extends Tracker_Semantic
 {
@@ -359,7 +359,7 @@ class TrackerSemanticStatus extends Tracker_Semantic
 
     private function doesTrackerNotificationUseStatusSemantic()
     {
-         return $this->tracker->getNotificationsLevel() === \Tracker::NOTIFICATIONS_LEVEL_STATUS_CHANGE;
+         return $this->tracker->getNotificationsLevel() === \Tuleap\Tracker\Tracker::NOTIFICATIONS_LEVEL_STATUS_CHANGE;
     }
 
     /**

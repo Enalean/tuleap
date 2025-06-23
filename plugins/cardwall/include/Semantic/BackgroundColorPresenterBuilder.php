@@ -20,10 +20,10 @@
 
 namespace Tuleap\Cardwall\Semantic;
 
-use Tracker;
 use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_List_Bind_Static;
 use Tracker_FormElementFactory;
+use Tuleap\Tracker\Tracker;
 
 class BackgroundColorPresenterBuilder
 {

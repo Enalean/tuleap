@@ -23,8 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\CrossTracker\Query\Advanced\SelectBuilder;
 
 use PFUser;
-use Tracker;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\VisitorParameters;
+use Tuleap\Tracker\Tracker;
 
 final readonly class SelectBuilderVisitorParameters implements VisitorParameters
 {

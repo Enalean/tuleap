@@ -21,7 +21,7 @@
 namespace Tuleap\Tracker\Artifact;
 
 use PFUser;
-use Tracker;
+use Tuleap\Tracker\Tracker;
 
 interface GetFileUploadData
 {

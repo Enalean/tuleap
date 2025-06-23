@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\Kanban;
 
 use PHPUnit\Framework\MockObject\MockObject;
-use Tracker;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_String;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -38,6 +37,7 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveTrackerStub;
 use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
 use Tuleap\Tracker\Test\Stub\VerifySubmissionPermissionStub;
+use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class KanbanActionsCheckerTest extends \Tuleap\Test\PHPUnit\TestCase

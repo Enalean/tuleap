@@ -161,7 +161,7 @@ class MilestoneRepresentationBuilder
     }
 
     /**
-     * @return \Tracker[]
+     * @return \Tuleap\Tracker\Tracker[]
      */
     private function getBacklogTrackers(\PFUser $user, \Planning_Milestone $milestone): array
     {

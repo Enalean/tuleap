@@ -58,6 +58,7 @@ use Tuleap\Tracker\Artifact\XML\Exporter\TrackerEventExportFullXML;
 use Tuleap\Tracker\Creation\JiraImporter\Configuration\PlatformConfigurationForExternalPluginsEvent;
 use Tuleap\Tracker\Creation\JiraImporter\Import\JiraImporterExternalPluginsEvent;
 use Tuleap\Tracker\REST\v1\Event\GetTrackersWithCriteria;
+use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\XML\Importer\ImportXMLProjectTrackerDone;
 
 require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';

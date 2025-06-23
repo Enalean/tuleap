@@ -31,7 +31,7 @@ final class TextFieldBuilder
 
     private string $name  = 'text';
     private string $label = 'Text';
-    private \Tracker $tracker;
+    private \Tuleap\Tracker\Tracker $tracker;
     private bool $is_required      = false;
     private int $number_of_rows    = 0;
     private int $number_of_columns = 0;
@@ -58,7 +58,7 @@ final class TextFieldBuilder
         return $this;
     }
 
-    public function inTracker(\Tracker $tracker): self
+    public function inTracker(\Tuleap\Tracker\Tracker $tracker): self
     {
         $this->tracker = $tracker;
         return $this;

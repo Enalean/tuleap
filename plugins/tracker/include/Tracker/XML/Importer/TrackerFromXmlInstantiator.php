@@ -24,12 +24,12 @@ namespace Tuleap\Tracker\Tracker\XML\Importer;
 
 use Project;
 use SimpleXMLElement;
-use Tracker;
 use Tracker_FormElementFactory;
 use TrackerFactory;
 use TrackerFromXmlImportCannotBeCreatedException;
 use trackerPlugin;
 use Tuleap\Project\XML\Import\ImportConfig;
+use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\TrackerXMLFieldMappingFromExistingTracker;
 use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
 

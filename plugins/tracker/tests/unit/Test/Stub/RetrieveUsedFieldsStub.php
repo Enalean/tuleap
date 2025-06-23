@@ -46,7 +46,7 @@ final class RetrieveUsedFieldsStub implements RetrieveUsedFields
         return new self([]);
     }
 
-    public function getUsedFields(\Tracker $tracker): array
+    public function getUsedFields(\Tuleap\Tracker\Tracker $tracker): array
     {
         $fields_of_tracker = [];
         foreach ($this->fields as $field) {

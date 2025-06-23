@@ -30,7 +30,7 @@ use Tuleap\Tracker\Test\Stub\RetrieveTrackerStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ParentInHierarchyRetrieverTest extends TestCase
 {
-    private \Tracker $parent_tracker;
+    private \Tuleap\Tracker\Tracker $parent_tracker;
     private SearchParentTrackerStub $search_parent_tracker;
     private RetrieveTrackerStub $retrieve_tracker;
 

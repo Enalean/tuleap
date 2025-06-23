@@ -22,8 +22,8 @@ namespace Tuleap\Tracker\Tracker\XML\Updater;
 
 use PFUser;
 use SimpleXMLElement;
-use Tracker;
 use Tuleap\Tracker\Action\DuckTypedMoveFieldCollection;
+use Tuleap\Tracker\Tracker;
 
 interface UpdateMoveChangesetXMLDuckTyping
 {

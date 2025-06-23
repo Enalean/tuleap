@@ -20,9 +20,9 @@
 
 namespace Tuleap\Tracker\Artifact\ActionButtons;
 
-use Tracker;
 use Tuleap\Event\Dispatchable;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Tracker;
 
 class MoveArtifactActionAllowedByPluginRetriever implements Dispatchable
 {

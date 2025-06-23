@@ -23,13 +23,13 @@ declare(strict_types=1);
 namespace Tuleap\Artidoc\Document\Tracker;
 
 use PFUser;
-use Tracker;
 use Tracker_FormElement_Field_String;
 use Tracker_FormElementFactory;
 use Tuleap\Project\REST\MinimalProjectRepresentation;
 use Tuleap\Tracker\Artifact\GetFileUploadData;
 use Tuleap\Tracker\Semantic\Description\TrackerSemanticDescription;
 use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle;
+use Tuleap\Tracker\Tracker;
 
 /**
  * @psalm-immutable

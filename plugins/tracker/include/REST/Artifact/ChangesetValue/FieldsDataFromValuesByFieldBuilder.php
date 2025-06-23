@@ -40,7 +40,7 @@ final class FieldsDataFromValuesByFieldBuilder
      * @throws \Tracker_FormElement_InvalidFieldException
      * @throws \Tracker_FormElement_InvalidFieldValueException
      */
-    public function getFieldsDataOnCreate(array $values, \Tracker $tracker): InitialChangesetValuesContainer
+    public function getFieldsDataOnCreate(array $values, \Tuleap\Tracker\Tracker $tracker): InitialChangesetValuesContainer
     {
         $new_values    = [];
         $artifact_link = Option::nothing(NewArtifactLinkInitialChangesetValue::class);
@@ -62,7 +62,7 @@ final class FieldsDataFromValuesByFieldBuilder
     /**
      * @throws \Tracker_FormElement_InvalidFieldException
      */
-    private function getFieldByName(\Tracker $tracker, string $field_name): \Tracker_FormElement_Field
+    private function getFieldByName(\Tuleap\Tracker\Tracker $tracker, string $field_name): \Tracker_FormElement_Field
     {
         $field = $this->fields_retriever->getUsedFieldByName($tracker->getId(), $field_name);
         if (! $field) {

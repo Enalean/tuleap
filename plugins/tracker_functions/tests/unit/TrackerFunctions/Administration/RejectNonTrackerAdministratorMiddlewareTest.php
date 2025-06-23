@@ -37,7 +37,7 @@ final class RejectNonTrackerAdministratorMiddlewareTest extends TestCase
     {
         $user = UserTestBuilder::buildWithDefaults();
 
-        $tracker = $this->createMock(\Tracker::class);
+        $tracker = $this->createMock(\Tuleap\Tracker\Tracker::class);
         $tracker->method('userIsAdmin')->with($user)->willReturn(true);
 
         $response = $this->createMock(ResponseInterface::class);
@@ -47,7 +47,7 @@ final class RejectNonTrackerAdministratorMiddlewareTest extends TestCase
             ProvideCurrentUserStub::buildWithUser($user)
         );
 
-        $request = (new NullServerRequest())->withAttribute(\Tracker::class, $tracker);
+        $request = (new NullServerRequest())->withAttribute(\Tuleap\Tracker\Tracker::class, $tracker);
 
         self::assertSame(
             $response,
@@ -63,7 +63,7 @@ final class RejectNonTrackerAdministratorMiddlewareTest extends TestCase
     {
         $user = UserTestBuilder::buildWithDefaults();
 
-        $tracker = $this->createMock(\Tracker::class);
+        $tracker = $this->createMock(\Tuleap\Tracker\Tracker::class);
         $tracker->method('userIsAdmin')->with($user)->willReturn(false);
 
         $response = $this->createMock(ResponseInterface::class);
@@ -73,7 +73,7 @@ final class RejectNonTrackerAdministratorMiddlewareTest extends TestCase
             ProvideCurrentUserStub::buildWithUser($user)
         );
 
-        $request = (new NullServerRequest())->withAttribute(\Tracker::class, $tracker);
+        $request = (new NullServerRequest())->withAttribute(\Tuleap\Tracker\Tracker::class, $tracker);
 
         $this->expectException(NotFoundException::class);
         $middleware->process($request, $handler);

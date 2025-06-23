@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\Tracker;
 
 use PFUser;
-use Tracker;
 
 interface RetrieveTrackersByProjectIdUserCanView
 {

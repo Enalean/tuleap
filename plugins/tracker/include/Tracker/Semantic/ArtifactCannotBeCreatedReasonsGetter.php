@@ -23,11 +23,11 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Semantic;
 
 use PFUser;
-use Tracker;
 use Tuleap\Tracker\FormElement\Field\RetrieveUsedFields;
 use Tuleap\Tracker\Permission\VerifySubmissionPermissions;
 use Tuleap\Tracker\Semantic\Title\GetTitleSemantic;
 use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle;
+use Tuleap\Tracker\Tracker;
 
 final class ArtifactCannotBeCreatedReasonsGetter
 {

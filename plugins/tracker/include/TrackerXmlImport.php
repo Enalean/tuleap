@@ -32,6 +32,7 @@ use Tuleap\Tracker\Events\XMLImportArtifactLinkTypeCanBeDisabled;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\Hierarchy\HierarchyDAO;
+use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\Tracker\XML\Importer\CreateFromXml;
 use Tuleap\Tracker\Tracker\XML\Importer\FromXmlCreator;
 use Tuleap\Tracker\Tracker\XML\Importer\GetInstanceFromXml;

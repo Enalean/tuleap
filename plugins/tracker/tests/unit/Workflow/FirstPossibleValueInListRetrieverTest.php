@@ -74,7 +74,7 @@ final class FirstPossibleValueInListRetrieverTest extends TestCase
     private \Workflow_Transition_Condition_Permissions|Stub $condition_1;
     private \Workflow_Transition_Condition_Permissions|Stub $condition_2;
     private Workflow_Transition_ConditionFactory|Stub $condition_factory;
-    private \Tracker $tracker;
+    private \Tuleap\Tracker\Tracker $tracker;
 
     protected function setUp(): void
     {
@@ -332,7 +332,7 @@ final class FirstPossibleValueInListRetrieverTest extends TestCase
         $this->value_from_artifact = ListStaticValueBuilder::aStaticValue('value from artifact')->withId(self::ORIGINAL_FIELD_CHANGED_VALUE_ID)->build();
     }
 
-    private function setUpRules(\Tracker $tracker): void
+    private function setUpRules(\Tuleap\Tracker\Tracker $tracker): void
     {
         $this->rule_1 = new Tracker_Rule_List(12, $tracker->getId(), 201, self::THIRD_VALUE_ID, 202, 127);
         $this->rule_2 = new Tracker_Rule_List(12, $tracker->getId(), 201, 114, 202, 128);

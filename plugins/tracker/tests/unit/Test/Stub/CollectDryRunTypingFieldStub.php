@@ -48,7 +48,7 @@ final class CollectDryRunTypingFieldStub implements CollectDryRunTypingField
         return new self(true, DuckTypedMoveFieldCollection::fromFields([], [], [], []));
     }
 
-    public function collect(\Tracker $source_tracker, \Tracker $destination_tracker, Artifact $artifact, \PFUser $user, LoggerInterface $logger): DuckTypedMoveFieldCollection
+    public function collect(\Tuleap\Tracker\Tracker $source_tracker, \Tuleap\Tracker\Tracker $destination_tracker, Artifact $artifact, \PFUser $user, LoggerInterface $logger): DuckTypedMoveFieldCollection
     {
         if ($this->should_throw_when_collect_is_called) {
             throw new \Exception('Attempted to collect fields in a dry run context while it was not expected');

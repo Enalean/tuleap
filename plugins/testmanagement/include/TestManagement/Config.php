@@ -72,7 +72,7 @@ class Config implements IRetrieveTestExecutionTrackerIdFromConfig
         return $tracker ? $tracker->getId() : false;
     }
 
-    public function getTestExecutionTracker(Project $project): ?\Tracker
+    public function getTestExecutionTracker(Project $project): ?\Tuleap\Tracker\Tracker
     {
         return $this->getTracker($project, 'test_execution_tracker_id');
     }
@@ -97,7 +97,7 @@ class Config implements IRetrieveTestExecutionTrackerIdFromConfig
         return $tracker ? $tracker->getId() : null;
     }
 
-    private function getTracker(Project $project, string $key): ?\Tracker
+    private function getTracker(Project $project, string $key): ?\Tuleap\Tracker\Tracker
     {
         $id = $this->getProperty($project, $key);
         if ($id === false) {

@@ -481,7 +481,7 @@ final class ChangesetRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Test
         int $submitted_by = 101,
         int $last_modified_by = 101,
     ): \Tracker_Artifact_Changeset {
-        $tracker = $this->createMock(\Tracker::class);
+        $tracker = $this->createMock(\Tuleap\Tracker\Tracker::class);
         $tracker->method('getGroupId')->willReturn(110);
         $tracker->method('getProject')->willReturn(ProjectTestBuilder::aProject()->build());
         $artifact = $this->createMock(Artifact::class);

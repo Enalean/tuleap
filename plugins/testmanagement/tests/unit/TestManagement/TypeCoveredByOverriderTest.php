@@ -37,8 +37,8 @@ final class TypeCoveredByOverriderTest extends \Tuleap\Test\PHPUnit\TestCase
     private int $test_definition_tracker_id = 444;
     private int $another_tracker_id         = 445;
     private ArtifactLinksUsageDao&MockObject $dao;
-    private \Tracker $test_definition_tracker;
-    private \Tracker $another_tracker;
+    private \Tuleap\Tracker\Tracker $test_definition_tracker;
+    private \Tuleap\Tracker\Tracker $another_tracker;
 
     public function setUp(): void
     {

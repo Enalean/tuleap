@@ -19,6 +19,7 @@
  */
 
 use Tuleap\AgileDashboard\Milestone\MilestoneDao;
+use Tuleap\Tracker\Tracker;
 
 /**
  * I am a helper to build selectbox options of all milestones of a given tracker

@@ -23,11 +23,11 @@ declare(strict_types=1);
 namespace Tuleap\TrackerFunctions\Stubs\Notification;
 
 use PFUser;
-use Tracker;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
+use Tuleap\Tracker\Tracker;
 use Tuleap\TrackerFunctions\Notification\TrackerAdminRecipientsRetriever;
 
 final class TrackerAdminRecipientsRetrieverStub implements TrackerAdminRecipientsRetriever

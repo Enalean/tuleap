@@ -34,7 +34,7 @@ final readonly class TrackerReferenceStub implements TrackerReference
     {
     }
 
-    public static function fromTracker(\Tracker $tracker): self
+    public static function fromTracker(\Tuleap\Tracker\Tracker $tracker): self
     {
         return new self($tracker->getId(), $tracker->getName(), (int) $tracker->getGroupId(), 'A project');
     }

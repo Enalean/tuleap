@@ -32,7 +32,6 @@ use Planning;
 use Planning_ArtifactMilestone;
 use Planning_Milestone;
 use PlanningFactory;
-use Tracker;
 use Tracker_HierarchyFactory;
 use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -40,6 +39,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SubmilestoneFinderTest extends TestCase

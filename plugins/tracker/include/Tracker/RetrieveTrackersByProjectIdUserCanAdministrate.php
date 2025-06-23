@@ -21,7 +21,6 @@
 namespace Tuleap\Tracker;
 
 use PFUser;
-use Tracker;
 
 interface RetrieveTrackersByProjectIdUserCanAdministrate
 {

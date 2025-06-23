@@ -71,7 +71,7 @@ class NotificationsUserSettingsUpdateController implements DispatchableWithReque
         $layout->redirect($current_uri);
     }
 
-    private function processUpdate(HTTPRequest $request, BaseLayout $layout, \Tracker $tracker, \PFUser $user)
+    private function processUpdate(HTTPRequest $request, BaseLayout $layout, \Tuleap\Tracker\Tracker $tracker, \PFUser $user)
     {
         $notification_label = dgettext('plugin-tracker', 'Notify me on all updates of artifacts I\'m involved (assigned, submitter, cc, comment)');
         switch ($request->get('notification-mode')) {

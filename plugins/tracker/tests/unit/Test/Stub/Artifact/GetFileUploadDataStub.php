@@ -23,11 +23,11 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Test\Stub\Artifact;
 
 use PFUser;
-use Tracker;
 use Tracker_FormElement_Field_File;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\FileUploadData;
 use Tuleap\Tracker\Artifact\GetFileUploadData;
+use Tuleap\Tracker\Tracker;
 
 final class GetFileUploadDataStub implements GetFileUploadData
 {

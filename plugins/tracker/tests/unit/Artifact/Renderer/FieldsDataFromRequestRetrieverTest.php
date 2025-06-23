@@ -23,7 +23,6 @@ namespace Tuleap\Tracker\Artifact\Renderer;
 use Codendi_Request;
 use PHPUnit\Framework\MockObject\Stub;
 use ProjectManager;
-use Tracker;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElementFactory;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -31,6 +30,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Status\StatusValuesCollection;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\Workflow\FirstPossibleValueInListRetriever;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]

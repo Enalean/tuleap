@@ -24,8 +24,8 @@ namespace Tuleap\Tracker\Semantic\Timeframe;
 
 use Codendi_Request;
 use Exception;
-use Tracker;
 use Tuleap\Tracker\Notifications\Settings\CheckEventShouldBeSentInNotification;
+use Tuleap\Tracker\Tracker;
 
 class SemanticTimeframeUpdator
 {

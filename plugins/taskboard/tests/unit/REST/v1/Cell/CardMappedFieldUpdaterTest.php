@@ -78,7 +78,7 @@ final class CardMappedFieldUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
     private FirstPossibleValueInListRetriever&MockObject $first_possible_value_retriever;
     private TaskboardTracker $taskboard_tracker;
     private \Cardwall_Column $done_column;
-    private \Tracker $tasks_tracker;
+    private \Tuleap\Tracker\Tracker $tasks_tracker;
 
     protected function setUp(): void
     {

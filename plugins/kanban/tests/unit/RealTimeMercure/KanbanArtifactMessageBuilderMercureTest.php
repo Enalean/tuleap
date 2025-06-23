@@ -145,7 +145,7 @@ final class KanbanArtifactMessageBuilderMercureTest extends TestCase
         $data = $this->message_builder->buildArtifactReordered($artifact, $this->tracker_semantic);
     }
 
-    private function setupArtifact(\Tracker $tracker): Artifact
+    private function setupArtifact(\Tuleap\Tracker\Tracker $tracker): Artifact
     {
         $artifact = $this->createMock(Artifact::class);
         $artifact->method('getId')->willReturn(1);
@@ -154,7 +154,7 @@ final class KanbanArtifactMessageBuilderMercureTest extends TestCase
         return $artifact;
     }
 
-    private function setupTracker(): \Tracker
+    private function setupTracker(): \Tuleap\Tracker\Tracker
     {
         return TrackerTestBuilder::aTracker()->withId(1)->build();
     }

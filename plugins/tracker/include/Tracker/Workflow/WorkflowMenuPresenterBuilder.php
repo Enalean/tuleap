@@ -20,7 +20,7 @@
 namespace Tuleap\Tracker\Workflow;
 
 use Psr\EventDispatcher\EventDispatcherInterface;
-use Tracker;
+use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\Webhook\Actions\AdminWebhooks;
 use Workflow;
 

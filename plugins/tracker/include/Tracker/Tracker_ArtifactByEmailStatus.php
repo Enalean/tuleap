@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
+use Tuleap\Tracker\Tracker;
 
 class Tracker_ArtifactByEmailStatus
 {

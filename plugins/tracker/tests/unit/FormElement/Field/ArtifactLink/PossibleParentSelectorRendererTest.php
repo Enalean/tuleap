@@ -40,7 +40,7 @@ final class PossibleParentSelectorRendererTest extends TestCase
     use TemporaryTestDirectory;
 
     private \PFUser $user;
-    private \Tracker $user_story_tracker;
+    private \Tuleap\Tracker\Tracker $user_story_tracker;
     private PossibleParentSelectorRenderer $renderer;
 
     protected function setUp(): void

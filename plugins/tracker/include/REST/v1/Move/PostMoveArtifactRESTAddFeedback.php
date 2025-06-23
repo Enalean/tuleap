@@ -22,8 +22,8 @@ namespace Tuleap\Tracker\REST\v1\Move;
 
 use Feedback;
 use FeedbackDao;
-use Tracker;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Tracker;
 
 final class PostMoveArtifactRESTAddFeedback implements AddPostMoveArtifactFeedback
 {

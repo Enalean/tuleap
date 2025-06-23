@@ -24,10 +24,10 @@ namespace Tuleap\TestPlan\TestDefinition;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use TemplateRendererFactory;
-use Tracker;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\GlobalResponseMock;
 use Tuleap\Templating\TemplateCache;
+use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\TrackerColor;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]

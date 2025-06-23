@@ -61,7 +61,7 @@ class TimeframeConfigInvalid implements IComputeTimeframes
         return false;
     }
 
-    public function save(\Tracker $tracker, SemanticTimeframeDao $dao): bool
+    public function save(\Tuleap\Tracker\Tracker $tracker, SemanticTimeframeDao $dao): bool
     {
         return false;
     }
@@ -110,7 +110,7 @@ class TimeframeConfigInvalid implements IComputeTimeframes
         return dgettext('tuleap-tracker', 'It is inherited from a tracker of another project, this is not allowed');
     }
 
-    public function getTrackerFromWhichTimeframeIsImplied(): ?\Tracker
+    public function getTrackerFromWhichTimeframeIsImplied(): ?\Tuleap\Tracker\Tracker
     {
         return null;
     }

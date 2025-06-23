@@ -27,7 +27,6 @@ use Feedback;
 use PFUser;
 use SimpleXMLElement;
 use TemplateRendererFactory;
-use Tracker;
 use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_Text;
 use Tracker_FormElementFactory;
@@ -36,6 +35,7 @@ use Tracker_SemanticManager;
 use TrackerManager;
 use Tuleap\Option\Option;
 use Tuleap\Tracker\Notifications\Settings\CalendarEventConfigDao;
+use Tuleap\Tracker\Tracker;
 
 class TrackerSemanticTitle extends Tracker_Semantic
 {

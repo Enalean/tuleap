@@ -39,7 +39,7 @@ final class RemainingEffortValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestC
     private \Tracker_FormElementFactory&MockObject $form_element_factory;
     private RemainingEffortValueRetriever $remaining_effort_retriever;
     private Artifact $artifact;
-    private \Tracker $tracker;
+    private \Tuleap\Tracker\Tracker $tracker;
     private \Tracker_FormElement_Field $field;
 
     public function setUp(): void
@@ -77,7 +77,7 @@ final class RemainingEffortValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestC
         $value = 76;
 
         $this->field = IntFieldBuilder::anIntField(39)
-            ->withName(\Tracker::REMAINING_EFFORT_FIELD_NAME)
+            ->withName(\Tuleap\Tracker\Tracker::REMAINING_EFFORT_FIELD_NAME)
             ->build();
         $this->form_element_factory->method('getNumericFieldByNameForUser')->willReturn($this->field);
 
@@ -95,7 +95,7 @@ final class RemainingEffortValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestC
     public function testItReturnsNullWhenThereIsNoLastChangeset(): void
     {
         $field = FloatFieldBuilder::aFloatField(760)
-            ->withName(\Tracker::REMAINING_EFFORT_FIELD_NAME)
+            ->withName(\Tuleap\Tracker\Tracker::REMAINING_EFFORT_FIELD_NAME)
             ->build();
         $this->form_element_factory->method('getNumericFieldByNameForUser')->willReturn($field);
         $this->artifact = $this->createMock(Artifact::class);
@@ -131,7 +131,7 @@ final class RemainingEffortValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestC
     private function setUpField(): void
     {
         $this->field = FloatFieldBuilder::aFloatField(760)
-            ->withName(\Tracker::REMAINING_EFFORT_FIELD_NAME)
+            ->withName(\Tuleap\Tracker\Tracker::REMAINING_EFFORT_FIELD_NAME)
             ->build();
 
         $this->form_element_factory->method('getNumericFieldByNameForUser')->with(

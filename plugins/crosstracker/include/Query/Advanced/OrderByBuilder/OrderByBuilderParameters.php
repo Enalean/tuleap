@@ -23,9 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\CrossTracker\Query\Advanced\OrderByBuilder;
 
 use PFUser;
-use Tracker;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrderByDirection;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\VisitorParameters;
+use Tuleap\Tracker\Tracker;
 
 final readonly class OrderByBuilderParameters implements VisitorParameters
 {

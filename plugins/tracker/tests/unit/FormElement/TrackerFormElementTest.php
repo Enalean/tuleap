@@ -25,7 +25,6 @@ namespace Tuleap\Tracker\FormElement;
 use ForgeConfig;
 use HTTPRequest;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
-use Tracker;
 use Tracker_FormElement;
 use Tracker_FormElement_StaticField_Separator;
 use Tracker_FormElementFactory;
@@ -42,6 +41,7 @@ use Tuleap\Test\Stubs\CSRF\CSRFSessionKeyStorageStub;
 use Tuleap\Test\Stubs\CSRF\CSRFSigningKeyStorageStub;
 use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Tracker;
 
 #[DisableReturnValueGenerationForTestDoubles]
 final class TrackerFormElementTest extends TestCase

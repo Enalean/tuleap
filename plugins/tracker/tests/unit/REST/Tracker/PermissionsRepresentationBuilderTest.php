@@ -27,12 +27,12 @@ use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
 use Project;
 use ProjectUGroup;
-use Tracker;
 use Tuleap\Project\UGroupRetriever;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\Stubs\UGroupRetrieverStub;
 use Tuleap\Tracker\PermissionsFunctionsWrapper;
+use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PermissionsRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase

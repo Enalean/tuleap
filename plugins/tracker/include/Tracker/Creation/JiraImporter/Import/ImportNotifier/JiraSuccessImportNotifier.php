@@ -22,11 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\ImportNotifier;
 
-use Tracker;
 use Tuleap\Language\LocaleSwitcher;
 use Tuleap\ServerHostname;
 use Tuleap\Tracker\Creation\JiraImporter\Import\User\JiraUserOnTuleapCache;
 use Tuleap\Tracker\Creation\JiraImporter\PendingJiraImport;
+use Tuleap\Tracker\Tracker;
 
 class JiraSuccessImportNotifier
 {

@@ -58,7 +58,7 @@ final class PUTConfigurationHandlerTest extends TestCase
     private const FIELD_2_ID         = 202;
 
     private SaveConfigurationStub $saver;
-    private \Tracker $tracker;
+    private \Tuleap\Tracker\Tracker $tracker;
     /**
      * @psalm-var list<ConfiguredFieldRepresentation>
      */

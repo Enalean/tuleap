@@ -196,7 +196,7 @@ final class NewDropdownCurrentContextSectionForKanbanProviderTest extends \Tulea
             ->method('checkUserCanAddArtifact')
             ->with($this->user, $kanban);
 
-        $tracker = $this->createMock(\Tracker::class);
+        $tracker = $this->createMock(\Tuleap\Tracker\Tracker::class);
         $tracker->method('getId')->willReturn(102);
         $tracker->method('getSubmitUrl')->willReturn('/path/to/102');
         $tracker->method('getItemName')->willReturn('bug');

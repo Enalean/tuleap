@@ -24,12 +24,12 @@ namespace Tuleap\Tracker\Artifact;
 
 use PFUser;
 use Psr\EventDispatcher\EventDispatcherInterface;
-use Tracker;
 use Tracker_ArtifactFactory;
 use Tuleap\Option\Option;
 use Tuleap\Tracker\Hierarchy\ParentInHierarchyRetriever;
 use Tuleap\Tracker\Permission\RetrieveUserPermissionOnTrackers;
 use Tuleap\Tracker\Permission\TrackerPermissionType;
+use Tuleap\Tracker\Tracker;
 
 final readonly class PossibleParentsRetriever
 {
@@ -63,7 +63,7 @@ final readonly class PossibleParentsRetriever
             return $possible_parents;
         }
 
-        $parent_tracker->apply(function (\Tracker $parent_tracker) use ($possible_parents, $user, $limit, $offset) {
+        $parent_tracker->apply(function (\Tuleap\Tracker\Tracker $parent_tracker) use ($possible_parents, $user, $limit, $offset) {
             $possible_parents->setParentLabel($parent_tracker->getItemName());
             $possible_parents->addPossibleParents(
                 $this->artifact_factory->getPaginatedPossibleParentArtifactsUserCanView(

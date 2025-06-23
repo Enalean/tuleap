@@ -28,7 +28,7 @@ use Tuleap\Tracker\Semantic\Timeframe\TimeframeImpliedFromAnotherTracker;
 
 class SemanticTimeframeCurrentConfigurationPresenterBuilder
 {
-    private \Tracker $current_tracker;
+    private \Tuleap\Tracker\Tracker $current_tracker;
 
     private SemanticTimeframeDao $dao;
 
@@ -37,7 +37,7 @@ class SemanticTimeframeCurrentConfigurationPresenterBuilder
     private \TrackerFactory $tracker_factory;
 
     public function __construct(
-        \Tracker $current_tracker,
+        \Tuleap\Tracker\Tracker $current_tracker,
         IComputeTimeframes $i_compute_timeframes,
         SemanticTimeframeDao $dao,
         \TrackerFactory $tracker_factory,
@@ -91,7 +91,7 @@ class SemanticTimeframeCurrentConfigurationPresenterBuilder
         return $semantics_links;
     }
 
-    private function getTrackerFromWhichWeImplyTheSemantic(): ?\Tracker
+    private function getTrackerFromWhichWeImplyTheSemantic(): ?\Tuleap\Tracker\Tracker
     {
         if ($this->i_compute_timeframes->getName() !== TimeframeImpliedFromAnotherTracker::NAME) {
             return null;

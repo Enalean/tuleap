@@ -26,7 +26,6 @@ use AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder;
 use PHPUnit\Framework\MockObject\MockObject;
 use Planning_ArtifactMilestone;
 use Planning_VirtualTopMilestone;
-use Tracker;
 use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
 use Tuleap\Layout\NewDropdown\CurrentContextSectionToHeaderOptionsInserter;
 use Tuleap\Layout\NewDropdown\NewDropdownLinkPresenter;
@@ -37,6 +36,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\NewDropdown\TrackerNewDropdownLinkPresenterBuilder;
 use Tuleap\Tracker\Permission\VerifySubmissionPermissions;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class HeaderOptionsForPlanningProviderTest extends TestCase

@@ -36,7 +36,7 @@ final class RemainingEffortRepresentationBuilderTest extends \Tuleap\Test\PHPUni
     private RemainingEffortRepresentationBuilder $builder;
     private \PFUser $user;
     private \Tuleap\Tracker\Artifact\Artifact $artifact;
-    private \Tracker $tracker;
+    private \Tuleap\Tracker\Tracker $tracker;
 
     protected function setUp(): void
     {
@@ -55,7 +55,7 @@ final class RemainingEffortRepresentationBuilderTest extends \Tuleap\Test\PHPUni
         $this->factory
             ->expects($this->once())
             ->method('getNumericFieldByNameForUser')
-            ->with($this->tracker, $this->user, \Tracker::REMAINING_EFFORT_FIELD_NAME)
+            ->with($this->tracker, $this->user, \Tuleap\Tracker\Tracker::REMAINING_EFFORT_FIELD_NAME)
             ->willReturn(null);
 
         self::assertNull($this->builder->getRemainingEffort($this->user, $this->artifact));
@@ -71,7 +71,7 @@ final class RemainingEffortRepresentationBuilderTest extends \Tuleap\Test\PHPUni
         $this->factory
             ->expects($this->once())
             ->method('getNumericFieldByNameForUser')
-            ->with($this->tracker, $this->user, \Tracker::REMAINING_EFFORT_FIELD_NAME)
+            ->with($this->tracker, $this->user, \Tuleap\Tracker\Tracker::REMAINING_EFFORT_FIELD_NAME)
             ->willReturn($field);
 
         $this->retriever
@@ -93,7 +93,7 @@ final class RemainingEffortRepresentationBuilderTest extends \Tuleap\Test\PHPUni
         $this->factory
             ->expects($this->once())
             ->method('getNumericFieldByNameForUser')
-            ->with($this->tracker, $this->user, \Tracker::REMAINING_EFFORT_FIELD_NAME)
+            ->with($this->tracker, $this->user, \Tuleap\Tracker\Tracker::REMAINING_EFFORT_FIELD_NAME)
             ->willReturn($field);
 
         $this->retriever
@@ -114,7 +114,7 @@ final class RemainingEffortRepresentationBuilderTest extends \Tuleap\Test\PHPUni
         $this->factory
             ->expects($this->once())
             ->method('getNumericFieldByNameForUser')
-            ->with($this->tracker, $this->user, \Tracker::REMAINING_EFFORT_FIELD_NAME)
+            ->with($this->tracker, $this->user, \Tuleap\Tracker\Tracker::REMAINING_EFFORT_FIELD_NAME)
             ->willReturn($field);
 
         $this->retriever
@@ -139,7 +139,7 @@ final class RemainingEffortRepresentationBuilderTest extends \Tuleap\Test\PHPUni
         $this->factory
             ->expects($this->once())
             ->method('getNumericFieldByNameForUser')
-            ->with($this->tracker, $this->user, \Tracker::REMAINING_EFFORT_FIELD_NAME)
+            ->with($this->tracker, $this->user, \Tuleap\Tracker\Tracker::REMAINING_EFFORT_FIELD_NAME)
             ->willReturn($field);
 
         $this->retriever

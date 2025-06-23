@@ -25,8 +25,8 @@
 namespace Tuleap\Tracker\Artifact\ArtifactsDeletion;
 
 use PFUser;
-use Tracker;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Tracker;
 
 class ArtifactsDeletionManager
 {

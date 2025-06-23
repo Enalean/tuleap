@@ -20,8 +20,6 @@
 
 namespace Tuleap\Tracker;
 
-use Tracker;
-
 interface RetrievePromotedTrackers
 {
     /**

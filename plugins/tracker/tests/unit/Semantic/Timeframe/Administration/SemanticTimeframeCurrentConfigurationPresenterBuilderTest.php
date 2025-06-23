@@ -38,7 +38,7 @@ class SemanticTimeframeCurrentConfigurationPresenterBuilderTest extends \Tuleap\
      */
     private $duration_field;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\Tracker
+     * @var \PHPUnit\Framework\MockObject\MockObject|\Tuleap\Tracker\Tracker
      */
     private $current_tracker;
     /**
@@ -57,7 +57,7 @@ class SemanticTimeframeCurrentConfigurationPresenterBuilderTest extends \Tuleap\
     {
         $this->start_date_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
         $this->duration_field   = $this->createMock(\Tracker_FormElement_Field_Numeric::class);
-        $this->current_tracker  = $this->createMock(\Tracker::class);
+        $this->current_tracker  = $this->createMock(\Tuleap\Tracker\Tracker::class);
         $this->dao              = $this->createMock(SemanticTimeframeDao::class);
         $this->tracker_factory  = $this->createMock(\TrackerFactory::class);
     }
@@ -66,7 +66,7 @@ class SemanticTimeframeCurrentConfigurationPresenterBuilderTest extends \Tuleap\
     {
         $this->current_tracker->expects($this->any())->method('getId')->willReturn(self::CURRENT_TRACKER_ID);
 
-        $another_tracker = $this->createMock(\Tracker::class);
+        $another_tracker = $this->createMock(\Tuleap\Tracker\Tracker::class);
         $another_tracker->expects($this->any())->method('getName')->willReturn('Sprints');
         $another_tracker->expects($this->any())->method('getId')->willReturn(self::ANOTHER_TRACKER_ID);
 
@@ -117,7 +117,7 @@ class SemanticTimeframeCurrentConfigurationPresenterBuilderTest extends \Tuleap\
 
         $this->current_tracker->expects($this->any())->method('getId')->willReturn(self::CURRENT_TRACKER_ID);
 
-        $another_tracker = $this->createMock(\Tracker::class);
+        $another_tracker = $this->createMock(\Tuleap\Tracker\Tracker::class);
         $another_tracker->expects($this->any())->method('getName')->willReturn('User Story');
         $another_tracker->expects($this->any())->method('getId')->willReturn(self::ANOTHER_TRACKER_ID);
 

@@ -46,7 +46,7 @@ final class ActiveTrackerRetrieverMiddlewareTest extends TestCase
         $handler->expects($this->once())->method('handle')->with(
             self::callback(
                 fn (ServerRequestInterface $enriched_request): bool =>
-                    $enriched_request->getAttribute(\Tracker::class) === $tracker
+                    $enriched_request->getAttribute(\Tuleap\Tracker\Tracker::class) === $tracker
             )
         );
 

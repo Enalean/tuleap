@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\CrossTracker\Query\Advanced\QueryBuilder\Field;
 
 use PFUser;
-use Tracker;
 use Tuleap\CrossTracker\Query\Advanced\DuckTypedField\Where\DuckTypedFieldTypeWhere;
 use Tuleap\CrossTracker\Query\Advanced\DuckTypedField\Where\DuckTypedFieldWhere;
 use Tuleap\CrossTracker\Query\Advanced\QueryBuilder\Field\Date\DateFromWhereBuilder;
@@ -39,6 +38,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
 use Tuleap\Tracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
 use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
+use Tuleap\Tracker\Tracker;
 
 final readonly class FieldFromWhereBuilder
 {

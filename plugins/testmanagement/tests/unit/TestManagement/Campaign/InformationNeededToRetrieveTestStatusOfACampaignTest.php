@@ -36,7 +36,7 @@ final class InformationNeededToRetrieveTestStatusOfACampaignTest extends \Tuleap
     private const USER_UGROUP_IDS = ['123', 4];
 
     private Artifact&MockObject $campaign;
-    private \Tracker&MockObject $campaign_tracker;
+    private \Tuleap\Tracker\Tracker&MockObject $campaign_tracker;
     private \PFUser&MockObject $user;
     private Config&MockObject $testmanagement_config;
     private TrackerFactory&MockObject $tracker_factory;
@@ -46,7 +46,7 @@ final class InformationNeededToRetrieveTestStatusOfACampaignTest extends \Tuleap
     {
         $this->campaign = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
         $this->campaign->method('getId')->willReturn((string) self::CAMPAIGN_ID);
-        $this->campaign_tracker = $this->createMock(\Tracker::class);
+        $this->campaign_tracker = $this->createMock(\Tuleap\Tracker\Tracker::class);
         $this->campaign->method('getTracker')->willReturn($this->campaign_tracker);
         $project = $this->createMock(\Project::class);
         $project->method('getID')->willReturn('102');
@@ -227,9 +227,9 @@ final class InformationNeededToRetrieveTestStatusOfACampaignTest extends \Tuleap
         $this->assertNull($information);
     }
 
-    private function buildTracker(bool $can_user_view_it): \Tracker&MockObject
+    private function buildTracker(bool $can_user_view_it): \Tuleap\Tracker\Tracker&MockObject
     {
-        $tracker = $this->createMock(\Tracker::class);
+        $tracker = $this->createMock(\Tuleap\Tracker\Tracker::class);
         $tracker->method('userCanView')->willReturn($can_user_view_it);
 
         return $tracker;

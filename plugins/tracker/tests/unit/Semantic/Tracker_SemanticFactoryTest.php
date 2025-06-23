@@ -67,7 +67,7 @@ final class Tracker_SemanticFactoryTest extends \Tuleap\Test\PHPUnit\TestCase //
         $tsf->method('getSemanticTooltipFactory')->willReturn($semantic_tooltip_factory);
         $tsf->method('getSemanticContributorFactory')->willReturn($semantic_contributor_factory);
 
-        $tracker = $this->createMock(\Tracker::class);
+        $tracker = $this->createMock(\Tuleap\Tracker\Tracker::class);
 
         $mapping = [
             'F8'  => 108,

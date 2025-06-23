@@ -27,7 +27,6 @@ use DateTime;
 use ForgeConfig;
 use PFUser;
 use ProjectUGroup;
-use Tracker;
 use Tuleap\Config\ConfigurationVariables;
 use Tuleap\CrossTracker\Query\Advanced\DuckTypedField\FieldTypeRetrieverWrapper;
 use Tuleap\CrossTracker\Query\Advanced\ReadableFieldRetriever;
@@ -80,6 +79,7 @@ use Tuleap\Tracker\Test\Stub\Permission\RetrieveUserPermissionOnFieldsStub;
 use Tuleap\Tracker\Test\Stub\RetrieveArtifactStub;
 use Tuleap\Tracker\Test\Stub\RetrieveFieldTypeStub;
 use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
+use Tuleap\Tracker\Tracker;
 use Tuleap\User\UserGroup\NameTranslator;
 use UserHelper;
 

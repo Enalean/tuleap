@@ -32,7 +32,6 @@ use PFUser;
 use Project;
 use ProjectHistoryDao;
 use ReferenceManager;
-use Tracker;
 use TrackerFactory;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\Layout\BaseLayout;
@@ -41,6 +40,7 @@ use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
 use Tuleap\Tracker\Admin\GlobalAdmin\GlobalAdminPermissionsChecker;
 use Tuleap\Tracker\FormElement\Field\FieldDao;
+use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\Tracker\Widget\SearchWidgetsByTrackerId;
 use Tuleap\Tracker\Workflow\Trigger\TriggersDao;
 

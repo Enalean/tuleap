@@ -22,8 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Taskboard\Tracker;
 
-use Tracker;
 use Tracker_FormElement_Field_Selectbox;
+use Tuleap\Tracker\Tracker;
 
 class MappedFieldsCollection
 {

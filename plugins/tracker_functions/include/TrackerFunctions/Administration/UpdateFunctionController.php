@@ -55,8 +55,8 @@ final class UpdateFunctionController extends DispatchablePSR15Compatible
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $tracker = $request->getAttribute(\Tracker::class);
-        if (! $tracker instanceof \Tracker) {
+        $tracker = $request->getAttribute(\Tuleap\Tracker\Tracker::class);
+        if (! $tracker instanceof \Tuleap\Tracker\Tracker) {
             throw new \LogicException('Tracker is missing');
         }
 
@@ -122,7 +122,7 @@ final class UpdateFunctionController extends DispatchablePSR15Compatible
         };
     }
 
-    private function moveFile(\Tracker $tracker, UploadedFileInterface $uploaded_file): Ok|Err
+    private function moveFile(\Tuleap\Tracker\Tracker $tracker, UploadedFileInterface $uploaded_file): Ok|Err
     {
         $path   = $this->function_path_helper->getPathForTracker($tracker);
         $folder = dirname($path);
@@ -139,7 +139,7 @@ final class UpdateFunctionController extends DispatchablePSR15Compatible
         }
     }
 
-    private function redirectWithFeedback(PFUser $user, \Tracker $tracker, NewFeedback $feedback): ResponseInterface
+    private function redirectWithFeedback(PFUser $user, \Tuleap\Tracker\Tracker $tracker, NewFeedback $feedback): ResponseInterface
     {
         return $this->redirect_with_feedback_factory->createResponseForUser(
             $user,
@@ -148,7 +148,7 @@ final class UpdateFunctionController extends DispatchablePSR15Compatible
         );
     }
 
-    public static function getUrl(\Tracker $tracker): string
+    public static function getUrl(\Tuleap\Tracker\Tracker $tracker): string
     {
         return '/tracker_functions/' . urlencode((string) $tracker->getId()) . '/admin';
     }
@@ -156,7 +156,7 @@ final class UpdateFunctionController extends DispatchablePSR15Compatible
     /**
      * @return Ok<null>
      */
-    private function logInProjectHistory(\PFUser $user, \Tracker $tracker): Ok
+    private function logInProjectHistory(\PFUser $user, \Tuleap\Tracker\Tracker $tracker): Ok
     {
         $this->history_saver->logFunctionUploaded($user, $tracker);
 
@@ -166,7 +166,7 @@ final class UpdateFunctionController extends DispatchablePSR15Compatible
     /**
      * @return Ok<null>
      */
-    private function activateFunction(\Tracker $tracker): Ok
+    private function activateFunction(\Tuleap\Tracker\Tracker $tracker): Ok
     {
         $this->function_activation->activateFunction($tracker->getId());
 

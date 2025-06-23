@@ -71,7 +71,7 @@ class ByFieldController implements DispatchableWithRequest
         $this->display($tracker, $request, $layout);
     }
 
-    protected function display(\Tracker $tracker, HTTPRequest $request, BaseLayout $layout): void
+    protected function display(\Tuleap\Tracker\Tracker $tracker, HTTPRequest $request, BaseLayout $layout): void
     {
         $selected_id = (int) $request->getValidated('selected_id', 'uint', 0);
 
@@ -111,7 +111,7 @@ class ByFieldController implements DispatchableWithRequest
         $tracker->displayFooter($tracker_manager);
     }
 
-    private function getUGroupPermissionsPerField(\Tracker $tracker, int $selected_id): ByFieldGroupPermissions
+    private function getUGroupPermissionsPerField(\Tuleap\Tracker\Tracker $tracker, int $selected_id): ByFieldGroupPermissions
     {
         $ugroups_permissions = plugin_tracker_permission_get_field_tracker_ugroups_permissions(
             $tracker->getGroupId(),
@@ -159,7 +159,7 @@ class ByFieldController implements DispatchableWithRequest
         return count($ugroup_list) === 0;
     }
 
-    public static function getUrl(\Tracker $tracker): string
+    public static function getUrl(\Tuleap\Tracker\Tracker $tracker): string
     {
         return TRACKER_BASE_URL . self::URL . '/' . $tracker->getId();
     }

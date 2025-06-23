@@ -94,7 +94,7 @@ final class AdministrationControllerTest extends TestCase
 
     public function testNotFoundWhenUserIsNotAdminOfTheTracker(): void
     {
-        $tracker = $this->createMock(\Tracker::class);
+        $tracker = $this->createMock(\Tuleap\Tracker\Tracker::class);
         $tracker->method('getId')->willReturn(101);
         $tracker->method('isDeleted')->willReturn(false);
         $tracker->method('userIsAdmin')->willReturn(false);

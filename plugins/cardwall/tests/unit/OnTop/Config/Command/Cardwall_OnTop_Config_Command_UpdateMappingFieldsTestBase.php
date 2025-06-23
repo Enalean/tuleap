@@ -29,13 +29,13 @@ use Cardwall_OnTop_Config_TrackerMappingFreestyle;
 use Cardwall_OnTop_Config_TrackerMappingStatus;
 use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\MockObject\MockObject;
-use Tracker;
 use Tracker_FormElement_Field;
 use Tracker_FormElementFactory;
 use TrackerFactory;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Tracker;
 
 abstract class Cardwall_OnTop_Config_Command_UpdateMappingFieldsTestBase extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {

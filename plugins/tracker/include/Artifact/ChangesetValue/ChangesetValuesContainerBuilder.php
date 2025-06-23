@@ -26,7 +26,6 @@ use CuyZ\Valinor\Mapper\MappingError;
 use CuyZ\Valinor\Mapper\TreeMapper;
 use PFUser;
 use Psl\Json\Exception\DecodeException;
-use Tracker;
 use Tracker_FormElement_InvalidFieldValueException;
 use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -36,6 +35,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\RetrieveAnArtifactLinkField;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkChangesetValueBuilder;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValueBuilder;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
+use Tuleap\Tracker\Tracker;
 use function Psl\Json\decode as psl_json_decode;
 
 final readonly class ChangesetValuesContainerBuilder implements BuildChangesetValuesContainer, BuildInitialChangesetValuesContainer

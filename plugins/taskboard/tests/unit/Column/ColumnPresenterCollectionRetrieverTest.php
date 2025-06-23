@@ -38,7 +38,7 @@ final class ColumnPresenterCollectionRetrieverTest extends \Tuleap\Test\PHPUnit\
 {
     private ColumnFactory&MockObject $column_factory;
     private TrackerMappingPresenterBuilder&MockObject $mappings_builder;
-    private \Tracker $release_tracker;
+    private \Tuleap\Tracker\Tracker $release_tracker;
     private \Planning_ArtifactMilestone $milestone;
 
     protected function setUp(): void

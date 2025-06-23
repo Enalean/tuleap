@@ -38,7 +38,7 @@ final class PostActionCheckerTest extends TestCase
     private \PHPUnit\Framework\MockObject\MockObject|Config $config;
     private \Tracker_FormElementFactory|\PHPUnit\Framework\MockObject\MockObject $form_element_factory;
     private PostActionChecker $checker;
-    private \Tracker $tracker;
+    private \Tuleap\Tracker\Tracker $tracker;
 
     protected function setUp(): void
     {

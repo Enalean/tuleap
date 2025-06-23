@@ -21,7 +21,6 @@
 namespace Tuleap\Tracker\Semantic\Timeframe;
 
 use Psr\Log\NullLogger;
-use Tracker;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\SemanticTimeframeWithDurationRepresentation;
@@ -30,6 +29,7 @@ use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueDateTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueIntegerTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TimeframeWithDurationTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -152,7 +152,7 @@ final class TimeframeWithDurationTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItSaves(): void
     {
         $dao     = $this->getMockBuilder(SemanticTimeframeDao::class)->disableOriginalConstructor()->getMock();
-        $tracker = $this->getMockBuilder(\Tracker::class)->disableOriginalConstructor()->getMock();
+        $tracker = $this->getMockBuilder(\Tuleap\Tracker\Tracker::class)->disableOriginalConstructor()->getMock();
 
         $dao->expects($this->once())->method('save')->with(113, 1001, 1002, null, null)->willReturn(true);
         $tracker->expects($this->once())->method('getId')->willReturn(113);

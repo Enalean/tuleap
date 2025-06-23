@@ -25,7 +25,6 @@ namespace Tuleap\Tracker\Action;
 use Codendi_HTMLPurifier;
 use Codendi_Request;
 use PFUser;
-use Tracker;
 use Tracker_Artifact_Redirect;
 use Tracker_ArtifactFactory;
 use Tracker_Exception;
@@ -48,6 +47,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\Hierarchy\ParentInHierarchyRetriever;
 use Tuleap\Tracker\Permission\VerifySubmissionPermissions;
 use Tuleap\Tracker\Semantic\SemanticNotSupportedException;
+use Tuleap\Tracker\Tracker;
 
 class CreateArtifactAction
 {

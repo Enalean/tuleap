@@ -27,7 +27,6 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Project_AccessException;
 use Project_AccessProjectNotFoundException;
 use Psr\Log\NullLogger;
-use Tracker;
 use Tuleap\Project\REST\ProjectReference;
 use Tuleap\Roadmap\RetrieveReportToFilterArtifacts;
 use Tuleap\Roadmap\RoadmapWidgetDao;
@@ -53,6 +52,7 @@ use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueDateTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveTrackerStub;
+use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\TrackerColor;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]

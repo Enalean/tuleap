@@ -25,7 +25,6 @@ namespace Tuleap\Tracker\Semantic\Progress;
 use Codendi_Request;
 use PFUser;
 use SimpleXMLElement;
-use Tracker;
 use Tracker_FormElement_Field;
 use Tracker_SemanticManager;
 use TrackerManager;
@@ -37,6 +36,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\Semantic\Progress\Administration\SemanticProgressAdminPresenterBuilder;
 use Tuleap\Tracker\Semantic\Progress\Administration\SemanticProgressIntroductionPresenter;
 use Tuleap\Tracker\Semantic\Progress\Events\GetSemanticProgressUsageEvent;
+use Tuleap\Tracker\Tracker;
 
 class SemanticProgress extends \Tracker_Semantic
 {

@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\CrossTracker\Query\Advanced;
 
 use PFUser;
-use Tracker;
 use Tuleap\CrossTracker\Query\Advanced\OrderByBuilder\Field\FieldFromOrderBuilder;
 use Tuleap\CrossTracker\Query\Advanced\OrderByBuilder\Metadata\MetadataFromOrderBuilder;
 use Tuleap\CrossTracker\Query\Advanced\OrderByBuilder\OrderByBuilderParameters;
@@ -32,6 +31,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrderBy;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SelectableVisitor;
+use Tuleap\Tracker\Tracker;
 
 /**
  * @template-implements SelectableVisitor<OrderByBuilderParameters, ParametrizedFromOrder>

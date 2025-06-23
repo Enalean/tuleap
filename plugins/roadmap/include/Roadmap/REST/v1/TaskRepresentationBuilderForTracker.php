@@ -23,12 +23,12 @@ declare(strict_types=1);
 namespace Tuleap\Roadmap\REST\v1;
 
 use Psr\Log\LoggerInterface;
-use Tracker;
 use Tuleap\Project\REST\ProjectReference;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgressBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\IComputeTimeframes;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeImpliedFromAnotherTracker;
+use Tuleap\Tracker\Tracker;
 
 final class TaskRepresentationBuilderForTracker implements IBuildATaskRepresentation
 {

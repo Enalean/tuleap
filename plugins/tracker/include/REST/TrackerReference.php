@@ -19,9 +19,9 @@
 
 namespace Tuleap\Tracker\REST;
 
-use Tracker;
 use Tuleap\Project\ProjectBackground\ProjectBackgroundConfiguration;
 use Tuleap\Project\REST\ProjectReference;
+use Tuleap\Tracker\Tracker;
 
 /**
  * @psalm-immutable

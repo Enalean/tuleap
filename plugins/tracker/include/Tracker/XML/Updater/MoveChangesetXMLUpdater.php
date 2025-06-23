@@ -22,8 +22,8 @@ namespace Tuleap\Tracker\XML\Updater;
 
 use PFUser;
 use SimpleXMLElement;
-use Tracker;
 use Tracker_FormElement_Field;
+use Tuleap\Tracker\Tracker;
 
 final class MoveChangesetXMLUpdater
 {

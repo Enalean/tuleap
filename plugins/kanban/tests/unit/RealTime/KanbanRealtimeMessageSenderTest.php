@@ -20,7 +20,6 @@
 namespace Tuleap\Kanban\RealTime;
 
 use PHPUnit\Framework\MockObject\MockObject;
-use Tracker;
 use TrackerFactory;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Kanban\Kanban;
@@ -30,6 +29,7 @@ use Tuleap\RealTimeMercure\MercureClient;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\ProvideCurrentUserStub;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class KanbanRealtimeMessageSenderTest extends TestCase

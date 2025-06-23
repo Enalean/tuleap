@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\TrackerFunctions\Stubs\WASM;
 
-use Tracker;
+use Tuleap\Tracker\Tracker;
 use Tuleap\TrackerFunctions\WASM\WASMFunctionPathHelper;
 
 final class WASMFunctionPathHelperStub implements WASMFunctionPathHelper

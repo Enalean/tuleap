@@ -30,7 +30,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 final class TrackerSemanticsTest extends TestCase
 {
     /**
-     * @var \PHPUnit\Framework\MockObject\Stub&\Tracker
+     * @var \PHPUnit\Framework\MockObject\Stub&\Tuleap\Tracker\Tracker
      */
     private $tracker;
     /**
@@ -41,7 +41,7 @@ final class TrackerSemanticsTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->tracker         = $this->createStub(\Tracker::class);
+        $this->tracker         = $this->createStub(\Tuleap\Tracker\Tracker::class);
         $this->tracker_factory = $this->createStub(\TrackerFactory::class);
 
         $this->factory = new TrackerSemantics($this->tracker_factory);

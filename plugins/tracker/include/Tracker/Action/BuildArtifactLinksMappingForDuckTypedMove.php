@@ -21,9 +21,9 @@
 namespace Tuleap\Tracker\Action;
 
 use PFUser;
-use Tracker;
 use Tracker_XML_Importer_ArtifactImportedMapping;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Tracker;
 
 interface BuildArtifactLinksMappingForDuckTypedMove
 {

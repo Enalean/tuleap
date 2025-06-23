@@ -25,7 +25,6 @@ namespace Tuleap\Tracker\Artifact\MailGateway;
 use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\NullLogger;
-use Tracker;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_Changeset_IncomingMailDao;
 use Tracker_Artifact_MailGateway_CitationStripper;
@@ -43,6 +42,7 @@ use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\TextFieldBuilder;
+use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MailGatewayInsecureTest extends TestCase

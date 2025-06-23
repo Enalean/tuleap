@@ -213,7 +213,7 @@ final class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends \Tul
         $artifact       = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact->method('getId')->willReturn(1001);
 
-        $tracker = $this->createMock(\Tracker::class);
+        $tracker = $this->createMock(\Tuleap\Tracker\Tracker::class);
         $project = $this->createMock(\Project::class);
 
         $project->method('getUnixNameMixedCase')->willReturn('my-project');
@@ -258,7 +258,7 @@ final class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends \Tul
         $artifact       = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact->method('getId')->willReturn(123);
 
-        $tracker = $this->createMock(\Tracker::class);
+        $tracker = $this->createMock(\Tuleap\Tracker\Tracker::class);
         $project = $this->createMock(\Project::class);
 
         $project->method('getUnixNameMixedCase')->willReturn('my-project');
@@ -294,7 +294,7 @@ final class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends \Tul
         $artifact       = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact->method('getId')->willReturn(1001);
 
-        $tracker = $this->createMock(\Tracker::class);
+        $tracker = $this->createMock(\Tuleap\Tracker\Tracker::class);
         $project = $this->createMock(\Project::class);
 
         $project->method('getUnixNameMixedCase')->willReturn('my-project');
@@ -338,7 +338,7 @@ final class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends \Tul
         $artifact       = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact->method('getId')->willReturn(1001);
 
-        $tracker = $this->createMock(\Tracker::class);
+        $tracker = $this->createMock(\Tuleap\Tracker\Tracker::class);
         $project = $this->createMock(\Project::class);
 
         $project->method('getUnixNameMixedCase')->willReturn('my-project');

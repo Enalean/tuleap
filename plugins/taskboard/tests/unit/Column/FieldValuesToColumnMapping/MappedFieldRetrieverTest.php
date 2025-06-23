@@ -37,7 +37,7 @@ final class MappedFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     private \Cardwall_FieldProviders_SemanticStatusFieldRetriever&MockObject $status_retriever;
     private RetrieveUsedListFieldStub $form_element_factory;
     private SearchMappedFieldStub $search_mapped_field;
-    private \Tracker $user_stories_tracker;
+    private \Tuleap\Tracker\Tracker $user_stories_tracker;
     private TaskboardTracker $taskboard_tracker;
 
     protected function setUp(): void

@@ -60,7 +60,7 @@ class LinksRetriever
     /**
      * @return Artifact[]
      */
-    public function retrieveReverseLinksFromTracker(Artifact $artifact, \PFUser $user, \Tracker $target_tracker): array
+    public function retrieveReverseLinksFromTracker(Artifact $artifact, \PFUser $user, \Tuleap\Tracker\Tracker $target_tracker): array
     {
         $artifact_link_field = $artifact->getAnArtifactLinkField($user);
         $last_changeset      = $artifact->getLastChangeset();

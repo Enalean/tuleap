@@ -27,7 +27,6 @@ use PFUser;
 use PlanningFactory;
 use SimpleXMLElement;
 use TemplateRendererFactory;
-use Tracker;
 use Tracker_FormElement_Field;
 use Tracker_FormElementFactory;
 use Tracker_HierarchyFactory;
@@ -38,6 +37,7 @@ use Tuleap\Tracker\Semantic\Status\Done\SemanticDone;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneDao;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneFactory;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneValueChecker;
+use Tuleap\Tracker\Tracker;
 use UserManager;
 
 class SemanticVelocity extends Tracker_Semantic

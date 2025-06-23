@@ -23,13 +23,13 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
 
 use PFUser;
-use Tracker;
 use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\IRetrieveAllUsableTypesInProject;
 use Tuleap\Tracker\Hierarchy\ParentInHierarchyRetriever;
 use Tuleap\Tracker\Permission\RetrieveUserPermissionOnTrackers;
 use Tuleap\Tracker\Permission\TrackerPermissionType;
+use Tuleap\Tracker\Tracker;
 use function Psl\Json\encode as psl_json_encode;
 
 final readonly class EditorWithReverseLinksPresenterBuilder
@@ -63,7 +63,7 @@ final readonly class EditorWithReverseLinksPresenterBuilder
         PFUser $user,
     ): EditorWithReverseLinksPresenter {
         $parent_tracker = $this->parent_tracker_retriever->getParentTracker($current_tracker)
-            ->andThen(function (\Tracker $parent) use ($user) {
+            ->andThen(function (\Tuleap\Tracker\Tracker $parent) use ($user) {
                 $permissions               = $this->tracker_permissions_retriever->retrieveUserPermissionOnTrackers(
                     $user,
                     [$parent],

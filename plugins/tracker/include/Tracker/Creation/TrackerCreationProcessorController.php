@@ -209,7 +209,7 @@ class TrackerCreationProcessorController implements DispatchableWithRequest, Dis
         $GLOBALS['Response']->redirect('/plugins/tracker/' . urlencode($project->getUnixNameLowerCase()) . '/new');
     }
 
-    private function redirectToModal(\Tracker $tracker): void
+    private function redirectToModal(\Tuleap\Tracker\Tracker $tracker): void
     {
         $GLOBALS['Response']->redirect(
             '/plugins/tracker/?tracker=' . urlencode((string) $tracker->getId()) .

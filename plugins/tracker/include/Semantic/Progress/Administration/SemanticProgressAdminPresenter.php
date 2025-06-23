@@ -36,7 +36,7 @@ final class SemanticProgressAdminPresenter
     public string $tracker_semantic_admin_url;
 
     public function __construct(
-        \Tracker $tracker,
+        \Tuleap\Tracker\Tracker $tracker,
         public string $semantic_usages_description,
         public bool $is_semantic_defined,
         public string $updater_url,

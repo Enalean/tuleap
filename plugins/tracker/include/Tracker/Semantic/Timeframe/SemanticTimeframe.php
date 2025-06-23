@@ -25,7 +25,6 @@ namespace Tuleap\Tracker\Semantic\Timeframe;
 use Codendi_Request;
 use PFUser;
 use SimpleXMLElement;
-use Tracker;
 use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_Date;
 use Tracker_FormElement_Field_Numeric;
@@ -37,6 +36,7 @@ use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Tracker\Notifications\Settings\CalendarEventConfigDao;
 use Tuleap\Tracker\Semantic\Timeframe\Administration\SemanticTimeframeAdministrationPresenterBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\Administration\SemanticTimeframeCurrentConfigurationPresenterBuilder;
+use Tuleap\Tracker\Tracker;
 
 class SemanticTimeframe extends Tracker_Semantic
 {

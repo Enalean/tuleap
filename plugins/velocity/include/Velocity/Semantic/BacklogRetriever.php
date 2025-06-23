@@ -21,7 +21,7 @@
 namespace Tuleap\Velocity\Semantic;
 
 use PlanningFactory;
-use Tracker;
+use Tuleap\Tracker\Tracker;
 
 class BacklogRetriever
 {

@@ -46,7 +46,7 @@ class SetFloatValueValidator
     /**
      * @throws InvalidPostActionException
      */
-    public function validate(\Tracker $tracker, SetFloatValue ...$set_float_values): void
+    public function validate(\Tuleap\Tracker\Tracker $tracker, SetFloatValue ...$set_float_values): void
     {
         try {
             $this->field_ids_validator->validate(...$set_float_values);
@@ -83,7 +83,7 @@ class SetFloatValueValidator
         }
     }
 
-    private function extractFloatFieldIds(\Tracker $tracker): array
+    private function extractFloatFieldIds(\Tuleap\Tracker\Tracker $tracker): array
     {
         $float_fields    = $this->form_element_factory->getUsedFormElementsByType($tracker, 'float');
         $float_field_ids = [];

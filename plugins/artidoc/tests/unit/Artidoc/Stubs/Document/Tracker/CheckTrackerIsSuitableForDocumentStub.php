@@ -32,18 +32,18 @@ use Tuleap\NeverThrow\Result;
 final class CheckTrackerIsSuitableForDocumentStub implements CheckTrackerIsSuitableForDocument
 {
     /**
-     * @param null|array<int, \Tracker> $trackers
+     * @param null|array<int, \Tuleap\Tracker\Tracker> $trackers
      */
     private function __construct(private ?array $trackers)
     {
     }
 
-    public static function withSuitableTrackers(\Tracker $tracker, \Tracker ...$other_trackers): self
+    public static function withSuitableTrackers(\Tuleap\Tracker\Tracker $tracker, \Tuleap\Tracker\Tracker ...$other_trackers): self
     {
         return new self(
             array_reduce(
                 [$tracker, ...$other_trackers],
-                static function (array $trackers, \Tracker $tracker): array {
+                static function (array $trackers, \Tuleap\Tracker\Tracker $tracker): array {
                     $trackers[$tracker->getId()] = $tracker;
 
                     return $trackers;
@@ -63,7 +63,7 @@ final class CheckTrackerIsSuitableForDocumentStub implements CheckTrackerIsSuita
         return new self(null);
     }
 
-    public function checkTrackerIsSuitableForDocument(\Tracker $tracker, Artidoc $document, \PFUser $user): Ok|Err
+    public function checkTrackerIsSuitableForDocument(\Tuleap\Tracker\Tracker $tracker, Artidoc $document, \PFUser $user): Ok|Err
     {
         if ($this->trackers === null) {
             throw new \Exception('Unexpected call to checkTrackerIsSuitableForDocument');

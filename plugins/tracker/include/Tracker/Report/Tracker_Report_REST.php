@@ -17,6 +17,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Tracker\Tracker;
+
 class Tracker_Report_REST extends Tracker_Report
 {
     public const OPERATOR_PROPERTY_NAME = 'operator';

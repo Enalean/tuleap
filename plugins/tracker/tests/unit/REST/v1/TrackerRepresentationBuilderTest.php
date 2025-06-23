@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\REST\v1;
 
 use Luracast\Restler\RestException;
-use Tracker;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -37,6 +36,7 @@ use Tuleap\Tracker\Test\Stub\BuildCompleteTrackerRESTRepresentationStub;
 use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
 use Tuleap\Tracker\Test\Stub\Semantic\GetTitleSemanticStub;
 use Tuleap\Tracker\Test\Stub\VerifySubmissionPermissionStub;
+use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TrackerRepresentationBuilderTest extends TestCase

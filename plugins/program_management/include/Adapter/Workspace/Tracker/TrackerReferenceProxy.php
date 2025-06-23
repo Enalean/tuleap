@@ -23,9 +23,9 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Workspace\Tracker;
 
-use Tracker;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\IterationTracker\IterationTrackerIdentifier;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
+use Tuleap\Tracker\Tracker;
 
 /**
  * @psalm-immutable
@@ -64,7 +64,7 @@ final readonly class TrackerReferenceProxy implements TrackerReference
     {
         return '/plugins/tracker/?' .
             http_build_query(
-                ['tracker' => $this->id, 'func' => \Tracker::TRACKER_ACTION_NAME_FORM_ELEMENT_UPDATE_VIEW, 'formElement' => $field_id]
+                ['tracker' => $this->id, 'func' => \Tuleap\Tracker\Tracker::TRACKER_ACTION_NAME_FORM_ELEMENT_UPDATE_VIEW, 'formElement' => $field_id]
             );
     }
 

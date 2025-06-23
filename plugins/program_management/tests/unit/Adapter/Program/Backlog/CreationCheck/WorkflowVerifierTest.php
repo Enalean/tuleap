@@ -245,7 +245,7 @@ final class WorkflowVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    protected function getTrackerWithIdWithGenericProject(int $tracker_id, string $tracker_name): \Tracker
+    protected function getTrackerWithIdWithGenericProject(int $tracker_id, string $tracker_name): \Tuleap\Tracker\Tracker
     {
         $project = new \Project(['group_id' => 101, 'group_name' => 'My project', 'unix_group_name' => 'my_project', 'icon_codepoint' => '']);
         return TrackerTestBuilder::aTracker()->withId($tracker_id)->withName($tracker_name)->withProject($project)->build();

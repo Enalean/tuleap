@@ -24,7 +24,6 @@ namespace Tuleap\CrossTracker\Query\Advanced\QueryBuilder\Metadata\AlwaysThereFi
 
 use LogicException;
 use ParagonIE\EasyDB\EasyStatement;
-use Tracker;
 use Tuleap\CrossTracker\Query\Advanced\QueryBuilder\Metadata\MetadataValueWrapperParameters;
 use Tuleap\CrossTracker\Query\ParametrizedWhere;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenValueWrapper;
@@ -36,6 +35,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\SimpleValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\StatusOpenValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperVisitor;
 use Tuleap\Tracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
+use Tuleap\Tracker\Tracker;
 
 /**
  * @template-implements ValueWrapperVisitor<MetadataValueWrapperParameters, ParametrizedWhere>

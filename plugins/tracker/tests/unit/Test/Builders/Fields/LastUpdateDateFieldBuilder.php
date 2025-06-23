@@ -27,7 +27,7 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 final class LastUpdateDateFieldBuilder
 {
     private string $name = 'last_update_date';
-    private \Tracker $tracker;
+    private \Tuleap\Tracker\Tracker $tracker;
 
     private function __construct(private readonly int $id)
     {

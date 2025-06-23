@@ -29,7 +29,6 @@ use PFUser;
 use PHPUnit\Framework\Attributes\After;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use PHPUnit\Framework\MockObject\MockObject;
-use Tracker;
 use Tracker_Artifact_Redirect;
 use Tracker_FormElement_Field_Computed;
 use Tracker_FormElementFactory;
@@ -60,6 +59,7 @@ use Tuleap\Tracker\Test\Stub\Permission\TrackersPermissionsPassthroughRetriever;
 use Tuleap\Tracker\Test\Stub\RetrieveForwardLinksStub;
 use Tuleap\Tracker\Test\Stub\RetrieveReverseLinksStub;
 use Tuleap\Tracker\Test\Stub\RetrieveViewableArtifactStub;
+use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDetector;
 use function Psl\Json\encode as psl_json_encode;
 

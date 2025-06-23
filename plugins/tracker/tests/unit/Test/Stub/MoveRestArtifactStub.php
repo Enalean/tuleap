@@ -24,13 +24,13 @@ namespace Tuleap\Tracker\Test\Stub;
 
 use PFUser;
 use Psr\Log\LoggerInterface;
-use Tracker;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Exception\MoveArtifactNotDoneException;
 use Tuleap\Tracker\Exception\MoveArtifactNoValuesToProcessException;
 use Tuleap\Tracker\Exception\MoveArtifactSemanticsException;
 use Tuleap\Tracker\Exception\MoveArtifactTargetProjectNotActiveException;
 use Tuleap\Tracker\REST\v1\Move\MoveRestArtifact;
+use Tuleap\Tracker\Tracker;
 
 final class MoveRestArtifactStub implements MoveRestArtifact
 {

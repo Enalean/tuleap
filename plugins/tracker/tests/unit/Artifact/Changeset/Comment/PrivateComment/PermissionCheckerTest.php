@@ -25,13 +25,13 @@ namespace Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment;
 use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
 use ProjectUGroup;
-use Tracker;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_Changeset_Comment;
 use Tuleap\Test\Builders\ProjectUGroupTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
+use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PermissionCheckerTest extends TestCase

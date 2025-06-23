@@ -38,7 +38,7 @@ final readonly class TrackerDuplicationUserGroupMapping
     {
     }
 
-    public static function fromMapping(Tracker_UgroupMappingBuilder $builder, array|false $ugroup_mapping, \Tracker $template_tracker, \Project $project): self
+    public static function fromMapping(Tracker_UgroupMappingBuilder $builder, array|false $ugroup_mapping, \Tuleap\Tracker\Tracker $template_tracker, \Project $project): self
     {
         if ($ugroup_mapping) {
             return new self(DuplicationType::DUPLICATE_NEW_PROJECT, $ugroup_mapping);

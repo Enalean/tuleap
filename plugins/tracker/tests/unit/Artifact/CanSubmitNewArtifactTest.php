@@ -31,7 +31,7 @@ final class CanSubmitNewArtifactTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private CanSubmitNewArtifact $can_submit_artifact;
     private \PFUser $user;
-    private \Tracker $tracker;
+    private \Tuleap\Tracker\Tracker $tracker;
 
     protected function setUp(): void
     {

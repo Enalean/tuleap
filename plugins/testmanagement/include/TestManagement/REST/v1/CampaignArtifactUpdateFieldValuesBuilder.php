@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\TestManagement\REST\v1;
 
 use PFUser;
-use Tracker;
 use Tracker_FormElementFactory;
 use Tuleap\TestManagement\Campaign\Campaign;
 use Tuleap\TestManagement\LabelFieldNotFoundException;
@@ -32,6 +31,7 @@ use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 use Tuleap\Tracker\Semantic\Status\SemanticStatusClosedValueNotFoundException;
 use Tuleap\Tracker\Semantic\Status\SemanticStatusNotDefinedException;
 use Tuleap\Tracker\Semantic\Status\StatusValueRetriever;
+use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\Workflow\NoPossibleValueException;
 
 /**

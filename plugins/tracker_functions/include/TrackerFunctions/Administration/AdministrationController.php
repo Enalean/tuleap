@@ -121,7 +121,7 @@ final class AdministrationController implements DispatchableWithRequest, Dispatc
         $tracker->displayFooter($this->tracker_layout);
     }
 
-    public static function getUrl(\Tracker $tracker): string
+    public static function getUrl(\Tuleap\Tracker\Tracker $tracker): string
     {
         return '/tracker_functions/' . urlencode((string) $tracker->getId()) . '/admin';
     }
@@ -133,7 +133,7 @@ final class AdministrationController implements DispatchableWithRequest, Dispatc
             ->getProject();
     }
 
-    private function getTracker(int $id): \Tracker
+    private function getTracker(int $id): \Tuleap\Tracker\Tracker
     {
         $tracker = $this->retrieve_tracker->getTrackerById($id);
         if (! $tracker) {

@@ -25,7 +25,7 @@ namespace Tuleap\AgileDashboard\Planning;
 use PFUser;
 use Planning;
 use PlanningFactory;
-use Tracker;
+use Tuleap\Tracker\Tracker;
 
 class PlanningTrackerBacklogChecker
 {

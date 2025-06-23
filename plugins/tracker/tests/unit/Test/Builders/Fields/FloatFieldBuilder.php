@@ -32,7 +32,7 @@ final class FloatFieldBuilder
     private string $name                        = 'float';
     private ?\PFUser $user_with_read_permission = null;
     private bool $read_permission               = false;
-    private \Tracker $tracker;
+    private \Tuleap\Tracker\Tracker $tracker;
     private bool $is_required = false;
 
     private function __construct(private readonly int $id)
@@ -51,7 +51,7 @@ final class FloatFieldBuilder
         return $this;
     }
 
-    public function inTracker(\Tracker $tracker): self
+    public function inTracker(\Tuleap\Tracker\Tracker $tracker): self
     {
         $this->tracker = $tracker;
         return $this;

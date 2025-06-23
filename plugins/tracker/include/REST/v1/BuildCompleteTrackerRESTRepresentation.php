@@ -23,9 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\REST\v1;
 
 use PFUser;
-use Tracker;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\CompleteTrackerRepresentation;
+use Tuleap\Tracker\Tracker;
 
 interface BuildCompleteTrackerRESTRepresentation
 {

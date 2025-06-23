@@ -32,7 +32,6 @@ use Planning_ArtifactMilestone;
 use Planning_MilestoneFactory;
 use PlanningFactory;
 use Project;
-use Tracker;
 use Tracker_Artifact_Changeset;
 use Tuleap\AgileDashboard\Milestone\PaginatedMilestones;
 use Tuleap\AgileDashboard\Milestone\ParentTrackerRetriever;
@@ -44,6 +43,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MilestoneRepresentationBuilderTest extends TestCase

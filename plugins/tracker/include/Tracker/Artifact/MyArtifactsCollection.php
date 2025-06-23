@@ -24,14 +24,14 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Artifact;
 
 use PFUser;
-use Tracker;
 use Tuleap\Tracker\RetrieveTracker;
 use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle;
+use Tuleap\Tracker\Tracker;
 
 class MyArtifactsCollection implements \Countable
 {
     /**
-     * @var array<int, \Tracker>
+     * @var array<int, \Tuleap\Tracker\Tracker>
      */
     private $trackers           = [];
     private $trackers_has_title = [];

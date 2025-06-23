@@ -35,7 +35,7 @@ final readonly class ConfiguredTrackerRetriever implements RetrieveConfiguredTra
     ) {
     }
 
-    public function getTracker(Artidoc $document): ?\Tracker
+    public function getTracker(Artidoc $document): ?\Tuleap\Tracker\Tracker
     {
         $tracker_id = $this->dao->getTracker($document->getId());
 

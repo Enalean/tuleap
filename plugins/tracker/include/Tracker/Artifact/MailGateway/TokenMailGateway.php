@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Tracker;
+
 class Tracker_Artifact_MailGateway_TokenMailGateway extends Tracker_Artifact_MailGateway_MailGateway
 {
     protected function canCreateArtifact(Tracker $tracker)

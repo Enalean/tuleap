@@ -77,7 +77,7 @@ final class TestPlanPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->testmanagement_config       = $this->createMock(Config::class);
         $this->tracker_factory             = $this->createMock(TrackerFactory::class);
         $test_definition_tracker_retriever = $this->createMock(TestPlanTestDefinitionTrackerRetriever::class);
-        $test_def_tracker                  = $this->createMock(\Tracker::class);
+        $test_def_tracker                  = $this->createMock(\Tuleap\Tracker\Tracker::class);
         $test_def_tracker->method('getId')->willReturn(146);
         $test_def_tracker->method('getName')->willReturn('Test Def');
         $test_definition_tracker_retriever->method('getTestDefinitionTracker')->willReturn($test_def_tracker);
@@ -107,7 +107,7 @@ final class TestPlanPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->milestone->method('getParent')->willReturn(null);
         $this->testmanagement_config->method('getCampaignTrackerId')->willReturn(145);
-        $tracker = $this->createMock(\Tracker::class);
+        $tracker = $this->createMock(\Tuleap\Tracker\Tracker::class);
         $this->tracker_factory->method('getTrackerById')->willReturn($tracker);
         $tracker->method('userCanSubmitArtifact')->willReturn(true);
 
@@ -129,7 +129,7 @@ final class TestPlanPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->milestone->method('getParent')->willReturn($parent_artifact);
 
         $this->testmanagement_config->method('getCampaignTrackerId')->willReturn(145);
-        $tracker = $this->createMock(\Tracker::class);
+        $tracker = $this->createMock(\Tuleap\Tracker\Tracker::class);
         $this->tracker_factory->method('getTrackerById')->willReturn($tracker);
         $tracker->method('userCanSubmitArtifact')->willReturn(true);
 
@@ -147,7 +147,7 @@ final class TestPlanPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->milestone->method('getParent')->willReturn(null);
         $this->testmanagement_config->method('getCampaignTrackerId')->willReturn(145);
-        $tracker = $this->createMock(\Tracker::class);
+        $tracker = $this->createMock(\Tuleap\Tracker\Tracker::class);
         $this->tracker_factory->method('getTrackerById')->willReturn($tracker);
         $tracker->method('userCanSubmitArtifact')->willReturn(false);
 

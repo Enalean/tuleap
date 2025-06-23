@@ -38,7 +38,7 @@ final readonly class InvalidSearchableCollectorVisitor implements SearchableVisi
     public function __construct(
         private \Tracker_FormElementFactory $form_element_factory,
         private InvalidFieldChecker $field_checker,
-        private \Tracker $tracker,
+        private \Tuleap\Tracker\Tracker $tracker,
         private \PFUser $user,
     ) {
     }

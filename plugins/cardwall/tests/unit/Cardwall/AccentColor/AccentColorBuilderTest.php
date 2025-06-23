@@ -24,13 +24,13 @@ require_once __DIR__ . '/../../bootstrap.php';
 
 use PFUser;
 use PHPUnit_Framework_MockObject_MockObject;
-use Tracker;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Exception\NoChangesetException;
 use Tuleap\Tracker\Artifact\Exception\NoChangesetValueException;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\NoBindDecoratorException;
+use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class AccentColorBuilderTest extends \Tuleap\Test\PHPUnit\TestCase

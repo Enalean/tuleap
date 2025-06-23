@@ -24,6 +24,7 @@ use Tuleap\Tracker\Artifact\XML\Exporter\ArtifactXMLExporter;
 use Tuleap\Tracker\Artifact\XML\Exporter\ArtifactXMLExporterBuilder;
 use Tuleap\Tracker\Artifact\XML\Exporter\InArchiveFilePathXMLExporter;
 use Tuleap\Tracker\Artifact\XML\Exporter\NullChildrenCollector;
+use Tuleap\Tracker\Tracker;
 
 class Tracker_Artifact_XMLExport
 {

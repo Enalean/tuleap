@@ -20,7 +20,6 @@
 
 namespace Tuleap\Tracker\Notifications\Settings;
 
-use Tracker;
 use Tracker_DateReminderManager;
 use Tracker_NotificationsManager;
 use Tuleap\Request\NotFoundException;
@@ -37,6 +36,7 @@ use Tuleap\Tracker\Notifications\UgroupsToNotifyDao;
 use Tuleap\Tracker\Notifications\UnsubscribersNotificationDAO;
 use Tuleap\Tracker\Notifications\UserNotificationOnlyStatusChangeDAO;
 use Tuleap\Tracker\Notifications\UsersToNotifyDao;
+use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\User\NotificationOnAllUpdatesRetriever;
 use Tuleap\Tracker\User\NotificationOnOwnActionRetriever;
 use UGroupDao;
@@ -47,7 +47,7 @@ use UserPreferencesDao;
 trait NotificationsAdminSettingsControllerCommon
 {
     /**
-     * @return \Tracker
+     * @return \Tuleap\Tracker\Tracker
      * @throws NotFoundException
      */
     private function getTrackerFromTrackerID(\TrackerFactory $tracker_factory, $id)
@@ -62,7 +62,7 @@ trait NotificationsAdminSettingsControllerCommon
     /**
      * @return Tracker_DateReminderManager
      */
-    private function getDateReminderManager(\Tracker $tracker)
+    private function getDateReminderManager(\Tuleap\Tracker\Tracker $tracker)
     {
         return new Tracker_DateReminderManager($tracker);
     }
@@ -70,7 +70,7 @@ trait NotificationsAdminSettingsControllerCommon
     /**
      * @return Tracker_NotificationsManager
      */
-    private function getNotificationsManager(UserManager $user_manager, \Tracker $tracker)
+    private function getNotificationsManager(UserManager $user_manager, \Tuleap\Tracker\Tracker $tracker)
     {
         $user_to_notify_dao             = new UsersToNotifyDao();
         $ugroup_to_notify_dao           = new UgroupsToNotifyDao();

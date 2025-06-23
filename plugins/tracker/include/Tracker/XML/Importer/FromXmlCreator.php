@@ -24,7 +24,6 @@ namespace Tuleap\Tracker\Tracker\XML\Importer;
 
 use Project;
 use SimpleXMLElement;
-use Tracker;
 use Tracker_FormElementFactory;
 use TrackerFactory;
 use TrackerFromXmlException;
@@ -37,6 +36,7 @@ use Tuleap\Tracker\Creation\TrackerCreationNotificationsSettings;
 use Tuleap\Tracker\Creation\TrackerCreationNotificationsSettingsFromXmlBuilder;
 use Tuleap\Tracker\Creation\TrackerCreationSettings;
 use Tuleap\Tracker\FormElement\Field\XMLCriteriaValueCache;
+use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
 use Tuleap\XML\PHPCast;
 use Tuleap\XML\SimpleXMLElementBuilder;

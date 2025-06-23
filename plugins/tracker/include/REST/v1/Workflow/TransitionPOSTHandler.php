@@ -148,7 +148,7 @@ class TransitionPOSTHandler
     /**
      * @throws I18NRestException 404
      */
-    private function getTrackerByTrackerId(int $tracker_id): \Tracker
+    private function getTrackerByTrackerId(int $tracker_id): \Tuleap\Tracker\Tracker
     {
         $tracker = $this->tracker_factory->getTrackerById($tracker_id);
         if ($tracker === null) {

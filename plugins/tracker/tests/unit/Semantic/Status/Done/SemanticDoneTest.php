@@ -22,10 +22,10 @@ namespace Tuleap\Tracker\Semantic\Status\Done;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use SimpleXMLElement;
-use Tracker;
 use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SemanticDoneTest extends \Tuleap\Test\PHPUnit\TestCase

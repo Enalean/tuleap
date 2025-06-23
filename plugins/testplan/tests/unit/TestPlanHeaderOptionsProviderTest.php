@@ -24,7 +24,6 @@ namespace Tuleap\TestPlan;
 
 use PHPUnit\Framework\Attributes\Depends;
 use Project;
-use Tracker;
 use TrackerFactory;
 use Tuleap\AgileDashboard\Milestone\HeaderOptionsProvider;
 use Tuleap\Layout\NewDropdown\CurrentContextSectionToHeaderOptionsInserter;
@@ -33,6 +32,7 @@ use Tuleap\Layout\NewDropdown\NewDropdownLinkSectionPresenter;
 use Tuleap\Option\Option;
 use Tuleap\TestManagement\Config;
 use Tuleap\Tracker\NewDropdown\TrackerNewDropdownLinkPresenterBuilder;
+use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TestPlanHeaderOptionsProviderTest extends \Tuleap\Test\PHPUnit\TestCase

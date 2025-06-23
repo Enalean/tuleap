@@ -36,7 +36,7 @@ final class ArtifactTestBuilder
      */
     private $id;
     /**
-     * @var \Tracker
+     * @var \Tuleap\Tracker\Tracker
      */
     private $tracker;
     private string $title       = '';
@@ -119,7 +119,7 @@ final class ArtifactTestBuilder
         return $this;
     }
 
-    public function inTracker(\Tracker $tracker): self
+    public function inTracker(\Tuleap\Tracker\Tracker $tracker): self
     {
         $this->tracker = $tracker;
 

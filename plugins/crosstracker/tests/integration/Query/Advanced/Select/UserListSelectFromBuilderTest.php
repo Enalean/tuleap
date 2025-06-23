@@ -24,7 +24,6 @@ namespace Tuleap\CrossTracker\Query\Advanced\Select;
 
 use PFUser;
 use ProjectUGroup;
-use Tracker;
 use Tracker_FormElementFactory;
 use Tuleap\CrossTracker\Query\Advanced\CrossTrackerFieldTestCase;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Representations\UserListRepresentation;
@@ -34,6 +33,7 @@ use Tuleap\DB\DBFactory;
 use Tuleap\DB\UUID;
 use Tuleap\Test\Builders\CoreDatabaseBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
+use Tuleap\Tracker\Tracker;
 use UserHelper;
 use UserManager;
 

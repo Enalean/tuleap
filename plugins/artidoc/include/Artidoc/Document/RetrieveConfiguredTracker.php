@@ -24,5 +24,5 @@ use Tuleap\Artidoc\Domain\Document\Artidoc;
 
 interface RetrieveConfiguredTracker
 {
-    public function getTracker(Artidoc $document): ?\Tracker;
+    public function getTracker(Artidoc $document): ?\Tuleap\Tracker\Tracker;
 }

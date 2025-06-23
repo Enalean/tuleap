@@ -20,8 +20,8 @@
 
 namespace Tuleap\Tracker\Notifications\Settings;
 
-use Tracker;
 use Tuleap\Tracker\Notifications\GlobalNotification;
+use Tuleap\Tracker\Tracker;
 
 class UserNotificationSettings
 {

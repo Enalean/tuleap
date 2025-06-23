@@ -37,7 +37,7 @@ class PermissionsFunctionsWrapper
     /**
      * @return array[]
      */
-    public function getTrackerUGroupsPermissions(\Tracker $tracker)
+    public function getTrackerUGroupsPermissions(\Tuleap\Tracker\Tracker $tracker)
     {
         return plugin_tracker_permission_get_tracker_ugroups_permissions($tracker->getGroupId(), $tracker->getId());
     }

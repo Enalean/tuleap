@@ -25,7 +25,6 @@ namespace Tuleap\CrossTracker\Query;
 
 use ForgeConfig;
 use PFUser;
-use Tracker;
 use Tuleap\Config\ConfigKey;
 use Tuleap\Config\ConfigKeyCategory;
 use Tuleap\Config\ConfigKeyInt;
@@ -73,6 +72,7 @@ use Tuleap\Tracker\Report\Query\Advanced\SelectablesDoNotExistException;
 use Tuleap\Tracker\Report\Query\Advanced\SelectablesMustBeUniqueException;
 use Tuleap\Tracker\Report\Query\Advanced\SelectLimitExceededException;
 use Tuleap\Tracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
+use Tuleap\Tracker\Tracker;
 
 #[ConfigKeyCategory('CrossTracker Search')]
 final readonly class CrossTrackerArtifactQueryFactory

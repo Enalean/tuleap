@@ -84,7 +84,7 @@ final class TransitionPOSTHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->user_manager
             ->method('getCurrentUser')
             ->willReturn($current_user);
-        $tracker = $this->createMock(\Tracker::class);
+        $tracker = $this->createMock(\Tuleap\Tracker\Tracker::class);
         $project = $this->createMock(\Project::class);
         $tracker->method('getProject')->willReturn($project);
         $this->tracker_factory
@@ -132,7 +132,7 @@ final class TransitionPOSTHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->user_manager
             ->method('getCurrentUser')
             ->willReturn($current_user);
-        $tracker = $this->createMock(\Tracker::class);
+        $tracker = $this->createMock(\Tuleap\Tracker\Tracker::class);
         $project = $this->createMock(\Project::class);
         $tracker->method('getProject')->willReturn($project);
         $this->tracker_factory->method('getTrackerById')->willReturn($tracker);
@@ -187,7 +187,7 @@ final class TransitionPOSTHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->user_manager
             ->method('getCurrentUser')
             ->willReturn($this->createMock(\PFUser::class));
-        $tracker = $this->createMock(\Tracker::class);
+        $tracker = $this->createMock(\Tuleap\Tracker\Tracker::class);
         $project = $this->createMock(\Project::class);
         $tracker->method('getProject')->willReturn($project);
         $this->tracker_factory

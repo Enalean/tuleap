@@ -34,9 +34,9 @@ final readonly class ParentInHierarchyRetriever
     }
 
     /**
-     * @return Option<\Tracker>
+     * @return Option<\Tuleap\Tracker\Tracker>
      */
-    public function getParentTracker(\Tracker $child_tracker): Option
+    public function getParentTracker(\Tuleap\Tracker\Tracker $child_tracker): Option
     {
         return $this->search_parent_tracker->searchParentId($child_tracker->getId())
             ->andThen(

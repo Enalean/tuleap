@@ -21,7 +21,7 @@
 namespace Tuleap\TestManagement;
 
 use Exception;
-use Tracker;
+use Tuleap\Tracker\Tracker;
 
 class LabelFieldNotFoundException extends Exception
 {

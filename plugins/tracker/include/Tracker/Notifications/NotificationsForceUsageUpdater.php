@@ -20,9 +20,9 @@
 
 namespace Tuleap\Tracker\Notifications;
 
-use Tracker;
 use Tuleap\Tracker\Notifications\Settings\UserNotificationSettings;
 use Tuleap\Tracker\Notifications\Settings\UserNotificationSettingsDAO;
+use Tuleap\Tracker\Tracker;
 
 class NotificationsForceUsageUpdater
 {

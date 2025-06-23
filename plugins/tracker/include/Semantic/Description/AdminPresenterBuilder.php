@@ -29,7 +29,7 @@ final class AdminPresenterBuilder
     {
     }
 
-    public function build(\Tuleap\Tracker\Semantic\Description\TrackerSemanticDescription $semantic_description, \Tracker $tracker, CSRFSynchronizerToken $csrf_token): AdminPresenter
+    public function build(\Tuleap\Tracker\Semantic\Description\TrackerSemanticDescription $semantic_description, \Tuleap\Tracker\Tracker $tracker, CSRFSynchronizerToken $csrf_token): AdminPresenter
     {
         $text_fields = $this->tracker_form_element_factory->getUsedFormElementsByType($tracker, ['text']);
 

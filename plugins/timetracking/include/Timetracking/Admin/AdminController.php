@@ -27,10 +27,10 @@ use PermissionsNormalizer;
 use PermissionsNormalizerOverrideCollection;
 use ProjectHistoryDao;
 use TemplateRendererFactory;
-use Tracker;
 use TrackerManager;
 use Tuleap\Layout\CssViteAsset;
 use Tuleap\Layout\IncludeViteAssets;
+use Tuleap\Tracker\Tracker;
 use User_ForgeUserGroupFactory;
 
 class AdminController

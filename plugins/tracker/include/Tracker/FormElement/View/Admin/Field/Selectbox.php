@@ -49,7 +49,7 @@ class Tracker_FormElement_View_Admin_Field_Selectbox extends Tracker_FormElement
                 $change_type_form .= 'onsubmit="return confirm(\'' . $html_purifier->purify(dgettext('tuleap-tracker', 'Are you sure you want to change the type of this field?'), Codendi_HTMLPurifier::CONFIG_JS_QUOTE) . '\');"';
                 $change_type_form .= '>';
                 $change_type_form .= $csrf_token->fetchHTMLInput();
-                $change_type_form .= '<input type="hidden" name="func" value="' . $html_purifier->purify(\Tracker::TRACKER_ACTION_NAME_FORM_ELEMENT_UPDATE) . '" />';
+                $change_type_form .= '<input type="hidden" name="func" value="' . $html_purifier->purify(\Tuleap\Tracker\Tracker::TRACKER_ACTION_NAME_FORM_ELEMENT_UPDATE) . '" />';
                 $change_type_form .= '<input type="hidden" name="tracker" value="' . $html_purifier->purify((string) $this->formElement->getTrackerId()) . '" />';
                 $change_type_form .= '<input type="hidden" name="formElement" value="' . $html_purifier->purify((string) $this->formElement->getId()) . '" />';
                 $change_type_form .= '<input type="hidden" name="change-type" value="' . $html_purifier->purify($type) . '" />';

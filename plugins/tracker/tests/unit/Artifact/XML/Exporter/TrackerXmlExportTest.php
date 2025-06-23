@@ -23,7 +23,6 @@ namespace Tuleap\Tracker\Artifact\XML\Exporter;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use SimpleXMLElement;
-use Tracker;
 use Tracker_Artifact_XMLExport;
 use TrackerFactory;
 use TrackerXmlExport;
@@ -35,6 +34,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
+use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TrackerXmlExportTest extends \Tuleap\Test\PHPUnit\TestCase

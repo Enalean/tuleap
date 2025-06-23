@@ -23,12 +23,12 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\REST\v1\Move;
 
 use Luracast\Restler\RestException;
-use Tracker;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\Tracker\Admin\MoveArtifacts\MoveActionAllowedChecker;
 use Tuleap\Tracker\Artifact\ActionButtons\MoveArtifactActionAllowedByPluginRetriever;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Tracker;
 
 final class BeforeMoveChecker implements CheckBeforeMove
 {

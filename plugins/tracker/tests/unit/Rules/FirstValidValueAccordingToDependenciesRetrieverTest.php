@@ -137,7 +137,7 @@ final class FirstValidValueAccordingToDependenciesRetrieverTest extends \Tuleap\
         $this->field_changed->method('getId')->willReturn(201);
     }
 
-    private function setUpRules(\Tracker $tracker): void
+    private function setUpRules(\Tuleap\Tracker\Tracker $tracker): void
     {
         $this->rule_1 = new Tracker_Rule_List(12, $tracker->getId(), 201, self::THIRD_VALUE_ID, 202, 127);
         $this->rule_2 = new Tracker_Rule_List(12, $tracker->getId(), 201, 114, 202, 128);

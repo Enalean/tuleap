@@ -40,11 +40,11 @@ final class ArtifactViewCollectionBuilderTest extends TestCase
     private \EventManager&\PHPUnit\Framework\MockObject\MockObject $event_manager;
     private TypeIsChildLinkRetriever&\PHPUnit\Framework\MockObject\MockObject $retriever;
     private ArtifactViewCollectionBuilder $builder;
-    private \Tracker&\PHPUnit\Framework\MockObject\MockObject $tracker;
+    private \Tuleap\Tracker\Tracker&\PHPUnit\Framework\MockObject\MockObject $tracker;
 
     protected function setUp(): void
     {
-        $this->tracker = $this->createMock(\Tracker::class);
+        $this->tracker = $this->createMock(\Tuleap\Tracker\Tracker::class);
         $this->tracker->method('getId')->willReturn(123);
 
         $this->event_manager = $this->createMock(\EventManager::class);

@@ -58,7 +58,7 @@ final class PossibleParentHandlerTest extends TestCase
     private RetrieveOpenFeatureCount $retrieve_open_feature_count;
     private RetrieveArtifactStub $retrieve_artifact;
     private \Project $project;
-    private \Tracker $tracker;
+    private \Tuleap\Tracker\Tracker $tracker;
     private \PFUser $user;
     private RetrieveRootPlanningStub $retrieve_planning;
     private PossibleParentSelector $event;

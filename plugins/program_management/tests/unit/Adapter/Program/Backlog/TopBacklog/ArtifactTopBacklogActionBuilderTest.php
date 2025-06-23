@@ -25,9 +25,9 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog;
 
 use Tuleap\Layout\JavascriptAsset;
 use Tuleap\ProgramManagement\Adapter\Workspace\Tracker\TrackerSemantics;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogActionArtifactSourceInformation;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\VerifyFeaturePlanned;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\VerifyIsInTopBacklog;
-use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogActionArtifactSourceInformation;
 use Tuleap\ProgramManagement\Domain\Program\Plan\BuildProgram;
 use Tuleap\ProgramManagement\Domain\Program\Plan\VerifyIsPlannable;
 use Tuleap\ProgramManagement\Domain\Program\Plan\VerifyPrioritizeFeaturesPermission;
@@ -133,7 +133,7 @@ final class ArtifactTopBacklogActionBuilderTest extends \Tuleap\Test\PHPUnit\Tes
         $this->build_program                 = BuildProgramStub::stubValidProgram();
         $this->verify_is_in_top_backlog_stub = VerifyIsInTopBacklogStub::buildNotInBacklog();
         $this->verify_feature_planned        = VerifyFeaturePlannedStub::isNotPlanned();
-        $tracker                             = $this->createStub(\Tracker::class);
+        $tracker                             = $this->createStub(\Tuleap\Tracker\Tracker::class);
         $tracker->method('hasSemanticsTitle')->willReturn(false);
         $tracker->method('hasSemanticsStatus')->willReturn(true);
         $this->tracker_factory->method('getTrackerById')->willReturn($tracker);
@@ -151,7 +151,7 @@ final class ArtifactTopBacklogActionBuilderTest extends \Tuleap\Test\PHPUnit\Tes
         $this->build_program                 = BuildProgramStub::stubValidProgram();
         $this->verify_is_in_top_backlog_stub = VerifyIsInTopBacklogStub::buildNotInBacklog();
         $this->verify_feature_planned        = VerifyFeaturePlannedStub::isNotPlanned();
-        $tracker                             = $this->createMock(\Tracker::class);
+        $tracker                             = $this->createMock(\Tuleap\Tracker\Tracker::class);
         $tracker->method('hasSemanticsTitle')->willReturn(true);
         $tracker->method('hasSemanticsStatus')->willReturn(false);
         $this->tracker_factory->method('getTrackerById')->willReturn($tracker);
@@ -179,7 +179,7 @@ final class ArtifactTopBacklogActionBuilderTest extends \Tuleap\Test\PHPUnit\Tes
 
     private function mockAValidTracker(): void
     {
-        $tracker = $this->createStub(\Tracker::class);
+        $tracker = $this->createStub(\Tuleap\Tracker\Tracker::class);
         $tracker->method('hasSemanticsTitle')->willReturn(true);
         $tracker->method('hasSemanticsStatus')->willReturn(true);
         $this->tracker_factory->method('getTrackerById')->willReturn($tracker);

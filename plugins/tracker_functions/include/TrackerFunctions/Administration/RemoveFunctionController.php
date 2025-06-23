@@ -49,8 +49,8 @@ final class RemoveFunctionController extends DispatchablePSR15Compatible
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $tracker = $request->getAttribute(\Tracker::class);
-        if (! $tracker instanceof \Tracker) {
+        $tracker = $request->getAttribute(\Tuleap\Tracker\Tracker::class);
+        if (! $tracker instanceof \Tuleap\Tracker\Tracker) {
             throw new \LogicException('Tracker is missing');
         }
 
@@ -87,7 +87,7 @@ final class RemoveFunctionController extends DispatchablePSR15Compatible
         );
     }
 
-    private function redirectWithFeedback(PFUser $user, \Tracker $tracker, NewFeedback $feedback): ResponseInterface
+    private function redirectWithFeedback(PFUser $user, \Tuleap\Tracker\Tracker $tracker, NewFeedback $feedback): ResponseInterface
     {
         return $this->redirect_with_feedback_factory->createResponseForUser(
             $user,
@@ -96,7 +96,7 @@ final class RemoveFunctionController extends DispatchablePSR15Compatible
         );
     }
 
-    public static function getUrl(\Tracker $tracker): string
+    public static function getUrl(\Tuleap\Tracker\Tracker $tracker): string
     {
         return '/tracker_functions/' . urlencode((string) $tracker->getId()) . '/admin/remove';
     }

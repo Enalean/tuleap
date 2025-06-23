@@ -36,7 +36,7 @@ use Tuleap\Tracker\Test\Stub\Semantic\Timeframe\BuildSemanticTimeframeStub;
 final class CalendarConfigUpdaterTest extends TestCase
 {
     private readonly \Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle&\PHPUnit\Framework\MockObject\MockObject $semantic_title;
-    private readonly \Tracker $tracker;
+    private readonly \Tuleap\Tracker\Tracker $tracker;
 
     protected function setUp(): void
     {

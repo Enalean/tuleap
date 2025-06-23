@@ -24,12 +24,12 @@ namespace Tuleap\Tracker\Tracker\XML\Updater;
 
 use PFUser;
 use SimpleXMLElement;
-use Tracker;
 use Tuleap\Tracker\Action\DuckTypedMoveFieldCollection;
 use Tuleap\Tracker\Action\VerifyIsArtifactLinkField;
 use Tuleap\Tracker\Action\VerifyIsOpenListField;
 use Tuleap\Tracker\Action\VerifyIsPermissionsOnArtifactField;
 use Tuleap\Tracker\Action\VerifyIsUserGroupOpenListField;
+use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\XML\Updater\MoveChangesetXMLUpdater;
 
 final class MoveChangesetXMLDuckTypingUpdater implements UpdateMoveChangesetXMLDuckTyping

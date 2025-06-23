@@ -71,7 +71,7 @@ class ArtifactInTypeTablePresenter
         }
     }
 
-    private function userCanReadSubmitter(\Tracker $tracker, \PFUser $current_user)
+    private function userCanReadSubmitter(\Tuleap\Tracker\Tracker $tracker, \PFUser $current_user)
     {
         $formelement_factory = \Tracker_FormElementFactory::instance();
         $fields              = $formelement_factory->getUsedSubmittedByFields($tracker);

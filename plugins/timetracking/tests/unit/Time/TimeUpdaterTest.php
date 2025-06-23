@@ -20,12 +20,12 @@
 
 namespace Tuleap\Timetracking\Time;
 
-use Tracker;
 use Tuleap\Timetracking\Exceptions\TimeTrackingMissingTimeException;
 use Tuleap\Timetracking\Exceptions\TimeTrackingNotAllowedToAddException;
 use Tuleap\Timetracking\Exceptions\TimeTrackingNotAllowedToDeleteException;
 use Tuleap\Timetracking\Exceptions\TimeTrackingNotAllowedToEditException;
 use Tuleap\Timetracking\Exceptions\TimeTrackingNotBelongToUserException;
+use Tuleap\Tracker\Tracker;
 
 require_once __DIR__ . '/../bootstrap.php';
 

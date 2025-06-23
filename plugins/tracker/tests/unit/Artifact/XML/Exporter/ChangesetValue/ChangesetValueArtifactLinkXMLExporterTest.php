@@ -102,7 +102,7 @@ final class ChangesetValueArtifactLinkXMLExporterTest extends \Tuleap\Test\PHPUn
                 222 => $this->anArtifactLinkInfoUserCanView(222, 102, null),
             ])->build();
 
-        $tracker = $this->createMock(\Tracker::class);
+        $tracker = $this->createMock(\Tuleap\Tracker\Tracker::class);
         $tracker->method('isProjectAllowedToUseType')->willReturn(false);
         $tracker->method('getId')->willReturn(101);
         $artifact = ArtifactTestBuilder::anArtifact(102)->inTracker($tracker)->build();
@@ -132,7 +132,7 @@ final class ChangesetValueArtifactLinkXMLExporterTest extends \Tuleap\Test\PHPUn
                 222 => $this->anArtifactLinkInfoUserCanView(222, 102, '_is_child'),
             ])->build();
 
-        $tracker = $this->createMock(\Tracker::class);
+        $tracker = $this->createMock(\Tuleap\Tracker\Tracker::class);
         $tracker->method('isProjectAllowedToUseType')->willReturn(true);
         $tracker->method('getId')->willReturn(101);
         $artifact = ArtifactTestBuilder::anArtifact(102)->inTracker($tracker)->build();
@@ -178,7 +178,7 @@ final class ChangesetValueArtifactLinkXMLExporterTest extends \Tuleap\Test\PHPUn
                 $this->anArtifactLinkInfoUserCannotView(111, 101, null),
             ])->build();
 
-        $tracker = $this->createMock(\Tracker::class);
+        $tracker = $this->createMock(\Tuleap\Tracker\Tracker::class);
         $tracker->method('isProjectAllowedToUseType')->willReturn(false);
         $tracker->method('getId')->willReturn(101);
         $artifact = ArtifactTestBuilder::anArtifact(102)->inTracker($tracker)->build();
@@ -203,7 +203,7 @@ final class ChangesetValueArtifactLinkXMLExporterTest extends \Tuleap\Test\PHPUn
                 $this->anArtifactLinkInfoUserCannotView(111, 101, '_is_child'),
             ])->build();
 
-        $tracker = $this->createMock(\Tracker::class);
+        $tracker = $this->createMock(\Tuleap\Tracker\Tracker::class);
         $tracker->method('getId')->willReturn(101);
         $tracker->method('isProjectAllowedToUseType')->willReturn(true);
         $artifact = ArtifactTestBuilder::anArtifact(102)->inTracker($tracker)->build();
@@ -247,7 +247,7 @@ final class ChangesetValueArtifactLinkXMLExporterTest extends \Tuleap\Test\PHPUn
                 $this->anArtifactLinkInfoUserCanView(222, 102, null),
             ])->build();
 
-        $tracker = $this->createMock(\Tracker::class);
+        $tracker = $this->createMock(\Tuleap\Tracker\Tracker::class);
         $tracker->method('isProjectAllowedToUseType')->willReturn(false);
         $tracker->method('getId')->willReturn(101);
         $artifact = ArtifactTestBuilder::anArtifact(102)->inTracker($tracker)->build();
@@ -271,7 +271,7 @@ final class ChangesetValueArtifactLinkXMLExporterTest extends \Tuleap\Test\PHPUn
                 $this->anArtifactLinkInfoUserCanView(222, 102, '_is_child'),
             ])->build();
 
-        $tracker = $this->createMock(\Tracker::class);
+        $tracker = $this->createMock(\Tuleap\Tracker\Tracker::class);
         $tracker->method('isProjectAllowedToUseType')->willReturn(true);
         $tracker->method('getId')->willReturn(101);
         $artifact = ArtifactTestBuilder::anArtifact(102)->inTracker($tracker)->build();

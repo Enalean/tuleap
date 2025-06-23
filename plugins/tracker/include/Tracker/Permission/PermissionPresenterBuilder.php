@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Tracker;
+
 class Tracker_Permission_PermissionPresenterBuilder
 {
     public function getPresenter(Tracker $tracker)

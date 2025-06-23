@@ -74,7 +74,7 @@ final class RemoveFunctionControllerTest extends TestCase
         );
 
         $request = (new NullServerRequest())
-            ->withAttribute(\Tracker::class, $tracker);
+            ->withAttribute(\Tuleap\Tracker\Tracker::class, $tracker);
 
         $this->expectException(\LogicException::class);
 
@@ -100,7 +100,7 @@ final class RemoveFunctionControllerTest extends TestCase
         );
 
         $request = (new NullServerRequest())
-            ->withAttribute(\Tracker::class, $tracker)
+            ->withAttribute(\Tuleap\Tracker\Tracker::class, $tracker)
             ->withAttribute(\PFUser::class, $user);
 
         $response = $controller->handle($request);
@@ -136,7 +136,7 @@ final class RemoveFunctionControllerTest extends TestCase
         );
 
         $request = (new NullServerRequest())
-            ->withAttribute(\Tracker::class, $tracker)
+            ->withAttribute(\Tuleap\Tracker\Tracker::class, $tracker)
             ->withAttribute(\PFUser::class, $user);
 
         $response = $controller->handle($request);

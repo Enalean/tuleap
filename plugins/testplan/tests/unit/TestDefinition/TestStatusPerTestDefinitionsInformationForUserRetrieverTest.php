@@ -293,7 +293,7 @@ final class TestStatusPerTestDefinitionsInformationForUserRetrieverTest extends 
     {
         $artifact = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact->method('getId')->willReturn(852);
-        $tracker = $this->createMock(\Tracker::class);
+        $tracker = $this->createMock(\Tuleap\Tracker\Tracker::class);
         $project = $this->createMock(\Project::class);
         $project->method('getID')->willReturn(102);
         $tracker->method('getProject')->willReturn($project);
@@ -304,11 +304,11 @@ final class TestStatusPerTestDefinitionsInformationForUserRetrieverTest extends 
     }
 
     /**
-     * @return \PHPUnit\Framework\MockObject\MockObject&\Tracker
+     * @return \PHPUnit\Framework\MockObject\MockObject&\Tuleap\Tracker\Tracker
      */
-    private function buildTracker(bool $can_user_view_it): \Tracker
+    private function buildTracker(bool $can_user_view_it): \Tuleap\Tracker\Tracker
     {
-        $tracker = $this->createMock(\Tracker::class);
+        $tracker = $this->createMock(\Tuleap\Tracker\Tracker::class);
         $tracker->method('userCanView')->willReturn($can_user_view_it);
 
         return $tracker;

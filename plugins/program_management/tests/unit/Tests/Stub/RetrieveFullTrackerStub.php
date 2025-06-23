@@ -27,16 +27,16 @@ use Tuleap\ProgramManagement\Domain\Workspace\Tracker\TrackerIdentifier;
 
 final class RetrieveFullTrackerStub implements RetrieveFullTracker
 {
-    private function __construct(private \Tracker $tracker)
+    private function __construct(private \Tuleap\Tracker\Tracker $tracker)
     {
     }
 
-    public static function withTracker(\Tracker $tracker): self
+    public static function withTracker(\Tuleap\Tracker\Tracker $tracker): self
     {
         return new self($tracker);
     }
 
-    public function getNonNullTracker(TrackerIdentifier $tracker_identifier): \Tracker
+    public function getNonNullTracker(TrackerIdentifier $tracker_identifier): \Tuleap\Tracker\Tracker
     {
         return $this->tracker;
     }

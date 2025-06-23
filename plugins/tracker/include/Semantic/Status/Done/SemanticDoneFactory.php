@@ -23,10 +23,10 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Semantic\Status\Done;
 
 use SimpleXMLElement;
-use Tracker;
 use Tracker_Semantic;
 use Tuleap\Tracker\Semantic\IBuildSemanticFromXML;
 use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
+use Tuleap\Tracker\Tracker;
 
 class SemanticDoneFactory implements IBuildSemanticFromXML
 {

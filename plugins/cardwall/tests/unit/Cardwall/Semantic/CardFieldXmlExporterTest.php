@@ -25,10 +25,10 @@ namespace Tuleap\Cardwall\Semantic;
 use Cardwall_Semantic_CardFields;
 use PHPUnit\Framework\MockObject\MockObject;
 use SimpleXMLElement;
-use Tracker;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CardFieldXmlExporterTest extends TestCase

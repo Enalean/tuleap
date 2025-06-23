@@ -22,9 +22,9 @@ namespace Tuleap\Tracker\Tracker\XML\Importer;
 
 use Project;
 use SimpleXMLElement;
-use Tracker;
 use Tracker_Exception;
 use TrackerFromXmlException;
+use Tuleap\Tracker\Tracker;
 use XML_ParseException;
 
 interface CreateFromXml

@@ -50,7 +50,7 @@ final class PromotedMilestoneBuilderTest extends TestCase
 {
     private \PFUser $user;
     private \Project $project;
-    private \Tracker $tracker;
+    private \Tuleap\Tracker\Tracker $tracker;
     private \Tuleap\Tracker\Artifact\Artifact $artifact;
     private \Tracker_FormElement_Field_String $title_field;
     private SemanticTimeframeBuilder|\PHPUnit\Framework\MockObject\MockObject $timeframe_builder;

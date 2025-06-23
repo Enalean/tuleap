@@ -22,11 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Hierarchy;
 
-use Tracker;
 use Tracker_Hierarchy_HierarchicalTracker;
 use TreeNode;
 use TreeNode_InjectPaddingInTreeNodeVisitor;
 use Tuleap\Request\CSRFSynchronizerTokenInterface;
+use Tuleap\Tracker\Tracker;
 
 final readonly class HierarchyPresenter
 {

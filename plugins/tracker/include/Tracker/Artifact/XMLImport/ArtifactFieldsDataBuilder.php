@@ -24,6 +24,7 @@ use Tuleap\Tracker\Artifact\Event\ExternalStrategiesGetter;
 use Tuleap\Tracker\Artifact\XMLImport\XMLImportFieldStrategyComputed;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
+use Tuleap\Tracker\Tracker;
 
 /**
  * I convert the xml changeset data into data structure in order to create changeset in one artifact

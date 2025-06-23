@@ -170,7 +170,7 @@ class FirstConfigCreator
     }
 
     /**
-     * @return \Tracker|null
+     * @return \Tuleap\Tracker\Tracker|null
      *
      * @throws TrackerComesFromLegacyEngineException
      * @throws TrackerNotCreatedException

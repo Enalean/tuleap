@@ -181,9 +181,9 @@ final class BeforeMoveCheckerTest extends TestCase
         $this->before_move_checker->check($source_tracker, $target_tracker, $this->user, $artifact, $event);
     }
 
-    public function getTrackerUserIsAdmin(int $tracker_id): \Tracker&\PHPUnit\Framework\MockObject\Stub
+    public function getTrackerUserIsAdmin(int $tracker_id): \Tuleap\Tracker\Tracker&\PHPUnit\Framework\MockObject\Stub
     {
-        $tracker = $this->createStub(\Tracker::class);
+        $tracker = $this->createStub(\Tuleap\Tracker\Tracker::class);
         $tracker->method('getProject')->willReturn($this->project);
         $tracker->method('userIsAdmin')->willReturn(true);
         $tracker->method('getId')->willReturn($tracker_id);
@@ -192,9 +192,9 @@ final class BeforeMoveCheckerTest extends TestCase
         return $tracker;
     }
 
-    public function getTrackerUserIsMereMortal(int $tracker_id): \Tracker&\PHPUnit\Framework\MockObject\Stub
+    public function getTrackerUserIsMereMortal(int $tracker_id): \Tuleap\Tracker\Tracker&\PHPUnit\Framework\MockObject\Stub
     {
-        $tracker = $this->createStub(\Tracker::class);
+        $tracker = $this->createStub(\Tuleap\Tracker\Tracker::class);
         $tracker->method('getProject')->willReturn($this->project);
         $tracker->method('userIsAdmin')->willReturn(false);
         $tracker->method('getId')->willReturn($tracker_id);

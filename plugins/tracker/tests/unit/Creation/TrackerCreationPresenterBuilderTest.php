@@ -28,7 +28,6 @@ use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use PHPUnit\Framework\MockObject\MockObject;
 use Project;
 use ProjectManager;
-use Tracker;
 use TrackerDao;
 use TrackerFactory;
 use Tuleap\Request\CSRFSynchronizerTokenInterface;
@@ -36,6 +35,7 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\CSRFSynchronizerTokenStub;
 use Tuleap\Tracker\Creation\JiraImporter\PendingJiraImportDao;
+use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\TrackerColor;
 
 #[DisableReturnValueGenerationForTestDoubles]

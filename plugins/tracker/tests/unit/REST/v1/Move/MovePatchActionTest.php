@@ -25,7 +25,6 @@ namespace Tuleap\Tracker\REST\v1\Move;
 use Luracast\Restler\RestException;
 use Project;
 use Psr\Log\NullLogger;
-use Tracker;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -38,6 +37,7 @@ use Tuleap\Tracker\Test\Stub\CheckBeforeMoveStub;
 use Tuleap\Tracker\Test\Stub\MoveDryRunStub;
 use Tuleap\Tracker\Test\Stub\MoveRestArtifactStub;
 use Tuleap\Tracker\Test\Stub\RetrieveTrackerStub;
+use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MovePatchActionTest extends TestCase

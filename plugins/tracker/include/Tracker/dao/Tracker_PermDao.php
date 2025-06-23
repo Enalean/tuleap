@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Tracker;
+
 class Tracker_PermDao extends DataAccessObject
 {
     public function searchAccessPermissionsByTrackerId($tracker_id)

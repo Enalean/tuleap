@@ -25,7 +25,6 @@ namespace Tuleap\CrossTracker\Query\Advanced\Select;
 use Codendi_HTMLPurifier;
 use PFUser;
 use ProjectUGroup;
-use Tracker;
 use Tuleap\CrossTracker\Query\Advanced\CrossTrackerFieldTestCase;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Representations\TextResultRepresentation;
 use Tuleap\CrossTracker\Tests\CrossTrackerQueryTestBuilder;
@@ -34,6 +33,7 @@ use Tuleap\DB\UUID;
 use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\Test\Builders\CoreDatabaseBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
+use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TitleSelectBuilderTest extends CrossTrackerFieldTestCase

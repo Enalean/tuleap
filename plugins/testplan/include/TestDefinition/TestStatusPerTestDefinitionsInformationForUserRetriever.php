@@ -137,7 +137,7 @@ class TestStatusPerTestDefinitionsInformationForUserRetriever
     /**
      * @psalm-assert-if-true !null $tracker
      */
-    private function canUserViewTracker(?\Tracker $tracker, \PFUser $user): bool
+    private function canUserViewTracker(?\Tuleap\Tracker\Tracker $tracker, \PFUser $user): bool
     {
         if ($tracker === null) {
             return false;

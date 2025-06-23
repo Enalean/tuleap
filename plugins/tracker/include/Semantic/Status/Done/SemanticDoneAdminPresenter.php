@@ -23,8 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Semantic\Status\Done;
 
 use CSRFSynchronizerToken;
-use Tracker;
 use Tracker_FormElement_Field;
+use Tuleap\Tracker\Tracker;
 
 final class SemanticDoneAdminPresenter
 {

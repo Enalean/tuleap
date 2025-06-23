@@ -23,9 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\CrossTracker\Query\Advanced;
 
 use PFUser;
-use Tracker;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\VisitorParameters;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidSelectablesCollection;
+use Tuleap\Tracker\Tracker;
 
 final readonly class InvalidSelectableCollectorParameters implements VisitorParameters
 {

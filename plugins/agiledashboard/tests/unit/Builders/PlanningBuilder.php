@@ -22,9 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Test\Builders;
 
-use Tracker;
 use Tuleap\Option\Option;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Tracker;
 
 final class PlanningBuilder
 {

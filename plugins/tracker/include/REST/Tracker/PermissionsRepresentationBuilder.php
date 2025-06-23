@@ -23,10 +23,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\REST\Tracker;
 
-use Tracker;
 use Tuleap\Project\REST\MinimalUserGroupRepresentation;
 use Tuleap\Project\UGroupRetriever;
 use Tuleap\Tracker\PermissionsFunctionsWrapper;
+use Tuleap\Tracker\Tracker;
 
 readonly class PermissionsRepresentationBuilder
 {

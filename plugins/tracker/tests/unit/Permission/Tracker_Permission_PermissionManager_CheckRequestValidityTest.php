@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class Tracker_Permission_PermissionManager_CheckRequestValidityTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
@@ -39,7 +40,7 @@ final class Tracker_Permission_PermissionManager_CheckRequestValidityTest extend
     {
         $tracker_id    = 112;
         $project_id    = 34;
-        $this->tracker = $this->createMock(\Tracker::class);
+        $this->tracker = $this->createMock(\Tuleap\Tracker\Tracker::class);
         $this->tracker->method('getId')->willReturn($tracker_id);
         $this->tracker->method('getGroupId')->willReturn($project_id);
         $this->permissions         = [

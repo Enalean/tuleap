@@ -38,7 +38,7 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
     private $semantic_timeframe_dao;
 
     /**
-     * @var \Tracker
+     * @var \Tuleap\Tracker\Tracker
      */
     private $tracker;
 
@@ -56,7 +56,7 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
     protected function setUp(): void
     {
         $this->semantic_timeframe_dao      = $this->createMock(SemanticTimeframeDao::class);
-        $this->tracker                     = $this->createMock(\Tracker::class);
+        $this->tracker                     = $this->createMock(\Tuleap\Tracker\Tracker::class);
         $this->formelement_factory         = $this->createMock(\Tracker_FormElementFactory::class);
         $this->suitable_trackers_retriever = $this->createMock(SemanticTimeframeSuitableTrackersOtherSemanticsCanBeImpliedFromRetriever::class);
 
@@ -271,7 +271,7 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->suitable_trackers_retriever->method('getTrackersWeCanUseToImplyTheSemanticOfTheCurrentTrackerFrom')
             ->with($this->tracker)
             ->willReturn([
-                '150' => $this->createMock(\Tracker::class),
+                '150' => $this->createMock(\Tuleap\Tracker\Tracker::class),
             ]);
 
         $this->semantic_timeframe_dao
@@ -310,7 +310,7 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->suitable_trackers_retriever->method('getTrackersWeCanUseToImplyTheSemanticOfTheCurrentTrackerFrom')
             ->with($this->tracker)
             ->willReturn([
-                '150' => $this->createMock(\Tracker::class),
+                '150' => $this->createMock(\Tuleap\Tracker\Tracker::class),
             ]);
 
         $this->semantic_timeframe_dao

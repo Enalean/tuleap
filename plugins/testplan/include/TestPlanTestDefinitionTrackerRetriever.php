@@ -44,7 +44,7 @@ class TestPlanTestDefinitionTrackerRetriever
         $this->tracker_factory       = $tracker_factory;
     }
 
-    public function getTestDefinitionTracker(\Project $project, \PFUser $user): ?\Tracker
+    public function getTestDefinitionTracker(\Project $project, \PFUser $user): ?\Tuleap\Tracker\Tracker
     {
         $test_definition_tracker_id = $this->testmanagement_config->getTestDefinitionTrackerId($project);
         if ($test_definition_tracker_id === false) {

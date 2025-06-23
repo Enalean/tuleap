@@ -41,17 +41,17 @@ final class TimeframeImpliedFromAnotherTrackerTest extends \Tuleap\Test\PHPUnit\
      */
     private $links_retriever;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\Tracker
+     * @var \PHPUnit\Framework\MockObject\MockObject|\Tuleap\Tracker\Tracker
      */
     private $implied_from_tracker;
-    private \Tracker $tracker;
+    private \Tuleap\Tracker\Tracker $tracker;
 
     private const RELEASE_TRACKER_ID = 150;
 
     protected function setUp(): void
     {
         $this->tracker              = TrackerTestBuilder::aTracker()->withId(10)->build();
-        $this->implied_from_tracker = $this->createMock(\Tracker::class);
+        $this->implied_from_tracker = $this->createMock(\Tuleap\Tracker\Tracker::class);
         $this->implied_from_tracker->expects($this->any())->method('getName')->willReturn('Releases');
         $this->implied_from_tracker->expects($this->any())->method('getId')->willReturn(self::RELEASE_TRACKER_ID);
 

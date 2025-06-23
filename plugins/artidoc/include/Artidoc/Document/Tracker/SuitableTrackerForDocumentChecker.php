@@ -37,7 +37,7 @@ final class SuitableTrackerForDocumentChecker implements CheckTrackerIsSuitableF
     ) {
     }
 
-    public function checkTrackerIsSuitableForDocument(\Tracker $tracker, Artidoc $document, \PFUser $user): Ok|Err
+    public function checkTrackerIsSuitableForDocument(\Tuleap\Tracker\Tracker $tracker, Artidoc $document, \PFUser $user): Ok|Err
     {
         if ($tracker->isDeleted()) {
             return Result::err(TrackerNotFoundFault::forDocument($document));
@@ -68,7 +68,7 @@ final class SuitableTrackerForDocumentChecker implements CheckTrackerIsSuitableF
     }
 
     private function areTitleAndDescriptionFieldTheOnlyRequiredFields(
-        \Tracker $tracker,
+        \Tuleap\Tracker\Tracker $tracker,
         \Tracker_FormElement_Field $field_title,
         \Tracker_FormElement_Field $description_field,
     ): bool {
