@@ -38,6 +38,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
+use Tuleap\Tracker\Test\Stub\RetrieveSemanticDescriptionFieldStub;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
@@ -90,11 +91,11 @@ final class MailGatewayInsecureTest extends TestCase
         $this->incoming_mail = $this->createMock(IncomingMail::class);
         $this->incoming_mail->method('getRawMail')->willReturn('Raw mail');
 
-        $title_field       = StringFieldBuilder::aStringField(452)->build();
-        $description_field = TextFieldBuilder::aTextField(854)->build();
+        $title_field                = StringFieldBuilder::aStringField(452)->build();
+        $description_field          = TextFieldBuilder::aTextField(854)->build();
+        $retrieve_description_field = RetrieveSemanticDescriptionFieldStub::withTextField($description_field);
 
         $this->tracker->method('getTitleField')->willReturn($title_field);
-        $this->tracker->method('getDescriptionField')->willReturn($description_field);
         $this->tracker->method('getFormElementFields')->willReturn([$title_field, $description_field]);
 
         $this->changeset = ChangesetTestBuilder::aChangeset(666)->build();
@@ -111,9 +112,10 @@ final class MailGatewayInsecureTest extends TestCase
             $this->incoming_mail_dao,
             $this->artifact_creator,
             $this->formelement_factory,
-            new Tracker_ArtifactByEmailStatus($this->tracker_config),
+            new Tracker_ArtifactByEmailStatus($this->tracker_config, $retrieve_description_field),
             new NullLogger(),
-            $filter
+            $filter,
+            $retrieve_description_field,
         );
         $filter->method('isAnAutoReplyMail')->willReturn(false);
     }

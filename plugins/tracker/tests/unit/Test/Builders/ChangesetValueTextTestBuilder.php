@@ -28,7 +28,7 @@ use Tracker_FormElement_Field_Text;
 
 final class ChangesetValueTextTestBuilder
 {
-    private string $value  = 'Accipitres';
+    private ?string $value = 'Accipitres';
     private string $format = Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT;
 
     private function __construct(
@@ -53,6 +53,13 @@ final class ChangesetValueTextTestBuilder
     {
         $this->value  = $value;
         $this->format = $format;
+
+        return $this;
+    }
+
+    public function withNullValue(): self
+    {
+        $this->value = null;
 
         return $this;
     }

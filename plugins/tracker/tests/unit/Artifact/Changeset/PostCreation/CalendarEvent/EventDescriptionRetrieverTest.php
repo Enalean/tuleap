@@ -24,14 +24,18 @@ namespace Tuleap\Tracker\Artifact\Changeset\PostCreation\CalendarEvent;
 
 use ColinODell\PsrTestLogger\TestLogger;
 use PFUser;
-use PHPUnit\Framework\MockObject\MockObject;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue_Text;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\NeverThrow\Result;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Stub\RetrieveSemanticDescriptionFieldStub;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetValueTextTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\TextFieldBuilder;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class EventDescriptionRetrieverTest extends TestCase
@@ -42,22 +46,13 @@ final class EventDescriptionRetrieverTest extends TestCase
 
     private readonly Tracker_Artifact_Changeset $changeset;
     private readonly PFUser $recipient;
-    private \Tuleap\Tracker\Semantic\Description\TrackerSemanticDescription|MockObject $semantic_description;
 
     protected function setUp(): void
     {
         $this->changeset = ChangesetTestBuilder::aChangeset(1001)->build();
         $this->recipient = UserTestBuilder::buildWithDefaults();
 
-        $this->semantic_description = $this->createMock(\Tuleap\Tracker\Semantic\Description\TrackerSemanticDescription::class);
-        \Tuleap\Tracker\Semantic\Description\TrackerSemanticDescription::setInstance($this->semantic_description, $this->changeset->getTracker());
-
         \ForgeConfig::set('sys_default_domain', 'example.com');
-    }
-
-    protected function tearDown(): void
-    {
-        \Tuleap\Tracker\Semantic\Description\TrackerSemanticDescription::clearInstances();
     }
 
     /**
@@ -66,10 +61,10 @@ final class EventDescriptionRetrieverTest extends TestCase
      */
     public function testDescriptionContainsOnlyLinkToArtifactWhenTrackerDoesNotHaveDescriptionSemantic(bool $should_check_permissions): void
     {
-        $this->semantic_description->method('getField')->willReturn(null);
-
         $logger    = new TestLogger();
-        $retriever = new EventDescriptionRetriever();
+        $retriever = new EventDescriptionRetriever(
+            RetrieveSemanticDescriptionFieldStub::withNoField(),
+        );
 
         $result = $retriever->retrieveEventDescription(
             CalendarEventData::fromSummary('Christmas Party'),
@@ -91,10 +86,12 @@ final class EventDescriptionRetrieverTest extends TestCase
 
     public function testDescriptionContainsOnlyLinkToArtifactWhenDescriptionIsNotReadable(): void
     {
-        $this->setDescriptionValue('Ho ho ho, Merry Christmas!', self::USER_CANNOT_READ);
-
         $logger    = new TestLogger();
-        $retriever = new EventDescriptionRetriever();
+        $retriever = new EventDescriptionRetriever(
+            RetrieveSemanticDescriptionFieldStub::withTextField(
+                $this->buildDescriptionFieldWithValue('Ho ho ho, Merry Christmas!', self::USER_CANNOT_READ),
+            ),
+        );
 
         $should_check_permissions = true;
 
@@ -123,13 +120,12 @@ final class EventDescriptionRetrieverTest extends TestCase
      */
     public function testDescriptionContainsOnlyLinkToArtifactWhenNoValueForDescription(bool $user_can_read, bool $should_check_permissions): void
     {
-        $description_field = $this->getDescriptionField($user_can_read);
-        $this->semantic_description->method('getField')->willReturn($description_field);
-
-        $this->changeset->setFieldValue($description_field, null);
-
         $logger    = new TestLogger();
-        $retriever = new EventDescriptionRetriever();
+        $retriever = new EventDescriptionRetriever(
+            RetrieveSemanticDescriptionFieldStub::withTextField(
+                $this->buildDescriptionFieldWithValue(null, $user_can_read),
+            ),
+        );
 
         $result = $retriever->retrieveEventDescription(
             CalendarEventData::fromSummary('Christmas Party'),
@@ -160,10 +156,12 @@ final class EventDescriptionRetrieverTest extends TestCase
      */
     public function testDescriptionContainsLinkToArtifactPlusArtifactDescription(bool $user_can_read, bool $should_check_permissions): void
     {
-        $this->setDescriptionValue('Ho ho ho, Merry Christmas!', $user_can_read);
-
         $logger    = new TestLogger();
-        $retriever = new EventDescriptionRetriever();
+        $retriever = new EventDescriptionRetriever(
+            RetrieveSemanticDescriptionFieldStub::withTextField(
+                $this->buildDescriptionFieldWithValue('Ho ho ho, Merry Christmas!', $user_can_read),
+            ),
+        );
 
         $result = $retriever->retrieveEventDescription(
             CalendarEventData::fromSummary('Christmas Party'),
@@ -188,22 +186,30 @@ final class EventDescriptionRetrieverTest extends TestCase
         self::assertFalse($logger->hasDebugRecords());
     }
 
-    private function setDescriptionValue(string $description, bool $user_can_read): void
+    private function buildDescriptionFieldWithValue(?string $value, bool $user_can_read): \Tracker_FormElement_Field_Text
     {
-        $description_field = $this->getDescriptionField($user_can_read);
-        $this->semantic_description->method('getField')->willReturn($description_field);
+        $description_field = TextFieldBuilder::aTextField(1)
+            ->inTracker(TrackerTestBuilder::aTracker()->withProject(
+                ProjectTestBuilder::aProject()->withId(101)->build()
+            )->build())
+            ->withReadPermission($this->recipient, $user_can_read)->build();
 
-        $description_field_value = $this->createMock(Tracker_Artifact_ChangesetValue_Text::class);
-        $description_field_value->method('getValue')->willReturn($description);
+        if ($value !== null) {
+            $description_field_value = ChangesetValueTextTestBuilder::aValue(
+                $this->changeset->id,
+                $this->changeset,
+                $description_field
+            )->withValue(
+                $value,
+                Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT,
+            );
 
-        $this->changeset->setFieldValue($description_field, $description_field_value);
-    }
+            $this->changeset->setFieldValue($description_field, $description_field_value->build());
 
-    private function getDescriptionField(bool $user_can_read): \Tracker_FormElement_Field_Text
-    {
-        $description_field = $this->createMock(\Tracker_FormElement_Field_Text::class);
-        $description_field->method('userCanRead')->willReturn($user_can_read);
-        $description_field->method('getId')->willReturn(1);
+            return $description_field;
+        }
+
+        $this->changeset->setFieldValue($description_field, null);
 
         return $description_field;
     }

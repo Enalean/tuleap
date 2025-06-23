@@ -27,13 +27,14 @@ use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Tracker\FormElement\Field\RetrieveUsedFields;
-use Tuleap\Tracker\Semantic\Description\TrackerSemanticDescription;
+use Tuleap\Tracker\Semantic\Description\RetrieveSemanticDescriptionField;
 use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle;
 
 final class SuitableTrackerForDocumentChecker implements CheckTrackerIsSuitableForDocument
 {
     public function __construct(
         private RetrieveUsedFields $form_element_factory,
+        private RetrieveSemanticDescriptionField $description_field_retriever,
     ) {
     }
 
@@ -55,7 +56,7 @@ final class SuitableTrackerForDocumentChecker implements CheckTrackerIsSuitableF
             return Result::err(SemanticTitleIsNotAStringFault::forDocument($document));
         }
 
-        $description_field = TrackerSemanticDescription::load($tracker)->getField();
+        $description_field = $this->description_field_retriever->fromTracker($tracker);
         if (! $description_field) {
             return Result::err(NoSemanticDescriptionFault::forDocument($document));
         }

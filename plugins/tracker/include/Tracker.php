@@ -216,7 +216,7 @@ use Tuleap\Tracker\Permission\VerifySubmissionPermissions;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkChangesetValueBuilder;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValueBuilder;
 use Tuleap\Tracker\Semantic\Contributor\TrackerSemanticContributor;
-use Tuleap\Tracker\Semantic\Description\TrackerSemanticDescription;
+use Tuleap\Tracker\Semantic\Description\CachedSemanticDescriptionFieldRetriever;
 use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
 use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatusFactory;
 use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle;
@@ -1674,7 +1674,6 @@ class Tracker implements Tracker_Dispatchable_Interface
         $this->formElementFactory->displayFactories($this);
 
         $w                        = new Widget_Static(dgettext('tuleap-tracker', 'Unused elements'));
-        $unused_elements_content  = '';
         $unused_elements_content  = dgettext('tuleap-tracker', 'Below is a catalog of preconfigured elements ready for use.');
         $unused_elements_content .= '<div class="tracker-admin-palette-content"><table>';
         foreach (Tracker_FormElementFactory::instance()->getUnusedFormElementForTracker($this) as $f) {
@@ -1868,7 +1867,7 @@ class Tracker implements Tracker_Dispatchable_Interface
      */
     public function getTrackerSemanticManager()
     {
-        return new Tracker_SemanticManager($this);
+        return new Tracker_SemanticManager(CachedSemanticDescriptionFieldRetriever::instance(), $this);
     }
 
     /**
@@ -1990,7 +1989,7 @@ class Tracker implements Tracker_Dispatchable_Interface
      */
     private function getArtifactByMailStatus()
     {
-        return new Tracker_ArtifactByEmailStatus($this->getMailGatewayConfig());
+        return new Tracker_ArtifactByEmailStatus($this->getMailGatewayConfig(), CachedSemanticDescriptionFieldRetriever::instance());
     }
 
     /**
@@ -3151,31 +3150,6 @@ class Tracker implements Tracker_Dispatchable_Interface
     public function getTitleField()
     {
         $title_field = TrackerSemanticTitle::load($this)->getField();
-        if ($title_field) {
-            return $title_field;
-        } else {
-            return null;
-        }
-    }
-
-    /**
-     * Say if the tracker as "description" defined
-     *
-     * @return bool
-     */
-    public function hasSemanticsDescription()
-    {
-        return TrackerSemanticDescription::load($this)->getFieldId() ? true : false;
-    }
-
-    /**
-     * Return the description field, or null if no title field defined
-     *
-     * @return Tracker_FormElement_Field_Text the title field, or null if not defined
-     */
-    public function getDescriptionField()
-    {
-        $title_field = TrackerSemanticDescription::load($this)->getField();
         if ($title_field) {
             return $title_field;
         } else {

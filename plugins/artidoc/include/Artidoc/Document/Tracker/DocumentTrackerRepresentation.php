@@ -27,7 +27,7 @@ use Tracker_FormElement_Field_String;
 use Tracker_FormElementFactory;
 use Tuleap\Project\REST\MinimalProjectRepresentation;
 use Tuleap\Tracker\Artifact\GetFileUploadData;
-use Tuleap\Tracker\Semantic\Description\TrackerSemanticDescription;
+use Tuleap\Tracker\Semantic\Description\RetrieveSemanticDescriptionField;
 use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle;
 use Tuleap\Tracker\Tracker;
 
@@ -48,14 +48,18 @@ final readonly class DocumentTrackerRepresentation
     ) {
     }
 
-    public static function fromTracker(GetFileUploadData $file_upload_provider, Tracker $tracker, PFUser $user): self
-    {
+    public static function fromTracker(
+        GetFileUploadData $file_upload_provider,
+        RetrieveSemanticDescriptionField $retrieve_semantic_description_field,
+        Tracker $tracker,
+        PFUser $user,
+    ): self {
         $title_field = TrackerSemanticTitle::load($tracker)->getField();
         $title       = $title_field && $title_field instanceof Tracker_FormElement_Field_String && $title_field->userCanSubmit($user)
             ? new DocumentTrackerFieldStringRepresentation($title_field->getId(), $title_field->getLabel(), Tracker_FormElementFactory::instance()->getType($title_field), $title_field->getDefaultRESTValue())
             : null;
 
-        $description_field = TrackerSemanticDescription::load($tracker)->getField();
+        $description_field = $retrieve_semantic_description_field->fromTracker($tracker);
         $description       = $description_field && $description_field->userCanSubmit($user)
             ? new DocumentTrackerFieldTextRepresentation($description_field->getId(), $description_field->getLabel(), Tracker_FormElementFactory::instance()->getType($description_field), $description_field->getDefaultRESTValue())
             : null;

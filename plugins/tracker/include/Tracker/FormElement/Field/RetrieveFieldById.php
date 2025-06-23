@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2023-present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,13 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+namespace Tuleap\Tracker\FormElement\Field;
 
-namespace Tuleap\Tracker\Semantic\Description;
+use Tracker_FormElement_Field;
 
-use Tuleap\Tracker\Tracker;
-
-interface GetDescriptionSemantic
+interface RetrieveFieldById
 {
-    public function getByTracker(Tracker $tracker): TrackerSemanticDescription;
+    public function getFieldById($field_id): ?Tracker_FormElement_Field;
 }

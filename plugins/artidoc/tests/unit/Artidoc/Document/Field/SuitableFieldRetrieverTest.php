@@ -33,8 +33,8 @@ use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Tracker\Semantic\Description\TrackerSemanticDescription;
 use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle;
+use Tuleap\Tracker\Test\Stub\RetrieveSemanticDescriptionFieldStub;
 use Tuleap\Tracker\Test\Builders\Fields\ExternalFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserBindBuilder;
@@ -52,19 +52,17 @@ final class SuitableFieldRetrieverTest extends TestCase
     private PFUser $user;
     private Tracker $tracker;
     private RetrieveUsedFieldsStub $field_retriever;
+    private RetrieveSemanticDescriptionFieldStub $description_field_retriever;
 
     protected function setUp(): void
     {
-        $this->tracker         = TrackerTestBuilder::aTracker()->withId(1001)->build();
-        $this->user            = UserTestBuilder::buildWithDefaults();
-        $this->field_retriever = RetrieveUsedFieldsStub::withNoFields();
+        $this->tracker                     = TrackerTestBuilder::aTracker()->withId(1001)->build();
+        $this->user                        = UserTestBuilder::buildWithDefaults();
+        $this->field_retriever             = RetrieveUsedFieldsStub::withNoFields();
+        $this->description_field_retriever = RetrieveSemanticDescriptionFieldStub::withNoField();
 
         TrackerSemanticTitle::setInstance(
             new TrackerSemanticTitle($this->tracker, null),
-            $this->tracker,
-        );
-        TrackerSemanticDescription::setInstance(
-            new TrackerSemanticDescription($this->tracker, null),
             $this->tracker,
         );
     }
@@ -72,7 +70,6 @@ final class SuitableFieldRetrieverTest extends TestCase
     protected function tearDown(): void
     {
         TrackerSemanticTitle::clearInstances();
-        TrackerSemanticDescription::clearInstances();
     }
 
     /**
@@ -80,7 +77,7 @@ final class SuitableFieldRetrieverTest extends TestCase
      */
     private function retrieve(): Ok|Err
     {
-        $retriever = new SuitableFieldRetriever($this->field_retriever);
+        $retriever = new SuitableFieldRetriever($this->field_retriever, $this->description_field_retriever);
         return $retriever->retrieveField(self::FIELD_ID, $this->user);
     }
 
@@ -128,16 +125,12 @@ final class SuitableFieldRetrieverTest extends TestCase
 
     public function testErrForFieldThatIsSemanticDescription(): void
     {
-        $field                 = StringFieldBuilder::aStringField(self::FIELD_ID)
+        $field                             = StringFieldBuilder::aStringField(self::FIELD_ID)
             ->inTracker($this->tracker)
             ->withReadPermission($this->user, true)
             ->build();
-        $this->field_retriever = RetrieveUsedFieldsStub::withFields($field);
-
-        TrackerSemanticDescription::setInstance(
-            new TrackerSemanticDescription($this->tracker, $field),
-            $this->tracker,
-        );
+        $this->field_retriever             = RetrieveUsedFieldsStub::withFields($field);
+        $this->description_field_retriever = RetrieveSemanticDescriptionFieldStub::withTextField($field);
 
         $result = $this->retrieve();
         self::assertTrue(Result::isErr($result));

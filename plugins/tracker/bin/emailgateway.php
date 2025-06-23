@@ -28,6 +28,7 @@ use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayFilter;
+use Tuleap\Tracker\Semantic\Description\CachedSemanticDescriptionFieldRetriever;
 
 require_once __DIR__ . '/../../../src/www/include/pre.php';
 
@@ -59,9 +60,11 @@ $incoming_message_factory          = new Tracker_Artifact_MailGateway_IncomingMe
 );
 $incoming_mail_dao                 = new Tracker_Artifact_Changeset_IncomingMailDao();
 
-$citation_stripper   = new Tracker_Artifact_MailGateway_CitationStripper();
-$notifier            = new Tracker_Artifact_MailGateway_Notifier();
-$filter              = new MailGatewayFilter();
+$citation_stripper          = new Tracker_Artifact_MailGateway_CitationStripper();
+$notifier                   = new Tracker_Artifact_MailGateway_Notifier();
+$filter                     = new MailGatewayFilter();
+$retrieve_description_field = CachedSemanticDescriptionFieldRetriever::instance();
+
 $mailgateway_builder = new Tracker_Artifact_MailGateway_MailGatewayBuilder(
     $incoming_message_factory,
     $citation_stripper,
@@ -82,9 +85,10 @@ $mailgateway_builder = new Tracker_Artifact_MailGateway_MailGatewayBuilder(
         $logger
     ),
     Tracker_FormElementFactory::instance(),
-    new Tracker_ArtifactByEmailStatus($tracker_config),
+    new Tracker_ArtifactByEmailStatus($tracker_config, $retrieve_description_field),
     $logger,
-    $filter
+    $filter,
+    $retrieve_description_field,
 );
 $incoming_mail       = new \Tuleap\Tracker\Artifact\MailGateway\IncomingMail($raw_mail);
 $mailgateway         = $mailgateway_builder->build($incoming_mail);

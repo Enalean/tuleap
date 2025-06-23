@@ -35,13 +35,15 @@ use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Tracker\FormElement\Field\RetrieveUsedFields;
-use Tuleap\Tracker\Semantic\Description\TrackerSemanticDescription;
+use Tuleap\Tracker\Semantic\Description\RetrieveSemanticDescriptionField;
 use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle;
 
 final readonly class SuitableFieldRetriever
 {
-    public function __construct(private RetrieveUsedFields $factory)
-    {
+    public function __construct(
+        private RetrieveUsedFields $factory,
+        private RetrieveSemanticDescriptionField $retrieve_description_field,
+    ) {
     }
 
     /**
@@ -77,7 +79,7 @@ final readonly class SuitableFieldRetriever
             return Result::err(FieldIsTitleSemanticFault::build($field_id));
         }
 
-        $semantic_description_field = TrackerSemanticDescription::load($tracker)->getField();
+        $semantic_description_field = $this->retrieve_description_field->fromTracker($tracker);
         if ($semantic_description_field && $semantic_description_field->getId() === $field_id) {
             return Result::err(FieldIsDescriptionSemanticFault::build($field_id));
         }

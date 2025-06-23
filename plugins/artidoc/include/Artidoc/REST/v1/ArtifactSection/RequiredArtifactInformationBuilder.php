@@ -29,13 +29,15 @@ use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Tracker\Artifact\RetrieveArtifact;
-use Tuleap\Tracker\Semantic\Description\TrackerSemanticDescription;
+use Tuleap\Tracker\Semantic\Description\RetrieveSemanticDescriptionField;
 use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle;
 
 final readonly class RequiredArtifactInformationBuilder implements BuildRequiredArtifactInformation
 {
-    public function __construct(private RetrieveArtifact $artifact_retriever)
-    {
+    public function __construct(
+        private RetrieveArtifact $artifact_retriever,
+        private RetrieveSemanticDescriptionField $retrieve_description_field,
+    ) {
     }
 
     public function getRequiredArtifactInformation(ArtidocWithContext $artidoc, int $artifact_id, \PFUser $user): Ok|Err
@@ -93,7 +95,7 @@ final readonly class RequiredArtifactInformationBuilder implements BuildRequired
         }
         $title = $title_field_value->getContentAsText();
 
-        $description_field = TrackerSemanticDescription::load($artifact->getTracker())->getField();
+        $description_field = $this->retrieve_description_field->fromTracker($artifact->getTracker());
         if (! $description_field) {
             return Result::err(Fault::fromMessage(
                 sprintf(

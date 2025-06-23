@@ -31,6 +31,7 @@ use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 use Tuleap\Tracker\Rule\TrackerRulesDateValidator;
 use Tuleap\Tracker\Rule\TrackerRulesListValidator;
 use Tuleap\Tracker\Semantic\CollectionOfSemanticsUsingAParticularTrackerField;
+use Tuleap\Tracker\Semantic\Description\CachedSemanticDescriptionFieldRetriever;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
@@ -959,7 +960,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
 
     public function getUsagesInSemantics(): CollectionOfSemanticsUsingAParticularTrackerField
     {
-        $sm = new Tracker_SemanticManager($this->getTracker());
+        $sm = new Tracker_SemanticManager(CachedSemanticDescriptionFieldRetriever::instance(), $this->getTracker());
         return $sm->getSemanticsTheFieldBelongsTo($this);
     }
 

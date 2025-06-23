@@ -40,8 +40,8 @@ use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Tracker\Semantic\Description\TrackerSemanticDescription;
 use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle;
+use Tuleap\Tracker\Test\Stub\RetrieveSemanticDescriptionFieldStub;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveTrackerStub;
@@ -85,10 +85,6 @@ final class PUTConfigurationHandlerTest extends TestCase
             new TrackerSemanticTitle($this->tracker, null),
             $this->tracker
         );
-        TrackerSemanticDescription::setInstance(
-            new TrackerSemanticDescription($this->tracker, null),
-            $this->tracker
-        );
 
         $this->field_retriever  = RetrieveUsedFieldsStub::withNoFields();
         $this->saver            = SaveConfigurationStub::noop();
@@ -104,7 +100,6 @@ final class PUTConfigurationHandlerTest extends TestCase
     protected function tearDown(): void
     {
         TrackerSemanticTitle::clearInstances();
-        TrackerSemanticDescription::clearInstances();
     }
 
     private function handle(): Ok|Err
@@ -115,7 +110,8 @@ final class PUTConfigurationHandlerTest extends TestCase
             $this->retrieve_tracker,
             $this->tracker_checker,
             new SuitableFieldRetriever(
-                $this->field_retriever
+                $this->field_retriever,
+                RetrieveSemanticDescriptionFieldStub::withNoField(),
             ),
         );
 
@@ -229,10 +225,6 @@ final class PUTConfigurationHandlerTest extends TestCase
         );
         TrackerSemanticTitle::setInstance(
             new TrackerSemanticTitle($another_tracker, null),
-            $another_tracker
-        );
-        TrackerSemanticDescription::setInstance(
-            new TrackerSemanticDescription($another_tracker, null),
             $another_tracker
         );
 

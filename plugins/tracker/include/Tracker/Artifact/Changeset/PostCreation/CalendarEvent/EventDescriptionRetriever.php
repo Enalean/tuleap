@@ -26,9 +26,14 @@ use Psr\Log\LoggerInterface;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\ServerHostname;
+use Tuleap\Tracker\Semantic\Description\RetrieveSemanticDescriptionField;
 
 final class EventDescriptionRetriever implements RetrieveEventDescription
 {
+    public function __construct(private readonly RetrieveSemanticDescriptionField $retrieve_description_field)
+    {
+    }
+
     /**
      * @return Ok<CalendarEventData>
      */
@@ -41,7 +46,7 @@ final class EventDescriptionRetriever implements RetrieveEventDescription
     ): Ok {
         $default = ServerHostname::HTTPSUrl() . $changeset->getArtifact()->getUri();
 
-        $description_field = \Tuleap\Tracker\Semantic\Description\TrackerSemanticDescription::load($changeset->getTracker())->getField();
+        $description_field = $this->retrieve_description_field->fromTracker($changeset->getTracker());
         if (! $description_field) {
             $logger->debug('No semantic description for this tracker');
             return Result::ok($calendar_event_data->withDescription($default));

@@ -45,6 +45,7 @@ use Tuleap\Tracker\Report\Criteria\DeleteReportCriteriaValue;
 use Tuleap\Tracker\Report\Query\ParametrizedFrom;
 use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
+use Tuleap\Tracker\Semantic\Description\CachedSemanticDescriptionFieldRetriever;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
@@ -246,7 +247,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
      */
     protected function isSemanticTitle(): bool
     {
-        $semantic_manager = new Tracker_SemanticManager($this->getTracker());
+        $semantic_manager = new Tracker_SemanticManager(CachedSemanticDescriptionFieldRetriever::instance(), $this->getTracker());
         $semantics        = $semantic_manager->getSemantics();
         $field            = $semantics['title']->getField();
         return ($field === $this);

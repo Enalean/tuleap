@@ -129,6 +129,7 @@ use Tuleap\Tracker\REST\Artifact\ChangesetValue\FieldsDataFromValuesByFieldBuild
 use Tuleap\Tracker\REST\Artifact\CreateArtifact;
 use Tuleap\Tracker\REST\Artifact\HandlePUT;
 use Tuleap\Tracker\REST\Artifact\PUTHandler;
+use Tuleap\Tracker\Semantic\Description\CachedSemanticDescriptionFieldRetriever;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
@@ -177,7 +178,10 @@ final class ArtidocSectionsResource extends AuthenticatedResource
         $user      = UserManager::instance()->getCurrentUser();
         $collector = new RequiredSectionInformationCollector(
             $user,
-            new RequiredArtifactInformationBuilder(Tracker_ArtifactFactory::instance())
+            new RequiredArtifactInformationBuilder(
+                Tracker_ArtifactFactory::instance(),
+                CachedSemanticDescriptionFieldRetriever::instance(),
+            ),
         );
 
 
@@ -235,10 +239,15 @@ final class ArtidocSectionsResource extends AuthenticatedResource
             throw new RestException(400, 'Unknown level. Allowed values: ' . implode(', ', Level::allowed()));
         }
 
-        $user      = UserManager::instance()->getCurrentUser();
+        $user                       = UserManager::instance()->getCurrentUser();
+        $retrieve_description_field = CachedSemanticDescriptionFieldRetriever::instance();
+
         $collector = new RequiredSectionInformationCollector(
             $user,
-            new RequiredArtifactInformationBuilder(Tracker_ArtifactFactory::instance())
+            new RequiredArtifactInformationBuilder(
+                Tracker_ArtifactFactory::instance(),
+                $retrieve_description_field,
+            ),
         );
 
         $updater = new SectionUpdater(
@@ -249,6 +258,7 @@ final class ArtidocSectionsResource extends AuthenticatedResource
                 $this->getFileUploadDataProvider(),
                 new UpdateLevelDao(),
                 $this->getArtifactPutHandler(),
+                $retrieve_description_field,
                 $user,
             ),
         );
@@ -374,7 +384,10 @@ final class ArtidocSectionsResource extends AuthenticatedResource
 
         $collector = new RequiredSectionInformationCollector(
             $user,
-            new RequiredArtifactInformationBuilder(Tracker_ArtifactFactory::instance())
+            new RequiredArtifactInformationBuilder(
+                Tracker_ArtifactFactory::instance(),
+                CachedSemanticDescriptionFieldRetriever::instance(),
+            ),
         );
 
         try {
@@ -441,6 +454,7 @@ final class ArtidocSectionsResource extends AuthenticatedResource
                 ),
                 $this->getFileUploadDataProvider(),
                 $this->getArtifactPostHandler(),
+                CachedSemanticDescriptionFieldRetriever::instance(),
                 $user,
             ),
             $collector,
@@ -494,7 +508,10 @@ final class ArtidocSectionsResource extends AuthenticatedResource
     ): ArtifactSectionRepresentationBuilder {
         $configured_field_collection_builder = new ConfiguredFieldCollectionBuilder(
             new ConfiguredFieldDao(),
-            new SuitableFieldRetriever(Tracker_FormElementFactory::instance()),
+            new SuitableFieldRetriever(
+                Tracker_FormElementFactory::instance(),
+                CachedSemanticDescriptionFieldRetriever::instance(),
+            ),
         );
         return new ArtifactSectionRepresentationBuilder(
             $this->getFileUploadDataProvider(),

@@ -35,8 +35,8 @@ use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Tracker\Semantic\Description\TrackerSemanticDescription;
 use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle;
+use Tuleap\Tracker\Test\Stub\RetrieveSemanticDescriptionFieldStub;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\FileFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
@@ -76,7 +76,6 @@ final class ArtifactContentUpdaterTest extends TestCase
     protected function tearDown(): void
     {
         TrackerSemanticTitle::clearInstances();
-        TrackerSemanticDescription::clearInstances();
     }
 
     public function testFaultWhenArtifactCannotBeFound(): void
@@ -89,6 +88,7 @@ final class ArtifactContentUpdaterTest extends TestCase
             GetFileUploadDataStub::withoutField(),
             $update_level,
             $update_artifact,
+            RetrieveSemanticDescriptionFieldStub::withNoField(),
             $this->user,
         );
 
@@ -129,6 +129,7 @@ final class ArtifactContentUpdaterTest extends TestCase
             GetFileUploadDataStub::withoutField(),
             $update_level,
             $update_artifact,
+            RetrieveSemanticDescriptionFieldStub::withNoField(),
             $this->user,
         );
 
@@ -169,6 +170,7 @@ final class ArtifactContentUpdaterTest extends TestCase
             GetFileUploadDataStub::withoutField(),
             $update_level,
             $update_artifact,
+            RetrieveSemanticDescriptionFieldStub::withNoField(),
             $this->user,
         );
 
@@ -203,16 +205,13 @@ final class ArtifactContentUpdaterTest extends TestCase
             new TrackerSemanticTitle($tracker, $this->updatable_title_field),
             $tracker,
         );
-        TrackerSemanticDescription::setInstance(
-            new TrackerSemanticDescription($tracker, null),
-            $tracker,
-        );
 
         $updater = new ArtifactContentUpdater(
             RetrieveArtifactStub::withArtifacts($artifact),
             GetFileUploadDataStub::withoutField(),
             $update_level,
             $update_artifact,
+            RetrieveSemanticDescriptionFieldStub::withNoField(),
             $this->user,
         );
 
@@ -247,16 +246,13 @@ final class ArtifactContentUpdaterTest extends TestCase
             new TrackerSemanticTitle($tracker, $this->updatable_title_field),
             $tracker,
         );
-        TrackerSemanticDescription::setInstance(
-            new TrackerSemanticDescription($tracker, $this->readonly_description_field),
-            $tracker,
-        );
 
         $updater = new ArtifactContentUpdater(
             RetrieveArtifactStub::withArtifacts($artifact),
             GetFileUploadDataStub::withoutField(),
             $update_level,
             $update_artifact,
+            RetrieveSemanticDescriptionFieldStub::withTextField($this->readonly_description_field),
             $this->user,
         );
 
@@ -291,16 +287,13 @@ final class ArtifactContentUpdaterTest extends TestCase
             new TrackerSemanticTitle($tracker, $this->updatable_title_field),
             $tracker,
         );
-        TrackerSemanticDescription::setInstance(
-            new TrackerSemanticDescription($tracker, $this->updatable_description_field),
-            $tracker,
-        );
 
         $updater = new ArtifactContentUpdater(
             RetrieveArtifactStub::withArtifacts($artifact),
             GetFileUploadDataStub::withoutField(),
             $update_level,
             $update_artifact,
+            RetrieveSemanticDescriptionFieldStub::withTextField($this->updatable_description_field),
             $this->user,
         );
 
@@ -335,16 +328,13 @@ final class ArtifactContentUpdaterTest extends TestCase
             new TrackerSemanticTitle($tracker, $this->updatable_title_field),
             $tracker,
         );
-        TrackerSemanticDescription::setInstance(
-            new TrackerSemanticDescription($tracker, $this->updatable_description_field),
-            $tracker,
-        );
 
         $updater = new ArtifactContentUpdater(
             RetrieveArtifactStub::withArtifacts($artifact),
             GetFileUploadDataStub::withoutField(),
             $update_level,
             $update_artifact,
+            RetrieveSemanticDescriptionFieldStub::withTextField($this->updatable_description_field),
             $this->user,
         );
 
@@ -391,16 +381,13 @@ final class ArtifactContentUpdaterTest extends TestCase
             new TrackerSemanticTitle($tracker, $this->getTextField(self::TITLE_ID, true)),
             $tracker,
         );
-        TrackerSemanticDescription::setInstance(
-            new TrackerSemanticDescription($tracker, $this->updatable_description_field),
-            $tracker,
-        );
 
         $updater = new ArtifactContentUpdater(
             RetrieveArtifactStub::withArtifacts($artifact),
             GetFileUploadDataStub::withoutField(),
             $update_level,
             $update_artifact,
+            RetrieveSemanticDescriptionFieldStub::withTextField($this->updatable_description_field),
             $this->user,
         );
 
@@ -453,10 +440,6 @@ final class ArtifactContentUpdaterTest extends TestCase
             new TrackerSemanticTitle($tracker, $this->updatable_title_field),
             $tracker,
         );
-        TrackerSemanticDescription::setInstance(
-            new TrackerSemanticDescription($tracker, $this->updatable_description_field),
-            $tracker,
-        );
 
         $updater = new ArtifactContentUpdater(
             RetrieveArtifactStub::withArtifacts($artifact),
@@ -465,6 +448,7 @@ final class ArtifactContentUpdaterTest extends TestCase
             ),
             $update_level,
             $update_artifact,
+            RetrieveSemanticDescriptionFieldStub::withTextField($this->updatable_description_field),
             $this->user,
         );
 

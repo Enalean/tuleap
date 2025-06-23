@@ -86,6 +86,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
+use Tuleap\Tracker\Semantic\Description\CachedSemanticDescriptionFieldRetriever;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
@@ -226,7 +227,7 @@ final class ProgramIncrementCreationProcessorBuilder implements BuildProgramIncr
         $synchronized_fields_gatherer = new SynchronizedFieldsGatherer(
             $tracker_retriever,
             new \Tuleap\Tracker\Semantic\Title\TrackerSemanticTitleFactory(),
-            new \Tuleap\Tracker\Semantic\Description\TrackerSemanticDescriptionFactory(),
+            CachedSemanticDescriptionFieldRetriever::instance(),
             new \Tuleap\Tracker\Semantic\Status\TrackerSemanticStatusFactory(),
             new SemanticTimeframeBuilder(
                 new SemanticTimeframeDao(),

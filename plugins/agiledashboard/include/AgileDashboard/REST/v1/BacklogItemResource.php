@@ -54,6 +54,7 @@ use Tuleap\Tracker\REST\Helpers\IdsFromBodyAreNotUniqueException;
 use Tuleap\Tracker\REST\Helpers\OrderIdOutOfBoundException;
 use Tuleap\Tracker\REST\Helpers\OrderRepresentation;
 use Tuleap\Tracker\REST\Helpers\OrderValidator;
+use Tuleap\Tracker\Semantic\Description\CachedSemanticDescriptionFieldRetriever;
 use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
 use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle;
 use UserManager;
@@ -159,7 +160,7 @@ class BacklogItemResource extends AuthenticatedResource
 
     private function getBacklogItem(PFUser $current_user, Artifact $artifact)
     {
-        $semantic_manager = new Tracker_SemanticManager($artifact->getTracker());
+        $semantic_manager = new Tracker_SemanticManager(CachedSemanticDescriptionFieldRetriever::instance(), $artifact->getTracker());
         $semantics        = $semantic_manager->getSemantics();
 
         $artifact     = $this->updateArtifactTitleSemantic($current_user, $artifact, $semantics);

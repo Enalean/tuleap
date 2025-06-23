@@ -171,6 +171,8 @@ use Tuleap\Tracker\REST\v1\Move\MovePatchAction;
 use Tuleap\Tracker\REST\v1\Move\PostMoveArtifactRESTAddFeedback;
 use Tuleap\Tracker\REST\v1\Move\RestArtifactMover;
 use Tuleap\Tracker\REST\WorkflowRestBuilder;
+use Tuleap\Tracker\Semantic\Description\CachedSemanticDescriptionFieldRetriever;
+use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\Tracker\XML\Updater\BindOpenValueForDuckTypingUpdater;
 use Tuleap\Tracker\Tracker\XML\Updater\BindValueForDuckTypingUpdater;
 use Tuleap\Tracker\Tracker\XML\Updater\FieldChangeArtifactLinksUpdater;
@@ -316,7 +318,7 @@ class ArtifactsResource extends AuthenticatedResource
             ),
             new PermissionsRepresentationBuilder($ugroup_manager, $permissions_functions_wrapper),
             new WorkflowRestBuilder(),
-            static fn(\Tuleap\Tracker\Tracker $tracker) => new \Tracker_SemanticManager($tracker),
+            static fn(Tracker $tracker) => new \Tracker_SemanticManager(CachedSemanticDescriptionFieldRetriever::instance(), $tracker),
             new ParentInHierarchyRetriever(new HierarchyDAO(), $this->tracker_factory),
             TrackersPermissionsRetriever::build()
         );

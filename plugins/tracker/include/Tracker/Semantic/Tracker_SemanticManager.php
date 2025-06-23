@@ -25,6 +25,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\Semantic\CollectionOfSemanticsUsingAParticularTrackerField;
 use Tuleap\Tracker\Semantic\Contributor\TrackerSemanticContributor;
+use Tuleap\Tracker\Semantic\Description\RetrieveSemanticDescriptionField;
 use Tuleap\Tracker\Semantic\Description\TrackerSemanticDescription;
 use Tuleap\Tracker\Semantic\Progress\MethodBuilder;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgress;
@@ -61,12 +62,10 @@ class Tracker_SemanticManager //phpcs:ignore PSR1.Classes.ClassDeclaration.Missi
      */
     public final const TRACKER_EVENT_GET_SEMANTICS_NAMES = 'tracker_event_get_semantics_names';
 
-    /** @var Tracker */
-    protected $tracker;
-
-    public function __construct(Tracker $tracker)
-    {
-        $this->tracker = $tracker;
+    public function __construct(
+        private readonly RetrieveSemanticDescriptionField $retrieve_description_field,
+        protected Tracker $tracker,
+    ) {
     }
 
     public function process(TrackerManager $tracker_manager, $request, $current_user)
@@ -198,7 +197,12 @@ class Tracker_SemanticManager //phpcs:ignore PSR1.Classes.ClassDeclaration.Missi
         $semantics = new Tracker_SemanticCollection();
 
         $semantics->add(TrackerSemanticTitle::load($this->tracker));
-        $semantics->add(TrackerSemanticDescription::load($this->tracker));
+        $semantics->add(
+            new TrackerSemanticDescription(
+                $this->tracker,
+                $this->retrieve_description_field->fromTracker($this->tracker),
+            ),
+        );
         $semantics->add(TrackerSemanticStatus::load($this->tracker));
         $semantics->insertAfter(
             TrackerSemanticStatus::NAME,
