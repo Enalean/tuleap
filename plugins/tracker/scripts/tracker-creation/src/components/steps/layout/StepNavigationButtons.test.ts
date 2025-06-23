@@ -32,7 +32,7 @@ describe("StepNavigationButtons", () => {
         is_ready_to_submit = true,
         has_form_been_submitted = false,
         are_there_tv3 = false,
-    ): Promise<Wrapper<StepNavigationButtons>> {
+    ): Promise<Wrapper<Vue>> {
         const router: VueRouter = createRouter("my-project");
 
         jest.spyOn(router, "push").mockImplementation();
@@ -60,7 +60,7 @@ describe("StepNavigationButtons", () => {
 
     it("Does not display the [<- back] button when there is no previous step", async () => {
         const wrapper = await getWrapper({
-            nextStepName: "step-2",
+            next_step_name: "step-2",
         });
 
         expect(wrapper.find("[data-test=button-next]").exists()).toBe(true);
@@ -69,7 +69,7 @@ describe("StepNavigationButtons", () => {
 
     it("Does not display the [next ->] button when there is no next step, but displays the submit button instead", async () => {
         const wrapper = await getWrapper({
-            previousStepName: "step-1",
+            previous_step_name: "step-1",
         });
 
         expect(wrapper.find("[data-test=button-next]").exists()).toBe(false);
@@ -78,14 +78,14 @@ describe("StepNavigationButtons", () => {
     });
 
     it("Disables the [Create my tracker] submit button when the creation is not ready to be submitted", async () => {
-        const wrapper = await getWrapper({ previousStepName: "step-1" }, false, false);
+        const wrapper = await getWrapper({ previous_step_name: "step-1" }, false, false);
         const submit_button = wrapper.get("[data-test=button-create-my-tracker]");
 
         expect(submit_button.attributes("disabled")).toBe("disabled");
     });
 
     it("Disables the [Create my tracker] submit button when the form has been submitted", async () => {
-        const wrapper = await getWrapper({ previousStepName: "step-1" }, false, false, true);
+        const wrapper = await getWrapper({ previous_step_name: "step-1" }, false, false, true);
         const submit_button = wrapper.get("[data-test=button-create-my-tracker]");
 
         expect(submit_button.attributes("disabled")).toBe("disabled");
@@ -93,19 +93,16 @@ describe("StepNavigationButtons", () => {
     });
 
     it("Clicking on [Create my tracker] sets the form as submitted", async () => {
-        const wrapper = await getWrapper({ previousStepName: "step-1" }, false, true, false);
+        const wrapper = await getWrapper({ previous_step_name: "step-1" }, false, true, false);
         const submit_button = wrapper.get("[data-test=button-create-my-tracker]");
 
         submit_button.trigger("click");
 
-        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
-            "setCreationFormHasBeenSubmitted",
-            expect.anything(),
-        );
+        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("setCreationFormHasBeenSubmitted");
     });
 
     it("Disables the [next ->] button when the creation is not ready for the step 2 and to click on it does nothing", async () => {
-        const wrapper = await getWrapper({ nextStepName: "step-2" }, false);
+        const wrapper = await getWrapper({ next_step_name: "step-2" }, false);
         const next_step_button = wrapper.get("[data-test=button-next]");
 
         expect(next_step_button.attributes("disabled")).toBe("disabled");
@@ -116,7 +113,7 @@ describe("StepNavigationButtons", () => {
     });
 
     it("Clicking on the [next ->] button makes the app navigate to the next step", async () => {
-        const wrapper = await getWrapper({ nextStepName: "step-2" }, true);
+        const wrapper = await getWrapper({ next_step_name: "step-2" }, true);
 
         wrapper.get("[data-test=button-next]").trigger("click");
 
@@ -124,13 +121,13 @@ describe("StepNavigationButtons", () => {
     });
 
     it("Does not display legacy button if no tv3", async () => {
-        const wrapper = await getWrapper({ nextStepName: "step-2" });
+        const wrapper = await getWrapper({ next_step_name: "step-2" });
 
         expect(wrapper.find("[data-test=back-to-legacy]").exists()).toBe(false);
     });
 
     it("Displays legacy button if tv3", async () => {
-        const wrapper = await getWrapper({ nextStepName: "step-2" }, true, true, false, true);
+        const wrapper = await getWrapper({ next_step_name: "step-2" }, true, true, false, true);
 
         expect(wrapper.find("[data-test=back-to-legacy]").exists()).toBe(true);
     });
