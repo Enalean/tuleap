@@ -547,8 +547,10 @@ msgid ""
 "change."
 msgstr "이메일 변경이 요청되었으니 받은 편지함에서 변경을 완료하세요."
 
-msgid "An email has been sent to the address we have on file,"
-msgstr "등록된 주소로 이메일이 전송되었습니다."
+msgid ""
+"An email has been sent to the address associated with the account if it "
+"exists,"
+msgstr ""
 
 msgid ""
 "An error occurred in form submission, a link is not valid. Please retry."
@@ -4282,13 +4284,6 @@ msgstr "년"
 
 msgid "Yesterday"
 msgstr "어제"
-
-msgid ""
-"You already asked a recovery link recently, please check your email for the "
-"link to recover your password."
-msgstr ""
-"최근에 이미 복구 링크를 요청하셨으니 이메일에서 비밀번호를 복구할 수 있는 링"
-"크를 확인하세요."
 
 msgid ""
 "You appear to be double-posting this message, since it has the same subject "

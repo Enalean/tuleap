@@ -562,7 +562,9 @@ msgstr ""
 "Uma alteração de email foi solicitada, por favor verifique sua caixa de "
 "email para completar a alteração."
 
-msgid "An email has been sent to the address we have on file,"
+msgid ""
+"An email has been sent to the address associated with the account if it "
+"exists,"
 msgstr ""
 
 msgid ""
@@ -4383,11 +4385,6 @@ msgstr "Ano"
 
 msgid "Yesterday"
 msgstr "Ontem"
-
-msgid ""
-"You already asked a recovery link recently, please check your email for the "
-"link to recover your password."
-msgstr ""
 
 msgid ""
 "You appear to be double-posting this message, since it has the same subject "
