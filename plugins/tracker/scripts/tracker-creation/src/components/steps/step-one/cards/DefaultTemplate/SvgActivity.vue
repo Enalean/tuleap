@@ -18,7 +18,7 @@
   -
   -->
 
-<template functional>
+<template>
     <svg width="62" height="62" viewBox="0 0 62 62" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path
             fill-rule="evenodd"
@@ -29,3 +29,5 @@
         />
     </svg>
 </template>
+
+<script setup lang="ts"></script>

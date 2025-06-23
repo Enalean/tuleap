@@ -27,20 +27,9 @@
         />
     </div>
 </template>
-<script lang="ts">
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
-import type { Tracker } from "../../../../../store/type";
+<script setup lang="ts">
 import DefaultTemplateCard from "./DefaultTemplateCard.vue";
-import { State } from "vuex-class";
+import { useState } from "vuex-composition-helpers";
 
-@Component({
-    components: {
-        DefaultTemplateCard,
-    },
-})
-export default class DefaultTemplateSection extends Vue {
-    @State
-    readonly default_templates!: Tracker[];
-}
+const { default_templates } = useState(["default_templates"]);
 </script>

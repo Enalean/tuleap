@@ -17,7 +17,8 @@
     "slugify": "^1.6.1",
     "vue": "^2.7.8",
     "vue-router": "^3.5.3",
-    "vuex": "^3.6.2"
+    "vuex": "^3.6.2",
+    "vuex-composition-helpers": "^2.0.1"
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*",
