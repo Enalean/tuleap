@@ -33340,6 +33340,88 @@
       <code><![CDATA[addChild]]></code>
     </PossiblyNullReference>
   </file>
+  <file src="plugins/tracker/include/Semantic/Timeframe/Administration/SemanticTimeframeAdministrationPresenter.php">
+    <PossiblyFalsePropertyAssignmentValue>
+      <code><![CDATA[\json_encode($suitable_trackers)]]></code>
+      <code><![CDATA[\json_encode($usable_date_fields)]]></code>
+      <code><![CDATA[\json_encode($usable_numeric_fields)]]></code>
+    </PossiblyFalsePropertyAssignmentValue>
+  </file>
+  <file src="plugins/tracker/include/Semantic/Timeframe/Administration/SemanticTimeframeCurrentConfigurationPresenterBuilder.php">
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[! $semantics_implied_from_tracker]]></code>
+    </RiskyTruthyFalsyComparison>
+  </file>
+  <file src="plugins/tracker/include/Semantic/Timeframe/SemanticTimeframe.php">
+    <MissingReturnType>
+      <code><![CDATA[redirectToSemanticTimeframeAdmin]]></code>
+    </MissingReturnType>
+  </file>
+  <file src="plugins/tracker/include/Semantic/Timeframe/SemanticTimeframeBuilder.php">
+    <RedundantCastGivenDocblockType>
+      <code><![CDATA[(int) $row['duration_field_id']]]></code>
+      <code><![CDATA[(int) $row['end_date_field_id']]]></code>
+    </RedundantCastGivenDocblockType>
+  </file>
+  <file src="plugins/tracker/include/Semantic/Timeframe/SemanticTimeframeFromXMLBuilder.php">
+    <PossiblyNullArrayAccess>
+      <code><![CDATA[$implied_from_tracker_attributes['id']]]></code>
+      <code><![CDATA[$xml_duration_field_attributes['REF']]]></code>
+      <code><![CDATA[$xml_duration_field_attributes['REF']]]></code>
+      <code><![CDATA[$xml_end_date_field_attributes['REF']]]></code>
+      <code><![CDATA[$xml_end_date_field_attributes['REF']]]></code>
+      <code><![CDATA[$xml_start_date_field_attributes['REF']]]></code>
+      <code><![CDATA[$xml_start_date_field_attributes['REF']]]></code>
+    </PossiblyNullArrayAccess>
+    <TypeDoesNotContainType>
+      <code><![CDATA[isset($current_semantic_xml->inherited_from_tracker)]]></code>
+      <code><![CDATA[isset($current_semantic_xml->start_date_field)]]></code>
+    </TypeDoesNotContainType>
+  </file>
+  <file src="plugins/tracker/include/Semantic/Timeframe/SemanticTimeframeUpdator.php">
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[! $configs_relying_on_current_tracker]]></code>
+      <code><![CDATA[! $duration_field_id]]></code>
+      <code><![CDATA[! $end_date_field_id]]></code>
+      <code><![CDATA[! $start_date_field_id]]></code>
+    </RiskyTruthyFalsyComparison>
+  </file>
+  <file src="plugins/tracker/include/Semantic/Timeframe/TimeframeImpliedFromAnotherTracker.php">
+    <PossiblyNullReference>
+      <code><![CDATA[addAttribute]]></code>
+      <code><![CDATA[addAttribute]]></code>
+    </PossiblyNullReference>
+  </file>
+  <file src="plugins/tracker/include/Semantic/Timeframe/TimeframeWithDuration.php">
+    <PossiblyNullReference>
+      <code><![CDATA[addAttribute]]></code>
+      <code><![CDATA[addAttribute]]></code>
+      <code><![CDATA[addAttribute]]></code>
+    </PossiblyNullReference>
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[! $duration_ref]]></code>
+      <code><![CDATA[! $start_date]]></code>
+      <code><![CDATA[! $start_date_ref]]></code>
+    </RiskyTruthyFalsyComparison>
+  </file>
+  <file src="plugins/tracker/include/Semantic/Timeframe/TimeframeWithEndDate.php">
+    <PossiblyNullReference>
+      <code><![CDATA[addAttribute]]></code>
+      <code><![CDATA[addAttribute]]></code>
+      <code><![CDATA[addAttribute]]></code>
+    </PossiblyNullReference>
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[! $end_date_ref]]></code>
+      <code><![CDATA[! $start_date]]></code>
+      <code><![CDATA[! $start_date_ref]]></code>
+    </RiskyTruthyFalsyComparison>
+  </file>
+  <file src="plugins/tracker/include/Semantic/Timeframe/XML/XMLTimeframeSemantic.php">
+    <PossiblyNullReference>
+      <code><![CDATA[addAttribute]]></code>
+      <code><![CDATA[addAttribute]]></code>
+    </PossiblyNullReference>
+  </file>
   <file src="plugins/tracker/include/Semantic/Title/TrackerSemanticTitle.php">
     <MissingPropertyType>
       <code><![CDATA[$_instances]]></code>
@@ -45339,88 +45421,6 @@
     <UndefinedInterfaceMethod>
       <code><![CDATA[add]]></code>
     </UndefinedInterfaceMethod>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Semantic/Timeframe/Administration/SemanticTimeframeAdministrationPresenter.php">
-    <PossiblyFalsePropertyAssignmentValue>
-      <code><![CDATA[\json_encode($suitable_trackers)]]></code>
-      <code><![CDATA[\json_encode($usable_date_fields)]]></code>
-      <code><![CDATA[\json_encode($usable_numeric_fields)]]></code>
-    </PossiblyFalsePropertyAssignmentValue>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Semantic/Timeframe/Administration/SemanticTimeframeCurrentConfigurationPresenterBuilder.php">
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[! $semantics_implied_from_tracker]]></code>
-    </RiskyTruthyFalsyComparison>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Semantic/Timeframe/SemanticTimeframe.php">
-    <MissingReturnType>
-      <code><![CDATA[redirectToSemanticTimeframeAdmin]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Semantic/Timeframe/SemanticTimeframeBuilder.php">
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $row['duration_field_id']]]></code>
-      <code><![CDATA[(int) $row['end_date_field_id']]]></code>
-    </RedundantCastGivenDocblockType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Semantic/Timeframe/SemanticTimeframeFromXMLBuilder.php">
-    <PossiblyNullArrayAccess>
-      <code><![CDATA[$implied_from_tracker_attributes['id']]]></code>
-      <code><![CDATA[$xml_duration_field_attributes['REF']]]></code>
-      <code><![CDATA[$xml_duration_field_attributes['REF']]]></code>
-      <code><![CDATA[$xml_end_date_field_attributes['REF']]]></code>
-      <code><![CDATA[$xml_end_date_field_attributes['REF']]]></code>
-      <code><![CDATA[$xml_start_date_field_attributes['REF']]]></code>
-      <code><![CDATA[$xml_start_date_field_attributes['REF']]]></code>
-    </PossiblyNullArrayAccess>
-    <TypeDoesNotContainType>
-      <code><![CDATA[isset($current_semantic_xml->inherited_from_tracker)]]></code>
-      <code><![CDATA[isset($current_semantic_xml->start_date_field)]]></code>
-    </TypeDoesNotContainType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Semantic/Timeframe/SemanticTimeframeUpdator.php">
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[! $configs_relying_on_current_tracker]]></code>
-      <code><![CDATA[! $duration_field_id]]></code>
-      <code><![CDATA[! $end_date_field_id]]></code>
-      <code><![CDATA[! $start_date_field_id]]></code>
-    </RiskyTruthyFalsyComparison>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Semantic/Timeframe/TimeframeImpliedFromAnotherTracker.php">
-    <PossiblyNullReference>
-      <code><![CDATA[addAttribute]]></code>
-      <code><![CDATA[addAttribute]]></code>
-    </PossiblyNullReference>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Semantic/Timeframe/TimeframeWithDuration.php">
-    <PossiblyNullReference>
-      <code><![CDATA[addAttribute]]></code>
-      <code><![CDATA[addAttribute]]></code>
-      <code><![CDATA[addAttribute]]></code>
-    </PossiblyNullReference>
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[! $duration_ref]]></code>
-      <code><![CDATA[! $start_date]]></code>
-      <code><![CDATA[! $start_date_ref]]></code>
-    </RiskyTruthyFalsyComparison>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Semantic/Timeframe/TimeframeWithEndDate.php">
-    <PossiblyNullReference>
-      <code><![CDATA[addAttribute]]></code>
-      <code><![CDATA[addAttribute]]></code>
-      <code><![CDATA[addAttribute]]></code>
-    </PossiblyNullReference>
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[! $end_date_ref]]></code>
-      <code><![CDATA[! $start_date]]></code>
-      <code><![CDATA[! $start_date_ref]]></code>
-    </RiskyTruthyFalsyComparison>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Semantic/Timeframe/XML/XMLTimeframeSemantic.php">
-    <PossiblyNullReference>
-      <code><![CDATA[addAttribute]]></code>
-      <code><![CDATA[addAttribute]]></code>
-    </PossiblyNullReference>
   </file>
   <file src="plugins/tracker/include/Tracker/Semantic/Tooltip/OtherSemantic/ProgressTooltipEntry.php">
     <InvalidOperand>
