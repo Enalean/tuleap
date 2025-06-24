@@ -29,6 +29,8 @@ import { Option } from "@tuleap/option";
 import { ConfigurationFieldStub } from "@/sections/stubs/ConfigurationFieldStub";
 import type { SelectedTrackerRef } from "@/configuration/SelectedTracker";
 import { buildSelectedTracker } from "@/configuration/SelectedTracker";
+import { ref } from "vue";
+import type { SelectedFieldsCollection } from "@/configuration/SelectedFieldsCollection";
 
 const tracker_for_fields = {
     fields: [],
@@ -37,11 +39,13 @@ const tracker_for_fields = {
 
 describe("configuration-store", () => {
     let bugs: Tracker, selected_tracker: SelectedTrackerRef, store: ConfigurationStore;
+    let selected_fields: SelectedFieldsCollection;
 
     beforeEach(() => {
         bugs = TrackerStub.build(101, "Bugs");
         selected_tracker = buildSelectedTracker(Option.nothing());
-        store = initConfigurationStore(1, selected_tracker, []);
+        selected_fields = ref([]);
+        store = initConfigurationStore(1, selected_tracker, selected_fields, ref([]));
     });
 
     describe("saveTrackerConfiguration", () => {
@@ -94,11 +98,11 @@ describe("configuration-store", () => {
             vi.spyOn(rest, "getTracker").mockReturnValue(okAsync(tracker_for_fields));
 
             selected_tracker.value = Option.fromValue(bugs);
-            expect(store.selected_fields.value).toStrictEqual([]);
+            expect(selected_fields.value).toStrictEqual([]);
 
             const result = await store.saveFieldsConfiguration(fields);
 
-            expect(store.selected_fields.value).toStrictEqual(fields);
+            expect(selected_fields.value).toStrictEqual(fields);
             expect(result.isOk()).toBe(true);
         });
     });

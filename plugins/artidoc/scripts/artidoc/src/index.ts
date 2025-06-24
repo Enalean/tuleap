@@ -74,6 +74,14 @@ import {
     buildAllowedTrackersCollection,
 } from "@/configuration/AllowedTrackersCollection";
 import { buildSelectedTracker, SELECTED_TRACKER } from "@/configuration/SelectedTracker";
+import {
+    buildSelectedFieldsCollection,
+    SELECTED_FIELDS,
+} from "@/configuration/SelectedFieldsCollection";
+import {
+    AVAILABLE_FIELDS,
+    buildAvailableFieldsCollection,
+} from "@/configuration/AvailableFieldsCollection";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const vue_mount_point = document.getElementById("artidoc-mountpoint");
@@ -114,11 +122,19 @@ document.addEventListener("DOMContentLoaded", async () => {
         JSON.parse(getAttributeOrThrow(vue_mount_point, "data-allowed-trackers")),
     );
     const selected_tracker = buildSelectedTracker(saved_tracker);
+    const selected_fields = buildSelectedFieldsCollection(
+        JSON.parse(getAttributeOrThrow(vue_mount_point, "data-selected-fields")),
+    );
+    const available_fields = await buildAvailableFieldsCollection(
+        selected_tracker,
+        selected_fields,
+    );
 
     const configuration_store = initConfigurationStore(
         item_id,
         selected_tracker,
-        JSON.parse(getAttributeOrThrow(vue_mount_point, "data-selected-fields")),
+        selected_fields,
+        available_fields,
     );
 
     const is_loading_failed = ref(false);
@@ -154,6 +170,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         )
         .provide(ALLOWED_TRACKERS, allowed_trackers)
         .provide(SELECTED_TRACKER, selected_tracker)
+        .provide(SELECTED_FIELDS, selected_fields)
+        .provide(AVAILABLE_FIELDS, available_fields)
         .provide(CONFIGURATION_STORE, configuration_store)
         .provide(
             PDF_TEMPLATES_STORE,

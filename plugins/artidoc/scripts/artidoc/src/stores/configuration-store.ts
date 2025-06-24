@@ -17,12 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Ref } from "vue";
-import { ref } from "vue";
 import { Option } from "@tuleap/option";
 import { putConfiguration } from "@/helpers/rest-querier";
 import type { StrictInjectionKey } from "@tuleap/vue-strict-inject";
-import type { Project } from "@/helpers/project.type";
 import type { ConfigurationField } from "@/sections/readonly-fields/AvailableReadonlyFields";
 import { getAvailableFields } from "@/sections/readonly-fields/AvailableReadonlyFields";
 import type { Tracker } from "@/configuration/AllowedTrackersCollection";
@@ -30,15 +27,14 @@ import type { SelectedTrackerRef } from "@/configuration/SelectedTracker";
 import type { ResultAsync } from "neverthrow";
 import { okAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
+import type { SelectedFieldsCollection } from "@/configuration/SelectedFieldsCollection";
+import type { AvailableFieldsCollection } from "@/configuration/AvailableFieldsCollection";
 
 export interface ConfigurationStore {
-    selected_fields: Ref<ConfigurationField[]>;
-    available_fields: Ref<ConfigurationField[]>;
     saveTrackerConfiguration: (new_selected_tracker: Tracker) => ResultAsync<null, Fault>;
     saveFieldsConfiguration: (
         new_selected_fields: ConfigurationField[],
     ) => ResultAsync<null, Fault>;
-    current_project: Ref<Project | null>;
 }
 
 export const CONFIGURATION_STORE: StrictInjectionKey<ConfigurationStore> =
@@ -47,32 +43,16 @@ export const CONFIGURATION_STORE: StrictInjectionKey<ConfigurationStore> =
 export function initConfigurationStore(
     document_id: number,
     selected_tracker: SelectedTrackerRef,
-    selected_fields: ConfigurationField[],
+    selected_fields: SelectedFieldsCollection,
+    available_fields: AvailableFieldsCollection,
 ): ConfigurationStore {
-    const currently_selected_fields = ref(selected_fields);
-    const current_project: Ref<Project | null> = ref(
-        selected_tracker.value.mapOr((tracker) => tracker.project, null),
-    );
-
-    const available_fields: Ref<ConfigurationField[]> = ref([]);
-
-    selected_tracker.value.apply((currently_selected_tracker) => {
-        getAvailableFields(currently_selected_tracker.id, currently_selected_fields.value).map(
-            (fields) => (available_fields.value = fields),
-        );
-    });
-
     function saveTrackerConfiguration(new_selected_tracker: Tracker): ResultAsync<null, Fault> {
-        current_project.value = new_selected_tracker.project;
-
         return putConfiguration(document_id, new_selected_tracker.id, [])
-            .andThen(() =>
-                getAvailableFields(new_selected_tracker.id, currently_selected_fields.value),
-            )
+            .andThen(() => getAvailableFields(new_selected_tracker.id, selected_fields.value))
             .map((new_available_fields) => {
                 selected_tracker.value = Option.fromValue(new_selected_tracker);
                 available_fields.value = new_available_fields;
-                currently_selected_fields.value = [];
+                selected_fields.value = [];
                 return null;
             });
     }
@@ -86,7 +66,7 @@ export function initConfigurationStore(
             return putConfiguration(document_id, selected_tracker_id, new_selected_fields)
                 .andThen(() => getAvailableFields(selected_tracker_id, new_selected_fields))
                 .map((new_available_fields) => {
-                    currently_selected_fields.value = new_selected_fields;
+                    selected_fields.value = new_selected_fields;
                     available_fields.value = new_available_fields;
                     return null;
                 });
@@ -94,9 +74,6 @@ export function initConfigurationStore(
     }
 
     return {
-        selected_fields: currently_selected_fields,
-        available_fields,
-        current_project,
         saveTrackerConfiguration,
         saveFieldsConfiguration,
     };
