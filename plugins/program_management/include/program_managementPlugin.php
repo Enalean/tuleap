@@ -271,6 +271,7 @@ use Tuleap\Tracker\Permission\SubmissionPermissionVerifier;
 use Tuleap\Tracker\REST\v1\Event\GetExternalPostActionJsonParserEvent;
 use Tuleap\Tracker\REST\v1\Event\PostActionVisitExternalActionsEvent;
 use Tuleap\Tracker\REST\v1\Workflow\PostAction\CheckPostActionsForTracker;
+use Tuleap\Tracker\Semantic\Description\CachedSemanticDescriptionFieldRetriever;
 use Tuleap\Tracker\Semantic\Description\DescriptionSemanticDAO;
 use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatusDao;
 use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatusFactory;
@@ -507,7 +508,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         $gatherer = new SynchronizedFieldsGatherer(
             $tracker_retriever,
             new \Tuleap\Tracker\Semantic\Title\TrackerSemanticTitleFactory(),
-            new \Tuleap\Tracker\Semantic\Description\TrackerSemanticDescriptionFactory(),
+            CachedSemanticDescriptionFieldRetriever::instance(),
             $semantic_status_factory,
             new SemanticTimeframeBuilder(
                 $timeframe_dao,
@@ -1504,7 +1505,7 @@ final class program_managementPlugin extends Plugin implements PluginWithService
         $gatherer = new SynchronizedFieldsGatherer(
             $tracker_retriever,
             new \Tuleap\Tracker\Semantic\Title\TrackerSemanticTitleFactory(),
-            new \Tuleap\Tracker\Semantic\Description\TrackerSemanticDescriptionFactory(),
+            CachedSemanticDescriptionFieldRetriever::instance(),
             $semantic_status_factory,
             new SemanticTimeframeBuilder(
                 $timeframe_dao,

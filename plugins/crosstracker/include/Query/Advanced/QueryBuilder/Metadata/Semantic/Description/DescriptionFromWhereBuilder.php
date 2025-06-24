@@ -37,21 +37,24 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\StatusOpenValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ValueWrapperVisitor;
 use Tuleap\Tracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
 use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
+use Tuleap\Tracker\Semantic\Description\RetrieveSemanticDescriptionField;
 
 /**
  * @template-implements ValueWrapperVisitor<MetadataValueWrapperParameters, ParametrizedWhere>
  */
 final readonly class DescriptionFromWhereBuilder implements ValueWrapperVisitor
 {
-    public function __construct(private EasyDB $db)
-    {
+    public function __construct(
+        private EasyDB $db,
+        private RetrieveSemanticDescriptionField $retrieve_description_field,
+    ) {
     }
 
     public function getFromWhere(MetadataValueWrapperParameters $parameters): IProvideParametrizedFromAndWhereSQLFragments
     {
         $field_ids = [];
         foreach ($parameters->trackers as $tracker) {
-            $description_field = $tracker->getDescriptionField();
+            $description_field = $this->retrieve_description_field->fromTracker($tracker);
             if ($description_field && $description_field->userCanRead($parameters->user)) {
                 $field_ids[] = $description_field->getId();
             }

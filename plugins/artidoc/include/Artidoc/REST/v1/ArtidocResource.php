@@ -95,6 +95,7 @@ use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
 use Tuleap\Tracker\Artifact\FileUploadDataProvider;
+use Tuleap\Tracker\Semantic\Description\CachedSemanticDescriptionFieldRetriever;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
@@ -435,7 +436,8 @@ final class ArtidocResource extends AuthenticatedResource
      */
     private function getPutConfigurationHandler(\PFUser $user): PUTConfigurationHandler
     {
-        $form_element_factory = \Tracker_FormElementFactory::instance();
+        $form_element_factory        = \Tracker_FormElementFactory::instance();
+        $description_field_retriever = CachedSemanticDescriptionFieldRetriever::instance();
 
         return new PUTConfigurationHandler(
             $this->getArtidocWithContextRetriever($user),
@@ -445,8 +447,14 @@ final class ArtidocResource extends AuthenticatedResource
                 new ConfiguredFieldDao(),
             ),
             \TrackerFactory::instance(),
-            new SuitableTrackerForDocumentChecker($form_element_factory),
-            new SuitableFieldRetriever($form_element_factory),
+            new SuitableTrackerForDocumentChecker(
+                $form_element_factory,
+                $description_field_retriever,
+            ),
+            new SuitableFieldRetriever(
+                $form_element_factory,
+                $description_field_retriever,
+            ),
         );
     }
 
@@ -458,7 +466,10 @@ final class ArtidocResource extends AuthenticatedResource
             $this->getSectionRepresentationBuilder($artidoc, $user),
             new RequiredSectionInformationCollector(
                 $user,
-                new RequiredArtifactInformationBuilder(\Tracker_ArtifactFactory::instance())
+                new RequiredArtifactInformationBuilder(
+                    \Tracker_ArtifactFactory::instance(),
+                    CachedSemanticDescriptionFieldRetriever::instance(),
+                )
             ),
         );
     }
@@ -496,7 +507,7 @@ final class ArtidocResource extends AuthenticatedResource
 
         $configured_field_collection_builder = new ConfiguredFieldCollectionBuilder(
             new ConfiguredFieldDao(),
-            new SuitableFieldRetriever($form_element_factory),
+            new SuitableFieldRetriever($form_element_factory, CachedSemanticDescriptionFieldRetriever::instance()),
         );
 
         return new ArtifactSectionRepresentationBuilder(

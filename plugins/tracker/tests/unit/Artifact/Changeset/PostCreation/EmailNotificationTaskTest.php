@@ -39,6 +39,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 use Tuleap\Tracker\Notifications\ConfigNotificationEmailCustomSender;
 use Tuleap\Tracker\Notifications\RecipientsManager;
+use Tuleap\Tracker\Test\Stub\RetrieveSemanticDescriptionFieldStub;
 use Tuleap\Tracker\Test\Stub\Artifact\Changeset\PostCreation\ProvideEmailNotificationAttachmentStub;
 use Tuleap\Tracker\Test\Stub\Artifact\Changeset\PostCreation\SendMailStub;
 use Tuleap\Tracker\Tracker;
@@ -150,6 +151,7 @@ final class EmailNotificationTaskTest extends TestCase
             $this->config_notification_assigned_to,
             $this->custom_email_sender,
             ProvideEmailNotificationAttachmentStub::withAttachments($attachment1, $attachment2),
+            RetrieveSemanticDescriptionFieldStub::withNoField(),
         );
         $mail_notification_task->execute($this->changeset, new PostCreationTaskConfiguration(true, []));
     }
@@ -171,6 +173,7 @@ final class EmailNotificationTaskTest extends TestCase
             $this->config_notification_assigned_to,
             $this->custom_email_sender,
             ProvideEmailNotificationAttachmentStub::withoutAttachments(),
+            RetrieveSemanticDescriptionFieldStub::withNoField(),
         );
         $mail_notification_task->execute($this->changeset, new PostCreationTaskConfiguration(true, [UserTestBuilder::anActiveUser()->withUserName('peralta')->build()]));
     }
@@ -192,6 +195,7 @@ final class EmailNotificationTaskTest extends TestCase
             $this->config_notification_assigned_to,
             $this->custom_email_sender,
             ProvideEmailNotificationAttachmentStub::withoutAttachments(),
+            RetrieveSemanticDescriptionFieldStub::withNoField(),
         );
         $mail_notification_task->execute($this->changeset, new PostCreationTaskConfiguration(false, []));
     }
@@ -231,6 +235,7 @@ final class EmailNotificationTaskTest extends TestCase
             $this->config_notification_assigned_to,
             $this->custom_email_sender,
             ProvideEmailNotificationAttachmentStub::withoutAttachments(),
+            RetrieveSemanticDescriptionFieldStub::withNoField(),
         );
 
         $mail_notification_task->execute($this->changeset, new PostCreationTaskConfiguration(false, $notified_users));
@@ -251,6 +256,7 @@ final class EmailNotificationTaskTest extends TestCase
             $this->config_notification_assigned_to,
             $this->custom_email_sender,
             ProvideEmailNotificationAttachmentStub::withoutAttachments(),
+            RetrieveSemanticDescriptionFieldStub::withNoField(),
         );
         $body_text              = $mail_notification_task->getBodyText(
             $this->changeset,
@@ -286,6 +292,7 @@ final class EmailNotificationTaskTest extends TestCase
             $this->config_notification_assigned_to,
             $this->custom_email_sender,
             ProvideEmailNotificationAttachmentStub::withoutAttachments(),
+            RetrieveSemanticDescriptionFieldStub::withNoField(),
         );
         $res                    = $mail_notification_task->buildOneMessageForMultipleRecipients($this->changeset, ['user01' => false], true, $this->logger);
 
@@ -333,6 +340,7 @@ final class EmailNotificationTaskTest extends TestCase
             $this->config_notification_assigned_to,
             $this->custom_email_sender,
             ProvideEmailNotificationAttachmentStub::withoutAttachments(),
+            RetrieveSemanticDescriptionFieldStub::withNoField(),
         );
 
         $recipients = [

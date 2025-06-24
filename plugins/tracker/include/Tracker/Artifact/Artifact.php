@@ -157,6 +157,7 @@ use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkChan
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValueBuilder;
 use Tuleap\Tracker\Rule\FirstValidValueAccordingToDependenciesRetriever;
 use Tuleap\Tracker\Semantic\Contributor\TrackerSemanticContributor;
+use Tuleap\Tracker\Semantic\Description\CachedSemanticDescriptionFieldRetriever;
 use Tuleap\Tracker\Semantic\Description\TrackerSemanticDescription;
 use Tuleap\Tracker\Semantic\Progress\MethodBuilder;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgressBuilder;
@@ -683,14 +684,24 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
         if ($this->description !== '') {
             return $this->description;
         }
-        $provider = new ArtifactDescriptionProvider(TrackerSemanticDescription::load($this->getTracker()));
+        $provider = new ArtifactDescriptionProvider(
+            new TrackerSemanticDescription(
+                $this->getTracker(),
+                CachedSemanticDescriptionFieldRetriever::instance()->fromTracker($this->getTracker()),
+            )
+        );
 
         return $provider->getDescription($this);
     }
 
     public function getPostProcessedDescription(): string
     {
-        $provider = new ArtifactDescriptionProvider(TrackerSemanticDescription::load($this->getTracker()));
+        $provider = new ArtifactDescriptionProvider(
+            new TrackerSemanticDescription(
+                $this->getTracker(),
+                CachedSemanticDescriptionFieldRetriever::instance()->fromTracker($this->getTracker()),
+            )
+        );
 
         return $provider->getPostProcessedDescription($this);
     }

@@ -27,7 +27,7 @@ use AgileDashBoard_Semantic_InitialEffort;
 use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_Text;
-use Tuleap\Tracker\Semantic\Description\TrackerSemanticDescription;
+use Tuleap\Tracker\Semantic\Description\CachedSemanticDescriptionFieldRetriever;
 use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
 use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle;
 use Tuleap\Tracker\Tracker;
@@ -44,7 +44,7 @@ class SemanticFieldRepository
 
     public function findDescriptionByTracker(Tracker $tracker): ?Tracker_FormElement_Field_Text
     {
-        return TrackerSemanticDescription::load($tracker)->getField();
+        return (CachedSemanticDescriptionFieldRetriever::instance())->fromTracker($tracker);
     }
 
     public function findInitialEffortByTracker(Tracker $tracker): ?Tracker_FormElement_Field

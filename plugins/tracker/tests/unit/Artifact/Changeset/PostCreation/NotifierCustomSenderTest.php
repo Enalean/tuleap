@@ -38,6 +38,7 @@ use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 use Tuleap\Tracker\Notifications\ConfigNotificationEmailCustomSender;
 use Tuleap\Tracker\Notifications\ConfigNotificationEmailCustomSenderFormatter;
 use Tuleap\Tracker\Notifications\RecipientsManager;
+use Tuleap\Tracker\Test\Stub\RetrieveSemanticDescriptionFieldStub;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\Artifact\Changeset\PostCreation\ProvideEmailNotificationAttachmentStub;
 use Tuleap\Tracker\Test\Stub\Artifact\Changeset\PostCreation\SendMailStub;
@@ -82,6 +83,7 @@ final class NotifierCustomSenderTest extends TestCase
             $config_notification_assigned_to,
             $this->custom_email_sender,
             ProvideEmailNotificationAttachmentStub::withoutAttachments(),
+            RetrieveSemanticDescriptionFieldStub::withNoField(),
         );
 
         $this->user_realname        = 'J. Doe';

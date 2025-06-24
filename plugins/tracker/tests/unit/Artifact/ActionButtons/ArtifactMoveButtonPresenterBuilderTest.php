@@ -128,7 +128,6 @@ final class ArtifactMoveButtonPresenterBuilderTest extends \Tuleap\Test\PHPUnit\
         $this->tracker->method('userIsAdmin')->willReturn(true);
         $this->event_manager->method('processEvent');
         $this->tracker->method('hasSemanticsTitle')->willReturn(false);
-        $this->tracker->method('hasSemanticsDescription')->willReturn(false);
         $this->tracker->method('hasSemanticsStatus')->willReturn(false);
         $this->tracker->method('getContributorField')->willReturn(null);
         $this->artifact->method('getLinkedAndReverseArtifacts')->willReturn([]);

@@ -33173,13 +33173,6 @@
     </PossiblyNullReference>
   </file>
   <file src="plugins/tracker/include/Semantic/Description/TrackerSemanticDescription.php">
-    <MissingPropertyType>
-      <code><![CDATA[$_instances]]></code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code><![CDATA[clearInstances]]></code>
-      <code><![CDATA[setInstance]]></code>
-    </MissingReturnType>
     <PossiblyFalseArgument>
       <code><![CDATA[array_search($this->getFieldId(), $xml_mapping)]]></code>
     </PossiblyFalseArgument>
@@ -33502,7 +33495,6 @@
     <InvalidNullableReturnType>
       <code><![CDATA[Tracker_FormElement_Field_List]]></code>
       <code><![CDATA[Tracker_FormElement_Field_Text]]></code>
-      <code><![CDATA[Tracker_FormElement_Field_Text]]></code>
     </InvalidNullableReturnType>
     <InvalidParamDefault>
       <code><![CDATA[PFUser]]></code>
@@ -33633,7 +33625,6 @@
       <code><![CDATA[setSharedFormElementFactory]]></code>
     </MissingReturnType>
     <NullableReturnStatement>
-      <code><![CDATA[null]]></code>
       <code><![CDATA[null]]></code>
       <code><![CDATA[null]]></code>
     </NullableReturnStatement>
@@ -38539,6 +38530,11 @@
       <code><![CDATA[create]]></code>
     </MissingReturnType>
   </file>
+  <file src="plugins/tracker/include/Tracker/FormElement/Field/RetrieveFieldById.php">
+    <MissingParamType>
+      <code><![CDATA[$field_id]]></code>
+    </MissingParamType>
+  </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Field/Shareable/PropagatePropertiesDao.php">
     <DeprecatedMethod>
       <code><![CDATA[commit]]></code>
@@ -38779,6 +38775,7 @@
       <code><![CDATA[$field_id]]></code>
       <code><![CDATA[$field_id]]></code>
       <code><![CDATA[$field_id]]></code>
+      <code><![CDATA[$field_id]]></code>
       <code><![CDATA[$field_mapping]]></code>
       <code><![CDATA[$field_mapping]]></code>
       <code><![CDATA[$field_mapping]]></code>
@@ -38793,7 +38790,6 @@
       <code><![CDATA[$form_element_id]]></code>
       <code><![CDATA[$form_element_type]]></code>
       <code><![CDATA[$icon]]></code>
-      <code><![CDATA[$id]]></code>
       <code><![CDATA[$id]]></code>
       <code><![CDATA[$id]]></code>
       <code><![CDATA[$id]]></code>
@@ -46913,17 +46909,13 @@
     <MissingReturnType>
       <code><![CDATA[activateArtlinkV2]]></code>
       <code><![CDATA[disableArtifactLinkTypes]]></code>
-      <code><![CDATA[displayWarnings]]></code>
-      <code><![CDATA[fillFieldMappingFromExistingTracker]]></code>
       <code><![CDATA[importHierarchy]]></code>
       <code><![CDATA[storeHierarchyInDB]]></code>
     </MissingReturnType>
     <PossiblyFalseArgument>
       <code><![CDATA[\file_get_contents($filepath)]]></code>
-      <code><![CDATA[realpath(__DIR__ . '/../resources/tracker.rng')]]></code>
     </PossiblyFalseArgument>
     <PossiblyNullArgument>
-      <code><![CDATA[$attributes['use_private_comments']]]></code>
       <code><![CDATA[$xml_type['is_used']]]></code>
     </PossiblyNullArgument>
     <PossiblyNullArrayAccess>
@@ -48817,6 +48809,11 @@
     <FalsableReturnStatement>
       <code><![CDATA[reset($this->value_ids)]]></code>
     </FalsableReturnStatement>
+  </file>
+  <file src="plugins/tracker/tests/unit/Test/Stub/RetrieveFieldByIdStub.php">
+    <MissingParamType>
+      <code><![CDATA[$field_id]]></code>
+    </MissingParamType>
   </file>
   <file src="plugins/tracker/tests/unit/XML/XMLTrackerTest.php">
     <PossiblyNullArgument>

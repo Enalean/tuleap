@@ -131,8 +131,8 @@ use Tuleap\Tracker\Report\TrackerReportConfigDao;
 use Tuleap\Tracker\Semantic\Contributor\ContributorFieldRetriever;
 use Tuleap\Tracker\Semantic\Contributor\TrackerSemanticContributorDao;
 use Tuleap\Tracker\Semantic\Contributor\TrackerSemanticContributorFactory;
+use Tuleap\Tracker\Semantic\Description\CachedSemanticDescriptionFieldRetriever;
 use Tuleap\Tracker\Semantic\Description\DescriptionSemanticDAO;
-use Tuleap\Tracker\Semantic\Description\TrackerSemanticDescriptionFactory;
 use Tuleap\Tracker\Semantic\Status\StatusFieldRetriever;
 use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatusDao;
 use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatusFactory;
@@ -292,7 +292,10 @@ final class CrossTrackerArtifactQueryFactoryBuilder
             ),
             new \Tuleap\CrossTracker\Query\Advanced\QueryBuilder\Metadata\MetadataFromWhereBuilder(
                 new \Tuleap\CrossTracker\Query\Advanced\QueryBuilder\Metadata\Semantic\Title\TitleFromWhereBuilder($db),
-                new \Tuleap\CrossTracker\Query\Advanced\QueryBuilder\Metadata\Semantic\Description\DescriptionFromWhereBuilder($db),
+                new \Tuleap\CrossTracker\Query\Advanced\QueryBuilder\Metadata\Semantic\Description\DescriptionFromWhereBuilder(
+                    $db,
+                    CachedSemanticDescriptionFieldRetriever::instance(),
+                ),
                 new \Tuleap\CrossTracker\Query\Advanced\QueryBuilder\Metadata\Semantic\Status\StatusFromWhereBuilder(),
                 new \Tuleap\CrossTracker\Query\Advanced\QueryBuilder\Metadata\Semantic\AssignedTo\AssignedToFromWhereBuilder(UserManager::instance()),
                 new \Tuleap\CrossTracker\Query\Advanced\QueryBuilder\Metadata\AlwaysThereField\Date\DateFromWhereBuilder($date_time_value_rounder),
@@ -375,7 +378,7 @@ final class CrossTrackerArtifactQueryFactoryBuilder
             ),
             new MetadataFromOrderBuilder(
                 TrackerSemanticTitleFactory::instance(),
-                TrackerSemanticDescriptionFactory::instance(),
+                CachedSemanticDescriptionFieldRetriever::instance(),
                 new StatusFieldRetriever(TrackerSemanticStatusFactory::instance()),
                 new ContributorFieldRetriever(TrackerSemanticContributorFactory::instance()),
                 $text_order_builder,

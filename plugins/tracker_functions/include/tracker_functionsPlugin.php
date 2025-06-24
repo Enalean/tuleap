@@ -90,6 +90,8 @@ use Tuleap\Tracker\REST\FormElementRepresentationsBuilder;
 use Tuleap\Tracker\REST\PermissionsExporter;
 use Tuleap\Tracker\REST\Tracker\PermissionsRepresentationBuilder;
 use Tuleap\Tracker\REST\WorkflowRestBuilder;
+use Tuleap\Tracker\Semantic\Description\CachedSemanticDescriptionFieldRetriever;
+use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\Webhook\ArtifactPayloadBuilder;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
@@ -214,7 +216,7 @@ final class tracker_functionsPlugin extends Plugin
                     ),
                     new PermissionsRepresentationBuilder($ugroup_manager, $permissions_functions_wrapper,),
                     new WorkflowRestBuilder(),
-                    static fn(\Tuleap\Tracker\Tracker $tracker) => new \Tracker_SemanticManager($tracker),
+                    static fn(Tracker $tracker) => new \Tracker_SemanticManager(CachedSemanticDescriptionFieldRetriever::instance(), $tracker),
                     new ParentInHierarchyRetriever(new HierarchyDAO(), TrackerFactory::instance()),
                     TrackersPermissionsRetriever::build()
                 ),

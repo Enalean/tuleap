@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,16 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
-
 namespace Tuleap\Tracker\Semantic\Description;
 
-use Tuleap\Option\Option;
+use Tuleap\Tracker\Tracker;
 
-interface RetrieveDescriptionField
+interface RetrieveSemanticDescriptionField
 {
-    /**
-     * @return Option<int>
-     */
-    public function searchByTrackerId(int $tracker_id): Option;
+    public function fromTracker(Tracker $tracker): ?\Tracker_FormElement_Field_Text;
 }

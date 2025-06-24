@@ -33,6 +33,7 @@ use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 use Tuleap\Tracker\Notifications\ConfigNotificationEmailCustomSender;
 use Tuleap\Tracker\Notifications\ConfigNotificationEmailCustomSenderFormatter;
 use Tuleap\Tracker\Notifications\RecipientsManager;
+use Tuleap\Tracker\Semantic\Description\RetrieveSemanticDescriptionField;
 use UserHelper;
 
 final class EmailNotificationTask implements PostCreationTask
@@ -53,6 +54,7 @@ final class EmailNotificationTask implements PostCreationTask
         private readonly ConfigNotificationAssignedTo $config_notification_assigned_to,
         private readonly ConfigNotificationEmailCustomSender $config_notification_custom_sender,
         private readonly ProvideEmailNotificationAttachment $attachment_provider,
+        private readonly RetrieveSemanticDescriptionField $retrieve_description_field,
     ) {
     }
 
@@ -298,7 +300,7 @@ final class EmailNotificationTask implements PostCreationTask
 
     private function getCustomReplyToHeader(\Tuleap\Tracker\Artifact\Artifact $artifact)
     {
-        $artifactbymail = new \Tracker_ArtifactByEmailStatus($this->mail_gateway_config);
+        $artifactbymail = new \Tracker_ArtifactByEmailStatus($this->mail_gateway_config, $this->retrieve_description_field);
 
         if ($this->mail_gateway_config->isTokenBasedEmailgatewayEnabled()) {
             return [

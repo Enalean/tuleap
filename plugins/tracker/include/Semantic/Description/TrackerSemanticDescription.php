@@ -32,7 +32,6 @@ use Tracker_FormElementFactory;
 use Tracker_Semantic;
 use Tracker_SemanticManager;
 use TrackerManager;
-use Tuleap\Option\Option;
 use Tuleap\Tracker\Tracker;
 
 class TrackerSemanticDescription extends Tracker_Semantic
@@ -45,7 +44,7 @@ class TrackerSemanticDescription extends Tracker_Semantic
     protected $text_field;
 
     /**
-     * Cosntructor
+     * Constructor
      *
      * @param Tracker $tracker The tracker
      * @param Tracker_FormElement_Field_Text $text_field The field
@@ -207,26 +206,6 @@ class TrackerSemanticDescription extends Tracker_Semantic
         $dao->deleteForTracker($this->tracker->getId());
     }
 
-    protected static $_instances; //phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
-
-    /**
-     * @return TrackerSemanticDescription
-     */
-    public static function load(Tracker $tracker)
-    {
-        $tracker_id = $tracker->getId();
-        if (isset(self::$_instances[$tracker_id])) {
-            return self::$_instances[$tracker_id];
-        }
-        $dao                           = new DescriptionSemanticDAO();
-        $field                         = $dao->searchByTrackerId($tracker_id)
-            ->andThen(static fn(int $field_id) => Option::fromNullable(
-                Tracker_FormElementFactory::instance()->getFieldById($field_id)
-            ))->unwrapOr(null);
-        self::$_instances[$tracker_id] = new self($tracker, $field);
-        return self::$_instances[$tracker_id];
-    }
-
     /**
      * Export semantic to XML
      *
@@ -258,21 +237,5 @@ class TrackerSemanticDescription extends Tracker_Semantic
     public function isUsedInSemantics(Tracker_FormElement_Field $field)
     {
         return $this->getFieldId() == $field->getId();
-    }
-
-    /**
-     * Allows to inject a fake Semantic for tests. DO NOT USE IT IN PRODUCTION!
-     */
-    public static function setInstance(TrackerSemanticDescription $description, Tracker $tracker)
-    {
-        self::$_instances[$tracker->getId()] = $description;
-    }
-
-    /**
-     * Allows to clear Semantics for tests. DO NOT USE IT IN PRODUCTION!
-     */
-    public static function clearInstances()
-    {
-        self::$_instances = null;
     }
 }

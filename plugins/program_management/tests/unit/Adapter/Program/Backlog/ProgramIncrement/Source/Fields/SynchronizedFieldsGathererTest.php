@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Fields;
 
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
+use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\DescriptionFieldReference;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\DurationFieldReference;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\EndDateFieldReference;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\FieldRetrievalException;
@@ -34,11 +35,13 @@ use Tuleap\ProgramManagement\Tests\Builder\ProgramIncrementTrackerIdentifierBuil
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveFullArtifactLinkFieldStub;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveFullTrackerStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
+use Tuleap\Tracker\Semantic\Description\RetrieveSemanticDescriptionField;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeNotConfigured;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeWithDuration;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeWithEndDate;
+use Tuleap\Tracker\Test\Stub\RetrieveSemanticDescriptionFieldStub;
 use Tuleap\Tracker\Test\Builders\Fields\ArtifactLinkFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
@@ -50,10 +53,6 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
      * @var \PHPUnit\Framework\MockObject\Stub&\Tuleap\Tracker\Semantic\Title\TrackerSemanticTitleFactory
      */
     private $title_factory;
-    /**
-     * @var \PHPUnit\Framework\MockObject\Stub&\Tuleap\Tracker\Semantic\Description\TrackerSemanticDescriptionFactory
-     */
-    private $description_factory;
     /**
      * @var \PHPUnit\Framework\MockObject\Stub&\Tuleap\Tracker\Semantic\Status\TrackerSemanticStatusFactory
      */
@@ -69,7 +68,6 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
     protected function setUp(): void
     {
         $this->title_factory           = $this->createStub(\Tuleap\Tracker\Semantic\Title\TrackerSemanticTitleFactory::class);
-        $this->description_factory     = $this->createStub(\Tuleap\Tracker\Semantic\Description\TrackerSemanticDescriptionFactory::class);
         $this->status_factory          = $this->createStub(\Tuleap\Tracker\Semantic\Status\TrackerSemanticStatusFactory::class);
         $this->timeframe_builder       = $this->createStub(SemanticTimeframeBuilder::class);
         $this->artifact_link_retriever = RetrieveFullArtifactLinkFieldStub::withNoField();
@@ -89,11 +87,24 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
         return new SynchronizedFieldsGatherer(
             RetrieveFullTrackerStub::withTracker($this->tracker),
             $this->title_factory,
-            $this->description_factory,
+            RetrieveSemanticDescriptionFieldStub::withNoField(),
             $this->status_factory,
             $this->timeframe_builder,
             $this->artifact_link_retriever
         );
+    }
+
+    private function getDescriptionField(RetrieveSemanticDescriptionField $retrieve_semantic_description_field): DescriptionFieldReference
+    {
+        $gatherer = new SynchronizedFieldsGatherer(
+            RetrieveFullTrackerStub::withTracker($this->tracker),
+            $this->title_factory,
+            $retrieve_semantic_description_field,
+            $this->status_factory,
+            $this->timeframe_builder,
+            $this->artifact_link_retriever
+        );
+        return $gatherer->getDescriptionField($this->tracker_identifier);
     }
 
     public function testItThrowsWhenTitleFieldCantBeFound(): void
@@ -137,19 +148,17 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsWhenDescriptionFieldCantBeFound(): void
     {
-        $description_semantic = new \Tuleap\Tracker\Semantic\Description\TrackerSemanticDescription($this->tracker);
-        $this->description_factory->method('getByTracker')->willReturn($description_semantic);
-
         $this->expectException(FieldRetrievalException::class);
-        $this->getGatherer()->getDescriptionField($this->tracker_identifier);
+        $this->getDescriptionField(
+            RetrieveSemanticDescriptionFieldStub::withNoField(),
+        );
     }
 
     public function testItReturnsDescriptionReference(): void
     {
-        $description_semantic = new \Tuleap\Tracker\Semantic\Description\TrackerSemanticDescription($this->tracker, $this->getTextField(693, 'Smokish'));
-        $this->description_factory->method('getByTracker')->willReturn($description_semantic);
-
-        $description = $this->getGatherer()->getDescriptionField($this->tracker_identifier);
+        $description = $this->getDescriptionField(
+            RetrieveSemanticDescriptionFieldStub::withTextField($this->getTextField(693, 'Smokish'))
+        );
         self::assertSame(693, $description->getId());
         self::assertSame('Smokish', $description->getLabel());
     }

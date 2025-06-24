@@ -32,6 +32,7 @@ use Tuleap\Tracker\Artifact\Renderer\ArtifactViewCollectionBuilder;
 use Tuleap\Tracker\Artifact\Renderer\GetAdditionalAssetsForArtifactDisplay;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\ParentOfArtifactCollection;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeIsChildLinkRetriever;
+use Tuleap\Tracker\Semantic\Description\CachedSemanticDescriptionFieldRetriever;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDetector;
 
 class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRenderer // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
@@ -167,7 +168,8 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
         $status = new Tracker_ArtifactByEmailStatus(
             new MailGatewayConfig(
                 new MailGatewayConfigDao(),
-            )
+            ),
+            CachedSemanticDescriptionFieldRetriever::instance(),
         );
         if ($status->canUpdateArtifactInInsecureMode($this->tracker)) {
             $renderer = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../../../templates/artifact');

@@ -72,7 +72,9 @@ use Tuleap\Tracker\REST\FormElementRepresentationsBuilder;
 use Tuleap\Tracker\REST\PermissionsExporter;
 use Tuleap\Tracker\REST\Tracker\PermissionsRepresentationBuilder;
 use Tuleap\Tracker\REST\WorkflowRestBuilder;
+use Tuleap\Tracker\Semantic\Description\CachedSemanticDescriptionFieldRetriever;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
+use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\User\NotificationOnAllUpdatesRetriever;
 use Tuleap\Tracker\User\NotificationOnOwnActionRetriever;
 use Tuleap\Tracker\Webhook\ArtifactPayloadBuilder;
@@ -142,8 +144,9 @@ class ActionsRunner
         $ugroup_manager                 = new UGroupManager();
         $permissions_functions_wrapper  = new PermissionsFunctionsWrapper();
 
-        $event_manager  = EventManager::instance();
-        $task_collector = $event_manager->dispatch(new PostCreationTaskCollectorEvent($logger));
+        $event_manager               = EventManager::instance();
+        $task_collector              = $event_manager->dispatch(new PostCreationTaskCollectorEvent($logger));
+        $description_field_retriever = CachedSemanticDescriptionFieldRetriever::instance();
 
         $action_runner = new self(
             new ClearArtifactChangesetCacheTask(),
@@ -174,10 +177,13 @@ class ActionsRunner
                 new EmailNotificationAttachmentProvider(
                     new CalendarEventConfigDao(),
                     new EventSummaryRetriever(),
-                    new EventDescriptionRetriever(),
+                    new EventDescriptionRetriever(
+                        $description_field_retriever,
+                    ),
                     new EventDatesRetriever(SemanticTimeframeBuilder::build()),
                     new EventOrganizerRetriever(),
                 ),
+                $description_field_retriever,
             ),
             new WebhookNotificationTask(
                 $logger,
@@ -226,7 +232,9 @@ class ActionsRunner
                         ),
                         new PermissionsRepresentationBuilder($ugroup_manager, $permissions_functions_wrapper),
                         new WorkflowRestBuilder(),
-                        static fn(\Tuleap\Tracker\Tracker $tracker) => new \Tracker_SemanticManager($tracker),
+                        static function (Tracker $tracker) use ($description_field_retriever) {
+                            return new \Tracker_SemanticManager($description_field_retriever, $tracker);
+                        },
                         new ParentInHierarchyRetriever(new HierarchyDAO(), \TrackerFactory::instance()),
                         TrackersPermissionsRetriever::build()
                     ),

@@ -20,15 +20,15 @@
 
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 use Tuleap\Tracker\Tracker;
+use Tuleap\Tracker\Semantic\Description\RetrieveSemanticDescriptionField;
 
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_ArtifactByEmailStatus
 {
-    /** @var MailGatewayConfig */
-    private $tracker_plugin_config;
-
-    public function __construct(MailGatewayConfig $tracker_plugin_config)
-    {
-        $this->tracker_plugin_config = $tracker_plugin_config;
+    public function __construct(
+        private MailGatewayConfig $tracker_plugin_config,
+        private readonly RetrieveSemanticDescriptionField $retrieve_description_field,
+    ) {
     }
 
     /**
@@ -72,7 +72,7 @@ class Tracker_ArtifactByEmailStatus
     private function isSemanticDefined(Tracker $tracker)
     {
         $title_field       = $tracker->getTitleField();
-        $description_field = $tracker->getDescriptionField();
+        $description_field = $this->retrieve_description_field->fromTracker($tracker);
         return $title_field !== null && $description_field !== null;
     }
 
@@ -81,12 +81,13 @@ class Tracker_ArtifactByEmailStatus
      */
     private function isRequiredFieldsPossible(Tracker $tracker)
     {
-        if ($this->isSemanticDefined($tracker)) {
-            $title_field       = $tracker->getTitleField();
-            $description_field = $tracker->getDescriptionField();
-            return $this->isRequiredFieldsValid($tracker, $title_field, $description_field);
+        $title_field       = $tracker->getTitleField();
+        $description_field = $this->retrieve_description_field->fromTracker($tracker);
+        if (! $description_field || ! $title_field) {
+            return false;
         }
-        return false;
+
+        return $this->isRequiredFieldsValid($tracker, $title_field, $description_field);
     }
 
     /**

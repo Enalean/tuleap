@@ -32,7 +32,7 @@ use Tuleap\CrossTracker\Query\Advanced\OrderByBuilder\OrderByBuilderParameters;
 use Tuleap\CrossTracker\Query\Advanced\OrderByBuilder\ParametrizedFromOrder;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 use Tuleap\Tracker\Semantic\Contributor\RetrieveContributorField;
-use Tuleap\Tracker\Semantic\Description\GetDescriptionSemantic;
+use Tuleap\Tracker\Semantic\Description\RetrieveSemanticDescriptionField;
 use Tuleap\Tracker\Semantic\Status\RetrieveStatusField;
 use Tuleap\Tracker\Semantic\Title\GetTitleSemantic;
 use Tuleap\Tracker\Tracker;
@@ -41,7 +41,7 @@ final readonly class MetadataFromOrderBuilder
 {
     public function __construct(
         private GetTitleSemantic $title_semantic_retriever,
-        private GetDescriptionSemantic $description_semantic_retriever,
+        private RetrieveSemanticDescriptionField $retrieve_description_field,
         private RetrieveStatusField $status_field_retriever,
         private RetrieveContributorField $contributor_field_retriever,
         private TextFromOrderBuilder $text_builder,
@@ -96,9 +96,9 @@ final readonly class MetadataFromOrderBuilder
     {
         $field_ids = [];
         foreach ($trackers as $tracker) {
-            $semantic_description = $this->description_semantic_retriever->getByTracker($tracker);
-            if ($semantic_description->getField() !== null) {
-                $field_ids[] = $semantic_description->getFieldId();
+            $description_field = $this->retrieve_description_field->fromTracker($tracker);
+            if ($description_field !== null) {
+                $field_ids[] = $description_field->getId();
             }
         }
         return $field_ids;

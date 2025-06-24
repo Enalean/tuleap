@@ -89,6 +89,7 @@ use Tuleap\REST\RESTCurrentUserMiddleware;
 use Tuleap\Tracker\Artifact\Event\ArtifactDeleted;
 use Tuleap\Tracker\Artifact\FileUploadDataProvider;
 use Tuleap\Tracker\FormElement\FormElementDeletedEvent;
+use Tuleap\Tracker\Semantic\Description\CachedSemanticDescriptionFieldRetriever;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
@@ -226,12 +227,12 @@ class ArtidocPlugin extends Plugin implements PluginWithConfigKeys
 
     public function routeController(): DispatchableWithRequest
     {
-        $tracker_factory     = TrackerFactory::instance();
-        $docman_item_factory = new Docman_ItemFactory();
-        $dao                 = $this->getArtidocDao();
-        $logger              = BackendLogger::getDefaultLogger();
-
-        $form_element_factory = Tracker_FormElementFactory::instance();
+        $tracker_factory             = TrackerFactory::instance();
+        $docman_item_factory         = new Docman_ItemFactory();
+        $dao                         = $this->getArtidocDao();
+        $logger                      = BackendLogger::getDefaultLogger();
+        $form_element_factory        = Tracker_FormElementFactory::instance();
+        $description_field_retriever = CachedSemanticDescriptionFieldRetriever::instance();
 
         $retriever_builder = new ArtidocWithContextRetrieverBuilder(
             new ArtidocRetriever(new SearchArtidocDocumentDao(), new Docman_ItemFactory()),
@@ -251,13 +252,14 @@ class ArtidocPlugin extends Plugin implements PluginWithConfigKeys
             new SuitableTrackersForDocumentRetriever(
                 new SuitableTrackerForDocumentChecker(
                     $form_element_factory,
+                    $description_field_retriever,
                 ),
                 $tracker_factory,
             ),
             new ArtidocBreadcrumbsProvider($docman_item_factory),
             new ConfiguredFieldCollectionBuilder(
                 new ConfiguredFieldDao(),
-                new SuitableFieldRetriever($form_element_factory)
+                new SuitableFieldRetriever($form_element_factory, $description_field_retriever)
             ),
             $logger,
             new FileUploadDataProvider(
@@ -278,6 +280,7 @@ class ArtidocPlugin extends Plugin implements PluginWithConfigKeys
             ),
             EventManager::instance(),
             new RecentlyVisitedDocumentDao(),
+            $description_field_retriever,
         );
     }
 

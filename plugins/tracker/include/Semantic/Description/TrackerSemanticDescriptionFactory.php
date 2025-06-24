@@ -27,7 +27,7 @@ use Tuleap\Tracker\Semantic\IBuildSemanticFromXML;
 use Tuleap\Tracker\Semantic\IDuplicateSemantic;
 use Tuleap\Tracker\Tracker;
 
-class TrackerSemanticDescriptionFactory implements IBuildSemanticFromXML, IDuplicateSemantic, GetDescriptionSemantic
+class TrackerSemanticDescriptionFactory implements IBuildSemanticFromXML, IDuplicateSemantic
 {
     /**
      * Hold an instance of the class
@@ -46,11 +46,6 @@ class TrackerSemanticDescriptionFactory implements IBuildSemanticFromXML, IDupli
              self::$instance = new self();
         }
         return self::$instance;
-    }
-
-    public function getByTracker(Tracker $tracker): TrackerSemanticDescription
-    {
-        return TrackerSemanticDescription::load($tracker);
     }
 
     public function getInstanceFromXML(
