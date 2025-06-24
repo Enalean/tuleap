@@ -40,6 +40,10 @@
     {
       "type": "vcs",
       "url": "https://github.com/Enalean/Restler.git"
+    },
+    {
+      "type": "vcs",
+      "url": "https://github.com/Enalean/easydb.git"
     }
   ],
   "require": {
@@ -61,7 +65,7 @@
     "monolog/monolog": "^3.3",
     "mustache/mustache": "dev-main-tuleap#main-tuleap-20250312",
     "nikic/fast-route": "^1.2",
-    "paragonie/easydb": "^2",
+    "paragonie/easydb": "dev-enalean-v2.x#refs/tags/20250620-v2.11.0",
     "php-http/client-common": "^2.0",
     "php-http/guzzle7-adapter": "^1.0",
     "php-http/message": "^1.7",
