@@ -21,8 +21,9 @@ import { ref } from "vue";
 import type { Tracker } from "@/configuration/AllowedTrackersCollection";
 import type { ConfigurationStore } from "@/stores/configuration-store";
 import { TrackerStub } from "@/helpers/stubs/TrackerStub";
-import { noop } from "@/helpers/noop";
 import type { ConfigurationField } from "@/sections/readonly-fields/AvailableReadonlyFields";
+import { errAsync, okAsync } from "neverthrow";
+import { Fault } from "@tuleap/fault";
 
 const tasks: Tracker = {
     ...TrackerStub.withoutTitleAndDescription(),
@@ -42,25 +43,19 @@ export const ConfigurationStoreStub = {
     buildEmpty: (): ConfigurationStore => ({
         selected_fields: ref([]),
         available_fields: ref([]),
-        is_saving: ref(false),
-        is_error: ref(false),
-        is_success: ref(false),
-        error_message: ref(""),
-        saveTrackerConfiguration: noop,
-        saveFieldsConfiguration: noop,
-        resetSuccessFlagFromPreviousCalls: noop,
+        saveTrackerConfiguration: () => okAsync(null),
+        saveFieldsConfiguration: () => okAsync(null),
         current_project: ref(null),
     }),
 
     withSuccessfulSave: (): ConfigurationStore => ({
         ...ConfigurationStoreStub.buildEmpty(),
-        is_success: ref(true),
     }),
 
     withError: (): ConfigurationStore => ({
         ...ConfigurationStoreStub.buildEmpty(),
-        is_error: ref(true),
-        error_message: ref("Oh no!"),
+        saveTrackerConfiguration: () => errAsync(Fault.fromMessage("Oh no!")),
+        saveFieldsConfiguration: () => errAsync(Fault.fromMessage("Oh no!")),
     }),
 
     withSelectedFields: (selected_fields: ConfigurationField[]): ConfigurationStore => ({

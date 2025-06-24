@@ -27,17 +27,17 @@ import type { ConfigurationField } from "@/sections/readonly-fields/AvailableRea
 import { getAvailableFields } from "@/sections/readonly-fields/AvailableReadonlyFields";
 import type { Tracker } from "@/configuration/AllowedTrackersCollection";
 import type { SelectedTrackerRef } from "@/configuration/SelectedTracker";
+import type { ResultAsync } from "neverthrow";
+import { okAsync } from "neverthrow";
+import type { Fault } from "@tuleap/fault";
 
 export interface ConfigurationStore {
     selected_fields: Ref<ConfigurationField[]>;
     available_fields: Ref<ConfigurationField[]>;
-    is_saving: Ref<boolean>;
-    is_error: Ref<boolean>;
-    is_success: Ref<boolean>;
-    error_message: Ref<string>;
-    saveTrackerConfiguration: (new_selected_tracker: Tracker) => void;
-    saveFieldsConfiguration: (new_selected_fields: ConfigurationField[]) => void;
-    resetSuccessFlagFromPreviousCalls: () => void;
+    saveTrackerConfiguration: (new_selected_tracker: Tracker) => ResultAsync<null, Fault>;
+    saveFieldsConfiguration: (
+        new_selected_fields: ConfigurationField[],
+    ) => ResultAsync<null, Fault>;
     current_project: Ref<Project | null>;
 }
 
@@ -50,10 +50,6 @@ export function initConfigurationStore(
     selected_fields: ConfigurationField[],
 ): ConfigurationStore {
     const currently_selected_fields = ref(selected_fields);
-    const is_saving = ref(false);
-    const is_error = ref(false);
-    const is_success = ref(false);
-    const error_message = ref("");
     const current_project: Ref<Project | null> = ref(
         selected_tracker.value.mapOr((tracker) => tracker.project, null),
     );
@@ -61,82 +57,47 @@ export function initConfigurationStore(
     const available_fields: Ref<ConfigurationField[]> = ref([]);
 
     selected_tracker.value.apply((currently_selected_tracker) => {
-        getAvailableFields(currently_selected_tracker.id, currently_selected_fields.value).match(
-            (fields) => {
-                available_fields.value = fields;
-            },
-            (fault) => {
-                error_message.value = String(fault);
-            },
+        getAvailableFields(currently_selected_tracker.id, currently_selected_fields.value).map(
+            (fields) => (available_fields.value = fields),
         );
     });
 
-    function saveTrackerConfiguration(new_selected_tracker: Tracker): void {
-        is_saving.value = true;
-        is_error.value = false;
-        is_success.value = false;
+    function saveTrackerConfiguration(new_selected_tracker: Tracker): ResultAsync<null, Fault> {
         current_project.value = new_selected_tracker.project;
 
-        putConfiguration(document_id, new_selected_tracker.id, [])
+        return putConfiguration(document_id, new_selected_tracker.id, [])
             .andThen(() =>
                 getAvailableFields(new_selected_tracker.id, currently_selected_fields.value),
             )
-            .match(
-                (new_available_fields) => {
-                    selected_tracker.value = Option.fromValue(new_selected_tracker);
-                    available_fields.value = new_available_fields;
-                    currently_selected_fields.value = [];
-                    is_saving.value = false;
-                    is_success.value = true;
-                },
-                (fault) => {
-                    is_saving.value = false;
-                    is_error.value = true;
-                    error_message.value = String(fault);
-                },
-            );
+            .map((new_available_fields) => {
+                selected_tracker.value = Option.fromValue(new_selected_tracker);
+                available_fields.value = new_available_fields;
+                currently_selected_fields.value = [];
+                return null;
+            });
     }
 
-    function saveFieldsConfiguration(new_selected_fields: ConfigurationField[]): void {
-        is_saving.value = true;
-        is_error.value = false;
-        is_success.value = false;
-
-        selected_tracker.value.apply((currently_selected_tracker) => {
+    function saveFieldsConfiguration(
+        new_selected_fields: ConfigurationField[],
+    ): ResultAsync<null, Fault> {
+        return selected_tracker.value.mapOr((currently_selected_tracker) => {
             const selected_tracker_id = currently_selected_tracker.id;
 
-            putConfiguration(document_id, selected_tracker_id, new_selected_fields)
+            return putConfiguration(document_id, selected_tracker_id, new_selected_fields)
                 .andThen(() => getAvailableFields(selected_tracker_id, new_selected_fields))
-                .match(
-                    (new_available_fields) => {
-                        currently_selected_fields.value = new_selected_fields;
-                        available_fields.value = new_available_fields;
-                        is_saving.value = false;
-                        is_success.value = true;
-                    },
-                    (fault) => {
-                        is_saving.value = false;
-                        is_error.value = true;
-                        error_message.value = String(fault);
-                    },
-                );
-        });
-    }
-
-    function resetSuccessFlagFromPreviousCalls(): void {
-        is_success.value = false;
+                .map((new_available_fields) => {
+                    currently_selected_fields.value = new_selected_fields;
+                    available_fields.value = new_available_fields;
+                    return null;
+                });
+        }, okAsync(null));
     }
 
     return {
         selected_fields: currently_selected_fields,
         available_fields,
-        is_saving,
-        is_error,
-        is_success,
-        error_message,
         current_project,
         saveTrackerConfiguration,
         saveFieldsConfiguration,
-        resetSuccessFlagFromPreviousCalls,
     };
 }

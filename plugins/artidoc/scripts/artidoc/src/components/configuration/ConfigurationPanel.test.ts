@@ -32,20 +32,25 @@ import {
 } from "@/configuration/AllowedTrackersCollection";
 import { SELECTED_TRACKER } from "@/configuration/SelectedTracker";
 import { SelectedTrackerStub } from "@/helpers/stubs/SelectedTrackerStub";
+import { TrackerStub } from "@/helpers/stubs/TrackerStub";
 
 describe("ConfigurationPanel", () => {
-    it("should display error feedback", () => {
+    it("should display error feedback", async () => {
         const wrapper = shallowMount(ConfigurationPanel, {
             global: {
                 plugins: [createGettext({ silent: true })],
                 provide: {
                     [TITLE.valueOf()]: "My Document",
                     [CONFIGURATION_STORE.valueOf()]: ConfigurationStoreStub.withError(),
-                    [SELECTED_TRACKER.valueOf()]: SelectedTrackerStub.withNoTracker(),
+                    [SELECTED_TRACKER.valueOf()]: SelectedTrackerStub.withTracker(
+                        TrackerStub.build(101, "Bugs"),
+                    ),
                     [ALLOWED_TRACKERS.valueOf()]: buildAllowedTrackersCollection([]),
                 },
             },
         });
+
+        await wrapper.find("form").trigger("submit");
 
         expect(wrapper.findComponent(SuccessFeedback).exists()).toBe(false);
         expect(wrapper.findComponent(ErrorFeedback).exists()).toBe(true);

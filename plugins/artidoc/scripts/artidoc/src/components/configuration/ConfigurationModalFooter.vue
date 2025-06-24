@@ -71,20 +71,21 @@ import {
 import type { ConfigurationTab } from "@/components/configuration/configuration-modal";
 import ErrorFeedback from "@/components/configuration/ErrorFeedback.vue";
 import SuccessFeedback from "@/components/configuration/SuccessFeedback.vue";
-import { CONFIGURATION_STORE } from "@/stores/configuration-store";
 
 const closeModal = strictInject(CLOSE_CONFIGURATION_MODAL);
 
-const { error_message, is_error, is_saving, is_success } = strictInject(CONFIGURATION_STORE);
-
-defineProps<{
+const props = defineProps<{
     on_save_callback(): void;
     current_tab: ConfigurationTab;
     is_submit_button_disabled: boolean;
+    error_message: string;
+    is_error: boolean;
+    is_saving: boolean;
+    is_success: boolean;
 }>();
 
 const submit_button_icon = computed(() =>
-    is_saving.value ? "fa-solid fa-spin fa-circle-notch" : "fa-solid fa-floppy-disk",
+    props.is_saving ? "fa-solid fa-spin fa-circle-notch" : "fa-solid fa-floppy-disk",
 );
 </script>
 

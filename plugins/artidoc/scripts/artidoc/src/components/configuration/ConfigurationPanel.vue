@@ -81,14 +81,16 @@ import { SELECTED_TRACKER } from "@/configuration/SelectedTracker";
 const { $gettext } = useGettext();
 
 const title = strictInject(TITLE);
-const { error_message, is_error, is_saving, saveTrackerConfiguration } =
-    strictInject(CONFIGURATION_STORE);
+const { saveTrackerConfiguration } = strictInject(CONFIGURATION_STORE);
 const saved_tracker = strictInject(SELECTED_TRACKER);
 const allowed_trackers = strictInject(ALLOWED_TRACKERS);
 
 const pane_title = $gettext("Configuration of %{ title }", { title });
 
 const new_selected_tracker = ref<Option<Tracker>>(saved_tracker.value);
+const is_saving = ref<boolean>(false);
+const is_error = ref<boolean>(false);
+const error_message = ref<string>("");
 
 const is_submit_button_disabled = computed(
     () =>
@@ -106,7 +108,15 @@ const submit_button_icon = computed(() =>
 
 function onSubmit(event: Event): void {
     event.preventDefault();
-    new_selected_tracker.value.apply(saveTrackerConfiguration);
+    new_selected_tracker.value.apply((tracker) => {
+        is_saving.value = true;
+        is_error.value = false;
+        saveTrackerConfiguration(tracker).mapErr((fault) => {
+            is_error.value = true;
+            error_message.value = String(fault);
+        });
+        is_saving.value = false;
+    });
 }
 
 function onSelectTracker(tracker: Option<Tracker>): void {
