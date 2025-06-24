@@ -25,9 +25,12 @@ namespace Tuleap\Artidoc\Document\Field;
 use Tracker_Artifact_ChangesetValue_String;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_BindValue;
+use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StaticListFieldWithValue;
+use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StaticListValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StringFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserGroupListValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserGroupsListFieldWithValue;
+use Tuleap\Tracker\TrackerColor;
 
 final readonly class FieldsWithValuesBuilder implements GetFieldsWithValues
 {
@@ -49,25 +52,63 @@ final readonly class FieldsWithValuesBuilder implements GetFieldsWithValues
                     $changeset_value->getValue()
                 );
             }
+
             if (
                 $configured_field->field instanceof Tracker_FormElement_Field_List
-                && $configured_field->field->getBind()->getType() === \Tracker_FormElement_Field_List_Bind_Ugroups::TYPE
+                && $configured_field->field->getBind()?->getType() === \Tracker_FormElement_Field_List_Bind_Ugroups::TYPE
             ) {
                 assert($changeset_value instanceof \Tracker_Artifact_ChangesetValue_List);
-                $fields[] = new UserGroupsListFieldWithValue(
-                    $configured_field->field->getLabel(),
-                    $configured_field->display_type,
-                    array_values(
-                        array_map(
-                            static fn(Tracker_FormElement_Field_List_BindValue $value) => new UserGroupListValue(
-                                $value->getLabel()
-                            ),
-                            $changeset_value->getListValues()
-                        )
-                    )
-                );
+                $fields[] = $this->buildUserGroupsListFieldWithValue($configured_field, $changeset_value);
+            }
+
+            if (
+                $configured_field->field instanceof Tracker_FormElement_Field_List
+                && $configured_field->field->getBind()?->getType() === \Tracker_FormElement_Field_List_Bind_Static::TYPE
+            ) {
+                assert($changeset_value instanceof \Tracker_Artifact_ChangesetValue_List);
+                $fields[] = $this->buildStaticListFieldWithValue($configured_field, $changeset_value);
             }
         }
+
         return $fields;
+    }
+
+    private function buildUserGroupsListFieldWithValue(ConfiguredField $configured_field, \Tracker_Artifact_ChangesetValue_List $changeset_value): UserGroupsListFieldWithValue
+    {
+        return new UserGroupsListFieldWithValue(
+            $configured_field->field->getLabel(),
+            $configured_field->display_type,
+            array_values(
+                array_map(
+                    static fn(Tracker_FormElement_Field_List_BindValue $value) => new UserGroupListValue(
+                        $value->getLabel()
+                    ),
+                    $changeset_value->getListValues()
+                )
+            )
+        );
+    }
+
+    private function buildStaticListFieldWithValue(ConfiguredField $configured_field, \Tracker_Artifact_ChangesetValue_List $changeset_value): StaticListFieldWithValue
+    {
+        assert($configured_field->field instanceof \Tracker_FormElement_Field_List);
+
+        return new StaticListFieldWithValue(
+            $configured_field->field->getLabel(),
+            $configured_field->display_type,
+            array_values(
+                array_map(
+                    function (Tracker_FormElement_Field_List_BindValue $value) use ($configured_field) {
+                        $decorators = $configured_field->field->getDecorators();
+
+                        return new StaticListValue(
+                            $value->getLabel(),
+                            isset($decorators[$value->getId()]) ? TrackerColor::fromName($decorators[$value->getId()]->getCurrentColor()) : null,
+                        );
+                    },
+                    $changeset_value->getListValues()
+                )
+            )
+        );
     }
 }

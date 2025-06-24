@@ -58,7 +58,7 @@ final readonly class SuitableFieldRetriever
         return match (true) {
             $field instanceof Tracker_FormElement_Field_String => $this->validateStringField($field),
             $field instanceof Tracker_FormElement_Field_List
-            && $field->getBind()->getType() === Tracker_FormElement_Field_List_Bind_Ugroups::TYPE => Result::ok($field),
+            && $this->isListBindTypeSupported($field) => Result::ok($field),
             default => Result::err(FieldNotSupportedFault::build($field_id))
         };
     }
@@ -82,5 +82,12 @@ final readonly class SuitableFieldRetriever
             return Result::err(FieldIsDescriptionSemanticFault::build($field_id));
         }
         return Result::ok($field);
+    }
+
+    private function isListBindTypeSupported(Tracker_FormElement_Field_List $field): bool
+    {
+        $bind_type = $field->getBind()?->getType();
+
+        return $bind_type === Tracker_FormElement_Field_List_Bind_Ugroups::TYPE || $bind_type === \Tracker_FormElement_Field_List_Bind_Static::TYPE;
     }
 }
