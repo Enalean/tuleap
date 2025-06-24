@@ -112,7 +112,7 @@ export const renderDropdownElement = (
         </ul>`;
 };
 
-export const DropdownElement = define<InternalDropdownElement>({
+export const DropdownElement = define.compile<InternalDropdownElement>({
     tag: TAG,
     open: { observe: observeOpen, value: false, reflect: true },
     multiple_selection: false,
@@ -124,3 +124,7 @@ export const DropdownElement = define<InternalDropdownElement>({
     selection: (host, value) => value,
     render: renderDropdownElement,
 });
+
+if (!window.customElements.get(TAG)) {
+    window.customElements.define(TAG, DropdownElement);
+}

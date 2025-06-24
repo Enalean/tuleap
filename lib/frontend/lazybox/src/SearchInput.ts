@@ -83,7 +83,7 @@ export const buildClear = (host: HostElement) => (): void => {
 };
 
 export const TAG = "tuleap-lazybox-search";
-export const SearchInput = define<InternalSearchInput>({
+export const SearchInput = define.compile<InternalSearchInput>({
     tag: TAG,
     disabled: false,
     placeholder: "",
@@ -118,3 +118,7 @@ export const SearchInput = define<InternalSearchInput>({
         },
     },
 });
+
+if (!window.customElements.get(TAG)) {
+    window.customElements.define(TAG, SearchInput);
+}

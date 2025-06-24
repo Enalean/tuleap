@@ -148,7 +148,7 @@ export const searchInputSetter = (
 export const getContent = (host: HostElement): UpdateFunction<InternalSelectionElement> =>
     host.multiple ? getMultipleSelectionContent(host) : getSingleSelectionContent(host);
 
-export const SelectionElement = define<InternalSelectionElement>({
+export const SelectionElement = define.compile<InternalSelectionElement>({
     tag: TAG,
     multiple: {
         value: false,
@@ -166,3 +166,7 @@ export const SelectionElement = define<InternalSelectionElement>({
     search_input: searchInputSetter,
     render: getContent,
 });
+
+if (!window.customElements.get(TAG)) {
+    window.customElements.define(TAG, SelectionElement);
+}

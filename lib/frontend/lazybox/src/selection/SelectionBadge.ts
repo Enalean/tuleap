@@ -40,7 +40,7 @@ export const onClick = (host: HostElement): void => {
     dispatch(host, "remove-badge");
 };
 
-export const SelectionBadge = define<SelectionBadge>({
+export const SelectionBadge = define.compile<SelectionBadge>({
     tag: TAG,
     color: "primary",
     outline: false,
@@ -59,3 +59,7 @@ export const SelectionBadge = define<SelectionBadge>({
             </span>
         `.style(badge_style),
 });
+
+if (!window.customElements.get(TAG)) {
+    window.customElements.define(TAG, SelectionBadge);
+}

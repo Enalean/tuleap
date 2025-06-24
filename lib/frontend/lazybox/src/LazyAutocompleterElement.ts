@@ -114,7 +114,7 @@ export const getDropdownElement = (host: HostElement): DropdownElement & HTMLEle
     return element;
 };
 
-define<InternalLazyAutocompleter>({
+const LazyAutocompleter = define.compile<InternalLazyAutocompleter>({
     tag: TAG,
     disabled: {
         value: false,
@@ -127,3 +127,7 @@ define<InternalLazyAutocompleter>({
     dropdown_element: getDropdownElement,
     render: (host) => html`${host.dropdown_element}`,
 });
+
+if (!window.customElements.get(TAG)) {
+    window.customElements.define(TAG, LazyAutocompleter);
+}
