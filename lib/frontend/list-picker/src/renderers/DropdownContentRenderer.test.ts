@@ -34,7 +34,8 @@ describe("DropDownContentRenderer", () => {
         dropdown_list: Element,
         gettext_provider: GettextProvider,
         items_map_manager: ItemsMapManager,
-        doc: Document;
+        doc: Document,
+        locale: string;
 
     function getDropdownContentRenderer(): DropdownContentRenderer {
         return new DropdownContentRenderer(
@@ -42,6 +43,7 @@ describe("DropDownContentRenderer", () => {
             dropdown_list,
             items_map_manager,
             gettext_provider,
+            locale,
         );
     }
 
@@ -116,6 +118,147 @@ describe("DropDownContentRenderer", () => {
             dropdown_list = dropdown_list_element;
         });
 
+        describe("accent handling in search", () => {
+            it("should match strings with accents regardless of accent differences", async () => {
+                // Test accent handling by observing behavior rather than accessing private methods
+                const option_accented = doc.createElement("option");
+                option_accented.innerText = "résumé";
+                option_accented.value = "resume";
+                select.appendChild(option_accented);
+
+                const option_francois = doc.createElement("option");
+                option_francois.innerText = "François";
+                option_francois.value = "francois";
+                select.appendChild(option_francois);
+
+                const option_creme = doc.createElement("option");
+                option_creme.innerText = "Crème Brûlée";
+                option_creme.value = "creme_brulee";
+                select.appendChild(option_creme);
+
+                const renderer = getDropdownContentRenderer();
+                await items_map_manager.refreshItemsMap();
+                renderer.renderListPickerDropdownContent();
+
+                renderer.renderFilteredListPickerDropdownContent("resume");
+                expect(dropdown_list.querySelector(".list-picker-empty-dropdown-state")).toBeNull();
+                expect(dropdown_list.childElementCount).toBe(1);
+
+                renderer.renderFilteredListPickerDropdownContent("francois");
+                expect(dropdown_list.querySelector(".list-picker-empty-dropdown-state")).toBeNull();
+                expect(dropdown_list.childElementCount).toBe(1);
+
+                renderer.renderFilteredListPickerDropdownContent("creme brulee");
+                expect(dropdown_list.querySelector(".list-picker-empty-dropdown-state")).toBeNull();
+                expect(dropdown_list.childElementCount).toBe(1);
+            });
+
+            it("should match additional accent combinations", async () => {
+                const option_cafe = doc.createElement("option");
+                option_cafe.innerText = "café";
+                option_cafe.value = "cafe";
+                select.appendChild(option_cafe);
+
+                const option_garcon = doc.createElement("option");
+                option_garcon.innerText = "garçon";
+                option_garcon.value = "garcon";
+                select.appendChild(option_garcon);
+
+                const renderer = getDropdownContentRenderer();
+                await items_map_manager.refreshItemsMap();
+                renderer.renderListPickerDropdownContent();
+
+                renderer.renderFilteredListPickerDropdownContent("cafe");
+                expect(dropdown_list.querySelector(".list-picker-empty-dropdown-state")).toBeNull();
+                expect(dropdown_list.childElementCount).toBe(1);
+
+                renderer.renderFilteredListPickerDropdownContent("garcon");
+                expect(dropdown_list.querySelector(".list-picker-empty-dropdown-state")).toBeNull();
+                expect(dropdown_list.childElementCount).toBe(1);
+            });
+
+            it("should match partial strings with accents", async () => {
+                const option_resume_complet = doc.createElement("option");
+                option_resume_complet.innerText = "résumé complet";
+                option_resume_complet.value = "resume_complet";
+                select.appendChild(option_resume_complet);
+
+                const option_mon_cafe = doc.createElement("option");
+                option_mon_cafe.innerText = "Mon café préféré";
+                option_mon_cafe.value = "mon_cafe_prefere";
+                select.appendChild(option_mon_cafe);
+
+                const renderer = getDropdownContentRenderer();
+                await items_map_manager.refreshItemsMap();
+                renderer.renderListPickerDropdownContent();
+
+                renderer.renderFilteredListPickerDropdownContent("resume");
+                expect(dropdown_list.querySelector(".list-picker-empty-dropdown-state")).toBeNull();
+                expect(dropdown_list.childElementCount).toBe(1);
+
+                renderer.renderFilteredListPickerDropdownContent("cafe");
+                expect(dropdown_list.querySelector(".list-picker-empty-dropdown-state")).toBeNull();
+                expect(dropdown_list.childElementCount).toBe(1);
+            });
+
+            it("should not match strings that don't contain the search term", async () => {
+                const option = doc.createElement("option");
+                option.innerText = "apple";
+                option.value = "apple";
+                select.appendChild(option);
+
+                const renderer = getDropdownContentRenderer();
+                await items_map_manager.refreshItemsMap();
+                renderer.renderListPickerDropdownContent();
+
+                renderer.renderFilteredListPickerDropdownContent("orange");
+                expect(
+                    dropdown_list.querySelector(".list-picker-empty-dropdown-state"),
+                ).not.toBeNull();
+
+                renderer.renderFilteredListPickerDropdownContent("applee");
+                expect(
+                    dropdown_list.querySelector(".list-picker-empty-dropdown-state"),
+                ).not.toBeNull();
+
+                renderer.renderFilteredListPickerDropdownContent("");
+                expect(dropdown_list.querySelector(".list-picker-empty-dropdown-state")).toBeNull();
+            });
+
+            it("should not match partial strings that don't contain the search term", async () => {
+                const option_car = doc.createElement("option");
+                option_car.innerText = "car";
+                option_car.value = "car";
+                select.appendChild(option_car);
+
+                const renderer = getDropdownContentRenderer();
+                await items_map_manager.refreshItemsMap();
+                renderer.renderListPickerDropdownContent();
+
+                // "car" should not match "carpet" since "car" doesn't contain "carpet"
+                renderer.renderFilteredListPickerDropdownContent("carpet");
+                expect(
+                    dropdown_list.querySelector(".list-picker-empty-dropdown-state"),
+                ).not.toBeNull();
+            });
+
+            it("should handle empty search query correctly", async () => {
+                const option = doc.createElement("option");
+                option.innerText = "apple";
+                option.value = "apple";
+                select.appendChild(option);
+
+                const renderer = getDropdownContentRenderer();
+                await items_map_manager.refreshItemsMap();
+                renderer.renderListPickerDropdownContent();
+
+                // Empty string should show all items (no filtering)
+                renderer.renderFilteredListPickerDropdownContent("");
+                expect(dropdown_list.querySelector(".list-picker-empty-dropdown-state")).toBeNull();
+                expect(dropdown_list.childElementCount).toBe(1);
+            });
+        });
+
         it("renders only items matching the query", async () => {
             appendSimpleOptionsToSourceSelectBox(select);
             const renderer = getDropdownContentRenderer();
@@ -130,6 +273,58 @@ describe("DropDownContentRenderer", () => {
                 throw new Error("List should not be empty, it should contains the item 'Value 1'");
             }
             expect(dropdown_list.firstElementChild.textContent?.trim()).toBe("Value 1");
+        });
+
+        it("renders items with accent when searching without accent", async () => {
+            const option_accented = doc.createElement("option");
+            option_accented.innerText = "Café crème";
+            option_accented.value = "cafe_creme";
+            select.appendChild(option_accented);
+
+            const renderer = getDropdownContentRenderer();
+            await items_map_manager.refreshItemsMap();
+
+            renderer.renderListPickerDropdownContent();
+            renderer.renderFilteredListPickerDropdownContent("cafe");
+
+            expect(dropdown_list.childElementCount).toBe(1);
+
+            if (!dropdown_list.firstElementChild) {
+                throw new Error(
+                    "List should not be empty, it should contains the item 'Café crème'",
+                );
+            }
+            expect(dropdown_list.firstElementChild.textContent?.trim()).toBe("Café crème");
+
+            renderer.renderFilteredListPickerDropdownContent("café");
+            expect(dropdown_list.childElementCount).toBe(1);
+            expect(dropdown_list.firstElementChild?.textContent?.trim()).toBe("Café crème");
+        });
+
+        it("should not render items when search query doesn't match", async () => {
+            const option_regular = doc.createElement("option");
+            option_regular.innerText = "Apple";
+            option_regular.value = "apple";
+
+            const option_accented = doc.createElement("option");
+            option_accented.innerText = "Café crème";
+            option_accented.value = "cafe_creme";
+
+            select.appendChild(option_regular);
+            select.appendChild(option_accented);
+
+            const renderer = getDropdownContentRenderer();
+            await items_map_manager.refreshItemsMap();
+
+            renderer.renderListPickerDropdownContent();
+
+            renderer.renderFilteredListPickerDropdownContent("orange");
+            expect(dropdown_list.childElementCount).toBe(1);
+            expect(dropdown_list.querySelector(".list-picker-empty-dropdown-state")).not.toBeNull();
+
+            renderer.renderFilteredListPickerDropdownContent("chocolat");
+            expect(dropdown_list.childElementCount).toBe(1);
+            expect(dropdown_list.querySelector(".list-picker-empty-dropdown-state")).not.toBeNull();
         });
 
         it("renders an empty state if no items are matching the query", async () => {

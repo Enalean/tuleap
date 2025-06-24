@@ -106,11 +106,13 @@ export function createListPicker(
         );
     }
 
+    const locale = options?.locale?.replace("_", "-") ?? "en-US";
     const dropdown_content_renderer = new DropdownContentRenderer(
         source_select_box,
         dropdown_list_element,
         items_map_manager,
         gettext_provider,
+        locale,
     );
 
     dropdown_content_renderer.renderListPickerDropdownContent();
