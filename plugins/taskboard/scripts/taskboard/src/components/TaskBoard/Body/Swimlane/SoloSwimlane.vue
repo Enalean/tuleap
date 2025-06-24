@@ -26,11 +26,12 @@
         v-if="should_solo_card_be_displayed"
     >
         <swimlane-header v-bind:swimlane="swimlane" />
-        <solo-swimlane-cell
+        <drop-container-cell
             v-for="col of columns"
             v-bind:key="col.id"
             v-bind:column="col"
             v-bind:swimlane="swimlane"
+            v-bind:is_solo_card="true"
         />
     </div>
 </template>
@@ -40,8 +41,8 @@ import { computed } from "vue";
 import type { ColumnDefinition, Swimlane } from "../../../../type";
 import SwimlaneHeader from "./Header/SwimlaneHeader.vue";
 import { getColumnOfCard } from "../../../../helpers/list-value-to-column-mapper";
-import SoloSwimlaneCell from "./Cell/SoloSwimlaneCell.vue";
 import { useStore } from "vuex-composition-helpers";
+import DropContainerCell from "./Cell/DropContainerCell.vue";
 
 const props = defineProps<{
     swimlane: Swimlane;

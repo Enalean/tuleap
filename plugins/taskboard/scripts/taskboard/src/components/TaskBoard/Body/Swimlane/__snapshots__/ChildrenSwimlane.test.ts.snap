@@ -10,14 +10,12 @@ exports[`ChildrenSwimlane displays the parent card in its own cell and children 
     swimlane="[object Object]"
   />
    
-  <children-cell-stub
+  <drop-container-cell-stub
     column="[object Object]"
-    column_index="0"
     swimlane="[object Object]"
   />
-  <children-cell-stub
+  <drop-container-cell-stub
     column="[object Object]"
-    column_index="1"
     swimlane="[object Object]"
   />
 </div>

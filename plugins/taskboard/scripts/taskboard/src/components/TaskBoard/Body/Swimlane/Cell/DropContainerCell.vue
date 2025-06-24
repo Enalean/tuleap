@@ -31,7 +31,29 @@
         v-bind:data-accepted-trackers-ids="accepted_trackers_ids(column)"
         data-navigation="cell"
     >
-        <slot class="content" v-if="!column.is_collapsed"></slot>
+        <template v-if="!column.is_collapsed">
+            <card-with-remaining-effort
+                v-if="is_solo_card && is_solo_card_rendered"
+                v-bind:key="column.id"
+                v-bind:card="swimlane.card"
+                class="taskboard-cell-solo-card"
+                v-bind:class="{ 'taskboard-draggable-item': !swimlane.card.is_in_edit_mode }"
+                v-bind:data-card-id="swimlane.card.id"
+                v-bind:data-tracker-id="swimlane.card.tracker_id"
+                v-bind:draggable="!swimlane.card.is_in_edit_mode"
+                data-test="card-with-remaining-effort"
+            />
+            <template v-else>
+                <child-card
+                    v-for="card of children_cards"
+                    v-bind:key="card.id"
+                    v-bind:card="card"
+                />
+                <template v-if="swimlane.is_loading_children_cards">
+                    <card-skeleton v-for="i in nb_skeletons_to_display" v-bind:key="i" />
+                </template>
+            </template>
+        </template>
         <add-card
             v-if="is_add_card_rendered"
             v-bind:column="column"
@@ -54,15 +76,21 @@ import {
 import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 import AddCard from "../Card/Add/AddCard.vue";
 import CellDisallowsDropOverlay from "./CellDisallowsDropOverlay.vue";
-import type { ColumnDefinition, Swimlane } from "../../../../../type";
+import type { Card, ColumnDefinition, Swimlane } from "../../../../../type";
 import { useClassesForCollapsedColumn } from "./classes-for-collapsed-column-composable";
 import type { DraggedCard } from "../../../../../store/type";
+import CardWithRemainingEffort from "../Card/CardWithRemainingEffort.vue";
+import ChildCard from "../Card/ChildCard.vue";
+import CardSkeleton from "../Skeleton/CardSkeleton.vue";
+import { isStatusAcceptedByColumn } from "../../../../../helpers/list-value-to-column-mapper";
+import { useSkeletons } from "../Skeleton/skeleton-composable";
 
 const { $gettext } = useGettext();
 
 const props = defineProps<{
     swimlane: Swimlane;
     column: ColumnDefinition;
+    is_solo_card: boolean;
 }>();
 
 const store = useStore();
@@ -99,5 +127,23 @@ const drop_classes = computed((): string[] => {
         return column_classes;
     }
     return [...column_classes, "taskboard-cell-with-add-form"];
+});
+
+const is_solo_card_rendered = computed((): boolean => {
+    return isStatusAcceptedByColumn(props.swimlane.card, props.column);
+});
+
+const { cards_in_cell } = useNamespacedGetters("swimlane", ["cards_in_cell"]);
+
+const children_cards = computed((): Card[] => {
+    return cards_in_cell.value(props.swimlane, props.column);
+});
+
+const nb_skeletons_to_display = computed((): number => {
+    if (children_cards.value.length > 0) {
+        return 1;
+    }
+
+    return useSkeletons(children_cards.value.length);
 });
 </script>
