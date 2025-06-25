@@ -25,6 +25,7 @@ namespace Tuleap\Artidoc\Document\Field;
 use Tracker_Artifact_ChangesetValue_String;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_BindValue;
+use Tracker_FormElement_Field_List_OpenValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StaticListFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StaticListValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StringFieldWithValue;
@@ -98,7 +99,7 @@ final readonly class FieldsWithValuesBuilder implements GetFieldsWithValues
             $configured_field->display_type,
             array_values(
                 array_map(
-                    function (Tracker_FormElement_Field_List_BindValue $value) use ($configured_field) {
+                    function (Tracker_FormElement_Field_List_BindValue|Tracker_FormElement_Field_List_OpenValue $value) use ($configured_field) {
                         $decorators = $configured_field->field->getDecorators();
 
                         return new StaticListValue(
