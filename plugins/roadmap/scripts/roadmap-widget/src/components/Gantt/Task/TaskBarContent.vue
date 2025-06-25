@@ -78,10 +78,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onBeforeUnmount } from "vue";
+import { ref, computed, toRef } from "vue";
 import type { Task } from "../../../type";
-import { createPopover } from "@tuleap/tlp-popovers";
-import type { Popover } from "@tuleap/tlp-popovers";
+import { usePopover } from "../../../helpers/create-and-dispose-popover";
 
 const props = defineProps<{
     left: number;
@@ -98,7 +97,7 @@ const props = defineProps<{
 }>();
 
 const container_ref = ref<HTMLElement>();
-const popover = ref<Popover | undefined>();
+const popover_element_id_ref = toRef(props, "popover_element_id");
 
 const is_progress_in_error = computed(() => props.task.progress_error_message.length > 0);
 const style_container = computed(() => `left: ${props.left}px;`);
@@ -128,26 +127,5 @@ const progress_style = computed(() => {
     return `width: ${width_in_percent}%;`;
 });
 
-onMounted(() => {
-    if (props.popover_element_id && container_ref.value) {
-        const popover_element = document.getElementById(props.popover_element_id);
-        if (popover_element instanceof HTMLElement) {
-            popover.value = createPopover(container_ref.value, popover_element, {
-                placement: "right-start",
-                middleware: {
-                    flip: {
-                        fallbackPlacements: ["left-start", "top"],
-                    },
-                    offset: {
-                        alignmentAxis: 0,
-                    },
-                },
-            });
-        }
-    }
-});
-
-onBeforeUnmount(() => {
-    popover.value?.destroy();
-});
+usePopover(container_ref, popover_element_id_ref);
 </script>

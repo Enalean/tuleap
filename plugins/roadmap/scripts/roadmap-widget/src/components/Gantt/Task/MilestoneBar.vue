@@ -19,7 +19,11 @@
   -->
 
 <template>
-    <div class="roadmap-gantt-task-bar-milestone-container" v-bind:style="style">
+    <div
+        class="roadmap-gantt-task-bar-milestone-container"
+        ref="container_ref"
+        v-bind:style="style"
+    >
         <svg
             v-bind:width="width"
             v-bind:height="height"
@@ -49,14 +53,19 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, ref, toRef } from "vue";
 import { Styles } from "../../../helpers/styles";
 import type { Task } from "../../../type";
+import { usePopover } from "../../../helpers/create-and-dispose-popover";
 
 const props = defineProps<{
     left: number;
     task: Task;
+    popover_element_id: string;
 }>();
+
+const container_ref = ref<HTMLElement>();
+const popover_element_id_ref = toRef(props, "popover_element_id");
 
 const width = computed((): number => {
     return Styles.MILESTONE_WIDTH_IN_PX;
@@ -79,4 +88,6 @@ const border_classes = computed((): string => {
         ? "roadmap-gantt-task-bar-milestone-border-with-dates-implied"
         : "";
 });
+
+usePopover(container_ref, popover_element_id_ref);
 </script>
