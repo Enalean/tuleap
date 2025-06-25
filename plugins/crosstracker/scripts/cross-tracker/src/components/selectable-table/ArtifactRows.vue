@@ -19,26 +19,27 @@
   -->
 
 <template>
-    <template v-for="index of number_of_link" v-bind:key="index">
-        <empty-edit-cell class="tlp-skeleton-icon" />
-        <empty-selectable-cell
-            v-for="column_name of columns"
-            v-bind:key="column_name + index"
-            v-bind:cell="row.cells.get(column_name)"
-            v-bind:level="level"
-        />
-    </template>
+    <artifact-row
+        v-for="(row, index) of rows"
+        v-bind:key="row.id + level"
+        v-bind:row="row"
+        v-bind:columns="columns"
+        v-bind:query_id="query_id"
+        v-bind:level="level"
+        v-bind:is_even="isEven(index)"
+    />
 </template>
 
 <script setup lang="ts">
-import type { ArtifactRow, ArtifactsTable } from "../../../domain/ArtifactsTable";
-import EmptySelectableCell from "./EmptySelectableCell.vue";
-import EmptyEditCell from "./EmptyEditCell.vue";
+import ArtifactRow from "./ArtifactRow.vue";
+import type { ArtifactsTable } from "../../domain/ArtifactsTable";
 
 defineProps<{
-    row: ArtifactRow;
+    rows: ArtifactsTable["rows"];
     columns: ArtifactsTable["columns"];
+    query_id: string;
     level: number;
-    number_of_link: number;
 }>();
+
+const isEven = (index: number): boolean => index % 2 === 0;
 </script>

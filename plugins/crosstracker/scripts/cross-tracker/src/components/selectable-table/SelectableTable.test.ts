@@ -43,7 +43,6 @@ import type { RetrieveArtifactsTable } from "../../domain/RetrieveArtifactsTable
 import { Fault } from "@tuleap/fault";
 import { buildVueDompurifyHTMLDirective } from "vue-dompurify-html";
 import EmptyState from "../EmptyState.vue";
-import SelectableCell from "./SelectableCell.vue";
 import ExportXLSXButton from "../ExportXLSXButton.vue";
 import { ColumnNameGetter } from "../../domain/ColumnNameGetter";
 import { createVueGettextProviderPassThrough } from "../../helpers/vue-gettext-provider-for-test";
@@ -54,6 +53,7 @@ import type { Emitter } from "mitt";
 import mitt from "mitt";
 import SelectablePagination from "./SelectablePagination.vue";
 import { PRETTY_TITLE_COLUMN_NAME } from "../../domain/ColumnName";
+import ArtifactRows from "./ArtifactRows.vue";
 
 vi.useFakeTimers();
 
@@ -125,7 +125,7 @@ describe(`SelectableTable`, () => {
     describe(`onMounted()`, () => {
         it(`will retrieve the query result,
             will show a loading spinner
-            and will show a table-like grid with the selected columns and artifact values`, async () => {
+            and will display an ArtifactRows component with level 0`, async () => {
             const table = new ArtifactsTableBuilder()
                 .withColumn(DATE_COLUMN_NAME)
                 .withColumn(NUMERIC_COLUMN_NAME)
@@ -187,7 +187,8 @@ describe(`SelectableTable`, () => {
             expect(headers).toContain(DATE_COLUMN_NAME);
             expect(headers).toContain(NUMERIC_COLUMN_NAME);
             expect(headers).toContain(TEXT_COLUMN_NAME);
-            expect(wrapper.findAllComponents(SelectableCell)).toHaveLength(6);
+            expect(wrapper.findComponent(ArtifactRows).exists()).toBe(true);
+            expect(wrapper.findComponent(ArtifactRows).props("level")).toBe(0);
         });
 
         it(`when there is a REST error, it will be shown`, async () => {
@@ -267,8 +268,6 @@ describe(`SelectableTable`, () => {
             expect(headers_classes[1]).toContain("is-last-cell-of-row");
             expect(headers_classes[1]).toContain("headers-cell");
             expect(headers_classes[1]).not.toContain("is-pretty-title-column");
-
-            expect(wrapper.findAllComponents(SelectableCell)).toHaveLength(2);
         });
     });
 });

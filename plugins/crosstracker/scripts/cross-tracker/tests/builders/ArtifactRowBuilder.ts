@@ -24,7 +24,6 @@ export class ArtifactRowBuilder {
         id: 698,
         number_of_forward_link: 2,
         number_of_reverse_link: 1,
-        is_expanded: false,
         uri: "/plugins/tracker/?aid=698",
         cells: new Map(),
     };
@@ -42,7 +41,6 @@ export class ArtifactRowBuilder {
             id: 698,
             number_of_forward_link,
             number_of_reverse_link,
-            is_expanded: true,
             uri: "/plugins/tracker/?aid=698",
             cells: new Map(),
         };
