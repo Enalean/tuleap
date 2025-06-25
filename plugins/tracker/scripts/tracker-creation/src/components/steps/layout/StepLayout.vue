@@ -32,8 +32,8 @@
                 <slot name="interactive_content_advanced"></slot>
             </div>
             <step-navigation-buttons
-                v-bind:previous-step-name="previous_step_name"
-                v-bind:next-step-name="next_step_name"
+                v-bind:previous_step_name="previous_step_name"
+                v-bind:next_step_name="next_step_name"
             />
         </div>
     </div>

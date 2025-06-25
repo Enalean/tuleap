@@ -25,8 +25,8 @@
 
         <div class="tracker-creation-navigation-buttons">
             <router-link
-                v-if="previousStepName"
-                v-bind:to="{ name: previousStepName }"
+                v-if="previous_step_name"
+                v-bind:to="{ name: previous_step_name }"
                 class="tracker-creation-previous-step-button"
                 data-test="button-back"
             >
@@ -37,7 +37,7 @@
             </router-link>
 
             <button
-                v-if="nextStepName"
+                v-if="next_step_name"
                 v-on:click="goToNextStepIfGood"
                 class="tlp-button-primary tlp-button-large tracker-creation-next-step-button"
                 type="button"
@@ -63,7 +63,7 @@
                     'tlp-button-disabled': !is_ready_to_submit || has_form_been_submitted,
                 }"
                 v-bind:disabled="!is_ready_to_submit || has_form_been_submitted"
-                v-on:click="setCreationFormHasBeenSubmitted"
+                v-on:click="submitSetCreationFormHasBeenSubmitted"
             >
                 {{ $gettext("Create my tracker") }}
                 <i
@@ -77,43 +77,37 @@
         </div>
     </div>
 </template>
-<script lang="ts">
-import Vue from "vue";
-import { Getter, State, Mutation } from "vuex-class";
-import { Component, Prop } from "vue-property-decorator";
+<script setup lang="ts">
 import BackToLegacy from "./BackToLegacy.vue";
-@Component({
-    components: { BackToLegacy },
-})
-export default class StepNavigationButtons extends Vue {
-    @Prop({ required: false })
-    readonly nextStepName!: string;
+import { useState, useGetters, useMutations } from "vuex-composition-helpers";
+import { useRouter } from "../../../helpers/use-router";
+const props = defineProps<{
+    next_step_name?: string | undefined;
+    previous_step_name?: string | undefined;
+}>();
 
-    @Prop({ required: false })
-    readonly previousStepName!: string;
+const { has_form_been_submitted, is_parsing_a_xml_file, are_there_tv3 } = useState([
+    "has_form_been_submitted",
+    "is_parsing_a_xml_file",
+    "are_there_tv3",
+]);
 
-    @Getter
-    readonly is_ready_for_step_2!: boolean;
+const { is_ready_for_step_2, is_ready_to_submit } = useGetters([
+    "is_ready_for_step_2",
+    "is_ready_to_submit",
+]);
 
-    @Getter
-    readonly is_ready_to_submit!: boolean;
+const { setCreationFormHasBeenSubmitted } = useMutations(["setCreationFormHasBeenSubmitted"]);
 
-    @State
-    readonly has_form_been_submitted!: boolean;
+const router = useRouter();
 
-    @Mutation
-    readonly setCreationFormHasBeenSubmitted!: () => void;
-
-    @State
-    readonly is_parsing_a_xml_file!: boolean;
-
-    @State
-    readonly are_there_tv3!: boolean;
-
-    goToNextStepIfGood(): void {
-        if (this.is_ready_for_step_2) {
-            this.$router.push({ name: this.nextStepName });
-        }
+function goToNextStepIfGood(): void {
+    if (is_ready_for_step_2.value && props.next_step_name) {
+        router.push({ name: props.next_step_name });
     }
+}
+
+function submitSetCreationFormHasBeenSubmitted(): void {
+    setCreationFormHasBeenSubmitted();
 }
 </script>
