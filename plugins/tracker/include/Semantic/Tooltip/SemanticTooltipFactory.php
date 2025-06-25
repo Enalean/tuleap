@@ -21,9 +21,9 @@
 
 namespace Tuleap\Tracker\Semantic\Tooltip;
 
-use Tracker_Semantic_CollectionOfFieldsDuplicator;
-use Tuleap\Tracker\Semantic\IBuildSemanticFromXML;
+use Tuleap\Tracker\Semantic\CollectionOfFieldsDuplicator;
 use Tuleap\Tracker\Semantic\TrackerSemantic;
+use Tuleap\Tracker\Semantic\XML\IBuildSemanticFromXML;
 use Tuleap\Tracker\Tracker;
 
 class SemanticTooltipFactory implements IBuildSemanticFromXML
@@ -100,7 +100,7 @@ class SemanticTooltipFactory implements IBuildSemanticFromXML
      */
     public function duplicate(int $from_tracker_id, int $to_tracker_id, array $field_mapping)
     {
-        $duplicator = new Tracker_Semantic_CollectionOfFieldsDuplicator($this->getDao());
+        $duplicator = new CollectionOfFieldsDuplicator($this->getDao());
         $duplicator->duplicate($from_tracker_id, $to_tracker_id, $field_mapping);
     }
 }

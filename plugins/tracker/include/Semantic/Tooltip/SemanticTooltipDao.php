@@ -21,12 +21,12 @@
 namespace Tuleap\Tracker\Semantic\Tooltip;
 
 use DataAccessObject;
-use Tracker_Semantic_IRetrieveSemanticDARByTracker;
+use Tuleap\Tracker\Semantic\IRetrieveSemanticDARByTracker;
 
 /**
  *  Data Access Object for Tracker_Tooltip
  */
-class SemanticTooltipDao extends DataAccessObject implements Tracker_Semantic_IRetrieveSemanticDARByTracker
+class SemanticTooltipDao extends DataAccessObject implements IRetrieveSemanticDARByTracker
 {
     public function __construct()
     {

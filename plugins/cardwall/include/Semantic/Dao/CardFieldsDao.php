@@ -21,7 +21,9 @@
 * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 */
 
-class Cardwall_Semantic_Dao_CardFieldsDao extends DataAccessObject implements Tracker_Semantic_IRetrieveSemanticDARByTracker
+use Tuleap\Tracker\Semantic\IRetrieveSemanticDARByTracker;
+
+class Cardwall_Semantic_Dao_CardFieldsDao extends DataAccessObject implements IRetrieveSemanticDARByTracker //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /**
      * @return mixed either false if error or object DataAccessResult
