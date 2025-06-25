@@ -59,7 +59,7 @@ final class TimeframeTooltipEntry implements OtherSemanticTooltipEntryFetcher
         $start = $start_date ? (new \DateTimeImmutable())->setTimestamp($start_date) : null;
         $end   = $end_date ? (new \DateTimeImmutable())->setTimestamp($end_date) : null;
 
-        $renderer = $this->renderer_factory->getRenderer(__DIR__ . '/../../../../../templates/tooltip/other-semantic/');
+        $renderer = $this->renderer_factory->getRenderer(__DIR__ . '/../../../../templates/tooltip/other-semantic/');
 
         $formatter = DateFormat::getYearFullMonthAndDayFormatter($user);
 

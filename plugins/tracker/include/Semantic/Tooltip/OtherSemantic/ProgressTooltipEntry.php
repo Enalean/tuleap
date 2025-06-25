@@ -43,7 +43,7 @@ final class ProgressTooltipEntry implements OtherSemanticTooltipEntryFetcher
         }
 
         $progress_result = $progress_calculator->computeProgression($artifact, $user);
-        $renderer        = $this->renderer_factory->getRenderer(__DIR__ . '/../../../../../templates/tooltip/other-semantic/');
+        $renderer        = $this->renderer_factory->getRenderer(__DIR__ . '/../../../../templates/tooltip/other-semantic/');
 
         return $renderer->renderToString('progress-tooltip-entry', [
             'percentage'             => round(max(0, min(100, $progress_result->getValue() * 100))),
