@@ -100,6 +100,10 @@ function toggleLinks(row: ArtifactRow): void {
         return;
     }
 
+    if (!are_forward_links_loading.value && !are_reverse_links_loading.value) {
+        return;
+    }
+
     artifact_links_retriever
         .getForwardLinks(props.query_id, row.id)
         .map((artifacts: ArtifactsTableWithTotal) => {

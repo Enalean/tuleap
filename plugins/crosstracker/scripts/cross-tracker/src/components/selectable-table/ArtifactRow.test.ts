@@ -131,13 +131,16 @@ describe("ArtifactRow", () => {
     }
 
     it("should display forward and reverse links when caret is clicked with one level deeper", async () => {
+        const getForwardLinks = vi.spyOn(artifact_links_table_retriever, "getForwardLinks");
+        const getReverseLinks = vi.spyOn(artifact_links_table_retriever, "getReverseLinks");
         const wrapper = getWrapper();
 
         await wrapper.findComponent(SelectableCell).trigger("toggle-links");
         await vi.runOnlyPendingTimersAsync();
-
         const artifact_link_rows = wrapper.findAllComponents(ArtifactLinkRows);
 
+        expect(getForwardLinks).toHaveBeenCalledOnce();
+        expect(getReverseLinks).toHaveBeenCalledOnce();
         expect(artifact_link_rows).toHaveLength(2);
         expect(artifact_link_rows[0].props("level")).toBe(wrapper.props("level") + 1);
         expect(artifact_link_rows[1].props("level")).toBe(wrapper.props("level") + 1);
@@ -152,5 +155,32 @@ describe("ArtifactRow", () => {
         selectable_cells.forEach((cell) => {
             expect(cell.props("level")).toBe(wrapper.props("level"));
         });
+    });
+
+    it("should not fetch forward or reverse links if they already have been called", async () => {
+        const getForwardLinks = vi.spyOn(artifact_links_table_retriever, "getForwardLinks");
+        const getReverseLinks = vi.spyOn(artifact_links_table_retriever, "getReverseLinks");
+        const wrapper = getWrapper();
+
+        // Expand artifact links for the first time
+        await wrapper.findComponent(SelectableCell).trigger("toggle-links");
+        await vi.runOnlyPendingTimersAsync();
+
+        expect(getForwardLinks).toHaveBeenCalledTimes(1);
+        expect(getReverseLinks).toHaveBeenCalledTimes(1);
+
+        // Hide artifact links
+        await wrapper.findComponent(SelectableCell).trigger("toggle-links");
+        await vi.runOnlyPendingTimersAsync();
+
+        expect(getForwardLinks).toHaveBeenCalledTimes(1);
+        expect(getReverseLinks).toHaveBeenCalledTimes(1);
+
+        // Expand artifact links for the second time
+        await wrapper.findComponent(SelectableCell).trigger("toggle-links");
+        await vi.runOnlyPendingTimersAsync();
+
+        expect(getForwardLinks).toHaveBeenCalledTimes(1);
+        expect(getReverseLinks).toHaveBeenCalledTimes(1);
     });
 });
