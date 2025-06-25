@@ -26,24 +26,12 @@
         </template>
     </tracker-base-card>
 </template>
-<script lang="ts">
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
+<script setup lang="ts">
 import { TRACKER_XML_FILE } from "../../../../../store/type";
 import SvgTrackerXmlFile from "./SvgTrackerXmlFile.vue";
 import TrackerBaseCard from "../TrackerBaseCard.vue";
 import TrackerXmlFileCardDescription from "./TrackerXmlFileCardDescription.vue";
 import TrackerXmlFileSelector from "./TrackerXmlFileSelector.vue";
 
-@Component({
-    components: {
-        SvgTrackerXmlFile,
-        TrackerBaseCard,
-        TrackerXmlFileCardDescription,
-        TrackerXmlFileSelector,
-    },
-})
-export default class TrackerXmlFileCard extends Vue {
-    option_name = TRACKER_XML_FILE;
-}
+const option_name = TRACKER_XML_FILE;
 </script>
