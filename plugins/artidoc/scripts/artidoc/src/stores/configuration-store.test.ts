@@ -24,7 +24,6 @@ import { initConfigurationStore } from "@/stores/configuration-store";
 import { TrackerStub } from "@/helpers/stubs/TrackerStub";
 import * as rest from "@/helpers/rest-querier";
 import { errAsync, okAsync } from "neverthrow";
-import { flushPromises } from "@vue/test-utils";
 import { Fault } from "@tuleap/fault";
 import { Option } from "@tuleap/option";
 import { ConfigurationFieldStub } from "@/sections/stubs/ConfigurationFieldStub";
@@ -52,12 +51,10 @@ describe("configuration-store", () => {
 
             expect(selected_tracker.value.isNothing()).toBe(true);
 
-            store.saveTrackerConfiguration(bugs);
-            await flushPromises();
+            const result = await store.saveTrackerConfiguration(bugs);
 
             expect(selected_tracker.value.unwrapOr(null)).toBe(bugs);
-            expect(store.is_success.value).toBe(true);
-            expect(store.is_error.value).toBe(false);
+            expect(result.isOk()).toBe(true);
         });
 
         it("should display the error if putConfiguration returns an error", async () => {
@@ -67,13 +64,11 @@ describe("configuration-store", () => {
 
             expect(selected_tracker.value.isNothing()).toBe(true);
 
-            store.saveTrackerConfiguration(bugs);
-            await flushPromises();
+            const result = await store.saveTrackerConfiguration(bugs);
 
             expect(selected_tracker.value.isNothing()).toBe(true);
-            expect(store.is_success.value).toBe(false);
-            expect(store.is_error.value).toBe(true);
-            expect(store.error_message.value).toBe("Bad request");
+            expect(result.isErr()).toBe(true);
+            result.mapErr((fault) => expect(fault.toString()).toStrictEqual("Bad request"));
         });
 
         it("should display the error if getAvailableFields returns an error", async () => {
@@ -83,13 +78,11 @@ describe("configuration-store", () => {
             );
             expect(selected_tracker.value.isNothing()).toBe(true);
 
-            store.saveTrackerConfiguration(bugs);
-            await flushPromises();
+            const result = await store.saveTrackerConfiguration(bugs);
 
             expect(selected_tracker.value.isNothing()).toBe(true);
-            expect(store.is_success.value).toBe(false);
-            expect(store.is_error.value).toBe(true);
-            expect(store.error_message.value).toBe("Bad request");
+            expect(result.isErr()).toBe(true);
+            result.mapErr((fault) => expect(fault.toString()).toStrictEqual("Bad request"));
         });
     });
 
@@ -103,22 +96,10 @@ describe("configuration-store", () => {
             selected_tracker.value = Option.fromValue(bugs);
             expect(store.selected_fields.value).toStrictEqual([]);
 
-            store.saveFieldsConfiguration(fields);
-            await flushPromises();
+            const result = await store.saveFieldsConfiguration(fields);
 
             expect(store.selected_fields.value).toStrictEqual(fields);
-            expect(store.is_success.value).toBe(true);
-            expect(store.is_error.value).toBe(false);
-        });
-    });
-
-    describe("resetSuccessFlagFromPreviousCalls", () => {
-        it("should put the success flag to false", () => {
-            store.is_success.value = true;
-
-            store.resetSuccessFlagFromPreviousCalls();
-
-            expect(store.is_success.value).toBe(false);
+            expect(result.isOk()).toBe(true);
         });
     });
 });

@@ -30,6 +30,10 @@
         v-bind:current_tab="READONLY_FIELDS_SELECTION_TAB"
         v-bind:on_save_callback="onFieldsSubmit"
         v-bind:is_submit_button_disabled="is_submit_button_disabled"
+        v-bind:is_saving="is_saving"
+        v-bind:is_error="is_error"
+        v-bind:is_success="is_success"
+        v-bind:error_message="error_message"
     />
 </template>
 
@@ -41,6 +45,11 @@ import FieldsSelection from "@/components/configuration/FieldsSelection.vue";
 import ConfigurationModalFooter from "@/components/configuration/ConfigurationModalFooter.vue";
 import { READONLY_FIELDS_SELECTION_TAB } from "@/components/configuration/configuration-modal";
 import type { ConfigurationField } from "@/sections/readonly-fields/AvailableReadonlyFields";
+
+const is_saving = ref<boolean>(false);
+const is_error = ref<boolean>(false);
+const is_success = ref<boolean>(false);
+const error_message = ref<string>("");
 
 const props = defineProps<{
     configuration_store: ConfigurationStore;
@@ -54,7 +63,20 @@ const available_fields = ref<ConfigurationField[]>(
 );
 
 function onFieldsSubmit(): void {
-    props.configuration_store.saveFieldsConfiguration(selected_fields.value);
+    is_saving.value = true;
+    is_error.value = false;
+    is_success.value = false;
+    props.configuration_store.saveFieldsConfiguration(selected_fields.value).match(
+        () => {
+            is_saving.value = false;
+            is_success.value = true;
+        },
+        (fault) => {
+            is_saving.value = false;
+            is_error.value = true;
+            error_message.value = String(fault);
+        },
+    );
 }
 
 const is_submit_button_disabled = ref(true);
@@ -63,4 +85,6 @@ watch(selected_fields.value, () => {
         JSON.stringify(toRaw(selected_fields.value)) ===
         JSON.stringify(toRaw(props.configuration_store.selected_fields.value));
 });
+
+defineExpose({ is_success });
 </script>

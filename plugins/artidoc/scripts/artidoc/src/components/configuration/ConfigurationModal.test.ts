@@ -40,6 +40,7 @@ import {
 } from "@/configuration/AllowedTrackersCollection";
 import { SELECTED_TRACKER } from "@/configuration/SelectedTracker";
 import { SelectedTrackerStub } from "@/helpers/stubs/SelectedTrackerStub";
+import ConfigureTracker from "@/components/configuration/ConfigureTracker.vue";
 
 describe("ConfigurationModal", () => {
     function getWrapper(
@@ -68,6 +69,8 @@ describe("ConfigurationModal", () => {
         const onSuccessfulSaveCallback = vi.fn();
 
         bus.openModal(onSuccessfulSaveCallback);
+        await wrapper.vm.$nextTick();
+        wrapper.findComponent(ConfigureTracker).vm.is_success = true;
         await wrapper.vm.$nextTick();
 
         wrapper.find("[data-test=close-modal-after-success]").trigger("click");

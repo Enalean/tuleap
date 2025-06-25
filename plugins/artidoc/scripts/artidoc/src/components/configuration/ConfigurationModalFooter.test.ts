@@ -21,9 +21,6 @@ import { describe, it, expect, beforeEach, vi } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import type { VueWrapper } from "@vue/test-utils";
 import { createGettext } from "vue3-gettext";
-import type { ConfigurationStore } from "@/stores/configuration-store";
-import { CONFIGURATION_STORE } from "@/stores/configuration-store";
-import { ConfigurationStoreStub } from "@/helpers/stubs/ConfigurationStoreStub";
 import SuccessFeedback from "@/components/configuration/SuccessFeedback.vue";
 import ErrorFeedback from "@/components/configuration/ErrorFeedback.vue";
 import ConfigurationModalFooter from "@/components/configuration/ConfigurationModalFooter.vue";
@@ -34,23 +31,30 @@ import {
 
 describe("ConfigurationModalFooter", () => {
     let onSaveCallback: () => void, closeModal: () => void;
+    let is_success: boolean;
+    let is_error: boolean;
 
     beforeEach(() => {
         onSaveCallback = vi.fn();
         closeModal = vi.fn();
+        is_success = false;
+        is_error = false;
     });
 
-    const getWrapper = (configuration_store: ConfigurationStore): VueWrapper => {
+    const getWrapper = (): VueWrapper => {
         return shallowMount(ConfigurationModalFooter, {
             props: {
                 current_tab: TRACKER_SELECTION_TAB,
                 on_save_callback: onSaveCallback,
                 is_submit_button_disabled: false,
+                error_message: "",
+                is_error,
+                is_saving: false,
+                is_success,
             },
             global: {
                 provide: {
                     [CLOSE_CONFIGURATION_MODAL.valueOf()]: closeModal,
-                    [CONFIGURATION_STORE.valueOf()]: configuration_store,
                 },
                 plugins: [createGettext({ silent: true })],
             },
@@ -58,35 +62,38 @@ describe("ConfigurationModalFooter", () => {
     };
 
     it("should display success feedback", () => {
-        const wrapper = getWrapper(ConfigurationStoreStub.withSuccessfulSave());
+        is_success = true;
+        const wrapper = getWrapper();
 
         expect(wrapper.findComponent(SuccessFeedback).exists()).toBe(true);
         expect(wrapper.findComponent(ErrorFeedback).exists()).toBe(false);
     });
 
     it("should display error feedback", () => {
-        const wrapper = getWrapper(ConfigurationStoreStub.withError());
+        is_error = true;
+        const wrapper = getWrapper();
 
         expect(wrapper.findComponent(SuccessFeedback).exists()).toBe(false);
         expect(wrapper.findComponent(ErrorFeedback).exists()).toBe(true);
     });
 
     it("When the cancel button is clicked, then it should execute the closeModal() callback", () => {
-        const wrapper = getWrapper(ConfigurationStoreStub.buildEmpty());
+        const wrapper = getWrapper();
         wrapper.get("[data-test=cancel-modal-button]").trigger("click");
 
         expect(closeModal).toHaveBeenCalledOnce();
     });
 
     it("When the close button is clicked, then it should execute the closeModal() callback", () => {
-        const wrapper = getWrapper(ConfigurationStoreStub.withSuccessfulSave());
+        is_success = true;
+        const wrapper = getWrapper();
         wrapper.get("[data-test=close-modal-after-success]").trigger("click");
 
         expect(closeModal).toHaveBeenCalledOnce();
     });
 
     it("When the submit button is clicked, then it should execute the onSave() callback", () => {
-        const wrapper = getWrapper(ConfigurationStoreStub.buildEmpty());
+        const wrapper = getWrapper();
 
         wrapper.get("[data-test=submit]").trigger("click");
 

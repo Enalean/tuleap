@@ -31,6 +31,10 @@
         v-bind:current_tab="TRACKER_SELECTION_TAB"
         v-bind:is_submit_button_disabled="is_submit_button_disabled"
         v-bind:on_save_callback="onSubmit"
+        v-bind:is_saving="is_saving"
+        v-bind:is_error="is_error"
+        v-bind:is_success="is_success"
+        v-bind:error_message="error_message"
     />
 </template>
 
@@ -47,11 +51,15 @@ import { ALLOWED_TRACKERS } from "@/configuration/AllowedTrackersCollection";
 import { CONFIGURATION_STORE } from "@/stores/configuration-store";
 import { SELECTED_TRACKER } from "@/configuration/SelectedTracker";
 
-const { is_saving, is_success, saveTrackerConfiguration } = strictInject(CONFIGURATION_STORE);
+const { saveTrackerConfiguration } = strictInject(CONFIGURATION_STORE);
 const saved_tracker = strictInject(SELECTED_TRACKER);
 const allowed_trackers = strictInject(ALLOWED_TRACKERS);
 
 const new_selected_tracker = ref<Option<Tracker>>(saved_tracker.value);
+const is_saving = ref<boolean>(false);
+const is_error = ref<boolean>(false);
+const is_success = ref<boolean>(false);
+const error_message = ref<string>("");
 
 const is_submit_button_disabled = computed(
     () =>
@@ -64,10 +72,27 @@ const is_submit_button_disabled = computed(
 );
 
 function onSubmit(): void {
-    new_selected_tracker.value.apply(saveTrackerConfiguration);
+    new_selected_tracker.value.apply((tracker) => {
+        is_saving.value = true;
+        is_error.value = false;
+        is_success.value = false;
+        saveTrackerConfiguration(tracker).match(
+            () => {
+                is_saving.value = false;
+                is_success.value = true;
+            },
+            (fault) => {
+                is_saving.value = false;
+                is_error.value = true;
+                error_message.value = String(fault);
+            },
+        );
+    });
 }
 
 function onSelectTracker(tracker: Option<Tracker>): void {
     new_selected_tracker.value = tracker;
 }
+
+defineExpose({ is_success });
 </script>
