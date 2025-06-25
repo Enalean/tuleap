@@ -28,24 +28,12 @@
         </template>
     </tracker-base-card>
 </template>
-<script lang="ts">
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
+<script setup lang="ts">
 import { TRACKER_ANOTHER_PROJECT } from "../../../../../store/type";
 import TrackerBaseCard from "../TrackerBaseCard.vue";
 import SvgTrackerFromAnotherProject from "./SvgTrackerFromAnotherProject.vue";
 import TrackerFromAnotherProjectDescription from "./TrackerFromAnotherProjectDescription.vue";
 import TrackerFromAnotherProjectSelector from "./TrackerFromAnotherProjectSelector.vue";
 
-@Component({
-    components: {
-        SvgTrackerFromAnotherProject,
-        TrackerBaseCard,
-        TrackerFromAnotherProjectDescription,
-        TrackerFromAnotherProjectSelector,
-    },
-})
-export default class TrackerFromAnotherProjectCard extends Vue {
-    option_name = TRACKER_ANOTHER_PROJECT;
-}
+const option_name = TRACKER_ANOTHER_PROJECT;
 </script>

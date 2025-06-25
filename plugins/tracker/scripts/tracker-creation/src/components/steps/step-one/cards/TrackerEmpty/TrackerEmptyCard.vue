@@ -25,22 +25,11 @@
         </template>
     </tracker-base-card>
 </template>
-<script lang="ts">
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
+<script setup lang="ts">
 import { TRACKER_EMPTY } from "../../../../../store/type";
 import SvgTrackerEmpty from "./SvgTrackerEmpty.vue";
 import TrackerBaseCard from "../TrackerBaseCard.vue";
 import TrackerEmptyCardDescription from "./TrackerEmptyCardDescription.vue";
 
-@Component({
-    components: {
-        SvgTrackerEmpty,
-        TrackerBaseCard,
-        TrackerEmptyCardDescription,
-    },
-})
-export default class TrackerEmptyCard extends Vue {
-    option_name = TRACKER_EMPTY;
-}
+const option_name = TRACKER_EMPTY;
 </script>

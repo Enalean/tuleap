@@ -26,24 +26,12 @@
         </template>
     </tracker-base-card>
 </template>
-<script lang="ts">
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
+<script setup lang="ts">
 import { FROM_JIRA } from "../../../../../store/type";
 import SvgFromJira from "./SvgFromJira.vue";
 import TrackerBaseCard from "../TrackerBaseCard.vue";
 import TrackerFromJiraDescription from "./TrackerFromJiraDescription.vue";
 import TrackerFromJira from "./TrackerFromJira.vue";
 
-@Component({
-    components: {
-        TrackerFromJira,
-        SvgFromJira,
-        TrackerBaseCard,
-        TrackerFromJiraDescription,
-    },
-})
-export default class TrackerFromJiraCard extends Vue {
-    option_name = FROM_JIRA;
-}
+const option_name = FROM_JIRA;
 </script>
