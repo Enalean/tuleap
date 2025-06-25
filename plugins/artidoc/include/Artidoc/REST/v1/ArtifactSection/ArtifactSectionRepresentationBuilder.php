@@ -23,10 +23,12 @@ declare(strict_types=1);
 namespace Tuleap\Artidoc\REST\v1\ArtifactSection;
 
 use Tuleap\Artidoc\Document\Field\GetFieldsWithValues;
+use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StaticListFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StringFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserGroupsListFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
 use Tuleap\Artidoc\Domain\Document\Section\Level;
+use Tuleap\Artidoc\REST\v1\ArtifactSection\Field\SectionStaticListFieldRepresentation;
 use Tuleap\Artidoc\REST\v1\ArtifactSection\Field\SectionStringFieldRepresentation;
 use Tuleap\Artidoc\REST\v1\ArtifactSection\Field\SectionUserGroupsListFieldRepresentation;
 use Tuleap\Tracker\Artifact\GetFileUploadData;
@@ -84,7 +86,7 @@ final readonly class ArtifactSectionRepresentationBuilder
     }
 
     /**
-     * @return list<SectionStringFieldRepresentation | SectionUserGroupsListFieldRepresentation>
+     * @return list<SectionStringFieldRepresentation | SectionUserGroupsListFieldRepresentation | SectionStaticListFieldRepresentation>
      */
     private function getFieldValues(RequiredArtifactInformation $artifact_information): array
     {
@@ -94,6 +96,7 @@ final readonly class ArtifactSectionRepresentationBuilder
             $representations[] = match ($field::class) {
                 StringFieldWithValue::class => new SectionStringFieldRepresentation($field),
                 UserGroupsListFieldWithValue::class => new SectionUserGroupsListFieldRepresentation($field),
+                StaticListFieldWithValue::class => new SectionStaticListFieldRepresentation($field),
             };
         }
         return $representations;

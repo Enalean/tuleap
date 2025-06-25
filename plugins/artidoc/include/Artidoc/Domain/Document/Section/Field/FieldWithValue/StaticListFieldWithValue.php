@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,11 +20,23 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Artidoc\REST\v1\ArtifactSection\Field;
 
-enum FieldType: string
+namespace Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue;
+
+use Tuleap\Artidoc\Domain\Document\Section\Field\DisplayType;
+
+/**
+ * @psalm-immutable
+ */
+final readonly class StaticListFieldWithValue
 {
-    case STRING           = 'string';
-    case USER_GROUPS_LIST = 'user_groups_list';
-    case STATIC_LIST      =  'static_list';
+    /**
+     * @param list<StaticListValue> $values
+     */
+    public function __construct(
+        public string $label,
+        public DisplayType $display_type,
+        public array $values,
+    ) {
+    }
 }
