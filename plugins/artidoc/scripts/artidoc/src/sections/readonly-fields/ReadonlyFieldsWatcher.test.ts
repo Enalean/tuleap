@@ -26,7 +26,6 @@ import { flushPromises } from "@vue/test-utils";
 import * as rest_querier from "@/helpers/rest-querier";
 import { SectionsCollectionStub } from "@/sections/stubs/SectionsCollectionStub";
 import { ConfigurationFieldStub } from "@/sections/stubs/ConfigurationFieldStub";
-import { ConfigurationStoreStub } from "@/helpers/stubs/ConfigurationStoreStub";
 import FreetextSectionFactory from "@/helpers/freetext-section.factory";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import type { SectionsCollection } from "@/sections/SectionsCollection";
@@ -48,7 +47,7 @@ describe("ReadonlyFieldsWatcher", () => {
 
     beforeEach(() => {
         sections_collection = SectionsCollectionStub.withSections(artidoc_sections);
-        selected_fields = ConfigurationStoreStub.withSelectedFields([]).selected_fields;
+        selected_fields = ref([]);
 
         load_sections = vi.spyOn(section_loader, "getSectionsLoader");
         watchUpdateSectionsReadonlyFields(

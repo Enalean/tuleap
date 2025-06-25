@@ -17,11 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { ref } from "vue";
 import type { Tracker } from "@/configuration/AllowedTrackersCollection";
 import type { ConfigurationStore } from "@/stores/configuration-store";
 import { TrackerStub } from "@/helpers/stubs/TrackerStub";
-import type { ConfigurationField } from "@/sections/readonly-fields/AvailableReadonlyFields";
 import { errAsync, okAsync } from "neverthrow";
 import { Fault } from "@tuleap/fault";
 
@@ -41,25 +39,14 @@ export const ConfigurationStoreStub = {
     tasks,
     bugs,
     buildEmpty: (): ConfigurationStore => ({
-        selected_fields: ref([]),
-        available_fields: ref([]),
         saveTrackerConfiguration: () => okAsync(null),
         saveFieldsConfiguration: () => okAsync(null),
-        current_project: ref(null),
     }),
 
-    withSuccessfulSave: (): ConfigurationStore => ({
-        ...ConfigurationStoreStub.buildEmpty(),
-    }),
+    withSuccessfulSave: (): ConfigurationStore => ConfigurationStoreStub.buildEmpty(),
 
     withError: (): ConfigurationStore => ({
-        ...ConfigurationStoreStub.buildEmpty(),
         saveTrackerConfiguration: () => errAsync(Fault.fromMessage("Oh no!")),
         saveFieldsConfiguration: () => errAsync(Fault.fromMessage("Oh no!")),
-    }),
-
-    withSelectedFields: (selected_fields: ConfigurationField[]): ConfigurationStore => ({
-        ...ConfigurationStoreStub.buildEmpty(),
-        selected_fields: ref(selected_fields),
     }),
 };

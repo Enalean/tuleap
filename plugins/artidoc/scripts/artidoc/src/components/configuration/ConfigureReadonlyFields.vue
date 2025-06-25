@@ -21,8 +21,8 @@
     <div class="tlp-modal-body">
         <fields-selection-introductory-text />
         <fields-selection
-            v-bind:selected_fields="selected_fields"
-            v-bind:available_fields="available_fields"
+            v-bind:selected_fields="new_selected_fields"
+            v-bind:available_fields="new_available_fields"
         />
     </div>
 
@@ -45,6 +45,12 @@ import FieldsSelection from "@/components/configuration/FieldsSelection.vue";
 import ConfigurationModalFooter from "@/components/configuration/ConfigurationModalFooter.vue";
 import { READONLY_FIELDS_SELECTION_TAB } from "@/components/configuration/configuration-modal";
 import type { ConfigurationField } from "@/sections/readonly-fields/AvailableReadonlyFields";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { SELECTED_FIELDS } from "@/configuration/SelectedFieldsCollection";
+import { AVAILABLE_FIELDS } from "@/configuration/AvailableFieldsCollection";
+
+const selected_fields = strictInject(SELECTED_FIELDS);
+const available_fields = strictInject(AVAILABLE_FIELDS);
 
 const is_saving = ref<boolean>(false);
 const is_error = ref<boolean>(false);
@@ -55,35 +61,34 @@ const props = defineProps<{
     configuration_store: ConfigurationStore;
 }>();
 
-const selected_fields = ref<ConfigurationField[]>(
-    structuredClone(toRaw(props.configuration_store.selected_fields.value)),
+const new_selected_fields = ref<ConfigurationField[]>(
+    structuredClone(toRaw(selected_fields.value)),
 );
-const available_fields = ref<ConfigurationField[]>(
-    structuredClone(toRaw(props.configuration_store.available_fields.value)),
+const new_available_fields = ref<ConfigurationField[]>(
+    structuredClone(toRaw(available_fields.value)),
 );
 
 function onFieldsSubmit(): void {
     is_saving.value = true;
     is_error.value = false;
     is_success.value = false;
-    props.configuration_store.saveFieldsConfiguration(selected_fields.value).match(
+    props.configuration_store.saveFieldsConfiguration(new_selected_fields.value).match(
         () => {
-            is_saving.value = false;
             is_success.value = true;
         },
         (fault) => {
-            is_saving.value = false;
             is_error.value = true;
             error_message.value = String(fault);
         },
     );
+    is_saving.value = false;
 }
 
 const is_submit_button_disabled = ref(true);
-watch(selected_fields.value, () => {
+watch(new_selected_fields.value, () => {
     is_submit_button_disabled.value =
-        JSON.stringify(toRaw(selected_fields.value)) ===
-        JSON.stringify(toRaw(props.configuration_store.selected_fields.value));
+        JSON.stringify(toRaw(new_selected_fields.value)) ===
+        JSON.stringify(toRaw(selected_fields.value));
 });
 
 defineExpose({ is_success });

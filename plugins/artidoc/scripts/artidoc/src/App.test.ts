@@ -34,6 +34,7 @@ import {
     ALLOWED_TRACKERS,
     buildAllowedTrackersCollection,
 } from "@/configuration/AllowedTrackersCollection";
+import { SELECTED_FIELDS } from "@/configuration/SelectedFieldsCollection";
 
 describe("App", () => {
     it("should load and display the document view", () => {
@@ -47,7 +48,8 @@ describe("App", () => {
                     [DOCUMENT_ID.valueOf()]: 1,
                     [SECTIONS_COLLECTION.valueOf()]: SectionsCollectionStub.withSections([]),
                     [IS_LOADING_SECTIONS_FAILED.valueOf()]: ref(false),
-                    [CONFIGURATION_STORE.valueOf()]: ConfigurationStoreStub.withSelectedFields([]),
+                    [CONFIGURATION_STORE.valueOf()]: ConfigurationStoreStub.buildEmpty(),
+                    [SELECTED_FIELDS.valueOf()]: ref([]),
                 },
             },
         });
