@@ -20,13 +20,12 @@
 
 <template>
     <artifact-row
-        v-for="(row, index) of rows"
+        v-for="row of rows"
         v-bind:key="row.id + level"
         v-bind:row="row"
         v-bind:columns="columns"
         v-bind:query_id="query_id"
         v-bind:level="level"
-        v-bind:is_even="isEven(index)"
     />
 </template>
 
@@ -40,6 +39,4 @@ defineProps<{
     query_id: string;
     level: number;
 }>();
-
-const isEven = (index: number): boolean => index % 2 === 0;
 </script>

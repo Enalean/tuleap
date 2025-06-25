@@ -26,11 +26,3 @@ $padding-cell-template: calc(
     align-items: center;
     padding: $padding-cell-template;
 }
-
-.even-row {
-    background: var(--tlp-table-row-background-even);
-}
-
-.odd-row {
-    background: var(--tlp-table-row-background-odd);
-}

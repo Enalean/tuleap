@@ -46,13 +46,6 @@ const RetrieveArtifactLinksTableStub = {
             getReverseLinks: () => okAsync(reverse_links),
         };
     },
-
-    withDefaultContent(): RetrieveArtifactLinks {
-        return {
-            getForwardLinks: () => okAsync(new ArtifactsTableBuilderForTests().buildWithTotal(0)),
-            getReverseLinks: () => okAsync(new ArtifactsTableBuilderForTests().buildWithTotal(0)),
-        };
-    },
 };
 
 vi.useFakeTimers();
@@ -125,7 +118,6 @@ describe("ArtifactRow", () => {
                     .buildWithNumberOfLinks(number_of_forward_link, number_of_reverse_link),
                 columns: new Set<ColumnName>().add(PRETTY_TITLE_COLUMN_NAME),
                 level: 0,
-                is_even: true,
             },
         });
     }

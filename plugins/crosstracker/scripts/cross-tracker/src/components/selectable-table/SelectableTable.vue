@@ -81,6 +81,7 @@ let offset = 0;
 const limit = 30;
 
 const is_table_empty = computed<boolean>(() => !is_loading.value && total.value === 0);
+const number_of_selected_columns = ref(0);
 
 const emitter = strictInject(EMITTER);
 
@@ -125,6 +126,7 @@ function getSelectableQueryContent(query: Query): void {
         .match(
             (content_with_total) => {
                 columns.value = content_with_total.table.columns;
+                number_of_selected_columns.value = columns.value.size - 1;
                 rows.value = content_with_total.table.rows;
                 total.value = content_with_total.total;
             },
@@ -162,7 +164,7 @@ function isLastCellOfRow(index: number, size: number): boolean {
     display: grid;
     grid-template-columns:
         [edit] min-content
-        auto;
+        repeat(v-bind(number_of_selected_columns), auto);
     grid-template-rows:
         [headers] var(--tlp-x-large-spacing)
         auto;

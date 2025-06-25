@@ -18,19 +18,19 @@
   -->
 
 <template>
-    <edit-cell v-bind:uri="row.uri" v-bind:even="is_even" />
-    <selectable-cell
-        v-for="(column_name, column_index) of columns"
-        v-bind:key="column_name + '_' + level + '_' + row.id"
-        v-bind:cell="row.cells.get(column_name)"
-        v-bind:artifact_uri="row.uri"
-        v-bind:number_of_forward_link="row.number_of_forward_link"
-        v-bind:number_of_reverse_link="row.number_of_reverse_link"
-        v-bind:even="is_even"
-        v-bind:last_of_row="isLastCellOfRow(column_index, columns.size)"
-        v-on:toggle-links="toggleLinks(row)"
-        v-bind:level="level"
-    />
+    <div class="artifact-row">
+        <edit-cell v-bind:uri="row.uri" />
+        <selectable-cell
+            v-for="column_name of columns"
+            v-bind:key="column_name + '_' + level + '_' + row.id"
+            v-bind:cell="row.cells.get(column_name)"
+            v-bind:artifact_uri="row.uri"
+            v-bind:number_of_forward_link="row.number_of_forward_link"
+            v-bind:number_of_reverse_link="row.number_of_reverse_link"
+            v-on:toggle-links="toggleLinks(row)"
+            v-bind:level="level"
+        />
+    </div>
     <template v-if="is_expanded">
         <artifact-link-rows
             v-for="(artifact_link, index) in [forward, reverse]"
@@ -66,7 +66,6 @@ const props = defineProps<{
     columns: ArtifactsTable["columns"];
     query_id: string;
     level: number;
-    is_even: boolean;
 }>();
 
 const artifact_links_retriever = strictInject(RETRIEVE_ARTIFACT_LINKS);
@@ -122,8 +121,19 @@ function toggleLinks(row: ArtifactRow): void {
             are_reverse_links_loading.value = false;
         });
 }
-
-function isLastCellOfRow(index: number, size: number): boolean {
-    return index + 1 === size;
-}
 </script>
+<style scoped lang="scss">
+.artifact-row {
+    display: grid;
+    grid-column: 1 / -1;
+    grid-template-columns: subgrid;
+}
+
+.artifact-row:nth-of-type(even) {
+    background: var(--tlp-table-row-background-even);
+}
+
+.artifact-row:nth-of-type(odd) {
+    background: var(--tlp-table-row-background-odd);
+}
+</style>
