@@ -56,6 +56,7 @@
                                 class="breadcrumb-dropdown-link"
                                 v-bind:href="repository_fork_url()"
                                 v-bind:title="$gettext('Fork repositories')"
+                                data-test="fork-repositories-link"
                             >
                                 <i class="fas fa-code-branch fa-fw"></i>
                                 {{ $gettext("Fork repositories") }}

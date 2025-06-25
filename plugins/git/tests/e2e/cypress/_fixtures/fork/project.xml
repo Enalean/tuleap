@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) Enalean, 2025 - Present. All Rights Reserved.
+  ~
+  ~ This file is a part of Tuleap.
+  ~
+  ~ Tuleap is free software; you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation; either version 2 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ Tuleap is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<project unix-name="git-fork" full-name="git-fork" description="" access="public">
+  <long-description/>
+  <services>
+    <service shortname="summary" enabled="1"/>
+    <service shortname="admin" enabled="1"/>
+    <service shortname="plugin_git" enabled="1"/>
+  </services>
+  <ugroups>
+    <ugroup name="project_admins" description="Project administrators">
+      <members>
+        <member format="username">ProjectAdministrator</member>
+      </members>
+    </ugroup>
+    <ugroup name="project_members" description="Project members">
+      <members>
+        <member format="username">ProjectMember</member>
+        <member format="username">ProjectAdministrator</member>
+      </members>
+    </ugroup>
+  </ugroups>
+  <dashboards>
+    <dashboard name="Dashboard">
+    </dashboard>
+  </dashboards>
+  <git>
+    <ugroups-admin>
+      <ugroup><![CDATA[Project administrators]]></ugroup>
+      <ugroup><![CDATA[Project administrators]]></ugroup>
+    </ugroups-admin>
+    <repository name="MyRepository" description="-- Default description --" allow_artifact_closure="1" default_branch="main" bundle-path="">
+      <last-push-date push_date="1750319724" commits_number="1" refname="refs/heads/main" operation_type="create" refname_type="branch">
+        <user format="username">ProjectMember</user>
+      </last-push-date>
+      <read>
+        <ugroup><![CDATA[Registered users]]></ugroup>
+      </read>
+      <write>
+        <ugroup><![CDATA[Project members]]></ugroup>
+      </write>
+      <wplus/>
+    </repository>
+  </git>
+</project>

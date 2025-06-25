@@ -34,7 +34,7 @@ include_once __DIR__ . '/../../../src/www/project/admin/permissions.php';
 /**
  * GitViews
  */
-class GitViews extends PluginViews
+class GitViews extends PluginViews // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     private Project $project;
     private UGroupManager $ugroup_manager;
@@ -204,7 +204,7 @@ class GitViews extends PluginViews
                 $options = ' checked="true" ';
             }
             echo '<div>
-                <input id="choose_personal" type="radio" name="choose_destination" value="' . Git::SCOPE_PERSONAL . '" ' . $options . ' />
+                <input id="choose_personal" type="radio" name="choose_destination" value="' . Git::SCOPE_PERSONAL . '" ' . $options . ' data-test="in-this-project"/>
                 <label class="radio" for="choose_personal">' . dgettext('tuleap-git', 'Create personal repositories in this project') . '</label>
             </div>';
 
@@ -216,12 +216,12 @@ class GitViews extends PluginViews
 
             echo '<td>';
             $placeholder = dgettext('tuleap-git', 'Enter a path or leave it blank');
-            echo '<input type="text" title="' . $placeholder . '" placeholder="' . $placeholder . '" id="fork_repositories_path" name="path" />';
+            echo '<input type="text" title="' . $placeholder . '" placeholder="' . $placeholder . '" data-test="fork-repository-path" id="fork_repositories_path" name="path" />';
             echo '<input type="hidden" id="fork_repositories_prefix" value="u/' . $purifier->purify($this->user->getUserName()) . '" />';
             echo '</td>';
 
             echo '<td class="last">';
-            echo '<input type="submit" class="btn btn-primary" value="' . dgettext('tuleap-git', 'Fork repositories') . '" />';
+            echo '<input type="submit" class="btn btn-primary" value="' . dgettext('tuleap-git', 'Fork repositories') . '" data-test="create-fork-button" />';
             echo '</td>';
 
             echo '</tr></tbody></table>';
@@ -344,7 +344,7 @@ class GitViews extends PluginViews
                 ' . dgettext('tuleap-git', 'Copy to another project') . '</label>
             </div>';
 
-            $html .= '<select name="to_project" id="fork_destination">';
+            $html .= '<select name="to_project" id="fork_destination" data-test="fork-destination-project">';
             $html .= $userProjectOptions;
             $html .= '</select>';
         }

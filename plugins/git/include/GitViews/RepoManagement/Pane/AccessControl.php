@@ -126,6 +126,7 @@ class AccessControl extends Pane
 
         $html .= '<p><input type="submit" name="save" data-are-regexp-enabled="' . $are_regexp_enabled . '"
                 data-are-regexp-confliting="' . $are_regexp_conflicting . '"
+                data-test="git-permissions-submit"
                 class="btn btn-primary save-permissions-with-regexp" value="' .
             dgettext('tuleap-git', 'Save permissions') . '" /></p>';
         $html .= '</form>';

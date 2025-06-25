@@ -10,7 +10,7 @@
     <input type="hidden" id="repo_id" name="repo_id" value="{{ repository_id }}" />
 
     <label for="mail_prefix">{{ mail_prefix_label }}</label>
-    <input name="mail_prefix" id="mail_prefix" class="plugin_git_mail_prefix" type="text" value="{{ mail_prefix }}" />
+    <input name="mail_prefix" id="mail_prefix" class="plugin_git_mail_prefix" type="text" value="{{ mail_prefix }}" data-test="git-mail-prefix" />
 
     <h3>{{ notified_mails_title }}</h3>
 
@@ -60,7 +60,7 @@
         {{/ has_notifications }}
 
         {{^ has_notifications }}
-            <tr>
+            <tr data-test="git-no-notifications">
                 <td class="table-cell-empty" colspan="2">
                      {{ empty_notification }}
                 </td>

@@ -27,6 +27,7 @@
             class="tlp-select tlp-select-adjusted"
             v-model="owner_id"
             v-bind:disabled="isLoading"
+            data-test="select-fork-of-user"
         >
             <option v-bind:value="PROJECT_KEY">
                 {{ $gettext("Project repositories") }}

@@ -22,7 +22,7 @@
 /**
  * Traverse a list of repositories and furnish a ul/li tree representation
  */
-class GitViewsRepositoriesTraversalStrategy_Selectbox extends GitViewsRepositoriesTraversalStrategy
+class GitViewsRepositoriesTraversalStrategy_Selectbox extends GitViewsRepositoriesTraversalStrategy // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /**
      * @var GitViews
@@ -49,7 +49,7 @@ class GitViewsRepositoriesTraversalStrategy_Selectbox extends GitViewsRepositori
      */
     protected function getMainWrapper($inner)
     {
-        return '<select multiple size="7" id="fork_repositories_repo" name="repos[]">' . $inner . '</select>';
+        return '<select multiple size="7" id="fork_repositories_repo" name="repos[]" data-test="fork-reporitory-selectbox">' . $inner . '</select>';
     }
 
     /**
