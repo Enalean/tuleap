@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 import type { Row, Task, TaskDimension, TimePeriod } from "../type";
-import { getLeftForDate } from "./left-postion";
+import { getLeftForDate } from "./left-position";
 import { Styles } from "./styles";
 import { TaskDimensionMap } from "../type";
 

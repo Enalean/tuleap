@@ -31,7 +31,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import type { Iteration, IterationLevel, Row } from "../../../type";
-import { getLeftForDate } from "../../../helpers/left-postion";
+import { getLeftForDate } from "../../../helpers/left-position";
 import { Styles } from "../../../helpers/styles";
 import { useNamespacedGetters, useStore } from "vuex-composition-helpers";
 import type { TimeperiodGetters } from "../../../store/timeperiod/type";
