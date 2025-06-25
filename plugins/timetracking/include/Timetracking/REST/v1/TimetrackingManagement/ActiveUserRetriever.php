@@ -22,15 +22,22 @@ declare(strict_types=1);
 
 namespace Tuleap\Timetracking\REST\v1\TimetrackingManagement;
 
-final class QueryUserChecker implements CheckThatUserIsActive
+use Tuleap\User\RetrieveUserById;
+
+final readonly class ActiveUserRetriever implements GetActiveUser
 {
-    public function checkThatUserIsActive(int $user_id): bool
+    public function __construct(
+        private RetrieveUserById $retrieve_user,
+    ) {
+    }
+
+    public function getActiveUser(int $user_id): ?\PFUser
     {
-        $user = \UserManager::instance()->getUserById($user_id);
+        $user = $this->retrieve_user->getUserById($user_id);
         if (! $user || ! $user->isActive()) {
-            return false;
+            return null;
         }
 
-        return true;
+        return $user;
     }
 }

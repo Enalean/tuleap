@@ -22,21 +22,33 @@ declare(strict_types=1);
 
 namespace Tuleap\Timetracking\Tests\Stub;
 
-use Tuleap\Timetracking\REST\v1\TimetrackingManagement\CheckThatUserIsActive;
+use Tuleap\Timetracking\REST\v1\TimetrackingManagement\GetActiveUser;
 
-final readonly class CheckThatUserIsActiveStub implements CheckThatUserIsActive
+final readonly class GetActiveUserStub implements GetActiveUser
 {
-    public function __construct(private array $active_users_ids)
+    /**
+     * @param array<int, \PFUser> $users
+     */
+    public function __construct(private array $users)
     {
     }
 
-    public function checkThatUserIsActive(int $user_id): bool
+    public function getActiveUser(int $user_id): ?\PFUser
     {
-        return in_array($user_id, $this->active_users_ids);
+        if (! isset($this->users[$user_id])) {
+            return null;
+        }
+
+        return $this->users[$user_id];
     }
 
-    public static function withActiveUsers(int ...$users_ids): self
+    public static function withActiveUsers(\PFUser ...$users): self
     {
-        return new self([...$users_ids]);
+        $users_by_id = [];
+        foreach ($users as $user) {
+            $users_by_id[(int) $user->getId()] = $user;
+        }
+
+        return new self($users_by_id);
     }
 }
