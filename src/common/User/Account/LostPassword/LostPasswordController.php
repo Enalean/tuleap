@@ -74,7 +74,7 @@ final class LostPasswordController implements DispatchableWithRequestNoAuthz, Di
         }
 
         if ($user === null || $user->getUserPw() === null) {
-            $this->redisplayFormWithError($request, $layout, $variables, _('That user does not exist.'));
+            $this->displayConfirmation($layout);
             return;
         }
 
@@ -85,9 +85,8 @@ final class LostPasswordController implements DispatchableWithRequestNoAuthz, Di
                     try {
                         $reset_token = $this->reset_token_creator->create($user);
                     } catch (RecentlyCreatedCodeException) {
-                        return Result::err(
-                            Fault::fromMessage(_('You already asked a recovery link recently, please check your email for the link to recover your password.'))
-                        );
+                        $this->logger->info(sprintf('Reset code for user #%d was recently requested, not sending one again', $user->getId()));
+                        return Result::ok(true);
                     }
 
                     $identifier = $this->reset_token_formatter->getIdentifier($reset_token);
@@ -123,16 +122,7 @@ final class LostPasswordController implements DispatchableWithRequestNoAuthz, Di
                 }
             )->match(
                 function () use ($layout): void {
-                    $layout->addCssAsset(
-                        new CssAssetWithoutVariantDeclinaisons($this->core_assets, 'account-registration-style')
-                    );
-                    $layout->header(HeaderConfigurationBuilder::get(_('Password recovery'))->build());
-                    $this->renderer_factory
-                        ->getRenderer(__DIR__ . '/../../../../templates/account')
-                        ->renderToPage('lost-password-confirmation', [
-                            'title' => _('Password recovery'),
-                        ]);
-                    $layout->footer(FooterConfiguration::withoutContent());
+                    $this->displayConfirmation($layout);
                 },
                 function (Fault $fault) use ($request, $layout, $variables) {
                     Fault::writeToLogger($fault, $this->logger);
@@ -148,5 +138,19 @@ final class LostPasswordController implements DispatchableWithRequestNoAuthz, Di
         string $error_message,
     ): void {
         $this->display_controller->process($request, $layout, [...$variables, 'error_message' => $error_message]);
+    }
+
+    private function displayConfirmation(BaseLayout $layout): void
+    {
+        $layout->addCssAsset(
+            new CssAssetWithoutVariantDeclinaisons($this->core_assets, 'account-registration-style')
+        );
+        $layout->header(HeaderConfigurationBuilder::get(_('Password recovery'))->build());
+        $this->renderer_factory
+            ->getRenderer(__DIR__ . '/../../../../templates/account')
+            ->renderToPage('lost-password-confirmation', [
+                'title' => _('Password recovery'),
+            ]);
+        $layout->footer(FooterConfiguration::withoutContent());
     }
 }
