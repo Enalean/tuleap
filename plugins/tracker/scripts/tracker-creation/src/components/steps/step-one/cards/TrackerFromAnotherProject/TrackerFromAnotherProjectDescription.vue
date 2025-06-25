@@ -34,12 +34,4 @@
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import Component from "vue-class-component";
-
-@Component({
-    name: "TrackerFromAnotherProjectDescription",
-})
-export default class TrackerFromAnotherProjectDescription extends Vue {}
-</script>
+<script setup lang="ts"></script>
