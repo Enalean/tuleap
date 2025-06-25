@@ -31,6 +31,7 @@ use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\Tracker\XML\Importer\CreateFromXml;
 use Tuleap\Tracker\Tracker\XML\Importer\GetInstanceFromXml;
 use Tuleap\Tracker\Tracker\XML\Importer\InstantiateTrackerFromXml;
+use Tuleap\Tracker\Tracker\XML\Importer\XmlTrackersByPriorityOrderer;
 use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
 use Tuleap\XML\MappingsRegistry;
 
@@ -100,6 +101,7 @@ final class TrackerXmlImportArtifactLinkV2ActivationTest extends \Tuleap\Test\PH
             $this->createMock(TrackerXmlImportFeedbackCollector::class),
             $this->createMock(CreateFromXml::class),
             $this->createMock(InstantiateTrackerFromXml::class),
+            new XmlTrackersByPriorityOrderer(),
         );
 
         $this->external_validator->method('extractExternalFieldFromProjectElement');

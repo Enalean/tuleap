@@ -37,7 +37,9 @@ use Tuleap\Tracker\Tracker\XML\Importer\CreateFromXml;
 use Tuleap\Tracker\Tracker\XML\Importer\FromXmlCreator;
 use Tuleap\Tracker\Tracker\XML\Importer\GetInstanceFromXml;
 use Tuleap\Tracker\Tracker\XML\Importer\InstantiateTrackerFromXml;
+use Tuleap\Tracker\Tracker\XML\Importer\OrderXmlTrackersByPriority;
 use Tuleap\Tracker\Tracker\XML\Importer\TrackerFromXmlInstantiator;
+use Tuleap\Tracker\Tracker\XML\Importer\XmlTrackersByPriorityOrderer;
 use Tuleap\Tracker\TrackerColor;
 use Tuleap\Tracker\TrackerIsInvalidException;
 use Tuleap\Tracker\TrackerXMLFieldMappingFromExistingTracker;
@@ -125,6 +127,7 @@ class TrackerXmlImport
         TrackerXmlImportFeedbackCollector $feedback_collector,
         private readonly CreateFromXml $from_xml_creator,
         private readonly InstantiateTrackerFromXml $instantiate_tracker_from_xml,
+        private readonly OrderXmlTrackersByPriority $xml_trackers_by_priority_orderer,
     ) {
         $this->tracker_factory              = $tracker_factory;
         $this->event_manager                = $event_manager;
@@ -224,6 +227,7 @@ class TrackerXmlImport
                 $feedback_collector,
                 $logger,
             ),
+            new XmlTrackersByPriorityOrderer(),
         );
     }
 
@@ -276,7 +280,7 @@ class TrackerXmlImport
         $changeset_id_mapping     = new ImportedChangesetMapping();
         $url_mapping              = new CreatedFileURLMapping();
 
-        $ordered_xml_trackers = $this->getAllXmlTrackersOrderedByPriority($xml_input);
+        $ordered_xml_trackers = $this->xml_trackers_by_priority_orderer->getAllXmlTrackersOrderedByPriority($xml_input);
 
         foreach ($ordered_xml_trackers as $xml_tracker_id => $ordered_xml_tracker) {
             $tracker_created = $this->instantiate_tracker_from_xml->instantiateTrackerFromXml(
@@ -424,7 +428,7 @@ class TrackerXmlImport
         $this->external_fields_extractor->extractExternalFieldFromProjectElement($partial_element);
         $this->rng_validator->validate($partial_element->trackers, __DIR__ . '/../resources/trackers.rng');
 
-        $xml_trackers = $this->getAllXmlTrackersOrderedByPriority($xml_input);
+        $xml_trackers = $this->xml_trackers_by_priority_orderer->getAllXmlTrackersOrderedByPriority($xml_input);
         $trackers     = [];
 
         foreach ($xml_trackers as $xml_tracker_id => $xml_tracker) {
@@ -538,7 +542,7 @@ class TrackerXmlImport
     private function importHierarchy(SimpleXMLElement $xml_input, array $created_trackers_list)
     {
         $all_hierarchies = [];
-        foreach ($this->getAllXmlTrackersOrderedByPriority($xml_input) as $xml_tracker) {
+        foreach ($this->xml_trackers_by_priority_orderer->getAllXmlTrackersOrderedByPriority($xml_input) as $xml_tracker) {
             $all_hierarchies = $this->buildTrackersHierarchy($all_hierarchies, $xml_tracker, $created_trackers_list);
         }
 
@@ -659,44 +663,5 @@ class TrackerXmlImport
     protected function loadXmlFile(string $filepath)
     {
         return \simplexml_load_string(\file_get_contents($filepath));
-    }
-
-    /**
-     * protected for testing purpose
-     * @return array Array of SimpleXmlElement with each tracker
-     */
-    protected function getAllXmlTrackersOrderedByPriority(SimpleXMLElement $xml_input): array
-    {
-        $xml_trackers = [];
-        foreach ($xml_input->trackers->tracker as $xml_tracker) {
-            $xml_trackers[$this->getXmlTrackerAttribute($xml_tracker, 'id')] = $xml_tracker;
-        }
-
-        uasort($xml_trackers, function (SimpleXMLElement $xml_tracker_a, SimpleXMLElement $xml_tracker_b) {
-            $is_a_inherited_from_tracker = $this->hasTimeframeSemanticInheritedFromAnotherTracker($xml_tracker_a);
-            $is_b_inherited_from_tracker = $this->hasTimeframeSemanticInheritedFromAnotherTracker($xml_tracker_b);
-
-            if ($is_a_inherited_from_tracker === $is_b_inherited_from_tracker) {
-                return 0;
-            }
-
-            if ($is_a_inherited_from_tracker) {
-                return 1;
-            }
-            return -1;
-        });
-
-        return $xml_trackers;
-    }
-
-    private function hasTimeframeSemanticInheritedFromAnotherTracker(SimpleXMLElement $xml_tracker): bool
-    {
-        if (! $xml_tracker->semantics) {
-            return false;
-        }
-
-        $inherited_from_tracker_xml_element = $xml_tracker->semantics->xpath("./semantic[@type='timeframe']/inherited_from_tracker");
-
-        return $inherited_from_tracker_xml_element !== null && (is_array($inherited_from_tracker_xml_element) && count($inherited_from_tracker_xml_element) > 0);
     }
 }
