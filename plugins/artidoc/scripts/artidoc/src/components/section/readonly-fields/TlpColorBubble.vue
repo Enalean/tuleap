@@ -19,7 +19,7 @@
 
 <template>
     <span
-        class="tlp-color-bubble"
+        class="tlp-color-bubble document-color-bubble"
         v-bind:class="`tlp-swatch-${tlp_color}`"
         data-test="tlp-color-bubble"
     />
