@@ -36,7 +36,6 @@ import { NOTIFICATION_COLLECTION } from "@/sections/notifications/notification-c
 import { TOOLBAR_BUS } from "@/toolbar-bus-injection-key";
 import { SECTIONS_STATES_COLLECTION } from "@/sections/states/sections-states-collection-injection-key";
 import { FILE_UPLOADS_COLLECTION } from "@/sections/attachments/sections-file-uploads-collection-injection-key";
-import { CONFIGURATION_STORE, initConfigurationStore } from "@/stores/configuration-store";
 import { PDF_TEMPLATES_STORE, initPdfTemplatesStore } from "@/stores/pdf-templates-store";
 import {
     OPEN_CONFIGURATION_MODAL_BUS,
@@ -130,13 +129,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         selected_fields,
     );
 
-    const configuration_store = initConfigurationStore(
-        item_id,
-        selected_tracker,
-        selected_fields,
-        available_fields,
-    );
-
     const is_loading_failed = ref(false);
 
     watchForNeededPendingSectionInsertion(
@@ -172,7 +164,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         .provide(SELECTED_TRACKER, selected_tracker)
         .provide(SELECTED_FIELDS, selected_fields)
         .provide(AVAILABLE_FIELDS, available_fields)
-        .provide(CONFIGURATION_STORE, configuration_store)
         .provide(
             PDF_TEMPLATES_STORE,
             initPdfTemplatesStore(

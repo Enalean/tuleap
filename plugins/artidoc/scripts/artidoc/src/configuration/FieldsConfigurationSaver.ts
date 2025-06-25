@@ -1,5 +1,5 @@
-/*
- * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
+/**
+ * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,50 +16,43 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
-import { putConfiguration } from "@/helpers/rest-querier";
-import type { StrictInjectionKey } from "@tuleap/vue-strict-inject";
 import type { ConfigurationField } from "@/sections/readonly-fields/AvailableReadonlyFields";
 import { getAvailableFields } from "@/sections/readonly-fields/AvailableReadonlyFields";
-import type { SelectedTrackerRef } from "@/configuration/SelectedTracker";
 import type { ResultAsync } from "neverthrow";
 import { okAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
+import { putConfiguration } from "@/helpers/rest-querier";
+import type { SelectedTrackerRef } from "@/configuration/SelectedTracker";
 import type { SelectedFieldsCollection } from "@/configuration/SelectedFieldsCollection";
 import type { AvailableFieldsCollection } from "@/configuration/AvailableFieldsCollection";
 
-export interface ConfigurationStore {
+export interface SaveFieldsConfiguration {
     saveFieldsConfiguration: (
         new_selected_fields: ConfigurationField[],
     ) => ResultAsync<null, Fault>;
 }
 
-export const CONFIGURATION_STORE: StrictInjectionKey<ConfigurationStore> =
-    Symbol("configuration-store");
-
-export function initConfigurationStore(
+export function buildFieldsConfigurationSaver(
     document_id: number,
     selected_tracker: SelectedTrackerRef,
     selected_fields: SelectedFieldsCollection,
     available_fields: AvailableFieldsCollection,
-): ConfigurationStore {
-    function saveFieldsConfiguration(
-        new_selected_fields: ConfigurationField[],
-    ): ResultAsync<null, Fault> {
-        return selected_tracker.value.mapOr((currently_selected_tracker) => {
-            const selected_tracker_id = currently_selected_tracker.id;
-
-            return putConfiguration(document_id, selected_tracker_id, new_selected_fields)
-                .andThen(() => getAvailableFields(selected_tracker_id, new_selected_fields))
-                .map((new_available_fields) => {
-                    selected_fields.value = new_selected_fields;
-                    available_fields.value = new_available_fields;
-                    return null;
-                });
-        }, okAsync(null));
-    }
-
+): SaveFieldsConfiguration {
     return {
-        saveFieldsConfiguration,
+        saveFieldsConfiguration: (
+            new_selected_fields: ConfigurationField[],
+        ): ResultAsync<null, Fault> => {
+            return selected_tracker.value.mapOr((currently_selected_tracker) => {
+                const selected_tracker_id = currently_selected_tracker.id;
+
+                return putConfiguration(document_id, selected_tracker_id, new_selected_fields)
+                    .andThen(() => getAvailableFields(selected_tracker_id, new_selected_fields))
+                    .map((new_available_fields) => {
+                        selected_fields.value = new_selected_fields;
+                        available_fields.value = new_available_fields;
+                        return null;
+                    });
+            }, okAsync(null));
+        },
     };
 }

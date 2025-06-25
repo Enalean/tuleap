@@ -39,7 +39,6 @@
 
 <script setup lang="ts">
 import { ref, toRaw, watch } from "vue";
-import type { ConfigurationStore } from "@/stores/configuration-store";
 import FieldsSelectionIntroductoryText from "@/components/configuration/FieldsSelectionIntroductoryText.vue";
 import FieldsSelection from "@/components/configuration/FieldsSelection.vue";
 import ConfigurationModalFooter from "@/components/configuration/ConfigurationModalFooter.vue";
@@ -48,7 +47,12 @@ import type { ConfigurationField } from "@/sections/readonly-fields/AvailableRea
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { SELECTED_FIELDS } from "@/configuration/SelectedFieldsCollection";
 import { AVAILABLE_FIELDS } from "@/configuration/AvailableFieldsCollection";
+import { buildFieldsConfigurationSaver } from "@/configuration/FieldsConfigurationSaver";
+import { DOCUMENT_ID } from "@/document-id-injection-key";
+import { SELECTED_TRACKER } from "@/configuration/SelectedTracker";
 
+const document_id = strictInject(DOCUMENT_ID);
+const selected_tracker = strictInject(SELECTED_TRACKER);
 const selected_fields = strictInject(SELECTED_FIELDS);
 const available_fields = strictInject(AVAILABLE_FIELDS);
 
@@ -57,10 +61,6 @@ const is_error = ref<boolean>(false);
 const is_success = ref<boolean>(false);
 const error_message = ref<string>("");
 
-const props = defineProps<{
-    configuration_store: ConfigurationStore;
-}>();
-
 const new_selected_fields = ref<ConfigurationField[]>(
     structuredClone(toRaw(selected_fields.value)),
 );
@@ -68,11 +68,18 @@ const new_available_fields = ref<ConfigurationField[]>(
     structuredClone(toRaw(available_fields.value)),
 );
 
+const configuration_saver = buildFieldsConfigurationSaver(
+    document_id,
+    selected_tracker,
+    selected_fields,
+    available_fields,
+);
+
 function onFieldsSubmit(): void {
     is_saving.value = true;
     is_error.value = false;
     is_success.value = false;
-    props.configuration_store.saveFieldsConfiguration(new_selected_fields.value).match(
+    configuration_saver.saveFieldsConfiguration(new_selected_fields.value).match(
         () => {
             is_success.value = true;
         },
