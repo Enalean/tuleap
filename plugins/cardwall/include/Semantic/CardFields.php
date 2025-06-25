@@ -32,9 +32,11 @@ use Tuleap\Cardwall\Semantic\CardsPreviewBuilder;
 use Tuleap\Cardwall\Semantic\FieldUsedInSemanticObjectChecker;
 use Tuleap\Cardwall\Semantic\SemanticCardPresenter;
 use Tuleap\Cardwall\Semantic\SingleCardPreviewDetailsBuilder;
+use Tuleap\Tracker\Semantic\TrackerSemantic;
+use Tuleap\Tracker\Semantic\TrackerSemanticManager;
 use Tuleap\Tracker\Tracker;
 
-class Cardwall_Semantic_CardFields extends Tracker_Semantic
+class Cardwall_Semantic_CardFields extends TrackerSemantic //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public const NAME                  = 'plugin_cardwall_card_fields';
     public const BACKGROUND_COLOR_NAME = 'plugin_cardwell_card_fields_background_color';
@@ -71,7 +73,7 @@ class Cardwall_Semantic_CardFields extends Tracker_Semantic
     /** @var array
      * instances of this semantic
      */
-    protected static $_instances;
+    protected static $_instances; //phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
 
     /** @var Cardwall_Semantic_Dao_CardFieldsDao */
     private $dao;
@@ -171,7 +173,7 @@ class Cardwall_Semantic_CardFields extends Tracker_Semantic
     }
 
     public function displayAdmin(
-        Tracker_SemanticManager $semantic_manager,
+        TrackerSemanticManager $semantic_manager,
         TrackerManager $tracker_manager,
         Codendi_Request $request,
         PFUser $current_user,
@@ -238,7 +240,7 @@ class Cardwall_Semantic_CardFields extends Tracker_Semantic
         return $this->semantic_field_checker->isUsedInSemantic($field, $this->getFields());
     }
 
-    public function process(Tracker_SemanticManager $semantic_manager, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user)
+    public function process(TrackerSemanticManager $semantic_manager, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user)
     {
         if ($request->get('add') && (int) $request->get('field')) {
             $this->getCSRFToken()->check();

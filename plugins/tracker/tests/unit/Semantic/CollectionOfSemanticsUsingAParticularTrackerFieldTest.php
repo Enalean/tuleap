@@ -91,7 +91,7 @@ class CollectionOfSemanticsUsingAParticularTrackerFieldTest extends \Tuleap\Test
 
     private function getMockedSemantic(string $semantic_label, \Tuleap\Tracker\Tracker $tracker)
     {
-        $semantic = $this->createMock(\Tracker_Semantic::class);
+        $semantic = $this->createMock(\Tuleap\Tracker\Semantic\TrackerSemantic::class);
         $semantic->expects($this->any())->method('getLabel')->willReturn($semantic_label);
         $semantic->expects($this->any())->method('getTracker')->willReturn($tracker);
 

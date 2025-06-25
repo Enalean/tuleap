@@ -23,9 +23,10 @@
 
 use Tuleap\Cardwall\Semantic\CardFieldXmlExtractor;
 use Tuleap\Tracker\Semantic\IBuildSemanticFromXML;
+use Tuleap\Tracker\Semantic\TrackerSemantic;
 use Tuleap\Tracker\Tracker;
 
-class Cardwall_Semantic_CardFieldsFactory implements IBuildSemanticFromXML
+class Cardwall_Semantic_CardFieldsFactory implements IBuildSemanticFromXML  // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public function getInstanceFromXML(
         SimpleXMLElement $current_semantic_xml,
@@ -33,7 +34,7 @@ class Cardwall_Semantic_CardFieldsFactory implements IBuildSemanticFromXML
         array $xml_mapping,
         Tracker $tracker,
         array $tracker_mapping,
-    ): Tracker_Semantic {
+    ): TrackerSemantic {
         $extractor        = new CardFieldXmlExtractor();
         $fields           = $extractor->extractFieldFromXml($current_semantic_xml, $xml_mapping);
         $background_color = $extractor->extractBackgroundColorFromXml($current_semantic_xml, $xml_mapping);

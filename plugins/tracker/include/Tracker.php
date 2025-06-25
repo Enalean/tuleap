@@ -81,7 +81,6 @@ use Tracker_Permission_PermissionController;
 use Tracker_Report;
 use Tracker_ReportFactory;
 use Tracker_RulesManager;
-use Tracker_SemanticManager;
 use Tracker_SharedFormElementFactory;
 use Tracker_Workflow_GlobalRulesViolationException;
 use Tracker_Workflow_Trigger_RulesDao;
@@ -221,6 +220,7 @@ use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
 use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatusFactory;
 use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle;
 use Tuleap\Tracker\Semantic\Tooltip\SemanticTooltip;
+use Tuleap\Tracker\Semantic\TrackerSemanticManager;
 use Tuleap\Tracker\Tooltip\TrackerStats;
 use Tuleap\Tracker\User\NotificationOnAllUpdatesRetriever;
 use Tuleap\Tracker\User\NotificationOnOwnActionRetriever;
@@ -1863,11 +1863,11 @@ class Tracker implements Tracker_Dispatchable_Interface
     }
 
     /**
-     * @return Tracker_SemanticManager
+     * @return TrackerSemanticManager
      */
     public function getTrackerSemanticManager()
     {
-        return new Tracker_SemanticManager(CachedSemanticDescriptionFieldRetriever::instance(), $this);
+        return new TrackerSemanticManager(CachedSemanticDescriptionFieldRetriever::instance(), $this);
     }
 
     /**

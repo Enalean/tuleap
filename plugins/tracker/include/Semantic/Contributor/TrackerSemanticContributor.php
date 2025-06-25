@@ -29,12 +29,12 @@ use TemplateRendererFactory;
 use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElementFactory;
-use Tracker_Semantic;
-use Tracker_SemanticManager;
 use TrackerManager;
+use Tuleap\Tracker\Semantic\TrackerSemantic;
+use Tuleap\Tracker\Semantic\TrackerSemanticManager;
 use Tuleap\Tracker\Tracker;
 
-class TrackerSemanticContributor extends Tracker_Semantic
+class TrackerSemanticContributor extends TrackerSemantic
 {
     public const CONTRIBUTOR_SEMANTIC_SHORTNAME = 'contributor';
 
@@ -131,7 +131,7 @@ class TrackerSemanticContributor extends Tracker_Semantic
         return $html;
     }
 
-    public function displayAdmin(Tracker_SemanticManager $semantic_manager, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user): void
+    public function displayAdmin(TrackerSemanticManager $semantic_manager, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user): void
     {
         $this->tracker->displayAdminItemHeaderBurningParrot(
             $tracker_manager,
@@ -153,14 +153,14 @@ class TrackerSemanticContributor extends Tracker_Semantic
     /**
      * Process the form
      *
-     * @param Tracker_SemanticManager $semantic_manager The semantic manager
+     * @param TrackerSemanticManager $semantic_manager The semantic manager
      * @param TrackerManager $tracker_manager The tracker manager
      * @param Codendi_Request $request The request
      * @param PFUser $current_user The user who made the request
      *
      * @return void
      */
-    public function process(Tracker_SemanticManager $semantic_manager, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user)
+    public function process(TrackerSemanticManager $semantic_manager, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user)
     {
         if ($request->exist('update')) {
             $this->getCSRFToken()->check();

@@ -33509,6 +33509,68 @@
       <code><![CDATA[$att['REF']]]></code>
     </PossiblyNullArrayAccess>
   </file>
+  <file src="plugins/tracker/include/Semantic/TrackerSemantic.php">
+    <MissingReturnType>
+      <code><![CDATA[exportToREST]]></code>
+      <code><![CDATA[getFieldUserCanRead]]></code>
+    </MissingReturnType>
+    <UndefinedMethod>
+      <code><![CDATA[getField]]></code>
+    </UndefinedMethod>
+  </file>
+  <file src="plugins/tracker/include/Semantic/TrackerSemanticCollection.php">
+    <InvalidOperand>
+      <code><![CDATA[$index]]></code>
+    </InvalidOperand>
+    <InvalidScalarArgument>
+      <code><![CDATA[$position]]></code>
+    </InvalidScalarArgument>
+    <MissingParamType>
+      <code><![CDATA[$semantic_shortname]]></code>
+    </MissingParamType>
+    <MissingReturnType>
+      <code><![CDATA[add]]></code>
+      <code><![CDATA[insertAfter]]></code>
+    </MissingReturnType>
+    <MissingTemplateParam>
+      <code><![CDATA[ArrayAccess]]></code>
+      <code><![CDATA[Iterator]]></code>
+    </MissingTemplateParam>
+  </file>
+  <file src="plugins/tracker/include/Semantic/TrackerSemanticFactory.php">
+    <MissingParamType>
+      <code><![CDATA[$type]]></code>
+    </MissingParamType>
+    <MissingReturnType>
+      <code><![CDATA[getSemanticFromAnotherPlugin]]></code>
+    </MissingReturnType>
+    <PossiblyNullArrayAccess>
+      <code><![CDATA[$attributes['type']]]></code>
+    </PossiblyNullArrayAccess>
+  </file>
+  <file src="plugins/tracker/include/Semantic/TrackerSemanticManager.php">
+    <MissingParamType>
+      <code><![CDATA[$current_user]]></code>
+      <code><![CDATA[$current_user]]></code>
+      <code><![CDATA[$request]]></code>
+      <code><![CDATA[$request]]></code>
+    </MissingParamType>
+    <MissingReturnType>
+      <code><![CDATA[displayAdminSemantic]]></code>
+      <code><![CDATA[displaySemanticFooter]]></code>
+      <code><![CDATA[displaySemanticHeader]]></code>
+      <code><![CDATA[exportToREST]]></code>
+      <code><![CDATA[getSemanticOrder]]></code>
+      <code><![CDATA[process]]></code>
+    </MissingReturnType>
+    <PossiblyNullReference>
+      <code><![CDATA[exportToREST]]></code>
+      <code><![CDATA[process]]></code>
+    </PossiblyNullReference>
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[$timeframe_dao->getSemanticsImpliedFromGivenTracker($this->tracker->getId())]]></code>
+    </RiskyTruthyFalsyComparison>
+  </file>
   <file src="plugins/tracker/include/ServiceTracker.php">
     <MissingParamType>
       <code><![CDATA[$breadcrumbs]]></code>
@@ -45486,68 +45548,6 @@
     <UndefinedInterfaceMethod>
       <code><![CDATA[add]]></code>
     </UndefinedInterfaceMethod>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Semantic/Tracker_Semantic.php">
-    <MissingReturnType>
-      <code><![CDATA[exportToREST]]></code>
-      <code><![CDATA[getFieldUserCanRead]]></code>
-    </MissingReturnType>
-    <UndefinedMethod>
-      <code><![CDATA[getField]]></code>
-    </UndefinedMethod>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Semantic/Tracker_SemanticCollection.php">
-    <InvalidOperand>
-      <code><![CDATA[$index]]></code>
-    </InvalidOperand>
-    <InvalidScalarArgument>
-      <code><![CDATA[$position]]></code>
-    </InvalidScalarArgument>
-    <MissingParamType>
-      <code><![CDATA[$semantic_shortname]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[add]]></code>
-      <code><![CDATA[insertAfter]]></code>
-    </MissingReturnType>
-    <MissingTemplateParam>
-      <code><![CDATA[ArrayAccess]]></code>
-      <code><![CDATA[Iterator]]></code>
-    </MissingTemplateParam>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Semantic/Tracker_SemanticFactory.php">
-    <MissingParamType>
-      <code><![CDATA[$type]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[getSemanticFromAnotherPlugin]]></code>
-    </MissingReturnType>
-    <PossiblyNullArrayAccess>
-      <code><![CDATA[$attributes['type']]]></code>
-    </PossiblyNullArrayAccess>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Semantic/Tracker_SemanticManager.php">
-    <MissingParamType>
-      <code><![CDATA[$current_user]]></code>
-      <code><![CDATA[$current_user]]></code>
-      <code><![CDATA[$request]]></code>
-      <code><![CDATA[$request]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[displayAdminSemantic]]></code>
-      <code><![CDATA[displaySemanticFooter]]></code>
-      <code><![CDATA[displaySemanticHeader]]></code>
-      <code><![CDATA[exportToREST]]></code>
-      <code><![CDATA[getSemanticOrder]]></code>
-      <code><![CDATA[process]]></code>
-    </MissingReturnType>
-    <PossiblyNullReference>
-      <code><![CDATA[exportToREST]]></code>
-      <code><![CDATA[process]]></code>
-    </PossiblyNullReference>
-    <RiskyTruthyFalsyComparison>
-      <code><![CDATA[$timeframe_dao->getSemanticsImpliedFromGivenTracker($this->tracker->getId())]]></code>
-    </RiskyTruthyFalsyComparison>
   </file>
   <file src="plugins/tracker/include/Tracker/Semantic/XML/XMLFieldsBasedSemantic.php">
     <PossiblyNullReference>

@@ -34,7 +34,7 @@ use Tuleap\Tracker\Tracker;
 class Tracker_REST_TrackerRestBuilder implements BuildCompleteTrackerRESTRepresentation // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /**
-     * @psalm-param \Closure(Tracker): \Tracker_SemanticManager $semantic_manager_instantiator
+     * @psalm-param \Closure(Tracker): \Tuleap\Tracker\Semantic\TrackerSemanticManager $semantic_manager_instantiator
      */
     public function __construct(
         private Tracker_FormElementFactory $formelement_factory,

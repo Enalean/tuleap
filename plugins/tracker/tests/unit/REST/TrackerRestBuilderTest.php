@@ -93,7 +93,7 @@ final class TrackerRestBuilderTest extends TestCase
             new FrozenFieldsRetriever($this->createMock(FrozenFieldsDao::class), $this->form_element_factory,)
         );
 
-        $semantic_manager = $this->createMock(\Tracker_SemanticManager::class);
+        $semantic_manager = $this->createMock(\Tuleap\Tracker\Semantic\TrackerSemanticManager::class);
         $semantic_manager->method('exportToREST')->willReturn([]);
         $builder = new Tracker_REST_TrackerRestBuilder(
             $this->form_element_factory,

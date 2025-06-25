@@ -19,10 +19,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\Tracker\Semantic;
+
+use Codendi_Request;
+use CSRFSynchronizerToken;
+use PFUser;
+use SimpleXMLElement;
+use Tracker_FormElement_Field;
+use TrackerManager;
 use Tuleap\Tracker\REST\SemanticRepresentation;
 use Tuleap\Tracker\Tracker;
 
-abstract class Tracker_Semantic
+abstract class TrackerSemantic
 {
     /**
      * @var Tracker
@@ -32,7 +40,7 @@ abstract class Tracker_Semantic
     /**
      * Cosntructor
      *
-     * @param Tracker $tracker    The tracker
+     * @param Tracker $tracker The tracker
      */
     public function __construct(Tracker $tracker)
     {
@@ -95,32 +103,32 @@ abstract class Tracker_Semantic
     /**
      * Display the form to let the admin change the semantic
      *
-     * @param Tracker_SemanticManager $semantic_manager              The semantic manager
-     * @param TrackerManager          $tracker_manager The tracker manager
-     * @param Codendi_Request         $request         The request
-     * @param PFUser                    $current_user    The user who made the request
+     * @param TrackerSemanticManager $semantic_manager The semantic manager
+     * @param TrackerManager $tracker_manager The tracker manager
+     * @param Codendi_Request $request The request
+     * @param PFUser $current_user The user who made the request
      *
      * @return void
      */
-    abstract public function displayAdmin(Tracker_SemanticManager $semantic_manager, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user);
+    abstract public function displayAdmin(TrackerSemanticManager $semantic_manager, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user);
 
     /**
      * Process the form
      *
-     * @param Tracker_SemanticManager $semantic_manager              The semantic manager
-     * @param TrackerManager          $tracker_manager The tracker manager
-     * @param Codendi_Request         $request         The request
-     * @param PFUser                    $current_user    The user who made the request
+     * @param TrackerSemanticManager $semantic_manager The semantic manager
+     * @param TrackerManager $tracker_manager The tracker manager
+     * @param Codendi_Request $request The request
+     * @param PFUser $current_user The user who made the request
      *
      * @return void
      */
-    abstract public function process(Tracker_SemanticManager $semantic_manager, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user);
+    abstract public function process(TrackerSemanticManager $semantic_manager, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user);
 
     /**
      * Export semantic to XML
      *
-     * @param SimpleXMLElement &$root      the node to which the semantic is attached (passed by reference)
-     * @param array            $xml_mapping correspondance between real ids and xml IDs
+     * @param SimpleXMLElement &$root the node to which the semantic is attached (passed by reference)
+     * @param array $xml_mapping correspondance between real ids and xml IDs
      *
      * @return void
      */
@@ -143,8 +151,8 @@ abstract class Tracker_Semantic
     public function getUrl()
     {
         $query = http_build_query([
-            'tracker'  => $this->tracker->getId(),
-            'func'     => 'admin-semantic',
+            'tracker' => $this->tracker->getId(),
+            'func' => 'admin-semantic',
             'semantic' => $this->getShortName(),
         ]);
         return TRACKER_BASE_URL . '/?' . $query;

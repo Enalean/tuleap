@@ -30,17 +30,17 @@ use TemplateRendererFactory;
 use Tracker_FormElement_Field;
 use Tracker_FormElementFactory;
 use Tracker_HierarchyFactory;
-use Tracker_Semantic;
-use Tracker_SemanticManager;
 use TrackerManager;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDone;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneDao;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneFactory;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneValueChecker;
+use Tuleap\Tracker\Semantic\TrackerSemantic;
+use Tuleap\Tracker\Semantic\TrackerSemanticManager;
 use Tuleap\Tracker\Tracker;
 use UserManager;
 
-class SemanticVelocity extends Tracker_Semantic
+class SemanticVelocity extends TrackerSemantic
 {
     public const NAME = 'velocity';
 
@@ -108,7 +108,7 @@ class SemanticVelocity extends Tracker_Semantic
     }
 
     public function displayAdmin(
-        Tracker_SemanticManager $semantic_manager,
+        TrackerSemanticManager $semantic_manager,
         TrackerManager $tracker_manager,
         Codendi_Request $request,
         PFUser $current_user,
@@ -137,7 +137,7 @@ class SemanticVelocity extends Tracker_Semantic
     }
 
     public function process(
-        Tracker_SemanticManager $semantic_manager,
+        TrackerSemanticManager $semantic_manager,
         TrackerManager $tracker_manager,
         Codendi_Request $request,
         PFUser $current_user,

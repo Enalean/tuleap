@@ -29,12 +29,12 @@ use TemplateRendererFactory;
 use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_Text;
 use Tracker_FormElementFactory;
-use Tracker_Semantic;
-use Tracker_SemanticManager;
 use TrackerManager;
+use Tuleap\Tracker\Semantic\TrackerSemantic;
+use Tuleap\Tracker\Semantic\TrackerSemanticManager;
 use Tuleap\Tracker\Tracker;
 
-class TrackerSemanticDescription extends Tracker_Semantic
+class TrackerSemanticDescription extends TrackerSemantic
 {
     public const NAME = 'description';
 
@@ -143,7 +143,7 @@ class TrackerSemanticDescription extends Tracker_Semantic
     }
 
     public function displayAdmin(
-        Tracker_SemanticManager $semantic_manager,
+        TrackerSemanticManager $semantic_manager,
         TrackerManager $tracker_manager,
         Codendi_Request $request,
         PFUser $current_user,
@@ -166,7 +166,7 @@ class TrackerSemanticDescription extends Tracker_Semantic
     }
 
     public function process(
-        Tracker_SemanticManager $semantic_manager,
+        TrackerSemanticManager $semantic_manager,
         TrackerManager $tracker_manager,
         Codendi_Request $request,
         PFUser $current_user,

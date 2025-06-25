@@ -29,8 +29,6 @@ use Tracker_Artifact_PriorityHistoryDao;
 use Tracker_ArtifactDao;
 use Tracker_ArtifactFactory;
 use Tracker_FormElementFactory;
-use Tracker_SemanticCollection;
-use Tracker_SemanticManager;
 use TrackerFactory;
 use Tuleap\AgileDashboard\Milestone\Backlog\BacklogItem;
 use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
@@ -57,6 +55,8 @@ use Tuleap\Tracker\REST\Helpers\OrderValidator;
 use Tuleap\Tracker\Semantic\Description\CachedSemanticDescriptionFieldRetriever;
 use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
 use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle;
+use Tuleap\Tracker\Semantic\TrackerSemanticCollection;
+use Tuleap\Tracker\Semantic\TrackerSemanticManager;
 use UserManager;
 
 /**
@@ -160,7 +160,7 @@ class BacklogItemResource extends AuthenticatedResource
 
     private function getBacklogItem(PFUser $current_user, Artifact $artifact)
     {
-        $semantic_manager = new Tracker_SemanticManager(CachedSemanticDescriptionFieldRetriever::instance(), $artifact->getTracker());
+        $semantic_manager = new TrackerSemanticManager(CachedSemanticDescriptionFieldRetriever::instance(), $artifact->getTracker());
         $semantics        = $semantic_manager->getSemantics();
 
         $artifact     = $this->updateArtifactTitleSemantic($current_user, $artifact, $semantics);
@@ -182,7 +182,7 @@ class BacklogItemResource extends AuthenticatedResource
         return $backlog_item;
     }
 
-    private function updateArtifactTitleSemantic(PFUser $current_user, Artifact $artifact, Tracker_SemanticCollection $semantics)
+    private function updateArtifactTitleSemantic(PFUser $current_user, Artifact $artifact, TrackerSemanticCollection $semantics)
     {
         $semantic_title = $semantics[TrackerSemanticTitle::NAME];
         $title_field    = $semantic_title->getField();
@@ -198,7 +198,7 @@ class BacklogItemResource extends AuthenticatedResource
         PFUser $current_user,
         Artifact $artifact,
         BacklogItem $backlog_item,
-        Tracker_SemanticCollection $semantics,
+        TrackerSemanticCollection $semantics,
     ) {
         $semantic_status = $semantics[TrackerSemanticStatus::NAME];
 

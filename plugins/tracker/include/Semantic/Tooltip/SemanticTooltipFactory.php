@@ -21,9 +21,9 @@
 
 namespace Tuleap\Tracker\Semantic\Tooltip;
 
-use Tracker_Semantic;
 use Tracker_Semantic_CollectionOfFieldsDuplicator;
 use Tuleap\Tracker\Semantic\IBuildSemanticFromXML;
+use Tuleap\Tracker\Semantic\TrackerSemantic;
 use Tuleap\Tracker\Tracker;
 
 class SemanticTooltipFactory implements IBuildSemanticFromXML
@@ -70,7 +70,7 @@ class SemanticTooltipFactory implements IBuildSemanticFromXML
         array $xml_mapping,
         Tracker $tracker,
         array $tracker_mapping,
-    ): Tracker_Semantic {
+    ): TrackerSemantic {
         $row = [];
         foreach ($current_semantic_xml->field as $field) {
             $att = $field->attributes();

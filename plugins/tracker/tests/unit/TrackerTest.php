@@ -71,7 +71,7 @@ final class TrackerTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PS
         $this->tracker->method('getTrackerFactory')->willReturn($this->tracker_factory);
         $tracker1->method('getTrackerFactory')->willReturn($this->tracker_factory);
         $tracker2->method('getTrackerFactory')->willReturn($this->tracker_factory);
-        $tsm = $this->createMock(\Tracker_SemanticManager::class);
+        $tsm = $this->createMock(\Tuleap\Tracker\Semantic\TrackerSemanticManager::class);
         $this->tracker->method('getTrackerSemanticManager')->willReturn($tsm);
         $tracker1->method('getTrackerSemanticManager')->willReturn($tsm);
         $tracker2->method('getTrackerSemanticManager')->willReturn($tsm);

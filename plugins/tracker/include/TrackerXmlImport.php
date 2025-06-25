@@ -32,6 +32,7 @@ use Tuleap\Tracker\Events\XMLImportArtifactLinkTypeCanBeDisabled;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\Hierarchy\HierarchyDAO;
+use Tuleap\Tracker\Semantic\TrackerSemanticFactory;
 use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\Tracker\XML\Importer\BuildTrackersHierarchy;
 use Tuleap\Tracker\Tracker\XML\Importer\CreateFromXml;
@@ -174,7 +175,7 @@ class TrackerXmlImport
             $form_element_factory,
             $user_finder,
             $feedback_collector,
-            Tracker_SemanticFactory::instance(),
+            TrackerSemanticFactory::instance(),
             new Tracker_RuleFactory(
                 new Tracker_RuleDao()
             ),

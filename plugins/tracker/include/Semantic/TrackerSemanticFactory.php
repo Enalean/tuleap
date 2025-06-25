@@ -16,14 +16,17 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\Tracker\Semantic;
+
+use EventManager;
+use SimpleXMLElement;
+use TrackerFactory;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
 use Tuleap\Tracker\Semantic\Contributor\TrackerSemanticContributorFactory;
 use Tuleap\Tracker\Semantic\Description\TrackerSemanticDescriptionFactory;
-use Tuleap\Tracker\Semantic\IBuildSemanticFromXML;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgress;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgressDao;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgressDuplicator;
@@ -42,8 +45,7 @@ use Tuleap\Tracker\Semantic\Tooltip\SemanticTooltip;
 use Tuleap\Tracker\Semantic\Tooltip\SemanticTooltipFactory;
 use Tuleap\Tracker\Tracker;
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-class Tracker_SemanticFactory
+class TrackerSemanticFactory
 {
     /**
      * Create a semantic from xml in other plugins
@@ -77,7 +79,7 @@ class Tracker_SemanticFactory
     /**
      * The singleton method
      *
-     * @return Tracker_SemanticFactory an instance of the factory
+     * @return TrackerSemanticFactory an instance of the factory
      */
     public static function instance()
     {
@@ -94,7 +96,7 @@ class Tracker_SemanticFactory
         array $xml_mapping,
         Tracker $tracker,
         array $created_trackers_mapping,
-    ): ?Tracker_Semantic {
+    ): ?TrackerSemantic {
         $attributes = $xml->attributes();
         $type       = $attributes['type'];
 
@@ -161,12 +163,12 @@ class Tracker_SemanticFactory
         EventManager::instance()->processEvent(
             self::TRACKER_EVENT_SEMANTIC_FROM_XML,
             [
-                'xml'               => $xml,
+                'xml' => $xml,
                 'full_semantic_xml' => $full_semantic_xml,
-                'xml_mapping'       => $xml_mapping,
-                'tracker'           => $tracker,
-                'semantic'          => &$semantic,
-                'type'              => $type,
+                'xml_mapping' => $xml_mapping,
+                'tracker' => $tracker,
+                'semantic' => &$semantic,
+                'type' => $type,
             ]
         );
 
@@ -234,8 +236,8 @@ class Tracker_SemanticFactory
     /**
      * Creates new Tracker_Semantic in the database
      *
-     * @param Tracker_Semantic $semantic The semantic to save
-     * @param Tracker          $tracker  The tracker
+     * @param TrackerSemantic $semantic The semantic to save
+     * @param Tracker $tracker The tracker
      */
     public function saveObject($semantic, $tracker): void
     {

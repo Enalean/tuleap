@@ -233,7 +233,7 @@ class ActionsRunner
                         new PermissionsRepresentationBuilder($ugroup_manager, $permissions_functions_wrapper),
                         new WorkflowRestBuilder(),
                         static function (Tracker $tracker) use ($description_field_retriever) {
-                            return new \Tracker_SemanticManager($description_field_retriever, $tracker);
+                            return new \Tuleap\Tracker\Semantic\TrackerSemanticManager($description_field_retriever, $tracker);
                         },
                         new ParentInHierarchyRetriever(new HierarchyDAO(), \TrackerFactory::instance()),
                         TrackersPermissionsRetriever::build()

@@ -24,19 +24,12 @@ use Tuleap\Tracker\Tracker;
 /**
  * Represents the fields of a cardwall.
  */
-class Cardwall_CardFields
+class Cardwall_CardFields // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    public function __construct(Tracker_FormElementFactory $factory)
-    {
-        $this->form_element_factory = $factory;
-    }
-
     /**
-     *
-     *
      * @return Tracker_FormElement_Field[]
      */
-    public function getFields(Artifact $artifact)
+    public function getFields(Artifact $artifact): array
     {
         $diplayed_fields = [];
         $tracker         = $artifact->getTracker();
@@ -48,9 +41,11 @@ class Cardwall_CardFields
         return $diplayed_fields;
     }
 
-    private function getDisplayedFields(Tracker $tracker)
+    /**
+     * @return Tracker_FormElement_Field[]
+     */
+    private function getDisplayedFields(Tracker $tracker): array
     {
-        $semantic = Cardwall_Semantic_CardFields::load($tracker);
-        return $semantic->getFields();
+        return Cardwall_Semantic_CardFields::load($tracker)->getFields();
     }
 }

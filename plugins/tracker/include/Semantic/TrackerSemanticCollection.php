@@ -1,34 +1,39 @@
 <?php
 /**
-* Copyright Enalean (c) 2013 - Present. All rights reserved.
-* Tuleap and Enalean names and logos are registrated trademarks owned by
-* Enalean SAS. All other trademarks or names are properties of their respective
-* owners.
-*
-* This file is a part of Tuleap.
-*
-* Tuleap is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* Tuleap is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
-*/
+ * Copyright Enalean (c) 2013 - Present. All rights reserved.
+ * Tuleap and Enalean names and logos are registrated trademarks owned by
+ * Enalean SAS. All other trademarks or names are properties of their respective
+ * owners.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
 
-class Tracker_SemanticCollection implements ArrayAccess, Iterator
+namespace Tuleap\Tracker\Semantic;
+
+use ArrayAccess;
+use Iterator;
+
+class TrackerSemanticCollection implements ArrayAccess, Iterator
 {
     /**
-     * @var Tracker_Semantic[]
+     * @var TrackerSemantic[]
      */
     private $semantics_by_name;
     /**
-     * @var Tracker_Semantic[]
+     * @var TrackerSemantic[]
      */
     private $semantics;
 
@@ -38,14 +43,14 @@ class Tracker_SemanticCollection implements ArrayAccess, Iterator
         $this->semantics_by_name = [];
     }
 
-    public function add(Tracker_Semantic $semantic)
+    public function add(TrackerSemantic $semantic)
     {
         $this->semantics[] = $semantic;
 
         $this->semantics_by_name[$semantic->getShortName()] = $semantic;
     }
 
-    public function insertAfter($semantic_shortname, Tracker_Semantic $semantic)
+    public function insertAfter($semantic_shortname, TrackerSemantic $semantic)
     {
         $position = 0;
         foreach ($this->semantics as $index => $previous_semantic) {
@@ -64,7 +69,7 @@ class Tracker_SemanticCollection implements ArrayAccess, Iterator
         return isset($this->semantics_by_name[$offset]);
     }
 
-    public function offsetGet($offset): ?Tracker_Semantic
+    public function offsetGet($offset): ?TrackerSemantic
     {
         return isset($this->semantics_by_name[$offset]) ? $this->semantics_by_name[$offset] : null;
     }
@@ -90,7 +95,7 @@ class Tracker_SemanticCollection implements ArrayAccess, Iterator
         }
     }
 
-    public function current(): Tracker_Semantic|false
+    public function current(): TrackerSemantic|false
     {
         return current($this->semantics);
     }
