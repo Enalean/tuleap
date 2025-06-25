@@ -23,18 +23,16 @@
 @use "task";
 @use "today";
 
-$empty-room-to-display-today-pin-head: roadmap-variables.$today-pin-head-size + 2px;
-
 .roadmap-gantt-scrolling-area {
     position: relative;
     flex: 1 1 auto;
-    padding: $empty-room-to-display-today-pin-head 0 0;
+    padding: roadmap-variables.$today-pin-head-empty-room 0 0;
     overflow-x: auto;
 }
 
 .roadmap-gantt-scrolling-area-empty-pixel {
     position: absolute;
-    top: $empty-room-to-display-today-pin-head;
+    top: roadmap-variables.$today-pin-head-empty-room;
     left: 0;
     width: 1px;
     height: 1px;

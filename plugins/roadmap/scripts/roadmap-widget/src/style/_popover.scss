@@ -22,11 +22,7 @@
 
 .roadmap-gantt-task-popover {
     &.tlp-popover.tlp-popover-shown {
-        transform: translateY(-7px);
-
-        &.roadmap-gantt-task-milestone-popover {
-            transform: translateY(-9px);
-        }
+        transform: translate(calc(var(--tlp-small-spacing) * 0.5));
     }
 
     > .roadmap-gantt-task-popover-arrow::after {
