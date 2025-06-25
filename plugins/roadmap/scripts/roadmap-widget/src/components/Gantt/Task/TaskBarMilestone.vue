@@ -21,8 +21,8 @@
 <template>
     <div
         class="roadmap-gantt-task-bar-milestone-container"
-        ref="container_ref"
         v-bind:style="style"
+        ref="container_ref"
     >
         <svg
             v-bind:width="width"

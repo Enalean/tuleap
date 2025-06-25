@@ -18,12 +18,12 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import MilestoneBar from "./MilestoneBar.vue";
+import TaskBarMilestone from "./TaskBarMilestone.vue";
 import type { Task } from "../../../type";
 
-describe("MilestoneBar", () => {
+describe("TaskBarMilestone", () => {
     it("should display a svg diamond at given position", () => {
-        const wrapper = shallowMount(MilestoneBar, {
+        const wrapper = shallowMount(TaskBarMilestone, {
             propsData: {
                 task: {
                     color_name: "fiesta-red",
