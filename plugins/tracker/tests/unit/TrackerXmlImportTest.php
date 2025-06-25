@@ -43,6 +43,7 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Tracker\XML\Importer\CreateFromXml;
 use Tuleap\Tracker\Tracker\XML\Importer\GetInstanceFromXml;
 use Tuleap\Tracker\Tracker\XML\Importer\InstantiateTrackerFromXml;
+use Tuleap\Tracker\Tracker\XML\Importer\TrackersHierarchyBuilder;
 use Tuleap\Tracker\Tracker\XML\Importer\XmlTrackersByPriorityOrderer;
 use Tuleap\Tracker\XML\Importer\ImportXMLProjectTrackerDone;
 use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
@@ -176,6 +177,7 @@ final class TrackerXmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
                 $this->create_from_xml,
                 $this->instantiate_tracker_from_xml,
                 new XmlTrackersByPriorityOrderer(),
+                new TrackersHierarchyBuilder(),
             ]
         )->makePartial();
 
@@ -361,45 +363,6 @@ final class TrackerXmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $this->assertEquals($expected_tracker_mapping, $created_trackers_mapping);
-    }
-
-    public function testItBuildsTrackersHierarchy(): void
-    {
-        $tracker            = new SimpleXMLElement(
-            '<tracker id="T102" parent_id="T101" instantiate_for_new_projects="1">
-                    <name>name20</name>
-                    <item_name>item21</item_name>
-                    <description>desc22</description>
-                  </tracker>'
-        );
-        $hierarchy          = [];
-        $expected_hierarchy = [444 => [555]];
-        $mapper             = ['T101' => 444, 'T102' => 555];
-        $hierarchy          = $this->tracker_xml_importer->buildTrackersHierarchy($hierarchy, $tracker, $mapper);
-
-        $this->assertNotEmpty($hierarchy);
-        $this->assertNotNull($hierarchy[444]);
-        $this->assertEquals($hierarchy, $expected_hierarchy);
-    }
-
-    public function testItAddsTrackersHierarchyOnExistingHierarchy(): void
-    {
-        $hierarchy          = [444 => [555]];
-        $expected_hierarchy = [444 => [555, 666]];
-        $mapper             = ['T101' => 444, 'T103' => 666];
-        $xml_tracker        = new SimpleXMLElement(
-            '<tracker id="T103" parent_id="T101" instantiate_for_new_projects="1">
-                    <name>t30</name>
-                    <item_name>t31</item_name>
-                    <description>t32</description>
-                  </tracker>'
-        );
-
-        $hierarchy = $this->tracker_xml_importer->buildTrackersHierarchy($hierarchy, $xml_tracker, $mapper);
-
-        $this->assertNotEmpty($hierarchy);
-        $this->assertNotNull($hierarchy[444]);
-        $this->assertEquals($expected_hierarchy, $hierarchy);
     }
 
     public function testItCollectsErrorsWithoutImporting(): void
