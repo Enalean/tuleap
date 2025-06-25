@@ -18,13 +18,11 @@
  */
 
 import { describe, expect, it } from "vitest";
-import { ConfigurationStoreStub } from "@/helpers/stubs/ConfigurationStoreStub";
 import { shallowMount } from "@vue/test-utils";
 import { createGettext } from "vue3-gettext";
 import SuccessFeedback from "@/components/configuration/SuccessFeedback.vue";
 import ErrorFeedback from "@/components/configuration/ErrorFeedback.vue";
 import ConfigurationPanel from "@/components/configuration/ConfigurationPanel.vue";
-import { CONFIGURATION_STORE } from "@/stores/configuration-store";
 import { TITLE } from "@/title-injection-key";
 import {
     ALLOWED_TRACKERS,
@@ -33,15 +31,18 @@ import {
 import { SELECTED_TRACKER } from "@/configuration/SelectedTracker";
 import { SelectedTrackerStub } from "@/helpers/stubs/SelectedTrackerStub";
 import { TrackerStub } from "@/helpers/stubs/TrackerStub";
+import { SaveTrackerConfigurationStub } from "@/configuration/stubs/SaveTrackerConfigurationStub";
 
 describe("ConfigurationPanel", () => {
     it("should display error feedback", async () => {
         const wrapper = shallowMount(ConfigurationPanel, {
+            props: {
+                configuration_saver: SaveTrackerConfigurationStub.buildError(),
+            },
             global: {
                 plugins: [createGettext({ silent: true })],
                 provide: {
                     [TITLE.valueOf()]: "My Document",
-                    [CONFIGURATION_STORE.valueOf()]: ConfigurationStoreStub.withError(),
                     [SELECTED_TRACKER.valueOf()]: SelectedTrackerStub.withTracker(
                         TrackerStub.build(101, "Bugs"),
                     ),

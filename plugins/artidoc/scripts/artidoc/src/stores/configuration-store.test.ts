@@ -23,8 +23,7 @@ import type { ConfigurationStore } from "@/stores/configuration-store";
 import { initConfigurationStore } from "@/stores/configuration-store";
 import { TrackerStub } from "@/helpers/stubs/TrackerStub";
 import * as rest from "@/helpers/rest-querier";
-import { errAsync, okAsync } from "neverthrow";
-import { Fault } from "@tuleap/fault";
+import { okAsync } from "neverthrow";
 import { Option } from "@tuleap/option";
 import { ConfigurationFieldStub } from "@/sections/stubs/ConfigurationFieldStub";
 import type { SelectedTrackerRef } from "@/configuration/SelectedTracker";
@@ -46,48 +45,6 @@ describe("configuration-store", () => {
         selected_tracker = buildSelectedTracker(Option.nothing());
         selected_fields = ref([]);
         store = initConfigurationStore(1, selected_tracker, selected_fields, ref([]));
-    });
-
-    describe("saveTrackerConfiguration", () => {
-        it("should save the new tracker configuration", async () => {
-            vi.spyOn(rest, "putConfiguration").mockReturnValue(okAsync(new Response()));
-            vi.spyOn(rest, "getTracker").mockReturnValue(okAsync(tracker_for_fields));
-
-            expect(selected_tracker.value.isNothing()).toBe(true);
-
-            const result = await store.saveTrackerConfiguration(bugs);
-
-            expect(selected_tracker.value.unwrapOr(null)).toBe(bugs);
-            expect(result.isOk()).toBe(true);
-        });
-
-        it("should display the error if putConfiguration returns an error", async () => {
-            vi.spyOn(rest, "putConfiguration").mockReturnValue(
-                errAsync(Fault.fromMessage("Bad request")),
-            );
-
-            expect(selected_tracker.value.isNothing()).toBe(true);
-
-            const result = await store.saveTrackerConfiguration(bugs);
-
-            expect(selected_tracker.value.isNothing()).toBe(true);
-            expect(result.isErr()).toBe(true);
-            result.mapErr((fault) => expect(fault.toString()).toStrictEqual("Bad request"));
-        });
-
-        it("should display the error if getAvailableFields returns an error", async () => {
-            vi.spyOn(rest, "putConfiguration").mockReturnValue(okAsync(new Response()));
-            vi.spyOn(rest, "getTracker").mockReturnValue(
-                errAsync(Fault.fromMessage("Bad request")),
-            );
-            expect(selected_tracker.value.isNothing()).toBe(true);
-
-            const result = await store.saveTrackerConfiguration(bugs);
-
-            expect(selected_tracker.value.isNothing()).toBe(true);
-            expect(result.isErr()).toBe(true);
-            result.mapErr((fault) => expect(fault.toString()).toStrictEqual("Bad request"));
-        });
     });
 
     describe("saveFieldsConfiguration", () => {

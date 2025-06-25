@@ -38,6 +38,15 @@ import { SectionsCollectionStub } from "@/sections/stubs/SectionsCollectionStub"
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import { SELECTED_TRACKER } from "@/configuration/SelectedTracker";
 import { SelectedTrackerStub } from "@/helpers/stubs/SelectedTrackerStub";
+import { DOCUMENT_ID } from "@/document-id-injection-key";
+import {
+    buildSelectedFieldsCollection,
+    SELECTED_FIELDS,
+} from "@/configuration/SelectedFieldsCollection";
+import {
+    AVAILABLE_FIELDS,
+    buildAvailableFieldsCollection,
+} from "@/configuration/AvailableFieldsCollection";
 
 describe("DocumentView", () => {
     let is_loading_sections: Ref<boolean>, is_loading_sections_failed: Ref<boolean>;
@@ -52,16 +61,24 @@ describe("DocumentView", () => {
         is_tracker_configured: boolean,
         sections_collection: SectionsCollection,
     ): VueWrapper {
+        const selected_tracker = is_tracker_configured
+            ? SelectedTrackerStub.build()
+            : SelectedTrackerStub.withNoTracker();
+        const selected_fields = buildSelectedFieldsCollection([]);
         return shallowMount(DocumentView, {
             global: {
                 provide: {
                     [CAN_USER_EDIT_DOCUMENT.valueOf()]: can_user_edit_document,
-                    [SELECTED_TRACKER.valueOf()]: is_tracker_configured
-                        ? SelectedTrackerStub.build()
-                        : SelectedTrackerStub.withNoTracker(),
+                    [SELECTED_TRACKER.valueOf()]: selected_tracker,
                     [SECTIONS_COLLECTION.valueOf()]: sections_collection,
                     [IS_LOADING_SECTIONS.valueOf()]: is_loading_sections,
                     [IS_LOADING_SECTIONS_FAILED.valueOf()]: is_loading_sections_failed,
+                    [DOCUMENT_ID.valueOf()]: 10,
+                    [SELECTED_FIELDS.valueOf()]: selected_fields,
+                    [AVAILABLE_FIELDS.valueOf()]: buildAvailableFieldsCollection(
+                        selected_tracker,
+                        selected_fields,
+                    ),
                 },
             },
         });

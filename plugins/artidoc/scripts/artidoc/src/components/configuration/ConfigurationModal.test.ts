@@ -41,23 +41,40 @@ import {
 import { SELECTED_TRACKER } from "@/configuration/SelectedTracker";
 import { SelectedTrackerStub } from "@/helpers/stubs/SelectedTrackerStub";
 import ConfigureTracker from "@/components/configuration/ConfigureTracker.vue";
+import { DOCUMENT_ID } from "@/document-id-injection-key";
+import {
+    buildSelectedFieldsCollection,
+    SELECTED_FIELDS,
+} from "@/configuration/SelectedFieldsCollection";
+import {
+    AVAILABLE_FIELDS,
+    buildAvailableFieldsCollection,
+} from "@/configuration/AvailableFieldsCollection";
 
 describe("ConfigurationModal", () => {
     function getWrapper(
         store: ConfigurationStore,
         bus: OpenConfigurationModalBusStore,
     ): VueWrapper {
+        const selected_tracker = SelectedTrackerStub.build();
+        const selected_fields = buildSelectedFieldsCollection([]);
         return mount(ConfigurationModal, {
             global: {
                 plugins: [createGettext({ silent: true })],
                 provide: {
                     [CONFIGURATION_STORE.valueOf()]: store,
                     [ALLOWED_TRACKERS.valueOf()]: buildAllowedTrackersCollection([]),
-                    [SELECTED_TRACKER.valueOf()]: SelectedTrackerStub.build(),
+                    [SELECTED_TRACKER.valueOf()]: selected_tracker,
                     [OPEN_CONFIGURATION_MODAL_BUS.valueOf()]: bus,
                     [ARE_FIELDS_ENABLED.valueOf()]: true,
                     [TITLE.valueOf()]: "My artidoc",
                     [SECTIONS_STATES_COLLECTION.valueOf()]: SectionsStatesCollectionStub.build(),
+                    [DOCUMENT_ID.valueOf()]: 10,
+                    [SELECTED_FIELDS.valueOf()]: selected_fields,
+                    [AVAILABLE_FIELDS.valueOf()]: buildAvailableFieldsCollection(
+                        selected_tracker,
+                        selected_fields,
+                    ),
                 },
             },
         });
