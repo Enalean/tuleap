@@ -531,7 +531,8 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
             $prefill_types,
             $only_rows,
             $read_only,
-            $from_aid
+            $from_aid,
+            false
         );
 
         if (! $only_rows) {
@@ -1144,6 +1145,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         $only_rows = false,
         $read_only = false,
         $from_aid = null,
+        bool $can_aggregate_changes = true,
     ) {
         $html = '';
         if (! $only_rows) {
@@ -1362,7 +1364,14 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                     $html .= '</tr>';
                 }
                 if (! $only_rows) {
-                    $html .= $this->fetchAggregates($matching_ids, $extracolumn, $only_one_column, $columns, $use_data_from_db, $read_only);
+                    $html .= $this->fetchAggregates(
+                        $matching_ids,
+                        $extracolumn,
+                        $only_one_column,
+                        $columns,
+                        $use_data_from_db,
+                        $read_only || ! $can_aggregate_changes
+                    );
                 }
             }
         } else {
