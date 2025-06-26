@@ -91,7 +91,6 @@ class TimetrackingManagementWidget extends Widget
         $renderer      = TemplateRendererFactory::build()->getRenderer(TIMETRACKING_TEMPLATE_DIR);
 
         return $renderer->renderToString('timetracking-management', [
-            'widget_id' => $this->content_id,
             'widget_config' => json_encode($widget_config),
         ]);
     }
