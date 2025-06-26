@@ -98,8 +98,36 @@ describe("getAvailableFields", () => {
     const user_groups_radio_button_field = {
         field_id: 130,
         type: CHECKBOX_FIELD,
-        label: "Checkbox user groups",
+        label: "Radio user groups",
         bindings: { type: LIST_BIND_UGROUPS },
+    } as unknown as StructureFields;
+
+    const multi_static_list_field = {
+        field_id: 128,
+        type: MULTI_SELECTBOX_FIELD,
+        label: "Statics",
+        bindings: { type: LIST_BIND_STATIC },
+    } as StructureFields;
+
+    const static_open_list_field = {
+        field_id: 129,
+        type: OPEN_LIST_FIELD,
+        label: "Open static",
+        bindings: { type: LIST_BIND_STATIC },
+    } as StructureFields;
+
+    const static_checkbox_field = {
+        field_id: 130,
+        type: CHECKBOX_FIELD,
+        label: "Checkbox static",
+        bindings: { type: LIST_BIND_STATIC },
+    } as unknown as StructureFields;
+
+    const static_radio_button_field = {
+        field_id: 130,
+        type: CHECKBOX_FIELD,
+        label: "Radio static",
+        bindings: { type: LIST_BIND_STATIC },
     } as unknown as StructureFields;
 
     const all_fields: Readonly<StructureFields[]> = [
@@ -112,6 +140,10 @@ describe("getAvailableFields", () => {
         user_groups_open_list_field,
         user_groups_checkbox_field,
         user_groups_radio_button_field,
+        multi_static_list_field,
+        static_open_list_field,
+        static_checkbox_field,
+        static_radio_button_field,
         {
             field_id: 591,
             label: "Access information left column",
@@ -132,10 +164,15 @@ describe("getAvailableFields", () => {
                 ConfigurationFieldBuilder.fromSupportedTrackerField(string_field),
                 ConfigurationFieldBuilder.fromSupportedTrackerField(summary_field),
                 ConfigurationFieldBuilder.fromSupportedTrackerField(user_group_list_field),
+                ConfigurationFieldBuilder.fromSupportedTrackerField(static_value_list_field),
                 ConfigurationFieldBuilder.fromSupportedTrackerField(multi_user_groups_list_field),
                 ConfigurationFieldBuilder.fromSupportedTrackerField(user_groups_open_list_field),
                 ConfigurationFieldBuilder.fromSupportedTrackerField(user_groups_checkbox_field),
                 ConfigurationFieldBuilder.fromSupportedTrackerField(user_groups_radio_button_field),
+                ConfigurationFieldBuilder.fromSupportedTrackerField(multi_static_list_field),
+                ConfigurationFieldBuilder.fromSupportedTrackerField(static_open_list_field),
+                ConfigurationFieldBuilder.fromSupportedTrackerField(static_checkbox_field),
+                ConfigurationFieldBuilder.fromSupportedTrackerField(static_radio_button_field),
             ]);
         });
     });
