@@ -25,7 +25,6 @@ import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import type { SectionState } from "@/sections/states/SectionStateBuilder";
 import type { DeleteSection } from "@/sections/remove/SectionDeletor";
 import SectionDropdown from "./SectionDropdown.vue";
-import { CONFIGURATION_STORE } from "@/stores/configuration-store";
 import { REMOVE_FREETEXT_SECTION_MODAL } from "@/composables/useRemoveFreetextSectionModal";
 import PendingArtifactSectionFactory from "@/helpers/pending-artifact-section.factory";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
@@ -55,7 +54,6 @@ describe("SectionDropdown", () => {
             global: {
                 plugins: [createGettext({ silent: true })],
                 provide: {
-                    [CONFIGURATION_STORE.valueOf()]: true,
                     [REMOVE_FREETEXT_SECTION_MODAL.valueOf()]: {
                         openModal: openConfirmFreetextDeletionModal,
                     },

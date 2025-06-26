@@ -41,7 +41,6 @@
                 is_modal_shown
             "
             ref="configure_fields"
-            v-bind:configuration_store="configuration_store"
         />
     </div>
 </template>
@@ -52,7 +51,6 @@ import type { Modal } from "@tuleap/tlp-modal";
 import { createModal } from "@tuleap/tlp-modal";
 import { OPEN_CONFIGURATION_MODAL_BUS } from "@/stores/useOpenConfigurationModalBusStore";
 import { strictInject } from "@tuleap/vue-strict-inject";
-import { CONFIGURATION_STORE } from "@/stores/configuration-store";
 import { SELECTED_TRACKER } from "@/configuration/SelectedTracker";
 import { ARE_FIELDS_ENABLED } from "@/are-fields-enabled";
 import ConfigurationModalHeader from "@/components/configuration/ConfigurationModalHeader.vue";
@@ -67,7 +65,6 @@ import {
 import ConfigurationModalTabs from "@/components/configuration/ConfigurationModalTabs.vue";
 
 const are_fields_enabled = strictInject(ARE_FIELDS_ENABLED);
-const configuration_store = strictInject(CONFIGURATION_STORE);
 const selected_tracker = strictInject(SELECTED_TRACKER);
 
 const modal_element = ref<HTMLElement | undefined>(undefined);

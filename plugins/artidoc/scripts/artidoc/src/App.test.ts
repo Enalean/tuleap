@@ -22,8 +22,6 @@ import { shallowMount } from "@vue/test-utils";
 import { ref } from "vue";
 import App from "@/App.vue";
 import DocumentView from "@/views/DocumentView.vue";
-import { CONFIGURATION_STORE } from "@/stores/configuration-store";
-import { ConfigurationStoreStub } from "@/helpers/stubs/ConfigurationStoreStub";
 import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
 import { DOCUMENT_ID } from "@/document-id-injection-key";
 import { SECTIONS_COLLECTION } from "@/sections/states/sections-collection-injection-key";
@@ -42,13 +40,11 @@ describe("App", () => {
         const wrapper = shallowMount(App, {
             global: {
                 provide: {
-                    [CONFIGURATION_STORE.valueOf()]: ConfigurationStoreStub.buildEmpty(),
                     [ALLOWED_TRACKERS.valueOf()]: buildAllowedTrackersCollection([]),
                     [CAN_USER_EDIT_DOCUMENT.valueOf()]: true,
                     [DOCUMENT_ID.valueOf()]: 1,
                     [SECTIONS_COLLECTION.valueOf()]: SectionsCollectionStub.withSections([]),
                     [IS_LOADING_SECTIONS_FAILED.valueOf()]: ref(false),
-                    [CONFIGURATION_STORE.valueOf()]: ConfigurationStoreStub.buildEmpty(),
                     [SELECTED_FIELDS.valueOf()]: ref([]),
                 },
             },
