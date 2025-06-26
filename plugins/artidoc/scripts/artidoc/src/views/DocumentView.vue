@@ -23,7 +23,10 @@
         <no-access-state />
     </div>
     <div v-else class="tlp-framed" data-test="states-section">
-        <configuration-panel v-if="should_display_configuration_panel" />
+        <configuration-panel
+            v-if="should_display_configuration_panel"
+            v-bind:configuration_saver="configuration_saver"
+        />
         <empty-state v-else />
     </div>
 </template>
@@ -42,14 +45,28 @@ import {
     IS_LOADING_SECTIONS,
     IS_LOADING_SECTIONS_FAILED,
 } from "@/is-loading-sections-injection-key";
+import { buildTrackerConfigurationSaver } from "@/configuration/TrackerConfigurationSaver";
+import { DOCUMENT_ID } from "@/document-id-injection-key";
+import { SELECTED_FIELDS } from "@/configuration/SelectedFieldsCollection";
+import { AVAILABLE_FIELDS } from "@/configuration/AvailableFieldsCollection";
 
 const is_loading_sections = strictInject(IS_LOADING_SECTIONS);
 const is_loading_failed = strictInject(IS_LOADING_SECTIONS_FAILED);
 const sections_collection = strictInject(SECTIONS_COLLECTION);
 const can_user_edit_document = strictInject(CAN_USER_EDIT_DOCUMENT);
 const selected_tracker = strictInject(SELECTED_TRACKER);
+const document_id = strictInject(DOCUMENT_ID);
+const selected_fields = strictInject(SELECTED_FIELDS);
+const available_fields = strictInject(AVAILABLE_FIELDS);
 
 const should_display_configuration_panel = computed(
     () => can_user_edit_document && selected_tracker.value.isNothing(),
+);
+
+const configuration_saver = buildTrackerConfigurationSaver(
+    document_id,
+    selected_tracker,
+    selected_fields,
+    available_fields,
 );
 </script>

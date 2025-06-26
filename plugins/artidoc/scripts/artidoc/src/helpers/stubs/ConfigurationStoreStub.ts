@@ -20,8 +20,7 @@
 import type { Tracker } from "@/configuration/AllowedTrackersCollection";
 import type { ConfigurationStore } from "@/stores/configuration-store";
 import { TrackerStub } from "@/helpers/stubs/TrackerStub";
-import { errAsync, okAsync } from "neverthrow";
-import { Fault } from "@tuleap/fault";
+import { okAsync } from "neverthrow";
 
 const tasks: Tracker = {
     ...TrackerStub.withoutTitleAndDescription(),
@@ -39,14 +38,8 @@ export const ConfigurationStoreStub = {
     tasks,
     bugs,
     buildEmpty: (): ConfigurationStore => ({
-        saveTrackerConfiguration: () => okAsync(null),
         saveFieldsConfiguration: () => okAsync(null),
     }),
 
     withSuccessfulSave: (): ConfigurationStore => ConfigurationStoreStub.buildEmpty(),
-
-    withError: (): ConfigurationStore => ({
-        saveTrackerConfiguration: () => errAsync(Fault.fromMessage("Oh no!")),
-        saveFieldsConfiguration: () => errAsync(Fault.fromMessage("Oh no!")),
-    }),
 };

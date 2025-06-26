@@ -75,13 +75,12 @@ import { TITLE } from "@/title-injection-key";
 import TrackerSelection from "@/components/configuration/TrackerSelection.vue";
 import type { Tracker } from "@/configuration/AllowedTrackersCollection";
 import { ALLOWED_TRACKERS } from "@/configuration/AllowedTrackersCollection";
-import { CONFIGURATION_STORE } from "@/stores/configuration-store";
 import { SELECTED_TRACKER } from "@/configuration/SelectedTracker";
+import type { SaveTrackerConfiguration } from "@/configuration/TrackerConfigurationSaver";
 
 const { $gettext } = useGettext();
 
 const title = strictInject(TITLE);
-const { saveTrackerConfiguration } = strictInject(CONFIGURATION_STORE);
 const saved_tracker = strictInject(SELECTED_TRACKER);
 const allowed_trackers = strictInject(ALLOWED_TRACKERS);
 
@@ -106,12 +105,16 @@ const submit_button_icon = computed(() =>
     is_saving.value ? "fa-solid fa-spin fa-circle-notch" : "fa-solid fa-floppy-disk",
 );
 
+const props = defineProps<{
+    configuration_saver: SaveTrackerConfiguration;
+}>();
+
 function onSubmit(event: Event): void {
     event.preventDefault();
     new_selected_tracker.value.apply((tracker) => {
         is_saving.value = true;
         is_error.value = false;
-        saveTrackerConfiguration(tracker).mapErr((fault) => {
+        props.configuration_saver.saveTrackerConfiguration(tracker).mapErr((fault) => {
             is_error.value = true;
             error_message.value = String(fault);
         });

@@ -48,12 +48,17 @@ import TrackerSelection from "@/components/configuration/TrackerSelection.vue";
 import ConfigurationModalFooter from "@/components/configuration/ConfigurationModalFooter.vue";
 import type { Tracker } from "@/configuration/AllowedTrackersCollection";
 import { ALLOWED_TRACKERS } from "@/configuration/AllowedTrackersCollection";
-import { CONFIGURATION_STORE } from "@/stores/configuration-store";
 import { SELECTED_TRACKER } from "@/configuration/SelectedTracker";
+import { buildTrackerConfigurationSaver } from "@/configuration/TrackerConfigurationSaver";
+import { DOCUMENT_ID } from "@/document-id-injection-key";
+import { SELECTED_FIELDS } from "@/configuration/SelectedFieldsCollection";
+import { AVAILABLE_FIELDS } from "@/configuration/AvailableFieldsCollection";
 
-const { saveTrackerConfiguration } = strictInject(CONFIGURATION_STORE);
 const saved_tracker = strictInject(SELECTED_TRACKER);
 const allowed_trackers = strictInject(ALLOWED_TRACKERS);
+const document_id = strictInject(DOCUMENT_ID);
+const selected_fields = strictInject(SELECTED_FIELDS);
+const available_fields = strictInject(AVAILABLE_FIELDS);
 
 const new_selected_tracker = ref<Option<Tracker>>(saved_tracker.value);
 const is_saving = ref<boolean>(false);
@@ -71,12 +76,19 @@ const is_submit_button_disabled = computed(
         ),
 );
 
+const configuration_saver = buildTrackerConfigurationSaver(
+    document_id,
+    saved_tracker,
+    selected_fields,
+    available_fields,
+);
+
 function onSubmit(): void {
     new_selected_tracker.value.apply((tracker) => {
         is_saving.value = true;
         is_error.value = false;
         is_success.value = false;
-        saveTrackerConfiguration(tracker).match(
+        configuration_saver.saveTrackerConfiguration(tracker).match(
             () => {
                 is_saving.value = false;
                 is_success.value = true;
