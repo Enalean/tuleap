@@ -18,13 +18,14 @@
  */
 
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { okAsync } from "neverthrow";
+import type { ResultAsync } from "neverthrow";
+import { errAsync, okAsync } from "neverthrow";
 import { shallowMount } from "@vue/test-utils";
 import type { VueWrapper } from "@vue/test-utils";
 import { Option } from "@tuleap/option";
+import { Fault } from "@tuleap/fault";
 import { ArtifactRowBuilder } from "../../../tests/builders/ArtifactRowBuilder";
 import { ArtifactsTableBuilder as ArtifactsTableBuilderForTests } from "../../../tests/builders/ArtifactsTableBuilder";
-import type { ArtifactRow as ArtifactRowType } from "../../domain/ArtifactsTable";
 import { NUMERIC_CELL, PRETTY_TITLE_CELL } from "../../domain/ArtifactsTable";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-tests";
 import type { ColumnName } from "../../domain/ColumnName";
@@ -32,18 +33,19 @@ import { PRETTY_TITLE_COLUMN_NAME } from "../../domain/ColumnName";
 import type { ArtifactsTableWithTotal } from "../../domain/RetrieveArtifactsTable";
 import type { RetrieveArtifactLinks } from "../../domain/RetrieveArtifactLinks";
 import { RETRIEVE_ARTIFACT_LINKS } from "../../injection-symbols";
+import RowErrorMessage from "../feedback/RowErrorMessage.vue";
 import ArtifactRow from "./ArtifactRow.vue";
 import SelectableCell from "./SelectableCell.vue";
 import ArtifactLinkRows from "./ArtifactLinkRows.vue";
 
 const RetrieveArtifactLinksTableStub = {
     withContent(
-        forward_links: ArtifactsTableWithTotal,
-        reverse_links: ArtifactsTableWithTotal,
+        forward_links: ResultAsync<ArtifactsTableWithTotal, Fault>,
+        reverse_links: ResultAsync<ArtifactsTableWithTotal, Fault>,
     ): RetrieveArtifactLinks {
         return {
-            getForwardLinks: () => okAsync(forward_links),
-            getReverseLinks: () => okAsync(reverse_links),
+            getForwardLinks: () => forward_links,
+            getReverseLinks: () => reverse_links,
         };
     },
 };
@@ -51,49 +53,43 @@ const RetrieveArtifactLinksTableStub = {
 vi.useFakeTimers();
 
 const NUMERIC_COLUMN_NAME = "remaining_effort";
+const error_message = "Ooops";
+const fault = Fault.fromMessage(error_message);
+
+const artifact_row = new ArtifactRowBuilder()
+    .addCell(PRETTY_TITLE_COLUMN_NAME, {
+        type: PRETTY_TITLE_CELL,
+        title: "earthmaking",
+        tracker_name: "lifesome",
+        artifact_id: 512,
+        color: "inca-silver",
+    })
+    .addCell(NUMERIC_COLUMN_NAME, {
+        type: NUMERIC_CELL,
+        value: Option.fromValue(74),
+    })
+    .buildWithNumberOfLinks(1, 1);
+
+const forward_table = new ArtifactsTableBuilderForTests()
+    .withColumn(PRETTY_TITLE_COLUMN_NAME)
+    .withColumn(NUMERIC_COLUMN_NAME)
+    .withArtifactRow(artifact_row)
+    .withArtifactRow(artifact_row)
+    .buildWithTotal(2);
+
+const reverse_table = new ArtifactsTableBuilderForTests()
+    .withColumn(PRETTY_TITLE_COLUMN_NAME)
+    .withColumn(NUMERIC_COLUMN_NAME)
+    .withArtifactRow(artifact_row)
+    .buildWithTotal(2);
 
 describe("ArtifactRow", () => {
-    let number_of_forward_link: number,
-        number_of_reverse_link: number,
-        artifact_links_table_retriever: RetrieveArtifactLinks,
-        artifact_row: ArtifactRowType,
-        forward_table: ArtifactsTableWithTotal,
-        reverse_table: ArtifactsTableWithTotal;
+    let artifact_links_table_retriever: RetrieveArtifactLinks;
 
     beforeEach(() => {
-        number_of_forward_link = 1;
-        number_of_reverse_link = 1;
-
-        artifact_row = new ArtifactRowBuilder()
-            .addCell(PRETTY_TITLE_COLUMN_NAME, {
-                type: PRETTY_TITLE_CELL,
-                title: "earthmaking",
-                tracker_name: "lifesome",
-                artifact_id: 512,
-                color: "inca-silver",
-            })
-            .addCell(NUMERIC_COLUMN_NAME, {
-                type: NUMERIC_CELL,
-                value: Option.fromValue(74),
-            })
-            .buildWithNumberOfLinks(number_of_forward_link, number_of_reverse_link);
-
-        forward_table = new ArtifactsTableBuilderForTests()
-            .withColumn(PRETTY_TITLE_COLUMN_NAME)
-            .withColumn(NUMERIC_COLUMN_NAME)
-            .withArtifactRow(artifact_row)
-            .withArtifactRow(artifact_row)
-            .buildWithTotal(2);
-
-        reverse_table = new ArtifactsTableBuilderForTests()
-            .withColumn(PRETTY_TITLE_COLUMN_NAME)
-            .withColumn(NUMERIC_COLUMN_NAME)
-            .withArtifactRow(artifact_row)
-            .buildWithTotal(2);
-
         artifact_links_table_retriever = RetrieveArtifactLinksTableStub.withContent(
-            forward_table,
-            reverse_table,
+            okAsync(forward_table),
+            okAsync(reverse_table),
         );
     });
 
@@ -115,7 +111,7 @@ describe("ArtifactRow", () => {
                         artifact_id: 512,
                         color: "inca-silver",
                     })
-                    .buildWithNumberOfLinks(number_of_forward_link, number_of_reverse_link),
+                    .buildWithNumberOfLinks(1, 1),
                 columns: new Set<ColumnName>().add(PRETTY_TITLE_COLUMN_NAME),
                 level: 0,
             },
@@ -129,11 +125,13 @@ describe("ArtifactRow", () => {
 
         await wrapper.findComponent(SelectableCell).trigger("toggle-links");
         await vi.runOnlyPendingTimersAsync();
+        const row_error_message = wrapper.findComponent(RowErrorMessage);
         const artifact_link_rows = wrapper.findAllComponents(ArtifactLinkRows);
 
         expect(getForwardLinks).toHaveBeenCalledOnce();
         expect(getReverseLinks).toHaveBeenCalledOnce();
         expect(artifact_link_rows).toHaveLength(2);
+        expect(row_error_message.exists()).toBe(false);
         expect(artifact_link_rows[0].props("level")).toBe(wrapper.props("level") + 1);
         expect(artifact_link_rows[1].props("level")).toBe(wrapper.props("level") + 1);
     });
@@ -175,4 +173,26 @@ describe("ArtifactRow", () => {
         expect(getForwardLinks).toHaveBeenCalledTimes(1);
         expect(getReverseLinks).toHaveBeenCalledTimes(1);
     });
+
+    it.each([
+        ["forward links", errAsync(fault), okAsync(forward_table)],
+        ["reverse links", okAsync(reverse_table), errAsync(fault)],
+        ["forward and reverse links", errAsync(fault), errAsync(fault)],
+    ])(
+        "should display an error message if an error occurred when retrieving %s",
+        async (name, forward, reverse) => {
+            artifact_links_table_retriever = RetrieveArtifactLinksTableStub.withContent(
+                forward,
+                reverse,
+            );
+            const wrapper = getWrapper();
+
+            await wrapper.findComponent(SelectableCell).trigger("toggle-links");
+            await vi.runOnlyPendingTimersAsync();
+            const row_error_message = wrapper.findComponent(RowErrorMessage);
+
+            expect(row_error_message.exists()).toBe(true);
+            expect(row_error_message.props("error_message")).toStrictEqual(error_message);
+        },
+    );
 });
