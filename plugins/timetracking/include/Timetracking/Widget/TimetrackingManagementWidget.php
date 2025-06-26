@@ -78,7 +78,8 @@ class TimetrackingManagementWidget extends Widget
 
     public function getContent(): string
     {
-        $widget_config = TimetrackingManagementWidgetConfig::fromWidgetId(
+        $widget_config = TimetrackingManagementWidgetConfig::fromId(
+            (int) $this->content_id,
             $this->dao,
             $this->dao,
             UserManager::instance(),
@@ -86,7 +87,6 @@ class TimetrackingManagementWidget extends Widget
                 new AvatarHashDao(),
                 new ComputeAvatarHash()
             ),
-            (int) $this->content_id,
         );
         $renderer      = TemplateRendererFactory::build()->getRenderer(TIMETRACKING_TEMPLATE_DIR);
 

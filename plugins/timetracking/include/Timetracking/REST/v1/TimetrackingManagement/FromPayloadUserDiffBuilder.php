@@ -38,7 +38,7 @@ final readonly class FromPayloadUserDiffBuilder
     /**
      * @return Ok<UserDiff>|Err<Fault>
      */
-    public function getUserDiff(int $widget_id, array $users): Ok|Err
+    public function getUserDiff(int $query_id, array $users): Ok|Err
     {
         $user_ids = [];
         foreach ($users as $user_representation) {
@@ -51,7 +51,7 @@ final readonly class FromPayloadUserDiffBuilder
             }
         }
 
-        $currently_saved_users = $this->dao->getQueryUsers($widget_id);
+        $currently_saved_users = $this->dao->getUsersByQueryId($query_id);
         return Result::ok(new UserDiff(array_diff($user_ids, $currently_saved_users), array_diff($currently_saved_users, $user_ids)));
     }
 }

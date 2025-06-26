@@ -37,7 +37,7 @@ final class SearchUsersByWidgetIdStub implements SearchUsersByWidgetId
         return new self($users);
     }
 
-    public function searchUsersByWidgetId(int $widget_id): array
+    public function searchUsersByQueryId(int $id): array
     {
         return $this->users;
     }

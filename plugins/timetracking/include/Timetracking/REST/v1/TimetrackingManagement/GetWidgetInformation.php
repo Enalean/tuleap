@@ -24,5 +24,5 @@ namespace Tuleap\Timetracking\REST\v1\TimetrackingManagement;
 
 interface GetWidgetInformation
 {
-    public function getWidgetInformation(int $widget_id): ?array;
+    public function getWidgetInformationFromQuery(int $query_id): ?array;
 }

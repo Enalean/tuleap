@@ -43,19 +43,19 @@ final readonly class TimetrackingManagementWidgetConfig
     ) {
     }
 
-    public static function fromWidgetId(
+    public static function fromId(
+        int $id,
         SearchQueryByWidgetId $dao_query,
         SearchUsersByWidgetId $dao_user,
         RetrieveUserById $retrieve_user,
         ProvideUserAvatarUrl $provide_user_avatar_url,
-        int $widget_id,
     ): self {
-        $query = $dao_query->searchQueryByWidgetId($widget_id);
+        $query = $dao_query->searchQueryById($id);
         if ($query === null) {
-            throw new \RuntimeException("Unable to find configuration for widget id $widget_id");
+            throw new \RuntimeException("Unable to find configuration for widget id $id");
         }
 
-        $user_ids = $dao_user->searchUsersByWidgetId($widget_id);
+        $user_ids = $dao_user->searchUsersByQueryId($id);
         $users    = [];
         foreach ($user_ids as $user_id) {
             $user = $retrieve_user->getUserById($user_id);

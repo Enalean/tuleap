@@ -27,5 +27,5 @@ use Tuleap\NeverThrow\Ok;
 
 interface CheckPermission
 {
-    public function checkThatCurrentUserCanUpdateTheQuery(int $widget_id, \PFUser $current_user): Ok|Err;
+    public function checkThatCurrentUserCanUpdateTheQuery(int $query_id, \PFUser $current_user): Ok|Err;
 }

@@ -43,7 +43,7 @@ final class SearchQueryByWidgetIdStub implements SearchQueryByWidgetId
         return new self($id, $start_date, $end_date, $predefined_time_period);
     }
 
-    public function searchQueryByWidgetId(int $widget_id): ?array
+    public function searchQueryById(int $id): ?array
     {
         return [
             'id' => $this->id,

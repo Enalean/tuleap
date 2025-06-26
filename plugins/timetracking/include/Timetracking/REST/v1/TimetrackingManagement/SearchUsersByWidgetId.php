@@ -24,5 +24,5 @@ namespace Tuleap\Timetracking\REST\v1\TimetrackingManagement;
 
 interface SearchUsersByWidgetId
 {
-    public function searchUsersByWidgetId(int $widget_id): array;
+    public function searchUsersByQueryId(int $id): array;
 }
