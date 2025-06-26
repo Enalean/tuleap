@@ -37,14 +37,4 @@ describe(`EditCell`, () => {
 
         expect(wrapper.get("a").attributes("href")).toBe(uri);
     });
-
-    it(`sets the even class when the row is even`, () => {
-        const wrapper = getWrapper("/plugins/tracker/?aid=198", true);
-        expect(wrapper.get("[data-test=edit-cell]").classes()).toContain("even-row");
-    });
-
-    it(`sets the odd class when the row is odd`, () => {
-        const wrapper = getWrapper("/plugins/tracker/?aid=936", false);
-        expect(wrapper.get("[data-test=edit-cell]").classes()).toContain("odd-row");
-    });
 });

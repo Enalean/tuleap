@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <span class="cell" v-bind:class="getEvenOddClass()" data-test="edit-cell"
+    <span class="cell" data-test="edit-cell"
         ><a v-bind:href="uri" v-bind:title="$gettext('Edit')" class="link"
             ><i class="fa-solid fa-fw fa-edit" role="img"></i></a
     ></span>
@@ -29,12 +29,9 @@ import { useGettext } from "vue3-gettext";
 
 const { $gettext } = useGettext();
 
-const props = defineProps<{
+defineProps<{
     uri: string;
-    even: boolean;
 }>();
-
-const getEvenOddClass = (): string => (props.even ? `even-row` : `odd-row`);
 </script>
 
 <style scoped lang="scss">

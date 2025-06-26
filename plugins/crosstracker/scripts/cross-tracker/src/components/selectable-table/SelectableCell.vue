@@ -22,23 +22,13 @@
         <text-cell
             v-if="props.cell.type === TEXT_CELL"
             class="cell"
-            v-bind:class="getCommonClasses()"
             v-bind:text="props.cell.value"
             data-test="cell"
         />
-        <span
-            v-if="props.cell.type === USER_CELL"
-            class="cell"
-            v-bind:class="getCommonClasses()"
-            data-test="cell"
+        <span v-if="props.cell.type === USER_CELL" class="cell" data-test="cell"
             ><user-value v-bind:user="props.cell" />
         </span>
-        <span
-            v-if="props.cell.type === STATIC_LIST_CELL"
-            class="cell list-cell"
-            v-bind:class="getCommonClasses()"
-            data-test="cell"
-        >
+        <span v-if="props.cell.type === STATIC_LIST_CELL" class="cell list-cell" data-test="cell">
             <span
                 v-for="list_value of props.cell.value"
                 v-bind:key="list_value.label"
@@ -46,12 +36,7 @@
                 >{{ list_value.label }}</span
             >
         </span>
-        <span
-            v-if="props.cell.type === USER_LIST_CELL"
-            class="cell list-cell"
-            v-bind:class="getCommonClasses()"
-            data-test="cell"
-        >
+        <span v-if="props.cell.type === USER_LIST_CELL" class="cell list-cell" data-test="cell">
             <user-value
                 v-for="list_value of props.cell.value"
                 v-bind:key="list_value.display_name"
@@ -61,7 +46,6 @@
         <span
             v-if="props.cell.type === USER_GROUP_LIST_CELL"
             class="cell list-cell"
-            v-bind:class="getCommonClasses()"
             data-test="cell"
             ><span
                 v-for="list_value of props.cell.value"
@@ -70,11 +54,7 @@
                 >{{ list_value.label }}</span
             ></span
         >
-        <span
-            v-if="props.cell.type === TRACKER_CELL"
-            class="cell"
-            v-bind:class="getCommonClasses()"
-            data-test="cell"
+        <span v-if="props.cell.type === TRACKER_CELL" class="cell" data-test="cell"
             ><span v-bind:class="getBadgeClass(props.cell.color)">{{ props.cell.name }}</span></span
         >
         <pretty-title-cell-component
@@ -85,7 +65,6 @@
             v-bind:number_of_reverse_link="number_of_reverse_link"
             v-on:toggle-links="emit('toggle-links')"
             class="cell"
-            v-bind:class="getCommonClasses()"
             v-bind:level="level"
             data-test="cell"
         />
@@ -97,7 +76,6 @@
                 props.cell.type === PROJECT_CELL
             "
             class="cell"
-            v-bind:class="getCommonClasses()"
             data-test="cell"
             >{{ renderCell(props.cell) }}</span
         >
@@ -135,8 +113,6 @@ const props = defineProps<{
     artifact_uri: string;
     number_of_forward_link: number;
     number_of_reverse_link: number;
-    even: boolean;
-    last_of_row: boolean;
     level: number;
 }>();
 
@@ -155,14 +131,6 @@ function renderCell(cell: Cell): string {
     }
     return "";
 }
-
-const getCommonClasses = (): ReadonlyArray<string> => {
-    const classes = [props.even ? "even-row" : "odd-row"];
-    if (props.last_of_row) {
-        classes.push("last-of-row");
-    }
-    return classes;
-};
 
 const getBadgeClass = (color: ColorName): string => `tlp-badge-${color} tlp-badge-outline`;
 
@@ -188,7 +156,7 @@ const getOptionalBadgeClass = (option: Option<ColorName>): string =>
     content: ", ";
 }
 
-.last-of-row {
+.cell:last-of-type {
     padding-right: var(--tlp-medium-spacing);
 }
 </style>
