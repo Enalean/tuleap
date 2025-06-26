@@ -23,7 +23,7 @@
         <span
             v-for="user_group in user_groups_list_field.value"
             v-bind:key="user_group.label"
-            class="user-group-list-item"
+            class="user-group-list-item document-list-item-inline"
             data-test="user-group-list-item"
         >
             {{ user_group.label }}

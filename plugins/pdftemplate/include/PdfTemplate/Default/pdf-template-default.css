@@ -4,7 +4,34 @@ body {
     --main-color: #f57c13;
     /* Color used for text in header and footer */
     --dimmed-color: #667080;
+
     --medium-spacing: 16px;
+
+    /* tlp-colors */
+    --inca-silver-primary: #5d5d5d;
+    --chrome-silver-primary: #8f8f8f;
+    --firemist-silver-primary: #c5c5c5;
+    --red-wine-primary: #a10202;
+    --fiesta-red-primary: #f02727;
+    --coral-pink-primary: #ff8a8a;
+    --teddy-brown-primary: #9a600d;
+    --clockwork-orange-primary: #f18e06;
+    --graffiti-yellow-primary: #ffd300;
+    --army-green-primary: #5f8347;
+    --neon-green-primary: #6abf1d;
+    --acid-green-primary: #b9e45d;
+    --sherwood-green-primary: #009465;
+    --ocean-turquoise-primary: #28c4a0;
+    --surf-green-primary: #75e4bf;
+    --deep-blue-primary: #0480bf;
+    --lake-placid-blue-primary: #1ebade;
+    --daphne-blue-primary: #87dbef;
+    --plum-crazy-primary: #7c2db3;
+    --ultra-violet-primary: #a44ee1;
+    --lilac-purple-primary: #ce91fa;
+    --panther-pink-primary: #c42887;
+    --peggy-pink-primary: #e560b2;
+    --flamingo-pink-primary: #edacd4;
 }
 
 /* Cover page */
@@ -184,4 +211,125 @@ img {
 
 .document-label {
     font-weight: bold;
+}
+
+.document-list-item-inline ~ .document-list-item-inline::before {
+    content: ", ";
+}
+
+.document-item-list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.document-list-item-with-color-bubble {
+    display: inline-flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 5px;
+}
+
+.document-color-bubble {
+    content: " ";
+    display: flex;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+
+    &.tlp-swatch-inca-silver {
+        background-color: var(--inca-silver-primary);
+    }
+
+    &.tlp-swatch-chrome-silver {
+        background-color: var(--chrome-silver-primary);
+    }
+
+    &.tlp-swatch-firemist-silver {
+        background-color: var(--firemist-silver-primary);
+    }
+
+    &.tlp-swatch-red-wine {
+        background-color: var(--red-wine-primary);
+    }
+
+    &.tlp-swatch-fiesta-red {
+        background-color: var(--fiesta-red-primary);
+    }
+
+    &.tlp-swatch-coral-pink {
+        background-color: var(--coral-pink-primary);
+    }
+
+    &.tlp-swatch-teddy-brown {
+        background-color: var(--teddy-brown-primary);
+    }
+
+    &.tlp-swatch-clockwork-orange {
+        background-color: var(--clockwork-orange-primary);
+    }
+
+    &.tlp-swatch-graffiti-yellow {
+        background-color: var(--graffiti-yellow-primary);
+    }
+
+    &.tlp-swatch-army-green {
+        background-color: var(--army-green-primary);
+    }
+
+    &.tlp-swatch-neon-green {
+        background-color: var(--neon-green-primary);
+    }
+
+    &.tlp-swatch-acid-green {
+        background-color: var(--acid-green-primary);
+    }
+
+    &.tlp-swatch-sherwood-green {
+        background-color: var(--sherwood-green-primary);
+    }
+
+    &.tlp-swatch-ocean-turquoise {
+        background-color: var(--ocean-turquoise-primary);
+    }
+
+    &.tlp-swatch-surf-green {
+        background-color: var(--surf-green-primary);
+    }
+
+    &.tlp-swatch-deep-blue {
+        background-color: var(--deep-blue-primary);
+    }
+
+    &.tlp-swatch-lake-blue-placid {
+        background-color: var(--lake-placid-blue-primary);
+    }
+
+    &.tlp-swatch-daphne-blue {
+        background-color: var(--daphne-blue-primary);
+    }
+
+    &.tlp-swatch-plum-crazy {
+        background-color: var(--plum-crazy-primary);
+    }
+
+    &.tlp-swatch-ultra-violet {
+        background-color: var(--ultra-violet-primary);
+    }
+
+    &.tlp-swatch-lilac-purple {
+        background-color: var(--lilac-purple-primary);
+    }
+
+    &.tlp-swatch-panther-pink {
+        background-color: var(--panther-pink-primary);
+    }
+
+    &.tlp-swatch-peggy-pink {
+        background-color: var(--peggy-pink-primary);
+    }
+
+    &.tlp-swatch-flamingo-pink {
+        background-color: var(--flamingo-pink-primary);
+    }
 }

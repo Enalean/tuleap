@@ -19,11 +19,11 @@
 
 <template>
     <label class="tlp-label document-label">{{ static_list_field.label }}</label>
-    <p v-if="static_list_field.value.length > 0" class="static-items-list">
+    <p v-if="static_list_field.value.length > 0" class="static-items-list document-item-list">
         <span
             v-for="value in static_list_field.value"
             v-bind:key="value.label"
-            class="static-list-item"
+            class="static-list-item document-list-item-inline document-list-item-with-color-bubble"
             data-test="static-list-item"
         >
             <tlp-color-bubble v-if="value.tlp_color !== ''" v-bind:tlp_color="value.tlp_color" />
@@ -54,8 +54,8 @@ defineProps<{
 
 .static-list-item {
     display: inline-flex;
-    flex-direction: row;
     align-items: center;
+    align-self: center;
     gap: 5px;
 }
 

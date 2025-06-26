@@ -31,6 +31,7 @@ describe("TlpColorBubble", () => {
 
         expect(wrapper.find("[data-test=tlp-color-bubble]").classes()).toStrictEqual([
             "tlp-color-bubble",
+            "document-color-bubble",
             "tlp-swatch-fiesta-red",
         ]);
     });
