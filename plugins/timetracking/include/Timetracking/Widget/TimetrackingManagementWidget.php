@@ -29,6 +29,11 @@ use Tuleap\Layout\JavascriptAssetGeneric;
 use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Timetracking\REST\v1\TimetrackingManagement\Dao;
 use Tuleap\Timetracking\REST\v1\TimetrackingManagement\PredefinedTimePeriod;
+use Tuleap\Timetracking\Widget\Management\TimetrackingManagementWidgetConfig;
+use Tuleap\User\Avatar\AvatarHashDao;
+use Tuleap\User\Avatar\ComputeAvatarHash;
+use Tuleap\User\Avatar\UserAvatarUrlProvider;
+use UserManager;
 use Widget;
 
 class TimetrackingManagementWidget extends Widget
@@ -36,6 +41,8 @@ class TimetrackingManagementWidget extends Widget
     public const NAME = 'timetracking-management-widget';
 
     private Dao $dao;
+
+    private TimetrackingManagementWidgetConfig $widget_config;
 
     public function __construct(Dao $dao)
     {
@@ -74,7 +81,7 @@ class TimetrackingManagementWidget extends Widget
     public function getContent(): string
     {
         $renderer = TemplateRendererFactory::build()->getRenderer(TIMETRACKING_TEMPLATE_DIR);
-        return $renderer->renderToString('timetracking-management', ['widget_id' => $this->content_id]);
+        return $renderer->renderToString('timetracking-management', ['widget_id' => $this->content_id, 'widget_config' => json_encode($this->widget_config)]);
     }
 
     public function getIcon(): string
@@ -116,6 +123,16 @@ class TimetrackingManagementWidget extends Widget
      */
     public function loadContent($id): void
     {
-        $this->content_id = $this->dao->searchQueryByWidgetId((int) $id)[0]['id'];
+        $this->widget_config = TimetrackingManagementWidgetConfig::fromWidgetId(
+            $this->dao,
+            $this->dao,
+            UserManager::instance(),
+            new UserAvatarUrlProvider(
+                new AvatarHashDao(),
+                new ComputeAvatarHash()
+            ),
+            (int) $id
+        );
+        $this->content_id    = $this->widget_config->id;
     }
 }

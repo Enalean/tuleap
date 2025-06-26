@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export { element } from "./SelectionPredefinedTimePeriods";
+export { element, getPeriodAccordingToSelectedPreset } from "./SelectionPredefinedTimePeriods";
 export type { PredefinedTimePeriodSelect, PeriodOption } from "./SelectionPredefinedTimePeriods";
 export type { Period, PredefinedTimePeriod } from "./predefined-time-periods";
-export { TODAY, LAST_7_DAYS } from "./predefined-time-periods";
+export { TODAY, LAST_7_DAYS, getPredefinedTimePeriodWithString } from "./predefined-time-periods";
