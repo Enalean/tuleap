@@ -26,12 +26,13 @@ use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Bind_Static;
 use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Tracker_FormElement_Field_List_BindDecorator;
+use Tracker_FormElement_Field_List_OpenValue;
 use Tuleap\DB\DatabaseUUIDV7Factory;
 
 final class ListStaticBindBuilder
 {
     /**
-     * @var Tracker_FormElement_Field_List_Bind_StaticValue[]
+     * @var Tracker_FormElement_Field_List_Bind_StaticValue[]|Tracker_FormElement_Field_List_OpenValue[]
      */
     private array $bind_values = [];
     /**
@@ -72,7 +73,7 @@ final class ListStaticBindBuilder
     }
 
     /**
-     * @param array<int, Tracker_FormElement_Field_List_Bind_StaticValue> $values
+     * @param array<int, Tracker_FormElement_Field_List_Bind_StaticValue|Tracker_FormElement_Field_List_OpenValue> $values
      */
     public function withBuildStaticValues(array $values): self
     {

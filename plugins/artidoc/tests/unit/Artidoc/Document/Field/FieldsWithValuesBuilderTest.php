@@ -35,13 +35,16 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueListTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetValueOpenListBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueStringTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserGroupBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserGroupValueBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\List\OpenListStaticValueBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\StaticBindDecoratorBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\OpenListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\TrackerColor;
@@ -225,10 +228,16 @@ final class FieldsWithValuesBuilderTest extends TestCase
         ])
         ->build()->getField();
 
+        $third_list_custom_value = OpenListStaticValueBuilder::aStaticValue('Custom value')->build();
+        $third_list_field        = ListStaticBindBuilder::aStaticBind(
+            OpenListFieldBuilder::anOpenListField()->withId(125)->withLabel('static open list field')->build()
+        )->withBuildStaticValues([$third_list_custom_value])->build()->getField();
+
         $this->field_collection = new ConfiguredFieldCollection([
             self::TRACKER_ID => [
                 new ConfiguredField($first_list_field, DisplayType::BLOCK),
                 new ConfiguredField($second_list_field, DisplayType::COLUMN),
+                new ConfiguredField($third_list_field, DisplayType::COLUMN),
             ],
         ]);
 
@@ -244,12 +253,19 @@ final class FieldsWithValuesBuilderTest extends TestCase
                     $second_list_static_value_no_color,
                 ])->build(),
         );
+        $this->changeset->setFieldValue(
+            $third_list_field,
+            ChangesetValueOpenListBuilder::aListOfValue(685, $this->changeset, $third_list_field)->withValues([$third_list_custom_value])->build(),
+        );
 
         self::assertEquals([
             new StaticListFieldWithValue('static list field', DisplayType::BLOCK, []),
             new StaticListFieldWithValue('static list field with decorators', DisplayType::COLUMN, [
                 new StaticListValue('Red', TrackerColor::fromName('red-wine')),
                 new StaticListValue('No color', null),
+            ]),
+            new StaticListFieldWithValue('static open list field', DisplayType::COLUMN, [
+                new StaticListValue('Custom value', null),
             ]),
         ], $this->getFields());
     }

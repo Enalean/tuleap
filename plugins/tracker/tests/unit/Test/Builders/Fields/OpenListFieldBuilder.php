@@ -29,6 +29,7 @@ final class OpenListFieldBuilder
 {
     private int $field_id = 123;
     private string $name  = 'A field';
+    private string $label = 'open_list_field';
     private Tracker $tracker;
     /** @var list<\PFUser> */
     private array $user_with_read_permissions = [];
@@ -57,6 +58,12 @@ final class OpenListFieldBuilder
         return $this;
     }
 
+    public function withLabel(string $label): self
+    {
+        $this->label = $label;
+        return $this;
+    }
+
     public function withTracker(Tracker $tracker): self
     {
         $this->tracker = $tracker;
@@ -79,7 +86,7 @@ final class OpenListFieldBuilder
             $this->tracker->getId(),
             1,
             $this->name,
-            'open_list_field',
+            $this->label,
             '',
             true,
             'P',
