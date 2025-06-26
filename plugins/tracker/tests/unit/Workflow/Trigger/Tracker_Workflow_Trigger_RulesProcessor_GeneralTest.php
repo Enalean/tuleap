@@ -49,7 +49,7 @@ final class Tracker_Workflow_Trigger_RulesProcessor_GeneralTest extends \Tuleap\
         $this->parent->method('getXRef')->willReturn(899);
         $this->parent->method('getTrackerId')->willReturn(899);
         $task_tracker   = TrackerTestBuilder::aTracker()->withId(899)->build();
-        $this->artifact = new Artifact(1, 899, null, 10, null);
+        $this->artifact = new Artifact(1, 899, 0, 10, null);
         $this->artifact->setChangesets([ChangesetTestBuilder::aChangeset(2001)->ofArtifact($this->artifact)->build()]);
         $this->artifact->setParentWithoutPermissionChecking($this->parent);
         $this->artifact->setTracker($task_tracker);

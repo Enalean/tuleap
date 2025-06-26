@@ -54,7 +54,7 @@ final class Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategyTest extends \T
         $this->artifact = new Artifact(
             2,
             $this->task_tracker->getId(),
-            null,
+            0,
             10,
             null
         );
@@ -175,7 +175,7 @@ final class Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategyTest extends \T
         $sibling = new Artifact(
             3,
             $this->task_tracker->getId(),
-            null,
+            0,
             10,
             null
         );

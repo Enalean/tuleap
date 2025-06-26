@@ -45,7 +45,7 @@ final class Tracker_ReferenceManagerTest extends \Tuleap\Test\PHPUnit\TestCase /
         );
 
         $tracker        = TrackerTestBuilder::aTracker()->build();
-        $this->artifact = new Artifact($this->artifact_id, $tracker->getId(), null, 10, null);
+        $this->artifact = new Artifact($this->artifact_id, $tracker->getId(), 0, 10, null);
         $this->artifact->setTracker($tracker);
     }
 

@@ -334,7 +334,7 @@ class Tracker_ArtifactFactory implements RetrieveArtifact, RetrieveViewableArtif
         $artifact = new Artifact(
             $row['id'],
             $row['tracker_id'],
-            $row['submitted_by'],
+            (int) $row['submitted_by'],
             (int) $row['submitted_on'],
             $row['use_artifact_permissions']
         );

@@ -198,7 +198,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
     public $tracker_id;
     public $use_artifact_permissions;
     protected $per_tracker_id;
-    protected $submitted_by;
+    protected int $submitted_by;
     protected $submitted_on;
 
     protected $changesets;
@@ -265,7 +265,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
      *
      * @param bool $use_artifact_permissions True if this artifact uses permission, false otherwise
      */
-    public function __construct($id, $tracker_id, $submitted_by, $submitted_on, $use_artifact_permissions)
+    public function __construct($id, $tracker_id, int $submitted_by, $submitted_on, $use_artifact_permissions)
     {
         $this->id                       = $id;
         $this->tracker_id               = $tracker_id;
@@ -1738,7 +1738,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
      *
      * @return int the user id
      */
-    public function getSubmittedBy()
+    public function getSubmittedBy(): int
     {
         return $this->submitted_by;
     }
@@ -1760,10 +1760,10 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
         return $this->submitted_by_user;
     }
 
-    public function setSubmittedByUser(PFUser $user)
+    public function setSubmittedByUser(PFUser $user): void
     {
         $this->submitted_by_user = $user;
-        $this->submitted_by      = $user->getId();
+        $this->submitted_by      = (int) $user->getId();
     }
 
     /**
