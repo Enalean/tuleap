@@ -69,7 +69,7 @@ describe("ArtifactLinkRows", () => {
             },
             props: {
                 is_loading,
-                query_id: "0196d46b-aa17-7249-816a-b23604f5721a",
+                tql_query: "SELECT @id FROM @project='self' WHERE @id>1",
                 row: new ArtifactRowBuilder()
                     .addCell(PRETTY_TITLE_COLUMN_NAME, {
                         type: PRETTY_TITLE_CELL,

@@ -42,7 +42,7 @@
             v-bind:number_of_link="artifact_link.number_of_links"
             v-bind:artifact_links_rows="artifact_link.artifact_links"
             v-bind:level="level + 1"
-            v-bind:query_id="query_id"
+            v-bind:tql_query="tql_query"
         />
     </template>
 </template>
@@ -52,8 +52,8 @@ import { strictInject } from "@tuleap/vue-strict-inject";
 import type { Fault } from "@tuleap/fault";
 import type { ArtifactsTable, ArtifactRow } from "../../domain/ArtifactsTable";
 import type { ArtifactsTableWithTotal } from "../../domain/RetrieveArtifactsTable";
-import { RETRIEVE_ARTIFACT_LINKS } from "../../injection-symbols";
 import RowErrorMessage from "../feedback/RowErrorMessage.vue";
+import { RETRIEVE_ARTIFACT_LINKS, WIDGET_ID } from "../../injection-symbols";
 import ArtifactLinkRows from "./ArtifactLinkRows.vue";
 import SelectableCell from "./SelectableCell.vue";
 import EditCell from "./EditCell.vue";
@@ -67,11 +67,12 @@ interface ArtifactLinksFetchStatus {
 const props = defineProps<{
     row: ArtifactRow;
     columns: ArtifactsTable["columns"];
-    query_id: string;
+    tql_query: string;
     level: number;
 }>();
 
 const artifact_links_retriever = strictInject(RETRIEVE_ARTIFACT_LINKS);
+const widget_id = strictInject(WIDGET_ID);
 
 const forward_links = ref<ReadonlyArray<ArtifactRow>>([]);
 const reverse_links = ref<ReadonlyArray<ArtifactRow>>([]);
@@ -108,7 +109,7 @@ function toggleLinks(row: ArtifactRow): void {
     }
 
     artifact_links_retriever
-        .getForwardLinks(props.query_id, row.id)
+        .getForwardLinks(widget_id, row.id, props.tql_query)
         .match(
             (artifacts: ArtifactsTableWithTotal) => {
                 forward_links.value = artifacts.table.rows;
@@ -122,7 +123,7 @@ function toggleLinks(row: ArtifactRow): void {
         });
 
     artifact_links_retriever
-        .getReverseLinks(props.query_id, row.id)
+        .getReverseLinks(widget_id, row.id, props.tql_query)
         .match(
             (artifacts: ArtifactsTableWithTotal) => {
                 reverse_links.value = artifacts.table.rows;

@@ -32,8 +32,8 @@ import type { ColumnName } from "../../domain/ColumnName";
 import { PRETTY_TITLE_COLUMN_NAME } from "../../domain/ColumnName";
 import type { ArtifactsTableWithTotal } from "../../domain/RetrieveArtifactsTable";
 import type { RetrieveArtifactLinks } from "../../domain/RetrieveArtifactLinks";
-import { RETRIEVE_ARTIFACT_LINKS } from "../../injection-symbols";
 import RowErrorMessage from "../feedback/RowErrorMessage.vue";
+import { RETRIEVE_ARTIFACT_LINKS, WIDGET_ID } from "../../injection-symbols";
 import ArtifactRow from "./ArtifactRow.vue";
 import SelectableCell from "./SelectableCell.vue";
 import ArtifactLinkRows from "./ArtifactLinkRows.vue";
@@ -99,10 +99,11 @@ describe("ArtifactRow", () => {
                 ...getGlobalTestOptions(),
                 provide: {
                     [RETRIEVE_ARTIFACT_LINKS.valueOf()]: artifact_links_table_retriever,
+                    [WIDGET_ID.valueOf()]: 101,
                 },
             },
             props: {
-                query_id: "0196d46b-aa17-7249-816a-b23604f5721a",
+                tql_query: 'SELECT @pretty_title FROM @project="self"',
                 row: new ArtifactRowBuilder()
                     .addCell(PRETTY_TITLE_COLUMN_NAME, {
                         type: PRETTY_TITLE_CELL,

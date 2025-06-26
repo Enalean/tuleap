@@ -23,11 +23,13 @@ import type { ArtifactsTableWithTotal } from "./RetrieveArtifactsTable";
 
 export type RetrieveArtifactLinks = {
     getForwardLinks(
-        query_id: string,
+        widget_id: number,
         artifact_id: number,
+        tql_query: string,
     ): ResultAsync<ArtifactsTableWithTotal, Fault>;
     getReverseLinks(
-        query_id: string,
+        widget_id: number,
         artifact_id: number,
+        tql_query: string,
     ): ResultAsync<ArtifactsTableWithTotal, Fault>;
 };

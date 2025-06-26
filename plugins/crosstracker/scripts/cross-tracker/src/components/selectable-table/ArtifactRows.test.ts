@@ -101,7 +101,7 @@ describe("ArtifactRows", () => {
             props: {
                 rows: artifacts_table.rows,
                 columns: artifacts_table.columns,
-                query_id: "WhateverQueryId",
+                tql_query: "SELECT @id FROM @project='self' WHERE @id>1",
                 level: 0,
             },
         });
