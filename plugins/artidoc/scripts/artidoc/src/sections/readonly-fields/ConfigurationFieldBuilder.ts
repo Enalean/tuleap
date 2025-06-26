@@ -20,6 +20,7 @@
 import type { StructureFields } from "@tuleap/plugin-tracker-rest-api-types";
 import {
     CHECKBOX_FIELD,
+    LIST_BIND_STATIC,
     LIST_BIND_UGROUPS,
     MULTI_SELECTBOX_FIELD,
     OPEN_LIST_FIELD,
@@ -49,7 +50,7 @@ const buildConfiguredFieldIfSupported = (field: StructureFields): Option<Configu
             field.type === OPEN_LIST_FIELD ||
             field.type === RADIO_BUTTON_FIELD ||
             field.type === CHECKBOX_FIELD) &&
-        field.bindings.type === LIST_BIND_UGROUPS
+        (field.bindings.type === LIST_BIND_UGROUPS || field.bindings.type === LIST_BIND_STATIC)
     ) {
         return Option.fromValue<ConfigurationField>({ ...field_base, type: USER_GROUP_LIST_FIELD });
     }
