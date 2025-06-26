@@ -59,6 +59,7 @@ load_project() {
 
 seed_data() {
     sudo -u codendiadm /usr/bin/tuleap plugin:install \
+        timetracking \
         tracker \
         docman \
         agiledashboard \

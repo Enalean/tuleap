@@ -313,7 +313,7 @@ class timetrackingPlugin extends PluginWithLegacyInternalRouting implements Plug
             );
         }
         if ($get_widget_event->getName() === TimetrackingManagementWidget::NAME && FeatureFlagTimetrackingManagementWidget::isActive()) {
-            $get_widget_event->setWidget(new TimetrackingManagementWidget(new \Tuleap\Timetracking\REST\v1\TimetrackingManagement\Dao()));
+            $get_widget_event->setWidget(new TimetrackingManagementWidget(new \Tuleap\Timetracking\Widget\Management\ManagementDao()));
         }
     }
 
