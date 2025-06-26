@@ -18,27 +18,27 @@
  */
 
 import { describe, it, expect, beforeEach } from "vitest";
-import { initPdfTemplatesStore } from "@/stores/pdf-templates-store";
-import type { PdfTemplatesStore } from "@/stores/pdf-templates-store";
+import { buildPdfTemplatesCollection } from "@/pdf/pdf-templates-collection";
+import type { PdfTemplatesCollection } from "@/pdf/pdf-templates-collection";
 import { PdfTemplateStub } from "@/helpers/stubs/PdfTemplateStub";
 
-describe("pdf-templates-store", () => {
-    let store: PdfTemplatesStore;
+describe("pdf-templates-collection", () => {
+    let collection: PdfTemplatesCollection;
 
     beforeEach(() => {
-        store = initPdfTemplatesStore([
+        collection = buildPdfTemplatesCollection([
             PdfTemplateStub.redTemplate(),
             PdfTemplateStub.blueTemplate(),
         ]);
     });
 
     it("When no template is selected, then selected_template should be null", () => {
-        expect(store.selected_template.value).toBeNull();
+        expect(collection.selected_template.value).toBeNull();
     });
 
     it("When a template is selected, then selected_template should be set", () => {
-        store.setSelectedPdfTemplate(store.list.value[1]);
+        collection.setSelectedPdfTemplate(collection.list.value[1]);
 
-        expect(store.selected_template.value).toBe(store.list.value[1]);
+        expect(collection.selected_template.value).toBe(collection.list.value[1]);
     });
 });

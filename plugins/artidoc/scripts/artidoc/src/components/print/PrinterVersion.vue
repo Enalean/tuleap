@@ -92,11 +92,11 @@
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { SECTIONS_COLLECTION } from "@/sections/states/sections-collection-injection-key";
 import SectionPrinterVersion from "@/components/print/SectionPrinterVersion.vue";
-import { PDF_TEMPLATES_STORE } from "@/stores/pdf-templates-store";
+import { PDF_TEMPLATES_COLLECTION } from "@/pdf/pdf-templates-collection";
 import { computed } from "vue";
 
 const { saved_sections } = strictInject(SECTIONS_COLLECTION);
-const pdf_templates = strictInject(PDF_TEMPLATES_STORE);
+const pdf_templates = strictInject(PDF_TEMPLATES_COLLECTION);
 
 const has_title_page_content = computed(
     () => pdf_templates.selected_template.value?.title_page_content !== "",

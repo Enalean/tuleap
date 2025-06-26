@@ -21,7 +21,10 @@ import { describe, it, expect, beforeEach, vi } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import type { VueWrapper } from "@vue/test-utils";
 import { createGettext } from "vue3-gettext";
-import { initPdfTemplatesStore, PDF_TEMPLATES_STORE } from "@/stores/pdf-templates-store";
+import {
+    buildPdfTemplatesCollection,
+    PDF_TEMPLATES_COLLECTION,
+} from "@/pdf/pdf-templates-collection";
 import { PdfTemplateStub } from "@/helpers/stubs/PdfTemplateStub";
 import PdfExportMenuTemplatesDropdown from "./PdfExportMenuTemplatesDropdown.vue";
 import type { PdfTemplate } from "@tuleap/print-as-pdf";
@@ -41,7 +44,8 @@ describe("PdfExportMenuTemplatesDropdown", () => {
             global: {
                 plugins: [createGettext({ silent: true })],
                 provide: {
-                    [PDF_TEMPLATES_STORE.valueOf()]: initPdfTemplatesStore(pdf_templates),
+                    [PDF_TEMPLATES_COLLECTION.valueOf()]:
+                        buildPdfTemplatesCollection(pdf_templates),
                 },
             },
             propsData: {

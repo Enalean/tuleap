@@ -22,18 +22,19 @@ import { ref } from "vue";
 import type { PdfTemplate } from "@tuleap/print-as-pdf";
 import type { StrictInjectionKey } from "@tuleap/vue-strict-inject";
 
-export type PdfTemplatesStore = {
+export type PdfTemplatesCollection = {
     list: Ref<ReadonlyArray<PdfTemplate>>;
     selected_template: Ref<Readonly<PdfTemplate> | null>;
     setSelectedPdfTemplate(template: Readonly<PdfTemplate>): void;
 };
 
-export const PDF_TEMPLATES_STORE: StrictInjectionKey<PdfTemplatesStore> =
-    Symbol("pdf-templates-store");
+export const PDF_TEMPLATES_COLLECTION: StrictInjectionKey<PdfTemplatesCollection> = Symbol(
+    "pdf-templates-collection",
+);
 
-export const initPdfTemplatesStore = (
+export const buildPdfTemplatesCollection = (
     templates: ReadonlyArray<PdfTemplate> | null,
-): PdfTemplatesStore => {
+): PdfTemplatesCollection => {
     const list = ref(templates ?? []);
     const selected_template: Ref<Readonly<PdfTemplate> | null> = ref(null);
 
