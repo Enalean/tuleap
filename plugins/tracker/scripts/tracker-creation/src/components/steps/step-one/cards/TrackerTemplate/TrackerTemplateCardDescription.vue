@@ -29,12 +29,4 @@
         </div>
     </div>
 </template>
-<script lang="ts">
-import Vue from "vue";
-import Component from "vue-class-component";
-
-@Component({
-    name: "TrackerTemplateCardDescription",
-})
-export default class TrackerTemplateCardDescription extends Vue {}
-</script>
+<script setup lang="ts"></script>
