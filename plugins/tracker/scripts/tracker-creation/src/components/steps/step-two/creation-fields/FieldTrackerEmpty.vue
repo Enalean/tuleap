@@ -22,14 +22,8 @@
     <input type="hidden" name="from-tracker-empty" v-if="is_created_from_empty" value="true" />
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Getter } from "vuex-class";
-import { Component } from "vue-property-decorator";
+<script setup lang="ts">
+import { useGetters } from "vuex-composition-helpers";
 
-@Component
-export default class FieldTrackerEmpty extends Vue {
-    @Getter
-    readonly is_created_from_empty!: boolean;
-}
+const { is_created_from_empty } = useGetters(["is_created_from_empty"]);
 </script>
