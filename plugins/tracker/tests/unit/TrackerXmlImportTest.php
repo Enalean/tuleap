@@ -20,24 +20,23 @@
 
 namespace Tuleap\Tracker;
 
+use Event;
 use EventManager;
-use Mockery;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\MockObject\MockObject;
 use Project;
-use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use SimpleXMLElement;
 use Tracker_Artifact_XMLImport;
 use Tracker_FormElementFactory;
 use Tracker_Workflow_Trigger_RulesManager;
 use TrackerFactory;
 use TrackerXmlImport;
-use Tuleap\Project\UGroupRetrieverWithLegacy;
 use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
 use Tuleap\Project\XML\Import\ImportConfig;
+use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
-use Tuleap\Tracker\Creation\TrackerCreationDataChecker;
 use Tuleap\Tracker\Hierarchy\HierarchyDAO;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Tracker\XML\Importer\CreateFromXml;
@@ -54,141 +53,77 @@ use XML_RNGValidator;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TrackerXmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    use MockeryPHPUnitIntegration;
+    private \PFUser $user;
 
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface
-     */
-    private $user;
+    private MappingsRegistry $mapping_registery;
+    private TrackerXmlImport $tracker_xml_importer;
 
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TrackerXmlImportFeedbackCollector
-     */
-    private $feedback_collector;
+    private Project $project;
 
-    /**
-     * @var MappingsRegistry
-     */
-    private $mapping_registery;
-    /**
-     * @var \TrackerXmlImport
-     */
-    private $tracker_xml_importer;
-    /**
-     * @var \Project
-     */
-    private $project;
+    private ImportConfig $configuration;
 
-    /**
-     * @var ImportConfig
-     */
-    private $configuration;
+    private TrackerFactory&MockObject $tracker_factory;
 
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\TrackerFactory
-     */
-    private $tracker_factory;
+    private EventManager&MockObject $event_manager;
 
-    /**
-     * @var \EventManager|\Mockery\LegacyMockInterface|\Mockery\MockInterface
-     */
-    private $event_manager;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ArtifactLinksUsageDao
-     */
-    private $artifact_links_usage_dao;
-    /**
-     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|TrackerXMLFieldMappingFromExistingTracker
-     */
-    private $mapping_from_existing_tracker;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_Workflow_Trigger_RulesManager
-     */
-    private $trigger_rules_manager;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|XML_RNGValidator
-     */
-    private $rng_validator;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|HierarchyDAO
-     */
-    private $hierarchy_dao;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_Artifact_XMLImport
-     */
-    private $artifact_XML_import;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_FormElementFactory
-     */
-    private $tracker_form_element_factory;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\Tuleap\Project\UGroupRetrieverWithLegacy
-     */
-    private $ugroup_retriever_with_legacy;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ExternalFieldsExtractor
-     */
-    private $external_validator;
-    private TrackerCreationDataChecker $tracker_creation_data_checker;
+    private ArtifactLinksUsageDao&MockObject $artifact_links_usage_dao;
+    private XML_RNGValidator $rng_validator;
+    private HierarchyDAO&MockObject $hierarchy_dao;
+    private Tracker_Artifact_XMLImport&MockObject $artifact_XML_import;
+    private Tracker_FormElementFactory $tracker_form_element_factory;
+    private ExternalFieldsExtractor&MockObject $external_validator;
     private GetInstanceFromXml&MockObject $get_instance_from_xml;
     private InstantiateTrackerFromXml&MockObject $instantiate_tracker_from_xml;
-    private $create_from_xml;
 
     protected function setUp(): void
     {
-        $this->tracker_factory = Mockery::spy(TrackerFactory::class);
+        $this->tracker_factory = $this->createMock(TrackerFactory::class);
 
-        $this->external_validator           = Mockery::mock(ExternalFieldsExtractor::class);
-        $this->ugroup_retriever_with_legacy = Mockery::spy(UGroupRetrieverWithLegacy::class);
+        $this->external_validator = $this->createMock(ExternalFieldsExtractor::class);
 
-        $this->tracker_form_element_factory  = Mockery::mock(Tracker_FormElementFactory::class);
-        $this->artifact_XML_import           = Mockery::spy(Tracker_Artifact_XMLImport::class);
-        $this->hierarchy_dao                 = Mockery::spy(HierarchyDAO::class);
-        $this->rng_validator                 = new XML_RNGValidator();
-        $this->trigger_rules_manager         = Mockery::spy(Tracker_Workflow_Trigger_RulesManager::class);
-        $this->mapping_from_existing_tracker = Mockery::spy(TrackerXMLFieldMappingFromExistingTracker::class);
-        $this->event_manager                 = Mockery::spy(EventManager::class);
-        $this->artifact_links_usage_dao      = Mockery::spy(ArtifactLinksUsageDao::class);
-        $this->feedback_collector            = Mockery::mock(TrackerXmlImportFeedbackCollector::class);
-        $this->tracker_creation_data_checker = Mockery::mock(TrackerCreationDataChecker::class);
+        $this->tracker_form_element_factory = Tracker_FormElementFactory::instance();
+        $this->artifact_XML_import          = $this->createMock(Tracker_Artifact_XMLImport::class);
+        $this->hierarchy_dao                = $this->createMock(HierarchyDAO::class);
+        $this->rng_validator                = new XML_RNGValidator();
+        $trigger_rules_manager              = $this->createMock(Tracker_Workflow_Trigger_RulesManager::class);
+        $mapping_from_existing_tracker      = new TrackerXMLFieldMappingFromExistingTracker();
+        $this->event_manager                = $this->createMock(EventManager::class);
+        $this->artifact_links_usage_dao     = $this->createMock(ArtifactLinksUsageDao::class);
+        $feedback_collector                 = $this->createMock(TrackerXmlImportFeedbackCollector::class);
 
         $this->get_instance_from_xml = $this->createMock(GetInstanceFromXml::class);
 
         $this->instantiate_tracker_from_xml = $this->createMock(InstantiateTrackerFromXml::class);
-        $this->create_from_xml              = $this->createMock(CreateFromXml::class);
+        $create_from_xml                    = $this->createMock(CreateFromXml::class);
 
-        $this->tracker_xml_importer = Mockery::mock(
-            TrackerXmlImport::class,
-            [
-                $this->tracker_factory,
-                $this->event_manager,
-                $this->hierarchy_dao,
-                $this->get_instance_from_xml,
-                $this->rng_validator,
-                $this->trigger_rules_manager,
-                $this->artifact_XML_import,
-                Mockery::spy(IFindUserFromXMLReference::class),
-                Mockery::spy(LoggerInterface::class),
-                Mockery::spy(ArtifactLinksUsageUpdater::class),
-                $this->artifact_links_usage_dao,
-                $this->mapping_from_existing_tracker,
-                $this->external_validator,
-                $this->feedback_collector,
-                $this->create_from_xml,
-                $this->instantiate_tracker_from_xml,
-                new XmlTrackersByPriorityOrderer(),
-                new TrackersHierarchyBuilder(),
-            ]
-        )->makePartial();
+        $artifact_links_usage_updater = $this->createMock(ArtifactLinksUsageUpdater::class);
+        $artifact_links_usage_updater->method('forceUsageOfArtifactLinkTypes');
 
-        $this->external_validator->shouldReceive('extractExternalFieldFromProjectElement');
+        $this->tracker_xml_importer = new TrackerXmlImport(
+            $this->tracker_factory,
+            $this->event_manager,
+            $this->hierarchy_dao,
+            $this->get_instance_from_xml,
+            $this->rng_validator,
+            $trigger_rules_manager,
+            $this->artifact_XML_import,
+            $this->createMock(IFindUserFromXMLReference::class),
+            new NullLogger(),
+            $artifact_links_usage_updater,
+            $this->artifact_links_usage_dao,
+            $mapping_from_existing_tracker,
+            $this->external_validator,
+            $feedback_collector,
+            $create_from_xml,
+            $this->instantiate_tracker_from_xml,
+            new XmlTrackersByPriorityOrderer(),
+            new TrackersHierarchyBuilder(),
+        );
 
-        $group_id      = 123;
-        $this->project = Mockery::spy(Project::class);
-        $this->project->shouldReceive('getId')->andReturns($group_id);
+        $this->external_validator->method('extractExternalFieldFromProjectElement');
 
-        $this->user = Mockery::mock(\PFUser::class);
-        $this->user->shouldReceive('getId')->andReturn(1);
+        $this->project = ProjectTestBuilder::aProject()->withId(123)->build();
+        $this->user    = UserTestBuilder::aUser()->withId(1)->build();
 
         $this->mapping_registery = new MappingsRegistry();
         $this->configuration     = new ImportConfig();
@@ -198,6 +133,9 @@ final class TrackerXmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->expectNotToPerformAssertions();
         $this->instantiate_tracker_from_xml->method('instantiateTrackerFromXml');
+
+        $this->event_manager->method('processEvent');
+        $this->artifact_links_usage_dao->method('isTypeDisabledInProject');
 
         $xml_input = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
@@ -220,6 +158,9 @@ final class TrackerXmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->expectNotToPerformAssertions();
         $this->instantiate_tracker_from_xml->method('instantiateTrackerFromXml');
+
+        $this->event_manager->method('processEvent');
+        $this->artifact_links_usage_dao->method('isTypeDisabledInProject');
 
         $xml_input = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
@@ -322,6 +263,9 @@ final class TrackerXmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->instantiate_tracker_from_xml->method('instantiateTrackerFromXml');
 
+        $this->event_manager->method('processEvent');
+        $this->artifact_links_usage_dao->method('isTypeDisabledInProject');
+
         $xml_input = new SimpleXMLElement(
             '<?xml version="1.0" encoding="UTF-8"?>
             <project>
@@ -368,8 +312,7 @@ final class TrackerXmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItCollectsErrorsWithoutImporting(): void
     {
         $this->get_instance_from_xml->expects($this->exactly(3))->method('getInstanceFromXML');
-        $this->tracker_xml_importer->shouldReceive('import')->never();
-        $this->tracker_factory->shouldReceive('collectTrackersNameInErrorOnMandatoryCreationInfo')->once();
+        $this->tracker_factory->expects($this->once())->method('collectTrackersNameInErrorOnMandatoryCreationInfo');
 
         $xml_input = simplexml_load_string(file_get_contents(__DIR__ . '/_fixtures/TrackersList.xml'));
 
@@ -397,9 +340,16 @@ final class TrackerXmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
                 }
             );
 
-        $this->hierarchy_dao->shouldReceive('updateChildren')->with(2);
+        $this->hierarchy_dao->method('updateChildren')->willReturnCallback(
+            static fn (int $parent_id, array $child_ids) => match ($parent_id) {
+                444, 555 => true,
+            }
+        );
 
-        $this->external_validator->shouldReceive('extractExternalFieldsFromTracker');
+        $this->external_validator->method('extractExternalFieldsFromTracker');
+
+        $this->event_manager->method('processEvent');
+        $this->artifact_links_usage_dao->method('isTypeDisabledInProject');
 
         $result = $this->tracker_xml_importer->import(
             $this->configuration,
@@ -424,9 +374,19 @@ final class TrackerXmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
         $xml = simplexml_load_string(file_get_contents(__DIR__ . '/_fixtures/TrackersList.xml'));
 
         $this->instantiate_tracker_from_xml->method('instantiateTrackerFromXml');
+        $this->artifact_links_usage_dao->method('isTypeDisabledInProject');
+        $this->hierarchy_dao->method('updateChildren');
 
-        $this->event_manager->shouldReceive('processEvent')->with(Mockery::type(ImportXMLProjectTrackerDone::class))->once();
-        $this->external_validator->shouldReceive('extractExternalFieldsFromTracker');
+        $this->event_manager
+            ->expects($this->exactly(2))
+            ->method('processEvent')
+            ->willReturnCallback(
+                static fn (object|string $event) => match (true) {
+                    $event instanceof ImportXMLProjectTrackerDone,
+                    $event === Event::IMPORT_COMPAT_REF_XML => true
+                }
+            );
+        $this->external_validator->method('extractExternalFieldsFromTracker');
 
         $this->tracker_xml_importer->import(
             $this->configuration,
@@ -440,16 +400,18 @@ final class TrackerXmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItShouldNotImportHierarchyIfIsChildIsNotUsed(): void
     {
-        $this->artifact_links_usage_dao->shouldReceive('isTypeDisabledInProject')
-            ->with(Mockery::any(), '_is_child')
-            ->andReturn(true);
+        $this->artifact_links_usage_dao->method('isTypeDisabledInProject')
+            ->with($this->anything(), '_is_child')
+            ->willReturn(true);
 
         $xml = simplexml_load_string(file_get_contents(__DIR__ . '/_fixtures/TrackersList.xml'));
 
         $this->instantiate_tracker_from_xml->method('instantiateTrackerFromXml');
 
-        $this->hierarchy_dao->shouldReceive('updateChildren')->never();
-        $this->external_validator->shouldReceive('extractExternalFieldsFromTracker');
+        $this->hierarchy_dao->expects($this->never())->method('updateChildren');
+        $this->external_validator->method('extractExternalFieldsFromTracker');
+
+        $this->event_manager->method('processEvent');
 
         $this->tracker_xml_importer->import(
             $this->configuration,
@@ -481,7 +443,11 @@ final class TrackerXmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
         $tracker = TrackerTestBuilder::aTracker()->build();
         $this->instantiate_tracker_from_xml->method('instantiateTrackerFromXml')->willReturn($tracker);
 
-        $this->artifact_XML_import->shouldReceive('importBareArtifactsFromXML')->once()->andReturn([]);
+        $this->artifact_XML_import->expects($this->once())->method('importBareArtifactsFromXML')->willReturn([]);
+        $this->artifact_XML_import->method('importArtifactChangesFromXML');
+
+        $this->event_manager->method('processEvent');
+        $this->artifact_links_usage_dao->method('isTypeDisabledInProject');
 
         $this->tracker_xml_importer->import(
             $this->configuration,
@@ -508,7 +474,7 @@ final class TrackerXmlImportTest extends \Tuleap\Test\PHPUnit\TestCase
                      </trackers>'
         );
 
-        $this->artifact_XML_import->shouldReceive('importBareArtifactsFromXML')->andReturn([]);
+        $this->artifact_XML_import->method('importBareArtifactsFromXML')->willReturn([]);
         $configuration = new ImportConfig();
         $this->tracker_xml_importer->import(
             $configuration,

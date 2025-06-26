@@ -42,8 +42,7 @@ are a few hints to help you:
         the test method (+setUp).
     -   Use simple assertions (assertEquals, assertTrue, assertFalse
         should be enough most of the time).
-    -   Be very strict about what you expect (for instance Mockery's
-        `spy` should not be used in new tests)
+    -   Be very strict about what you expect
 -   Write smaller classes
 -   Do not try to be "clever/smarter/subtle/\..." unless absolutely
     needed. Write dumb code.
