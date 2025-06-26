@@ -42,8 +42,6 @@ class TimetrackingManagementWidget extends Widget
 
     private Dao $dao;
 
-    private TimetrackingManagementWidgetConfig $widget_config;
-
     public function __construct(Dao $dao)
     {
         parent::__construct(self::NAME);
@@ -80,8 +78,22 @@ class TimetrackingManagementWidget extends Widget
 
     public function getContent(): string
     {
-        $renderer = TemplateRendererFactory::build()->getRenderer(TIMETRACKING_TEMPLATE_DIR);
-        return $renderer->renderToString('timetracking-management', ['widget_id' => $this->content_id, 'widget_config' => json_encode($this->widget_config)]);
+        $widget_config = TimetrackingManagementWidgetConfig::fromWidgetId(
+            $this->dao,
+            $this->dao,
+            UserManager::instance(),
+            new UserAvatarUrlProvider(
+                new AvatarHashDao(),
+                new ComputeAvatarHash()
+            ),
+            (int) $this->content_id,
+        );
+        $renderer      = TemplateRendererFactory::build()->getRenderer(TIMETRACKING_TEMPLATE_DIR);
+
+        return $renderer->renderToString('timetracking-management', [
+            'widget_id' => $this->content_id,
+            'widget_config' => json_encode($widget_config),
+        ]);
     }
 
     public function getIcon(): string
@@ -123,16 +135,6 @@ class TimetrackingManagementWidget extends Widget
      */
     public function loadContent($id): void
     {
-        $this->widget_config = TimetrackingManagementWidgetConfig::fromWidgetId(
-            $this->dao,
-            $this->dao,
-            UserManager::instance(),
-            new UserAvatarUrlProvider(
-                new AvatarHashDao(),
-                new ComputeAvatarHash()
-            ),
-            (int) $id
-        );
-        $this->content_id    = $this->widget_config->id;
+        $this->content_id = $id;
     }
 }
