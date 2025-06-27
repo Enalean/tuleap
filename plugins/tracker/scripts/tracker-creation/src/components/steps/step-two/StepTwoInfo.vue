@@ -29,15 +29,6 @@
         <step-label v-bind:step_label="$gettext('Give your tracker some basic info')" />
     </div>
 </template>
-<script lang="ts">
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
+<script setup lang="ts">
 import StepLabel from "../layout/StepLabel.vue";
-
-@Component({
-    components: {
-        StepLabel,
-    },
-})
-export default class StepTwoInfo extends Vue {}
 </script>
