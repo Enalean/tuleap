@@ -25,7 +25,10 @@ import { IS_USER_ANONYMOUS } from "@/is-user-anonymous";
 import PrinterVersion from "@/components/print/PrinterVersion.vue";
 import PdfExportMenuTemplatesDropdown from "./PdfExportMenuTemplatesDropdown.vue";
 import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
-import { initPdfTemplatesStore, PDF_TEMPLATES_STORE } from "@/stores/pdf-templates-store";
+import {
+    buildPdfTemplatesCollection,
+    PDF_TEMPLATES_COLLECTION,
+} from "@/pdf/pdf-templates-collection";
 import { PdfTemplateStub } from "@/helpers/stubs/PdfTemplateStub";
 import { TITLE } from "@/title-injection-key";
 import { SECTIONS_STATES_COLLECTION } from "@/sections/states/sections-states-collection-injection-key";
@@ -43,7 +46,7 @@ describe("PdfExportMenuItem", () => {
                     [IS_USER_ANONYMOUS.valueOf()]: true,
                     [SECTIONS_STATES_COLLECTION.valueOf()]: SectionsStatesCollectionStub.build(),
                     [TITLE.valueOf()]: "Test document",
-                    [PDF_TEMPLATES_STORE.valueOf()]: initPdfTemplatesStore([
+                    [PDF_TEMPLATES_COLLECTION.valueOf()]: buildPdfTemplatesCollection([
                         PdfTemplateStub.blueTemplate(),
                     ]),
                 },
@@ -70,7 +73,8 @@ describe("PdfExportMenuItem", () => {
                         [SECTIONS_STATES_COLLECTION.valueOf()]:
                             SectionsStatesCollectionStub.build(),
                         [TITLE.valueOf()]: "Test document",
-                        [PDF_TEMPLATES_STORE.valueOf()]: initPdfTemplatesStore(templates),
+                        [PDF_TEMPLATES_COLLECTION.valueOf()]:
+                            buildPdfTemplatesCollection(templates),
                     },
                 },
             });
@@ -107,7 +111,7 @@ describe("PdfExportMenuItem", () => {
                         [IS_USER_ANONYMOUS.valueOf()]: false,
                         [SECTIONS_STATES_COLLECTION.valueOf()]: sections_states,
                         [TITLE.valueOf()]: "Test document",
-                        [PDF_TEMPLATES_STORE.valueOf()]: initPdfTemplatesStore([
+                        [PDF_TEMPLATES_COLLECTION.valueOf()]: buildPdfTemplatesCollection([
                             PdfTemplateStub.blueTemplate(),
                         ]),
                     },
@@ -127,7 +131,7 @@ describe("PdfExportMenuItem", () => {
                     [IS_USER_ANONYMOUS.valueOf()]: false,
                     [SECTIONS_STATES_COLLECTION.valueOf()]: SectionsStatesCollectionStub.build(),
                     [TITLE.valueOf()]: "Test document",
-                    [PDF_TEMPLATES_STORE.valueOf()]: initPdfTemplatesStore([
+                    [PDF_TEMPLATES_COLLECTION.valueOf()]: buildPdfTemplatesCollection([
                         PdfTemplateStub.blueTemplate(),
                     ]),
                 },
@@ -146,7 +150,7 @@ describe("PdfExportMenuItem", () => {
                     [IS_USER_ANONYMOUS.valueOf()]: false,
                     [SECTIONS_STATES_COLLECTION.valueOf()]: SectionsStatesCollectionStub.build(),
                     [TITLE.valueOf()]: "Test document",
-                    [PDF_TEMPLATES_STORE.valueOf()]: initPdfTemplatesStore([
+                    [PDF_TEMPLATES_COLLECTION.valueOf()]: buildPdfTemplatesCollection([
                         PdfTemplateStub.blueTemplate(),
                         PdfTemplateStub.redTemplate(),
                     ]),

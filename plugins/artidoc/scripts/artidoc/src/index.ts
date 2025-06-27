@@ -36,7 +36,10 @@ import { NOTIFICATION_COLLECTION } from "@/sections/notifications/notification-c
 import { TOOLBAR_BUS } from "@/toolbar-bus-injection-key";
 import { SECTIONS_STATES_COLLECTION } from "@/sections/states/sections-states-collection-injection-key";
 import { FILE_UPLOADS_COLLECTION } from "@/sections/attachments/sections-file-uploads-collection-injection-key";
-import { PDF_TEMPLATES_STORE, initPdfTemplatesStore } from "@/stores/pdf-templates-store";
+import {
+    PDF_TEMPLATES_COLLECTION,
+    buildPdfTemplatesCollection,
+} from "@/pdf/pdf-templates-collection";
 import {
     OPEN_CONFIGURATION_MODAL_BUS,
     useOpenConfigurationModalBusStore,
@@ -165,8 +168,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         .provide(SELECTED_FIELDS, selected_fields)
         .provide(AVAILABLE_FIELDS, available_fields)
         .provide(
-            PDF_TEMPLATES_STORE,
-            initPdfTemplatesStore(
+            PDF_TEMPLATES_COLLECTION,
+            buildPdfTemplatesCollection(
                 JSON.parse(getAttributeOrThrow(vue_mount_point, "data-pdf-templates")),
             ),
         )

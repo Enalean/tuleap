@@ -89,7 +89,7 @@
 import { computed, ref } from "vue";
 import { useGettext } from "vue3-gettext";
 import { strictInject } from "@tuleap/vue-strict-inject";
-import { PDF_TEMPLATES_STORE } from "@/stores/pdf-templates-store";
+import { PDF_TEMPLATES_COLLECTION } from "@/pdf/pdf-templates-collection";
 import type { PdfTemplate } from "@tuleap/print-as-pdf";
 import { printAsPdf } from "@tuleap/print-as-pdf";
 import { IS_USER_ANONYMOUS } from "@/is-user-anonymous";
@@ -99,7 +99,7 @@ import { createModal } from "@tuleap/tlp-modal";
 import PdfExportMenuTemplatesDropdown from "./PdfExportMenuTemplatesDropdown.vue";
 import { SECTIONS_STATES_COLLECTION } from "@/sections/states/sections-states-collection-injection-key";
 
-const pdf_templates = strictInject(PDF_TEMPLATES_STORE);
+const pdf_templates = strictInject(PDF_TEMPLATES_COLLECTION);
 const is_user_anonymous = strictInject(IS_USER_ANONYMOUS);
 const states_collection = strictInject(SECTIONS_STATES_COLLECTION);
 const title = strictInject(TITLE);

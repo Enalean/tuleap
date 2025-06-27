@@ -52,11 +52,11 @@
 import { onMounted, ref } from "vue";
 import { useGettext } from "vue3-gettext";
 import { createDropdown } from "@tuleap/tlp-dropdown";
-import { PDF_TEMPLATES_STORE } from "@/stores/pdf-templates-store";
+import { PDF_TEMPLATES_COLLECTION } from "@/pdf/pdf-templates-collection";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import type { PdfTemplate } from "@tuleap/print-as-pdf";
 
-const pdf_templates = strictInject(PDF_TEMPLATES_STORE);
+const pdf_templates = strictInject(PDF_TEMPLATES_COLLECTION);
 
 const { $gettext } = useGettext();
 const export_in_pdf = $gettext("Export document in PDF");
