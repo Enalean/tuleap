@@ -354,7 +354,7 @@ final readonly class TrackersPermissionsRetriever implements RetrieveUserPermiss
                     foreach ($ugroups as $ugroup) {
                         if (
                             $user->isMemberOfUGroup($ugroup, (int) $tracker->getGroupId())
-                            && $user->getId() === $artifact->getSubmittedBy()
+                            && (int) $user->getId() === $artifact->getSubmittedBy()
                         ) {
                             return true;
                         }

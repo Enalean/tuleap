@@ -1157,7 +1157,7 @@ class ArtifactLinkField extends Tracker_FormElement_Field
 
         // Well, shouldn't be here but API doesn't provide a Null Artifact on creation yet
         // Here to avoid having to pass null arg for fetchHtmlWidget
-        $artifact = new Artifact(-1, $this->tracker_id, $this->getCurrentUser()->getId(), 0, false);
+        $artifact = new Artifact(-1, $this->tracker_id, (int) $this->getCurrentUser()->getId(), 0, false);
 
         $artifact_links_to_render = new ArtifactLinksToRender(
             $this->getCurrentUser(),

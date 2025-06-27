@@ -136,8 +136,8 @@ final class Tracker_ArtifactTest extends TestCase //phpcs:ignore Squiz.Classes.V
         $value     = ChangesetValueDateTestBuilder::aValue(1, $changeset, $field)->build();
         $changeset->setFieldValue($field, $value);
 
-        $id       = $tracker_id = $use_artifact_permissions = $submitted_by = $submitted_on = '';
-        $artifact = new Artifact($id, $tracker_id, $submitted_by, $submitted_on, $use_artifact_permissions);
+        $id       = $tracker_id = $submitted_by = $submitted_on = 0;
+        $artifact = new Artifact($id, $tracker_id, $submitted_by, $submitted_on, false);
 
         self::assertEquals($value, $artifact->getValue($field, $changeset));
     }
