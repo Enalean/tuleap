@@ -32,6 +32,7 @@
         />
     </div>
     <template v-if="is_expanded">
+        <row-error-message v-if="error_message !== ''" v-bind:error_message="error_message" />
         <artifact-link-rows
             v-for="(artifact_link, index) in [forward, reverse]"
             v-bind:key="index"
@@ -48,9 +49,11 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
+import type { Fault } from "@tuleap/fault";
 import type { ArtifactsTable, ArtifactRow } from "../../domain/ArtifactsTable";
 import type { ArtifactsTableWithTotal } from "../../domain/RetrieveArtifactsTable";
 import { RETRIEVE_ARTIFACT_LINKS } from "../../injection-symbols";
+import RowErrorMessage from "../feedback/RowErrorMessage.vue";
 import ArtifactLinkRows from "./ArtifactLinkRows.vue";
 import SelectableCell from "./SelectableCell.vue";
 import EditCell from "./EditCell.vue";
@@ -75,6 +78,7 @@ const reverse_links = ref<ReadonlyArray<ArtifactRow>>([]);
 const are_forward_links_loading = ref(true);
 const are_reverse_links_loading = ref(true);
 const is_expanded = ref(false);
+const error_message = ref("");
 
 const forward = computed((): ArtifactLinksFetchStatus => {
     return {
@@ -105,18 +109,28 @@ function toggleLinks(row: ArtifactRow): void {
 
     artifact_links_retriever
         .getForwardLinks(props.query_id, row.id)
-        .map((artifacts: ArtifactsTableWithTotal) => {
-            forward_links.value = artifacts.table.rows;
-        })
+        .match(
+            (artifacts: ArtifactsTableWithTotal) => {
+                forward_links.value = artifacts.table.rows;
+            },
+            (fault: Fault) => {
+                error_message.value = String(fault);
+            },
+        )
         .then(() => {
             are_forward_links_loading.value = false;
         });
 
     artifact_links_retriever
         .getReverseLinks(props.query_id, row.id)
-        .map((artifacts: ArtifactsTableWithTotal) => {
-            reverse_links.value = artifacts.table.rows;
-        })
+        .match(
+            (artifacts: ArtifactsTableWithTotal) => {
+                reverse_links.value = artifacts.table.rows;
+            },
+            (fault: Fault) => {
+                error_message.value = String(fault);
+            },
+        )
         .then(() => {
             are_reverse_links_loading.value = false;
         });
