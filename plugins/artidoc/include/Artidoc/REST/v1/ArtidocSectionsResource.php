@@ -61,6 +61,7 @@ use Tuleap\Artidoc\Document\Field\ConfiguredFieldCollectionBuilder;
 use Tuleap\Artidoc\Document\Field\ConfiguredFieldDao;
 use Tuleap\Artidoc\Document\Field\FieldsWithValuesBuilder;
 use Tuleap\Artidoc\Document\Field\SuitableFieldRetriever;
+use Tuleap\Artidoc\Document\Field\UserListFieldWithValueBuilder;
 use Tuleap\Artidoc\Domain\Document\RetrieveArtidocWithContext;
 use Tuleap\Artidoc\Domain\Document\Section\CannotUpdatePartiallyReadableDocumentFault;
 use Tuleap\Artidoc\Domain\Document\Section\CollectRequiredSectionInformation;
@@ -138,6 +139,9 @@ use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionExtractor;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
 use Tuleap\Tracker\Workflow\WorkflowUpdateChecker;
+use Tuleap\User\Avatar\AvatarHashDao;
+use Tuleap\User\Avatar\ComputeAvatarHash;
+use Tuleap\User\Avatar\UserAvatarUrlProvider;
 use UserManager;
 use WorkflowFactory;
 use WrapperLogger;
@@ -513,10 +517,17 @@ final class ArtidocSectionsResource extends AuthenticatedResource
                 CachedSemanticDescriptionFieldRetriever::instance(),
             ),
         );
+        $provide_user_avatar_url             = new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash());
+
         return new ArtifactSectionRepresentationBuilder(
             $this->getFileUploadDataProvider(),
             new FieldsWithValuesBuilder(
                 $configured_field_collection_builder->buildFromSectionIdentifier($section_identifier, $user),
+                new UserListFieldWithValueBuilder(
+                    UserManager::instance(),
+                    $provide_user_avatar_url,
+                    $provide_user_avatar_url,
+                ),
             )
         );
     }

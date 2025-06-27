@@ -24,7 +24,7 @@ namespace Tuleap\Artidoc\Document\Field;
 
 use PFUser;
 use Tracker_FormElement_Field_List;
-use Tracker_FormElement_Field_List_Bind_Ugroups;
+use Tracker_FormElement_Field_List_Bind_Null;
 use Tracker_FormElement_Field_String;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldIsDescriptionSemanticFault;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldIsTitleSemanticFault;
@@ -90,6 +90,6 @@ final readonly class SuitableFieldRetriever
     {
         $bind_type = $field->getBind()?->getType();
 
-        return $bind_type === Tracker_FormElement_Field_List_Bind_Ugroups::TYPE || $bind_type === \Tracker_FormElement_Field_List_Bind_Static::TYPE;
+        return $bind_type !== Tracker_FormElement_Field_List_Bind_Null::TYPE;
     }
 }

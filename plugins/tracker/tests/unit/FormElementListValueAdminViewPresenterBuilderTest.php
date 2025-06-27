@@ -29,7 +29,7 @@ use Tuleap\Tracker\Colorpicker\ColorpickerMountPointPresenter;
 use Tuleap\Tracker\FormElement\FormElementListValueAdminViewPresenter;
 use Tuleap\Tracker\FormElement\FormElementListValueAdminViewPresenterBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\List\OpenListStaticValueBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\List\OpenListValueBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FormElementListValueAdminViewPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -93,7 +93,7 @@ final class FormElementListValueAdminViewPresenterBuilderTest extends \Tuleap\Te
 
     public function testBuildPresenterWithCustomValue(): void
     {
-        $value = OpenListStaticValueBuilder::aStaticValue('label')->withId(123)->build();
+        $value = OpenListValueBuilder::anOpenListValue('label')->withId(123)->build();
 
         $decorator = new ColorpickerMountPointPresenter('fiesta-red', 'name', 'id', true, false);
 

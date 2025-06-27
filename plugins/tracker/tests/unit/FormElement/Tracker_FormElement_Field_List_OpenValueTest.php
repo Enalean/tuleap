@@ -26,7 +26,7 @@ namespace Tuleap\Tracker\FormElement;
 
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Tracker\Test\Builders\Fields\List\OpenListStaticValueBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\List\OpenListValueBuilder;
 
 #[DisableReturnValueGenerationForTestDoubles]
 final class Tracker_FormElement_Field_List_OpenValueTest extends TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
@@ -35,7 +35,7 @@ final class Tracker_FormElement_Field_List_OpenValueTest extends TestCase //phpc
     {
         $id    = 123;
         $label = 'Reopen';
-        $value = OpenListStaticValueBuilder::aStaticValue($label)->withId($id)->build();
+        $value = OpenListValueBuilder::anOpenListValue($label)->withId($id)->build();
         self::assertEquals(
             '{"id":123,"value":"o123","caption":"Reopen","rest_value":"Reopen"}',
             json_encode($value->fetchForOpenListJson())

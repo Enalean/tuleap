@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Document\Field;
 
+use ParagonIE\Corner\Error;
 use Tuleap\Artidoc\Domain\Document\Section\Field\DisplayType;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StaticListFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StaticListValue;
@@ -29,6 +30,9 @@ use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StringFieldWithV
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserGroupListValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserGroupsListFieldWithValue;
 use Tuleap\Color\ItemColor;
+use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserListFieldWithValue;
+use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserListValue;
+use Tuleap\Artidoc\Stubs\Document\Field\BuildUserListFieldWithValueStub;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\ProjectUGroupTestBuilder;
@@ -40,9 +44,11 @@ use Tuleap\Tracker\Test\Builders\ChangesetValueOpenListBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueStringTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListUserBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserGroupBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserGroupValueBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\List\OpenListStaticValueBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListUserValueBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\List\OpenListValueBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\StaticBindDecoratorBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\OpenListFieldBuilder;
@@ -69,11 +75,18 @@ final class FieldsWithValuesBuilderTest extends TestCase
     }
 
     /**
-     * @return list<StringFieldWithValue | UserGroupsListFieldWithValue | StaticListFieldWithValue>
+     * @return list<StringFieldWithValue | UserGroupsListFieldWithValue | StaticListFieldWithValue | UserListFieldWithValue>
      */
     private function getFields(): array
     {
-        $builder = new FieldsWithValuesBuilder($this->field_collection);
+        $builder = new FieldsWithValuesBuilder(
+            $this->field_collection,
+            BuildUserListFieldWithValueStub::withCallback(
+                static function () {
+                    throw new Error('This test was not supposed to build user list fields itself.');
+                },
+            ),
+        );
         return $builder->getFieldsWithValues($this->changeset);
     }
 
@@ -228,7 +241,7 @@ final class FieldsWithValuesBuilderTest extends TestCase
         ])
         ->build()->getField();
 
-        $third_list_custom_value = OpenListStaticValueBuilder::aStaticValue('Custom value')->build();
+        $third_list_custom_value = OpenListValueBuilder::anOpenListValue('Custom value')->build();
         $third_list_field        = ListStaticBindBuilder::aStaticBind(
             OpenListFieldBuilder::anOpenListField()->withId(125)->withLabel('static open list field')->build()
         )->withBuildStaticValues([$third_list_custom_value])->build()->getField();
@@ -268,5 +281,48 @@ final class FieldsWithValuesBuilderTest extends TestCase
                 new StaticListValue('Custom value', null),
             ]),
         ], $this->getFields());
+    }
+
+    public function testItBuildsUserListFieldsWithValue(): void
+    {
+        $user_list_field = ListUserBindBuilder::aUserBind(
+            ListFieldBuilder::aListField(123)->withLabel('user list field')->build()
+        )->build()->getField();
+
+        $user_list_field_with_value = new UserListFieldWithValue(
+            $user_list_field->getLabel(),
+            DisplayType::BLOCK,
+            [
+                new UserListValue('Bob', 'bob_avatar_url.png'),
+                new UserListValue('Alice', 'alice_avatar_url.png'),
+            ]
+        );
+
+        $this->changeset->setFieldValue(
+            $user_list_field,
+            ChangesetValueListTestBuilder::aListOfValue(407, $this->changeset, $user_list_field)
+                ->withValues([
+                    ListUserValueBuilder::aUserWithId(102)->withDisplayedName('Bob')->build(),
+                    ListUserValueBuilder::aUserWithId(103)->withDisplayedName('Alice')->build(),
+                ])->build(),
+        );
+
+        $builder = new FieldsWithValuesBuilder(
+            new ConfiguredFieldCollection([
+                self::TRACKER_ID => [
+                    new ConfiguredField($user_list_field, DisplayType::BLOCK),
+                ],
+            ]),
+            BuildUserListFieldWithValueStub::withCallback(
+                static function (ConfiguredField $configured_field) use ($user_list_field_with_value): UserListFieldWithValue {
+                    assert($configured_field->field instanceof \Tracker_FormElement_Field_List);
+                    assert($configured_field->field->getBind() instanceof \Tracker_FormElement_Field_List_Bind_Users);
+
+                    return $user_list_field_with_value;
+                }
+            ),
+        );
+
+        self::assertEquals([$user_list_field_with_value], $builder->getFieldsWithValues($this->changeset));
     }
 }

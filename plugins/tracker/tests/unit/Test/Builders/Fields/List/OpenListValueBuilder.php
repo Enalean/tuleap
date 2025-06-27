@@ -26,7 +26,7 @@ namespace Tuleap\Tracker\Test\Builders\Fields\List;
 use Tracker_FormElement_Field_List_OpenValue;
 use Tuleap\DB\DatabaseUUIDV7Factory;
 
-final class OpenListStaticValueBuilder
+final class OpenListValueBuilder
 {
     private int $id         = 1;
     private bool $is_hidden = false;
@@ -35,7 +35,7 @@ final class OpenListStaticValueBuilder
     {
     }
 
-    public static function aStaticValue(string $value): self
+    public static function anOpenListValue(string $value): self
     {
         return new self($value);
     }

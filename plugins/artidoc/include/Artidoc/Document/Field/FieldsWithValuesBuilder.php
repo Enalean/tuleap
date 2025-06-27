@@ -35,8 +35,10 @@ use Tuleap\Color\ItemColor;
 
 final readonly class FieldsWithValuesBuilder implements GetFieldsWithValues
 {
-    public function __construct(private ConfiguredFieldCollection $field_collection)
-    {
+    public function __construct(
+        private ConfiguredFieldCollection $field_collection,
+        private BuildUserListFieldWithValue $build_user_list_field_with_value,
+    ) {
     }
 
     public function getFieldsWithValues(\Tracker_Artifact_Changeset $changeset): array
@@ -68,6 +70,14 @@ final readonly class FieldsWithValuesBuilder implements GetFieldsWithValues
             ) {
                 assert($changeset_value instanceof \Tracker_Artifact_ChangesetValue_List);
                 $fields[] = $this->buildStaticListFieldWithValue($configured_field, $changeset_value);
+            }
+
+            if (
+                $configured_field->field instanceof Tracker_FormElement_Field_List
+                && $configured_field->field->getBind()?->getType() === \Tracker_FormElement_Field_List_Bind_Users::TYPE
+            ) {
+                assert($changeset_value instanceof \Tracker_Artifact_ChangesetValue_List);
+                $fields[] = $this->build_user_list_field_with_value->buildUserListFieldWithValue($configured_field, $changeset_value);
             }
         }
 

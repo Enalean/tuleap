@@ -182,7 +182,7 @@ final class SuitableFieldRetrieverTest extends TestCase
         self::assertSame($list_field, $result->value);
     }
 
-    public function testItRejectsListFieldBoundToUsers(): void
+    public function testItAllowsListFieldBoundToUsers(): void
     {
         $list_field            = ListUserBindBuilder::aUserBind(
             ListFieldBuilder::aListField(self::FIELD_ID)
@@ -193,7 +193,7 @@ final class SuitableFieldRetrieverTest extends TestCase
         $this->field_retriever = RetrieveUsedFieldsStub::withFields($list_field);
 
         $result = $this->retrieve();
-        self::assertTrue(Result::isErr($result));
-        self::assertInstanceOf(FieldNotSupportedFault::class, $result->error);
+        self::assertTrue(Result::isOk($result));
+        self::assertSame($list_field, $result->value);
     }
 }
