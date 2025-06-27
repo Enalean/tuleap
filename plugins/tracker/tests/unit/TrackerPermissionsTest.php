@@ -30,7 +30,6 @@ use Project;
 use Tracker_CannedResponseManager;
 use Tracker_DateReminderManager;
 use Tracker_Permission_PermissionController;
-use Tracker_SemanticManager;
 use TrackerManager;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\GlobalResponseMock;
@@ -40,6 +39,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\User\ForgePermissionsRetrieverStub;
 use Tuleap\Tracker\Admin\GlobalAdmin\GlobalAdminPermissionsChecker;
+use Tuleap\Tracker\Semantic\TrackerSemanticManager;
 use Tuleap\Tracker\Test\Stub\VerifySubmissionPermissionStub;
 use Workflow;
 use WorkflowManager;
@@ -58,7 +58,7 @@ final class TrackerPermissionsTest extends TestCase
     private Tracker&MockObject $tracker1;
     private Tracker&MockObject $tracker2;
     private TrackerManager&MockObject $tracker_manager;
-    private Tracker_SemanticManager&MockObject $tracker_semantic_manager;
+    private TrackerSemanticManager&MockObject $tracker_semantic_manager;
     private Tracker_DateReminderManager&MockObject $tracker_date_reminder_manager;
     private Tracker_CannedResponseManager&MockObject $tracker_canned_response_manager;
     private WorkflowManager&MockObject $workflow_manager;
@@ -97,7 +97,7 @@ final class TrackerPermissionsTest extends TestCase
         $this->tracker1->setProject($public_project);
         $this->tracker2->setProject($public_project);
 
-        $this->tracker_semantic_manager = $this->createMock(Tracker_SemanticManager::class);
+        $this->tracker_semantic_manager = $this->createMock(TrackerSemanticManager::class);
         $this->tracker->method('getTrackerSemanticManager')->willReturn($this->tracker_semantic_manager);
         $this->tracker1->method('getTrackerSemanticManager')->willReturn($this->tracker_semantic_manager);
         $this->tracker2->method('getTrackerSemanticManager')->willReturn($this->tracker_semantic_manager);

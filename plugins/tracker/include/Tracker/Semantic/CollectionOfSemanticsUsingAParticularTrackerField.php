@@ -26,7 +26,7 @@ final class CollectionOfSemanticsUsingAParticularTrackerField
 {
     private \Tuleap\Tracker\Tracker $tracker;
     /**
-     * @var \Tracker_Semantic[]
+     * @var \Tuleap\Tracker\Semantic\TrackerSemantic[]
      */
     private array $semantics = [];
 

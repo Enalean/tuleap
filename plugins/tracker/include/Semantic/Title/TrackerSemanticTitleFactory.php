@@ -22,10 +22,10 @@
 namespace Tuleap\Tracker\Semantic\Title;
 
 use SimpleXMLElement;
-use Tracker_Semantic;
 use Tuleap\Option\Option;
 use Tuleap\Tracker\Semantic\IBuildSemanticFromXML;
 use Tuleap\Tracker\Semantic\IDuplicateSemantic;
+use Tuleap\Tracker\Semantic\TrackerSemantic;
 use Tuleap\Tracker\Tracker;
 
 class TrackerSemanticTitleFactory implements IBuildSemanticFromXML, IDuplicateSemantic, GetTitleSemantic
@@ -61,7 +61,7 @@ class TrackerSemanticTitleFactory implements IBuildSemanticFromXML, IDuplicateSe
         array $xml_mapping,
         Tracker $tracker,
         array $tracker_mapping,
-    ): ?Tracker_Semantic {
+    ): ?TrackerSemantic {
         $xml_field            = $current_semantic_xml->field;
         $xml_field_attributes = $xml_field->attributes();
         if (! isset($xml_mapping[(string) $xml_field_attributes['REF']])) {

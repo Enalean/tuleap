@@ -27,7 +27,7 @@ use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
  * I'm responsible for building Cardwall_Board regardless of it's future use
  */
 
-class Cardwall_RawBoardBuilder
+class Cardwall_RawBoardBuilder //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /**
      * Build a Cardwall_Board taking account of Mapped Fieds
@@ -61,7 +61,7 @@ class Cardwall_RawBoardBuilder
         );
         $presenter_builder        = new Cardwall_CardInCellPresenterBuilder(
             new Cardwall_CardInCellPresenterFactory($field_provider, $mapping_collection),
-            new Cardwall_CardFields($form_element_factory),
+            new Cardwall_CardFields(),
             $this->getDisplayPreferences($milestone, $user),
             $user,
             $background_color_builder,

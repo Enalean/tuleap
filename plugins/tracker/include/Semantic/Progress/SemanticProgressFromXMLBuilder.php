@@ -23,8 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Semantic\Progress;
 
 use SimpleXMLElement;
-use Tracker_Semantic;
 use Tuleap\Tracker\Semantic\IBuildSemanticFromXML;
+use Tuleap\Tracker\Semantic\TrackerSemantic;
 use Tuleap\Tracker\Tracker;
 
 class SemanticProgressFromXMLBuilder implements IBuildSemanticFromXML
@@ -45,7 +45,7 @@ class SemanticProgressFromXMLBuilder implements IBuildSemanticFromXML
         array $xml_mapping,
         Tracker $tracker,
         array $tracker_mapping,
-    ): ?Tracker_Semantic {
+    ): ?TrackerSemantic {
         if ($this->isEffortBased($current_semantic_xml)) {
             return $this->buildEffortBasedSemanticProgress($current_semantic_xml, $xml_mapping, $tracker);
         }

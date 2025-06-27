@@ -514,7 +514,7 @@ final class TrackerStructureXMLExporterTest extends TestCase
     ): Tracker&MockObject {
         $tracker = $this->createMock(Tracker::class);
 
-        $semantic_manager = $this->createMock(\Tracker_SemanticManager::class);
+        $semantic_manager = $this->createMock(\Tuleap\Tracker\Semantic\TrackerSemanticManager::class);
         $semantic_manager->method('exportToXml');
 
         $tracker->method('getProject')->willReturn(ProjectTestBuilder::aProject()->build());

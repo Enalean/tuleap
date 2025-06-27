@@ -21,7 +21,6 @@
 namespace Tuleap\Tracker\Semantic;
 
 use SimpleXMLElement;
-use Tracker_Semantic;
 use Tuleap\Tracker\Tracker;
 
 interface IBuildSemanticFromXML
@@ -32,5 +31,5 @@ interface IBuildSemanticFromXML
         array $xml_mapping,
         Tracker $tracker,
         array $tracker_mapping,
-    ): ?Tracker_Semantic;
+    ): ?TrackerSemantic;
 }

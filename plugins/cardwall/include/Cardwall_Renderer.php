@@ -175,7 +175,7 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
             );
             $presenter_builder        = new Cardwall_CardInCellPresenterBuilder(
                 new Cardwall_CardInCellPresenterFactory($field_provider, $mapping_collection),
-                new Cardwall_CardFields(Tracker_FormElementFactory::instance()),
+                new Cardwall_CardFields(),
                 $display_preferences,
                 $user,
                 $background_color_builder,

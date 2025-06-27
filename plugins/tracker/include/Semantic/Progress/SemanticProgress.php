@@ -26,7 +26,6 @@ use Codendi_Request;
 use PFUser;
 use SimpleXMLElement;
 use Tracker_FormElement_Field;
-use Tracker_SemanticManager;
 use TrackerManager;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\JavascriptAsset;
@@ -36,9 +35,10 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\Semantic\Progress\Administration\SemanticProgressAdminPresenterBuilder;
 use Tuleap\Tracker\Semantic\Progress\Administration\SemanticProgressIntroductionPresenter;
 use Tuleap\Tracker\Semantic\Progress\Events\GetSemanticProgressUsageEvent;
+use Tuleap\Tracker\Semantic\TrackerSemanticManager;
 use Tuleap\Tracker\Tracker;
 
-class SemanticProgress extends \Tracker_Semantic
+class SemanticProgress extends \Tuleap\Tracker\Semantic\TrackerSemantic
 {
     public const NAME = 'progress';
     /**
@@ -89,7 +89,7 @@ class SemanticProgress extends \Tracker_Semantic
     }
 
     public function displayAdmin(
-        Tracker_SemanticManager $semantic_manager,
+        TrackerSemanticManager $semantic_manager,
         TrackerManager $tracker_manager,
         Codendi_Request $request,
         PFUser $current_user,
@@ -126,7 +126,7 @@ class SemanticProgress extends \Tracker_Semantic
     }
 
     public function process(
-        Tracker_SemanticManager $semantic_manager,
+        TrackerSemanticManager $semantic_manager,
         TrackerManager $tracker_manager,
         Codendi_Request $request,
         PFUser $current_user,

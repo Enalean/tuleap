@@ -30,6 +30,9 @@ use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneValueChecker;
 use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
 use Tuleap\Tracker\Semantic\Timeframe\Events\DoesAPluginRenderAChartBasedOnSemanticTimeframeForTrackerEvent;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
+use Tuleap\Tracker\Semantic\TrackerSemanticCollection;
+use Tuleap\Tracker\Semantic\TrackerSemanticFactory;
+use Tuleap\Tracker\Semantic\TrackerSemanticManager;
 use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\Workflow\BeforeEvent;
 use Tuleap\Velocity\JiraImporter\AddVelocityToScrumTemplate;
@@ -76,13 +79,13 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
         return $this->pluginInfo;
     }
 
-    #[\Tuleap\Plugin\ListeningToEventName(Tracker_SemanticManager::TRACKER_EVENT_MANAGE_SEMANTICS)]
+    #[\Tuleap\Plugin\ListeningToEventName(TrackerSemanticManager::TRACKER_EVENT_MANAGE_SEMANTICS)]
     public function trackerEventManageSemantics($parameters): void // @codingStandardsIgnoreLine
     {
         $user      = $parameters['user'];
         $tracker   = $parameters['tracker'];
         $semantics = $parameters['semantics'];
-        \assert($semantics instanceof Tracker_SemanticCollection);
+        \assert($semantics instanceof TrackerSemanticCollection);
 
         if (! $this->isAPlanningTrackers($user, $tracker)) {
             return;
@@ -211,7 +214,7 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
             && strpos($_SERVER['REQUEST_URI'], 'func=admin-semantic') !== false;
     }
 
-    #[\Tuleap\Plugin\ListeningToEventName(Tracker_SemanticFactory::TRACKER_EVENT_SEMANTIC_FROM_XML)]
+    #[\Tuleap\Plugin\ListeningToEventName(TrackerSemanticFactory::TRACKER_EVENT_SEMANTIC_FROM_XML)]
     public function trackerEventSemanticFromXml(&$parameters): void // @codingStandardsIgnoreLine
     {
         $tracker = $parameters['tracker'];
@@ -275,7 +278,7 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
             ->addVelocityToStructure($event->tracker, $event->id_generator);
     }
 
-    #[\Tuleap\Plugin\ListeningToEventName(Tracker_SemanticFactory::TRACKER_EVENT_GET_SEMANTIC_DUPLICATORS)]
+    #[\Tuleap\Plugin\ListeningToEventName(TrackerSemanticFactory::TRACKER_EVENT_GET_SEMANTIC_DUPLICATORS)]
     public function registerProjectCreationEvent(array &$params): void
     {
         $params['duplicators'][] = new SemanticVelocityDuplicator(new SemanticVelocityDao());

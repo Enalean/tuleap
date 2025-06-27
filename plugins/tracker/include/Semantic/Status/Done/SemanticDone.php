@@ -34,16 +34,16 @@ use Tracker_Artifact_ChangesetValue_List;
 use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Value;
-use Tracker_Semantic;
-use Tracker_SemanticManager;
 use TrackerManager;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
+use Tuleap\Tracker\Semantic\TrackerSemantic;
+use Tuleap\Tracker\Semantic\TrackerSemanticManager;
 use Tuleap\Tracker\Tracker;
 use XML_SimpleXMLCDATAFactory;
 
-class SemanticDone extends Tracker_Semantic
+class SemanticDone extends TrackerSemantic
 {
     public const NAME = 'done';
 
@@ -136,7 +136,7 @@ class SemanticDone extends Tracker_Semantic
         return $renderer->renderToString('done-intro', $presenter);
     }
 
-    public function displayAdmin(Tracker_SemanticManager $semantic_manager, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user): void
+    public function displayAdmin(TrackerSemanticManager $semantic_manager, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user): void
     {
         $this->tracker->displayAdminItemHeaderBurningParrot(
             $tracker_manager,
@@ -250,14 +250,14 @@ class SemanticDone extends Tracker_Semantic
     /**
      * Process the form
      *
-     * @param Tracker_SemanticManager $semantic_manager The semantic manager
+     * @param TrackerSemanticManager $semantic_manager The semantic manager
      * @param TrackerManager $tracker_manager The tracker manager
      * @param Codendi_Request $request The request
      * @param PFUser $current_user The user who made the request
      *
      * @return void
      */
-    public function process(Tracker_SemanticManager $semantic_manager, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user)
+    public function process(TrackerSemanticManager $semantic_manager, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user)
     {
         $tracker_id = $this->tracker->getId();
         if ($request->exist('submit')) {

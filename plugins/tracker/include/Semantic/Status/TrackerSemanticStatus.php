@@ -32,17 +32,17 @@ use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Bind_Static;
 use Tracker_FormElementFactory;
-use Tracker_Semantic;
-use Tracker_SemanticManager;
 use TrackerManager;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\SemanticStatusRepresentation;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneDao;
 use Tuleap\Tracker\Semantic\Status\Open\AdminPresenterBuilder;
+use Tuleap\Tracker\Semantic\TrackerSemantic;
+use Tuleap\Tracker\Semantic\TrackerSemanticManager;
 use Tuleap\Tracker\Tracker;
 
-class TrackerSemanticStatus extends Tracker_Semantic
+class TrackerSemanticStatus extends TrackerSemantic
 {
     public const NAME   = 'status';
     public const OPEN   = 'Open';
@@ -235,7 +235,7 @@ class TrackerSemanticStatus extends Tracker_Semantic
     }
 
     public function displayAdmin(
-        Tracker_SemanticManager $semantic_manager,
+        TrackerSemanticManager $semantic_manager,
         TrackerManager $tracker_manager,
         Codendi_Request $request,
         PFUser $current_user,
@@ -274,7 +274,7 @@ class TrackerSemanticStatus extends Tracker_Semantic
         return $disabled_values;
     }
 
-    public function process(Tracker_SemanticManager $semantic_manager, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user): void
+    public function process(TrackerSemanticManager $semantic_manager, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user): void
     {
         if ($request->exist('delete')) {
             $this->getCSRFToken()->check();

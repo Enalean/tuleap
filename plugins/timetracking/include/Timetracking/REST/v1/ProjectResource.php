@@ -52,8 +52,8 @@ use Tuleap\Tracker\REST\Tracker\PermissionsRepresentationBuilder;
 use Tuleap\Tracker\REST\WorkflowRestBuilder;
 use Tuleap\Tracker\Semantic\Description\CachedSemanticDescriptionFieldRetriever;
 use Tuleap\Tracker\Tracker;
-use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
+use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDao;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsDetector;
@@ -142,7 +142,7 @@ class ProjectResource
                 ),
                 new PermissionsRepresentationBuilder($ugroup_manager, $permissions_functions_wrapper),
                 new WorkflowRestBuilder(),
-                static fn(Tracker $tracker) => new \Tracker_SemanticManager(CachedSemanticDescriptionFieldRetriever::instance(), $tracker),
+                static fn(Tracker $tracker) => new \Tuleap\Tracker\Semantic\TrackerSemanticManager(CachedSemanticDescriptionFieldRetriever::instance(), $tracker),
                 new ParentInHierarchyRetriever(new HierarchyDAO(), $tracker_factory),
                 TrackersPermissionsRetriever::build()
             )

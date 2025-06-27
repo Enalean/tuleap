@@ -161,6 +161,9 @@ use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneUsedExternalService;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneUsedExternalServiceEvent;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneValueChecker;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
+use Tuleap\Tracker\Semantic\TrackerSemanticCollection;
+use Tuleap\Tracker\Semantic\TrackerSemanticFactory;
+use Tuleap\Tracker\Semantic\TrackerSemanticManager;
 use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\TrackerEventTrackersDuplicated;
 use Tuleap\Tracker\Workflow\Event\GetWorkflowExternalPostActionsValuesForUpdate;
@@ -218,10 +221,10 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
             $this->addHook(trackerPlugin::TRACKER_EVENT_INCLUDE_CSS_FILE);
             $this->addHook(BuildArtifactFormActionEvent::NAME);
             $this->addHook(RedirectAfterArtifactCreationOrUpdateEvent::NAME);
-            $this->addHook(Tracker_SemanticManager::TRACKER_EVENT_MANAGE_SEMANTICS, 'tracker_event_manage_semantics');
-            $this->addHook(Tracker_SemanticFactory::TRACKER_EVENT_SEMANTIC_FROM_XML, 'tracker_event_semantic_from_xml');
-            $this->addHook(Tracker_SemanticManager::TRACKER_EVENT_GET_SEMANTICS_NAMES, 'tracker_event_get_semantics_names');
-            $this->addHook(Tracker_SemanticFactory::TRACKER_EVENT_GET_SEMANTIC_DUPLICATORS);
+            $this->addHook(TrackerSemanticManager::TRACKER_EVENT_MANAGE_SEMANTICS, 'tracker_event_manage_semantics');
+            $this->addHook(TrackerSemanticFactory::TRACKER_EVENT_SEMANTIC_FROM_XML, 'tracker_event_semantic_from_xml');
+            $this->addHook(TrackerSemanticManager::TRACKER_EVENT_GET_SEMANTICS_NAMES, 'tracker_event_get_semantics_names');
+            $this->addHook(TrackerSemanticFactory::TRACKER_EVENT_GET_SEMANTIC_DUPLICATORS);
             $this->addHook(Tracker_Report::TRACKER_EVENT_REPORT_DISPLAY_ADDITIONAL_CRITERIA);
             $this->addHook(Tracker_Report::TRACKER_EVENT_REPORT_SAVE_ADDITIONAL_CRITERIA);
             $this->addHook(Tracker_Report::TRACKER_EVENT_REPORT_LOAD_ADDITIONAL_CRITERIA);
@@ -793,19 +796,19 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
     }
 
     /**
-     * @see Tracker_SemanticManager::TRACKER_EVENT_MANAGE_SEMANTICS
+     * @see TrackerSemanticManager::TRACKER_EVENT_MANAGE_SEMANTICS
      */
     public function tracker_event_manage_semantics($parameters) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $tracker   = $parameters['tracker'];
         $semantics = $parameters['semantics'];
-        \assert($semantics instanceof Tracker_SemanticCollection);
+        \assert($semantics instanceof TrackerSemanticCollection);
 
         $semantics->add(AgileDashBoard_Semantic_InitialEffort::load($tracker));
     }
 
     /**
-     * @see Tracker_SemanticFactory::TRACKER_EVENT_SEMANTIC_FROM_XML
+     * @see TrackerSemanticFactory::TRACKER_EVENT_SEMANTIC_FROM_XML
      */
     public function tracker_event_semantic_from_xml(&$parameters) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
@@ -832,7 +835,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
     }
 
     /**
-     * @see Tracker_SemanticFactory::TRACKER_EVENT_GET_SEMANTIC_DUPLICATORS
+     * @see TrackerSemanticFactory::TRACKER_EVENT_GET_SEMANTIC_DUPLICATORS
      */
     public function tracker_event_get_semantic_duplicators($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
@@ -847,7 +850,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
     /**
      * Augment $params['semantics'] with names of AgileDashboard semantics
      *
-     * @see Tracker_SemanticManager::TRACKER_EVENT_GET_SEMANTICS_NAMES
+     * @see TrackerSemanticManager::TRACKER_EVENT_GET_SEMANTICS_NAMES
      */
     public function tracker_event_get_semantics_names(&$params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {

@@ -27,8 +27,6 @@ use PFUser;
 use TemplateRendererFactory;
 use Tracker_FormElement_Field;
 use Tracker_FormElementFactory;
-use Tracker_Semantic;
-use Tracker_SemanticManager;
 use TrackerManager;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
@@ -38,8 +36,10 @@ use Tuleap\Tracker\Semantic\Progress\SemanticProgressBuilder;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgressDao;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle;
+use Tuleap\Tracker\Semantic\TrackerSemantic;
+use Tuleap\Tracker\Semantic\TrackerSemanticManager;
 
-class SemanticTooltip extends Tracker_Semantic implements TooltipFields
+class SemanticTooltip extends TrackerSemantic implements TooltipFields
 {
     public const NAME = 'tooltip';
 
@@ -86,7 +86,7 @@ class SemanticTooltip extends Tracker_Semantic implements TooltipFields
     /**
      * Process the form
      *
-     * @param Tracker_SemanticManager $semantic_manager The semantic manager
+     * @param TrackerSemanticManager $semantic_manager The semantic manager
      * @param TrackerManager          $tracker_manager  The tracker manager
      * @param Codendi_Request         $request          The request
      * @param PFUser                  $current_user     The user who made the request
@@ -94,7 +94,7 @@ class SemanticTooltip extends Tracker_Semantic implements TooltipFields
      * @return void
      */
     public function process(
-        Tracker_SemanticManager $semantic_manager,
+        TrackerSemanticManager $semantic_manager,
         TrackerManager $tracker_manager,
         Codendi_Request $request,
         PFUser $current_user,
@@ -196,7 +196,7 @@ class SemanticTooltip extends Tracker_Semantic implements TooltipFields
     /**
      * Display the form to let the admin change the semantic
      *
-     * @param Tracker_SemanticManager $semantic_manager The semantic manager
+     * @param TrackerSemanticManager $semantic_manager The semantic manager
      * @param TrackerManager          $tracker_manager  The tracker manager
      * @param Codendi_Request         $request          The request
      * @param PFUser                  $current_user     The user who made the request
@@ -204,7 +204,7 @@ class SemanticTooltip extends Tracker_Semantic implements TooltipFields
      * @return void
      */
     public function displayAdmin(
-        Tracker_SemanticManager $semantic_manager,
+        TrackerSemanticManager $semantic_manager,
         TrackerManager $tracker_manager,
         Codendi_Request $request,
         PFUser $current_user,

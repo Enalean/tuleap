@@ -68,9 +68,7 @@ class CardsResource
         $bind_decorator_retriever  = new BindDecoratorRetriever();
         $this->single_card_builder = new Cardwall_SingleCardBuilder(
             $this->config_factory,
-            new Cardwall_CardFields(
-                $this->formelement_factory
-            ),
+            new Cardwall_CardFields(),
             Tracker_ArtifactFactory::instance(),
             PlanningFactory::build(),
             new BackgroundColorBuilder($bind_decorator_retriever),

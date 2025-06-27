@@ -33,9 +33,9 @@ use Tracker_FormElement_Field_ReadOnly;
 use Tracker_FormElementFactory;
 use Tracker_ReportFactory;
 use Tracker_RuleFactory;
-use Tracker_SemanticFactory;
 use TrackerFactory;
 use Tuleap\Project\UGroupRetrieverWithLegacy;
+use Tuleap\Tracker\Semantic\TrackerSemanticFactory;
 use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\TrackerColor;
 use Tuleap\Tracker\Webhook\WebhookFactory;
@@ -51,7 +51,7 @@ readonly class GetInstanceFromXml
         private Tracker_FormElementFactory $formelement_factory,
         private IFindUserFromXMLReference $user_finder,
         private TrackerXmlImportFeedbackCollector $feedback_collector,
-        private Tracker_SemanticFactory $semantic_factory,
+        private TrackerSemanticFactory $semantic_factory,
         private Tracker_RuleFactory $rule_factory,
         private Tracker_ReportFactory $report_factory,
         private WorkflowFactory $workflow_factory,

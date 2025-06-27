@@ -16,14 +16,20 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\Tracker\Semantic;
+
+use Codendi_HTMLPurifier;
+use EventManager;
+use PFUser;
+use SimpleXMLElement;
+use Tracker_FormElement_Field;
+use TrackerManager;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
-use Tuleap\Tracker\Semantic\CollectionOfSemanticsUsingAParticularTrackerField;
 use Tuleap\Tracker\Semantic\Contributor\TrackerSemanticContributor;
 use Tuleap\Tracker\Semantic\Description\RetrieveSemanticDescriptionField;
 use Tuleap\Tracker\Semantic\Description\TrackerSemanticDescription;
@@ -38,14 +44,15 @@ use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle;
 use Tuleap\Tracker\Tracker;
+use UserManager;
 
-class Tracker_SemanticManager //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+class TrackerSemanticManager
 {
     /**
      * Fetch the semantics used by other plugins
      *
      * Parameters:
-     * 'semantics' => @var Tracker_SemanticCollection A collection of semantics that needs adding to.
+     * 'semantics' => @var TrackerSemanticCollection A collection of semantics that needs adding to.
      * 'tracker'   => @var Tracker                    The Tracker the semantics are defined upon
      * 'user'      => @var PFUser                     The current user
      *
@@ -116,8 +123,8 @@ class Tracker_SemanticManager //phpcs:ignore PSR1.Classes.ClassDeclaration.Missi
                 continue;
             }
             $url = TRACKER_BASE_URL . '/?' . http_build_query([
-                'tracker'  => $this->tracker->getId(),
-                'func'     => 'admin-semantic',
+                'tracker' => $this->tracker->getId(),
+                'func' => 'admin-semantic',
                 'semantic' => $semantic->getShortName(),
             ]);
 
@@ -131,7 +138,7 @@ class Tracker_SemanticManager //phpcs:ignore PSR1.Classes.ClassDeclaration.Missi
                          <section class="tlp-pane-section tlp-pane-section-submit tracker-admin-semantics-edit-button-section">
                             <a href="' . $url . '" class="tlp-button-primary tlp-button-outline">
                                 <i class="fas fa-pencil-alt tlp-button-icon" aria-hidden="true"></i>' . $translated_button
-                            . '</a>
+                . '</a>
                         </section>
                     </div>
                 </section>';
@@ -143,7 +150,7 @@ class Tracker_SemanticManager //phpcs:ignore PSR1.Classes.ClassDeclaration.Missi
         $this->tracker->displayFooter($tracker_manager);
     }
 
-    public function displaySemanticHeader(Tracker_Semantic $semantic, TrackerManager $tracker_manager)
+    public function displaySemanticHeader(TrackerSemantic $semantic, TrackerManager $tracker_manager)
     {
         $title = $semantic->getLabel();
         $this->tracker->displayAdminItemHeader(
@@ -155,7 +162,7 @@ class Tracker_SemanticManager //phpcs:ignore PSR1.Classes.ClassDeclaration.Missi
         echo '<h2 class="almost-tlp-title">' . $title . '</h2>';
     }
 
-    public function displaySemanticFooter(Tracker_Semantic $semantic, TrackerManager $tracker_manager)
+    public function displaySemanticFooter(TrackerSemantic $semantic, TrackerManager $tracker_manager)
     {
         $this->tracker->displayFooter($tracker_manager);
         die();
@@ -192,9 +199,9 @@ class Tracker_SemanticManager //phpcs:ignore PSR1.Classes.ClassDeclaration.Missi
         return new CollectionOfSemanticsUsingAParticularTrackerField($field, $semantics_using_field);
     }
 
-    public function getSemantics(): Tracker_SemanticCollection
+    public function getSemantics(): TrackerSemanticCollection
     {
-        $semantics = new Tracker_SemanticCollection();
+        $semantics = new TrackerSemanticCollection();
 
         $semantics->add(TrackerSemanticTitle::load($this->tracker));
         $semantics->add(
@@ -237,23 +244,23 @@ class Tracker_SemanticManager //phpcs:ignore PSR1.Classes.ClassDeclaration.Missi
      * Use an event to get semantics from other plugins.
      *
      */
-    private function addOtherSemantics(PFUser $user, Tracker_SemanticCollection $semantics): void
+    private function addOtherSemantics(PFUser $user, TrackerSemanticCollection $semantics): void
     {
-         EventManager::instance()->processEvent(
-             self::TRACKER_EVENT_MANAGE_SEMANTICS,
-             [
-                 'semantics'   => $semantics,
-                 'tracker'     => $this->tracker,
-                 'user'        => $user,
-             ]
-         );
+        EventManager::instance()->processEvent(
+            self::TRACKER_EVENT_MANAGE_SEMANTICS,
+            [
+                'semantics' => $semantics,
+                'tracker' => $this->tracker,
+                'user' => $user,
+            ]
+        );
     }
 
     /**
      * Export semantic to XML
      *
-     * @param SimpleXMLElement &$root     the node to which the tooltip is attached (passed by reference)
-     * @param array            $xmlMapping correspondance between real ids and xml IDs
+     * @param SimpleXMLElement &$root the node to which the tooltip is attached (passed by reference)
+     * @param array $xmlMapping correspondance between real ids and xml IDs
      *
      * @return void
      */

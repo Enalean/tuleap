@@ -30,14 +30,14 @@ use TemplateRendererFactory;
 use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_Text;
 use Tracker_FormElementFactory;
-use Tracker_Semantic;
-use Tracker_SemanticManager;
 use TrackerManager;
 use Tuleap\Option\Option;
 use Tuleap\Tracker\Notifications\Settings\CalendarEventConfigDao;
+use Tuleap\Tracker\Semantic\TrackerSemantic;
+use Tuleap\Tracker\Semantic\TrackerSemanticManager;
 use Tuleap\Tracker\Tracker;
 
-class TrackerSemanticTitle extends Tracker_Semantic
+class TrackerSemanticTitle extends TrackerSemantic
 {
     public const NAME = 'title';
 
@@ -131,7 +131,7 @@ class TrackerSemanticTitle extends Tracker_Semantic
         return $html;
     }
 
-    public function displayAdmin(Tracker_SemanticManager $semantic_manager, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user): void
+    public function displayAdmin(TrackerSemanticManager $semantic_manager, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user): void
     {
         $this->tracker->displayAdminItemHeaderBurningParrot(
             $tracker_manager,
@@ -153,7 +153,7 @@ class TrackerSemanticTitle extends Tracker_Semantic
         $semantic_manager->displaySemanticFooter($this, $tracker_manager);
     }
 
-    public function process(Tracker_SemanticManager $semantic_manager, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user): void
+    public function process(TrackerSemanticManager $semantic_manager, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user): void
     {
         if ($request->exist('update')) {
             $this->getCSRFToken()->check();

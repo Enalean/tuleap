@@ -36,12 +36,12 @@ use Tracker_FormElementFactory;
 use Tracker_Migration_V3;
 use Tracker_Report_Renderer_Table;
 use Tracker_ReportFactory;
-use Tracker_SemanticFactory;
 use TrackerFactory;
 use Tuleap\DB\DBFactory;
 use Tuleap\Disposable\Dispose;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\Helpers\CodendiLogSwitcher;
+use Tuleap\Tracker\Semantic\TrackerSemanticFactory;
 use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -184,7 +184,7 @@ final class DefectTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private function checkItHasOnlyOneOpenValueForStatusSemantic(): void
     {
-        $semantic_status = Tracker_SemanticFactory::instance()->getSemanticStatusFactory()->getByTracker(
+        $semantic_status = TrackerSemanticFactory::instance()->getSemanticStatusFactory()->getByTracker(
             $this->defect_tracker
         );
         $open_values     = $semantic_status->getOpenValues();

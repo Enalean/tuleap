@@ -44,6 +44,7 @@ use Tuleap\Tracker\RetrieveTrackersByProjectIdUserCanAdministrate;
 use Tuleap\Tracker\RetrieveTrackersByProjectIdUserCanView;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDuplicator;
+use Tuleap\Tracker\Semantic\TrackerSemanticFactory;
 use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\TrackerColor;
 use Tuleap\Tracker\TrackerDuplicationUserGroupMapping;
@@ -56,7 +57,7 @@ use Tuleap\Tracker\Workflow\Trigger\Siblings\SiblingsRetriever;
 use Tuleap\Tracker\Workflow\WorkflowBackendLogger;
 use Tuleap\Tracker\Workflow\WorkflowRulesManagerLoopSafeGuard;
 
-class TrackerFactory implements RetrieveTracker, RetrieveTrackersByProjectIdUserCanView, RetrieveTrackersByProjectIdUserCanAdministrate
+class TrackerFactory implements RetrieveTracker, RetrieveTrackersByProjectIdUserCanView, RetrieveTrackersByProjectIdUserCanAdministrate // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     /**
      * Get the trackers required by agile dashboard
@@ -88,7 +89,7 @@ class TrackerFactory implements RetrieveTracker, RetrieveTrackersByProjectIdUser
      * Hold an instance of the class
      * @var self|null
      */
-    protected static $_instance;
+    protected static $_instance; //phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
 
     /**
      * The singleton method
@@ -447,7 +448,7 @@ class TrackerFactory implements RetrieveTracker, RetrieveTrackersByProjectIdUser
         );
 
         // Duplicate Semantics
-        Tracker_SemanticFactory::instance()->duplicate(
+        TrackerSemanticFactory::instance()->duplicate(
             (int) $id_template,
             $id,
             $field_mapping
@@ -790,7 +791,7 @@ class TrackerFactory implements RetrieveTracker, RetrieveTrackersByProjectIdUser
                     //create semantics
                     if (isset($tracker->semantics)) {
                         foreach ($tracker->semantics as $semantic) {
-                            Tracker_SemanticFactory::instance()->saveObject($semantic, $trackerDB);
+                            TrackerSemanticFactory::instance()->saveObject($semantic, $trackerDB);
                         }
                     }
                     //create rules

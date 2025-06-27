@@ -21,7 +21,6 @@
 
 namespace Tuleap\Tracker\Semantic;
 
-use Tracker_SemanticFactory;
 use Tuleap\Tracker\Semantic\Contributor\TrackerSemanticContributor;
 use Tuleap\Tracker\Semantic\Contributor\TrackerSemanticContributorFactory;
 use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
@@ -32,7 +31,7 @@ use Tuleap\Tracker\Semantic\Tooltip\SemanticTooltip;
 use Tuleap\Tracker\Semantic\Tooltip\SemanticTooltipFactory;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Tracker_SemanticFactoryTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+final class TrackerSemanticFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testGetInstanceFromXml(): void
     {
@@ -54,7 +53,7 @@ final class Tracker_SemanticFactoryTest extends \Tuleap\Test\PHPUnit\TestCase //
         $semantic_contributor_factory->method('getInstanceFromXML')->willReturn($semantic_contributor);
 
         $tsf = $this->createPartialMock(
-            Tracker_SemanticFactory::class,
+            TrackerSemanticFactory::class,
             [
                 'getSemanticStatusFactory',
                 'getSemanticTitleFactory',

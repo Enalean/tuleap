@@ -78,9 +78,7 @@ class CardwallLegacyController implements DispatchableWithRequest
                 try {
                     $single_card_builder = new Cardwall_SingleCardBuilder(
                         $this->config_factory,
-                        new Cardwall_CardFields(
-                            Tracker_FormElementFactory::instance()
-                        ),
+                        new Cardwall_CardFields(),
                         Tracker_ArtifactFactory::instance(),
                         PlanningFactory::build(),
                         new BackgroundColorBuilder($bind_decorator_retriever),
