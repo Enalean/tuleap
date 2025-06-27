@@ -25,22 +25,18 @@
         aria-labelledby="artidoc-configuration-modal-title"
         ref="modal_element"
     >
-        <configuration-modal-header v-bind:close_modal="closeModal" />
+        <configuration-modal-header />
         <configuration-modal-tabs
             v-on:switch-configuration-tab="switchTab"
             v-bind:current_tab="current_tab"
         />
-        <configure-tracker
-            v-if="current_tab === TRACKER_SELECTION_TAB && is_modal_shown"
-            ref="configure_tracker"
-        />
+        <configure-tracker v-if="current_tab === TRACKER_SELECTION_TAB && is_modal_shown" />
         <configure-readonly-fields
             v-if="
                 current_tab === READONLY_FIELDS_SELECTION_TAB &&
                 is_tracker_configured &&
                 is_modal_shown
             "
-            ref="configure_fields"
         />
     </div>
 </template>
@@ -69,12 +65,7 @@ const selected_tracker = strictInject(SELECTED_TRACKER);
 
 const modal_element = ref<HTMLElement | undefined>(undefined);
 const current_tab = ref<ConfigurationTab>(TRACKER_SELECTION_TAB);
-const configure_tracker = ref<InstanceType<typeof ConfigureTracker>>();
-const configure_fields = ref<InstanceType<typeof ConfigureReadonlyFields>>();
 const is_tracker_configured = computed(() => selected_tracker.value.isValue());
-const is_success = computed(
-    () => configure_tracker.value?.is_success || configure_fields.value?.is_success || false,
-);
 
 const noop = (): void => {};
 
@@ -100,11 +91,11 @@ function openModal(onSuccessfulSaved?: () => void): void {
     is_modal_shown.value = true;
 }
 
-function closeModal(): void {
+function closeModal(is_success: boolean): void {
     modal?.hide();
     is_modal_shown.value = false;
 
-    if (is_success.value) {
+    if (is_success) {
         onSuccessfulSaveCallback();
     }
 }

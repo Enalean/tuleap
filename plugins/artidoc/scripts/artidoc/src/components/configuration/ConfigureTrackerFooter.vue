@@ -20,14 +20,14 @@
 <template>
     <div class="tlp-modal-footer">
         <error-feedback v-if="is_error" v-bind:error_message="error_message" />
-        <success-feedback v-if="is_success && current_tab === TRACKER_SELECTION_TAB" />
+        <success-feedback v-if="is_success" />
 
         <div class="artidoc-modal-buttons">
             <button
                 type="button"
                 class="tlp-button-primary tlp-modal-action"
                 v-if="is_success"
-                v-on:click="closeModal()"
+                v-on:click="closeModal(true)"
                 data-test="close-modal-after-success"
             >
                 {{ $gettext("Close") }}
@@ -38,7 +38,7 @@
                     type="button"
                     class="tlp-button-primary tlp-button-outline tlp-modal-action"
                     data-test="cancel-modal-button"
-                    v-on:click="closeModal()"
+                    v-on:click="closeModal(false)"
                 >
                     {{ $gettext("Cancel") }}
                 </button>
@@ -47,7 +47,7 @@
                     class="tlp-button-primary tlp-modal-action"
                     v-bind:disabled="is_submit_button_disabled"
                     data-test="submit"
-                    v-on:click="on_save_callback()"
+                    v-on:click="onSubmit()"
                 >
                     <i
                         class="tlp-button-icon"
@@ -62,31 +62,68 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
-import {
-    TRACKER_SELECTION_TAB,
-    CLOSE_CONFIGURATION_MODAL,
-} from "@/components/configuration/configuration-modal";
-import type { ConfigurationTab } from "@/components/configuration/configuration-modal";
+import { CLOSE_CONFIGURATION_MODAL } from "@/components/configuration/configuration-modal";
 import ErrorFeedback from "@/components/configuration/ErrorFeedback.vue";
 import SuccessFeedback from "@/components/configuration/SuccessFeedback.vue";
+import type { SaveTrackerConfiguration } from "@/configuration/TrackerConfigurationSaver";
+import { SELECTED_TRACKER } from "@/configuration/SelectedTracker";
+import type { Tracker } from "@/configuration/AllowedTrackersCollection";
+import { ALLOWED_TRACKERS } from "@/configuration/AllowedTrackersCollection";
+import type { Option } from "@tuleap/option";
 
 const closeModal = strictInject(CLOSE_CONFIGURATION_MODAL);
+const allowed_trackers = strictInject(ALLOWED_TRACKERS);
+const saved_tracker = strictInject(SELECTED_TRACKER);
+
+const is_saving = ref<boolean>(false);
+const is_error = ref<boolean>(false);
+const is_success = ref<boolean>(false);
+const error_message = ref<string>("");
 
 const props = defineProps<{
-    on_save_callback(): void;
-    current_tab: ConfigurationTab;
-    is_submit_button_disabled: boolean;
-    error_message: string;
-    is_error: boolean;
-    is_saving: boolean;
-    is_success: boolean;
+    new_selected_tracker: Option<Tracker>;
+    configuration_saver: SaveTrackerConfiguration;
+}>();
+
+const emit = defineEmits<{
+    (e: "after-save", successful: boolean): void;
 }>();
 
 const submit_button_icon = computed(() =>
-    props.is_saving ? "fa-solid fa-spin fa-circle-notch" : "fa-solid fa-floppy-disk",
+    is_saving.value ? "fa-solid fa-spin fa-circle-notch" : "fa-solid fa-floppy-disk",
 );
+const is_submit_button_disabled = computed(
+    () =>
+        allowed_trackers.isEmpty() ||
+        is_saving.value ||
+        props.new_selected_tracker.mapOr(
+            (tracker) => tracker.id === saved_tracker.value.mapOr((saved) => saved.id, Number.NaN),
+            false,
+        ),
+);
+
+function onSubmit(): void {
+    props.new_selected_tracker.apply((tracker) => {
+        is_saving.value = true;
+        is_error.value = false;
+        is_success.value = false;
+        props.configuration_saver.saveTrackerConfiguration(tracker).match(
+            () => {
+                is_saving.value = false;
+                is_success.value = true;
+                emit("after-save", true);
+            },
+            (fault) => {
+                is_saving.value = false;
+                is_error.value = true;
+                error_message.value = String(fault);
+                emit("after-save", false);
+            },
+        );
+    });
+}
 </script>
 
 <style scoped lang="scss">

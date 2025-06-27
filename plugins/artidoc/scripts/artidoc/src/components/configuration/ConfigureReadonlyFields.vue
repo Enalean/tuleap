@@ -26,14 +26,10 @@
         />
     </div>
 
-    <configuration-modal-footer
-        v-bind:current_tab="READONLY_FIELDS_SELECTION_TAB"
-        v-bind:on_save_callback="onFieldsSubmit"
+    <configure-readonly-fields-footer
         v-bind:is_submit_button_disabled="is_submit_button_disabled"
-        v-bind:is_saving="is_saving"
-        v-bind:is_error="is_error"
-        v-bind:is_success="is_success"
-        v-bind:error_message="error_message"
+        v-bind:new_selected_fields="new_selected_fields"
+        v-bind:configuration_saver="configuration_saver"
     />
 </template>
 
@@ -41,8 +37,7 @@
 import { ref, toRaw, watch } from "vue";
 import FieldsSelectionIntroductoryText from "@/components/configuration/FieldsSelectionIntroductoryText.vue";
 import FieldsSelection from "@/components/configuration/FieldsSelection.vue";
-import ConfigurationModalFooter from "@/components/configuration/ConfigurationModalFooter.vue";
-import { READONLY_FIELDS_SELECTION_TAB } from "@/components/configuration/configuration-modal";
+import ConfigureReadonlyFieldsFooter from "@/components/configuration/ConfigureReadonlyFieldsFooter.vue";
 import type { ConfigurationField } from "@/sections/readonly-fields/AvailableReadonlyFields";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { SELECTED_FIELDS } from "@/configuration/SelectedFieldsCollection";
@@ -55,11 +50,6 @@ const document_id = strictInject(DOCUMENT_ID);
 const selected_tracker = strictInject(SELECTED_TRACKER);
 const selected_fields = strictInject(SELECTED_FIELDS);
 const available_fields = strictInject(AVAILABLE_FIELDS);
-
-const is_saving = ref<boolean>(false);
-const is_error = ref<boolean>(false);
-const is_success = ref<boolean>(false);
-const error_message = ref<string>("");
 
 const new_selected_fields = ref<ConfigurationField[]>(
     structuredClone(toRaw(selected_fields.value)),
@@ -75,28 +65,10 @@ const configuration_saver = buildFieldsConfigurationSaver(
     available_fields,
 );
 
-function onFieldsSubmit(): void {
-    is_saving.value = true;
-    is_error.value = false;
-    is_success.value = false;
-    configuration_saver.saveFieldsConfiguration(new_selected_fields.value).match(
-        () => {
-            is_success.value = true;
-        },
-        (fault) => {
-            is_error.value = true;
-            error_message.value = String(fault);
-        },
-    );
-    is_saving.value = false;
-}
-
 const is_submit_button_disabled = ref(true);
 watch(new_selected_fields.value, () => {
     is_submit_button_disabled.value =
         JSON.stringify(toRaw(new_selected_fields.value)) ===
         JSON.stringify(toRaw(selected_fields.value));
 });
-
-defineExpose({ is_success });
 </script>

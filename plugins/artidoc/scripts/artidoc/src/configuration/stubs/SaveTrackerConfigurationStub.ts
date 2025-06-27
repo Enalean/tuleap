@@ -17,9 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 import type { SaveTrackerConfiguration } from "@/configuration/TrackerConfigurationSaver";
-import { errAsync } from "neverthrow";
+import { errAsync, okAsync } from "neverthrow";
 import { Fault } from "@tuleap/fault";
+
 export const SaveTrackerConfigurationStub = {
+    buildSuccess: (): SaveTrackerConfiguration => {
+        return {
+            saveTrackerConfiguration: () => okAsync(null),
+        };
+    },
     buildError: (): SaveTrackerConfiguration => {
         return {
             saveTrackerConfiguration: () => errAsync(Fault.fromMessage("Oh no!")),
