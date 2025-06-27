@@ -1,4 +1,4 @@
-plugin_tracker	service_lbl_key	Tracker
+plugin_tracker	service_lbl_key	Trackers
 plugin_tracker	service_desc_key	Trackers du projet
 
 project_admin_utils	tracker_date_reminder_title	Options de Rappel sur date de tracker
