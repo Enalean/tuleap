@@ -62,6 +62,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         )
         .provide(USER_LOCALE_KEY, getAttributeOrThrow(document.body, "data-user-locale"))
         .provide(RETRIEVE_QUERY, query_retriever)
-        .provide(WIDGET_ID, Number.parseInt(getAttributeOrThrow(mount_point, "data-widget-id"), 10))
+        .provide(WIDGET_ID, query.id)
         .mount(mount_point);
 });
