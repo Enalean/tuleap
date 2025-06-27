@@ -27,7 +27,7 @@ import { ArtifactLinksRetriever } from "./ArtifactLinksRetriever";
 import { ArtifactsTableBuilder } from "./ArtifactsTableBuilder";
 
 describe("ArtifactsLinksRetriever", () => {
-    const query_id = "0194dfd6-a489-703b-aabd-9d473212d908";
+    const widget_id = 109;
     const artifact_id = 34;
 
     const getRetriever = (): RetrieveArtifactLinks => {
@@ -35,8 +35,22 @@ describe("ArtifactsLinksRetriever", () => {
     };
 
     it.each([
-        ["forward", getRetriever().getForwardLinks, { source_artifact_id: artifact_id }],
-        ["reverse", getRetriever().getReverseLinks, { target_artifact_id: artifact_id }],
+        [
+            "forward",
+            getRetriever().getForwardLinks,
+            {
+                source_artifact_id: artifact_id,
+                tql_query: 'SELECT @pretty_title FROM @project="self"',
+            },
+        ],
+        [
+            "reverse",
+            getRetriever().getReverseLinks,
+            {
+                target_artifact_id: artifact_id,
+                tql_query: 'SELECT @pretty_title FROM @project="self"',
+            },
+        ],
     ])(
         "should call for the %s links linked to an artifact and return an ArtifactTable accordingly",
         async (direction, retriever_call, params) => {
@@ -61,10 +75,14 @@ describe("ArtifactsLinksRetriever", () => {
                 } as Response),
             );
 
-            const result = await retriever_call(query_id, artifact_id);
+            const result = await retriever_call(
+                widget_id,
+                artifact_id,
+                'SELECT @pretty_title FROM @project="self"',
+            );
 
             expect(getResponse).toHaveBeenCalledWith(
-                fetch_result.uri`/api/v1/crosstracker_query/${query_id}/${direction}_links`,
+                fetch_result.uri`/api/v1/crosstracker_widget/${widget_id}/${direction}_links`,
                 {
                     params,
                 },

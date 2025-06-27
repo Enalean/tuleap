@@ -24,8 +24,8 @@
         v-bind:key="row.id + level"
         v-bind:row="row"
         v-bind:columns="columns"
-        v-bind:query_id="query_id"
         v-bind:level="level"
+        v-bind:tql_query="tql_query"
     />
 </template>
 
@@ -36,7 +36,7 @@ import type { ArtifactsTable } from "../../domain/ArtifactsTable";
 defineProps<{
     rows: ArtifactsTable["rows"];
     columns: ArtifactsTable["columns"];
-    query_id: string;
+    tql_query: string;
     level: number;
 }>();
 </script>

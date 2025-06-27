@@ -36,8 +36,8 @@
             <artifact-rows
                 v-bind:rows="rows"
                 v-bind:columns="columns"
-                v-bind:query_id="query.id"
                 v-bind:level="0"
+                v-bind:tql_query="query.tql_query"
             />
         </div>
     </div>

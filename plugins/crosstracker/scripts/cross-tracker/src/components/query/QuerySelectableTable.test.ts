@@ -35,7 +35,7 @@ import EmptyState from "../EmptyState.vue";
 import { ColumnNameGetter } from "../../domain/ColumnNameGetter";
 import { createVueGettextProviderPassThrough } from "../../helpers/vue-gettext-provider-for-test";
 import QuerySelectableTable from "./QuerySelectableTable.vue";
-import SelectableCell from "../selectable-table/SelectableCell.vue";
+import ArtifactRows from "../selectable-table/ArtifactRows.vue";
 import type { Events, NotifyFaultEvent } from "../../helpers/widget-events";
 import { NOTIFY_FAULT_EVENT } from "../../helpers/widget-events";
 import type { Emitter } from "mitt";
@@ -94,7 +94,7 @@ describe(`SelectableTable`, () => {
     describe(`onMounted()`, () => {
         it(`will retrieve the query result,
             will show a loading spinner
-            and will show a table-like grid with the selected columns and artifact values`, async () => {
+            and the artifacts rows`, async () => {
             const table = new ArtifactsTableBuilder()
                 .withColumn(DATE_COLUMN_NAME)
                 .withColumn(NUMERIC_COLUMN_NAME)
@@ -156,7 +156,7 @@ describe(`SelectableTable`, () => {
             expect(headers).toContain(DATE_COLUMN_NAME);
             expect(headers).toContain(NUMERIC_COLUMN_NAME);
             expect(headers).toContain(TEXT_COLUMN_NAME);
-            expect(wrapper.findAllComponents(SelectableCell)).toHaveLength(6);
+            expect(wrapper.findAllComponents(ArtifactRows)).toHaveLength(1);
         });
 
         it(`when there is a REST error, it will be shown`, async () => {
@@ -197,7 +197,7 @@ describe(`SelectableTable`, () => {
             expect(wrapper.emitted()).toHaveProperty("search-finished");
             expect(headers.length).toBe(0);
             expect(dispatched_fault_events).toHaveLength(1);
-            expect(wrapper.findAllComponents(SelectableCell)).toHaveLength(0);
+            expect(wrapper.findAllComponents(ArtifactRows)).toHaveLength(0);
         });
         it("returns the result of the tql query", async () => {
             const query_content = new ArtifactsTableBuilder()
@@ -240,7 +240,7 @@ describe(`SelectableTable`, () => {
 
             expect(wrapper.emitted()).toHaveProperty("search-finished");
             expect(headers).toContain(TEXT_COLUMN_NAME);
-            expect(wrapper.findAllComponents(SelectableCell)).toHaveLength(2);
+            expect(wrapper.findAllComponents(ArtifactRows)).toHaveLength(1);
         });
     });
     describe("Empty state", () => {
@@ -308,7 +308,7 @@ describe(`SelectableTable`, () => {
                 expect(headers_classes[1]).toContain("headers-cell");
                 expect(headers_classes[1]).not.toContain("is-pretty-title-column");
 
-                expect(wrapper.findAllComponents(SelectableCell)).toHaveLength(2);
+                expect(wrapper.findAllComponents(ArtifactRows)).toHaveLength(1);
             });
         });
     });

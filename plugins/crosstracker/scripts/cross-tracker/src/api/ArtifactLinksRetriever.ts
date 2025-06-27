@@ -30,12 +30,14 @@ export const ArtifactLinksRetriever = (
 ): RetrieveArtifactLinks => {
     return {
         getForwardLinks(
-            query_id: string,
+            widget_id: number,
             artifact_id: number,
+            tql_query: string,
         ): ResultAsync<ArtifactsTableWithTotal, Fault> {
-            return getResponse(uri`/api/v1/crosstracker_query/${query_id}/forward_links`, {
+            return getResponse(uri`/api/v1/crosstracker_widget/${widget_id}/forward_links`, {
                 params: {
                     source_artifact_id: artifact_id,
+                    tql_query,
                 },
             }).andThen((response) => {
                 const total = Number.parseInt(response.headers.get("X-PAGINATION-SIZE") ?? "0", 10);
@@ -50,12 +52,14 @@ export const ArtifactLinksRetriever = (
             });
         },
         getReverseLinks(
-            query_id: string,
+            widget_id: number,
             artifact_id: number,
+            tql_query: string,
         ): ResultAsync<ArtifactsTableWithTotal, Fault> {
-            return getResponse(uri`/api/v1/crosstracker_query/${query_id}/reverse_links`, {
+            return getResponse(uri`/api/v1/crosstracker_widget/${widget_id}/reverse_links`, {
                 params: {
                     target_artifact_id: artifact_id,
+                    tql_query,
                 },
             }).andThen((response) => {
                 const total = Number.parseInt(response.headers.get("X-PAGINATION-SIZE") ?? "0", 10);

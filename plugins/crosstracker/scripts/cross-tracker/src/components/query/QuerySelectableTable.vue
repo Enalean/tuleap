@@ -31,22 +31,14 @@
                     'is-pretty-title-column': column_name === PRETTY_TITLE_COLUMN_NAME,
                 }"
                 data-test="column-header"
-                >{{ getColumnName(column_name) }}</span
-            >
-            <template v-for="(row, index) of rows" v-bind:key="row.uri">
-                <edit-cell v-bind:uri="row.uri" v-bind:even="isEven(index)" />
-                <selectable-cell
-                    v-for="(column_name, column_index) of columns"
-                    v-bind:key="column_name + index"
-                    v-bind:cell="row.cells.get(column_name)"
-                    v-bind:artifact_uri="row.uri"
-                    v-bind:number_of_reverse_link="row.number_of_reverse_link"
-                    v-bind:number_of_forward_link="row.number_of_forward_link"
-                    v-bind:even="isEven(index)"
-                    v-bind:last_of_row="isLastCellOfRow(column_index, columns.size)"
-                    v-bind:level="0"
-                />
-            </template>
+                >{{ getColumnName(column_name) }}
+            </span>
+            <artifact-rows
+                v-bind:rows="rows"
+                v-bind:columns="columns"
+                v-bind:level="0"
+                v-bind:tql_query="tql_query"
+            />
         </div>
     </div>
     <selectable-pagination
@@ -67,10 +59,9 @@ import { ArtifactsRetrievalFault } from "../../domain/ArtifactsRetrievalFault";
 import type { ColumnName } from "../../domain/ColumnName";
 import { PRETTY_TITLE_COLUMN_NAME } from "../../domain/ColumnName";
 import { NOTIFY_FAULT_EVENT, SEARCH_ARTIFACTS_EVENT } from "../../helpers/widget-events";
-import SelectablePagination from "../selectable-table/SelectablePagination.vue";
-import EditCell from "../selectable-table/EditCell.vue";
-import SelectableCell from "../selectable-table/SelectableCell.vue";
 import EmptyState from "../EmptyState.vue";
+import ArtifactRows from "../selectable-table/ArtifactRows.vue";
+import SelectablePagination from "../selectable-table/SelectablePagination.vue";
 
 const column_name_getter = strictInject(GET_COLUMN_NAME);
 
@@ -93,6 +84,7 @@ let offset = 0;
 const limit = 30;
 
 const is_table_empty = computed<boolean>(() => !is_loading.value && total.value === 0);
+const number_of_selected_columns = ref(0);
 
 const emitter = strictInject(EMITTER);
 
@@ -134,6 +126,7 @@ function loadArtifacts(): void {
         .match(
             (content_with_total) => {
                 columns.value = content_with_total.table.columns;
+                number_of_selected_columns.value = columns.value.size - 1;
                 rows.value = content_with_total.table.rows;
                 total.value = content_with_total.total;
             },
@@ -154,8 +147,6 @@ const getColumnName = (name: ColumnName): string => {
     return column_name_getter.getTranslatedColumnName(name);
 };
 
-const isEven = (index: number): boolean => index % 2 === 0;
-
 function isLastCellOfRow(index: number, size: number): boolean {
     return index + 1 === size;
 }
@@ -174,7 +165,7 @@ function isLastCellOfRow(index: number, size: number): boolean {
     display: grid;
     grid-template-columns:
         [edit] min-content
-        auto;
+        repeat(v-bind(number_of_selected_columns), auto);
     grid-template-rows:
         [headers] var(--tlp-x-large-spacing)
         auto;

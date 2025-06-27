@@ -29,8 +29,8 @@
         v-else
         v-bind:rows="artifact_links_rows"
         v-bind:columns="columns"
-        v-bind:query_id="query_id"
         v-bind:level="level"
+        v-bind:tql_query="tql_query"
     />
 </template>
 
@@ -43,7 +43,7 @@ defineProps<{
     is_loading: boolean;
     row: ArtifactRow;
     columns: ArtifactsTable["columns"];
-    query_id: string;
+    tql_query: string;
     level: number;
     artifact_links_rows: ArtifactsTable["rows"];
     number_of_link: number;
