@@ -57,6 +57,7 @@ use Tuleap\Project\Admin\GetProjectHistoryEntryValue;
 use Tuleap\Project\Registration\RegisterProjectCreationEvent;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\PullRequest\Authorization\PullRequestPermissionChecker;
+use Tuleap\PullRequest\CSRFTokenSynchronizerProvider;
 use Tuleap\PullRequest\Dao as PullRequestDao;
 use Tuleap\PullRequest\DefaultSettings\DefaultSettingsController;
 use Tuleap\PullRequest\DefaultSettings\PullRequestPane as DefaultSettingsPullRequestPane;
@@ -621,7 +622,18 @@ class pullrequestPlugin extends Plugin
 
     public function routePostDefaultSettings(): DefaultSettingsController
     {
-        return new DefaultSettingsController(new MergeSettingDAO(), new ProjectHistoryDao());
+        $fine_grained_dao = new FineGrainedDao();
+        return new DefaultSettingsController(
+            new MergeSettingDAO(),
+            new ProjectHistoryDao(),
+            new GitPermissionsManager(
+                new Git_PermissionsDao(),
+                new Git_SystemEventManager(SystemEventManager::instance()),
+                $fine_grained_dao,
+                new FineGrainedRetriever($fine_grained_dao)
+            ),
+            new CSRFTokenSynchronizerProvider()
+        );
     }
 
     public function routeGetAutocompleterReviewers(): ReviewerAutocompleterController
