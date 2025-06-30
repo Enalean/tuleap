@@ -27,6 +27,7 @@ import emitter from "../../helpers/emitter";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 import { nextTick } from "vue";
 import type { Modal } from "@tuleap/tlp-modal/src";
+import type { Folder, Item, RootState } from "../../type";
 
 vi.mock("@tuleap/tlp-modal", () => {
     return {
@@ -43,24 +44,17 @@ vi.mock("tlp", () => {
 });
 
 describe("FolderHeader", () => {
-    function factory(is_loading_ascendant_hierarchy, is_folder_empty): VueWrapper<FolderHeader> {
-        const dynamic_import_stubs = [
-            "confirm-deletion-modal",
-            "permissions-update-modal",
-            "create-new-item-version-modal",
-            "download-folder-size-threshold-exceeded-modal",
-            "download-folder-size-warning-modal",
-            "file-changelog-modal",
-            "update-properties-modal",
-        ];
-
+    function factory(
+        is_loading_ascendant_hierarchy: boolean,
+        is_folder_empty: boolean,
+    ): VueWrapper<FolderHeader> {
         return shallowMount(FolderHeader, {
             global: {
                 ...getGlobalTestOptions({
                     state: {
                         is_loading_ascendant_hierarchy,
-                        current_folder: { id: 20 },
-                    },
+                        current_folder: { id: 20 } as Folder,
+                    } as RootState,
                     getters: {
                         current_folder_title: () => "My folder title",
                         is_folder_empty: () => is_folder_empty,
@@ -72,7 +66,6 @@ describe("FolderHeader", () => {
                         },
                     },
                 }),
-                stubs: dynamic_import_stubs,
             },
         });
     }
@@ -131,7 +124,7 @@ describe("FolderHeader", () => {
             expect(wrapper.find("[data-test=document-delete-item-modal]").exists()).toBe(false);
 
             emitter.emit("deleteItem", {
-                item: { id: 20 },
+                item: { id: 20 } as Item,
             });
 
             await nextTick();
