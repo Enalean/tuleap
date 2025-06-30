@@ -90,34 +90,6 @@ final class Tracker_Artifact_ChangesetValue_TextTest extends TestCase //phpcs:ig
         self::assertEquals("Problems with my code: example\n", $text->getContentAsText());
     }
 
-    public function testReturnsUnconvertedHTMLWhenFormatIsHTML(): void
-    {
-        $field = $this->getTextFieldWithProject();
-        $text  = new Tracker_Artifact_ChangesetValue_Text(
-            111,
-            ChangesetTestBuilder::aChangeset(15)->build(),
-            $field,
-            false,
-            'Problems with my code: <b>example</b>',
-            Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT
-        );
-        self::assertEquals('Problems with my code: <b>example</b>', $text->getTextWithReferences(self::PROJECT_ID));
-    }
-
-    public function testReturnsUnconvertedTextWhenFormatIsText(): void
-    {
-        $field = $this->getTextFieldWithProject();
-        $text  = new Tracker_Artifact_ChangesetValue_Text(
-            111,
-            ChangesetTestBuilder::aChangeset(15)->build(),
-            $field,
-            false,
-            'Problems with my code: <b>example</b>',
-            Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT
-        );
-        self::assertEquals('Problems with my code: &lt;b&gt;example&lt;/b&gt;', $text->getTextWithReferences(self::PROJECT_ID));
-    }
-
     private function getTextFieldWithProject(): Tracker_FormElement_Field_Text
     {
         $project = ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build();

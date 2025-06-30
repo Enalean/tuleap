@@ -158,16 +158,17 @@ final class ArtifactDescriptionProviderTest extends TestCase
 
     public function testGetPostProcessedDescriptionReturnTheDescriptionAsFormatHTML(): void
     {
+        $tracker = TrackerTestBuilder::aTracker()->withProject(ProjectTestBuilder::aProject()->build())->build();
+
+        $changeset = ChangesetTestBuilder::aChangeset(1)->build();
+        $artifact  = ArtifactTestBuilder::anArtifact(1)->withChangesets($changeset)->inTracker($tracker)->build();
+
         $field = $this->createMock(Tracker_FormElement_Field_Text::class);
         $this->semantic_description->expects($this->once())->method('getField')->willReturn($field);
 
         $field->expects($this->once())->method('userCanRead')->willReturn(true);
         $field->method('getId')->willReturn(1);
-
-        $tracker = TrackerTestBuilder::aTracker()->withProject(ProjectTestBuilder::aProject()->build())->build();
-
-        $changeset = ChangesetTestBuilder::aChangeset(1)->build();
-        $artifact  = ArtifactTestBuilder::anArtifact(1)->withChangesets($changeset)->inTracker($tracker)->build();
+        $field->method('getTracker')->willReturn($tracker);
 
         $description = "<p>Description:</p>\n\n<ul>\n\t<li>Element 1</li>\n\t<li>Element 2</li>\n\t<li>Element 3 puce</li>\n</ul>\n";
         $changeset->setFieldValue(
