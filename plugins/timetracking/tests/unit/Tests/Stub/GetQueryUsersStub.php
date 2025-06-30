@@ -30,7 +30,7 @@ final readonly class GetQueryUsersStub implements GetQueryUsers
     {
     }
 
-    public function getQueryUsers(int $widget_id): array
+    public function getUsersByQueryId(int $id): array
     {
         return $this->users;
     }

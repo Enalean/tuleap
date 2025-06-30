@@ -35,7 +35,6 @@ final class TimetrackingManagementWidgetConfigTest extends TestCase
 {
     public function testItReturnsATimetrackingWidgetConfig(): void
     {
-        $widget_id       = 44;
         $id              = 21;
         $start_date      = 1234567890;
         $end_date        = null;
@@ -53,12 +52,12 @@ final class TimetrackingManagementWidgetConfigTest extends TestCase
 
         $provide_user_avatar_url = ProvideUserAvatarUrlStub::build();
 
-        $result = TimetrackingManagementWidgetConfig::fromWidgetId(
+        $result = TimetrackingManagementWidgetConfig::fromId(
+            $id,
             SearchQueryByWidgetIdStub::build($id, $start_date, $end_date, $predefined_time),
             SearchUsersByWidgetIdStub::build([$user1->getId(), $user2->getId()]),
             RetrieveUserByIdStub::withUsers($user1, $user2),
-            $provide_user_avatar_url,
-            $widget_id
+            $provide_user_avatar_url
         );
 
         self::assertEquals($id, $result->id);

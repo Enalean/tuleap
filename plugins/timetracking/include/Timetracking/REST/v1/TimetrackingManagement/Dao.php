@@ -35,55 +35,64 @@ final class Dao extends DataAccessObject implements SaveQueryWithDates, SaveQuer
         return (int) $this->getDB()->lastInsertId();
     }
 
-    public function delete(int $widget_id): void
+    public function delete(int $query_id): void
     {
         $sql = 'DELETE FROM plugin_timetracking_management_query WHERE id = ?';
-        $this->getDB()->run($sql, $widget_id);
+        $this->getDB()->run($sql, $query_id);
     }
 
-    public function saveQueryWithDates(int $widget_id, DateTimeImmutable $start_date, DateTimeImmutable $end_date, array $user_ids_to_insert, array $user_ids_to_remove): void
-    {
-        $this->getDB()->tryFlatTransaction(function () use ($widget_id, $start_date, $end_date, $user_ids_to_insert, $user_ids_to_remove) {
+    public function saveQueryWithDates(
+        int $query_id,
+        DateTimeImmutable $start_date,
+        DateTimeImmutable $end_date,
+        array $user_ids_to_insert,
+        array $user_ids_to_remove,
+    ): void {
+        $this->getDB()->tryFlatTransaction(function () use ($query_id, $start_date, $end_date, $user_ids_to_insert, $user_ids_to_remove) {
             $sql = 'UPDATE plugin_timetracking_management_query
                     SET start_date = ?, end_date = ?, predefined_time_period = ?
                     WHERE id = ?';
 
-            $this->getDB()->run($sql, $start_date->getTimestamp(), $end_date->getTimestamp(), null, $widget_id);
-            $this->insertUsers($widget_id, $user_ids_to_insert);
-            $this->deleteUsers($widget_id, $user_ids_to_remove);
+            $this->getDB()->run($sql, $start_date->getTimestamp(), $end_date->getTimestamp(), null, $query_id);
+            $this->insertUsers($query_id, $user_ids_to_insert);
+            $this->deleteUsers($query_id, $user_ids_to_remove);
         });
     }
 
-    public function saveQueryWithPredefinedTimePeriod(int $widget_id, PredefinedTimePeriod $predefined_time_period, array $user_ids_to_insert, array $user_ids_to_remove): void
-    {
-        $this->getDB()->tryFlatTransaction(function () use ($widget_id, $predefined_time_period, $user_ids_to_insert, $user_ids_to_remove) {
+    public function saveQueryWithPredefinedTimePeriod(
+        int $query_id,
+        PredefinedTimePeriod $predefined_time_period,
+        array $user_ids_to_insert,
+        array $user_ids_to_remove,
+    ): void {
+        $this->getDB()->tryFlatTransaction(function () use ($query_id, $predefined_time_period, $user_ids_to_insert, $user_ids_to_remove) {
             $sql = 'UPDATE plugin_timetracking_management_query
                     SET start_date = ?, end_date = ?, predefined_time_period = ?
                     WHERE id = ?';
 
-            $this->getDB()->run($sql, null, null, $predefined_time_period->value, $widget_id);
-            $this->insertUsers($widget_id, $user_ids_to_insert);
-            $this->deleteUsers($widget_id, $user_ids_to_remove);
+            $this->getDB()->run($sql, null, null, $predefined_time_period->value, $query_id);
+            $this->insertUsers($query_id, $user_ids_to_insert);
+            $this->deleteUsers($query_id, $user_ids_to_remove);
         });
     }
 
-    private function deleteUsers(int $widget_id, array $user_ids_to_remove): void
+    private function deleteUsers(int $query_id, array $user_ids_to_remove): void
     {
         if (! empty($user_ids_to_remove)) {
             $user_ids_statement = EasyStatement::open()->in('user_id IN (?*)', $user_ids_to_remove);
-            $sql                = "DELETE FROM plugin_timetracking_management_query_users WHERE $user_ids_statement AND widget_id = ? ";
+            $sql                = "DELETE FROM plugin_timetracking_management_query_users WHERE $user_ids_statement AND query_id = ? ";
 
             $delete_params   = $user_ids_statement->values();
-            $delete_params[] = $widget_id;
+            $delete_params[] = $query_id;
             $this->getDB()->safeQuery($sql, $delete_params);
         }
     }
 
-    private function insertUsers(int $widget_id, array $user_ids_to_insert): void
+    private function insertUsers(int $query_id, array $user_ids_to_insert): void
     {
         $users_to_insert = [];
         foreach ($user_ids_to_insert as $user_id) {
-            $users_to_insert[] = ['widget_id' => $widget_id, 'user_id' => $user_id];
+            $users_to_insert[] = ['query_id' => $query_id, 'user_id' => $user_id];
         }
 
         if ($users_to_insert !== []) {
@@ -91,15 +100,15 @@ final class Dao extends DataAccessObject implements SaveQueryWithDates, SaveQuer
         }
     }
 
-    public function getQueryUsers(int $widget_id): array
+    public function getUsersByQueryId(int $id): array
     {
         $sql = 'SELECT user_id
                 FROM plugin_timetracking_management_query_users
-                WHERE widget_id = ?';
-        return $this->getDB()->column($sql, [$widget_id]);
+                WHERE query_id = ?';
+        return $this->getDB()->column($sql, [$id]);
     }
 
-    public function getWidgetInformation(int $widget_id): ?array
+    public function getWidgetInformationFromQuery(int $query_id): ?array
     {
         $sql = 'SELECT dashboard_id, user_id
                 FROM plugin_timetracking_management_query
@@ -117,29 +126,29 @@ final class Dao extends DataAccessObject implements SaveQueryWithDates, SaveQuer
                   AND widget.name = "timetracking-management-widget"
                   AND dashboard_type = "user"';
 
-        return $this->getDB()->row($sql, $widget_id);
+        return $this->getDB()->row($sql, $query_id);
     }
 
     /**
      * @return null|array{id: int, start_date: string|null, end_date: string|null, predefined_time_period: string|null}
      */
-    public function searchQueryByWidgetId(int $widget_id): ?array
+    public function searchQueryById(int $id): ?array
     {
         $sql = 'SELECT *
                 FROM plugin_timetracking_management_query
                 WHERE id = ?';
 
-        return $this->getDB()->row($sql, $widget_id);
+        return $this->getDB()->row($sql, $id);
     }
 
     /**
      * @return int[]
      */
-    public function searchUsersByWidgetId(int $widget_id): array
+    public function searchUsersByQueryId(int $id): array
     {
         $sql = 'SELECT user_id
                 FROM plugin_timetracking_management_query_users
-                WHERE widget_id = ?';
-        return $this->getDB()->column($sql, [$widget_id]);
+                WHERE query_id = ?';
+        return $this->getDB()->column($sql, [$id]);
     }
 }

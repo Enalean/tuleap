@@ -20,17 +20,21 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Timetracking\REST\v1\TimetrackingManagement;
-
-use DateTimeImmutable;
-
-interface SaveQueryWithDates
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+final class b202506261100_rename_widget_id_column extends \Tuleap\ForgeUpgrade\Bucket
 {
-    public function saveQueryWithDates(
-        int $query_id,
-        DateTimeImmutable $start_date,
-        DateTimeImmutable $end_date,
-        array $user_ids_to_insert,
-        array $user_ids_to_remove,
-    ): void;
+    public function description()
+    {
+        return 'Rename plugin_timetracking_management_query_users.widget_id column';
+    }
+
+    public function up()
+    {
+        $this->api->dbh->query(
+            <<<EOS
+            ALTER TABLE plugin_timetracking_management_query_users
+                RENAME COLUMN widget_id TO query_id
+            EOS
+        );
+    }
 }

@@ -39,13 +39,13 @@ final readonly class QueryPUTHandler
     /**
      * @return Ok<true>|Err<Fault>
      */
-    public function handle(int $widget_id, QueryPUTRepresentation $representation): Ok|Err
+    public function handle(int $query_id, QueryPUTRepresentation $representation): Ok|Err
     {
-        return $this->permission_checker->checkThatCurrentUserCanUpdateTheQuery($widget_id, \UserManager::instance()->getCurrentUser())
-            ->andThen(fn () => $this->user_diff_builder->getUserDiff($widget_id, $representation->users))
-            ->andThen(function (UserDiff $user_diff) use ($widget_id, $representation) {
+        return $this->permission_checker->checkThatCurrentUserCanUpdateTheQuery($query_id, \UserManager::instance()->getCurrentUser())
+            ->andThen(fn () => $this->user_diff_builder->getUserDiff($query_id, $representation->users))
+            ->andThen(function (UserDiff $user_diff) use ($query_id, $representation) {
                 return $this->data_checker->getValidatedPeriod($representation)
-                    ->andThen(fn (Period $period) => $this->timetracking_management_widget_saver->save($widget_id, $period, $user_diff));
+                    ->andThen(fn (Period $period) => $this->timetracking_management_widget_saver->save($query_id, $period, $user_diff));
             });
     }
 }
