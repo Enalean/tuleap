@@ -2560,14 +2560,6 @@
       <code><![CDATA[$this->display_preferences]]></code>
     </UndefinedThisPropertyFetch>
   </file>
-  <file src="plugins/cardwall/include/CardFields.php">
-    <MissingReturnType>
-      <code><![CDATA[getDisplayedFields]]></code>
-    </MissingReturnType>
-    <UndefinedThisPropertyAssignment>
-      <code><![CDATA[$this->form_element_factory]]></code>
-    </UndefinedThisPropertyAssignment>
-  </file>
   <file src="plugins/cardwall/include/CardInCellPresenter.php">
     <MissingParamType>
       <code><![CDATA[$card_field_id]]></code>
@@ -33104,6 +33096,15 @@
       <code><![CDATA[function ($group_id) {]]></code>
     </MissingClosureReturnType>
   </file>
+  <file src="plugins/tracker/include/Semantic/CollectionOfFieldsDuplicator.php">
+    <DeprecatedMethod>
+      <code><![CDATA[$this->dao->searchByTrackerId($from_tracker_id)]]></code>
+      <code><![CDATA[$this->dao->searchByTrackerId($from_tracker_id)]]></code>
+    </DeprecatedMethod>
+    <UndefinedInterfaceMethod>
+      <code><![CDATA[add]]></code>
+    </UndefinedInterfaceMethod>
+  </file>
   <file src="plugins/tracker/include/Semantic/Contributor/TrackerSemanticContributor.php">
     <ArgumentTypeCoercion>
       <code><![CDATA[$field]]></code>
@@ -33570,6 +33571,16 @@
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[$timeframe_dao->getSemanticsImpliedFromGivenTracker($this->tracker->getId())]]></code>
     </RiskyTruthyFalsyComparison>
+  </file>
+  <file src="plugins/tracker/include/Semantic/XML/XMLFieldsBasedSemantic.php">
+    <PossiblyNullReference>
+      <code><![CDATA[addAttribute]]></code>
+    </PossiblyNullReference>
+  </file>
+  <file src="plugins/tracker/include/Semantic/XML/XMLSemantic.php">
+    <PossiblyNullReference>
+      <code><![CDATA[addAttribute]]></code>
+    </PossiblyNullReference>
   </file>
   <file src="plugins/tracker/include/ServiceTracker.php">
     <MissingParamType>
@@ -45540,25 +45551,6 @@
       <code><![CDATA[searchInvolvedFieldsByTrackerId]]></code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/Tracker/Semantic/CollectionOfFieldsDuplicator.php">
-    <DeprecatedMethod>
-      <code><![CDATA[$this->dao->searchByTrackerId($from_tracker_id)]]></code>
-      <code><![CDATA[$this->dao->searchByTrackerId($from_tracker_id)]]></code>
-    </DeprecatedMethod>
-    <UndefinedInterfaceMethod>
-      <code><![CDATA[add]]></code>
-    </UndefinedInterfaceMethod>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Semantic/XML/XMLFieldsBasedSemantic.php">
-    <PossiblyNullReference>
-      <code><![CDATA[addAttribute]]></code>
-    </PossiblyNullReference>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Semantic/XML/XMLSemantic.php">
-    <PossiblyNullReference>
-      <code><![CDATA[addAttribute]]></code>
-    </PossiblyNullReference>
-  </file>
   <file src="plugins/tracker/include/Tracker/Service/ServiceActivator.php">
     <MissingReturnType>
       <code><![CDATA[atLeastOneTrackerServiceIsUsedInTemplate]]></code>
@@ -45658,6 +45650,9 @@
     <UndefinedDocblockClass>
       <code><![CDATA[Hierarchy]]></code>
     </UndefinedDocblockClass>
+    <UnusedProperty>
+      <code><![CDATA[$form_element_factory]]></code>
+    </UnusedProperty>
   </file>
   <file src="plugins/tracker/include/Tracker/TrackerManager.php">
     <DeprecatedMethod>
@@ -46918,11 +46913,7 @@
     <PossiblyNullArgument>
       <code><![CDATA[$xml_type['is_used']]]></code>
     </PossiblyNullArgument>
-    <PossiblyNullArrayAccess>
-      <code><![CDATA[$tracker_attributes[$attribute_name]]]></code>
-    </PossiblyNullArrayAccess>
     <RiskyTruthyFalsyComparison>
-      <code><![CDATA[! $tracker_attributes[$attribute_name]]]></code>
       <code><![CDATA[! $tracker_xml]]></code>
       <code><![CDATA[! $tracker_xml]]></code>
     </RiskyTruthyFalsyComparison>

@@ -43,6 +43,7 @@ use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeFromXMLBuilder;
 use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitleFactory;
 use Tuleap\Tracker\Semantic\Tooltip\SemanticTooltip;
 use Tuleap\Tracker\Semantic\Tooltip\SemanticTooltipFactory;
+use Tuleap\Tracker\Semantic\XML\IBuildSemanticFromXML;
 use Tuleap\Tracker\Tracker;
 
 class TrackerSemanticFactory

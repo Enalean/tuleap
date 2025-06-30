@@ -1,6 +1,6 @@
 <?php
-/*
- * Copyright (c) Enalean, 2021-Present. All Rights Reserved.
+/**
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,29 +16,21 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
-
-declare(strict_types=1);
 
 namespace Tuleap\Tracker\Semantic\XML;
 
-use Tuleap\Tracker\FormElement\XML\XMLFormElementFlattenedCollection;
+use SimpleXMLElement;
+use Tuleap\Tracker\Semantic\TrackerSemantic;
+use Tuleap\Tracker\Tracker;
 
-abstract class XMLSemantic
+interface IBuildSemanticFromXML
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private string $type,
-    ) {
-    }
-
-    public function export(\SimpleXMLElement $parent_node, XMLFormElementFlattenedCollection $form_elements): \SimpleXMLElement
-    {
-        $semantic = $parent_node->addChild('semantic');
-        $semantic->addAttribute('type', $this->type);
-        return $semantic;
-    }
+    public function getInstanceFromXML(
+        SimpleXMLElement $current_semantic_xml,
+        SimpleXMLElement $all_semantics_xml,
+        array $xml_mapping,
+        Tracker $tracker,
+        array $tracker_mapping,
+    ): ?TrackerSemantic;
 }

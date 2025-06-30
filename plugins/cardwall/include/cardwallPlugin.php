@@ -43,6 +43,7 @@ use Tuleap\Tracker\Artifact\XML\Exporter\TrackerEventExportStructureXML;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Semantic\ExternalSemanticsExportEvent;
 use Tuleap\Tracker\Events\AllowedFieldTypeChangesRetriever;
 use Tuleap\Tracker\Report\Renderer\ImportRendererFromXmlEvent;
+use Tuleap\Tracker\Semantic\CollectionOfFieldsDuplicator;
 use Tuleap\Tracker\Semantic\TrackerSemanticCollection;
 use Tuleap\Tracker\Semantic\TrackerSemanticFactory;
 use Tuleap\Tracker\Semantic\TrackerSemanticManager;
@@ -379,7 +380,7 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
      */
     public function trackerEventGetSemanticDuplicators($params)
     {
-        $params['duplicators'][] = new Tracker_Semantic_CollectionOfFieldsDuplicator(new Cardwall_Semantic_Dao_CardFieldsDao());
+        $params['duplicators'][] = new CollectionOfFieldsDuplicator(new Cardwall_Semantic_Dao_CardFieldsDao());
         $params['duplicators'][] = new BackgroundColorSemanticFactory(new BackgroundColorDao());
     }
 
