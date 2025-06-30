@@ -4999,11 +4999,9 @@
       <code><![CDATA[_addUser]]></code>
       <code><![CDATA[_getApprovalTableNotificationCycle]]></code>
       <code><![CDATA[_getDao]]></code>
-      <code><![CDATA[_getMail]]></code>
       <code><![CDATA[_getUserManager]]></code>
       <code><![CDATA[appendReviewerList]]></code>
       <code><![CDATA[createReviewerFromRow]]></code>
-      <code><![CDATA[delUser]]></code>
       <code><![CDATA[deleteTable]]></code>
       <code><![CDATA[getAllApprovalTableForUser]]></code>
       <code><![CDATA[getAllPendingReviewsForUser]]></code>
@@ -25821,15 +25819,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/pullrequest/include/PullRequest/DefaultSettings/DefaultSettingsController.php">
-    <DeprecatedMethod>
-      <code><![CDATA[groupAddHistory]]></code>
-    </DeprecatedMethod>
-    <InvalidArgument>
-      <code><![CDATA[$is_merge_commit_allowed]]></code>
-    </InvalidArgument>
-    <InvalidClass>
-      <code><![CDATA[\gitPlugin]]></code>
-    </InvalidClass>
     <InvalidReturnType>
       <code><![CDATA[process]]></code>
     </InvalidReturnType>
@@ -32211,9 +32200,6 @@
     <NoValue>
       <code><![CDATA[$artifact_links]]></code>
     </NoValue>
-    <PossiblyInvalidArgument>
-      <code><![CDATA[$this->getCurrentUser()->getId()]]></code>
-    </PossiblyInvalidArgument>
     <PossiblyInvalidOperand>
       <code><![CDATA[$report->id]]></code>
       <code><![CDATA[$report->id]]></code>
@@ -34066,7 +34052,6 @@
       <code><![CDATA[$changesets]]></code>
       <code><![CDATA[$id]]></code>
       <code><![CDATA[$per_tracker_id]]></code>
-      <code><![CDATA[$submitted_by]]></code>
       <code><![CDATA[$submitted_on]]></code>
       <code><![CDATA[$tracker_id]]></code>
       <code><![CDATA[$use_artifact_permissions]]></code>
@@ -34110,7 +34095,6 @@
       <code><![CDATA[setHierarchyFactory]]></code>
       <code><![CDATA[setParentWithoutPermissionChecking]]></code>
       <code><![CDATA[setStatus]]></code>
-      <code><![CDATA[setSubmittedByUser]]></code>
       <code><![CDATA[setTitle]]></code>
       <code><![CDATA[setTracker]]></code>
       <code><![CDATA[setTransactionExecutorForTests]]></code>
@@ -42447,7 +42431,6 @@
       <code><![CDATA[userBelongsToGroup]]></code>
       <code><![CDATA[userCanViewArtifact]]></code>
       <code><![CDATA[userCanViewTracker]]></code>
-      <code><![CDATA[userHavePermissionOnTracker]]></code>
     </MissingReturnType>
     <PossiblyInvalidArgument>
       <code><![CDATA[$artifact->getTracker()->getGroupId()]]></code>
@@ -45650,9 +45633,6 @@
     <UndefinedDocblockClass>
       <code><![CDATA[Hierarchy]]></code>
     </UndefinedDocblockClass>
-    <UnusedProperty>
-      <code><![CDATA[$form_element_factory]]></code>
-    </UnusedProperty>
   </file>
   <file src="plugins/tracker/include/Tracker/TrackerManager.php">
     <DeprecatedMethod>
