@@ -21,7 +21,7 @@
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionRetriever;
 
-class Tracker_Artifact_ChangesetFactory
+class Tracker_Artifact_ChangesetFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /** Tracker_Artifact_ChangesetDao */
     private $dao;
@@ -201,7 +201,10 @@ class Tracker_Artifact_ChangesetFactory
         array $cache,
         Tracker_Artifact_Changeset $changeset,
         ?Tracker_Artifact_Changeset $previous_changeset = null,
-    ) {
+    ): void {
+        if (! isset($cache[$changeset->getId()])) {
+            return;
+        }
         foreach ($cache[$changeset->getId()] as $changeset_value_row) {
             $field = $this->tracker_form_element_factory->getFieldById($changeset_value_row['field_id']);
             if ($field === null || ! $field->userCanRead($user)) {
