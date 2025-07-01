@@ -1,5 +1,5 @@
-/*
- * Copyright (c) Enalean, 2025 - present. All Rights Reserved.
+/**
+ * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,14 +16,19 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+import { errAsync, okAsync } from "neverthrow";
+import { Fault } from "@tuleap/fault";
+import type { SaveFieldsConfiguration } from "@/configuration/FieldsConfigurationSaver";
 
-import type { StrictInjectionKey } from "@tuleap/vue-strict-inject/src/strict-inject";
-
-export type ConfigurationTab = "tracker-selection-tab" | "readonly-fields-selection-tab";
-
-export const TRACKER_SELECTION_TAB: ConfigurationTab = "tracker-selection-tab";
-export const READONLY_FIELDS_SELECTION_TAB: ConfigurationTab = "readonly-fields-selection-tab";
-
-export const CLOSE_CONFIGURATION_MODAL: StrictInjectionKey<(is_success: boolean) => void> = Symbol(
-    "close-configuration-modal",
-);
+export const SaveFieldsConfigurationStub = {
+    buildSuccess: (): SaveFieldsConfiguration => {
+        return {
+            saveFieldsConfiguration: () => okAsync(null),
+        };
+    },
+    buildError: (): SaveFieldsConfiguration => {
+        return {
+            saveFieldsConfiguration: () => errAsync(Fault.fromMessage("Oh no!")),
+        };
+    },
+};

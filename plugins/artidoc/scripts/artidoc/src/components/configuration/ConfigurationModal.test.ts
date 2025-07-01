@@ -47,16 +47,28 @@ import {
     AVAILABLE_FIELDS,
     buildAvailableFieldsCollection,
 } from "@/configuration/AvailableFieldsCollection";
+import ConfigureTrackerFooter from "@/components/configuration/ConfigureTrackerFooter.vue";
+import { TrackerStub } from "@/helpers/stubs/TrackerStub";
+import TrackerSelection from "@/components/configuration/TrackerSelection.vue";
+import { Option } from "@tuleap/option";
+import * as configuration_saver from "@/configuration/TrackerConfigurationSaver";
+import { SaveTrackerConfigurationStub } from "@/configuration/stubs/SaveTrackerConfigurationStub";
 
 describe("ConfigurationModal", () => {
+    const epic_tracker = TrackerStub.build(12, "Epic");
+    const story_tracker = TrackerStub.build(13, "Story");
+
     function getWrapper(bus: OpenConfigurationModalBusStore): VueWrapper {
-        const selected_tracker = SelectedTrackerStub.build();
+        const selected_tracker = SelectedTrackerStub.withTracker(epic_tracker);
         const selected_fields = buildSelectedFieldsCollection([]);
         return mount(ConfigurationModal, {
             global: {
                 plugins: [createGettext({ silent: true })],
                 provide: {
-                    [ALLOWED_TRACKERS.valueOf()]: buildAllowedTrackersCollection([]),
+                    [ALLOWED_TRACKERS.valueOf()]: buildAllowedTrackersCollection([
+                        epic_tracker,
+                        story_tracker,
+                    ]),
                     [SELECTED_TRACKER.valueOf()]: selected_tracker,
                     [OPEN_CONFIGURATION_MODAL_BUS.valueOf()]: bus,
                     [ARE_FIELDS_ENABLED.valueOf()]: true,
@@ -74,16 +86,29 @@ describe("ConfigurationModal", () => {
     }
 
     it("When the modal is closed after a successful save, then it should execute onSuccessfulSaveCallback", async () => {
+        vi.spyOn(configuration_saver, "buildTrackerConfigurationSaver").mockReturnValue(
+            SaveTrackerConfigurationStub.buildSuccess(),
+        );
+
         const bus = useOpenConfigurationModalBusStore();
         const wrapper = getWrapper(bus);
         const onSuccessfulSaveCallback = vi.fn();
 
         bus.openModal(onSuccessfulSaveCallback);
         await wrapper.vm.$nextTick();
-        wrapper.findComponent(ConfigureTracker).vm.is_success = true;
+        wrapper
+            .findComponent(ConfigureTracker)
+            .findComponent(TrackerSelection)
+            .vm.$emit("select-tracker", Option.fromNullable(story_tracker));
+        await wrapper.vm.$nextTick();
+        await wrapper
+            .findComponent(ConfigureTracker)
+            .findComponent(ConfigureTrackerFooter)
+            .find("[data-test=submit]")
+            .trigger("click");
         await wrapper.vm.$nextTick();
 
-        wrapper.find("[data-test=close-modal-after-success]").trigger("click");
+        await wrapper.find("[data-test=close-modal-after-success]").trigger("click");
 
         expect(onSuccessfulSaveCallback).toHaveBeenCalledOnce();
     });

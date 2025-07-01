@@ -26,7 +26,7 @@
         <button
             class="tlp-modal-close"
             type="button"
-            v-on:click="close_modal"
+            v-on:click="closeModal(false)"
             data-dismiss="modal"
             v-bind:title="close_title"
         >
@@ -39,13 +39,11 @@
 import { useGettext } from "vue3-gettext";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { TITLE } from "@/title-injection-key";
+import { CLOSE_CONFIGURATION_MODAL } from "@/components/configuration/configuration-modal";
 
 const { $gettext, interpolate } = useGettext();
 
-defineProps<{
-    close_modal: () => void;
-}>();
-
+const closeModal = strictInject(CLOSE_CONFIGURATION_MODAL);
 const title = strictInject(TITLE);
 
 const modal_title = interpolate($gettext("Configuration of %{ title }"), { title });
