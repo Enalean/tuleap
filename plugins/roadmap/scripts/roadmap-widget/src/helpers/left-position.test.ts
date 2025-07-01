@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { getLeftForDate } from "./left-postion";
+import { getLeftForDate } from "./left-position";
 import { TimePeriodMonth } from "./time-period-month";
 import { TimePeriodQuarter } from "./time-period-quarter";
 import { createVueGettextProviderPassthrough } from "./vue-gettext-provider-for-test";
