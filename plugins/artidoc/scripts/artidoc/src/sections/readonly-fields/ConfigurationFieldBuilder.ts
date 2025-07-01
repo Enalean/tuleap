@@ -18,20 +18,43 @@
  */
 
 import type { StructureFields } from "@tuleap/plugin-tracker-rest-api-types";
+import type { ListBindType } from "@tuleap/plugin-tracker-constants";
 import {
     CHECKBOX_FIELD,
     LIST_BIND_STATIC,
     LIST_BIND_UGROUPS,
+    LIST_BIND_USERS,
     MULTI_SELECTBOX_FIELD,
     OPEN_LIST_FIELD,
     RADIO_BUTTON_FIELD,
     SELECTBOX_FIELD,
     STRING_FIELD as TRACKER_STRING_FIELD,
 } from "@tuleap/plugin-tracker-constants";
-import type { ConfigurationField } from "@/sections/readonly-fields/AvailableReadonlyFields";
+import type {
+    ConfigurationField,
+    ConfigurationFieldType,
+} from "@/sections/readonly-fields/AvailableReadonlyFields";
 import { DISPLAY_TYPE_COLUMN } from "@/sections/readonly-fields/AvailableReadonlyFields";
-import { STRING_FIELD, USER_GROUP_LIST_FIELD } from "@/sections/readonly-fields/ReadonlyFields";
+import {
+    STATIC_LIST_FIELD,
+    STRING_FIELD,
+    USER_GROUP_LIST_FIELD,
+    USER_LIST_FIELD,
+} from "@/sections/readonly-fields/ReadonlyFields";
 import { Option } from "@tuleap/option";
+
+const buildConfiguredListFieldType = (list_bind_type: ListBindType): ConfigurationFieldType => {
+    if (list_bind_type === LIST_BIND_STATIC) {
+        return STATIC_LIST_FIELD;
+    }
+    if (list_bind_type === LIST_BIND_UGROUPS) {
+        return USER_GROUP_LIST_FIELD;
+    }
+    if (list_bind_type === LIST_BIND_USERS) {
+        return USER_LIST_FIELD;
+    }
+    throw new Error(`Unknown list bind type ${list_bind_type}`);
+};
 
 const buildConfiguredFieldIfSupported = (field: StructureFields): Option<ConfigurationField> => {
     const field_base = {
@@ -45,14 +68,16 @@ const buildConfiguredFieldIfSupported = (field: StructureFields): Option<Configu
     }
 
     if (
-        (field.type === SELECTBOX_FIELD ||
-            field.type === MULTI_SELECTBOX_FIELD ||
-            field.type === OPEN_LIST_FIELD ||
-            field.type === RADIO_BUTTON_FIELD ||
-            field.type === CHECKBOX_FIELD) &&
-        (field.bindings.type === LIST_BIND_UGROUPS || field.bindings.type === LIST_BIND_STATIC)
+        field.type === SELECTBOX_FIELD ||
+        field.type === MULTI_SELECTBOX_FIELD ||
+        field.type === OPEN_LIST_FIELD ||
+        field.type === RADIO_BUTTON_FIELD ||
+        field.type === CHECKBOX_FIELD
     ) {
-        return Option.fromValue<ConfigurationField>({ ...field_base, type: USER_GROUP_LIST_FIELD });
+        return Option.fromValue<ConfigurationField>({
+            ...field_base,
+            type: buildConfiguredListFieldType(field.bindings.type),
+        });
     }
 
     return Option.nothing();

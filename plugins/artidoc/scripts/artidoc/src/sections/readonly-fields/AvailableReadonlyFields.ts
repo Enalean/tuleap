@@ -25,8 +25,10 @@ import type {
     TrackerResponseNoInstance,
 } from "@tuleap/plugin-tracker-rest-api-types";
 import type {
+    STATIC_LIST_FIELD,
     STRING_FIELD,
     USER_GROUP_LIST_FIELD,
+    USER_LIST_FIELD,
 } from "@/sections/readonly-fields/ReadonlyFields";
 import { ConfigurationFieldBuilder } from "@/sections/readonly-fields/ConfigurationFieldBuilder";
 
@@ -36,8 +38,14 @@ export type ConfigurationFieldDisplayType = "column" | "block";
 export const DISPLAY_TYPE_COLUMN: ConfigurationFieldDisplayType = "column";
 export const DISPLAY_TYPE_BLOCK: ConfigurationFieldDisplayType = "block";
 
+export type ConfigurationFieldType =
+    | typeof STRING_FIELD
+    | typeof USER_GROUP_LIST_FIELD
+    | typeof STATIC_LIST_FIELD
+    | typeof USER_LIST_FIELD;
+
 export type ConfigurationField = {
-    readonly type: typeof STRING_FIELD | typeof USER_GROUP_LIST_FIELD;
+    readonly type: ConfigurationFieldType;
     readonly field_id: number;
     readonly label: string;
     display_type: ConfigurationFieldDisplayType;
