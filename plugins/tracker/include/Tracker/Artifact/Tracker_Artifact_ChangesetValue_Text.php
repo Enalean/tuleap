@@ -271,20 +271,6 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
         };
     }
 
-    public function getTextWithReferences(int $group_id): string
-    {
-        if ($this->isInHTMLFormat()) {
-            return $this->purifier->purifyHTMLWithReferences($this->getText(), $group_id);
-        }
-
-        return $this->purifier->purifyTextWithReferences($this->getText(), $group_id);
-    }
-
-    private function isInHTMLFormat(): bool
-    {
-        return $this->format === self::HTML_CONTENT;
-    }
-
     private function interpretMarkdownContent(string $text): string
     {
         $content_interpreter = self::getCommonMarkInterpreter($this->purifier);

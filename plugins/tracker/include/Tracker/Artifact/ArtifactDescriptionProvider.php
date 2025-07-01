@@ -52,7 +52,7 @@ class ArtifactDescriptionProvider
         if (! $changeset_value) {
             return '';
         }
-        return $changeset_value->getTextWithReferences((int) $artifact->getTracker()->getGroupId());
+        return $changeset_value->getValue();
     }
 
     private function getChangesetValue(Artifact $artifact): ?Tracker_Artifact_ChangesetValue_Text
