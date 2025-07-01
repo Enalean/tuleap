@@ -27,6 +27,8 @@ import type {
     NewItemAlternative,
     FileProperties,
     SearchDate,
+    ItemFile,
+    Folder,
 } from "../type";
 
 export interface DeleteItemEvent {
@@ -92,6 +94,24 @@ export type UpdateApplyPermissionsOnChildren = {
     do_permissions_apply_on_children: boolean;
 };
 
+export type ShowChangelogModalEventDetail = {
+    updated_file: ItemFile;
+    dropped_file: File;
+};
+
+export type ShowChangelogModalEvent = {
+    detail: ShowChangelogModalEventDetail;
+};
+
+export type ShowFileCreationModalEventDetail = {
+    parent: Folder;
+    dropped_file: File;
+};
+
+export type ShowFileCreationModalEvent = {
+    detail: ShowFileCreationModalEventDetail;
+};
+
 export type Events = {
     "update-status-property": string;
     "update-status-recursion": boolean;
@@ -109,6 +129,8 @@ export type Events = {
     "show-max-archive-size-threshold-exceeded-modal": MaxArchiveSizeThresholdExceededEvent;
     "show-archive-size-warning-modal": ArchiveSizeWarningModalEvent;
     "show-new-folder-modal": { detail: { parent: Item } };
+    "show-changelog-modal": ShowChangelogModalEvent;
+    "show-file-creation-modal": ShowFileCreationModalEvent;
     "hide-action-menu": void;
     "update-multiple-properties-list-value": UpdateMultipleListValueEvent;
     createItem:

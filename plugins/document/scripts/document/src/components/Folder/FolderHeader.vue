@@ -56,7 +56,7 @@
                 data-test="document-folder-harder-search-box"
             />
         </div>
-        <confirm-deletion-modal
+        <modal-confirm-deletion
             v-if="item_to_delete"
             v-bind:item="item_to_delete"
             data-test="document-delete-item-modal"
@@ -67,13 +67,13 @@
             data-test="document-permissions-item-modal"
             v-if="Object.keys(item_to_update_permissions).length > 0"
         />
-        <download-folder-size-threshold-exceeded-modal
+        <modal-max-archive-size-threshold-exceeded
             v-if="current_folder_size !== null"
             v-bind:size="current_folder_size"
             v-on:download-as-zip-modal-closed="hideDownloadFolderModals()"
             data-test="document-folder-size-threshold-exceeded"
         />
-        <download-folder-size-warning-modal
+        <modal-archive-size-warning
             v-if="folder_above_warning_threshold_props"
             v-bind:size="folder_above_warning_threshold_props.folder_size"
             v-bind:folder-href="folder_above_warning_threshold_props.folder_href"
@@ -81,7 +81,7 @@
             v-on:download-folder-as-zip-modal-closed="hideDownloadFolderModals()"
             data-test="document-folder-size-warning-modal"
         />
-        <file-changelog-modal
+        <file-version-changelog-modal
             v-if="file_changelog_properties"
             v-on:close-changelog-modal="hideChangelogModal()"
             v-bind:updated-file="file_changelog_properties.updated_file"
@@ -97,8 +97,7 @@
     </div>
 </template>
 
-<script lang="ts">
-import { mapGetters, mapState } from "vuex";
+<script setup lang="ts">
 import { TYPE_EMBEDDED, TYPE_FILE, TYPE_LINK, TYPE_WIKI } from "../../constants";
 import SearchBox from "./SearchBox.vue";
 import FileUploadManager from "./FilesUploads/FilesUploadsManager.vue";
@@ -108,236 +107,200 @@ import FolderHeaderAction from "./FolderHeaderAction.vue";
 import { isFolder } from "../../helpers/type-check-helper";
 import emitter from "../../helpers/emitter";
 import FileCreationModal from "./DropDown/NewDocument/FileCreationModal.vue";
-import { defineAsyncComponent } from "vue";
+import type { Component } from "vue";
+import { computed, defineAsyncComponent, onBeforeUnmount, onMounted, ref } from "vue";
+import type {
+    ArchiveSizeWarningModalEvent,
+    DeleteItemEvent,
+    MaxArchiveSizeThresholdExceededEvent,
+    NewVersionEvent,
+    ShowChangelogModalEvent,
+    ShowChangelogModalEventDetail,
+    ShowFileCreationModalEvent,
+    ShowFileCreationModalEventDetail,
+    UpdatePermissionsEvent,
+    UpdatePropertiesEvent,
+} from "../../helpers/emitter";
+import { useGetters, useState } from "vuex-composition-helpers";
+import type { Empty, Item, ItemType, RootState } from "../../type";
+import type { RootGetter } from "../../store/getters";
 
-export default {
-    name: "FolderHeader",
-    components: {
-        FileCreationModal,
-        FolderHeaderAction,
-        NewFolderModal,
-        SearchBox,
-        NewItemModal,
-        FileUploadManager,
-        "confirm-deletion-modal": defineAsyncComponent(
-            () =>
-                import(
-                    /* webpackChunkName: "document-confirm-item-deletion-modal" */
-                    "./DropDown/Delete/ModalConfirmDeletion.vue"
-                ),
-        ),
-        "permissions-update-modal": defineAsyncComponent(
-            () =>
-                import(
-                    /* webpackChunkName: "document-permissions-update-modal" */ "./Permissions/PermissionsUpdateModal.vue"
-                ),
-        ),
-        "download-folder-size-threshold-exceeded-modal": defineAsyncComponent(
-            () =>
-                import(
-                    /* webpackChunkName: "document-download-folder-size-exceeded-modal" */
-                    "./DropDown/DownloadFolderAsZip/ModalMaxArchiveSizeThresholdExceeded.vue"
-                ),
-        ),
-        "download-folder-size-warning-modal": defineAsyncComponent(
-            () =>
-                import(
-                    /* webpackChunkName: "document-download-folder-size-warning-modal" */
-                    "./DropDown/DownloadFolderAsZip/ModalArchiveSizeWarning.vue"
-                ),
-        ),
-        "file-changelog-modal": defineAsyncComponent(
-            () =>
-                import(
-                    /* webpackChunkName: "file-changelog-modal" */
-                    "./DropDown/NewVersion/FileVersionChangelogModal.vue"
-                ),
-        ),
-        "file-creation-modal": defineAsyncComponent(
-            () =>
-                import(
-                    /* webpackChunkName: "file-creation-modal" */
-                    "./DropDown/NewDocument/FileCreationModal.vue"
-                ),
-        ),
-    },
-    data() {
-        return {
-            shown_new_version_modal: null,
-            shown_update_properties_modal: null,
-            updated_item: null,
-            updated_properties: null,
-            item_to_delete: null,
-            item_to_update_permissions: {},
-            current_folder_size: null,
-            folder_above_warning_threshold_props: null,
-            file_changelog_properties: null,
-            file_creation_properties: null,
-            updated_empty_new_type: null,
-        };
-    },
-    computed: {
-        ...mapState(["is_loading_ascendant_hierarchy", "current_folder"]),
-        ...mapGetters(["current_folder_title", "is_folder_empty"]),
-        title_class() {
-            return this.is_loading_ascendant_hierarchy
-                ? "tlp-skeleton-text document-folder-title-loading"
-                : "";
-        },
-        folder_title() {
-            return this.is_loading_ascendant_hierarchy ? "" : this.current_folder_title;
-        },
-        can_display_search_box() {
-            return this.current_folder && !this.is_folder_empty;
-        },
-        can_display_new_document_button() {
-            return this.current_folder;
-        },
-    },
-    created() {
-        emitter.on("deleteItem", this.showDeleteItemModal);
-        emitter.on("show-create-new-item-version-modal", this.showCreateNewItemVersionModal);
-        emitter.on(
-            "show-create-new-version-modal-for-empty",
-            this.showCreateNewVersionModalForEmpty,
-        );
-        emitter.on("show-update-item-properties-modal", this.showUpdateItemPropertiesModal);
-        emitter.on("show-update-permissions-modal", this.showUpdateItemPermissionsModal);
-        emitter.on(
-            "show-max-archive-size-threshold-exceeded-modal",
-            this.showMaxArchiveSizeThresholdExceededErrorModal,
-        );
-        emitter.on("show-archive-size-warning-modal", this.showArchiveSizeWarningModal);
-        emitter.on("show-changelog-modal", this.showChangelogModal);
-        emitter.on("show-file-creation-modal", this.showFileCreationModal);
-    },
-    beforeUnmount() {
-        emitter.off("deleteItem", this.showDeleteItemModal);
-        emitter.off("show-create-new-item-version-modal", this.showCreateNewItemVersionModal);
-        emitter.off(
-            "show-create-new-version-modal-for-empty",
-            this.showCreateNewVersionModalForEmpty,
-        );
-        emitter.off("show-update-item-properties-modal", this.showUpdateItemPropertiesModal);
-        emitter.off("show-update-permissions-modal", this.showUpdateItemPermissionsModal);
-        emitter.off(
-            "show-max-archive-size-threshold-exceeded-modal",
-            this.showMaxArchiveSizeThresholdExceededErrorModal,
-        );
-        emitter.off("show-archive-size-warning-modal", this.showArchiveSizeWarningModal);
-        emitter.off("show-changelog-modal", this.showChangelogModal);
-        emitter.off("show-file-creation-modal", this.showFileCreationModal);
-    },
-    methods: {
-        showCreateNewVersionModalForEmpty(event) {
-            this.updated_item = event.item;
-            this.updated_empty_new_type = event.type;
-            this.shown_new_version_modal = defineAsyncComponent(
-                () =>
-                    import(
-                        /* webpackChunkName: "document-new-empty-version-modal" */ "./DropDown/NewVersion/CreateNewVersionEmptyModal.vue"
-                    ),
+const ModalConfirmDeletion = defineAsyncComponent(
+    () => import("./DropDown/Delete/ModalConfirmDeletion.vue"),
+);
+const PermissionsUpdateModal = defineAsyncComponent(
+    () => import("./Permissions/PermissionsUpdateModal.vue"),
+);
+const ModalMaxArchiveSizeThresholdExceeded = defineAsyncComponent(
+    () => import("./DropDown/DownloadFolderAsZip/ModalMaxArchiveSizeThresholdExceeded.vue"),
+);
+const ModalArchiveSizeWarning = defineAsyncComponent(
+    () => import("./DropDown/DownloadFolderAsZip/ModalArchiveSizeWarning.vue"),
+);
+const FileVersionChangelogModal = defineAsyncComponent(
+    () => import("./DropDown/NewVersion/FileVersionChangelogModal.vue"),
+);
+
+const shown_new_version_modal = ref<Component | null>(null);
+const shown_update_properties_modal = ref<Component | null>(null);
+const updated_item = ref<Item | null>(null);
+const updated_properties = ref(null);
+const item_to_delete = ref<Item | null>(null);
+const item_to_update_permissions = ref({});
+const current_folder_size = ref<number | null>(null);
+const folder_above_warning_threshold_props = ref<{
+    folder_size: number;
+    folder_href: string;
+    should_warn_osx_user: boolean;
+} | null>(null);
+const file_changelog_properties = ref<ShowChangelogModalEventDetail | null>(null);
+const file_creation_properties = ref<ShowFileCreationModalEventDetail | null>(null);
+const updated_empty_new_type = ref<ItemType | null>(null);
+
+const { is_loading_ascendant_hierarchy, current_folder } = useState<
+    Pick<RootState, "is_loading_ascendant_hierarchy" | "current_folder">
+>(["is_loading_ascendant_hierarchy", "current_folder"]);
+const { current_folder_title, is_folder_empty } = useGetters<
+    Pick<RootGetter, "current_folder_title" | "is_folder_empty">
+>(["current_folder_title", "is_folder_empty"]);
+
+const title_class = computed(() =>
+    is_loading_ascendant_hierarchy.value ? "tlp-skeleton-text document-folder-title-loading" : "",
+);
+const folder_title = computed(() =>
+    is_loading_ascendant_hierarchy.value ? "" : current_folder_title.value,
+);
+const can_display_search_box = computed(
+    () => current_folder.value !== null && !is_folder_empty.value,
+);
+const can_display_new_document_button = computed(() => current_folder.value !== null);
+
+onMounted(() => {
+    emitter.on("deleteItem", showDeleteItemModal);
+    emitter.on("show-create-new-item-version-modal", showCreateNewItemVersionModal);
+    emitter.on("show-create-new-version-modal-for-empty", showCreateNewVersionModalForEmpty);
+    emitter.on("show-update-item-properties-modal", showUpdateItemPropertiesModal);
+    emitter.on("show-update-permissions-modal", showUpdateItemPermissionsModal);
+    emitter.on(
+        "show-max-archive-size-threshold-exceeded-modal",
+        showMaxArchiveSizeThresholdExceededErrorModal,
+    );
+    emitter.on("show-archive-size-warning-modal", showArchiveSizeWarningModal);
+    emitter.on("show-changelog-modal", showChangelogModal);
+    emitter.on("show-file-creation-modal", showFileCreationModal);
+});
+
+onBeforeUnmount(() => {
+    emitter.off("deleteItem", showDeleteItemModal);
+    emitter.off("show-create-new-item-version-modal", showCreateNewItemVersionModal);
+    emitter.off("show-create-new-version-modal-for-empty", showCreateNewVersionModalForEmpty);
+    emitter.off("show-update-item-properties-modal", showUpdateItemPropertiesModal);
+    emitter.off("show-update-permissions-modal", showUpdateItemPermissionsModal);
+    emitter.off(
+        "show-max-archive-size-threshold-exceeded-modal",
+        showMaxArchiveSizeThresholdExceededErrorModal,
+    );
+    emitter.off("show-archive-size-warning-modal", showArchiveSizeWarningModal);
+    emitter.off("show-changelog-modal", showChangelogModal);
+    emitter.off("show-file-creation-modal", showFileCreationModal);
+});
+
+function showCreateNewVersionModalForEmpty(event: { item: Empty; type: ItemType }): void {
+    updated_item.value = event.item;
+    updated_empty_new_type.value = event.type;
+    shown_new_version_modal.value = defineAsyncComponent(
+        () => import("./DropDown/NewVersion/CreateNewVersionEmptyModal.vue"),
+    );
+}
+
+function showCreateNewItemVersionModal(event: NewVersionEvent): void {
+    updated_item.value = event.detail.current_item;
+
+    switch (updated_item.value.type) {
+        case TYPE_FILE:
+            shown_new_version_modal.value = defineAsyncComponent(
+                () => import("./DropDown/NewVersion/CreateNewVersionFileModal.vue"),
             );
-        },
-        showCreateNewItemVersionModal(event) {
-            this.updated_item = event.detail.current_item;
+            break;
+        case TYPE_EMBEDDED:
+            shown_new_version_modal.value = defineAsyncComponent(
+                () => import("./DropDown/NewVersion/CreateNewVersionEmbeddedFileModal.vue"),
+            );
+            break;
+        case TYPE_WIKI:
+            shown_new_version_modal.value = defineAsyncComponent(
+                () => import("./DropDown/NewVersion/CreateNewVersionWikiModal.vue"),
+            );
+            break;
+        case TYPE_LINK:
+            shown_new_version_modal.value = defineAsyncComponent(
+                () => import("./DropDown/NewVersion/CreateNewVersionLinkModal.vue"),
+            );
+            break;
+        default:
+    }
+}
 
-            switch (this.updated_item.type) {
-                case TYPE_FILE:
-                    this.shown_new_version_modal = defineAsyncComponent(
-                        () =>
-                            import(
-                                /* webpackChunkName: "document-new-file-version-modal" */ "./DropDown/NewVersion/CreateNewVersionFileModal.vue"
-                            ),
-                    );
-                    break;
-                case TYPE_EMBEDDED:
-                    this.shown_new_version_modal = defineAsyncComponent(
-                        () =>
-                            import(
-                                /* webpackChunkName: "document-new-embedded-version-file-modal" */ "./DropDown/NewVersion/CreateNewVersionEmbeddedFileModal.vue"
-                            ),
-                    );
-                    break;
-                case TYPE_WIKI:
-                    this.shown_new_version_modal = defineAsyncComponent(
-                        () =>
-                            import(
-                                /* webpackChunkName: "document-new-wiki-version-modal" */ "./DropDown/NewVersion/CreateNewVersionWikiModal.vue"
-                            ),
-                    );
-                    break;
-                case TYPE_LINK:
-                    this.shown_new_version_modal = defineAsyncComponent(
-                        () =>
-                            import(
-                                /* webpackChunkName: "document-new-link-version-modal" */ "./DropDown/NewVersion/CreateNewVersionLinkModal.vue"
-                            ),
-                    );
-                    break;
-                default:
-            }
-        },
-        showChangelogModal(event) {
-            this.file_changelog_properties = event.detail;
-        },
+function showChangelogModal(event: ShowChangelogModalEvent): void {
+    file_changelog_properties.value = event.detail;
+}
 
-        showFileCreationModal(event) {
-            this.file_creation_properties = event.detail;
-        },
-        showUpdateItemPropertiesModal(event) {
-            if (!event.detail.current_item) {
-                return;
-            }
-            this.updated_properties = event.detail.current_item;
-            if (!this.isItemAFolder(this.updated_properties)) {
-                this.shown_update_properties_modal = defineAsyncComponent(
-                    () =>
-                        import(
-                            /* webpackChunkName: "update-properties-modal" */ "./DropDown/UpdateProperties/UpdatePropertiesModal.vue"
-                        ),
-                );
-            } else {
-                this.shown_update_properties_modal = defineAsyncComponent(
-                    () =>
-                        import(
-                            /* webpackChunkName: "update-folder-properties-modal" */ "./DropDown/UpdateProperties/UpdateFolderPropertiesModal.vue"
-                        ),
-                );
-            }
-        },
-        showMaxArchiveSizeThresholdExceededErrorModal(event) {
-            this.current_folder_size = event.detail.current_folder_size;
-        },
-        showArchiveSizeWarningModal(event) {
-            this.folder_above_warning_threshold_props = {
-                folder_size: event.detail.current_folder_size,
-                folder_href: event.detail.folder_href,
-                should_warn_osx_user: event.detail.should_warn_osx_user,
-            };
-        },
-        hideChangelogModal() {
-            this.file_changelog_properties = null;
-        },
-        hideFileCreationModal() {
-            this.file_creation_properties = null;
-        },
-        hideDownloadFolderModals() {
-            this.current_folder_size = null;
-            this.folder_above_warning_threshold_props = null;
-        },
-        showUpdateItemPermissionsModal(event) {
-            this.item_to_update_permissions = event.detail.current_item;
-        },
-        isItemAFolder(item) {
-            return isFolder(item);
-        },
-        showDeleteItemModal(event) {
-            this.item_to_delete = event.item;
-        },
-        hideDeleteItemModal() {
-            this.item_to_delete = null;
-        },
-    },
-};
+function showFileCreationModal(event: ShowFileCreationModalEvent): void {
+    file_creation_properties.value = event.detail;
+}
+
+function showUpdateItemPropertiesModal(event: UpdatePropertiesEvent): void {
+    if (!event.detail.current_item) {
+        return;
+    }
+    updated_item.value = event.detail.current_item;
+    if (!isFolder(updated_item.value)) {
+        shown_update_properties_modal.value = defineAsyncComponent(
+            () => import("./DropDown/UpdateProperties/UpdatePropertiesModal.vue"),
+        );
+    } else {
+        shown_update_properties_modal.value = defineAsyncComponent(
+            () => import("./DropDown/UpdateProperties/UpdateFolderPropertiesModal.vue"),
+        );
+    }
+}
+
+function showMaxArchiveSizeThresholdExceededErrorModal(
+    event: MaxArchiveSizeThresholdExceededEvent,
+): void {
+    current_folder_size.value = event.detail.current_folder_size;
+}
+
+function showArchiveSizeWarningModal(event: ArchiveSizeWarningModalEvent): void {
+    folder_above_warning_threshold_props.value = {
+        folder_size: event.detail.current_folder_size,
+        folder_href: event.detail.folder_href,
+        should_warn_osx_user: event.detail.should_warn_osx_user,
+    };
+}
+
+function hideChangelogModal(): void {
+    file_changelog_properties.value = null;
+}
+
+function hideFileCreationModal(): void {
+    file_creation_properties.value = null;
+}
+
+function hideDownloadFolderModals(): void {
+    current_folder_size.value = null;
+    folder_above_warning_threshold_props.value = null;
+}
+
+function showUpdateItemPermissionsModal(event: UpdatePermissionsEvent): void {
+    item_to_update_permissions.value = event.detail.current_item;
+}
+
+function showDeleteItemModal(event: DeleteItemEvent): void {
+    item_to_delete.value = event.item;
+}
+
+function hideDeleteItemModal(): void {
+    item_to_delete.value = null;
+}
 </script>
