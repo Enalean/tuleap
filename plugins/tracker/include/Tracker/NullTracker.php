@@ -18,17 +18,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Color\ItemColor;
 use Tuleap\Tracker\Tracker;
-use Tuleap\Tracker\TrackerColor;
 
 /**
  * Null pattern for Tracker.
  */
-class NullTracker extends Tracker
+class NullTracker extends Tracker // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     public function __construct()
     {
-        parent::__construct(null, null, null, null, null, null, null, null, null, null, null, null, null, TrackerColor::default(), null);
+        parent::__construct(null, null, null, null, null, null, null, null, null, null, null, null, null, ItemColor::default(), null);
     }
 
     /**

@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
 
+use Tuleap\Color\ItemColor;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -35,7 +36,6 @@ use Tuleap\Tracker\Test\Stub\Hierarchy\SearchParentTrackerStub;
 use Tuleap\Tracker\Test\Stub\Permission\RetrieveUserPermissionOnTrackersStub;
 use Tuleap\Tracker\Test\Stub\RetrieveAllUsableTypesInProjectStub;
 use Tuleap\Tracker\Test\Stub\RetrieveTrackerStub;
-use Tuleap\Tracker\TrackerColor;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class EditorWithReverseLinksPresenterBuilderTest extends TestCase
@@ -68,7 +68,7 @@ final class EditorWithReverseLinksPresenterBuilderTest extends TestCase
             ->withProject($current_project)
             ->build();
         $current_tracker = TrackerTestBuilder::aTracker()->withId(self::CURRENT_TRACKER_ID)
-            ->withColor(TrackerColor::fromName(self::CURRENT_TRACKER_COLOR))
+            ->withColor(ItemColor::fromName(self::CURRENT_TRACKER_COLOR))
             ->withShortName(self::CURRENT_TRACKER_SHORTNAME)
             ->withProject($current_project)
             ->build();
@@ -114,7 +114,7 @@ final class EditorWithReverseLinksPresenterBuilderTest extends TestCase
             ->withProject($current_project)
             ->build();
         $current_tracker = TrackerTestBuilder::aTracker()->withId(self::CURRENT_TRACKER_ID)
-            ->withColor(TrackerColor::fromName(self::CURRENT_TRACKER_COLOR))
+            ->withColor(ItemColor::fromName(self::CURRENT_TRACKER_COLOR))
             ->withShortName(self::CURRENT_TRACKER_SHORTNAME)
             ->withProject($current_project)
             ->build();

@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Roadmap\REST\v1;
 
 use Psr\Log\NullLogger;
+use Tuleap\Color\ItemColor;
 use Tuleap\Date\DatePeriodWithOpenDays;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -33,7 +34,6 @@ use Tuleap\Tracker\Semantic\Timeframe\TimeframeImpliedFromAnotherTracker;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
-use Tuleap\Tracker\TrackerColor;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TaskRepresentationBuilderForTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -63,7 +63,7 @@ final class TaskRepresentationBuilderForTrackerTest extends \Tuleap\Test\PHPUnit
         $this->tracker = TrackerTestBuilder::aTracker()
             ->withId(101)
             ->withName('bug')
-            ->withColor(TrackerColor::fromName('fiesta-red'))
+            ->withColor(ItemColor::fromName('fiesta-red'))
             ->build();
 
         $semantic_status = $this->createMock(\Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus::class);

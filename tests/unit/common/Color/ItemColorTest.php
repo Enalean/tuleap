@@ -20,18 +20,20 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker;
+namespace Tuleap\Color;
 
 use InvalidArgumentException;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use Tuleap\Test\PHPUnit\TestCase;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class TrackerColorTest extends \Tuleap\Test\PHPUnit\TestCase
+#[DisableReturnValueGenerationForTestDoubles]
+final class ItemColorTest extends TestCase
 {
     public function testColorCanBeBuiltFromAValidColorName(): void
     {
         $color_name = 'inca-silver';
-        $color      = TrackerColor::fromName($color_name);
-        $this->assertEquals($color_name, $color->getName());
+        $color      = ItemColor::fromName($color_name);
+        self::assertEquals($color_name, $color->getName());
     }
 
     /**
@@ -40,25 +42,25 @@ final class TrackerColorTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     public function testColorCanBeBuiltFromColorNameThatMightNotBeStandardized(string $color_name): void
     {
-        $color = TrackerColor::fromNotStandardizedName($color_name);
-        $this->assertEquals('inca-silver', $color->getName());
+        $color = ItemColor::fromNotStandardizedName($color_name);
+        self::assertEquals('inca-silver', $color->getName());
     }
 
     public function testDefaultColorCanBeBuilt(): void
     {
-        $color = TrackerColor::default();
-        $this->assertNotEmpty($color->getName());
+        $color = ItemColor::default();
+        self::assertNotEmpty($color->getName());
     }
 
     public function testInvalidColorNameIsRejected(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        TrackerColor::fromName('notvalidcolorname');
+        ItemColor::fromName('notvalidcolorname');
     }
 
     public function testInvalidNotStandardizedColorNameIsRejected(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        TrackerColor::fromNotStandardizedName('notvalidcolorname');
+        ItemColor::fromNotStandardizedName('notvalidcolorname');
     }
 }

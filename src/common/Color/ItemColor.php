@@ -20,11 +20,11 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker;
+namespace Tuleap\Color;
 
 use InvalidArgumentException;
 
-final class TrackerColor
+final readonly class ItemColor
 {
     private const DEFAULT_COLOR_NAME     = 'inca-silver';
     public const COLOR_NAMES             = [
@@ -73,16 +73,10 @@ final class TrackerColor
     ];
 
     /**
-     * @var string
-     */
-    private $color_name;
-
-    /**
      * @psalm-param value-of<self::COLOR_NAMES> $color_name
      */
-    private function __construct(string $color_name)
+    private function __construct(private string $color_name)
     {
-        $this->color_name = $color_name;
     }
 
     public static function fromName(string $color_name): self

@@ -27,6 +27,7 @@ use Project;
 use TestHelper;
 use Tracker_ArtifactDao;
 use Tracker_ArtifactFactory;
+use Tuleap\Color\ItemColor;
 use Tuleap\Project\HeartbeatsEntry;
 use Tuleap\Project\HeartbeatsEntryCollection;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -37,7 +38,6 @@ use Tuleap\Test\Stubs\RetrieveUserByIdStub;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
-use Tuleap\Tracker\TrackerColor;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class LatestHeartbeatsCollectorTest extends TestCase
@@ -56,7 +56,7 @@ final class LatestHeartbeatsCollectorTest extends TestCase
             ->with(101, HeartbeatsEntryCollection::NB_MAX_ENTRIES)
             ->willReturn(TestHelper::arrayToDar(['id' => 1], ['id' => 2], ['id' => 3]));
 
-        $tracker   = TrackerTestBuilder::aTracker()->withColor(TrackerColor::default())->build();
+        $tracker   = TrackerTestBuilder::aTracker()->withColor(ItemColor::default())->build();
         $artifact1 = ArtifactTestBuilder::anArtifact(1)
             ->inTracker($tracker)
             ->userCanView($this->user)

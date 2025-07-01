@@ -26,11 +26,11 @@ use ParagonIE\EasyDB\EasyDB;
 use Tracker_FormElement;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElementFactory;
+use Tuleap\Color\ItemColor;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Description\DescriptionSemanticDAO;
 use Tuleap\Tracker\Semantic\Title\TitleSemanticDAO;
 use Tuleap\Tracker\Tracker;
-use Tuleap\Tracker\TrackerColor;
 use function Psl\Str\lowercase;
 
 final class TrackerDatabaseBuilder
@@ -41,7 +41,7 @@ final class TrackerDatabaseBuilder
 
     public function buildTracker(int $project_id, string $name, string $color = 'inca-silver'): Tracker
     {
-        $color_name = TrackerColor::fromName($color);
+        $color_name = ItemColor::fromName($color);
         $factory    = \TrackerFactory::instance();
         $tracker_id = (int) $this->db->insertReturnId(
             'tracker',
@@ -587,7 +587,7 @@ final class TrackerDatabaseBuilder
         return $ids_list;
     }
 
-    public function buildColorForStaticListValue(int $field_id, int $value_id, TrackerColor $color): void
+    public function buildColorForStaticListValue(int $field_id, int $value_id, ItemColor $color): void
     {
         $this->db->insert(
             'tracker_field_list_bind_decorator',

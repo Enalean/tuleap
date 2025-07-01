@@ -23,11 +23,11 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Test\Builders;
 
 use PFUser;
+use Tuleap\Color\ItemColor;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Stubs\CSRF\CSRFSessionKeyStorageStub;
 use Tuleap\Test\Stubs\CSRF\CSRFSigningKeyStorageStub;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\TrackerColor;
 
 final class ArtifactTestBuilder
 {
@@ -81,7 +81,7 @@ final class ArtifactTestBuilder
         $this->tracker = TrackerTestBuilder::aTracker()
             ->withId(101)
             ->withName('bug')
-            ->withColor(TrackerColor::fromName('fiesta-red'))
+            ->withColor(ItemColor::fromName('fiesta-red'))
             ->withProject(ProjectTestBuilder::aProject()->build())
             ->build();
     }

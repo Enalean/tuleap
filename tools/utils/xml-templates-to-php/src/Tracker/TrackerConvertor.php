@@ -33,11 +33,11 @@ use PhpParser\Node\Name;
 use PhpParser\Node\Scalar\String_;
 use PhpParser\Node\Stmt;
 use Psr\Log\LoggerInterface;
+use Tuleap\Color\ItemColor;
 use Tuleap\Tools\Xml2Php\Tracker\FormElement\FormElementConvertorBuilder;
 use Tuleap\Tools\Xml2Php\Tracker\FormElement\IdToNameMapping;
 use Tuleap\Tools\Xml2Php\Tracker\Report\ReportConvertor;
 use Tuleap\Tracker\FormElement\XML\XMLReferenceByName;
-use Tuleap\Tracker\TrackerColor;
 use Tuleap\Tracker\Workflow\XML\XMLSimpleWorkflow;
 use Tuleap\Tracker\XML\XMLTracker;
 
@@ -135,7 +135,7 @@ class TrackerConvertor
                 [
                     new Arg(
                         new StaticCall(
-                            new Name('\\' . TrackerColor::class),
+                            new Name('\\' . ItemColor::class),
                             'fromName',
                             [new Arg(new String_((string) $this->xml_tracker->color))]
                         )

@@ -24,6 +24,7 @@ namespace Tuleap\CrossTracker\Query\Advanced\Select;
 
 use PFUser;
 use ProjectUGroup;
+use Tuleap\Color\ItemColor;
 use Tuleap\CrossTracker\Query\Advanced\CrossTrackerFieldTestCase;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Representations\StaticListRepresentation;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Representations\StaticListValueRepresentation;
@@ -33,7 +34,6 @@ use Tuleap\DB\UUID;
 use Tuleap\Test\Builders\CoreDatabaseBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
 use Tuleap\Tracker\Tracker;
-use Tuleap\Tracker\TrackerColor;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class StatusSelectBuilderTest extends CrossTrackerFieldTestCase
@@ -70,7 +70,7 @@ final class StatusSelectBuilderTest extends CrossTrackerFieldTestCase
         $tracker_builder->buildColorForStaticListValue(
             $sprint_status_field_id,
             $sprint_status_values['closed'][0],
-            TrackerColor::fromName('teddy-brown'),
+            ItemColor::fromName('teddy-brown'),
         );
 
         $tracker_builder->grantReadPermissionOnField(

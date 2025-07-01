@@ -27,6 +27,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Project_AccessException;
 use Project_AccessProjectNotFoundException;
 use Psr\Log\NullLogger;
+use Tuleap\Color\ItemColor;
 use Tuleap\Project\REST\ProjectReference;
 use Tuleap\Roadmap\RetrieveReportToFilterArtifacts;
 use Tuleap\Roadmap\RoadmapWidgetDao;
@@ -53,7 +54,6 @@ use Tuleap\Tracker\Test\Builders\ChangesetValueDateTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveTrackerStub;
 use Tuleap\Tracker\Tracker;
-use Tuleap\Tracker\TrackerColor;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -80,7 +80,7 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $tracker->method('userCanView')->willReturn(true);
         $tracker->method('getTitleField')->willReturn($title_field);
         $tracker->method('getId')->willReturn($tracker_id);
-        $tracker->method('getColor')->willReturn(TrackerColor::fromName($color));
+        $tracker->method('getColor')->willReturn(ItemColor::fromName($color));
         $tracker->method('getProject')->willReturn($this->project);
         $tracker->method('getItemName')->willReturn($name);
 

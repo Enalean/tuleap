@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\REST\Artifact;
 
+use Tuleap\Color\ItemColor;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -30,7 +31,6 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\Artifact\Changeset\ChangesetRepresentation;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
-use Tuleap\Tracker\TrackerColor;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -63,7 +63,7 @@ final class ArtifactRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
         $tracker = TrackerTestBuilder::aTracker()
             ->withId(self::TRACKER_ID)
             ->withName('User Stories')
-            ->withColor(TrackerColor::fromName('plum-crazy'))
+            ->withColor(ItemColor::fromName('plum-crazy'))
             ->withProject($project)
             ->build();
 

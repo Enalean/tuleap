@@ -22,11 +22,11 @@
 declare(strict_types=1);
 
 use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Color\ItemColor;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Tracker;
-use Tuleap\Tracker\TrackerColor;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TrackerTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
@@ -90,7 +90,7 @@ final class TrackerTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PS
         $group_id = 999;
         $this->tracker->method('getGroupId')->willReturn($group_id);
         $this->tracker->method('getId')->willReturn(110);
-        $this->tracker->method('getColor')->willReturn(TrackerColor::default());
+        $this->tracker->method('getColor')->willReturn(ItemColor::default());
         $tracker1->method('getGroupId')->willReturn($group_id);
         $tracker1->method('getId')->willReturn(111);
         $tracker2->method('getGroupId')->willReturn($group_id);

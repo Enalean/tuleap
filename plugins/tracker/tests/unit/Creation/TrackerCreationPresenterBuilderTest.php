@@ -30,13 +30,13 @@ use Project;
 use ProjectManager;
 use TrackerDao;
 use TrackerFactory;
+use Tuleap\Color\ItemColor;
 use Tuleap\Request\CSRFSynchronizerTokenInterface;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\CSRFSynchronizerTokenStub;
 use Tuleap\Tracker\Creation\JiraImporter\PendingJiraImportDao;
 use Tuleap\Tracker\Tracker;
-use Tuleap\Tracker\TrackerColor;
 
 #[DisableReturnValueGenerationForTestDoubles]
 final class TrackerCreationPresenterBuilderTest extends TestCase
@@ -208,7 +208,7 @@ final class TrackerCreationPresenterBuilderTest extends TestCase
         $tracker_user_admin->method('getId')->willReturn(4);
         $tracker_user_admin->method('getName')->willReturn('MyAwesomeTracker');
         $tracker_user_admin->method('getDescription')->willReturn('Description');
-        $tracker_user_admin->method('getColor')->willReturn(TrackerColor::fromName('red-wine'));
+        $tracker_user_admin->method('getColor')->willReturn(ItemColor::fromName('red-wine'));
 
         $this->project_manager->method('getProject')->with('101')->willReturn($project);
 
@@ -303,8 +303,8 @@ final class TrackerCreationPresenterBuilderTest extends TestCase
     private function getTrackerColors(): array
     {
         return [
-            'colors_names'  => TrackerColor::COLOR_NAMES,
-            'default_color' => TrackerColor::default()->getName(),
+            'colors_names'  => ItemColor::COLOR_NAMES,
+            'default_color' => ItemColor::default()->getName(),
         ];
     }
 }

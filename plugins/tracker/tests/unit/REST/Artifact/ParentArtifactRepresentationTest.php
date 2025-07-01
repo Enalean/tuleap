@@ -22,10 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\REST\Artifact;
 
+use Tuleap\Color\ItemColor;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
-use Tuleap\Tracker\TrackerColor;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ParentArtifactRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -54,7 +54,7 @@ final class ParentArtifactRepresentationTest extends \Tuleap\Test\PHPUnit\TestCa
             ->withId(self::TRACKER_ID)
             ->withName(self::TRACKER_LABEL)
             ->withShortName(self::TRACKER_SHORTNAME)
-            ->withColor(TrackerColor::fromName(self::TRACKER_COLOR))
+            ->withColor(ItemColor::fromName(self::TRACKER_COLOR))
             ->withProject($project)
             ->build();
         $artifact = ArtifactTestBuilder::anArtifact(self::ARTIFACT_ID)
