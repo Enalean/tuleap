@@ -25,7 +25,6 @@ import {
 function bindSubmissionBarToFollowUpComment(
     doc: Document,
     editor_format_selectbox: HTMLSelectElement | null,
-    follow_up_comment_editor_instance: CKEDITOR.editor | null,
     follow_up_new_comment: HTMLElement | null,
 ): void {
     if (!follow_up_new_comment) {
@@ -34,7 +33,7 @@ function bindSubmissionBarToFollowUpComment(
 
     follow_up_new_comment.addEventListener("input", () => {
         toggleSubmitArtifactBar(
-            follow_up_comment_editor_instance,
+            CKEDITOR.instances.tracker_followup_comment_new,
             editor_format_selectbox,
             follow_up_new_comment,
             doc,
@@ -45,7 +44,6 @@ function bindSubmissionBarToFollowUpComment(
 function bindSubmissionBarToEditorFormatSelectBox(
     doc: Document,
     editor_format_selectbox: HTMLSelectElement | null,
-    follow_up_comment_editor_instance: CKEDITOR.editor | null,
     follow_up_new_comment: HTMLElement | null,
 ): void {
     if (!editor_format_selectbox) {
@@ -54,7 +52,7 @@ function bindSubmissionBarToEditorFormatSelectBox(
     editor_format_selectbox.addEventListener("change", () => {
         toggleSubmissionBarForCommentInCkeditor(
             doc,
-            follow_up_comment_editor_instance,
+            CKEDITOR.instances.tracker_followup_comment_new,
             editor_format_selectbox,
             follow_up_new_comment,
         );
@@ -69,23 +67,12 @@ export const bindSubmissionBarToFollowups = (
 ): void => {
     toggleSubmissionBarForCommentInCkeditor(
         doc,
-
         follow_up_comment_editor_instance,
         editor_format_selectbox,
         follow_up_new_comment,
     );
 
-    bindSubmissionBarToFollowUpComment(
-        doc,
-        editor_format_selectbox,
-        follow_up_comment_editor_instance,
-        follow_up_new_comment,
-    );
+    bindSubmissionBarToFollowUpComment(doc, editor_format_selectbox, follow_up_new_comment);
 
-    bindSubmissionBarToEditorFormatSelectBox(
-        doc,
-        editor_format_selectbox,
-        follow_up_comment_editor_instance,
-        follow_up_new_comment,
-    );
+    bindSubmissionBarToEditorFormatSelectBox(doc, editor_format_selectbox, follow_up_new_comment);
 };

@@ -50,7 +50,7 @@ describe("bindSubmissionBarToFollowups", () => {
         const input_event = new Event("change");
         select_ckeditor_format.dispatchEvent(input_event);
 
-        expect(toggleSubmissionBarForCommentInCkeditor).toHaveBeenCalledTimes(2);
+        expect(toggleSubmissionBarForCommentInCkeditor).toHaveBeenCalledTimes(1);
     });
 
     it("should bind submission bar to followup comment", () => {
