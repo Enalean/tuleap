@@ -28,6 +28,7 @@ use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StaticListValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StringFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserGroupListValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserGroupsListFieldWithValue;
+use Tuleap\Color\ItemColor;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\ProjectUGroupTestBuilder;
@@ -47,7 +48,6 @@ use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\OpenListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
-use Tuleap\Tracker\TrackerColor;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FieldsWithValuesBuilderTest extends TestCase
@@ -224,7 +224,7 @@ final class FieldsWithValuesBuilderTest extends TestCase
             $second_list_static_value_red,
             $second_list_static_value_no_color,
         ])->withDecorators([
-            $second_list_static_value_red->getId() => StaticBindDecoratorBuilder::withColor(TrackerColor::fromName('red-wine'))->withFieldId(124)->withValueId($second_list_static_value_red->getId())->build(),
+            $second_list_static_value_red->getId() => StaticBindDecoratorBuilder::withColor(ItemColor::fromName('red-wine'))->withFieldId(124)->withValueId($second_list_static_value_red->getId())->build(),
         ])
         ->build()->getField();
 
@@ -261,7 +261,7 @@ final class FieldsWithValuesBuilderTest extends TestCase
         self::assertEquals([
             new StaticListFieldWithValue('static list field', DisplayType::BLOCK, []),
             new StaticListFieldWithValue('static list field with decorators', DisplayType::COLUMN, [
-                new StaticListValue('Red', TrackerColor::fromName('red-wine')),
+                new StaticListValue('Red', ItemColor::fromName('red-wine')),
                 new StaticListValue('No color', null),
             ]),
             new StaticListFieldWithValue('static open list field', DisplayType::COLUMN, [

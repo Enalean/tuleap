@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue;
 
-use Tuleap\Tracker\TrackerColor;
+use Tuleap\Color\ItemColor;
 
 /**
  * @psalm-immutable
@@ -31,7 +31,7 @@ final readonly class StaticListValue
 {
     public function __construct(
         public string $label,
-        public ?TrackerColor $tlp_color,
+        public ?ItemColor $tlp_color,
     ) {
     }
 }

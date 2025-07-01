@@ -23,14 +23,14 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Test\Builders;
 
 use Project;
+use Tuleap\Color\ItemColor;
 use Tuleap\Tracker\Permission\VerifySubmissionPermissions;
 use Tuleap\Tracker\Test\Stub\VerifySubmissionPermissionStub;
 use Tuleap\Tracker\Tracker;
-use Tuleap\Tracker\TrackerColor;
 
 final class TrackerTestBuilder
 {
-    private ?TrackerColor $color  = null;
+    private ?ItemColor $color     = null;
     private string $name          = 'Irrelevant';
     private string $description   = 'Irrelevant';
     private string $short_name    = 'irrelevant';
@@ -90,7 +90,7 @@ final class TrackerTestBuilder
         return $this;
     }
 
-    public function withColor(TrackerColor $color): self
+    public function withColor(ItemColor $color): self
     {
         $this->color = $color;
 
@@ -141,10 +141,10 @@ final class TrackerTestBuilder
         return (int) $this->project->getId();
     }
 
-    private function getColor(): TrackerColor
+    private function getColor(): ItemColor
     {
         if (! $this->color) {
-            return TrackerColor::default();
+            return ItemColor::default();
         }
 
         return $this->color;
@@ -186,7 +186,7 @@ final class TrackerTestBuilder
                 bool $instantiate_for_new_projects,
                 bool $log_priority_changes,
                 int $notifications_level,
-                TrackerColor $color,
+                ItemColor $color,
                 bool $enable_emailgateway,
                 private readonly bool $user_can_submit,
                 private readonly ?bool $user_can_view,

@@ -23,10 +23,10 @@ declare(strict_types=1);
 namespace Tuleap\Kanban\RecentlyVisited;
 
 use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Color\ItemColor;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
-use Tuleap\Tracker\TrackerColor;
 use Tuleap\User\History\HistoryEntryCollection;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -164,11 +164,11 @@ final class VisitRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $tracker_12 = TrackerTestBuilder::aTracker()->withName('release')
             ->withProject($project)
-            ->withColor(TrackerColor::fromName(self::FIRST_TRACKER_COLOR))
+            ->withColor(ItemColor::fromName(self::FIRST_TRACKER_COLOR))
             ->build();
         $tracker_24 = TrackerTestBuilder::aTracker()->withName('sprint')
             ->withProject($project)
-            ->withColor(TrackerColor::fromName(self::SECOND_TRACKER_COLOR))
+            ->withColor(ItemColor::fromName(self::SECOND_TRACKER_COLOR))
             ->build();
 
         $this->dao->method('searchVisitByUserId')

@@ -18,6 +18,7 @@
  */
 
 use Psr\EventDispatcher\EventDispatcherInterface;
+use Tuleap\Color\ItemColor;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
@@ -46,7 +47,6 @@ use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDuplicator;
 use Tuleap\Tracker\Semantic\TrackerSemanticFactory;
 use Tuleap\Tracker\Tracker;
-use Tuleap\Tracker\TrackerColor;
 use Tuleap\Tracker\TrackerDuplicationUserGroupMapping;
 use Tuleap\Tracker\TrackerEventTrackersDuplicated;
 use Tuleap\Tracker\TrackerIsInvalidException;
@@ -303,7 +303,7 @@ class TrackerFactory implements RetrieveTracker, RetrieveTrackersByProjectIdUser
             $row['instantiate_for_new_projects'],
             $row['log_priority_changes'],
             $row['notifications_level'],
-            TrackerColor::fromName($row['color']),
+            ItemColor::fromName($row['color']),
             $row['enable_emailgateway']
         );
     }

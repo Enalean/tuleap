@@ -9,7 +9,7 @@ deptrac:
     - name: CoreLibraries
       collectors:
         - type: classLike
-          value: Tuleap\\(?:NeverThrow\\(?:Err|Fault|Ok|Result)|Option\\Option)
+          value: Tuleap\\(?:NeverThrow\\(?:Err|Fault|Ok|Result)|Option\\Option|Color\\ItemColor)
 
   ruleset:
     Domain:

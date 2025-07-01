@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\XML;
 
 use PHPUnit\Framework\Attributes\CoversClass;
+use Tuleap\Color\ItemColor;
 use Tuleap\Tracker\Artifact\Changeset\XML\XMLChangeset;
 use Tuleap\Tracker\Artifact\XML\Exporter\FieldChange\ArtifactLinkChange;
 use Tuleap\Tracker\Artifact\XML\XMLArtifact;
@@ -53,7 +54,6 @@ use Tuleap\Tracker\Report\XML\XMLReportCriterion;
 use Tuleap\Tracker\Semantic\Status\XML\XMLStatusSemantic;
 use Tuleap\Tracker\Semantic\Timeframe\XML\XMLTimeframeSemantic;
 use Tuleap\Tracker\Semantic\Title\XML\XMLTitleSemantic;
-use Tuleap\Tracker\TrackerColor;
 use function PHPUnit\Framework\assertCount;
 use function PHPUnit\Framework\assertEquals;
 use function PHPUnit\Framework\assertFalse;
@@ -163,7 +163,7 @@ class XMLTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
             false,
             false,
             false,
-            TrackerColor::fromName('flamingo-pink'),
+            ItemColor::fromName('flamingo-pink'),
             false,
         ));
 

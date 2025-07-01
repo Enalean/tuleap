@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Artifact\RecentlyVisited;
 
 use PHPUnit\Framework\MockObject\Stub;
+use Tuleap\Color\ItemColor;
 use Tuleap\Glyph\Glyph;
 use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -31,7 +32,6 @@ use Tuleap\Test\Stubs\EventDispatcherStub;
 use Tuleap\Tracker\Artifact\StatusBadgeBuilder;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
-use Tuleap\Tracker\TrackerColor;
 use Tuleap\User\History\HistoryEntryCollection;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -109,7 +109,7 @@ final class VisitRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $first_tracker  = TrackerTestBuilder::aTracker()
             ->withProject($project)
             ->withShortName(self::FIRST_TRACKER_SHORTNAME)
-            ->withColor(TrackerColor::fromName(self::FIRST_TRACKER_COLOR))
+            ->withColor(ItemColor::fromName(self::FIRST_TRACKER_COLOR))
             ->build();
         $first_artifact = ArtifactTestBuilder::anArtifact(self::FIRST_ARTIFACT_ID)
             ->inTracker($first_tracker)
@@ -119,7 +119,7 @@ final class VisitRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $second_tracker  = TrackerTestBuilder::aTracker()
             ->withProject($project)
             ->withShortName(self::SECOND_TRACKER_SHORTNAME)
-            ->withColor(TrackerColor::fromName(self::SECOND_TRACKER_COLOR))
+            ->withColor(ItemColor::fromName(self::SECOND_TRACKER_COLOR))
             ->build();
         $second_artifact = ArtifactTestBuilder::anArtifact(self::SECOND_ARTIFACT_ID)
             ->inTracker($second_tracker)

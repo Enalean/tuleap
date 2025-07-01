@@ -1162,7 +1162,6 @@
             <file name="plugins/tracker/tests/unit/Test/Stub/Creation/JiraImporter/JiraCloudClientStub.php"/>
             <file name="plugins/tracker/tests/unit/Test/Stub/Creation/JiraImporter/JiraServerClientStub.php"/>
             <file name="plugins/tracker/tests/unit/TrackerBlockingErrorTest.php"/>
-            <file name="plugins/tracker/tests/unit/TrackerColorTest.php"/>
             <file name="plugins/tracker/tests/unit/TrackerFactoryDuplicationTest.php"/>
             <file name="plugins/tracker/tests/unit/TrackerFactoryPossibleChildrenTest.php"/>
             <file name="plugins/tracker/tests/unit/TrackerFactoryTest.php"/>

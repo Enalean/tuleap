@@ -31,7 +31,7 @@ use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StaticListValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StringFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserGroupListValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserGroupsListFieldWithValue;
-use Tuleap\Tracker\TrackerColor;
+use Tuleap\Color\ItemColor;
 
 final readonly class FieldsWithValuesBuilder implements GetFieldsWithValues
 {
@@ -104,7 +104,7 @@ final readonly class FieldsWithValuesBuilder implements GetFieldsWithValues
 
                         return new StaticListValue(
                             $value->getLabel(),
-                            isset($decorators[$value->getId()]) ? TrackerColor::fromName($decorators[$value->getId()]->getCurrentColor()) : null,
+                            isset($decorators[$value->getId()]) ? ItemColor::fromName($decorators[$value->getId()]->getCurrentColor()) : null,
                         );
                     },
                     $changeset_value->getListValues()

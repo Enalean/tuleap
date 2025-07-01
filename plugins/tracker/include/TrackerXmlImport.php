@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Color\ItemColor;
 use Tuleap\Project\UGroupRetrieverWithLegacy;
 use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
 use Tuleap\Project\XML\Import\ImportConfig;
@@ -43,7 +44,6 @@ use Tuleap\Tracker\Tracker\XML\Importer\OrderXmlTrackersByPriority;
 use Tuleap\Tracker\Tracker\XML\Importer\TrackerFromXmlInstantiator;
 use Tuleap\Tracker\Tracker\XML\Importer\TrackersHierarchyBuilder;
 use Tuleap\Tracker\Tracker\XML\Importer\XmlTrackersByPriorityOrderer;
-use Tuleap\Tracker\TrackerColor;
 use Tuleap\Tracker\TrackerIsInvalidException;
 use Tuleap\Tracker\TrackerXMLFieldMappingFromExistingTracker;
 use Tuleap\Tracker\Webhook\WebhookDao;
@@ -432,7 +432,7 @@ class TrackerXmlImport
                 $name,
                 $description,
                 $item_name,
-                TrackerColor::default()->getName(),
+                ItemColor::default()->getName(),
                 [],
                 $this->xml_fields_mapping,
                 $this->reports_xml_mapping,
@@ -568,7 +568,7 @@ class TrackerXmlImport
                 $name,
                 $description,
                 $item_name,
-                TrackerColor::default()->getName(),
+                ItemColor::default()->getName(),
                 [],
                 $this->xml_fields_mapping,
                 $this->reports_xml_mapping,

@@ -82,7 +82,7 @@ class TrackerConvertorTest extends TestCase
 
         $printer = new PrettyPrinter\Standard();
         self::assertEquals(
-            '$tracker = (new \Tuleap\Tracker\XML\XMLTracker(\'T448\', \'issue\'))->withColor(\Tuleap\Tracker\TrackerColor::fromName(\'lake-placid-blue\'));',
+            '$tracker = (new \Tuleap\Tracker\XML\XMLTracker(\'T448\', \'issue\'))->withColor(\Tuleap\Color\ItemColor::fromName(\'lake-placid-blue\'));',
             $printer->prettyPrint($nodes)
         );
     }

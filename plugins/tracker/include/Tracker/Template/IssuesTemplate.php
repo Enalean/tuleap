@@ -24,6 +24,7 @@ namespace Tuleap\Tracker\Template;
 
 use Psr\EventDispatcher\EventDispatcherInterface;
 use SimpleXMLElement;
+use Tuleap\Color\ItemColor;
 use Tuleap\Project\Registration\Template\IssuesTemplateDashboardDefinition;
 use Tuleap\Tracker\FormElement\Container\Column\XML\XMLColumn;
 use Tuleap\Tracker\FormElement\Container\Fieldset\XML\XMLFieldset;
@@ -56,7 +57,6 @@ use Tuleap\Tracker\Semantic\Status\Done\XML\XMLDoneSemantic;
 use Tuleap\Tracker\Semantic\Status\XML\XMLStatusSemantic;
 use Tuleap\Tracker\Semantic\Title\XML\XMLTitleSemantic;
 use Tuleap\Tracker\Semantic\XML\XMLFieldsBasedSemantic;
-use Tuleap\Tracker\TrackerColor;
 use Tuleap\Tracker\Workflow\XML\XMLSimpleWorkflow;
 use Tuleap\Tracker\XML\XMLTracker;
 use Tuleap\Widget\XML\XMLPreference;
@@ -85,7 +85,7 @@ final class IssuesTemplate
         $tracker = (new XMLTracker('T_issue', 'issue'))
             ->withName('Issues')
             ->withPromoted()
-            ->withColor(TrackerColor::fromName('lake-placid-blue'))
+            ->withColor(ItemColor::fromName('lake-placid-blue'))
             ->withDescription('requests, bugs, tasks, activities');
 
         $issue_tracker = $tracker

@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Search;
 
 use Tracker_FormElement_Field;
+use Tuleap\Color\ItemColor;
 use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Search\IndexedItemFound;
 use Tuleap\Search\IndexedItemFoundToSearchResult;
@@ -34,7 +35,6 @@ use Tuleap\Test\Stubs\EventDispatcherStub;
 use Tuleap\Tracker\Artifact\StatusBadgeBuilder;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
-use Tuleap\Tracker\TrackerColor;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SearchResultRetrieverTest extends TestCase
@@ -91,7 +91,7 @@ final class SearchResultRetrieverTest extends TestCase
         );
 
         $project  = ProjectTestBuilder::aProject()->build();
-        $tracker  = TrackerTestBuilder::aTracker()->withColor(TrackerColor::fromName(self::TRACKER_COLOR))
+        $tracker  = TrackerTestBuilder::aTracker()->withColor(ItemColor::fromName(self::TRACKER_COLOR))
             ->withProject($project)
             ->build();
         $artifact = ArtifactTestBuilder::anArtifact(self::ARTIFACT_ID)->withTitle(self::ARTIFACT_TITLE)
@@ -135,7 +135,7 @@ final class SearchResultRetrieverTest extends TestCase
         );
 
         $project  = ProjectTestBuilder::aProject()->build();
-        $tracker  = TrackerTestBuilder::aTracker()->withColor(TrackerColor::fromName(self::TRACKER_COLOR))
+        $tracker  = TrackerTestBuilder::aTracker()->withColor(ItemColor::fromName(self::TRACKER_COLOR))
             ->withProject($project)
             ->build();
         $artifact = ArtifactTestBuilder::anArtifact(self::ARTIFACT_ID)->withTitle(self::ARTIFACT_TITLE)

@@ -21,12 +21,12 @@
 declare(strict_types=1);
 
 use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Color\ItemColor;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 use Tuleap\Tracker\Tracker;
-use Tuleap\Tracker\TrackerColor;
 use Tuleap\Tracker\Workflow\Trigger\Siblings\SiblingsRetriever;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -139,7 +139,7 @@ final class Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategyTest extends \T
             null,
             null,
             null,
-            TrackerColor::default(),
+            ItemColor::default(),
             null
         );
     }
