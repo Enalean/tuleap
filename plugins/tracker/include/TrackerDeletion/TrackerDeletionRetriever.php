@@ -27,7 +27,7 @@ use Tuleap\Tracker\Tracker;
 
 final class TrackerDeletionRetriever
 {
-    public function __construct(private RetrieveDeletedTracker $dao, private RetrieveTracker $trakcer_factory)
+    public function __construct(private RetrieveDeletedTracker $dao, private RetrieveTracker $tracker_factory)
     {
     }
 
@@ -44,7 +44,7 @@ final class TrackerDeletionRetriever
         }
 
         foreach ($pending_trackers as $pending_tracker) {
-            $tracker = $this->trakcer_factory->getTrackerById($pending_tracker['id']);
+            $tracker = $this->tracker_factory->getTrackerById($pending_tracker['id']);
             if ($tracker) {
                 $deleted_trackers[] = $tracker;
             }
