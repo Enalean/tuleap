@@ -27,8 +27,8 @@ use TemplateRendererFactory;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptAssetGeneric;
 use Tuleap\Layout\JavascriptViteAsset;
-use Tuleap\Timetracking\REST\v1\TimetrackingManagement\Dao;
 use Tuleap\Timetracking\REST\v1\TimetrackingManagement\PredefinedTimePeriod;
+use Tuleap\Timetracking\Widget\Management\ManagementDao;
 use Tuleap\Timetracking\Widget\Management\TimetrackingManagementWidgetConfig;
 use Tuleap\User\Avatar\AvatarHashDao;
 use Tuleap\User\Avatar\ComputeAvatarHash;
@@ -40,9 +40,9 @@ class TimetrackingManagementWidget extends Widget
 {
     public const NAME = 'timetracking-management-widget';
 
-    private Dao $dao;
+    private ManagementDao $dao;
 
-    public function __construct(Dao $dao)
+    public function __construct(ManagementDao $dao)
     {
         parent::__construct(self::NAME);
         $this->dao = $dao;

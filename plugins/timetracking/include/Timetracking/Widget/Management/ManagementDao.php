@@ -20,13 +20,20 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Timetracking\REST\v1\TimetrackingManagement;
+namespace Tuleap\Timetracking\Widget\Management;
 
 use DateTimeImmutable;
 use ParagonIE\EasyDB\EasyStatement;
 use Tuleap\DB\DataAccessObject;
+use Tuleap\Timetracking\REST\v1\TimetrackingManagement\GetQueryUsers;
+use Tuleap\Timetracking\REST\v1\TimetrackingManagement\GetWidgetInformation;
+use Tuleap\Timetracking\REST\v1\TimetrackingManagement\PredefinedTimePeriod;
+use Tuleap\Timetracking\REST\v1\TimetrackingManagement\SaveQueryWithDates;
+use Tuleap\Timetracking\REST\v1\TimetrackingManagement\SaveQueryWithPredefinedTimePeriod;
+use Tuleap\Timetracking\REST\v1\TimetrackingManagement\SearchQueryByWidgetId;
+use Tuleap\Timetracking\REST\v1\TimetrackingManagement\SearchUsersByWidgetId;
 
-final class Dao extends DataAccessObject implements SaveQueryWithDates, SaveQueryWithPredefinedTimePeriod, GetQueryUsers, GetWidgetInformation, SearchQueryByWidgetId, SearchUsersByWidgetId
+final class ManagementDao extends DataAccessObject implements SaveQueryWithDates, SaveQueryWithPredefinedTimePeriod, GetQueryUsers, GetWidgetInformation, SearchQueryByWidgetId, SearchUsersByWidgetId
 {
     public function create(PredefinedTimePeriod $predefined_time_period): int
     {
@@ -37,8 +44,15 @@ final class Dao extends DataAccessObject implements SaveQueryWithDates, SaveQuer
 
     public function delete(int $query_id): void
     {
-        $sql = 'DELETE FROM plugin_timetracking_management_query WHERE id = ?';
-        $this->getDB()->run($sql, $query_id);
+        $this->getDB()->run(
+            <<<EOS
+            DELETE plugin_timetracking_management_query, plugin_timetracking_management_query_users
+            FROM plugin_timetracking_management_query
+                INNER JOIN plugin_timetracking_management_query_users ON (id = query_id)
+            WHERE id = ?
+            EOS,
+            $query_id,
+        );
     }
 
     public function saveQueryWithDates(
