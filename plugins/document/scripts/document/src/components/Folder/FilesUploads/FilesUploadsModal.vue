@@ -27,7 +27,7 @@
                 class="tlp-modal-close"
                 type="button"
                 data-dismiss="modal"
-                v-bind:aria-label="close"
+                v-bind:aria-label="$gettext('Close')"
             >
                 <i class="fa-solid fa-xmark tlp-modal-close-icon" aria-hidden="true"></i>
             </button>
@@ -67,27 +67,22 @@
     </div>
 </template>
 
-<script lang="ts">
-import { mapState } from "vuex";
+<script setup lang="ts">
 import UploadProgressBar from "../ProgressBar/UploadProgressBar.vue";
 import { FILE_UPLOAD_UNKNOWN_ERROR } from "../../../constants";
+import { useState } from "vuex-composition-helpers";
+import type { RootState } from "../../../type";
+import { useGettext } from "vue3-gettext";
 
-export default {
-    components: {
-        UploadProgressBar,
-    },
-    computed: {
-        ...mapState(["files_uploads_list"]),
-        close() {
-            return this.$gettext("Close");
-        },
-    },
-    methods: {
-        getUploadErrorMessage(file) {
-            return file.upload_error === FILE_UPLOAD_UNKNOWN_ERROR
-                ? this.$gettext("An error has occurred, please contact your administrator")
-                : file.upload_error;
-        },
-    },
-};
+const { $gettext } = useGettext();
+
+const { files_uploads_list } = useState<Pick<RootState, "files_uploads_list">>([
+    "files_uploads_list",
+]);
+
+function getUploadErrorMessage(file) {
+    return file.upload_error === FILE_UPLOAD_UNKNOWN_ERROR
+        ? $gettext("An error has occurred, please contact your administrator")
+        : file.upload_error;
+}
 </script>
