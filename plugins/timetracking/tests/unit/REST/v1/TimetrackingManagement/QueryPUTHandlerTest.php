@@ -26,9 +26,10 @@ use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Timetracking\Tests\Stub\CheckPermissionStub;
-use Tuleap\Timetracking\Tests\Stub\CheckThatUserIsActiveStub;
+use Tuleap\Timetracking\Tests\Stub\GetActiveUserStub;
 use Tuleap\Timetracking\Tests\Stub\GetQueryUsersStub;
 use Tuleap\Timetracking\Tests\Stub\SaveQueryWithDatesStub;
 use Tuleap\Timetracking\Tests\Stub\SaveQueryWithPredefinedTimePeriodStub;
@@ -36,6 +37,11 @@ use Tuleap\Timetracking\Tests\Stub\SaveQueryWithPredefinedTimePeriodStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class QueryPUTHandlerTest extends TestCase
 {
+    private const ALICE_ID   = 101;
+    private const BOB_ID     = 102;
+    private const CHARLIE_ID = 103;
+    private const DYLAN_ID   = 104;
+
     private CheckPermissionStub $check_permission_stub;
 
     protected function setUp(): void
@@ -59,7 +65,11 @@ final class QueryPUTHandlerTest extends TestCase
         $handler = new QueryPUTHandler(
             new FromPayloadPeriodBuilder(),
             new FromPayloadUserDiffBuilder(
-                CheckThatUserIsActiveStub::withActiveUsers(101, 102, 103),
+                GetActiveUserStub::withActiveUsers(
+                    UserTestBuilder::aUser()->withId(self::ALICE_ID)->build(),
+                    UserTestBuilder::aUser()->withId(self::BOB_ID)->build(),
+                    UserTestBuilder::aUser()->withId(self::CHARLIE_ID)->build(),
+                ),
                 GetQueryUsersStub::withUserIds(),
             ),
             new TimetrackingManagementWidgetSaver(
@@ -68,12 +78,12 @@ final class QueryPUTHandlerTest extends TestCase
             ),
             $this->check_permission_stub,
         );
-        return $handler->handle($widget_id, $representation);
+        return $handler->handle($widget_id, $representation, UserTestBuilder::buildWithDefaults());
     }
 
     public function testUpdateQueryWithDates(): void
     {
-        $result = $this->handle('2024-06-27T15:46:00z', '2024-06-27T15:46:00z', null, [['id' => 101]]);
+        $result = $this->handle('2024-06-27T15:46:00z', '2024-06-27T15:46:00z', null, [['id' => self::ALICE_ID]]);
 
         self::assertTrue(Result::isOk($result));
         self::assertTrue($result->value);
@@ -81,7 +91,7 @@ final class QueryPUTHandlerTest extends TestCase
 
     public function testUpdateQueryWithPredefinedTimePeriod(): void
     {
-        $result = $this->handle(null, null, 'last_week', [['id' => 102]]);
+        $result = $this->handle(null, null, 'last_week', [['id' => self::BOB_ID]]);
 
         self::assertTrue(Result::isOk($result));
         self::assertTrue($result->value);
@@ -89,7 +99,7 @@ final class QueryPUTHandlerTest extends TestCase
 
     public function testFaultWhenInvalidDateFormat(): void
     {
-        $result = $this->handle('hello', '2024-06-27T15:46:00z', null, [['id' => 103]]);
+        $result = $this->handle('hello', '2024-06-27T15:46:00z', null, [['id' => self::CHARLIE_ID]]);
 
         self::assertTrue(Result::isErr($result));
         self::assertInstanceOf(QueryInvalidDateFormatFault::class, $result->error);
@@ -97,7 +107,7 @@ final class QueryPUTHandlerTest extends TestCase
 
     public function testFaultEndDateLesserThanStartDate(): void
     {
-        $result = $this->handle('2024-06-27T15:46:00z', '2023-05-26T15:46:00z', null, [['id' => 101], ['id' => 102]]);
+        $result = $this->handle('2024-06-27T15:46:00z', '2023-05-26T15:46:00z', null, [['id' => self::ALICE_ID], ['id' => self::BOB_ID]]);
 
         self::assertTrue(Result::isErr($result));
         self::assertInstanceOf(QueryEndDateLesserThanStartDateFault::class, $result->error);
@@ -105,7 +115,7 @@ final class QueryPUTHandlerTest extends TestCase
 
     public function testFaultWhenDatesAndPredefinedTimePeriodAreProvided(): void
     {
-        $result = $this->handle('2024-06-27T15:46:00z', '2023-05-26T15:46:00z', 'today', [['id' => 101], ['id' => 102], ['id' => 103]]);
+        $result = $this->handle('2024-06-27T15:46:00z', '2023-05-26T15:46:00z', 'today', [['id' => self::ALICE_ID], ['id' => self::BOB_ID], ['id' => self::CHARLIE_ID]]);
 
         self::assertTrue(Result::isErr($result));
         self::assertInstanceOf(QueryPredefinedTimePeriodAndDatesProvidedFault::class, $result->error);
@@ -113,7 +123,7 @@ final class QueryPUTHandlerTest extends TestCase
 
     public function testFaultWhenOneDateAndPredefinedTimePeriodAreProvided(): void
     {
-        $result = $this->handle('2024-06-27T15:46:00z', '', 'today', [['id' => 102], ['id' => 103]]);
+        $result = $this->handle('2024-06-27T15:46:00z', '', 'today', [['id' => self::BOB_ID], ['id' => self::CHARLIE_ID]]);
 
         self::assertTrue(Result::isErr($result));
         self::assertInstanceOf(QueryPredefinedTimePeriodAndDatesProvidedFault::class, $result->error);
@@ -121,7 +131,7 @@ final class QueryPUTHandlerTest extends TestCase
 
     public function testFaultWhenNothingIsProvided(): void
     {
-        $result = $this->handle(null, null, null, [['id' => 102], ['id' => 103]]);
+        $result = $this->handle(null, null, null, [['id' => self::BOB_ID], ['id' => self::CHARLIE_ID]]);
 
         self::assertTrue(Result::isErr($result));
         self::assertInstanceOf(QueryPredefinedTimePeriodAndDatesProvidedFault::class, $result->error);
@@ -129,7 +139,7 @@ final class QueryPUTHandlerTest extends TestCase
 
     public function testFaultWhenOnlyOneDateIsProvided(): void
     {
-        $result = $this->handle('2024-06-27T15:46:00z', null, null, [['id' => 102], ['id' => 103]]);
+        $result = $this->handle('2024-06-27T15:46:00z', null, null, [['id' => self::BOB_ID], ['id' => self::CHARLIE_ID]]);
 
         self::assertTrue(Result::isErr($result));
         self::assertInstanceOf(QueryOnlyOneDateProvidedFault::class, $result->error);
@@ -137,7 +147,7 @@ final class QueryPUTHandlerTest extends TestCase
 
     public function testFaultWhenInvalidUsersAreProvided(): void
     {
-        $result = $this->handle(null, null, 'last_week', [['id' => 101], ['id' => 301]]);
+        $result = $this->handle(null, null, 'last_week', [['id' => self::ALICE_ID], ['id' => 301]]);
 
         self::assertTrue(Result::isErr($result));
         self::assertInstanceOf(QueryInvalidUserIdFault::class, $result->error);
@@ -145,7 +155,7 @@ final class QueryPUTHandlerTest extends TestCase
 
     public function testFaultWhenValidButNotActiveUsersAreProvided(): void
     {
-        $result = $this->handle(null, null, 'last_week', [['id' => 101], ['id' => 104]]);
+        $result = $this->handle(null, null, 'last_week', [['id' => self::ALICE_ID], ['id' => self::DYLAN_ID]]);
 
         self::assertTrue(Result::isErr($result));
         self::assertInstanceOf(QueryInvalidUserIdFault::class, $result->error);
@@ -155,7 +165,7 @@ final class QueryPUTHandlerTest extends TestCase
     {
         $this->check_permission_stub = CheckPermissionStub::withoutPermission();
 
-        $result = $this->handle(null, null, 'last_week', [['id' => 101], ['id' => 102]]);
+        $result = $this->handle(null, null, 'last_week', [['id' => self::ALICE_ID], ['id' => self::BOB_ID]]);
 
         self::assertTrue(Result::isErr($result));
         self::assertInstanceOf(WidgetNotFoundFault::class, $result->error);

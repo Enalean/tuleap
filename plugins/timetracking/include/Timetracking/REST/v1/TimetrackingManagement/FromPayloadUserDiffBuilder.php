@@ -30,7 +30,7 @@ use Tuleap\NeverThrow\Result;
 final readonly class FromPayloadUserDiffBuilder
 {
     public function __construct(
-        private CheckThatUserIsActive $check_that_user_is_active,
+        private GetActiveUser $check_that_user_is_active,
         private GetQueryUsers $dao,
     ) {
     }
@@ -46,7 +46,8 @@ final readonly class FromPayloadUserDiffBuilder
         }
 
         foreach ($user_ids as $user_id) {
-            if (! $this->check_that_user_is_active->checkThatUserIsActive($user_id)) {
+            $user = $this->check_that_user_is_active->getActiveUser($user_id);
+            if (! $user) {
                 return Result::err(QueryInvalidUserIdFault::build($user_id));
             }
         }

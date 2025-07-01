@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Timetracking\REST\v1\TimetrackingManagement;
 
-interface CheckThatUserIsActive
+interface GetActiveUser
 {
-    public function checkThatUserIsActive(int $user_id): bool;
+    public function getActiveUser(int $user_id): ?\PFUser;
 }

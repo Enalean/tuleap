@@ -45,7 +45,7 @@ final class TimetrackingManagementWidgetResource extends AuthenticatedResource
 
         return (new QueryPUTHandler(
             new FromPayloadPeriodBuilder(),
-            new FromPayloadUserDiffBuilder(new QueryUserChecker(), $dao),
+            new FromPayloadUserDiffBuilder(new ActiveUserRetriever(\UserManager::instance()), $dao),
             new TimetrackingManagementWidgetSaver($dao, $dao),
             new PermissionChecker($dao),
         ));
@@ -98,7 +98,7 @@ final class TimetrackingManagementWidgetResource extends AuthenticatedResource
         Header::allowOptionsPut();
 
         $this->getPUTHandler()
-            ->handle($id, $item)
+            ->handle($id, $item, \UserManager::instance()->getCurrentUser())
             ->mapErr(FaultMapper::mapToRestException(...));
     }
 }

@@ -39,9 +39,9 @@ final readonly class QueryPUTHandler
     /**
      * @return Ok<true>|Err<Fault>
      */
-    public function handle(int $query_id, QueryPUTRepresentation $representation): Ok|Err
+    public function handle(int $query_id, QueryPUTRepresentation $representation, \PFUser $user): Ok|Err
     {
-        return $this->permission_checker->checkThatCurrentUserCanUpdateTheQuery($query_id, \UserManager::instance()->getCurrentUser())
+        return $this->permission_checker->checkThatCurrentUserCanUpdateTheQuery($query_id, $user)
             ->andThen(fn () => $this->user_diff_builder->getUserDiff($query_id, $representation->users))
             ->andThen(function (UserDiff $user_diff) use ($query_id, $representation) {
                 return $this->data_checker->getValidatedPeriod($representation)

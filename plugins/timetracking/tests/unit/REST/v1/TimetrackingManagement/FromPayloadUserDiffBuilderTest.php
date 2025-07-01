@@ -23,27 +23,41 @@ declare(strict_types=1);
 namespace Tuleap\Timetracking\REST\v1\TimetrackingManagement;
 
 use Tuleap\NeverThrow\Result;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Timetracking\Tests\Stub\CheckThatUserIsActiveStub;
+use Tuleap\Timetracking\Tests\Stub\GetActiveUserStub;
 use Tuleap\Timetracking\Tests\Stub\GetQueryUsersStub;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FromPayloadUserDiffBuilderTest extends TestCase
 {
-    private const WIDGET_ID = 92;
+    private const WIDGET_ID  = 92;
+    private const ALICE_ID   = 101;
+    private const BOB_ID     = 102;
+    private const CHARLIE_ID = 103;
+    private const DYLAN_ID   = 104;
+
+    private \PFUser $alice;
+    private \PFUser $bob;
+
+    protected function setUp(): void
+    {
+        $this->alice = UserTestBuilder::aUser()->withId(self::ALICE_ID)->build();
+        $this->bob   = UserTestBuilder::aUser()->withId(self::BOB_ID)->build();
+    }
 
     public function testItReturnsAFaultWhenUserIdsAreInvalid(): void
     {
         $result = (
             new FromPayloadUserDiffBuilder(
-                CheckThatUserIsActiveStub::withActiveUsers(101, 102),
+                GetActiveUserStub::withActiveUsers($this->alice, $this->bob),
                 GetQueryUsersStub::withUserIds(),
             )
         )->getUserDiff(
             self::WIDGET_ID,
             [
-                ['id' => 101],
-                ['id' => 104],
+                ['id' => self::ALICE_ID],
+                ['id' => self::DYLAN_ID],
             ]
         );
 
@@ -55,14 +69,14 @@ final class FromPayloadUserDiffBuilderTest extends TestCase
     {
         $result = (
             new FromPayloadUserDiffBuilder(
-                CheckThatUserIsActiveStub::withActiveUsers(101, 102),
+                GetActiveUserStub::withActiveUsers($this->alice, $this->bob),
                 GetQueryUsersStub::withUserIds(),
             )
         )->getUserDiff(
             self::WIDGET_ID,
             [
-                ['id' => 101],
-                ['id' => 103],
+                ['id' => self::ALICE_ID],
+                ['id' => self::CHARLIE_ID],
             ]
         );
 
@@ -74,15 +88,15 @@ final class FromPayloadUserDiffBuilderTest extends TestCase
     {
         $result = (
         new FromPayloadUserDiffBuilder(
-            CheckThatUserIsActiveStub::withActiveUsers(101, 102),
+            GetActiveUserStub::withActiveUsers($this->alice, $this->bob),
             GetQueryUsersStub::withUserIds(),
         )
-        )->getUserDiff(self::WIDGET_ID, [['id' => 101], ['id' => 102]]);
+        )->getUserDiff(self::WIDGET_ID, [['id' => self::ALICE_ID], ['id' => self::BOB_ID]]);
 
         self::assertTrue(Result::isOk($result));
         self::assertEquals(
             new UserDiff(
-                [101, 102],
+                [self::ALICE_ID, self::BOB_ID],
                 []
             ),
             $result->value
@@ -93,8 +107,8 @@ final class FromPayloadUserDiffBuilderTest extends TestCase
     {
         $result = (
         new FromPayloadUserDiffBuilder(
-            CheckThatUserIsActiveStub::withActiveUsers(101, 102),
-            GetQueryUsersStub::withUserIds(101, 102),
+            GetActiveUserStub::withActiveUsers($this->alice, $this->bob),
+            GetQueryUsersStub::withUserIds(self::ALICE_ID, self::BOB_ID),
         )
         )->getUserDiff(self::WIDGET_ID, []);
 
@@ -102,7 +116,7 @@ final class FromPayloadUserDiffBuilderTest extends TestCase
         self::assertEquals(
             new UserDiff(
                 [],
-                [101, 102]
+                [self::ALICE_ID, self::BOB_ID]
             ),
             $result->value
         );
@@ -112,16 +126,16 @@ final class FromPayloadUserDiffBuilderTest extends TestCase
     {
         $result = (
         new FromPayloadUserDiffBuilder(
-            CheckThatUserIsActiveStub::withActiveUsers(101, 102),
-            GetQueryUsersStub::withUserIds(102),
+            GetActiveUserStub::withActiveUsers($this->alice, $this->bob),
+            GetQueryUsersStub::withUserIds(self::BOB_ID),
         )
-        )->getUserDiff(self::WIDGET_ID, [['id' => 101]]);
+        )->getUserDiff(self::WIDGET_ID, [['id' => self::ALICE_ID]]);
 
         self::assertTrue(Result::isOk($result));
         self::assertEquals(
             new UserDiff(
-                [101],
-                [102]
+                [self::ALICE_ID],
+                [self::BOB_ID]
             ),
             $result->value
         );
