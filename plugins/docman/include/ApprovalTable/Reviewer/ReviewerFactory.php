@@ -26,7 +26,7 @@ use Tuleap\Mail\MailLogger;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 
-class Docman_ApprovalTableReviewerFactory
+class Docman_ApprovalTableReviewerFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public $table;
     public $item;
@@ -156,26 +156,6 @@ class Docman_ApprovalTableReviewerFactory
     }
 
     /**
-     * @return Docman_ApprovalReviewer[]
-     */
-    public function getReviewerListForLatestVersion()
-    {
-        $list = [];
-        if ($this->reviewerCache === null) {
-            $this->reviewerCache = [];
-
-            $dao = self::_getDao();
-            foreach ($dao->getReviewerList($this->table->getId()) as $row) {
-                $this->reviewerCache[$row['reviewer_id']] = true;
-
-                $list[] = $this->createReviewerFromRow($row);
-            }
-        }
-
-        return $list;
-    }
-
-    /**
      * Return true if given userid is member of the current table or not.
      * There is a cache for this information (the membership of users).
      */
@@ -202,7 +182,7 @@ class Docman_ApprovalTableReviewerFactory
      *
      * @access: private
      */
-    public function _addUser($userId)
+    public function _addUser($userId) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $dPm  = Docman_PermissionsManager::instance($this->item->getGroupId());
         $um   = $this->_getUserManager();
@@ -297,7 +277,7 @@ class Docman_ApprovalTableReviewerFactory
     /**
      * Delete user from reviewer list.
      */
-    public function delUser($userId)
+    public function delUser($userId): bool
     {
         $dao     = self::_getDao();
         $deleted = $dao->delUser($this->table->getId(), $userId);
@@ -449,24 +429,19 @@ class Docman_ApprovalTableReviewerFactory
     }
 
     // Class accessor
-    public static function _getDao()
+    public static function _getDao() //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $dao = new Docman_ApprovalTableReviewerDao(CodendiDataAccess::instance());
         return $dao;
     }
 
-    public function _getMail()
-    {
-        return new Codendi_Mail();
-    }
-
-    public function _getUserManager()
+    public function _getUserManager() //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $um = UserManager::instance();
         return $um;
     }
 
-    public function _getApprovalTableNotificationCycle()
+    public function _getApprovalTableNotificationCycle() //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $atsm = new Docman_ApprovalTableNotificationCycle(
             new MailNotificationBuilder(
