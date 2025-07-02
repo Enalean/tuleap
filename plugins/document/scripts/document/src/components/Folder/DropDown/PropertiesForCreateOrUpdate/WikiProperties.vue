@@ -19,7 +19,7 @@
   -->
 
 <template>
-    <div class="tlp-form-element" v-if="is_displayed">
+    <div class="tlp-form-element">
         <label class="tlp-label" for="document-new-item-wiki-page-name">
             {{ $gettext("Wiki page") }}
             <i class="fa-solid fa-asterisk"></i>
@@ -44,16 +44,10 @@
 </template>
 
 <script setup lang="ts">
-import { isWiki } from "../../../../helpers/type-check-helper";
-import type { Item, WikiProperties } from "../../../../type";
-import { computed } from "vue";
+import type { WikiProperties } from "../../../../type";
 import emitter from "../../../../helpers/emitter";
 
-const props = defineProps<{ value: WikiProperties; item: Item }>();
-
-const is_displayed = computed((): boolean => {
-    return isWiki(props.item);
-});
+defineProps<{ value: WikiProperties }>();
 
 function onInput($event: Event): void {
     if ($event.target instanceof HTMLInputElement) {

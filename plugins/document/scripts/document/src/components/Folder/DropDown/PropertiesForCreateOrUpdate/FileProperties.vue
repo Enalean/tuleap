@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <div class="tlp-form-element" v-if="is_displayed">
+    <div class="tlp-form-element">
         <label class="tlp-label" for="document-new-file-upload">
             {{ $gettext("File") }}
             <i class="fa-solid fa-asterisk"></i>
@@ -44,14 +44,12 @@
 import { mapState } from "vuex";
 import { sprintf } from "sprintf-js";
 import prettyKibibytes from "pretty-kibibytes";
-import { isFile } from "../../../../helpers/type-check-helper";
 import emitter from "../../../../helpers/emitter";
 
 export default {
     name: "FileProperties",
     props: {
         value: Object,
-        item: Object,
     },
     data() {
         return {
@@ -60,9 +58,6 @@ export default {
     },
     computed: {
         ...mapState("configuration", ["max_size_upload"]),
-        is_displayed() {
-            return isFile(this.item);
-        },
     },
     methods: {
         onFileChange(e) {
@@ -72,9 +67,7 @@ export default {
             }
 
             const file = files.item(0);
-            if (!this.item.title) {
-                emitter.emit("update-title-property", file.name);
-            }
+            emitter.emit("update-title-property", file.name);
 
             this.error_message = "";
             if (file.size > this.max_size_upload) {

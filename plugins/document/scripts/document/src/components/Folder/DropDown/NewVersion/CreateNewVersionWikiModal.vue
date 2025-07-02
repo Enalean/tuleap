@@ -29,7 +29,10 @@
         <modal-feedback />
         <div class="tlp-modal-body">
             <div class="docman-item-update-property">
-                <wiki-properties v-model="wiki_model.wiki_properties" v-bind:item="wiki_model" />
+                <wiki-properties
+                    v-model="wiki_model.wiki_properties"
+                    v-if="wiki_model.type === TYPE_WIKI()"
+                />
                 <lock-property v-bind:item="wiki_item" v-if="wiki_item !== null" />
             </div>
         </div>
@@ -53,6 +56,7 @@ import ModalFooter from "../../ModalCommon/ModalFooter.vue";
 import WikiProperties from "../PropertiesForCreateOrUpdate/WikiProperties.vue";
 import LockProperty from "../Lock/LockProperty.vue";
 import emitter from "../../../../helpers/emitter";
+import { TYPE_WIKI } from "../../../../constants";
 
 export default {
     name: "CreateNewVersionWikiModal",
@@ -99,6 +103,9 @@ export default {
         emitter.off("update-lock", this.updateLock);
     },
     methods: {
+        TYPE_WIKI() {
+            return TYPE_WIKI;
+        },
         setApprovalUpdateAction(value) {
             this.approval_table_action = value;
         },

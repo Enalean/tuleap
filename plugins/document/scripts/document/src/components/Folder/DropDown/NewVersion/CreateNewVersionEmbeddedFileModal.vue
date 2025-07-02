@@ -34,8 +34,7 @@
                 v-on:approval-table-action-change="setApprovalUpdateAction"
             >
                 <embedded-properties
-                    v-if="embedded_file_model"
-                    v-bind:item="embedded_item"
+                    v-if="embedded_file_model && embedded_item.type === TYPE_EMBEDDED()"
                     v-bind:value="embedded_file_model.content"
                     key="embedded-props"
                 />
@@ -62,6 +61,7 @@ import EmbeddedProperties from "../PropertiesForCreateOrUpdate/EmbeddedPropertie
 import ItemUpdateProperties from "./PropertiesForUpdate/ItemUpdateProperties.vue";
 import emitter from "../../../../helpers/emitter";
 import { toRaw } from "vue";
+import { TYPE_EMBEDDED } from "../../../../constants";
 
 export default {
     name: "CreateNewVersionEmbeddedFileModal",
@@ -112,6 +112,9 @@ export default {
         emitter.off("update-embedded-properties", this.updateContent);
     },
     methods: {
+        TYPE_EMBEDDED() {
+            return TYPE_EMBEDDED;
+        },
         ...mapActions(["loadDocument"]),
         setApprovalUpdateAction(value) {
             this.approval_table_action = value;

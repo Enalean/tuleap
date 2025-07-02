@@ -19,7 +19,7 @@
   -->
 
 <template>
-    <div class="tlp-form-element" v-show="is_displayed">
+    <div class="tlp-form-element">
         <label class="tlp-label" for="document-new-item-embedded">{{ $gettext("Content") }}</label>
         <div class="tlp-form-element">
             <textarea
@@ -35,14 +35,12 @@
 </template>
 
 <script lang="ts">
-import { isEmbedded } from "../../../../helpers/type-check-helper";
 import emitter from "../../../../helpers/emitter";
 
 export default {
     name: "EmbeddedProperties",
     props: {
         value: String,
-        item: Object,
     },
     data() {
         return {
@@ -50,9 +48,6 @@ export default {
         };
     },
     computed: {
-        is_displayed() {
-            return isEmbedded(this.item);
-        },
         placeholder() {
             return this.$gettext("My content...");
         },

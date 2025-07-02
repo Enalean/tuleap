@@ -43,25 +43,24 @@
                 v-bind:parent="parent"
             >
                 <link-properties
-                    v-bind:item="item"
+                    v-if="item.type === TYPE_LINK()"
                     name="properties"
                     v-bind:value="item.link_properties.link_url"
                 />
                 <wiki-properties
+                    v-if="item.type === TYPE_WIKI()"
                     v-bind:value="item.wiki_properties.page_name"
-                    v-bind:item="item"
                     name="properties"
                 />
                 <embedded-properties
+                    v-if="item.type === TYPE_EMBEDDED()"
                     v-bind:value="item.embedded_properties.content"
-                    v-bind:item="item"
                     name="properties"
                 />
                 <file-properties
+                    v-if="item.type === TYPE_FILE() && !is_from_alternative"
                     v-bind:value="item.file_properties"
-                    v-bind:item="item"
                     name="properties"
-                    v-if="!is_from_alternative"
                 />
             </document-global-property-for-create>
             <other-information-properties-for-create
@@ -89,7 +88,15 @@
 <script lang="ts">
 import { mapState } from "vuex";
 import { createModal } from "@tuleap/tlp-modal";
-import { CAN_READ, CAN_WRITE, CAN_MANAGE, TYPE_FILE } from "../../../../constants";
+import {
+    CAN_READ,
+    CAN_WRITE,
+    CAN_MANAGE,
+    TYPE_FILE,
+    TYPE_LINK,
+    TYPE_EMBEDDED,
+    TYPE_WIKI,
+} from "../../../../constants";
 import DocumentGlobalPropertyForCreate from "./PropertiesForCreate/DocumentGlobalPropertyForCreate.vue";
 import LinkProperties from "../PropertiesForCreateOrUpdate/LinkProperties.vue";
 import WikiProperties from "../PropertiesForCreateOrUpdate/WikiProperties.vue";
@@ -199,6 +206,18 @@ export default {
         emitter.off("update-embedded-properties", this.updateEmbeddedContent);
     },
     methods: {
+        TYPE_FILE() {
+            return TYPE_FILE;
+        },
+        TYPE_EMBEDDED() {
+            return TYPE_EMBEDDED;
+        },
+        TYPE_WIKI() {
+            return TYPE_WIKI;
+        },
+        TYPE_LINK() {
+            return TYPE_LINK;
+        },
         getDefaultItem() {
             return {
                 title: "",
