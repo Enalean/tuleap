@@ -121,6 +121,8 @@ use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Layout\SiteHomepageController;
+use Tuleap\Mail\MailFactory;
+use Tuleap\Mail\TemplateWithoutFooter;
 use Tuleap\Markdown\CodeBlockFeatures;
 use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\Markdown\CommonMarkInterpreterController;
@@ -1222,6 +1224,8 @@ class RouteCollector
                 $event_manager,
             ),
             \BackendLogger::getDefaultLogger(),
+            new TemplateWithoutFooter(),
+            new MailFactory()
         );
     }
 
