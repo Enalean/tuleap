@@ -20,12 +20,16 @@
 
 <template>
     <tracker-base-card v-bind:option-name="tracker.id">
-        <template v-slot:content>
+        <template #content>
             <div class="card-glyph">
-                <component v-bind:is="svg_glyph" />
+                <svg-bug v-if="props.tracker.id === 'default-bug'" />
+                <svg-activity v-else-if="props.tracker.id === 'default-activity'" />
+                <svg-tracker-template v-else />
             </div>
             <div class="card-content">
-                <h4 class="card-title">{{ tracker.name }}</h4>
+                <h4 class="card-title">
+                    {{ tracker.name }}
+                </h4>
                 <div class="card-description">
                     <span class="card-description-content">
                         {{ tracker.description }}
@@ -35,36 +39,14 @@
         </template>
     </tracker-base-card>
 </template>
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+<script setup lang="ts">
 import type { Tracker } from "../../../../../store/type";
 import TrackerBaseCard from "../TrackerBaseCard.vue";
-import SvgTrackerTemplate from "../TrackerTemplate/SvgTrackerTemplate.vue";
-import SvgActivity from "./SvgActivity.vue";
 import SvgBug from "./SvgBug.vue";
+import SvgActivity from "./SvgActivity.vue";
+import SvgTrackerTemplate from "../TrackerTemplate/SvgTrackerTemplate.vue";
 
-@Component({
-    components: {
-        SvgTrackerTemplate,
-        SvgActivity,
-        SvgBug,
-        TrackerBaseCard,
-    },
-})
-export default class DefaultTemplateCard extends Vue {
-    @Prop({ required: true })
-    readonly tracker!: Tracker;
-
-    get svg_glyph(): string {
-        switch (this.tracker.id) {
-            case "default-bug":
-                return "svg-bug";
-            case "default-activity":
-                return "svg-activity";
-            default:
-                return "svg-tracker-template";
-        }
-    }
-}
+const props = defineProps<{
+    tracker: Tracker;
+}>();
 </script>

@@ -16,7 +16,9 @@ exports[`DefaultTemplateCard Displays a card for activity tracker 1`] = `
     <h4
       class="card-title"
     >
-      Activity
+      
+                Activity
+            
     </h4>
      
     <div
@@ -50,7 +52,9 @@ exports[`DefaultTemplateCard Displays a card for bug tracker 1`] = `
     <h4
       class="card-title"
     >
-      Bug
+      
+                Bug
+            
     </h4>
      
     <div
