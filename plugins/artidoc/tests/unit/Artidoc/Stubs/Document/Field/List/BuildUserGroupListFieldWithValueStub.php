@@ -20,15 +20,15 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Artidoc\Stubs\Document\Field;
+namespace Tuleap\Artidoc\Stubs\Document\Field\List;
 
-use Tuleap\Artidoc\Document\Field\BuildUserListFieldWithValue;
 use Tuleap\Artidoc\Document\Field\ConfiguredField;
-use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserListFieldWithValue;
+use Tuleap\Artidoc\Document\Field\List\BuildUserGroupListWithValue;
+use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserGroupsListFieldWithValue;
 
-final class BuildUserListFieldWithValueStub implements BuildUserListFieldWithValue
+final class BuildUserGroupListFieldWithValueStub implements BuildUserGroupListWithValue
 {
-    /** @psalm-var callable(ConfiguredField): UserListFieldWithValue */
+    /** @psalm-var callable(ConfiguredField): UserGroupsListFieldWithValue */
     private $callback;
 
     private function __construct(callable $callback)
@@ -41,7 +41,7 @@ final class BuildUserListFieldWithValueStub implements BuildUserListFieldWithVal
         return new self($callback);
     }
 
-    public function buildUserListFieldWithValue(ConfiguredField $configured_field, \Tracker_Artifact_ChangesetValue_List $changeset_value): UserListFieldWithValue
+    public function buildUserGroupsListFieldWithValue(ConfiguredField $configured_field, \Tracker_Artifact_ChangesetValue_List $changeset_value): UserGroupsListFieldWithValue
     {
         return ($this->callback)($configured_field);
     }
