@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,14 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+namespace Tuleap\User\Avatar;
 
-namespace Tuleap\Artidoc\REST\v1\ArtifactSection\Field;
-
-enum FieldType: string
+interface ProvideDefaultUserAvatarUrl
 {
-    case STRING           = 'string';
-    case USER_GROUPS_LIST = 'user_groups_list';
-    case STATIC_LIST      =  'static_list';
-    case USER_LIST        =  'user_list';
+    public function getDefaultAvatarUrl(): string;
 }

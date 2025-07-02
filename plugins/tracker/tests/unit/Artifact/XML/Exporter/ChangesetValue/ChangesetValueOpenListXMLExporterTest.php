@@ -33,7 +33,7 @@ use Tracker_FormElement_Field_List_Bind_Ugroups;
 use Tracker_FormElement_Field_List_Bind_Users;
 use Tracker_FormElement_Field_OpenList;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\List\OpenListStaticValueBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\List\OpenListValueBuilder;
 use UserManager;
 use UserXMLExportedCollection;
 use UserXMLExporter;
@@ -75,7 +75,7 @@ final class ChangesetValueOpenListXMLExporterTest extends \Tuleap\Test\PHPUnit\T
     {
         $bind = $this->createMock(Tracker_FormElement_Field_List_Bind_Users::class);
         $bind->method('getType')->willReturn('users');
-        $open_value = OpenListStaticValueBuilder::aStaticValue('email@tuleap.org')->build();
+        $open_value = OpenListValueBuilder::anOpenListValue('email@tuleap.org')->build();
 
         $this->field = $this->createMock(Tracker_FormElement_Field_OpenList::class);
         $this->field->method('getBind')->willReturn($bind);
@@ -115,7 +115,7 @@ final class ChangesetValueOpenListXMLExporterTest extends \Tuleap\Test\PHPUnit\T
     {
         $bind = $this->createMock(Tracker_FormElement_Field_List_Bind_Ugroups::class);
         $bind->method('getType')->willReturn('ugroups');
-        $open_value = OpenListStaticValueBuilder::aStaticValue('new_ugroup')->build();
+        $open_value = OpenListValueBuilder::anOpenListValue('new_ugroup')->build();
 
         $this->field = $this->createMock(Tracker_FormElement_Field_OpenList::class);
         $this->field->method('getBind')->willReturn($bind);
@@ -152,7 +152,7 @@ final class ChangesetValueOpenListXMLExporterTest extends \Tuleap\Test\PHPUnit\T
     {
         $bind = $this->createMock(Tracker_FormElement_Field_List_Bind_Static::class);
         $bind->method('getType')->willReturn('static');
-        $open_value = OpenListStaticValueBuilder::aStaticValue('keyword01')->build();
+        $open_value = OpenListValueBuilder::anOpenListValue('keyword01')->build();
 
         $this->field = $this->createMock(Tracker_FormElement_Field_OpenList::class);
         $this->field->method('getBind')->willReturn($bind);

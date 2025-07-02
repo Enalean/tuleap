@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\REST\v1;
 
+use ParagonIE\Corner\Error;
 use PFUser;
 use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -40,6 +41,7 @@ use Tuleap\Artidoc\REST\v1\ArtifactSection\ArtifactSectionAttachmentsRepresentat
 use Tuleap\Artidoc\REST\v1\ArtifactSection\ArtifactSectionRepresentation;
 use Tuleap\Artidoc\REST\v1\ArtifactSection\ArtifactSectionRepresentationBuilder;
 use Tuleap\Artidoc\REST\v1\ArtifactSection\RequiredArtifactInformationBuilder;
+use Tuleap\Artidoc\Stubs\Document\Field\BuildUserListFieldWithValueStub;
 use Tuleap\Artidoc\Stubs\Document\FreetextIdentifierStub;
 use Tuleap\Artidoc\Stubs\Document\SectionIdentifierStub;
 use Tuleap\NeverThrow\Err;
@@ -105,7 +107,12 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
                 new ArtifactSectionRepresentationBuilder(
                     $this->file_upload_provider,
                     new FieldsWithValuesBuilder(
-                        new ConfiguredFieldCollection([])
+                        new ConfiguredFieldCollection([]),
+                        BuildUserListFieldWithValueStub::withCallback(
+                            static function () {
+                                throw new Error('This test was not supposed to build user list fields itself.');
+                            },
+                        ),
                     )
                 ),
             ),

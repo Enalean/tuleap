@@ -45,6 +45,7 @@ use Tuleap\Artidoc\Document\Field\ConfiguredFieldCollectionBuilder;
 use Tuleap\Artidoc\Document\Field\ConfiguredFieldDao;
 use Tuleap\Artidoc\Document\Field\FieldsWithValuesBuilder;
 use Tuleap\Artidoc\Document\Field\SuitableFieldRetriever;
+use Tuleap\Artidoc\Document\Field\UserListFieldWithValueBuilder;
 use Tuleap\Artidoc\Document\Tracker\NoSemanticDescriptionFault;
 use Tuleap\Artidoc\Document\Tracker\NoSemanticTitleFault;
 use Tuleap\Artidoc\Document\Tracker\SemanticTitleIsNotAStringFault;
@@ -103,6 +104,9 @@ use Tuleap\Tracker\Workflow\SimpleMode\SimpleWorkflowDao;
 use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionExtractor;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
+use Tuleap\User\Avatar\AvatarHashDao;
+use Tuleap\User\Avatar\ComputeAvatarHash;
+use Tuleap\User\Avatar\UserAvatarUrlProvider;
 use UserManager;
 
 final class ArtidocResource extends AuthenticatedResource
@@ -510,6 +514,8 @@ final class ArtidocResource extends AuthenticatedResource
             new SuitableFieldRetriever($form_element_factory, CachedSemanticDescriptionFieldRetriever::instance()),
         );
 
+        $provide_user_avatar_url = new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash());
+
         return new ArtifactSectionRepresentationBuilder(
             new FileUploadDataProvider(
                 new FrozenFieldDetector(
@@ -529,6 +535,11 @@ final class ArtidocResource extends AuthenticatedResource
             ),
             new FieldsWithValuesBuilder(
                 $configured_field_collection_builder->buildFromArtidoc($artidoc, $user),
+                new UserListFieldWithValueBuilder(
+                    UserManager::instance(),
+                    $provide_user_avatar_url,
+                    $provide_user_avatar_url,
+                ),
             )
         );
     }

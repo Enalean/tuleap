@@ -24,7 +24,7 @@ namespace Tuleap\User\Avatar;
 
 use Tuleap\Option\Option;
 
-final readonly class UserAvatarUrlProvider implements ProvideUserAvatarUrl
+final readonly class UserAvatarUrlProvider implements ProvideUserAvatarUrl, ProvideDefaultUserAvatarUrl
 {
     public function __construct(private AvatarHashStorage $storage, private ComputeAvatarHash $compute_avatar_hash)
     {
@@ -32,22 +32,20 @@ final readonly class UserAvatarUrlProvider implements ProvideUserAvatarUrl
 
     public function getAvatarUrl(\PFUser $user): string
     {
+        if ($user->isAnonymous() || ! $user->hasAvatar()) {
+            return $this->getDefaultAvatarUrl();
+        }
+
         return \Tuleap\ServerHostname::HTTPSUrl() . $this->getAbsoluteUrl($user);
+    }
+
+    public function getDefaultAvatarUrl(): string
+    {
+        return \Tuleap\ServerHostname::HTTPSUrl() . \PFUser::DEFAULT_AVATAR_URL;
     }
 
     private function getAbsoluteUrl(\PFUser $user): string
     {
-        $avatar_url = \PFUser::DEFAULT_AVATAR_URL;
-
-        if ($user->isAnonymous()) {
-            return $avatar_url;
-        }
-
-        if (! $user->hasAvatar()) {
-            return $avatar_url;
-        }
-
-
         return $this->getAvatarFileHash($user)
             ->match(
                 static fn(string $hash) => '/users/' . urlencode($user->getUserName()) . '/avatar-' . $hash . '.png',
