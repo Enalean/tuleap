@@ -1519,7 +1519,7 @@ msgid "Global rules"
 msgstr ""
 
 #, php-format
-msgid "Global rules are not respected in tracker #%d"
+msgid "Global rules are not respected in tracker %s (#%d)"
 msgstr ""
 
 msgid "Go see this tracker"
