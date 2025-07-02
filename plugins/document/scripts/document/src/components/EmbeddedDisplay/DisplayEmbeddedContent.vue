@@ -91,12 +91,28 @@
 
 <script setup lang="ts">
 import emitter from "../../helpers/emitter";
-// eslint-disable-next-line import/no-duplicates
-import { computed, onBeforeMount, onUnmounted, ref } from "vue";
+import { computed, defineAsyncComponent, onBeforeMount, onUnmounted, ref } from "vue";
 import type { PreferenciesState } from "../../store/preferencies/preferencies-default-state";
 import { useNamespacedState } from "vuex-composition-helpers";
 import type { Embedded } from "../../type";
 import { useGettext } from "vue3-gettext";
+import EmbeddedFileEditionSwitcher from "./EmbeddedFileEditionSwitcher.vue";
+import ApprovalBadge from "../Folder/ApprovalTables/ApprovalBadge.vue";
+import DocumentTitleLockInfo from "../Folder/LockInfo/DocumentTitleLockInfo.vue";
+import ActionsHeader from "./ActionsHeader.vue";
+
+const PermissionsUpdateModal = defineAsyncComponent(
+    () => import("../Folder/Permissions/PermissionsUpdateModal.vue"),
+);
+const CreateNewEmbeddedFileVersionModal = defineAsyncComponent(
+    () => import("../Folder/DropDown/NewVersion/CreateNewVersionEmbeddedFileModal.vue"),
+);
+const ConfirmDeletionModal = defineAsyncComponent(
+    () => import("../Folder/DropDown/Delete/ModalConfirmDeletion.vue"),
+);
+const UpdatePropertiesModal = defineAsyncComponent(
+    () => import("../Folder/DropDown/UpdateProperties/UpdatePropertiesModal.vue"),
+);
 
 const is_modal_shown = ref(false);
 const show_confirm_deletion_modal = ref(false);
@@ -166,66 +182,28 @@ onUnmounted(() => {
 function showCreateNewItemVersionModal(): void {
     is_modal_shown.value = true;
 }
+
 function hideModal(): void {
     is_modal_shown.value = false;
 }
+
 function showUpdatePropertiesModal(): void {
     show_update_properties_modal.value = true;
 }
+
 function hideUpdatePropertiesModal(): void {
     show_update_properties_modal.value = false;
 }
+
 function showUpdateItemPermissionsModal(): void {
     show_update_permissions_modal.value = true;
 }
+
 function showDeleteItemModal(): void {
     show_confirm_deletion_modal.value = true;
 }
+
 function hideDeleteItemModal(): void {
     show_confirm_deletion_modal.value = false;
 }
-</script>
-
-<script lang="ts">
-// eslint-disable-next-line import/no-duplicates
-import { defineAsyncComponent, defineComponent } from "vue";
-import UpdatePropertiesModal from "../Folder/DropDown/UpdateProperties/UpdatePropertiesModal.vue";
-import EmbeddedFileEditionSwitcher from "./EmbeddedFileEditionSwitcher.vue";
-import ApprovalBadge from "../Folder/ApprovalTables/ApprovalBadge.vue";
-import DocumentTitleLockInfo from "../Folder/LockInfo/DocumentTitleLockInfo.vue";
-import ActionsHeader from "./ActionsHeader.vue";
-
-export default defineComponent({
-    components: {
-        UpdatePropertiesModal,
-        EmbeddedFileEditionSwitcher,
-        ApprovalBadge,
-        DocumentTitleLockInfo,
-        ActionsHeader,
-        "permissions-update-modal": defineAsyncComponent(
-            () =>
-                import(
-                    /* webpackChunkName: "document-permissions-update-modal" */ "../Folder/Permissions/PermissionsUpdateModal.vue"
-                ),
-        ),
-        "create-new-embedded-file-version-modal": defineAsyncComponent(
-            () =>
-                import(
-                    /* webpackChunkName: "document-new-embedded-file-version-modal" */ "../Folder/DropDown/NewVersion/CreateNewVersionEmbeddedFileModal.vue"
-                ),
-        ),
-        "confirm-deletion-modal": defineAsyncComponent(
-            () =>
-                import(
-                    /* webpackChunkName: "document-confirm-item-deletion-modal" */ "../Folder/DropDown/Delete/ModalConfirmDeletion.vue"
-                ),
-        ),
-        "update-properties-modal": defineAsyncComponent(
-            () =>
-                import(
-                    /* webpackChunkName: "update-properties-modal" */ "../Folder/DropDown/UpdateProperties/UpdatePropertiesModal.vue"
-                ),
-        ),
-    },
-});
 </script>
