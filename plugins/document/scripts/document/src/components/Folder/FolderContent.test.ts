@@ -22,20 +22,13 @@ import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import FolderContent from "./FolderContent.vue";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
+import type { Folder, Item, RootState } from "../../type";
+import * as router from "../../helpers/use-router";
 
 describe("FolderContent", () => {
-    let factory, item;
-    const state = {};
-
-    const mockRoute = {
-        params: {
-            id: 1,
-        },
-    };
+    let factory: () => VueWrapper<FolderContent>, item: Item;
+    const state = {} as RootState;
     const replace = vi.fn();
-    const mockRouter = {
-        replace,
-    };
     const update_currently_previewed_item_mock = vi.fn();
     const toggle_quick_look_mock = vi.fn();
 
@@ -51,19 +44,17 @@ describe("FolderContent", () => {
                             toggleQuickLook: toggle_quick_look_mock,
                         },
                     }),
-                    mocks: {
-                        $route: mockRoute,
-                        $router: mockRouter,
-                    },
                 },
             });
         };
+
+        vi.spyOn(router, "useRouter").mockReturnValue({ replace });
 
         item = {
             id: 42,
             title: "my item title",
             parent_id: 0,
-        };
+        } as Item;
     });
 
     it(`Should not display preview when component is rendered`, () => {
@@ -76,7 +67,7 @@ describe("FolderContent", () => {
     describe("toggleQuickLook", () => {
         it(`Given no item is currently previewed, then it directly displays quick look`, async () => {
             state.currently_previewed_item = null;
-            state.current_folder = item;
+            state.current_folder = item as Folder;
 
             const wrapper = factory();
             const event = {
@@ -96,9 +87,9 @@ describe("FolderContent", () => {
             state.currently_previewed_item = {
                 id: 105,
                 title: "my previewed item",
-            };
+            } as Item;
 
-            state.current_folder = item;
+            state.current_folder = item as Folder;
 
             const wrapper = factory();
             const event = {
@@ -116,7 +107,7 @@ describe("FolderContent", () => {
         it(`Given user toggle quick look, then it open quick look`, async () => {
             state.currently_previewed_item = item;
 
-            state.current_folder = item;
+            state.current_folder = item as Folder;
             state.toggle_quick_look = false;
 
             const wrapper = factory();
@@ -135,7 +126,7 @@ describe("FolderContent", () => {
         it(`Given user toggle quick look on a previewed item, then it closes quick look`, async () => {
             state.currently_previewed_item = item;
 
-            state.current_folder = item;
+            state.current_folder = item as Folder;
             state.toggle_quick_look = true;
 
             const wrapper = factory();
@@ -153,7 +144,7 @@ describe("FolderContent", () => {
             state.current_folder = {
                 id: 25,
                 parent_id: 0,
-            };
+            } as Folder;
 
             state.currently_previewed_item = item;
 
@@ -167,7 +158,7 @@ describe("FolderContent", () => {
             state.current_folder = {
                 id: 25,
                 parent_id: 100,
-            };
+            } as Folder;
 
             state.currently_previewed_item = item;
 

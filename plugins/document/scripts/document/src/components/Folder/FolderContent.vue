@@ -71,90 +71,88 @@
     </div>
 </template>
 
-<script lang="ts">
-import { mapState } from "vuex";
+<script setup lang="ts">
 import FolderContentRow from "./FolderContentRow.vue";
 import QuicklookGlobal from "../QuickLook/QuickLookGlobal.vue";
 import { isFile, isFolder } from "../../helpers/type-check-helper";
 import emitter from "../../helpers/emitter";
+import { useState, useStore } from "vuex-composition-helpers";
+import type { Item, RootState } from "../../type";
+import { computed, onBeforeUnmount, onMounted } from "vue";
+import { useRouter } from "../../helpers/use-router";
 
-export default {
-    name: "FolderContent",
-    components: { QuicklookGlobal, FolderContentRow },
-    computed: {
-        ...mapState([
-            "folder_content",
-            "currently_previewed_item",
-            "toggle_quick_look",
-            "current_folder",
-        ]),
-        item_id() {
-            if (this.currently_previewed_item === null) {
-                return null;
-            }
+const $store = useStore();
+const $router = useRouter();
 
-            return this.currently_previewed_item.id;
-        },
-        quick_look_dropzone_class() {
-            if (this.currently_previewed_item === null) {
-                return "";
-            }
+const { folder_content, currently_previewed_item, toggle_quick_look, current_folder } = useState<
+    Pick<
+        RootState,
+        "folder_content" | "currently_previewed_item" | "toggle_quick_look" | "current_folder"
+    >
+>(["folder_content", "currently_previewed_item", "toggle_quick_look", "current_folder"]);
 
-            return {
-                "document-quick-look-folder-dropzone": isFolder(this.currently_previewed_item),
-                "document-quick-look-file-dropzone": isFile(this.currently_previewed_item),
-            };
-        },
-        should_display_preview() {
-            return this.toggle_quick_look && this.currently_previewed_item;
-        },
-    },
-    created() {
-        emitter.on("toggle-quick-look", this.toggleQuickLook);
-    },
-    beforeUnmount() {
-        emitter.off("toggle-quick-look", this.toggleQuickLook);
-    },
-    methods: {
-        async toggleQuickLook(event) {
-            if (!this.currently_previewed_item) {
-                await this.displayQuickLook(event.details.item);
-                return;
-            }
+const item_id = computed(() => currently_previewed_item.value?.id);
+const quick_look_dropzone_class = computed(() => {
+    if (currently_previewed_item.value === null) {
+        return "";
+    }
 
-            if (this.currently_previewed_item.id !== event.details.item.id) {
-                await this.displayQuickLook(event.details.item);
-                return;
-            }
+    return {
+        "document-quick-look-folder-dropzone": isFolder(currently_previewed_item.value),
+        "document-quick-look-file-dropzone": isFile(currently_previewed_item.value),
+    };
+});
+const should_display_preview = computed(
+    () => toggle_quick_look.value && currently_previewed_item.value !== null,
+);
 
-            if (!this.toggle_quick_look) {
-                await this.displayQuickLook(event.details.item);
-            } else {
-                await this.closeQuickLook(event.details.item);
-            }
-        },
-        async displayQuickLook(item) {
-            await this.$router.replace({
-                name: "preview",
-                params: { preview_item_id: item.id },
-            });
+onMounted(() => {
+    emitter.on("toggle-quick-look", toggleQuickLook);
+});
 
-            this.$store.commit("updateCurrentlyPreviewedItem", item);
-            this.$store.commit("toggleQuickLook", true);
-        },
-        async closeQuickLook() {
-            if (this.current_folder.parent_id !== 0) {
-                await this.$router.replace({
-                    name: "folder",
-                    params: { item_id: this.current_folder.id },
-                });
-            } else {
-                await this.$router.replace({
-                    name: "root_folder",
-                });
-            }
-            this.$store.commit("toggleQuickLook", false);
-        },
-    },
-};
+onBeforeUnmount(() => {
+    emitter.off("toggle-quick-look", toggleQuickLook);
+});
+
+async function toggleQuickLook(event: { details: { item: Item } }): Promise<void> {
+    if (currently_previewed_item.value === null) {
+        await displayQuickLook(event.details.item);
+        return;
+    }
+
+    if (currently_previewed_item.value.id !== event.details.item.id) {
+        await displayQuickLook(event.details.item);
+        return;
+    }
+
+    if (!toggle_quick_look.value) {
+        await displayQuickLook(event.details.item);
+    } else {
+        await closeQuickLook();
+    }
+}
+
+async function displayQuickLook(item: Item): Promise<void> {
+    await $router.replace({
+        name: "preview",
+        params: { preview_item_id: item.id },
+    });
+
+    $store.commit("updateCurrentlyPreviewedItem", item);
+    $store.commit("toggleQuickLook", true);
+}
+
+async function closeQuickLook(): Promise<void> {
+    if (current_folder.value !== null && current_folder.value.parent_id !== 0) {
+        await $router.replace({
+            name: "folder",
+            params: { item_id: current_folder.value.id },
+        });
+    } else {
+        await $router.replace({
+            name: "root_folder",
+        });
+    }
+    $store.commit("toggleQuickLook", false);
+}
 </script>
