@@ -437,7 +437,7 @@ export interface SearchCriterionOwner extends BaseSearchCriterion {
 }
 
 export interface SearchCriterionText extends BaseSearchCriterion {
-    readonly type: "text";
+    readonly type: "text" | "number";
 }
 
 export interface SearchListOption {
@@ -450,7 +450,11 @@ export interface SearchCriterionList extends BaseSearchCriterion {
     readonly options: ReadonlyArray<SearchListOption>;
 }
 
-export type SearchCriterion = SearchCriterionDate | SearchCriterionText | SearchCriterionList;
+export type SearchCriterion =
+    | SearchCriterionDate
+    | SearchCriterionText
+    | SearchCriterionList
+    | SearchCriterionOwner;
 
 export type SearchCriteria = ReadonlyArray<SearchCriterion>;
 

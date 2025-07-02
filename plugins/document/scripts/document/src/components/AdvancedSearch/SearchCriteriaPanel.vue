@@ -30,13 +30,38 @@
                 <search-criteria-breadcrumb v-if="!is_in_root_folder" />
                 <div class="document-search-criteria" v-if="new_query">
                     <criterion-global-text v-bind:value="new_query.global_search" />
-                    <component
-                        v-for="criterion in criteria"
-                        v-bind:key="criterion.name"
-                        v-bind:is="`criterion-${criterion.type}`"
-                        v-bind:criterion="criterion"
-                        v-bind:value="new_query[criterion.name]"
-                    />
+                    <template v-for="criterion in criteria">
+                        <criterion-text
+                            v-if="criterion.type === 'text'"
+                            v-bind:key="criterion.name"
+                            v-bind:criterion="criterion"
+                            v-bind:value="new_query[criterion.name]"
+                        />
+                        <criterion-owner
+                            v-if="criterion.type === 'owner'"
+                            v-bind:key="criterion.name"
+                            v-bind:criterion="criterion"
+                            v-bind:value="new_query[criterion.name]"
+                        />
+                        <criterion-date
+                            v-if="criterion.type === 'date'"
+                            v-bind:key="criterion.name"
+                            v-bind:criterion="criterion"
+                            v-bind:value="new_query[criterion.name]"
+                        />
+                        <criterion-list
+                            v-if="criterion.type === 'list'"
+                            v-bind:key="criterion.name"
+                            v-bind:criterion="criterion"
+                            v-bind:value="new_query[criterion.name]"
+                        />
+                        <criterion-number
+                            v-if="criterion.type === 'number'"
+                            v-bind:key="criterion.name"
+                            v-bind:criterion="criterion"
+                            v-bind:value="new_query[criterion.name]"
+                        />
+                    </template>
                 </div>
             </section>
             <section class="tlp-pane-section tlp-pane-section-submit search-criteria-panel-submit">
@@ -59,10 +84,14 @@ import CriterionGlobalText from "./Criteria/CriterionGlobalText.vue";
 import { useNamespacedState } from "vuex-composition-helpers";
 import type { ConfigurationState } from "../../store/configuration";
 import type { Ref } from "vue";
-// eslint-disable-next-line import/no-duplicates
 import { computed, onMounted, onUnmounted, ref } from "vue";
 import type { UpdateCriteriaDateEvent, UpdateCriteriaEvent } from "../../helpers/emitter";
 import emitter from "../../helpers/emitter";
+import CriterionText from "./Criteria/CriterionText.vue";
+import CriterionOwner from "./Criteria/CriterionOwner.vue";
+import CriterionDate from "./Criteria/CriterionDate.vue";
+import CriterionList from "./Criteria/CriterionList.vue";
+import CriterionNumber from "./Criteria/CriterionNumber.vue";
 
 const props = defineProps<{ query: AdvancedSearchParams; folder_id: number }>();
 
@@ -112,25 +141,5 @@ function updateCriteriaDate(event: UpdateCriteriaDateEvent): void {
 
 const is_in_root_folder = computed((): boolean => {
     return props.folder_id === root_id.value;
-});
-</script>
-
-<script lang="ts">
-// eslint-disable-next-line import/no-duplicates
-import { defineComponent } from "vue";
-import CriterionText from "./Criteria/CriterionText.vue";
-import CriterionOwner from "./Criteria/CriterionOwner.vue";
-import CriterionDate from "./Criteria/CriterionDate.vue";
-import CriterionList from "./Criteria/CriterionList.vue";
-import CriterionNumber from "./Criteria/CriterionNumber.vue";
-
-export default defineComponent({
-    components: {
-        CriterionText,
-        CriterionOwner,
-        CriterionDate,
-        CriterionList,
-        CriterionNumber,
-    },
 });
 </script>
