@@ -55,6 +55,7 @@ vi.useFakeTimers();
 const NUMERIC_COLUMN_NAME = "remaining_effort";
 const error_message = "Ooops";
 const fault = Fault.fromMessage(error_message);
+const html_element = {} as HTMLElement;
 
 const artifact_row = new ArtifactRowBuilder()
     .addCell(PRETTY_TITLE_COLUMN_NAME, {
@@ -115,6 +116,11 @@ describe("ArtifactRow", () => {
                     .buildWithNumberOfLinks(1, 1),
                 columns: new Set<ColumnName>().add(PRETTY_TITLE_COLUMN_NAME),
                 level: 0,
+                is_last: false,
+                parent_element: undefined,
+                parent_caret: undefined,
+                direction: undefined,
+                reverse_links_count: undefined,
             },
         });
     }
@@ -124,7 +130,7 @@ describe("ArtifactRow", () => {
         const getReverseLinks = vi.spyOn(artifact_links_table_retriever, "getReverseLinks");
         const wrapper = getWrapper();
 
-        await wrapper.findComponent(SelectableCell).trigger("toggle-links");
+        wrapper.findComponent(SelectableCell).vm.$emit("toggle-links", html_element, html_element);
         await vi.runOnlyPendingTimersAsync();
         const row_error_message = wrapper.findComponent(RowErrorMessage);
         const artifact_link_rows = wrapper.findAllComponents(ArtifactLinkRows);
@@ -188,7 +194,9 @@ describe("ArtifactRow", () => {
             );
             const wrapper = getWrapper();
 
-            await wrapper.findComponent(SelectableCell).trigger("toggle-links");
+            wrapper
+                .findComponent(SelectableCell)
+                .vm.$emit("toggle-links", html_element, html_element);
             await vi.runOnlyPendingTimersAsync();
             const row_error_message = wrapper.findComponent(RowErrorMessage);
 

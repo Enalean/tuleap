@@ -25,6 +25,7 @@ import { ArtifactRepresentationStub } from "../../tests/builders/ArtifactReprese
 import type { RetrieveArtifactLinks } from "../domain/RetrieveArtifactLinks";
 import { ArtifactLinksRetriever } from "./ArtifactLinksRetriever";
 import { ArtifactsTableBuilder } from "./ArtifactsTableBuilder";
+import { FORWARD_DIRECTION, REVERSE_DIRECTION } from "../domain/ArtifactsTable";
 
 describe("ArtifactsLinksRetriever", () => {
     const widget_id = 109;
@@ -36,7 +37,7 @@ describe("ArtifactsLinksRetriever", () => {
 
     it.each([
         [
-            "forward",
+            FORWARD_DIRECTION,
             getRetriever().getForwardLinks,
             {
                 source_artifact_id: artifact_id,
@@ -44,7 +45,7 @@ describe("ArtifactsLinksRetriever", () => {
             },
         ],
         [
-            "reverse",
+            REVERSE_DIRECTION,
             getRetriever().getReverseLinks,
             {
                 target_artifact_id: artifact_id,

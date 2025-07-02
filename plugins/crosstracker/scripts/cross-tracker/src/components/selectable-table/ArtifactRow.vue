@@ -25,14 +25,18 @@
             v-bind:key="column_name + '_' + level + '_' + row.id"
             v-bind:cell="row.cells.get(column_name)"
             v-bind:artifact_uri="row.uri"
-            v-bind:number_of_forward_link="row.number_of_forward_link"
-            v-bind:number_of_reverse_link="row.number_of_reverse_link"
-            v-on:toggle-links="toggleLinks(row)"
+            v-bind:expected_number_of_forward_link="row.number_of_forward_link"
+            v-bind:expected_number_of_reverse_link="row.number_of_reverse_link"
+            v-on:toggle-links="toggleLinks"
             v-bind:level="level"
+            v-bind:is_last="is_last"
+            v-bind:parent_element="parent_element"
+            v-bind:parent_caret="parent_caret"
+            v-bind:direction="direction"
+            v-bind:reverse_links_count="reverse_links_count"
         />
     </div>
-    <template v-if="is_expanded">
-        <row-error-message v-if="error_message !== ''" v-bind:error_message="error_message" />
+    <template v-if="is_expanded && current_element_ref && current_caret_ref">
         <artifact-link-rows
             v-for="(artifact_link, index) in [forward, reverse]"
             v-bind:key="index"
@@ -43,14 +47,24 @@
             v-bind:artifact_links_rows="artifact_link.artifact_links"
             v-bind:level="level + 1"
             v-bind:tql_query="tql_query"
+            v-bind:parent_element="current_element_ref"
+            v-bind:parent_caret="current_caret_ref"
+            v-bind:direction="artifact_link.direction"
+            v-bind:reverse_links_count="reverse.number_of_links"
         />
+        <row-error-message v-if="error_message !== ''" v-bind:error_message="error_message" />
     </template>
 </template>
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { computed, ref } from "vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import type { Fault } from "@tuleap/fault";
-import type { ArtifactsTable, ArtifactRow } from "../../domain/ArtifactsTable";
+import type {
+    ArtifactLinkDirection,
+    ArtifactRow,
+    ArtifactsTable,
+} from "../../domain/ArtifactsTable";
+import { FORWARD_DIRECTION, REVERSE_DIRECTION } from "../../domain/ArtifactsTable";
 import type { ArtifactsTableWithTotal } from "../../domain/RetrieveArtifactsTable";
 import RowErrorMessage from "../feedback/RowErrorMessage.vue";
 import { RETRIEVE_ARTIFACT_LINKS, WIDGET_ID } from "../../injection-symbols";
@@ -62,6 +76,7 @@ interface ArtifactLinksFetchStatus {
     is_loading: boolean;
     artifact_links: ReadonlyArray<ArtifactRow>;
     number_of_links: number;
+    direction: ArtifactLinkDirection;
 }
 
 const props = defineProps<{
@@ -69,6 +84,11 @@ const props = defineProps<{
     columns: ArtifactsTable["columns"];
     tql_query: string;
     level: number;
+    is_last: boolean;
+    parent_element: HTMLElement | undefined;
+    parent_caret: HTMLElement | undefined;
+    direction: ArtifactLinkDirection | undefined;
+    reverse_links_count: number | undefined;
 }>();
 
 const artifact_links_retriever = strictInject(RETRIEVE_ARTIFACT_LINKS);
@@ -81,11 +101,15 @@ const are_reverse_links_loading = ref(true);
 const is_expanded = ref(false);
 const error_message = ref("");
 
+const current_element_ref = ref<HTMLElement>();
+const current_caret_ref = ref<HTMLElement>();
+
 const forward = computed((): ArtifactLinksFetchStatus => {
     return {
         is_loading: are_forward_links_loading.value,
         artifact_links: forward_links.value,
         number_of_links: props.row.number_of_forward_link,
+        direction: FORWARD_DIRECTION,
     };
 });
 
@@ -94,10 +118,14 @@ const reverse = computed((): ArtifactLinksFetchStatus => {
         is_loading: are_reverse_links_loading.value,
         artifact_links: reverse_links.value,
         number_of_links: props.row.number_of_reverse_link,
+        direction: REVERSE_DIRECTION,
     };
 });
 
-function toggleLinks(row: ArtifactRow): void {
+function toggleLinks(current_element: HTMLElement, current_caret: HTMLElement): void {
+    current_element_ref.value = current_element;
+    current_caret_ref.value = current_caret;
+
     is_expanded.value = !is_expanded.value;
 
     if (!is_expanded.value) {
@@ -109,7 +137,7 @@ function toggleLinks(row: ArtifactRow): void {
     }
 
     artifact_links_retriever
-        .getForwardLinks(widget_id, row.id, props.tql_query)
+        .getForwardLinks(widget_id, props.row.id, props.tql_query)
         .match(
             (artifacts: ArtifactsTableWithTotal) => {
                 forward_links.value = artifacts.table.rows;
@@ -123,7 +151,7 @@ function toggleLinks(row: ArtifactRow): void {
         });
 
     artifact_links_retriever
-        .getReverseLinks(widget_id, row.id, props.tql_query)
+        .getReverseLinks(widget_id, props.row.id, props.tql_query)
         .match(
             (artifacts: ArtifactsTableWithTotal) => {
                 reverse_links.value = artifacts.table.rows;

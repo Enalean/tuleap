@@ -32,6 +32,7 @@ defineProps<{
 
 <style scoped lang="scss">
 .tlp-alert-danger {
+    z-index: 1;
     grid-column: 1 / -1;
     margin: 0;
     padding: var(--tlp-small-spacing) var(--tlp-small-spacing) var(--tlp-small-spacing) 42px;

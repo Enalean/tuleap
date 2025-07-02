@@ -30,6 +30,8 @@ defineProps<{
 
 <style scoped lang="scss">
 .caret-indentation {
-    margin-left: calc(var(--tlp-medium-spacing) * v-bind(level));
+    /* 32px is the equivalent to --tlp-x-large-spacing. We are setting it fixed here
+     so that it is not impacted by the theme density. */
+    margin-left: calc(32px * v-bind(level));
 }
 </style>
