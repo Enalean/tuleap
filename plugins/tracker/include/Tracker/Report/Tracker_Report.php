@@ -1618,6 +1618,9 @@ class Tracker_Report implements Tracker_Dispatchable_Interface // phpcs:ignore P
                     }
 
                     $this->report_session->setHasChanged();
+                    $GLOBALS['Response']->redirect('?' . http_build_query([
+                        'report' => $this->id,
+                    ]));
                 }
                 if ($request->exist('tracker_expert_query_submit') && ! $current_user->isAnonymous()) {
                     $this->checkReportUpdateRequest($request, $tracker);
@@ -1628,6 +1631,9 @@ class Tracker_Report implements Tracker_Dispatchable_Interface // phpcs:ignore P
                         $this->expert_query = $expert_query;
                         $this->report_session->setHasChanged();
                     }
+                    $GLOBALS['Response']->redirect('?' . http_build_query([
+                        'report' => $this->id,
+                    ]));
                 }
                 if ($this->is_in_expert_mode && $this->expert_query) {
                     try {
