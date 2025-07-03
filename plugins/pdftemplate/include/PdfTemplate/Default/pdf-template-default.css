@@ -223,7 +223,7 @@ img {
     align-items: center;
 }
 
-.document-list-item-with-color-bubble {
+.document-list-item-with-color-bubble, .document-list-item-with-avatar {
     display: inline-flex;
     flex-direction: row;
     align-items: center;
@@ -332,4 +332,11 @@ img {
     &.tlp-swatch-flamingo-pink {
         background-color: var(--flamingo-pink-primary);
     }
+}
+
+.document-avatar-mini {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    overflow: hidden;
 }

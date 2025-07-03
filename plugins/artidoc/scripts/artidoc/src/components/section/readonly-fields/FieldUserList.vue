@@ -19,14 +19,14 @@
 
 <template>
     <label class="tlp-label document-label">{{ user_list_field.label }}</label>
-    <p v-if="user_list_field.value.length > 0" class="user-list">
+    <p v-if="user_list_field.value.length > 0" class="user-list document-item-list">
         <span
             v-for="user in user_list_field.value"
             v-bind:key="user.display_name"
-            class="user-list-item"
+            class="user-list-item document-list-item-inline document-list-item-with-avatar"
             data-test="user-list-item"
         >
-            <div class="tlp-avatar-mini">
+            <div class="tlp-avatar-mini document-avatar-mini">
                 <img
                     loading="lazy"
                     v-bind:src="user.avatar_url"
