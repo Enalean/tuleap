@@ -26,6 +26,7 @@ import * as tlp_modal from "@tuleap/tlp-modal";
 import emitter from "../../../../helpers/emitter";
 import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
 import { nextTick } from "vue";
+import type { Modal } from "@tuleap/tlp-modal";
 
 describe("FileVersionChangelogModal", () => {
     const create_file_version = vi.fn();
@@ -33,8 +34,8 @@ describe("FileVersionChangelogModal", () => {
     function getWrapper(): VueWrapper<FileVersionChangelogModal> {
         return shallowMount(FileVersionChangelogModal, {
             props: {
-                updatedFile: { id: 12, title: "How to.pdf", properties: [] },
-                droppedFile: new File([], "How to (updated).pdf"),
+                updated_file: { id: 12, title: "How to.pdf", properties: [] },
+                dropped_file: new File([], "How to (updated).pdf"),
             },
             global: {
                 ...getGlobalTestOptions({
@@ -59,17 +60,17 @@ describe("FileVersionChangelogModal", () => {
             addEventListener: () => {},
             show: () => {},
             hide: () => {},
-        });
+            removeBackdrop: () => {},
+        } as unknown as Modal);
     });
 
     it("Create a new version of the document with the provided changelog and titles if any.", async () => {
         const wrapper = getWrapper();
-        wrapper.setData({
-            version: {
-                title: "Added the [contributions] section",
-                changelog: "Now, it mentions how to contribute to the project.",
-            },
-        });
+        emitter.emit("update-version-title", "Added the [contributions] section");
+        emitter.emit(
+            "update-changelog-property",
+            "Now, it mentions how to contribute to the project.",
+        );
 
         await wrapper.get("form").trigger("submit");
 
@@ -85,12 +86,11 @@ describe("FileVersionChangelogModal", () => {
 
     it("Create a new version of the document with the new approval table.", async () => {
         const wrapper = getWrapper();
-        wrapper.setData({
-            version: {
-                title: "Added the [contributions] section",
-                changelog: "Now, it mentions how to contribute to the project.",
-            },
-        });
+        emitter.emit("update-version-title", "Added the [contributions] section");
+        emitter.emit(
+            "update-changelog-property",
+            "Now, it mentions how to contribute to the project.",
+        );
 
         wrapper
             .findComponent(ItemUpdateProperties)
@@ -110,23 +110,23 @@ describe("FileVersionChangelogModal", () => {
     it("Updates the version title", async () => {
         const wrapper = getWrapper();
 
-        expect(wrapper.vm.$data.version.title).toBe("");
+        expect(wrapper.vm.version.title).toBe("");
         emitter.emit("update-version-title", "A title");
 
         await nextTick();
 
-        expect(wrapper.vm.$data.version.title).toBe("A title");
+        expect(wrapper.vm.version.title).toBe("A title");
     });
 
     it("Updates the changelog", async () => {
         const wrapper = getWrapper();
 
-        expect(wrapper.vm.$data.version.changelog).toBe("");
+        expect(wrapper.vm.version.changelog).toBe("");
         emitter.emit("update-changelog-property", "A changelog");
 
         await nextTick();
 
-        expect(wrapper.vm.$data.version.changelog).toBe("A changelog");
+        expect(wrapper.vm.version.changelog).toBe("A changelog");
     });
 
     it("Updates the lock", async () => {
@@ -134,11 +134,11 @@ describe("FileVersionChangelogModal", () => {
 
         await nextTick();
 
-        expect(wrapper.vm.$data.version.is_file_locked).toBeUndefined();
+        expect(wrapper.vm.version.is_file_locked).toBeUndefined();
         emitter.emit("update-lock", true);
 
         await nextTick();
 
-        expect(wrapper.vm.$data.version.is_file_locked).toBe(true);
+        expect(wrapper.vm.version.is_file_locked).toBe(true);
     });
 });
