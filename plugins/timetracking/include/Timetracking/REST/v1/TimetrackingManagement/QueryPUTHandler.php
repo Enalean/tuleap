@@ -43,9 +43,15 @@ final readonly class QueryPUTHandler
     {
         return $this->permission_checker->checkThatCurrentUserCanUpdateTheQuery($query_id, $user)
             ->andThen(fn () => $this->user_diff_builder->getUserDiff($query_id, $representation->users))
-            ->andThen(function (UserDiff $user_diff) use ($query_id, $representation) {
-                return $this->data_checker->getValidatedPeriod($representation)
-                    ->andThen(fn (Period $period) => $this->timetracking_management_widget_saver->save($query_id, $period, $user_diff));
-            });
+            ->andThen(fn (UserDiff $user_diff) => $this->save($query_id, $representation, $user_diff));
+    }
+
+    private function save(
+        int $query_id,
+        QueryPUTRepresentation $representation,
+        UserDiff $userDiff,
+    ): Ok|Err {
+        return $this->data_checker->getValidatedPeriod($representation)
+            ->andThen(fn (Period $period) => $this->timetracking_management_widget_saver->save($query_id, $period, $userDiff));
     }
 }
