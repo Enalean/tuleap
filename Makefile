@@ -276,7 +276,7 @@ pull-docker-images: ## Pull all docker images used for development
 	@$(MAKE) --no-print-directory docker-pull-verify-keyless-gha IMAGE_NAME=ghcr.io/enalean/tuleap-test-phpunit:el9-php82
 	@$(MAKE) --no-print-directory docker-pull-verify-keyless-gha IMAGE_NAME=ghcr.io/enalean/tuleap-test-rest:el9-php82
 	@$(MAKE) --no-print-directory docker-pull-verify IMAGE_NAME=tuleap/tuleap-community-edition:latest KEY_PATH=tools/utils/signing-keys/tuleap-community.pub
-	@$(MAKE) --no-print-directory docker-pull-verify-keyless-gha IMAGE_NAME=ghcr.io/enalean/tuleap-aio-dev:el9-php82
+	@$(MAKE) --no-print-directory docker-pull-verify-keyless-gha IMAGE_NAME=ghcr.io/enalean/tuleap-aio-dev:el9-php84
 	@$(MAKE) --no-print-directory docker-pull-verify-keyless-gha IMAGE_NAME=ghcr.io/enalean/ldap:latest
 	$(DOCKER_COMPOSE) pull web db redis mailhog ldap
 
@@ -343,9 +343,9 @@ dev-forgeupgrade: ## Run forgeupgrade in Docker Compose environment
 dev-clear-cache: ## Clear caches in Docker Compose environment
 	@$(DOCKER_COMPOSE) exec web /usr/share/tuleap/src/utils/tuleap --clear-caches
 
-start-el9: ## Start Tuleap with PHP 8.2 on Rocky Linux 9
-start: ## Start Tuleap with PHP 8.2 on Rocky Linux 9
-	@echo "Start Tuleap with PHP 8.2 on Rocky Linux 9"
+start-el9: ## Start Tuleap with PHP 8.4 on Rocky Linux 9
+start: ## Start Tuleap with PHP 8.4 on Rocky Linux 9
+	@echo "Start Tuleap with PHP 8.4 on Rocky Linux 9"
 	@$(MAKE) --no-print-directory start-rp
 
 start-dockerdesktop: ## Start Tuleap on Docker Desktop

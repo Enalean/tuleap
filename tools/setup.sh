@@ -43,6 +43,7 @@ fi
 _checkLogFile
 _optionsSelected "${@}"
 ${tuleapcfg} systemctl mask "php82-php-fpm.service"
+${tuleapcfg} systemctl mask "php84-php-fpm.service"
 _checkIfTuleapInstalled
 
 if [ ${tuleap_installed:-false} = "false" ] || \
