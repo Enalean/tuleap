@@ -26,7 +26,7 @@ import { createTrackerCreationLocalVue } from "../../../helpers/local-vue-for-te
 
 describe("StepOne", () => {
     it("resets the slugify mode when it is mounted", async () => {
-        const wrapper: Wrapper<StepOne> = shallowMount(StepOne, {
+        const wrapper: Wrapper<Vue> = shallowMount(StepOne, {
             mocks: {
                 $store: createStoreMock({
                     state: {

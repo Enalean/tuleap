@@ -19,23 +19,25 @@
 
 <template>
     <step-layout next_step_name="step-2">
-        <template v-slot:step_info>
+        <template #step_info>
             <step-one-info />
         </template>
 
-        <template v-slot:interactive_content v-if="project_templates.length > 0">
-            <h3 data-test="platform-template-name">{{ title_company_name }}</h3>
+        <template #interactive_content v-if="store.state.project_templates.length > 0">
+            <h3 data-test="platform-template-name">
+                {{ title_company_name }}
+            </h3>
             <div class="tracker-creation-starting-point-options">
                 <tracker-template-card />
             </div>
         </template>
 
-        <template v-slot:interactive_content_default>
+        <template #interactive_content_default>
             <h3>{{ default_templates_title }}</h3>
             <default-template-section />
         </template>
 
-        <template v-slot:interactive_content_advanced>
+        <template #interactive_content_advanced>
             <h3>{{ advanced_users_title }}</h3>
             <div class="tracker-creation-starting-point-options">
                 <tracker-from-another-project-card />
@@ -46,63 +48,39 @@
         </template>
     </step-layout>
 </template>
-<script lang="ts">
-import Vue from "vue";
-import { Mutation, State } from "vuex-class";
-import { Component } from "vue-property-decorator";
+<script setup lang="ts">
+import { computed, onMounted } from "vue";
 import TrackerTemplateCard from "./cards/TrackerTemplate/TrackerTemplateCard.vue";
 import TrackerXmlFileCard from "./cards/TrackerXmlFile/TrackerXmlFileCard.vue";
 import StepLayout from "../layout/StepLayout.vue";
 import StepOneInfo from "./StepOneInfo.vue";
 import TrackerEmptyCard from "./cards/TrackerEmpty/TrackerEmptyCard.vue";
 import TrackerFromAnotherProjectCard from "./cards/TrackerFromAnotherProject/TrackerFromAnotherProjectCard.vue";
-import type { Tracker } from "../../../store/type";
 import DefaultTemplateSection from "./cards/DefaultTemplate/DefaultTemplateSection.vue";
 import TrackerFromJiraCard from "./cards/FromJira/TrackerFromJiraCard.vue";
+import { useState, useStore } from "vuex-composition-helpers";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 
-@Component({
-    components: {
-        DefaultTemplateSection,
-        TrackerFromJiraCard,
-        TrackerEmptyCard,
-        StepLayout,
-        TrackerTemplateCard,
-        TrackerXmlFileCard,
-        TrackerFromAnotherProjectCard,
-        StepOneInfo,
-    },
-})
-export default class StepOne extends Vue {
-    @Mutation
-    readonly setSlugifyShortnameMode!: (is_active: boolean) => void;
+const { company_name } = useState(["company_name"]);
+const store = useStore();
 
-    @State
-    readonly company_name!: string;
+const { interpolate, $gettext, $ngettext } = useGettext();
 
-    @State
-    readonly default_templates!: Tracker[];
+onMounted(() => {
+    store.commit("setSlugifyShortnameMode", true);
+});
 
-    @State
-    readonly project_templates!: Tracker[];
+const title_company_name = computed(() => {
+    return company_name.value === "Tuleap"
+        ? $gettext("Custom templates")
+        : interpolate($gettext("%{ company_name } templates"), {
+              company_name: company_name.value,
+          });
+});
 
-    mounted(): void {
-        this.setSlugifyShortnameMode(true);
-    }
+const advanced_users_title = $gettext("For advanced users");
 
-    get title_company_name(): string {
-        return this.company_name === "Tuleap"
-            ? this.$gettext("Custom templates")
-            : this.$gettextInterpolate(this.$gettext("%{ company_name } templates"), {
-                  company_name: this.company_name,
-              });
-    }
-
-    get advanced_users_title(): string {
-        return this.$gettext("For advanced users");
-    }
-
-    get default_templates_title(): string {
-        return this.$ngettext("Tuleap template", "Tuleap templates", this.default_templates.length);
-    }
-}
+const default_templates_title = computed(() => {
+    return $ngettext("Tuleap template", "Tuleap templates", store.state.default_templates.length);
+});
 </script>
