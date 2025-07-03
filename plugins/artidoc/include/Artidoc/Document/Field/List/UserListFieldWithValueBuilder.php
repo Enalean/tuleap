@@ -20,18 +20,19 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Artidoc\Document\Field;
+namespace Tuleap\Artidoc\Document\Field\List;
 
 use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_BindValue;
 use Tracker_FormElement_Field_List_OpenValue;
+use Tuleap\Artidoc\Document\Field\ConfiguredField;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserListFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserListValue;
 use Tuleap\User\Avatar\ProvideDefaultUserAvatarUrl;
 use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 use Tuleap\User\RetrieveUserById;
 
-final class UserListFieldWithValueBuilder implements BuildUserListFieldWithValue
+final readonly class UserListFieldWithValueBuilder implements BuildUserListFieldWithValue
 {
     public function __construct(
         private RetrieveUserById $retrieve_user_by_id,

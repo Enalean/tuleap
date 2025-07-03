@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\REST\v1;
 
-use ParagonIE\Corner\Error;
 use PFUser;
 use PHPUnit\Framework\Attributes\TestWith;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -41,7 +40,7 @@ use Tuleap\Artidoc\REST\v1\ArtifactSection\ArtifactSectionAttachmentsRepresentat
 use Tuleap\Artidoc\REST\v1\ArtifactSection\ArtifactSectionRepresentation;
 use Tuleap\Artidoc\REST\v1\ArtifactSection\ArtifactSectionRepresentationBuilder;
 use Tuleap\Artidoc\REST\v1\ArtifactSection\RequiredArtifactInformationBuilder;
-use Tuleap\Artidoc\Stubs\Document\Field\BuildUserListFieldWithValueStub;
+use Tuleap\Artidoc\Stubs\Document\Field\List\BuildListFieldWithValueStub;
 use Tuleap\Artidoc\Stubs\Document\FreetextIdentifierStub;
 use Tuleap\Artidoc\Stubs\Document\SectionIdentifierStub;
 use Tuleap\NeverThrow\Err;
@@ -57,7 +56,6 @@ use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFileFullRepresentation;
 use Tuleap\Tracker\REST\Artifact\FileInfoRepresentation;
 use Tuleap\Tracker\Semantic\Description\RetrieveSemanticDescriptionField;
 use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle;
-use Tuleap\Tracker\Test\Stub\RetrieveSemanticDescriptionFieldStub;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueTextTestBuilder;
@@ -66,6 +64,7 @@ use Tuleap\Tracker\Test\Builders\Fields\TextFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\Artifact\GetFileUploadDataStub;
 use Tuleap\Tracker\Test\Stub\RetrieveArtifactStub;
+use Tuleap\Tracker\Test\Stub\RetrieveSemanticDescriptionFieldStub;
 use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -108,9 +107,9 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
                     $this->file_upload_provider,
                     new FieldsWithValuesBuilder(
                         new ConfiguredFieldCollection([]),
-                        BuildUserListFieldWithValueStub::withCallback(
+                        BuildListFieldWithValueStub::withCallback(
                             static function () {
-                                throw new Error('This test was not supposed to build user list fields itself.');
+                                throw new \Exception('This test was not supposed to build list fields.');
                             },
                         ),
                     )

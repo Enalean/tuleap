@@ -20,10 +20,9 @@
 
 declare(strict_types=1);
 
-namespace unit\Artidoc\Document\Field;
+namespace Tuleap\Artidoc\Document\Field\List;
 
 use Tuleap\Artidoc\Document\Field\ConfiguredField;
-use Tuleap\Artidoc\Document\Field\UserListFieldWithValueBuilder;
 use Tuleap\Artidoc\Domain\Document\Section\Field\DisplayType;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserListFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserListValue;

@@ -60,8 +60,11 @@ use Tuleap\Artidoc\Document\DocumentServiceFromAllowedProjectRetriever;
 use Tuleap\Artidoc\Document\Field\ConfiguredFieldCollectionBuilder;
 use Tuleap\Artidoc\Document\Field\ConfiguredFieldDao;
 use Tuleap\Artidoc\Document\Field\FieldsWithValuesBuilder;
+use Tuleap\Artidoc\Document\Field\List\ListFieldWithValueBuilder;
+use Tuleap\Artidoc\Document\Field\List\StaticListFieldWithValueBuilder;
+use Tuleap\Artidoc\Document\Field\List\UserGroupListWithValueBuilder;
+use Tuleap\Artidoc\Document\Field\List\UserListFieldWithValueBuilder;
 use Tuleap\Artidoc\Document\Field\SuitableFieldRetriever;
-use Tuleap\Artidoc\Document\Field\UserListFieldWithValueBuilder;
 use Tuleap\Artidoc\Domain\Document\RetrieveArtidocWithContext;
 use Tuleap\Artidoc\Domain\Document\Section\CannotUpdatePartiallyReadableDocumentFault;
 use Tuleap\Artidoc\Domain\Document\Section\CollectRequiredSectionInformation;
@@ -523,10 +526,14 @@ final class ArtidocSectionsResource extends AuthenticatedResource
             $this->getFileUploadDataProvider(),
             new FieldsWithValuesBuilder(
                 $configured_field_collection_builder->buildFromSectionIdentifier($section_identifier, $user),
-                new UserListFieldWithValueBuilder(
-                    UserManager::instance(),
-                    $provide_user_avatar_url,
-                    $provide_user_avatar_url,
+                new ListFieldWithValueBuilder(
+                    new UserListFieldWithValueBuilder(
+                        UserManager::instance(),
+                        $provide_user_avatar_url,
+                        $provide_user_avatar_url,
+                    ),
+                    new StaticListFieldWithValueBuilder(),
+                    new UserGroupListWithValueBuilder(),
                 ),
             )
         );

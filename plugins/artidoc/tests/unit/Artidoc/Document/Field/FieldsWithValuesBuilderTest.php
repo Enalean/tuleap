@@ -22,17 +22,15 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Document\Field;
 
-use ParagonIE\Corner\Error;
 use Tuleap\Artidoc\Domain\Document\Section\Field\DisplayType;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StaticListFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StaticListValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StringFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserGroupListValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserGroupsListFieldWithValue;
-use Tuleap\Color\ItemColor;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserListFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserListValue;
-use Tuleap\Artidoc\Stubs\Document\Field\BuildUserListFieldWithValueStub;
+use Tuleap\Artidoc\Stubs\Document\Field\List\BuildListFieldWithValueStub;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\ProjectUGroupTestBuilder;
@@ -40,18 +38,13 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueListTestBuilder;
-use Tuleap\Tracker\Test\Builders\ChangesetValueOpenListBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueStringTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserGroupBindBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\List\ListUserGroupValueBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserValueBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\List\OpenListValueBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\List\StaticBindDecoratorBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\OpenListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
@@ -81,9 +74,9 @@ final class FieldsWithValuesBuilderTest extends TestCase
     {
         $builder = new FieldsWithValuesBuilder(
             $this->field_collection,
-            BuildUserListFieldWithValueStub::withCallback(
+            BuildListFieldWithValueStub::withCallback(
                 static function () {
-                    throw new Error('This test was not supposed to build user list fields itself.');
+                    throw new \Exception('This test was not supposed to build list fields.');
                 },
             ),
         );
@@ -133,64 +126,6 @@ final class FieldsWithValuesBuilderTest extends TestCase
         ], $this->getFields());
     }
 
-    public function testItBuildsSupportedFieldsWithValues(): void
-    {
-        $GLOBALS['Language']->method('getText')->willReturn('Project Members');
-        $first_list_field = ListUserGroupBindBuilder::aUserGroupBind(
-            ListFieldBuilder::aListField(843)
-                ->withLabel('presearch')
-                ->inTracker($this->tracker)
-                ->build()
-        )->withUserGroups(
-            [
-                ProjectUGroupTestBuilder::aCustomUserGroup(821)->withName('haematoxylin')->build(),
-            ]
-        )->build()->getField();
-
-        $second_list_value1     = ProjectUGroupTestBuilder::buildProjectMembers();
-        $second_list_value2     = ProjectUGroupTestBuilder::aCustomUserGroup(919)->withName('Reviewers')->build();
-        $second_list_field      = ListUserGroupBindBuilder::aUserGroupBind(
-            ListFieldBuilder::aListField(480)
-                ->withMultipleValues()
-                ->withLabel('trionychoidean')
-                ->inTracker($this->tracker)
-                ->build()
-        )->withUserGroups(
-            [
-                $second_list_value1,
-                $second_list_value2,
-                ProjectUGroupTestBuilder::aCustomUserGroup(794)->withName('Mentlegen')->build(),
-            ]
-        )->build()->getField();
-        $this->field_collection = new ConfiguredFieldCollection([
-            self::TRACKER_ID => [
-                new ConfiguredField($first_list_field, DisplayType::BLOCK),
-                new ConfiguredField($second_list_field, DisplayType::COLUMN),
-            ],
-        ]);
-
-        $this->changeset->setFieldValue(
-            $first_list_field,
-            ChangesetValueListTestBuilder::aListOfValue(934, $this->changeset, $first_list_field)->build()
-        );
-        $this->changeset->setFieldValue(
-            $second_list_field,
-            ChangesetValueListTestBuilder::aListOfValue(407, $this->changeset, $second_list_field)
-                ->withValues([
-                    ListUserGroupValueBuilder::aUserGroupValue($second_list_value1)->build(),
-                    ListUserGroupValueBuilder::aUserGroupValue($second_list_value2)->build(),
-                ])->build()
-        );
-
-        self::assertEquals([
-            new UserGroupsListFieldWithValue('presearch', DisplayType::BLOCK, []),
-            new UserGroupsListFieldWithValue('trionychoidean', DisplayType::COLUMN, [
-                new UserGroupListValue('Project Members'),
-                new UserGroupListValue('Reviewers'),
-            ]),
-        ], $this->getFields());
-    }
-
     public function testItSkipsMissingChangesetValues(): void
     {
         $first_string_field     = StringFieldBuilder::aStringField(268)
@@ -220,67 +155,91 @@ final class FieldsWithValuesBuilderTest extends TestCase
         ], $this->getFields());
     }
 
+    public function testItBuildsUserGroupListFieldsWithValues(): void
+    {
+        $user_group_list_value1 = ProjectUGroupTestBuilder::buildProjectMembers();
+        $user_group_list_value2 = ProjectUGroupTestBuilder::aCustomUserGroup(919)->withName('Reviewers')->build();
+        $user_group_list_field  = ListUserGroupBindBuilder::aUserGroupBind(
+            ListFieldBuilder::aListField(480)
+                ->withMultipleValues()
+                ->withLabel('trionychoidean')
+                ->inTracker($this->tracker)
+                ->build()
+        )->withUserGroups(
+            [
+                $user_group_list_value1,
+                $user_group_list_value2,
+                ProjectUGroupTestBuilder::aCustomUserGroup(794)->withName('Mentlegen')->build(),
+            ]
+        )->build()->getField();
+
+        $this->field_collection = new ConfiguredFieldCollection([
+            self::TRACKER_ID => [
+                new ConfiguredField($user_group_list_field, DisplayType::COLUMN),
+            ],
+        ]);
+
+        $this->changeset->setFieldValue(
+            $user_group_list_field,
+            ChangesetValueListTestBuilder::aListOfValue(934, $this->changeset, $user_group_list_field)->build()
+        );
+
+        $expected_field_with_value = new UserGroupsListFieldWithValue('trionychoidean', DisplayType::COLUMN, [
+            new UserGroupListValue('Project Members'),
+            new UserGroupListValue('Reviewers'),
+        ]);
+
+        $builder = new FieldsWithValuesBuilder(
+            $this->field_collection,
+            BuildListFieldWithValueStub::withCallback(
+                static function (ConfiguredField $configured_field) use ($expected_field_with_value): UserGroupsListFieldWithValue {
+                    assert($configured_field->field instanceof \Tracker_FormElement_Field_List);
+                    assert($configured_field->field->getBind() instanceof \Tracker_FormElement_Field_List_Bind_Ugroups);
+
+                    return $expected_field_with_value;
+                },
+            ),
+        );
+
+        self::assertEquals([$expected_field_with_value], $builder->getFieldsWithValues($this->changeset));
+    }
+
     public function testItBuildsStaticListFieldWithValues(): void
     {
-        $first_list_field = ListStaticBindBuilder::aStaticBind(
+        $static_list_field = ListStaticBindBuilder::aStaticBind(
             ListFieldBuilder::aListField(123)->inTracker($this->tracker)->withLabel('static list field')->build(),
         )->withBuildStaticValues([
             ListStaticValueBuilder::aStaticValue('Something')->build(),
         ])->build()->getField();
 
-        $second_list_static_value_red      = ListStaticValueBuilder::aStaticValue('Red')->withId(10002)->build();
-        $second_list_static_value_no_color = ListStaticValueBuilder::aStaticValue('No color')->withId(10004)->build();
-
-        $second_list_field = ListStaticBindBuilder::aStaticBind(
-            ListFieldBuilder::aListField(124)->inTracker($this->tracker)->withLabel('static list field with decorators')->build(),
-        )->withBuildStaticValues([
-            $second_list_static_value_red,
-            $second_list_static_value_no_color,
-        ])->withDecorators([
-            $second_list_static_value_red->getId() => StaticBindDecoratorBuilder::withColor(ItemColor::fromName('red-wine'))->withFieldId(124)->withValueId($second_list_static_value_red->getId())->build(),
-        ])
-        ->build()->getField();
-
-        $third_list_custom_value = OpenListValueBuilder::anOpenListValue('Custom value')->build();
-        $third_list_field        = ListStaticBindBuilder::aStaticBind(
-            OpenListFieldBuilder::anOpenListField()->withId(125)->withLabel('static open list field')->build()
-        )->withBuildStaticValues([$third_list_custom_value])->build()->getField();
-
         $this->field_collection = new ConfiguredFieldCollection([
             self::TRACKER_ID => [
-                new ConfiguredField($first_list_field, DisplayType::BLOCK),
-                new ConfiguredField($second_list_field, DisplayType::COLUMN),
-                new ConfiguredField($third_list_field, DisplayType::COLUMN),
+                new ConfiguredField($static_list_field, DisplayType::BLOCK),
             ],
         ]);
 
         $this->changeset->setFieldValue(
-            $first_list_field,
-            ChangesetValueListTestBuilder::aListOfValue(934, $this->changeset, $first_list_field)->build()
-        );
-        $this->changeset->setFieldValue(
-            $second_list_field,
-            ChangesetValueListTestBuilder::aListOfValue(407, $this->changeset, $second_list_field)
-                ->withValues([
-                    $second_list_static_value_red,
-                    $second_list_static_value_no_color,
-                ])->build(),
-        );
-        $this->changeset->setFieldValue(
-            $third_list_field,
-            ChangesetValueOpenListBuilder::aListOfValue(685, $this->changeset, $third_list_field)->withValues([$third_list_custom_value])->build(),
+            $static_list_field,
+            ChangesetValueListTestBuilder::aListOfValue(934, $this->changeset, $static_list_field)->build()
         );
 
-        self::assertEquals([
-            new StaticListFieldWithValue('static list field', DisplayType::BLOCK, []),
-            new StaticListFieldWithValue('static list field with decorators', DisplayType::COLUMN, [
-                new StaticListValue('Red', ItemColor::fromName('red-wine')),
-                new StaticListValue('No color', null),
-            ]),
-            new StaticListFieldWithValue('static open list field', DisplayType::COLUMN, [
-                new StaticListValue('Custom value', null),
-            ]),
-        ], $this->getFields());
+        $expected_field_with_value = new StaticListFieldWithValue('static list field', DisplayType::BLOCK, [
+            new StaticListValue('Something', null),
+        ]);
+
+        $builder = new FieldsWithValuesBuilder(
+            $this->field_collection,
+            BuildListFieldWithValueStub::withCallback(
+                static function (ConfiguredField $configured_field) use ($expected_field_with_value): StaticListFieldWithValue {
+                    assert($configured_field->field instanceof \Tracker_FormElement_Field_List);
+                    assert($configured_field->field->getBind() instanceof \Tracker_FormElement_Field_List_Bind_Static);
+
+                    return $expected_field_with_value;
+                },
+            ),
+        );
+
+        self::assertEquals([$expected_field_with_value], $builder->getFieldsWithValues($this->changeset));
     }
 
     public function testItBuildsUserListFieldsWithValue(): void
@@ -289,7 +248,7 @@ final class FieldsWithValuesBuilderTest extends TestCase
             ListFieldBuilder::aListField(123)->withLabel('user list field')->build()
         )->build()->getField();
 
-        $user_list_field_with_value = new UserListFieldWithValue(
+        $expected_list_field_with_value = new UserListFieldWithValue(
             $user_list_field->getLabel(),
             DisplayType::BLOCK,
             [
@@ -313,16 +272,16 @@ final class FieldsWithValuesBuilderTest extends TestCase
                     new ConfiguredField($user_list_field, DisplayType::BLOCK),
                 ],
             ]),
-            BuildUserListFieldWithValueStub::withCallback(
-                static function (ConfiguredField $configured_field) use ($user_list_field_with_value): UserListFieldWithValue {
+            BuildListFieldWithValueStub::withCallback(
+                static function (ConfiguredField $configured_field) use ($expected_list_field_with_value): UserListFieldWithValue {
                     assert($configured_field->field instanceof \Tracker_FormElement_Field_List);
                     assert($configured_field->field->getBind() instanceof \Tracker_FormElement_Field_List_Bind_Users);
 
-                    return $user_list_field_with_value;
+                    return $expected_list_field_with_value;
                 }
             ),
         );
 
-        self::assertEquals([$user_list_field_with_value], $builder->getFieldsWithValues($this->changeset));
+        self::assertEquals([$expected_list_field_with_value], $builder->getFieldsWithValues($this->changeset));
     }
 }
