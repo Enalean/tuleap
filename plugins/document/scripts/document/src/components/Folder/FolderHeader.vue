@@ -45,7 +45,7 @@
                 <component
                     v-if="shown_update_properties_modal !== null"
                     v-bind:is="shown_update_properties_modal"
-                    v-bind:item="updated_properties"
+                    v-bind:item="updated_item"
                     data-test="document-update-properties-modal"
                 />
             </div>
@@ -144,7 +144,6 @@ const FileVersionChangelogModal = defineAsyncComponent(
 const shown_new_version_modal = ref<Component | null>(null);
 const shown_update_properties_modal = ref<Component | null>(null);
 const updated_item = ref<Item | null>(null);
-const updated_properties = ref(null);
 const item_to_delete = ref<Item | null>(null);
 const item_to_update_permissions = ref({});
 const current_folder_size = ref<number | null>(null);
