@@ -1717,8 +1717,8 @@ msgid "Global rules"
 msgstr "Règles globales"
 
 #, php-format
-msgid "Global rules are not respected in tracker #%d"
-msgstr "Règles globales non respectées pour le tracker #%d"
+msgid "Global rules are not respected in tracker %s (#%d)"
+msgstr "Règles globales non respectées pour le tracker %s (#%d)"
 
 msgid "Go see this tracker"
 msgstr "Aller voir ce tracker"

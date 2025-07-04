@@ -195,14 +195,15 @@ class TrackerRulesListValidator
                 $target_label = $target_field->getLabel();
                 $source_label = $source_field->getLabel();
 
-                $this->sendFeedbackError($target_label, $source_label, $pb_source_values, $pb_target_values);
+                $this->sendFeedbackError($target_label, $source_label, $pb_source_values, $pb_target_values, $source_field->getTracker());
             }
         }
     }
 
-    private function sendFeedbackError(string $target_label, string $source_label, array $pb_source_values, array $pb_target_values): void
+    private function sendFeedbackError(string $target_label, string $source_label, array $pb_source_values, array $pb_target_values, Tracker $tracker): void
     {
-        $message = $source_label .  '(' . implode(', ', $pb_source_values) . ') -> ' . $target_label . '(' . implode(', ', $pb_target_values) . ')';
+        $message  = sprintf(dgettext('tuleap-tracker', 'Global rules are not respected in tracker %s (#%d)'), $tracker->getName(), $tracker->getId());
+        $message .= ' - ' . $source_label .  '(' . implode(', ', $pb_source_values) . ') -> ' . $target_label . '(' . implode(', ', $pb_target_values) . ')';
         $this->logger->debug($message);
         $GLOBALS['Response']->addFeedback(Feedback::ERROR, $message);
     }
