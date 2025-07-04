@@ -26,13 +26,14 @@ import emitter from "../../../../helpers/emitter";
 import UpdatePropertiesModal from "./UpdatePropertiesModal.vue";
 import * as tlp_modal from "@tuleap/tlp-modal";
 import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
+import type { Item } from "../../../../type";
 
 vi.mock("@tuleap/autocomplete-for-select2", () => {
     return { autocomplete_users_for_select2: vi.fn() };
 });
 
 describe("UpdatePropertiesModal", () => {
-    let factory;
+    let factory: (item: Item, has_loaded_properties: boolean) => VueWrapper<UpdatePropertiesModal>;
 
     beforeEach(() => {
         factory = (item, has_loaded_properties): VueWrapper<UpdatePropertiesModal> => {
