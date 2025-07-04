@@ -41,8 +41,10 @@ use Tuleap\Tracker\PermissionsPerGroup\TrackerPermissionPerGroupRepresentationBu
 use Tuleap\Tracker\ServiceHomepage\HomepagePresenterBuilder;
 use Tuleap\Tracker\ServiceHomepage\HomepageRenderer;
 use Tuleap\Tracker\Tracker;
+use Tuleap\Tracker\TrackerDeletion\DeletedTrackerDao;
 use Tuleap\Tracker\TrackerDeletion\DeletedTrackerPresenter;
 use Tuleap\Tracker\TrackerDeletion\DeletedTrackersListPresenter;
+use Tuleap\Tracker\TrackerDeletion\TrackerDeletionRetriever;
 
 class TrackerManager implements Tracker_IFetchTrackerSwitcher // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
@@ -593,7 +595,8 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher // phpcs:ignore PS
 
     public function displayDeletedTrackers()
     {
-        $deleted_trackers = $this->getTrackerFactory()->getDeletedTrackers();
+        $tracker_deleted_retriever = new TrackerDeletionRetriever(new DeletedTrackerDao(), $this->getTrackerFactory());
+        $deleted_trackers          = $tracker_deleted_retriever->getDeletedTrackers();
 
         $deleted_trackers_presenters = [];
         $tracker_ids_warning         = [];
@@ -608,11 +611,11 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher // phpcs:ignore PS
                 continue;
             }
 
-            $project_id    = $project->getId();
+            $project_id    = (int) $project->getId();
             $project_name  = $project->getUnixName();
             $tracker_id    = $tracker->getId();
             $tracker_name  = $tracker->getName();
-            $deletion_date = date('d-m-Y', $tracker->deletion_date);
+            $deletion_date = date('d-m-Y', (int) $tracker->deletion_date);
 
             $deleted_trackers_presenters[] = new DeletedTrackerPresenter(
                 $tracker_id,
