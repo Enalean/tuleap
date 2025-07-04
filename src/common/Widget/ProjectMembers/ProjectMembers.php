@@ -47,7 +47,7 @@ class ProjectMembers extends Widget
         return 'fa-users';
     }
 
-    public function getContent()
+    public function getContent(): string
     {
         $renderer = \TemplateRendererFactory::build()->getRenderer(
             __DIR__ . '/../../../templates/widgets'

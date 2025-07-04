@@ -33,7 +33,7 @@ use Tuleap\Project\MappingRegistry;
  *
  * The display of a folder (its children) would be great
  */
-class Docman_Widget_Embedded extends Widget implements \Tuleap\Docman\Item\ItemVisitor
+class Docman_Widget_Embedded extends Widget implements \Tuleap\Docman\Item\ItemVisitor //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /**
      * The title given by the user to the widget
@@ -80,11 +80,7 @@ class Docman_Widget_Embedded extends Widget implements \Tuleap\Docman\Item\ItemV
                dgettext('tuleap-docman', 'Document viewer');
     }
 
-    /**
-     * Compute the content of the widget
-     * @return string html
-     */
-    public function getContent()
+    public function getContent(): string
     {
         if (! $this->plugin_docman_widget_embedded_item_id) {
             return '';

@@ -71,7 +71,7 @@ use Tuleap\Project\MappingRegistry;
         return '';
     }
 
-    public function getContent()
+    public function getContent(): string
     {
         return '';
     }

@@ -51,7 +51,7 @@ class MyWelcomeMessage extends Widget
         return _('Welcome message and information for users');
     }
 
-    public function getContent()
+    public function getContent(): string
     {
         $renderer = new SiteContentRenderer();
         return $renderer->renderMarkdown(

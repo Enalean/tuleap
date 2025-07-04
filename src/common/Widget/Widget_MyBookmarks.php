@@ -26,7 +26,7 @@ require_once('Widget.php');
 *
 * Personal bookmarks
 */
-class Widget_MyBookmarks extends Widget
+class Widget_MyBookmarks extends Widget //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public function __construct()
     {
@@ -38,7 +38,7 @@ class Widget_MyBookmarks extends Widget
         return $GLOBALS['Language']->getText('my_index', 'my_bookmarks');
     }
 
-    public function getContent()
+    public function getContent(): string
     {
         $html_my_bookmarks = '';
         $result            = db_query('SELECT bookmark_url, bookmark_title, bookmark_id from user_bookmarks where ' .

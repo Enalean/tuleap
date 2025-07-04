@@ -26,7 +26,7 @@ require_once __DIR__ . '/../../www/my/my_utils.php';
 *
 * Filemodules that are actively monitored
 */
-class Widget_MyMonitoredFp extends Widget
+class Widget_MyMonitoredFp extends Widget //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public function __construct()
     {
@@ -38,7 +38,7 @@ class Widget_MyMonitoredFp extends Widget
         return $GLOBALS['Language']->getText('my_index', 'my_files');
     }
 
-    public function getContent()
+    public function getContent(): string
     {
         $purifier             = Codendi_HTMLPurifier::instance();
         $frsrf                = new FRSReleaseFactory();

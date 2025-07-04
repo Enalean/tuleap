@@ -26,7 +26,7 @@ require_once __DIR__ . '/../../www/my/my_utils.php';
 *
 * Forums that are actively monitored
 */
-class Widget_MyMonitoredForums extends Widget
+class Widget_MyMonitoredForums extends Widget //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public function __construct()
     {
@@ -38,7 +38,7 @@ class Widget_MyMonitoredForums extends Widget
         return $GLOBALS['Language']->getText('my_index', 'my_forums');
     }
 
-    public function getContent()
+    public function getContent(): string
     {
         $purifier                 = Codendi_HTMLPurifier::instance();
         $html_my_monitored_forums = '';

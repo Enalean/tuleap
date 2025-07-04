@@ -36,7 +36,7 @@ class Widget_ProjectPublicAreas extends Widget //phpcs:ignore PSR1.Classes.Class
         return $GLOBALS['Language']->getText('include_project_home', 'public_areas');
     }
 
-    public function getContent()
+    public function getContent(): string
     {
         $purifier = Codendi_HTMLPurifier::instance();
         $request  = HTTPRequest::instance();

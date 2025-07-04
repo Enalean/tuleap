@@ -121,7 +121,7 @@ class ProjectLabeledItems extends Widget
         return false;
     }
 
-    public function getContent()
+    public function getContent(): string
     {
         $config_labels = $this->config_retriever->getLabelsConfig($this->content_id);
         $project       = $this->getProject();

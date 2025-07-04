@@ -24,7 +24,7 @@
 *
 * Personal Admin
 */
-class Widget_MyAdmin extends Widget
+class Widget_MyAdmin extends Widget //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     private $user_is_super_admin;
 
@@ -48,7 +48,7 @@ class Widget_MyAdmin extends Widget
         return $GLOBALS['Language']->getText('my_index', 'my_admin_description');
     }
 
-    public function getContent()
+    public function getContent(): string
     {
         $html_my_admin = '<table width="100%" class="tlp-table">';
 
@@ -101,36 +101,36 @@ class Widget_MyAdmin extends Widget
         }
 
         $i              = 0;
-        $html_my_admin .= $this->_get_admin_row(
+        $html_my_admin .= $this->getAdminRow(
             $i++,
             sprintf(_('Users in <a href="%1$s"><B>P</B> (pending) status</a>'), '/admin/approve_pending_users.php?page=pending'),
             $pending_users,
-            $this->_get_color($pending_users)
+            $this->getColor($pending_users)
         );
 
         if (ForgeConfig::getInt(User_UserStatusManager::CONFIG_USER_REGISTRATION_APPROVAL) === 1) {
-            $html_my_admin .= $this->_get_admin_row(
+            $html_my_admin .= $this->getAdminRow(
                 $i++,
                 sprintf(_('Validated users <a href="%1$s"><B>pending email activation</B></a>'), '/admin/approve_pending_users.php?page=validated'),
                 $validated_users,
-                $this->_get_color($validated_users)
+                $this->getColor($validated_users)
             );
         }
 
         $html_my_admin .= $this->getHTMLForNonSuperAdmin($i);
 
-        $html_my_admin .= $this->_get_admin_row(
+        $html_my_admin .= $this->getAdminRow(
             $i++,
             '<a href="/admin/news/">' . _('Site news approval') . '</a>',
             $pending_news,
-            $this->_get_color($pending_news)
+            $this->getColor($pending_news)
         );
 
         $pendings = [];
         $em       = EventManager::instance();
         $em->processEvent('widget_myadmin', ['result' => &$pendings]);
         foreach ($pendings as $entry) {
-            $html_my_admin .= $this->_get_admin_row(
+            $html_my_admin .= $this->getAdminRow(
                 $i++,
                 $entry['text'],
                 $entry['value'],
@@ -148,20 +148,20 @@ class Widget_MyAdmin extends Widget
         $row              = db_fetch_array();
         $pending_projects = $row['count'];
 
-        return $this->_get_admin_row(
+        return $this->getAdminRow(
             $i++,
             sprintf(_('Projects in <a href="%1$s"><B>P</B> (pending) status</A>'), '/admin/approve-pending.php'),
             $pending_projects,
-            $this->_get_color($pending_projects)
+            $this->getColor($pending_projects)
         );
     }
 
-    public function _get_color($nb)
+    private function getColor($nb): string
     {
         return $nb == 0 ? 'green' : 'orange';
     }
 
-    public function _get_admin_row($i, $text, $value, $bgcolor, $textcolor = 'white')
+    private function getAdminRow($i, $text, $value, $bgcolor, $textcolor = 'white'): string
     {
         return '<tr class="' . util_get_alt_row_color($i++) . '"><td>' . $text . '</td><td nowrap="nowrap" style="width:20%; background:' . $bgcolor . '; color:' . $textcolor . '; padding: 2px 8px; font-weight:bold; text-align:center;">' . $value . '</td></tr>';
     }

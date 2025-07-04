@@ -129,7 +129,7 @@ class Tracker_Widget_MyArtifacts extends Widget
         return true;
     }
 
-    public function getContent()
+    public function getContent(): string
     {
         $html_my_artifacts = '';
 
@@ -149,7 +149,7 @@ class Tracker_Widget_MyArtifacts extends Widget
         }
 
         if (count($my_artifacts) > 0) {
-            $html_my_artifacts .= $this->_display_artifacts($my_artifacts);
+            $html_my_artifacts .= $this->displayArtifacts($my_artifacts);
         } else {
             $html_my_artifacts .= '<section class="empty-state-pane">
                 <div class="empty-state-illustration">
@@ -186,7 +186,7 @@ class Tracker_Widget_MyArtifacts extends Widget
         return $html_my_artifacts;
     }
 
-    public function _display_artifacts(MyArtifactsCollection $my_artifacts) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    private function displayArtifacts(MyArtifactsCollection $my_artifacts): string
     {
         $hp = Codendi_HTMLPurifier::instance();
 

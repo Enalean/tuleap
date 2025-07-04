@@ -48,12 +48,7 @@ class Git_Widget_ProjectPushes extends Widget
         return dgettext('tuleap-git', 'Last Git pushes');
     }
 
-    /**
-     * Compute the content of the widget
-     *
-     * @return string html
-     */
-    public function getContent()
+    public function getContent(): string
     {
         $request     = HTTPRequest::instance();
         $groupId     = $request->get('group_id');

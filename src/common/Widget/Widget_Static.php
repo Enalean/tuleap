@@ -104,10 +104,7 @@ class Widget_Static extends Widget // phpcs:ignore PSR1.Classes.ClassDeclaration
         $this->content = $content;
     }
 
-    /**
-     * Content getter
-     */
-    public function getContent()
+    public function getContent(): string
     {
         return $this->content;
     }

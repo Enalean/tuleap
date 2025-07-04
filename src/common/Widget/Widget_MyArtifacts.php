@@ -114,7 +114,7 @@ class Widget_MyArtifacts extends Widget // phpcs:ignore PSR1.Classes.ClassDeclar
         return true;
     }
 
-    public function getContent()
+    public function getContent(): string
     {
         $html_my_artifacts = '<table style="width:100%">';
         if ($atf = new ArtifactTypeFactory(false)) {
