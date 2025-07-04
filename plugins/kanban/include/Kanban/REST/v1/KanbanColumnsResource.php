@@ -46,6 +46,7 @@ use Tuleap\Kanban\KanbanStatisticsAggregator;
 use TrackerFactory;
 use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\Tracker\Permission\SubmissionPermissionVerifier;
+use Tuleap\Tracker\Semantic\Title\CachedSemanticTitleFieldRetriever;
 use Tuleap\User\Avatar\AvatarHashDao;
 use Tuleap\User\Avatar\ComputeAvatarHash;
 use Tuleap\User\Avatar\UserAvatarUrlProvider;
@@ -114,6 +115,7 @@ class KanbanColumnsResource
                 $permissions_manager,
                 Tracker_FormElementFactory::instance(),
                 SubmissionPermissionVerifier::instance(),
+                CachedSemanticTitleFieldRetriever::instance(),
             )
         );
 

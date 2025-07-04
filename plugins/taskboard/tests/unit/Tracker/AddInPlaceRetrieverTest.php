@@ -24,7 +24,9 @@ namespace Tuleap\Taskboard\Tracker;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Tracker\Semantic\Title\RetrieveSemanticTitleField;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Test\Stub\Semantic\Title\RetrieveSemanticTitleFieldStub;
 use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -33,25 +35,21 @@ class AddInPlaceRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     private const SEMANTIC_TITLE_FIELD_ID = 1533;
 
     private MockObject&\Tracker_FormElementFactory $form_element_factory;
-    private AddInPlaceRetriever $add_in_place_retriever;
-    private MockObject&\Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle $semantic_title;
     private \Tracker_FormElement_Field_Selectbox&MockObject $mapped_field;
+    private RetrieveSemanticTitleField $title_field_retriever;
 
     protected function setUp(): void
     {
-        $this->semantic_title         = $this->createMock(\Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle::class);
-        $this->form_element_factory   = $this->createMock(\Tracker_FormElementFactory::class);
-        $this->mapped_field           = $this->createMock(\Tracker_FormElement_Field_Selectbox::class);
-        $this->add_in_place_retriever = new AddInPlaceRetriever(
-            $this->form_element_factory
-        );
+        $this->form_element_factory  = $this->createMock(\Tracker_FormElementFactory::class);
+        $this->mapped_field          = $this->createMock(\Tracker_FormElement_Field_Selectbox::class);
+        $this->title_field_retriever = RetrieveSemanticTitleFieldStub::build();
 
         $this->mapped_field->method('getId')->willReturn(1001);
     }
 
-    protected function tearDown(): void
+    private function getRetriever(): AddInPlaceRetriever
     {
-        \Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle::clearInstances();
+        return new AddInPlaceRetriever($this->form_element_factory, $this->title_field_retriever);
     }
 
     public function testItReturnsNullWhenTrackerHasMoreThanOneChild(): void
@@ -68,7 +66,7 @@ class AddInPlaceRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         );
 
-        $add_in_place = $this->add_in_place_retriever->retrieveAddInPlace(
+        $add_in_place = $this->getRetriever()->retrieveAddInPlace(
             $taskboard_tracker,
             $user,
             new MappedFieldsCollection()
@@ -86,7 +84,7 @@ class AddInPlaceRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertInstanceOf(MockObject::class, $tracker);
         $tracker->method('getChildren')->willReturn([]);
 
-        $add_in_place = $this->add_in_place_retriever->retrieveAddInPlace(
+        $add_in_place = $this->getRetriever()->retrieveAddInPlace(
             $taskboard_tracker,
             $user,
             new MappedFieldsCollection()
@@ -106,7 +104,7 @@ class AddInPlaceRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $child_tracker = TrackerTestBuilder::aTracker()->withId(42)->build();
         $tracker->method('getChildren')->willReturn([$child_tracker]);
 
-        $add_in_place = $this->add_in_place_retriever->retrieveAddInPlace(
+        $add_in_place = $this->getRetriever()->retrieveAddInPlace(
             $taskboard_tracker,
             $user,
             new MappedFieldsCollection()
@@ -128,7 +126,7 @@ class AddInPlaceRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $child_tracker = TrackerTestBuilder::aTracker()->withId(42)->build();
         $tracker->method('getChildren')->willReturn([$child_tracker]);
 
-        $add_in_place = $this->add_in_place_retriever->retrieveAddInPlace(
+        $add_in_place = $this->getRetriever()->retrieveAddInPlace(
             $taskboard_tracker,
             $user,
             new MappedFieldsCollection([42 => $this->mapped_field])
@@ -152,7 +150,7 @@ class AddInPlaceRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->mockSemanticTitle($child_tracker, false, false);
 
-        $add_in_place = $this->add_in_place_retriever->retrieveAddInPlace(
+        $add_in_place = $this->getRetriever()->retrieveAddInPlace(
             $taskboard_tracker,
             $user,
             new MappedFieldsCollection([42 => $this->mapped_field])
@@ -176,7 +174,7 @@ class AddInPlaceRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->mockSemanticTitle($child_tracker, true, false);
 
-        $add_in_place = $this->add_in_place_retriever->retrieveAddInPlace(
+        $add_in_place = $this->getRetriever()->retrieveAddInPlace(
             $taskboard_tracker,
             $user,
             new MappedFieldsCollection([42 => $this->mapped_field])
@@ -201,7 +199,7 @@ class AddInPlaceRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->mockSemanticTitle($child_tracker, true, true);
         $this->mockTrackerFields($child_tracker, true, true, true);
 
-        $add_in_place = $this->add_in_place_retriever->retrieveAddInPlace(
+        $add_in_place = $this->getRetriever()->retrieveAddInPlace(
             $taskboard_tracker,
             $user,
             new MappedFieldsCollection([42 => $this->mapped_field])
@@ -232,7 +230,7 @@ class AddInPlaceRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with($user, $tracker)
             ->willReturn(null);
 
-        $add_in_place = $this->add_in_place_retriever->retrieveAddInPlace(
+        $add_in_place = $this->getRetriever()->retrieveAddInPlace(
             $taskboard_tracker,
             $user,
             new MappedFieldsCollection([42 => $this->mapped_field])
@@ -269,7 +267,7 @@ class AddInPlaceRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with($user)
             ->willReturn(false);
 
-        $add_in_place = $this->add_in_place_retriever->retrieveAddInPlace(
+        $add_in_place = $this->getRetriever()->retrieveAddInPlace(
             $taskboard_tracker,
             $user,
             new MappedFieldsCollection([42 => $this->mapped_field])
@@ -310,7 +308,7 @@ class AddInPlaceRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('getAnArtifactLinkField')
             ->willReturn(null);
 
-        $add_in_place = $this->add_in_place_retriever->retrieveAddInPlace(
+        $add_in_place = $this->getRetriever()->retrieveAddInPlace(
             $taskboard_tracker,
             $user,
             new MappedFieldsCollection([42 => $this->mapped_field])
@@ -323,17 +321,13 @@ class AddInPlaceRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private function mockSemanticTitle(\Tuleap\Tracker\Tracker $child_tracker, bool $is_set, bool $user_can_submit): void
     {
-        \Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle::setInstance($this->semantic_title, $child_tracker);
-
-        $title_field = null;
-
-        if ($is_set) {
-            $title_field = $this->createMock(\Tracker_FormElement_Field_String::class);
-            $title_field->method('userCanSubmit')->willReturn($user_can_submit);
-            $title_field->method('getId')->willReturn(self::SEMANTIC_TITLE_FIELD_ID);
+        if (! $is_set) {
+            return;
         }
-
-        $this->semantic_title->expects($this->once())->method('getField')->willReturn($title_field);
+        $title_field = $this->createMock(\Tracker_FormElement_Field_String::class);
+        $title_field->method('userCanSubmit')->willReturn($user_can_submit);
+        $title_field->method('getId')->willReturn(self::SEMANTIC_TITLE_FIELD_ID);
+        $this->title_field_retriever = RetrieveSemanticTitleFieldStub::build()->withTitleField($child_tracker, $title_field);
     }
 
     private function getTaskboardTracker(): TaskboardTracker

@@ -32465,9 +32465,6 @@
     <MissingReturnType>
       <code><![CDATA[checkSemantic]]></code>
     </MissingReturnType>
-    <RedundantCastGivenDocblockType>
-      <code><![CDATA[(int) $tracker_destination->getTitleField()->getId()]]></code>
-    </RedundantCastGivenDocblockType>
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[! $artifact->getTitle()]]></code>
     </RiskyTruthyFalsyComparison>
@@ -33380,13 +33377,6 @@
     </PossiblyNullReference>
   </file>
   <file src="plugins/tracker/include/Semantic/Title/TrackerSemanticTitle.php">
-    <MissingPropertyType>
-      <code><![CDATA[$_instances]]></code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code><![CDATA[clearInstances]]></code>
-      <code><![CDATA[setInstance]]></code>
-    </MissingReturnType>
     <PossiblyFalseArgument>
       <code><![CDATA[array_search($this->getFieldId(), $xml_mapping)]]></code>
     </PossiblyFalseArgument>
@@ -33599,7 +33589,6 @@
     </InvalidArgument>
     <InvalidNullableReturnType>
       <code><![CDATA[Tracker_FormElement_Field_List]]></code>
-      <code><![CDATA[Tracker_FormElement_Field_Text]]></code>
     </InvalidNullableReturnType>
     <InvalidParamDefault>
       <code><![CDATA[PFUser]]></code>
@@ -33730,7 +33719,6 @@
       <code><![CDATA[setSharedFormElementFactory]]></code>
     </MissingReturnType>
     <NullableReturnStatement>
-      <code><![CDATA[null]]></code>
       <code><![CDATA[null]]></code>
     </NullableReturnStatement>
     <PossiblyFalseArgument>
@@ -40704,9 +40692,6 @@
     <PossiblyNullArgument>
       <code><![CDATA[$artifact]]></code>
     </PossiblyNullArgument>
-    <PossiblyNullReference>
-      <code><![CDATA[getField]]></code>
-    </PossiblyNullReference>
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[! $user_preference]]></code>
     </RiskyTruthyFalsyComparison>
@@ -40716,7 +40701,6 @@
     </TypeDoesNotContainType>
     <UndefinedMethod>
       <code><![CDATA[getContentAsText]]></code>
-      <code><![CDATA[getField]]></code>
       <code><![CDATA[getFormat]]></code>
       <code><![CDATA[getText]]></code>
       <code><![CDATA[getText]]></code>

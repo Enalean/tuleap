@@ -29,9 +29,10 @@ use Tracker_ArtifactFactory;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\MyArtifactsCollection;
-use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Test\Stub\RetrieveTrackerStub;
+use Tuleap\Tracker\Test\Stub\Semantic\Title\RetrieveSemanticTitleFieldStub;
 use UserManager;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -91,7 +92,8 @@ final class UsersArtifactsResourceControllerTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testFetchArtifactsSubmittedByUserWithoutData(): void
     {
-        $this->artifact_factory->expects($this->once())->method('getUserOpenArtifactsSubmittedBy')->with($this->current_user, 0, 250)->willReturn(new MyArtifactsCollection($this->createMock(\TrackerFactory::class)));
+        $this->artifact_factory->expects($this->once())->method('getUserOpenArtifactsSubmittedBy')->with($this->current_user, 0, 250)
+            ->willReturn(new MyArtifactsCollection(RetrieveTrackerStub::withoutTracker(), RetrieveSemanticTitleFieldStub::build()));
 
         [$total, $artifacts] = $this->controller->getArtifacts('self', '{"submitted_by": true}', 0, 250);
         $this->assertEquals(0, $total);
@@ -100,7 +102,8 @@ final class UsersArtifactsResourceControllerTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testFetchArtifactsAssignedToUserWithoutData(): void
     {
-        $this->artifact_factory->expects($this->once())->method('getUserOpenArtifactsAssignedTo')->with($this->current_user, 0, 250)->willReturn(new MyArtifactsCollection($this->createMock(\TrackerFactory::class)));
+        $this->artifact_factory->expects($this->once())->method('getUserOpenArtifactsAssignedTo')->with($this->current_user, 0, 250)
+            ->willReturn(new MyArtifactsCollection(RetrieveTrackerStub::withoutTracker(), RetrieveSemanticTitleFieldStub::build()));
 
         [$total, $artifacts] = $this->controller->getArtifacts('self', '{"assigned_to": true}', 0, 250);
         $this->assertEquals(0, $total);
@@ -109,7 +112,8 @@ final class UsersArtifactsResourceControllerTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testFetchArtifactsAssignedToOrSubmittedByUserWithoutData(): void
     {
-        $this->artifact_factory->expects($this->once())->method('getUserOpenArtifactsSubmittedByOrAssignedTo')->with($this->current_user, 0, 250)->willReturn(new MyArtifactsCollection($this->createMock(\TrackerFactory::class)));
+        $this->artifact_factory->expects($this->once())->method('getUserOpenArtifactsSubmittedByOrAssignedTo')->with($this->current_user, 0, 250)
+            ->willReturn(new MyArtifactsCollection(RetrieveTrackerStub::withoutTracker(), RetrieveSemanticTitleFieldStub::build()));
 
         [$total, $artifacts] = $this->controller->getArtifacts('self', '{"assigned_to": true, "submitted_by": true}', 0, 250);
         $this->assertEquals(0, $total);
@@ -125,8 +129,6 @@ final class UsersArtifactsResourceControllerTest extends \Tuleap\Test\PHPUnit\Te
 
         $tracker_factory = $this->createMock(\TrackerFactory::class);
         $tracker_factory->expects($this->once())->method('getTrackerById')->willReturn($tracker);
-        $semantic_title = new TrackerSemanticTitle($tracker, StringFieldBuilder::aStringField(1001)->withReadPermission($this->current_user, true)->build());
-        TrackerSemanticTitle::setInstance($semantic_title, $tracker);
 
         $artifact1 = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact1->method('getId')->willReturn(455);
@@ -143,7 +145,10 @@ final class UsersArtifactsResourceControllerTest extends \Tuleap\Test\PHPUnit\Te
         $artifact2->method('getTracker')->willReturn($tracker);
         $artifact2->method('userCanView')->willReturn(true);
 
-        $my_artifacts_collection = new MyArtifactsCollection($tracker_factory);
+        $my_artifacts_collection = new MyArtifactsCollection(
+            $tracker_factory,
+            RetrieveSemanticTitleFieldStub::build()->withTitleField($tracker, StringFieldBuilder::aStringField(1001)->withReadPermission($this->current_user, true)->build()),
+        );
         $my_artifacts_collection->setTotalNumberOfArtifacts(2);
         $my_artifacts_collection->setTracker($tracker_id, $this->current_user);
         $my_artifacts_collection->addArtifactForTracker($tracker, $artifact1);

@@ -39,9 +39,9 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 use Tuleap\Tracker\Notifications\ConfigNotificationEmailCustomSender;
 use Tuleap\Tracker\Notifications\RecipientsManager;
-use Tuleap\Tracker\Test\Stub\RetrieveSemanticDescriptionFieldStub;
 use Tuleap\Tracker\Test\Stub\Artifact\Changeset\PostCreation\ProvideEmailNotificationAttachmentStub;
 use Tuleap\Tracker\Test\Stub\Artifact\Changeset\PostCreation\SendMailStub;
+use Tuleap\Tracker\Test\Stub\Semantic\Description\RetrieveSemanticDescriptionFieldStub;
 use Tuleap\Tracker\Tracker;
 use UserHelper;
 

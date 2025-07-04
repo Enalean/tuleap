@@ -22,8 +22,8 @@ declare(strict_types=1);
 
 use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
+use Tuleap\Tracker\Test\Stub\Semantic\Description\RetrieveSemanticDescriptionFieldStub;
 use Tuleap\Tracker\Tracker;
-use Tuleap\Tracker\Test\Stub\RetrieveSemanticDescriptionFieldStub;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class Tracker_ArtifactByEmailStatusTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps

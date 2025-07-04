@@ -36,13 +36,14 @@ use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Tracker\FormElement\Field\RetrieveUsedFields;
 use Tuleap\Tracker\Semantic\Description\RetrieveSemanticDescriptionField;
-use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle;
+use Tuleap\Tracker\Semantic\Title\RetrieveSemanticTitleField;
 
 final readonly class SuitableFieldRetriever
 {
     public function __construct(
         private RetrieveUsedFields $factory,
         private RetrieveSemanticDescriptionField $retrieve_description_field,
+        private RetrieveSemanticTitleField $retrieve_title_field,
     ) {
     }
 
@@ -74,7 +75,7 @@ final readonly class SuitableFieldRetriever
         $field_id = $field->getId();
         $tracker  = $field->getTracker();
 
-        $semantic_title_field = TrackerSemanticTitle::load($tracker)->getField();
+        $semantic_title_field = $this->retrieve_title_field->fromTracker($tracker);
         if ($semantic_title_field && $semantic_title_field->getId() === $field_id) {
             return Result::err(FieldIsTitleSemanticFault::build($field_id));
         }

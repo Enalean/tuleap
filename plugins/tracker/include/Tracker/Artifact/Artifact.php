@@ -166,7 +166,7 @@ use Tuleap\Tracker\Semantic\Status\StatusValueForChangesetProvider;
 use Tuleap\Tracker\Semantic\Status\StatusValueProvider;
 use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
-use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle;
+use Tuleap\Tracker\Semantic\Title\CachedSemanticTitleFieldRetriever;
 use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\Workflow\FirstPossibleValueInListRetriever;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
@@ -662,7 +662,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
     {
         if (! isset($this->title)) {
             $this->title = null;
-            if ($title_field = TrackerSemanticTitle::load($this->getTracker())->getField()) {
+            if ($title_field = CachedSemanticTitleFieldRetriever::instance()->fromTracker($this->getTracker())) {
                 if ($title_field->userCanRead()) {
                     if ($last_changeset = $this->getLastChangeset()) {
                         if ($title_field_value = $last_changeset->getValue($title_field)) {
@@ -826,7 +826,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
     public function fetchMailTitle($recipient, $format = 'text', $ignore_perms = false)
     {
         $output = '';
-        if ($title_field = TrackerSemanticTitle::load($this->getTracker())->getField()) {
+        if ($title_field = CachedSemanticTitleFieldRetriever::instance()->fromTracker($this->getTracker())) {
             if ($ignore_perms || $title_field->userCanRead($recipient)) {
                 if ($value = $this->getLastChangeset()->getValue($title_field)) {
                     if ($title = $value->getText()) {

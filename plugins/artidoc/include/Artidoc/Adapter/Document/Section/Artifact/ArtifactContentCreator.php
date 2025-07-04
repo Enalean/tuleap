@@ -35,7 +35,7 @@ use Tuleap\Tracker\REST\Artifact\CreateArtifact;
 use Tuleap\Tracker\REST\TrackerReference;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 use Tuleap\Tracker\Semantic\Description\RetrieveSemanticDescriptionField;
-use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle;
+use Tuleap\Tracker\Semantic\Title\RetrieveSemanticTitleField;
 
 final readonly class ArtifactContentCreator implements CreateArtifactContent
 {
@@ -44,6 +44,7 @@ final readonly class ArtifactContentCreator implements CreateArtifactContent
         private GetFileUploadData $file_upload_data_provider,
         private CreateArtifact $artifact_creator,
         private RetrieveSemanticDescriptionField $retrieve_description_field,
+        private RetrieveSemanticTitleField $retrieve_title_field,
         private \PFUser $current_user,
     ) {
     }
@@ -60,7 +61,7 @@ final readonly class ArtifactContentCreator implements CreateArtifactContent
             ));
         }
 
-        $title_field = TrackerSemanticTitle::load($tracker)->getField();
+        $title_field = $this->retrieve_title_field->fromTracker($tracker);
         if (! $title_field) {
             return Result::err(Fault::fromMessage(
                 sprintf(

@@ -136,8 +136,8 @@ use Tuleap\Tracker\Semantic\Description\DescriptionSemanticDAO;
 use Tuleap\Tracker\Semantic\Status\StatusFieldRetriever;
 use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatusDao;
 use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatusFactory;
+use Tuleap\Tracker\Semantic\Title\CachedSemanticTitleFieldRetriever;
 use Tuleap\Tracker\Semantic\Title\TitleSemanticDAO;
-use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitleFactory;
 use UGroupManager;
 use UserHelper;
 use UserManager;
@@ -377,7 +377,7 @@ final class CrossTrackerArtifactQueryFactoryBuilder
                 $user_list_builder,
             ),
             new MetadataFromOrderBuilder(
-                TrackerSemanticTitleFactory::instance(),
+                CachedSemanticTitleFieldRetriever::instance(),
                 CachedSemanticDescriptionFieldRetriever::instance(),
                 new StatusFieldRetriever(TrackerSemanticStatusFactory::instance()),
                 new ContributorFieldRetriever(TrackerSemanticContributorFactory::instance()),

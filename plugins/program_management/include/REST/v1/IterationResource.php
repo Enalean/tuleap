@@ -51,6 +51,7 @@ use Tuleap\ProgramManagement\Domain\Team\MirroredTimebox\FeatureOfUserStoryRetri
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
+use Tuleap\Tracker\Semantic\Title\CachedSemanticTitleFieldRetriever;
 
 final class IterationResource
 {
@@ -86,7 +87,7 @@ final class IterationResource
         $artifact_factory               = \Tracker_ArtifactFactory::instance();
         $artifact_retriever             = new ArtifactFactoryAdapter($artifact_factory);
         $visibility_verifier            = new ArtifactVisibleVerifier($artifact_factory, $this->user_adapter);
-        $retrieve_title_value           = new TitleValueRetriever($artifact_retriever, $this->user_adapter, \Tuleap\Tracker\Semantic\Title\TrackerSemanticTitleFactory::instance());
+        $retrieve_title_value           = new TitleValueRetriever($artifact_retriever, $this->user_adapter, CachedSemanticTitleFieldRetriever::instance());
         $retrieve_uri                   = new URIRetriever($artifact_retriever);
         $retrieve_cross_ref             = new CrossReferenceRetriever($artifact_retriever);
         $retrieve_background_color      = new BackgroundColorRetriever(

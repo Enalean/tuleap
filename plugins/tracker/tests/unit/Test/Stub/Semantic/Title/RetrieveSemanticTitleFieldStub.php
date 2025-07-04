@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2025 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,34 +20,41 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Test\Stub;
+namespace Tuleap\Tracker\Test\Stub\Semantic\Title;
 
-use Tuleap\Tracker\Semantic\Description\RetrieveSemanticDescriptionField;
+use Tracker_FormElement_Field_Text;
+use Tuleap\Tracker\Semantic\Title\RetrieveSemanticTitleField;
 use Tuleap\Tracker\Tracker;
 
-final class RetrieveSemanticDescriptionFieldStub implements RetrieveSemanticDescriptionField
+final class RetrieveSemanticTitleFieldStub implements RetrieveSemanticTitleField
 {
     private int $call_count;
+    /** @var array<int, Tracker_FormElement_Field_Text> */
+    private array $tracker_titles = [];
 
-    private function __construct(private readonly ?\Tracker_FormElement_Field_Text $field_text)
+    private function __construct()
     {
         $this->call_count = 0;
     }
 
-    public static function withNoField(): self
+    public static function build(): self
     {
-        return new self(null);
+        return new self();
     }
 
-    public static function withTextField(\Tracker_FormElement_Field_Text $field_text): self
+    public function withTitleField(Tracker $tracker, Tracker_FormElement_Field_Text $title_field): self
     {
-        return new self($field_text);
+        $this->tracker_titles[$tracker->getId()] = $title_field;
+        return $this;
     }
 
-    public function fromTracker(Tracker $tracker): ?\Tracker_FormElement_Field_Text
+    public function fromTracker(Tracker $tracker): ?Tracker_FormElement_Field_Text
     {
         $this->call_count++;
-        return $this->field_text;
+        if (isset($this->tracker_titles[$tracker->getId()])) {
+            return $this->tracker_titles[$tracker->getId()];
+        }
+        return null;
     }
 
     public function getCallCount(): int

@@ -34,12 +34,12 @@ use Tuleap\Artidoc\Stubs\Document\Field\RetrieveConfiguredFieldStub;
 use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle;
-use Tuleap\Tracker\Test\Stub\RetrieveSemanticDescriptionFieldStub;
 use Tuleap\Tracker\Test\Builders\Fields\ExternalFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
+use Tuleap\Tracker\Test\Stub\Semantic\Description\RetrieveSemanticDescriptionFieldStub;
+use Tuleap\Tracker\Test\Stub\Semantic\Title\RetrieveSemanticTitleFieldStub;
 
 #[DisableReturnValueGenerationForTestDoubles]
 final class ConfiguredFieldCollectionBuilderTest extends TestCase
@@ -57,11 +57,6 @@ final class ConfiguredFieldCollectionBuilderTest extends TestCase
         $this->user       = UserTestBuilder::buildWithDefaults();
     }
 
-    protected function tearDown(): void
-    {
-        TrackerSemanticTitle::clearInstances();
-    }
-
     public function testEmptyConfiguredFields(): void
     {
         $builder = new ConfiguredFieldCollectionBuilder(
@@ -69,6 +64,7 @@ final class ConfiguredFieldCollectionBuilderTest extends TestCase
             new SuitableFieldRetriever(
                 RetrieveUsedFieldsStub::withNoFields(),
                 RetrieveSemanticDescriptionFieldStub::withNoField(),
+                RetrieveSemanticTitleFieldStub::build(),
             ),
         );
 
@@ -90,6 +86,7 @@ final class ConfiguredFieldCollectionBuilderTest extends TestCase
                         ->build()
                 ),
                 RetrieveSemanticDescriptionFieldStub::withNoField(),
+                RetrieveSemanticTitleFieldStub::build(),
             ),
         );
 
@@ -120,11 +117,8 @@ final class ConfiguredFieldCollectionBuilderTest extends TestCase
                         ->build(),
                 ),
                 RetrieveSemanticDescriptionFieldStub::withNoField(),
+                RetrieveSemanticTitleFieldStub::build(),
             )
-        );
-        TrackerSemanticTitle::setInstance(
-            new TrackerSemanticTitle($this->tracker, null),
-            $this->tracker
         );
 
         $scenarios = [

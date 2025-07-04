@@ -40,6 +40,7 @@ use Tuleap\Dashboard\User\UserDashboardRetriever;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\RealTimeMercure\MercureClient;
 use Tuleap\Tracker\Permission\SubmissionPermissionVerifier;
+use Tuleap\Tracker\Semantic\Title\CachedSemanticTitleFieldRetriever;
 use Tuleap\Widget\WidgetFactory;
 use User_ForgeUserGroupPermissionsDao;
 use User_ForgeUserGroupPermissionsManager;
@@ -87,6 +88,7 @@ final class KanbanPresenter
                 new KanbanPermissionsManager(),
                 Tracker_FormElementFactory::instance(),
                 SubmissionPermissionVerifier::instance(),
+                CachedSemanticTitleFieldRetriever::instance(),
             )
         );
 

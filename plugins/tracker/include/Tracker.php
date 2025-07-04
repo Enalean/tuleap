@@ -219,7 +219,7 @@ use Tuleap\Tracker\Semantic\Contributor\TrackerSemanticContributor;
 use Tuleap\Tracker\Semantic\Description\CachedSemanticDescriptionFieldRetriever;
 use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
 use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatusFactory;
-use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle;
+use Tuleap\Tracker\Semantic\Title\CachedSemanticTitleFieldRetriever;
 use Tuleap\Tracker\Semantic\Tooltip\SemanticTooltip;
 use Tuleap\Tracker\Semantic\TrackerSemanticManager;
 use Tuleap\Tracker\Tooltip\TrackerStats;
@@ -1863,12 +1863,9 @@ class Tracker implements Tracker_Dispatchable_Interface
         return ($this->deletion_date != '');
     }
 
-    /**
-     * @return TrackerSemanticManager
-     */
-    public function getTrackerSemanticManager()
+    public function getTrackerSemanticManager(): TrackerSemanticManager
     {
-        return new TrackerSemanticManager(CachedSemanticDescriptionFieldRetriever::instance(), $this);
+        return new TrackerSemanticManager(CachedSemanticDescriptionFieldRetriever::instance(), CachedSemanticTitleFieldRetriever::instance(), $this);
     }
 
     /**
@@ -3135,27 +3132,20 @@ class Tracker implements Tracker_Dispatchable_Interface
 
     /**
      * Say if the tracker as "title" defined
-     *
-     * @return bool
      */
-    public function hasSemanticsTitle()
+    public function hasSemanticsTitle(): bool
     {
-        return TrackerSemanticTitle::load($this)->getFieldId() ? true : false;
+        return CachedSemanticTitleFieldRetriever::instance()->fromTracker($this) !== null;
     }
 
     /**
      * Return the title field, or null if no title field defined
      *
-     * @return Tracker_FormElement_Field_Text the title field, or null if not defined
+     * @return ?Tracker_FormElement_Field_Text the title field, or null if not defined
      */
-    public function getTitleField()
+    public function getTitleField(): ?Tracker_FormElement_Field_Text
     {
-        $title_field = TrackerSemanticTitle::load($this)->getField();
-        if ($title_field) {
-            return $title_field;
-        } else {
-            return null;
-        }
+        return CachedSemanticTitleFieldRetriever::instance()->fromTracker($this);
     }
 
     /**

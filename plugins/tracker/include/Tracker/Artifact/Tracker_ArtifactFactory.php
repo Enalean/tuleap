@@ -24,6 +24,7 @@ use Tuleap\Tracker\Artifact\MyArtifactsCollection;
 use Tuleap\Tracker\Artifact\PaginatedArtifactDao;
 use Tuleap\Tracker\Artifact\RetrieveArtifact;
 use Tuleap\Tracker\Artifact\RetrieveViewableArtifact;
+use Tuleap\Tracker\Semantic\Title\CachedSemanticTitleFieldRetriever;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_ArtifactFactory implements RetrieveArtifact, RetrieveViewableArtifact, \Tuleap\Tracker\Artifact\SaveArtifact
@@ -284,7 +285,7 @@ class Tracker_ArtifactFactory implements RetrieveArtifact, RetrieveViewableArtif
      */
     protected function getUserOpenArtifacts(PFUser $user, string $callback, ?int $offset, ?int $limit): MyArtifactsCollection
     {
-        $my_artifacts = new MyArtifactsCollection(TrackerFactory::instance());
+        $my_artifacts = new MyArtifactsCollection(TrackerFactory::instance(), CachedSemanticTitleFieldRetriever::instance());
         $dar          = $this->getDao()->$callback($user, $offset, $limit);
         $my_artifacts->setTotalNumberOfArtifacts($this->getDao()->foundRows());
         foreach ($dar as $row) {

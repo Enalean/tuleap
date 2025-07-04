@@ -20,12 +20,12 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Test\Stub;
+namespace Tuleap\Tracker\Test\Stub\Semantic\Title;
 
 use Tuleap\Option\Option;
-use Tuleap\Tracker\Semantic\Description\SearchDescriptionField;
+use Tuleap\Tracker\Semantic\Title\SearchTitleField;
 
-final class SearchDescriptionFieldStub implements SearchDescriptionField
+final class SearchTitleFieldStub implements SearchTitleField
 {
     /** @psalm-var callable(int): Option */
     private $callback;

@@ -22,16 +22,15 @@ declare(strict_types=1);
 
 namespace Tuleap\Taskboard\Tracker;
 
+use Tracker_FormElementFactory;
+use Tuleap\Tracker\Semantic\Title\RetrieveSemanticTitleField;
+
 class AddInPlaceRetriever
 {
-    /**
-     * @var \Tracker_FormElementFactory
-     */
-    private $form_element_factory;
-
-    public function __construct(\Tracker_FormElementFactory $form_element_factory)
-    {
-        $this->form_element_factory = $form_element_factory;
+    public function __construct(
+        private readonly Tracker_FormElementFactory $form_element_factory,
+        private readonly RetrieveSemanticTitleField $title_field_retriever,
+    ) {
     }
 
     public function retrieveAddInPlace(
@@ -55,7 +54,7 @@ class AddInPlaceRetriever
             return null;
         }
 
-        $field_title = \Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle::load($child_tracker)->getField();
+        $field_title = $this->title_field_retriever->fromTracker($child_tracker);
         if (! $field_title || ! $field_title->userCanSubmit($user)) {
             return null;
         }

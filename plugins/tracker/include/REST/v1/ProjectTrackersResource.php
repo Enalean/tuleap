@@ -55,7 +55,7 @@ use Tuleap\Tracker\Semantic\ArtifactCannotBeCreatedReasonsGetter;
 use Tuleap\Tracker\Semantic\CollectionOfCreationSemanticToCheck;
 use Tuleap\Tracker\Semantic\Description\CachedSemanticDescriptionFieldRetriever;
 use Tuleap\Tracker\Semantic\SemanticNotSupportedFault;
-use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitleFactory;
+use Tuleap\Tracker\Semantic\Title\CachedSemanticTitleFieldRetriever;
 use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
@@ -173,7 +173,11 @@ class ProjectTrackersResource extends AuthenticatedResource
             ),
             new PermissionsRepresentationBuilder($ugroup_manager, $tracker_permission_wrapper),
             new WorkflowRestBuilder(),
-            static fn(Tracker $tracker) => new \Tuleap\Tracker\Semantic\TrackerSemanticManager(CachedSemanticDescriptionFieldRetriever::instance(), $tracker),
+            static fn(Tracker $tracker) => new \Tuleap\Tracker\Semantic\TrackerSemanticManager(
+                CachedSemanticDescriptionFieldRetriever::instance(),
+                CachedSemanticTitleFieldRetriever::instance(),
+                $tracker,
+            ),
             new ParentInHierarchyRetriever(new HierarchyDAO(), $tracker_factory),
             TrackersPermissionsRetriever::build()
         );
@@ -181,7 +185,7 @@ class ProjectTrackersResource extends AuthenticatedResource
         $cannot_create_reasons = new ArtifactCannotBeCreatedReasonsGetter(
             SubmissionPermissionVerifier::instance(),
             $form_element_factory,
-            TrackerSemanticTitleFactory::instance()
+            CachedSemanticTitleFieldRetriever::instance(),
         );
 
         $semantics_to_check = CollectionOfCreationSemanticToCheck::fromREST($with_creation_semantic_check)->match(

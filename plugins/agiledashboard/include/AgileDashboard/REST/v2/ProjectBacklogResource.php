@@ -41,6 +41,7 @@ use Tuleap\Project\ProjectBackground\ProjectBackgroundConfiguration;
 use Tuleap\Project\ProjectBackground\ProjectBackgroundDao;
 use Tuleap\REST\Header;
 use Tuleap\Tracker\Artifact\Dao\PriorityDao;
+use Tuleap\Tracker\Semantic\Title\CachedSemanticTitleFieldRetriever;
 
 /**
  * Wrapper for backlog related REST methods
@@ -97,6 +98,7 @@ class ProjectBacklogResource
             new ArtifactsInExplicitBacklogDao(),
             new PriorityDao(),
             \Tuleap\Tracker\Permission\TrackersPermissionsRetriever::build(),
+            CachedSemanticTitleFieldRetriever::instance(),
         );
 
         $this->parent_tracker_retriever = new ParentTrackerRetriever($this->planning_factory);

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2023-present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,11 +20,28 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Semantic\Title;
+namespace Tuleap\Tracker\Test\Stub\Semantic\Description;
 
-use Tuleap\Tracker\Tracker;
+use Tuleap\Option\Option;
+use Tuleap\Tracker\Semantic\Description\SearchDescriptionField;
 
-interface GetTitleSemantic
+final class SearchDescriptionFieldStub implements SearchDescriptionField
 {
-    public function getByTracker(Tracker $tracker): TrackerSemanticTitle;
+    /** @psalm-var callable(int): Option */
+    private $callback;
+
+    private function __construct(callable $callback)
+    {
+        $this->callback = $callback;
+    }
+
+    public static function withCallback(callable $callback): self
+    {
+        return new self($callback);
+    }
+
+    public function searchByTrackerId(int $tracker_id): Option
+    {
+        return ($this->callback)($tracker_id);
+    }
 }

@@ -128,6 +128,7 @@ use Tuleap\Tracker\Semantic\Status\SemanticStatusClosedValueNotFoundException;
 use Tuleap\Tracker\Semantic\Status\SemanticStatusNotDefinedException;
 use Tuleap\Tracker\Semantic\Status\StatusValueRetriever;
 use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatusFactory;
+use Tuleap\Tracker\Semantic\Title\CachedSemanticTitleFieldRetriever;
 use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\Workflow\FirstPossibleValueInListRetriever;
 use Tuleap\Tracker\Workflow\NoPossibleValueException;
@@ -206,6 +207,7 @@ final class KanbanResource extends AuthenticatedResource
             $this->permissions_manager,
             $this->form_element_factory,
             SubmissionPermissionVerifier::instance(),
+            CachedSemanticTitleFieldRetriever::instance(),
         );
 
         $this->kanban_representation_builder = new KanbanRepresentationBuilder(

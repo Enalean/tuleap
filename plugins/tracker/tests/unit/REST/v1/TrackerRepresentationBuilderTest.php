@@ -34,7 +34,7 @@ use Tuleap\Tracker\Semantic\CollectionOfCreationSemanticToCheck;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\BuildCompleteTrackerRESTRepresentationStub;
 use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
-use Tuleap\Tracker\Test\Stub\Semantic\GetTitleSemanticStub;
+use Tuleap\Tracker\Test\Stub\Semantic\Title\RetrieveSemanticTitleFieldStub;
 use Tuleap\Tracker\Test\Stub\VerifySubmissionPermissionStub;
 use Tuleap\Tracker\Tracker;
 
@@ -119,7 +119,7 @@ final class TrackerRepresentationBuilderTest extends TestCase
             new ArtifactCannotBeCreatedReasonsGetter(
                 VerifySubmissionPermissionStub::withSubmitPermission(),
                 RetrieveUsedFieldsStub::withNoFields(),
-                GetTitleSemanticStub::withoutTextField()
+                RetrieveSemanticTitleFieldStub::build(),
             )
         );
 

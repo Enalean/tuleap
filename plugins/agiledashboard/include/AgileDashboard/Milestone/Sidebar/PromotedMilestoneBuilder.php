@@ -30,14 +30,15 @@ use Psr\Log\LoggerInterface;
 use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
-use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle;
+use Tuleap\Tracker\Semantic\Title\RetrieveSemanticTitleField;
 
-final class PromotedMilestoneBuilder implements BuildPromotedMilestone
+final readonly class PromotedMilestoneBuilder implements BuildPromotedMilestone
 {
     public function __construct(
-        private readonly PlanningFactory $planning_factory,
-        private readonly SemanticTimeframeBuilder $timeframe_builder,
-        private readonly LoggerInterface $logger,
+        private PlanningFactory $planning_factory,
+        private SemanticTimeframeBuilder $timeframe_builder,
+        private RetrieveSemanticTitleField $semantic_title_field_retriever,
+        private LoggerInterface $logger,
     ) {
     }
 
@@ -50,7 +51,7 @@ final class PromotedMilestoneBuilder implements BuildPromotedMilestone
             return Option::nothing(Planning_ArtifactMilestone::class);
         }
 
-        $title_field = TrackerSemanticTitle::load($milestone_artifact->getTracker())->getField();
+        $title_field = $this->semantic_title_field_retriever->fromTracker($milestone_artifact->getTracker());
         if ($title_field === null) {
             return Option::nothing(Planning_ArtifactMilestone::class);
         }

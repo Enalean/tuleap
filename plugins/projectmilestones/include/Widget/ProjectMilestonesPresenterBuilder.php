@@ -54,6 +54,7 @@ use Tuleap\Tracker\Artifact\Dao\PriorityDao;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBrokenConfigurationException;
+use Tuleap\Tracker\Semantic\Title\CachedSemanticTitleFieldRetriever;
 
 class ProjectMilestonesPresenterBuilder
 {
@@ -172,6 +173,7 @@ class ProjectMilestonesPresenterBuilder
                 new ArtifactsInExplicitBacklogDao(),
                 new PriorityDao(),
                 \Tuleap\Tracker\Permission\TrackersPermissionsRetriever::build(),
+                CachedSemanticTitleFieldRetriever::instance(),
             ),
             $milestone_factory,
             new ExplicitBacklogDao(),

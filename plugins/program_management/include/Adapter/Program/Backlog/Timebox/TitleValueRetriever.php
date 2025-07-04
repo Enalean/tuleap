@@ -34,14 +34,14 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\RetrieveUserStoryT
 use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\UserStoryIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\Semantic\Title\GetTitleSemantic;
+use Tuleap\Tracker\Semantic\Title\RetrieveSemanticTitleField;
 
 final readonly class TitleValueRetriever implements RetrieveTitleValueUserCanSee, RetrieveUserStoryTitle, RetrieveFeatureTitle
 {
     public function __construct(
         private RetrieveFullArtifact $artifact_retriever,
         private RetrieveUser $retrieve_user,
-        private GetTitleSemantic $get_title_semantic,
+        private RetrieveSemanticTitleField $title_field_retriever,
     ) {
     }
 
@@ -71,7 +71,7 @@ final readonly class TitleValueRetriever implements RetrieveTitleValueUserCanSee
 
     private function getArtifactTitleUserCanRead(Artifact $artifact, \PFUser $user): ?string
     {
-        $title_field = $this->get_title_semantic->getByTracker($artifact->getTracker())->getField();
+        $title_field = $this->title_field_retriever->fromTracker($artifact->getTracker());
         if (! $title_field || ! $title_field->userCanRead($user)) {
             return null;
         }

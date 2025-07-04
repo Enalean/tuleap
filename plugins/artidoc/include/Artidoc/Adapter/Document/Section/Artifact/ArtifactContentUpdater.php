@@ -35,7 +35,7 @@ use Tuleap\Tracker\Artifact\RetrieveArtifact;
 use Tuleap\Tracker\REST\Artifact\HandlePUT;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 use Tuleap\Tracker\Semantic\Description\RetrieveSemanticDescriptionField;
-use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle;
+use Tuleap\Tracker\Semantic\Title\RetrieveSemanticTitleField;
 
 final readonly class ArtifactContentUpdater implements UpdateArtifactContent
 {
@@ -45,6 +45,7 @@ final readonly class ArtifactContentUpdater implements UpdateArtifactContent
         private UpdateLevel $level_updater,
         private HandlePUT $put_handler,
         private RetrieveSemanticDescriptionField $retrieve_description_field,
+        private RetrieveSemanticTitleField $retrieve_title_field,
         private \PFUser $current_user,
     ) {
     }
@@ -77,7 +78,8 @@ final readonly class ArtifactContentUpdater implements UpdateArtifactContent
             ));
         }
 
-        $title_field = TrackerSemanticTitle::load($artifact->getTracker())->getField();
+        $tracker     = $artifact->getTracker();
+        $title_field = $this->retrieve_title_field->fromTracker($tracker);
         if (! $title_field) {
             return Result::err(Fault::fromMessage(
                 sprintf(
@@ -95,7 +97,7 @@ final readonly class ArtifactContentUpdater implements UpdateArtifactContent
             ));
         }
 
-        $description_field = $this->retrieve_description_field->fromTracker($artifact->getTracker());
+        $description_field = $this->retrieve_description_field->fromTracker($tracker);
         if (! $description_field) {
             return Result::err(Fault::fromMessage(
                 sprintf(
@@ -134,7 +136,7 @@ final readonly class ArtifactContentUpdater implements UpdateArtifactContent
             $description_value,
         ];
 
-        $file_upload_data = $this->file_upload_data_provider->getFileUploadData($artifact->getTracker(), $artifact, $this->current_user);
+        $file_upload_data = $this->file_upload_data_provider->getFileUploadData($tracker, $artifact, $this->current_user);
         if ($file_upload_data) {
             $attachment_value           = new ArtifactValuesRepresentation();
             $attachment_value->field_id = $file_upload_data->getField()->getId();

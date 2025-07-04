@@ -36,6 +36,7 @@ use Tuleap\Tracker\Notifications\UgroupsToNotifyDao;
 use Tuleap\Tracker\Notifications\UsersToNotifyDao;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeImpliedFromAnotherTracker;
+use Tuleap\Tracker\Semantic\Title\CachedSemanticTitleFieldRetriever;
 use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle;
 use Tuleap\Tracker\Tracker;
 use Tuleap\User\InvalidEntryInAutocompleterCollection;
@@ -151,6 +152,7 @@ class Tracker_NotificationsManager
             $calendar_event_config_dao,
             $calendar_event_config_dao,
             SemanticTimeframeBuilder::build(),
+            CachedSemanticTitleFieldRetriever::instance(),
         );
         $calendar_config_updater
             ->updateConfigAccordingToRequest($this->tracker, $request)
@@ -350,8 +352,8 @@ class Tracker_NotificationsManager
         $is_semantic_timeframe_defined     = $semantic_timeframe->isDefined();
         $is_semantic_timeframe_inherited   = $semantic_timeframe->getTimeframeCalculator() instanceof TimeframeImpliedFromAnotherTracker;
 
-        $semantic_title            = TrackerSemanticTitle::load($this->tracker);
-        $is_semantic_title_defined = $semantic_title->getField() !== null;
+        $semantic_title_field      = CachedSemanticTitleFieldRetriever::instance()->fromTracker($this->tracker);
+        $is_semantic_title_defined = $semantic_title_field !== null;
 
         $renderer = $this->getNotificationsRenderer();
         $renderer->renderToPage(
@@ -364,7 +366,7 @@ class Tracker_NotificationsManager
                 $is_semantic_timeframe_inherited,
                 $semantic_timeframe->getUrl(),
                 $is_semantic_title_defined,
-                $semantic_title->getUrl(),
+                (new TrackerSemanticTitle($this->tracker, $semantic_title_field))->getUrl(),
             )
         );
     }

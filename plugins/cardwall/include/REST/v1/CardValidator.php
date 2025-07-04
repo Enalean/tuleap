@@ -26,7 +26,7 @@ use Cardwall_SingleCard;
 use Luracast\Restler\RestException;
 use PFUser;
 use Tracker_FormElement_Field;
-use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle;
+use Tuleap\Tracker\Semantic\Title\CachedSemanticTitleFieldRetriever;
 
 class CardValidator
 {
@@ -42,10 +42,10 @@ class CardValidator
 
     private function getLabelFieldData(Cardwall_SingleCard $single_card, $label)
     {
-        $semantic_title = TrackerSemanticTitle::load($single_card->getArtifact()->getTracker());
-        if ($semantic_title) {
+        $semantic_title = CachedSemanticTitleFieldRetriever::instance()->fromTracker($single_card->getArtifact()->getTracker());
+        if ($semantic_title !== null) {
             return [
-                $semantic_title->getFieldId() => $label,
+                $semantic_title->getId() => $label,
             ];
         }
         return [];

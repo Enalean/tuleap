@@ -26,7 +26,7 @@ use ParagonIE\EasyDB\EasyStatement;
 use Tuleap\DB\DataAccessObject;
 use Tuleap\Option\Option;
 
-final class TitleSemanticDAO extends DataAccessObject implements RetrieveTitleField, SearchTrackersWithoutTitleSemantic
+final class TitleSemanticDAO extends DataAccessObject implements SearchTitleField, SearchTrackersWithoutTitleSemantic
 {
     public function searchByTrackerId(int $tracker_id): Option
     {

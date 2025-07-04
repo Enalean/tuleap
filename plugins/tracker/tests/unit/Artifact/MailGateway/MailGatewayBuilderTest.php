@@ -34,7 +34,7 @@ use Tracker_ArtifactByEmailStatus;
 use Tracker_FormElementFactory;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
-use Tuleap\Tracker\Test\Stub\RetrieveSemanticDescriptionFieldStub;
+use Tuleap\Tracker\Test\Stub\Semantic\Description\RetrieveSemanticDescriptionFieldStub;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MailGatewayBuilderTest extends TestCase

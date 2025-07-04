@@ -41,18 +41,16 @@ use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeNotConfigured;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeWithDuration;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeWithEndDate;
-use Tuleap\Tracker\Test\Stub\RetrieveSemanticDescriptionFieldStub;
+use Tuleap\Tracker\Semantic\Title\RetrieveSemanticTitleField;
 use Tuleap\Tracker\Test\Builders\Fields\ArtifactLinkFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Test\Stub\Semantic\Description\RetrieveSemanticDescriptionFieldStub;
+use Tuleap\Tracker\Test\Stub\Semantic\Title\RetrieveSemanticTitleFieldStub;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const PROGRAM_INCREMENT_TRACKER_ID = 37;
-    /**
-     * @var \PHPUnit\Framework\MockObject\Stub&\Tuleap\Tracker\Semantic\Title\TrackerSemanticTitleFactory
-     */
-    private $title_factory;
     /**
      * @var \PHPUnit\Framework\MockObject\Stub&\Tuleap\Tracker\Semantic\Status\TrackerSemanticStatusFactory
      */
@@ -67,7 +65,6 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function setUp(): void
     {
-        $this->title_factory           = $this->createStub(\Tuleap\Tracker\Semantic\Title\TrackerSemanticTitleFactory::class);
         $this->status_factory          = $this->createStub(\Tuleap\Tracker\Semantic\Status\TrackerSemanticStatusFactory::class);
         $this->timeframe_builder       = $this->createStub(SemanticTimeframeBuilder::class);
         $this->artifact_link_retriever = RetrieveFullArtifactLinkFieldStub::withNoField();
@@ -82,11 +79,12 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
             ->build();
     }
 
-    private function getGatherer(): SynchronizedFieldsGatherer
-    {
+    private function getGatherer(
+        RetrieveSemanticTitleField $retrieve_semantic_title_field,
+    ): SynchronizedFieldsGatherer {
         return new SynchronizedFieldsGatherer(
             RetrieveFullTrackerStub::withTracker($this->tracker),
-            $this->title_factory,
+            $retrieve_semantic_title_field,
             RetrieveSemanticDescriptionFieldStub::withNoField(),
             $this->status_factory,
             $this->timeframe_builder,
@@ -98,7 +96,7 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $gatherer = new SynchronizedFieldsGatherer(
             RetrieveFullTrackerStub::withTracker($this->tracker),
-            $this->title_factory,
+            RetrieveSemanticTitleFieldStub::build(),
             $retrieve_semantic_description_field,
             $this->status_factory,
             $this->timeframe_builder,
@@ -109,39 +107,27 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsWhenTitleFieldCantBeFound(): void
     {
-        $title_semantic = new \Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle($this->tracker);
-        $this->title_factory->method('getByTracker')->willReturn($title_semantic);
-
         $this->expectException(FieldRetrievalException::class);
-        $this->getGatherer()->getTitleField($this->tracker_identifier, null);
+        $this->getGatherer(RetrieveSemanticTitleFieldStub::build())->getTitleField($this->tracker_identifier, null);
     }
 
     public function testItThrowsWhenTitleIsNotAString(): void
     {
-        $title_semantic = new \Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle($this->tracker, $this->getTextField(1, 'Title'));
-        $this->title_factory->method('getByTracker')->willReturn($title_semantic);
-
         $this->expectException(TitleFieldHasIncorrectTypeException::class);
-        $this->getGatherer()->getTitleField($this->tracker_identifier, null);
+        $this->getGatherer(RetrieveSemanticTitleFieldStub::build()->withTitleField($this->tracker, $this->getTextField(1, 'Title')))->getTitleField($this->tracker_identifier, null);
     }
 
     public function testItCollectsErrorWhenTitleIsNotAString(): void
     {
-        $title_semantic = new \Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle($this->tracker, $this->getTextField(1, 'Title'));
-        $this->title_factory->method('getByTracker')->willReturn($title_semantic);
-
         $this->expectException(TitleFieldHasIncorrectTypeException::class);
         $errors_collector = new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), false);
-        $this->getGatherer()->getTitleField($this->tracker_identifier, $errors_collector);
+        $this->getGatherer(RetrieveSemanticTitleFieldStub::build()->withTitleField($this->tracker, $this->getTextField(1, 'Title')))->getTitleField($this->tracker_identifier, $errors_collector);
         $this->assertCount(1, $errors_collector->getTitleHasIncorrectTypeError());
     }
 
     public function testItReturnsTitleReference(): void
     {
-        $title_semantic = new \Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle($this->tracker, $this->getStringField(832, 'Semiacquaintance'));
-        $this->title_factory->method('getByTracker')->willReturn($title_semantic);
-
-        $title = $this->getGatherer()->getTitleField($this->tracker_identifier, null);
+        $title = $this->getGatherer(RetrieveSemanticTitleFieldStub::build()->withTitleField($this->tracker, $this->getStringField(832, 'Semiacquaintance')))->getTitleField($this->tracker_identifier, null);
         self::assertSame(832, $title->getId());
         self::assertSame('Semiacquaintance', $title->getLabel());
     }
@@ -169,7 +155,7 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->status_factory->method('getByTracker')->willReturn($status_semantic);
 
         $this->expectException(FieldRetrievalException::class);
-        $this->getGatherer()->getStatusField($this->tracker_identifier);
+        $this->getGatherer(RetrieveSemanticTitleFieldStub::build())->getStatusField($this->tracker_identifier);
     }
 
     public function testItReturnsStatusReference(): void
@@ -177,7 +163,7 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
         $status_semantic = new \Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus($this->tracker, $this->getSelectboxField(525, 'Kettle'));
         $this->status_factory->method('getByTracker')->willReturn($status_semantic);
 
-        $status = $this->getGatherer()->getStatusField($this->tracker_identifier);
+        $status = $this->getGatherer(RetrieveSemanticTitleFieldStub::build())->getStatusField($this->tracker_identifier);
         self::assertSame(525, $status->getId());
         self::assertSame('Kettle', $status->getLabel());
     }
@@ -188,7 +174,7 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->timeframe_builder->method('getSemantic')->willReturn($timeframe_semantic);
 
         $this->expectException(MissingTimeFrameFieldException::class);
-        $this->getGatherer()->getStartDateField($this->tracker_identifier);
+        $this->getGatherer(RetrieveSemanticTitleFieldStub::build())->getStartDateField($this->tracker_identifier);
     }
 
     public function testItReturnsStartDateReference(): void
@@ -199,7 +185,7 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
         );
         $this->timeframe_builder->method('getSemantic')->willReturn($timeframe_semantic);
 
-        $start_date = $this->getGatherer()->getStartDateField($this->tracker_identifier);
+        $start_date = $this->getGatherer(RetrieveSemanticTitleFieldStub::build())->getStartDateField($this->tracker_identifier);
         self::assertSame(101, $start_date->getId());
         self::assertSame('hebetate', $start_date->getLabel());
     }
@@ -210,7 +196,7 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->timeframe_builder->method('getSemantic')->willReturn($timeframe_semantic);
 
         $this->expectException(MissingTimeFrameFieldException::class);
-        $this->getGatherer()->getEndPeriodField($this->tracker_identifier);
+        $this->getGatherer(RetrieveSemanticTitleFieldStub::build())->getEndPeriodField($this->tracker_identifier);
     }
 
     public function testItReturnsDurationReference(): void
@@ -221,7 +207,7 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
         );
         $this->timeframe_builder->method('getSemantic')->willReturn($timeframe_semantic);
 
-        $end_period = $this->getGatherer()->getEndPeriodField($this->tracker_identifier);
+        $end_period = $this->getGatherer(RetrieveSemanticTitleFieldStub::build())->getEndPeriodField($this->tracker_identifier);
         self::assertInstanceOf(DurationFieldReference::class, $end_period);
         self::assertSame(429, $end_period->getId());
         self::assertSame('Maclura', $end_period->getLabel());
@@ -235,7 +221,7 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
         );
         $this->timeframe_builder->method('getSemantic')->willReturn($timeframe_semantic);
 
-        $end_period = $this->getGatherer()->getEndPeriodField($this->tracker_identifier);
+        $end_period = $this->getGatherer(RetrieveSemanticTitleFieldStub::build())->getEndPeriodField($this->tracker_identifier);
         self::assertInstanceOf(EndDateFieldReference::class, $end_period);
         self::assertSame(754, $end_period->getId());
         self::assertSame('block', $end_period->getLabel());
@@ -244,7 +230,7 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItThrowsWhenArtifactLinkFieldCantBeFound(): void
     {
         $this->expectException(NoArtifactLinkFieldException::class);
-        $this->getGatherer()->getArtifactLinkField($this->tracker_identifier, null);
+        $this->getGatherer(RetrieveSemanticTitleFieldStub::build())->getArtifactLinkField($this->tracker_identifier, null);
     }
 
     public function testItReturnsArtifactLinkReference(): void
@@ -256,7 +242,7 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
                 ->build()
         );
 
-        $artifact_link = $this->getGatherer()->getArtifactLinkField($this->tracker_identifier, null);
+        $artifact_link = $this->getGatherer(RetrieveSemanticTitleFieldStub::build())->getArtifactLinkField($this->tracker_identifier, null);
         self::assertSame(623, $artifact_link->getId());
         self::assertSame('premanifest', $artifact_link->getLabel());
     }
