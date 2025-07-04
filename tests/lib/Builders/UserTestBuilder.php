@@ -177,6 +177,12 @@ class UserTestBuilder
         return $this;
     }
 
+    public function withPassword(string $password): self
+    {
+        $this->params['password'] = $password;
+        return $this;
+    }
+
     public function withAdministratorOf(\Project $project): self
     {
         if ($this->user_group_data === null) {

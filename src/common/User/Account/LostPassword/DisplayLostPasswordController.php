@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\User\Account\LostPassword;
 
 use HTTPRequest;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\FooterConfiguration;
@@ -36,13 +37,13 @@ final class DisplayLostPasswordController implements DispatchableWithRequestNoAu
     public function __construct(
         private \TemplateRendererFactory $renderer_factory,
         private IncludeAssets $core_assets,
-        private \EventManager $event_manager,
+        private EventDispatcherInterface $event_manager,
     ) {
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
-        $this->event_manager->processEvent('before_lostpw', []);
+        $this->event_manager->dispatch(new BeforeLostPassword());
 
         $layout->addCssAsset(
             new CssAssetWithoutVariantDeclinaisons($this->core_assets, 'account-registration-style')

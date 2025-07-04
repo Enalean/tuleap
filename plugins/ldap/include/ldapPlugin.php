@@ -62,6 +62,8 @@ use Tuleap\User\Account\AccountCreated;
 use Tuleap\User\Account\AccountInformationCollection;
 use Tuleap\User\Account\AccountInformationPresenter;
 use Tuleap\User\Account\AuthenticationMeanName;
+use Tuleap\User\Account\LostPassword\BeforeLostPassword;
+use Tuleap\User\Account\LostPassword\BeforeLostPasswordConfirm;
 use Tuleap\User\Account\PasswordPreUpdateEvent;
 use Tuleap\User\Account\RedirectAfterLogin;
 use Tuleap\User\Account\RegistrationGuardEvent;
@@ -491,16 +493,16 @@ class LdapPlugin extends Plugin implements PluginWithConfigKeys
         return $link;
     }
 
-    #[\Tuleap\Plugin\ListeningToEventName('before_lostpw')]
-    public function beforeLostpw($params): void
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function beforeLostpw(BeforeLostPassword $event): void
     {
         if ($this->isLdapAuthType()) {
             exit_permission_denied();
         }
     }
 
-    #[\Tuleap\Plugin\ListeningToEventName('before_lostpw-confirm')]
-    public function beforeLostpwConfirm($params): void
+    #[\Tuleap\Plugin\ListeningToEventClass]
+    public function beforeLostpwConfirm(BeforeLostPasswordConfirm $event): void
     {
         if ($this->isLdapAuthType()) {
             exit_permission_denied();
