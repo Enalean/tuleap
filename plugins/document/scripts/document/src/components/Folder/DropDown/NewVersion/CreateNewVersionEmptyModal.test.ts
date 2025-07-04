@@ -25,9 +25,10 @@ import CreateNewVersionEmptyModal from "./CreateNewVersionEmptyModal.vue";
 import { TYPE_EMPTY, TYPE_FILE, TYPE_LINK } from "../../../../constants";
 import * as tlp_modal from "@tuleap/tlp-modal";
 import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
+import type { Modal } from "@tuleap/tlp-modal";
 
 describe("CreateNewVersionEmptyModal", () => {
-    let factory;
+    let factory: (props: object) => VueWrapper<CreateNewVersionEmptyModal>;
     const create_new_version = vi.fn();
     const reset_error_modal = vi.fn();
 
@@ -66,7 +67,7 @@ describe("CreateNewVersionEmptyModal", () => {
             addEventListener: () => {},
             show: () => {},
             hide: () => {},
-        });
+        } as unknown as Modal);
     });
 
     it("Default type for creation of new link version of an empty document is file", () => {
@@ -78,9 +79,10 @@ describe("CreateNewVersionEmptyModal", () => {
                 embedded_properties: {},
                 file_properties: {},
             },
+            type: null,
         });
 
-        expect(wrapper.vm.new_item_version.type).toBe(TYPE_FILE);
+        expect(wrapper.vm.new_item_version_type).toBe(TYPE_FILE);
     });
     it("should create a new link version from an empty document", () => {
         const wrapper = factory({
@@ -91,14 +93,10 @@ describe("CreateNewVersionEmptyModal", () => {
                 embedded_properties: {},
                 file_properties: {},
             },
-        });
-        wrapper.setData({
-            new_item_version: {
-                type: TYPE_LINK,
-            },
+            type: TYPE_LINK,
         });
         wrapper.get("form").trigger("submit.prevent");
         expect(wrapper.vm.is_loading).toBe(true);
-        expect(wrapper.vm.new_item_version.type).toBe(TYPE_LINK);
+        expect(wrapper.vm.new_item_version_type).toBe(TYPE_LINK);
     });
 });

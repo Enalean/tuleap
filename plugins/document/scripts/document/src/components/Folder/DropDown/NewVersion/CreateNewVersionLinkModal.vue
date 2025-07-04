@@ -35,9 +35,8 @@
                 v-bind:is-open-after-dnd="false"
             >
                 <link-properties
-                    v-if="link_model"
+                    v-if="link_model && item.type === TYPE_LINK()"
                     v-bind:value="item.link_properties.link_url"
-                    v-bind:item="item"
                     key="link-props"
                 />
             </item-update-properties>
@@ -62,6 +61,7 @@ import ModalFooter from "../../ModalCommon/ModalFooter.vue";
 import ItemUpdateProperties from "./PropertiesForUpdate/ItemUpdateProperties.vue";
 import LinkProperties from "../PropertiesForCreateOrUpdate/LinkProperties.vue";
 import emitter from "../../../../helpers/emitter";
+import { TYPE_LINK } from "../../../../constants";
 
 export default {
     name: "CreateNewVersionLinkModal",
@@ -111,6 +111,9 @@ export default {
         emitter.off("update-link-properties", this.updateLinkProperties);
     },
     methods: {
+        TYPE_LINK() {
+            return TYPE_LINK;
+        },
         setApprovalUpdateAction(value) {
             this.approval_table_action = value;
         },

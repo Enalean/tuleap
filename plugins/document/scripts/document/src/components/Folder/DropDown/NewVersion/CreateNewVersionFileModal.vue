@@ -34,7 +34,7 @@
                 v-on:approval-table-action-change="setApprovalUpdateAction"
                 v-bind:is-open-after-dnd="false"
             >
-                <file-properties v-bind:item="uploaded_item" />
+                <file-properties v-if="uploaded_item.type === TYPE_FILE()" />
             </item-update-properties>
             <file-version-history v-bind:item="item" />
         </div>
@@ -117,6 +117,9 @@ export default {
         emitter.off("update-lock", this.updateLock);
     },
     methods: {
+        TYPE_FILE() {
+            return TYPE_FILE;
+        },
         getDefaultUploadedItem() {
             return {
                 title: "",

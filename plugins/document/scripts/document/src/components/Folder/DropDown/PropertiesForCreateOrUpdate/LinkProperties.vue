@@ -19,7 +19,7 @@
   -->
 
 <template>
-    <div class="tlp-form-element" v-if="is_displayed">
+    <div class="tlp-form-element">
         <label class="tlp-label" for="document-new-item-link-url">
             {{ $gettext("URL") }}
             <i class="fa-solid fa-asterisk"></i>
@@ -44,16 +44,9 @@
     </div>
 </template>
 <script setup lang="ts">
-import { isLink } from "../../../../helpers/type-check-helper";
-import type { Item } from "../../../../type";
-import { computed } from "vue";
 import emitter from "../../../../helpers/emitter";
 
-const props = defineProps<{ value: string; item: Item }>();
-
-const is_displayed = computed((): boolean => {
-    return isLink(props.item);
-});
+defineProps<{ value: string }>();
 
 function onInput($event: Event): void {
     if ($event.target instanceof HTMLInputElement) {

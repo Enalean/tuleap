@@ -22,44 +22,45 @@
     <form
         class="tlp-modal"
         role="dialog"
-        v-bind:aria-labelled-by="`document-new-empty-version-modal`"
+        aria-labelled-by="document-new-empty-version-modal"
         v-on:submit="createNewVersion"
+        ref="form"
     >
         <modal-header
             v-bind:modal-title="modal_title"
-            v-bind:aria-labelled-by="`document-new-empty-version-modal`"
+            aria-labelled-by="document-new-empty-version-modal"
         />
         <modal-feedback />
 
         <div class="tlp-modal-body">
             <link-properties
+                v-if="new_item_version_type === TYPE_LINK"
                 v-bind:value="new_item_version.link_properties.link_url"
-                v-bind:item="new_item_version"
             />
             <embedded-properties
+                v-if="new_item_version_type === TYPE_EMBEDDED"
                 v-bind:value="new_item_version.embedded_properties.content"
-                v-bind:item="new_item_version"
             />
             <file-properties
+                v-if="new_item_version_type === TYPE_FILE"
                 v-bind:value="new_item_version.file_properties"
-                v-bind:item="new_item_version"
             />
         </div>
         <modal-footer
             v-bind:is-loading="is_loading"
-            v-bind:submit-button-label="submit_button_label"
-            v-bind:aria-labelled-by="`document-new-empty-version-modal`"
+            v-bind:submit-button-label="$gettext('Create new version')"
+            aria-labelled-by="document-new-empty-version-modal"
             v-bind:icon-submit-button-class="'fa-solid fa-plus'"
             data-test="document-modal-submit-button-create-empty"
         />
     </form>
 </template>
 
-<script lang="ts">
-import { mapState } from "vuex";
+<script setup lang="ts">
+import type { Modal } from "@tuleap/tlp-modal";
 import { createModal } from "@tuleap/tlp-modal";
 import { sprintf } from "sprintf-js";
-import { TYPE_FILE } from "../../../../constants";
+import { TYPE_EMBEDDED, TYPE_FILE, TYPE_LINK } from "../../../../constants";
 import ModalHeader from "../../ModalCommon/ModalHeader.vue";
 import ModalFeedback from "../../ModalCommon/ModalFeedback.vue";
 import ModalFooter from "../../ModalCommon/ModalFooter.vue";
@@ -67,103 +68,102 @@ import EmbeddedProperties from "../PropertiesForCreateOrUpdate/EmbeddedPropertie
 import LinkProperties from "../PropertiesForCreateOrUpdate/LinkProperties.vue";
 import FileProperties from "../PropertiesForCreateOrUpdate/FileProperties.vue";
 import emitter from "../../../../helpers/emitter";
+import type { Item, ItemType } from "../../../../type";
+import { computed, onBeforeUnmount, onMounted, ref } from "vue";
+import { useNamespacedState, useStore } from "vuex-composition-helpers";
+import type { ErrorState } from "../../../../store/error/module";
+import { useGettext } from "vue3-gettext";
+import type { NewVersionFromEmptyInformation } from "../../../../store/actions-update";
 
-export default {
-    name: "CreateNewVersionEmptyModal",
-    components: {
-        FileProperties,
-        LinkProperties,
-        ModalFeedback,
-        ModalHeader,
-        ModalFooter,
-        EmbeddedProperties,
-    },
-    props: {
-        item: Object,
-        type: {
-            required: false,
-            type: String,
-        },
-    },
-    data() {
-        return {
-            is_loading: false,
-            new_item_version: {
-                type: this.type || TYPE_FILE,
-                link_properties: {
-                    link_url: "",
-                },
-                file_properties: {
-                    file: "",
-                },
-                embedded_properties: {
-                    content: "",
-                },
-            },
-        };
-    },
-    computed: {
-        ...mapState("error", ["has_modal_error"]),
-        ...mapState("configuration", ["project_id"]),
-        submit_button_label() {
-            return this.$gettext("Create new version");
-        },
-        modal_title() {
-            return sprintf(this.$gettext('New version for "%s"'), this.item.title);
-        },
-    },
-    mounted() {
-        this.modal = createModal(this.$el);
-        this.modal.addEventListener("tlp-modal-hidden", this.reset);
-        this.modal.show();
-        emitter.on("update-link-properties", this.updateLinkProperties);
-        emitter.on("update-wiki-properties", this.updateWikiProperties);
-        emitter.on("update-embedded-properties", this.updateEmbeddedContent);
-        emitter.on("update-file-properties", this.updateFilesProperties);
-    },
-    beforeUnmount() {
-        emitter.off("update-link-properties", this.updateLinkProperties);
-        emitter.off("update-wiki-properties", this.updateWikiProperties);
-        emitter.off("update-embedded-properties", this.updateEmbeddedContent);
-        emitter.off("update-file-properties", this.updateFilesProperties);
-    },
-    methods: {
-        reset() {
-            this.$store.commit("error/resetModalError");
-            this.is_loading = false;
-            this.hide();
-        },
-        hide() {
-            this.$emit("hidden");
-        },
-        async createNewVersion(event) {
-            event.preventDefault();
-            this.is_loading = true;
-            this.$store.commit("error/resetModalError");
+const { $gettext } = useGettext();
+const $store = useStore();
 
-            await this.$store.dispatch("createNewVersionFromEmpty", [
-                this.new_item_version.type,
-                this.item,
-                this.new_item_version,
-            ]);
+const props = defineProps<{
+    item: Item;
+    type: ItemType | null;
+}>();
 
-            this.is_loading = false;
-            if (this.has_modal_error === false) {
-                this.modal.hide();
-            }
-        },
-        updateLinkProperties(url) {
-            this.new_item_version.link_properties.link_url = url;
-        },
-        updateWikiProperties(page_name) {
-            this.new_item_version.wiki_properties.page_name = page_name;
-        },
-        updateEmbeddedContent(content) {
-            this.new_item_version.embedded_properties.content = content;
-        },
-        updateFilesProperties(file_properties) {
-            this.new_item_version.file_properties = file_properties;
-        },
-    },
-};
+const emit = defineEmits<{
+    (e: "hidden"): void;
+}>();
+
+const is_loading = ref<boolean>(false);
+const new_item_version_type = ref<ItemType>(props.type || TYPE_FILE);
+const new_item_version = ref<NewVersionFromEmptyInformation>({
+    link_properties: { link_url: "" },
+    file_properties: { file: "" },
+    embedded_properties: { content: "" },
+});
+const form = ref<HTMLFormElement>();
+
+let modal: Modal | null = null;
+
+const { has_modal_error } = useNamespacedState<Pick<ErrorState, "has_modal_error">>("error", [
+    "has_modal_error",
+]);
+
+const modal_title = computed(() => sprintf($gettext('New version for "%s"'), props.item.title));
+
+onMounted(() => {
+    if (!(form.value instanceof HTMLFormElement)) {
+        throw new Error("form element not found");
+    }
+    modal = createModal(form.value);
+    modal.addEventListener("tlp-modal-hidden", reset);
+    modal.show();
+    emitter.on("update-link-properties", updateLinkProperties);
+    emitter.on("update-wiki-properties", updateWikiProperties);
+    emitter.on("update-embedded-properties", updateEmbeddedContent);
+    emitter.on("update-file-properties", updateFilesProperties);
+});
+
+onBeforeUnmount(() => {
+    emitter.off("update-link-properties", updateLinkProperties);
+    emitter.off("update-wiki-properties", updateWikiProperties);
+    emitter.off("update-embedded-properties", updateEmbeddedContent);
+    emitter.off("update-file-properties", updateFilesProperties);
+});
+
+function reset(): void {
+    $store.commit("error/resetModalError");
+    is_loading.value = false;
+    hide();
+}
+
+function hide(): void {
+    emit("hidden");
+}
+
+async function createNewVersion(event: SubmitEvent): Promise<void> {
+    event.preventDefault();
+    is_loading.value = true;
+    $store.commit("error/resetModalError");
+
+    await $store.dispatch("createNewVersionFromEmpty", [
+        new_item_version_type.value,
+        props.item,
+        new_item_version.value,
+    ]);
+
+    is_loading.value = false;
+    if (!has_modal_error.value) {
+        modal?.hide();
+    }
+}
+
+function updateLinkProperties(url: string): void {
+    new_item_version.value.link_properties.link_url = url;
+}
+
+function updateWikiProperties(page_name): void {
+    new_item_version.value.wiki_properties.page_name = page_name;
+}
+
+function updateEmbeddedContent(content: string): void {
+    new_item_version.value.embedded_properties.content = content;
+}
+
+function updateFilesProperties(file_properties: { file: File }): void {
+    new_item_version.value.file_properties = file_properties;
+}
 </script>
