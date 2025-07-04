@@ -45495,12 +45495,9 @@
   </file>
   <file src="plugins/tracker/include/Tracker/TrackerFactory.php">
     <DeprecatedMethod>
-      <code><![CDATA[$pending_trackers]]></code>
-      <code><![CDATA[$pending_trackers]]></code>
       <code><![CDATA[duplicatePermissions]]></code>
       <code><![CDATA[duplicatePermissions]]></code>
       <code><![CDATA[getRow]]></code>
-      <code><![CDATA[isError]]></code>
     </DeprecatedMethod>
     <InvalidNullableReturnType>
       <code><![CDATA[Tracker]]></code>
@@ -46430,7 +46427,6 @@
       <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
       <code><![CDATA[escapeIntImplode]]></code>
       <code><![CDATA[quoteSmart]]></code>
       <code><![CDATA[quoteSmart]]></code>
@@ -46466,8 +46462,6 @@
       <code><![CDATA[retrieve]]></code>
       <code><![CDATA[retrieve]]></code>
       <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[update]]></code>
       <code><![CDATA[update]]></code>
       <code><![CDATA[update]]></code>
       <code><![CDATA[update]]></code>
@@ -46477,11 +46471,9 @@
     </DeprecatedMethod>
     <FalsableReturnStatement>
       <code><![CDATA[$this->retrieve($sql)]]></code>
-      <code><![CDATA[$this->retrieve($sql)]]></code>
     </FalsableReturnStatement>
     <InvalidFalsableReturnType>
       <code><![CDATA[LegacyDataAccessResultInterface]]></code>
-      <code><![CDATA[\Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface]]></code>
     </InvalidFalsableReturnType>
     <MissingParamType>
       <code><![CDATA[$allow_copy]]></code>

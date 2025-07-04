@@ -23,7 +23,7 @@ use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 use Tuleap\Tracker\Hierarchy\HierarchyDAO;
 use Tuleap\Tracker\Tracker;
 
-class TrackerDao extends DataAccessObject
+class TrackerDao extends DataAccessObject //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     public function searchById($id)
     {
@@ -353,38 +353,5 @@ class TrackerDao extends DataAccessObject
         }
         $id_enumeration = $this->da->escapeIntImplode($excluded_tracker_ids);
         return "$restriction_clause ($id_enumeration)";
-    }
-
-    /**
-    * Searches deleted trackers
-    *
-    * @return \Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
-    */
-    public function retrieveTrackersMarkAsDeleted()
-    {
-        $sql = "SELECT tracker.*
-                FROM tracker
-                    INNER JOIN `groups` USING (group_id)
-                WHERE tracker.deletion_date > 0
-                    AND `groups`.status <> 'D'
-                ORDER BY tracker.group_id";
-
-        return $this->retrieve($sql);
-    }
-
-    /**
-    * Restore a deleted tracker by removig its deletion_date flag.
-    *
-    * @param int $tracker_id the ID of the tracker
-    *
-    * @return bool
-    */
-    public function restoreTrackerMarkAsDeleted($tracker_id)
-    {
-        $tracker_id = $this->da->escapeInt($tracker_id);
-        $sql        = "UPDATE tracker SET
-                          deletion_date = NULL
-                      WHERE id = $tracker_id";
-        return $this->update($sql);
     }
 }
