@@ -20,5 +20,9 @@
 
 import type { ConfigurationState } from "./index";
 
+export interface ConfigurationGetters {
+    readonly user_can_dragndrop: boolean;
+}
+
 export const user_can_dragndrop = (state: ConfigurationState): boolean =>
     state.max_files_dragndrop > 0;

@@ -33,6 +33,7 @@ vi.useFakeTimers();
 
 describe("DragNDropHandler", () => {
     let main, drop_event, drag_event, add_upload_file_mock, create_new_file_version_mock;
+    const closest_mock = vi.fn();
 
     const file1 = new File([new Blob(["Some text in a file"])], "file.txt", {
         type: "plain/text",
@@ -89,7 +90,7 @@ describe("DragNDropHandler", () => {
                 }),
             },
         });
-        vi.spyOn(wrapper.vm, "isDragNDropingOnAModal").mockReturnValue(false);
+        closest_mock.mockReturnValue(false);
 
         return wrapper;
     }
@@ -110,6 +111,9 @@ describe("DragNDropHandler", () => {
             dataTransfer: {
                 files: [],
             },
+            target: {
+                closest: closest_mock,
+            },
         };
         drag_event = {
             stopPropagation: (): void => {},
@@ -118,7 +122,7 @@ describe("DragNDropHandler", () => {
                 items: [],
             },
             target: {
-                closest: (): void => {},
+                closest: closest_mock,
             },
         };
 
@@ -231,7 +235,7 @@ describe("DragNDropHandler", () => {
                     type: TYPE_FILE,
                     user_can_write: true,
                     lock_info: {
-                        locked_by: {
+                        lock_by: {
                             id: 753,
                             name: "some dude",
                             display_name: "Some Dude",
@@ -244,7 +248,7 @@ describe("DragNDropHandler", () => {
                 const wrapper = getWrapper(false, false, 1000000, [target_file]);
                 drop_event.dataTransfer.files.push(file1);
 
-                wrapper.setData({ highlighted_item_id: target_file.id });
+                wrapper.vm.highlighted_item_id = target_file.id;
 
                 await wrapper.vm.ondrop(drop_event);
                 await vi.runOnlyPendingTimersAsync();
@@ -266,7 +270,7 @@ describe("DragNDropHandler", () => {
                 const wrapper = getWrapper(false, false, 0, [target_file]);
                 drop_event.dataTransfer.files.push(file1);
 
-                wrapper.setData({ highlighted_item_id: target_file.id });
+                wrapper.vm.highlighted_item_id = target_file.id;
 
                 await wrapper.vm.ondrop(drop_event);
 
@@ -291,7 +295,7 @@ describe("DragNDropHandler", () => {
                     throw new Error("It cannot");
                 });
 
-                wrapper.setData({ highlighted_item_id: target_file.id });
+                wrapper.vm.highlighted_item_id = target_file.id;
 
                 await wrapper.vm.ondrop(drop_event);
 
@@ -338,7 +342,7 @@ describe("DragNDropHandler", () => {
             const wrapper = getWrapper(false, false, 1000000000, [target_subfolder]);
             drop_event.dataTransfer.files.push(file1, file2);
 
-            wrapper.setData({ highlighted_item_id: target_subfolder.id });
+            wrapper.vm.highlighted_item_id = target_subfolder.id;
 
             await wrapper.vm.ondrop(drop_event);
 
@@ -386,7 +390,7 @@ describe("DragNDropHandler", () => {
                 type: TYPE_FILE,
                 user_can_write: true,
                 lock_info: {
-                    locked_by: {
+                    lock_by: {
                         id: CURRENT_USER_ID,
                         name: "current_user",
                     },
@@ -399,7 +403,7 @@ describe("DragNDropHandler", () => {
             const wrapper = getWrapper(false, false, 1000000000, [target_file]);
             drop_event.dataTransfer.files.push(file1);
 
-            wrapper.setData({ highlighted_item_id: target_file.id });
+            wrapper.vm.highlighted_item_id = target_file.id;
 
             await wrapper.vm.ondrop(drop_event);
 
@@ -421,7 +425,7 @@ describe("DragNDropHandler", () => {
                 type: TYPE_FILE,
                 user_can_write: true,
                 lock_info: {
-                    locked_by: {
+                    lock_by: {
                         id: CURRENT_USER_ID,
                         name: "current_user",
                     },
@@ -433,7 +437,7 @@ describe("DragNDropHandler", () => {
 
             drop_event.dataTransfer.files.push(file1);
 
-            wrapper.setData({ highlighted_item_id: target_file.id });
+            wrapper.vm.highlighted_item_id = target_file.id;
 
             await wrapper.vm.ondrop(drop_event);
 
@@ -451,7 +455,7 @@ describe("DragNDropHandler", () => {
                 type: TYPE_FILE,
                 user_can_write: true,
                 lock_info: {
-                    locked_by: {
+                    lock_by: {
                         id: CURRENT_USER_ID,
                         name: "current_user",
                     },
@@ -465,7 +469,7 @@ describe("DragNDropHandler", () => {
 
             drop_event.dataTransfer.files.push(file1);
 
-            wrapper.setData({ highlighted_item_id: target_file.id });
+            wrapper.vm.highlighted_item_id = target_file.id;
 
             await wrapper.vm.ondrop(drop_event);
 
@@ -508,7 +512,7 @@ describe("DragNDropHandler", () => {
             const wrapper = getWrapper(false, false, 1000000000, [target_subfolder]);
             drop_event.dataTransfer.files.push(file1);
 
-            wrapper.setData({ highlighted_item_id: target_subfolder.id });
+            wrapper.vm.highlighted_item_id = target_subfolder.id;
 
             await wrapper.vm.ondrop(drop_event);
 
@@ -528,7 +532,7 @@ describe("DragNDropHandler", () => {
             const wrapper = getWrapper(false, false, 1000000000, [target_file]);
             drop_event.dataTransfer.files.push(file1);
 
-            wrapper.setData({ highlighted_item_id: target_file.id });
+            wrapper.vm.highlighted_item_id = target_file.id;
 
             await wrapper.vm.ondrop(drop_event);
 
@@ -539,7 +543,7 @@ describe("DragNDropHandler", () => {
             const wrapper = getWrapper();
             drop_event.dataTransfer.files.push(file1);
 
-            wrapper.vm.isDragNDropingOnAModal.mockReturnValue(true);
+            closest_mock.mockReturnValue(true);
 
             await wrapper.vm.ondrop(drop_event);
 
