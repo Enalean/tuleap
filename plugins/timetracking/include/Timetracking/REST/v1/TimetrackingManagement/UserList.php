@@ -22,21 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Timetracking\REST\v1\TimetrackingManagement;
 
-final readonly class UserDiff
+final readonly class UserList
 {
     public function __construct(
-        private array $user_ids_to_insert,
-        private array $user_ids_to_remove,
+        public array $user_ids,
     ) {
-    }
-
-    public function getUserIdsToInsert(): array
-    {
-        return $this->user_ids_to_insert;
-    }
-
-    public function getUserIdsToRemove(): array
-    {
-        return $this->user_ids_to_remove;
     }
 }

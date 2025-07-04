@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\Timetracking\Widget\Management;
 
 use DateTimeImmutable;
-use ParagonIE\EasyDB\EasyStatement;
 use Tuleap\DB\DataAccessObject;
 use Tuleap\Timetracking\REST\v1\TimetrackingManagement\GetQueryUsers;
 use Tuleap\Timetracking\REST\v1\TimetrackingManagement\GetWidgetInformation;
@@ -32,6 +31,7 @@ use Tuleap\Timetracking\REST\v1\TimetrackingManagement\SaveQueryWithDates;
 use Tuleap\Timetracking\REST\v1\TimetrackingManagement\SaveQueryWithPredefinedTimePeriod;
 use Tuleap\Timetracking\REST\v1\TimetrackingManagement\SearchQueryByWidgetId;
 use Tuleap\Timetracking\REST\v1\TimetrackingManagement\SearchUsersByWidgetId;
+use Tuleap\Timetracking\REST\v1\TimetrackingManagement\UserList;
 
 final class ManagementDao extends DataAccessObject implements SaveQueryWithDates, SaveQueryWithPredefinedTimePeriod, GetQueryUsers, GetWidgetInformation, SearchQueryByWidgetId, SearchUsersByWidgetId
 {
@@ -59,53 +59,46 @@ final class ManagementDao extends DataAccessObject implements SaveQueryWithDates
         int $query_id,
         DateTimeImmutable $start_date,
         DateTimeImmutable $end_date,
-        array $user_ids_to_insert,
-        array $user_ids_to_remove,
+        UserList $users,
     ): void {
-        $this->getDB()->tryFlatTransaction(function () use ($query_id, $start_date, $end_date, $user_ids_to_insert, $user_ids_to_remove) {
+        $this->getDB()->tryFlatTransaction(function () use ($query_id, $start_date, $end_date, $users) {
             $sql = 'UPDATE plugin_timetracking_management_query
                     SET start_date = ?, end_date = ?, predefined_time_period = ?
                     WHERE id = ?';
 
             $this->getDB()->run($sql, $start_date->getTimestamp(), $end_date->getTimestamp(), null, $query_id);
-            $this->insertUsers($query_id, $user_ids_to_insert);
-            $this->deleteUsers($query_id, $user_ids_to_remove);
+            $this->deleteUsers($query_id);
+            $this->insertUsers($query_id, $users);
         });
     }
 
     public function saveQueryWithPredefinedTimePeriod(
         int $query_id,
         PredefinedTimePeriod $predefined_time_period,
-        array $user_ids_to_insert,
-        array $user_ids_to_remove,
+        UserList $users,
     ): void {
-        $this->getDB()->tryFlatTransaction(function () use ($query_id, $predefined_time_period, $user_ids_to_insert, $user_ids_to_remove) {
+        $this->getDB()->tryFlatTransaction(function () use ($query_id, $predefined_time_period, $users) {
             $sql = 'UPDATE plugin_timetracking_management_query
                     SET start_date = ?, end_date = ?, predefined_time_period = ?
                     WHERE id = ?';
 
             $this->getDB()->run($sql, null, null, $predefined_time_period->value, $query_id);
-            $this->insertUsers($query_id, $user_ids_to_insert);
-            $this->deleteUsers($query_id, $user_ids_to_remove);
+            $this->deleteUsers($query_id);
+            $this->insertUsers($query_id, $users);
         });
     }
 
-    private function deleteUsers(int $query_id, array $user_ids_to_remove): void
+    private function deleteUsers(int $query_id): void
     {
-        if (! empty($user_ids_to_remove)) {
-            $user_ids_statement = EasyStatement::open()->in('user_id IN (?*)', $user_ids_to_remove);
-            $sql                = "DELETE FROM plugin_timetracking_management_query_users WHERE $user_ids_statement AND query_id = ? ";
+        $sql = 'DELETE FROM plugin_timetracking_management_query_users WHERE query_id = ? ';
 
-            $delete_params   = $user_ids_statement->values();
-            $delete_params[] = $query_id;
-            $this->getDB()->safeQuery($sql, $delete_params);
-        }
+        $this->getDB()->RUN($sql, $query_id);
     }
 
-    private function insertUsers(int $query_id, array $user_ids_to_insert): void
+    private function insertUsers(int $query_id, UserList $users): void
     {
         $users_to_insert = [];
-        foreach ($user_ids_to_insert as $user_id) {
+        foreach ($users->user_ids as $user_id) {
             $users_to_insert[] = ['query_id' => $query_id, 'user_id' => $user_id];
         }
 

@@ -47,9 +47,8 @@ final class TimetrackingManagementWidgetSaverTest extends TestCase
         $result = (new TimetrackingManagementWidgetSaver($save_with_dates, $save_with_time_period))->save(
             89,
             Period::fromDates($start_date_immutable, $end_date_immutable),
-            new UserDiff(
+            new UserList(
                 [101, 102, 103],
-                []
             ),
         );
 
@@ -68,9 +67,8 @@ final class TimetrackingManagementWidgetSaverTest extends TestCase
         $result = (new TimetrackingManagementWidgetSaver($save_with_dates, $save_with_time_period))->save(
             89,
             Period::fromPredefinedTimePeriod(PredefinedTimePeriod::YESTERDAY),
-            new UserDiff(
+            new UserList(
                 [101, 102, 103],
-                []
             ),
         );
 
