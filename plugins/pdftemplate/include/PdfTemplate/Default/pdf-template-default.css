@@ -6,6 +6,7 @@ body {
     --dimmed-color: #667080;
 
     --medium-spacing: 16px;
+    --small-spacing: 8px;
 
     /* tlp-colors */
     --inca-silver-primary: #5d5d5d;
@@ -203,6 +204,8 @@ img {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
     margin: var(--medium-spacing) 0 0;
+    overflow-wrap: normal;
+    gap: var(--small-spacing);
 
     > .document-grid-element-full-row {
         grid-column-start: span 4;
@@ -213,21 +216,32 @@ img {
     font-weight: bold;
 }
 
-.document-list-item-inline ~ .document-list-item-inline::before {
-    content: ", ";
-}
-
 .document-item-list {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
 }
 
+.document-list-item-inline {
+    display: inline-flex;
+    align-items: center;
+    align-self: center;
+    white-space: nowrap;
+}
+
+.document-list-item-inline > .document-avatar-mini,
+.document-list-item-inline > .document-color-bubble {
+    margin: 0 5px 0 0;
+}
+
+.document-list-item-inline:not(:last-child)::after {
+    content: ",\0000A0";
+}
+
 .document-list-item-with-color-bubble, .document-list-item-with-avatar {
     display: inline-flex;
     flex-direction: row;
     align-items: center;
-    gap: 5px;
 }
 
 .document-color-bubble {

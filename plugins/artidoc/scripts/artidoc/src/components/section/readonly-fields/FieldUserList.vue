@@ -61,10 +61,13 @@ defineProps<{
     display: inline-flex;
     align-items: center;
     align-self: center;
-    gap: 5px;
+
+    > .tlp-avatar-mini {
+        margin: 0 5px 0 0;
+    }
 }
 
-.user-list-item ~ .user-list-item::before {
-    content: ", ";
+.user-list-item:not(:last-child)::after {
+    content: ",\0000A0";
 }
 </style>

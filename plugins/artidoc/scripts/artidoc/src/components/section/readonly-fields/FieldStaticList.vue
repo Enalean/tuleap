@@ -56,10 +56,9 @@ defineProps<{
     display: inline-flex;
     align-items: center;
     align-self: center;
-    gap: 5px;
 }
 
-.static-list-item ~ .static-list-item::before {
-    content: ", ";
+.static-list-item:not(:last-child)::after {
+    content: ",\0000A0";
 }
 </style>

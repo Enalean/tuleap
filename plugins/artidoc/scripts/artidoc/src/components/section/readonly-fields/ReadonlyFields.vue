@@ -79,6 +79,8 @@ const getFieldClasses = (readonly_field: ReadonlyField): string[] => {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
     margin: var(--tlp-medium-spacing) 0 0;
+    overflow-wrap: normal;
+    gap: var(--tlp-small-spacing);
 
     > .display-field-in-block {
         grid-column-start: span 4;

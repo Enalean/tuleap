@@ -39,6 +39,7 @@ defineProps<{
     display: flex;
     width: 8px;
     height: 8px;
+    margin: 0 5px 0 0;
     border-radius: 50%;
     background-color: var(--primary-color);
 }
