@@ -18,12 +18,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Artifact_Redirect
+class Tracker_Artifact_Redirect //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public const STATE_CREATE_PARENT = 'to_parent';
     public const STATE_STAY          = 'stay';
     public const STATE_CONTINUE      = 'continue';
     public const STATE_SUBMIT        = 'submit';
+    public const TO_MY_DASHBOARD     = 'my-dashboard-id';
 
     /**
      * @var string
@@ -44,6 +45,10 @@ class Tracker_Artifact_Redirect
 
         if (empty($this->query_parameters)) {
             return $base_url;
+        }
+
+        if ($this->mode === self::TO_MY_DASHBOARD) {
+            return '/my/?' . http_build_query($this->query_parameters);
         }
 
         return $base_url . '/?' . http_build_query($this->query_parameters);

@@ -1,6 +1,6 @@
 <?php
-/**
- * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2025 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,23 +18,26 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Tracker\Report;
+namespace Tuleap\Tracker\Report\Widget;
 
-class WidgetAdditionalButtonPresenter
+use Tuleap\Dashboard\User\UserDashboardController;
+
+final class WidgetAdditionalButtonPresenter
 {
-    public $new_artifact;
-    public $url_artifact_submit;
-    public $is_a_table_renderer;
+    public string $new_artifact;
+    public string $url_artifact_submit;
 
-    public function __construct(\Tuleap\Tracker\Tracker $tracker, $is_a_table_renderer)
+    public function __construct(\Tuleap\Tracker\Tracker $tracker, public bool $is_a_table_renderer, \Widget $widget)
     {
         $this->new_artifact        = sprintf(
             dgettext('tuleap-tracker', 'Add a new %s'),
             $tracker->getItemName()
         );
         $this->url_artifact_submit = \Tuleap\ServerHostname::HTTPSUrl() .
-            '/plugins/tracker/?tracker=' . urlencode($tracker->getId()) . '&func=new-artifact';
+            '/plugins/tracker/?tracker=' . urlencode((string) $tracker->getId()) . '&func=new-artifact';
 
-        $this->is_a_table_renderer = $is_a_table_renderer;
+        if ($widget->owner_type === UserDashboardController::DASHBOARD_TYPE || $widget->owner_type === UserDashboardController::LEGACY_DASHBOARD_TYPE) {
+            $this->url_artifact_submit .= '&my-dashboard-id=' . urlencode((string) $widget->getDashboardId());
+        }
     }
 }

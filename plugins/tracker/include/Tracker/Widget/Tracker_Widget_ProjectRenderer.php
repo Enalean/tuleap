@@ -29,7 +29,7 @@ use Tuleap\Tracker\Widget\WidgetRendererDao;
  *
  * Personal tracker renderer
  */
-class Tracker_Widget_ProjectRenderer extends Tracker_Widget_Renderer
+class Tracker_Widget_ProjectRenderer extends Tracker_Widget_Renderer //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public const ID = 'plugin_tracker_projectrenderer';
     private Tracker_Report_RendererFactory $renderer_factory;
@@ -61,7 +61,7 @@ class Tracker_Widget_ProjectRenderer extends Tracker_Widget_Renderer
         if (! $mapping_registry->hasCustomMapping(Tracker_Report_RendererFactory::MAPPING_KEY)) {
             return $dao->cloneContent(
                 (int) $this->owner_id,
-                (string) $this->owner_type,
+                $this->owner_type,
                 (int) $owner_id,
                 (string) $owner_type
             );

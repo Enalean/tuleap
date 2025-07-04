@@ -30,7 +30,7 @@ use Tuleap\Tracker\Report\WidgetAddToDashboardDropdownBuilder;
 use Tuleap\Tracker\Widget\WidgetWithAssetDependencies;
 use Tuleap\Widget\WidgetFactory;
 
-abstract class Tracker_Report_Renderer implements WidgetWithAssetDependencies
+abstract class Tracker_Report_Renderer implements WidgetWithAssetDependencies //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public const XML_ID_PREFIX = 'R';
 
@@ -120,10 +120,7 @@ abstract class Tracker_Report_Renderer implements WidgetWithAssetDependencies
      */
     abstract public function processRequest(TrackerManager $tracker_manager, $request, PFUser $current_user);
 
-    /**
-     * Fetch content to be displayed in widget
-     */
-    abstract public function fetchWidget(PFUser $user);
+    abstract public function fetchWidget(PFUser $user, Widget $widget): string;
 
     /**
      * Returns the type of this renderer

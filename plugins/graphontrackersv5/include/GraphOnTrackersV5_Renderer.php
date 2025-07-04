@@ -37,8 +37,9 @@ use Tuleap\Layout\CssAssetCollection;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Project\MappingRegistry;
-use Tuleap\Tracker\Report\WidgetAdditionalButtonPresenter;
+use Tuleap\Tracker\Report\Widget\WidgetAdditionalButtonPresenter;
 use UserManager;
+use Widget;
 
 //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer
@@ -150,16 +151,13 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer
         ));
     }
 
-    /**
-     * Fetch content to be displayed in widget
-     */
-    public function fetchWidget(PFUser $user)
+    public function fetchWidget(PFUser $user, Widget $widget): string
     {
         $html             = '';
         $in_dashboard     = $readonly = true;
         $store_in_session = false;
         if ($in_dashboard) {
-            $html .= $this->fetchAdditionalButton($this->report->getTracker());
+            $html .= $this->fetchAdditionalButton($widget);
         }
         $html .= $this->fetchCharts($user, $in_dashboard, $readonly, $store_in_session);
         $html .= $this->fetchWidgetGoToReport();
@@ -241,7 +239,7 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer
         return false;
     }
 
-    private function fetchAdditionalButton()
+    private function fetchAdditionalButton(Widget $widget): string
     {
         $is_a_table_renderer = false;
 
@@ -249,7 +247,8 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer
             'widget-additionnal-button',
             new WidgetAdditionalButtonPresenter(
                 $this->report->getTracker(),
-                $is_a_table_renderer
+                $is_a_table_renderer,
+                $widget
             )
         );
 

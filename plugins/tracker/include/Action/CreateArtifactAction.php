@@ -242,29 +242,36 @@ class CreateArtifactAction
         $redirect           = new Tracker_Artifact_Redirect();
         $redirect->base_url = TRACKER_BASE_URL;
 
-        $stay     = $request->get('submit_and_stay');
-        $continue = $request->get('submit_and_continue');
+        $stay            = $request->get('submit_and_stay');
+        $continue        = $request->get('submit_and_continue');
+        $my_dashboard_id = $request->get('my-dashboard-id');
+
         if ($stay) {
             $redirect->mode = Tracker_Artifact_Redirect::STATE_STAY;
         } elseif ($continue) {
             $redirect->mode = Tracker_Artifact_Redirect::STATE_CONTINUE;
+        } elseif ($my_dashboard_id) {
+            $redirect->mode = Tracker_Artifact_Redirect::TO_MY_DASHBOARD;
         } else {
             $redirect->mode = Tracker_Artifact_Redirect::STATE_SUBMIT;
         }
-        $redirect->query_parameters = $this->calculateRedirectParams($tracker_id, $artifact_id, $stay, $continue);
+        $redirect->query_parameters = $this->calculateRedirectParams($tracker_id, $artifact_id, $stay, $continue, $my_dashboard_id);
 
         return $redirect;
     }
 
-    private function calculateRedirectParams(int $tracker_id, int $artifact_id, $stay, $continue): array
+    private function calculateRedirectParams(int $tracker_id, int $artifact_id, string|bool $stay, string|bool $continue, string|bool $my_dashboard_id): array
     {
         $redirect_params            = [];
         $redirect_params['tracker'] = $tracker_id;
-        if ($continue) {
+        if ($continue !== false) {
             $redirect_params['func'] = 'new-artifact';
         }
-        if ($stay) {
+        if ($stay !== false) {
             $redirect_params['aid'] = $artifact_id;
+        }
+        if ($my_dashboard_id !== false) {
+            $redirect_params['dashboard_id'] = $my_dashboard_id;
         }
         return array_filter($redirect_params);
     }

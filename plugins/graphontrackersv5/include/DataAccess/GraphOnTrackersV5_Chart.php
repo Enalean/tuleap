@@ -48,11 +48,12 @@ use Tuleap\GraphOnTrackersV5\DataTransformation\ChartDataBuilderV5;
 use Tuleap\GraphOnTrackersV5\GraphicLibrary\GraphOnTrackersV5_Engine;
 use Tuleap\GraphOnTrackersV5\GraphOnTrackersV5_GraphActionsPresenter;
 use Tuleap\GraphOnTrackersV5\GraphOnTrackersV5_Renderer;
-use Tuleap\Tracker\Report\WidgetAdditionalButtonPresenter;
+use Tuleap\Tracker\Report\Widget\WidgetAdditionalButtonPresenter;
 use Tuleap\Widget\WidgetFactory;
 use User_ForgeUserGroupPermissionsDao;
 use User_ForgeUserGroupPermissionsManager;
 use UserManager;
+use Widget;
 use XML_SimpleXMLCDATAFactory;
 
 /**
@@ -60,7 +61,7 @@ use XML_SimpleXMLCDATAFactory;
  *
  * This class must be overriden to provide your own concrete chart (Pie, Bar, ..)
  */
-abstract class GraphOnTrackersV5_Chart implements Visitable
+abstract class GraphOnTrackersV5_Chart implements Visitable //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public const MARKER_BEGINNING_OUTPUT_FETCH = '🥀';
 
@@ -278,13 +279,13 @@ abstract class GraphOnTrackersV5_Chart implements Visitable
                 >' . $content . '</div>';
     }
 
-    private function fetchAdditionnalButton()
+    private function fetchAdditionnalButton(\Widget $widget): string
     {
         $is_a_table_renderer = false;
 
         $html = $this->getTemplateRenderer()->renderToString(
             'widget-additionnal-button',
-            new WidgetAdditionalButtonPresenter($this->getTracker(), $is_a_table_renderer)
+            new WidgetAdditionalButtonPresenter($this->getTracker(), $is_a_table_renderer, $widget)
         );
 
         return $html;
@@ -647,9 +648,9 @@ abstract class GraphOnTrackersV5_Chart implements Visitable
         return $content;
     }
 
-    public function getWidgetContent()
+    public function getWidgetContent(Widget $widget)
     {
-        $content  = $this->fetchAdditionnalButton();
+        $content  = $this->fetchAdditionnalButton($widget);
         $content .= $this->getContent(true);
         $content .= $this->renderer->fetchWidgetGoToReport();
 

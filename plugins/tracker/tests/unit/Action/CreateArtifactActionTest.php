@@ -154,6 +154,16 @@ final class CreateArtifactActionTest extends TestCase
         $this->assertUriHasArgument($redirect_uri->toUrl(), 'tracker', (string) $tracker_id);
     }
 
+    public function testItRedirectsToPersonalDashboard(): void
+    {
+        $request_data = ['my-dashboard-id' => '9'];
+        $tracker_id   = 73;
+        $artifact_id  = 66;
+        $redirect_uri = $this->getRedirectUrlFor($request_data, $tracker_id, $artifact_id);
+        $this->assertStringStartsWith('/my/?', $redirect_uri->toUrl());
+        $this->assertUriHasArgument($redirect_uri->toUrl(), 'dashboard_id', '9');
+    }
+
     public function testSubmitAndContinue(): void
     {
         $request_data = ['submit_and_continue' => true];
