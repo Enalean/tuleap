@@ -68,7 +68,9 @@ export const QueryRetriever = (): Query => {
         start_date = start;
         end_date = end;
         predefined_period = period;
-        users_list = users;
+        users_list = users.sort((a, b) =>
+            a.display_name.localeCompare(b.display_name, undefined, { numeric: true }),
+        );
     };
 
     const saveQuery = (widget_id: number): void => {
