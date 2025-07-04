@@ -25824,7 +25824,6 @@
     </InvalidReturnType>
     <PossiblyInvalidArgument>
       <code><![CDATA[$project->getID()]]></code>
-      <code><![CDATA[$project->getID()]]></code>
     </PossiblyInvalidArgument>
   </file>
   <file src="plugins/pullrequest/include/PullRequest/DefaultSettings/PullRequestPane.php">
@@ -35261,7 +35260,6 @@
     <MissingReturnType>
       <code><![CDATA[getChangesetFromRow]]></code>
       <code><![CDATA[setCommentsFromCache]]></code>
-      <code><![CDATA[setFieldValuesFromCache]]></code>
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/Artifact/Tracker_Artifact_ChangesetJsonFormatter.php">
@@ -36840,54 +36838,6 @@
     <UndefinedVariable>
       <code><![CDATA[$ugroup]]></code>
     </UndefinedVariable>
-  </file>
-  <file src="plugins/tracker/include/Tracker/DeletedTrackerPresenter.php">
-    <MissingParamType>
-      <code><![CDATA[$deletion_date]]></code>
-      <code><![CDATA[$project_id]]></code>
-      <code><![CDATA[$project_name]]></code>
-      <code><![CDATA[$restore_token]]></code>
-      <code><![CDATA[$tracker_id]]></code>
-      <code><![CDATA[$tracker_name]]></code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$csrf_token]]></code>
-      <code><![CDATA[$deletion_date]]></code>
-      <code><![CDATA[$id]]></code>
-      <code><![CDATA[$project_id]]></code>
-      <code><![CDATA[$project_name]]></code>
-      <code><![CDATA[$tracker]]></code>
-    </MissingPropertyType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/DeletedTrackersListPresenter.php">
-    <MissingParamType>
-      <code><![CDATA[$has_trackers]]></code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$delete_action_column_header]]></code>
-      <code><![CDATA[$deletion_date_column_header]]></code>
-      <code><![CDATA[$id_column_header]]></code>
-      <code><![CDATA[$project_column_header]]></code>
-      <code><![CDATA[$restore_action_column_header]]></code>
-      <code><![CDATA[$tracker_column_header]]></code>
-    </MissingPropertyType>
-    <MissingReturnType>
-      <code><![CDATA[getTemplateDir]]></code>
-      <code><![CDATA[has_warnings]]></code>
-      <code><![CDATA[warning_message]]></code>
-    </MissingReturnType>
-    <UndefinedThisPropertyAssignment>
-      <code><![CDATA[$this->deleted_trackers_list]]></code>
-      <code><![CDATA[$this->has_trackers]]></code>
-      <code><![CDATA[$this->no_trackers_label]]></code>
-      <code><![CDATA[$this->restore_action]]></code>
-      <code><![CDATA[$this->title]]></code>
-      <code><![CDATA[$this->tracker_ids_warning]]></code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch>
-      <code><![CDATA[$this->tracker_ids_warning]]></code>
-      <code><![CDATA[$this->tracker_ids_warning]]></code>
-    </UndefinedThisPropertyFetch>
   </file>
   <file src="plugins/tracker/include/Tracker/Events/AllowedFieldTypeChangesRetriever.php">
     <MissingReturnType>

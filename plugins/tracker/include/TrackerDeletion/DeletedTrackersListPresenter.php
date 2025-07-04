@@ -1,7 +1,6 @@
 <?php
-/**
- * Copyright (c) STMicroelectronics 2014. All rights reserved
- * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2025 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,16 +17,29 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-class DeletedTrackersListPresenter
-{
-    public $id_column_header;
-    public $tracker_column_header;
-    public $project_column_header;
-    public $deletion_date_column_header;
-    public $restore_action_column_header;
-    public $delete_action_column_header;
 
-    public function __construct(array $table_content, array $tracker_ids_warning, $has_trackers)
+namespace Tuleap\Tracker\TrackerDeletion;
+
+final class DeletedTrackersListPresenter
+{
+    public string $title;
+    public array $deleted_trackers_list;
+    public array $tracker_ids_warning;
+    public string $id_column_header;
+    public string $tracker_column_header;
+    public string $project_column_header;
+    public string $deletion_date_column_header;
+    public string $restore_action;
+    public string $no_trackers_label;
+    public bool $has_trackers;
+    public bool $has_warnings;
+    public string $warning_message;
+
+    /**
+     * @param DeletedTrackerPresenter[] $table_content
+     * @param string[] $tracker_ids_warning
+     */
+    public function __construct(array $table_content, array $tracker_ids_warning, bool $has_trackers)
     {
         $this->title                       = dgettext('tuleap-tracker', 'Trackers Pending for Deletion');
         $this->deleted_trackers_list       = $table_content;
@@ -39,20 +51,11 @@ class DeletedTrackersListPresenter
         $this->restore_action              = dgettext('tuleap-tracker', 'Restore');
         $this->no_trackers_label           = dgettext('tuleap-tracker', 'No Tracker pending for Deletion');
         $this->has_trackers                = $has_trackers;
+        $this->has_warnings                = count($this->tracker_ids_warning) > 0;
+        $this->warning_message             = dgettext('tuleap-tracker', 'The following trackers cannot be displayed (data seems missing in database):') . implode(',', $this->tracker_ids_warning);
     }
 
-    public function has_warnings()
-    {
-        return count($this->tracker_ids_warning) > 0;
-    }
-
-    public function warning_message()
-    {
-        return dgettext('tuleap-tracker', 'The following trackers cannot be displayed (data seems missing in database):') .
-        implode(',', $this->tracker_ids_warning);
-    }
-
-    public function getTemplateDir()
+    public function getTemplateDir(): string
     {
         return TRACKER_TEMPLATE_DIR;
     }
