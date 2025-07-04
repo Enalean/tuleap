@@ -84,8 +84,8 @@
         <file-version-changelog-modal
             v-if="file_changelog_properties"
             v-on:close-changelog-modal="hideChangelogModal()"
-            v-bind:updated-file="file_changelog_properties.updated_file"
-            v-bind:dropped-file="file_changelog_properties.dropped_file"
+            v-bind:updated_file="file_changelog_properties.updated_file"
+            v-bind:dropped_file="file_changelog_properties.dropped_file"
             data-test="file-changelog-modal"
         />
         <file-creation-modal

@@ -21,144 +21,127 @@
     <form
         class="tlp-modal"
         role="dialog"
-        v-bind:aria-labelled-by="aria_labelled_by"
+        aria-labelled-by="document-file-changelog-modal"
         v-on:submit.prevent="uploadNewVersion"
+        ref="form"
     >
-        <modal-header v-bind:modal-title="modal_title" v-bind:aria-labelled-by="aria_labelled_by" />
+        <modal-header
+            v-bind:modal-title="modal_title"
+            aria-labelled-by="document-file-changelog-modal"
+        />
         <modal-feedback />
         <div class="tlp-modal-body">
             <item-update-properties
                 v-bind:version="version"
-                v-bind:item="updatedFile"
+                v-bind:item="updated_file"
                 v-bind:is-open-after-dnd="true"
                 v-on:approval-table-action-change="setApprovalUpdateAction"
             />
-            <file-version-history v-bind:item="updatedFile" />
+            <file-version-history v-bind:item="updated_file" />
         </div>
         <modal-footer
             v-bind:is-loading="is_loading"
             v-bind:submit-button-label="$gettext('Create new version')"
-            v-bind:aria-labelled-by="aria_labelled_by"
+            aria-labelled-by="document-file-changelog-modal"
             v-bind:icon-submit-button-class="'fa-solid fa-plus'"
             data-test="document-modal-submit-button-create-version-changelog"
         />
     </form>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
+import type { Modal } from "@tuleap/tlp-modal";
 import { createModal } from "@tuleap/tlp-modal";
 import ModalHeader from "../../ModalCommon/ModalHeader.vue";
 import ModalFeedback from "../../ModalCommon/ModalFeedback.vue";
 import ModalFooter from "../../ModalCommon/ModalFooter.vue";
 import ItemUpdateProperties from "./PropertiesForUpdate/ItemUpdateProperties.vue";
 import { sprintf } from "sprintf-js";
-import { mapState } from "vuex";
 import emitter from "../../../../helpers/emitter";
-import { TYPE_FILE } from "../../../../constants";
-import { getItemStatus } from "../../../../helpers/properties-helpers/value-transformer/status-property-helper";
-import { getStatusProperty } from "../../../../helpers/properties-helpers/hardcoded-properties-mapping-helper";
 import FileVersionHistory from "./History/FileVersionHistory.vue";
+import type { ItemFile, NewVersion } from "../../../../type";
+import { computed, onBeforeUnmount, onMounted, ref } from "vue";
+import { useNamespacedState, useStore } from "vuex-composition-helpers";
+import type { ErrorState } from "../../../../store/error/module";
+import { useGettext } from "vue3-gettext";
 
-export default {
-    name: "FileVersionChangelogModal",
-    components: {
-        FileVersionHistory,
-        ModalHeader,
-        ModalFeedback,
-        ModalFooter,
-        ItemUpdateProperties,
-    },
-    props: {
-        updatedFile: {
-            default: () => ({}),
-            type: Object,
-        },
-        droppedFile: {
-            default: () => ({}),
-            type: File,
-        },
-    },
-    data() {
-        return {
-            modal: null,
-            is_loading: false,
-            version: { title: "", changelog: "" },
-            approval_table_action: null,
-            new_version_item: {
-                id: 0,
-                title: "",
-                description: "",
-                type: "file",
-                file_properties: { file: {} },
-                status: "none",
-            },
-        };
-    },
-    computed: {
-        ...mapState("error", ["has_modal_error"]),
-        modal_title() {
-            return sprintf(this.$gettext('New version for "%s"'), this.updatedFile.title);
-        },
-        aria_labelled_by() {
-            return "document-file-changelog-modal";
-        },
-    },
-    mounted() {
-        this.new_version_item = {
-            id: this.updatedFile.id,
-            title: this.updatedFile.title,
-            description: this.updatedFile.description,
-            type: TYPE_FILE,
-            file_properties: { file: this.droppedFile },
-            status: getItemStatus(getStatusProperty(this.updatedFile.properties)),
-        };
-        this.modal = createModal(this.$el, { destroy_on_hide: true });
-        this.modal.addEventListener("tlp-modal-hidden", this.close);
-        this.modal.show();
-        emitter.on("update-version-title", this.updateTitleValue);
-        emitter.on("update-changelog-property", this.updateChangelogValue);
-        emitter.on("update-lock", this.updateLock);
-    },
-    beforeUnmount() {
-        emitter.off("update-version-title", this.updateTitleValue);
-        emitter.off("update-changelog-property", this.updateChangelogValue);
-        emitter.off("update-lock", this.updateLock);
-    },
-    methods: {
-        setApprovalUpdateAction(value) {
-            this.approval_table_action = value;
-        },
-        async uploadNewVersion() {
-            this.is_loading = true;
-            this.$store.commit("error/resetModalError");
+const { $gettext } = useGettext();
+const $store = useStore();
 
-            await this.$store.dispatch("createNewFileVersionFromModal", [
-                this.updatedFile,
-                this.droppedFile,
-                this.version.title,
-                this.version.changelog,
-                false,
-                this.approval_table_action,
-            ]);
-            this.is_loading = false;
-            if (this.has_modal_error === false) {
-                this.uploaded_item = {};
-                this.close();
-            }
-        },
-        close() {
-            this.modal.removeBackdrop();
-            this.$emit("close-changelog-modal");
-        },
-        updateTitleValue(title) {
-            this.version.title = title;
-        },
-        updateChangelogValue(changelog) {
-            this.version.changelog = changelog;
-        },
-        updateLock(is_locked) {
-            this.version.is_file_locked = is_locked;
-        },
-    },
-};
+const props = defineProps<{
+    updated_file: ItemFile;
+    dropped_file: File;
+}>();
+
+const emit = defineEmits<{
+    (e: "close-changelog-modal"): void;
+}>();
+
+let modal: Modal | null = null;
+const is_loading = ref<boolean>(false);
+const version = ref<NewVersion>({ title: "", changelog: "" });
+const approval_table_action = ref<string | null>(null);
+const form = ref<HTMLFormElement>();
+
+const { has_modal_error } = useNamespacedState<Pick<ErrorState, "has_modal_error">>("error", [
+    "has_modal_error",
+]);
+
+const modal_title = computed(() =>
+    sprintf($gettext('New version for "%s"'), props.updated_file.title),
+);
+
+onMounted(() => {
+    modal = createModal(form.value, { destroy_on_hide: true });
+    modal.addEventListener("tlp-modal-hidden", close);
+    modal.show();
+    emitter.on("update-version-title", updateTitleValue);
+    emitter.on("update-changelog-property", updateChangelogValue);
+    emitter.on("update-lock", updateLock);
+});
+
+onBeforeUnmount(() => {
+    emitter.off("update-version-title", updateTitleValue);
+    emitter.off("update-changelog-property", updateChangelogValue);
+    emitter.off("update-lock", updateLock);
+});
+
+function setApprovalUpdateAction(value: string): void {
+    approval_table_action.value = value;
+}
+
+async function uploadNewVersion(): Promise<void> {
+    is_loading.value = true;
+    $store.commit("error/resetModalError");
+
+    await $store.dispatch("createNewFileVersionFromModal", [
+        props.updated_file,
+        props.dropped_file,
+        version.value.title,
+        version.value.changelog,
+        false,
+        approval_table_action.value,
+    ]);
+    is_loading.value = false;
+    if (!has_modal_error.value) {
+        close();
+    }
+}
+
+function close(): void {
+    modal?.removeBackdrop();
+    emit("close-changelog-modal");
+}
+
+function updateTitleValue(title: string): void {
+    version.value.title = title;
+}
+
+function updateChangelogValue(changelog: string): void {
+    version.value.changelog = changelog;
+}
+
+function updateLock(is_locked: boolean): void {
+    version.value.is_file_locked = is_locked;
+}
 </script>
