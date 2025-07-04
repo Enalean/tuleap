@@ -290,12 +290,10 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher // phpcs:ignore PS
      * Restore a deleted tracker.
      *
      * @param int $tracker_id ID of the tracker marked as deleted
-     *
-     * @return bool
      */
-    private function restoreDeletedTracker($tracker_id)
+    private function restoreDeletedTracker($tracker_id): void
     {
-        return $this->getTrackerFactory()->restoreDeletedTracker($tracker_id);
+        $this->getTrackerFactory()->restoreDeletedTracker($tracker_id);
     }
 
     public function displayHeader(Project $project, string $title, array $breadcrumbs, HeaderConfiguration|array $params): void
