@@ -51,4 +51,40 @@ final class ManagementDaoTest extends TestIntegrationTestCase
         self::assertSame([101], $dao->searchUsersByQueryId($query1));
         self::assertSame([], $dao->searchUsersByQueryId($query2));
     }
+
+    public function testSaveQueryWithPredefinedTimePeriod(): void
+    {
+        $dao    = new ManagementDao();
+        $query1 = $dao->create(self::PERIOD);
+        $query2 = $dao->create(self::PERIOD);
+        $dao->saveQueryWithPredefinedTimePeriod($query1, self::PERIOD, [101], []);
+        $dao->saveQueryWithPredefinedTimePeriod($query2, self::PERIOD, [101, 102], []);
+
+        self::assertSame([101], $dao->searchUsersByQueryId($query1));
+        self::assertSame([101, 102], $dao->searchUsersByQueryId($query2));
+
+        $dao->saveQueryWithPredefinedTimePeriod($query1, self::PERIOD, [102, 103], [101]);
+
+        self::assertSame([102, 103], $dao->searchUsersByQueryId($query1));
+        self::assertSame([101, 102], $dao->searchUsersByQueryId($query2));
+    }
+
+    public function testSaveQueryWithDates(): void
+    {
+        $now = new \DateTimeImmutable();
+
+        $dao    = new ManagementDao();
+        $query1 = $dao->create(self::PERIOD);
+        $query2 = $dao->create(self::PERIOD);
+        $dao->saveQueryWithDates($query1, $now, $now, [101], []);
+        $dao->saveQueryWithDates($query2, $now, $now, [101, 102], []);
+
+        self::assertSame([101], $dao->searchUsersByQueryId($query1));
+        self::assertSame([101, 102], $dao->searchUsersByQueryId($query2));
+
+        $dao->saveQueryWithDates($query1, $now, $now, [102, 103], [101]);
+
+        self::assertSame([102, 103], $dao->searchUsersByQueryId($query1));
+        self::assertSame([101, 102], $dao->searchUsersByQueryId($query2));
+    }
 }
