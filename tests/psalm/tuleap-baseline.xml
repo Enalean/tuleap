@@ -9193,10 +9193,8 @@
       <code><![CDATA[$pluginPath]]></code>
     </MissingPropertyType>
     <MissingReturnType>
-      <code><![CDATA[_getReviews]]></code>
       <code><![CDATA[getAjaxUrl]]></code>
       <code><![CDATA[getCategory]]></code>
-      <code><![CDATA[getContent]]></code>
       <code><![CDATA[getDescription]]></code>
       <code><![CDATA[getTitle]]></code>
       <code><![CDATA[isAjax]]></code>
@@ -9222,7 +9220,6 @@
     </MissingPropertyType>
     <MissingReturnType>
       <code><![CDATA[getCategory]]></code>
-      <code><![CDATA[getContent]]></code>
       <code><![CDATA[getDescription]]></code>
       <code><![CDATA[getTitle]]></code>
     </MissingReturnType>
@@ -20158,7 +20155,6 @@
       <code><![CDATA[cloneContent]]></code>
       <code><![CDATA[destroy]]></code>
       <code><![CDATA[getCategory]]></code>
-      <code><![CDATA[getContent]]></code>
       <code><![CDATA[getInstallPreferences]]></code>
       <code><![CDATA[getTitle]]></code>
       <code><![CDATA[hasPreferences]]></code>
@@ -20863,7 +20859,6 @@
       <code><![CDATA[$owner_type]]></code>
     </MissingParamType>
     <MissingReturnType>
-      <code><![CDATA[getContent]]></code>
       <code><![CDATA[getDescription]]></code>
       <code><![CDATA[getRssUrl]]></code>
       <code><![CDATA[getTitle]]></code>
@@ -20888,7 +20883,6 @@
       <code><![CDATA[$last_build_url]]></code>
     </MissingPropertyType>
     <MissingReturnType>
-      <code><![CDATA[getContent]]></code>
       <code><![CDATA[getDescription]]></code>
       <code><![CDATA[getTitle]]></code>
       <code><![CDATA[initContent]]></code>
@@ -20907,7 +20901,6 @@
       <code><![CDATA[$id]]></code>
     </MissingParamType>
     <MissingReturnType>
-      <code><![CDATA[getContent]]></code>
       <code><![CDATA[getDescription]]></code>
       <code><![CDATA[getTitle]]></code>
       <code><![CDATA[initContent]]></code>
@@ -20926,7 +20919,6 @@
       <code><![CDATA[$id]]></code>
     </MissingParamType>
     <MissingReturnType>
-      <code><![CDATA[getContent]]></code>
       <code><![CDATA[getDescription]]></code>
       <code><![CDATA[getTitle]]></code>
       <code><![CDATA[initContent]]></code>
@@ -20946,7 +20938,6 @@
       <code><![CDATA[$id]]></code>
     </MissingParamType>
     <MissingReturnType>
-      <code><![CDATA[getContent]]></code>
       <code><![CDATA[getDescription]]></code>
       <code><![CDATA[getTitle]]></code>
       <code><![CDATA[initContent]]></code>
@@ -20961,7 +20952,7 @@
   </file>
   <file src="plugins/hudson/include/hudson_Widget_MyMonitoredJobs.php">
     <DeprecatedFunction>
-      <code><![CDATA[user_set_preference('plugin_hudson_my_not_monitored_jobs', implode(',', $this->_not_monitored_jobs))]]></code>
+      <code><![CDATA[user_set_preference('plugin_hudson_my_not_monitored_jobs', implode(',', $this->not_monitored_jobs))]]></code>
     </DeprecatedFunction>
     <DeprecatedMethod>
       <code><![CDATA[$job_dao->searchByUserID($user->getId())]]></code>
@@ -20981,8 +20972,6 @@
       <code><![CDATA[$widget_id]]></code>
     </MissingParamType>
     <MissingReturnType>
-      <code><![CDATA[_getMonitoredJobsByUser]]></code>
-      <code><![CDATA[getContent]]></code>
       <code><![CDATA[getDescription]]></code>
       <code><![CDATA[getTitle]]></code>
       <code><![CDATA[hasPreferences]]></code>
@@ -20998,7 +20987,6 @@
       <code><![CDATA[$plugin]]></code>
     </MissingPropertyType>
     <MissingReturnType>
-      <code><![CDATA[getContent]]></code>
       <code><![CDATA[getDescription]]></code>
       <code><![CDATA[getTitle]]></code>
       <code><![CDATA[hasPreferences]]></code>
@@ -21854,7 +21842,6 @@
       <code><![CDATA[destroy]]></code>
       <code><![CDATA[duplicateContent]]></code>
       <code><![CDATA[getConfigLabels]]></code>
-      <code><![CDATA[getContent]]></code>
       <code><![CDATA[getDescription]]></code>
       <code><![CDATA[getInstallPreferences]]></code>
       <code><![CDATA[getProjectAllLabelsPresenter]]></code>
@@ -25668,7 +25655,6 @@
     <MissingReturnType>
       <code><![CDATA[destroy]]></code>
       <code><![CDATA[getCategory]]></code>
-      <code><![CDATA[getContent]]></code>
       <code><![CDATA[getInstallPreferences]]></code>
       <code><![CDATA[hasPreferences]]></code>
       <code><![CDATA[isUnique]]></code>
@@ -25692,7 +25678,6 @@
     <MissingReturnType>
       <code><![CDATA[destroy]]></code>
       <code><![CDATA[getCategory]]></code>
-      <code><![CDATA[getContent]]></code>
       <code><![CDATA[getInstallPreferences]]></code>
       <code><![CDATA[hasPreferences]]></code>
       <code><![CDATA[isUnique]]></code>
@@ -28357,11 +28342,6 @@
       <code><![CDATA[canAddValueFromQuery]]></code>
       <code><![CDATA[initiateDatas]]></code>
     </MissingReturnType>
-  </file>
-  <file src="plugins/statistics/include/Statistics_Widget_ProjectStatistics.php">
-    <InvalidReturnStatement>
-      <code><![CDATA[$duHtml->getTotalProjectSize($group_id)]]></code>
-    </InvalidReturnStatement>
   </file>
   <file src="plugins/statistics/include/SystemEventQueueStatistics.php">
     <MissingReturnType>
@@ -31721,7 +31701,6 @@
     <MissingReturnType>
       <code><![CDATA[destroy]]></code>
       <code><![CDATA[getCategory]]></code>
-      <code><![CDATA[getContent]]></code>
       <code><![CDATA[getDescription]]></code>
       <code><![CDATA[getInstallPreferences]]></code>
       <code><![CDATA[getTitle]]></code>
@@ -31738,7 +31717,6 @@
     </MissingParamType>
     <MissingReturnType>
       <code><![CDATA[getCategory]]></code>
-      <code><![CDATA[getContent]]></code>
       <code><![CDATA[getDescription]]></code>
       <code><![CDATA[getTitle]]></code>
       <code><![CDATA[hasPreferences]]></code>
@@ -45953,10 +45931,8 @@
       <code><![CDATA[$artifact_show]]></code>
     </MissingPropertyType>
     <MissingReturnType>
-      <code><![CDATA[_display_artifacts]]></code>
       <code><![CDATA[getAjaxUrl]]></code>
       <code><![CDATA[getCategory]]></code>
-      <code><![CDATA[getContent]]></code>
       <code><![CDATA[getDescription]]></code>
       <code><![CDATA[getTitle]]></code>
       <code><![CDATA[hasPreferences]]></code>
@@ -46036,7 +46012,6 @@
       <code><![CDATA[cloneContent]]></code>
       <code><![CDATA[destroy]]></code>
       <code><![CDATA[getCategory]]></code>
-      <code><![CDATA[getContent]]></code>
       <code><![CDATA[getInstallPreferences]]></code>
       <code><![CDATA[getTitle]]></code>
       <code><![CDATA[hasPreferences]]></code>
@@ -61552,7 +61527,6 @@
   </file>
   <file src="src/common/Widget/MyWelcomeMessage.php">
     <MissingReturnType>
-      <code><![CDATA[getContent]]></code>
       <code><![CDATA[getDescription]]></code>
       <code><![CDATA[getFileNameForUser]]></code>
       <code><![CDATA[getTitle]]></code>
@@ -61604,7 +61578,6 @@
   </file>
   <file src="src/common/Widget/ProjectHeartbeat.php">
     <MissingReturnType>
-      <code><![CDATA[getContent]]></code>
       <code><![CDATA[getDescription]]></code>
       <code><![CDATA[getTitle]]></code>
     </MissingReturnType>
@@ -61658,7 +61631,6 @@
   </file>
   <file src="src/common/Widget/ProjectMembers/ProjectMembers.php">
     <MissingReturnType>
-      <code><![CDATA[getContent]]></code>
       <code><![CDATA[getDescription]]></code>
       <code><![CDATA[getTitle]]></code>
     </MissingReturnType>
@@ -61711,7 +61683,6 @@
       <code><![CDATA[displayRss]]></code>
       <code><![CDATA[getAjaxUrl]]></code>
       <code><![CDATA[getCategory]]></code>
-      <code><![CDATA[getContent]]></code>
       <code><![CDATA[getDescription]]></code>
       <code><![CDATA[getId]]></code>
       <code><![CDATA[getInstallPreferences]]></code>
@@ -61791,7 +61762,6 @@
     <MissingReturnType>
       <code><![CDATA[cloneContent]]></code>
       <code><![CDATA[destroy]]></code>
-      <code><![CDATA[getContent]]></code>
       <code><![CDATA[getInstallPreferences]]></code>
       <code><![CDATA[getTitle]]></code>
       <code><![CDATA[hasPreferences]]></code>
@@ -61834,9 +61804,6 @@
       <code><![CDATA[$user_is_super_admin]]></code>
     </MissingPropertyType>
     <MissingReturnType>
-      <code><![CDATA[_get_admin_row]]></code>
-      <code><![CDATA[_get_color]]></code>
-      <code><![CDATA[getContent]]></code>
       <code><![CDATA[getDescription]]></code>
       <code><![CDATA[getHTMLForNonSuperAdmin]]></code>
       <code><![CDATA[getHTMLForSuperAdmin]]></code>
@@ -61869,7 +61836,6 @@
     <MissingReturnType>
       <code><![CDATA[getAjaxUrl]]></code>
       <code><![CDATA[getCategory]]></code>
-      <code><![CDATA[getContent]]></code>
       <code><![CDATA[getDescription]]></code>
       <code><![CDATA[getPriorityColorsKey]]></code>
       <code><![CDATA[getTitle]]></code>
@@ -61900,7 +61866,6 @@
       <code><![CDATA[db_result($result, $i, 'bookmark_url')]]></code>
     </DeprecatedFunction>
     <MissingReturnType>
-      <code><![CDATA[getContent]]></code>
       <code><![CDATA[getDescription]]></code>
       <code><![CDATA[getTitle]]></code>
     </MissingReturnType>
@@ -61928,7 +61893,6 @@
     <MissingReturnType>
       <code><![CDATA[getAjaxUrl]]></code>
       <code><![CDATA[getCategory]]></code>
-      <code><![CDATA[getContent]]></code>
       <code><![CDATA[getDescription]]></code>
       <code><![CDATA[getTitle]]></code>
       <code><![CDATA[isAjax]]></code>
@@ -61962,7 +61926,6 @@
     <MissingReturnType>
       <code><![CDATA[getAjaxUrl]]></code>
       <code><![CDATA[getCategory]]></code>
-      <code><![CDATA[getContent]]></code>
       <code><![CDATA[getDescription]]></code>
       <code><![CDATA[getTitle]]></code>
       <code><![CDATA[isAjax]]></code>
@@ -61975,7 +61938,6 @@
   </file>
   <file src="src/common/Widget/Widget_ProjectDescription.php">
     <MissingReturnType>
-      <code><![CDATA[getContent]]></code>
       <code><![CDATA[getDescription]]></code>
       <code><![CDATA[getTitle]]></code>
     </MissingReturnType>
@@ -61987,7 +61949,6 @@
     <MissingReturnType>
       <code><![CDATA[canBeUsedByProject]]></code>
       <code><![CDATA[getCategory]]></code>
-      <code><![CDATA[getContent]]></code>
       <code><![CDATA[getDescription]]></code>
       <code><![CDATA[getTitle]]></code>
       <code><![CDATA[isAvailable]]></code>
@@ -62018,7 +61979,6 @@
       <code><![CDATA[$group_id]]></code>
     </InvalidArgument>
     <MissingReturnType>
-      <code><![CDATA[getContent]]></code>
       <code><![CDATA[getDescription]]></code>
       <code><![CDATA[getTitle]]></code>
     </MissingReturnType>
@@ -62111,7 +62071,6 @@
     <MissingReturnType>
       <code><![CDATA[display]]></code>
       <code><![CDATA[getAdditionalClass]]></code>
-      <code><![CDATA[getContent]]></code>
       <code><![CDATA[getTitle]]></code>
       <code><![CDATA[setAdditionalClass]]></code>
       <code><![CDATA[setContent]]></code>

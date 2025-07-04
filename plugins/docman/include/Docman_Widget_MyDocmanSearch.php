@@ -22,7 +22,7 @@
 /**
 * Docman_Widget_MyDocmanSearch
 */
-class Docman_Widget_MyDocmanSearch extends Widget
+class Docman_Widget_MyDocmanSearch extends Widget //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public $pluginPath;
 
@@ -37,7 +37,7 @@ class Docman_Widget_MyDocmanSearch extends Widget
         return dgettext('tuleap-docman', 'Document Id Search');
     }
 
-    public function getContent()
+    public function getContent(): string
     {
         $html    = '';
         $request = HTTPRequest::instance();

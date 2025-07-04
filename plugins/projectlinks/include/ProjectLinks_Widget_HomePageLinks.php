@@ -69,13 +69,7 @@ class ProjectLinks_Widget_HomePageLinks extends Widget
         return dgettext('tuleap-projectlinks', 'Create links between projects.');
     }
 
-    /**
-     * Widget content
-     *
-     * @see src/common/Widget/Widget#getContent()
-     * @return String
-     */
-    public function getContent()
+    public function getContent(): string
     {
         $request = HTTPRequest::instance();
         $groupId = $request->get('group_id');

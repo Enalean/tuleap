@@ -28,7 +28,7 @@ require_once __DIR__ . '/../../../src/www/my/my_utils.php';
 /**
  * Docman_Widget_MyDocman
  */
-class Docman_Widget_MyDocman extends Widget
+class Docman_Widget_MyDocman extends Widget //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public $pluginPath;
 
@@ -43,7 +43,7 @@ class Docman_Widget_MyDocman extends Widget
         return dgettext('tuleap-docman', 'Documents under review');
     }
 
-    public function getContent()
+    public function getContent(): string
     {
         $html  = '';
         $html .= '<script type="text/javascript">';
@@ -64,13 +64,13 @@ class Docman_Widget_MyDocman extends Widget
             }
         }
         </script>";
-        $html .= $this->_getReviews(true);
-        $html .= $this->_getReviews(false);
+        $html .= $this->getReviews(true);
+        $html .= $this->getReviews(false);
 
         return $html;
     }
 
-    private function _getReviews($reviewer = true)
+    private function getReviews($reviewer = true): string
     {
         $hp   = Codendi_HTMLPurifier::instance();
         $html = '';

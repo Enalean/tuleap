@@ -44,7 +44,7 @@ class Widget_ProjectLatestFileReleases extends Widget
         return $this->content['title'] ?? '';
     }
 
-    public function getContent()
+    public function getContent(): string
     {
         return $this->content['content'] ?? '';
     }

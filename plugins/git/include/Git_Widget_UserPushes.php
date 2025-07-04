@@ -28,7 +28,7 @@ use Tuleap\Layout\IncludeViteAssets;
 /**
  * Widget displaying last git pushes for the user
  */
-class Git_Widget_UserPushes extends Widget
+class Git_Widget_UserPushes extends Widget //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public $offset   = 5;
     public $pastDays = 30;
@@ -65,12 +65,7 @@ class Git_Widget_UserPushes extends Widget
         return dgettext('tuleap-git', 'My last Git pushes');
     }
 
-    /**
-     * Compute the content of the widget
-     *
-     * @return String
-     */
-    public function getContent()
+    public function getContent(): string
     {
         $dao     = new Git_LogDao();
         $um      = UserManager::instance();

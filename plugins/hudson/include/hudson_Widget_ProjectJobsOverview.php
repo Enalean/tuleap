@@ -22,7 +22,7 @@
 use Tuleap\Dashboard\Project\ProjectDashboardController;
 use Tuleap\Hudson\HudsonJobBuilder;
 
-class hudson_Widget_ProjectJobsOverview extends HudsonOverviewWidget
+class hudson_Widget_ProjectJobsOverview extends HudsonOverviewWidget //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public $plugin;
     public $group_id;
@@ -64,7 +64,7 @@ class hudson_Widget_ProjectJobsOverview extends HudsonOverviewWidget
         return false;
     }
 
-    public function getContent()
+    public function getContent(): string
     {
         $purifier         = Codendi_HTMLPurifier::instance();
         $minimal_jobs     = $this->getJobsByGroup($this->group_id);

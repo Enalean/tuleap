@@ -69,12 +69,7 @@ class Widget_ProjectLatestNews extends Widget //phpcs:ignore PSR1.Classes.ClassD
         return $GLOBALS['Language']->getText('include_project_home', 'latest_news');
     }
 
-    /**
-     * Content of the widget
-     *
-     * @return String
-     */
-    public function getContent()
+    public function getContent(): string
     {
         return $this->content;
     }

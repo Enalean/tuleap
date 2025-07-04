@@ -117,7 +117,7 @@ class hudson_Widget_JobTestResults extends HudsonJobWidget
         }
     }
 
-    public function getContent()
+    public function getContent(): string
     {
         $this->initContent();
 

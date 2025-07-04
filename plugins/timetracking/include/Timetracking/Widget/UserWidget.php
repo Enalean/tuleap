@@ -60,7 +60,7 @@ class UserWidget extends Widget
         return dgettext('tuleap-timetracking', 'Time tracking');
     }
 
-    public function getContent()
+    public function getContent(): string
     {
         $renderer = TemplateRendererFactory::build()->getRenderer(TIMETRACKING_TEMPLATE_DIR);
 

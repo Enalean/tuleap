@@ -52,7 +52,7 @@ abstract class GraphOnTrackersV5_Widget_Chart extends Widget
         return $this->chart_title ?: 'Tracker Chart';
     }
 
-    public function getContent()
+    public function getContent(): string
     {
         $chart = GraphOnTrackersV5_ChartFactory::instance()->getChart(
             null,

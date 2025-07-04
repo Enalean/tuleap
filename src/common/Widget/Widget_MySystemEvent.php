@@ -19,7 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Widget_MySystemEvent extends Widget
+class Widget_MySystemEvent extends Widget //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /**
      * Constructor
@@ -38,11 +38,7 @@ class Widget_MySystemEvent extends Widget
         return _('System events');
     }
 
-    /**
-     * Compute the content of the widget
-     * @return string html
-     */
-    public function getContent()
+    public function getContent(): string
     {
         $hp       = Codendi_HTMLPurifier::instance();
         $se       = SystemEventManager::instance();

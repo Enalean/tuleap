@@ -22,11 +22,11 @@
 use Tuleap\Dashboard\User\UserDashboardController;
 use Tuleap\Hudson\HudsonJobBuilder;
 
-class hudson_Widget_MyMonitoredJobs extends HudsonOverviewWidget
+class hudson_Widget_MyMonitoredJobs extends HudsonOverviewWidget //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public hudsonPlugin $plugin;
 
-    public mixed $_not_monitored_jobs;
+    public mixed $not_monitored_jobs;
     private MinimalHudsonJobFactory $factory;
     private HudsonJobBuilder $job_builder;
 
@@ -36,11 +36,11 @@ class hudson_Widget_MyMonitoredJobs extends HudsonOverviewWidget
         $this->setOwner($user_id, UserDashboardController::LEGACY_DASHBOARD_TYPE);
         $this->plugin = $plugin;
 
-        $this->_not_monitored_jobs = user_get_preference('plugin_hudson_my_not_monitored_jobs');
-        if ($this->_not_monitored_jobs === false) {
-            $this->_not_monitored_jobs = [];
+        $this->not_monitored_jobs = user_get_preference('plugin_hudson_my_not_monitored_jobs');
+        if ($this->not_monitored_jobs === false) {
+            $this->not_monitored_jobs = [];
         } else {
-            $this->_not_monitored_jobs = explode(',', $this->_not_monitored_jobs);
+            $this->not_monitored_jobs = explode(',', $this->not_monitored_jobs);
         }
         $this->factory     = $factory;
         $this->job_builder = $job_builder;
@@ -74,9 +74,9 @@ class hudson_Widget_MyMonitoredJobs extends HudsonOverviewWidget
                 $dar->next();
             }
 
-            $this->_not_monitored_jobs = $not_monitored_jobs;
+            $this->not_monitored_jobs = $not_monitored_jobs;
 
-            user_set_preference('plugin_hudson_my_not_monitored_jobs', implode(',', $this->_not_monitored_jobs));
+            user_set_preference('plugin_hudson_my_not_monitored_jobs', implode(',', $this->not_monitored_jobs));
         }
         return true;
     }
@@ -108,7 +108,7 @@ class hudson_Widget_MyMonitoredJobs extends HudsonOverviewWidget
             $html .= '<input type="checkbox"
                              name="myhudsonjobs[]"
                              value="' . $purifier->purify($row['job_id']) . '"
-                             ' . (in_array($row['job_id'], $this->_not_monitored_jobs) ? '' : 'checked="checked"') . '>';
+                             ' . (in_array($row['job_id'], $this->not_monitored_jobs) ? '' : 'checked="checked"') . '>';
             $html .= '</td><td>';
             $html .= $purifier->purify($row['name']);
             $html .= '</td></tr>';
@@ -119,7 +119,7 @@ class hudson_Widget_MyMonitoredJobs extends HudsonOverviewWidget
         return $html;
     }
 
-    public function getContent()
+    public function getContent(): string
     {
         $purifier = Codendi_HTMLPurifier::instance();
         $html     = '';
@@ -129,7 +129,7 @@ class hudson_Widget_MyMonitoredJobs extends HudsonOverviewWidget
         $dar              = $job_dao->searchByUserID($user->getId());
         $nb_jobs_in_error = 0;
         if ($dar->rowCount() > 0) {
-            $monitored_jobs = $this->_getMonitoredJobsByUser();
+            $monitored_jobs = $this->getMonitoredJobsByUser();
             if (sizeof($monitored_jobs) > 0) {
                 $html .= '<table style="width:100%">';
                 $cpt   = 1;
@@ -194,7 +194,7 @@ class hudson_Widget_MyMonitoredJobs extends HudsonOverviewWidget
         return $html;
     }
 
-    public function _getMonitoredJobsByUser()
+    private function getMonitoredJobsByUser(): array
     {
         $user           = UserManager::instance()->getCurrentUser();
         $job_dao        = new PluginHudsonJobDao(CodendiDataAccess::instance());
@@ -202,7 +202,7 @@ class hudson_Widget_MyMonitoredJobs extends HudsonOverviewWidget
         $monitored_jobs = [];
         while ($dar->valid()) {
             $row = $dar->current();
-            if (! in_array($row['job_id'], $this->_not_monitored_jobs)) {
+            if (! in_array($row['job_id'], $this->not_monitored_jobs)) {
                 $monitored_jobs[] = $row['job_id'];
             }
             $dar->next();

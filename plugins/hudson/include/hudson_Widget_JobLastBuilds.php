@@ -22,7 +22,7 @@
 use Tuleap\Dashboard\User\UserDashboardController;
 use Tuleap\Hudson\HudsonJobBuilder;
 
-class hudson_Widget_JobLastBuilds extends HudsonJobWidget
+class hudson_Widget_JobLastBuilds extends HudsonJobWidget //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /**
      * @var HudsonJob
@@ -98,7 +98,7 @@ class hudson_Widget_JobLastBuilds extends HudsonJobWidget
         }
     }
 
-    public function getContent()
+    public function getContent(): string
     {
         $this->initContent();
 

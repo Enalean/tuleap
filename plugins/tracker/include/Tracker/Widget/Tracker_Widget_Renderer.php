@@ -26,7 +26,7 @@ use Tuleap\Project\MappingRegistry;
  *
  * Tracker Renderer
  */
-abstract class Tracker_Widget_Renderer extends Widget
+abstract class Tracker_Widget_Renderer extends Widget //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public $renderer_title;
     public $renderer_id;
@@ -43,7 +43,7 @@ abstract class Tracker_Widget_Renderer extends Widget
             dgettext('tuleap-tracker', 'Tracker renderer');
     }
 
-    public function getContent()
+    public function getContent(): string
     {
         $renderer = $this->getRenderer();
         if ($renderer) {

@@ -25,7 +25,7 @@ use Tuleap\Statistics\DiskUsage\Subversion\Retriever as SVNRetriever;
 /**
  * Statisitics_Widget_ProjectStatistics
  */
-class Statistics_Widget_ProjectStatistics extends Widget
+class Statistics_Widget_ProjectStatistics extends Widget //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /**
      * Constructor
@@ -49,14 +49,7 @@ class Statistics_Widget_ProjectStatistics extends Widget
         return dgettext('tuleap-statistics', 'Project statistics');
     }
 
-    /**
-     * Show the content of the widget
-     *
-     * @return void
-     *
-     * @see Widget::getContent()
-     */
-    public function getContent()
+    public function getContent(): string
     {
         $request  = HTTPRequest::instance();
         $group_id = $request->get('group_id');

@@ -42,7 +42,7 @@ class Widget_ImageViewer extends Widget //phpcs:ignore PSR1.Classes.ClassDeclara
         return $this->image_title ?: 'Image';
     }
 
-    public function getContent()
+    public function getContent(): string
     {
         if (! $this->image_url) {
             return '';

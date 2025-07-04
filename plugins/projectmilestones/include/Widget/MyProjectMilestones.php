@@ -148,7 +148,7 @@ class MyProjectMilestones extends Widget
         }
     }
 
-    public function getContent()
+    public function getContent(): string
     {
         return $this->project_milestones_widget_retriever->getContent($this->project, $this->root_planning);
     }

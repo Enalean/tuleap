@@ -85,7 +85,7 @@ class TimeTrackingOverview extends Widget
         return false;
     }
 
-    public function getContent()
+    public function getContent(): string
     {
         $renderer = TemplateRendererFactory::build()->getRenderer(TIMETRACKING_TEMPLATE_DIR);
         return $renderer->renderToString(
