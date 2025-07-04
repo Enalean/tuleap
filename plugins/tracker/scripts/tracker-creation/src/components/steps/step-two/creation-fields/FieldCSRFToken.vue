@@ -20,15 +20,8 @@
 <template>
     <input type="hidden" v-bind:name="csrf_token.name" v-bind:value="csrf_token.value" />
 </template>
-<script lang="ts">
-import Vue from "vue";
-import { State } from "vuex-class";
-import { Component } from "vue-property-decorator";
-import type { CSRFToken } from "../../../../store/type.js";
+<script setup lang="ts">
+import { useState } from "vuex-composition-helpers";
 
-@Component
-export default class FieldCSRFToken extends Vue {
-    @State
-    readonly csrf_token!: CSRFToken;
-}
+const { csrf_token } = useState(["csrf_token"]);
 </script>
