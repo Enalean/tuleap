@@ -27,18 +27,17 @@ use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 
-final readonly class FromPayloadUserDiffBuilder
+final readonly class FromPayloadUserListBuilder
 {
     public function __construct(
         private GetActiveUser $check_that_user_is_active,
-        private GetQueryUsers $dao,
     ) {
     }
 
     /**
-     * @return Ok<UserDiff>|Err<Fault>
+     * @return Ok<UserList>|Err<Fault>
      */
-    public function getUserDiff(int $query_id, array $users): Ok|Err
+    public function getUserList(array $users): Ok|Err
     {
         $user_ids = [];
         foreach ($users as $user_representation) {
@@ -52,7 +51,6 @@ final readonly class FromPayloadUserDiffBuilder
             }
         }
 
-        $currently_saved_users = $this->dao->getUsersByQueryId($query_id);
-        return Result::ok(new UserDiff(array_diff($user_ids, $currently_saved_users), array_diff($currently_saved_users, $user_ids)));
+        return Result::ok(new UserList($user_ids));
     }
 }

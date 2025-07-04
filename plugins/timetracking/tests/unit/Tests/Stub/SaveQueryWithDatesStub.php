@@ -25,6 +25,7 @@ namespace Tuleap\Timetracking\Tests\Stub;
 use DateTimeImmutable;
 use Error;
 use Tuleap\Timetracking\REST\v1\TimetrackingManagement\SaveQueryWithDates;
+use Tuleap\Timetracking\REST\v1\TimetrackingManagement\UserList;
 
 final class SaveQueryWithDatesStub implements SaveQueryWithDates
 {
@@ -49,7 +50,7 @@ final class SaveQueryWithDatesStub implements SaveQueryWithDates
         return $this->has_been_called;
     }
 
-    public function saveQueryWithDates(int $query_id, DateTimeImmutable $start_date, DateTimeImmutable $end_date, array $user_ids_to_insert, array $user_ids_to_remove,): void
+    public function saveQueryWithDates(int $query_id, DateTimeImmutable $start_date, DateTimeImmutable $end_date, UserList $users,): void
     {
         if ($this->should_not_be_called) {
             throw new Error("Shouldn't have been called");

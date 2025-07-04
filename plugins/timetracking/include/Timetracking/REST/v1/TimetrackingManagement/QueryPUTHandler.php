@@ -30,7 +30,7 @@ final readonly class QueryPUTHandler
 {
     public function __construct(
         private FromPayloadPeriodBuilder $data_checker,
-        private FromPayloadUserDiffBuilder $user_diff_builder,
+        private FromPayloadUserListBuilder $user_list_builder,
         private TimetrackingManagementWidgetSaver $timetracking_management_widget_saver,
         private CheckPermission $permission_checker,
     ) {
@@ -42,16 +42,16 @@ final readonly class QueryPUTHandler
     public function handle(int $query_id, QueryPUTRepresentation $representation, \PFUser $user): Ok|Err
     {
         return $this->permission_checker->checkThatCurrentUserCanUpdateTheQuery($query_id, $user)
-            ->andThen(fn () => $this->user_diff_builder->getUserDiff($query_id, $representation->users))
-            ->andThen(fn (UserDiff $user_diff) => $this->save($query_id, $representation, $user_diff));
+            ->andThen(fn () => $this->user_list_builder->getUserList($representation->users))
+            ->andThen(fn (UserList $users) => $this->save($query_id, $representation, $users));
     }
 
     private function save(
         int $query_id,
         QueryPUTRepresentation $representation,
-        UserDiff $userDiff,
+        UserList $users,
     ): Ok|Err {
         return $this->data_checker->getValidatedPeriod($representation)
-            ->andThen(fn (Period $period) => $this->timetracking_management_widget_saver->save($query_id, $period, $userDiff));
+            ->andThen(fn (Period $period) => $this->timetracking_management_widget_saver->save($query_id, $period, $users));
     }
 }

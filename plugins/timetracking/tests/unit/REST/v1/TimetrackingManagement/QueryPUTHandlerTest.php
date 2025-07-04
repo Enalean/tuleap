@@ -30,7 +30,6 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Timetracking\Tests\Stub\CheckPermissionStub;
 use Tuleap\Timetracking\Tests\Stub\GetActiveUserStub;
-use Tuleap\Timetracking\Tests\Stub\GetQueryUsersStub;
 use Tuleap\Timetracking\Tests\Stub\SaveQueryWithDatesStub;
 use Tuleap\Timetracking\Tests\Stub\SaveQueryWithPredefinedTimePeriodStub;
 
@@ -64,13 +63,12 @@ final class QueryPUTHandlerTest extends TestCase
 
         $handler = new QueryPUTHandler(
             new FromPayloadPeriodBuilder(),
-            new FromPayloadUserDiffBuilder(
+            new FromPayloadUserListBuilder(
                 GetActiveUserStub::withActiveUsers(
                     UserTestBuilder::aUser()->withId(self::ALICE_ID)->build(),
                     UserTestBuilder::aUser()->withId(self::BOB_ID)->build(),
                     UserTestBuilder::aUser()->withId(self::CHARLIE_ID)->build(),
                 ),
-                GetQueryUsersStub::withUserIds(),
             ),
             new TimetrackingManagementWidgetSaver(
                 SaveQueryWithDatesStub::build(),

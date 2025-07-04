@@ -27,7 +27,6 @@ interface SaveQueryWithPredefinedTimePeriod
     public function saveQueryWithPredefinedTimePeriod(
         int $query_id,
         PredefinedTimePeriod $predefined_time_period,
-        array $user_ids_to_insert,
-        array $user_ids_to_remove,
+        UserList $users,
     ): void;
 }
