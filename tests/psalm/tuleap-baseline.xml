@@ -22658,8 +22658,6 @@
       <code><![CDATA[$params]]></code>
       <code><![CDATA[$params]]></code>
       <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
-      <code><![CDATA[$params]]></code>
       <code><![CDATA[$user_id]]></code>
       <code><![CDATA[$value]]></code>
     </MissingParamType>
@@ -45566,6 +45564,7 @@
     <InvalidArgument>
       <code><![CDATA[$_SERVER]]></code>
       <code><![CDATA[$_SERVER]]></code>
+      <code><![CDATA[$tracker_ids_warning]]></code>
     </InvalidArgument>
     <MissingParamType>
       <code><![CDATA[$create_mode]]></code>
@@ -45585,6 +45584,7 @@
       <code><![CDATA[$project->group_id]]></code>
       <code><![CDATA[$project->group_id]]></code>
       <code><![CDATA[$project->group_id]]></code>
+      <code><![CDATA[$tracker->deletion_date]]></code>
     </MissingPropertyType>
     <MissingReturnType>
       <code><![CDATA[checkUserCanAccessTracker]]></code>
