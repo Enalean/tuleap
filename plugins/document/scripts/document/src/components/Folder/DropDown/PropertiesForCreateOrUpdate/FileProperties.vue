@@ -40,47 +40,55 @@
     </div>
 </template>
 
-<script lang="ts">
-import { mapState } from "vuex";
+<script setup lang="ts">
 import { sprintf } from "sprintf-js";
 import prettyKibibytes from "pretty-kibibytes";
 import emitter from "../../../../helpers/emitter";
+import type { FileProperties } from "../../../../type";
+import { useNamespacedState } from "vuex-composition-helpers";
+import type { ConfigurationState } from "../../../../store/configuration";
+import { ref } from "vue";
+import { useGettext } from "vue3-gettext";
 
-export default {
-    name: "FileProperties",
-    props: {
-        value: Object,
-    },
-    data() {
-        return {
-            error_message: "",
-        };
-    },
-    computed: {
-        ...mapState("configuration", ["max_size_upload"]),
-    },
-    methods: {
-        onFileChange(e) {
-            var files = e.target.files || e.dataTransfer.files;
-            if (!files.length) {
-                return;
-            }
+const { $gettext } = useGettext();
 
-            const file = files.item(0);
-            emitter.emit("update-title-property", file.name);
+defineProps<{
+    value: FileProperties;
+}>();
 
-            this.error_message = "";
-            if (file.size > this.max_size_upload) {
-                this.error_message = sprintf(
-                    this.$gettext("You are not allowed to upload files bigger than %s."),
-                    prettyKibibytes(this.max_size_upload),
-                );
-            }
+const error_message = ref<string>("");
+const input = ref<HTMLInputElement>();
 
-            this.$refs.input.setCustomValidity(this.error_message);
+const { max_size_upload } = useNamespacedState<Pick<ConfigurationState, "max_size_upload">>(
+    "configuration",
+    ["max_size_upload"],
+);
 
-            emitter.emit("update-file-properties", { file });
-        },
-    },
-};
+function onFileChange(event: Event): void {
+    if (!(event.target instanceof HTMLInputElement)) {
+        return;
+    }
+    const files = event.target.files || event.dataTransfer.files;
+    if (files.length === 0) {
+        return;
+    }
+
+    const file = files.item(0);
+    if (file === null) {
+        return;
+    }
+    emitter.emit("update-title-property", file.name);
+
+    error_message.value = "";
+    if (file.size > max_size_upload.value) {
+        error_message.value = sprintf(
+            $gettext("You are not allowed to upload files bigger than %s."),
+            prettyKibibytes(max_size_upload.value),
+        );
+    }
+
+    input.value?.setCustomValidity(error_message.value);
+
+    emitter.emit("update-file-properties", { file });
+}
 </script>
