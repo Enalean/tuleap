@@ -35,6 +35,7 @@ use Tuleap\AgileDashboard\Milestone\Sidebar\PromotedMilestoneBuilder;
 use Tuleap\AgileDashboard\Milestone\Sidebar\PromotedMilestoneListBuilder;
 use Tuleap\Layout\SidebarPromotedItemPresenter;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
+use Tuleap\Tracker\Semantic\Title\CachedSemanticTitleFieldRetriever;
 
 class AgileDashboardService extends \Service
 {
@@ -84,6 +85,7 @@ class AgileDashboardService extends \Service
                 new PromotedMilestoneBuilder(
                     $planning_factory,
                     SemanticTimeframeBuilder::build(),
+                    CachedSemanticTitleFieldRetriever::instance(),
                     BackendLogger::getDefaultLogger(),
                 ),
                 new MilestoneDao(),

@@ -46,6 +46,7 @@ use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
+use Tuleap\Tracker\Semantic\Title\CachedSemanticTitleFieldRetriever;
 
 final class ProgramBacklogItemsResource extends AuthenticatedResource
 {
@@ -89,7 +90,7 @@ final class ProgramBacklogItemsResource extends AuthenticatedResource
                 $artifact_retriever,
                 $user_retriever
             ),
-            new TitleValueRetriever($artifact_retriever, $user_retriever, \Tuleap\Tracker\Semantic\Title\TrackerSemanticTitleFactory::instance()),
+            new TitleValueRetriever($artifact_retriever, $user_retriever, CachedSemanticTitleFieldRetriever::instance()),
             new URIRetriever($artifact_retriever),
             new CrossReferenceRetriever($artifact_retriever),
             new IsOpenRetriever($artifact_retriever),

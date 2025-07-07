@@ -25,11 +25,12 @@ namespace Tuleap\Tracker\Semantic;
 use Tracker_FormElement_Field_Text;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Semantic\Title\RetrieveSemanticTitleField;
 use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
-use Tuleap\Tracker\Test\Stub\Semantic\GetTitleSemanticStub;
+use Tuleap\Tracker\Test\Stub\Semantic\Title\RetrieveSemanticTitleFieldStub;
 use Tuleap\Tracker\Test\Stub\VerifySubmissionPermissionStub;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -37,7 +38,7 @@ final class ArtifactCannotBeCreatedReasonsGetterTest extends TestCase
 {
     private VerifySubmissionPermissionStub $can_submit_artifact_verifier;
     private RetrieveUsedFieldsStub $used_fields_retriever;
-    private GetTitleSemanticStub $semantic_title_factory;
+    private RetrieveSemanticTitleField $title_field_retriever;
     private Tracker_FormElement_Field_Text $semantic_title_field;
     private \Tuleap\Tracker\Tracker $tracker;
 
@@ -50,16 +51,16 @@ final class ArtifactCannotBeCreatedReasonsGetterTest extends TestCase
             ->inTracker($this->tracker)
             ->build();
         $this->used_fields_retriever        = RetrieveUsedFieldsStub::withFields($this->semantic_title_field);
-        $this->semantic_title_factory       = GetTitleSemanticStub::withTextField($this->semantic_title_field);
+        $this->title_field_retriever        = RetrieveSemanticTitleFieldStub::build()->withTitleField($this->tracker, $this->semantic_title_field);
     }
 
-    private function getReasons(CollectionOfCreationSemanticToCheck $semantics_to_check,): CollectionOfCannotCreateArtifactReason
+    private function getReasons(CollectionOfCreationSemanticToCheck $semantics_to_check): CollectionOfCannotCreateArtifactReason
     {
         $user                                    = UserTestBuilder::buildSiteAdministrator();
         $artifact_creation_from_semantic_checker = new ArtifactCannotBeCreatedReasonsGetter(
             $this->can_submit_artifact_verifier,
             $this->used_fields_retriever,
-            $this->semantic_title_factory
+            $this->title_field_retriever
         );
 
         return $artifact_creation_from_semantic_checker->getCannotCreateArtifactReasons(
@@ -93,9 +94,9 @@ final class ArtifactCannotBeCreatedReasonsGetterTest extends TestCase
 
     public function testItFillsTheReasonCollectionWhenTheSemanticTitleFieldIsNotSet(): void
     {
-        $this->semantic_title_factory = GetTitleSemanticStub::withoutTextField();
-        $semantics_to_check           = CollectionOfCreationSemanticToCheck::fromREST(['title'])->value;
-        $cannot_create_reasons        = $this->getReasons($semantics_to_check);
+        $this->title_field_retriever = RetrieveSemanticTitleFieldStub::build();
+        $semantics_to_check          = CollectionOfCreationSemanticToCheck::fromREST(['title'])->value;
+        $cannot_create_reasons       = $this->getReasons($semantics_to_check);
         self::assertCount(1, $cannot_create_reasons->getReasons());
         self::assertNotEmpty($cannot_create_reasons->getReasons()[0]->reason);
     }
@@ -122,10 +123,10 @@ final class ArtifactCannotBeCreatedReasonsGetterTest extends TestCase
         $form_element->method('getId')->willReturn(15);
         $form_element->method('getTrackerId')->willReturn($this->tracker->getId());
         $form_element->method('isRequired')->willReturn(false);
-        $this->semantic_title_factory = GetTitleSemanticStub::withTextField($form_element);
-        $this->used_fields_retriever  = RetrieveUsedFieldsStub::withFields($form_element);
-        $semantics_to_check           = CollectionOfCreationSemanticToCheck::fromREST(['title'])->value;
-        $cannot_create_reasons        = $this->getReasons($semantics_to_check);
+        $this->title_field_retriever = RetrieveSemanticTitleFieldStub::build()->withTitleField($this->tracker, $form_element);
+        $this->used_fields_retriever = RetrieveUsedFieldsStub::withFields($form_element);
+        $semantics_to_check          = CollectionOfCreationSemanticToCheck::fromREST(['title'])->value;
+        $cannot_create_reasons       = $this->getReasons($semantics_to_check);
         self::assertCount(1, $cannot_create_reasons->getReasons());
         self::assertNotEmpty($cannot_create_reasons->getReasons()[0]->reason);
     }

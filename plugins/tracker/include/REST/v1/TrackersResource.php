@@ -84,6 +84,7 @@ use Tuleap\Tracker\REST\v1\Report\MatchingIdsOrderer;
 use Tuleap\Tracker\REST\v1\Workflow\ModeUpdater;
 use Tuleap\Tracker\REST\WorkflowRestBuilder;
 use Tuleap\Tracker\Semantic\Description\CachedSemanticDescriptionFieldRetriever;
+use Tuleap\Tracker\Semantic\Title\CachedSemanticTitleFieldRetriever;
 use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
@@ -866,7 +867,11 @@ class TrackersResource extends AuthenticatedResource
             ),
             new PermissionsRepresentationBuilder($ugroup_manager, $permissions_functions_wrapper),
             new WorkflowRestBuilder(),
-            static fn(Tracker $tracker) => new \Tuleap\Tracker\Semantic\TrackerSemanticManager(CachedSemanticDescriptionFieldRetriever::instance(), $tracker),
+            static fn(Tracker $tracker) => new \Tuleap\Tracker\Semantic\TrackerSemanticManager(
+                CachedSemanticDescriptionFieldRetriever::instance(),
+                CachedSemanticTitleFieldRetriever::instance(),
+                $tracker,
+            ),
             new ParentInHierarchyRetriever(new HierarchyDAO(), $this->tracker_factory),
             TrackersPermissionsRetriever::build()
         );

@@ -100,6 +100,7 @@ use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
 use Tuleap\Tracker\Artifact\FileUploadDataProvider;
 use Tuleap\Tracker\Semantic\Description\CachedSemanticDescriptionFieldRetriever;
+use Tuleap\Tracker\Semantic\Title\CachedSemanticTitleFieldRetriever;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
@@ -445,6 +446,7 @@ final class ArtidocResource extends AuthenticatedResource
     {
         $form_element_factory        = \Tracker_FormElementFactory::instance();
         $description_field_retriever = CachedSemanticDescriptionFieldRetriever::instance();
+        $title_field_retriever       = CachedSemanticTitleFieldRetriever::instance();
 
         return new PUTConfigurationHandler(
             $this->getArtidocWithContextRetriever($user),
@@ -457,10 +459,12 @@ final class ArtidocResource extends AuthenticatedResource
             new SuitableTrackerForDocumentChecker(
                 $form_element_factory,
                 $description_field_retriever,
+                $title_field_retriever,
             ),
             new SuitableFieldRetriever(
                 $form_element_factory,
                 $description_field_retriever,
+                $title_field_retriever,
             ),
         );
     }
@@ -476,6 +480,7 @@ final class ArtidocResource extends AuthenticatedResource
                 new RequiredArtifactInformationBuilder(
                     \Tracker_ArtifactFactory::instance(),
                     CachedSemanticDescriptionFieldRetriever::instance(),
+                    CachedSemanticTitleFieldRetriever::instance(),
                 )
             ),
         );
@@ -514,7 +519,11 @@ final class ArtidocResource extends AuthenticatedResource
 
         $configured_field_collection_builder = new ConfiguredFieldCollectionBuilder(
             new ConfiguredFieldDao(),
-            new SuitableFieldRetriever($form_element_factory, CachedSemanticDescriptionFieldRetriever::instance()),
+            new SuitableFieldRetriever(
+                $form_element_factory,
+                CachedSemanticDescriptionFieldRetriever::instance(),
+                CachedSemanticTitleFieldRetriever::instance(),
+            ),
         );
 
         $provide_user_avatar_url = new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash());

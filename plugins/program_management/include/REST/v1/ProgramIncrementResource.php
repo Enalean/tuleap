@@ -93,6 +93,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdaterDataFormater;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
+use Tuleap\Tracker\Semantic\Title\CachedSemanticTitleFieldRetriever;
 
 final class ProgramIncrementResource extends AuthenticatedResource
 {
@@ -131,7 +132,7 @@ final class ProgramIncrementResource extends AuthenticatedResource
             $visibility_verifier,
             new ContentDao(),
             $visibility_verifier,
-            new TitleValueRetriever($artifact_retriever, $user_retriever, \Tuleap\Tracker\Semantic\Title\TrackerSemanticTitleFactory::instance()),
+            new TitleValueRetriever($artifact_retriever, $user_retriever, CachedSemanticTitleFieldRetriever::instance()),
             new URIRetriever($artifact_retriever),
             new CrossReferenceRetriever($artifact_retriever),
             new TrackerOfArtifactRetriever($artifact_retriever),
@@ -341,7 +342,7 @@ final class ProgramIncrementResource extends AuthenticatedResource
             new ArtifactVisibleVerifier($artifact_factory, $user_retriever),
             new IterationsLinkedToProgramIncrementDAO(),
             new StatusValueRetriever($artifact_retriever, $user_retriever),
-            new TitleValueRetriever($artifact_retriever, $user_retriever, \Tuleap\Tracker\Semantic\Title\TrackerSemanticTitleFactory::instance()),
+            new TitleValueRetriever($artifact_retriever, $user_retriever, CachedSemanticTitleFieldRetriever::instance()),
             new TimeframeValueRetriever(
                 $artifact_retriever,
                 $user_retriever,
@@ -409,7 +410,7 @@ final class ProgramIncrementResource extends AuthenticatedResource
         $visibility_verifier = new ArtifactVisibleVerifier($artifact_factory, $user_retriever);
 
         $artifacts_linked_to_parent_dao = new ArtifactsLinkedToParentDao();
-        $title_retriever                = new TitleValueRetriever($artifact_retriever, $user_retriever, \Tuleap\Tracker\Semantic\Title\TrackerSemanticTitleFactory::instance());
+        $title_retriever                = new TitleValueRetriever($artifact_retriever, $user_retriever, CachedSemanticTitleFieldRetriever::instance());
         $uri_retriever                  = new URIRetriever($artifact_retriever);
         $background_color_retriever     = new BackgroundColorRetriever(
             new BackgroundColorBuilder(new BindDecoratorRetriever()),

@@ -25,24 +25,16 @@ namespace Tuleap\Taskboard\Tracker;
 use PFUser;
 use Planning_Milestone;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\MappedFieldRetriever;
+use Tuleap\Tracker\Semantic\Title\RetrieveSemanticTitleField;
 
-class TrackerPresenterCollectionBuilder
+final readonly class TrackerPresenterCollectionBuilder
 {
-    /** @var TrackerCollectionRetriever */
-    private $trackers_retriever;
-    /** @var MappedFieldRetriever */
-    private $mapped_field_retriever;
-    /** @var AddInPlaceRetriever */
-    private $add_in_place_retriever;
-
     public function __construct(
-        TrackerCollectionRetriever $trackers_retriever,
-        MappedFieldRetriever $mapped_field_retriever,
-        AddInPlaceRetriever $add_in_place_tracker_retriever,
+        private TrackerCollectionRetriever $trackers_retriever,
+        private MappedFieldRetriever $mapped_field_retriever,
+        private AddInPlaceRetriever $add_in_place_retriever,
+        private RetrieveSemanticTitleField $title_field_retriever,
     ) {
-        $this->trackers_retriever     = $trackers_retriever;
-        $this->mapped_field_retriever = $mapped_field_retriever;
-        $this->add_in_place_retriever = $add_in_place_tracker_retriever;
     }
 
     /**
@@ -84,7 +76,7 @@ class TrackerPresenterCollectionBuilder
 
     private function getTitleField(TaskboardTracker $taskboard_tracker, \PFUser $user): ?TitleFieldPresenter
     {
-        $field_title = \Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle::load($taskboard_tracker->getTracker())->getField();
+        $field_title = $this->title_field_retriever->fromTracker($taskboard_tracker->getTracker());
 
         return ($field_title !== null && $field_title->userCanUpdate($user))
             ? new TitleFieldPresenter($field_title)

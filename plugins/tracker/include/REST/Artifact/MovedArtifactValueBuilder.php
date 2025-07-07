@@ -32,8 +32,10 @@ class MovedArtifactValueBuilder
     {
         $this->checkSemantic($artifact, $tracker_destination);
 
-        $representation           = new ArtifactValuesRepresentation();
-        $representation->field_id = (int) $tracker_destination->getTitleField()->getId();
+        $representation = new ArtifactValuesRepresentation();
+        $title_field    = $tracker_destination->getTitleField();
+        assert($title_field !== null);
+        $representation->field_id = $title_field->getId();
         $representation->value    = $artifact->getTitle();
 
         return [$representation];

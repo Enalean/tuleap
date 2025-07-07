@@ -50,6 +50,7 @@ use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\NotFoundException;
 use Tuleap\Tracker\Artifact\FileUploadDataProvider;
 use Tuleap\Tracker\Semantic\Description\RetrieveSemanticDescriptionField;
+use Tuleap\Tracker\Semantic\Title\RetrieveSemanticTitleField;
 
 final readonly class ArtidocController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {
@@ -73,6 +74,7 @@ final readonly class ArtidocController implements DispatchableWithRequest, Dispa
         private EventDispatcherInterface $event_dispatcher,
         private RecordVisit $recently_visited_dao,
         private RetrieveSemanticDescriptionField $retrieve_description_field,
+        private RetrieveSemanticTitleField $retrieve_title_field,
     ) {
     }
 
@@ -165,6 +167,7 @@ final readonly class ArtidocController implements DispatchableWithRequest, Dispa
         if ($tracker) {
             return DocumentTrackerRepresentation::fromTracker(
                 $this->file_upload_provider,
+                $this->retrieve_title_field,
                 $this->retrieve_description_field,
                 $tracker,
                 $user

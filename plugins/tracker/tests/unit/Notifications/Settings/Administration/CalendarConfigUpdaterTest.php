@@ -31,23 +31,16 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\Notifications\Settings\CheckEventShouldBeSentInNotificationStub;
 use Tuleap\Tracker\Test\Stub\Notifications\Settings\UpdateCalendarConfigStub;
 use Tuleap\Tracker\Test\Stub\Semantic\Timeframe\BuildSemanticTimeframeStub;
+use Tuleap\Tracker\Test\Stub\Semantic\Title\RetrieveSemanticTitleFieldStub;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CalendarConfigUpdaterTest extends TestCase
 {
-    private readonly \Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle&\PHPUnit\Framework\MockObject\MockObject $semantic_title;
     private readonly \Tuleap\Tracker\Tracker $tracker;
 
     protected function setUp(): void
     {
-        $this->tracker        = TrackerTestBuilder::aTracker()->build();
-        $this->semantic_title = $this->createMock(\Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle::class);
-        \Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle::setInstance($this->semantic_title, $this->tracker);
-    }
-
-    protected function tearDown(): void
-    {
-        \Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle::clearInstances();
+        $this->tracker = TrackerTestBuilder::aTracker()->build();
     }
 
     public function testNothingIsUpdatedWhenRequestDoesNotAskTo(): void
@@ -62,6 +55,7 @@ final class CalendarConfigUpdaterTest extends TestCase
                 DateFieldBuilder::aDateField(1001)->build(),
                 DateFieldBuilder::aDateField(1002)->build(),
             ),
+            RetrieveSemanticTitleFieldStub::build(),
         );
 
         $result = $updater->updateConfigAccordingToRequest(
@@ -87,6 +81,7 @@ final class CalendarConfigUpdaterTest extends TestCase
                 DateFieldBuilder::aDateField(1001)->build(),
                 DateFieldBuilder::aDateField(1002)->build(),
             ),
+            RetrieveSemanticTitleFieldStub::build(),
         );
 
         $result = $updater->updateConfigAccordingToRequest(
@@ -112,6 +107,7 @@ final class CalendarConfigUpdaterTest extends TestCase
                 DateFieldBuilder::aDateField(1001)->build(),
                 DateFieldBuilder::aDateField(1002)->build(),
             ),
+            RetrieveSemanticTitleFieldStub::build(),
         );
 
         $result = $updater->updateConfigAccordingToRequest(
@@ -129,14 +125,6 @@ final class CalendarConfigUpdaterTest extends TestCase
     {
         $update_config = UpdateCalendarConfigStub::build();
 
-        \Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle::setInstance(
-            new \Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle(
-                $this->tracker,
-                TextFieldBuilder::aTextField(1)->build()
-            ),
-            $this->tracker,
-        );
-
         $updater = new CalendarConfigUpdater(
             CheckEventShouldBeSentInNotificationStub::withoutEventInNotification(),
             $update_config,
@@ -145,6 +133,7 @@ final class CalendarConfigUpdaterTest extends TestCase
                 DateFieldBuilder::aDateField(1001)->build(),
                 DateFieldBuilder::aDateField(1002)->build(),
             ),
+            RetrieveSemanticTitleFieldStub::build()->withTitleField($this->tracker, TextFieldBuilder::aTextField(1)->build()),
         );
 
         $result = $updater->updateConfigAccordingToRequest(
@@ -170,6 +159,7 @@ final class CalendarConfigUpdaterTest extends TestCase
                 DateFieldBuilder::aDateField(1001)->build(),
                 DateFieldBuilder::aDateField(1002)->build(),
             ),
+            RetrieveSemanticTitleFieldStub::build(),
         );
 
         $result = $updater->updateConfigAccordingToRequest(
@@ -187,8 +177,6 @@ final class CalendarConfigUpdaterTest extends TestCase
     {
         $update_config = UpdateCalendarConfigStub::build();
 
-        \Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle::setInstance(new \Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle($this->tracker, null), $this->tracker);
-
         $updater = new CalendarConfigUpdater(
             CheckEventShouldBeSentInNotificationStub::withoutEventInNotification(),
             $update_config,
@@ -197,6 +185,7 @@ final class CalendarConfigUpdaterTest extends TestCase
                 DateFieldBuilder::aDateField(1001)->build(),
                 DateFieldBuilder::aDateField(1002)->build(),
             ),
+            RetrieveSemanticTitleFieldStub::build(),
         );
 
         $result = $updater->updateConfigAccordingToRequest(
@@ -214,18 +203,11 @@ final class CalendarConfigUpdaterTest extends TestCase
     {
         $update_config = UpdateCalendarConfigStub::build();
 
-        \Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle::setInstance(
-            new \Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle(
-                $this->tracker,
-                TextFieldBuilder::aTextField(1)->build()
-            ),
-            $this->tracker,
-        );
-
         $updater = new CalendarConfigUpdater(
             CheckEventShouldBeSentInNotificationStub::withoutEventInNotification(),
             $update_config,
             BuildSemanticTimeframeStub::withTimeframeSemanticNotConfigured($this->tracker),
+            RetrieveSemanticTitleFieldStub::build()->withTitleField($this->tracker, TextFieldBuilder::aTextField(1)->build()),
         );
 
         $result = $updater->updateConfigAccordingToRequest(

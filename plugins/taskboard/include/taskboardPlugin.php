@@ -53,6 +53,7 @@ use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 use Tuleap\Tracker\NewDropdown\TrackerNewDropdownLinkPresenterBuilder;
 use Tuleap\Tracker\Permission\SubmissionPermissionVerifier;
 use Tuleap\Tracker\Permission\TrackersPermissionsRetriever;
+use Tuleap\Tracker\Semantic\Title\CachedSemanticTitleFieldRetriever;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -111,6 +112,7 @@ class taskboardPlugin extends Plugin
 
         $freestyle_mapping_dao = new FreestyleMappingDao();
         $form_element_factory  = \Tracker_FormElementFactory::instance();
+        $title_field_retriever = CachedSemanticTitleFieldRetriever::instance();
         return new \Tuleap\Taskboard\Routing\TaskboardController(
             new MilestoneExtractor(
                 $agiledashboard_plugin->getMilestoneFactory(),
@@ -131,7 +133,8 @@ class taskboardPlugin extends Plugin
                             $form_element_factory
                         )
                     ),
-                    new \Tuleap\Taskboard\Tracker\AddInPlaceRetriever($form_element_factory),
+                    new \Tuleap\Taskboard\Tracker\AddInPlaceRetriever($form_element_factory, $title_field_retriever),
+                    $title_field_retriever,
                 ),
                 Tracker_ArtifactFactory::instance()
             ),

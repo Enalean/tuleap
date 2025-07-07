@@ -30,13 +30,14 @@ use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Tracker\Artifact\RetrieveArtifact;
 use Tuleap\Tracker\Semantic\Description\RetrieveSemanticDescriptionField;
-use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle;
+use Tuleap\Tracker\Semantic\Title\RetrieveSemanticTitleField;
 
 final readonly class RequiredArtifactInformationBuilder implements BuildRequiredArtifactInformation
 {
     public function __construct(
         private RetrieveArtifact $artifact_retriever,
         private RetrieveSemanticDescriptionField $retrieve_description_field,
+        private RetrieveSemanticTitleField $retrieve_semantic_title_field,
     ) {
     }
 
@@ -63,7 +64,8 @@ final readonly class RequiredArtifactInformationBuilder implements BuildRequired
             ));
         }
 
-        $title_field = TrackerSemanticTitle::load($artifact->getTracker())->getField();
+        $tracker     = $artifact->getTracker();
+        $title_field = $this->retrieve_semantic_title_field->fromTracker($tracker);
         if (! $title_field) {
             return Result::err(Fault::fromMessage(
                 sprintf(
@@ -95,7 +97,7 @@ final readonly class RequiredArtifactInformationBuilder implements BuildRequired
         }
         $title = $title_field_value->getContentAsText();
 
-        $description_field = $this->retrieve_description_field->fromTracker($artifact->getTracker());
+        $description_field = $this->retrieve_description_field->fromTracker($tracker);
         if (! $description_field) {
             return Result::err(Fault::fromMessage(
                 sprintf(

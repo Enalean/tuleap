@@ -161,6 +161,7 @@ use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneUsedExternalService;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneUsedExternalServiceEvent;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneValueChecker;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
+use Tuleap\Tracker\Semantic\Title\CachedSemanticTitleFieldRetriever;
 use Tuleap\Tracker\Semantic\TrackerSemanticCollection;
 use Tuleap\Tracker\Semantic\TrackerSemanticFactory;
 use Tuleap\Tracker\Semantic\TrackerSemanticManager;
@@ -1363,6 +1364,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
             new ArtifactsInExplicitBacklogDao(),
             new PriorityDao(),
             \Tuleap\Tracker\Permission\TrackersPermissionsRetriever::build(),
+            CachedSemanticTitleFieldRetriever::instance(),
         );
     }
 

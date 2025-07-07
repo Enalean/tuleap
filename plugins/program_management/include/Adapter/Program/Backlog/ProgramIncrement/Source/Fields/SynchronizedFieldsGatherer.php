@@ -41,12 +41,13 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fiel
 use Tuleap\ProgramManagement\Domain\Workspace\Tracker\TrackerIdentifier;
 use Tuleap\Tracker\Semantic\Description\RetrieveSemanticDescriptionField;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
+use Tuleap\Tracker\Semantic\Title\RetrieveSemanticTitleField;
 
-final class SynchronizedFieldsGatherer implements GatherSynchronizedFields
+final readonly class SynchronizedFieldsGatherer implements GatherSynchronizedFields
 {
     public function __construct(
         private RetrieveFullTracker $tracker_retriever,
-        private \Tuleap\Tracker\Semantic\Title\TrackerSemanticTitleFactory $title_factory,
+        private RetrieveSemanticTitleField $retrieve_title_field,
         private RetrieveSemanticDescriptionField $retrieve_description_field,
         private \Tuleap\Tracker\Semantic\Status\TrackerSemanticStatusFactory $status_factory,
         private SemanticTimeframeBuilder $timeframe_builder,
@@ -57,7 +58,7 @@ final class SynchronizedFieldsGatherer implements GatherSynchronizedFields
     public function getTitleField(TrackerIdentifier $tracker_identifier, ?ConfigurationErrorsCollector $errors_collector): TitleFieldReference
     {
         $full_tracker = $this->tracker_retriever->getNonNullTracker($tracker_identifier);
-        $title_field  = $this->title_factory->getByTracker($full_tracker)->getField();
+        $title_field  = $this->retrieve_title_field->fromTracker($full_tracker);
         if (! $title_field) {
             throw new FieldRetrievalException($tracker_identifier->getId(), 'title');
         }

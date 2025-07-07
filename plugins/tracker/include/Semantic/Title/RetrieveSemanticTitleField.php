@@ -22,12 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Semantic\Title;
 
-use Tuleap\Option\Option;
+use Tracker_FormElement_Field_Text;
+use Tuleap\Tracker\Tracker;
 
-interface RetrieveTitleField
+interface RetrieveSemanticTitleField
 {
-    /**
-     * @return Option<int>
-     */
-    public function searchByTrackerId(int $tracker_id): Option;
+    public function fromTracker(Tracker $tracker): ?Tracker_FormElement_Field_Text;
 }

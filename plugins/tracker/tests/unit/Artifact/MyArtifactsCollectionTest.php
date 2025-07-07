@@ -26,6 +26,7 @@ namespace Tuleap\Tracker\Artifact;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveTrackerStub;
+use Tuleap\Tracker\Test\Stub\Semantic\Title\RetrieveSemanticTitleFieldStub;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MyArtifactsCollectionTest extends TestCase
@@ -33,7 +34,7 @@ final class MyArtifactsCollectionTest extends TestCase
     public function testCanGetArtifactsOfAnEmptyTracker(): void
     {
         $tracker    = TrackerTestBuilder::aTracker()->withId(111)->build();
-        $collection = new MyArtifactsCollection(RetrieveTrackerStub::withoutTracker());
+        $collection = new MyArtifactsCollection(RetrieveTrackerStub::withoutTracker(), RetrieveSemanticTitleFieldStub::build());
 
         self::assertEmpty($collection->getArtifactsInTracker($tracker));
         self::assertEquals(0, $collection->getArtifactsInTrackerCount($tracker));

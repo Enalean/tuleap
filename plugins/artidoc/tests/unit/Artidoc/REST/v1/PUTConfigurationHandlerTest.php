@@ -40,12 +40,12 @@ use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle;
-use Tuleap\Tracker\Test\Stub\RetrieveSemanticDescriptionFieldStub;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveTrackerStub;
 use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
+use Tuleap\Tracker\Test\Stub\Semantic\Description\RetrieveSemanticDescriptionFieldStub;
+use Tuleap\Tracker\Test\Stub\Semantic\Title\RetrieveSemanticTitleFieldStub;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PUTConfigurationHandlerTest extends TestCase
@@ -81,10 +81,6 @@ final class PUTConfigurationHandlerTest extends TestCase
                 new ArtidocDocument(['item_id' => 1, 'group_id' => self::PROJECT_ID]),
             ),
         );
-        TrackerSemanticTitle::setInstance(
-            new TrackerSemanticTitle($this->tracker, null),
-            $this->tracker
-        );
 
         $this->field_retriever  = RetrieveUsedFieldsStub::withNoFields();
         $this->saver            = SaveConfigurationStub::noop();
@@ -97,11 +93,6 @@ final class PUTConfigurationHandlerTest extends TestCase
         $this->user         = UserTestBuilder::buildWithDefaults();
     }
 
-    protected function tearDown(): void
-    {
-        TrackerSemanticTitle::clearInstances();
-    }
-
     private function handle(): Ok|Err
     {
         $handler = new PUTConfigurationHandler(
@@ -112,6 +103,7 @@ final class PUTConfigurationHandlerTest extends TestCase
             new SuitableFieldRetriever(
                 $this->field_retriever,
                 RetrieveSemanticDescriptionFieldStub::withNoField(),
+                RetrieveSemanticTitleFieldStub::build(),
             ),
         );
 
@@ -222,10 +214,6 @@ final class PUTConfigurationHandlerTest extends TestCase
                 ->withReadPermission($this->user, true)
                 ->inTracker($another_tracker)
                 ->build(),
-        );
-        TrackerSemanticTitle::setInstance(
-            new TrackerSemanticTitle($another_tracker, null),
-            $another_tracker
         );
 
         $this->saver = SaveConfigurationStub::withCallback($this->assertNeverSaved(...));

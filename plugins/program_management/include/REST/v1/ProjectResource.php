@@ -103,6 +103,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdaterDataFormater;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
+use Tuleap\Tracker\Semantic\Title\CachedSemanticTitleFieldRetriever;
 use URLVerification;
 
 final class ProjectResource extends AuthenticatedResource
@@ -189,7 +190,7 @@ final class ProjectResource extends AuthenticatedResource
             new ArtifactVisibleVerifier($artifact_factory, $this->user_manager_adapter),
             new ProgramIncrementRetriever(
                 new StatusValueRetriever($artifact_retriever, $this->user_manager_adapter),
-                new TitleValueRetriever($artifact_retriever, $this->user_manager_adapter, \Tuleap\Tracker\Semantic\Title\TrackerSemanticTitleFactory::instance()),
+                new TitleValueRetriever($artifact_retriever, $this->user_manager_adapter, CachedSemanticTitleFieldRetriever::instance()),
                 new TimeframeValueRetriever(
                     $artifact_retriever,
                     $this->user_manager_adapter,
@@ -384,7 +385,7 @@ final class ProjectResource extends AuthenticatedResource
             CachedProgramBuilder::instance(),
             new FeaturesDao(),
             $visibility_verifier,
-            new TitleValueRetriever($artifact_retriever, $this->user_manager_adapter, \Tuleap\Tracker\Semantic\Title\TrackerSemanticTitleFactory::instance()),
+            new TitleValueRetriever($artifact_retriever, $this->user_manager_adapter, CachedSemanticTitleFieldRetriever::instance()),
             new URIRetriever($artifact_retriever),
             new CrossReferenceRetriever($artifact_retriever),
             new TrackerOfArtifactRetriever($artifact_retriever),

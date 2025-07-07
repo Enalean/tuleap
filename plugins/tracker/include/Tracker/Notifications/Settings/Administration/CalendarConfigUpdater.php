@@ -29,6 +29,7 @@ use Tuleap\NeverThrow\Result;
 use Tuleap\Tracker\Notifications\Settings\CheckEventShouldBeSentInNotification;
 use Tuleap\Tracker\Notifications\Settings\UpdateCalendarConfig;
 use Tuleap\Tracker\Semantic\Timeframe\BuildSemanticTimeframe;
+use Tuleap\Tracker\Semantic\Title\RetrieveSemanticTitleField;
 
 final class CalendarConfigUpdater
 {
@@ -38,6 +39,7 @@ final class CalendarConfigUpdater
         private readonly CheckEventShouldBeSentInNotification $current_config,
         private readonly UpdateCalendarConfig $update_config,
         private readonly BuildSemanticTimeframe $semantic_timeframe_builder,
+        private readonly RetrieveSemanticTitleField $title_field_retriever,
     ) {
     }
 
@@ -84,7 +86,7 @@ final class CalendarConfigUpdater
             return Result::ok(false);
         }
 
-        if (\Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle::load($tracker)->getField() === null) {
+        if ($this->title_field_retriever->fromTracker($tracker) === null) {
             return Result::err(dgettext('tuleap-tracker', 'Semantic title is required for calendar events'));
         }
 

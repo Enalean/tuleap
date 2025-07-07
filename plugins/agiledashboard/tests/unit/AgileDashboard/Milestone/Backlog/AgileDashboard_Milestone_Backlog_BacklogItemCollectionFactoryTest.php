@@ -47,6 +47,7 @@ use Tuleap\Tracker\Artifact\Dao\PriorityDao;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\Permission\TrackersPermissionsPassthroughRetriever;
+use Tuleap\Tracker\Test\Stub\Semantic\Title\RetrieveSemanticTitleFieldStub;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest extends TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
@@ -85,6 +86,7 @@ final class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactoryTest ex
                 $this->artifacts_in_explicit_backlog_dao,
                 $this->artifact_priority_dao,
                 new TrackersPermissionsPassthroughRetriever(),
+                RetrieveSemanticTitleFieldStub::build(),
             ])
             ->onlyMethods([
                 'userCanReadBacklogTitleField',

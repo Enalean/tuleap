@@ -134,6 +134,7 @@ use Tuleap\Tracker\REST\Artifact\CreateArtifact;
 use Tuleap\Tracker\REST\Artifact\HandlePUT;
 use Tuleap\Tracker\REST\Artifact\PUTHandler;
 use Tuleap\Tracker\Semantic\Description\CachedSemanticDescriptionFieldRetriever;
+use Tuleap\Tracker\Semantic\Title\CachedSemanticTitleFieldRetriever;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
@@ -188,6 +189,7 @@ final class ArtidocSectionsResource extends AuthenticatedResource
             new RequiredArtifactInformationBuilder(
                 Tracker_ArtifactFactory::instance(),
                 CachedSemanticDescriptionFieldRetriever::instance(),
+                CachedSemanticTitleFieldRetriever::instance(),
             ),
         );
 
@@ -248,12 +250,14 @@ final class ArtidocSectionsResource extends AuthenticatedResource
 
         $user                       = UserManager::instance()->getCurrentUser();
         $retrieve_description_field = CachedSemanticDescriptionFieldRetriever::instance();
+        $retrieve_title_field       = CachedSemanticTitleFieldRetriever::instance();
 
         $collector = new RequiredSectionInformationCollector(
             $user,
             new RequiredArtifactInformationBuilder(
                 Tracker_ArtifactFactory::instance(),
                 $retrieve_description_field,
+                $retrieve_title_field,
             ),
         );
 
@@ -266,6 +270,7 @@ final class ArtidocSectionsResource extends AuthenticatedResource
                 new UpdateLevelDao(),
                 $this->getArtifactPutHandler(),
                 $retrieve_description_field,
+                $retrieve_title_field,
                 $user,
             ),
         );
@@ -394,6 +399,7 @@ final class ArtidocSectionsResource extends AuthenticatedResource
             new RequiredArtifactInformationBuilder(
                 Tracker_ArtifactFactory::instance(),
                 CachedSemanticDescriptionFieldRetriever::instance(),
+                CachedSemanticTitleFieldRetriever::instance(),
             ),
         );
 
@@ -462,6 +468,7 @@ final class ArtidocSectionsResource extends AuthenticatedResource
                 $this->getFileUploadDataProvider(),
                 $this->getArtifactPostHandler(),
                 CachedSemanticDescriptionFieldRetriever::instance(),
+                CachedSemanticTitleFieldRetriever::instance(),
                 $user,
             ),
             $collector,
@@ -518,6 +525,7 @@ final class ArtidocSectionsResource extends AuthenticatedResource
             new SuitableFieldRetriever(
                 Tracker_FormElementFactory::instance(),
                 CachedSemanticDescriptionFieldRetriever::instance(),
+                CachedSemanticTitleFieldRetriever::instance(),
             ),
         );
         $provide_user_avatar_url             = new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash());

@@ -96,6 +96,7 @@ use Tuleap\Tracker\RealTime\RealTimeArtifactMessageSender;
 use Tuleap\Tracker\RealtimeMercure\RealTimeMercureArtifactMessageSender;
 use Tuleap\Tracker\Report\Event\TrackerReportDeleted;
 use Tuleap\Tracker\Report\Event\TrackerReportSetToPrivate;
+use Tuleap\Tracker\Semantic\Title\CachedSemanticTitleFieldRetriever;
 use Tuleap\Tracker\TrackerCrumbInContext;
 use Tuleap\Tracker\TrackerEventTrackersDuplicated;
 use Tuleap\Tracker\XML\Importer\ImportXMLProjectTrackerDone;
@@ -362,6 +363,7 @@ final class KanbanPlugin extends Plugin implements PluginWithService
                     new KanbanPermissionsManager(),
                     Tracker_FormElementFactory::instance(),
                     \Tuleap\Tracker\Permission\SubmissionPermissionVerifier::instance(),
+                    CachedSemanticTitleFieldRetriever::instance(),
                 )
             ),
         );
@@ -611,6 +613,7 @@ final class KanbanPlugin extends Plugin implements PluginWithService
                 new KanbanPermissionsManager(),
                 $this->getFormElementFactory(),
                 \Tuleap\Tracker\Permission\SubmissionPermissionVerifier::instance(),
+                CachedSemanticTitleFieldRetriever::instance(),
             )
         );
     }
