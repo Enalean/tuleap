@@ -45,6 +45,7 @@ use Tuleap\Tracker\TrackerDeletion\DeletedTrackerDao;
 use Tuleap\Tracker\TrackerDeletion\DeletedTrackerPresenter;
 use Tuleap\Tracker\TrackerDeletion\DeletedTrackersListPresenter;
 use Tuleap\Tracker\TrackerDeletion\TrackerDeletionRetriever;
+use Tuleap\Tracker\TrackerDeletion\TrackerRestorer;
 
 class TrackerManager implements Tracker_IFetchTrackerSwitcher // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
@@ -209,18 +210,10 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher // phpcs:ignore PS
                                 break;
                             case 'restore-tracker':
                                 if ($global_admin_permissions_checker->doesUserHaveTrackerGlobalAdminRightsOnProject($project, $user)) {
-                                    $tracker_id = $request->get('tracker_id');
-                                    $group_id   = $request->get('group_id');
-                                    $token      = new CSRFSynchronizerToken('/tracker/admin/restore.php');
+                                    $restorer = new TrackerRestorer($this->getTrackerFactory(), new DeletedTrackerDao());
+                                    $token    = new CSRFSynchronizerToken('/tracker/admin/restore.php');
                                     $token->check();
-                                    $tracker = $this->getTrackerFactory()->getTrackerById($tracker_id);
-                                    if ($tracker === null) {
-                                        throw new RuntimeException('Tracker does not exist');
-                                    }
-                                    $tracker_name = $tracker->getName();
-                                    $this->restoreDeletedTracker($tracker_id);
-                                    $GLOBALS['Response']->addFeedback('info', sprintf(dgettext('tuleap-tracker', 'The tracker \'%1$s\' has been properly restored'), $tracker_name));
-                                    $GLOBALS['Response']->redirect('/tracker/admin/restore.php');
+                                    $restorer->restoreTracker($request, $GLOBALS['Response']);
                                 } else {
                                     $this->redirectToTrackerHomepage($group_id);
                                 }
@@ -286,16 +279,6 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher // phpcs:ignore PS
         return TRACKER_BASE_URL . '/?' . http_build_query([
             'group_id' => $project_id,
         ]);
-    }
-
-    /**
-     * Restore a deleted tracker.
-     *
-     * @param int $tracker_id ID of the tracker marked as deleted
-     */
-    private function restoreDeletedTracker($tracker_id): void
-    {
-        $this->getTrackerFactory()->restoreDeletedTracker($tracker_id);
     }
 
     public function displayHeader(Project $project, string $title, array $breadcrumbs, HeaderConfiguration|array $params): void
