@@ -1,4 +1,4 @@
-FROM rockylinux/rockylinux:9.4@sha256:4b9c7b0285aa68f45ef42308fb7a364ffb63b461645cfb22c53212d85d16bf93
+FROM rockylinux/rockylinux:9.6@sha256:7620071ad66949c3aef9fd313151f0cfee46b75485990c3b03710624f5e1b7b3
 
 # DOCKERFILE_BASEDIR_PATH is the directory where the Dockerfiles is
 ARG DOCKERFILE_BASEDIR_PATH
@@ -13,6 +13,13 @@ COPY $YUM_REPO_PATH /etc/yum.repos.d/
 COPY $PACKAGES_PATH /rpms
 
 RUN /usr/bin/ln -s /var/lib/tuleap /var/lib/codendi
+
+EXPOSE 22 80 443
+
+ENV TLP_SYSTEMCTL=docker
+ENV TLP_INSTALL_PLUGINS_TO_ENABLE='agiledashboard api_explorer baseline cardwall docman document_generation embed frs fts_db mediawiki_standalone git gitlab gitlfs graphontrackersv5 hudson_git hudson_svn jira_import kanban label oauth2_server onlyoffice openidconnectclient program_management projectmilestones pullrequest roadmap svn taskboard tracker testmanagement testplan timetracking velocity'
+
+HEALTHCHECK --start-period=5m --timeout=5s CMD /usr/bin/tuleap healthcheck
 
 RUN /usr/sbin/groupadd -g 900 -r codendiadm && \
     /usr/sbin/groupadd -g 902 -r gitolite && \
@@ -94,16 +101,5 @@ RUN /usr/sbin/groupadd -g 900 -r codendiadm && \
     awk '$5 >= 3071' /etc/ssh/moduli > /etc/ssh/moduli.tmp && mv /etc/ssh/moduli.tmp /etc/ssh/moduli
 
 COPY $DOCKERFILE_BASEDIR_PATH/sshd_config /etc/ssh/sshd_config
-
-FROM scratch
-
-EXPOSE 22 80 443
-
-ENV TLP_SYSTEMCTL=docker
-ENV TLP_INSTALL_PLUGINS_TO_ENABLE='agiledashboard api_explorer baseline cardwall docman document_generation embed frs fts_db mediawiki_standalone git gitlab gitlfs graphontrackersv5 hudson_git hudson_svn jira_import kanban label oauth2_server onlyoffice openidconnectclient program_management projectmilestones pullrequest roadmap svn taskboard tracker testmanagement testplan timetracking velocity'
-
-COPY --from=0 / /
-
-HEALTHCHECK --start-period=5m --timeout=5s CMD /usr/bin/tuleap healthcheck
 
 ENTRYPOINT [ "/usr/share/tuleap/plugins/tee_container/bin/tee-container.php", "run" ]
