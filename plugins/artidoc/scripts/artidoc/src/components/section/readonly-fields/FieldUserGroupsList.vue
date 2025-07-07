@@ -19,7 +19,7 @@
 
 <template>
     <label class="tlp-label document-label">{{ user_groups_list_field.label }}</label>
-    <p v-if="user_groups_list_field.value.length > 0">
+    <p v-if="user_groups_list_field.value.length > 0" class="user-group-list document-item-list">
         <span
             v-for="user_group in user_groups_list_field.value"
             v-bind:key="user_group.label"
@@ -44,7 +44,13 @@ defineProps<{
 </script>
 
 <style scoped lang="scss">
-.user-group-list-item ~ .user-group-list-item::before {
-    content: ", ";
+.user-group-list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.user-group-list-item:not(:last-child)::after {
+    content: ",\0000A0";
 }
 </style>
