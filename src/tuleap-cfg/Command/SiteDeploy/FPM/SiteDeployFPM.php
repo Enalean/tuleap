@@ -34,7 +34,7 @@ final class SiteDeployFPM
     private const PHP82_SRC_CONF_DIR             = __DIR__ . '/../../../../etc/fpm82';
     private const PHP84_DST_CONF_DIR             = '/etc/opt/remi/php84';
     private const PHP84_SRC_CONF_DIR             = __DIR__ . '/../../../../etc/fpm84';
-    private const PHP_DEFAULT_UNIT_SERVICE_NAMES = ['php82-php-fpm.service'];
+    private const PHP_DEFAULT_UNIT_SERVICE_NAMES = ['php82-php-fpm.service', 'php84-php-fpm.service'];
 
     private const FPM_PART_ERRORS             = 'tuleap_errors.part';
     private const FPM_PART_ERRORS_PROD        = 'tuleap_errors_prod.part';

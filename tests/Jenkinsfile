@@ -64,16 +64,16 @@ pipeline {
         stage('Tests') {
             failFast false
             parallel {
-                stage('UT PHPUnit PHP 8.2') {
-                    steps { script { execTestWithLimitedConcurrency({ actions.runPHPUnitTests('82') }) } }
+                stage('UT PHPUnit PHP 8.4') {
+                    steps { script { execTestWithLimitedConcurrency({ actions.runPHPUnitTests('84') }) } }
                     post { always { junit 'results/ut-phpunit/*/phpunit_tests_results.xml' } }
                 }
-                stage('REST PHP 8.2 MySQL 8.0') {
-                    steps { script { execTestWithLimitedConcurrency({ actions.runRESTTests('mysql80', '82') }) } }
+                stage('REST PHP 8.4 MySQL 8.0') {
+                    steps { script { execTestWithLimitedConcurrency({ actions.runRESTTests('mysql80', '84') }) } }
                     post { always { junit 'results/api-rest/*/*' } }
                 }
-                stage('DB/Integration PHP 8.2 MySQL 8.0') {
-                    steps { script { execTestWithLimitedConcurrency({ actions.runDBTests('mysql80', '82') }) } }
+                stage('DB/Integration PHP 8.4 MySQL 8.0') {
+                    steps { script { execTestWithLimitedConcurrency({ actions.runDBTests('mysql80', '84') }) } }
                     post { always { junit 'results/db/*/db_tests.xml' } }
                 }
                 stage('Build and run el9') { steps { script { execTestWithLimitedConcurrency({ actions.runBuildAndRun('el9') }) } } }
