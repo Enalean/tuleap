@@ -31,6 +31,7 @@ describe("MilestoneBar", () => {
                     progress_error_message: "",
                 } as Task,
                 left: 123,
+                popover_element_id: "10",
             },
         });
 

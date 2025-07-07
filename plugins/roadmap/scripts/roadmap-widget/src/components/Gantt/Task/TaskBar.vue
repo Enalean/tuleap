@@ -23,6 +23,7 @@
         v-if="task.is_milestone"
         v-bind:task="task"
         v-bind:left="left"
+        v-bind:popover_element_id="popover_element_id"
         v-bind:class="container_classes"
     />
     <task-bar-content
