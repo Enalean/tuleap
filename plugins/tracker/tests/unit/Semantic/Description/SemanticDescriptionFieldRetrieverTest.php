@@ -33,7 +33,7 @@ use Tuleap\Tracker\Tracker;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SemanticDescriptionFieldRetrieverTest extends TestCase
 {
-    private \Tracker_FormElement_Field_Text $description_field;
+    private \Tuleap\Tracker\FormElement\Field\Text\TextField $description_field;
     private Tracker $tracker;
 
     protected function setUp(): void

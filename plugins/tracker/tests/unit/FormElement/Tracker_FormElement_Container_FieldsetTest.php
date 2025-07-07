@@ -28,11 +28,11 @@ use SimpleXMLElement;
 use Tracker_FormElement_Container_Fieldset;
 use Tracker_FormElement_Field_Float;
 use Tracker_FormElement_Field_String;
-use Tracker_FormElement_Field_Text;
 use Tracker_FormElementFactory;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\User\XML\Import\IFindUserFromXMLReferenceStub;
+use Tuleap\Tracker\FormElement\Field\Text\TextField;
 use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\FieldsetContainerBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -176,7 +176,7 @@ final class Tracker_FormElement_Container_FieldsetTest extends TestCase // phpcs
 
         $field_01 = $this->createMock(Tracker_FormElement_Field_String::class);
         $field_02 = $this->createMock(Tracker_FormElement_Field_Float::class);
-        $field_03 = $this->createMock(Tracker_FormElement_Field_Text::class);
+        $field_03 = $this->createMock(TextField::class);
 
         $container_fieldset->method('getAllFormElements')->willReturn([$field_01, $field_02, $field_03]);
 

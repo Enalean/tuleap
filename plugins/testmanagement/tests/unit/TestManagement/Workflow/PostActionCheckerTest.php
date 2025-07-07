@@ -122,7 +122,7 @@ final class PostActionCheckerTest extends TestCase
         $collection->method('getHiddenFieldsetsPostActions')->willReturn([]);
 
         $this->form_element_factory->method('getFieldById')->willReturn(
-            new \Tracker_FormElement_Field_Text(1412, self::TRACKER_ID, 1000, 'artifact link', 'Links', 'Irrelevant', true, 'P', false, '', 3)
+            new \Tuleap\Tracker\FormElement\Field\Text\TextField(1412, self::TRACKER_ID, 1000, 'artifact link', 'Links', 'Irrelevant', true, 'P', false, '', 3)
         );
         $this->checker->checkPostActions($event);
 

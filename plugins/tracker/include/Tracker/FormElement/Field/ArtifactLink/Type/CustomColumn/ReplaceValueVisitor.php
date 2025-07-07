@@ -44,9 +44,9 @@ use Tracker_FormElement_Field_Selectbox;
 use Tracker_FormElement_Field_String;
 use Tracker_FormElement_Field_SubmittedBy;
 use Tracker_FormElement_Field_SubmittedOn;
-use Tracker_FormElement_Field_Text;
 use Tracker_FormElement_FieldVisitor;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
+use Tuleap\Tracker\FormElement\Field\Text\TextField;
 use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
 
 /**
@@ -131,7 +131,7 @@ class ReplaceValueVisitor implements Tracker_FormElement_FieldVisitor
         return $purifier->purify($changeset_value->getText(), CODENDI_PURIFIER_STRIP_HTML);
     }
 
-    public function visitText(Tracker_FormElement_Field_Text $field)
+    public function visitText(TextField $field)
     {
         throw new UnsupportedFieldException();
     }

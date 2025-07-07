@@ -186,7 +186,7 @@ final class EventDescriptionRetrieverTest extends TestCase
         self::assertFalse($logger->hasDebugRecords());
     }
 
-    private function buildDescriptionFieldWithValue(?string $value, bool $user_can_read): \Tracker_FormElement_Field_Text
+    private function buildDescriptionFieldWithValue(?string $value, bool $user_can_read): \Tuleap\Tracker\FormElement\Field\Text\TextField
     {
         $description_field = TextFieldBuilder::aTextField(1)
             ->inTracker(TrackerTestBuilder::aTracker()->withProject(

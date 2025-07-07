@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\Field\Text;
 
-use Tracker_FormElement_Field_Text;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -129,9 +128,9 @@ final class TextValueValidatorTest extends TestCase
         self::assertTrue(Result::isOk($result));
     }
 
-    private function buildTextField(): Tracker_FormElement_Field_Text
+    private function buildTextField(): TextField
     {
-        $field = $this->createMock(Tracker_FormElement_Field_Text::class);
+        $field = $this->createMock(TextField::class);
         $field->method('getLabel')->willReturn('Text Field');
 
         return $field;

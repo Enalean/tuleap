@@ -25,10 +25,10 @@ namespace Tuleap\Tracker\Artifact\ChangesetValue;
 
 use Codendi_HTMLPurifier;
 use Tracker_Artifact_ChangesetValue_Text;
-use Tracker_FormElement_Field_Text;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\FormElement\Field\Text\TextField;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\TextFieldBuilder;
@@ -90,7 +90,7 @@ final class Tracker_Artifact_ChangesetValue_TextTest extends TestCase //phpcs:ig
         self::assertEquals("Problems with my code: example\n", $text->getContentAsText());
     }
 
-    private function getTextFieldWithProject(): Tracker_FormElement_Field_Text
+    private function getTextFieldWithProject(): TextField
     {
         $project = ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build();
         $tracker = TrackerTestBuilder::aTracker()->withProject($project)->build();

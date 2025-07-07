@@ -22,10 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Semantic;
 
-use Tracker_FormElement_Field_Text;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Tracker\Semantic\Title\RetrieveSemanticTitleField;
+use Tuleap\Tracker\FormElement\Field\Text\TextField;
 use Tuleap\Tracker\Semantic\Title\TrackerSemanticTitle;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -38,9 +37,9 @@ final class ArtifactCannotBeCreatedReasonsGetterTest extends TestCase
 {
     private VerifySubmissionPermissionStub $can_submit_artifact_verifier;
     private RetrieveUsedFieldsStub $used_fields_retriever;
-    private RetrieveSemanticTitleField $title_field_retriever;
-    private Tracker_FormElement_Field_Text $semantic_title_field;
+    private TextField $semantic_title_field;
     private \Tuleap\Tracker\Tracker $tracker;
+    private RetrieveSemanticTitleFieldStub $title_field_retriever;
 
     protected function setUp(): void
     {
@@ -117,7 +116,7 @@ final class ArtifactCannotBeCreatedReasonsGetterTest extends TestCase
 
     public function testItFillsTheReasonCollectionWhenTheUserCannotSubmitTheTitleField(): void
     {
-        $form_element = $this->createMock(Tracker_FormElement_Field_Text::class);
+        $form_element = $this->createMock(TextField::class);
         $form_element->method('userCanSubmit')->willReturn(false);
         $form_element->method('getLabel')->willReturn('Title');
         $form_element->method('getId')->willReturn(15);

@@ -29,7 +29,7 @@ final class RetrieveSemanticDescriptionFieldStub implements RetrieveSemanticDesc
 {
     private int $call_count;
 
-    private function __construct(private readonly ?\Tracker_FormElement_Field_Text $field_text)
+    private function __construct(private readonly ?\Tuleap\Tracker\FormElement\Field\Text\TextField $field_text)
     {
         $this->call_count = 0;
     }
@@ -39,12 +39,12 @@ final class RetrieveSemanticDescriptionFieldStub implements RetrieveSemanticDesc
         return new self(null);
     }
 
-    public static function withTextField(\Tracker_FormElement_Field_Text $field_text): self
+    public static function withTextField(\Tuleap\Tracker\FormElement\Field\Text\TextField $field_text): self
     {
         return new self($field_text);
     }
 
-    public function fromTracker(Tracker $tracker): ?\Tracker_FormElement_Field_Text
+    public function fromTracker(Tracker $tracker): ?\Tuleap\Tracker\FormElement\Field\Text\TextField
     {
         $this->call_count++;
         return $this->field_text;

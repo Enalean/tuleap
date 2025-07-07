@@ -22,10 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Semantic\Title;
 
-use Tracker_FormElement_Field_Text;
+use Tuleap\Tracker\FormElement\Field\Text\TextField;
 use Tuleap\Tracker\Tracker;
 
 interface RetrieveSemanticTitleField
 {
-    public function fromTracker(Tracker $tracker): ?Tracker_FormElement_Field_Text;
+    public function fromTracker(Tracker $tracker): ?TextField;
 }

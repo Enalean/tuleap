@@ -116,9 +116,9 @@ final class AdminPresenterBuilderTest extends TestCase
         );
     }
 
-    private function getFieldWithIdAndLabel(int $id, $label): \Tracker_FormElement_Field_Text
+    private function getFieldWithIdAndLabel(int $id, $label): \Tuleap\Tracker\FormElement\Field\Text\TextField
     {
-        return new \Tracker_FormElement_Field_Text(
+        return new \Tuleap\Tracker\FormElement\Field\Text\TextField(
             $id,
             $this->tracker->getId(),
             1,

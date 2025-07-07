@@ -29,8 +29,8 @@ use Tracker_FormElement_Container_Column;
 use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Tracker_FormElement_Field_Selectbox;
-use Tracker_FormElement_Field_Text;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\FormElement\Field\Text\TextField;
 use Tuleap\Tracker\Test\Builders\Fields\ColumnContainerBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
@@ -55,11 +55,11 @@ final class TrackerXMLFieldMappingFromExistingTrackerTest extends TestCase
     private Tracker_FormElement_Container_Column $column_2;
     private Tracker_FormElement_Container_Column $column_3;
     private Tracker_FormElement_Container_Column $column_4;
-    private Tracker_FormElement_Field_Text $text_value_1;
-    private Tracker_FormElement_Field_Text $text_value_2;
-    private Tracker_FormElement_Field_Text $text_value_3;
-    private Tracker_FormElement_Field_Text $text_value_4;
-    private Tracker_FormElement_Field_Text $text_value_5;
+    private TextField $text_value_1;
+    private TextField $text_value_2;
+    private TextField $text_value_3;
+    private TextField $text_value_4;
+    private TextField $text_value_5;
 
     public function setUp(): void
     {
@@ -211,7 +211,7 @@ final class TrackerXMLFieldMappingFromExistingTrackerTest extends TestCase
         return ListStaticValueBuilder::aStaticValue($label)->build();
     }
 
-    private function buildATextField(string $name): Tracker_FormElement_Field_Text
+    private function buildATextField(string $name): TextField
     {
         $text_value     = TextFieldBuilder::aTextField(85)->withName($name)->build();
         $this->fields[] = $text_value;

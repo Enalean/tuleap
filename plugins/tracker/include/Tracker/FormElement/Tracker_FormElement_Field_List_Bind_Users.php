@@ -21,8 +21,8 @@
 
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindListUserValueGetter;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindParameters;
-use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindVisitor;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindUsersDao;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindVisitor;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\PlatformUsersGetterSingleton;
 use Tuleap\Tracker\Import\Spotter;
 use Tuleap\Tracker\REST\FieldListBindUserValueRepresentation;
@@ -764,7 +764,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
     public function testImport()
     {
         if (parent::testImport()) {
-            if (static::class == 'Tracker_FormElement_Field_Text') {
+            if (static::class == 'Tuleap\Tracker\FormElement\Field\Text\TextField') {
                 if (! (isset($this->default_properties['rows']) && isset($this->default_properties['cols']))) {
                     var_dump($this, 'Properties must be "rows" and "cols"');
                     return false;

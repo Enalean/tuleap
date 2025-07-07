@@ -63,7 +63,7 @@ final readonly class RichTextareaConfiguration
         \Tuleap\Tracker\Tracker $tracker,
         ?Artifact $artifact,
         \PFUser $user,
-        \Tracker_FormElement_Field_Text $field,
+        \Tuleap\Tracker\FormElement\Field\Text\TextField $field,
         string $content,
     ): self {
         return new self(

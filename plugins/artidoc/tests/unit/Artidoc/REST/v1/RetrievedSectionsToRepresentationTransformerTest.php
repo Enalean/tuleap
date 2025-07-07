@@ -27,7 +27,6 @@ use PHPUnit\Framework\Attributes\TestWith;
 use Tracker_Artifact_Changeset;
 use Tracker_FormElement_Field_File;
 use Tracker_FormElement_Field_String;
-use Tracker_FormElement_Field_Text;
 use Tuleap\Artidoc\Adapter\Document\ArtidocDocument;
 use Tuleap\Artidoc\Adapter\Document\Section\RequiredSectionInformationCollector;
 use Tuleap\Artidoc\Document\Field\ConfiguredFieldCollection;
@@ -51,6 +50,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\UploadDataAttributesForRichTextEditorBuilder;
+use Tuleap\Tracker\FormElement\Field\Text\TextField;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFileFullRepresentation;
 use Tuleap\Tracker\REST\Artifact\FileInfoRepresentation;
 use Tuleap\Tracker\Semantic\Description\RetrieveSemanticDescriptionField;
@@ -134,7 +134,7 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
     private function getArtifact(
         int $id,
         Tracker_FormElement_Field_String $title,
-        Tracker_FormElement_Field_Text $description_field,
+        TextField $description_field,
         string $format,
     ): Artifact {
         $artifact = ArtifactTestBuilder::anArtifact($id)

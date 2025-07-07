@@ -31,7 +31,6 @@ use Tracker_FormElement_Field_Date;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Tracker_FormElement_Field_String;
-use Tracker_FormElement_Field_Text;
 use Tracker_FormElementFactory;
 use Tracker_Migration_V3;
 use Tracker_Report_Renderer_Table;
@@ -41,6 +40,7 @@ use Tuleap\DB\DBFactory;
 use Tuleap\Disposable\Dispose;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\Helpers\CodendiLogSwitcher;
+use Tuleap\Tracker\FormElement\Field\Text\TextField;
 use Tuleap\Tracker\Semantic\TrackerSemanticFactory;
 use Tuleap\Tracker\Tracker;
 
@@ -232,7 +232,7 @@ final class DefectTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
     private function checkItHasATextFieldDescription(): void
     {
         $field = $this->form_element_factory->getFormElementByName($this->defect_tracker->getId(), 'details');
-        self::assertInstanceOf(Tracker_FormElement_Field_Text::class, $field);
+        self::assertInstanceOf(TextField::class, $field);
         self::assertSame('details', $field->getName());
         self::assertSame('Original Submission', $field->getLabel());
         self::assertFalse($field->isRequired());

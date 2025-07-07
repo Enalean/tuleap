@@ -25,9 +25,9 @@ namespace Tuleap\Tracker;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_PermissionsOnArtifact;
-use Tracker_FormElement_Field_Text;
 use Tracker_FormElementFactory;
 use Tuleap\GlobalLanguageMock;
+use Tuleap\Tracker\FormElement\Field\Text\TextField;
 use Tuleap\Tracker\Masschange\MasschangeDataValueExtractor;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -83,12 +83,12 @@ final class MasschangeDataValueExtractorTest extends \Tuleap\Test\PHPUnit\TestCa
     {
         return [
             'Field with an update' => [
-                Tracker_FormElement_Field_Text::class,
+                TextField::class,
                 'Value01',
                 true,
             ],
             'Field without an update' => [
-                Tracker_FormElement_Field_Text::class,
+                TextField::class,
                 'Unchanged',
                 false,
             ],

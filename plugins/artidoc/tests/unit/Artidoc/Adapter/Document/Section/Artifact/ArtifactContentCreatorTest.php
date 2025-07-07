@@ -25,7 +25,6 @@ namespace Tuleap\Artidoc\Adapter\Document\Section\Artifact;
 use Luracast\Restler\RestException;
 use PFUser;
 use Tracker_FormElement_Field_String;
-use Tracker_FormElement_Field_Text;
 use Tuleap\Artidoc\Adapter\Document\ArtidocDocument;
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\Artidoc\Domain\Document\Section\Artifact\ArtifactContent;
@@ -35,6 +34,7 @@ use Tuleap\NeverThrow\Result;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\FormElement\Field\Text\TextField;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\FileFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
@@ -55,8 +55,8 @@ final class ArtifactContentCreatorTest extends TestCase
     private PFUser $user;
     private Tracker_FormElement_Field_String $readonly_title_field;
     private Tracker_FormElement_Field_String $submitable_title_field;
-    private Tracker_FormElement_Field_Text $readonly_description_field;
-    private Tracker_FormElement_Field_Text $submitable_description_field;
+    private TextField $readonly_description_field;
+    private TextField $submitable_description_field;
     private ArtidocWithContext $artidoc;
     private \Tuleap\Tracker\Tracker $tracker;
 
@@ -394,7 +394,7 @@ final class ArtifactContentCreatorTest extends TestCase
             ->build();
     }
 
-    private function getTextField(int $id, bool $submittable): Tracker_FormElement_Field_Text
+    private function getTextField(int $id, bool $submittable): TextField
     {
         return TextFieldBuilder::aTextField($id)
             ->withSubmitPermission($this->user, $submittable)

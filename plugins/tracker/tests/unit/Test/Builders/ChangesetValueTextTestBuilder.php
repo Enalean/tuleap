@@ -24,7 +24,7 @@ namespace Tuleap\Tracker\Test\Builders;
 
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue_Text;
-use Tracker_FormElement_Field_Text;
+use Tuleap\Tracker\FormElement\Field\Text\TextField;
 
 final class ChangesetValueTextTestBuilder
 {
@@ -34,14 +34,14 @@ final class ChangesetValueTextTestBuilder
     private function __construct(
         private readonly int $id,
         private readonly Tracker_Artifact_Changeset $changeset,
-        private readonly Tracker_FormElement_Field_Text $field,
+        private readonly TextField $field,
     ) {
     }
 
     public static function aValue(
         int $id,
         Tracker_Artifact_Changeset $changeset,
-        Tracker_FormElement_Field_Text $field,
+        TextField $field,
     ): self {
         return new self($id, $changeset, $field);
     }

@@ -22,9 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Semantic\Title;
 
-use Tracker_FormElement_Field_Text;
 use Tuleap\Option\Option;
 use Tuleap\Tracker\FormElement\Field\RetrieveFieldById;
+use Tuleap\Tracker\FormElement\Field\Text\TextField;
 use Tuleap\Tracker\Tracker;
 
 final readonly class SemanticTitleFieldRetriever implements RetrieveSemanticTitleField
@@ -35,7 +35,7 @@ final readonly class SemanticTitleFieldRetriever implements RetrieveSemanticTitl
     ) {
     }
 
-    public function fromTracker(Tracker $tracker): ?Tracker_FormElement_Field_Text
+    public function fromTracker(Tracker $tracker): ?TextField
     {
         return $this->search_title_field->searchByTrackerId($tracker->getId())
             ->andThen(fn(int $field_id) => Option::fromNullable($this->retrieve_field_by_id->getFieldById($field_id)))

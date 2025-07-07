@@ -264,9 +264,9 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    private function getTextField(int $id, string $label): \Tracker_FormElement_Field_Text
+    private function getTextField(int $id, string $label): \Tuleap\Tracker\FormElement\Field\Text\TextField
     {
-        return new \Tracker_FormElement_Field_Text(
+        return new \Tuleap\Tracker\FormElement\Field\Text\TextField(
             $id,
             self::PROGRAM_INCREMENT_TRACKER_ID,
             1,

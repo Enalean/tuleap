@@ -35,7 +35,7 @@ final readonly class SemanticDescriptionFieldRetriever implements RetrieveSemant
     ) {
     }
 
-    public function fromTracker(Tracker $tracker): ?\Tracker_FormElement_Field_Text
+    public function fromTracker(Tracker $tracker): ?\Tuleap\Tracker\FormElement\Field\Text\TextField
     {
         return $this->search_description_field->searchByTrackerId($tracker->getId())
             ->andThen(function (int $field_id) {

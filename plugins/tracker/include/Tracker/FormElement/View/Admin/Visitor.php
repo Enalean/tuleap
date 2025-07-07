@@ -20,6 +20,7 @@
 use Tuleap\JSONHeader;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldAdmin;
+use Tuleap\Tracker\FormElement\Field\Text\TextField;
 use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
 use Tuleap\Tracker\FormElement\View\Admin\Field\Computed;
 
@@ -115,7 +116,7 @@ class Tracker_FormElement_View_Admin_Visitor implements Tracker_FormElement_Visi
         $this->visitField($field);
     }
 
-    public function visitText(Tracker_FormElement_Field_Text $field)
+    public function visitText(TextField $field)
     {
         $this->visitField($field);
     }

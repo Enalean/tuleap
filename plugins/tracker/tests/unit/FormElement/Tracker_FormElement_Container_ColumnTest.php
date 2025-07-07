@@ -28,8 +28,8 @@ use SimpleXMLElement;
 use Tracker_FormElement_Container_Column;
 use Tracker_FormElement_Field_Float;
 use Tracker_FormElement_Field_String;
-use Tracker_FormElement_Field_Text;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\FormElement\Field\Text\TextField;
 use Tuleap\Tracker\Test\Builders\Fields\ColumnContainerBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
 
@@ -55,7 +55,7 @@ final class Tracker_FormElement_Container_ColumnTest extends TestCase // phpcs:i
     {
         $field_01 = $this->createMock(Tracker_FormElement_Field_String::class);
         $field_02 = $this->createMock(Tracker_FormElement_Field_Float::class);
-        $field_03 = $this->createMock(Tracker_FormElement_Field_Text::class);
+        $field_03 = $this->createMock(TextField::class);
 
         $container_column = $this->createPartialMock(Tracker_FormElement_Container_Column::class, ['getAllFormElements']);
         $container_column->method('getAllFormElements')->willReturn([$field_01, $field_02, $field_03]);

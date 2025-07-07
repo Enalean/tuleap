@@ -63,7 +63,6 @@ use Tracker_FormElement;
 use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_BindFactory;
-use Tracker_FormElement_Field_Text;
 use Tracker_FormElementFactory;
 use Tracker_GeneralSettings_Presenter;
 use Tracker_GlobalNotificationDao;
@@ -187,6 +186,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeIsChildLinkRetriever;
 use Tuleap\Tracker\FormElement\Field\Date\CSVFormatter;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
 use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
+use Tuleap\Tracker\FormElement\Field\Text\TextField;
 use Tuleap\Tracker\FormElement\View\Admin\DisplayAdminFormElementsWarningsEvent;
 use Tuleap\Tracker\Hierarchy\HierarchyController;
 use Tuleap\Tracker\Hierarchy\HierarchyDAO;
@@ -3141,9 +3141,9 @@ class Tracker implements Tracker_Dispatchable_Interface
     /**
      * Return the title field, or null if no title field defined
      *
-     * @return ?Tracker_FormElement_Field_Text the title field, or null if not defined
+     * @return ?TextField the title field, or null if not defined
      */
-    public function getTitleField(): ?Tracker_FormElement_Field_Text
+    public function getTitleField(): ?TextField
     {
         return CachedSemanticTitleFieldRetriever::instance()->fromTracker($this);
     }

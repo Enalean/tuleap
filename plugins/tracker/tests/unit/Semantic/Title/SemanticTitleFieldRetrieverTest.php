@@ -23,9 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Semantic\Title;
 
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
-use Tracker_FormElement_Field_Text;
 use Tuleap\Option\Option;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\FormElement\Field\Text\TextField;
 use Tuleap\Tracker\Test\Builders\Fields\TextFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveFieldByIdStub;
@@ -36,7 +36,7 @@ use function Psl\Type\int;
 #[DisableReturnValueGenerationForTestDoubles]
 final class SemanticTitleFieldRetrieverTest extends TestCase
 {
-    private Tracker_FormElement_Field_Text $title_field;
+    private TextField $title_field;
     private Tracker $tracker;
 
     protected function setUp(): void

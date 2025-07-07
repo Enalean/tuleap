@@ -44,7 +44,7 @@ final class DefinitionRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $user = UserTestBuilder::aUser()->build();
 
-        $field = $this->createMock(\Tracker_FormElement_Field_Text::class);
+        $field = $this->createMock(\Tuleap\Tracker\FormElement\Field\Text\TextField::class);
 
         $value = $this->createMock(\Tracker_Artifact_ChangesetValue_Text::class);
         $value->method('getText')->willReturn('description');

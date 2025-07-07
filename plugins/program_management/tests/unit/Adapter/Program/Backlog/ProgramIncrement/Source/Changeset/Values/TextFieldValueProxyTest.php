@@ -54,11 +54,11 @@ final class TextFieldValueProxyTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertSame('text', $value->getFormat());
     }
 
-    private function getTextField(): \Tracker_FormElement_Field_Text
+    private function getTextField(): \Tuleap\Tracker\FormElement\Field\Text\TextField
     {
         $project = ProjectTestBuilder::aProject()->withId(115)->build();
         $tracker = TrackerTestBuilder::aTracker()->withProject($project)->build();
-        $field   = new \Tracker_FormElement_Field_Text(
+        $field   = new \Tuleap\Tracker\FormElement\Field\Text\TextField(
             168,
             84,
             1,

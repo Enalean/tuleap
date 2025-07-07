@@ -29,7 +29,7 @@ final class CachedSemanticDescriptionFieldRetriever implements RetrieveSemanticD
 {
     private static ?self $instance = null;
     /**
-     * @var array<int, \Tracker_FormElement_Field_Text | null>
+     * @var array<int, \Tuleap\Tracker\FormElement\Field\Text\TextField | null>
      */
     private array $semantics_cache = [];
 
@@ -46,7 +46,7 @@ final class CachedSemanticDescriptionFieldRetriever implements RetrieveSemanticD
     {
     }
 
-    public function fromTracker(Tracker $tracker): ?\Tracker_FormElement_Field_Text
+    public function fromTracker(Tracker $tracker): ?\Tuleap\Tracker\FormElement\Field\Text\TextField
     {
         if (isset($this->semantics_cache[$tracker->getId()])) {
             return $this->semantics_cache[$tracker->getId()];

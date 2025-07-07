@@ -19,6 +19,25 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\Tracker\FormElement\Field\Text;
+
+use Codendi_HTMLPurifier;
+use EventManager;
+use Feedback;
+use LogicException;
+use PFUser;
+use ReferenceManager;
+use TemplateRendererFactory;
+use Tracker_Artifact_Changeset;
+use Tracker_Artifact_ChangesetValue;
+use Tracker_Artifact_ChangesetValue_Text;
+use Tracker_ArtifactFactory;
+use Tracker_FormElement_Field_Alphanum;
+use Tracker_FormElement_FieldVisitor;
+use Tracker_FormElementFactory;
+use Tracker_Report;
+use Tracker_Report_Criteria;
+use Tracker_Report_Criteria_Text_ValueDao;
 use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\Markdown\EnhancedCodeBlockExtension;
 use Tuleap\NeverThrow\Fault;
@@ -32,8 +51,6 @@ use Tuleap\Tracker\Artifact\FileUploadDataProvider;
 use Tuleap\Tracker\Artifact\RichTextareaConfiguration;
 use Tuleap\Tracker\Artifact\RichTextareaProvider;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
-use Tuleap\Tracker\FormElement\Field\Text\TextValueDao;
-use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
 use Tuleap\Tracker\FormElement\FieldContentIndexer;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\DeleteSpecificProperties;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\DuplicateSpecificProperties;
@@ -46,12 +63,12 @@ use Tuleap\Tracker\Report\Query\ParametrizedFrom;
 use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
 use Tuleap\Tracker\Semantic\Title\CachedSemanticTitleFieldRetriever;
+use UserManager;
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
-class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
+class TextField extends Tracker_FormElement_Field_Alphanum
 {
     public array $default_properties = [
-        'rows'      => [
+        'rows'          => [
             'value' => 10,
             'type'  => 'string',
             'size'  => 3,
@@ -301,9 +318,9 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
     /**
      * Fetch the html code to display the field value in artifact
      *
-     * @param Artifact                        $artifact         The artifact
-     * @param Tracker_Artifact_ChangesetValue $value            The actual value of the field
-     * @param array                           $submitted_values The value already submitted by the user
+     * @param Artifact $artifact The artifact
+     * @param Tracker_Artifact_ChangesetValue $value The actual value of the field
+     * @param array $submitted_values The value already submitted by the user
      */
     protected function fetchArtifactValue(
         Artifact $artifact,
@@ -351,7 +368,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
         $hp = Codendi_HTMLPurifier::instance();
 
         $renderer_factory       = TemplateRendererFactory::build();
-        $renderer               = $renderer_factory->getRenderer(__DIR__ . '/../../Artifact');
+        $renderer               = $renderer_factory->getRenderer(__DIR__ . '/../../../Artifact');
         $rich_textarea_provider = new RichTextareaProvider(
             new \Tuleap\Tracker\Artifact\UploadDataAttributesForRichTextEditorBuilder(
                 new FileUploadDataProvider($this->getFrozenFieldDetector(), Tracker_FormElementFactory::instance())
@@ -380,7 +397,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
         return $html;
     }
 
-     /**
+    /**
      * Fetch data to display the field value in mail
      */
     public function fetchMailArtifactValue(
@@ -408,8 +425,8 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
     /**
      * Fetch the html code to display the field value in artifact in read only mode
      *
-     * @param Artifact                        $artifact The artifact
-     * @param Tracker_Artifact_ChangesetValue $value    The actual value of the field
+     * @param Artifact $artifact The artifact
+     * @param Tracker_Artifact_ChangesetValue $value The actual value of the field
      *
      * @return string
      */
@@ -445,7 +462,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
             $content = $this->getProperty('default_value');
         }
         $html .= '<textarea data-test="text-field-admin-value" rows="' . $this->getProperty('rows') . '" cols="' . $this->getProperty('cols') . '" autocomplete="off">';
-        $html .=  $hp->purify($content, CODENDI_PURIFIER_CONVERT_HTML);
+        $html .= $hp->purify($content, CODENDI_PURIFIER_CONVERT_HTML);
         $html .= '</textarea>';
         return $html;
     }
@@ -499,7 +516,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
     public function testImport()
     {
         if (parent::testImport()) {
-            if (static::class == 'Tracker_FormElement_Field_Text') {
+            if (static::class == 'Tuleap\Tracker\FormElement\Field\Text\TextField') {
                 if (! (isset($this->default_properties['rows']) && isset($this->default_properties['cols']))) {
                     var_dump($this, 'Properties must be "rows" and "cols"');
                     return false;
@@ -518,7 +535,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
      * Validate a value
      *
      * @param Artifact $artifact The artifact
-     * @param mixed    $value    data coming from the request. May be string or array.
+     * @param mixed $value data coming from the request. May be string or array.
      *
      * @return bool true if the value is considered ok
      */
@@ -542,8 +559,8 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
     /**
      * Get the value of this field
      *
-     * @param Tracker_Artifact_Changeset $changeset   The changeset (needed in only few cases like 'lud' field)
-     * @param int                        $value_id    The id of the value
+     * @param Tracker_Artifact_Changeset $changeset The changeset (needed in only few cases like 'lud' field)
+     * @param int $value_id The id of the value
      * @param bool $has_changed If the changeset value has changed from the rpevious one
      *
      * @return Tracker_Artifact_ChangesetValue or null if not found
@@ -626,14 +643,14 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
     private function isFormatValid(?string $format): bool
     {
         return isset($format)
-            && in_array(
-                $format,
-                [
-                    Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT,
-                    Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT,
-                    Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT,
-                ]
-            );
+               && in_array(
+                   $format,
+                   [
+                       Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT,
+                       Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT,
+                       Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT,
+                   ]
+               );
     }
 
     protected function saveValue(
@@ -699,8 +716,8 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
     /**
      * Validate a required field
      *
-     * @param Artifact $artifact        The artifact to check
-     * @param mixed    $submitted_value The submitted value
+     * @param Artifact $artifact The artifact to check
+     * @param mixed $submitted_value The submitted value
      */
     public function isValidRegardingRequiredProperty(Artifact $artifact, $submitted_value): bool
     {
