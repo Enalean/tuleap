@@ -40,6 +40,7 @@ describe("KeyboardNavigationManager", () => {
     beforeEach(async () => {
         const doc = document.implementation.createHTMLDocument();
         const source_select_box = doc.createElement("select");
+        const locale = "fr-FR";
         appendGroupedOptionsToSourceSelectBox(source_select_box);
 
         const { dropdown_list_element } = new BaseComponentRenderer(
@@ -56,6 +57,7 @@ describe("KeyboardNavigationManager", () => {
             {
                 gettext: (english: string) => english,
             } as GettextProvider,
+            locale,
         );
 
         dropdown_list = dropdown_list_element;

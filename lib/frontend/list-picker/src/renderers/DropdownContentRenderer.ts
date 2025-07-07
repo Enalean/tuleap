@@ -29,6 +29,7 @@ export class DropdownContentRenderer {
         private readonly dropdown_list_element: Element,
         private readonly items_map_manager: ItemsMapManager,
         private readonly gettext_provider: GettextProvider,
+        private readonly locale: string | undefined,
     ) {
         this.groups_map = new Map();
     }
@@ -57,10 +58,21 @@ export class DropdownContentRenderer {
             return;
         }
 
-        const lowercase_query = filter_query.toLowerCase();
-        const matching_items = this.items_map_manager.getListPickerItems().filter((item) => {
-            return item.label.toLowerCase().includes(lowercase_query);
+        const normalized_filter_query = this.getNormalizedString(filter_query);
+        const collator = new Intl.Collator(this.locale, {
+            sensitivity: "base",
+            usage: "search",
         });
+
+        const matching_items = this.items_map_manager
+            .getListPickerItems()
+            .filter((item) =>
+                this.isMatchingIntlCollatorSearch(
+                    this.getNormalizedString(item.label),
+                    normalized_filter_query,
+                    collator,
+                ),
+            );
 
         if (matching_items.length === 0) {
             this.dropdown_list_element.appendChild(this.createEmptyStateQueryDidNotMatch());
@@ -81,6 +93,36 @@ export class DropdownContentRenderer {
                 this.dropdown_list_element.appendChild(item.element);
             }
         });
+    }
+
+    private getNormalizedString(string: string): string {
+        return string.normalize("NFC");
+    }
+
+    private isMatchingIntlCollatorSearch(
+        haystack: string,
+        needle: string,
+        collator: Intl.Collator,
+    ): boolean {
+        if (needle.length === 0) {
+            return false;
+        }
+
+        return this.isSubstringFoundWithCollator(haystack, needle, collator);
+    }
+
+    private isSubstringFoundWithCollator(
+        haystack: string,
+        needle: string,
+        collator: Intl.Collator,
+    ): boolean {
+        for (let i = 0; i <= haystack.length - needle.length; i++) {
+            const substring = haystack.substring(i, i + needle.length);
+            if (collator.compare(substring, needle) === 0) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public renderAfterDependenciesUpdate(): void {
