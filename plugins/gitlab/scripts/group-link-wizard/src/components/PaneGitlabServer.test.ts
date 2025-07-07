@@ -40,7 +40,7 @@ vi.mock("vue-router");
 const server_url = "https://example.com/";
 const token = "glpat-a1e2i3o4u5y6";
 
-function getWrapper(state: StateTree = {}): VueWrapper<InstanceType<typeof PaneGitlabServer>> {
+function getWrapper(state: StateTree = {}): VueWrapper {
     return shallowMount(PaneGitlabServer, {
         global: {
             ...getGlobalTestOptions(state),
@@ -48,9 +48,7 @@ function getWrapper(state: StateTree = {}): VueWrapper<InstanceType<typeof PaneG
     });
 }
 
-function getFetchGroupsButton(
-    wrapper: VueWrapper<InstanceType<typeof PaneGitlabServer>>,
-): HTMLButtonElement {
+function getFetchGroupsButton(wrapper: VueWrapper): HTMLButtonElement {
     const fetch_groups_button = wrapper.get("[data-test=gitlab-fetch-groups-button]").element;
     if (!(fetch_groups_button instanceof HTMLButtonElement)) {
         throw new Error("Could not find the fetch groups button");
@@ -148,7 +146,7 @@ describe("PaneGitlabServer", () => {
     });
 
     describe("stores", () => {
-        let wrapper: VueWrapper<InstanceType<typeof PaneGitlabServer>>;
+        let wrapper: VueWrapper;
 
         beforeEach(() => {
             const group_1 = {

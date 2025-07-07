@@ -32,7 +32,7 @@ import type { GroupsState } from "../stores/types";
 
 vi.mock("vue-router");
 
-function getWrapper(groups_state: GroupsState): VueWrapper<InstanceType<typeof PaneGitlabGroup>> {
+function getWrapper(groups_state: GroupsState): VueWrapper {
     return shallowMount(PaneGitlabGroup, {
         global: {
             stubs: ["router-link"],
