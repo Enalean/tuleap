@@ -39,7 +39,10 @@
 </template>
 
 <script setup lang="ts">
+import { useGettext } from "vue3-gettext";
 import { useStore } from "../../../stores/root";
+
+const { $gettext } = useGettext();
 
 defineProps<{
     field_description_value: string;

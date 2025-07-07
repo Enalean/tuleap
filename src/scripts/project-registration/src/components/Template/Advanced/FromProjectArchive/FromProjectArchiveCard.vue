@@ -62,10 +62,12 @@
 </template>
 
 <script setup lang="ts">
+import { useGettext } from "vue3-gettext";
 import FromProjectSvg from "./FromProjectSvg.vue";
 import type { AdvancedOptions, ProjectArchiveTemplateData } from "../../../../type";
 import { useStore } from "../../../../stores/root";
 
+const { $gettext } = useGettext();
 const root_store = useStore();
 
 const option_name = "from_project_archive";

@@ -80,14 +80,14 @@ import type { ExternalTemplateCategory, ExternalTemplateData } from "../../type"
 import { useStore } from "../../stores/root";
 import { useGettext } from "vue3-gettext";
 
+const { $gettext } = useGettext();
+
 const CATEGORY_TULEAP = "Tuleap";
 const CATEGORY_ACME = "ACME";
 const CATEGORY_ADVANCED = "Advanced";
 
 const external_templates_categories: Ref<ExternalTemplateCategory[]> = ref([]);
 const categorised_external_templates_map: Ref<Map<string, ExternalTemplateData[]>> = ref(new Map());
-
-const gettext_provider = useGettext();
 
 const root_store = useStore();
 onMounted(() => {
@@ -169,7 +169,7 @@ function getExternalCategoryClasses(category: ExternalTemplateCategory): string[
 
 const platform_template_name = computed((): string => {
     if (root_store.company_name === "Tuleap") {
-        return gettext_provider.$gettext("Custom templates");
+        return $gettext("Custom templates");
     }
     return root_store.company_name;
 });

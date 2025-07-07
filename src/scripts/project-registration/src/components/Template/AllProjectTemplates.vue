@@ -50,7 +50,10 @@
 </template>
 
 <script setup lang="ts">
+import { useGettext } from "vue3-gettext";
 import NewProjectBoxes from "./NewProjectBoxesSvg.vue";
 import TemplateFooter from "./TemplateFooter.vue";
 import TemplateSelection from "./TemplateSelection.vue";
+
+const { $gettext } = useGettext();
 </script>

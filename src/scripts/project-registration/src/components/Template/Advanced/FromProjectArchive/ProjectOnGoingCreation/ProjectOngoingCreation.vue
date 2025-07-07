@@ -37,7 +37,7 @@
 
 <script setup lang="ts">
 import ProjectOngoingCreationSvg from "./ProjectOngoingCreationSvg.vue";
-import { computed, onMounted } from "vue";
+import { onMounted } from "vue";
 import { useGettext } from "vue3-gettext";
 import type { ResultAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
@@ -46,6 +46,7 @@ import type { MinimalProjectRepresentation } from "../../../../../type";
 import { useStore } from "../../../../../stores/root";
 import { redirectToUrl } from "../../../../../helpers/location-helper";
 
+const { $gettext } = useGettext();
 const root_store = useStore();
 
 onMounted(() => {
@@ -90,9 +91,5 @@ function getProject(id: number): ResultAsync<MinimalProjectRepresentation, Fault
     return getJSON<MinimalProjectRepresentation>(uri`/api/projects/${id}`);
 }
 
-const gettext_provider = useGettext();
-
-const message_creation = computed((): string => {
-    return gettext_provider.$gettext("You will receive an email when the project is created.");
-});
+const message_creation = $gettext("You will receive an email when the project is created.");
 </script>

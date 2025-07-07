@@ -75,11 +75,14 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
+import { useGettext } from "vue3-gettext";
 import type { AdvancedOptions } from "../../../../type";
 import SvgTemplate from "./SvgTemplate.vue";
 import UserProjectList from "./UserProjectList.vue";
 import { useStore } from "../../../../stores/root";
 const option_name: AdvancedOptions = "from_existing_user_project";
+
+const { $gettext } = useGettext();
 
 const is_loading_project_list = ref<boolean>(false);
 const has_error = ref<boolean>(false);

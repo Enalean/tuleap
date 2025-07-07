@@ -65,7 +65,7 @@ import { useGettext } from "vue3-gettext";
 
 const root_store = useStore();
 const element = ref<InstanceType<typeof Element>>();
-const gettext_provider = useGettext();
+const { $gettext } = useGettext();
 
 const list_picker_instance: Ref<ListPicker | null> = ref(null);
 
@@ -100,22 +100,22 @@ onBeforeUnmount((): void => {
 function translatedVisibilityDetails(visibility: string): string {
     switch (visibility) {
         case ACCESS_PUBLIC_UNRESTRICTED:
-            return gettext_provider.$gettext(
+            return $gettext(
                 "Project content is available to all authenticated users, including restricted users. Please note that more restrictive permissions might exist on some items.",
             );
         case ACCESS_PUBLIC:
-            return gettext_provider.$gettext(
+            return $gettext(
                 "Project content is available to all authenticated users. Please note that more restrictive permissions might exist on some items.",
             );
         case ACCESS_PRIVATE:
             if (root_store.are_restricted_users_allowed) {
-                return gettext_provider.$gettext(
+                return $gettext(
                     "Only project members can access project content. Restricted users can be added to the project.",
                 );
             }
-            return gettext_provider.$gettext("Only project members can access project content.");
+            return $gettext("Only project members can access project content.");
         case ACCESS_PRIVATE_WO_RESTRICTED:
-            return gettext_provider.$gettext(
+            return $gettext(
                 "Only project members can access project content. Restricted users can NOT be added in this project.",
             );
         default:

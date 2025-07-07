@@ -79,7 +79,7 @@ import emitter from "../../../helpers/emitter";
 const root_store = useStore();
 
 const shortname = ref<InstanceType<typeof HTMLFormElement>>();
-const gettext_provider = useGettext();
+const { $gettext } = useGettext();
 
 const project_name = ref("");
 const slugified_project_name = ref("");
@@ -89,13 +89,11 @@ const is_in_edit_mode = ref(false);
 const min_project_length = ref(3);
 const max_project_length = ref(30);
 
-const error_project_short_name = gettext_provider.interpolate(
-    gettext_provider.$gettext(
-        "Project short name must have between %{ min } and %{ max } characters length. It can only contain alphanumerical characters and dashes. Must start with a letter.",
-    ),
+const error_project_short_name = $gettext(
+    "Project short name must have between %{ min } and %{ max } characters length. It can only contain alphanumerical characters and dashes. Must start with a letter.",
     {
-        min: min_project_length,
-        max: max_project_length,
+        min: String(min_project_length),
+        max: String(max_project_length),
     },
 );
 

@@ -40,12 +40,14 @@
 
 <script setup lang="ts">
 import { onMounted } from "vue";
+import { useGettext } from "vue3-gettext";
 import { useStore } from "../../stores/root";
 import ProjectApprovalSvg from "./ProjectApprovalSvg.vue";
 import { useRouter } from "../../helpers/use-router";
 
 const root_store = useStore();
 const router = useRouter();
+const { $gettext } = useGettext();
 
 onMounted(() => {
     if (!root_store.is_template_selected) {

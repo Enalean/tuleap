@@ -45,10 +45,12 @@
 
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
+import { useGettext } from "vue3-gettext";
 import { isElementInViewport } from "../../helpers/is-element-in-viewport";
 import { useStore } from "../../stores/root";
 import { useRouter } from "../../helpers/use-router";
 
+const { $gettext } = useGettext();
 const root_store = useStore();
 const element = ref<InstanceType<typeof Element>>();
 const router = useRouter();
