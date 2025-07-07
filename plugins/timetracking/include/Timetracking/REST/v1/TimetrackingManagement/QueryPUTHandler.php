@@ -42,7 +42,7 @@ final readonly class QueryPUTHandler
     public function handle(int $query_id, QueryPUTRepresentation $representation, \PFUser $user): Ok|Err
     {
         return $this->permission_checker->checkThatCurrentUserCanUpdateTheQuery($query_id, $user)
-            ->andThen(fn () => $this->user_list_builder->getUserList($representation->users))
+            ->andThen(fn () => $this->user_list_builder->getUserList($user, $representation->users))
             ->andThen(fn (UserList $users) => $this->save($query_id, $representation, $users));
     }
 

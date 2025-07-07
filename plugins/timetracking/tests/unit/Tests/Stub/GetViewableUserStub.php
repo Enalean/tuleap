@@ -20,9 +20,36 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Timetracking\REST\v1\TimetrackingManagement;
+namespace Tuleap\Timetracking\Tests\Stub;
 
-interface GetActiveUser
+use PFUser;
+use Tuleap\Timetracking\Widget\Management\GetViewableUser;
+
+final readonly class GetViewableUserStub implements GetViewableUser
 {
-    public function getActiveUser(int $user_id): ?\PFUser;
+    /**
+     * @param array<int, PFUser> $users
+     */
+    public function __construct(private array $users)
+    {
+    }
+
+    public function getViewableUser(PFUser $current_user, int $user_id): ?PFUser
+    {
+        if (! isset($this->users[$user_id])) {
+            return null;
+        }
+
+        return $this->users[$user_id];
+    }
+
+    public static function withViewableUsers(PFUser ...$users): self
+    {
+        $users_by_id = [];
+        foreach ($users as $user) {
+            $users_by_id[(int) $user->getId()] = $user;
+        }
+
+        return new self($users_by_id);
+    }
 }

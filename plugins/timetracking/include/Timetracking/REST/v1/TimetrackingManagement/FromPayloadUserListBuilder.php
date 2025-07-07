@@ -26,31 +26,50 @@ use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
+use Tuleap\Timetracking\Widget\Management\GetViewableUser;
 
 final readonly class FromPayloadUserListBuilder
 {
     public function __construct(
-        private GetActiveUser $check_that_user_is_active,
+        private GetViewableUser $check_that_user_is_active,
     ) {
     }
 
     /**
+     * @param QueryUserRepresentation[] $users
+     *
      * @return Ok<UserList>|Err<Fault>
      */
-    public function getUserList(array $users): Ok|Err
+    public function getUserList(\PFUser $current_user, array $users): Ok|Err
     {
-        $user_ids = [];
-        foreach ($users as $user_representation) {
-            $user_ids[] = $user_representation['id'];
-        }
+        $user_ids = $this->extractUserIds($users);
 
         foreach ($user_ids as $user_id) {
-            $user = $this->check_that_user_is_active->getActiveUser($user_id);
-            if (! $user) {
+            if (! $this->isUserIdValid($current_user, $user_id)) {
                 return Result::err(QueryInvalidUserIdFault::build($user_id));
             }
         }
 
         return Result::ok(new UserList($user_ids));
+    }
+
+    /**
+     * @param QueryUserRepresentation[] $users
+     */
+    private function extractUserIds(array $users): array
+    {
+        $user_ids = [];
+        foreach ($users as $user_representation) {
+            $user_ids[$user_representation->id] = true;
+        }
+
+        return array_keys($user_ids);
+    }
+
+    private function isUserIdValid(\PFUser $current_user, int $user_id): bool
+    {
+        $user = $this->check_that_user_is_active->getViewableUser($current_user, $user_id);
+
+        return $user !== null;
     }
 }
