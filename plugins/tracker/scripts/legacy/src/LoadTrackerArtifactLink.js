@@ -136,47 +136,21 @@ document.observe("dom:loaded", function () {
                     modified_date = new Date(child.last_modified_date);
 
                 additional_row.dataset.childOf = row_id;
-                /* eslint-disable no-multi-str */
-                // eslint-disable-next-line no-unsanitized/property
-                additional_row.innerHTML =
-                    ' \
-                    <td class="tracker_report_table_unlink"></td> \
-                    <td class="tracker-artifact-rollup-view" style="padding-left: ' +
-                    depth * 20 +
-                    'px;"> \
-                        <a class="direct-link-to-artifact" \
-                            href="' +
-                    child.html_url +
-                    '" \
-                            data-artifact-id="' +
-                    child.id +
-                    '" \
-                        >' +
-                    child.xref +
-                    "</a> \
-                    </td> \
-                    <td>" +
-                    child.project.label +
-                    "</td> \
-                    <td>" +
-                    child.tracker.label +
-                    "</td> \
-                    <td>" +
-                    child.title +
-                    "</td> \
-                    <td>" +
-                    child.status +
-                    "</td> \
-                    <td>" +
-                    formatDate(modified_date) +
-                    "</td> \
-                    <td>" +
-                    formatUser(child.submitted_by_user) +
-                    "</td> \
-                    <td>" +
-                    child.assignees.map(formatUser).join(", ") +
-                    "</td>";
-                /* eslint-enable no-multi-str */
+                additional_row.insert(`
+                    <td class="tracker_report_table_unlink"></td>
+                    <td class="tracker-artifact-rollup-view" style="padding-left: ${tuleap.escaper.html(depth) * 20} px;">
+                        <a class="direct-link-to-artifact" href="${tuleap.escaper.html(child.html_url)}" data-artifact-id="${tuleap.escaper.html(child.id)}">
+                            ${tuleap.escaper.html(child.xref)}
+                        </a>
+                    </td>
+                    <td>${tuleap.escaper.html(child.project.label)}</td>
+                    <td>${tuleap.escaper.html(child.tracker.label)}</td>
+                    <td>${tuleap.escaper.html(child.title)}</td>
+                    <td>${tuleap.escaper.html(child.status)}</td>
+                    <td>${formatDate(modified_date)}</td>
+                    <td>${formatUser(child.submitted_by_user)}</td>
+                    <td>${tuleap.escaper.html(child.assignees.map(formatUser).join(", "))}</td>
+                `);
 
                 if (next_row) {
                     tbody.insertBefore(additional_row, next_row);
@@ -211,21 +185,27 @@ document.observe("dom:loaded", function () {
         }
 
         function formatDate(date) {
-            return (
+            return tuleap.escaper.html(
                 date.getFullYear() +
-                "-" +
-                ("0" + date.getMonth()).substr(-2) +
-                "-" +
-                ("0" + date.getDay()).substr(-2) +
-                " " +
-                ("0" + date.getHours()).substr(-2) +
-                ":" +
-                ("0" + date.getMinutes()).substr(-2)
+                    "-" +
+                    ("0" + date.getMonth()).substr(-2) +
+                    "-" +
+                    ("0" + date.getDay()).substr(-2) +
+                    " " +
+                    ("0" + date.getHours()).substr(-2) +
+                    ":" +
+                    ("0" + date.getMinutes()).substr(-2),
             );
         }
 
         function formatUser(user_json) {
-            return '<a href="' + user_json.user_url + '"> ' + user_json.display_name + " </a>";
+            return (
+                '<a href="' +
+                tuleap.escaper.html(user_json.user_url) +
+                '"> ' +
+                tuleap.escaper.html(user_json.display_name) +
+                " </a>"
+            );
         }
     }
 
@@ -342,7 +322,7 @@ document.observe("dom:loaded", function () {
                 const renderer_panel = $("tracker-link-artifact-slow-way-content")
                     .up()
                     .down(".tracker_report_renderer");
-                renderer_panel.update(text);
+                renderer_panel.update(tuleap.escaper.html(text));
                 load_behavior_in_renderer_panel(renderer_panel);
 
                 return false;
@@ -499,16 +479,14 @@ document.observe("dom:loaded", function () {
                 location.href.toQueryParams().func == "new-artifact" ||
                 location.href.toQueryParams().func == "submit-artifact"
             ) {
-                input
-                    .up()
-                    .up()
-                    .insert(
-                        '<br /><em style="color:#666; font-size: 0.9em;">' +
-                            codendi.locales.tracker_artifact_link.advanced +
-                            "<br />" +
-                            input.title +
-                            "</em>",
-                    );
+                input.up().up().insert(`
+                        <br />
+                        <em style="color:#666; font-size: 0.9em;">
+                            ${tuleap.escaper.html(codendi.locales.tracker_artifact_link.advanced)}
+                        <br />
+                            ${tuleap.escaper.html(input.title)}
+                        </em>
+                    `);
             }
 
             if (
@@ -517,21 +495,23 @@ document.observe("dom:loaded", function () {
             ) {
                 if (!location.href.toQueryParams().modal) {
                     var link = new Element("a", {
-                        title: codendi.locales.tracker_artifact_link.select,
+                        title: tuleap.escaper.html(codendi.locales.tracker_artifact_link.select),
                     })
                         .addClassName("tracker-form-element-artifactlink-selector btn btn-small")
                         .update(
-                            '<img src="' + codendi.imgroot + 'ic/clipboard-search-result.png" />',
+                            '<img src="' +
+                                tuleap.escaper.html(codendi.imgroot) +
+                                'ic/clipboard-search-result.png" />',
                         );
 
                     var link_create = new Element("a", {
-                        title: codendi.locales.tracker_artifact_link.create,
+                        title: tuleap.escaper.html(codendi.locales.tracker_artifact_link.create),
                         href: "#",
                     })
                         .addClassName("tracker-form-element-artifactlink-selector btn btn-small")
                         .update(
                             '<img src="' +
-                                codendi.imgroot +
+                                tuleap.escaper.html(codendi.imgroot) +
                                 'ic/artifact-plus.png" style="vertical-align: middle;"/> ',
                         );
 
@@ -540,7 +520,7 @@ document.observe("dom:loaded", function () {
                     preview_button.classList.add("btn-small");
                     preview_button.classList.add("tracker-form-element-artifactlink-add");
                     preview_button.type = "button";
-                    preview_button.innerText = input.dataset.previewLabel;
+                    preview_button.innerText = tuleap.escaper.html(input.dataset.previewLabel);
                     preview_button.addEventListener("click", function () {
                         codendi.tracker.artifact.artifactLink.addTemporaryArtifactLinks();
                     });
@@ -551,21 +531,22 @@ document.observe("dom:loaded", function () {
                     input_append_element.insert(link).insert(link_create);
                     container.appendChild(preview_button);
                     container.insert(
-                        '<br /><em style="color:#666; font-size: 0.9em;">' + input.title + "</em>",
+                        '<br /><em style="color:#666; font-size: 0.9em;">' +
+                            tuleap.escaper.html(input.title) +
+                            "</em>",
                     );
                 }
             }
 
             if (location.href.toQueryParams().modal == 1) {
-                input
-                    .up()
-                    .insert(
-                        '<br /><em style="color:#666; font-size: 0.9em;">' +
-                            codendi.locales.tracker_artifact_link.advanced +
-                            "<br />" +
-                            input.title +
-                            "</em>",
-                    );
+                input.up().insert(`
+                        <br />
+                        <em style="color:#666; font-size: 0.9em;">
+                            ${tuleap.escaper.html(codendi.locales.tracker_artifact_link.advanced)}
+                        <br />
+                            ${tuleap.escaper.html(input.title)}
+                        </em>,
+                    `);
             }
 
             if (!link) {
@@ -612,7 +593,7 @@ document.observe("dom:loaded", function () {
                             ],
                             modal: 1,
                         }).toQueryString(),
-                    title: link.title,
+                    title: tuleap.escaper.html(link.title),
                     iframeEmbed: true,
                 });
 
