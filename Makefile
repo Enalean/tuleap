@@ -157,14 +157,14 @@ generate-mo: ## Compile translated strings into binary format
 	@tools/utils/generate-mo.sh `pwd`
 
 tests-rest: ## Run all REST tests. SETUP_ONLY=1 to disable auto run. PHP_VERSION to select the version of PHP to use (82,84). DB to select the database to use (mysql80,mysql84)
-	$(eval PHP_VERSION ?= 82)
+	$(eval PHP_VERSION ?= 84)
 	$(eval DB ?= mysql80)
 	$(eval SETUP_ONLY ?= 0)
 	$(eval TESTS_RESULT ?= ./test_results_rest_$(PHP_VERSION)_$(DB))
 	SETUP_ONLY="$(SETUP_ONLY)" TESTS_RESULT="$(TESTS_RESULT)" tests/rest/bin/run-compose.sh "$(PHP_VERSION)" "$(DB)"
 
 tests-db: ## Run all DB integration tests. SETUP_ONLY=1 to disable auto run. PHP_VERSION to select the version of PHP to use (82,84). DB to select the database to use (mysql80,mysql84). SEED to set the random seed order.
-	$(eval PHP_VERSION ?= 82)
+	$(eval PHP_VERSION ?= 84)
 	$(eval DB ?= mysql80)
 	$(eval SETUP_ONLY ?= 0)
 	SETUP_ONLY="$(SETUP_ONLY)" tests/integration/bin/run-compose.sh "$(PHP_VERSION)" "$(DB)"
@@ -204,13 +204,13 @@ run-as-owner:
 
 phpunit-ci:
 	$(eval COVERAGE_ENABLED ?= 1)
-	$(eval PHP_VERSION ?= 82)
+	$(eval PHP_VERSION ?= 84)
 	mkdir -p $(WORKSPACE)/results/ut-phpunit/php-$(PHP_VERSION)
 	@$(DOCKER) run --rm -v $(CURDIR):/tuleap:ro --network none -v $(WORKSPACE)/results/ut-phpunit/php-$(PHP_VERSION):/tmp/results ghcr.io/enalean/tuleap-test-phpunit:el9-php$(PHP_VERSION) make -C /tuleap TARGET="phpunit-ci-run COVERAGE_ENABLED=$(COVERAGE_ENABLED)" PHP=/opt/remi/php$(PHP_VERSION)/root/usr/bin/php run-as-owner
 
 .PHONY: tests-unit-php
 tests-unit-php: ## Run PHPUnit unit tests in a Docker container. PHP_VERSION to select the version of PHP to use (82, 84). FILES to run specific tests.
-	$(eval PHP_VERSION ?= 82)
+	$(eval PHP_VERSION ?= 84)
 	@$(DOCKER) run --rm -v $(CURDIR):/tuleap:ro --network none ghcr.io/enalean/tuleap-test-phpunit:el9-php$(PHP_VERSION) scl enable php$(PHP_VERSION) "make -C /tuleap phpunit FILES=$(FILES)"
 
 ifneq ($(origin SEED),undefined)
@@ -273,8 +273,8 @@ bash-web: ## Give a bash on web container
 
 .PHONY:pull-docker-images
 pull-docker-images: ## Pull all docker images used for development
-	@$(MAKE) --no-print-directory docker-pull-verify-keyless-gha IMAGE_NAME=ghcr.io/enalean/tuleap-test-phpunit:el9-php82
-	@$(MAKE) --no-print-directory docker-pull-verify-keyless-gha IMAGE_NAME=ghcr.io/enalean/tuleap-test-rest:el9-php82
+	@$(MAKE) --no-print-directory docker-pull-verify-keyless-gha IMAGE_NAME=ghcr.io/enalean/tuleap-test-phpunit:el9-php84
+	@$(MAKE) --no-print-directory docker-pull-verify-keyless-gha IMAGE_NAME=ghcr.io/enalean/tuleap-test-rest:el9-php84
 	@$(MAKE) --no-print-directory docker-pull-verify IMAGE_NAME=tuleap/tuleap-community-edition:latest KEY_PATH=tools/utils/signing-keys/tuleap-community.pub
 	@$(MAKE) --no-print-directory docker-pull-verify-keyless-gha IMAGE_NAME=ghcr.io/enalean/tuleap-aio-dev:el9-php84
 	@$(MAKE) --no-print-directory docker-pull-verify-keyless-gha IMAGE_NAME=ghcr.io/enalean/ldap:latest
