@@ -20,24 +20,11 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Timetracking\REST\v1\TimetrackingManagement;
+namespace Tuleap\Timetracking\Widget\Management;
 
-use Tuleap\User\RetrieveUserById;
+use PFUser;
 
-final readonly class ActiveUserRetriever implements GetActiveUser
+interface GetViewableUser
 {
-    public function __construct(
-        private RetrieveUserById $retrieve_user,
-    ) {
-    }
-
-    public function getActiveUser(int $user_id): ?\PFUser
-    {
-        $user = $this->retrieve_user->getUserById($user_id);
-        if (! $user || ! $user->isActive()) {
-            return null;
-        }
-
-        return $user;
-    }
+    public function getViewableUser(PFUser $current_user, int $user_id): ?\PFUser;
 }

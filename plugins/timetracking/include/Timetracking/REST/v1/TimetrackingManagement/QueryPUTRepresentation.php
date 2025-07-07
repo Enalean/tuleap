@@ -43,7 +43,7 @@ final class QueryPUTRepresentation
     public ?string $predefined_time_period = null;
 
     /**
-     * @var QueryUserRepresentation[] $users {@from body} {@required false}
+     * @var array $users {@type \Tuleap\Timetracking\REST\v1\TimetrackingManagement\QueryUserRepresentation} {@from body} {@required false}
      * @psalm-param QueryUserRepresentation[] $users
      */
     public array $users = [];

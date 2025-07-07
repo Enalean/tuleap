@@ -28,4 +28,12 @@ namespace Tuleap\Timetracking\REST\v1\TimetrackingManagement;
 final class QueryUserRepresentation
 {
     public int $id;
+
+    public static function fromId(int $id): QueryUserRepresentation
+    {
+        $query_user_representation     = new self();
+        $query_user_representation->id = $id;
+
+        return $query_user_representation;
+    }
 }
