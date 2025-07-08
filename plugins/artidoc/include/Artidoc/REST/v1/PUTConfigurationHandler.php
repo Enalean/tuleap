@@ -37,6 +37,7 @@ use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\RetrieveTracker;
 use Tuleap\Tracker\Tracker;
 
@@ -129,7 +130,7 @@ final readonly class PUTConfigurationHandler
         }
 
         return $this->retrieve_suitable_field->retrieveField($input_field->field_id, $user)
-            ->andThen(function (\Tracker_FormElement_Field_String|\Tracker_FormElement_Field_List $field) use ($display_type, $tracker) {
+            ->andThen(function (\Tracker_FormElement_Field_String|\Tracker_FormElement_Field_List|ArtifactLinkField $field) use ($display_type, $tracker) {
                 if ($field->getTrackerId() !== $tracker->getId()) {
                     return Result::err(
                         FieldDoesNotBelongToTrackerFault::build($field->getId(), $tracker->getId())

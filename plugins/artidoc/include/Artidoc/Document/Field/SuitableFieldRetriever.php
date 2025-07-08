@@ -34,6 +34,7 @@ use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\RetrieveUsedFields;
 use Tuleap\Tracker\Semantic\Description\RetrieveSemanticDescriptionField;
 use Tuleap\Tracker\Semantic\Title\RetrieveSemanticTitleField;
@@ -48,7 +49,7 @@ final readonly class SuitableFieldRetriever
     }
 
     /**
-     * @return Ok<Tracker_FormElement_Field_String> | Ok<Tracker_FormElement_Field_List> | Err<Fault>
+     * @return Ok<Tracker_FormElement_Field_String> | Ok<Tracker_FormElement_Field_List> | Ok<ArtifactLinkField> | Err<Fault>
      */
     public function retrieveField(int $field_id, PFUser $user): Ok|Err
     {
@@ -62,6 +63,7 @@ final readonly class SuitableFieldRetriever
             $field instanceof Tracker_FormElement_Field_String => $this->validateStringField($field),
             $field instanceof Tracker_FormElement_Field_List
             && $this->isListBindTypeSupported($field) => Result::ok($field),
+            $field instanceof ArtifactLinkField => Result::ok($field),
             default => Result::err(FieldNotSupportedFault::build($field_id))
         };
     }

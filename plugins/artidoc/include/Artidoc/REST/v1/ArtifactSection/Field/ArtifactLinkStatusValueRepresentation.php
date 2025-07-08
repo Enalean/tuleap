@@ -22,11 +22,21 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\REST\v1\ArtifactSection\Field;
 
-enum FieldType: string
+use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\ArtifactLinkStatusValue;
+
+/**
+ * @psalm-immutable
+ */
+final readonly class ArtifactLinkStatusValueRepresentation
 {
-    case STRING           = 'string';
-    case USER_GROUPS_LIST = 'user_groups_list';
-    case STATIC_LIST      = 'static_list';
-    case USER_LIST        = 'user_list';
-    case ARTIFACT_LINK    = 'links';
+    public string $label;
+    public string $color;
+    public bool $is_open;
+
+    public function __construct(ArtifactLinkStatusValue $status_value)
+    {
+        $this->label   = $status_value->label;
+        $this->color   = $status_value->color !== null ? $status_value->color->getName() : '';
+        $this->is_open = $status_value->is_open;
+    }
 }

@@ -20,18 +20,32 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Artidoc\Document\Field;
+namespace Tuleap\Artidoc\REST\v1\ArtifactSection\Field;
 
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\ArtifactLinkFieldWithValue;
-use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StaticListFieldWithValue;
-use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StringFieldWithValue;
-use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserGroupsListFieldWithValue;
-use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserListFieldWithValue;
+use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\ArtifactLinkValue;
 
-interface GetFieldsWithValues
+/**
+ * @psalm-immutable
+ */
+final readonly class SectionArtifactLinkFieldRepresentation
 {
+    public string $type;
+    public string $label;
+    public string $display_type;
     /**
-     * @return list<StringFieldWithValue | UserGroupsListFieldWithValue | StaticListFieldWithValue | UserListFieldWithValue | ArtifactLinkFieldWithValue>
+     * @var list<ArtifactLinkValueRepresentation>
      */
-    public function getFieldsWithValues(\Tracker_Artifact_Changeset $changeset): array;
+    public array $value;
+
+    public function __construct(ArtifactLinkFieldWithValue $field)
+    {
+        $this->type         = FieldType::ARTIFACT_LINK->value;
+        $this->label        = $field->label;
+        $this->display_type = $field->display_type->value;
+        $this->value        = array_map(
+            static fn(ArtifactLinkValue $link_value) => new ArtifactLinkValueRepresentation($link_value),
+            $field->values,
+        );
+    }
 }

@@ -26,7 +26,7 @@ use Project;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Events\GetEditableTypesInProject;
 
-class TypePresenterFactory implements AllTypesRetriever, VisibleTypesRetriever, IRetrieveAllUsableTypesInProject, RetrieveCurrentlyUsedArtifactLinkTypesInTracker
+class TypePresenterFactory implements AllTypesRetriever, VisibleTypesRetriever, IRetrieveAllUsableTypesInProject, RetrieveCurrentlyUsedArtifactLinkTypesInTracker, RetrieveTypeFromShortname
 {
     /**
      * Add new artifact link types
@@ -174,7 +174,7 @@ class TypePresenterFactory implements AllTypesRetriever, VisibleTypesRetriever, 
         return array_filter($types);
     }
 
-    public function getFromShortname($shortname): ?TypePresenter
+    public function getFromShortname(?string $shortname): ?TypePresenter
     {
         if ($shortname == \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::NO_TYPE) {
             return new TypePresenter('', '', '', true);

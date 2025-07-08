@@ -128,7 +128,7 @@ final class CountElementsCalculatorTest extends TestCase
         $changeset_epic           = ChangesetTestBuilder::aChangeset(1)->build();
         $epic_artifact_link_field = ArtifactLinkFieldBuilder::anArtifactLinkField(1)->build();
         ChangesetValueArtifactLinkTestBuilder::aValue(1, $changeset_epic, $epic_artifact_link_field)
-            ->withLinks([
+            ->withForwardLinks([
                 3 => new Tracker_ArtifactLinkInfo(3, '', 101, $this->user_story_tracker->getId(), 1, null),
                 4 => new Tracker_ArtifactLinkInfo(4, '', 101, $this->user_story_tracker->getId(), 1, null),
             ])
@@ -147,7 +147,7 @@ final class CountElementsCalculatorTest extends TestCase
             ->build();
         $changeset_user_story_01 = ChangesetTestBuilder::aChangeset(1)->build();
         ChangesetValueArtifactLinkTestBuilder::aValue(1, $changeset_user_story_01, $user_story_artifact_link_field)
-            ->withLinks([])
+            ->withForwardLinks([])
             ->build();
 
         $user_story_02           = ArtifactTestBuilder::anArtifact(4)
@@ -156,7 +156,7 @@ final class CountElementsCalculatorTest extends TestCase
             ->build();
         $changeset_user_story_02 = ChangesetTestBuilder::aChangeset(1)->build();
         ChangesetValueArtifactLinkTestBuilder::aValue(1, $changeset_user_story_02, $user_story_artifact_link_field)
-            ->withLinks([
+            ->withForwardLinks([
                 5 => new Tracker_ArtifactLinkInfo(5, '', 101, $this->task_tracker->getId(), 1, null),
                 6 => new Tracker_ArtifactLinkInfo(6, '', 101, $this->task_tracker->getId(), 1, null),
             ])
@@ -235,7 +235,7 @@ final class CountElementsCalculatorTest extends TestCase
         $epic           = ArtifactTestBuilder::anArtifact(2)->inTracker($epic_tracker)->build();
         $changeset_epic = ChangesetTestBuilder::aChangeset(1)->build();
         ChangesetValueArtifactLinkTestBuilder::aValue(1, $changeset_epic, $epic_artifact_link_field)
-            ->withLinks([
+            ->withForwardLinks([
                 3 => new Tracker_ArtifactLinkInfo(3, '', 101, $this->user_story_tracker->getId(), 1, null),
                 4 => new Tracker_ArtifactLinkInfo(4, '', 101, $this->user_story_tracker->getId(), 1, null),
             ])
@@ -251,7 +251,7 @@ final class CountElementsCalculatorTest extends TestCase
             ->build();
         $changeset_user_story_01 = ChangesetTestBuilder::aChangeset(1)->build();
         ChangesetValueArtifactLinkTestBuilder::aValue(1, $changeset_user_story_01, $user_story_artifact_link_field)
-            ->withLinks([])
+            ->withForwardLinks([])
             ->build();
 
         $user_story_02           = ArtifactTestBuilder::anArtifact(4)
@@ -260,7 +260,7 @@ final class CountElementsCalculatorTest extends TestCase
             ->build();
         $changeset_user_story_02 = ChangesetTestBuilder::aChangeset(1)->build();
         ChangesetValueArtifactLinkTestBuilder::aValue(1, $changeset_user_story_02, $user_story_artifact_link_field)
-            ->withLinks([
+            ->withForwardLinks([
                 5 => new Tracker_ArtifactLinkInfo(5, '', 101, $this->task_tracker->getId(), 1, null),
                 6 => new Tracker_ArtifactLinkInfo(6, '', 101, $this->task_tracker->getId(), 1, null),
             ])
@@ -408,19 +408,19 @@ final class CountElementsCalculatorTest extends TestCase
         $user_story_01           = ArtifactTestBuilder::anArtifact(2)->inTracker($this->user_story_tracker)->build();
         $changeset_user_story_01 = ChangesetTestBuilder::aChangeset(1)->build();
         ChangesetValueArtifactLinkTestBuilder::aValue(1, $changeset_user_story_01, $artifact_link_field)
-            ->withLinks([])
+            ->withForwardLinks([])
             ->build();
 
         $user_story_02           = ArtifactTestBuilder::anArtifact(3)->inTracker($this->user_story_tracker)->build();
         $changeset_user_story_02 = ChangesetTestBuilder::aChangeset(1)->build();
         ChangesetValueArtifactLinkTestBuilder::aValue(1, $changeset_user_story_02, $artifact_link_field)
-            ->withLinks([])
+            ->withForwardLinks([])
             ->build();
 
         $user_story_03           = ArtifactTestBuilder::anArtifact(4)->inTracker($this->user_story_tracker)->build();
         $changeset_user_story_03 = ChangesetTestBuilder::aChangeset(1)->build();
         ChangesetValueArtifactLinkTestBuilder::aValue(1, $changeset_user_story_03, $artifact_link_field)
-            ->withLinks([])
+            ->withForwardLinks([])
             ->build();
         $matcher = self::exactly(3);
 

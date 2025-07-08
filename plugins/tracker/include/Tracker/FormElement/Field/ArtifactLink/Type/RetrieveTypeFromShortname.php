@@ -20,13 +20,9 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Artidoc\REST\v1\ArtifactSection\Field;
+namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\Type;
 
-enum FieldType: string
+interface RetrieveTypeFromShortname
 {
-    case STRING           = 'string';
-    case USER_GROUPS_LIST = 'user_groups_list';
-    case STATIC_LIST      = 'static_list';
-    case USER_LIST        = 'user_list';
-    case ARTIFACT_LINK    = 'links';
+    public function getFromShortname(?string $shortname): ?TypePresenter;
 }

@@ -33,7 +33,9 @@ use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\Semantic\Title\RetrieveSemanticTitleField;
+use Tuleap\Tracker\Test\Builders\Fields\ArtifactLinkFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ExternalFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserBindBuilder;
@@ -66,7 +68,7 @@ final class SuitableFieldRetrieverTest extends TestCase
     }
 
     /**
-     * @return Ok<\Tracker_FormElement_Field_String> | Ok<\Tracker_FormElement_Field_List> | Err<Fault>
+     * @return Ok<\Tracker_FormElement_Field_String> | Ok<\Tracker_FormElement_Field_List> | Ok<ArtifactLinkField> | Err<Fault>
      */
     private function retrieve(): Ok|Err
     {
@@ -185,5 +187,18 @@ final class SuitableFieldRetrieverTest extends TestCase
         $result = $this->retrieve();
         self::assertTrue(Result::isOk($result));
         self::assertSame($list_field, $result->value);
+    }
+
+    public function testItAllowsArtifactLinkField(): void
+    {
+        $link_field            = ArtifactLinkFieldBuilder::anArtifactLinkField(self::FIELD_ID)
+            ->inTracker($this->tracker)
+            ->withReadPermission($this->user, true)
+            ->build();
+        $this->field_retriever = RetrieveUsedFieldsStub::withFields($link_field);
+
+        $result = $this->retrieve();
+        self::assertTrue(Result::isOk($result));
+        self::assertSame($link_field, $result->value);
     }
 }
