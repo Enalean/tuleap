@@ -33,7 +33,7 @@ import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 
 describe("TrackerFromJiraProject", () => {
     let state: State;
-    let wrapper: Wrapper<TrackerFromJiraProject>;
+    let wrapper: Wrapper<Vue>;
     beforeEach(async () => {
         const tracker_list: TrackerList[] = [];
         state = {
@@ -76,9 +76,7 @@ describe("TrackerFromJiraProject", () => {
             credentials: state.from_jira_data.credentials,
             project_key: value,
         });
-        expect(wrapper.vm.$data.error_message).toBe("");
-
-        expect(wrapper.find("[data-test=jira-fail-load-project]").exists()).toBe(false);
+        expect(wrapper.find("[data-test=jira-fail-load-trackers]").exists()).toBe(false);
     });
 
     it("display the error message", async () => {
@@ -90,7 +88,7 @@ describe("TrackerFromJiraProject", () => {
 
 describe("TrackerFromJiraProject reload state", () => {
     let state: State;
-    let wrapper: Wrapper<TrackerFromJiraProject>;
+    let wrapper: Wrapper<Vue>;
     beforeEach(async () => {
         const project_one: ProjectList = { id: "TO", label: "Toto" };
         const project_two: ProjectList = { id: "TU", label: "Tutu" };
