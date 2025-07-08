@@ -18,6 +18,8 @@
  */
 
 import type {
+    ReadonlyFieldLinkedArtifact,
+    ReadonlyFieldLinks,
     ReadonlyFieldStaticList,
     ReadonlyFieldStaticListValue,
     ReadonlyFieldString,
@@ -27,6 +29,7 @@ import type {
     ReadonlyFieldUserListValue,
 } from "@/sections/readonly-fields/ReadonlyFields";
 import type { ConfigurationFieldDisplayType } from "@/sections/readonly-fields/AvailableReadonlyFields";
+import { DISPLAY_TYPE_BLOCK } from "@/sections/readonly-fields/AvailableReadonlyFields";
 
 export const ReadonlyFieldStub = {
     string: (value: string, display_type: ConfigurationFieldDisplayType): ReadonlyFieldString => ({
@@ -61,5 +64,11 @@ export const ReadonlyFieldStub = {
         label: "Readonly user list field",
         value,
         display_type,
+    }),
+    linkField: (value: ReadonlyFieldLinkedArtifact[]): ReadonlyFieldLinks => ({
+        type: "links",
+        label: "Readonly links field",
+        display_type: DISPLAY_TYPE_BLOCK,
+        value,
     }),
 };

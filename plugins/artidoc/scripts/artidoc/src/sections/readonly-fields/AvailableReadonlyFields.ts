@@ -34,9 +34,9 @@ import { ConfigurationFieldBuilder } from "@/sections/readonly-fields/Configurat
 
 export type TrackerForFields = Pick<TrackerResponseNoInstance, "fields" | "semantics">;
 
-export type ConfigurationFieldDisplayType = "column" | "block";
-export const DISPLAY_TYPE_COLUMN: ConfigurationFieldDisplayType = "column";
-export const DISPLAY_TYPE_BLOCK: ConfigurationFieldDisplayType = "block";
+export const DISPLAY_TYPE_COLUMN = "column";
+export const DISPLAY_TYPE_BLOCK = "block";
+export type ConfigurationFieldDisplayType = typeof DISPLAY_TYPE_COLUMN | typeof DISPLAY_TYPE_BLOCK;
 
 export type ConfigurationFieldType =
     | typeof STRING_FIELD

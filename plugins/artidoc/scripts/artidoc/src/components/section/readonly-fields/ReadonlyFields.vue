@@ -43,6 +43,7 @@
                 v-if="readonly_field.type === USER_LIST_FIELD"
                 v-bind:user_list_field="readonly_field"
             />
+            <field-links v-if="readonly_field.type === LINKS_FIELD" v-bind:field="readonly_field" />
         </div>
     </div>
 </template>
@@ -51,6 +52,7 @@
 import FieldString from "@/components/section/readonly-fields/FieldString.vue";
 import type { ReadonlyField } from "@/sections/readonly-fields/ReadonlyFields";
 import {
+    LINKS_FIELD,
     STATIC_LIST_FIELD,
     STRING_FIELD,
     USER_GROUP_LIST_FIELD,
@@ -60,13 +62,15 @@ import type { SectionBasedOnArtifact } from "@/helpers/artidoc-section.type";
 import FieldUserGroupsList from "@/components/section/readonly-fields/FieldUserGroupsList.vue";
 import FieldStaticList from "@/components/section/readonly-fields/FieldStaticList.vue";
 import FieldUserList from "@/components/section/readonly-fields/FieldUserList.vue";
+import FieldLinks from "@/components/section/readonly-fields/FieldLinks.vue";
+import { DISPLAY_TYPE_BLOCK } from "@/sections/readonly-fields/AvailableReadonlyFields";
 
 defineProps<{
     section: SectionBasedOnArtifact;
 }>();
 
 const getFieldClasses = (readonly_field: ReadonlyField): string[] => {
-    if (readonly_field.display_type === "block") {
+    if (readonly_field.display_type === DISPLAY_TYPE_BLOCK) {
         return ["display-field-in-block", "document-grid-element-full-row"];
     }
 
