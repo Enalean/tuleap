@@ -34,402 +34,395 @@
     </div>
 </template>
 
-<script lang="ts">
-import { defineAsyncComponent } from "vue";
-import { mapGetters, mapState } from "vuex";
+<script setup lang="ts">
+import { computed, defineAsyncComponent, onBeforeUnmount, onMounted, ref } from "vue";
 import CurrentFolderDropZone from "./CurrentFolderDropZone.vue";
 import { highlightItem } from "../../../helpers/highlight-items-helper";
 import { isFile, isFolder } from "../../../helpers/type-check-helper";
 import emitter from "../../../helpers/emitter";
 import { sprintf } from "sprintf-js";
 import { buildFakeItem } from "../../../helpers/item-builder";
+import type { FakeItem, ItemFile, Reason, RootState } from "../../../type";
+import {
+    useNamespacedGetters,
+    useNamespacedState,
+    useState,
+    useStore,
+} from "vuex-composition-helpers";
+import type { ConfigurationGetters } from "../../../store/configuration/getters";
+import type { ConfigurationState } from "../../../store/configuration";
+import { useGettext } from "vue3-gettext";
 
-export default {
-    components: { CurrentFolderDropZone },
-    data() {
-        return {
-            main: null,
-            error_modal_shown: false,
-            is_dropzone_highlighted: false,
-            error_modal_reasons: [],
-            MAX_FILES_ERROR: "max_files",
-            CREATION_ERROR: "creation_error",
-            MAX_SIZE_ERROR: "max_size",
-            ALREADY_EXISTS_ERROR: "already_exists",
-            EDITION_LOCKED: "edition_locked",
-            DROPPED_ITEM_IS_NOT_A_FILE: "dropped_item_is_not_a_file",
-            FILENAME_PATTERN_IS_SET_ERROR: "filename_pattern_is_set",
-            highlighted_item_id: null,
-            number_of_dragged_files: 0,
-            is_drop_possible: true,
-            dragover_error_reason: "",
-            fake_item_list: [],
-        };
-    },
-    computed: {
-        ...mapGetters("configuration", ["user_can_dragndrop"]),
-        ...mapState(["current_folder", "folder_content"]),
-        ...mapState("configuration", [
-            "user_id",
-            "max_files_dragndrop",
-            "max_size_upload",
-            "is_changelog_proposed_after_dnd",
-            "is_filename_pattern_enforced",
-        ]),
-        user_can_dragndrop_in_current_folder() {
-            return (
-                this.user_can_dragndrop && this.current_folder && this.current_folder.user_can_write
-            );
-        },
-        error_modal_name() {
-            if (!this.error_modal_shown) {
-                return null;
-            }
+const MAX_FILES_ERROR = "max_files";
+const CREATION_ERROR = "creation_error";
+const MAX_SIZE_ERROR = "max_size";
+const ALREADY_EXISTS_ERROR = "already_exists";
+const EDITION_LOCKED = "edition_locked";
+const DROPPED_ITEM_IS_NOT_A_FILE = "dropped_item_is_not_a_file";
+const FILENAME_PATTERN_IS_SET_ERROR = "filename_pattern_is_set";
 
-            if (this.error_modal_shown === this.MAX_SIZE_ERROR) {
-                return defineAsyncComponent(
-                    () =>
-                        import(
-                            /* webpackChunkName: "document-max-size-dragndrop-error-modal" */ "./MaxSizeDragndropErrorModal.vue"
-                        ),
-                );
-            }
+const { $gettext } = useGettext();
+const $store = useStore();
 
-            if (this.error_modal_shown === this.ALREADY_EXISTS_ERROR) {
-                return defineAsyncComponent(
-                    () =>
-                        import(
-                            /* webpackChunkName: "document-max-size-dragndrop-error-modal" */ "./FileAlreadyExistsDragndropErrorModal.vue"
-                        ),
-                );
-            }
+const main = ref<HTMLElement | null>(null);
+const error_modal_shown = ref<string | false>(false);
+const is_dropzone_highlighted = ref<boolean>(false);
+const error_modal_reasons = ref<Array<Reason>>([]);
+const highlighted_item_id = ref<number | null>(null);
+const number_of_dragged_files = ref<number>(0);
+const is_drop_possible = ref<boolean>(true);
+const dragover_error_reason = ref<string>("");
+const fake_item_list = ref<Array<FakeItem>>([]);
 
-            if (this.error_modal_shown === this.CREATION_ERROR) {
-                return defineAsyncComponent(
-                    () =>
-                        import(
-                            /* webpackChunkName: "document-max-size-dragndrop-error-modal" */ "./CreationErrorDragndropErrorModal.vue"
-                        ),
-                );
-            }
+const { user_can_dragndrop } = useNamespacedGetters<
+    Pick<ConfigurationGetters, "user_can_dragndrop">
+>("configuration", ["user_can_dragndrop"]);
+const { current_folder, folder_content } = useState<
+    Pick<RootState, "current_folder" | "folder_content">
+>(["current_folder", "folder_content"]);
+const {
+    user_id,
+    max_files_dragndrop,
+    max_size_upload,
+    is_changelog_proposed_after_dnd,
+    is_filename_pattern_enforced,
+} = useNamespacedState<
+    Pick<
+        ConfigurationState,
+        | "user_id"
+        | "max_files_dragndrop"
+        | "max_size_upload"
+        | "is_changelog_proposed_after_dnd"
+        | "is_filename_pattern_enforced"
+    >
+>("configuration", [
+    "user_id",
+    "max_files_dragndrop",
+    "max_size_upload",
+    "is_changelog_proposed_after_dnd",
+    "is_filename_pattern_enforced",
+]);
 
-            if (this.error_modal_shown === this.EDITION_LOCKED) {
-                return defineAsyncComponent(
-                    () =>
-                        import(
-                            /* webpackChunkName: "document-edition-locked-error-modal" */ "./DocumentLockedForEditionErrorModal.vue"
-                        ),
-                );
-            }
+const user_can_dragndrop_in_current_folder = computed(
+    () => user_can_dragndrop.value && current_folder.value && current_folder.value.user_can_write,
+);
+const error_modal_name = computed(() => {
+    if (!error_modal_shown.value) {
+        return null;
+    }
 
-            if (this.error_modal_shown === this.DROPPED_ITEM_IS_NOT_A_FILE) {
-                return defineAsyncComponent(
-                    () =>
-                        import(
-                            /* webpackChunkName: "document-droppped-item-is-folder-error" */ "./DroppedItemIsAFolderErrorModal.vue"
-                        ),
-                );
-            }
-            if (this.error_modal_shown === this.FILENAME_PATTERN_IS_SET_ERROR) {
-                return defineAsyncComponent(
-                    () =>
-                        import(
-                            /* webpackChunkName: "document-filename-pattern-set-error-modal" */ "./FilenamePatternSetErrorModal.vue"
-                        ),
-                );
-            }
-            return defineAsyncComponent(
-                () =>
-                    import(
-                        /* webpackChunkName: "document-max-files-dragndrop-error-modal" */ "./MaxFilesDragndropErrorModal.vue"
-                    ),
-            );
-        },
-    },
-    created() {
-        this.main = document.querySelector(".document-main");
-        this.main.addEventListener("dragover", this.ondragover);
-        this.main.addEventListener("dragleave", this.ondragleave);
-        this.main.addEventListener("drop", this.ondrop);
-    },
-    beforeUnmount() {
-        this.main.removeEventListener("dragover", this.ondragover);
-        this.main.removeEventListener("dragleave", this.ondragleave);
-        this.main.removeEventListener("drop", this.ondrop);
-    },
-    methods: {
-        ondragover(event) {
-            event.preventDefault();
-            event.stopPropagation();
-            if (this.isDragNDropingOnAModal(event)) {
-                return;
-            }
-            this.number_of_dragged_files = event.dataTransfer.items.length;
-            this.is_drop_possible =
-                this.isDropPossibleAccordingFilenamePattern() &&
-                this.user_can_dragndrop_in_current_folder;
-            if (!this.is_drop_possible) {
-                this.dragover_error_reason = this.getDragErrorReason();
-            }
-            this.highlightFolderDropZone(event);
-        },
-        ondragleave(event) {
-            event.preventDefault();
-            event.stopPropagation();
+    if (error_modal_shown.value === MAX_SIZE_ERROR) {
+        return defineAsyncComponent(() => import("./MaxSizeDragndropErrorModal.vue"));
+    }
 
-            if (this.isInQuickLookPane()) {
-                return;
-            }
-            this.is_drop_possible = true;
-            this.number_of_dragged_files = 0;
-            this.drag_error_reason = "";
-            this.clearHighlight();
-        },
-        isInQuickLookPane() {
-            return document.querySelector(`
-                .quick-look-pane-highlighted,
-                .quick-look-pane-highlighted-forbidden
-            `);
-        },
-        async ondrop(event) {
-            event.preventDefault();
-            event.stopPropagation();
+    if (error_modal_shown.value === ALREADY_EXISTS_ERROR) {
+        return defineAsyncComponent(() => import("./FileAlreadyExistsDragndropErrorModal.vue"));
+    }
 
-            if (this.isDragNDropingOnAModal(event)) {
-                return;
-            }
-            const is_uploading_in_subfolder = this.highlighted_item_id !== null;
-            const dropzone_item = this.getDropZoneItem();
-            this.clearHighlight();
+    if (error_modal_shown.value === CREATION_ERROR) {
+        return defineAsyncComponent(() => import("./CreationErrorDragndropErrorModal.vue"));
+    }
 
-            if (!this.user_can_dragndrop_in_current_folder || !dropzone_item.user_can_write) {
-                return;
-            }
+    if (error_modal_shown.value === EDITION_LOCKED) {
+        return defineAsyncComponent(() => import("./DocumentLockedForEditionErrorModal.vue"));
+    }
 
-            if (!event.dataTransfer.files || event.dataTransfer.files.length === 0) {
-                this.error_modal_shown = this.DROPPED_ITEM_IS_NOT_A_FILE;
-                this.error_modal_reasons.push({ nb_dropped_files: 1 });
+    if (error_modal_shown.value === DROPPED_ITEM_IS_NOT_A_FILE) {
+        return defineAsyncComponent(() => import("./DroppedItemIsAFolderErrorModal.vue"));
+    }
+    if (error_modal_shown.value === FILENAME_PATTERN_IS_SET_ERROR) {
+        return defineAsyncComponent(() => import("./FilenamePatternSetErrorModal.vue"));
+    }
+    return defineAsyncComponent(() => import("./MaxFilesDragndropErrorModal.vue"));
+});
 
-                return;
-            }
+onMounted(() => {
+    main.value = document.querySelector<HTMLElement>(".document-main");
+    main.value?.addEventListener("dragover", ondragover);
+    main.value?.addEventListener("dragleave", ondragleave);
+    main.value?.addEventListener("drop", ondrop);
+});
 
-            if (isFile(dropzone_item)) {
-                await this.uploadNewFileVersion(event, dropzone_item);
+onBeforeUnmount(() => {
+    main.value?.removeEventListener("dragover", ondragover);
+    main.value?.removeEventListener("dragleave", ondragleave);
+    main.value?.removeEventListener("drop", ondrop);
+});
 
-                return;
-            }
+function ondragover(event: DragEvent): void {
+    event.preventDefault();
+    event.stopPropagation();
+    if (isDragNDropingOnAModal(event)) {
+        return;
+    }
+    if (event.dataTransfer) {
+        number_of_dragged_files.value = event.dataTransfer.items.length;
+    }
+    is_drop_possible.value =
+        isDropPossibleAccordingFilenamePattern() && user_can_dragndrop_in_current_folder.value;
+    if (!is_drop_possible.value) {
+        dragover_error_reason.value = getDragErrorReason();
+    }
+    highlightFolderDropZone(event);
+}
 
-            const files = event.dataTransfer.files;
+function ondragleave(event: DragEvent): void {
+    event.preventDefault();
+    event.stopPropagation();
 
-            if (files.length > this.max_files_dragndrop) {
-                this.error_modal_shown = this.MAX_FILES_ERROR;
-                return;
-            }
+    if (isInQuickLookPane()) {
+        return;
+    }
+    is_drop_possible.value = true;
+    number_of_dragged_files.value = 0;
+    clearHighlight();
+}
 
-            if (this.is_filename_pattern_enforced && files.length > 1) {
-                this.error_modal_shown = this.FILENAME_PATTERN_IS_SET_ERROR;
-                return;
-            }
+function isInQuickLookPane(): Element | null {
+    return document.querySelector(
+        `.quick-look-pane-highlighted,.quick-look-pane-highlighted-forbidden`,
+    );
+}
 
-            if (this.is_filename_pattern_enforced && files.length === 1) {
-                emitter.emit("show-file-creation-modal", {
-                    detail: {
-                        parent: dropzone_item,
-                        dropped_file: files[0],
-                    },
-                });
-                return;
-            }
+async function ondrop(event: DragEvent): Promise<void> {
+    event.preventDefault();
+    event.stopPropagation();
 
-            for (const file of files) {
-                const is_item_a_file = this.isDroppedItemAFile(file);
-                if (!is_item_a_file) {
-                    this.error_modal_shown = this.DROPPED_ITEM_IS_NOT_A_FILE;
-                    this.error_modal_reasons.push({ nb_dropped_files: files.length });
+    if (isDragNDropingOnAModal(event)) {
+        return;
+    }
+    const is_uploading_in_subfolder = highlighted_item_id.value !== null;
+    const dropzone_item = getDropZoneItem();
+    clearHighlight();
 
-                    return;
-                }
+    if (!user_can_dragndrop_in_current_folder.value || !dropzone_item.user_can_write) {
+        return;
+    }
 
-                if (file.size > this.max_size_upload) {
-                    this.error_modal_shown = this.MAX_SIZE_ERROR;
-                    return;
-                }
+    if (!event.dataTransfer || !event.dataTransfer.files || event.dataTransfer.files.length === 0) {
+        error_modal_shown.value = DROPPED_ITEM_IS_NOT_A_FILE;
+        error_modal_reasons.value.push({ nb_dropped_files: 1 });
 
-                if (
-                    this.folder_content.find(
-                        (item) =>
-                            item.title === file.name &&
-                            !isFolder(item) &&
-                            item.parent_id === dropzone_item.id,
-                    )
-                ) {
-                    this.error_modal_shown = this.ALREADY_EXISTS_ERROR;
-                    return;
-                }
-            }
+        return;
+    }
 
-            let should_display_fake_item = false;
-            if (!is_uploading_in_subfolder) {
-                should_display_fake_item = true;
-            } else {
-                should_display_fake_item = dropzone_item.is_expanded;
-            }
+    if (isFile(dropzone_item)) {
+        await uploadNewFileVersion(event, dropzone_item);
 
-            if (is_uploading_in_subfolder && !dropzone_item.is_expanded) {
-                this.$store.commit("toggleCollapsedFolderHasUploadingContent", {
-                    collapsed_folder: dropzone_item,
-                    toggle: true,
-                });
-            }
+        return;
+    }
 
-            for (const file of files) {
-                try {
-                    this.fake_item_list.push(buildFakeItem());
-                    await this.$store.dispatch("addNewUploadFile", [
-                        file,
-                        dropzone_item,
-                        file.name,
-                        "",
-                        should_display_fake_item,
-                        this.fake_item_list[this.fake_item_list.length - 1],
-                    ]);
-                } catch (error) {
-                    this.error_modal_shown = this.CREATION_ERROR;
-                    this.error_modal_reasons.push({ filename: file.name, message: error });
-                }
-            }
-        },
-        errorModalHasBeenClosed() {
-            this.error_modal_shown = false;
-            this.error_modal_reasons = [];
-        },
-        isDragNDropingOnAModal(event) {
-            return Boolean(event.target.closest(".tlp-modal"));
-        },
-        clearHighlight() {
-            const highlighted_items = document.querySelectorAll(`
-                .document-tree-item-highlighted,
-                .document-tree-item-hightlighted-forbidden,
-                .quick-look-pane-highlighted,
-                .quick-look-pane-highlighted-forbidden
-            `);
+    const files = event.dataTransfer.files;
 
-            for (const element of highlighted_items) {
-                element.classList.remove(
-                    "document-tree-item-highlighted",
-                    "document-folder-highlighted",
-                    "document-file-highlighted",
-                    "document-tree-item-hightlighted-forbidden",
-                    "quick-look-pane-highlighted",
-                    "quick-look-pane-highlighted-forbidden",
-                );
-            }
+    if (files.length > max_files_dragndrop.value) {
+        error_modal_shown.value = MAX_FILES_ERROR;
+        return;
+    }
 
-            this.is_dropzone_highlighted = false;
-            this.highlighted_item_id = null;
-        },
-        highlightFolderDropZone(event) {
-            this.clearHighlight();
+    if (is_filename_pattern_enforced.value && files.length > 1) {
+        error_modal_shown.value = FILENAME_PATTERN_IS_SET_ERROR;
+        return;
+    }
 
-            const target_drop_zones = [
-                ".document-tree-item-folder",
-                ".document-quick-look-folder-dropzone",
-                ".document-quick-look-file-dropzone",
-            ];
+    if (is_filename_pattern_enforced.value && files.length === 1) {
+        emitter.emit("show-file-creation-modal", {
+            detail: {
+                parent: dropzone_item,
+                dropped_file: files[0],
+            },
+        });
+        return;
+    }
 
-            if (event.dataTransfer.items.length === 1) {
-                target_drop_zones.push(".document-tree-item-file");
-            }
+    for (const file of files) {
+        const is_item_a_file = isDroppedItemAFile(file);
+        if (!is_item_a_file) {
+            error_modal_shown.value = DROPPED_ITEM_IS_NOT_A_FILE;
+            error_modal_reasons.value.push({ nb_dropped_files: files.length });
 
-            const closest_row = event.target.closest(target_drop_zones);
+            return;
+        }
 
-            if (closest_row) {
-                this.highlighted_item_id = parseInt(closest_row.dataset.itemId, 10);
+        if (file.size > max_size_upload.value) {
+            error_modal_shown.value = MAX_SIZE_ERROR;
+            return;
+        }
 
-                const item = this.getDropZoneItem();
+        if (
+            folder_content.value.find(
+                (item) =>
+                    item.title === file.name &&
+                    !isFolder(item) &&
+                    item.parent_id === dropzone_item.id,
+            )
+        ) {
+            error_modal_shown.value = ALREADY_EXISTS_ERROR;
+            return;
+        }
+    }
 
-                highlightItem(item, closest_row);
-            } else {
-                this.is_dropzone_highlighted = true;
-            }
-        },
-        getDropZoneItem: function () {
-            if (!this.highlighted_item_id) {
-                return this.current_folder;
-            }
+    let should_display_fake_item: boolean;
+    if (!is_uploading_in_subfolder) {
+        should_display_fake_item = true;
+    } else {
+        should_display_fake_item = dropzone_item.is_expanded;
+    }
 
-            return this.folder_content.find((item) => item.id === this.highlighted_item_id);
-        },
-        async uploadNewFileVersion(event, dropzone_item) {
-            const { lock_info, approval_table } = dropzone_item;
-            const is_document_locked_by_current_user =
-                lock_info === null ||
-                (lock_info !== null && lock_info.locked_by.id === this.user_id);
+    if (is_uploading_in_subfolder && !dropzone_item.is_expanded) {
+        $store.commit("toggleCollapsedFolderHasUploadingContent", {
+            collapsed_folder: dropzone_item,
+            toggle: true,
+        });
+    }
 
-            if (!is_document_locked_by_current_user) {
-                this.error_modal_shown = this.EDITION_LOCKED;
-                this.error_modal_reasons.push({
-                    filename: dropzone_item.title,
-                    lock_owner: lock_info.locked_by,
-                });
+    for (const file of files) {
+        try {
+            fake_item_list.value.push(buildFakeItem());
+            await $store.dispatch("addNewUploadFile", [
+                file,
+                dropzone_item,
+                file.name,
+                "",
+                should_display_fake_item,
+                fake_item_list.value[fake_item_list.value.length - 1],
+            ]);
+        } catch (error) {
+            error_modal_shown.value = CREATION_ERROR;
+            error_modal_reasons.value.push({ filename: file.name, message: error });
+        }
+    }
+}
 
-                return;
-            }
+function errorModalHasBeenClosed() {
+    error_modal_shown.value = false;
+    error_modal_reasons.value = [];
+}
 
-            const files = event.dataTransfer.files;
-            const file = files[0];
+function isDragNDropingOnAModal(event: DragEvent): boolean {
+    return Boolean(event.target.closest(".tlp-modal"));
+}
 
-            const is_item_a_file = this.isDroppedItemAFile(file);
-            if (!is_item_a_file) {
-                this.error_modal_shown = this.DROPPED_ITEM_IS_NOT_A_FILE;
-                this.error_modal_reasons.push({ nb_dropped_files: 1 });
+function clearHighlight(): void {
+    const highlighted_items = document.querySelectorAll(
+        `.document-tree-item-highlighted,.document-tree-item-hightlighted-forbidden,.quick-look-pane-highlighted,.quick-look-pane-highlighted-forbidden`,
+    );
 
-                return;
-            }
+    for (const element of highlighted_items) {
+        element.classList.remove(
+            "document-tree-item-highlighted",
+            "document-folder-highlighted",
+            "document-file-highlighted",
+            "document-tree-item-hightlighted-forbidden",
+            "quick-look-pane-highlighted",
+            "quick-look-pane-highlighted-forbidden",
+        );
+    }
 
-            if (file.size > this.max_size_upload) {
-                this.error_modal_shown = this.MAX_SIZE_ERROR;
-                return;
-            }
+    is_dropzone_highlighted.value = false;
+    highlighted_item_id.value = null;
+}
 
-            try {
-                if (this.is_changelog_proposed_after_dnd || approval_table !== null) {
-                    emitter.emit("show-changelog-modal", {
-                        detail: {
-                            updated_file: dropzone_item,
-                            dropped_file: file,
-                        },
-                    });
+function highlightFolderDropZone(event: DragEvent): void {
+    clearHighlight();
 
-                    return;
-                }
+    const target_drop_zones = [
+        ".document-tree-item-folder",
+        ".document-quick-look-folder-dropzone",
+        ".document-quick-look-file-dropzone",
+    ];
 
-                await this.$store.dispatch("createNewFileVersion", [dropzone_item, file]);
-            } catch (error) {
-                this.error_modal_shown = this.CREATION_ERROR;
-                this.error_modal_reasons.push({ filename: file.name, message: error });
-            }
-        },
-        isDroppedItemAFile(file) {
-            return file.size % 4096 !== 0 || file.type !== "";
-        },
-        isDropPossibleAccordingFilenamePattern() {
-            return (
-                (this.is_filename_pattern_enforced && this.number_of_dragged_files === 1) ||
-                !this.is_filename_pattern_enforced
-            );
-        },
-        getDragErrorReason() {
-            if (this.is_filename_pattern_enforced && this.number_of_dragged_files > 1) {
-                return this.$gettext(
-                    "When a filename pattern is set, you are not allowed to drag 'n drop more than 1 file at once.",
-                );
-            }
-            return sprintf(
-                this.$gettext("Dropping files in %s is forbidden."),
-                this.current_folder.title,
-            );
-        },
-    },
-};
+    if (event.dataTransfer && event.dataTransfer.items.length === 1) {
+        target_drop_zones.push(".document-tree-item-file");
+    }
+
+    const closest_row = event.target.closest(target_drop_zones);
+
+    if (closest_row) {
+        highlighted_item_id.value = parseInt(closest_row.dataset.itemId, 10);
+
+        const item = getDropZoneItem();
+
+        highlightItem(item, closest_row);
+    } else {
+        is_dropzone_highlighted.value = true;
+    }
+}
+
+function getDropZoneItem() {
+    if (!highlighted_item_id.value) {
+        return current_folder.value;
+    }
+
+    return folder_content.value.find((item) => item.id === highlighted_item_id.value);
+}
+
+async function uploadNewFileVersion(event: DragEvent, dropzone_item: ItemFile): Promise<void> {
+    const { lock_info, approval_table } = dropzone_item;
+    const is_document_locked_by_current_user =
+        lock_info === null || lock_info.lock_by.id === user_id.value;
+
+    if (!is_document_locked_by_current_user) {
+        error_modal_shown.value = EDITION_LOCKED;
+        error_modal_reasons.value.push({
+            filename: dropzone_item.title,
+            lock_owner: lock_info.lock_by,
+        });
+
+        return;
+    }
+
+    const files = event.dataTransfer.files;
+    const file = files[0];
+
+    const is_item_a_file = isDroppedItemAFile(file);
+    if (!is_item_a_file) {
+        error_modal_shown.value = DROPPED_ITEM_IS_NOT_A_FILE;
+        error_modal_reasons.value.push({ nb_dropped_files: 1 });
+
+        return;
+    }
+
+    if (file.size > max_size_upload.value) {
+        error_modal_shown.value = MAX_SIZE_ERROR;
+        return;
+    }
+
+    try {
+        if (is_changelog_proposed_after_dnd.value || approval_table !== null) {
+            emitter.emit("show-changelog-modal", {
+                detail: {
+                    updated_file: dropzone_item,
+                    dropped_file: file,
+                },
+            });
+
+            return;
+        }
+
+        await $store.dispatch("createNewFileVersion", [dropzone_item, file]);
+    } catch (error) {
+        error_modal_shown.value = CREATION_ERROR;
+        error_modal_reasons.value.push({ filename: file.name, message: error });
+    }
+}
+
+function isDroppedItemAFile(file): boolean {
+    return file.size % 4096 !== 0 || file.type !== "";
+}
+
+function isDropPossibleAccordingFilenamePattern(): boolean {
+    return (
+        (is_filename_pattern_enforced.value && number_of_dragged_files.value === 1) ||
+        !is_filename_pattern_enforced.value
+    );
+}
+
+function getDragErrorReason(): string {
+    if (is_filename_pattern_enforced.value && number_of_dragged_files.value > 1) {
+        return $gettext(
+            "When a filename pattern is set, you are not allowed to drag 'n drop more than 1 file at once.",
+        );
+    }
+    return sprintf($gettext("Dropping files in %s is forbidden."), current_folder.value?.title);
+}
 </script>
