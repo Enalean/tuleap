@@ -55,8 +55,10 @@ final class DisplayResetPasswordController implements DispatchableWithBurningPar
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
+        $required_confirm_hash = new \Valid_String('confirm_hash');
+        $required_confirm_hash->required();
         $confirm_hash = new ConcealedString(
-            $request->valid(new \Valid_String('confirm_hash')) === false ? '' : $request->get('confirm_hash')
+            $request->getValidated($required_confirm_hash->getKey(), $required_confirm_hash, '')
         );
 
         $this->user_retriever
