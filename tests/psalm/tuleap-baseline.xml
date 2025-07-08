@@ -45548,7 +45548,6 @@
     <InvalidArgument>
       <code><![CDATA[$_SERVER]]></code>
       <code><![CDATA[$_SERVER]]></code>
-      <code><![CDATA[$tracker_ids_warning]]></code>
     </InvalidArgument>
     <MissingParamType>
       <code><![CDATA[$create_mode]]></code>
@@ -45568,13 +45567,11 @@
       <code><![CDATA[$project->group_id]]></code>
       <code><![CDATA[$project->group_id]]></code>
       <code><![CDATA[$project->group_id]]></code>
-      <code><![CDATA[$tracker->deletion_date]]></code>
     </MissingPropertyType>
     <MissingReturnType>
       <code><![CDATA[checkUserCanAccessTracker]]></code>
       <code><![CDATA[displayCreateTracker]]></code>
       <code><![CDATA[displayCreateTrackerFromTV3]]></code>
-      <code><![CDATA[displayDeletedTrackers]]></code>
       <code><![CDATA[displayMigrateFromTV3Option]]></code>
       <code><![CDATA[doCreateTracker]]></code>
       <code><![CDATA[duplicateReferences]]></code>
@@ -46660,6 +46657,11 @@
       <code><![CDATA[searchAccessPermissionsByFieldId]]></code>
       <code><![CDATA[searchAccessPermissionsByTrackerId]]></code>
     </MissingReturnType>
+  </file>
+  <file src="plugins/tracker/include/TrackerDeletion/DeleteTrackerPresenterBuilder.php">
+    <MissingPropertyType>
+      <code><![CDATA[$tracker->deletion_date]]></code>
+    </MissingPropertyType>
   </file>
   <file src="plugins/tracker/include/TrackerFromXmlImportCannotBeCreatedException.php">
     <MissingParamType>

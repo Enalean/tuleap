@@ -277,6 +277,9 @@ use Tuleap\Tracker\Service\CheckPromotedTrackerConfiguration;
 use Tuleap\Tracker\Service\PromotedTrackerConfiguration;
 use Tuleap\Tracker\Service\ServiceActivator;
 use Tuleap\Tracker\Tracker;
+use Tuleap\Tracker\TrackerDeletion\DeletedTrackerDao;
+use Tuleap\Tracker\TrackerDeletion\DeleteTrackerPresenterBuilder;
+use Tuleap\Tracker\TrackerDeletion\TrackerDeletionRetriever;
 use Tuleap\Tracker\User\NotificationOnAllUpdatesRetriever;
 use Tuleap\Tracker\User\NotificationOnOwnActionRetriever;
 use Tuleap\Tracker\User\UserPreferencesPostController;
@@ -328,6 +331,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
     public const EMAILGATEWAY_INSECURE_ARTIFACT_UPDATE   = 'forge__artifact';
     public const SERVICE_SHORTNAME                       = 'plugin_tracker';
     public const TRUNCATED_SERVICE_NAME                  = 'Trackers';
+    public const DELETED_TRACKERS_TEMPLATE_NAME          = 'deleted_trackers';
 
     public function __construct($id)
     {
@@ -1158,8 +1162,15 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
 
     public function display_deleted_trackers(array &$params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        $tracker_manager = new TrackerManager();
-        $tracker_manager->displayDeletedTrackers();
+        $deleted_tracker_presenter_builder = new DeleteTrackerPresenterBuilder(new TrackerDeletionRetriever(new DeletedTrackerDao(), $this->getTrackerFactory()));
+        $presenter                         = $deleted_tracker_presenter_builder->displayDeletedTrackers();
+        $renderer                          = new AdminPageRenderer();
+
+        $renderer->renderToPage(
+            $presenter->getTemplateDir(),
+            self::DELETED_TRACKERS_TEMPLATE_NAME,
+            $presenter
+        );
     }
 
     /**

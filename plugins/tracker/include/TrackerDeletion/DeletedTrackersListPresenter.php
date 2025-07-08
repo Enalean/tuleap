@@ -37,7 +37,7 @@ final class DeletedTrackersListPresenter
 
     /**
      * @param DeletedTrackerPresenter[] $table_content
-     * @param string[] $tracker_ids_warning
+     * @param int[] $tracker_ids_warning
      */
     public function __construct(array $table_content, array $tracker_ids_warning, bool $has_trackers)
     {

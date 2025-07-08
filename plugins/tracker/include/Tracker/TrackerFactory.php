@@ -156,36 +156,6 @@ class TrackerFactory implements RetrieveTracker, RetrieveTrackersByProjectIdUser
     }
 
     /**
-     * Retrieve the list of deleted trackers.
-     *
-     * @return array
-     */
-    public function getDeletedTrackers()
-    {
-        $dao              = new \Tuleap\Tracker\TrackerDeletion\DeletedTrackerDao();
-        $pending_trackers = $dao->retrieveTrackersMarkAsDeleted();
-        $deleted_trackers = [];
-
-        if ($pending_trackers) {
-            foreach ($pending_trackers as $pending_tracker) {
-                $deleted_trackers[] = $this->getTrackerById($pending_tracker['id']);
-            }
-        }
-
-        return $deleted_trackers;
-    }
-
-    /**
-     * Restore a tracker from the list of deleted trackers.
-     *
-     * @param  int $tracker_id
-     *
-     */
-    public function restoreDeletedTracker($tracker_id): void
-    {
-        $dao = new \Tuleap\Tracker\TrackerDeletion\DeletedTrackerDao();
-        $dao->restoreTrackerMarkAsDeleted($tracker_id);
-    }
 
     /**
      * @param int $group_id the project id the trackers to retrieve belong to
