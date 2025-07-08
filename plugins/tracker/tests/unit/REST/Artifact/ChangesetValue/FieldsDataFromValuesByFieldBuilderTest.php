@@ -54,7 +54,7 @@ final class FieldsDataFromValuesByFieldBuilderTest extends \Tuleap\Test\PHPUnit\
     private \Tracker_FormElement_Field_Integer $int_field;
     private \Tracker_FormElement_Field_Float $float_field;
     private \Tracker_FormElement_Field_String $string_field;
-    private \Tracker_FormElement_Field_Text $text_field;
+    private \Tuleap\Tracker\FormElement\Field\Text\TextField $text_field;
     private \Tuleap\Tracker\Tracker $tracker;
 
     protected function setUp(): void

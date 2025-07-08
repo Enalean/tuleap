@@ -25,10 +25,10 @@ namespace Tuleap\Tracker\Artifact\Changeset\PostCreation\CalendarEvent;
 use PFUser;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue_Text;
-use Tracker_FormElement_Field_Text;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\FormElement\Field\Text\TextField;
 use Tuleap\Tracker\Semantic\Title\RetrieveSemanticTitleField;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
@@ -130,15 +130,15 @@ final class EventSummaryRetrieverTest extends TestCase
         );
     }
 
-    private function setTitleValue(string $title, Tracker_FormElement_Field_Text $title_field): void
+    private function setTitleValue(string $title, TextField $title_field): void
     {
         $title_field_value = new Tracker_Artifact_ChangesetValue_Text(1, $this->changeset, $title_field, false, $title, 'text');
         $this->changeset->setFieldValue($title_field, $title_field_value);
     }
 
-    private function getTitleField(bool $user_can_read): Tracker_FormElement_Field_Text
+    private function getTitleField(bool $user_can_read): TextField
     {
-        $title_field = $this->createMock(Tracker_FormElement_Field_Text::class);
+        $title_field = $this->createMock(TextField::class);
         $title_field->method('userCanRead')->willReturn($user_can_read);
         $title_field->method('getId')->willReturn(1);
 

@@ -22,15 +22,15 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\REST\v1\ArtifactSection;
 
-use Tracker_FormElement_Field_Text;
+use Tuleap\Tracker\FormElement\Field\Text\TextField;
 
 final readonly class RequiredArtifactInformation
 {
     public function __construct(
         public \Tracker_Artifact_Changeset $last_changeset,
-        public Tracker_FormElement_Field_Text $title_field,
+        public TextField $title_field,
         public string $title,
-        public Tracker_FormElement_Field_Text $description_field,
+        public TextField $description_field,
         public string $description,
     ) {
     }

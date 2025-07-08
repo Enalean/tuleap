@@ -27,9 +27,9 @@ use PFUser;
 use SimpleXMLElement;
 use TemplateRendererFactory;
 use Tracker_FormElement_Field;
-use Tracker_FormElement_Field_Text;
 use Tracker_FormElementFactory;
 use TrackerManager;
+use Tuleap\Tracker\FormElement\Field\Text\TextField;
 use Tuleap\Tracker\Semantic\TrackerSemantic;
 use Tuleap\Tracker\Semantic\TrackerSemanticManager;
 use Tuleap\Tracker\Tracker;
@@ -39,7 +39,7 @@ class TrackerSemanticDescription extends TrackerSemantic
     public const NAME = 'description';
 
     /**
-     * @var Tracker_FormElement_Field_Text
+     * @var TextField
      */
     protected $text_field;
 
@@ -47,9 +47,9 @@ class TrackerSemanticDescription extends TrackerSemantic
      * Constructor
      *
      * @param Tracker $tracker The tracker
-     * @param Tracker_FormElement_Field_Text $text_field The field
+     * @param TextField $text_field The field
      */
-    public function __construct(Tracker $tracker, ?Tracker_FormElement_Field_Text $text_field = null)
+    public function __construct(Tracker $tracker, ?TextField $text_field = null)
     {
         parent::__construct($tracker);
         $this->text_field = $text_field;
@@ -102,7 +102,7 @@ class TrackerSemanticDescription extends TrackerSemantic
     /**
      * The (text) field used for description semantic
      *
-     * @return Tracker_FormElement_Field_Text The (text) field used for description semantic, or null if no field
+     * @return TextField The (text) field used for description semantic, or null if no field
      */
     public function getField()
     {

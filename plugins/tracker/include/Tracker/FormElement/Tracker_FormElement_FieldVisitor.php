@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
+use Tuleap\Tracker\FormElement\Field\Text\TextField;
 use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
 
 /**
@@ -44,7 +45,7 @@ interface Tracker_FormElement_FieldVisitor // phpcs:ignore PSR1.Classes.ClassDec
 
     public function visitString(Tracker_FormElement_Field_String $field);
 
-    public function visitText(Tracker_FormElement_Field_Text $field);
+    public function visitText(TextField $field);
 
     public function visitRadiobutton(Tracker_FormElement_Field_Radiobutton $field);
 

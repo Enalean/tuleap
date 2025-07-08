@@ -22,14 +22,14 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Semantic\Title;
 
-use Tracker_FormElement_Field_Text;
 use Tracker_FormElementFactory;
+use Tuleap\Tracker\FormElement\Field\Text\TextField;
 use Tuleap\Tracker\Tracker;
 
 final class CachedSemanticTitleFieldRetriever implements RetrieveSemanticTitleField
 {
     private static ?self $instance = null;
-    /** @var array<int, ?Tracker_FormElement_Field_Text> */
+    /** @var array<int, ?TextField> */
     private array $semantics_cache = [];
 
     public static function instance(): self
@@ -45,7 +45,7 @@ final class CachedSemanticTitleFieldRetriever implements RetrieveSemanticTitleFi
     {
     }
 
-    public function fromTracker(Tracker $tracker): ?Tracker_FormElement_Field_Text
+    public function fromTracker(Tracker $tracker): ?TextField
     {
         if (isset($this->semantics_cache[$tracker->getId()])) {
             return $this->semantics_cache[$tracker->getId()];

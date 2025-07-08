@@ -33,7 +33,7 @@ final class ForTextTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $comparison = new EqualComparison(new Field('field'), new SimpleValueWrapper('value'));
         $field_id   = 101;
-        $field      = $this->createMock(\Tracker_FormElement_Field_Text::class);
+        $field      = $this->createMock(\Tuleap\Tracker\FormElement\Field\Text\TextField::class);
         $field->method('getId')->willReturn($field_id);
 
         $db = $this->createMock(EasyDB::class);

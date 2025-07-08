@@ -47,7 +47,7 @@ final class FieldValuesGathererTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $form_element_factory;
     private \Tracker_FormElement_Field_String $title_field;
-    private \Tracker_FormElement_Field_Text $description_field;
+    private \Tuleap\Tracker\FormElement\Field\Text\TextField $description_field;
     private \Tracker_FormElement_Field_Selectbox $status_field;
     private \Tracker_FormElement_Field_Date $start_date_field;
     private \Tracker_FormElement_Field_Date $end_date_field;
@@ -58,7 +58,7 @@ final class FieldValuesGathererTest extends \Tuleap\Test\PHPUnit\TestCase
     protected function setUp(): void
     {
         $this->title_field       = new \Tracker_FormElement_Field_String(1376, 89, 1000, 'title', 'Title', 'Irrelevant', true, 'P', true, '', 2);
-        $this->description_field = new \Tracker_FormElement_Field_Text(1412, 89, 1000, 'description', 'Description', 'Irrelevant', true, 'P', false, '', 3);
+        $this->description_field = new \Tuleap\Tracker\FormElement\Field\Text\TextField(1412, 89, 1000, 'description', 'Description', 'Irrelevant', true, 'P', false, '', 3);
         $this->status_field      = new \Tracker_FormElement_Field_Selectbox(1499, 89, 1000, 'status', 'Status', 'Irrelevant', true, 'P', false, '', 4);
         $this->start_date_field  = new \Tracker_FormElement_Field_Date(1784, 89, 1000, 'date', 'Date', 'Irrelevant', true, 'P', false, '', 5);
         $this->end_date_field    = new \Tracker_FormElement_Field_Date(1368, 89, 1000, 'date', 'Date', 'Irrelevant', true, 'P', false, '', 6);

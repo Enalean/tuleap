@@ -24,6 +24,7 @@ declare(strict_types=1);
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Tracker\FormElement\Field\Text\TextField;
 use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
@@ -150,7 +151,7 @@ final class TrackerReportRESTGetTest extends \Tuleap\Test\PHPUnit\TestCase //php
         $integer->method('getId')->willReturn(22);
         $integer->method('userCanRead')->willReturn(true);
 
-        $label = $this->createMock(Tracker_FormElement_Field_Text::class);
+        $label = $this->createMock(TextField::class);
         $label->method('getId')->willReturn(44);
         $label->method('userCanRead')->willReturn(true);
 

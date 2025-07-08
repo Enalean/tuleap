@@ -24,7 +24,6 @@ namespace Tuleap\Artidoc\Document\Tracker;
 
 use Tracker_FormElement_Field_File;
 use Tracker_FormElement_Field_String;
-use Tracker_FormElement_Field_Text;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -33,6 +32,7 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\Artifact\GetFileUploadDataStub;
 use Tuleap\Tracker\Test\Stub\Semantic\Description\RetrieveSemanticDescriptionFieldStub;
 use Tuleap\Tracker\Test\Stub\Semantic\Title\RetrieveSemanticTitleFieldStub;
+use Tuleap\Tracker\FormElement\Field\Text\TextField;
 use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -216,9 +216,9 @@ final class DocumentTrackerRepresentationTest extends TestCase
         return $field;
     }
 
-    private function getTextField(int $id, bool $submittable): Tracker_FormElement_Field_Text
+    private function getTextField(int $id, bool $submittable): TextField
     {
-        $field = $this->createMock(Tracker_FormElement_Field_Text::class);
+        $field = $this->createMock(TextField::class);
         $field->method('getId')->willReturn($id);
         $field->method('getLabel')->willReturn('A Text Field');
         $field->method('userCanSubmit')->willReturn($submittable);

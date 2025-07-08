@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\Adapter;
 
-use Tracker_FormElement_Field_Text;
+use Tuleap\Tracker\FormElement\Field\Text\TextField;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SemanticValueAdapterFindTitleTest extends SemanticValueAdapterTestCase
@@ -32,7 +32,7 @@ final class SemanticValueAdapterFindTitleTest extends SemanticValueAdapterTestCa
     {
         $this->changeset->method('getTracker')->willReturn($this->tracker);
 
-        $field = $this->createMock(Tracker_FormElement_Field_Text::class);
+        $field = $this->createMock(TextField::class);
         $field->method('userCanRead')->willReturn(true);
 
         $this->semantic_field_repository
@@ -53,7 +53,7 @@ final class SemanticValueAdapterFindTitleTest extends SemanticValueAdapterTestCa
     {
         $this->changeset->method('getTracker')->willReturn($this->tracker);
 
-        $field = $this->createMock(Tracker_FormElement_Field_Text::class);
+        $field = $this->createMock(TextField::class);
         $field->method('userCanRead')->willReturn(false);
 
         $this->semantic_field_repository
@@ -84,7 +84,7 @@ final class SemanticValueAdapterFindTitleTest extends SemanticValueAdapterTestCa
     {
         $this->changeset->method('getTracker')->willReturn($this->tracker);
 
-        $field = $this->createMock(Tracker_FormElement_Field_Text::class);
+        $field = $this->createMock(TextField::class);
         $field->method('userCanRead')->willReturn(true);
 
         $this->semantic_field_repository

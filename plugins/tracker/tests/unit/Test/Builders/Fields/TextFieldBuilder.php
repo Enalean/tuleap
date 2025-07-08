@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Test\Builders\Fields;
 
-use Tracker_FormElement_Field_Text;
+use Tuleap\Tracker\FormElement\Field\Text\TextField;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class TextFieldBuilder
@@ -82,7 +82,7 @@ final class TextFieldBuilder
         return $this;
     }
 
-    private function setProperties(Tracker_FormElement_Field_Text $field): void
+    private function setProperties(TextField $field): void
     {
         $properties = [];
         if ($this->number_of_rows > 0) {
@@ -96,9 +96,9 @@ final class TextFieldBuilder
         }
     }
 
-    public function build(): Tracker_FormElement_Field_Text
+    public function build(): TextField
     {
-        $field = new Tracker_FormElement_Field_Text(
+        $field = new TextField(
             $this->id,
             10,
             15,

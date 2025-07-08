@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\FormElement;
+namespace Tuleap\Tracker\FormElement\Field\Text;
 
 use ParagonIE\EasyDB\EasyDB;
 use PFUser;
@@ -30,14 +30,12 @@ use PHPUnit\Framework\MockObject\MockObject;
 use ReflectionClass;
 use TestHelper;
 use Tracker_Artifact_ChangesetValue_Text;
-use Tracker_FormElement_Field_Text;
 use Tracker_Report_Criteria_Text_ValueDao;
 use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface;
 use Tuleap\GlobalResponseMock;
 use Tuleap\Option\Option;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Tracker\FormElement\Field\Text\TextValueDao;
 use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
@@ -45,20 +43,20 @@ use Tuleap\Tracker\Test\Builders\ChangesetValueTextTestBuilder;
 use Tuleap\Tracker\Test\Builders\ReportTestBuilder;
 
 #[DisableReturnValueGenerationForTestDoubles]
-final class Tracker_FormElement_Field_TextTest extends TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+final class TextFieldTest extends TestCase
 {
     use GlobalResponseMock;
 
     private Tracker_Artifact_ChangesetValue_Text $previous_value;
     private TextValueDao&MockObject $value_dao;
-    private Tracker_FormElement_Field_Text&MockObject $text_field;
+    private TextField&MockObject $text_field;
     private PFUser $user;
 
     protected function setUp(): void
     {
         $this->user = UserTestBuilder::buildWithDefaults();
 
-        $this->text_field = $this->createPartialMock(Tracker_FormElement_Field_Text::class, [
+        $this->text_field = $this->createPartialMock(TextField::class, [
             'getCurrentUser', 'getDb', 'getValueDao', 'getProperty', 'isRequired', 'getCriteriaDao',
         ]);
         $this->text_field->method('getCurrentUser')->willReturn($this->user);

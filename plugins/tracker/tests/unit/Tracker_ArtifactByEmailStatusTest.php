@@ -63,7 +63,7 @@ final class Tracker_ArtifactByEmailStatusTest extends \Tuleap\Test\PHPUnit\TestC
     public function testItAcceptsArtifactByInsecureEmailWhenSemanticIsDefined(): void
     {
         $field_title       = $this->createMock(\Tracker_FormElement_Field_String::class);
-        $field_description = $this->createMock(\Tracker_FormElement_Field_Text::class);
+        $field_description = $this->createMock(\Tuleap\Tracker\FormElement\Field\Text\TextField::class);
 
         $field_title->method('isRequired')->willReturn(false);
         $field_description->method('isRequired')->willReturn(false);
@@ -86,7 +86,7 @@ final class Tracker_ArtifactByEmailStatusTest extends \Tuleap\Test\PHPUnit\TestC
         $this->tracker->method('isEmailgatewayEnabled')->willReturn(true);
 
         $field_title       = $this->createMock(\Tracker_FormElement_Field_String::class);
-        $field_description = $this->createMock(\Tracker_FormElement_Field_Text::class);
+        $field_description = $this->createMock(\Tuleap\Tracker\FormElement\Field\Text\TextField::class);
         $field_title->method('isRequired')->willReturn(false);
         $field_description->method('isRequired')->willReturn(false);
 
@@ -109,11 +109,11 @@ final class Tracker_ArtifactByEmailStatusTest extends \Tuleap\Test\PHPUnit\TestC
         $field_title->method('isRequired')->willReturn(false);
         $this->tracker->method('getTitleField')->willReturn($field_title);
 
-        $field_description = $this->createMock(\Tracker_FormElement_Field_Text::class);
+        $field_description = $this->createMock(\Tuleap\Tracker\FormElement\Field\Text\TextField::class);
         $field_description->method('getId')->willReturn(2);
         $field_description->method('isRequired')->willReturn(false);
 
-        $another_field = $this->createMock(\Tracker_FormElement_Field_Text::class);
+        $another_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\Text\TextField::class);
         $another_field->method('getId')->willReturn(3);
         $another_field->method('isRequired')->willReturn(true);
         $this->tracker->method('getFormElementFields')->willReturn([$field_title, $another_field, $field_description]);
@@ -220,11 +220,11 @@ final class Tracker_ArtifactByEmailStatusTest extends \Tuleap\Test\PHPUnit\TestC
         $field_title->method('getId')->willReturn(1);
         $field_title->method('isRequired')->willReturn($is_title_required);
 
-        $field_description = $this->createMock(\Tracker_FormElement_Field_Text::class);
+        $field_description = $this->createMock(\Tuleap\Tracker\FormElement\Field\Text\TextField::class);
         $field_description->method('getId')->willReturn(2);
         $field_description->method('isRequired')->willReturn($is_description_required);
 
-        $another_field = $this->createMock(\Tracker_FormElement_Field_Text::class);
+        $another_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\Text\TextField::class);
         $another_field->method('getId')->willReturn(3);
         $another_field->method('isRequired')->willReturn($is_another_field_required);
 
@@ -262,7 +262,7 @@ final class Tracker_ArtifactByEmailStatusTest extends \Tuleap\Test\PHPUnit\TestC
     public function testIsSemanticConfiguredReturnsTrue(): void
     {
         $field_title       = $this->createMock(\Tracker_FormElement_Field_String::class);
-        $field_description = $this->createMock(\Tracker_FormElement_Field_Text::class);
+        $field_description = $this->createMock(\Tuleap\Tracker\FormElement\Field\Text\TextField::class);
 
 
         $this->tracker_plugin_conf->method('isInsecureEmailgatewayEnabled')->willReturn(true);

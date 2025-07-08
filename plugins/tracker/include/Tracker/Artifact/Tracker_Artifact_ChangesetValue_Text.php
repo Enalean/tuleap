@@ -24,6 +24,7 @@ use Tuleap\Markdown\EnhancedCodeBlockExtension;
 use Tuleap\Tracker\Artifact\ChangesetValue\Text\FollowUpPresenter;
 use Tuleap\Tracker\Artifact\ChangesetValue\Text\TextValueInterpreter;
 use Tuleap\Tracker\Artifact\CodeBlockFeaturesOnArtifact;
+use Tuleap\Tracker\FormElement\Field\Text\TextField;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueCommonmarkRepresentation;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueTextRepresentation;
 
@@ -228,7 +229,7 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
         $renderer = TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR);
 
         $field = $this->getField();
-        if (! $field instanceof Tracker_FormElement_Field_Text) {
+        if (! $field instanceof TextField) {
             throw new LogicException('Field ' . $field->getId() . ' is not a text field');
         }
 

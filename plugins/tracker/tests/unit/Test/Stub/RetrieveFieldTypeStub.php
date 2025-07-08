@@ -32,7 +32,7 @@ final class RetrieveFieldTypeStub implements RetrieveFieldType
         \Tracker_FormElementFactory::FIELD_INTEGER_TYPE => \Tracker_FormElement_Field_Integer::class,
         \Tracker_FormElementFactory::FIELD_FLOAT_TYPE => \Tracker_FormElement_Field_Float::class,
         \Tracker_FormElementFactory::FIELD_DATE_TYPE => \Tracker_FormElement_Field_Date::class,
-        \Tracker_FormElementFactory::FIELD_TEXT_TYPE => \Tracker_FormElement_Field_Text::class,
+        \Tracker_FormElementFactory::FIELD_TEXT_TYPE => \Tuleap\Tracker\FormElement\Field\Text\TextField::class,
         \Tracker_FormElementFactory::FIELD_SUBMITTED_ON_TYPE => \Tracker_FormElement_Field_SubmittedOn::class,
         \Tracker_FormElementFactory::FIELD_SUBMITTED_BY_TYPE => \Tracker_FormElement_Field_SubmittedBy::class,
     ];

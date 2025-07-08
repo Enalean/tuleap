@@ -27,6 +27,7 @@ use Tuleap\Test\Stubs\CSRF\CSRFSessionKeyStorageStub;
 use Tuleap\Test\Stubs\CSRF\CSRFSigningKeyStorageStub;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\FieldDao;
+use Tuleap\Tracker\FormElement\Field\Text\TextField;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Tracker;
 
@@ -234,7 +235,7 @@ final class Tracker_FormElementFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
                 $this->assertEquals(666, $field->getId());
             }
 
-            if ($field instanceof Tracker_FormElement_Field_Text) {
+            if ($field instanceof TextField) {
                 $found_fields['text'] = true;
                 $this->assertEquals(999, $field->getId());
             }

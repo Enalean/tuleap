@@ -352,7 +352,7 @@ class AddInPlaceRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $title_field->method('isRequired')->willReturn($is_title_field_required);
         $title_field->method('getId')->willReturn(self::SEMANTIC_TITLE_FIELD_ID);
 
-        $desc_field = $this->createMock(\Tracker_FormElement_Field_Text::class);
+        $desc_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\Text\TextField::class);
         $desc_field->method('isRequired')->willReturn($is_desc_field_required);
         $desc_field->method('getId')->willReturn(1534);
 

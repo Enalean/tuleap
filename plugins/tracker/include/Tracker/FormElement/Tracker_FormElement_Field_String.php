@@ -23,6 +23,7 @@ use Tuleap\Search\ItemToIndexQueue;
 use Tuleap\Search\ItemToIndexQueueEventBased;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
+use Tuleap\Tracker\FormElement\Field\Text\TextField;
 use Tuleap\Tracker\FormElement\FieldContentIndexer;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\DeleteSpecificProperties;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\DuplicateSpecificProperties;
@@ -33,7 +34,7 @@ use Tuleap\Tracker\Report\Criteria\CriteriaAlphaNumValueDAO;
 use Tuleap\Tracker\Report\Criteria\DeleteReportCriteriaValue;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
-class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text
+class Tracker_FormElement_Field_String extends TextField
 {
     public array $default_properties = [
         'maxchars'      => [

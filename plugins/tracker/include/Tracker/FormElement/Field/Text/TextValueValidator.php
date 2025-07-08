@@ -21,7 +21,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\Field\Text;
 
-use Tracker_FormElement_Field_Text;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
@@ -35,7 +34,7 @@ final class TextValueValidator
     /**
      * @return Ok<true> | Err<Fault>
      */
-    public function isValueValid(Tracker_FormElement_Field_Text $field_text, mixed $value): Ok|Err
+    public function isValueValid(TextField $field_text, mixed $value): Ok|Err
     {
         $content_value = $this->getContentFromValue($value);
 

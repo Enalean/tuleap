@@ -30,11 +30,11 @@ use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tracker_Artifact_Changeset;
 use Tracker_ArtifactFactory;
-use Tracker_FormElement_Field_Text;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\NotFoundException;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\FormElement\Field\Text\TextField;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueIntegerTestBuilder;
@@ -44,7 +44,7 @@ use Tuleap\Tracker\Test\Builders\Fields\TextFieldBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TextDiffRetrieverTest extends TestCase
 {
-    private Tracker_FormElement_Field_Text $field_text;
+    private TextField $field_text;
     private Tracker_Artifact_Changeset $previous_changeset;
     private Tracker_Artifact_Changeset $next_changeset;
     private BaseLayout&MockObject $layout;

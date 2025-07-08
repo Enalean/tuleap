@@ -36,14 +36,14 @@ class ChangesetsForDiff
      */
     private $next_changeset;
     /**
-     * @var \Tracker_FormElement_Field_Text
+     * @var \Tuleap\Tracker\FormElement\Field\Text\TextField
      * @psalm-readonly
      */
     private $field_text;
 
     public function __construct(
         \Tracker_Artifact_Changeset $next_changeset,
-        \Tracker_FormElement_Field_Text $field_text,
+        \Tuleap\Tracker\FormElement\Field\Text\TextField $field_text,
         ?\Tracker_Artifact_Changeset $previous_changeset,
     ) {
         $this->previous_changeset = $previous_changeset;
@@ -61,7 +61,7 @@ class ChangesetsForDiff
         return $this->next_changeset;
     }
 
-    public function getFieldText(): \Tracker_FormElement_Field_Text
+    public function getFieldText(): \Tuleap\Tracker\FormElement\Field\Text\TextField
     {
         return $this->field_text;
     }

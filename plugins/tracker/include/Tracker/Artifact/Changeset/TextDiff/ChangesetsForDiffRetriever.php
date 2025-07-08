@@ -61,7 +61,7 @@ class ChangesetsForDiffRetriever
             throw new NotFoundException(dgettext('tuleap-tracker', 'Field not found.'));
         }
 
-        if (! $field instanceof \Tracker_FormElement_Field_Text) {
+        if (! $field instanceof \Tuleap\Tracker\FormElement\Field\Text\TextField) {
             throw new ForbiddenException(dgettext('tuleap-tracker', 'Only text fields are supported for diff.'));
         }
 

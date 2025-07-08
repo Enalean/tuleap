@@ -22,14 +22,14 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Test\Stub\Semantic\Title;
 
-use Tracker_FormElement_Field_Text;
+use Tuleap\Tracker\FormElement\Field\Text\TextField;
 use Tuleap\Tracker\Semantic\Title\RetrieveSemanticTitleField;
 use Tuleap\Tracker\Tracker;
 
 final class RetrieveSemanticTitleFieldStub implements RetrieveSemanticTitleField
 {
     private int $call_count;
-    /** @var array<int, Tracker_FormElement_Field_Text> */
+    /** @var array<int, TextField> */
     private array $tracker_titles = [];
 
     private function __construct()
@@ -42,13 +42,13 @@ final class RetrieveSemanticTitleFieldStub implements RetrieveSemanticTitleField
         return new self();
     }
 
-    public function withTitleField(Tracker $tracker, Tracker_FormElement_Field_Text $title_field): self
+    public function withTitleField(Tracker $tracker, TextField $title_field): self
     {
         $this->tracker_titles[$tracker->getId()] = $title_field;
         return $this;
     }
 
-    public function fromTracker(Tracker $tracker): ?Tracker_FormElement_Field_Text
+    public function fromTracker(Tracker $tracker): ?TextField
     {
         $this->call_count++;
         if (isset($this->tracker_titles[$tracker->getId()])) {
