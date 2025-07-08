@@ -24,9 +24,10 @@ import TrackerFromJira from "./TrackerFromJira.vue";
 import { createTrackerCreationLocalVue } from "../../../../../helpers/local-vue-for-tests";
 import type { Credentials, JiraImportData, State } from "../../../../../store/type";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
+import type Vue from "vue";
 
 describe("TrackerFromJira", () => {
-    let wrapper: Wrapper<TrackerFromJira>;
+    let wrapper: Wrapper<Vue>;
 
     beforeEach(async () => {
         const state = {
@@ -61,8 +62,8 @@ describe("TrackerFromJira", () => {
         await wrapper.trigger("submit");
 
         expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith("getJiraProjectList", credentials);
-        expect(wrapper.vm.$data.is_connection_valid).toBe(true);
-        expect(wrapper.vm.$data.error_message).toBe("");
+        expect(wrapper.find("[data-test=should-display-connexion]").exists()).toBe(true);
+        expect(wrapper.find("[data-test=jira-fail-load-project]").exists()).toBe(false);
 
         expect(wrapper.find("[data-test=jira-fail-load-project]").exists()).toBe(false);
     });

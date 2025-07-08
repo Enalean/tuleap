@@ -33,6 +33,7 @@
             class="tlp-button-primary create-from-jira-button"
             v-bind:disabled="should_be_disabled"
             v-if="should_display_connection"
+            data-test="should-display-connexion"
         >
             <span>{{ $gettext("Connect") }}</span>
             <i class="fa tlp-button-icon-right" v-bind:class="icon_class"></i>
@@ -41,92 +42,78 @@
     </form>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Action, Mutation, State } from "vuex-class";
-import { Component } from "vue-property-decorator";
-import type { Credentials, JiraImportData, ProjectList } from "../../../../../store/type";
+<script setup lang="ts">
+import { ref, computed, onBeforeMount } from "vue";
+import type { Credentials, ProjectList } from "../../../../../store/type";
 import TrackerFromJiraProject from "./TrackerFromJiraProject.vue";
 import TrackerFromJiraServer from "./TrackerFromJiraServer.vue";
 import { FetchWrapperError } from "@tuleap/tlp-fetch";
+import { useActions, useMutations, useState } from "vuex-composition-helpers";
 
-@Component({
-    components: { TrackerFromJiraServer, TrackerFromJiraProject },
-})
-export default class TrackerFromJira extends Vue {
-    @State
-    readonly from_jira_data!: JiraImportData;
+const { from_jira_data } = useState(["from_jira_data"]);
+const { setJiraCredentials, setProjectList } = useMutations([
+    "setJiraCredentials",
+    "setProjectList",
+]);
+const { getJiraProjectList } = useActions(["getJiraProjectList"]);
 
-    @Mutation
-    readonly setJiraCredentials!: (credentials: Credentials) => void;
+const is_connection_valid = ref(false);
+const is_loading = ref(false);
+const error_message = ref("");
+const project_list = ref<ProjectList[] | null>(null);
 
-    @Mutation
-    readonly setProjectList!: (project_list: ProjectList[]) => void;
+const credentials = ref<Credentials>({
+    server_url: "",
+    user_email: "",
+    token: "",
+});
 
-    @Action
-    readonly getJiraProjectList!: (credentials: Credentials) => Promise<ProjectList[]>;
+onBeforeMount(() => {
+    if (!from_jira_data.value.project_list) {
+        return;
+    }
+    project_list.value = from_jira_data.value.project_list;
+});
 
-    private is_connection_valid = false;
-    private is_loading = false;
-    error_message = "";
+const checkConnexionIsReady = async (): Promise<void> => {
+    error_message.value = "";
 
-    project_list: ProjectList[] | null = null;
+    try {
+        is_loading.value = true;
+        project_list.value = await getJiraProjectList(credentials.value);
 
-    credentials: Credentials = {
-        server_url: "",
-        user_email: "",
-        token: "",
-    };
+        setJiraCredentials(credentials.value);
+        setProjectList(project_list.value);
 
-    beforeMount(): void {
-        if (!this.from_jira_data.project_list) {
-            return;
+        is_connection_valid.value = true;
+    } catch (e) {
+        if (!(e instanceof FetchWrapperError)) {
+            throw e;
         }
-
-        this.project_list = this.from_jira_data.project_list;
+        const { error } = await e.response.json();
+        error_message.value = error;
+    } finally {
+        is_loading.value = false;
     }
+};
 
-    async checkConnexionIsReady(): Promise<void> {
-        this.error_message = "";
+const should_display_connection = computed((): boolean => {
+    return !is_connection_valid.value && !project_list.value;
+});
 
-        try {
-            this.is_loading = true;
-            this.project_list = await this.getJiraProjectList(this.credentials);
-
-            this.setJiraCredentials(this.credentials);
-            this.setProjectList(this.project_list);
-
-            this.is_connection_valid = true;
-        } catch (e) {
-            if (!(e instanceof FetchWrapperError)) {
-                throw e;
-            }
-            const { error } = await e.response.json();
-            this.error_message = error;
-        } finally {
-            this.is_loading = false;
-        }
+const icon_class = computed((): string => {
+    if (is_loading.value) {
+        return "fa-circle-o-notch fa-spinner";
     }
+    return "";
+});
 
-    get should_display_connection(): boolean {
-        return !this.is_connection_valid && !this.project_list;
-    }
-
-    get icon_class(): string {
-        if (this.is_loading) {
-            return "fa-circle-o-notch fa-spinner";
-        }
-
-        return "";
-    }
-
-    get should_be_disabled(): boolean {
-        return (
-            this.credentials.server_url === "" ||
-            this.credentials.user_email === "" ||
-            this.credentials.token === "" ||
-            this.is_loading
-        );
-    }
-}
+const should_be_disabled = computed((): boolean => {
+    return (
+        credentials.value.server_url === "" ||
+        credentials.value.user_email === "" ||
+        credentials.value.token === "" ||
+        is_loading.value
+    );
+});
 </script>
