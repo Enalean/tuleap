@@ -481,6 +481,15 @@ final class UpdateArtifactActionTest extends TestCase
         $this->assertEquals(TRACKER_BASE_URL . "/?aid=$from_aid", $redirect_uri->toUrl());
     }
 
+    public function testItReturnsOnMyDashboardWhenDashboardIdIsProvided(): void
+    {
+        $this->request = HTTPRequestBuilder::get()->withParam('func', 'artifact-update')
+            ->withParam('my-dashboard-id', '123')
+            ->build();
+        $redirect_uri  = $this->getRedirectUrl();
+        $this->assertEquals('/my/?tracker=' . self::TRACKER_ID . '&dashboard_id=123', $redirect_uri->toUrl());
+    }
+
     private function assertURIHasArgument(string $url, string $argument, string $argument_value): void
     {
         $query_string = parse_url($url, PHP_URL_QUERY);
