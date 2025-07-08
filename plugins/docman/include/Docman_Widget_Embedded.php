@@ -189,7 +189,7 @@ class Docman_Widget_Embedded extends Widget implements \Tuleap\Docman\Item\ItemV
         if (! $mapping_registry->hasCustomMapping(\DocmanPlugin::ITEM_MAPPING_KEY)) {
             return $dao->cloneContent(
                 (int) $this->owner_id,
-                (string) $this->owner_type,
+                $this->owner_type,
                 (int) $owner_id,
                 (string) $owner_type
             );

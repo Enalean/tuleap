@@ -19223,7 +19223,6 @@
       <code><![CDATA[duplicate]]></code>
       <code><![CDATA[exportToXml]]></code>
       <code><![CDATA[fetch]]></code>
-      <code><![CDATA[fetchAdditionnalButton]]></code>
       <code><![CDATA[fetchAsArray]]></code>
       <code><![CDATA[fetchContentD3Graph]]></code>
       <code><![CDATA[fetchContentJPGraph]]></code>
@@ -20079,8 +20078,6 @@
       <code><![CDATA[afterSaveObject]]></code>
       <code><![CDATA[delete]]></code>
       <code><![CDATA[exportToXml]]></code>
-      <code><![CDATA[fetchAdditionalButton]]></code>
-      <code><![CDATA[fetchWidget]]></code>
       <code><![CDATA[getChartFactory]]></code>
       <code><![CDATA[getCharts]]></code>
       <code><![CDATA[getTemplateRenderer]]></code>
@@ -20097,9 +20094,6 @@
       <code><![CDATA[addChild]]></code>
       <code><![CDATA[addChild]]></code>
     </PossiblyNullReference>
-    <TooManyArguments>
-      <code><![CDATA[fetchAdditionalButton]]></code>
-    </TooManyArguments>
     <UndefinedMethod>
       <code><![CDATA[getCharts]]></code>
     </UndefinedMethod>
@@ -31829,12 +31823,6 @@
       <code><![CDATA[$dao->retrieve($sql)]]></code>
     </PossiblyFalseIterator>
   </file>
-  <file src="plugins/tracker/include/Action/CreateArtifactAction.php">
-    <MissingParamType>
-      <code><![CDATA[$continue]]></code>
-      <code><![CDATA[$stay]]></code>
-    </MissingParamType>
-  </file>
   <file src="plugins/tracker/include/Action/UpdateArtifactAction.php">
     <InvalidArgument>
       <code><![CDATA[$remaining_effort_field]]></code>
@@ -34938,7 +34926,6 @@
       <code><![CDATA[display]]></code>
       <code><![CDATA[displayFooter]]></code>
       <code><![CDATA[displayHeader]]></code>
-      <code><![CDATA[enhanceRedirect]]></code>
       <code><![CDATA[fetchFieldsForCopy]]></code>
       <code><![CDATA[fetchFormContent]]></code>
       <code><![CDATA[fetchRulesAsJavascript]]></code>
@@ -35015,7 +35002,6 @@
     <MissingReturnType>
       <code><![CDATA[displayFooter]]></code>
       <code><![CDATA[displayHeader]]></code>
-      <code><![CDATA[enhanceRedirect]]></code>
       <code><![CDATA[fetchFormContent]]></code>
     </MissingReturnType>
   </file>
@@ -35027,7 +35013,6 @@
       <code><![CDATA[displayANumberOfBlankTab]]></code>
       <code><![CDATA[displayFooter]]></code>
       <code><![CDATA[displayHeader]]></code>
-      <code><![CDATA[enhanceRedirect]]></code>
       <code><![CDATA[fetchFormContent]]></code>
       <code><![CDATA[fetchTitle]]></code>
       <code><![CDATA[fetchTitleInHierarchy]]></code>
@@ -44008,7 +43993,6 @@
       <code><![CDATA[canAddToDashboard]]></code>
       <code><![CDATA[delete]]></code>
       <code><![CDATA[exportToXml]]></code>
-      <code><![CDATA[fetchWidget]]></code>
       <code><![CDATA[getReport]]></code>
       <code><![CDATA[getTemplateRenderer]]></code>
       <code><![CDATA[getType]]></code>
@@ -44209,7 +44193,6 @@
       <code><![CDATA[fetchAddAggregatesUsedFunctionsHeader]]></code>
       <code><![CDATA[fetchAddAggregatesUsedFunctionsValue]]></code>
       <code><![CDATA[fetchAddColumn]]></code>
-      <code><![CDATA[fetchAdditionnalButton]]></code>
       <code><![CDATA[fetchAggregates]]></code>
       <code><![CDATA[fetchAggregatesExtraColumns]]></code>
       <code><![CDATA[fetchFormStart]]></code>
@@ -44220,7 +44203,6 @@
       <code><![CDATA[fetchRange]]></code>
       <code><![CDATA[fetchTHead]]></code>
       <code><![CDATA[fetchViewButtons]]></code>
-      <code><![CDATA[fetchWidget]]></code>
       <code><![CDATA[formatAggregateResult]]></code>
       <code><![CDATA[getAggregates]]></code>
       <code><![CDATA[getAggregatesDao]]></code>
@@ -44302,7 +44284,6 @@
     </RiskyTruthyFalsyComparison>
     <TooManyArguments>
       <code><![CDATA[buildOrderedQuery]]></code>
-      <code><![CDATA[fetchAdditionnalButton]]></code>
     </TooManyArguments>
     <UndefinedMethod>
       <code><![CDATA[getAggregates]]></code>
@@ -44395,19 +44376,6 @@
       <code><![CDATA[WidgetMyDashboardPresenter[]]]></code>
       <code><![CDATA[WidgetMyDashboardPresenter[]]]></code>
     </UndefinedDocblockClass>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Report/WidgetAdditionalButtonPresenter.php">
-    <InvalidScalarArgument>
-      <code><![CDATA[$tracker->getId()]]></code>
-    </InvalidScalarArgument>
-    <MissingParamType>
-      <code><![CDATA[$is_a_table_renderer]]></code>
-    </MissingParamType>
-    <MissingPropertyType>
-      <code><![CDATA[$is_a_table_renderer]]></code>
-      <code><![CDATA[$new_artifact]]></code>
-      <code><![CDATA[$url_artifact_submit]]></code>
-    </MissingPropertyType>
   </file>
   <file src="plugins/tracker/include/Tracker/Report/XML/XMLReport.php">
     <PossiblyNullArgument>
@@ -51186,7 +51154,6 @@
       <code><![CDATA[$rss_url]]></code>
       <code><![CDATA[$title]]></code>
       <code><![CDATA[$widget->owner_id]]></code>
-      <code><![CDATA[$widget->owner_type]]></code>
       <code><![CDATA[$widget_id]]></code>
       <code><![CDATA[$widget_name]]></code>
     </MissingPropertyType>
@@ -61652,7 +61619,6 @@
       <code><![CDATA[$content_id]]></code>
       <code><![CDATA[$id]]></code>
       <code><![CDATA[$owner_id]]></code>
-      <code><![CDATA[$owner_type]]></code>
     </MissingPropertyType>
     <MissingReturnType>
       <code><![CDATA[canBeAddedFromWidgetList]]></code>

@@ -184,7 +184,7 @@ final class RoadmapProjectWidget extends \Widget
 
         return $this->transaction_executor->execute(
             function () use ($id, $owner_id, $owner_type, $mapping_registry): int {
-                $data = $this->dao->searchContent((int) $id, (int) $this->owner_id, (string) $this->owner_type);
+                $data = $this->dao->searchContent((int) $id, (int) $this->owner_id, $this->owner_type);
                 if (! $data) {
                     return $this->dao->cloneContent(
                         (int) $id,
@@ -228,7 +228,7 @@ final class RoadmapProjectWidget extends \Widget
         $row = $this->dao->searchContent(
             (int) $id,
             (int) $this->owner_id,
-            (string) $this->owner_type,
+            $this->owner_type,
         );
 
         if ($row) {
@@ -274,7 +274,7 @@ final class RoadmapProjectWidget extends \Widget
 
         return $this->dao->insertContent(
             (int) $this->owner_id,
-            (string) $this->owner_type,
+            $this->owner_type,
             $roadmap_parameters['title'],
             $tracker_ids,
             $report_id,
@@ -329,7 +329,7 @@ final class RoadmapProjectWidget extends \Widget
         $this->dao->update(
             $id,
             (int) $this->owner_id,
-            (string) $this->owner_type,
+            $this->owner_type,
             $roadmap_parameters['title'],
             $tracker_ids,
             $report_id,
@@ -346,7 +346,7 @@ final class RoadmapProjectWidget extends \Widget
      */
     public function destroy($id): void
     {
-        $this->dao->delete((int) $id, (int) $this->owner_id, (string) $this->owner_type);
+        $this->dao->delete((int) $id, (int) $this->owner_id, $this->owner_type);
     }
 
     public function getJavascriptAssets(): array

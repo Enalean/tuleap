@@ -32,7 +32,7 @@ use Tuleap\Project\MappingRegistry;
     public $content_id;
     public $id;
     public $owner_id;
-    public $owner_type;
+    public string $owner_type;
 
     /** @var  int */
     protected $dashboard_widget_id;

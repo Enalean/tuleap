@@ -29,7 +29,7 @@ use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Project\MappingRegistry;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
-use Tuleap\Tracker\Report\WidgetAdditionalButtonPresenter;
+use Tuleap\Tracker\Report\Widget\WidgetAdditionalButtonPresenter;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Cardwall_Renderer extends Tracker_Report_Renderer
@@ -225,18 +225,14 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
         }
     }
 
-    /**
-     * Fetch content to be displayed in widget
-     *
-     * @return string
-     */
-    public function fetchWidget(PFUser $user)
+    public function fetchWidget(PFUser $user, Widget $widget): string
     {
         $html = '';
 
         $additional_button_presenter = new WidgetAdditionalButtonPresenter(
             $this->report->getTracker(),
-            false
+            false,
+            $widget
         );
 
         $renderer = TemplateRendererFactory::build()->getRenderer(dirname(__FILE__) . '/../templates');

@@ -47,7 +47,7 @@ abstract class Tracker_Widget_Renderer extends Widget //phpcs:ignore PSR1.Classe
     {
         $renderer = $this->getRenderer();
         if ($renderer) {
-            return $renderer->fetchWidget($this->getCurrentUser());
+            return $renderer->fetchWidget($this->getCurrentUser(), $this);
         }
         $template_renderer = TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../../templates/widget');
         return $template_renderer->renderToString('renderer-not-found', []);

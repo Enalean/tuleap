@@ -105,7 +105,7 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
         return $this->cached_parent_hierarchy;
     }
 
-    protected function enhanceRedirect(Codendi_Request $request)
+    protected function enhanceRedirect(Codendi_Request $request): void
     {
         $from_aid = $request->get('from_aid');
         if ($from_aid != null) {

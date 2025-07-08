@@ -18,12 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Tracker\Report\WidgetAdditionalButtonPresenter;
+use Tuleap\Tracker\Report\Widget\WidgetAdditionalButtonPresenter;
 
 /**
  * The content of the renderer
  */
-class Cardwall_RendererPresenter extends Cardwall_BoardPresenter
+class Cardwall_RendererPresenter extends Cardwall_BoardPresenter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /**
      * @var Tracker_FormElement_Field_Selectbox

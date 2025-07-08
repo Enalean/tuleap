@@ -61,7 +61,7 @@ abstract class GraphOnTrackersV5_Widget_Chart extends Widget
         );
 
         if ($chart && $chart->getRenderer()->getReport()->getTracker()->userCanView()) {
-            $content = $chart->getWidgetContent();
+            $content = $chart->getWidgetContent($this);
         } else {
             $content = '<em>Chart does not exist</em>';
         }
@@ -151,7 +151,7 @@ abstract class GraphOnTrackersV5_Widget_Chart extends Widget
         if (! $mapping_registry->hasCustomMapping(GraphOnTrackersV5_ChartFactory::MAPPING_KEY)) {
             return $dao->cloneContent(
                 (int) $this->owner_id,
-                (string) $this->owner_type,
+                $this->owner_type,
                 (int) $owner_id,
                 (string) $owner_type
             );

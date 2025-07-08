@@ -30,6 +30,7 @@ use TrackerManager;
 use Tuleap\Layout\CssAssetCollection;
 use Tuleap\Project\MappingRegistry;
 use Tuleap\Test\PHPUnit\TestCase;
+use Widget;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TableRendererForReportRetrieverTest extends TestCase
@@ -74,7 +75,7 @@ final class TableRendererForReportRetrieverTest extends TestCase
                 // TODO: Implement processRequest() method.
             }
 
-            public function fetchWidget(PFUser $user)
+            public function fetchWidget(PFUser $user, Widget $widget): string
             {
                 // TODO: Implement fetchWidget() method.
             }
