@@ -29,23 +29,22 @@
         ></textarea>
     </div>
 </template>
-<script lang="ts">
-import Vue from "vue";
-import { State } from "vuex-class";
-import { Component } from "vue-property-decorator";
+<script setup lang="ts">
+import { computed } from "vue";
+import { useState } from "vuex-composition-helpers";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 import type { TrackerToBeCreatedMandatoryData } from "../../../../store/type";
 
-@Component
-export default class FieldDescription extends Vue {
-    @State
-    readonly tracker_to_be_created!: TrackerToBeCreatedMandatoryData;
+const { $gettext, interpolate } = useGettext();
+const { tracker_to_be_created } = useState<{
+    tracker_to_be_created: TrackerToBeCreatedMandatoryData;
+}>(["tracker_to_be_created"]);
 
-    get placeholder(): string {
-        return this.$gettextInterpolate(
-            this.$gettext("My %{ tracker_name } tracker description..."),
-            { tracker_name: this.tracker_to_be_created.name },
-            true,
-        );
-    }
-}
+const placeholder = computed(() =>
+    interpolate(
+        $gettext("My %{ tracker_name } tracker description..."),
+        { tracker_name: tracker_to_be_created.value.name },
+        true,
+    ),
+);
 </script>
