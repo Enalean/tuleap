@@ -17,11 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { createApp, readonly } from "vue";
+import { createApp } from "vue";
 import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue3-gettext-init";
 import { createGettext } from "vue3-gettext";
 import { getAttributeOrThrow } from "@tuleap/dom";
 import { getLocaleOrThrow, getTimezoneOrThrow } from "@tuleap/date-helper";
+import type { RelativeDatesDisplayPreference } from "@tuleap/tlp-relative-date";
 import { createOverviewRouter } from "./router/router";
 import { buildBaseUrl } from "./router/base-url-builders";
 import VueDOMPurifyHTML from "vue-dompurify-html";
@@ -44,7 +45,7 @@ export async function init(mount_point: HTMLElement): Promise<void> {
     const base_url = buildBaseUrl(window.location, current_repository_id, project_id);
 
     createApp(OverviewApp)
-        .provide(OVERVIEW_APP_BASE_URL_KEY, readonly(base_url))
+        .provide(OVERVIEW_APP_BASE_URL_KEY, base_url)
         .provide(USER_LOCALE_KEY, getLocaleOrThrow(document))
         .provide(USER_TIMEZONE_KEY, getTimezoneOrThrow(document))
         .provide(
@@ -56,7 +57,11 @@ export async function init(mount_point: HTMLElement): Promise<void> {
         .provide(CURRENT_USER_AVATAR_URL, getAttributeOrThrow(mount_point, "data-user-avatar-url"))
         .provide(
             USER_RELATIVE_DATE_DISPLAY_PREFERENCE_KEY,
-            getAttributeOrThrow(mount_point, "data-relative-date-display"),
+            // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- Assume that the backend does not send any string
+            getAttributeOrThrow(
+                mount_point,
+                "data-relative-date-display",
+            ) as RelativeDatesDisplayPreference,
         )
         .provide(
             ARE_MERGE_COMMITS_ALLOWED_IN_REPOSITORY,
@@ -66,9 +71,10 @@ export async function init(mount_point: HTMLElement): Promise<void> {
         )
         .use(createOverviewRouter(base_url))
         .use(
-            await initVueGettext(createGettext, (locale: string) => {
-                return import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`);
-            }),
+            await initVueGettext(
+                createGettext,
+                (locale) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`),
+            ),
         )
         .use(VueDOMPurifyHTML)
         .mount(mount_point);

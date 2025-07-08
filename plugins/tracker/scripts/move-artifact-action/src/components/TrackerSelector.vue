@@ -60,17 +60,18 @@ import { TRACKER_ID } from "../injection-symbols";
 const { $gettext } = useGettext();
 
 const selectors_store = useSelectorsStore();
+const source_tracker_id = strictInject(TRACKER_ID);
 
 type TrackerSelectorOption = Tracker & {
     disabled: boolean;
 };
 
-const tracker_options = computed((): TrackerSelectorOption[] =>
-    selectors_store.trackers.map((tracker: Tracker) => ({
+const tracker_options = computed((): TrackerSelectorOption[] => {
+    return selectors_store.trackers.map((tracker: Tracker) => ({
         ...tracker,
-        disabled: tracker.id === strictInject(TRACKER_ID),
-    })),
-);
+        disabled: tracker.id === source_tracker_id,
+    }));
+});
 const tracker_id = ref(null);
 const list_picker = ref<ListPicker | undefined>();
 const move_artifact_tracker_selector = ref<HTMLSelectElement>();

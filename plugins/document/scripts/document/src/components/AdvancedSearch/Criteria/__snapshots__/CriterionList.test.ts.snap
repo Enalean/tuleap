@@ -28,6 +28,7 @@ exports[`CriterionList > should render the component 1`] = `
     </option>
     <option
       data-test="option-folder"
+      selected=""
       value="folder"
     >
       Folder

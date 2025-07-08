@@ -14,7 +14,9 @@ exports[`CriterionOwner > should render the component with an already selected u
     class="tlp-input"
     id="document-criterion-owner-owner"
   >
-    <option>
+    <option
+      selected=""
+    >
       John Doe
     </option>
     

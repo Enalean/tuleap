@@ -15,7 +15,7 @@
     "@tuleap/tlp-swatch-colors": "workspace:*",
     "@tuleap/vue3-breadcrumb-privacy": "workspace:^",
     "@tuleap/vue3-gettext-init": "workspace:^",
-    "vue": "^3.3.4",
+    "vue": "^3.4.38",
     "vue3-gettext": "2.4.0",
     "vuex": "^4.1.0",
     "vuex-composition-helpers": "^2.0.3"

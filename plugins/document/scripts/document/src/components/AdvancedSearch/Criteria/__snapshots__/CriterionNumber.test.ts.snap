@@ -15,6 +15,7 @@ exports[`CriterionNumber > should render the component 1`] = `
     data-test="document-criterion-number-id"
     id="document-criterion-number-id"
     type="number"
+    value="123"
   />
 </div>
 `;

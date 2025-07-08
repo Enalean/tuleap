@@ -23,7 +23,7 @@
     "@tuleap/vue3-gettext-init": "workspace:*",
     "hybrids": "^9.1.6",
     "neverthrow": "^6.0.0",
-    "vue": "^3.3.4",
+    "vue": "^3.4.38",
     "vue-dompurify-html": "^5.0.0",
     "vue3-gettext": "^2.4.0"
   },

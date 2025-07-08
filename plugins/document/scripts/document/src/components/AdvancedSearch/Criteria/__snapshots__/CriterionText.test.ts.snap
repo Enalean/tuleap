@@ -22,6 +22,7 @@ exports[`CriterionText > should render the component 1`] = `
     data-test="document-criterion-text-title"
     id="document-criterion-text-title"
     type="text"
+    value="Lorem"
   />
 </div>
 `;
