@@ -36,7 +36,7 @@
             aria-hidden="true"
             data-test="pretty-title-caret"
         ></i>
-        <span class="tlp-skeleton-text"></span>
+        <span class="cross-ref-badge tlp-skeleton-text"></span>
     </span>
 </template>
 
