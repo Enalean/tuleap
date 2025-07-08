@@ -22,20 +22,27 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\TrackerDeletion;
 
+use ForgeConfig;
 use Tuleap\DB\DataAccessObject;
 
 final class DeletedTrackerDao extends DataAccessObject implements RetrieveDeletedTracker, RestoreDeletedTracker
 {
     public function retrieveTrackersMarkAsDeleted(): array
     {
+        if (ForgeConfig::getInt('sys_file_deletion_delay') === 0) {
+            return [];
+        }
+        $displayed_purge_date = strtotime('-' . ForgeConfig::getInt('sys_file_deletion_delay') . ' day');
+
         $sql = "SELECT tracker.*
                 FROM tracker
                     INNER JOIN `groups` USING (group_id)
                 WHERE tracker.deletion_date > 0
+                    AND tracker.deletion_date >= ?
                     AND `groups`.status <> 'D'
                 ORDER BY tracker.group_id";
 
-        return $this->getDB()->q($sql);
+        return $this->getDB()->q($sql, $displayed_purge_date);
     }
 
     public function restoreTrackerMarkAsDeleted(int $tracker_id): void

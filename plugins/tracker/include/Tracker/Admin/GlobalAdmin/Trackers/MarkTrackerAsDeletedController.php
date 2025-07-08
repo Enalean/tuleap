@@ -159,17 +159,23 @@ final readonly class MarkTrackerAsDeletedController implements DispatchableWithR
                 $tracker->getName()
             )
         );
-        $layout->addFeedback(
-            Feedback::INFO,
-            sprintf(
-                dgettext(
-                    'tuleap-tracker',
-                    'In case you have inadvertently deleted this tracker and want it to be restored, please contact the <a href="mailto:%1$s">Site Administrator</a> within the next 10 days.'
+        $purge_date = ForgeConfig::getInt('sys_file_deletion_delay');
+        if ($purge_date !== 0) {
+            $layout->addFeedback(
+                Feedback::INFO,
+                sprintf(
+                    dngettext(
+                        'tuleap-tracker',
+                        'In case you have inadvertently deleted this tracker and want it to be restored, please contact the <a href="mailto:%1$s">Site Administrator</a> within the next %2$d day.',
+                        'In case you have inadvertently deleted this tracker and want it to be restored, please contact the <a href="mailto:%1$s">Site Administrator</a> within the next %2$d days.',
+                        $purge_date,
+                    ),
+                    ForgeConfig::get('sys_email_admin'),
+                    $purge_date
                 ),
-                ForgeConfig::get('sys_email_admin')
-            ),
-            CODENDI_PURIFIER_LIGHT
-        );
+                CODENDI_PURIFIER_LIGHT
+            );
+        }
 
         $this->deleteTrackerReference($tracker, $layout);
         $this->deleteWidgets($tracker, $layout);
