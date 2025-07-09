@@ -29,13 +29,13 @@ use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
 
 #[DisableReturnValueGenerationForTestDoubles]
-final class TrackerSemanticStatusDaoTest extends TestIntegrationTestCase
+final class StatusSemanticDAOTest extends TestIntegrationTestCase
 {
-    private TrackerSemanticStatusDao $dao;
+    private StatusSemanticDAO $dao;
 
     protected function setUp(): void
     {
-        $this->dao = new TrackerSemanticStatusDao();
+        $this->dao = new StatusSemanticDAO();
     }
 
     public function testCRUD(): void
@@ -58,7 +58,8 @@ final class TrackerSemanticStatusDaoTest extends TestIntegrationTestCase
         $this->dao->save($tracker_a, $field_id, $open_values);
         $results = [];
         foreach ($this->dao->searchByTrackerId($tracker_a) as $row) {
-            $results[] = (int) $row['open_value_id'];
+            self::assertSame($field_id, $row['field_id']);
+            $results[] = $row['open_value_id'];
         }
         self::assertEqualsCanonicalizing($open_values, $results);
         self::assertCount(0, $this->dao->searchByTrackerId($tracker_b));

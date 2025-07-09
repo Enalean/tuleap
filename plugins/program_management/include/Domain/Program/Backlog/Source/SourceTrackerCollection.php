@@ -93,13 +93,13 @@ final class SourceTrackerCollection
     }
 
     /**
-     * @return int[]
+     * @return list<int>
      */
     public function getSourceTrackerIds(): array
     {
-        return array_map(
+        return array_values(array_map(
             static fn(TrackerReference $tracker) => $tracker->getId(),
             $this->source_trackers
-        );
+        ));
     }
 }
