@@ -24,14 +24,18 @@ namespace Tuleap\Artidoc\Document\Field;
 
 use Tracker_Artifact_ChangesetValue_String;
 use Tracker_FormElement_Field_List;
+use Tuleap\Artidoc\Document\Field\ArtifactLink\BuildArtifactLinkFieldWithValue;
 use Tuleap\Artidoc\Document\Field\List\BuildListFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StringFieldWithValue;
+use Tuleap\Tracker\Artifact\Changeset\ArtifactLink\ArtifactLinkChangesetValue;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 
 final readonly class FieldsWithValuesBuilder implements GetFieldsWithValues
 {
     public function __construct(
         private ConfiguredFieldCollection $field_collection,
         private BuildListFieldWithValue $build_list_field_with_value,
+        private BuildArtifactLinkFieldWithValue $build_artlink_field_with_value,
     ) {
     }
 
@@ -53,6 +57,11 @@ final readonly class FieldsWithValuesBuilder implements GetFieldsWithValues
             if ($configured_field->field instanceof Tracker_FormElement_Field_List) {
                 assert($changeset_value instanceof \Tracker_Artifact_ChangesetValue_List);
                 $fields[] = $this->build_list_field_with_value->buildListFieldWithValue($configured_field, $changeset_value);
+            }
+
+            if ($configured_field->field instanceof ArtifactLinkField) {
+                assert($changeset_value instanceof ArtifactLinkChangesetValue);
+                $fields[] = $this->build_artlink_field_with_value->buildArtifactLinkFieldWithValue($configured_field, $changeset_value);
             }
         }
 

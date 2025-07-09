@@ -27,6 +27,7 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 final class ArtifactLinkFieldBuilder
 {
     use FieldBuilderWithSpecificProperties;
+    use FieldBuilderWithPermissions;
 
     private int $parent_id        = 0;
     private string $shortname     = 'overjoy';
@@ -97,6 +98,7 @@ final class ArtifactLinkFieldBuilder
         );
         $field->setTracker($this->tracker);
         $this->setSpecificProperties($field);
+        $this->setPermissions($field);
         return $field;
     }
 }

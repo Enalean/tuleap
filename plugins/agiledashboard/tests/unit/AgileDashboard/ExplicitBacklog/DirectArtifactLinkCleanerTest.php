@@ -220,7 +220,7 @@ class DirectArtifactLinkCleanerTest extends TestCase
         $artifact_link_field->method('getId')->willReturn(124);
         $changeset       = ChangesetTestBuilder::aChangeset(1)->build();
         $changeset_value = ChangesetValueArtifactLinkTestBuilder::aValue(12, $changeset, $artifact_link_field)
-            ->withLinks([
+            ->withForwardLinks([
                 450 => new Tracker_ArtifactLinkInfo(450, '', 101, 1, 1, ''),
                 452 => new Tracker_ArtifactLinkInfo(452, '', 101, 1, 1, ''),
             ])->build();

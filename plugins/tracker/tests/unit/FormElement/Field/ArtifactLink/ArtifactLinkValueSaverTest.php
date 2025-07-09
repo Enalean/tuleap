@@ -110,7 +110,7 @@ final class ArtifactLinkValueSaverTest extends TestCase
         });
 
         $this->previous_changesetvalue = ChangesetValueArtifactLinkTestBuilder::aValue(12, ChangesetTestBuilder::aChangeset(3521)->build(), $this->field)
-            ->withLinks([36 => Tracker_ArtifactLinkInfo::buildFromArtifact($this->initial_linked_artifact, '')])
+            ->withForwardLinks([36 => Tracker_ArtifactLinkInfo::buildFromArtifact($this->initial_linked_artifact, '')])
             ->build();
 
         $this->user = new PFUser([

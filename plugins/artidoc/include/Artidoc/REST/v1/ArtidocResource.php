@@ -41,6 +41,7 @@ use Tuleap\Artidoc\ArtidocWithContextRetrieverBuilder;
 use Tuleap\Artidoc\Document\ArtidocDao;
 use Tuleap\Artidoc\Document\ConfigurationSaver;
 use Tuleap\Artidoc\Document\DocumentServiceFromAllowedProjectRetriever;
+use Tuleap\Artidoc\Document\Field\ArtifactLink\ArtifactLinkFieldWithValueBuilder;
 use Tuleap\Artidoc\Document\Field\ConfiguredFieldCollectionBuilder;
 use Tuleap\Artidoc\Document\Field\ConfiguredFieldDao;
 use Tuleap\Artidoc\Document\Field\FieldsWithValuesBuilder;
@@ -98,7 +99,10 @@ use Tuleap\NeverThrow\Fault;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
+use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Artifact\FileUploadDataProvider;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\Semantic\Description\CachedSemanticDescriptionFieldRetriever;
 use Tuleap\Tracker\Semantic\Title\CachedSemanticTitleFieldRetriever;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
@@ -515,14 +519,15 @@ final class ArtidocResource extends AuthenticatedResource
         ArtidocWithContext $artidoc,
         \PFUser $user,
     ): ArtifactSectionRepresentationBuilder {
-        $form_element_factory = \Tracker_FormElementFactory::instance();
+        $form_element_factory  = \Tracker_FormElementFactory::instance();
+        $title_field_retriever = CachedSemanticTitleFieldRetriever::instance();
 
         $configured_field_collection_builder = new ConfiguredFieldCollectionBuilder(
             new ConfiguredFieldDao(),
             new SuitableFieldRetriever(
                 $form_element_factory,
                 CachedSemanticDescriptionFieldRetriever::instance(),
-                CachedSemanticTitleFieldRetriever::instance(),
+                $title_field_retriever,
             ),
         );
 
@@ -555,6 +560,11 @@ final class ArtidocResource extends AuthenticatedResource
                     ),
                     new StaticListFieldWithValueBuilder(),
                     new UserGroupListWithValueBuilder(),
+                ),
+                new ArtifactLinkFieldWithValueBuilder(
+                    $user,
+                    $title_field_retriever,
+                    new TypePresenterFactory(new TypeDao(), new ArtifactLinksUsageDao()),
                 ),
             )
         );

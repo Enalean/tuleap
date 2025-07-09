@@ -20,13 +20,23 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Artidoc\REST\v1\ArtifactSection\Field;
+namespace Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue;
 
-enum FieldType: string
+use Tuleap\Color\ItemColor;
+
+/**
+ * @psalm-immutable
+ */
+final readonly class ArtifactLinkValue
 {
-    case STRING           = 'string';
-    case USER_GROUPS_LIST = 'user_groups_list';
-    case STATIC_LIST      = 'static_list';
-    case USER_LIST        = 'user_list';
-    case ARTIFACT_LINK    = 'links';
+    public function __construct(
+        public string $link_label,
+        public string $tracker_shortname,
+        public ItemColor $tracker_color,
+        public int $artifact_id,
+        public string $title,
+        public string $html_uri,
+        public ?ArtifactLinkStatusValue $status,
+    ) {
+    }
 }

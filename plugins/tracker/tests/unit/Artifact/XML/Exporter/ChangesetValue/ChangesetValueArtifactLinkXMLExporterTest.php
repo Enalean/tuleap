@@ -97,7 +97,7 @@ final class ChangesetValueArtifactLinkXMLExporterTest extends \Tuleap\Test\PHPUn
     public function testItExportsChildren(): void
     {
         $changeset_value = ChangesetValueArtifactLinkTestBuilder::aValue(1, $this->changeset, $this->field)
-            ->withLinks([
+            ->withForwardLinks([
                 111 => $this->anArtifactLinkInfoUserCanView(111, 101, null),
                 222 => $this->anArtifactLinkInfoUserCanView(222, 102, null),
             ])->build();
@@ -127,7 +127,7 @@ final class ChangesetValueArtifactLinkXMLExporterTest extends \Tuleap\Test\PHPUn
     public function testItExportsChildrenTypeMode(): void
     {
         $changeset_value = ChangesetValueArtifactLinkTestBuilder::aValue(1, $this->changeset, $this->field)
-            ->withLinks([
+            ->withForwardLinks([
                 111 => $this->anArtifactLinkInfoUserCanView(111, 101, '_is_child'),
                 222 => $this->anArtifactLinkInfoUserCanView(222, 102, '_is_child'),
             ])->build();
@@ -174,7 +174,7 @@ final class ChangesetValueArtifactLinkXMLExporterTest extends \Tuleap\Test\PHPUn
     public function testItDoesNotExportChildrenUserCannotSee(): void
     {
         $changeset_value = ChangesetValueArtifactLinkTestBuilder::aValue(1, $this->changeset, $this->field)
-            ->withLinks([
+            ->withForwardLinks([
                 $this->anArtifactLinkInfoUserCannotView(111, 101, null),
             ])->build();
 
@@ -199,7 +199,7 @@ final class ChangesetValueArtifactLinkXMLExporterTest extends \Tuleap\Test\PHPUn
     public function testItDoesNotExportChildrenUserCannotSeeTypeMode(): void
     {
         $changeset_value = ChangesetValueArtifactLinkTestBuilder::aValue(1, $this->changeset, $this->field)
-            ->withLinks([
+            ->withForwardLinks([
                 $this->anArtifactLinkInfoUserCannotView(111, 101, '_is_child'),
             ])->build();
 
@@ -224,7 +224,7 @@ final class ChangesetValueArtifactLinkXMLExporterTest extends \Tuleap\Test\PHPUn
     public function testItDoesNotFailIfNull(): void
     {
         $changeset_value = ChangesetValueArtifactLinkTestBuilder::aValue(1, $this->changeset, $this->field)
-            ->withLinks([])->build();
+            ->withForwardLinks([])->build();
 
 
         $this->exporter->export(
@@ -242,7 +242,7 @@ final class ChangesetValueArtifactLinkXMLExporterTest extends \Tuleap\Test\PHPUn
     public function testItCollectsChildren(): void
     {
         $changeset_value = ChangesetValueArtifactLinkTestBuilder::aValue(1, $this->changeset, $this->field)
-            ->withLinks([
+            ->withForwardLinks([
                 $this->anArtifactLinkInfoUserCanView(111, 101, null),
                 $this->anArtifactLinkInfoUserCanView(222, 102, null),
             ])->build();
@@ -266,7 +266,7 @@ final class ChangesetValueArtifactLinkXMLExporterTest extends \Tuleap\Test\PHPUn
     public function testItCollectsChildrenTypeMode(): void
     {
         $changeset_value = ChangesetValueArtifactLinkTestBuilder::aValue(1, $this->changeset, $this->field)
-            ->withLinks([
+            ->withForwardLinks([
                 $this->anArtifactLinkInfoUserCanView(111, 101, '_is_child'),
                 $this->anArtifactLinkInfoUserCanView(222, 102, '_is_child'),
             ])->build();

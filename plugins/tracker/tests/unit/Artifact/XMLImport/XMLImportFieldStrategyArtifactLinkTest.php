@@ -188,7 +188,7 @@ final class XMLImportFieldStrategyArtifactLinkTest extends TestCase
             1,
             $changeset,
             $this->field
-        )->withLinks([
+        )->withForwardLinks([
             1 => new Tracker_ArtifactLinkInfo(1, '', 101, 888, 123, null),
             2 => new Tracker_ArtifactLinkInfo(2, '', 101, 888, 123, null),
             3 => new Tracker_ArtifactLinkInfo(3, '', 101, 888, 123, null),

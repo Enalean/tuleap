@@ -29,10 +29,10 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 
 final class ChangesetValueArtifactLinkTestBuilder
 {
-    /**
-     * @var array<int, Tracker_ArtifactLinkInfo>
-     */
-    private array $links = [];
+    /** @var array<int, Tracker_ArtifactLinkInfo> */
+    private array $forward_links = [];
+    /** @var array<int, Tracker_ArtifactLinkInfo> */
+    private array $reverse_links = [];
 
     private function __construct(
         private readonly int $id,
@@ -49,10 +49,19 @@ final class ChangesetValueArtifactLinkTestBuilder
     /**
      * @param array<int, Tracker_ArtifactLinkInfo> $links
      */
-    public function withLinks(array $links): self
+    public function withForwardLinks(array $links): self
     {
-        $this->links = $links;
+        $this->forward_links = $links;
 
+        return $this;
+    }
+
+    /**
+     * @param array<int, Tracker_ArtifactLinkInfo> $links
+     */
+    public function withReverseLinks(array $links): self
+    {
+        $this->reverse_links = $links;
         return $this;
     }
 
@@ -63,8 +72,8 @@ final class ChangesetValueArtifactLinkTestBuilder
             $this->changeset,
             $this->field,
             true,
-            $this->links,
-            [],
+            $this->forward_links,
+            $this->reverse_links,
         );
 
         $this->changeset->setFieldValue($this->field, $value);

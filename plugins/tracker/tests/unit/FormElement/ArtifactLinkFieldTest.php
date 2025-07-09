@@ -106,7 +106,7 @@ final class ArtifactLinkFieldTest extends TestCase
     {
         $field = ArtifactLinkFieldBuilder::anArtifactLinkField(651)->build();
         $value = ChangesetValueArtifactLinkTestBuilder::aValue(1, ChangesetTestBuilder::aChangeset(1)->build(), $field)
-            ->withLinks([
+            ->withForwardLinks([
                 123 => Tracker_ArtifactLinkInfo::buildFromArtifact(
                     ArtifactTestBuilder::anArtifact(123)->withChangesets(ChangesetTestBuilder::aChangeset(1235)->build())->build(),
                     '',
@@ -131,7 +131,7 @@ final class ArtifactLinkFieldTest extends TestCase
 
         $changeset = ChangesetTestBuilder::aChangeset(6512)->build();
         $value     = ChangesetValueArtifactLinkTestBuilder::aValue(1, $changeset, $field)
-            ->withLinks([
+            ->withForwardLinks([
                 123 => Tracker_ArtifactLinkInfo::buildFromArtifact(
                     ArtifactTestBuilder::anArtifact(123)->withChangesets(ChangesetTestBuilder::aChangeset(1235)->build())->build(),
                     '',
@@ -447,7 +447,7 @@ final class ArtifactLinkFieldTest extends TestCase
         }
 
         $changeset       = ChangesetTestBuilder::aChangeset(654)->build();
-        $changeset_value = ChangesetValueArtifactLinkTestBuilder::aValue(6541, $changeset, $field)->withLinks($links)->build();
+        $changeset_value = ChangesetValueArtifactLinkTestBuilder::aValue(6541, $changeset, $field)->withForwardLinks($links)->build();
         $changeset->setFieldValue($field, $changeset_value);
         return $changeset;
     }

@@ -57,6 +57,7 @@ use Tuleap\Artidoc\ArtidocWithContextRetrieverBuilder;
 use Tuleap\Artidoc\Document\ArtidocDao;
 use Tuleap\Artidoc\Document\ConfiguredTrackerRetriever;
 use Tuleap\Artidoc\Document\DocumentServiceFromAllowedProjectRetriever;
+use Tuleap\Artidoc\Document\Field\ArtifactLink\ArtifactLinkFieldWithValueBuilder;
 use Tuleap\Artidoc\Document\Field\ConfiguredFieldCollectionBuilder;
 use Tuleap\Artidoc\Document\Field\ConfiguredFieldDao;
 use Tuleap\Artidoc\Document\Field\FieldsWithValuesBuilder;
@@ -520,12 +521,13 @@ final class ArtidocSectionsResource extends AuthenticatedResource
         SectionIdentifier $section_identifier,
         PFUser $user,
     ): ArtifactSectionRepresentationBuilder {
+        $title_field_retriever               = CachedSemanticTitleFieldRetriever::instance();
         $configured_field_collection_builder = new ConfiguredFieldCollectionBuilder(
             new ConfiguredFieldDao(),
             new SuitableFieldRetriever(
                 Tracker_FormElementFactory::instance(),
                 CachedSemanticDescriptionFieldRetriever::instance(),
-                CachedSemanticTitleFieldRetriever::instance(),
+                $title_field_retriever,
             ),
         );
         $provide_user_avatar_url             = new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash());
@@ -542,6 +544,11 @@ final class ArtidocSectionsResource extends AuthenticatedResource
                     ),
                     new StaticListFieldWithValueBuilder(),
                     new UserGroupListWithValueBuilder(),
+                ),
+                new ArtifactLinkFieldWithValueBuilder(
+                    $user,
+                    $title_field_retriever,
+                    new TypePresenterFactory(new TypeDao(), new ArtifactLinksUsageDao()),
                 ),
             )
         );

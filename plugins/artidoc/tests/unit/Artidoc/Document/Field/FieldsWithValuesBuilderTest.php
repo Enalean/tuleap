@@ -23,6 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\Artidoc\Document\Field;
 
 use Tuleap\Artidoc\Domain\Document\Section\Field\DisplayType;
+use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\ArtifactLinkFieldWithValue;
+use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\ArtifactLinkValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StaticListFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StaticListValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StringFieldWithValue;
@@ -30,15 +32,20 @@ use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserGroupListVal
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserGroupsListFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserListFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserListValue;
+use Tuleap\Artidoc\Stubs\Document\Field\ArtifactLink\BuildArtifactLinkFieldWithValueStub;
 use Tuleap\Artidoc\Stubs\Document\Field\List\BuildListFieldWithValueStub;
+use Tuleap\Color\ItemColor;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\ProjectUGroupTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetValueArtifactLinkTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueListTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueStringTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\ArtifactLinkFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserBindBuilder;
@@ -68,7 +75,7 @@ final class FieldsWithValuesBuilderTest extends TestCase
     }
 
     /**
-     * @return list<StringFieldWithValue | UserGroupsListFieldWithValue | StaticListFieldWithValue | UserListFieldWithValue>
+     * @return list<StringFieldWithValue | UserGroupsListFieldWithValue | StaticListFieldWithValue | UserListFieldWithValue | ArtifactLinkFieldWithValue>
      */
     private function getFields(): array
     {
@@ -77,6 +84,11 @@ final class FieldsWithValuesBuilderTest extends TestCase
             BuildListFieldWithValueStub::withCallback(
                 static function () {
                     throw new \Exception('This test was not supposed to build list fields.');
+                },
+            ),
+            BuildArtifactLinkFieldWithValueStub::withCallback(
+                static function () {
+                    throw new \Exception('This test was not supposed to build link fields.');
                 },
             ),
         );
@@ -199,6 +211,11 @@ final class FieldsWithValuesBuilderTest extends TestCase
                     return $expected_field_with_value;
                 },
             ),
+            BuildArtifactLinkFieldWithValueStub::withCallback(
+                static function () {
+                    throw new \Exception('This test was not supposed to build link fields.');
+                },
+            ),
         );
 
         self::assertEquals([$expected_field_with_value], $builder->getFieldsWithValues($this->changeset));
@@ -235,6 +252,11 @@ final class FieldsWithValuesBuilderTest extends TestCase
                     assert($configured_field->field->getBind() instanceof \Tracker_FormElement_Field_List_Bind_Static);
 
                     return $expected_field_with_value;
+                },
+            ),
+            BuildArtifactLinkFieldWithValueStub::withCallback(
+                static function () {
+                    throw new \Exception('This test was not supposed to build link fields.');
                 },
             ),
         );
@@ -280,8 +302,60 @@ final class FieldsWithValuesBuilderTest extends TestCase
                     return $expected_list_field_with_value;
                 }
             ),
+            BuildArtifactLinkFieldWithValueStub::withCallback(
+                static function () {
+                    throw new \Exception('This test was not supposed to build link fields.');
+                },
+            ),
         );
 
         self::assertEquals([$expected_list_field_with_value], $builder->getFieldsWithValues($this->changeset));
+    }
+
+    public function testItBuildsLinkFieldsWithValue(): void
+    {
+        $link_field = ArtifactLinkFieldBuilder::anArtifactLinkField(123)->build();
+
+        $expected_link_field_with_value = new ArtifactLinkFieldWithValue(
+            $link_field->getLabel(),
+            DisplayType::BLOCK,
+            [
+                new ArtifactLinkValue(
+                    'Child',
+                    'my_tracker',
+                    ItemColor::fromName('red-wine'),
+                    33,
+                    'My artifact',
+                    '/plugins/tracker/?aid=33',
+                    null,
+                ),
+            ],
+        );
+
+        $this->changeset->setFieldValue(
+            $link_field,
+            ChangesetValueArtifactLinkTestBuilder::aValue(1, $this->changeset, $link_field)->build(),
+        );
+
+        $builder = new FieldsWithValuesBuilder(
+            new ConfiguredFieldCollection([
+                self::TRACKER_ID => [
+                    new ConfiguredField($link_field, DisplayType::BLOCK),
+                ],
+            ]),
+            BuildListFieldWithValueStub::withCallback(
+                static function () {
+                    throw new \Exception('This test was not supposed to build list fields.');
+                },
+            ),
+            BuildArtifactLinkFieldWithValueStub::withCallback(
+                static function (ConfiguredField $configured_field) use ($expected_link_field_with_value): ArtifactLinkFieldWithValue {
+                    assert($configured_field->field instanceof ArtifactLinkField);
+                    return $expected_link_field_with_value;
+                },
+            ),
+        );
+
+        self::assertEquals([$expected_link_field_with_value], $builder->getFieldsWithValues($this->changeset));
     }
 }

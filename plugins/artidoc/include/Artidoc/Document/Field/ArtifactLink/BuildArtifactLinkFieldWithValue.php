@@ -20,18 +20,16 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Artidoc\Document\Field;
+namespace Tuleap\Artidoc\Document\Field\ArtifactLink;
 
+use Tuleap\Artidoc\Document\Field\ConfiguredField;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\ArtifactLinkFieldWithValue;
-use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StaticListFieldWithValue;
-use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StringFieldWithValue;
-use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserGroupsListFieldWithValue;
-use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserListFieldWithValue;
+use Tuleap\Tracker\Artifact\Changeset\ArtifactLink\ArtifactLinkChangesetValue;
 
-interface GetFieldsWithValues
+interface BuildArtifactLinkFieldWithValue
 {
-    /**
-     * @return list<StringFieldWithValue | UserGroupsListFieldWithValue | StaticListFieldWithValue | UserListFieldWithValue | ArtifactLinkFieldWithValue>
-     */
-    public function getFieldsWithValues(\Tracker_Artifact_Changeset $changeset): array;
+    public function buildArtifactLinkFieldWithValue(
+        ConfiguredField $configured_field,
+        ?ArtifactLinkChangesetValue $changeset_value,
+    ): ArtifactLinkFieldWithValue;
 }

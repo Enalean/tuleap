@@ -20,18 +20,22 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Artidoc\Document\Field;
+namespace Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue;
 
-use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\ArtifactLinkFieldWithValue;
-use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StaticListFieldWithValue;
-use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StringFieldWithValue;
-use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserGroupsListFieldWithValue;
-use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserListFieldWithValue;
+use Tuleap\Artidoc\Domain\Document\Section\Field\DisplayType;
 
-interface GetFieldsWithValues
+/**
+ * @psalm-immutable
+ */
+final readonly class ArtifactLinkFieldWithValue
 {
     /**
-     * @return list<StringFieldWithValue | UserGroupsListFieldWithValue | StaticListFieldWithValue | UserListFieldWithValue | ArtifactLinkFieldWithValue>
+     * @param list<ArtifactLinkValue> $values
      */
-    public function getFieldsWithValues(\Tracker_Artifact_Changeset $changeset): array;
+    public function __construct(
+        public string $label,
+        public DisplayType $display_type,
+        public array $values,
+    ) {
+    }
 }

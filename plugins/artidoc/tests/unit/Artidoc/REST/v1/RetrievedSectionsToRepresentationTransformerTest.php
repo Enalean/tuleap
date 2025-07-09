@@ -38,6 +38,7 @@ use Tuleap\Artidoc\REST\v1\ArtifactSection\ArtifactSectionAttachmentsRepresentat
 use Tuleap\Artidoc\REST\v1\ArtifactSection\ArtifactSectionRepresentation;
 use Tuleap\Artidoc\REST\v1\ArtifactSection\ArtifactSectionRepresentationBuilder;
 use Tuleap\Artidoc\REST\v1\ArtifactSection\RequiredArtifactInformationBuilder;
+use Tuleap\Artidoc\Stubs\Document\Field\ArtifactLink\BuildArtifactLinkFieldWithValueStub;
 use Tuleap\Artidoc\Stubs\Document\Field\List\BuildListFieldWithValueStub;
 use Tuleap\Artidoc\Stubs\Document\FreetextIdentifierStub;
 use Tuleap\Artidoc\Stubs\Document\SectionIdentifierStub;
@@ -104,6 +105,11 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
                         BuildListFieldWithValueStub::withCallback(
                             static function () {
                                 throw new \Exception('This test was not supposed to build list fields.');
+                            },
+                        ),
+                        BuildArtifactLinkFieldWithValueStub::withCallback(
+                            static function () {
+                                throw new \Exception('This test was not supposed to build link fields.');
                             },
                         ),
                     )
@@ -216,10 +222,10 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
             });
 
         $result = $this->getRepresentation([
-            RetrievedSection::fromArtifact(['artifact_id' => 1, 'id' => SectionIdentifierStub::create(), 'item_id'   => 101, 'rank' => 0, 'level' => 1]),
-            RetrievedSection::fromArtifact(['artifact_id' => 2, 'id' => SectionIdentifierStub::create(), 'item_id'   => 101, 'rank' => 1, 'level' => 1]),
-            RetrievedSection::fromArtifact(['artifact_id' => 3, 'id' => SectionIdentifierStub::create(), 'item_id'   => 101, 'rank' => 2, 'level' => 1]),
-            RetrievedSection::fromArtifact(['artifact_id' => 4, 'id' => SectionIdentifierStub::create(), 'item_id'   => 101, 'rank' => 3, 'level' => 1]),
+            RetrievedSection::fromArtifact(['artifact_id' => 1, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 0, 'level' => 1]),
+            RetrievedSection::fromArtifact(['artifact_id' => 2, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 1, 'level' => 1]),
+            RetrievedSection::fromArtifact(['artifact_id' => 3, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 2, 'level' => 1]),
+            RetrievedSection::fromArtifact(['artifact_id' => 4, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 3, 'level' => 1]),
         ], RetrieveSemanticDescriptionFieldStub::withTextField($description_field), RetrieveSemanticTitleFieldStub::build()->withTitleField($this->tracker, $title_field));
 
         self::assertTrue(Result::isOk($result));
@@ -274,7 +280,7 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
             });
 
         $result = $this->getRepresentation([
-            RetrievedSection::fromArtifact(['artifact_id' => 1, 'id' => SectionIdentifierStub::create(), 'item_id'   => 101, 'rank' => 1, 'level' => 1]),
+            RetrievedSection::fromArtifact(['artifact_id' => 1, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 1, 'level' => 1]),
         ], RetrieveSemanticDescriptionFieldStub::withTextField($description_field), RetrieveSemanticTitleFieldStub::build()->withTitleField($this->tracker, $title_field));
 
         self::assertTrue(Result::isOk($result));
@@ -315,7 +321,7 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
             });
 
         $result = $this->getRepresentation([
-            RetrievedSection::fromArtifact(['artifact_id' => 1, 'id' => SectionIdentifierStub::create(), 'item_id'   => 101, 'rank' => 1, 'level' => 1]),
+            RetrievedSection::fromArtifact(['artifact_id' => 1, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 1, 'level' => 1]),
         ], RetrieveSemanticDescriptionFieldStub::withTextField($description_field), RetrieveSemanticTitleFieldStub::build()->withTitleField($this->tracker, $title_field));
 
         self::assertTrue(Result::isOk($result));
@@ -363,7 +369,7 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
                 'id'                   => SectionIdentifierStub::create(),
                 'item_id'              => 101,
                 'rank'                 => 0,
-                'level' => 1,
+                'level'                => 1,
             ]),
             RetrievedSection::fromArtifact(['artifact_id' => 1, 'id' => SectionIdentifierStub::create(), 'item_id' => 101, 'rank' => 1, 'level' => 1]),
         ], RetrieveSemanticDescriptionFieldStub::withTextField($description_field), RetrieveSemanticTitleFieldStub::build()->withTitleField($this->tracker, $title_field));
