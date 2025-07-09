@@ -21,12 +21,16 @@
     <form
         class="tlp-modal"
         role="dialog"
-        v-bind:aria-labelled-by="aria_labelled_by"
+        aria-labelled-by="document-new-item-version-modal"
         v-on:submit="createNewEmbeddedFileVersion"
+        ref="form"
     >
-        <modal-header v-bind:modal-title="modal_title" v-bind:aria-labelled-by="aria_labelled_by" />
+        <modal-header
+            v-bind:modal-title="modal_title"
+            aria-labelled-by="document-new-item-version-modal"
+        />
         <modal-feedback />
-        <div class="tlp-modal-body" v-if="embedded_item !== null">
+        <div class="tlp-modal-body">
             <item-update-properties
                 v-bind:version="version"
                 v-bind:item="embedded_item"
@@ -34,7 +38,7 @@
                 v-on:approval-table-action-change="setApprovalUpdateAction"
             >
                 <embedded-properties
-                    v-if="embedded_file_model && embedded_item.type === TYPE_EMBEDDED()"
+                    v-if="embedded_file_model && embedded_item.type === TYPE_EMBEDDED"
                     v-bind:value="embedded_file_model.content"
                     key="embedded-props"
                 />
@@ -42,16 +46,16 @@
         </div>
         <modal-footer
             v-bind:is-loading="is_loading"
-            v-bind:submit-button-label="submit_button_label"
-            v-bind:aria-labelled-by="aria_labelled_by"
+            v-bind:submit-button-label="$gettext('Create new version')"
+            aria-labelled-by="document-new-item-version-modal"
             v-bind:icon-submit-button-class="'fa-solid fa-plus'"
             data-test="document-modal-submit-button-create-embedded-version"
         />
     </form>
 </template>
 
-<script lang="ts">
-import { mapState, mapActions } from "vuex";
+<script setup lang="ts">
+import type { Modal } from "@tuleap/tlp-modal";
 import { createModal } from "@tuleap/tlp-modal";
 import { sprintf } from "sprintf-js";
 import ModalHeader from "../../ModalCommon/ModalHeader.vue";
@@ -60,134 +64,133 @@ import ModalFooter from "../../ModalCommon/ModalFooter.vue";
 import EmbeddedProperties from "../PropertiesForCreateOrUpdate/EmbeddedProperties.vue";
 import ItemUpdateProperties from "./PropertiesForUpdate/ItemUpdateProperties.vue";
 import emitter from "../../../../helpers/emitter";
-import { toRaw } from "vue";
+import { computed, onBeforeUnmount, onMounted, ref, toRaw } from "vue";
 import { TYPE_EMBEDDED } from "../../../../constants";
+import type {
+    EmbeddedProperties as EmbeddedPropertiesType,
+    Embedded,
+    NewVersion,
+} from "../../../../type";
+import { useGettext } from "vue3-gettext";
+import { useNamespacedState, useStore } from "vuex-composition-helpers";
+import type { ErrorState } from "../../../../store/error/module";
 
-export default {
-    name: "CreateNewVersionEmbeddedFileModal",
-    components: {
-        ItemUpdateProperties,
-        ModalFeedback,
-        ModalHeader,
-        ModalFooter,
-        EmbeddedProperties,
-    },
-    props: {
-        item: Object,
-    },
-    data() {
-        return {
-            embedded_file_model: null,
-            version: {},
-            is_loading: false,
-            modal: null,
-            embedded_item: null,
-        };
-    },
-    computed: {
-        ...mapState("error", ["has_modal_error"]),
-        submit_button_label() {
-            return this.$gettext("Create new version");
-        },
-        modal_title() {
-            return sprintf(this.$gettext('New version for "%s"'), this.item.title);
-        },
-        aria_labelled_by() {
-            return "document-new-item-version-modal";
-        },
-    },
-    mounted() {
-        this.embedded_item = structuredClone(toRaw(this.item));
-        this.modal = createModal(this.$el);
-        this.registerEvents();
-        emitter.on("update-version-title", this.updateTitleValue);
-        emitter.on("update-changelog-property", this.updateChangelogValue);
-        emitter.on("update-lock", this.updateLock);
-        emitter.on("update-embedded-properties", this.updateContent);
-    },
-    beforeUnmount() {
-        emitter.off("update-version-title", this.updateTitleValue);
-        emitter.off("update-changelog-property", this.updateChangelogValue);
-        emitter.off("update-lock", this.updateLock);
-        emitter.off("update-embedded-properties", this.updateContent);
-    },
-    methods: {
-        TYPE_EMBEDDED() {
-            return TYPE_EMBEDDED;
-        },
-        ...mapActions(["loadDocument"]),
-        setApprovalUpdateAction(value) {
-            this.approval_table_action = value;
-        },
-        registerEvents() {
-            this.modal.addEventListener("tlp-modal-hidden", this.reset);
+const { $gettext } = useGettext();
+const $store = useStore();
 
-            this.show();
-        },
-        async show() {
-            this.version = {
-                title: "",
-                changelog: "",
-                is_file_locked: this.item.lock_info !== null,
-            };
+const props = defineProps<{
+    item: Embedded;
+}>();
 
-            if (this.embedded_item.embedded_file_properties.content === undefined) {
-                this.embedded_item = await this.$store.dispatch(
-                    "loadDocument",
-                    this.embedded_item.id,
-                );
-            }
+const emit = defineEmits<{
+    (e: "hidden"): void;
+}>();
 
-            this.embedded_file_model = this.embedded_item.embedded_file_properties;
+const embedded_file_model = ref<EmbeddedPropertiesType | null>(null);
+const version = ref<NewVersion>({ changelog: "", title: "" });
+const is_loading = ref<boolean>(false);
+const embedded_item = ref<Embedded>(structuredClone(toRaw(props.item)));
+const form = ref<HTMLFormElement>();
+const approval_table_action = ref<string | null>(null);
+let modal: Modal | null = null;
 
-            this.modal.show();
-        },
-        reset() {
-            this.$store.commit("error/resetModalError");
-            this.is_loading = false;
-            this.embedded_file_model = null;
-            this.hide();
-        },
-        async createNewEmbeddedFileVersion(event) {
-            event.preventDefault();
-            this.is_loading = true;
-            this.$store.commit("error/resetModalError");
+const { has_modal_error } = useNamespacedState<Pick<ErrorState, "has_modal_error">>("error", [
+    "has_modal_error",
+]);
 
-            await this.$store.dispatch("createNewEmbeddedFileVersionFromModal", [
-                this.embedded_item,
-                this.embedded_file_model.content,
-                this.version.title,
-                this.version.changelog,
-                this.version.is_file_locked,
-                this.approval_table_action,
-            ]);
+const modal_title = computed(() => sprintf($gettext('New version for "%s"'), props.item.title));
 
-            this.is_loading = false;
-            if (this.has_modal_error === false) {
-                this.embedded_item = this.$store.dispatch(
-                    "refreshEmbeddedFile",
-                    this.embedded_item,
-                );
-                this.embedded_file_model = null;
-                this.hide();
-                this.modal.hide();
-            }
-        },
-        hide() {
-            this.$emit("hidden");
-        },
-        updateTitleValue(title) {
-            this.version.title = title;
-        },
-        updateChangelogValue(changelog) {
-            this.version.changelog = changelog;
-        },
-        updateLock(is_locked) {
-            this.version.is_file_locked = is_locked;
-        },
-        updateContent(content) {
-            this.embedded_file_model.content = content;
-        },
-    },
-};
+onMounted(() => {
+    modal = createModal(form.value);
+    registerEvents();
+    emitter.on("update-version-title", updateTitleValue);
+    emitter.on("update-changelog-property", updateChangelogValue);
+    emitter.on("update-lock", updateLock);
+    emitter.on("update-embedded-properties", updateContent);
+});
+
+onBeforeUnmount(() => {
+    emitter.off("update-version-title", updateTitleValue);
+    emitter.off("update-changelog-property", updateChangelogValue);
+    emitter.off("update-lock", updateLock);
+    emitter.off("update-embedded-properties", updateContent);
+});
+
+function setApprovalUpdateAction(value: string): void {
+    approval_table_action.value = value;
+}
+
+function registerEvents(): void {
+    modal?.addEventListener("tlp-modal-hidden", reset);
+
+    show();
+}
+
+async function show(): Promise<void> {
+    version.value = {
+        title: "",
+        changelog: "",
+        is_file_locked: props.item.lock_info !== null,
+    };
+
+    if (embedded_item.value.embedded_file_properties?.content === undefined) {
+        embedded_item.value = await $store.dispatch("loadDocument", embedded_item.value.id);
+    }
+
+    embedded_file_model.value = embedded_item.value.embedded_file_properties;
+
+    modal?.show();
+}
+
+function reset(): void {
+    $store.commit("error/resetModalError");
+    is_loading.value = false;
+    embedded_file_model.value = null;
+    hide();
+}
+
+async function createNewEmbeddedFileVersion(event: SubmitEvent): Promise<void> {
+    event.preventDefault();
+    is_loading.value = true;
+    $store.commit("error/resetModalError");
+
+    await $store.dispatch("createNewEmbeddedFileVersionFromModal", [
+        embedded_item.value,
+        embedded_file_model.value?.content ?? "",
+        version.value.title,
+        version.value.changelog,
+        version.value.is_file_locked,
+        approval_table_action.value,
+    ]);
+
+    is_loading.value = false;
+    if (!has_modal_error.value) {
+        embedded_item.value = await $store.dispatch("refreshEmbeddedFile", embedded_item.value);
+        embedded_file_model.value = null;
+        hide();
+        modal?.hide();
+    }
+}
+
+function hide(): void {
+    emit("hidden");
+}
+
+function updateTitleValue(title: string): void {
+    version.value.title = title;
+}
+
+function updateChangelogValue(changelog: string): void {
+    version.value.changelog = changelog;
+}
+
+function updateLock(is_locked: boolean): void {
+    version.value.is_file_locked = is_locked;
+}
+
+function updateContent(content: string): void {
+    if (embedded_file_model.value) {
+        embedded_file_model.value.content = content;
+    }
+}
 </script>
