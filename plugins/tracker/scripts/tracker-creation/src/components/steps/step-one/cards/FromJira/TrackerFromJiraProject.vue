@@ -87,83 +87,73 @@
         </div>
     </div>
 </template>
-<script lang="ts">
-import Vue from "vue";
-import type {
-    Credentials,
-    JiraImportData,
-    ProjectList,
-    TrackerList,
-} from "../../../../../store/type";
-import { Component, Prop } from "vue-property-decorator";
-import { Action, Mutation, State } from "vuex-class";
+<script setup lang="ts">
+import { ref } from "vue";
 import { FetchWrapperError } from "@tuleap/tlp-fetch";
+import type { ProjectList } from "../../../../../store/type";
+import { useState, useMutations, useActions } from "vuex-composition-helpers";
 
-@Component
-export default class TrackerFromJiraProject extends Vue {
-    @Prop({ required: true })
-    readonly project_list!: ProjectList[];
+defineProps<{
+    project_list: ProjectList[];
+}>();
 
-    @State
-    readonly from_jira_data!: JiraImportData;
+const { from_jira_data } = useState(["from_jira_data"]);
 
-    @Mutation
-    readonly setTrackerList!: (tracker_list: TrackerList[]) => void;
+const { setTrackerList, setProject, setTrackerName, setTracker } = useMutations([
+    "setTrackerList",
+    "setProject",
+    "setTrackerName",
+    "setTracker",
+]);
 
-    @Mutation
-    readonly setProject!: (project: ProjectList) => void;
+const { getJiraTrackerList } = useActions(["getJiraTrackerList"]);
 
-    @Mutation
-    readonly setTrackerName!: (name: string) => void;
+const is_a_project_selected = ref(false);
+const is_loading = ref(false);
+const error_message = ref("");
 
-    @Mutation
-    readonly setTracker!: (tracker: TrackerList) => void;
+async function selectProject(event: Event): Promise<void> {
+    if (!(event.target instanceof HTMLSelectElement)) {
+        return;
+    }
+    error_message.value = "";
 
-    @Action
-    readonly getJiraTrackerList!: (
-        credentials: Credentials,
-        project_key: string,
-    ) => Promise<TrackerList[]>;
-
-    is_a_project_selected = false;
-    is_loading = false;
-    error_message = "";
-
-    async selectProject(event: Event): Promise<void> {
-        if (!(event.target instanceof HTMLSelectElement)) {
-            return;
-        }
-        this.error_message = "";
-
-        const project = JSON.parse(event.target.value);
-        try {
-            this.is_a_project_selected = true;
-            this.is_loading = true;
-            const tracker_list = await this.$store.dispatch("getJiraTrackerList", {
-                credentials: this.from_jira_data.credentials,
-                project_key: project.id,
-            });
-
-            this.setTrackerList(tracker_list);
-            this.setProject(project);
-        } catch (e) {
-            if (!(e instanceof FetchWrapperError)) {
-                throw e;
-            }
-            const { error } = await e.response.json();
-            this.error_message = error;
-        } finally {
-            this.is_loading = false;
-        }
+    if (!event.target.value) {
+        return;
     }
 
-    selectTracker(event: Event): void {
-        if (!(event.target instanceof HTMLSelectElement)) {
-            return;
+    const project = JSON.parse(event.target.value);
+    try {
+        is_a_project_selected.value = true;
+        is_loading.value = true;
+        const tracker_list = await getJiraTrackerList({
+            credentials: from_jira_data.value.credentials,
+            project_key: project.id,
+        });
+
+        setTrackerList(tracker_list);
+        setProject(project);
+    } catch (e) {
+        if (!(e instanceof FetchWrapperError)) {
+            throw e;
         }
-        const tracker = JSON.parse(event.target.value);
-        this.setTrackerName(tracker.name);
-        this.setTracker(tracker);
+        const { error } = await e.response.json();
+        error_message.value = error;
+    } finally {
+        is_loading.value = false;
     }
+}
+
+function selectTracker(event: Event): void {
+    if (!(event.target instanceof HTMLSelectElement)) {
+        return;
+    }
+    if (!event.target.value) {
+        return;
+    }
+
+    const tracker = JSON.parse(event.target.value);
+    setTrackerName(tracker.name);
+    setTracker(tracker);
 }
 </script>
