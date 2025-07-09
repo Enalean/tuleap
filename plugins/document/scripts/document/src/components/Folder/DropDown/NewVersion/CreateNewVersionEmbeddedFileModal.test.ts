@@ -33,7 +33,7 @@ describe("CreateNewVersionEmbeddedFileModal", () => {
     const remove_backdrop = vi.fn();
     const load_documents = vi.fn();
 
-    function getWrapper(prop): VueWrapper<CreateNewVersionEmbeddedFileModal> {
+    function getWrapper(prop: object): VueWrapper<CreateNewVersionEmbeddedFileModal> {
         load_documents.mockImplementation(() => {
             return Promise.resolve({
                 id: 12,
@@ -80,12 +80,12 @@ describe("CreateNewVersionEmbeddedFileModal", () => {
             item: { id: 12, title: "Dacia", embedded_file_properties: {} },
         });
 
-        expect(wrapper.vm.$data.version.title).toBe("");
+        expect(wrapper.vm.version.title).toBe("");
         emitter.emit("update-version-title", "A title");
 
         await vi.runOnlyPendingTimersAsync();
 
-        expect(wrapper.vm.$data.version.title).toBe("A title");
+        expect(wrapper.vm.version.title).toBe("A title");
     });
 
     it("Updates the changelog", async () => {
@@ -93,12 +93,12 @@ describe("CreateNewVersionEmbeddedFileModal", () => {
             item: { id: 12, title: "Dacia", embedded_file_properties: {} },
         });
 
-        expect(wrapper.vm.$data.version.changelog).toBe("");
+        expect(wrapper.vm.version.changelog).toBe("");
         emitter.emit("update-changelog-property", "A changelog");
 
         await vi.runOnlyPendingTimersAsync();
 
-        expect(wrapper.vm.$data.version.changelog).toBe("A changelog");
+        expect(wrapper.vm.version.changelog).toBe("A changelog");
     });
 
     it("Updates the lock", async () => {
@@ -106,12 +106,12 @@ describe("CreateNewVersionEmbeddedFileModal", () => {
             item: { id: 12, title: "Dacia", embedded_file_properties: {} },
         });
 
-        expect(wrapper.vm.$data.version.is_file_locked).toBe(true);
+        expect(wrapper.vm.version.is_file_locked).toBe(true);
         emitter.emit("update-lock", false);
 
         await vi.runOnlyPendingTimersAsync();
 
-        expect(wrapper.vm.$data.version.is_file_locked).toBe(false);
+        expect(wrapper.vm.version.is_file_locked).toBe(false);
     });
 
     it("should not retrieve the document content if there is content when the component is mounted", async () => {
@@ -120,7 +120,7 @@ describe("CreateNewVersionEmbeddedFileModal", () => {
         });
         await vi.runOnlyPendingTimersAsync();
 
-        expect(wrapper.vm.$data.embedded_item.embedded_file_properties.content).toBe("Time or ...");
+        expect(wrapper.vm.embedded_item.embedded_file_properties.content).toBe("Time or ...");
     });
 
     it("should retrieve the document content if there is no content when the component is mounted", async () => {
@@ -130,6 +130,6 @@ describe("CreateNewVersionEmbeddedFileModal", () => {
 
         await vi.runOnlyPendingTimersAsync();
 
-        expect(wrapper.vm.$data.embedded_item.embedded_file_properties.content).toBe("VROOM VROOM");
+        expect(wrapper.vm.embedded_item.embedded_file_properties.content).toBe("VROOM VROOM");
     });
 });
