@@ -180,7 +180,7 @@ final class TrackerPresenterCollectionBuilderTest extends \Tuleap\Test\PHPUnit\T
 
         $this->mockSemanticTitle($first_taskboard_tracker, false, true);
         $this->mockSemanticTitle($second_taskboard_tracker, true, true);
-        $this->mockSemanticTitle($third_taskboard_tracker, true, true, \Tracker_FormElement_Field_String::class);
+        $this->mockSemanticTitle($third_taskboard_tracker, true, true, \Tuleap\Tracker\FormElement\Field\String\StringField::class);
         $this->mockSemanticTitle($fourth_taskboard_tracker, true, true);
 
         $this->mockSemanticContributor($first_taskboard_tracker, false, false);

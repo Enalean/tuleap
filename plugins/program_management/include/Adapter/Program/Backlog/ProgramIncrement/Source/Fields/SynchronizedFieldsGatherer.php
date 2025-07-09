@@ -62,7 +62,7 @@ final readonly class SynchronizedFieldsGatherer implements GatherSynchronizedFie
         if (! $title_field) {
             throw new FieldRetrievalException($tracker_identifier->getId(), 'title');
         }
-        if (! $title_field instanceof \Tracker_FormElement_Field_String) {
+        if (! $title_field instanceof \Tuleap\Tracker\FormElement\Field\String\StringField) {
             $errors_collector?->addTitleHasIncorrectType(
                 '/plugins/tracker/?tracker=' . urlencode((string) $full_tracker->getId()) . '&func=admin-semantic&semantic=title',
                 TrackerReferenceProxy::fromTracker($full_tracker),

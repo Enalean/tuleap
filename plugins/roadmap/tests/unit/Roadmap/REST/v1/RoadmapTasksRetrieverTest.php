@@ -72,7 +72,7 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     private RoadmapTasksOutOfDateFilter&MockObject $tasks_filter;
     private SemanticProgressBuilder&MockObject $progress_builder;
 
-    private function getTracker(int $tracker_id, \Tracker_FormElement_Field_String $title_field, ItemColor $color, string $name): Tracker&MockObject
+    private function getTracker(int $tracker_id, \Tuleap\Tracker\FormElement\Field\String\StringField $title_field, ItemColor $color, string $name): Tracker&MockObject
     {
         $tracker = $this->createMock(Tracker::class);
         $tracker->method('getId')->willReturn($tracker_id);
@@ -363,7 +363,7 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('userCanAccessProject')
             ->with($this->user, $this->project);
 
-        $title_field = $this->createMock(\Tracker_FormElement_Field_String::class);
+        $title_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\String\StringField::class);
         $title_field->method('userCanRead')->willReturn(false);
 
         $tracker = $this->createMock(Tracker::class);
@@ -403,7 +403,7 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('userCanAccessProject')
             ->with($this->user, $this->project);
 
-        $title_field = $this->createMock(\Tracker_FormElement_Field_String::class);
+        $title_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\String\StringField::class);
         $title_field->method('userCanRead')->willReturn(true);
 
         $tracker = $this->createMock(Tracker::class);
@@ -449,7 +449,7 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('userCanAccessProject')
             ->with($this->user, $this->project);
 
-        $title_field = $this->createMock(\Tracker_FormElement_Field_String::class);
+        $title_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\String\StringField::class);
         $title_field->method('userCanRead')->willReturn(true);
 
         $tracker = $this->createMock(Tracker::class);
@@ -509,7 +509,7 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('userCanAccessProject')
             ->with($this->user, $this->project);
 
-        $title_field = $this->createMock(\Tracker_FormElement_Field_String::class);
+        $title_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\String\StringField::class);
         $title_field->method('userCanRead')->willReturn(true);
 
         $tracker = $this->createMock(Tracker::class);
@@ -569,7 +569,7 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('userCanAccessProject')
             ->with($this->user, $this->project);
 
-        $title_field = $this->createMock(\Tracker_FormElement_Field_String::class);
+        $title_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\String\StringField::class);
         $title_field->method('userCanRead')->willReturn(true);
 
         $tracker = $this->createMock(Tracker::class);
@@ -628,7 +628,7 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('userCanAccessProject')
             ->with($this->user, $this->project);
 
-        $title_field = $this->createMock(\Tracker_FormElement_Field_String::class);
+        $title_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\String\StringField::class);
         $title_field->method('userCanRead')->willReturn(true);
         $tracker = $this->getTracker(self::TRACKER_ID, $title_field, ItemColor::ACID_GREEN, 'task');
 
@@ -768,7 +768,7 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('userCanAccessProject')
             ->with($this->user, $this->project);
 
-        $title_field = $this->createMock(\Tracker_FormElement_Field_String::class);
+        $title_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\String\StringField::class);
         $title_field->method('userCanRead')->willReturn(true);
 
         $tracker = $this->getTracker(self::TRACKER_ID, $title_field, ItemColor::ACID_GREEN, 'task');
@@ -915,7 +915,7 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('userCanAccessProject')
             ->with($this->user, $this->project);
 
-        $title_field = $this->createMock(\Tracker_FormElement_Field_String::class);
+        $title_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\String\StringField::class);
         $title_field->method('userCanRead')->willReturn(true);
 
         $tracker = $this->getTracker(self::TRACKER_ID, $title_field, ItemColor::ACID_GREEN, 'task');
@@ -1035,9 +1035,9 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('userCanAccessProject')
             ->with($this->user, $this->project);
 
-        $title_field = $this->createMock(\Tracker_FormElement_Field_String::class);
+        $title_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\String\StringField::class);
         $title_field->method('userCanRead')->willReturn(true);
-        $another_title_field = $this->createMock(\Tracker_FormElement_Field_String::class);
+        $another_title_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\String\StringField::class);
         $another_title_field->method('userCanRead')->willReturn(true);
 
         $tracker         = $this->getTracker(self::TRACKER_ID, $title_field, ItemColor::ACID_GREEN, 'task');

@@ -24,7 +24,6 @@ namespace Tuleap\Artidoc\Adapter\Document\Section\Artifact;
 
 use Luracast\Restler\RestException;
 use PFUser;
-use Tracker_FormElement_Field_String;
 use Tuleap\Artidoc\Adapter\Document\Section\Identifier\UUIDSectionIdentifierFactory;
 use Tuleap\Artidoc\Domain\Document\Section\Artifact\ArtifactContent;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
@@ -34,6 +33,7 @@ use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\FormElement\Field\String\StringField;
 use Tuleap\Tracker\FormElement\Field\Text\TextField;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\FileFieldBuilder;
@@ -58,8 +58,8 @@ final class ArtifactContentUpdaterTest extends TestCase
     private SectionIdentifier $section_identifier;
     private PFUser $user;
     private Tracker $tracker;
-    private Tracker_FormElement_Field_String $readonly_title_field;
-    private Tracker_FormElement_Field_String $updatable_title_field;
+    private StringField $readonly_title_field;
+    private StringField $updatable_title_field;
     private TextField $readonly_description_field;
     private TextField $updatable_description_field;
 
@@ -447,7 +447,7 @@ final class ArtifactContentUpdaterTest extends TestCase
         self::assertTrue($update_level->isCalled());
     }
 
-    private function getStringField(int $id, bool $submittable): Tracker_FormElement_Field_String
+    private function getStringField(int $id, bool $submittable): StringField
     {
         return StringFieldBuilder::aStringField($id)->inTracker($this->tracker)
             ->withUpdatePermission($this->user, $submittable)

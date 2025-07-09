@@ -28,7 +28,7 @@ use Tuleap\Tracker\FormElement\RetrieveFieldType;
 final class RetrieveFieldTypeStub implements RetrieveFieldType
 {
     private const TRACKER_FIELDS = [
-        \Tracker_FormElementFactory::FIELD_STRING_TYPE => \Tracker_FormElement_Field_String::class,
+        \Tracker_FormElementFactory::FIELD_STRING_TYPE => \Tuleap\Tracker\FormElement\Field\String\StringField::class,
         \Tracker_FormElementFactory::FIELD_INTEGER_TYPE => \Tracker_FormElement_Field_Integer::class,
         \Tracker_FormElementFactory::FIELD_FLOAT_TYPE => \Tracker_FormElement_Field_Float::class,
         \Tracker_FormElementFactory::FIELD_DATE_TYPE => \Tracker_FormElement_Field_Date::class,

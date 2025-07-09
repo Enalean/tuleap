@@ -66,7 +66,7 @@ final class ArtifactUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->changeset_creator = $this->createMock(NewChangesetCreator::class);
         $this->fields_retriever  = RetrieveUsedFieldsStub::withFields(
-            new \Tracker_FormElement_Field_String(
+            new \Tuleap\Tracker\FormElement\Field\String\StringField(
                 self::FIELD_ID,
                 34,
                 0,

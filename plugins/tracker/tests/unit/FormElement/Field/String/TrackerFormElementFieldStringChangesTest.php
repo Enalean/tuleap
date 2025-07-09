@@ -24,7 +24,6 @@ namespace Tuleap\Tracker\FormElement\Field\String;
 
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use Tracker_Artifact_ChangesetValue_Text;
-use Tracker_FormElement_Field_String;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
@@ -35,7 +34,7 @@ use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 final class TrackerFormElementFieldStringChangesTest extends TestCase
 {
     private Tracker_Artifact_ChangesetValue_Text $previous_value;
-    private Tracker_FormElement_Field_String $field;
+    private StringField $field;
 
     protected function setUp(): void
     {

@@ -19,6 +19,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\Tracker\FormElement\Field\String;
+
+use Codendi_HTMLPurifier;
+use EventManager;
+use Feedback;
+use Rule_NoCr;
+use Rule_String;
+use Tracker_Artifact_Changeset;
+use Tracker_Artifact_ChangesetValue;
+use Tracker_Artifact_ChangesetValue_String;
+use Tracker_FormElement_Field;
+use Tracker_FormElement_FieldVisitor;
 use Tuleap\Search\ItemToIndexQueue;
 use Tuleap\Search\ItemToIndexQueueEventBased;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -33,8 +45,7 @@ use Tuleap\Tracker\FormElement\FieldSpecificProperties\StringFieldSpecificProper
 use Tuleap\Tracker\Report\Criteria\CriteriaAlphaNumValueDAO;
 use Tuleap\Tracker\Report\Criteria\DeleteReportCriteriaValue;
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
-class Tracker_FormElement_Field_String extends TextField
+class StringField extends TextField
 {
     public array $default_properties = [
         'maxchars'      => [
@@ -82,8 +93,8 @@ class Tracker_FormElement_Field_String extends TextField
     /**
      * Get the value of this field
      *
-     * @param Tracker_Artifact_Changeset $changeset   The changeset (needed in only few cases like 'lud' field)
-     * @param int                        $value_id    The id of the value
+     * @param Tracker_Artifact_Changeset $changeset The changeset (needed in only few cases like 'lud' field)
+     * @param int $value_id The id of the value
      * @param bool $has_changed If the changeset value has changed from the rpevious one
      *
      * @return Tracker_Artifact_ChangesetValue or null if not found
@@ -115,8 +126,8 @@ class Tracker_FormElement_Field_String extends TextField
                          name="artifact[' . $this->id . ']"
                          ' . ($this->isRequired() ? 'required' : '') . '
                          size="' . $this->getProperty('size') . '"
-                         ' . ($this->getProperty('maxchars') ? 'maxlength="' . $this->getProperty('maxchars') . '"' : '')  . '
-                         value="' .  $hp->purify($value, CODENDI_PURIFIER_CONVERT_HTML)  . '" />';
+                         ' . ($this->getProperty('maxchars') ? 'maxlength="' . $this->getProperty('maxchars') . '"' : '') . '
+                         value="' . $hp->purify($value, CODENDI_PURIFIER_CONVERT_HTML) . '" />';
         return $html;
     }
 
@@ -132,8 +143,8 @@ class Tracker_FormElement_Field_String extends TextField
             $html .= '<input type="text"
                              name="artifact[' . $this->id . ']"
                              size="' . $this->getProperty('size') . '"
-                             ' . ($this->getProperty('maxchars') ? 'maxlength="' . $this->getProperty('maxchars') . '"' : '')  . '
-                             value="' .  $hp->purify($value, CODENDI_PURIFIER_CONVERT_HTML)  . '" />';
+                             ' . ($this->getProperty('maxchars') ? 'maxlength="' . $this->getProperty('maxchars') . '"' : '') . '
+                             value="' . $hp->purify($value, CODENDI_PURIFIER_CONVERT_HTML) . '" />';
         }
         return $html;
     }
@@ -141,8 +152,8 @@ class Tracker_FormElement_Field_String extends TextField
     /**
      * Fetch the html code to display the field value in artifact in read only mode
      *
-     * @param Artifact                        $artifact The artifact
-     * @param Tracker_Artifact_ChangesetValue $value    The actual value of the field
+     * @param Artifact $artifact The artifact
+     * @param Tracker_Artifact_ChangesetValue $value The actual value of the field
      *
      * @return string
      */
@@ -160,9 +171,9 @@ class Tracker_FormElement_Field_String extends TextField
     /**
      * Fetch the html code to display the field value in artifact
      *
-     * @param Artifact                        $artifact         The artifact
-     * @param Tracker_Artifact_ChangesetValue $value            The actual value of the field
-     * @param array                           $submitted_values The value already submitted by the user
+     * @param Artifact $artifact The artifact
+     * @param Tracker_Artifact_ChangesetValue $value The actual value of the field
+     * @param array $submitted_values The value already submitted by the user
      */
     protected function fetchArtifactValue(
         Artifact $artifact,
@@ -184,8 +195,8 @@ class Tracker_FormElement_Field_String extends TextField
                          name="artifact[' . $this->id . ']"
                          ' . ($this->isRequired() ? 'required' : '') . '
                          size="' . $this->getProperty('size') . '"
-                         ' . ($this->getProperty('maxchars') ? 'maxlength="' . $this->getProperty('maxchars') . '"' : '')  . '
-                         value="' .  $hp->purify($value, CODENDI_PURIFIER_CONVERT_HTML)  . '" />';
+                         ' . ($this->getProperty('maxchars') ? 'maxlength="' . $this->getProperty('maxchars') . '"' : '') . '
+                         value="' . $hp->purify($value, CODENDI_PURIFIER_CONVERT_HTML) . '" />';
         return $html;
     }
 
@@ -204,8 +215,8 @@ class Tracker_FormElement_Field_String extends TextField
         $html .= '<input type="text"
                          data-test="field-default-value"
                          size="' . $this->getProperty('size') . '"
-                         ' . ($this->getProperty('maxchars') ? 'maxlength="' . $this->getProperty('maxchars') . '"' : '')  . '
-                         value="' .  $hp->purify($value, CODENDI_PURIFIER_CONVERT_HTML) . '" autocomplete="off" />';
+                         ' . ($this->getProperty('maxchars') ? 'maxlength="' . $this->getProperty('maxchars') . '"' : '') . '
+                         value="' . $hp->purify($value, CODENDI_PURIFIER_CONVERT_HTML) . '" autocomplete="off" />';
         return $html;
     }
 
@@ -253,7 +264,7 @@ class Tracker_FormElement_Field_String extends TextField
      * Validate a value
      *
      * @param Artifact $artifact The artifact
-     * @param mixed    $value    data coming from the request. May be string or array.
+     * @param mixed $value data coming from the request. May be string or array.
      *
      * @return bool true if the value is considered ok
      */
@@ -297,8 +308,8 @@ class Tracker_FormElement_Field_String extends TextField
     /**
      * Validate a required field
      *
-     * @param Artifact $artifact        The artifact to check
-     * @param mixed    $submitted_value The submitted value
+     * @param Artifact $artifact The artifact to check
+     * @param mixed $submitted_value The submitted value
      *
      * @return bool true on success or false on failure
      */

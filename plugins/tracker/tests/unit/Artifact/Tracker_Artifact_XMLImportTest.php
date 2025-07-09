@@ -38,7 +38,6 @@ use Tracker_Artifact_XMLImport_XMLImportZipArchive;
 use Tracker_FormElement_Field_MultiSelectbox;
 use Tracker_FormElement_Field_OpenList;
 use Tracker_FormElement_Field_PermissionsOnArtifact;
-use Tracker_FormElement_Field_String;
 use Tracker_FormElementFactory;
 use Tracker_XML_Importer_ArtifactImportedMapping;
 use TrackerXmlFieldsMapping_InSamePlatform;
@@ -63,6 +62,7 @@ use Tuleap\Tracker\Artifact\XMLImport\TrackerXmlImportConfig;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
+use Tuleap\Tracker\FormElement\Field\String\StringField;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ArtifactLinkFieldBuilder;
@@ -1697,7 +1697,7 @@ final class Tracker_Artifact_XMLImportTest extends TestCase // phpcs:ignore Squi
 
     public function testItCreatesArtifactWithAlphanumFieldData(): void
     {
-        $string_field = $this->createMock(Tracker_FormElement_Field_String::class);
+        $string_field = $this->createMock(StringField::class);
         $string_field->method('getId')->willReturn(369);
         $string_field->method('validateField')->willReturn(true);
         $string_field->method('setTracker');
@@ -1752,7 +1752,7 @@ final class Tracker_Artifact_XMLImportTest extends TestCase // phpcs:ignore Squi
 
     public function testItCreatesArtifactWithAlphanumFieldDataAndTimeDisplayedDate(): void
     {
-        $string_field = $this->createMock(Tracker_FormElement_Field_String::class);
+        $string_field = $this->createMock(StringField::class);
         $string_field->method('getId')->willReturn(369);
         $string_field->method('validateField')->willReturn(true);
         $string_field->method('setTracker');
@@ -1860,11 +1860,11 @@ final class Tracker_Artifact_XMLImportTest extends TestCase // phpcs:ignore Squi
 
     public function testItCreatesArtifactWithSelectboxValue(): void
     {
-        $status_field = $this->createMock(Tracker_FormElement_Field_String::class);
+        $status_field = $this->createMock(StringField::class);
         $status_field->method('getId')->willReturn(234);
         $status_field->method('validateField')->willReturn(true);
         $status_field->method('setTracker');
-        $assto_field = $this->createMock(Tracker_FormElement_Field_String::class);
+        $assto_field = $this->createMock(StringField::class);
         $assto_field->method('getId')->willReturn(456);
         $assto_field->method('validateField')->willReturn(true);
         $assto_field->method('setTracker');

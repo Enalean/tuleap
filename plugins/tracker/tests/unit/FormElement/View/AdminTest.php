@@ -22,11 +22,11 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\FormElement\View;
 
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
-use Tracker_FormElement_Field_String;
 use Tracker_FormElement_View_Admin;
 use Tracker_FormElementFactory;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\FormElement\Field\String\StringField;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
@@ -62,7 +62,7 @@ final class AdminTest extends TestCase
         self::assertMatchesRegularExpression('/Saucisse/', $content);
     }
 
-    private function givenAnElementWithManyCopies(): Tracker_FormElement_Field_String
+    private function givenAnElementWithManyCopies(): StringField
     {
         $factory = $this->createMock(Tracker_FormElementFactory::class);
 

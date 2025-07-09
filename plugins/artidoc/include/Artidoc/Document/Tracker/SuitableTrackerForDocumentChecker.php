@@ -53,7 +53,7 @@ final readonly class SuitableTrackerForDocumentChecker implements CheckTrackerIs
         if (! $title_field) {
             return Result::err(NoSemanticTitleFault::forDocument($document));
         }
-        if (! ($title_field instanceof \Tracker_FormElement_Field_String)) {
+        if (! ($title_field instanceof \Tuleap\Tracker\FormElement\Field\String\StringField)) {
             return Result::err(SemanticTitleIsNotAStringFault::forDocument($document));
         }
 

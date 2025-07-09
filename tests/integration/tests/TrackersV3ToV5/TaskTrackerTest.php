@@ -34,7 +34,6 @@ use Tracker_FormElement;
 use Tracker_FormElement_Field_Date;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Bind_StaticValue;
-use Tracker_FormElement_Field_String;
 use Tracker_FormElementFactory;
 use Tracker_Migration_V3;
 use Tracker_Report_Renderer_Table;
@@ -45,6 +44,7 @@ use Tuleap\Disposable\Dispose;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\Helpers\CodendiLogSwitcher;
 use Tuleap\Tracker\DateReminder\DateReminderDao;
+use Tuleap\Tracker\FormElement\Field\String\StringField;
 use Tuleap\Tracker\FormElement\Field\Text\TextField;
 use Tuleap\Tracker\Semantic\TrackerSemanticFactory;
 use Tuleap\Tracker\Tracker;
@@ -161,7 +161,7 @@ final class TaskTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
     private function checkItHasATitleSemantic(): void
     {
         $field = $this->task_tracker->getTitleField();
-        self::assertInstanceOf(Tracker_FormElement_Field_String::class, $field);
+        self::assertInstanceOf(StringField::class, $field);
         self::assertSame('summary', $field->getName());
         self::assertSame('Summary', $field->getLabel());
         self::assertTrue($field->isRequired());

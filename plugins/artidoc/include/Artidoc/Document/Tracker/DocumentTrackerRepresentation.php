@@ -23,10 +23,10 @@ declare(strict_types=1);
 namespace Tuleap\Artidoc\Document\Tracker;
 
 use PFUser;
-use Tracker_FormElement_Field_String;
 use Tracker_FormElementFactory;
 use Tuleap\Project\REST\MinimalProjectRepresentation;
 use Tuleap\Tracker\Artifact\GetFileUploadData;
+use Tuleap\Tracker\FormElement\Field\String\StringField;
 use Tuleap\Tracker\Semantic\Description\RetrieveSemanticDescriptionField;
 use Tuleap\Tracker\Semantic\Title\RetrieveSemanticTitleField;
 use Tuleap\Tracker\Tracker;
@@ -56,7 +56,7 @@ final readonly class DocumentTrackerRepresentation
         PFUser $user,
     ): self {
         $title_field = $retrieve_semantic_title_field->fromTracker($tracker);
-        $title       = $title_field instanceof Tracker_FormElement_Field_String && $title_field->userCanSubmit($user)
+        $title       = $title_field instanceof StringField && $title_field->userCanSubmit($user)
             ? new DocumentTrackerFieldStringRepresentation($title_field->getId(), $title_field->getLabel(), Tracker_FormElementFactory::instance()->getType($title_field), $title_field->getDefaultRESTValue())
             : null;
 

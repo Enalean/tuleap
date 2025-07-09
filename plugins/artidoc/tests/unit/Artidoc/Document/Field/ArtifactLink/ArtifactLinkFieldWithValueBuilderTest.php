@@ -28,7 +28,6 @@ use Tracker_ArtifactFactory;
 use Tracker_ArtifactLinkInfo;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Bind_StaticValue;
-use Tracker_FormElement_Field_String;
 use Tuleap\Artidoc\Document\Field\ConfiguredField;
 use Tuleap\Artidoc\Domain\Document\Section\Field\DisplayType;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\ArtifactLinkFieldWithValue;
@@ -44,6 +43,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeIsChildPresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
+use Tuleap\Tracker\FormElement\Field\String\StringField;
 use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
@@ -214,7 +214,7 @@ final class ArtifactLinkFieldWithValueBuilderTest extends TestCase
         int $id,
         Tracker $tracker,
         PFUser $user,
-        Tracker_FormElement_Field_String $title_field,
+        StringField $title_field,
         ?string $title,
         Tracker_FormElement_Field_List $status_field,
         ?Tracker_FormElement_Field_List_Bind_StaticValue $status_value,

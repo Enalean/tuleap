@@ -26,13 +26,13 @@ use PFUser;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tracker_ArtifactFactory;
-use Tracker_FormElement_Field_String;
 use Tracker_FormElementFactory;
 use Tracker_RulesManager;
 use Tracker_Workflow_GlobalRulesViolationException;
 use Tuleap\GlobalResponseMock;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\String\StringField;
 use UserManager;
 use Workflow;
 
@@ -75,8 +75,8 @@ final class TrackerBlockingErrorTest extends TestCase
             ['summary 1', 'details 1'],
             ['summary 2', 'details 2'],
         ];
-        $field1 = $this->createMock(Tracker_FormElement_Field_String::class);
-        $field2 = $this->createMock(Tracker_FormElement_Field_String::class);
+        $field1 = $this->createMock(StringField::class);
+        $field2 = $this->createMock(StringField::class);
         $this->formelement_factory->method('getUsedFields')->willReturn([$field1, $field2]);
         $field1->method('isRequired')->willReturn(false);
         $field2->method('isRequired')->willReturn(false);
@@ -137,8 +137,8 @@ final class TrackerBlockingErrorTest extends TestCase
             ['summary 1', 'details 1'],
             ['summary 2', 'details 2'],
         ];
-        $field1 = $this->createMock(Tracker_FormElement_Field_String::class);
-        $field2 = $this->createMock(Tracker_FormElement_Field_String::class);
+        $field1 = $this->createMock(StringField::class);
+        $field2 = $this->createMock(StringField::class);
         $this->formelement_factory->method('getUsedFields')->willReturn([$field1, $field2]);
         $field1->method('isRequired')->willReturn(false);
         $field2->method('isRequired')->willReturn(false);
@@ -200,8 +200,8 @@ final class TrackerBlockingErrorTest extends TestCase
             ['summary 1', 'details 1'],
             ['summary 2', ''],
         ];
-        $field1 = $this->createMock(Tracker_FormElement_Field_String::class);
-        $field2 = $this->createMock(Tracker_FormElement_Field_String::class);
+        $field1 = $this->createMock(StringField::class);
+        $field2 = $this->createMock(StringField::class);
         $this->formelement_factory->method('getUsedFields')->willReturn([$field1, $field2]);
         $field1->method('isRequired')->willReturn(false);
         $field2->method('isRequired')->willReturn(false);

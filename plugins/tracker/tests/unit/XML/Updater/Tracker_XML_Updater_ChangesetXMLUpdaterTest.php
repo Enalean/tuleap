@@ -21,13 +21,13 @@
 declare(strict_types=1);
 
 use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Tracker\FormElement\Field\String\StringField;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Tracker;
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Tracker_XML_Updater_ChangesetXMLUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class Tracker_XML_Updater_ChangesetXMLUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     private Tracker_XML_Updater_ChangesetXMLUpdater $updater;
 
@@ -45,11 +45,11 @@ final class Tracker_XML_Updater_ChangesetXMLUpdaterTest extends \Tuleap\Test\PHP
 
     private int $user_id = 101;
 
-    private Tracker_FormElement_Field_String $field_summary;
+    private StringField $field_summary;
 
-    private Tracker_FormElement_Field_String $field_effort;
+    private StringField $field_effort;
 
-    private Tracker_FormElement_Field_String $field_details;
+    private StringField $field_details;
 
     private Tracker $tracker;
 

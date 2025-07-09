@@ -34,7 +34,6 @@ use Psr\Log\NullLogger;
 use SimpleXMLElement;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_XMLImport;
-use Tracker_FormElement_Field_String;
 use Tracker_FormElementFactory;
 use TrackerXmlFieldsMapping_FromAnotherPlatform;
 use Tuleap\DB\DBConnection;
@@ -54,6 +53,7 @@ use Tuleap\Tracker\Artifact\XMLImport\TrackerXmlImportConfig;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
+use Tuleap\Tracker\FormElement\Field\String\StringField;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueTextTestBuilder;
@@ -80,7 +80,7 @@ final class XmlImportTest extends TestCase
     private Tracker_FormElementFactory&MockObject $formelement_factory;
     private Tracker_Artifact_XMLImport $importer;
     private TrackerXmlFieldsMapping_FromAnotherPlatform $xml_mapping;
-    private Tracker_FormElement_Field_String $tracker_formelement_field_string;
+    private StringField $tracker_formelement_field_string;
     private CreatedFileURLMapping $url_mapping;
     private ExternalFieldsExtractor&MockObject $external_field_extractor;
     private TrackerPrivateCommentUGroupExtractor&MockObject $private_comment_extractor;
@@ -97,7 +97,7 @@ final class XmlImportTest extends TestCase
         $this->xml_mapping           = new TrackerXmlFieldsMapping_FromAnotherPlatform([]);
         $this->url_mapping           = new CreatedFileURLMapping();
 
-        $this->tracker_formelement_field_string = $this->createMock(Tracker_FormElement_Field_String::class);
+        $this->tracker_formelement_field_string = $this->createMock(StringField::class);
         $this->tracker_formelement_field_string->method('setTracker');
         $this->tracker_formelement_field_string->method('getName')->willReturn('summary');
         $this->tracker_formelement_field_string->method('getId')->willReturn(self::SUMMARY_FIELD_ID);

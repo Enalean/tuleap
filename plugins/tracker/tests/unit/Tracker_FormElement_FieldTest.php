@@ -24,6 +24,7 @@ declare(strict_types=1);
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use Tuleap\GlobalResponseMock;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\String\StringField;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 
 #[DisableReturnValueGenerationForTestDoubles]
@@ -76,7 +77,7 @@ final class Tracker_FormElement_FieldTest extends \Tuleap\Test\PHPUnit\TestCase 
         foreach ($matrix as $case) {
             $this->setUp();
 
-            $field = $this->createPartialMock(Tracker_FormElement_Field_String::class, ['getId', 'getLabel', 'getName', 'userCanUpdate', 'isRequired', 'isValid', 'setHasErrors']);
+            $field = $this->createPartialMock(StringField::class, ['getId', 'getLabel', 'getName', 'userCanUpdate', 'isRequired', 'isValid', 'setHasErrors']);
             $field->method('getId')->willReturn(101);
             $field->method('getLabel')->willReturn('Summary');
             $field->method('getName')->willReturn('summary');
@@ -146,7 +147,7 @@ final class Tracker_FormElement_FieldTest extends \Tuleap\Test\PHPUnit\TestCase 
     public function testIsValidNotRequired(): void
     {
         $artifact = $this->createMock(Artifact::class);
-        $field    = $this->createPartialMock(Tracker_FormElement_Field_String::class, ['getLabel', 'getName', 'isRequired', 'validate']);
+        $field    = $this->createPartialMock(StringField::class, ['getLabel', 'getName', 'isRequired', 'validate']);
         $field->method('getLabel')->willReturn('Status');
         $field->method('isRequired')->willReturn(false);
         $field->method('validate')->willReturnCallback(static fn (Artifact $artifact, mixed $value) => $value === '');
@@ -163,7 +164,7 @@ final class Tracker_FormElement_FieldTest extends \Tuleap\Test\PHPUnit\TestCase 
     public function testIsValidRequired(): void
     {
         $artifact = $this->createMock(Artifact::class);
-        $field    = $this->createPartialMock(Tracker_FormElement_Field_String::class, ['getLabel', 'getName', 'isRequired', 'validate']);
+        $field    = $this->createPartialMock(StringField::class, ['getLabel', 'getName', 'isRequired', 'validate']);
         $field->method('getLabel')->willReturn('Status');
         $field->method('getName')->willReturn('status');
         $field->expects($this->exactly(2))->method('isRequired')->willReturn(true);

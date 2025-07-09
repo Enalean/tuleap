@@ -247,9 +247,9 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertSame('premanifest', $artifact_link->getLabel());
     }
 
-    private function getStringField(int $id, string $label): \Tracker_FormElement_Field_String
+    private function getStringField(int $id, string $label): \Tuleap\Tracker\FormElement\Field\String\StringField
     {
-        return new \Tracker_FormElement_Field_String(
+        return new \Tuleap\Tracker\FormElement\Field\String\StringField(
             $id,
             self::PROGRAM_INCREMENT_TRACKER_ID,
             1,

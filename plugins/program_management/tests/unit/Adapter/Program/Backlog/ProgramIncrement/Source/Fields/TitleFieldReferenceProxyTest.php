@@ -35,9 +35,9 @@ final class TitleFieldReferenceProxyTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertSame(self::FIELD_LABEL, $field->getLabel());
     }
 
-    private function getStringField(): \Tracker_FormElement_Field_String
+    private function getStringField(): \Tuleap\Tracker\FormElement\Field\String\StringField
     {
-        return new \Tracker_FormElement_Field_String(
+        return new \Tuleap\Tracker\FormElement\Field\String\StringField(
             self::FIELD_ID,
             35,
             1,

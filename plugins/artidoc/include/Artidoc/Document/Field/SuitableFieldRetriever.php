@@ -25,7 +25,6 @@ namespace Tuleap\Artidoc\Document\Field;
 use PFUser;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Bind_Null;
-use Tracker_FormElement_Field_String;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldIsDescriptionSemanticFault;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldIsTitleSemanticFault;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldNotFoundFault;
@@ -36,6 +35,7 @@ use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\RetrieveUsedFields;
+use Tuleap\Tracker\FormElement\Field\String\StringField;
 use Tuleap\Tracker\Semantic\Description\RetrieveSemanticDescriptionField;
 use Tuleap\Tracker\Semantic\Title\RetrieveSemanticTitleField;
 
@@ -49,7 +49,7 @@ final readonly class SuitableFieldRetriever
     }
 
     /**
-     * @return Ok<Tracker_FormElement_Field_String> | Ok<Tracker_FormElement_Field_List> | Ok<ArtifactLinkField> | Err<Fault>
+     * @return Ok<StringField> | Ok<Tracker_FormElement_Field_List> | Ok<ArtifactLinkField> | Err<Fault>
      */
     public function retrieveField(int $field_id, PFUser $user): Ok|Err
     {
@@ -60,7 +60,7 @@ final readonly class SuitableFieldRetriever
         }
 
         return match (true) {
-            $field instanceof Tracker_FormElement_Field_String => $this->validateStringField($field),
+            $field instanceof StringField             => $this->validateStringField($field),
             $field instanceof Tracker_FormElement_Field_List
             && $this->isListBindTypeSupported($field) => Result::ok($field),
             $field instanceof ArtifactLinkField => Result::ok($field),
@@ -69,10 +69,10 @@ final readonly class SuitableFieldRetriever
     }
 
     /**
-     * @return Ok<Tracker_FormElement_Field_String>|Err<Fault>
+     * @return Ok<StringField>|Err<Fault>
      */
     private function validateStringField(
-        Tracker_FormElement_Field_String $field,
+        StringField $field,
     ): Ok|Err {
         $field_id = $field->getId();
         $tracker  = $field->getTracker();

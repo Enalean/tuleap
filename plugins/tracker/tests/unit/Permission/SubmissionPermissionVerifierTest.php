@@ -42,11 +42,11 @@ final class SubmissionPermissionVerifierTest extends TestCase
      */
     private $form_element_factory;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&\Tracker_FormElement_Field_String
+     * @var \PHPUnit\Framework\MockObject\MockObject&\Tuleap\Tracker\FormElement\Field\String\StringField
      */
     private $submitable_field;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&\Tracker_FormElement_Field_String
+     * @var \PHPUnit\Framework\MockObject\MockObject&\Tuleap\Tracker\FormElement\Field\String\StringField
      */
     private $readonly_field;
     /**
@@ -59,9 +59,9 @@ final class SubmissionPermissionVerifierTest extends TestCase
         $this->user    = UserTestBuilder::buildWithDefaults();
         $this->tracker = $this->createMock(Tracker::class);
         $this->tracker->method('getId')->willReturn(1);
-        $this->submitable_field = $this->createMock(\Tracker_FormElement_Field_String::class);
+        $this->submitable_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\String\StringField::class);
         $this->submitable_field->method('userCanSubmit')->willReturn(true);
-        $this->readonly_field = $this->createMock(\Tracker_FormElement_Field_String::class);
+        $this->readonly_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\String\StringField::class);
         $this->readonly_field->method('userCanSubmit')->willReturn(false);
 
         $this->form_element_factory = $this->createMock(\Tracker_FormElementFactory::class);

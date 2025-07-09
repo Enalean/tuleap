@@ -24,9 +24,9 @@ namespace Tuleap\Kanban;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use Tracker_FormElement_Field_List;
-use Tracker_FormElement_Field_String;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Tracker\FormElement\Field\String\StringField;
 use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
 use Tuleap\Tracker\Semantic\Title\RetrieveSemanticTitleField;
 use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
@@ -45,7 +45,7 @@ final class KanbanActionsCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const STRING_FIELD_ID = 201;
     private const LIST_FIELD_ID   = 40;
-    private Tracker_FormElement_Field_String $field_string;
+    private StringField $field_string;
     private Tracker_FormElement_Field_List $field_list;
     private Tracker $tracker;
     private RetrieveSemanticTitleField $title_field_retriever;

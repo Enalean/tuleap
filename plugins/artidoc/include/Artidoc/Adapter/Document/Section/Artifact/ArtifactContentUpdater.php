@@ -117,7 +117,7 @@ final readonly class ArtifactContentUpdater implements UpdateArtifactContent
 
         $title_value           = new ArtifactValuesRepresentation();
         $title_value->field_id = $title_field->getId();
-        $title_value->value    = $title_field instanceof \Tracker_FormElement_Field_String
+        $title_value->value    = $title_field instanceof \Tuleap\Tracker\FormElement\Field\String\StringField
             ? $content->title
             : [
                 'content' => $content->title,

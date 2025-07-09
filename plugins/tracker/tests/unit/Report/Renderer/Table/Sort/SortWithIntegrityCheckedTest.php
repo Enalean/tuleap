@@ -34,7 +34,7 @@ final class SortWithIntegrityCheckedTest extends TestCase
     {
         $renderer_id                  = 10;
         $used_field_id                = 123;
-        $used_field                   = new \Tracker_FormElement_Field_String($used_field_id, 456, 0, 'field', 'Correct field', '', 1, 'P', false, false, 1);
+        $used_field                   = new \Tuleap\Tracker\FormElement\Field\String\StringField($used_field_id, 456, 0, 'field', 'Correct field', '', 1, 'P', false, false, 1);
         $this->sort_with_used_field   = [
             'renderer_id ' => $renderer_id,
             'field_id' => $used_field_id,
@@ -42,7 +42,7 @@ final class SortWithIntegrityCheckedTest extends TestCase
             'rank' => 1,
             'field' => $used_field,
         ];
-        $unused_field                 = new \Tracker_FormElement_Field_String(234, 456, 0, 'field', 'Correct field', '', 0, 'P', false, false, 1);
+        $unused_field                 = new \Tuleap\Tracker\FormElement\Field\String\StringField(234, 456, 0, 'field', 'Correct field', '', 0, 'P', false, false, 1);
         $this->sort_with_unused_field = [
             'renderer_id ' => $renderer_id,
             'field_id' => $unused_field->getId(),

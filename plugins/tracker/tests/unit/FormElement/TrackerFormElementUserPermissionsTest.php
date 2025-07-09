@@ -20,9 +20,9 @@
 
 namespace Tuleap\Tracker\FormElement;
 
-use Tracker_FormElement_Field_String;
 use Tracker_Workflow_WorkflowUser;
 use Tuleap\GlobalLanguageMock;
+use Tuleap\Tracker\FormElement\Field\String\StringField;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TrackerFormElementUserPermissionsTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -34,7 +34,7 @@ final class TrackerFormElementUserPermissionsTest extends \Tuleap\Test\PHPUnit\T
 
     protected function setUp(): void
     {
-        $this->form_element = $this->createPartialMock(Tracker_FormElement_Field_String::class, ['getId', 'getLabel', 'getName']);
+        $this->form_element = $this->createPartialMock(StringField::class, ['getId', 'getLabel', 'getName']);
         $this->form_element->method('getId')->willReturn(300);
         $this->form_element->method('getLabel')->willReturn('My field');
         $this->form_element->method('getName')->willReturn('my_field');

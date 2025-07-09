@@ -769,7 +769,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
                     var_dump($this, 'Properties must be "rows" and "cols"');
                     return false;
                 }
-            } elseif (static::class == 'Tracker_FormElement_Field_String') {
+            } elseif (static::class == 'Tuleap\Tracker\FormElement\Field\String\StringField') {
                 if (! (isset($this->default_properties['maxchars']) && isset($this->default_properties['size']))) {
                     var_dump($this, 'Properties must be "maxchars" and "size"');
                     return false;

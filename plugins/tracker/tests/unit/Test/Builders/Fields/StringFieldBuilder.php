@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Test\Builders\Fields;
 
-use Tracker_FormElement_Field_String;
+use Tuleap\Tracker\FormElement\Field\String\StringField;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class StringFieldBuilder
@@ -35,8 +35,8 @@ final class StringFieldBuilder
     private bool $use_it      = true;
     private \Tuleap\Tracker\Tracker $tracker;
     /** @var array<string, mixed> */
-    private array $specific_properties                        = [];
-    private ?Tracker_FormElement_Field_String $original_field = null;
+    private array $specific_properties   = [];
+    private ?StringField $original_field = null;
 
     private function __construct(private readonly int $id)
     {
@@ -85,15 +85,15 @@ final class StringFieldBuilder
         return $this;
     }
 
-    public function withOriginalField(Tracker_FormElement_Field_String $field): self
+    public function withOriginalField(StringField $field): self
     {
         $this->original_field = $field;
         return $this;
     }
 
-    public function build(): Tracker_FormElement_Field_String
+    public function build(): StringField
     {
-        $field = new Tracker_FormElement_Field_String(
+        $field = new StringField(
             $this->id,
             $this->tracker->getId(),
             15,
