@@ -44,7 +44,7 @@ final class FromPayloadUserListBuilderTest extends TestCase
         $this->bob   = UserTestBuilder::aUser()->withId(self::BOB_ID)->build();
     }
 
-    public function testItReturnsAFaultWhenUserIdDoesNotMatchActiveUser(): void
+    public function testItIgnoresWhenUserIdDoesNotMatchActiveUser(): void
     {
         $current_user = UserTestBuilder::buildWithDefaults();
 
@@ -60,19 +60,24 @@ final class FromPayloadUserListBuilderTest extends TestCase
             ],
         );
 
-        self::assertTrue(Result::isErr($result));
-        self::assertInstanceOf(QueryInvalidUserIdFault::class, $result->error);
+        self::assertTrue(Result::isOk($result));
+        self::assertEquals(
+            new UserList(
+                [$this->alice],
+                [],
+            ),
+            $result->value
+        );
     }
 
     public function testItReturnsAUserListWhenValidUsersAreProvided(): void
     {
         $current_user = UserTestBuilder::buildWithDefaults();
 
-        $result = (
-        new FromPayloadUserListBuilder(
-            GetViewableUserStub::withViewableUsers($this->alice, $this->bob),
-        )
-        )->getUserList(
+        $check_that_user_is_active = GetViewableUserStub::withViewableUsers($this->alice, $this->bob);
+
+        $builder = new FromPayloadUserListBuilder($check_that_user_is_active);
+        $result  = $builder->getUserList(
             $current_user,
             [
                 QueryUserRepresentation::fromId(self::ALICE_ID),
@@ -83,7 +88,34 @@ final class FromPayloadUserListBuilderTest extends TestCase
         self::assertTrue(Result::isOk($result));
         self::assertEquals(
             new UserList(
-                [self::ALICE_ID, self::BOB_ID],
+                [$this->alice, $this->bob],
+                [],
+            ),
+            $result->value
+        );
+    }
+
+    public function testItReturnsAUserListWhenValidUsersAreProvidedButSomeAreNotViewable(): void
+    {
+        $current_user = UserTestBuilder::buildWithDefaults();
+
+        $check_that_user_is_active = GetViewableUserStub::withViewableUsers($this->alice)
+            ->andNotViewableUsers($this->bob);
+
+        $builder = new FromPayloadUserListBuilder($check_that_user_is_active);
+        $result  = $builder->getUserList(
+            $current_user,
+            [
+                QueryUserRepresentation::fromId(self::ALICE_ID),
+                QueryUserRepresentation::fromId(self::BOB_ID),
+            ],
+        );
+
+        self::assertTrue(Result::isOk($result));
+        self::assertEquals(
+            new UserList(
+                [$this->alice],
+                [$this->bob],
             ),
             $result->value
         );

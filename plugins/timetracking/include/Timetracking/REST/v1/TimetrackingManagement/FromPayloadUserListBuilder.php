@@ -27,6 +27,8 @@ use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Timetracking\Widget\Management\GetViewableUser;
+use Tuleap\Timetracking\Widget\Management\NotAllowedToSeeTimetrackingOfUserFault;
+use Tuleap\Timetracking\Widget\Management\QueryInvalidUserIdFault;
 
 final readonly class FromPayloadUserListBuilder
 {
@@ -44,13 +46,24 @@ final readonly class FromPayloadUserListBuilder
     {
         $user_ids = $this->extractUserIds($users);
 
+        $viewable_users     = [];
+        $not_viewable_users = [];
         foreach ($user_ids as $user_id) {
-            if (! $this->isUserIdValid($current_user, $user_id)) {
-                return Result::err(QueryInvalidUserIdFault::build($user_id));
+            $result = $this->check_that_user_is_active->getViewableUser($current_user, $user_id);
+
+            if (Result::isOk($result)) {
+                $viewable_users[] = $result->value;
+            } elseif ($result->error instanceof NotAllowedToSeeTimetrackingOfUserFault) {
+                $not_viewable_users[] = $result->error->user;
+            } elseif ($result->error instanceof QueryInvalidUserIdFault) {
+                // silently ignore invalid user ids
+                continue;
+            } else {
+                return $result;
             }
         }
 
-        return Result::ok(new UserList($user_ids));
+        return Result::ok(new UserList($viewable_users, $not_viewable_users));
     }
 
     /**
@@ -64,12 +77,5 @@ final readonly class FromPayloadUserListBuilder
         }
 
         return array_keys($user_ids);
-    }
-
-    private function isUserIdValid(\PFUser $current_user, int $user_id): bool
-    {
-        $user = $this->check_that_user_is_active->getViewableUser($current_user, $user_id);
-
-        return $user !== null;
     }
 }

@@ -22,15 +22,15 @@ declare(strict_types=1);
 
 namespace Tuleap\Timetracking\Widget\Management;
 
-use PFUser;
-use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
-use Tuleap\NeverThrow\Ok;
 
-interface GetViewableUser
+/**
+ * @psalm-immutable
+ */
+final readonly class QueryInvalidUserIdFault extends Fault
 {
-    /**
-     * @return Ok<PFUser>|Err<Fault>
-     */
-    public function getViewableUser(PFUser $current_user, int $user_id): Ok|Err;
+    public static function build(int $invalid_id): Fault
+    {
+        return new self(sprintf('User with id #%d not found.', $invalid_id));
+    }
 }

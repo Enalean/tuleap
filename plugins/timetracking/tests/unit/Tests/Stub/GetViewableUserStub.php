@@ -23,25 +23,44 @@ declare(strict_types=1);
 namespace Tuleap\Timetracking\Tests\Stub;
 
 use PFUser;
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Ok;
+use Tuleap\NeverThrow\Result;
 use Tuleap\Timetracking\Widget\Management\GetViewableUser;
+use Tuleap\Timetracking\Widget\Management\NotAllowedToSeeTimetrackingOfUserFault;
+use Tuleap\Timetracking\Widget\Management\QueryInvalidUserIdFault;
 
-final readonly class GetViewableUserStub implements GetViewableUser
+final class GetViewableUserStub implements GetViewableUser
 {
+    /**
+     * @var array<int, PFUser>
+     */
+    private array $not_viewable_users = [];
+
     /**
      * @param array<int, PFUser> $users
      */
-    public function __construct(private array $users)
+    public function __construct(private readonly array $users)
     {
     }
 
     #[\Override]
-    public function getViewableUser(PFUser $current_user, int $user_id): ?PFUser
+    public function getViewableUser(PFUser $current_user, int $user_id): Ok|Err
     {
-        if (! isset($this->users[$user_id])) {
-            return null;
+        if (isset($this->not_viewable_users[$user_id])) {
+            return Result::err(
+                NotAllowedToSeeTimetrackingOfUserFault::build(
+                    $current_user,
+                    $this->not_viewable_users[$user_id],
+                ),
+            );
         }
 
-        return $this->users[$user_id];
+        if (! isset($this->users[$user_id])) {
+            return Result::err(QueryInvalidUserIdFault::build($user_id));
+        }
+
+        return Result::ok($this->users[$user_id]);
     }
 
     public static function withViewableUsers(PFUser ...$users): self
@@ -52,5 +71,14 @@ final readonly class GetViewableUserStub implements GetViewableUser
         }
 
         return new self($users_by_id);
+    }
+
+    public function andNotViewableUsers(PFUser ...$users): self
+    {
+        foreach ($users as $user) {
+            $this->not_viewable_users[(int) $user->getId()] = $user;
+        }
+
+        return $this;
     }
 }

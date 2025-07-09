@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,17 +20,11 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Timetracking\REST\v1\TimetrackingManagement;
+namespace Tuleap\Timetracking\Widget\Management;
 
-use Tuleap\NeverThrow\Fault;
+use PFUser;
 
-/**
- * @psalm-immutable
- */
-final readonly class QueryInvalidUserIdFault extends Fault
+interface VerifyManagerCanSeeTimetrackingOfUser
 {
-    public static function build(int $invalid_id): Fault
-    {
-        return new self(sprintf('User with id #%d not found.', $invalid_id));
-    }
+    public function isManagerAllowedToSeeTimetrackingOfUser(PFUser $manager, PFUser $user): bool;
 }

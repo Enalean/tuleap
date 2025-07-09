@@ -34,14 +34,14 @@ class TimetrackingUgroupSaver
         $this->dao = $dao;
     }
 
-    public function saveWriters(Tracker $tracker, array $ugroup_ids)
+    public function saveWriters(Tracker $tracker, array $ugroup_ids): void
     {
-        return $this->dao->saveWriters($tracker->getId(), $ugroup_ids);
+        $this->dao->saveWriters($tracker->getId(), $ugroup_ids);
     }
 
-    public function saveReaders(Tracker $tracker, array $ugroup_ids)
+    public function saveReaders(Tracker $tracker, array $ugroup_ids): void
     {
-        return $this->dao->saveReaders($tracker->getId(), $ugroup_ids);
+        $this->dao->saveReaders($tracker->getId(), $ugroup_ids);
     }
 
     public function deleteWriters(Tracker $tracker)

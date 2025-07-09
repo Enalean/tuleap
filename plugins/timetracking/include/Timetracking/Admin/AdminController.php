@@ -245,7 +245,7 @@ class AdminController
         );
     }
 
-    private function saveWriters(Tracker $tracker, $selected_write_ugroup)
+    private function saveWriters(Tracker $tracker, $selected_write_ugroup): void
     {
         $override_collection = new PermissionsNormalizerOverrideCollection();
         $normalized_ids      = $this->permissions_normalizer->getNormalizedUGroupIds(
@@ -254,12 +254,11 @@ class AdminController
             $override_collection
         );
 
-        if ($this->timetracking_ugroup_saver->saveWriters($tracker, $normalized_ids)) {
-            $override_collection->emitFeedback(self::WRITE_ACCESS);
-        }
+        $this->timetracking_ugroup_saver->saveWriters($tracker, $normalized_ids);
+        $override_collection->emitFeedback(self::WRITE_ACCESS);
     }
 
-    private function saveReaders(Tracker $tracker, $selected_read_ugroup)
+    private function saveReaders(Tracker $tracker, $selected_read_ugroup): void
     {
         $override_collection = new PermissionsNormalizerOverrideCollection();
         $normalized_ids      = $this->permissions_normalizer->getNormalizedUGroupIds(
@@ -268,8 +267,7 @@ class AdminController
             $override_collection
         );
 
-        if ($this->timetracking_ugroup_saver->saveReaders($tracker, $normalized_ids)) {
-            $override_collection->emitFeedback(self::READ_ACCESS);
-        }
+        $this->timetracking_ugroup_saver->saveReaders($tracker, $normalized_ids);
+        $override_collection->emitFeedback(self::READ_ACCESS);
     }
 }

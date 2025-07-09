@@ -40,6 +40,7 @@ export type Query = {
         users: User[],
     ) => void;
     has_the_query_been_modified: Ref<boolean>;
+    no_more_viewable_users: Ref<User[]>;
     saveQuery: (widget_id: number) => void;
 };
 
@@ -49,6 +50,7 @@ export const QueryRetriever = (): Query => {
     let predefined_period: PredefinedTimePeriod | "" = TODAY;
     let users_list: User[] = [];
     const has_the_query_been_modified = ref(false);
+    const no_more_viewable_users: Ref<User[]> = ref([]);
 
     const getQuery = (): TimetrackingManagementQuery => {
         return {
@@ -74,7 +76,12 @@ export const QueryRetriever = (): Query => {
     };
 
     const saveQuery = (widget_id: number): void => {
-        putQuery(widget_id, getQuery());
+        putQuery(widget_id, getQuery()).match(
+            (result) => {
+                no_more_viewable_users.value = result.no_more_viewable_users;
+            },
+            () => {},
+        );
     };
 
     return {
@@ -82,5 +89,6 @@ export const QueryRetriever = (): Query => {
         setQuery,
         has_the_query_been_modified,
         saveQuery,
+        no_more_viewable_users,
     };
 };

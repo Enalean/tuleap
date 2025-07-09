@@ -50,7 +50,7 @@ final class QueryPUTHandlerTest extends TestCase
     }
 
     /**
-     * @return Ok<true> | Err<Fault>
+     * @return Ok<UserList> | Err<Fault>
      */
     public function handle(?string $start_date, ?string $end_date, ?string $predefined_time_period, array $users): Ok|Err
     {
@@ -90,7 +90,7 @@ final class QueryPUTHandlerTest extends TestCase
         );
 
         self::assertTrue(Result::isOk($result));
-        self::assertTrue($result->value);
+        self::assertNotNull($result->value);
     }
 
     public function testUpdateQueryWithPredefinedTimePeriod(): void
@@ -98,7 +98,7 @@ final class QueryPUTHandlerTest extends TestCase
         $result = $this->handle(null, null, 'last_week', [QueryUserRepresentation::fromId(self::BOB_ID)]);
 
         self::assertTrue(Result::isOk($result));
-        self::assertTrue($result->value);
+        self::assertNotNull($result->value);
     }
 
     public function testFaultWhenInvalidDateFormat(): void
@@ -189,7 +189,7 @@ final class QueryPUTHandlerTest extends TestCase
         self::assertInstanceOf(QueryOnlyOneDateProvidedFault::class, $result->error);
     }
 
-    public function testFaultWhenInvalidUsersAreProvided(): void
+    public function testInvalidUsersAreIgnored(): void
     {
         $result = $this->handle(
             null,
@@ -201,11 +201,10 @@ final class QueryPUTHandlerTest extends TestCase
             ],
         );
 
-        self::assertTrue(Result::isErr($result));
-        self::assertInstanceOf(QueryInvalidUserIdFault::class, $result->error);
+        self::assertTrue(Result::isOk($result));
     }
 
-    public function testFaultWhenValidButNotActiveUsersAreProvided(): void
+    public function testInactiveUsersAreIgnored(): void
     {
         $result = $this->handle(
             null,
@@ -217,8 +216,7 @@ final class QueryPUTHandlerTest extends TestCase
             ],
         );
 
-        self::assertTrue(Result::isErr($result));
-        self::assertInstanceOf(QueryInvalidUserIdFault::class, $result->error);
+        self::assertTrue(Result::isOk($result));
     }
 
     public function testFaultWhenCurrentUserIsNotTheWidgetOwner(): void

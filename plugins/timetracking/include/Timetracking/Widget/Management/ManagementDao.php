@@ -98,8 +98,8 @@ final class ManagementDao extends DataAccessObject implements SaveQueryWithDates
     private function insertUsers(int $query_id, UserList $users): void
     {
         $users_to_insert = [];
-        foreach ($users->user_ids as $user_id) {
-            $users_to_insert[] = ['query_id' => $query_id, 'user_id' => $user_id];
+        foreach ($users->viewable_users as $user) {
+            $users_to_insert[] = ['query_id' => $query_id, 'user_id' => $user->getId()];
         }
 
         if ($users_to_insert !== []) {

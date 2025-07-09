@@ -23,26 +23,44 @@ declare(strict_types=1);
 namespace Tuleap\Timetracking\Widget\Management;
 
 use PFUser;
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Fault;
+use Tuleap\NeverThrow\Ok;
+use Tuleap\NeverThrow\Result;
 use Tuleap\User\RetrieveUserById;
 
 final readonly class ViewableUserRetriever implements GetViewableUser
 {
     public function __construct(
         private RetrieveUserById $retrieve_user,
+        private VerifyManagerCanSeeTimetrackingOfUser $perms_verifier,
     ) {
     }
 
-    public function getViewableUser(PFUser $current_user, int $user_id): ?\PFUser
+    #[\Override]
+    public function getViewableUser(PFUser $current_user, int $user_id): Ok|Err
     {
         if ($current_user->isAnonymous()) {
-            return null;
+            return Result::err(Fault::fromMessage('Anonymous users cannot retrieve PII'));
+        }
+
+        if ((int) $current_user->getId() === $user_id) {
+            return Result::ok($current_user);
         }
 
         $user = $this->retrieve_user->getUserById($user_id);
         if (! $user || ! $user->isAlive()) {
-            return null;
+            return Result::err(QueryInvalidUserIdFault::build($user_id));
         }
 
-        return $user;
+        if ($current_user->isSuperUser()) {
+            return Result::ok($user);
+        }
+
+        if ($this->perms_verifier->isManagerAllowedToSeeTimetrackingOfUser($current_user, $user)) {
+            return Result::ok($user);
+        }
+
+        return Result::err(NotAllowedToSeeTimetrackingOfUserFault::build($current_user, $user));
     }
 }

@@ -18,24 +18,30 @@
   -->
 
 <template>
-    <no-more-viewable-users-warning />
-    <widget-query-displayer
-        v-if="!is_query_being_edited"
-        v-on:click="is_query_being_edited = true"
-    />
-    <widget-query-editor v-else v-on:close-edit-mode="is_query_being_edited = false" />
-    <widget-query-save-request v-show="!is_query_being_edited && has_the_query_been_modified" />
+    <div class="tlp-alert-warning" v-if="no_more_viewable_users.length > 0">
+        {{
+            $ngettext(
+                "You don't have the permission to access this user times, user removed from list:",
+                "You don't have the permission to access those users times, users removed from list:",
+                no_more_viewable_users.length,
+            )
+        }}
+        <code v-if="no_more_viewable_users.length === 1">{{
+            no_more_viewable_users[0].display_name
+        }}</code>
+        <ul v-else>
+            <li v-for="user in no_more_viewable_users" v-bind:key="user.id">
+                <code>{{ user.display_name }}</code>
+            </li>
+        </ul>
+    </div>
 </template>
 
 <script setup lang="ts">
-import WidgetQueryDisplayer from "./WidgetQueryDisplayer.vue";
-import WidgetQueryEditor from "./WidgetQueryEditor.vue";
-import { ref } from "vue";
-import WidgetQuerySaveRequest from "./WidgetQuerySaveRequest.vue";
+import { useGettext } from "vue3-gettext";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { RETRIEVE_QUERY } from "../injection-symbols";
-import NoMoreViewableUsersWarning from "./NoMoreViewableUsersWarning.vue";
 
-const is_query_being_edited = ref(false);
-const { has_the_query_been_modified } = strictInject(RETRIEVE_QUERY);
+const { $ngettext } = useGettext();
+const { no_more_viewable_users } = strictInject(RETRIEVE_QUERY);
 </script>
