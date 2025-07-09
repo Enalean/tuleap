@@ -19,14 +19,14 @@
   -->
 
 <template>
-    <milestone-bar
+    <task-bar-milestone
         v-if="task.is_milestone"
         v-bind:task="task"
         v-bind:left="left"
         v-bind:popover_element_id="popover_element_id"
         v-bind:class="container_classes"
     />
-    <task-bar-content
+    <task-bar-progress
         v-else
         v-bind:left="left"
         v-bind:width="width"
@@ -45,8 +45,8 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import type { Task } from "../../../type";
-import MilestoneBar from "./MilestoneBar.vue";
-import TaskBarContent from "./TaskBarContent.vue";
+import TaskBarMilestone from "./TaskBarMilestone.vue";
+import TaskBarProgress from "./TaskBarProgress.vue";
 
 const props = defineProps<{
     left: number;

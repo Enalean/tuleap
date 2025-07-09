@@ -21,7 +21,7 @@ import { DateTime } from "luxon";
 import { mount } from "@vue/test-utils";
 import type { Wrapper } from "@vue/test-utils";
 import type { Task } from "../../../type";
-import MilestoneBar from "./MilestoneBar.vue";
+import TaskBarMilestone from "./TaskBarMilestone.vue";
 import TaskBar from "./TaskBar.vue";
 
 describe("TaskBar", () => {
@@ -102,7 +102,7 @@ describe("TaskBar", () => {
         is_milestone = true;
         width = 21;
 
-        expect(getWrapper().findComponent(MilestoneBar).exists()).toBe(true);
+        expect(getWrapper().findComponent(TaskBarMilestone).exists()).toBe(true);
     });
 
     describe("percentage", () => {
