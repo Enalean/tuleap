@@ -43,16 +43,9 @@
         />
     </div>
 </template>
-<script lang="ts">
-import Vue from "vue";
-import { Getter, State } from "vuex-class";
-import { Component } from "vue-property-decorator";
-import type { JiraImportData } from "../../../../store/type";
-@Component
-export default class FieldFromJira extends Vue {
-    @State
-    readonly from_jira_data!: JiraImportData;
-    @Getter
-    readonly is_created_from_jira!: boolean;
-}
+<script setup lang="ts">
+import { useGetters, useState } from "vuex-composition-helpers";
+
+const { from_jira_data } = useState(["from_jira_data"]);
+const { is_created_from_jira } = useGetters(["is_created_from_jira"]);
 </script>
