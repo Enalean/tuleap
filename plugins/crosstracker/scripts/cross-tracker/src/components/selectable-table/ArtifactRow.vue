@@ -25,8 +25,8 @@
             v-bind:key="column_name + '_' + level + '_' + row.id"
             v-bind:cell="row.cells.get(column_name)"
             v-bind:artifact_uri="row.uri"
-            v-bind:expected_number_of_forward_link="row.number_of_forward_link"
-            v-bind:expected_number_of_reverse_link="row.number_of_reverse_link"
+            v-bind:expected_number_of_forward_link="row.expected_number_of_forward_links"
+            v-bind:expected_number_of_reverse_link="row.expected_number_of_reverse_links"
             v-on:toggle-links="toggleLinks"
             v-bind:level="level"
             v-bind:is_last="is_last"
@@ -43,14 +43,15 @@
             v-bind:row="row"
             v-bind:columns="columns"
             v-bind:is_loading="artifact_link.is_loading"
-            v-bind:number_of_link="artifact_link.number_of_links"
+            v-bind:expected_number_of_links="artifact_link.expected_number_of_links"
             v-bind:artifact_links_rows="artifact_link.artifact_links"
             v-bind:level="level + 1"
             v-bind:tql_query="tql_query"
             v-bind:parent_element="current_element_ref"
             v-bind:parent_caret="current_caret_ref"
             v-bind:direction="artifact_link.direction"
-            v-bind:reverse_links_count="reverse.number_of_links"
+            v-bind:reverse_links_count="reverse.artifact_links.length"
+            v-bind:ancestors="[...ancestors, row.id]"
         />
         <row-error-message v-if="error_message !== ''" v-bind:error_message="error_message" />
     </template>
@@ -75,7 +76,7 @@ import EditCell from "./EditCell.vue";
 interface ArtifactLinksFetchStatus {
     is_loading: boolean;
     artifact_links: ReadonlyArray<ArtifactRow>;
-    number_of_links: number;
+    expected_number_of_links: number;
     direction: ArtifactLinkDirection;
 }
 
@@ -89,6 +90,7 @@ const props = defineProps<{
     parent_caret: HTMLElement | undefined;
     direction: ArtifactLinkDirection | undefined;
     reverse_links_count: number | undefined;
+    ancestors: number[];
 }>();
 
 const artifact_links_retriever = strictInject(RETRIEVE_ARTIFACT_LINKS);
@@ -108,7 +110,7 @@ const forward = computed((): ArtifactLinksFetchStatus => {
     return {
         is_loading: are_forward_links_loading.value,
         artifact_links: forward_links.value,
-        number_of_links: props.row.number_of_forward_link,
+        expected_number_of_links: props.row.expected_number_of_forward_links,
         direction: FORWARD_DIRECTION,
     };
 });
@@ -117,7 +119,7 @@ const reverse = computed((): ArtifactLinksFetchStatus => {
     return {
         is_loading: are_reverse_links_loading.value,
         artifact_links: reverse_links.value,
-        number_of_links: props.row.number_of_reverse_link,
+        expected_number_of_links: props.row.expected_number_of_reverse_links,
         direction: REVERSE_DIRECTION,
     };
 });
@@ -154,7 +156,9 @@ function toggleLinks(current_element: HTMLElement, current_caret: HTMLElement): 
         .getReverseLinks(widget_id, props.row.id, props.tql_query)
         .match(
             (artifacts: ArtifactsTableWithTotal) => {
-                reverse_links.value = artifacts.table.rows;
+                reverse_links.value = artifacts.table.rows.filter(
+                    (row) => row.id !== props.ancestors.slice(-1)[0],
+                );
             },
             (fault: Fault) => {
                 error_message.value = String(fault);

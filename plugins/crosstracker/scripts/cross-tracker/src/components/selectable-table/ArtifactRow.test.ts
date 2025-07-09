@@ -69,7 +69,7 @@ const artifact_row = new ArtifactRowBuilder()
         type: NUMERIC_CELL,
         value: Option.fromValue(74),
     })
-    .buildWithNumberOfLinks(1, 1);
+    .buildWithExpectedNumberOfLinks(1, 1);
 
 const forward_table = new ArtifactsTableBuilderForTests()
     .withColumn(PRETTY_TITLE_COLUMN_NAME)
@@ -85,9 +85,13 @@ const reverse_table = new ArtifactsTableBuilderForTests()
     .buildWithTotal(2);
 
 describe("ArtifactRow", () => {
-    let artifact_links_table_retriever: RetrieveArtifactLinks;
+    let artifact_links_table_retriever: RetrieveArtifactLinks,
+        ancestors: number[],
+        artifact_id: number;
 
     beforeEach(() => {
+        artifact_id = 512;
+        ancestors = [123, 234];
         artifact_links_table_retriever = RetrieveArtifactLinksTableStub.withContent(
             okAsync(forward_table),
             okAsync(reverse_table),
@@ -106,14 +110,15 @@ describe("ArtifactRow", () => {
             props: {
                 tql_query: 'SELECT @pretty_title FROM @project="self"',
                 row: new ArtifactRowBuilder()
+                    .withRowId(artifact_id)
                     .addCell(PRETTY_TITLE_COLUMN_NAME, {
                         type: PRETTY_TITLE_CELL,
                         title: "earthmaking",
                         tracker_name: "lifesome",
-                        artifact_id: 512,
+                        artifact_id,
                         color: "inca-silver",
                     })
-                    .buildWithNumberOfLinks(1, 1),
+                    .buildWithExpectedNumberOfLinks(1, 1),
                 columns: new Set<ColumnName>().add(PRETTY_TITLE_COLUMN_NAME),
                 level: 0,
                 is_last: false,
@@ -121,6 +126,7 @@ describe("ArtifactRow", () => {
                 parent_caret: undefined,
                 direction: undefined,
                 reverse_links_count: undefined,
+                ancestors,
             },
         });
     }
@@ -204,4 +210,199 @@ describe("ArtifactRow", () => {
             expect(row_error_message.props("error_message")).toStrictEqual(error_message);
         },
     );
+
+    describe("Ancestors propagation", () => {
+        it("Should include its own row into the ancestors collection passed to ArtifactLinks", async () => {
+            ancestors = [472];
+
+            const wrapper = getWrapper();
+
+            wrapper
+                .findComponent(SelectableCell)
+                .vm.$emit("toggle-links", html_element, html_element);
+
+            await vi.runOnlyPendingTimersAsync();
+
+            const artifact_link_rows = wrapper.findAllComponents(ArtifactLinkRows);
+
+            expect(artifact_link_rows).not.toHaveLength(0);
+            artifact_link_rows.forEach((artifact_link_row) => {
+                expect(artifact_link_row.props("ancestors")).toStrictEqual([472, artifact_id]);
+            });
+        });
+    });
+
+    describe("Parents filtering", () => {
+        it("should not filter anything if my parent is not in the list of reverse links", async () => {
+            const reverse_row_1 = new ArtifactRowBuilder()
+                .addCell(PRETTY_TITLE_COLUMN_NAME, {
+                    type: PRETTY_TITLE_CELL,
+                    title: "earthmaking",
+                    tracker_name: "lifesome",
+                    artifact_id: 512,
+                    color: "inca-silver",
+                })
+                .addCell(NUMERIC_COLUMN_NAME, {
+                    type: NUMERIC_CELL,
+                    value: Option.fromValue(74),
+                })
+                .withRowId(675)
+                .buildWithExpectedNumberOfLinks(1, 1);
+
+            const reverse_row_2 = new ArtifactRowBuilder()
+                .addCell(PRETTY_TITLE_COLUMN_NAME, {
+                    type: PRETTY_TITLE_CELL,
+                    title: "earthmaking",
+                    tracker_name: "lifesome",
+                    artifact_id: 512,
+                    color: "inca-silver",
+                })
+                .addCell(NUMERIC_COLUMN_NAME, {
+                    type: NUMERIC_CELL,
+                    value: Option.fromValue(74),
+                })
+                .withRowId(988)
+                .buildWithExpectedNumberOfLinks(1, 1);
+
+            const reverse_links_table = new ArtifactsTableBuilderForTests()
+                .withColumn(PRETTY_TITLE_COLUMN_NAME)
+                .withColumn(NUMERIC_COLUMN_NAME)
+                .withArtifactRow(reverse_row_1)
+                .withArtifactRow(reverse_row_2)
+                .buildWithTotal(2);
+
+            artifact_links_table_retriever = RetrieveArtifactLinksTableStub.withContent(
+                okAsync(forward_table),
+                okAsync(reverse_links_table),
+            );
+
+            const wrapper = getWrapper();
+
+            wrapper
+                .findComponent(SelectableCell)
+                .vm.$emit("toggle-links", html_element, html_element);
+            await vi.runOnlyPendingTimersAsync();
+
+            const reverse_artifact_link_rows = wrapper.findAllComponents(ArtifactLinkRows)[1];
+            const reverse_rows = reverse_artifact_link_rows.props("artifact_links_rows");
+
+            expect(reverse_rows).toHaveLength(reverse_links_table.total);
+        });
+
+        it("should filter my parent out if it is in the list of reverse links", async () => {
+            const reverse_row_1 = new ArtifactRowBuilder()
+                .addCell(PRETTY_TITLE_COLUMN_NAME, {
+                    type: PRETTY_TITLE_CELL,
+                    title: "earthmaking",
+                    tracker_name: "lifesome",
+                    artifact_id: 512,
+                    color: "inca-silver",
+                })
+                .addCell(NUMERIC_COLUMN_NAME, {
+                    type: NUMERIC_CELL,
+                    value: Option.fromValue(74),
+                })
+                .withRowId(675)
+                .buildWithExpectedNumberOfLinks(1, 1);
+
+            const reverse_row_2 = new ArtifactRowBuilder()
+                .addCell(PRETTY_TITLE_COLUMN_NAME, {
+                    type: PRETTY_TITLE_CELL,
+                    title: "earthmaking",
+                    tracker_name: "lifesome",
+                    artifact_id: 512,
+                    color: "inca-silver",
+                })
+                .addCell(NUMERIC_COLUMN_NAME, {
+                    type: NUMERIC_CELL,
+                    value: Option.fromValue(74),
+                })
+                .withRowId(artifact_id)
+                .buildWithExpectedNumberOfLinks(1, 1);
+
+            const reverse_links_table = new ArtifactsTableBuilderForTests()
+                .withColumn(PRETTY_TITLE_COLUMN_NAME)
+                .withColumn(NUMERIC_COLUMN_NAME)
+                .withArtifactRow(reverse_row_1)
+                .withArtifactRow(reverse_row_2)
+                .buildWithTotal(2);
+
+            artifact_links_table_retriever = RetrieveArtifactLinksTableStub.withContent(
+                okAsync(forward_table),
+                okAsync(reverse_links_table),
+            );
+
+            ancestors = [345, 5498, artifact_id];
+
+            const wrapper = getWrapper();
+
+            wrapper
+                .findComponent(SelectableCell)
+                .vm.$emit("toggle-links", html_element, html_element);
+            await vi.runOnlyPendingTimersAsync();
+
+            const reverse_artifact_link_rows = wrapper.findAllComponents(ArtifactLinkRows)[1];
+            const reverse_rows = reverse_artifact_link_rows.props("artifact_links_rows");
+
+            expect(reverse_rows.filter((row) => row.id === artifact_id)).toHaveLength(0);
+        });
+
+        it("should work even if I have no ancestors", async () => {
+            const reverse_row_1 = new ArtifactRowBuilder()
+                .addCell(PRETTY_TITLE_COLUMN_NAME, {
+                    type: PRETTY_TITLE_CELL,
+                    title: "earthmaking",
+                    tracker_name: "lifesome",
+                    artifact_id: 512,
+                    color: "inca-silver",
+                })
+                .addCell(NUMERIC_COLUMN_NAME, {
+                    type: NUMERIC_CELL,
+                    value: Option.fromValue(74),
+                })
+                .withRowId(675)
+                .buildWithExpectedNumberOfLinks(1, 1);
+
+            const reverse_row_2 = new ArtifactRowBuilder()
+                .addCell(PRETTY_TITLE_COLUMN_NAME, {
+                    type: PRETTY_TITLE_CELL,
+                    title: "earthmaking",
+                    tracker_name: "lifesome",
+                    artifact_id: 512,
+                    color: "inca-silver",
+                })
+                .addCell(NUMERIC_COLUMN_NAME, {
+                    type: NUMERIC_CELL,
+                    value: Option.fromValue(74),
+                })
+                .withRowId(artifact_id)
+                .buildWithExpectedNumberOfLinks(1, 1);
+
+            const reverse_links_table = new ArtifactsTableBuilderForTests()
+                .withColumn(PRETTY_TITLE_COLUMN_NAME)
+                .withColumn(NUMERIC_COLUMN_NAME)
+                .withArtifactRow(reverse_row_1)
+                .withArtifactRow(reverse_row_2)
+                .buildWithTotal(2);
+
+            artifact_links_table_retriever = RetrieveArtifactLinksTableStub.withContent(
+                okAsync(forward_table),
+                okAsync(reverse_links_table),
+            );
+
+            ancestors = [];
+
+            const wrapper = getWrapper();
+
+            wrapper
+                .findComponent(SelectableCell)
+                .vm.$emit("toggle-links", html_element, html_element);
+            await vi.runOnlyPendingTimersAsync();
+
+            const reverse_artifact_link_rows = wrapper.findAllComponents(ArtifactLinkRows)[1];
+            const reverse_rows = reverse_artifact_link_rows.props("artifact_links_rows");
+
+            expect(reverse_rows).toHaveLength(reverse_links_table.total);
+        });
+    });
 });

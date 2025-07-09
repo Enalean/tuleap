@@ -22,7 +22,7 @@
         v-if="is_loading"
         v-bind:row="row"
         v-bind:columns="columns"
-        v-bind:number_of_link="number_of_link"
+        v-bind:expected_number_of_links="expected_number_of_links"
         v-bind:level="level"
     />
     <artifact-rows
@@ -35,6 +35,7 @@
         v-bind:parent_caret="parent_caret"
         v-bind:direction="direction"
         v-bind:reverse_links_count="reverse_links_count"
+        v-bind:ancestors="ancestors"
     />
 </template>
 
@@ -54,10 +55,11 @@ defineProps<{
     tql_query: string;
     level: number;
     artifact_links_rows: ArtifactsTable["rows"];
-    number_of_link: number;
+    expected_number_of_links: number;
     parent_element: HTMLElement;
     parent_caret: HTMLElement;
     direction: ArtifactLinkDirection;
     reverse_links_count: number;
+    ancestors: number[];
 }>();
 </script>

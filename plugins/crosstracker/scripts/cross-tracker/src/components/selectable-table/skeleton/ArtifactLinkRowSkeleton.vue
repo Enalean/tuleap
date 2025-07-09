@@ -19,7 +19,7 @@
   -->
 
 <template>
-    <template v-for="index of number_of_link" v-bind:key="index">
+    <template v-for="index of expected_number_of_links" v-bind:key="index">
         <empty-edit-cell class="tlp-skeleton-icon" />
         <empty-selectable-cell
             v-for="column_name of columns"
@@ -39,6 +39,6 @@ defineProps<{
     row: ArtifactRow;
     columns: ArtifactsTable["columns"];
     level: number;
-    number_of_link: number;
+    expected_number_of_links: number;
 }>();
 </script>

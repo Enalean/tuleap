@@ -78,15 +78,16 @@ describe("ArtifactLinkRows", () => {
                         artifact_id: 512,
                         color: "inca-silver",
                     })
-                    .buildWithNumberOfLinks(number_of_forward_link, 0),
+                    .buildWithExpectedNumberOfLinks(number_of_forward_link, 0),
                 columns: new Set<ColumnName>().add(PRETTY_TITLE_COLUMN_NAME),
                 level: 0,
                 artifact_links_rows: artifact_table.rows,
-                number_of_link: number_of_forward_link,
+                expected_number_of_links: number_of_forward_link,
                 parent_element: {} as HTMLElement,
                 parent_caret: {} as HTMLElement,
                 direction: FORWARD_DIRECTION,
                 reverse_links_count: 2,
+                ancestors: [123, 234],
             },
         });
     }
@@ -99,7 +100,7 @@ describe("ArtifactLinkRows", () => {
 
         expect(artifact_row.exists()).toBe(false);
         expect(skeleton.exists()).toBe(true);
-        expect(skeleton.props("number_of_link")).toBe(number_of_forward_link);
+        expect(skeleton.props("expected_number_of_links")).toBe(number_of_forward_link);
         expect(skeleton.props("level")).toBe(wrapper.props("level"));
     });
 
