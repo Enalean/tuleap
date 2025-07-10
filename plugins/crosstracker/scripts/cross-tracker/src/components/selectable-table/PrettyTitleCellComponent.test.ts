@@ -17,26 +17,37 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, it, beforeEach, expect } from "vitest";
-import { shallowMount } from "@vue/test-utils";
+import { beforeEach, describe, expect, it } from "vitest";
+import { nextTick } from "vue";
 import type { VueWrapper } from "@vue/test-utils";
-import { PRETTY_TITLE_CELL } from "../../domain/ArtifactsTable";
+import { shallowMount } from "@vue/test-utils";
+import type { ArtifactLinkDirection } from "../../domain/ArtifactsTable";
+import { FORWARD_DIRECTION, PRETTY_TITLE_CELL } from "../../domain/ArtifactsTable";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-tests";
 import { CAN_DISPLAY_ARTIFACT_LINK } from "../../injection-symbols";
 import PrettyTitleCellComponent from "./PrettyTitleCellComponent.vue";
 import CaretIndentation from "./CaretIndentation.vue";
+import ArtifactLinkArrow from "./ArtifactLinkArrow.vue";
 
 describe("PrettyTitleCellComponent", () => {
     let artifact_uri: string;
     let can_display_artifact_link: boolean;
-    let number_of_forward_link: number;
-    let number_of_reverse_link: number;
+    let expected_number_of_forward_link: number;
+    let expected_number_of_reverse_link: number;
+    let parent_element: HTMLElement | undefined;
+    let parent_caret: HTMLElement | undefined;
+    let direction: ArtifactLinkDirection | undefined;
+    let reverse_links_count: number | undefined;
 
     beforeEach(() => {
         artifact_uri = "/plugins/tracker/?aid=286";
         can_display_artifact_link = true;
-        number_of_forward_link = 0;
-        number_of_reverse_link = 0;
+        expected_number_of_forward_link = 0;
+        expected_number_of_reverse_link = 0;
+        parent_element = undefined;
+        parent_caret = undefined;
+        direction = undefined;
+        reverse_links_count = undefined;
     });
 
     const getWrapper = (): VueWrapper<InstanceType<typeof PrettyTitleCellComponent>> => {
@@ -56,9 +67,14 @@ describe("PrettyTitleCellComponent", () => {
                     color: "coral-pink",
                 },
                 artifact_uri,
-                number_of_forward_link,
-                number_of_reverse_link,
+                expected_number_of_forward_link,
+                expected_number_of_reverse_link,
                 level: 0,
+                is_last: false,
+                parent_element,
+                parent_caret,
+                reverse_links_count,
+                direction,
             },
         });
     };
@@ -95,8 +111,8 @@ describe("PrettyTitleCellComponent", () => {
         });
 
         it("should not hide the button, when artifact has links", () => {
-            number_of_forward_link = 2;
-            number_of_reverse_link = 1;
+            expected_number_of_forward_link = 2;
+            expected_number_of_reverse_link = 1;
             const wrapper = getWrapper();
 
             expect(
@@ -110,7 +126,7 @@ describe("PrettyTitleCellComponent", () => {
         const caret_down = "fa-caret-down";
 
         it("should display a caret down, when caret is clicked", async () => {
-            number_of_forward_link = 2;
+            expected_number_of_forward_link = 2;
             const wrapper = getWrapper();
 
             expect(wrapper.find("[data-test=pretty-title-caret]").classes()).toContain(caret_right);
@@ -119,7 +135,7 @@ describe("PrettyTitleCellComponent", () => {
         });
 
         it("should display a caret right, when caret is clicked again", async () => {
-            number_of_reverse_link = 1;
+            expected_number_of_reverse_link = 1;
             const wrapper = getWrapper();
 
             expect(wrapper.find("[data-test=pretty-title-caret]").classes()).toContain(caret_right);
@@ -132,12 +148,46 @@ describe("PrettyTitleCellComponent", () => {
 
     describe("Caret indentation", () => {
         it("should display a Caret Indentation component with the same level", () => {
-            number_of_forward_link = 2;
+            expected_number_of_forward_link = 2;
             const wrapper = getWrapper();
 
             expect(wrapper.findComponent(CaretIndentation).props("level")).toBe(
                 wrapper.props("level"),
             );
+        });
+    });
+
+    describe("ArtifactLinkArrow", () => {
+        it("should not include an ArtifactLinkArrow if there are no parent elements", () => {
+            const wrapper = getWrapper();
+
+            expect(wrapper.findComponent(ArtifactLinkArrow).exists()).toBe(false);
+        });
+
+        it("should include an ArtifactLinkArrow if there are parent elements", async () => {
+            parent_element = {} as HTMLElement;
+            parent_caret = {} as HTMLElement;
+            direction = FORWARD_DIRECTION;
+            reverse_links_count = 3;
+
+            const wrapper = getWrapper();
+
+            await nextTick();
+
+            expect(wrapper.findComponent(ArtifactLinkArrow).exists()).toBe(true);
+        });
+
+        it("should include an ArtifactLinkArrow if there are parent elements BUT no reverse links", async () => {
+            parent_element = {} as HTMLElement;
+            parent_caret = {} as HTMLElement;
+            direction = FORWARD_DIRECTION;
+            reverse_links_count = 0;
+
+            const wrapper = getWrapper();
+
+            await nextTick();
+
+            expect(wrapper.findComponent(ArtifactLinkArrow).exists()).toBe(true);
         });
     });
 });

@@ -32,7 +32,7 @@
             v-on:switch-to-writing-mode="handleSwitchWriting"
         />
     </section>
-    <section class="tlp-pane-section" v-if="!is_loading">
+    <section class="tlp-pane-section artifact-table" v-if="!is_loading">
         <selectable-table v-bind:query="backend_query" />
     </section>
 </template>
@@ -173,5 +173,9 @@ defineExpose({
 <style scoped lang="scss">
 .reading-mode-shown {
     border: 0;
+}
+
+.artifact-table {
+    position: relative;
 }
 </style>

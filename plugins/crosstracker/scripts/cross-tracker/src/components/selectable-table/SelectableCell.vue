@@ -61,12 +61,17 @@
             v-if="props.cell.type === PRETTY_TITLE_CELL"
             v-bind:cell="cell"
             v-bind:artifact_uri="artifact_uri"
-            v-bind:number_of_forward_link="number_of_forward_link"
-            v-bind:number_of_reverse_link="number_of_reverse_link"
-            v-on:toggle-links="emit('toggle-links')"
+            v-bind:expected_number_of_forward_link="expected_number_of_forward_link"
+            v-bind:expected_number_of_reverse_link="expected_number_of_reverse_link"
+            v-bind:is_last="is_last"
+            v-on:toggle-links="toggleArtifactLinksDisplay"
             class="cell"
             v-bind:level="level"
             data-test="cell"
+            v-bind:parent_element="parent_element"
+            v-bind:parent_caret="parent_caret"
+            v-bind:direction="direction"
+            v-bind:reverse_links_count="reverse_links_count"
         />
 
         <span
@@ -86,7 +91,7 @@
 import { strictInject } from "@tuleap/vue-strict-inject";
 import type { ColorName } from "@tuleap/core-constants";
 import type { Option } from "@tuleap/option";
-import type { Cell } from "../../domain/ArtifactsTable";
+import type { ArtifactLinkDirection, Cell } from "../../domain/ArtifactsTable";
 import {
     DATE_CELL,
     NUMERIC_CELL,
@@ -111,9 +116,14 @@ const date_time_formatter = strictInject(DATE_TIME_FORMATTER);
 const props = defineProps<{
     cell: Cell | undefined;
     artifact_uri: string;
-    number_of_forward_link: number;
-    number_of_reverse_link: number;
+    expected_number_of_forward_link: number;
+    expected_number_of_reverse_link: number;
     level: number;
+    is_last: boolean;
+    parent_element: HTMLElement | undefined;
+    parent_caret: HTMLElement | undefined;
+    direction: ArtifactLinkDirection | undefined;
+    reverse_links_count: number | undefined;
 }>();
 
 const emit = defineEmits<ToggleLinks>();
@@ -130,6 +140,10 @@ function renderCell(cell: Cell): string {
         return cell.icon !== "" ? cell.icon + " " + cell.name : cell.name;
     }
     return "";
+}
+
+function toggleArtifactLinksDisplay(parent_element: HTMLElement, parent_caret: HTMLElement): void {
+    emit("toggle-links", parent_element, parent_caret);
 }
 
 const getBadgeClass = (color: ColorName): string => `tlp-badge-${color} tlp-badge-outline`;
