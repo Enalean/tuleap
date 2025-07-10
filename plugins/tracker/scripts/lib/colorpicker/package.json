@@ -5,8 +5,10 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "type": "module",
+  "types": "./src/index.d.ts",
   "exports": {
     ".": {
+      "types": "./src/index.d.ts",
       "sass": "./dist/plugin-tracker-color-picker.css",
       "import": "./dist/plugin-tracker-color-picker.js",
       "require": "./dist/plugin-tracker-color-picker.umd.cjs"

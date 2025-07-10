@@ -42,7 +42,6 @@ use Tuleap\AgileDashboard\Planning\TrackersWithHierarchicalLinkDefinedNotFoundEx
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
 use Tuleap\Layout\HeaderConfigurationBuilder;
-use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\NeverThrow\Err;
@@ -128,7 +127,7 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
      * @param \Closure(string $title, BreadCrumbCollection $breadcrumbs, \Tuleap\Layout\HeaderConfiguration $header_configuration): void $displayHeader
      * @param \Closure(): void $displayFooter
      */
-    public function new_(\Closure $displayHeader, \Closure $displayFooter): void
+    public function new_(\Closure $displayHeader, \Closure $displayFooter): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $planning  = $this->planning_factory->buildNewPlanning($this->group_id);
         $presenter = $this->getFormPresenter($this->request->getCurrentUser(), $planning);
@@ -289,12 +288,15 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
         }
         $presenter = $this->planning_edition_presenter_builder->build($planning, $this->request->getCurrentUser(), $this->project);
 
-        $include_assets = new IncludeAssets(
-            __DIR__ . '/../../frontend-assets',
-            '/assets/agiledashboard'
+        $GLOBALS['HTML']->addJavascriptAsset(
+            new JavascriptViteAsset(
+                new IncludeViteAssets(
+                    __DIR__ . '/../../scripts/administration/frontend-assets',
+                    '/assets/agiledashboard/administration'
+                ),
+                'src/planning-admin-colorpicker.ts'
+            )
         );
-        $GLOBALS['HTML']->addStylesheet($include_assets->getFileURL('planning-admin-colorpicker.css'));
-        $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('planning-admin.js'));
 
         $title = dgettext('tuleap-agiledashboard', 'Edit');
 
@@ -327,13 +329,6 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
             $available_trackers,
             $planning
         );
-
-        $include_assets = new IncludeAssets(
-            __DIR__ . '/../../frontend-assets',
-            '/assets/agiledashboard'
-        );
-        $GLOBALS['HTML']->addStylesheet($include_assets->getFileURL('planning-admin-colorpicker.css'));
-        $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('planning-admin.js'));
 
         return new Planning_FormPresenter(
             $this->planning_permissions_manager,

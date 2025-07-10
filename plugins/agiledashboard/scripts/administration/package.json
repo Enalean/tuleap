@@ -7,6 +7,8 @@
   "type": "module",
   "dependencies": {
     "@tuleap/burningparrot-theme": "workspace:*",
+    "@tuleap/plugin-cardwall-column-colors": "workspace:^",
+    "@tuleap/plugin-tracker-color-picker": "workspace:^",
     "@tuleap/project-background": "workspace:*",
     "@tuleap/tlp-modal": "workspace:*",
     "@tuleap/tlp-popovers": "workspace:*"

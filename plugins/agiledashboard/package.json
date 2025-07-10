@@ -4,10 +4,7 @@
   "homepage": "https://www.tuleap.org",
   "license": "GPL-2.0-or-later",
   "private": true,
-  "dependencies": {
-    "@tuleap/plugin-cardwall-column-colors": "workspace:^",
-    "@tuleap/plugin-tracker-color-picker": "workspace:*"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*",
     "@tuleap/cypress-configurator": "workspace:*",

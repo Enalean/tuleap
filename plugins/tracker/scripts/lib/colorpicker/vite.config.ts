@@ -30,13 +30,7 @@ export default vite.defineLibConfig({
             name: "TuleapTrackerColorPicker",
         },
         rollupOptions: {
-            external: ["vue", "vue-gettext"],
-            output: {
-                globals: {
-                    vue: "Vue",
-                    "vue-gettext": "VueGettext",
-                },
-            },
+            external: ["vue", "vue3-gettext"],
         },
     },
 });

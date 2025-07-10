@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2024-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,22 +17,4 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { vite } from "@tuleap/build-system-configurator";
-import * as path from "node:path";
-
-export default vite.defineAppConfig(
-    {
-        plugin_name: path.basename(path.resolve(__dirname, "../..")),
-        sub_app_name: path.basename(__dirname),
-    },
-    {
-        build: {
-            rollupOptions: {
-                input: {
-                    administration: path.resolve(__dirname, "src/main.ts"),
-                    colorpicker: path.resolve(__dirname, "src/planning-admin-colorpicker.ts"),
-                },
-            },
-        },
-    },
-);
+export function createColorPicker(mount_point: HTMLElement): Promise<void>;
