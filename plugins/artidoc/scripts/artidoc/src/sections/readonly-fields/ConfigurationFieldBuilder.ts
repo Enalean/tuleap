@@ -60,11 +60,14 @@ const buildConfiguredFieldIfSupported = (field: StructureFields): Option<Configu
     const field_base = {
         field_id: field.field_id,
         label: field.label,
-        display_type: DISPLAY_TYPE_COLUMN,
     };
 
     if (field.type === TRACKER_STRING_FIELD) {
-        return Option.fromValue<ConfigurationField>({ ...field_base, type: STRING_FIELD });
+        return Option.fromValue<ConfigurationField>({
+            ...field_base,
+            display_type: DISPLAY_TYPE_COLUMN,
+            type: STRING_FIELD,
+        });
     }
 
     if (
@@ -76,6 +79,7 @@ const buildConfiguredFieldIfSupported = (field: StructureFields): Option<Configu
     ) {
         return Option.fromValue<ConfigurationField>({
             ...field_base,
+            display_type: DISPLAY_TYPE_COLUMN,
             type: buildConfiguredListFieldType(field.bindings.type),
         });
     }

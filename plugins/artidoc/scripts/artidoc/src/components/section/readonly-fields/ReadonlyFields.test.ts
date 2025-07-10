@@ -32,6 +32,7 @@ import {
 import FieldUserGroupsList from "@/components/section/readonly-fields/FieldUserGroupsList.vue";
 import FieldStaticList from "@/components/section/readonly-fields/FieldStaticList.vue";
 import FieldUserList from "@/components/section/readonly-fields/FieldUserList.vue";
+import FieldLinks from "@/components/section/readonly-fields/FieldLinks.vue";
 
 describe("ReadonlyFields", () => {
     const getWrapper = (fields: ReadonlyField[]): VueWrapper => {
@@ -83,6 +84,7 @@ describe("ReadonlyFields", () => {
                 [{ display_name: "Bob", avatar_url: "https://example.com/bob_avatar.png" }],
                 DISPLAY_TYPE_BLOCK,
             ),
+            ReadonlyFieldStub.linkField([]),
         ];
         const wrapper = getWrapper(fields);
 
@@ -91,5 +93,6 @@ describe("ReadonlyFields", () => {
         expect(wrapper.findComponent(FieldUserGroupsList).exists()).toBe(true);
         expect(wrapper.findComponent(FieldStaticList).exists()).toBe(true);
         expect(wrapper.findComponent(FieldUserList).exists()).toBe(true);
+        expect(wrapper.findComponent(FieldLinks).exists()).toBe(true);
     });
 });

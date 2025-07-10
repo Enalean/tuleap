@@ -16,13 +16,17 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import type { ConfigurationFieldDisplayType } from "@/sections/readonly-fields/AvailableReadonlyFields";
+import type {
+    ConfigurationFieldDisplayType,
+    DISPLAY_TYPE_BLOCK,
+} from "@/sections/readonly-fields/AvailableReadonlyFields";
 import type { ColorName } from "@tuleap/plugin-tracker-constants";
 
 export const STRING_FIELD = "string";
 export const USER_GROUP_LIST_FIELD = "user_groups_list";
 export const STATIC_LIST_FIELD = "static_list";
 export const USER_LIST_FIELD = "user_list";
+export const LINKS_FIELD = "links";
 
 export type ReadonlyFieldString = Readonly<{
     type: typeof STRING_FIELD;
@@ -66,8 +70,32 @@ export type ReadonlyFieldUserList = Readonly<{
     display_type: ConfigurationFieldDisplayType;
 }>;
 
+export type ReadonlyFieldLinks = Readonly<{
+    type: typeof LINKS_FIELD;
+    label: string;
+    display_type: typeof DISPLAY_TYPE_BLOCK;
+    value: ReadonlyFieldLinkedArtifact[];
+}>;
+
+export type ReadonlyFieldLinkedArtifact = Readonly<{
+    link_label: string;
+    tracker_shortname: string;
+    tracker_color: ColorName;
+    artifact_id: number;
+    title: string;
+    html_uri: string;
+    status: LinkedArtifactStatus | null;
+}>;
+
+export type LinkedArtifactStatus = Readonly<{
+    label: string;
+    color: ColorName | "";
+    is_open: boolean;
+}>;
+
 export type ReadonlyField =
     | ReadonlyFieldString
     | ReadonlyFieldUserGroupsList
     | ReadonlyFieldStaticList
-    | ReadonlyFieldUserList;
+    | ReadonlyFieldUserList
+    | ReadonlyFieldLinks;
