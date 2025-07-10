@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\REST\v1\ArtifactSection\Field;
 
+use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\ArtifactLinkStatusValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\ArtifactLinkValue;
 
 /**
@@ -45,6 +46,10 @@ final readonly class ArtifactLinkValueRepresentation
         $this->artifact_id       = $link_value->artifact_id;
         $this->title             = $link_value->title;
         $this->html_uri          = $link_value->html_uri;
-        $this->status            = $link_value->status !== null ? new ArtifactLinkStatusValueRepresentation($link_value->status) : null;
+        /** @psalm-suppress ImpureMethodCall */
+        $this->status = $link_value->status->mapOr(
+            static fn(ArtifactLinkStatusValue $status) => new ArtifactLinkStatusValueRepresentation($status),
+            null
+        );
     }
 }

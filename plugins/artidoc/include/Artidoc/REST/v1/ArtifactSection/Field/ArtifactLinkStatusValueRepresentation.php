@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Artidoc\REST\v1\ArtifactSection\Field;
 
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\ArtifactLinkStatusValue;
+use Tuleap\Color\ItemColor;
 
 /**
  * @psalm-immutable
@@ -35,8 +36,9 @@ final readonly class ArtifactLinkStatusValueRepresentation
 
     public function __construct(ArtifactLinkStatusValue $status_value)
     {
-        $this->label   = $status_value->label;
-        $this->color   = $status_value->color !== null ? $status_value->color->getName() : '';
+        $this->label = $status_value->label;
+        /** @psalm-suppress ImpureMethodCall */
+        $this->color   = $status_value->color->mapOr(static fn (ItemColor $color) => $color->getName(), '');
         $this->is_open = $status_value->is_open;
     }
 }
