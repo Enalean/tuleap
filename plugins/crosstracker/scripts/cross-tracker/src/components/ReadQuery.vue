@@ -33,7 +33,7 @@
         />
     </section>
     <section class="tlp-pane-section artifact-table" v-if="!is_loading">
-        <selectable-table v-bind:query="backend_query" />
+        <selectable-table v-bind:tql_query="backend_query.tql_query" />
     </section>
 </template>
 

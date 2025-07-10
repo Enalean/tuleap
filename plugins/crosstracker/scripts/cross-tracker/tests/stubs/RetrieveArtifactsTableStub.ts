@@ -31,19 +31,16 @@ import { ArtifactRowBuilder } from "../builders/ArtifactRowBuilder";
 export const RetrieveArtifactsTableStub = {
     withContent(
         query_table_with_total: ArtifactsTableWithTotal,
-        report_table_with_total: ArtifactsTableWithTotal,
         report_table_with_all_artifact: ReadonlyArray<ArtifactsTable>,
     ): RetrieveArtifactsTable {
         return {
             getSelectableQueryResult: () => okAsync(query_table_with_total),
-            getSelectableQueryContent: () => okAsync(report_table_with_total),
             getSelectableQueryFullResult: () => okAsync(report_table_with_all_artifact),
         };
     },
 
     withFault(fault: Fault): RetrieveArtifactsTable {
         return {
-            getSelectableQueryContent: () => errAsync(fault),
             getSelectableQueryResult: () => errAsync(fault),
             getSelectableQueryFullResult: () => errAsync(fault),
         };
@@ -66,8 +63,6 @@ export const RetrieveArtifactsTableStub = {
             table,
             total: 1,
         };
-        return RetrieveArtifactsTableStub.withContent(table_result, table_result, [
-            table_result.table,
-        ]);
+        return RetrieveArtifactsTableStub.withContent(table_result, [table_result.table]);
     },
 };

@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <empty-state v-if="is_table_empty" v-bind:tql_query="query.tql_query" />
+    <empty-state v-if="is_table_empty" v-bind:tql_query="tql_query" />
     <div class="cross-tracker-loader" v-if="is_loading" data-test="loading"></div>
     <div class="overflow-wrapper" v-if="total > 0">
         <div class="selectable-table" v-if="!is_loading">
@@ -37,7 +37,7 @@
                 v-bind:rows="rows"
                 v-bind:columns="columns"
                 v-bind:level="0"
-                v-bind:tql_query="query.tql_query"
+                v-bind:tql_query="tql_query"
                 v-bind:ancestors="[]"
             />
         </div>
@@ -63,7 +63,6 @@ import type { ColumnName } from "../../domain/ColumnName";
 import { PRETTY_TITLE_COLUMN_NAME } from "../../domain/ColumnName";
 import type { RefreshArtifactsEvent } from "../../helpers/widget-events";
 import { NOTIFY_FAULT_EVENT, REFRESH_ARTIFACTS_EVENT } from "../../helpers/widget-events";
-import type { Query } from "../../type";
 import ArtifactRows from "./ArtifactRows.vue";
 
 const column_name_getter = strictInject(GET_COLUMN_NAME);
@@ -71,7 +70,7 @@ const column_name_getter = strictInject(GET_COLUMN_NAME);
 const artifacts_retriever = strictInject(RETRIEVE_ARTIFACTS_TABLE);
 
 const props = defineProps<{
-    query: Query;
+    tql_query: string;
 }>();
 
 const is_loading = ref(false);
@@ -86,6 +85,11 @@ const number_of_selected_columns = ref(0);
 
 const emitter = strictInject(EMITTER);
 
+const emit = defineEmits<{
+    (e: "search-finished"): void;
+    (e: "search-started"): void;
+}>();
+
 function handleNewPage(new_offset: number): void {
     offset = new_offset;
     refreshArtifactList();
@@ -93,7 +97,7 @@ function handleNewPage(new_offset: number): void {
 
 function refreshArtifactList(): void {
     resetArtifactList();
-    getSelectableQueryContent(props.query);
+    getSelectableQueryContent(props.tql_query);
 }
 
 function resetArtifactList(): void {
@@ -113,17 +117,18 @@ onBeforeUnmount(() => {
 
 function handleRefreshArtifactsEvent(event: RefreshArtifactsEvent): void {
     resetArtifactList();
-    getSelectableQueryContent(event.query);
+    getSelectableQueryContent(event.query.tql_query);
 }
 
-function getSelectableQueryContent(query: Query): void {
-    if (query.tql_query === "") {
+function getSelectableQueryContent(tql_query: string): void {
+    if (tql_query === "") {
+        emit("search-finished");
         is_loading.value = false;
         return;
     }
 
     artifacts_retriever
-        .getSelectableQueryContent(query.id, limit, offset)
+        .getSelectableQueryResult(tql_query, limit, offset)
         .match(
             (content_with_total) => {
                 columns.value = content_with_total.table.columns;
@@ -134,11 +139,12 @@ function getSelectableQueryContent(query: Query): void {
             (fault) => {
                 emitter.emit(NOTIFY_FAULT_EVENT, {
                     fault: ArtifactsRetrievalFault(fault),
-                    tql_query: query.tql_query,
+                    tql_query,
                 });
             },
         )
         .then(() => {
+            emit("search-finished");
             is_loading.value = false;
         });
 }

@@ -88,7 +88,7 @@
             </button>
         </div>
         <section class="tlp-pane-section" v-if="is_selectable_table_displayed">
-            <query-selectable-table
+            <selectable-table
                 v-on:search-finished="is_search_loading = false"
                 v-on:search-started="is_search_loading = true"
                 v-bind:tql_query="tql_query"
@@ -112,12 +112,12 @@ import {
     QUERY_EDITED_EVENT,
     SEARCH_ARTIFACTS_EVENT,
 } from "../../../helpers/widget-events";
-import QuerySelectableTable from "../QuerySelectableTable.vue";
 import type { PutQueryRepresentation } from "../../../api/cross-tracker-rest-api-types";
 import { useGettext } from "vue3-gettext";
 import QueryDisplayedByDefaultSwitch from "../QueryDisplayedByDefaultSwitch.vue";
 import type { Query } from "../../../type";
 import QueryEditor from "../QueryEditor.vue";
+import SelectableTable from "../../selectable-table/SelectableTable.vue";
 
 const { $gettext } = useGettext();
 
