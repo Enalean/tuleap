@@ -35,6 +35,7 @@ use Reference;
 use ReferenceManager;
 use TrackerFactory;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
+use Tuleap\ForgeConfigSandbox;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\ForbiddenException;
@@ -55,6 +56,7 @@ use Tuleap\Tracker\Workflow\Trigger\TriggersDao;
 final class MarkTrackerAsDeletedControllerTest extends TestCase
 {
     use GlobalLanguageMock;
+    use ForgeConfigSandbox;
 
     private TrackerFactory&MockObject $tracker_factory;
     private EventManager&MockObject $event_manager;
@@ -99,6 +101,8 @@ final class MarkTrackerAsDeletedControllerTest extends TestCase
         $this->project = ProjectTestBuilder::aProject()->withId(42)->build();
 
         $token_provider->method('getCSRF')->willReturn(CSRFSynchronizerTokenStub::buildSelf());
+
+        \ForgeConfig::set('sys_file_deletion_delay', 10);
     }
 
     public function testItThrowsExceptionIfTrackerCannotBeFound(): void
