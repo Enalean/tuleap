@@ -19,19 +19,19 @@
 
 import type { Fault } from "@tuleap/fault";
 import type { ResultAsync } from "neverthrow";
-import { okAsync } from "neverthrow";
 import type { StoredArtidocSection } from "@/sections/SectionsCollection";
 import { getAllSections } from "@/helpers/rest-querier";
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import { CreateStoredSections } from "@/sections/states/CreateStoredSections";
 
 export type LoadSections = {
-    loadSections: () => ResultAsync<StoredArtidocSection[], Fault>;
+    loadSections(): ResultAsync<StoredArtidocSection[], Fault>;
 };
 
 export const getSectionsLoader = (artidoc_id: number): LoadSections => ({
-    loadSections: (): ResultAsync<StoredArtidocSection[], Fault> =>
-        getAllSections(artidoc_id).andThen((artidoc_sections: readonly ArtidocSection[]) =>
-            okAsync(CreateStoredSections.fromArtidocSectionsCollection(artidoc_sections)),
-        ),
+    loadSections(): ResultAsync<StoredArtidocSection[], Fault> {
+        return getAllSections(artidoc_id).map((artidoc_sections: readonly ArtidocSection[]) =>
+            CreateStoredSections.fromArtidocSectionsCollection(artidoc_sections),
+        );
+    },
 });
