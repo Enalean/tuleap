@@ -41,6 +41,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeIsChildPresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
 use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
@@ -123,7 +124,7 @@ final class ArtifactLinkFieldWithValueBuilderTest extends TestCase
             $user,
             RetrieveSemanticTitleFieldStub::build()->withTitleField($tracker, $title_field),
             RetrieveTypeFromShortnameStub::build()
-                ->withTypePresenter(ArtifactLinkField::TYPE_IS_CHILD, new TypePresenter(ArtifactLinkField::TYPE_IS_CHILD, 'Child', 'Parent', true))
+                ->withTypePresenter(ArtifactLinkField::TYPE_IS_CHILD, new TypeIsChildPresenter())
                 ->withTypePresenter('_covered_by', new TypePresenter('_covered_by', 'Covers', 'Covered by', true))
                 ->withTypePresenter(null, new TypePresenter('', '', '', true)),
         );
@@ -134,7 +135,7 @@ final class ArtifactLinkFieldWithValueBuilderTest extends TestCase
                 DisplayType::BLOCK,
                 [
                     new ArtifactLinkValue(
-                        'Child',
+                        'is Parent of',
                         'my_tracker',
                         ItemColor::fromName('panther-pink'),
                         15,
@@ -152,7 +153,7 @@ final class ArtifactLinkFieldWithValueBuilderTest extends TestCase
                         Option::fromValue(new ArtifactLinkStatusValue('Closed', Option::nothing(ItemColor::class), false)),
                     ),
                     new ArtifactLinkValue(
-                        '',
+                        'is Linked to',
                         'my_tracker',
                         ItemColor::fromName('panther-pink'),
                         17,
@@ -161,7 +162,7 @@ final class ArtifactLinkFieldWithValueBuilderTest extends TestCase
                         Option::nothing(ArtifactLinkStatusValue::class),
                     ),
                     new ArtifactLinkValue(
-                        'Parent',
+                        'is Child of',
                         'my_tracker',
                         ItemColor::fromName('panther-pink'),
                         21,
@@ -179,7 +180,7 @@ final class ArtifactLinkFieldWithValueBuilderTest extends TestCase
                         Option::fromValue(new ArtifactLinkStatusValue('Closed', Option::nothing(ItemColor::class), false)),
                     ),
                     new ArtifactLinkValue(
-                        '',
+                        'is Linked to',
                         'my_tracker',
                         ItemColor::fromName('panther-pink'),
                         23,

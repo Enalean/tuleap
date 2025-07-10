@@ -140,5 +140,11 @@ msgstr ""
 msgid "You don't have permission to write the document."
 msgstr "Vous n'avez pas la permission de mettre à jour le document."
 
+msgid "is Child of"
+msgstr "est Enfant de"
+
 msgid "is Linked to"
 msgstr "est Lié à"
+
+msgid "is Parent of"
+msgstr "est Parent de"
