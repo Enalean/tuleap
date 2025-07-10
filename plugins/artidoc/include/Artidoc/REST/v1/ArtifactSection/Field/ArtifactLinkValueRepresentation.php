@@ -40,7 +40,7 @@ final readonly class ArtifactLinkValueRepresentation
 
     public function __construct(ArtifactLinkValue $link_value)
     {
-        $this->link_label        = $link_value->link_label !== '' ? $link_value->link_label : dgettext('tuleap-artidoc', 'is Linked to');
+        $this->link_label        = $link_value->link_label;
         $this->tracker_shortname = $link_value->tracker_shortname;
         $this->tracker_color     = $link_value->tracker_color->getName();
         $this->artifact_id       = $link_value->artifact_id;

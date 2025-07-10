@@ -33,6 +33,8 @@ use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\ArtifactLink\ArtifactLinkChangesetValue;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\RetrieveTypeFromShortname;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeIsChildPresenter;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
 use Tuleap\Tracker\REST\Artifact\ArtifactReferenceWithType;
 use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
 use Tuleap\Tracker\Semantic\Title\RetrieveSemanticTitleField;
@@ -71,7 +73,7 @@ final readonly class ArtifactLinkFieldWithValueBuilder implements BuildArtifactL
             $linked_artifact = $forward_link->getArtifact();
             $linked_tracker  = $linked_artifact->getTracker();
             $links[]         = new ArtifactLinkValue(
-                $type_presenter->forward_label,
+                $this->renameLinkTypes($type_presenter)->forward_label,
                 $linked_tracker->getItemName(),
                 $linked_tracker->getColor(),
                 $linked_artifact->getId(),
@@ -90,7 +92,7 @@ final readonly class ArtifactLinkFieldWithValueBuilder implements BuildArtifactL
             $linked_artifact = $reverse_link->getArtifact();
             $linked_tracker  = $linked_artifact->getTracker();
             $links[]         = new ArtifactLinkValue(
-                $type_presenter->reverse_label,
+                $this->renameLinkTypes($type_presenter)->reverse_label,
                 $linked_tracker->getItemName(),
                 $linked_tracker->getColor(),
                 $linked_artifact->getId(),
@@ -149,5 +151,22 @@ final readonly class ArtifactLinkFieldWithValueBuilder implements BuildArtifactL
                 $semantic_status->isOpen($artifact),
             )
         );
+    }
+
+    private function renameLinkTypes(TypePresenter $presenter): TypePresenter
+    {
+        if ($presenter instanceof TypeIsChildPresenter) {
+            $presenter->forward_label = dgettext('tuleap-artidoc', 'is Parent of');
+            $presenter->reverse_label = dgettext('tuleap-artidoc', 'is Child of');
+            return $presenter;
+        }
+
+        if ($presenter->shortname === '') {
+            $presenter->forward_label = dgettext('tuleap-artidoc', 'is Linked to');
+            $presenter->reverse_label = dgettext('tuleap-artidoc', 'is Linked to');
+            return $presenter;
+        }
+
+        return $presenter;
     }
 }
