@@ -23,15 +23,19 @@ declare(strict_types=1);
 namespace Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue;
 
 use Tuleap\Color\ItemColor;
+use Tuleap\Option\Option;
 
 /**
  * @psalm-immutable
  */
 final readonly class ArtifactLinkStatusValue
 {
+    /**
+     * @param Option<ItemColor> $color
+     */
     public function __construct(
         public string $label,
-        public ?ItemColor $color,
+        public Option $color,
         public bool $is_open,
     ) {
     }

@@ -35,10 +35,12 @@ use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\ArtifactLinkFiel
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\ArtifactLinkStatusValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\ArtifactLinkValue;
 use Tuleap\Color\ItemColor;
+use Tuleap\Option\Option;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
 use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
@@ -60,6 +62,12 @@ use Tuleap\Tracker\Tracker;
 #[DisableReturnValueGenerationForTestDoubles]
 final class ArtifactLinkFieldWithValueBuilderTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        Tracker_ArtifactFactory::clearInstance();
+        TrackerSemanticStatus::clearInstances();
+    }
+
     public function testItBuildsArtifactLinkField(): void
     {
         $project      = ProjectTestBuilder::aProject()->build();
@@ -100,13 +108,13 @@ final class ArtifactLinkFieldWithValueBuilderTest extends TestCase
 
         $changeset = ChangesetValueArtifactLinkTestBuilder::aValue(12, ChangesetTestBuilder::aChangeset(852)->build(), $link_field)
             ->withForwardLinks([
-                15 => new Tracker_ArtifactLinkInfo(15, 'art', 101, 35, 123, '_is_child'),
-                16 => new Tracker_ArtifactLinkInfo(16, 'art', 101, 35, 124, '__covers'),
+                15 => new Tracker_ArtifactLinkInfo(15, 'art', 101, 35, 123, ArtifactLinkField::TYPE_IS_CHILD),
+                16 => new Tracker_ArtifactLinkInfo(16, 'art', 101, 35, 124, '_covered_by'),
                 17 => new Tracker_ArtifactLinkInfo(17, 'art', 101, 35, 125, null),
             ])
             ->withReverseLinks([
-                21 => new Tracker_ArtifactLinkInfo(21, 'art', 101, 35, 235, '_is_child'),
-                22 => new Tracker_ArtifactLinkInfo(22, 'art', 101, 35, 236, '__covers'),
+                21 => new Tracker_ArtifactLinkInfo(21, 'art', 101, 35, 235, ArtifactLinkField::TYPE_IS_CHILD),
+                22 => new Tracker_ArtifactLinkInfo(22, 'art', 101, 35, 236, '_covered_by'),
                 23 => new Tracker_ArtifactLinkInfo(23, 'art', 101, 35, 237, null),
             ])
             ->build();
@@ -115,8 +123,8 @@ final class ArtifactLinkFieldWithValueBuilderTest extends TestCase
             $user,
             RetrieveSemanticTitleFieldStub::build()->withTitleField($tracker, $title_field),
             RetrieveTypeFromShortnameStub::build()
-                ->withTypePresenter('_is_child', new TypePresenter('_is_child', 'Child', 'Parent', true))
-                ->withTypePresenter('__covers', new TypePresenter('__covers', 'Covers', 'Covered by', true))
+                ->withTypePresenter(ArtifactLinkField::TYPE_IS_CHILD, new TypePresenter(ArtifactLinkField::TYPE_IS_CHILD, 'Child', 'Parent', true))
+                ->withTypePresenter('_covered_by', new TypePresenter('_covered_by', 'Covers', 'Covered by', true))
                 ->withTypePresenter(null, new TypePresenter('', '', '', true)),
         );
 
@@ -132,7 +140,7 @@ final class ArtifactLinkFieldWithValueBuilderTest extends TestCase
                         15,
                         'Artifact 15',
                         '/plugins/tracker/?aid=15',
-                        new ArtifactLinkStatusValue('Open', ItemColor::fromName('neon-green'), true),
+                        Option::fromValue(new ArtifactLinkStatusValue('Open', Option::fromValue(ItemColor::fromName('neon-green')), true)),
                     ),
                     new ArtifactLinkValue(
                         'Covers',
@@ -141,7 +149,7 @@ final class ArtifactLinkFieldWithValueBuilderTest extends TestCase
                         16,
                         'Artifact 16',
                         '/plugins/tracker/?aid=16',
-                        new ArtifactLinkStatusValue('Closed', null, false),
+                        Option::fromValue(new ArtifactLinkStatusValue('Closed', Option::nothing(ItemColor::class), false)),
                     ),
                     new ArtifactLinkValue(
                         '',
@@ -150,7 +158,7 @@ final class ArtifactLinkFieldWithValueBuilderTest extends TestCase
                         17,
                         '',
                         '/plugins/tracker/?aid=17',
-                        null,
+                        Option::nothing(ArtifactLinkStatusValue::class),
                     ),
                     new ArtifactLinkValue(
                         'Parent',
@@ -159,7 +167,7 @@ final class ArtifactLinkFieldWithValueBuilderTest extends TestCase
                         21,
                         'Artifact 21',
                         '/plugins/tracker/?aid=21',
-                        new ArtifactLinkStatusValue('Open', ItemColor::fromName('neon-green'), true),
+                        Option::fromValue(new ArtifactLinkStatusValue('Open', Option::fromValue(ItemColor::fromName('neon-green')), true)),
                     ),
                     new ArtifactLinkValue(
                         'Covered by',
@@ -168,7 +176,7 @@ final class ArtifactLinkFieldWithValueBuilderTest extends TestCase
                         22,
                         '',
                         '/plugins/tracker/?aid=22',
-                        new ArtifactLinkStatusValue('Closed', null, false),
+                        Option::fromValue(new ArtifactLinkStatusValue('Closed', Option::nothing(ItemColor::class), false)),
                     ),
                     new ArtifactLinkValue(
                         '',
@@ -177,7 +185,7 @@ final class ArtifactLinkFieldWithValueBuilderTest extends TestCase
                         23,
                         'Artifact 23',
                         '/plugins/tracker/?aid=23',
-                        null,
+                        Option::nothing(ArtifactLinkStatusValue::class),
                     ),
                 ],
             ),

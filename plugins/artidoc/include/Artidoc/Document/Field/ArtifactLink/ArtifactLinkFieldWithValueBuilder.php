@@ -29,6 +29,7 @@ use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\ArtifactLinkFiel
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\ArtifactLinkStatusValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\ArtifactLinkValue;
 use Tuleap\Color\ItemColor;
+use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\ArtifactLink\ArtifactLinkChangesetValue;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\RetrieveTypeFromShortname;
@@ -117,29 +118,36 @@ final readonly class ArtifactLinkFieldWithValueBuilder implements BuildArtifactL
         return $value?->getValue() ?? '';
     }
 
-    private function getArtifactStatus(Tracker $tracker, Artifact $artifact): ?ArtifactLinkStatusValue
+    /**
+     * @return Option<ArtifactLinkStatusValue>
+     */
+    private function getArtifactStatus(Tracker $tracker, Artifact $artifact): Option
     {
         $semantic_status = TrackerSemanticStatus::load($tracker);
         $status_field    = $semantic_status->getField();
         if ($status_field === null) {
-            return null;
+            return Option::nothing(ArtifactLinkStatusValue::class);
         }
 
         $values = $artifact->getLastChangeset()?->getValue($status_field);
         if (! ($values instanceof Tracker_Artifact_ChangesetValue_List)) {
-            return null;
+            return Option::nothing(ArtifactLinkStatusValue::class);
         }
 
         if ($values->count() === 0) {
-            return null;
+            return Option::nothing(ArtifactLinkStatusValue::class);
         }
 
         $value      = array_values($values->getListValues())[0];
         $decorators = $status_field->getDecorators();
-        return new ArtifactLinkStatusValue(
-            $value->getLabel(),
-            isset($decorators[$value->getId()]) ? ItemColor::fromName($decorators[$value->getId()]->getCurrentColor()) : null,
-            $semantic_status->isOpen($artifact),
+        return Option::fromValue(
+            new ArtifactLinkStatusValue(
+                $value->getLabel(),
+                isset($decorators[$value->getId()])
+                    ? Option::fromValue(ItemColor::fromName($decorators[$value->getId()]->getCurrentColor()))
+                    : Option::nothing(ItemColor::class),
+                $semantic_status->isOpen($artifact),
+            )
         );
     }
 }
