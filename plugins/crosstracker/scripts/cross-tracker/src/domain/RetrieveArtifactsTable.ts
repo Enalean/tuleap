@@ -33,12 +33,6 @@ export type RetrieveArtifactsTable = {
         offset: number,
     ): ResultAsync<ArtifactsTableWithTotal, Fault>;
 
-    getSelectableQueryContent(
-        query_id: string,
-        limit: number,
-        offset: number,
-    ): ResultAsync<ArtifactsTableWithTotal, Fault>;
-
     getSelectableQueryFullResult(
         query_id: string,
     ): ResultAsync<ReadonlyArray<ArtifactsTable>, Fault>;

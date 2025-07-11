@@ -46,7 +46,6 @@ import EmptyState from "../EmptyState.vue";
 import ExportXLSXButton from "../ExportXLSXButton.vue";
 import { ColumnNameGetter } from "../../domain/ColumnNameGetter";
 import { createVueGettextProviderPassThrough } from "../../helpers/vue-gettext-provider-for-test";
-import type { Query } from "../../type";
 import type { Events, NotifyFaultEvent } from "../../helpers/widget-events";
 import { NOTIFY_FAULT_EVENT } from "../../helpers/widget-events";
 import type { Emitter } from "mitt";
@@ -63,7 +62,6 @@ const TEXT_COLUMN_NAME = "details";
 
 describe(`SelectableTable`, () => {
     let is_xslx_export_allowed: boolean;
-    let query: Query;
     let emitter: Emitter<Events>;
     let dispatched_fault_events: NotifyFaultEvent[];
 
@@ -73,14 +71,6 @@ describe(`SelectableTable`, () => {
 
     beforeEach(() => {
         is_xslx_export_allowed = true;
-
-        query = {
-            id: "",
-            tql_query: `SELECT start_date WHERE start_date != ''`,
-            title: "",
-            description: "",
-            is_default: false,
-        };
 
         emitter = mitt<Events>();
         dispatched_fault_events = [];
@@ -117,7 +107,7 @@ describe(`SelectableTable`, () => {
                 },
             },
             props: {
-                query,
+                tql_query: `SELECT start_date WHERE start_date != ''`,
             },
         });
     };
@@ -166,11 +156,9 @@ describe(`SelectableTable`, () => {
                 table,
                 total: 2,
             };
-            const table_retriever = RetrieveArtifactsTableStub.withContent(
-                table_result,
-                table_result,
-                [table_result.table],
-            );
+            const table_retriever = RetrieveArtifactsTableStub.withContent(table_result, [
+                table_result.table,
+            ]);
 
             const wrapper = getWrapper(table_retriever);
 
@@ -210,11 +198,9 @@ describe(`SelectableTable`, () => {
                 table: new ArtifactsTableBuilder().build(),
                 total: 0,
             };
-            const table_retriever = RetrieveArtifactsTableStub.withContent(
-                table_result,
-                table_result,
-                [table_result.table],
-            );
+            const table_retriever = RetrieveArtifactsTableStub.withContent(table_result, [
+                table_result.table,
+            ]);
 
             const wrapper = getWrapper(table_retriever);
             expect(wrapper.findComponent(EmptyState).exists()).toBe(true);
@@ -248,11 +234,9 @@ describe(`SelectableTable`, () => {
                 table,
                 total: 1,
             };
-            const table_retriever = RetrieveArtifactsTableStub.withContent(
-                table_result,
-                table_result,
-                [table_result.table],
-            );
+            const table_retriever = RetrieveArtifactsTableStub.withContent(table_result, [
+                table_result.table,
+            ]);
 
             const wrapper = getWrapper(table_retriever);
 

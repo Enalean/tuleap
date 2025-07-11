@@ -39,7 +39,7 @@ import {
     NOTIFY_SUCCESS_EVENT,
     SEARCH_ARTIFACTS_EVENT,
 } from "../../../helpers/widget-events";
-import QuerySelectableTable from "../QuerySelectableTable.vue";
+import SelectableTable from "../../selectable-table/SelectableTable.vue";
 import { PostNewQueryStub } from "../../../../tests/stubs/PostNewQueryStub";
 import type { PostNewQuery } from "../../../domain/PostNewQuery";
 import type { Emitter } from "mitt";
@@ -156,7 +156,7 @@ describe("CreateNewQuery", () => {
         it("does not display the result table when no search has been performed", () => {
             const wrapper = getWrapper();
 
-            expect(wrapper.findComponent(QuerySelectableTable).exists()).toBe(false);
+            expect(wrapper.findComponent(SelectableTable).exists()).toBe(false);
         });
         it("Search a tql query result by emitting an event when the Search button is clicked", async () => {
             const wrapper = getWrapper();
@@ -196,7 +196,7 @@ describe("CreateNewQuery", () => {
             const search_button = wrapper.find("[data-test=query-creation-search-button]");
             await search_button.trigger("click");
 
-            const query_selectable_component = wrapper.findComponent(QuerySelectableTable);
+            const query_selectable_component = wrapper.findComponent(SelectableTable);
             query_selectable_component.vm.$emit("search-started");
 
             await vi.runOnlyPendingTimersAsync();

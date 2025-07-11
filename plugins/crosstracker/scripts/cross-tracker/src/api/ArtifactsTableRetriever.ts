@@ -60,29 +60,6 @@ export const ArtifactsTableRetriever = (
             });
         },
 
-        getSelectableQueryContent(
-            query_id,
-            limit,
-            offset,
-        ): ResultAsync<ArtifactsTableWithTotal, Fault> {
-            return getResponse(uri`/api/v1/crosstracker_query/${query_id}/content`, {
-                params: {
-                    limit,
-                    offset,
-                },
-            }).andThen((response) => {
-                const total = Number.parseInt(response.headers.get("X-PAGINATION-SIZE") ?? "0", 10);
-                return decodeJSON<SelectableQueryContentRepresentation>(response).map(
-                    (query_content) => {
-                        return {
-                            table: table_builder.mapQueryContentToArtifactsTable(query_content),
-                            total,
-                        };
-                    },
-                );
-            });
-        },
-
         getSelectableQueryFullResult(query_id): ResultAsync<readonly ArtifactsTable[], Fault> {
             return getAllJSON<SelectableQueryContentRepresentation>(
                 uri`/api/v1/crosstracker_query/${query_id}/content`,
