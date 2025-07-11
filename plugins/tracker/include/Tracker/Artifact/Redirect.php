@@ -47,10 +47,6 @@ class Tracker_Artifact_Redirect //phpcs:ignore PSR1.Classes.ClassDeclaration.Mis
             return $base_url;
         }
 
-        if ($this->mode === self::TO_MY_DASHBOARD) {
-            return '/my/?' . http_build_query($this->query_parameters);
-        }
-
         return $base_url . '/?' . http_build_query($this->query_parameters);
     }
 
