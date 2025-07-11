@@ -35,6 +35,8 @@ import { initLinkField } from "../fields/LinkFieldEditor";
 import { initListFields } from "../fields/list-fields";
 import { initEditionSwitcher } from "./TrackerArtifactEditionSwitcher";
 import "./text-follow-up";
+import { listenEnableDisableSubmitEvents } from "./artifact-edition-buttons-switcher/disable-submit-buttons";
+import { EventDispatcher } from "@tuleap/plugin-tracker-artifact-common";
 
 function initTextFields(user_locale: LocaleString): void {
     const creator = RichTextEditorsCreator(
@@ -78,5 +80,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     // changes in CKEditors
     const edition_switcher = initEditionSwitcher();
 
-    initLinkField(user_locale, edition_switcher);
+    const event_dispatcher = EventDispatcher();
+    listenEnableDisableSubmitEvents(document, event_dispatcher);
+    initLinkField(user_locale, event_dispatcher, edition_switcher);
 });
