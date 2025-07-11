@@ -437,7 +437,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
 
         $html .= $this->fetchHeader($report_can_be_modified, $user, $total_rows, $queries);
         $html .= $this->fetchTHead($extracolumn, $only_one_column, $with_sort_links);
-        $html .= $this->fetchTBody($matching_ids, $total_rows, $queries, $columns, $extracolumn);
+        $html .= $this->fetchTBody($matching_ids, $total_rows, $queries, $columns, null, $extracolumn);
 
         //Display next/previous
         $html .= $this->fetchNextPrevious($total_rows, $offset, $report_can_be_modified, (int) $request->get('link-artifact-id'));
@@ -523,6 +523,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
             $total_rows,
             $queries,
             $columns,
+            null,
             $extracolumn,
             $only_one_column,
             $use_data_from_db,
@@ -653,6 +654,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
             $total_rows,
             $queries,
             $columns,
+            $widget,
             $extracolumn,
             $only_one_column,
             $use_data_from_db,
@@ -1134,6 +1136,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         $total_rows,
         array $queries,
         array $columns,
+        ?Widget $widget,
         $extracolumn = 1,
         $only_one_column = null,
         $use_data_from_db = false,
@@ -1253,6 +1256,9 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                         ];
                         if ($from_aid != null) {
                             $params['from_aid'] = $from_aid;
+                        }
+                        if ($widget) {
+                            $params['my-dashboard-id'] = $widget->getDashboardId();
                         }
                         $url = TRACKER_BASE_URL . '/?' . http_build_query($params);
 
@@ -2041,6 +2047,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                                     $total_rows,
                                     $queries,
                                     $columns,
+                                    null,
                                     $extracolumn,
                                     $key
                                 );

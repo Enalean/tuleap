@@ -204,20 +204,23 @@ final readonly class UpdateArtifactAction
 
     public function getRedirectUrlAfterArtifactUpdate(Codendi_Request $request): Tracker_Artifact_Redirect
     {
-        $stay     = $request->get('submit_and_stay');
-        $from_aid = $request->get('from_aid');
+        $stay            = $request->get('submit_and_stay');
+        $from_aid        = $request->get('from_aid');
+        $my_dashboard_id = $request->get('my-dashboard-id');
 
         $redirect                   = new Tracker_Artifact_Redirect();
         $redirect->mode             = Tracker_Artifact_Redirect::STATE_SUBMIT;
         $redirect->base_url         = TRACKER_BASE_URL;
-        $redirect->query_parameters = $this->calculateRedirectParams($stay, $from_aid);
+        $redirect->query_parameters = $this->calculateRedirectParams($stay, $from_aid, $my_dashboard_id);
         if ($stay) {
             $redirect->mode = Tracker_Artifact_Redirect::STATE_STAY;
+        } elseif ($my_dashboard_id !== false) {
+            $redirect->mode = Tracker_Artifact_Redirect::TO_MY_DASHBOARD;
         }
         return $redirect;
     }
 
-    private function calculateRedirectParams($stay, $from_aid): array
+    private function calculateRedirectParams($stay, $from_aid, string|bool $my_dashboard_id): array
     {
         $redirect_params = [];
         if ($stay) {
@@ -227,6 +230,9 @@ final readonly class UpdateArtifactAction
             $redirect_params['aid'] = $from_aid;
         } else {
             $redirect_params['tracker'] = $this->artifact->tracker_id;
+        }
+        if ($my_dashboard_id !== false) {
+            $redirect_params['dashboard_id'] = $my_dashboard_id;
         }
         return array_filter($redirect_params);
     }
