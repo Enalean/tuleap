@@ -122,16 +122,7 @@ final class Codendi_HTMLPurifierTest extends \PHPUnit\Framework\TestCase // phpc
     public function testPurifyJsQuoteAndDQuote(): void
     {
         $p = Codendi_HTMLPurifier::instance();
-        self::assertEquals('\u003C\/script\u003E', $p->purify('</script>', CODENDI_PURIFIER_JS_DQUOTE));
-        self::assertEquals('a\u0022a', $p->purify('a"a', CODENDI_PURIFIER_JS_DQUOTE));
-        self::assertEquals('\u0022a', $p->purify('"a', CODENDI_PURIFIER_JS_DQUOTE));
-        self::assertEquals('a\u0022', $p->purify('a"', CODENDI_PURIFIER_JS_DQUOTE));
-        self::assertEquals('\u0022', $p->purify('"', CODENDI_PURIFIER_JS_DQUOTE));
         self::assertEquals('\"', $p->purify('"', CODENDI_PURIFIER_JS_QUOTE));
-        self::assertEquals(
-            '\u003C\/script\u003E\\\nbla bla\\\n\u003C\/script\u003E\\\nbla bla\\\n\u003C\/script\u003E',
-            $p->purify('</script>\nbla bla\n</script>\nbla bla\n</script>', CODENDI_PURIFIER_JS_DQUOTE)
-        );
         self::assertEquals('\u003C\/script\u003E', $p->purify('</script>', CODENDI_PURIFIER_JS_QUOTE));
         self::assertEquals('100', $p->purify(100, CODENDI_PURIFIER_JS_QUOTE));
     }

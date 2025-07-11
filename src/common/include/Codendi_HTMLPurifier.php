@@ -46,7 +46,6 @@ class Codendi_HTMLPurifier
     public const CONFIG_LIGHT                         = 10;
     public const CONFIG_FULL                          = 15;
     public const CONFIG_JS_QUOTE                      = 20;
-    public const CONFIG_JS_DQUOTE                     = 25;
     public const CONFIG_MINIMAL_FORMATTING_NO_NEWLINE = 35;
     public const CONFIG_DISABLED                      = 100;
 
@@ -321,9 +320,6 @@ class Codendi_HTMLPurifier
 
             case self::CONFIG_JS_QUOTE:
                 $clean = $this->jsStringPurifier($html, JSON_HEX_APOS);
-                break;
-            case self::CONFIG_JS_DQUOTE:
-                $clean = $this->jsStringPurifier($html, JSON_HEX_QUOT);
                 break;
             case self::CONFIG_CONVERT_HTML:
             default:
