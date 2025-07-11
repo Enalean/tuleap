@@ -444,7 +444,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         int $changeset_id,
         mixed $value,
         ?Tracker_Report $report = null,
-        ?int $from_aid = null,
+        ?array $redirection_parameters = null,
     ): string {
         return '';
     }

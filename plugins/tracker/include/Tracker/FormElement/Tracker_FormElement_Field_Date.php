@@ -473,7 +473,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
         int $changeset_id,
         mixed $value,
         ?Tracker_Report $report = null,
-        ?int $from_aid = null,
+        ?array $redirection_parameters = null,
     ): string {
         return $this->formatDateForDisplay($value);
     }

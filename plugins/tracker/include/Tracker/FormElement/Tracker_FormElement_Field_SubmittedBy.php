@@ -340,7 +340,7 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
         int $changeset_id,
         mixed $value,
         ?Tracker_Report $report = null,
-        ?int $from_aid = null,
+        ?array $redirection_parameters = null,
     ): string {
         return $this->getBind()->formatChangesetValue(Tracker_FormElement_Field_List_Bind_UsersValue::fromId($this->getUUIdFactory()->buildUUIDFromBytesData($this->getUUIdFactory()->buildUUIDBytes()), $value));
     }

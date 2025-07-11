@@ -514,7 +514,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
         int $changeset_id,
         mixed $value,
         ?Tracker_Report $report = null,
-        ?int $from_aid = null,
+        ?array $redirection_parameters = null,
     ): string {
         $arr       = [];
         $bindtable = $this->getBind()->getBindtableSqlFragment();

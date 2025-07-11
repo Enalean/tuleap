@@ -195,7 +195,7 @@ class TextField extends Tracker_FormElement_Field_Alphanum
         int $changeset_id,
         mixed $value,
         ?Tracker_Report $report = null,
-        ?int $from_aid = null,
+        ?array $redirection_parameters = null,
     ): string {
         $tracker = $this->getTracker();
         if ($tracker === null) {

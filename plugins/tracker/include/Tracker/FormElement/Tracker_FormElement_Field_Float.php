@@ -135,7 +135,7 @@ class Tracker_FormElement_Field_Float extends Tracker_FormElement_Field_Numeric
         int $changeset_id,
         mixed $value,
         ?Tracker_Report $report = null,
-        ?int $from_aid = null,
+        ?array $redirection_parameters = null,
     ): string {
         if ($value === null) {
             return '';

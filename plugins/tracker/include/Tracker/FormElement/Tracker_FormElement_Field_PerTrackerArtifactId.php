@@ -63,7 +63,7 @@ class Tracker_FormElement_Field_PerTrackerArtifactId extends Tracker_FormElement
         int $changeset_id,
         mixed $value,
         ?Tracker_Report $report = null,
-        ?int $from_aid = null,
+        ?array $redirection_parameters = null,
     ): string {
         return '<a class="direct-link-to-artifact" href="' . TRACKER_BASE_URL . '/?' . http_build_query(['aid' => $artifact_id]) . '">' . $value . '</a>';
     }

@@ -1251,17 +1251,19 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                             $html .= '</td>';
                         }
                     }
+                    $redirection_parameters = null;
                     if (! $only_one_column) {
-                        $params = [
+                        $redirection_parameters = [
                             'aid' => $row['id'],
                         ];
                         if ($from_aid != null) {
-                            $params['from_aid'] = $from_aid;
+                            $redirection_parameters['from_aid'] = $from_aid;
                         }
+
                         if ($widget && ($widget->owner_type === UserDashboardController::LEGACY_DASHBOARD_TYPE || $widget->owner_type === UserDashboardController::DASHBOARD_TYPE)) {
-                            $params['my-dashboard-id'] = $widget->getDashboardId();
+                            $redirection_parameters['my-dashboard-id'] = $widget->getDashboardId();
                         }
-                        $url = TRACKER_BASE_URL . '/?' . http_build_query($params);
+                        $url = TRACKER_BASE_URL . '/?' . http_build_query($redirection_parameters);
 
                         $html .= '<td>';
                         $html .= '<a
@@ -1294,7 +1296,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                                     (int) $row['changeset_id'],
                                     $value,
                                     $this->report,
-                                    (int) $from_aid
+                                    $redirection_parameters
                                 );
                             }
                             $html .= '</td>';
