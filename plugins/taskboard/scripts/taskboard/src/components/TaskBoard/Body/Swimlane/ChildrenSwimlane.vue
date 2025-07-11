@@ -21,12 +21,12 @@
 <template>
     <div class="taskboard-swimlane" data-navigation="swimlane" tabindex="0">
         <parent-cell v-bind:swimlane="swimlane" />
-        <children-cell
-            v-for="(col, index) of columns"
+        <drop-container-cell
+            v-for="col of columns"
             v-bind:key="col.id"
             v-bind:column="col"
-            v-bind:column_index="index"
             v-bind:swimlane="swimlane"
+            v-bind:is_solo_card="false"
         />
     </div>
 </template>
@@ -35,8 +35,8 @@
 import { computed } from "vue";
 import type { ColumnDefinition, Swimlane } from "../../../../type";
 import ParentCell from "./ParentCell.vue";
-import ChildrenCell from "./Cell/ChildrenCell.vue";
 import { useStore } from "vuex-composition-helpers";
+import DropContainerCell from "./Cell/DropContainerCell.vue";
 
 defineProps<{
     swimlane: Swimlane;

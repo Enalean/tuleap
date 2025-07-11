@@ -17,68 +17,176 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Slots, Wrapper } from "@vue/test-utils";
+import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import DropContainerCell from "./DropContainerCell.vue";
-import type { ColumnDefinition, Swimlane } from "../../../../../type";
+import type { Card, ColumnDefinition, MappedListValue, Swimlane } from "../../../../../type";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { RootState } from "../../../../../store/type";
 import AddCard from "../Card/Add/AddCard.vue";
+import CardSkeleton from "../Skeleton/CardSkeleton.vue";
+import ChildCard from "../Card/ChildCard.vue";
 
+type DropContainerCellExposed = {
+    cards: Card[];
+};
+
+let card = {} as Card;
+let column: ColumnDefinition = {} as ColumnDefinition;
 function getWrapper(
     column: ColumnDefinition,
     can_add_in_place: boolean,
-    slots: Slots = {},
-): Wrapper<Vue> {
-    const swimlane = { card: { id: 1 } } as Swimlane;
+    cards_in_cell: Card[],
+    is_loading_children_cards: boolean,
+    is_solo_card: boolean,
+    is_in_edit_mode: boolean,
+): Wrapper<Vue & DropContainerCellExposed> {
+    const swimlane = {
+        card: { ...card, is_in_edit_mode },
+        is_loading_children_cards,
+    } as Swimlane;
 
     return shallowMount(DropContainerCell, {
         propsData: {
             column,
             swimlane,
+            is_solo_card,
         },
         mocks: {
             $store: createStoreMock({
                 state: {
                     card_being_dragged: null,
                     column: {},
-                    swimlane: {},
                 } as RootState,
                 getters: {
                     "column/accepted_trackers_ids": (): number[] => [],
                     can_add_in_place: (): boolean => can_add_in_place,
                     "swimlane/is_there_at_least_one_children_to_display": (): boolean => true,
+                    "swimlane/cards_in_cell": () => cards_in_cell,
                 },
             }),
         },
-        slots,
     });
 }
 
 describe("DropContainerCell", () => {
+    beforeEach(() => {
+        card = {
+            id: 1,
+            mapped_list_value: { id: 103 } as MappedListValue,
+            tracker_id: 88,
+            is_in_edit_mode: false,
+        } as Card;
+
+        column = {
+            is_collapsed: true,
+            mappings: [
+                {
+                    tracker_id: card.tracker_id,
+                    field_id: 2,
+                    accepts: [{ id: card.mapped_list_value?.id }],
+                },
+            ],
+        } as ColumnDefinition;
+    });
     it(`Given the column is expanded, it displays the content of the cell`, () => {
-        const column: ColumnDefinition = { is_collapsed: false } as ColumnDefinition;
-        const wrapper = getWrapper(column, false, {
-            default: '<div class="my-slot-content"></div>',
-        });
+        column.is_collapsed = false;
+        const wrapper = getWrapper(column, false, [], false, true, false);
 
         expect(wrapper.classes("taskboard-cell-collapsed")).toBe(false);
-        expect(wrapper.find(".my-slot-content").exists()).toBe(true);
+        expect(wrapper.get("[data-test=card-with-remaining-effort]").exists()).toBe(true);
     });
 
     it(`Given the column is collapsed, it does not display the content of the cell`, () => {
-        const column: ColumnDefinition = { is_collapsed: true } as ColumnDefinition;
-        const wrapper = getWrapper(column, false, {
-            default: '<div class="my-slot-content"></div>',
-        });
+        column.is_collapsed = true;
+        const wrapper = getWrapper(column, false, [], false, false, false);
 
         expect(wrapper.classes("taskboard-cell-collapsed")).toBe(true);
-        expect(wrapper.find(".my-slot-content").exists()).toBe(false);
+        expect(wrapper.find("[data-test=card-with-remaining-effort]").exists()).toBe(false);
+    });
+
+    it(`when the swimlane is loading children cards,
+        and there isn't any card yet,
+        it displays many skeletons`, () => {
+        column.is_collapsed = false;
+        const wrapper = getWrapper(column, false, [], true, false, false);
+
+        expect(wrapper.findAllComponents(ChildCard)).toHaveLength(0);
+        expect(wrapper.findAllComponents(CardSkeleton)).toHaveLength(4);
+    });
+
+    it(`when the swimlane has not yet finished to load children cards,
+        it displays card of the column and one skeleton`, () => {
+        column.is_collapsed = false;
+        const wrapper = getWrapper(
+            column,
+            false,
+            [{ id: 10, label: "Card 1" } as Card, { id: 22, label: "Card 2" } as Card],
+            true,
+            false,
+            false,
+        );
+
+        expect(wrapper.findAllComponents(ChildCard)).toHaveLength(2);
+        expect(wrapper.findAllComponents(CardSkeleton)).toHaveLength(1);
+    });
+
+    it(`when the swimlane has loaded children cards,
+        it displays card of the column and no skeleton`, () => {
+        column.is_collapsed = false;
+        const wrapper = getWrapper(
+            column,
+            false,
+            [{ id: 1, label: "Card 1" } as Card],
+            false,
+            false,
+            false,
+        );
+
+        expect(wrapper.findAllComponents(ChildCard)).toHaveLength(1);
+        expect(wrapper.findAllComponents(CardSkeleton)).toHaveLength(0);
+    });
+
+    describe("is draggable", () => {
+        let done_column: ColumnDefinition;
+
+        beforeEach(() => {
+            done_column = {
+                id: 3,
+                label: "Done",
+                is_collapsed: false,
+                mappings: [
+                    {
+                        tracker_id: card.tracker_id,
+                        field_id: 2,
+                        accepts: [{ id: card.mapped_list_value?.id }],
+                    },
+                ],
+            } as ColumnDefinition;
+        });
+
+        it("is draggable when the card is not in edit mode", () => {
+            const wrapper = getWrapper(done_column, false, [], false, true, false);
+
+            const solo_card = wrapper.find("[data-test=card-with-remaining-effort]");
+
+            expect(solo_card.classes()).toContain("taskboard-draggable-item");
+            expect(solo_card.attributes("draggable")).toBe("true");
+        });
+
+        it("is not draggable when the card is in edit mode", () => {
+            const wrapper = getWrapper(done_column, true, [], false, true, true);
+
+            const solo_card = wrapper.find("[data-test=card-with-remaining-effort]");
+
+            expect(solo_card.classes()).not.toContain("taskboard-draggable-item");
+            expect(solo_card.attributes("draggable")).toBeFalsy();
+        });
     });
 
     it(`informs the pointerenter`, () => {
         const column: ColumnDefinition = { is_collapsed: true } as ColumnDefinition;
-        const wrapper = getWrapper(column, false);
+        const wrapper = getWrapper(column, false, [], false, false, false);
 
         wrapper.trigger("pointerenter");
         expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("column/pointerEntersColumn", column);
@@ -86,7 +194,7 @@ describe("DropContainerCell", () => {
 
     it(`informs the pointerleave`, () => {
         const column: ColumnDefinition = { is_collapsed: true } as ColumnDefinition;
-        const wrapper = getWrapper(column, false);
+        const wrapper = getWrapper(column, false, [], false, false, false);
 
         wrapper.trigger("pointerleave");
         expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("column/pointerLeavesColumn", {
@@ -97,7 +205,7 @@ describe("DropContainerCell", () => {
 
     it(`expands the column when user clicks on the collapsed column cell`, () => {
         const column: ColumnDefinition = { is_collapsed: true } as ColumnDefinition;
-        const wrapper = getWrapper(column, false);
+        const wrapper = getWrapper(column, false, [], false, false, false);
 
         wrapper.trigger("click");
         expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith("column/expandColumn", column);
@@ -106,7 +214,7 @@ describe("DropContainerCell", () => {
     describe("renders the AddCard component only when it is possible", () => {
         it(`renders the button when the tracker of the swimlane allows to add cards in place`, () => {
             const column = { is_collapsed: false } as ColumnDefinition;
-            const wrapper = getWrapper(column, true);
+            const wrapper = getWrapper(column, true, [], false, false, false);
 
             expect(wrapper.findComponent(AddCard).exists()).toBe(true);
             expect(wrapper.classes("taskboard-cell-with-add-form")).toBe(true);
@@ -115,7 +223,7 @@ describe("DropContainerCell", () => {
         it(`does not render the AddCard component
             when the tracker of the swimlane disallows to add cards in place`, () => {
             const column = { is_collapsed: false } as ColumnDefinition;
-            const wrapper = getWrapper(column, false);
+            const wrapper = getWrapper(column, false, [], false, false, false);
 
             expect(wrapper.findComponent(AddCard).exists()).toBe(false);
             expect(wrapper.classes("taskboard-cell-with-add-form")).toBe(false);
@@ -123,7 +231,7 @@ describe("DropContainerCell", () => {
 
         it(`does not render the AddCard component when the column is collapsed`, () => {
             const column = { is_collapsed: true } as ColumnDefinition;
-            const wrapper = getWrapper(column, true);
+            const wrapper = getWrapper(column, true, [], false, false, false);
 
             expect(wrapper.findComponent(AddCard).exists()).toBe(false);
             expect(wrapper.classes("taskboard-cell-with-add-form")).toBe(false);
