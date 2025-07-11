@@ -25,6 +25,7 @@ import { ArtifactRepresentationStub } from "../../tests/builders/ArtifactReprese
 import type { RetrieveArtifactLinks } from "../domain/RetrieveArtifactLinks";
 import { ArtifactLinksRetriever } from "./ArtifactLinksRetriever";
 import { ArtifactsTableBuilder } from "./ArtifactsTableBuilder";
+import type { ArtifactsTable } from "../domain/ArtifactsTable";
 import { FORWARD_DIRECTION, REVERSE_DIRECTION } from "../domain/ArtifactsTable";
 
 describe("ArtifactsLinksRetriever", () => {
@@ -42,6 +43,7 @@ describe("ArtifactsLinksRetriever", () => {
             {
                 source_artifact_id: artifact_id,
                 tql_query: 'SELECT @pretty_title FROM @project="self"',
+                limit: 50,
             },
         ],
         [
@@ -50,12 +52,12 @@ describe("ArtifactsLinksRetriever", () => {
             {
                 target_artifact_id: artifact_id,
                 tql_query: 'SELECT @pretty_title FROM @project="self"',
+                limit: 50,
             },
         ],
     ])(
         "should call for the %s links linked to an artifact and return an ArtifactTable accordingly",
         async (direction, retriever_call, params) => {
-            const total = 45;
             const date_field_name = "start_date";
             const first_date_value = "2022-04-27T11:54:15+07:00";
             const query_content = SelectableQueryContentRepresentationStub.build(
@@ -69,12 +71,9 @@ describe("ArtifactsLinksRetriever", () => {
                     }),
                 ],
             );
-            const getResponse = vi.spyOn(fetch_result, "getResponse").mockReturnValue(
-                okAsync({
-                    headers: new Headers({ "X-PAGINATION-SIZE": String(total) }),
-                    json: () => Promise.resolve(query_content),
-                } as Response),
-            );
+            const getAllJSON = vi
+                .spyOn(fetch_result, "getAllJSON")
+                .mockReturnValue(okAsync([query_content]));
 
             const result = await retriever_call(
                 widget_id,
@@ -82,7 +81,7 @@ describe("ArtifactsLinksRetriever", () => {
                 'SELECT @pretty_title FROM @project="self"',
             );
 
-            expect(getResponse).toHaveBeenCalledWith(
+            expect(getAllJSON).toHaveBeenCalledWith(
                 fetch_result.uri`/api/v1/crosstracker_widget/${widget_id}/${direction}_links`,
                 {
                     params,
@@ -91,10 +90,17 @@ describe("ArtifactsLinksRetriever", () => {
             if (!result.isOk()) {
                 throw Error("Expected an Ok");
             }
-            expect(result.value.total).toBe(total);
-            const table = result.value.table;
-            expect(table.columns).toHaveLength(2);
-            expect(table.rows).toHaveLength(2);
+            result.match(
+                (artifacts: ArtifactsTable[]) => {
+                    artifacts.forEach((artifact) => {
+                        expect(artifact.columns).toHaveLength(2);
+                        expect(artifact.rows).toHaveLength(2);
+                    });
+                },
+                (error) => {
+                    throw new Error(`Unexpected error: ${error}`);
+                },
+            );
         },
     );
 });

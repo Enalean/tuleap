@@ -21,9 +21,9 @@ import type { ResultAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
 import type { ArtifactsTableBuilder } from "./ArtifactsTableBuilder";
 import type { RetrieveArtifactLinks } from "../domain/RetrieveArtifactLinks";
-import type { ArtifactsTableWithTotal } from "../domain/RetrieveArtifactsTable";
 import type { SelectableQueryContentRepresentation } from "./cross-tracker-rest-api-types";
-import { decodeJSON, getResponse, uri } from "@tuleap/fetch-result";
+import { getAllJSON, uri } from "@tuleap/fetch-result";
+import type { ArtifactsTable } from "../domain/ArtifactsTable";
 
 export const ArtifactLinksRetriever = (
     table_builder: ArtifactsTableBuilder,
@@ -33,43 +33,40 @@ export const ArtifactLinksRetriever = (
             widget_id: number,
             artifact_id: number,
             tql_query: string,
-        ): ResultAsync<ArtifactsTableWithTotal, Fault> {
-            return getResponse(uri`/api/v1/crosstracker_widget/${widget_id}/forward_links`, {
-                params: {
-                    source_artifact_id: artifact_id,
-                    tql_query,
-                },
-            }).andThen((response) => {
-                const total = Number.parseInt(response.headers.get("X-PAGINATION-SIZE") ?? "0", 10);
-                return decodeJSON<SelectableQueryContentRepresentation>(response).map(
-                    (query_content) => {
-                        return {
-                            table: table_builder.mapQueryContentToArtifactsTable(query_content),
-                            total,
-                        };
+        ): ResultAsync<ArtifactsTable[], Fault> {
+            return getAllJSON<SelectableQueryContentRepresentation>(
+                uri`/api/v1/crosstracker_widget/${widget_id}/forward_links`,
+                {
+                    params: {
+                        source_artifact_id: artifact_id,
+                        tql_query,
+                        limit: 50,
                     },
+                },
+            ).map((query_content) => {
+                return query_content.map((table) =>
+                    table_builder.mapQueryContentToArtifactsTable(table),
                 );
             });
         },
+
         getReverseLinks(
             widget_id: number,
             artifact_id: number,
             tql_query: string,
-        ): ResultAsync<ArtifactsTableWithTotal, Fault> {
-            return getResponse(uri`/api/v1/crosstracker_widget/${widget_id}/reverse_links`, {
-                params: {
-                    target_artifact_id: artifact_id,
-                    tql_query,
-                },
-            }).andThen((response) => {
-                const total = Number.parseInt(response.headers.get("X-PAGINATION-SIZE") ?? "0", 10);
-                return decodeJSON<SelectableQueryContentRepresentation>(response).map(
-                    (query_content) => {
-                        return {
-                            table: table_builder.mapQueryContentToArtifactsTable(query_content),
-                            total,
-                        };
+        ): ResultAsync<ArtifactsTable[], Fault> {
+            return getAllJSON<SelectableQueryContentRepresentation>(
+                uri`/api/v1/crosstracker_widget/${widget_id}/reverse_links`,
+                {
+                    params: {
+                        target_artifact_id: artifact_id,
+                        tql_query,
+                        limit: 50,
                     },
+                },
+            ).map((query_content) => {
+                return query_content.map((table) =>
+                    table_builder.mapQueryContentToArtifactsTable(table),
                 );
             });
         },
