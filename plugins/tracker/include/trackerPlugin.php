@@ -2509,10 +2509,11 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
         $unsubscribers_notification_dao = new UnsubscribersNotificationDAO();
         $user_preferences_dao           = new UserPreferencesDao();
         $only_status_change_dao         = new UserNotificationOnlyStatusChangeDAO();
+        $user_manager                   = UserManager::instance();
         return new NotificationsForceUsageUpdater(
             new RecipientsManager(
                 Tracker_FormElementFactory::instance(),
-                UserManager::instance(),
+                $user_manager,
                 $unsubscribers_notification_dao,
                 new UserNotificationSettingsRetriever(
                     new Tracker_GlobalNotificationDao(),
@@ -2522,7 +2523,8 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
                 ),
                 $only_status_change_dao,
                 new NotificationOnAllUpdatesRetriever($user_preferences_dao),
-                new NotificationOnOwnActionRetriever($user_preferences_dao)
+                new NotificationOnOwnActionRetriever($user_preferences_dao),
+                new MentionedUserInTextRetriever($user_manager),
             ),
             new UserNotificationSettingsDAO()
         );
@@ -2803,7 +2805,6 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
                     $event_manager,
                     new \Tracker_Artifact_Changeset_CommentDao(),
                 ),
-                new MentionedUserInTextRetriever($user_manager),
             ),
         );
 

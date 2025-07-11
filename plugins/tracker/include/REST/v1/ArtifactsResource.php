@@ -46,7 +46,6 @@ use TransitionFactory;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Markdown\CommonMarkInterpreter;
-use Tuleap\Notification\Mention\MentionedUserInTextRetriever;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\JsonDecoder;
@@ -825,7 +824,6 @@ class ArtifactsResource extends AuthenticatedResource
                     $event_dispatcher,
                     new \Tracker_Artifact_Changeset_CommentDao(),
                 ),
-                new MentionedUserInTextRetriever($user_manager),
             ),
         );
 

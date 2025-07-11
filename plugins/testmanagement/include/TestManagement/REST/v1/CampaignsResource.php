@@ -59,7 +59,6 @@ use Tuleap\Jenkins\JenkinsCSRFCrumbRetriever;
 use Tuleap\Markdown\CodeBlockFeatures;
 use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\Markdown\EnhancedCodeBlockExtension;
-use Tuleap\Notification\Mention\MentionedUserInTextRetriever;
 use Tuleap\RealTime\NodeJSClient;
 use Tuleap\RealTimeMercure\ClientBuilder;
 use Tuleap\REST\Header;
@@ -395,7 +394,6 @@ class CampaignsResource
                     $event_manager,
                     new \Tracker_Artifact_Changeset_CommentDao(),
                 ),
-                new MentionedUserInTextRetriever($user_manager),
             ),
         );
 

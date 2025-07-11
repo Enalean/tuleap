@@ -27,7 +27,6 @@ use Tracker_Artifact_Changeset_InitialChangesetFieldsValidator;
 use Tracker_Artifact_ChangesetFactoryBuilder;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
-use Tuleap\Notification\Mention\MentionedUserInTextRetriever;
 use Tuleap\ProgramManagement\Adapter\ArtifactVisibleVerifier;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\Iteration\IterationsDAO;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\Iteration\IterationsLinkedToProgramIncrementDAO;
@@ -177,7 +176,6 @@ final class ProgramIncrementCreationProcessorBuilder implements BuildProgramIncr
                     $event_dispatcher,
                     new \Tracker_Artifact_Changeset_CommentDao(),
                 ),
-                new MentionedUserInTextRetriever(\UserManager::instance()),
             ),
         );
 

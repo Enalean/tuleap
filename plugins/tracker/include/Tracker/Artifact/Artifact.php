@@ -83,7 +83,6 @@ use Tuleap\Http\Response\JSONResponseBuilder;
 use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Layout\TooltipJSON;
 use Tuleap\Mapper\ValinorMapperBuilderFactory;
-use Tuleap\Notification\Mention\MentionedUserInTextRetriever;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Project\UGroupLiteralizer;
@@ -2282,7 +2281,6 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
                     $event_dispatcher,
                     new \Tracker_Artifact_Changeset_CommentDao(),
                 ),
-                new MentionedUserInTextRetriever($this->getUserManager()),
             ),
         );
     }

@@ -30,7 +30,6 @@ use TrackerFactory;
 use Tuleap\Cardwall\OnTop\Config\ColumnFactory;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
-use Tuleap\Notification\Mention\MentionedUserInTextRetriever;
 use Tuleap\Search\ItemToIndexQueueEventBased;
 use Tuleap\Taskboard\Column\CardColumnFinder;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\ArtifactMappedFieldValueRetriever;
@@ -184,7 +183,6 @@ class CellPatcher
                     $event_dispatcher,
                     $changeset_comment_dao,
                 ),
-                new MentionedUserInTextRetriever($user_manager),
             ),
         );
 

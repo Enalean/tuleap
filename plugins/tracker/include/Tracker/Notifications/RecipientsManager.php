@@ -25,6 +25,7 @@ use PFUser;
 use Psr\Log\LoggerInterface;
 use Tracker_Artifact_Changeset;
 use Tracker_FormElementFactory;
+use Tuleap\Notification\Mention\MentionedUserInTextRetriever;
 use Tuleap\Tracker\Notifications\RemoveRecipient\ArtifactStatusChangeDetector;
 use Tuleap\Tracker\Notifications\RemoveRecipient\ArtifactStatusChangeDetectorImpl;
 use Tuleap\Tracker\Notifications\RemoveRecipient\RemoveRecipientThatAreTechnicalUsers;
@@ -41,7 +42,9 @@ use UserManager;
 class RecipientsManager
 {
     /** @var list<RecipientRemovalStrategy> */
-    private readonly array $recipient_removal_strategies;
+    private readonly array $global_recipient_removal_strategies;
+    /** @var list<RecipientRemovalStrategy> */
+    private readonly array $mentioned_recipient_removal_strategies;
     private readonly ArtifactStatusChangeDetector $status_change_detector;
 
     public function __construct(
@@ -52,12 +55,16 @@ class RecipientsManager
         private readonly UserNotificationOnlyStatusChangeDAO $user_status_change_only_dao,
         private readonly NotificationOnAllUpdatesRetriever $notification_on_all_updates_retriever,
         NotificationOnOwnActionRetriever $notification_on_own_action_retriever,
+        private readonly MentionedUserInTextRetriever $user_in_text_retriever,
     ) {
-        $this->status_change_detector       = new ArtifactStatusChangeDetectorImpl();
-        $this->recipient_removal_strategies = [
+        $this->status_change_detector                 = new ArtifactStatusChangeDetectorImpl();
+        $this->mentioned_recipient_removal_strategies = [
             new RemoveRecipientThatAreTechnicalUsers(),
             new RemoveRecipientThatDoesntWantMailForTheirOwnActions($notification_on_own_action_retriever),
             new RemoveRecipientThatCannotReadAnything(),
+        ];
+        $this->global_recipient_removal_strategies    = [
+            ...$this->mentioned_recipient_removal_strategies,
             new RemoveRecipientThatHaveUnsubscribedFromNotification($this->unsubscribers_notification_dao),
             new RemoveRecipientWhenTheyAreInStatusUpdateOnlyMode($this->user_status_change_only_dao, $this->status_change_detector),
             new RemoveRecipientWhenTheyAreInCreationOnlyMode($this->notification_settings_retriever),
@@ -69,7 +76,24 @@ class RecipientsManager
      *
      * @psalm-return array<string, bool> Structure is [$recipient => $checkPermissions] where $recipient is a username or an email and $checkPermissions is bool.
      */
-    public function getRecipients(Tracker_Artifact_Changeset $changeset, bool $is_update, LoggerInterface $logger): array
+    public function getRecipients(Tracker_Artifact_Changeset $changeset, bool $is_update, bool $send_notifications_to_subscribed_users, LoggerInterface $logger): array
+    {
+        $recipients_from_subscriptions = [];
+        if ($send_notifications_to_subscribed_users) {
+            $recipients_from_subscriptions = $this->getRecipientsFromSubscriptions($changeset, $is_update);
+        }
+
+        return array_map(
+            static fn (Recipient $recipient) => $recipient->check_permissions,
+            $this->removeRecipientsUsingStrategies($this->global_recipient_removal_strategies, $logger, $changeset, $recipients_from_subscriptions, $is_update)
+            + $this->getRecipientsFromComment($changeset, $is_update, $logger)
+        );
+    }
+
+    /**
+     * @psalm-return array<string, Recipient>
+     */
+    private function getRecipientsFromSubscriptions(Tracker_Artifact_Changeset $changeset, bool $is_update): array
     {
         // 1 Get from the fields
         $recipients = [];
@@ -124,29 +148,20 @@ class RecipientsManager
             }
         }
 
-        foreach ($this->recipient_removal_strategies as $strategy) {
-            if (empty($tablo)) {
-                $logger->debug('Recepient list is empty, skip other removal strategies');
-                break;
-            }
-            $tablo = $strategy->removeRecipient($logger, $changeset, $tablo, $is_update);
-        }
-        return array_map(static fn (Recipient $recipient) => $recipient->check_permissions, $tablo);
+        return $tablo;
     }
 
     /**
-     * @param list<PFUser> $mentioned_users
-     *
-     * @psalm-return array<string, bool> Structure is [$recipient => $checkPermissions] where $recipient is a username or an email and $checkPermissions is bool.
+     * @psalm-return array<string, Recipient>
      */
-    public function getRecipientFromComment(array $mentioned_users): array
+    private function getRecipientsFromComment(Tracker_Artifact_Changeset $changeset, bool $is_update, LoggerInterface $logger): array
     {
-        $tablo = [];
-        foreach ($mentioned_users as $user) {
-            $tablo[$user->getUserName()] = Recipient::fromUser($user);
+        $recipients      = [];
+        $mentioned_users = $this->user_in_text_retriever->getMentionedUsers($changeset->getComment()?->body ?? '');
+        foreach ($mentioned_users->users as $user) {
+            $recipients[$user->getUserName()] = Recipient::fromUser($user);
         }
-
-        return array_map(static fn (Recipient $recipient) => $recipient->check_permissions, $tablo);
+        return $this->removeRecipientsUsingStrategies($this->mentioned_recipient_removal_strategies, $logger, $changeset, $recipients, $is_update);
     }
 
     public function getUserFromRecipientName(string $recipient_name): ?PFUser
@@ -244,5 +259,28 @@ class RecipientsManager
         }
 
         return $user_ids;
+    }
+
+    /**
+     * @param list<RecipientRemovalStrategy> $removal_strategies
+     * @param array<string, Recipient> $recipients
+     *
+     * @psalm-return array<string, Recipient>
+     */
+    private function removeRecipientsUsingStrategies(
+        array $removal_strategies,
+        LoggerInterface $logger,
+        Tracker_Artifact_Changeset $changeset,
+        array $recipients,
+        bool $is_update,
+    ): array {
+        foreach ($removal_strategies as $strategy) {
+            if ($recipients === []) {
+                $logger->debug('Recipient list is empty, skip other removal strategies');
+                break;
+            }
+            $recipients = $strategy->removeRecipient($logger, $changeset, $recipients, $is_update);
+        }
+        return $recipients;
     }
 }

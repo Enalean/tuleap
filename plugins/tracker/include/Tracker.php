@@ -1923,7 +1923,8 @@ class Tracker implements Tracker_Dispatchable_Interface
                     ),
                     $only_status_change_dao,
                     new NotificationOnAllUpdatesRetriever($user_preferences_dao),
-                    new NotificationOnOwnActionRetriever($user_preferences_dao)
+                    new NotificationOnOwnActionRetriever($user_preferences_dao),
+                    new MentionedUserInTextRetriever($user_manager),
                 ),
                 $user_notification_settings_dao
             )
@@ -3000,7 +3001,6 @@ class Tracker implements Tracker_Dispatchable_Interface
                     $event_dispatcher,
                     $changeset_comment_dao,
                 ),
-                new MentionedUserInTextRetriever($this->getUserManager()),
             ),
         );
     }
@@ -3379,7 +3379,6 @@ class Tracker implements Tracker_Dispatchable_Interface
                     $event_manager,
                     new Tracker_Artifact_Changeset_CommentDao(),
                 ),
-                new MentionedUserInTextRetriever($this->getUserManager()),
             ),
         );
 

@@ -56,7 +56,6 @@ use Tuleap\AgileDashboard\REST\v1\Milestone\MilestoneRepresentationBuilder;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
-use Tuleap\Notification\Mention\MentionedUserInTextRetriever;
 use Tuleap\Project\ProjectBackground\ProjectBackgroundConfiguration;
 use Tuleap\Project\ProjectBackground\ProjectBackgroundDao;
 use Tuleap\REST\AuthenticatedResource;
@@ -1338,7 +1337,6 @@ class MilestoneResource extends AuthenticatedResource
                             $this->event_manager,
                             new Tracker_Artifact_Changeset_CommentDao(),
                         ),
-                        new MentionedUserInTextRetriever(UserManager::instance()),
                     ),
                 ),
                 new ArtifactForwardLinksRetriever(new ArtifactLinksByChangesetCache(), new ChangesetValueArtifactLinkDao(), $this->tracker_artifact_factory)

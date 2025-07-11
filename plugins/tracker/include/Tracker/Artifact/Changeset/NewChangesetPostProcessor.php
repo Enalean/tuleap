@@ -25,7 +25,6 @@ namespace Tuleap\Tracker\Artifact\Changeset;
 use PFUser;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tracker_Artifact_Changeset;
-use Tuleap\Notification\Mention\MentionedUserInTextRetriever;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\Comment\ChangesetCommentIndexer;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationActionsQueuer;
@@ -38,7 +37,6 @@ final readonly class NewChangesetPostProcessor implements ProcessChangesetPostCr
         private EventDispatcherInterface $event_manager,
         private PostCreationActionsQueuer $post_creation_queuer,
         private ChangesetCommentIndexer $changeset_comment_indexer,
-        private MentionedUserInTextRetriever $user_in_text_retriever,
     ) {
     }
 
@@ -56,15 +54,9 @@ final readonly class NewChangesetPostProcessor implements ProcessChangesetPostCr
         }
 
         if (! $context->getImportConfig()->isFromXml()) {
-            $mentioned_users = $this->user_in_text_retriever->getMentionedUsers($changeset_created->comment_creation->getBody());
-            $users_ids       = array_map(
-                static fn(PFUser $user) => (int) $user->getId(),
-                $mentioned_users->users
-            );
             $this->post_creation_queuer->queuePostCreation(
                 $new_changeset,
                 $context->shouldSendNotifications(),
-                $users_ids,
             );
         }
 

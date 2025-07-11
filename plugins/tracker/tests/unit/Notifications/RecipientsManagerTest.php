@@ -32,6 +32,7 @@ use Tracker_Artifact_ChangesetValue_List;
 use Tracker_FormElement_Field_Date;
 use Tracker_FormElement_Field_Selectbox;
 use Tracker_FormElementFactory;
+use Tuleap\Notification\Mention\MentionedUserInTextRetriever;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\StoreUserPreferenceStub;
@@ -72,13 +73,14 @@ final class RecipientsManagerTest extends TestCase
             $notification_settings_retriever,
             $this->user_status_change_only_dao,
             new NotificationOnAllUpdatesRetriever($user_preference_store),
-            new NotificationOnOwnActionRetriever($user_preference_store)
+            new NotificationOnOwnActionRetriever($user_preference_store),
+            new MentionedUserInTextRetriever($this->user_manager),
         );
 
         $this->user_manager->method('getUserByUserName')->willReturnCallback(static fn(string $username) => match ($username) {
-            'recipient1' => UserTestBuilder::buildWithId(101),
-            'recipient2' => UserTestBuilder::buildWithId(102),
-            'recipient3' => UserTestBuilder::buildWithId(103),
+            'recipient1' => UserTestBuilder::anActiveUser()->withId(101)->withUserName('recipient1')->build(),
+            'recipient2' => UserTestBuilder::anActiveUser()->withId(102)->withUserName('recipient2')->build(),
+            'recipient3' => UserTestBuilder::anActiveUser()->withId(103)->withUserName('recipient3')->build(),
             default      => throw new LogicException("Should not be called with '$username'"),
         });
 
@@ -102,7 +104,7 @@ final class RecipientsManagerTest extends TestCase
             'Review',
             [],
             Tracker::NOTIFICATIONS_LEVEL_DEFAULT,
-            false,
+            'some text',
             ChangesetTestBuilder::aChangeset(1)->build(),
         );
 
@@ -114,7 +116,7 @@ final class RecipientsManagerTest extends TestCase
 
         self::assertSame(
             ['recipient1' => true],
-            $this->recipients_manager->getRecipients($changeset, true, new NullLogger())
+            $this->recipients_manager->getRecipients($changeset, true, true, new NullLogger())
         );
     }
 
@@ -129,7 +131,7 @@ final class RecipientsManagerTest extends TestCase
             'Review',
             [],
             Tracker::NOTIFICATIONS_LEVEL_DEFAULT,
-            false,
+            'some text',
             ChangesetTestBuilder::aChangeset(1)->build(),
         );
 
@@ -141,7 +143,38 @@ final class RecipientsManagerTest extends TestCase
 
         self::assertSame(
             ['recipient2' => true],
-            $this->recipients_manager->getRecipients($changeset, true, new NullLogger())
+            $this->recipients_manager->getRecipients($changeset, true, true, new NullLogger())
+        );
+    }
+
+    public function testItReturnsRecipientsFromMentionedUsers(): void
+    {
+        $this->mockADateField(true);
+
+        $changeset = $this->getAMockedChangeset(
+            [],
+            [],
+            'On going',
+            'Review',
+            [],
+            Tracker::NOTIFICATIONS_LEVEL_DEFAULT,
+            '@recipient1 @recipient2',
+            ChangesetTestBuilder::aChangeset(1)->build(),
+        );
+
+        $artifact = $changeset->getArtifact();
+        self::assertTrue($artifact instanceof Artifact && $artifact instanceof MockObject);
+        $artifact->method('userCanView')->willReturnCallback(
+            function (\PFUser $user): bool {
+                return $user->getUserName() === 'recipient1';
+            }
+        );
+
+        $this->user_notification_settings->method('isInNotifyOnArtifactCreationMode')->willReturn(false);
+
+        self::assertSame(
+            ['recipient1' => true],
+            $this->recipients_manager->getRecipients($changeset, true, true, new NullLogger())
         );
     }
 
@@ -161,7 +194,7 @@ final class RecipientsManagerTest extends TestCase
             ],
             ],
             Tracker::NOTIFICATIONS_LEVEL_DEFAULT,
-            false,
+            'some text',
             ChangesetTestBuilder::aChangeset(1)->build(),
         );
 
@@ -173,7 +206,39 @@ final class RecipientsManagerTest extends TestCase
 
         self::assertSame(
             ['recipient3' => true],
-            $this->recipients_manager->getRecipients($changeset, true, new NullLogger())
+            $this->recipients_manager->getRecipients($changeset, true, true, new NullLogger())
+        );
+    }
+
+    public function testItReturnsRecipientsFromMentionedUsersButSkipSubscribedUsersWhenNotificationsAreDisabled(): void
+    {
+        $this->mockADateField(true);
+
+        $changeset = $this->getAMockedChangeset(
+            [],
+            [],
+            'On going',
+            'Review',
+            [[
+                'on_updates'        => true,
+                'check_permissions' => true,
+                'recipients'        => ['recipient2'],
+            ],
+            ],
+            Tracker::NOTIFICATIONS_LEVEL_DEFAULT,
+            '@recipient1',
+            ChangesetTestBuilder::aChangeset(1)->build(),
+        );
+
+        $artifact = $changeset->getArtifact();
+        self::assertTrue($artifact instanceof Artifact && $artifact instanceof MockObject);
+        $artifact->method('userCanView')->willReturn(true);
+
+        $this->user_notification_settings->method('isInNotifyOnArtifactCreationMode')->willReturn(false);
+
+        self::assertSame(
+            ['recipient1' => true],
+            $this->recipients_manager->getRecipients($changeset, true, false, new NullLogger())
         );
     }
 
@@ -188,7 +253,7 @@ final class RecipientsManagerTest extends TestCase
             'Review',
             [],
             Tracker::NOTIFICATIONS_LEVEL_DEFAULT,
-            true,
+            'some text',
             ChangesetTestBuilder::aChangeset(1)->build(),
         );
 
@@ -200,7 +265,7 @@ final class RecipientsManagerTest extends TestCase
 
         self::assertSame(
             [],
-            $this->recipients_manager->getRecipients($changeset, true, new NullLogger())
+            $this->recipients_manager->getRecipients($changeset, true, true, new NullLogger())
         );
     }
 
@@ -215,7 +280,7 @@ final class RecipientsManagerTest extends TestCase
             'Review',
             [],
             Tracker::NOTIFICATIONS_LEVEL_DEFAULT,
-            true,
+            '',
             ChangesetTestBuilder::aChangeset(1)->build(),
         );
 
@@ -227,7 +292,7 @@ final class RecipientsManagerTest extends TestCase
 
         self::assertSame(
             [],
-            $this->recipients_manager->getRecipients($changeset, true, new NullLogger())
+            $this->recipients_manager->getRecipients($changeset, true, true, new NullLogger())
         );
     }
 
@@ -252,7 +317,7 @@ final class RecipientsManagerTest extends TestCase
             ],
             ],
             Tracker::NOTIFICATIONS_LEVEL_DEFAULT,
-            false,
+            'some text',
             ChangesetTestBuilder::aChangeset(1)->build(),
         );
 
@@ -264,7 +329,7 @@ final class RecipientsManagerTest extends TestCase
 
         self::assertSame(
             ['recipient1' => true, 'recipient3' => true],
-            $this->recipients_manager->getRecipients($changeset, true, new NullLogger())
+            $this->recipients_manager->getRecipients($changeset, true, true, new NullLogger())
         );
     }
 
@@ -284,7 +349,7 @@ final class RecipientsManagerTest extends TestCase
             ],
             ],
             Tracker::NOTIFICATIONS_LEVEL_DEFAULT,
-            false,
+            'some text',
             ChangesetTestBuilder::aChangeset(1)->build(),
         );
         $artifact  = $changeset->getArtifact();
@@ -295,7 +360,7 @@ final class RecipientsManagerTest extends TestCase
 
         self::assertSame(
             ['recipient3' => true],
-            $this->recipients_manager->getRecipients($changeset, true, new NullLogger())
+            $this->recipients_manager->getRecipients($changeset, true, true, new NullLogger())
         );
     }
 
@@ -315,7 +380,7 @@ final class RecipientsManagerTest extends TestCase
             ],
             ],
             Tracker::NOTIFICATIONS_LEVEL_STATUS_CHANGE,
-            false,
+            'some text',
             ChangesetTestBuilder::aChangeset(1)->build(),
         );
 
@@ -327,7 +392,7 @@ final class RecipientsManagerTest extends TestCase
 
         self::assertSame(
             ['recipient3' => true],
-            $this->recipients_manager->getRecipients($changeset, true, new NullLogger())
+            $this->recipients_manager->getRecipients($changeset, true, true, new NullLogger())
         );
     }
 
@@ -347,7 +412,7 @@ final class RecipientsManagerTest extends TestCase
             ],
             ],
             Tracker::NOTIFICATIONS_LEVEL_STATUS_CHANGE,
-            false,
+            'some text',
             null
         );
 
@@ -359,7 +424,7 @@ final class RecipientsManagerTest extends TestCase
 
         self::assertSame(
             ['recipient3' => true],
-            $this->recipients_manager->getRecipients($changeset, false, new NullLogger())
+            $this->recipients_manager->getRecipients($changeset, false, true, new NullLogger())
         );
     }
 
@@ -379,7 +444,7 @@ final class RecipientsManagerTest extends TestCase
             ],
             ],
             Tracker::NOTIFICATIONS_LEVEL_STATUS_CHANGE,
-            false,
+            'some text',
             ChangesetTestBuilder::aChangeset(1)->build(),
         );
 
@@ -393,7 +458,7 @@ final class RecipientsManagerTest extends TestCase
 
         self::assertSame(
             ['recipient3' => true],
-            $this->recipients_manager->getRecipients($changeset, true, new NullLogger())
+            $this->recipients_manager->getRecipients($changeset, true, true, new NullLogger())
         );
     }
 
@@ -413,7 +478,7 @@ final class RecipientsManagerTest extends TestCase
             ],
             ],
             Tracker::NOTIFICATIONS_LEVEL_STATUS_CHANGE,
-            false,
+            'some text',
             ChangesetTestBuilder::aChangeset(1)->build(),
         );
 
@@ -427,7 +492,7 @@ final class RecipientsManagerTest extends TestCase
 
         self::assertSame(
             ['recipient3' => true],
-            $this->recipients_manager->getRecipients($changeset, true, new NullLogger())
+            $this->recipients_manager->getRecipients($changeset, true, true, new NullLogger())
         );
     }
 
@@ -473,7 +538,7 @@ final class RecipientsManagerTest extends TestCase
 
         self::assertSame(
             [],
-            $this->recipients_manager->getRecipients($changeset, true, new NullLogger())
+            $this->recipients_manager->getRecipients($changeset, true, true, new NullLogger())
         );
     }
 
@@ -493,7 +558,7 @@ final class RecipientsManagerTest extends TestCase
             ],
             ],
             Tracker::NOTIFICATIONS_LEVEL_STATUS_CHANGE,
-            false,
+            'some text',
             ChangesetTestBuilder::aChangeset(1)->build(),
         );
 
@@ -507,7 +572,7 @@ final class RecipientsManagerTest extends TestCase
 
         self::assertSame(
             ['recipient3' => true],
-            $this->recipients_manager->getRecipients($changeset, true, new NullLogger())
+            $this->recipients_manager->getRecipients($changeset, true, true, new NullLogger())
         );
     }
 
@@ -527,7 +592,7 @@ final class RecipientsManagerTest extends TestCase
             ],
             ],
             Tracker::NOTIFICATIONS_LEVEL_DEFAULT,
-            false,
+            'some text',
             ChangesetTestBuilder::aChangeset(1)->build(),
         );
 
@@ -543,7 +608,7 @@ final class RecipientsManagerTest extends TestCase
 
         self::assertSame(
             ['recipient3' => true],
-            $this->recipients_manager->getRecipients($changeset, true, new NullLogger())
+            $this->recipients_manager->getRecipients($changeset, true, true, new NullLogger())
         );
     }
 
@@ -563,7 +628,7 @@ final class RecipientsManagerTest extends TestCase
             ],
             ],
             Tracker::NOTIFICATIONS_LEVEL_DEFAULT,
-            false,
+            'some text',
             ChangesetTestBuilder::aChangeset(1)->build(),
         );
 
@@ -578,7 +643,7 @@ final class RecipientsManagerTest extends TestCase
 
         self::assertSame(
             ['recipient2' => true, 'recipient3' => true],
-            $this->recipients_manager->getRecipients($changeset, true, new NullLogger())
+            $this->recipients_manager->getRecipients($changeset, true, true, new NullLogger())
         );
     }
 
@@ -598,7 +663,7 @@ final class RecipientsManagerTest extends TestCase
             ],
             ],
             Tracker::NOTIFICATIONS_LEVEL_DEFAULT,
-            false,
+            'some text',
             ChangesetTestBuilder::aChangeset(1)->build(),
         );
 
@@ -614,7 +679,7 @@ final class RecipientsManagerTest extends TestCase
 
         self::assertSame(
             ['recipient3' => true],
-            $this->recipients_manager->getRecipients($changeset, true, new NullLogger())
+            $this->recipients_manager->getRecipients($changeset, true, true, new NullLogger())
         );
     }
 
@@ -633,7 +698,7 @@ final class RecipientsManagerTest extends TestCase
         string $artifact_status,
         array $tracker_recipients,
         int $tracker_notification_level,
-        bool $has_empty_body,
+        string $comment_body,
         ?Tracker_Artifact_Changeset $previous_changeset,
     ): Tracker_Artifact_Changeset&MockObject {
         $changeset       = $this->createMock(Tracker_Artifact_Changeset::class);
@@ -659,7 +724,7 @@ final class RecipientsManagerTest extends TestCase
         $changeset->method('getTracker')->willReturn($tracker);
 
         $comment_changeset = ChangesetCommentTestBuilder::aComment()->withCommentBody(
-            $has_empty_body ? '' : 'some text'
+            $comment_body
         )->build();
         $changeset->method('getComment')->willReturn($comment_changeset);
 

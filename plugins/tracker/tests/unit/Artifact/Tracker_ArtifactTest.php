@@ -45,7 +45,6 @@ use Tracker_HierarchyFactory;
 use Tracker_NoChangeException;
 use Tracker_Workflow_GlobalRulesViolationException;
 use Tuleap\GlobalResponseMock;
-use Tuleap\Notification\Mention\MentionedUserInTextRetriever;
 use Tuleap\Project\XML\Export\ArchiveInterface;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -285,7 +284,6 @@ final class Tracker_ArtifactTest extends TestCase //phpcs:ignore Squiz.Classes.V
                 EventDispatcherStub::withIdentityCallback(),
                 PostCreationActionsQueuerStub::doNothing(),
                 $changeset_comment_indexer,
-                new MentionedUserInTextRetriever(ProvideAndRetrieveUserStub::build($user)),
             ),
         );
         $creator->create($changeset_creation, PostCreationContext::withNoConfig(false));

@@ -37,6 +37,7 @@ use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Mail\MailLogger;
 use Tuleap\Markdown\CommonMarkInterpreter;
+use Tuleap\Notification\Mention\MentionedUserInTextRetriever;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\CachingTrackerPrivateCommentInformationRetriever;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\PermissionChecker;
@@ -166,7 +167,8 @@ class ActionsRunner
                     ),
                     $only_status_change_dao,
                     new NotificationOnAllUpdatesRetriever($user_preferences_dao),
-                    new NotificationOnOwnActionRetriever($user_preferences_dao)
+                    new NotificationOnOwnActionRetriever($user_preferences_dao),
+                    new MentionedUserInTextRetriever($user_manager),
                 ),
                 Tracker_Artifact_MailGateway_RecipientFactory::build(),
                 new MailGatewayConfig(

@@ -32,7 +32,6 @@ use Tracker_FormElementFactory;
 use Tracker_NoChangeException;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
-use Tuleap\Notification\Mention\MentionedUserInTextRetriever;
 use Tuleap\REST\I18NRestException;
 use Tuleap\Search\ItemToIndexQueueEventBased;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
@@ -142,7 +141,6 @@ class CardPatcher
                     $event_dispatcher,
                     new \Tracker_Artifact_Changeset_CommentDao(),
                 ),
-                new MentionedUserInTextRetriever($user_manager),
             ),
         );
 

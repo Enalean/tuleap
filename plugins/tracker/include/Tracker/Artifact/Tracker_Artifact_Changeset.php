@@ -869,7 +869,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
      */
     public function executePostCreationActions(bool $send_notifications): void
     {
-        ActionsQueuer::build(BackendLogger::getDefaultLogger())->queuePostCreation($this, $send_notifications, []);
+        ActionsQueuer::build(BackendLogger::getDefaultLogger())->queuePostCreation($this, $send_notifications);
     }
 
     /**
