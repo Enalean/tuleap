@@ -1,4 +1,4 @@
-FROM rockylinux/rockylinux:9.4@sha256:4b9c7b0285aa68f45ef42308fb7a364ffb63b461645cfb22c53212d85d16bf93 AS tuleap-installrpms-base
+FROM rockylinux/rockylinux:9.6@sha256:7620071ad66949c3aef9fd313151f0cfee46b75485990c3b03710624f5e1b7b3 AS tuleap-installrpms-base
 # To test RHEL9:
 #FROM registry.access.redhat.com/ubi9 AS tuleap-installrpms-base
 # To test AlmaLinux
