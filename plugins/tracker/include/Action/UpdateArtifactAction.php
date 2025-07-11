@@ -215,7 +215,8 @@ final readonly class UpdateArtifactAction
         if ($stay) {
             $redirect->mode = Tracker_Artifact_Redirect::STATE_STAY;
         } elseif ($my_dashboard_id !== false) {
-            $redirect->mode = Tracker_Artifact_Redirect::TO_MY_DASHBOARD;
+            $redirect->base_url = '/my/';
+            $redirect->mode     = Tracker_Artifact_Redirect::TO_MY_DASHBOARD;
         }
         return $redirect;
     }

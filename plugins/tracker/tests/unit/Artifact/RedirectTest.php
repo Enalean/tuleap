@@ -51,13 +51,4 @@ final class RedirectTest extends \Tuleap\Test\PHPUnit\TestCase
         $redirection->mode = Tracker_Artifact_Redirect::STATE_SUBMIT;
         $this->assertFalse($redirection->stayInTracker());
     }
-
-    public function testDetectRedirectOnPersonalDashboard(): void
-    {
-        $redirection                   = new Tracker_Artifact_Redirect();
-        $redirection->mode             = Tracker_Artifact_Redirect::TO_MY_DASHBOARD;
-        $redirection->query_parameters = ['my-dashboard-id' => 3];
-
-        $this->assertEquals('/my/?my-dashboard-id=3', $redirection->toUrl());
-    }
 }

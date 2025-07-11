@@ -251,7 +251,8 @@ class CreateArtifactAction
         } elseif ($continue) {
             $redirect->mode = Tracker_Artifact_Redirect::STATE_CONTINUE;
         } elseif ($my_dashboard_id) {
-            $redirect->mode = Tracker_Artifact_Redirect::TO_MY_DASHBOARD;
+            $redirect->base_url = '/my/';
+            $redirect->mode     = Tracker_Artifact_Redirect::TO_MY_DASHBOARD;
         } else {
             $redirect->mode = Tracker_Artifact_Redirect::STATE_SUBMIT;
         }
