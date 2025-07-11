@@ -299,8 +299,8 @@ export const ArtifactsTableBuilder = (): ArtifactsTableBuilder => {
 
                     const row: ArtifactRow = {
                         id: artifact_id,
-                        number_of_forward_link,
-                        number_of_reverse_link,
+                        expected_number_of_forward_links: number_of_forward_link,
+                        expected_number_of_reverse_links: number_of_reverse_link,
                         uri: artifact_uri,
                         cells: new Map<string, Cell>(),
                     };

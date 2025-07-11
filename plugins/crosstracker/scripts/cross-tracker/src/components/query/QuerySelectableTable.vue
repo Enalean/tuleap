@@ -38,6 +38,7 @@
                 v-bind:columns="columns"
                 v-bind:level="0"
                 v-bind:tql_query="tql_query"
+                v-bind:ancestors="[]"
             />
         </div>
     </div>

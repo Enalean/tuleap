@@ -31,6 +31,7 @@
         v-bind:parent_caret="parent_caret"
         v-bind:direction="direction"
         v-bind:reverse_links_count="reverse_links_count"
+        v-bind:ancestors="ancestors"
     />
 </template>
 
@@ -47,5 +48,6 @@ defineProps<{
     parent_caret?: HTMLElement;
     direction?: ArtifactLinkDirection;
     reverse_links_count?: number;
+    ancestors: number[];
 }>();
 </script>

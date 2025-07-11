@@ -47,8 +47,8 @@
             v-if="can_display_artifact_link"
             v-on:click="toggleArtifactLinksDisplay()"
             class="caret-button"
-            v-bind:aria-hidden="!has_artifact_links"
-            v-bind:disabled="!has_artifact_links"
+            v-bind:aria-hidden="!should_display_links()"
+            v-bind:disabled="!should_display_links()"
             data-test="pretty-title-links-button"
         >
             <i
@@ -104,8 +104,15 @@ const caret_element = useTemplateRef<HTMLElement>("target-caret-element");
 
 const emit = defineEmits<ToggleLinks>();
 
-const has_artifact_links =
-    props.expected_number_of_forward_link > 0 || props.expected_number_of_reverse_link > 0;
+function should_display_links(): boolean {
+    if (props.level === 0) {
+        return (
+            props.expected_number_of_forward_link > 0 || props.expected_number_of_reverse_link > 0
+        );
+    }
+    return props.expected_number_of_forward_link > 0 || props.expected_number_of_reverse_link > 1;
+}
+
 const are_artifact_links_expanded = ref(false);
 
 const caret_class = computed((): string => {

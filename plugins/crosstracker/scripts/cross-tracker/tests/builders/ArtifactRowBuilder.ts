@@ -20,10 +20,10 @@
 import type { ArtifactRow, Cell } from "../../src/domain/ArtifactsTable";
 
 export class ArtifactRowBuilder {
-    #row: ArtifactRow = {
-        id: 698,
-        number_of_forward_link: 2,
-        number_of_reverse_link: 1,
+    #id: number = 698;
+    #row = {
+        expected_number_of_forward_links: 2,
+        expected_number_of_reverse_links: 1,
         uri: "/plugins/tracker/?aid=698",
         cells: new Map(),
     };
@@ -33,20 +33,28 @@ export class ArtifactRowBuilder {
         return this;
     }
 
-    public buildWithNumberOfLinks(
-        number_of_forward_link: number,
-        number_of_reverse_link: number,
+    public withRowId(id: number): this {
+        this.#id = id;
+        return this;
+    }
+
+    public buildWithExpectedNumberOfLinks(
+        expected_number_of_forward_links: number,
+        expected_number_of_reverse_links: number,
     ): ArtifactRow {
         return {
-            id: 698,
-            number_of_forward_link,
-            number_of_reverse_link,
+            id: this.#id,
+            expected_number_of_forward_links,
+            expected_number_of_reverse_links,
             uri: "/plugins/tracker/?aid=698",
             cells: new Map(),
         };
     }
 
     public build(): ArtifactRow {
-        return this.#row;
+        return {
+            id: this.#id,
+            ...this.#row,
+        };
     }
 }

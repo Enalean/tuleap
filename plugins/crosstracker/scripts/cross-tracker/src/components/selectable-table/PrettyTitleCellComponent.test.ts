@@ -38,12 +38,14 @@ describe("PrettyTitleCellComponent", () => {
     let parent_caret: HTMLElement | undefined;
     let direction: ArtifactLinkDirection | undefined;
     let reverse_links_count: number | undefined;
+    let level: number;
 
     beforeEach(() => {
         artifact_uri = "/plugins/tracker/?aid=286";
         can_display_artifact_link = true;
         expected_number_of_forward_link = 0;
         expected_number_of_reverse_link = 0;
+        level = 0;
         parent_element = undefined;
         parent_caret = undefined;
         direction = undefined;
@@ -69,7 +71,7 @@ describe("PrettyTitleCellComponent", () => {
                 artifact_uri,
                 expected_number_of_forward_link,
                 expected_number_of_reverse_link,
-                level: 0,
+                level,
                 is_last: false,
                 parent_element,
                 parent_caret,
@@ -113,6 +115,30 @@ describe("PrettyTitleCellComponent", () => {
         it("should not hide the button, when artifact has links", () => {
             expected_number_of_forward_link = 2;
             expected_number_of_reverse_link = 1;
+            const wrapper = getWrapper();
+
+            expect(
+                wrapper.find("[data-test=pretty-title-links-button]").attributes("aria-hidden"),
+            ).toBe("false");
+        });
+
+        it("should not display the button if level > 0 and there is only one reverse link and no forward links", () => {
+            level = 1;
+            expected_number_of_forward_link = 0;
+            expected_number_of_reverse_link = 1;
+
+            const wrapper = getWrapper();
+
+            expect(
+                wrapper.find("[data-test=pretty-title-links-button]").attributes("aria-hidden"),
+            ).toBe("true");
+        });
+
+        it("should display the button if level > 0 and there is one reverse link and one forward link", () => {
+            level = 1;
+            expected_number_of_forward_link = 1;
+            expected_number_of_reverse_link = 1;
+
             const wrapper = getWrapper();
 
             expect(

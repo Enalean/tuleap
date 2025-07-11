@@ -34,7 +34,7 @@ const DATE_COLUMN_NAME = "start_date";
 const columns = new Set<ColumnName>().add(PRETTY_TITLE_COLUMN_NAME).add(DATE_COLUMN_NAME);
 
 describe("ArtifactLinkRowSkeleton", () => {
-    function getWrapper(number_of_link: number): VueWrapper {
+    function getWrapper(expected_number_of_links: number): VueWrapper {
         return shallowMount(ArtifactLinkRowSkeleton, {
             global: { ...getGlobalTestOptions() },
             props: {
@@ -53,7 +53,7 @@ describe("ArtifactLinkRowSkeleton", () => {
                     })
                     .build(),
                 columns,
-                number_of_link,
+                expected_number_of_links,
                 level: 0,
             },
         });
@@ -61,12 +61,12 @@ describe("ArtifactLinkRowSkeleton", () => {
 
     it.each([6, 0])(
         "should display the correct number of row and the correct number of cell when there are %s links",
-        (number_of_link) => {
-            const wrapper = getWrapper(number_of_link);
+        (expected_number_of_links) => {
+            const wrapper = getWrapper(expected_number_of_links);
 
-            expect(wrapper.findAllComponents(EmptyEditCell)).toHaveLength(number_of_link);
+            expect(wrapper.findAllComponents(EmptyEditCell)).toHaveLength(expected_number_of_links);
             expect(wrapper.findAllComponents(EmptySelectableCell)).toHaveLength(
-                number_of_link * columns.size,
+                expected_number_of_links * columns.size,
             );
         },
     );

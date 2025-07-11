@@ -116,8 +116,8 @@ export type ArtifactRow = {
     readonly id: number;
     readonly uri: string;
     readonly cells: Map<ColumnName, Cell>;
-    readonly number_of_forward_link: number;
-    readonly number_of_reverse_link: number;
+    readonly expected_number_of_forward_links: number;
+    readonly expected_number_of_reverse_links: number;
 };
 
 export type ArtifactsTable = {

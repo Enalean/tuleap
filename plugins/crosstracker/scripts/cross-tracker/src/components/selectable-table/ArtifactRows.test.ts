@@ -46,10 +46,13 @@ const RetrieveArtifactLinksTableStub = {
 };
 
 describe("ArtifactRows", () => {
-    let table: ArtifactsTable, artifact_links_table_retriever: RetrieveArtifactLinks;
+    let table: ArtifactsTable,
+        artifact_links_table_retriever: RetrieveArtifactLinks,
+        ancestors: number[];
 
     beforeEach(() => {
         artifact_links_table_retriever = RetrieveArtifactLinksTableStub.withDefaultContent();
+        ancestors = [123, 135];
 
         table = new ArtifactsTableBuilder()
             .withColumn(DATE_COLUMN_NAME)
@@ -70,7 +73,7 @@ describe("ArtifactRows", () => {
                         type: TEXT_CELL,
                         value: "<p>Griffith</p>",
                     })
-                    .buildWithNumberOfLinks(2, 1),
+                    .buildWithExpectedNumberOfLinks(2, 1),
             )
             .withArtifactRow(
                 new ArtifactRowBuilder()
@@ -103,6 +106,7 @@ describe("ArtifactRows", () => {
                 columns: artifacts_table.columns,
                 tql_query: "SELECT @id FROM @project='self' WHERE @id>1",
                 level: 0,
+                ancestors,
             },
         });
     };
@@ -121,6 +125,31 @@ describe("ArtifactRows", () => {
         expect(artifact_rows).not.toHaveLength(0);
         artifact_rows.forEach((artifact_row) => {
             expect(artifact_row.props("level")).toBe(wrapper.props("level"));
+        });
+    });
+
+    describe("ancestors propagation", () => {
+        it("should propagate ancestors to its rows", () => {
+            const wrapper = getWrapper(table);
+
+            const artifact_rows = wrapper.findAllComponents(ArtifactRow);
+
+            expect(artifact_rows).not.toHaveLength(0);
+            artifact_rows.forEach((artifact_row) => {
+                expect(artifact_row.props("ancestors")).toStrictEqual(wrapper.props("ancestors"));
+            });
+        });
+
+        it("should propagate ancestors to its rows even if it is empty", () => {
+            ancestors = [];
+            const wrapper = getWrapper(table);
+
+            const artifact_rows = wrapper.findAllComponents(ArtifactRow);
+
+            expect(artifact_rows).not.toHaveLength(0);
+            artifact_rows.forEach((artifact_row) => {
+                expect(artifact_row.props("ancestors")).toStrictEqual(wrapper.props("ancestors"));
+            });
         });
     });
 });
