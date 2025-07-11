@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Dashboard\User\UserDashboardController;
 use Tuleap\Date\RelativeDatesAssetsRetriever;
 use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 use Tuleap\Layout\CssAssetCollection;
@@ -1257,7 +1258,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                         if ($from_aid != null) {
                             $params['from_aid'] = $from_aid;
                         }
-                        if ($widget) {
+                        if ($widget && ($widget->owner_type === UserDashboardController::LEGACY_DASHBOARD_TYPE || $widget->owner_type === UserDashboardController::DASHBOARD_TYPE)) {
                             $params['my-dashboard-id'] = $widget->getDashboardId();
                         }
                         $url = TRACKER_BASE_URL . '/?' . http_build_query($params);
