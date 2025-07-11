@@ -143,13 +143,13 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
 use Tuleap\Tracker\Rule\FirstValidValueAccordingToDependenciesRetriever;
+use Tuleap\Tracker\Semantic\Status\CachedSemanticStatusFieldRetriever;
 use Tuleap\Tracker\Semantic\Status\Done\DoneValueRetriever;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneDao;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneFactory;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneUsedExternalService;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneUsedExternalServiceEvent;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneValueChecker;
-use Tuleap\Tracker\Semantic\Status\StatusFieldRetriever;
 use Tuleap\Tracker\Semantic\Status\StatusValueRetriever;
 use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatusFactory;
 use Tuleap\Tracker\Workflow\FirstPossibleValueInListRetriever;
@@ -387,7 +387,7 @@ class gitlabPlugin extends Plugin
                     $commenter,
                     new PostPushWebhookCloseArtifactHandler(
                         new ArtifactCloser(
-                            new StatusFieldRetriever($semantic_status_factory),
+                            CachedSemanticStatusFieldRetriever::instance(),
                             new StatusValueRetriever($semantic_status_factory, $first_possible_value_retriever),
                             new DoneValueRetriever(
                                 new SemanticDoneFactory(
@@ -622,7 +622,7 @@ class gitlabPlugin extends Plugin
                     $commenter,
                     new PostPushWebhookCloseArtifactHandler(
                         new ArtifactCloser(
-                            new StatusFieldRetriever($semantic_status_factory),
+                            CachedSemanticStatusFieldRetriever::instance(),
                             new StatusValueRetriever($semantic_status_factory, $first_possible_value_retriever),
                             new DoneValueRetriever(
                                 new SemanticDoneFactory(

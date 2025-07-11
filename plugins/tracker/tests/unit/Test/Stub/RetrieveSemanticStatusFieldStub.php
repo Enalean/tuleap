@@ -22,8 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Test\Stub;
 
-final class RetrieveStatusFieldStub implements \Tuleap\Tracker\Semantic\Status\RetrieveStatusField
+final class RetrieveSemanticStatusFieldStub implements \Tuleap\Tracker\Semantic\Status\RetrieveSemanticStatusField
 {
+    private int $call_count = 0;
+
     /**
      * @param list<\Tracker_FormElement_Field_List> $return_values
      */
@@ -51,8 +53,9 @@ final class RetrieveStatusFieldStub implements \Tuleap\Tracker\Semantic\Status\R
         return new self(true, false, []);
     }
 
-    public function getStatusField(\Tuleap\Tracker\Tracker $tracker): ?\Tracker_FormElement_Field_List
+    public function fromTracker(\Tuleap\Tracker\Tracker $tracker): ?\Tracker_FormElement_Field_List
     {
+        $this->call_count++;
         if ($this->return_null) {
             return null;
         }
@@ -63,5 +66,10 @@ final class RetrieveStatusFieldStub implements \Tuleap\Tracker\Semantic\Status\R
             return array_shift($this->return_values);
         }
         throw new \LogicException('No status field configured');
+    }
+
+    public function getCallCount(): int
+    {
+        return $this->call_count;
     }
 }

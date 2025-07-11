@@ -53,28 +53,25 @@ class SemanticDoneDuplicator implements IDuplicateSemantic
             return;
         }
 
-        $from_semantic_status_field_rows = $this->semantic_status_dao->searchByTrackerId($from_tracker_id);
-        if ($from_semantic_status_field_rows === []) {
-            return;
-        }
+        $this->semantic_status_dao->searchFieldByTrackerId($from_tracker_id)
+            ->apply(function (int $from_semantic_status_field_id) use ($field_mapping, $result, $to_tracker_id) {
+                $values_mapping = $this->extractValueMapping(
+                    $field_mapping,
+                    $from_semantic_status_field_id
+                );
 
-        $from_semantic_status_field_id = $from_semantic_status_field_rows[0]['field_id'];
-        $values_mapping                = $this->extractValueMapping(
-            $field_mapping,
-            $from_semantic_status_field_id
-        );
+                $to_selected_value_ids = [];
+                foreach ($result as $row) {
+                    $from_selected_value_id = $row['value_id'];
+                    if (isset($values_mapping[$from_selected_value_id])) {
+                        $to_selected_value_ids[] = (int) $values_mapping[$from_selected_value_id];
+                    }
+                }
 
-        $to_selected_value_ids = [];
-        foreach ($result as $row) {
-            $from_selected_value_id = $row['value_id'];
-            if (isset($values_mapping[$from_selected_value_id])) {
-                $to_selected_value_ids[] = (int) $values_mapping[$from_selected_value_id];
-            }
-        }
-
-        if (count($to_selected_value_ids) > 0) {
-            $this->semantic_done_dao->addForTracker($to_tracker_id, $to_selected_value_ids);
-        }
+                if (count($to_selected_value_ids) > 0) {
+                    $this->semantic_done_dao->addForTracker($to_tracker_id, $to_selected_value_ids);
+                }
+            });
     }
 
     private function extractValueMapping(array $field_mapping, int $from_semantic_status_field_id): array

@@ -265,11 +265,11 @@ use Tuleap\Tracker\Report\TrackerReportConfigDao;
 use Tuleap\Tracker\REST\OAuth2\OAuth2TrackerReadScope;
 use Tuleap\Tracker\Rule\FirstValidValueAccordingToDependenciesRetriever;
 use Tuleap\Tracker\Search\IndexAllArtifactsProcessor;
+use Tuleap\Tracker\Semantic\Status\CachedSemanticStatusFieldRetriever;
 use Tuleap\Tracker\Semantic\Status\Done\DoneValueRetriever;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneDao;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneFactory;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneValueChecker;
-use Tuleap\Tracker\Semantic\Status\StatusFieldRetriever;
 use Tuleap\Tracker\Semantic\Status\StatusValueRetriever;
 use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatusFactory;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
@@ -2815,7 +2815,7 @@ class trackerPlugin extends Plugin implements PluginWithConfigKeys, PluginWithSe
             $user_manager,
             new ArtifactWasClosedCache(),
             new ArtifactCloser(
-                new StatusFieldRetriever($status_semantic_factory),
+                CachedSemanticStatusFieldRetriever::instance(),
                 new StatusValueRetriever($status_semantic_factory, $first_possible_value_retriever),
                 new DoneValueRetriever(
                     new SemanticDoneFactory(new SemanticDoneDao(), new SemanticDoneValueChecker()),

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,14 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Semantic\Status;
 
-final class StatusFieldRetriever implements RetrieveStatusField
-{
-    public function __construct(private \Tuleap\Tracker\Semantic\Status\TrackerSemanticStatusFactory $status_factory)
-    {
-    }
+use Tuleap\Option\Option;
 
-    public function getStatusField(\Tuleap\Tracker\Tracker $tracker): ?\Tracker_FormElement_Field_List
-    {
-        return $this->status_factory->getByTracker($tracker)->getField();
-    }
+interface SearchStatusField
+{
+    /**
+     * @return Option<int>
+     */
+    public function searchFieldByTrackerId(int $tracker_id): Option;
 }

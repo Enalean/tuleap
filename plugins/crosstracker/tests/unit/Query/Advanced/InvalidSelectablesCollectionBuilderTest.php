@@ -58,10 +58,9 @@ use Tuleap\Tracker\Report\Query\Advanced\SelectLimitExceededException;
 use Tuleap\Tracker\Report\Query\Advanced\UgroupLabelConverter;
 use Tuleap\Tracker\Semantic\Contributor\ContributorFieldRetriever;
 use Tuleap\Tracker\Semantic\Contributor\TrackerSemanticContributorFactory;
-use Tuleap\Tracker\Semantic\Status\StatusFieldRetriever;
-use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatusFactory;
 use Tuleap\Tracker\Test\Stub\Permission\RetrieveUserPermissionOnFieldsStub;
 use Tuleap\Tracker\Test\Stub\RetrieveFieldTypeStub;
+use Tuleap\Tracker\Test\Stub\RetrieveSemanticStatusFieldStub;
 use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
 use UserManager;
 
@@ -128,7 +127,7 @@ final class InvalidSelectablesCollectionBuilderTest extends TestCase
                     new ArtifactIdMetadataChecker(),
                 ),
                 new InvalidOrderByListChecker(
-                    new StatusFieldRetriever(TrackerSemanticStatusFactory::instance()),
+                    RetrieveSemanticStatusFieldStub::withNoField(),
                     new ContributorFieldRetriever(TrackerSemanticContributorFactory::instance()),
                 ),
             )),

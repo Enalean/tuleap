@@ -28,14 +28,13 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 use Tuleap\Tracker\Semantic\Contributor\ContributorFieldRetriever;
 use Tuleap\Tracker\Semantic\Contributor\TrackerSemanticContributorFactory;
-use Tuleap\Tracker\Semantic\Status\StatusFieldRetriever;
 use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
-use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatusFactory;
 use Tuleap\Tracker\Test\Builders\Fields\CheckboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\OpenListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\RadioButtonFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Test\Stub\RetrieveSemanticStatusFieldStub;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class InvalidOrderByListCheckerTest extends TestCase
@@ -48,7 +47,7 @@ final class InvalidOrderByListCheckerTest extends TestCase
     public function testItThrowIfUsedWithNotHandledMetadata(): void
     {
         $checker = new InvalidOrderByListChecker(
-            new StatusFieldRetriever(TrackerSemanticStatusFactory::instance()),
+            RetrieveSemanticStatusFieldStub::withNoField(),
             new ContributorFieldRetriever(TrackerSemanticContributorFactory::instance()),
         );
         self::expectException(LogicException::class);
@@ -68,14 +67,10 @@ final class InvalidOrderByListCheckerTest extends TestCase
     public function testItAllowsSingleValueListFields(Tracker_FormElement_Field_List $list, bool $is_allowed): void
     {
         $checker = new InvalidOrderByListChecker(
-            new StatusFieldRetriever(TrackerSemanticStatusFactory::instance()),
+            RetrieveSemanticStatusFieldStub::withField($list),
             new ContributorFieldRetriever(TrackerSemanticContributorFactory::instance()),
         );
         $tracker = TrackerTestBuilder::aTracker()->withId(45)->build();
-        TrackerSemanticStatus::setInstance(
-            new TrackerSemanticStatus($tracker, $list),
-            $tracker,
-        );
         self::assertSame($is_allowed, $checker->metadataListIsSortable(new Metadata('status'), [$tracker]));
     }
 }

@@ -47,28 +47,26 @@ final class StatusSemanticDAOTest extends TestIntegrationTestCase
         $project_id = (int) $core_builder->buildProject('MyProject')->getID();
         $tracker_a  = $tracker_builder->buildTracker($project_id, 'Tracker A')->getId();
         $tracker_b  = $tracker_builder->buildTracker($project_id, 'Tracker B')->getId();
+        $field_id   = 7854;
 
         // At the start, there is nothing
-        self::assertCount(0, $this->dao->searchByTrackerId($tracker_a));
-        self::assertCount(0, $this->dao->searchByTrackerId($tracker_b));
+        self::assertTrue($this->dao->searchFieldByTrackerId($tracker_a)->isNothing());
+        self::assertTrue($this->dao->searchFieldByTrackerId($tracker_b)->isNothing());
+        self::assertEmpty($this->dao->searchOpenValuesByFieldId($field_id));
 
         // Save for Tracker A
-        $field_id    = 7854;
         $open_values = [12, 13, 14, 85];
         $this->dao->save($tracker_a, $field_id, $open_values);
-        $results = [];
-        foreach ($this->dao->searchByTrackerId($tracker_a) as $row) {
-            self::assertSame($field_id, $row['field_id']);
-            $results[] = $row['open_value_id'];
-        }
-        self::assertEqualsCanonicalizing($open_values, $results);
-        self::assertCount(0, $this->dao->searchByTrackerId($tracker_b));
+        self::assertSame($field_id, $this->dao->searchFieldByTrackerId($tracker_a)->unwrapOr(null));
+        self::assertEqualsCanonicalizing($open_values, $this->dao->searchOpenValuesByFieldId($field_id));
+        self::assertTrue($this->dao->searchFieldByTrackerId($tracker_b)->isNothing());
 
         self::assertSame(1, $this->dao->getNbOfTrackerWithoutSemanticStatusDefined([$tracker_a, $tracker_b]));
         self::assertSame([$tracker_b], $this->dao->getTrackerIdsWithoutSemanticStatusDefined([$tracker_a, $tracker_b]));
 
         // After delete, there is nothing
         $this->dao->delete($tracker_a);
-        self::assertCount(0, $this->dao->searchByTrackerId($tracker_a));
+        self::assertTrue($this->dao->searchFieldByTrackerId($tracker_a)->isNothing());
+        self::assertEmpty($this->dao->searchOpenValuesByFieldId($field_id));
     }
 }

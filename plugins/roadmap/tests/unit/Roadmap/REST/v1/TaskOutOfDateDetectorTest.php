@@ -31,12 +31,12 @@ use Tuleap\Date\DatePeriodWithOpenDays;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\Semantic\Status\SemanticStatusRetriever;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeWithEndDate;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
+use Tuleap\Tracker\Test\Stub\Semantic\Status\RetrieveSemanticStatusStub;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TaskOutOfDateDetectorTest extends TestCase
@@ -65,6 +65,7 @@ final class TaskOutOfDateDetectorTest extends TestCase
         $this->status_field->method('getId')->willReturn(365);
 
         $this->semantic_status = $this->createMock(\Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus::class);
+        $this->semantic_status->method('getTracker')->willReturn($this->artifact->getTracker());
         $this->semantic_status->method('getOpenValues')->willReturn([self::TODO_VALUE_ID, self::ON_GOING_VALUE_ID]);
 
         $this->timeframe_calculator = $this->createMock(TimeframeWithEndDate::class);
@@ -72,10 +73,7 @@ final class TaskOutOfDateDetectorTest extends TestCase
 
         $semantic_timeframe->method('getTimeframeCalculator')->willReturn($this->timeframe_calculator);
 
-        $semantic_status_retriever = $this->createMock(SemanticStatusRetriever::class);
-        $semantic_status_retriever->method('retrieveSemantic')
-            ->with($this->artifact->getTracker())
-            ->willReturn($this->semantic_status);
+        $semantic_status_retriever = RetrieveSemanticStatusStub::build()->withSemanticStatus($this->semantic_status);
 
         $semantic_timeframe_builder = $this->createMock(SemanticTimeframeBuilder::class);
         $semantic_timeframe_builder->method('getSemantic')

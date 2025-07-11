@@ -22,10 +22,29 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Semantic\Status;
 
-class SemanticStatusRetriever
+use Tracker_FormElement_Field_List_Bind;
+use Tuleap\Tracker\Tracker;
+
+final readonly class SemanticStatusRetriever implements RetrieveSemanticStatus
 {
-    public function retrieveSemantic(\Tuleap\Tracker\Tracker $tracker): \Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus
+    public function __construct(
+        private RetrieveSemanticStatusField $status_field_retriever,
+        private SearchStatusOpenValues $search_open_values,
+    ) {
+    }
+
+    public function fromTracker(Tracker $tracker): TrackerSemanticStatus
     {
-        return \Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus::load($tracker);
+        $field = $this->status_field_retriever->fromTracker($tracker);
+        if ($field === null) {
+            return new TrackerSemanticStatus($tracker, $field, []);
+        }
+
+        $open_values = $this->search_open_values->searchOpenValuesByFieldId($field->getId());
+        if ($open_values === []) {
+            $open_values[] = Tracker_FormElement_Field_List_Bind::NONE_VALUE;
+        }
+
+        return new TrackerSemanticStatus($tracker, $field, $open_values);
     }
 }

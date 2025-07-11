@@ -40,6 +40,9 @@ use Tuleap\Dashboard\User\UserDashboardRetriever;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\RealTimeMercure\MercureClient;
 use Tuleap\Tracker\Permission\SubmissionPermissionVerifier;
+use Tuleap\Tracker\Semantic\Status\SemanticStatusFieldRetriever;
+use Tuleap\Tracker\Semantic\Status\SemanticStatusRetriever;
+use Tuleap\Tracker\Semantic\Status\StatusSemanticDAO;
 use Tuleap\Tracker\Semantic\Title\CachedSemanticTitleFieldRetriever;
 use Tuleap\Widget\WidgetFactory;
 use User_ForgeUserGroupPermissionsDao;
@@ -77,11 +80,16 @@ final class KanbanPresenter
         int $selected_tracker_report_id,
     ) {
         $user_preferences              = new KanbanUserPreferences();
+        $status_semantic_dao           = new StatusSemanticDAO();
         $kanban_representation_builder = new \Tuleap\Kanban\REST\v1\KanbanRepresentationBuilder(
             $user_preferences,
             new KanbanColumnFactory(
                 new KanbanColumnDao(),
-                $user_preferences
+                $user_preferences,
+                new SemanticStatusRetriever(
+                    new SemanticStatusFieldRetriever($status_semantic_dao, Tracker_FormElementFactory::instance()),
+                    $status_semantic_dao,
+                ),
             ),
             new KanbanActionsChecker(
                 TrackerFactory::instance(),

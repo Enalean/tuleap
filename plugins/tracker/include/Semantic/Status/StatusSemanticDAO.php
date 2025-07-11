@@ -26,19 +26,23 @@ namespace Tuleap\Tracker\Semantic\Status;
 
 use ParagonIE\EasyDB\EasyStatement;
 use Tuleap\DB\DataAccessObject;
+use Tuleap\Option\Option;
 
-class StatusSemanticDAO extends DataAccessObject
+class StatusSemanticDAO extends DataAccessObject implements SearchStatusField, SearchStatusOpenValues
 {
-    /**
-     * @return array<array{
-     *     field_id: int,
-     *     open_value_id: int,
-     * }>
-     */
-    public function searchByTrackerId(int $tracker_id): array
+    public function searchFieldByTrackerId(int $tracker_id): Option
     {
-        $sql = 'SELECT field_id, open_value_id FROM tracker_semantic_status WHERE tracker_id = ?';
-        return $this->getDB()->q($sql, $tracker_id);
+        $sql      = 'SELECT field_id FROM tracker_semantic_status WHERE tracker_id = ?';
+        $field_id = $this->getDB()->cell($sql, $tracker_id);
+        return $field_id !== false
+            ? Option::fromValue($field_id)
+            : Option::nothing(\Psl\Type\int());
+    }
+
+    public function searchOpenValuesByFieldId(int $field_id): array
+    {
+        $sql = 'SELECT open_value_id FROM tracker_semantic_status WHERE field_id = ?';
+        return $this->getDB()->column($sql, [$field_id]);
     }
 
     /**

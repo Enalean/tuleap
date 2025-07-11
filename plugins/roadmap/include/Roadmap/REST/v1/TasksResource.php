@@ -31,7 +31,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\Semantic\Progress\MethodBuilder;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgressBuilder;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgressDao;
-use Tuleap\Tracker\Semantic\Status\SemanticStatusRetriever;
+use Tuleap\Tracker\Semantic\Status\CachedSemanticStatusRetriever;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use UserManager;
 
@@ -102,7 +102,7 @@ final class TasksResource
                 $logger
             ),
             new TaskOutOfDateDetector(
-                new SemanticStatusRetriever(),
+                CachedSemanticStatusRetriever::instance(),
                 $semantic_timeframe_builder,
                 $logger,
             ),

@@ -22,10 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Semantic\Status;
 
+use Tuleap\Option\Option;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Test\Stub\RetrieveFieldByIdStub;
+use Tuleap\Tracker\Test\Stub\Semantic\Status\SearchStatusFieldStub;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class StatusFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
+final class SemanticStatusFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const TRACKER_ID = 77;
     private ?\Tracker_FormElement_Field_Selectbox $field;
@@ -57,8 +60,11 @@ final class StatusFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $factory = $this->createStub(\Tuleap\Tracker\Semantic\Status\TrackerSemanticStatusFactory::class);
         $factory->method('getByTracker')->willReturn($semantic);
 
-        $retriever = new StatusFieldRetriever($factory);
-        return $retriever->getStatusField($tracker);
+        $retriever = new SemanticStatusFieldRetriever(
+            SearchStatusFieldStub::withCallback(fn() => Option::fromNullable($this->field?->getId())),
+            RetrieveFieldByIdStub::withCallback(fn() => $this->field),
+        );
+        return $retriever->fromTracker($tracker);
     }
 
     public function testItRetrievesStatusField(): void

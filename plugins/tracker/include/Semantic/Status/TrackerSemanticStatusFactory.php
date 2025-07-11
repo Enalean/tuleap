@@ -51,7 +51,7 @@ class TrackerSemanticStatusFactory implements IBuildSemanticFromXML, IDuplicateS
 
     public function getByTracker(Tracker $tracker): TrackerSemanticStatus
     {
-        return TrackerSemanticStatus::load($tracker);
+        return CachedSemanticStatusRetriever::instance()->fromTracker($tracker);
     }
 
     public function getInstanceFromXML(
@@ -95,41 +95,34 @@ class TrackerSemanticStatusFactory implements IBuildSemanticFromXML, IDuplicateS
      */
     public function duplicate(int $from_tracker_id, int $to_tracker_id, array $field_mapping): void
     {
-        $rows                 = $this->getDao()->searchByTrackerId($from_tracker_id);
-        $from_status_field_id = null;
-        $from_open_value_ids  = [];
-        // walk the semantic status rows (one row per open value)
-        // to retrieve semantics values of tracker FROM
-        foreach ($rows as $row) {
-            // if we already have the status field, just jump to open values
-            if (! $from_status_field_id) {
-                $from_status_field_id = $row['field_id'];
-            }
-            $from_open_value_ids[] = $row['open_value_id'];
-        }
+        $dao = $this->getDao();
+        $dao->searchFieldByTrackerId($from_tracker_id)
+            ->apply(function (int $from_status_field_id) use ($to_tracker_id, $field_mapping, $dao) {
+                $from_open_value_ids = $dao->searchOpenValuesByFieldId($from_status_field_id);
 
-        // walk the mapping array to get the corresponding status values for tracker TARGET
-        $to_status_field_id = false;
-        $to_open_value_ids  = [];
-        foreach ($field_mapping as $mapping) {
-            if ($mapping['from'] == $from_status_field_id) {
-                // $mapping is the mapping for the status field
+                // walk the mapping array to get the corresponding status values for tracker TARGET
+                $to_status_field_id = false;
+                $to_open_value_ids  = [];
+                foreach ($field_mapping as $mapping) {
+                    if ($mapping['from'] == $from_status_field_id) {
+                        // $mapping is the mapping for the status field
 
-                // get the field id for status field target
-                $to_status_field_id = $mapping['to'];
+                        // get the field id for status field target
+                        $to_status_field_id = $mapping['to'];
 
-                $mapping_values = $mapping['values'];
-                // get the value ids for status open values target
-                foreach ($from_open_value_ids as $from_open_value_id) {
-                    if (isset($mapping_values[$from_open_value_id])) {
-                        $to_open_value_ids[] = $mapping_values[$from_open_value_id];
+                        $mapping_values = $mapping['values'];
+                        // get the value ids for status open values target
+                        foreach ($from_open_value_ids as $from_open_value_id) {
+                            if (isset($mapping_values[$from_open_value_id])) {
+                                $to_open_value_ids[] = $mapping_values[$from_open_value_id];
+                            }
+                        }
                     }
                 }
-            }
-        }
 
-        if ($to_status_field_id) {
-            $this->getDao()->save($to_tracker_id, $to_status_field_id, $to_open_value_ids);
-        }
+                if ($to_status_field_id) {
+                    $dao->save($to_tracker_id, $to_status_field_id, $to_open_value_ids);
+                }
+            });
     }
 }
