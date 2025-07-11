@@ -83,11 +83,11 @@ class TrackerSemanticStatusFactory implements IBuildSemanticFromXML, IDuplicateS
     /**
      * Return the Dao
      *
-     * @return TrackerSemanticStatusDao The dao
+     * @return StatusSemanticDAO The dao
      */
     public function getDao()
     {
-        return new TrackerSemanticStatusDao();
+        return new StatusSemanticDAO();
     }
 
     /**
@@ -95,12 +95,12 @@ class TrackerSemanticStatusFactory implements IBuildSemanticFromXML, IDuplicateS
      */
     public function duplicate(int $from_tracker_id, int $to_tracker_id, array $field_mapping): void
     {
-        $dar                  = $this->getDao()->searchByTrackerId($from_tracker_id);
+        $rows                 = $this->getDao()->searchByTrackerId($from_tracker_id);
         $from_status_field_id = null;
         $from_open_value_ids  = [];
         // walk the semantic status rows (one row per open value)
         // to retrieve semantics values of tracker FROM
-        while ($row = $dar->getRow()) {
+        foreach ($rows as $row) {
             // if we already have the status field, just jump to open values
             if (! $from_status_field_id) {
                 $from_status_field_id = $row['field_id'];

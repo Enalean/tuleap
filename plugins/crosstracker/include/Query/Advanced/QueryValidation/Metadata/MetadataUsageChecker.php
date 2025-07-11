@@ -28,7 +28,7 @@ use Tuleap\CrossTracker\Query\Advanced\AllowedMetadata;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 use Tuleap\Tracker\Semantic\Contributor\TrackerSemanticContributorDao;
 use Tuleap\Tracker\Semantic\Description\SearchTrackersWithoutDescriptionSemantic;
-use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatusDao;
+use Tuleap\Tracker\Semantic\Status\StatusSemanticDAO;
 use Tuleap\Tracker\Semantic\Title\SearchTrackersWithoutTitleSemantic;
 use Tuleap\Tracker\Tracker;
 
@@ -43,7 +43,7 @@ final class MetadataUsageChecker implements CheckMetadataUsage
         private readonly Tracker_FormElementFactory $form_element_factory,
         private readonly SearchTrackersWithoutTitleSemantic $title_verifier,
         private readonly SearchTrackersWithoutDescriptionSemantic $description_verifier,
-        private readonly TrackerSemanticStatusDao $status_dao,
+        private readonly StatusSemanticDAO $status_dao,
         private readonly TrackerSemanticContributorDao $assigned_to_dao,
     ) {
         $this->cache_already_checked = [];
@@ -117,7 +117,7 @@ final class MetadataUsageChecker implements CheckMetadataUsage
      */
     private function checkStatusIsUsedByAtLeastOneTracker(array $trackers_id): void
     {
-        $count = $this->status_dao->getNbOfTrackerWithoutSemanticStatusDefined($trackers_id);
+        $count = $this->status_dao->getNbOfTrackerWithoutSemanticStatusDefined(array_values($trackers_id));
         if ($count === count($trackers_id)) {
             throw new StatusIsMissingInAllTrackersException();
         }

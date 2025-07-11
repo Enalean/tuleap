@@ -36,7 +36,7 @@ use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
 use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
-use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatusDao;
+use Tuleap\Tracker\Semantic\Status\StatusSemanticDAO;
 use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatusFactory;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Tracker;
@@ -46,7 +46,7 @@ final class StatusIsAlignedVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private StatusIsAlignedVerifier $verifier;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&TrackerSemanticStatusDao
+     * @var \PHPUnit\Framework\MockObject\MockObject&StatusSemanticDAO
      */
     private $semantic_status_dao;
     /**
@@ -72,7 +72,7 @@ final class StatusIsAlignedVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 
     protected function setUp(): void
     {
-        $this->semantic_status_dao     = $this->createMock(TrackerSemanticStatusDao::class);
+        $this->semantic_status_dao     = $this->createMock(StatusSemanticDAO::class);
         $this->semantic_status_factory = $this->createMock(TrackerSemanticStatusFactory::class);
         $this->tracker_factory         = $this->createMock(\TrackerFactory::class);
 

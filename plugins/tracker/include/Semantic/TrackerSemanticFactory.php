@@ -36,7 +36,7 @@ use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneDao;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneDuplicator;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneFactory;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneValueChecker;
-use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatusDao;
+use Tuleap\Tracker\Semantic\Status\StatusSemanticDAO;
 use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatusFactory;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeFromXMLBuilder;
@@ -270,7 +270,7 @@ class TrackerSemanticFactory
             new SemanticProgressDuplicator(new SemanticProgressDao()),
             new SemanticDoneDuplicator(
                 new SemanticDoneDao(),
-                new TrackerSemanticStatusDao()
+                new StatusSemanticDAO()
             ),
         ];
 

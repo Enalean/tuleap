@@ -134,7 +134,7 @@ use Tuleap\Tracker\Semantic\Contributor\TrackerSemanticContributorFactory;
 use Tuleap\Tracker\Semantic\Description\CachedSemanticDescriptionFieldRetriever;
 use Tuleap\Tracker\Semantic\Description\DescriptionSemanticDAO;
 use Tuleap\Tracker\Semantic\Status\StatusFieldRetriever;
-use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatusDao;
+use Tuleap\Tracker\Semantic\Status\StatusSemanticDAO;
 use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatusFactory;
 use Tuleap\Tracker\Semantic\Title\CachedSemanticTitleFieldRetriever;
 use Tuleap\Tracker\Semantic\Title\TitleSemanticDAO;
@@ -200,7 +200,7 @@ final class CrossTrackerArtifactQueryFactoryBuilder
                 Tracker_FormElementFactory::instance(),
                 new TitleSemanticDAO(),
                 new DescriptionSemanticDAO(),
-                new TrackerSemanticStatusDao(),
+                new StatusSemanticDAO(),
                 new TrackerSemanticContributorDao(),
             ),
             new InvalidMetadataChecker(

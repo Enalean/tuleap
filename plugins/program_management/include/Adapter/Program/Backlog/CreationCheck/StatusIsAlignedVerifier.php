@@ -26,17 +26,17 @@ use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErr
 use Tuleap\ProgramManagement\Domain\Program\Backlog\CreationCheck\VerifyStatusIsAligned;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Source\SourceTrackerCollection;
 use Tuleap\ProgramManagement\Domain\TrackerReference;
-use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatusDao;
+use Tuleap\Tracker\Semantic\Status\StatusSemanticDAO;
 use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatusFactory;
 
 final class StatusIsAlignedVerifier implements VerifyStatusIsAligned
 {
-    private TrackerSemanticStatusDao $semantic_status_dao;
+    private StatusSemanticDAO $semantic_status_dao;
     private TrackerSemanticStatusFactory $semantic_status_factory;
     private \TrackerFactory $tracker_factory;
 
     public function __construct(
-        TrackerSemanticStatusDao $semantic_status_dao,
+        StatusSemanticDAO $semantic_status_dao,
         TrackerSemanticStatusFactory $semantic_status_factory,
         \TrackerFactory $tracker_factory,
     ) {
