@@ -20,28 +20,23 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue;
+namespace Tuleap\Artidoc\REST\v1\ArtifactSection\Field;
 
-use Tuleap\Color\ItemColor;
-use Tuleap\Option\Option;
+use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\ArtifactLinkProject;
 
 /**
  * @psalm-immutable
  */
-final readonly class ArtifactLinkValue
+final readonly class ArtifactLinkProjectReference
 {
-    /**
-     * @param Option<ArtifactLinkStatusValue> $status
-     */
-    public function __construct(
-        public string $link_label,
-        public string $tracker_shortname,
-        public ItemColor $tracker_color,
-        public ArtifactLinkProject $project,
-        public int $artifact_id,
-        public string $title,
-        public string $html_uri,
-        public Option $status,
-    ) {
+    public int $id;
+    public string $label;
+    public string $icon;
+
+    public function __construct(ArtifactLinkProject $project)
+    {
+        $this->id    = $project->id;
+        $this->label = $project->name;
+        $this->icon  = $project->icon;
     }
 }

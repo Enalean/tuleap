@@ -26,10 +26,12 @@ use PFUser;
 use Tracker_Artifact_ChangesetValue_List;
 use Tuleap\Artidoc\Document\Field\ConfiguredField;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\ArtifactLinkFieldWithValue;
+use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\ArtifactLinkProject;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\ArtifactLinkStatusValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\ArtifactLinkValue;
 use Tuleap\Color\ItemColor;
 use Tuleap\Option\Option;
+use Tuleap\Project\Icons\EmojiCodepointConverter;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\ArtifactLink\ArtifactLinkChangesetValue;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\RetrieveTypeFromShortname;
@@ -76,6 +78,7 @@ final readonly class ArtifactLinkFieldWithValueBuilder implements BuildArtifactL
                 $this->renameLinkTypes($type_presenter)->forward_label,
                 $linked_tracker->getItemName(),
                 $linked_tracker->getColor(),
+                $this->getLinkProject($linked_tracker->getProject()),
                 $linked_artifact->getId(),
                 $this->getArtifactTitle($linked_tracker, $linked_artifact),
                 $linked_artifact->getUri(),
@@ -95,6 +98,7 @@ final readonly class ArtifactLinkFieldWithValueBuilder implements BuildArtifactL
                 $this->renameLinkTypes($type_presenter)->reverse_label,
                 $linked_tracker->getItemName(),
                 $linked_tracker->getColor(),
+                $this->getLinkProject($linked_tracker->getProject()),
                 $linked_artifact->getId(),
                 $this->getArtifactTitle($linked_tracker, $linked_artifact),
                 $linked_artifact->getUri(),
@@ -168,5 +172,14 @@ final readonly class ArtifactLinkFieldWithValueBuilder implements BuildArtifactL
         }
 
         return $presenter;
+    }
+
+    private function getLinkProject(\Project $linked_project): ArtifactLinkProject
+    {
+        return new ArtifactLinkProject(
+            (int) $linked_project->getID(),
+            $linked_project->getPublicName(),
+            EmojiCodepointConverter::convertStoredEmojiFormatToEmojiFormat($linked_project->getIconUnicodeCodepoint())
+        );
     }
 }

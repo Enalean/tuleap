@@ -81,6 +81,7 @@ export type ReadonlyFieldLinkedArtifact = Readonly<{
     link_label: string;
     tracker_shortname: string;
     tracker_color: ColorName;
+    project: LinkedArtifactProject;
     artifact_id: number;
     title: string;
     html_uri: string;
@@ -91,6 +92,12 @@ export type LinkedArtifactStatus = Readonly<{
     label: string;
     color: ColorName | "";
     is_open: boolean;
+}>;
+
+export type LinkedArtifactProject = Readonly<{
+    id: number;
+    label: string;
+    icon: string;
 }>;
 
 export type ReadonlyField =

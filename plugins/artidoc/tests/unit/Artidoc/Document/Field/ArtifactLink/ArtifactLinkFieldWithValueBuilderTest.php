@@ -32,6 +32,7 @@ use Tracker_FormElement_Field_String;
 use Tuleap\Artidoc\Document\Field\ConfiguredField;
 use Tuleap\Artidoc\Domain\Document\Section\Field\DisplayType;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\ArtifactLinkFieldWithValue;
+use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\ArtifactLinkProject;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\ArtifactLinkStatusValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\ArtifactLinkValue;
 use Tuleap\Color\ItemColor;
@@ -63,6 +64,10 @@ use Tuleap\Tracker\Tracker;
 #[DisableReturnValueGenerationForTestDoubles]
 final class ArtifactLinkFieldWithValueBuilderTest extends TestCase
 {
+    private const PROJECT_ID   = 640;
+    private const PROJECT_ICON = '🛰️';
+    private const PROJECT_NAME = 'Parabema retransit';
+
     protected function tearDown(): void
     {
         Tracker_ArtifactFactory::clearInstance();
@@ -71,7 +76,11 @@ final class ArtifactLinkFieldWithValueBuilderTest extends TestCase
 
     public function testItBuildsArtifactLinkField(): void
     {
-        $project      = ProjectTestBuilder::aProject()->build();
+        $project      = ProjectTestBuilder::aProject()
+            ->withId(self::PROJECT_ID)
+            ->withPublicName(self::PROJECT_NAME)
+            ->withIcon(self::PROJECT_ICON)
+            ->build();
         $tracker      = TrackerTestBuilder::aTracker()
             ->withShortName('my_tracker')
             ->withId(35)
@@ -129,6 +138,7 @@ final class ArtifactLinkFieldWithValueBuilderTest extends TestCase
                 ->withTypePresenter(null, new TypePresenter('', '', '', true)),
         );
 
+        $link_project = new ArtifactLinkProject(self::PROJECT_ID, self::PROJECT_NAME, self::PROJECT_ICON);
         self::assertEquals(
             new ArtifactLinkFieldWithValue(
                 $link_field->getLabel(),
@@ -138,6 +148,7 @@ final class ArtifactLinkFieldWithValueBuilderTest extends TestCase
                         'is Parent of',
                         'my_tracker',
                         ItemColor::fromName('panther-pink'),
+                        $link_project,
                         15,
                         'Artifact 15',
                         '/plugins/tracker/?aid=15',
@@ -147,6 +158,7 @@ final class ArtifactLinkFieldWithValueBuilderTest extends TestCase
                         'Covers',
                         'my_tracker',
                         ItemColor::fromName('panther-pink'),
+                        $link_project,
                         16,
                         'Artifact 16',
                         '/plugins/tracker/?aid=16',
@@ -156,6 +168,7 @@ final class ArtifactLinkFieldWithValueBuilderTest extends TestCase
                         'is Linked to',
                         'my_tracker',
                         ItemColor::fromName('panther-pink'),
+                        $link_project,
                         17,
                         '',
                         '/plugins/tracker/?aid=17',
@@ -165,6 +178,7 @@ final class ArtifactLinkFieldWithValueBuilderTest extends TestCase
                         'is Child of',
                         'my_tracker',
                         ItemColor::fromName('panther-pink'),
+                        $link_project,
                         21,
                         'Artifact 21',
                         '/plugins/tracker/?aid=21',
@@ -174,6 +188,7 @@ final class ArtifactLinkFieldWithValueBuilderTest extends TestCase
                         'Covered by',
                         'my_tracker',
                         ItemColor::fromName('panther-pink'),
+                        $link_project,
                         22,
                         '',
                         '/plugins/tracker/?aid=22',
@@ -183,6 +198,7 @@ final class ArtifactLinkFieldWithValueBuilderTest extends TestCase
                         'is Linked to',
                         'my_tracker',
                         ItemColor::fromName('panther-pink'),
+                        $link_project,
                         23,
                         'Artifact 23',
                         '/plugins/tracker/?aid=23',
