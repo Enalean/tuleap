@@ -34,6 +34,7 @@ import {
     IS_EXPORT_ALLOWED,
     WIDGET_ID,
     RETRIEVE_ARTIFACTS_TABLE,
+    ARROW_REDRAW_TRIGGERER,
 } from "../../injection-symbols";
 import { DATE_CELL, NUMERIC_CELL, PRETTY_TITLE_CELL, TEXT_CELL } from "../../domain/ArtifactsTable";
 import { RetrieveArtifactsTableStub } from "../../../tests/stubs/RetrieveArtifactsTableStub";
@@ -52,6 +53,7 @@ import type { Emitter } from "mitt";
 import mitt from "mitt";
 import SelectablePagination from "./SelectablePagination.vue";
 import { PRETTY_TITLE_COLUMN_NAME } from "../../domain/ColumnName";
+import type { ArrowRedrawTriggerer } from "../../ArrowRedrawTriggerer";
 import ArtifactRows from "./ArtifactRows.vue";
 
 vi.useFakeTimers();
@@ -64,6 +66,7 @@ describe(`SelectableTable`, () => {
     let is_xslx_export_allowed: boolean;
     let emitter: Emitter<Events>;
     let dispatched_fault_events: NotifyFaultEvent[];
+    let stub_arrow_redrawer_triggerer: ArrowRedrawTriggerer;
 
     const registerFaultEvent = (event: NotifyFaultEvent): void => {
         dispatched_fault_events.push(event);
@@ -71,6 +74,11 @@ describe(`SelectableTable`, () => {
 
     beforeEach(() => {
         is_xslx_export_allowed = true;
+
+        stub_arrow_redrawer_triggerer = {
+            listenToSelectableTableResize: vi.fn(),
+            removeListener: vi.fn(),
+        };
 
         emitter = mitt<Events>();
         dispatched_fault_events = [];
@@ -104,6 +112,7 @@ describe(`SelectableTable`, () => {
                         createVueGettextProviderPassThrough(),
                     ),
                     [EMITTER.valueOf()]: emitter,
+                    [ARROW_REDRAW_TRIGGERER.valueOf()]: stub_arrow_redrawer_triggerer,
                 },
             },
             props: {
@@ -191,7 +200,43 @@ describe(`SelectableTable`, () => {
             expect(dispatched_fault_events).toHaveLength(1);
             expect(dispatched_fault_events[0].fault.isArtifactsRetrieval()).toBe(true);
         });
+
+        it("will add a listener on the selectable_table to watch for resize", () => {
+            const table_result = {
+                table: new ArtifactsTableBuilder().build(),
+                total: 0,
+            };
+            const table_retriever = RetrieveArtifactsTableStub.withContent(table_result, [
+                table_result.table,
+            ]);
+
+            const wrapper = getWrapper(table_retriever);
+
+            expect(
+                stub_arrow_redrawer_triggerer.listenToSelectableTableResize,
+            ).toHaveBeenCalledWith(wrapper.vm.$el);
+        });
     });
+
+    describe("Component removal", () => {
+        it("will remove the listener on the selectable_table", () => {
+            const table_result = {
+                table: new ArtifactsTableBuilder().build(),
+                total: 0,
+            };
+            const table_retriever = RetrieveArtifactsTableStub.withContent(table_result, [
+                table_result.table,
+            ]);
+
+            const wrapper = getWrapper(table_retriever);
+            wrapper.unmount();
+
+            expect(stub_arrow_redrawer_triggerer.removeListener).toHaveBeenCalledWith(
+                wrapper.vm.$el,
+            );
+        });
+    });
+
     describe("Empty state", () => {
         it("displays the empty state and no XLSX button nor pagination when there is no result", () => {
             const table_result = {

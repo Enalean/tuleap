@@ -17,17 +17,13 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
 import type { Emitter } from "mitt";
 import mitt from "mitt";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-tests";
 import type { Events } from "../../helpers/widget-events";
-import {
-    ROW_INSERTED_IN_TABLE_EVENT,
-    ROW_REMOVED_IN_TABLE_EVENT,
-} from "../../helpers/widget-events";
 import { EMITTER } from "../../injection-symbols";
 import ArtifactLinkArrow from "./ArtifactLinkArrow.vue";
 import type { ArtifactLinkDirection } from "../../domain/ArtifactsTable";
@@ -65,32 +61,14 @@ describe("ArtifactLinkArrow", () => {
     let emitter: Emitter<Events>,
         is_last_link: boolean,
         reverse_links_count: number,
-        direction: ArtifactLinkDirection,
-        dispatched_row_inserted_in_table_events: number,
-        dispatched_row_removed_in_table_events: number;
+        direction: ArtifactLinkDirection;
 
     beforeEach(() => {
         emitter = mitt<Events>();
         is_last_link = false;
         reverse_links_count = 0;
         direction = FORWARD_DIRECTION;
-        dispatched_row_inserted_in_table_events = 0;
-        dispatched_row_removed_in_table_events = 0;
-        emitter.on(ROW_INSERTED_IN_TABLE_EVENT, registerRowInsertedInTableEvent);
-        emitter.on(ROW_REMOVED_IN_TABLE_EVENT, registerRowRemovedInTableEvent);
     });
-
-    afterEach(() => {
-        emitter.off(ROW_INSERTED_IN_TABLE_EVENT, registerRowInsertedInTableEvent);
-        emitter.off(ROW_REMOVED_IN_TABLE_EVENT, registerRowRemovedInTableEvent);
-    });
-
-    function registerRowInsertedInTableEvent(): void {
-        dispatched_row_inserted_in_table_events++;
-    }
-    function registerRowRemovedInTableEvent(): void {
-        dispatched_row_removed_in_table_events++;
-    }
 
     function getWrapper(): VueWrapper {
         return shallowMount(ArtifactLinkArrow, {
@@ -177,18 +155,6 @@ describe("ArtifactLinkArrow", () => {
                       M8.5 1
                       L12.5 5"
             `);
-        });
-    });
-
-    describe("Emit ROW_INSERTED_IN_TABLE_EVENT and ROW_REMOVED_IN_TABLE_EVENT", () => {
-        it("should emit ROW_INSERTED_IN_TABLE_EVENT on component creation", () => {
-            getWrapper();
-            expect(dispatched_row_inserted_in_table_events).toBe(1);
-        });
-
-        it("should emit ROW_REMOVED_IN_TABLE_EVENT on component deletion", () => {
-            getWrapper().unmount();
-            expect(dispatched_row_removed_in_table_events).toBe(1);
         });
     });
 });

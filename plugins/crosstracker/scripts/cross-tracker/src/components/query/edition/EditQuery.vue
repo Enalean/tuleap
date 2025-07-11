@@ -87,13 +87,12 @@
                 {{ $gettext("Save") }}
             </button>
         </div>
-        <section class="tlp-pane-section" v-if="is_selectable_table_displayed">
-            <selectable-table
-                v-on:search-finished="is_search_loading = false"
-                v-on:search-started="is_search_loading = true"
-                v-bind:tql_query="tql_query"
-            />
-        </section>
+        <selectable-table
+            v-if="is_selectable_table_displayed"
+            v-on:search-finished="is_search_loading = false"
+            v-on:search-started="is_search_loading = true"
+            v-bind:tql_query="tql_query"
+        />
     </section>
 </template>
 

@@ -36,6 +36,7 @@ import {
     DASHBOARD_TYPE,
     NEW_QUERY_CREATOR,
     WIDGET_TITLE_UPDATER,
+    ARROW_REDRAW_TRIGGERER,
     QUERY_UPDATER,
     WIDGET_CONTAINER,
     CAN_DISPLAY_ARTIFACT_LINK,
@@ -54,6 +55,7 @@ import type { WidgetData } from "./type";
 import { WidgetTitleUpdater } from "./WidgetTitleUpdater";
 import { QueryUpdater } from "./api/QueryUpdater";
 import { ArtifactLinksRetriever } from "./api/ArtifactLinksRetriever";
+import { ArrowRedrawTriggerer } from "./ArrowRedrawTriggerer";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const locale = getLocaleOrThrow(document);
@@ -90,6 +92,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             title_element,
             widget_data.default_title,
         );
+        const arrow_redraw_triggerer = ArrowRedrawTriggerer(emitter);
 
         const vue_mount_point = selectOrThrow(widget_element, ".vue-mount-point");
         const artifacts_table_builder = ArtifactsTableBuilder();
@@ -114,6 +117,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             .provide(NEW_QUERY_CREATOR, NewQueryCreator())
             .provide(QUERY_UPDATER, QueryUpdater())
             .provide(WIDGET_TITLE_UPDATER, widget_title_updater)
+            .provide(ARROW_REDRAW_TRIGGERER, arrow_redraw_triggerer)
             .provide(WIDGET_CONTAINER, widget_element)
             .provide(CAN_DISPLAY_ARTIFACT_LINK, widget_data.can_display_artifact_link)
             .mount(vue_mount_point);

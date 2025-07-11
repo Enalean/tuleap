@@ -25,13 +25,10 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, onUnmounted, ref } from "vue";
+import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { EMITTER } from "../../injection-symbols";
-import {
-    ROW_INSERTED_IN_TABLE_EVENT,
-    ROW_REMOVED_IN_TABLE_EVENT,
-} from "../../helpers/widget-events";
+import { SELECTABLE_TABLE_RESIZED_EVENT } from "../../helpers/widget-events";
 import type { ArtifactLinkDirection } from "../../domain/ArtifactsTable";
 import { REVERSE_DIRECTION } from "../../domain/ArtifactsTable";
 
@@ -175,19 +172,11 @@ function getReversePath(): string {
 }
 
 onMounted(() => {
-    emitter.on(ROW_INSERTED_IN_TABLE_EVENT, resetProps);
-    emitter.on(ROW_REMOVED_IN_TABLE_EVENT, resetProps);
-
-    emitter.emit(ROW_INSERTED_IN_TABLE_EVENT);
+    emitter.on(SELECTABLE_TABLE_RESIZED_EVENT, resetProps);
 });
 
 onBeforeUnmount(() => {
-    emitter.off(ROW_INSERTED_IN_TABLE_EVENT, resetProps);
-    emitter.off(ROW_REMOVED_IN_TABLE_EVENT, resetProps);
-});
-
-onUnmounted(() => {
-    emitter.emit(ROW_REMOVED_IN_TABLE_EVENT);
+    emitter.off(SELECTABLE_TABLE_RESIZED_EVENT, resetProps);
 });
 </script>
 
