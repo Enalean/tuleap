@@ -40,6 +40,7 @@ use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\Fields\ArtifactLinkFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveTrackerStub;
@@ -280,6 +281,25 @@ final class PUTConfigurationHandlerTest extends TestCase
     public function testFaultWhenTrackerIsNotSuitable(): void
     {
         $this->tracker_checker = CheckTrackerIsSuitableForDocumentStub::withoutSuitableTracker();
+
+        $this->saver = SaveConfigurationStub::withCallback($this->assertNeverSaved(...));
+
+        $result = $this->handle();
+
+        self::assertTrue(Result::isErr($result));
+    }
+
+    public function testFaultWhenLinkFieldInColumnDisplayType(): void
+    {
+        $this->input_fields    = [
+            new ConfiguredFieldRepresentation(self::FIELD_1_ID, 'column'),
+        ];
+        $this->field_retriever = RetrieveUsedFieldsStub::withFields(
+            ArtifactLinkFieldBuilder::anArtifactLinkField(self::FIELD_1_ID)
+                ->withReadPermission($this->user, true)
+                ->inTracker($this->tracker)
+                ->build(),
+        );
 
         $this->saver = SaveConfigurationStub::withCallback($this->assertNeverSaved(...));
 

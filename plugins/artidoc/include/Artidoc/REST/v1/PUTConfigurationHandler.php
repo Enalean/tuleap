@@ -33,6 +33,7 @@ use Tuleap\Artidoc\Domain\Document\Section\Field\ArtifactSectionField;
 use Tuleap\Artidoc\Domain\Document\Section\Field\DisplayType;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldDisplayTypeIsUnknownFault;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldDoesNotBelongToTrackerFault;
+use Tuleap\Artidoc\Domain\Document\Section\Field\LinkFieldMustBeDisplayedInBlockFault;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
@@ -136,6 +137,11 @@ final readonly class PUTConfigurationHandler
                         FieldDoesNotBelongToTrackerFault::build($field->getId(), $tracker->getId())
                     );
                 }
+
+                if ($field instanceof ArtifactLinkField && $display_type !== DisplayType::BLOCK) {
+                    return Result::err(LinkFieldMustBeDisplayedInBlockFault::build());
+                }
+
                 return Result::ok(new ArtifactSectionField($field->getId(), $display_type));
             });
     }

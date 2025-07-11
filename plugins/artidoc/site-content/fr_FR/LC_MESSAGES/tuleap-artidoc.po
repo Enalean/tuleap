@@ -18,6 +18,9 @@ msgstr "Administration"
 msgid "Artidoc"
 msgstr "Artidoc"
 
+msgid "Artifact link field must use 'block' display type."
+msgstr "Le champ liens d'artifact doit utiliser l'affichage 'block'."
+
 msgid "Artifacts as Documents"
 msgstr "Artifacts sous forme de Documents"
 
