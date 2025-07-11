@@ -20,6 +20,7 @@
 
 namespace Tuleap\Tracker\Report\Widget;
 
+use Tuleap\Dashboard\Project\ProjectDashboardController;
 use Tuleap\Dashboard\User\UserDashboardController;
 
 final class WidgetAdditionalButtonPresenter
@@ -38,6 +39,10 @@ final class WidgetAdditionalButtonPresenter
 
         if ($widget->owner_type === UserDashboardController::DASHBOARD_TYPE || $widget->owner_type === UserDashboardController::LEGACY_DASHBOARD_TYPE) {
             $this->url_artifact_submit .= '&my-dashboard-id=' . urlencode((string) $widget->getDashboardId());
+        }
+
+        if ($widget->owner_type === ProjectDashboardController::DASHBOARD_TYPE || $widget->owner_type === ProjectDashboardController::LEGACY_DASHBOARD_TYPE) {
+            $this->url_artifact_submit .= '&project-dashboard-id=' . urlencode((string) $widget->getDashboardId());
         }
     }
 }

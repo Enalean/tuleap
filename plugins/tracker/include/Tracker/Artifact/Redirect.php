@@ -20,11 +20,12 @@
 
 class Tracker_Artifact_Redirect //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    public const STATE_CREATE_PARENT = 'to_parent';
-    public const STATE_STAY          = 'stay';
-    public const STATE_CONTINUE      = 'continue';
-    public const STATE_SUBMIT        = 'submit';
-    public const TO_MY_DASHBOARD     = 'my-dashboard-id';
+    public const string STATE_CREATE_PARENT  = 'to_parent';
+    public const string STATE_STAY           = 'stay';
+    public const string STATE_CONTINUE       = 'continue';
+    public const string STATE_SUBMIT         = 'submit';
+    public const string TO_MY_DASHBOARD      = 'my-dashboard-id';
+    public const string TO_PROJECT_DASHBOARD = 'project-dashboard-id';
 
     /**
      * @var string

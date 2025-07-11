@@ -31,7 +31,10 @@ use Tracker_Exception;
 use Tracker_FormElementFactory;
 use Tracker_IDisplayTrackerLayout;
 use Tracker_IFetchTrackerSwitcher;
+use Tuleap\Dashboard\Project\ProjectDashboard;
+use Tuleap\Dashboard\Project\ProjectDashboardRetriever;
 use Tuleap\JSONHeader;
+use Tuleap\Project\ProjectByIDFactory;
 use Tuleap\Request\RequestTime;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\ArtifactDoesNotExistException;
@@ -60,6 +63,8 @@ class CreateArtifactAction
         private readonly ArtifactLinker $artifact_linker,
         private readonly ParentInHierarchyRetriever $parent_retriever,
         private readonly BuildInitialChangesetValuesContainer $initial_changeset_values_container_builder,
+        private readonly ProjectDashboardRetriever $project_dashboard_retriever,
+        private readonly ProjectByIDFactory $project_by_id_factory,
     ) {
     }
 
@@ -242,9 +247,10 @@ class CreateArtifactAction
         $redirect           = new Tracker_Artifact_Redirect();
         $redirect->base_url = TRACKER_BASE_URL;
 
-        $stay            = $request->get('submit_and_stay');
-        $continue        = $request->get('submit_and_continue');
-        $my_dashboard_id = $request->get('my-dashboard-id');
+        $stay                 = $request->get('submit_and_stay');
+        $continue             = $request->get('submit_and_continue');
+        $my_dashboard_id      = $request->get('my-dashboard-id');
+        $project_dashboard_id = $request->get('project-dashboard-id');
 
         if ($stay) {
             $redirect->mode = Tracker_Artifact_Redirect::STATE_STAY;
@@ -253,15 +259,22 @@ class CreateArtifactAction
         } elseif ($my_dashboard_id) {
             $redirect->base_url = '/my/';
             $redirect->mode     = Tracker_Artifact_Redirect::TO_MY_DASHBOARD;
+        } elseif ($project_dashboard_id) {
+            $this->project_dashboard_retriever
+                ->getProjectDashboardById((int) $project_dashboard_id)
+                ->match(
+                    fn (ProjectDashboard $dashboard) => $this->redirectToProjectDashboard($dashboard, $redirect),
+                    fn () => $this->fallbackRedirectOnTracker($redirect)
+                );
         } else {
-            $redirect->mode = Tracker_Artifact_Redirect::STATE_SUBMIT;
+            $this->fallbackRedirectOnTracker($redirect);
         }
-        $redirect->query_parameters = $this->calculateRedirectParams($tracker_id, $artifact_id, $stay, $continue, $my_dashboard_id);
+        $redirect->query_parameters = $this->calculateRedirectParams($tracker_id, $artifact_id, $stay, $continue, $my_dashboard_id, $project_dashboard_id);
 
         return $redirect;
     }
 
-    private function calculateRedirectParams(int $tracker_id, int $artifact_id, string|bool $stay, string|bool $continue, string|bool $my_dashboard_id): array
+    private function calculateRedirectParams(int $tracker_id, int $artifact_id, string|bool $stay, string|bool $continue, string|bool $my_dashboard_id, string|bool $project_dashboard_id): array
     {
         $redirect_params            = [];
         $redirect_params['tracker'] = $tracker_id;
@@ -273,7 +286,23 @@ class CreateArtifactAction
         }
         if ($my_dashboard_id !== false) {
             $redirect_params['dashboard_id'] = $my_dashboard_id;
+        }if ($project_dashboard_id !== false) {
+            $redirect_params['dashboard_id'] = $project_dashboard_id;
         }
         return array_filter($redirect_params);
+    }
+
+    private function redirectToProjectDashboard(
+        ProjectDashboard $dashboard,
+        Tracker_Artifact_Redirect $redirect,
+    ): void {
+        $project            = $this->project_by_id_factory->getProjectById($dashboard->getProjectId());
+        $redirect->base_url = '/projects/' . urlencode($project->getUnixName()) . '/';
+        $redirect->mode     = Tracker_Artifact_Redirect::TO_PROJECT_DASHBOARD;
+    }
+
+    private function fallbackRedirectOnTracker(Tracker_Artifact_Redirect $redirect): void
+    {
+        $redirect->mode = Tracker_Artifact_Redirect::STATE_SUBMIT;
     }
 }
