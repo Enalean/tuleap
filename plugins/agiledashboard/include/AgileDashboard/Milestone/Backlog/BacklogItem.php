@@ -48,9 +48,10 @@ class BacklogItem implements IBacklogItem
     ) {
         $this->id         = $artifact->getId();
         $this->title      = $artifact->getTitle() ?? '';
-        $this->color      = $this->artifact->getTracker()->getColor()->getName();
-        $this->type       = $this->artifact->getTracker()->getName();
-        $this->short_type = $this->artifact->getTracker()->getItemName();
+        $tracker          = $this->artifact->getTracker();
+        $this->color      = $tracker->getColor()->value;
+        $this->type       = $tracker->getName();
+        $this->short_type = $tracker->getItemName();
     }
 
     public function setParent(Artifact $parent): void

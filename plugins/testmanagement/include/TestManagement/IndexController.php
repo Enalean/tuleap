@@ -30,6 +30,7 @@ use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\TestManagement\REST\v1\MilestoneRepresentation;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\IRetrieveAllUsableTypesInProject;
+use Tuleap\Tracker\Tracker;
 use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 
 class IndexController extends TestManagementController
@@ -124,7 +125,7 @@ class IndexController extends TestManagementController
             return $empty_config;
         }
 
-        assert($issue_tracker instanceof \Tuleap\Tracker\Tracker);
+        assert($issue_tracker instanceof Tracker);
 
         $execution_tracker_id = $this->config->getTestExecutionTrackerId($this->project);
 
@@ -143,7 +144,7 @@ class IndexController extends TestManagementController
                 'create' => $issue_tracker->userCanSubmitArtifact($current_user),
                 'link'   => $link_field && $link_field->userCanUpdate($current_user),
             ],
-            'xref_color' => $issue_tracker->getColor()->getName(),
+            'xref_color' => $issue_tracker->getColor()->value,
         ];
     }
 

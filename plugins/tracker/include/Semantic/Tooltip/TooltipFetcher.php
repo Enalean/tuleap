@@ -67,7 +67,7 @@ final class TooltipFetcher
                         ['title' => $artifact->getTitle(), 'xref' => $artifact->getXRef()]
                     ),
                 $html
-            )->withAccentColor($artifact->getTracker()->getColor()->getName())
+            )->withAccentColor($artifact->getTracker()->getColor()->value)
         );
     }
 

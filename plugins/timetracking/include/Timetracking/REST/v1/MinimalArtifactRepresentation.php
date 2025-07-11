@@ -87,7 +87,7 @@ class MinimalArtifactRepresentation
             $artifact->getXRef(),
             $artifact->getUri(),
             $artifact->getTitle() ?? '',
-            $artifact->getTracker()->getColor()->getName(),
+            $artifact->getTracker()->getColor()->value,
             JsonCast::toDate($artifact->getSubmittedOn())
         );
     }

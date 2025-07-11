@@ -24,35 +24,33 @@ namespace Tuleap\Color;
 
 use InvalidArgumentException;
 
-final readonly class ItemColor
+enum ItemColor: string
 {
-    private const DEFAULT_COLOR_NAME     = 'inca-silver';
-    public const COLOR_NAMES             = [
-        self::DEFAULT_COLOR_NAME,
-        'chrome-silver',
-        'firemist-silver',
-        'red-wine',
-        'fiesta-red',
-        'coral-pink',
-        'teddy-brown',
-        'clockwork-orange',
-        'graffiti-yellow',
-        'army-green',
-        'neon-green',
-        'acid-green',
-        'sherwood-green',
-        'ocean-turquoise',
-        'surf-green',
-        'deep-blue',
-        'lake-placid-blue',
-        'daphne-blue',
-        'plum-crazy',
-        'ultra-violet',
-        'lilac-purple',
-        'panther-pink',
-        'peggy-pink',
-        'flamingo-pink',
-    ];
+    case INCA_SILVER      = 'inca-silver';
+    case CHROME_SILVER    = 'chrome-silver';
+    case FIREMIST_SILVER  = 'firemist-silver';
+    case RED_WINE         = 'red-wine';
+    case FIESTA_RED       = 'fiesta-red';
+    case CORAL_PINK       = 'coral-pink';
+    case TEDDY_BROWN      = 'teddy-brown';
+    case CLOCKWORK_ORANGE = 'clockwork-orange';
+    case GRAFFITI_YELLOW  = 'graffiti-yellow';
+    case ARMY_GREEN       = 'army-green';
+    case NEON_GREEN       = 'neon-green';
+    case ACID_GREEN       = 'acid-green';
+    case SHERWOOD_GREEN   = 'sherwood-green';
+    case OCEAN_TURQUOISE  = 'ocean-turquoise';
+    case SURF_GREEN       = 'surf-green';
+    case DEEP_BLUE        = 'deep-blue';
+    case LAKE_PLACID_BLUE = 'lake-placid-blue';
+    case DAPHNE_BLUE      = 'daphne-blue';
+    case PLUM_CRAZY       = 'plum-crazy';
+    case ULTRA_VIOLET     = 'ultra-violet';
+    case LILAC_PURPLE     = 'lilac-purple';
+    case PANTHER_PINK     = 'panther-pink';
+    case PEGGY_PINK       = 'peggy-pink';
+    case FLAMINGO_PINK    = 'flamingo-pink';
+
     private const NOT_STANDARDIZED_NAMES = [
         'inca_silver',
         'chrome_silver',
@@ -72,25 +70,18 @@ final readonly class ItemColor
         'flamingo_pink',
     ];
 
-    /**
-     * @psalm-param value-of<self::COLOR_NAMES> $color_name
-     */
-    private function __construct(private string $color_name)
-    {
-    }
-
     public static function fromName(string $color_name): self
     {
-        if (! in_array($color_name, self::COLOR_NAMES, true)) {
-            throw self::createException(self::COLOR_NAMES, $color_name);
+        $valid_color = self::tryFrom($color_name);
+        if ($valid_color === null) {
+            throw self::createException(self::listValues(), $color_name);
         }
-
-        return new self($color_name);
+        return $valid_color;
     }
 
     public static function fromNotStandardizedName(string $color_name): self
     {
-        $valid_not_standardized_color_names = array_merge(self::COLOR_NAMES, self::NOT_STANDARDIZED_NAMES);
+        $valid_not_standardized_color_names = array_merge(self::listValues(), self::NOT_STANDARDIZED_NAMES);
 
         if (! in_array($color_name, $valid_not_standardized_color_names, true)) {
             throw self::createException($valid_not_standardized_color_names, $color_name);
@@ -101,7 +92,7 @@ final readonly class ItemColor
 
     public static function default(): self
     {
-        return new self(self::DEFAULT_COLOR_NAME);
+        return self::INCA_SILVER;
     }
 
     /**
@@ -118,8 +109,11 @@ final readonly class ItemColor
         );
     }
 
-    public function getName(): string
+    /**
+     * @return non-empty-list<string>
+     */
+    public static function listValues(): array
     {
-        return $this->color_name;
+        return array_map(static fn(self $color) => $color->value, self::cases());
     }
 }

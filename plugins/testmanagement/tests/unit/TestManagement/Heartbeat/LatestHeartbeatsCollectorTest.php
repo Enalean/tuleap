@@ -29,6 +29,7 @@ use Tuleap\Project\HeartbeatsEntryCollection;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\TestManagement\Campaign\Execution\ExecutionDao;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use UserManager;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -87,9 +88,7 @@ final class LatestHeartbeatsCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->dao->method('searchLastTestExecUpdate')->willReturn([$row_artifact]);
 
-        $color   = ItemColor::fromName('chrome-silver');
-        $tracker = $this->createMock(\Tuleap\Tracker\Tracker::class);
-        $tracker->method('getColor')->willReturn($color);
+        $tracker = TrackerTestBuilder::aTracker()->withColor(ItemColor::CHROME_SILVER)->build();
 
         $artifact = $this->createMock(Artifact::class);
         $artifact->method('getLastUpdateDate')->willReturn(123456789);

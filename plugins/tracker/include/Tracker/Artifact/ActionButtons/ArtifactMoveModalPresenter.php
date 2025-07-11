@@ -47,10 +47,11 @@ class ArtifactMoveModalPresenter
 
     public function __construct(Artifact $artifact)
     {
+        $tracker             = $artifact->getTracker();
         $this->tracker_id    = $artifact->getTrackerId();
-        $this->tracker_name  = $artifact->getTracker()->getItemName();
-        $this->tracker_color = $artifact->getTracker()->getColor()->getName();
+        $this->tracker_name  = $tracker->getItemName();
+        $this->tracker_color = $tracker->getColor()->value;
         $this->artifact_id   = $artifact->getId();
-        $this->project_id    = $artifact->getTracker()->getProject()->getID();
+        $this->project_id    = (int) $tracker->getProject()->getID();
     }
 }

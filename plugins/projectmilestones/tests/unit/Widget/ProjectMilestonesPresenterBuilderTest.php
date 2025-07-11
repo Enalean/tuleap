@@ -226,7 +226,10 @@ final class ProjectMilestonesPresenterBuilderTest extends \Tuleap\Test\PHPUnit\T
         $this->agiledashboard_milestone_backlog
             ->expects($this->once())
             ->method('getDescendantTrackers')
-            ->willReturn([$this->aTracker(122, 'Bug', 'fiesta-red'), $this->aTracker(124, 'Story', 'deep-blue')]);
+            ->willReturn([
+                $this->aTracker(122, 'Bug', ItemColor::FIESTA_RED),
+                $this->aTracker(124, 'Story', ItemColor::DEEP_BLUE),
+            ]);
 
         $this->mockAgiledashboardBacklogFactory($this->agiledashboard_milestone_backlog_factory);
 
@@ -680,9 +683,9 @@ final class ProjectMilestonesPresenterBuilderTest extends \Tuleap\Test\PHPUnit\T
         $this->http_request->method('getCurrentUser')->willReturn($this->john_doe);
     }
 
-    private function aTracker(int $id, string $name, string $color): Tracker
+    private function aTracker(int $id, string $name, ItemColor $color): Tracker
     {
-        return TrackerTestBuilder::aTracker()->withId($id)->withName($name)->withColor(ItemColor::fromName($color))->build();
+        return TrackerTestBuilder::aTracker()->withId($id)->withName($name)->withColor($color)->build();
     }
 
     private function mockMilestoneBacklog(): void

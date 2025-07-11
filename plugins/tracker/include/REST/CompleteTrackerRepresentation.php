@@ -137,7 +137,7 @@ class CompleteTrackerRepresentation implements TrackerRepresentation
                 'uri'  => $this->uri . '/' . ReportRepresentation::ROUTE,
             ],
         ];
-        $this->color_name             = $tracker->getColor()->getName();
+        $this->color_name             = $tracker->getColor()->value;
         $this->permissions_for_groups = $permissions;
         $this->parent                 = ($parent_tracker !== null) ? TrackerReference::build($parent_tracker) : null;
     }

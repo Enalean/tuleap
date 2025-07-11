@@ -652,7 +652,7 @@ class TrackerFactory implements RetrieveTracker, RetrieveTrackersByProjectIdUser
             $tracker->getName(),
             $tracker->getDescription(),
             $tracker->getItemName(),
-            $tracker->getColor()->getName(),
+            $tracker->getColor()->value,
             $ugroup_mapping
         );
 
@@ -736,7 +736,7 @@ class TrackerFactory implements RetrieveTracker, RetrieveTrackersByProjectIdUser
                     $tracker->instantiate_for_new_projects,
                     $tracker->log_priority_changes,
                     $tracker->getNotificationsLevel(),
-                    $tracker->getColor()->getName(),
+                    $tracker->getColor()->value,
                     $tracker->isEmailgatewayEnabled()
                 );
                 if ($tracker_id) {

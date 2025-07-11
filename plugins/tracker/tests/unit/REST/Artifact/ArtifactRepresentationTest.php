@@ -63,7 +63,7 @@ final class ArtifactRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
         $tracker = TrackerTestBuilder::aTracker()
             ->withId(self::TRACKER_ID)
             ->withName('User Stories')
-            ->withColor(ItemColor::fromName('plum-crazy'))
+            ->withColor(ItemColor::PLUM_CRAZY)
             ->withProject($project)
             ->build();
 

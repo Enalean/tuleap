@@ -38,7 +38,7 @@ final readonly class ArtifactLinkStatusValueRepresentation
     {
         $this->label = $status_value->label;
         /** @psalm-suppress ImpureMethodCall */
-        $this->color   = $status_value->color->mapOr(static fn (ItemColor $color) => $color->getName(), '');
+        $this->color   = $status_value->color->mapOr(static fn (ItemColor $color) => $color->value, '');
         $this->is_open = $status_value->is_open;
     }
 }

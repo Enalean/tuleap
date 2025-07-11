@@ -138,7 +138,7 @@ readonly class GetInstanceFromXml
             'browse_instructions' => (string) $xml->browse_instructions,
             'status'              => '',
             'deletion_date'       => '',
-            'color'               => $tracker_color->getName(),
+            'color'               => $tracker_color->value,
         ];
         $row['allow_copy']                   = isset($att['allow_copy']) ?
             (int) $att['allow_copy'] : 1;

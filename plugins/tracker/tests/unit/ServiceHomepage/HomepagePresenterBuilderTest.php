@@ -173,7 +173,7 @@ final class HomepagePresenterBuilderTest extends TestCase
     ): Stub&\Tuleap\Tracker\Tracker {
         $tracker = $this->createStub(\Tuleap\Tracker\Tracker::class);
         $tracker->method('getId')->willReturn(15);
-        $tracker->method('getColor')->willReturn(ItemColor::fromName('sherwood-green'));
+        $tracker->method('getColor')->willReturn(ItemColor::SHERWOOD_GREEN);
         $tracker->method('getName')->willReturn('task');
         $tracker->method('getDescription')->willReturn('Track development tasks');
         $tracker->method('getUri')->willReturn('/plugins/tracker/?tracker=15');

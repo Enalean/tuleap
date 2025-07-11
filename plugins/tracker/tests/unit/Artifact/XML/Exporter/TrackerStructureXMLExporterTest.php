@@ -246,7 +246,7 @@ final class TrackerStructureXMLExporterTest extends TestCase
         );
 
         $color = $xml->color;
-        self::assertEquals(ItemColor::default()->getName(), (string) $color);
+        self::assertEquals(ItemColor::default()->value, (string) $color);
     }
 
     public function testItExportTheTrackerUsageInNewDropDown(): void

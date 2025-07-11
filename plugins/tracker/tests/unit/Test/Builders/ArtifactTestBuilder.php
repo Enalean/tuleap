@@ -28,6 +28,7 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Stubs\CSRF\CSRFSessionKeyStorageStub;
 use Tuleap\Test\Stubs\CSRF\CSRFSigningKeyStorageStub;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Tracker;
 
 final class ArtifactTestBuilder
 {
@@ -36,7 +37,7 @@ final class ArtifactTestBuilder
      */
     private $id;
     /**
-     * @var \Tuleap\Tracker\Tracker
+     * @var Tracker
      */
     private $tracker;
     private string $title       = '';
@@ -81,7 +82,7 @@ final class ArtifactTestBuilder
         $this->tracker = TrackerTestBuilder::aTracker()
             ->withId(101)
             ->withName('bug')
-            ->withColor(ItemColor::fromName('fiesta-red'))
+            ->withColor(ItemColor::FIESTA_RED)
             ->withProject(ProjectTestBuilder::aProject()->build())
             ->build();
     }
@@ -119,7 +120,7 @@ final class ArtifactTestBuilder
         return $this;
     }
 
-    public function inTracker(\Tuleap\Tracker\Tracker $tracker): self
+    public function inTracker(Tracker $tracker): self
     {
         $this->tracker = $tracker;
 

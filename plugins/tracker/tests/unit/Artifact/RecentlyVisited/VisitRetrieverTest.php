@@ -42,13 +42,13 @@ final class VisitRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     private const FIRST_ARTIFACT_ID              = 1;
     private const FIRST_ARTIFACT_VISIT_TIMESTAMP = 1584987154;
     private const FIRST_ARTIFACT_TITLE           = 'Random title';
-    private const FIRST_TRACKER_COLOR            = 'fiesta-red';
+    private const FIRST_TRACKER_COLOR            = ItemColor::FIESTA_RED;
     private const FIRST_TRACKER_SHORTNAME        = 'bug';
 
     private const SECOND_ARTIFACT_ID              = 2;
     private const SECOND_ARTIFACT_VISIT_TIMESTAMP = 1844678754;
     private const SECOND_ARTIFACT_TITLE           = 'lowland';
-    private const SECOND_TRACKER_COLOR            = 'deep-blue';
+    private const SECOND_TRACKER_COLOR            = ItemColor::DEEP_BLUE;
     private const SECOND_TRACKER_SHORTNAME        = 'story';
 
     private \PFUser $user;
@@ -109,7 +109,7 @@ final class VisitRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $first_tracker  = TrackerTestBuilder::aTracker()
             ->withProject($project)
             ->withShortName(self::FIRST_TRACKER_SHORTNAME)
-            ->withColor(ItemColor::fromName(self::FIRST_TRACKER_COLOR))
+            ->withColor(self::FIRST_TRACKER_COLOR)
             ->build();
         $first_artifact = ArtifactTestBuilder::anArtifact(self::FIRST_ARTIFACT_ID)
             ->inTracker($first_tracker)
@@ -119,7 +119,7 @@ final class VisitRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $second_tracker  = TrackerTestBuilder::aTracker()
             ->withProject($project)
             ->withShortName(self::SECOND_TRACKER_SHORTNAME)
-            ->withColor(ItemColor::fromName(self::SECOND_TRACKER_COLOR))
+            ->withColor(self::SECOND_TRACKER_COLOR)
             ->build();
         $second_artifact = ArtifactTestBuilder::anArtifact(self::SECOND_ARTIFACT_ID)
             ->inTracker($second_tracker)
@@ -149,14 +149,14 @@ final class VisitRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertSame(self::FIRST_ARTIFACT_VISIT_TIMESTAMP, $first_entry->getVisitTime());
         self::assertSame(self::FIRST_ARTIFACT_ID, $first_entry->getPerTypeId());
         self::assertSame(self::FIRST_ARTIFACT_TITLE, $first_entry->getTitle());
-        self::assertSame(self::FIRST_TRACKER_COLOR, $first_entry->getColor());
+        self::assertSame(self::FIRST_TRACKER_COLOR->value, $first_entry->getColor());
         self::assertSame(sprintf('/plugins/tracker/?aid=%d', self::FIRST_ARTIFACT_ID), $first_entry->getLink());
         self::assertSame(sprintf('%s #%d', self::FIRST_TRACKER_SHORTNAME, self::FIRST_ARTIFACT_ID), $first_entry->getXref());
 
         self::assertSame(self::SECOND_ARTIFACT_VISIT_TIMESTAMP, $second_entry->getVisitTime());
         self::assertSame(self::SECOND_ARTIFACT_ID, $second_entry->getPerTypeId());
         self::assertSame(self::SECOND_ARTIFACT_TITLE, $second_entry->getTitle());
-        self::assertSame(self::SECOND_TRACKER_COLOR, $second_entry->getColor());
+        self::assertSame(self::SECOND_TRACKER_COLOR->value, $second_entry->getColor());
         self::assertSame(sprintf('/plugins/tracker/?aid=%d', self::SECOND_ARTIFACT_ID), $second_entry->getLink());
         self::assertSame(sprintf('%s #%d', self::SECOND_TRACKER_SHORTNAME, self::SECOND_ARTIFACT_ID), $second_entry->getXref());
     }

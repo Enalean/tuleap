@@ -79,7 +79,7 @@ class MinimalTrackerRepresentation implements TrackerRepresentation
             JsonCast::toInt($tracker_id),
             CompleteTrackerRepresentation::ROUTE . '/' . $tracker_id,
             $tracker->getName(),
-            $tracker->getColor()->getName(),
+            $tracker->getColor()->value,
             new ProjectReference($tracker->getProject()),
             null
         );
@@ -92,7 +92,7 @@ class MinimalTrackerRepresentation implements TrackerRepresentation
             JsonCast::toInt($tracker_id),
             CompleteTrackerRepresentation::ROUTE . '/' . $tracker_id,
             $tracker->getName(),
-            $tracker->getColor()->getName(),
+            $tracker->getColor()->value,
             new ProjectReference($tracker->getProject()),
             $reasons->toStringArray()
         );

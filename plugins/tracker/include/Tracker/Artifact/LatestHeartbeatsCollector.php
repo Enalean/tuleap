@@ -100,7 +100,7 @@ final class LatestHeartbeatsCollector
     {
         $purifier = Codendi_HTMLPurifier::instance();
 
-        $badge_color = $purifier->purify('tlp-swatch-' . $artifact->getTracker()->getColor()->getName());
+        $badge_color = $purifier->purify('tlp-swatch-' . $artifact->getTracker()->getColor()->value);
         $title       = '
             <a class="direct-link-to-artifact" href="' . $artifact->getUri() . '">
                 <span class="cross-ref-badge ' . $badge_color . '">

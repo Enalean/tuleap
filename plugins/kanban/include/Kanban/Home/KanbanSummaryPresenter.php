@@ -40,7 +40,7 @@ final class KanbanSummaryPresenter
         $this->count_closed_kanban_items = count($kanban_item_dao->getKanbanArchiveItemIds(
             $this->kanban->getTrackerId()
         ));
-        $this->color                     = $this->kanban->tracker->getColor()->getName();
+        $this->color                     = $this->kanban->tracker->getColor()->value;
     }
 
     public function name(): string

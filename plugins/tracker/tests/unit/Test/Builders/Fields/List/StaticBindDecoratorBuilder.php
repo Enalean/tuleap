@@ -60,7 +60,7 @@ final class StaticBindDecoratorBuilder
             null,
             null,
             null,
-            $this->tlp_color->getName(),
+            $this->tlp_color->value,
         );
     }
 }

@@ -87,7 +87,7 @@ final class TaskRepresentationBuilderForTracker implements IBuildATaskRepresenta
             $artifact->getXRef(),
             $artifact->getUri(),
             (string) $artifact->getTitle(),
-            $this->tracker->getColor()->getName(),
+            $this->tracker->getColor()->value,
             $progress_result->getValue(),
             $progress_result->getErrorMessage(),
             $start,

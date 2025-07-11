@@ -91,8 +91,8 @@ final class ListFieldWithValueBuilderTest extends TestCase
             $static_list_field->getLabel(),
             DisplayType::BLOCK,
             [
-                new StaticListValue('Red', ItemColor::fromName('fiesta-red')),
-                new StaticListValue('Blue', ItemColor::fromName('deep-blue')),
+                new StaticListValue('Red', ItemColor::FIESTA_RED),
+                new StaticListValue('Blue', ItemColor::DEEP_BLUE),
             ]
         );
 

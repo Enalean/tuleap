@@ -297,7 +297,7 @@ final class XMLTracker
         $cdata_section_factory->insert($tracker_xml, 'name', $this->name);
         $cdata_section_factory->insert($tracker_xml, 'item_name', $this->item_name);
         $cdata_section_factory->insert($tracker_xml, 'description', $this->description);
-        $cdata_section_factory->insert($tracker_xml, 'color', $this->color->getName());
+        $cdata_section_factory->insert($tracker_xml, 'color', $this->color->value);
 
         if ($this->submit_instructions !== '') {
             $cdata_section_factory->insert($tracker_xml, 'submit_instructions', $this->submit_instructions);

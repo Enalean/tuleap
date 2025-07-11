@@ -203,7 +203,7 @@ class Tracker_GeneralSettings_Presenter // phpcs:ignore PSR1.Classes.ClassDeclar
         $this->is_instatiate_for_new_projects = (bool) $tracker->instantiate_for_new_projects;
         $this->is_log_priority_changes        = (bool) $tracker->log_priority_changes;
         $this->is_copy_allowed                = $tracker->isCopyAllowed();
-        $this->tracker_color                  = $tracker->getColor()->getName();
+        $this->tracker_color                  = $tracker->getColor()->value;
         $this->submit_instructions            = (string) $tracker->submit_instructions;
         $this->browse_instructions            = (string) $tracker->browse_instructions;
 

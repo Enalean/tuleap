@@ -74,7 +74,7 @@ final class VisitRetriever
                 null,
                 '/kanban/' . urlencode((string) $kanban_id),
                 $kanban->getName(),
-                $tracker->getColor()->getName(),
+                $tracker->getColor()->value,
                 self::TYPE,
                 $kanban->getId(),
                 null,

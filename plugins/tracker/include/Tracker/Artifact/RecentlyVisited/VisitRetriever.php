@@ -87,7 +87,7 @@ final class VisitRetriever
                     $collection->getXRef(),
                     $collection->getMainUri(),
                     $artifact->getTitle() ?? '',
-                    $tracker->getColor()->getName(),
+                    $tracker->getColor()->value,
                     self::TYPE,
                     $artifact->getId(),
                     $this->glyph_finder->get('tuleap-tracker-small'),

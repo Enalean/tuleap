@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\BacklogItem;
 
+use Tuleap\Tracker\Artifact\Artifact;
+
 /**
  * @psalm-immutable
  */
@@ -52,11 +54,11 @@ final class BacklogItemCreationUpdateInformationLinkPresenter
         $this->title      = $title;
     }
 
-    public static function fromArtifact(\Tuleap\Tracker\Artifact\Artifact $artifact): self
+    public static function fromArtifact(Artifact $artifact): self
     {
         return new self(
             $artifact->getUri(),
-            $artifact->getTracker()->getColor()->getName(),
+            $artifact->getTracker()->getColor()->value,
             $artifact->getXRef(),
             $artifact->getTitle() ?? ''
         );

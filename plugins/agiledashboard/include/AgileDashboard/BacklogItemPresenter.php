@@ -53,9 +53,10 @@ final class BacklogItemPresenter implements IBacklogItem, BacklogRowPresenter
         $this->id         = $artifact->getId();
         $this->title      = $artifact->getTitle() ?? '';
         $this->url        = $artifact->getUri();
-        $this->type       = $this->artifact->getTracker()->getName();
-        $this->color      = $this->artifact->getTracker()->getColor()->getName();
-        $this->short_type = $this->artifact->getTracker()->getItemName();
+        $tracker          = $this->artifact->getTracker();
+        $this->type       = $tracker->getName();
+        $this->color      = $tracker->getColor()->value;
+        $this->short_type = $tracker->getItemName();
     }
 
     public function setParent(Artifact $parent): void

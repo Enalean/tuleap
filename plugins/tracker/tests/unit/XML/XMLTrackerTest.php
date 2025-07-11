@@ -54,6 +54,7 @@ use Tuleap\Tracker\Report\XML\XMLReportCriterion;
 use Tuleap\Tracker\Semantic\Status\XML\XMLStatusSemantic;
 use Tuleap\Tracker\Semantic\Timeframe\XML\XMLTimeframeSemantic;
 use Tuleap\Tracker\Semantic\Title\XML\XMLTitleSemantic;
+use Tuleap\Tracker\Tracker;
 use function PHPUnit\Framework\assertCount;
 use function PHPUnit\Framework\assertEquals;
 use function PHPUnit\Framework\assertFalse;
@@ -149,23 +150,25 @@ class XMLTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testExportFromTrackerObject(): void
     {
-        $tracker = XMLTracker::fromTracker(new \Tuleap\Tracker\Tracker(
-            23,
-            115,
-            'Bugs',
-            'Collect issues',
-            'bug',
-            false,
-            'Here are the rules',
-            'See all my stuff',
-            null,
-            null,
-            false,
-            false,
-            false,
-            ItemColor::fromName('flamingo-pink'),
-            false,
-        ));
+        $tracker = XMLTracker::fromTracker(
+            new Tracker(
+                23,
+                115,
+                'Bugs',
+                'Collect issues',
+                'bug',
+                false,
+                'Here are the rules',
+                'See all my stuff',
+                null,
+                null,
+                false,
+                false,
+                false,
+                ItemColor::FLAMINGO_PINK,
+                false,
+            )
+        );
 
         $xml = $tracker->export(new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><foo/>'));
         assertEquals('T23', (string) $xml['id']);

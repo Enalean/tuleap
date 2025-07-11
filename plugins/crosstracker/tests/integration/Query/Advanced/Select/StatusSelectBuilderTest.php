@@ -70,7 +70,7 @@ final class StatusSelectBuilderTest extends CrossTrackerFieldTestCase
         $tracker_builder->buildColorForStaticListValue(
             $sprint_status_field_id,
             $sprint_status_values['closed'][0],
-            ItemColor::fromName('teddy-brown'),
+            ItemColor::TEDDY_BROWN,
         );
 
         $tracker_builder->grantReadPermissionOnField(

@@ -154,7 +154,7 @@ final class TrackerRestBuilderTest extends TestCase
             'getDescription' => 'Tracks User Stories for developers',
             'getName' => 'User Stories',
             'getItemName' => 'story',
-            'getColor' => ItemColor::fromName('deep-blue'),
+            'getColor' => ItemColor::DEEP_BLUE,
             'getWorkflow' => $workflow,
             'userIsAdmin' => false,
             'getProject' => $project,
