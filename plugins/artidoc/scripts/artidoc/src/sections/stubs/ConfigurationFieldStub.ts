@@ -26,6 +26,7 @@ export const ConfigurationFieldStub = {
             label: "String Field",
             type: "string",
             display_type: DISPLAY_TYPE_COLUMN,
+            can_display_type_be_changed: true,
         };
     },
 
@@ -36,5 +37,9 @@ export const ConfigurationFieldStub = {
     withLabel: (label: string): ConfigurationField => ({
         ...ConfigurationFieldStub.build(),
         label,
+    }),
+    withFixedDisplayType: (): ConfigurationField => ({
+        ...ConfigurationFieldStub.build(),
+        can_display_type_be_changed: false,
     }),
 };

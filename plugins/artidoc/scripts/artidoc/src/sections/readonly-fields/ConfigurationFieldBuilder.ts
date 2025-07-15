@@ -29,13 +29,18 @@ import {
     RADIO_BUTTON_FIELD,
     SELECTBOX_FIELD,
     STRING_FIELD as TRACKER_STRING_FIELD,
+    ARTIFACT_LINK_FIELD,
 } from "@tuleap/plugin-tracker-constants";
 import type {
     ConfigurationField,
     ConfigurationFieldType,
 } from "@/sections/readonly-fields/AvailableReadonlyFields";
-import { DISPLAY_TYPE_COLUMN } from "@/sections/readonly-fields/AvailableReadonlyFields";
 import {
+    DISPLAY_TYPE_BLOCK,
+    DISPLAY_TYPE_COLUMN,
+} from "@/sections/readonly-fields/AvailableReadonlyFields";
+import {
+    LINKS_FIELD,
     STATIC_LIST_FIELD,
     STRING_FIELD,
     USER_GROUP_LIST_FIELD,
@@ -60,6 +65,7 @@ const buildConfiguredFieldIfSupported = (field: StructureFields): Option<Configu
     const field_base = {
         field_id: field.field_id,
         label: field.label,
+        can_display_type_be_changed: true,
     };
 
     if (field.type === TRACKER_STRING_FIELD) {
@@ -67,6 +73,15 @@ const buildConfiguredFieldIfSupported = (field: StructureFields): Option<Configu
             ...field_base,
             display_type: DISPLAY_TYPE_COLUMN,
             type: STRING_FIELD,
+        });
+    }
+
+    if (field.type === ARTIFACT_LINK_FIELD) {
+        return Option.fromValue<ConfigurationField>({
+            ...field_base,
+            display_type: DISPLAY_TYPE_BLOCK,
+            type: LINKS_FIELD,
+            can_display_type_be_changed: false,
         });
     }
 

@@ -33,7 +33,10 @@
             <div class="dragndrop-grip"><dragndrop-grip-illustration /></div>
             <div class="field-label">{{ field.label }}</div>
             <div class="field-display-type">
-                <label class="tlp-label tlp-checkbox">
+                <label
+                    class="tlp-label tlp-checkbox"
+                    v-bind:title="getSwitchDisplayTypeCheckboxTitle(field)"
+                >
                     <input
                         type="checkbox"
                         value="1"
@@ -41,6 +44,7 @@
                         data-test="switch-display-type-checkbox"
                         draggable="false"
                         v-bind:checked="field.display_type === DISPLAY_TYPE_BLOCK"
+                        v-bind:disabled="!field.can_display_type_be_changed"
                         v-on:change="() => switchFieldDisplayType(field)"
                     />
                     {{ $gettext("Full row") }}
@@ -71,11 +75,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount } from "vue";
+import { onBeforeUnmount, onMounted, ref } from "vue";
+import { useGettext } from "vue3-gettext";
 import type {
+    DragCallbackParameter,
     Drekkenov,
     SuccessfulDropCallbackParameter,
-    DragCallbackParameter,
 } from "@tuleap/drag-and-drop";
 import { init } from "@tuleap/drag-and-drop";
 import DragndropGripIllustration from "@/components/dnd/DragndropGripIllustration.vue";
@@ -83,9 +88,11 @@ import ReorderFieldsArrows from "@/components/configuration/ReorderFieldsArrows.
 import type { FieldsReorderer } from "@/sections/readonly-fields/FieldsReorderer";
 import type { ConfigurationField } from "@/sections/readonly-fields/AvailableReadonlyFields";
 import {
-    DISPLAY_TYPE_COLUMN,
     DISPLAY_TYPE_BLOCK,
+    DISPLAY_TYPE_COLUMN,
 } from "@/sections/readonly-fields/AvailableReadonlyFields";
+
+const { $gettext } = useGettext();
 
 const props = defineProps<{
     currently_selected_fields: ConfigurationField[];
@@ -169,6 +176,16 @@ onBeforeUnmount(() => {
 const switchFieldDisplayType = (field: ConfigurationField): void => {
     field.display_type =
         field.display_type === DISPLAY_TYPE_COLUMN ? DISPLAY_TYPE_BLOCK : DISPLAY_TYPE_COLUMN;
+};
+
+const getSwitchDisplayTypeCheckboxTitle = (field: ConfigurationField): string => {
+    if (field.can_display_type_be_changed) {
+        return "";
+    }
+
+    return $gettext(
+        "The display type of this type of field cannot be changed, otherwise its readability would be impacted.",
+    );
 };
 </script>
 
