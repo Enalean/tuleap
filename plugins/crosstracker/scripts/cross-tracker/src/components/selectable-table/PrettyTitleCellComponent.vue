@@ -106,11 +106,9 @@ const emit = defineEmits<ToggleLinks>();
 
 function should_display_links(): boolean {
     if (props.level === 0) {
-        return (
-            props.expected_number_of_forward_link > 0 || props.expected_number_of_reverse_link > 0
-        );
+        return props.expected_number_of_forward_link + props.expected_number_of_reverse_link > 0;
     }
-    return props.expected_number_of_forward_link > 0 || props.expected_number_of_reverse_link > 1;
+    return props.expected_number_of_reverse_link + props.expected_number_of_forward_link > 1;
 }
 
 const are_artifact_links_expanded = ref(false);

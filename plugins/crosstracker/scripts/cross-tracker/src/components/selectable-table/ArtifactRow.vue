@@ -142,7 +142,9 @@ function toggleLinks(current_element: HTMLElement, current_caret: HTMLElement): 
         .getForwardLinks(widget_id, props.row.id, props.tql_query)
         .match(
             (artifacts: ArtifactsTableWithTotal) => {
-                forward_links.value = artifacts.table.rows;
+                forward_links.value = artifacts.table.rows.filter(
+                    (row) => row.id !== props.ancestors.slice(-1)[0],
+                );
             },
             (fault: Fault) => {
                 error_message.value = String(fault);

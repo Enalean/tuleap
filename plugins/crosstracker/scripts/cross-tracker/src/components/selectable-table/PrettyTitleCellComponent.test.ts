@@ -134,6 +134,42 @@ describe("PrettyTitleCellComponent", () => {
             ).toBe("true");
         });
 
+        it("should display the button if level = 0 and there is only one reverse link and no forward links", () => {
+            level = 0;
+            expected_number_of_forward_link = 0;
+            expected_number_of_reverse_link = 1;
+
+            const wrapper = getWrapper();
+
+            expect(
+                wrapper.find("[data-test=pretty-title-links-button]").attributes("aria-hidden"),
+            ).toBe("false");
+        });
+
+        it("should not display the button if level > 0 and there is only one forward link and no reverse links", () => {
+            level = 1;
+            expected_number_of_forward_link = 1;
+            expected_number_of_reverse_link = 0;
+
+            const wrapper = getWrapper();
+
+            expect(
+                wrapper.find("[data-test=pretty-title-links-button]").attributes("aria-hidden"),
+            ).toBe("true");
+        });
+
+        it("should not display the button if level = 0 and there is only one forward link and no reverse links", () => {
+            level = 0;
+            expected_number_of_forward_link = 1;
+            expected_number_of_reverse_link = 0;
+
+            const wrapper = getWrapper();
+
+            expect(
+                wrapper.find("[data-test=pretty-title-links-button]").attributes("aria-hidden"),
+            ).toBe("false");
+        });
+
         it("should display the button if level > 0 and there is one reverse link and one forward link", () => {
             level = 1;
             expected_number_of_forward_link = 1;
