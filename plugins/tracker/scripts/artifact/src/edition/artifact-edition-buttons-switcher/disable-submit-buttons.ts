@@ -17,6 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { EventDispatcher } from "@tuleap/plugin-tracker-artifact-common";
+import type { CommonEvents } from "@tuleap/plugin-tracker-artifact-common/src/events/CommonEvents";
+
 function setSubmitOption(artifact_form: HTMLFormElement, doc: Document, option: string): void {
     const submit_and_stay = doc.createElement("input");
 
@@ -48,3 +51,33 @@ export const disableSubmitAfterArtifactEdition = (doc: Document): void => {
         });
     });
 };
+
+export function listenEnableDisableSubmitEvents(
+    doc: Document,
+    event_dispatcher: EventDispatcher<CommonEvents>,
+): void {
+    const buttons: NodeListOf<HTMLButtonElement> = doc.querySelectorAll(
+        `.tracker-artifact-submit-buttons-bar button,
+            .tracker-artifact-submit-buttons-bar-condensed button`,
+    );
+
+    event_dispatcher.addObserver("WillDisableSubmit", (event) => {
+        if (!("reason" in event)) {
+            throw Error("Event is not the expected type");
+        }
+        const reason = event.reason;
+
+        buttons.forEach((button) => {
+            button.disabled = true;
+            button.dataset.backupTitle = button.title;
+            button.title = String(reason);
+        });
+    });
+    event_dispatcher.addObserver("WillEnableSubmit", () => {
+        buttons.forEach((button) => {
+            button.disabled = false;
+            button.title = String(button.dataset.backupTitle);
+            delete button.dataset.backupTitle;
+        });
+    });
+}

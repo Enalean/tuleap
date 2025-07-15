@@ -25,7 +25,11 @@ import { getLocaleWithDefault } from "@tuleap/gettext";
 import { reopenFieldsetsWithInvalidInput } from "../edition/reopen-fieldsets-with-invalid-input";
 import { initLinkField } from "../fields/LinkFieldEditor";
 import { initListFields } from "../fields/list-fields";
-import { disableSubmitAfterArtifactEdition } from "../edition/artifact-edition-buttons-switcher/disable-submit-buttons";
+import {
+    disableSubmitAfterArtifactEdition,
+    listenEnableDisableSubmitEvents,
+} from "../edition/artifact-edition-buttons-switcher/disable-submit-buttons";
+import { EventDispatcher } from "@tuleap/plugin-tracker-artifact-common";
 
 document.addEventListener("DOMContentLoaded", () => {
     const user_locale = getLocaleWithDefault(document);
@@ -35,8 +39,10 @@ document.addEventListener("DOMContentLoaded", () => {
         RichTextEditorFactory.forFlamingParrotWithFormatSelector(document, user_locale),
     );
     creator.createTextFieldEditors();
+    const event_dispatcher = EventDispatcher();
+    listenEnableDisableSubmitEvents(document, event_dispatcher);
     initListFields();
-    initLinkField(user_locale, null);
+    initLinkField(user_locale, event_dispatcher, null);
     disableSubmitAfterArtifactEdition(document);
 
     const submit_buttons = document.querySelectorAll(

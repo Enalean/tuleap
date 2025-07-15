@@ -25,12 +25,12 @@ import type {
     CommonEvents,
     WillNotifyFault,
     DidChangeLinkFieldValue,
+    EventDispatcher,
 } from "@tuleap/plugin-tracker-artifact-common";
 import {
     CurrentArtifactIdentifier,
     CurrentProjectIdentifier,
     CurrentTrackerIdentifier,
-    EventDispatcher,
 } from "@tuleap/plugin-tracker-artifact-common";
 import type { FormatLinkFieldValue } from "@tuleap/plugin-tracker-link-field";
 import {
@@ -63,11 +63,14 @@ function assertColorName(_color: string): _color is ColorName {
 
 export function initLinkField(
     user_locale: LocaleString,
+    event_dispatcher: EventDispatcher<CommonEvents>,
     edition_switcher: EditionSwitcher | null,
 ): void {
     const mount_point = document.querySelector("[data-link-field-id]");
     if (mount_point instanceof HTMLElement) {
-        LinkFieldEditor(document, user_locale, edition_switcher).init(mount_point);
+        LinkFieldEditor(document, user_locale, event_dispatcher, edition_switcher).init(
+            mount_point,
+        );
     }
 }
 
@@ -101,6 +104,7 @@ function initObserveLinkValue(
 export const LinkFieldEditor = (
     doc: Document,
     user_locale: LocaleString,
+    event_dispatcher: EventDispatcher<CommonEvents>,
     edition_switcher: EditionSwitcher | null,
 ): LinkFieldEditor => ({
     init(mount_point): void {
@@ -141,7 +145,6 @@ export const LinkFieldEditor = (
             .map(parseInt)
             .map(ParentTrackerIdentifier.fromId);
 
-        const event_dispatcher = EventDispatcher();
         const links_store = LinksStore();
         const new_links_store = NewLinksStore();
         const links_marked_for_removal_store = LinksMarkedForRemovalStore();
