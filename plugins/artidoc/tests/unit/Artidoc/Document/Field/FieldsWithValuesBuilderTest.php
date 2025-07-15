@@ -24,6 +24,7 @@ namespace Tuleap\Artidoc\Document\Field;
 
 use Tuleap\Artidoc\Domain\Document\Section\Field\DisplayType;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\ArtifactLinkFieldWithValue;
+use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\ArtifactLinkProject;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\ArtifactLinkStatusValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\ArtifactLinkValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StaticListFieldWithValue;
@@ -326,6 +327,7 @@ final class FieldsWithValuesBuilderTest extends TestCase
                     'Child',
                     'my_tracker',
                     ItemColor::fromName('red-wine'),
+                    new ArtifactLinkProject(903, 'unprinceliness', ''),
                     33,
                     'My artifact',
                     '/plugins/tracker/?aid=33',

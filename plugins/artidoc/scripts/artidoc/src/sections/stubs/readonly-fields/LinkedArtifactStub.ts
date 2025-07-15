@@ -33,6 +33,7 @@ function build(): ReadonlyFieldLinkedArtifact {
         link_label: "is Linked to",
         tracker_shortname: "bugs",
         tracker_color: "fiesta-red",
+        project: { id: 166, label: "Acetized meniscate", icon: "🛰️" },
         artifact_id,
         title: "Ottweilian bepierce",
         html_uri: `/plugins/tracker/?aid=${artifact_id}`,

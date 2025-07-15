@@ -25,6 +25,7 @@ import FieldLinks from "./FieldLinks.vue";
 import { ReadonlyFieldStub } from "@/sections/stubs/ReadonlyFieldStub";
 import type { ReadonlyFieldLinkedArtifact } from "@/sections/readonly-fields/ReadonlyFields";
 import { LinkedArtifactStub } from "@/sections/stubs/readonly-fields/LinkedArtifactStub";
+import { PROJECT_ID } from "@/project-id-injection-key";
 
 describe("FieldLinks", () => {
     const getWrapper = (values: ReadonlyFieldLinkedArtifact[]): VueWrapper =>
@@ -34,6 +35,9 @@ describe("FieldLinks", () => {
             },
             global: {
                 plugins: [createGettext({ silent: true })],
+                provide: {
+                    [PROJECT_ID.valueOf()]: 156,
+                },
             },
         });
 

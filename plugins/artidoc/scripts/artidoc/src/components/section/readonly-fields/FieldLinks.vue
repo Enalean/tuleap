@@ -33,6 +33,11 @@
                     >{{ link.tracker_shortname }} #{{ link.artifact_id }}</span
                 ><span class="artidoc-link-field-title">{{ link.title }}</span></a
             >
+            <span
+                v-if="!isLinkedArtifactInCurrentProject(link)"
+                class="artidoc-link-field-artifact-project"
+                >{{ getLabelAndIcon(link.project) }}</span
+            >
         </span>
         <span
             v-if="link.status !== null"
@@ -48,13 +53,17 @@
 </template>
 <script setup lang="ts">
 import { useGettext } from "vue3-gettext";
+import { strictInject } from "@tuleap/vue-strict-inject";
 import type {
+    LinkedArtifactProject,
     LinkedArtifactStatus,
     ReadonlyFieldLinkedArtifact,
     ReadonlyFieldLinks,
 } from "@/sections/readonly-fields/ReadonlyFields";
+import { PROJECT_ID } from "@/project-id-injection-key";
 
 const { $gettext } = useGettext();
+const current_project_id = strictInject(PROJECT_ID);
 
 defineProps<{
     field: ReadonlyFieldLinks;
@@ -67,6 +76,17 @@ function getCrossRefBadgeClasses(link: ReadonlyFieldLinkedArtifact): string {
 function getStatusBadgeClasses(status: LinkedArtifactStatus): string {
     const badge_class = status.color !== "" ? `tlp-badge-${status.color}` : "tlp-badge-secondary";
     return `tlp-badge-outline ${badge_class}`;
+}
+
+function isLinkedArtifactInCurrentProject(link: ReadonlyFieldLinkedArtifact): boolean {
+    return link.project.id === current_project_id;
+}
+
+function getLabelAndIcon(project: LinkedArtifactProject): string {
+    if (project.icon === "") {
+        return project.label;
+    }
+    return project.icon + " " + project.label;
 }
 </script>
 <style scoped lang="scss">
@@ -96,5 +116,11 @@ $link-row-padding: 8px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+
+.artidoc-link-field-artifact-project {
+    margin: 2px 0 0;
+    color: var(--tlp-dimmed-color);
+    font-size: 0.65rem;
 }
 </style>
