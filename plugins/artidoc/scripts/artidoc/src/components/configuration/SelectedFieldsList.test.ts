@@ -68,4 +68,13 @@ describe("SelectedFieldsList", () => {
         await switch_display_type_checkbox.setValue(1); // Uncheck the checkbox
         expect(field.display_type).toBe(DISPLAY_TYPE_COLUMN);
     });
+
+    it("When the display type cannot be changed, then the 'full row' checkbox should be disabled", () => {
+        const field = ConfigurationFieldStub.withFixedDisplayType();
+        const switch_display_type_checkbox = getWrapper([field]).find<HTMLInputElement>(
+            "[data-test=switch-display-type-checkbox]",
+        );
+
+        expect(switch_display_type_checkbox.attributes("disabled")).toBeDefined();
+    });
 });

@@ -279,6 +279,13 @@ msgstr "Sélectionner les champs..."
 msgid "Table of contents"
 msgstr "Table des matières"
 
+msgid ""
+"The display type of this type of field cannot be changed, otherwise its "
+"readability would be impacted."
+msgstr ""
+"Le type d'affichage de ce type de champ ne peut pas être modifié, sinon sa "
+"lisibilité serait impactée."
+
 msgid "The document is being edited. Please save your work beforehand."
 msgstr ""
 "Le document est en cours d'édition. Veuillez au préalable sauvegarder votre "

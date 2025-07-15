@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Artidoc\Document\Field;
 
 use Tuleap\Artidoc\Domain\Document\Section\Field\DisplayType;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 
 final readonly class ConfiguredFieldRepresentation
 {
@@ -30,6 +31,7 @@ final readonly class ConfiguredFieldRepresentation
         public int $field_id,
         public string $label,
         public DisplayType $display_type,
+        public bool $can_display_type_be_changed,
     ) {
     }
 
@@ -39,6 +41,7 @@ final readonly class ConfiguredFieldRepresentation
             $configured_field->field->getId(),
             $configured_field->field->getLabel(),
             $configured_field->display_type,
+            ! ($configured_field->field instanceof ArtifactLinkField),
         );
     }
 }

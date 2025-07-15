@@ -23,13 +23,10 @@ import { shallowMount } from "@vue/test-utils";
 import { createGettext } from "vue3-gettext";
 import type { ConfigurationField } from "@/sections/readonly-fields/AvailableReadonlyFields";
 import ReorderFieldsArrows from "@/components/configuration/ReorderFieldsArrows.vue";
+import { ConfigurationFieldStub } from "@/sections/stubs/ConfigurationFieldStub";
 
-const field: ConfigurationField = {
-    field_id: 1234,
-    label: "String Field",
-    type: "string",
-    display_type: "column",
-};
+const field: ConfigurationField = ConfigurationFieldStub.withFieldId(1234);
+
 describe("ReorderFieldsArrows", () => {
     let is_first: boolean, is_last: boolean;
 
