@@ -52,6 +52,7 @@ use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\SelectedValue;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\SelectedValuesCollection;
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerSelectedRepresentation;
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerSelectedType;
+use Tuleap\CrossTracker\Tests\Stub\Query\InstantiateRetrievedQueryTrackersStub;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\Project\Icons\EmojiCodepointConverter;
@@ -86,6 +87,7 @@ final class MetadataResultBuilderTest extends TestCase
     private function getSelectedResult(
         Metadata $metadata,
         RetrieveArtifactStub $artifact_retriever,
+        InstantiateRetrievedQueryTrackersStub $query_trackers_retriever,
         array $selected_result,
     ): SelectedValuesCollection {
         $purifier               = Codendi_HTMLPurifier::instance();
@@ -105,7 +107,7 @@ final class MetadataResultBuilderTest extends TestCase
             new ProjectNameResultBuilder(),
             new TrackerNameResultBuilder(),
             new PrettyTitleResultBuilder(),
-            new ArtifactResultBuilder($artifact_retriever),
+            new ArtifactResultBuilder($artifact_retriever, $query_trackers_retriever),
         );
 
         $user_helper->method('getDisplayNameFromUser')->willReturnCallback(static fn(PFUser $user) => $user->getRealName());
@@ -124,6 +126,7 @@ final class MetadataResultBuilderTest extends TestCase
         $this->getSelectedResult(
             new Metadata('not-existing'),
             RetrieveArtifactStub::withNoArtifact(),
+            InstantiateRetrievedQueryTrackersStub::withNoTrackers(),
             [],
         );
     }
@@ -137,6 +140,7 @@ final class MetadataResultBuilderTest extends TestCase
                 ArtifactTestBuilder::anArtifact(12)->inTracker($this->second_tracker)->build(),
                 ArtifactTestBuilder::anArtifact(13)->inTracker($this->second_tracker)->build(),
             ),
+            InstantiateRetrievedQueryTrackersStub::withNoTrackers(),
             [
                 ['id' => 11, '@title' => 'My title', '@title_format' => 'text'],
                 ['id' => 12, '@title' => '**Title**', '@title_format' => 'commonmark'],
@@ -168,6 +172,7 @@ EOL
                 ArtifactTestBuilder::anArtifact(22)->inTracker($this->second_tracker)->build(),
                 ArtifactTestBuilder::anArtifact(23)->inTracker($this->second_tracker)->build(),
             ),
+            InstantiateRetrievedQueryTrackersStub::withNoTrackers(),
             [
                 ['id' => 21, '@description' => 'blablabla', '@description_format' => 'text'],
                 ['id' => 22, '@description' => "# Hello\n\nWorld!", '@description_format' => 'commonmark'],
@@ -200,6 +205,7 @@ EOL
                 ArtifactTestBuilder::anArtifact(32)->inTracker($this->first_tracker)->build(),
                 ArtifactTestBuilder::anArtifact(33)->inTracker($this->second_tracker)->build(),
             ),
+            InstantiateRetrievedQueryTrackersStub::withNoTrackers(),
             [
                 ['id' => 31, '@status' => 'Open', '@status_color' => 'neon-green'],
                 ['id' => 32, '@status' => ['Closed', 'Also open'], '@status_color' => ['fiesta-red']],
@@ -233,6 +239,7 @@ EOL
                 ArtifactTestBuilder::anArtifact(42)->inTracker($this->first_tracker)->build(),
                 ArtifactTestBuilder::anArtifact(43)->inTracker($this->second_tracker)->build(),
             ),
+            InstantiateRetrievedQueryTrackersStub::withNoTrackers(),
             [
                 ['id' => 41, '@assigned_to' => 135],
                 ['id' => 42, '@assigned_to' => 135],
@@ -268,6 +275,7 @@ EOL
                 ArtifactTestBuilder::anArtifact(51)->inTracker($this->first_tracker)->build(),
                 ArtifactTestBuilder::anArtifact(52)->inTracker($this->first_tracker)->build(),
             ),
+            InstantiateRetrievedQueryTrackersStub::withNoTrackers(),
             [
                 ['id' => 51, '@submitted_on' => $first_date->getTimestamp()],
                 ['id' => 52, '@submitted_on' => $second_date->getTimestamp()],
@@ -295,6 +303,7 @@ EOL
                 ArtifactTestBuilder::anArtifact(61)->inTracker($this->first_tracker)->build(),
                 ArtifactTestBuilder::anArtifact(62)->inTracker($this->first_tracker)->build(),
             ),
+            InstantiateRetrievedQueryTrackersStub::withNoTrackers(),
             [
                 ['id' => 61, '@last_update_date' => $first_date->getTimestamp()],
                 ['id' => 62, '@last_update_date' => $second_date->getTimestamp()],
@@ -320,6 +329,7 @@ EOL
                 ArtifactTestBuilder::anArtifact(71)->inTracker($this->first_tracker)->build(),
                 ArtifactTestBuilder::anArtifact(72)->inTracker($this->first_tracker)->build(),
             ),
+            InstantiateRetrievedQueryTrackersStub::withNoTrackers(),
             [
                 ['id' => 71, '@submitted_by' => 135],
                 ['id' => 72, '@submitted_by' => 145],
@@ -345,6 +355,7 @@ EOL
                 ArtifactTestBuilder::anArtifact(81)->inTracker($this->first_tracker)->build(),
                 ArtifactTestBuilder::anArtifact(82)->inTracker($this->first_tracker)->build(),
             ),
+            InstantiateRetrievedQueryTrackersStub::withNoTrackers(),
             [
                 ['id' => 81, '@last_update_by' => 135],
                 ['id' => 82, '@last_update_by' => 145],
@@ -370,6 +381,7 @@ EOL
                 ArtifactTestBuilder::anArtifact(91)->inTracker($this->first_tracker)->build(),
                 ArtifactTestBuilder::anArtifact(92)->inTracker($this->first_tracker)->build(),
             ),
+            InstantiateRetrievedQueryTrackersStub::withNoTrackers(),
             [
                 ['id' => 91, '@id' => 91],
                 ['id' => 92, '@id' => 92],
@@ -395,6 +407,7 @@ EOL
                 ArtifactTestBuilder::anArtifact(101)->inTracker($this->first_tracker)->build(),
                 ArtifactTestBuilder::anArtifact(102)->inTracker($this->second_tracker)->build(),
             ),
+            InstantiateRetrievedQueryTrackersStub::withNoTrackers(),
             [
                 ['id' => 101, '@project.name' => 'Project 101', '@project.icon' => null],
                 ['id' => 102, '@project.name' => 'Project with icon', '@project.icon' => EmojiCodepointConverter::convertEmojiToStoreFormat('⚔️')],
@@ -420,6 +433,7 @@ EOL
                 ArtifactTestBuilder::anArtifact(111)->inTracker($this->first_tracker)->build(),
                 ArtifactTestBuilder::anArtifact(112)->inTracker($this->second_tracker)->build(),
             ),
+            InstantiateRetrievedQueryTrackersStub::withNoTrackers(),
             [
                 ['id' => 111, '@tracker.name' => 'Tracker 38', '@tracker.color' => 'neon-green'],
                 ['id' => 112, '@tracker.name' => 'Tracker 4', '@tracker.color' => 'deep-blue'],
@@ -446,6 +460,7 @@ EOL
                 ArtifactTestBuilder::anArtifact(122)->inTracker($this->second_tracker)->build(),
                 ArtifactTestBuilder::anArtifact(123)->inTracker($this->second_tracker)->build(),
             ),
+            InstantiateRetrievedQueryTrackersStub::withNoTrackers(),
             [
                 ['id' => 121, '@pretty_title.tracker' => 'tracker_38', '@pretty_title.color' => 'inca-silver', '@pretty_title' => 'title 121', '@pretty_title.format' => 'text'],
                 ['id' => 122, '@pretty_title.tracker' => 'tracker_4', '@pretty_title.color' => 'neon-green', '@pretty_title' => 'title 122', '@pretty_title.format' => 'text'],
@@ -472,11 +487,12 @@ EOL
             RetrieveArtifactStub::withArtifacts(
                 ArtifactTestBuilder::anArtifact(131)->withoutLinkedArtifact()->inTracker($this->first_tracker)->build(),
                 ArtifactTestBuilder::anArtifact(132)
-                    ->withLinkedArtifact(ArtifactTestBuilder::anArtifact(156)->build())
-                    ->withLinkedAndReverseArtifact(ArtifactTestBuilder::anArtifact(156)->build())
+                    ->withLinkedArtifact(ArtifactTestBuilder::anArtifact(156)->inTracker($this->first_tracker)->build())
+                    ->withLinkedAndReverseArtifact(ArtifactTestBuilder::anArtifact(156)->inTracker($this->first_tracker)->build())
                     ->inTracker($this->second_tracker)
                     ->build(),
             ),
+            InstantiateRetrievedQueryTrackersStub::withTrackers($this->first_tracker, $this->second_tracker),
             [
                 ['id' => 131],
                 ['id' => 132],
@@ -491,6 +507,39 @@ EOL
         self::assertEqualsCanonicalizing([
             131 => new SelectedValue('@artifact', new ArtifactRepresentation(131, '/plugins/tracker/?aid=131', 0, 0)),
             132 => new SelectedValue('@artifact', new ArtifactRepresentation(132, '/plugins/tracker/?aid=132', 1, 0)),
+        ], $result->values);
+    }
+
+    public function testItReturnsFilteredValuesOfNumberOfForwardAndReverseLinks(): void
+    {
+        $query_trackers_retriever = InstantiateRetrievedQueryTrackersStub::withTrackers($this->first_tracker);
+
+        $result = $this->getSelectedResult(
+            new Metadata('artifact'),
+            RetrieveArtifactStub::withArtifacts(
+                ArtifactTestBuilder::anArtifact(132)
+                    ->withLinkedArtifact(ArtifactTestBuilder::anArtifact(156)->inTracker($this->first_tracker)->build())
+                    ->withLinkedAndReverseArtifact(
+                        ArtifactTestBuilder::anArtifact(157)->inTracker($this->first_tracker)->build(),
+                        ArtifactTestBuilder::anArtifact(158)->inTracker($this->first_tracker)->build(),
+                        ArtifactTestBuilder::anArtifact(159)->inTracker($this->second_tracker)->build(),
+                    )
+                    ->inTracker($this->second_tracker)
+                    ->build(),
+            ),
+            $query_trackers_retriever,
+            [
+                ['id' => 132],
+            ]
+        );
+
+        self::assertEquals(
+            new CrossTrackerSelectedRepresentation('@artifact', CrossTrackerSelectedType::TYPE_ARTIFACT),
+            $result->selected,
+        );
+        self::assertCount(1, $result->values);
+        self::assertEqualsCanonicalizing([
+            132 => new SelectedValue('@artifact', new ArtifactRepresentation(132, '/plugins/tracker/?aid=132', 1, 1)),
         ], $result->values);
     }
 }

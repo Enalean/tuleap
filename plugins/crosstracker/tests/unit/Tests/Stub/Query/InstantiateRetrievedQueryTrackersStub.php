@@ -18,15 +18,30 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\CrossTracker\Query;
 
+namespace Tuleap\CrossTracker\Tests\Stub\Query;
+
+use Tuleap\CrossTracker\Query\InstantiateRetrievedQueryTrackers;
 use Tuleap\Tracker\Tracker;
 
-interface InstantiateRetrievedQueryTrackerIds
+final readonly class InstantiateRetrievedQueryTrackersStub implements InstantiateRetrievedQueryTrackers
 {
-    /**
-     * @param int[] $trackers_ids
-     * @return Tracker[]
-     */
-    public function getTrackers(array $trackers_ids): array;
+    private function __construct(private array $trackers)
+    {
+    }
+
+    public static function withTrackers(Tracker $tracker, Tracker ...$other_tracker): self
+    {
+        return new self([$tracker, ...$other_tracker]);
+    }
+
+    public static function withNoTrackers(): self
+    {
+        return new self([]);
+    }
+
+    public function getTrackers(array $trackers_ids): array
+    {
+        return $this->trackers;
+    }
 }

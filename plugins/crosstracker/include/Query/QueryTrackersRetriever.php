@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Query;
 
-use LogicException;
 use PFUser;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\CrossTracker\Query\Advanced\FromBuilderVisitor;
@@ -39,21 +38,20 @@ use Tuleap\Tracker\Report\Query\Advanced\ExpertQueryValidator;
 use Tuleap\Tracker\Report\Query\Advanced\FromIsInvalidException;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\SyntaxError;
 use Tuleap\Tracker\Report\Query\Advanced\MissingFromException;
-use Tuleap\Tracker\RetrieveTracker;
 use Tuleap\Tracker\Tracker;
 
-final readonly class QueryTrackersRetriever implements RetrieveQueryTrackers, InstantiateRetrievedQueryTrackerIds
+final readonly class QueryTrackersRetriever implements RetrieveQueryTrackers
 {
     public function __construct(
         private ExpertQueryValidator $expert_query_validator,
         private FromBuilderVisitor $from_builder,
         private RetrieveUserPermissionOnTrackers $trackers_permissions,
         private CrossTrackerTQLQueryDao $tql_query_dao,
-        private RetrieveTracker $tracker_factory,
         private WidgetInProjectChecker $in_project_checker,
         private SearchCrossTrackerWidget $widget_retriever,
         private ProjectByIDFactory $project_factory,
         private EventDispatcherInterface $event_dispatcher,
+        private TrackersListAllowedByPlugins $trackers_list_allowed_by_plugins,
     ) {
     }
 
@@ -89,7 +87,7 @@ final readonly class QueryTrackersRetriever implements RetrieveQueryTrackers, In
         $additional_from = $this->from_builder->buildFromWhere($query->parsed_query->getFrom(), $query->getWidgetId(), $current_user);
         $trackers        = $this->trackers_permissions->retrieveUserPermissionOnTrackers(
             $current_user,
-            $this->getTrackers(array_map(
+            $this->trackers_list_allowed_by_plugins->getTrackers(array_map(
                 static fn(array $row): int => $row['id'],
                 $this->tql_query_dao->searchTrackersIdsMatchingQuery($additional_from, $limit),
             )),
@@ -97,25 +95,6 @@ final readonly class QueryTrackersRetriever implements RetrieveQueryTrackers, In
         )->allowed;
         if ($trackers === []) {
             throw new FromIsInvalidException([dgettext('tuleap-crosstracker', 'No tracker found')]);
-        }
-        return $trackers;
-    }
-
-    /**
-     * @param int[] $trackers_ids
-     * @return Tracker[]
-     */
-    public function getTrackers(array $trackers_ids): array
-    {
-        $event = $this->event_dispatcher->dispatch(new RetrievedQueryTrackerIds($trackers_ids));
-
-        $trackers = [];
-        foreach ($event->getTrackerIds() as $id) {
-            $tracker = $this->tracker_factory->getTrackerById($id);
-            if ($tracker === null) {
-                throw new LogicException("Tracker #$id found in db but unable to find it again");
-            }
-            $trackers[] = $tracker;
         }
         return $trackers;
     }
