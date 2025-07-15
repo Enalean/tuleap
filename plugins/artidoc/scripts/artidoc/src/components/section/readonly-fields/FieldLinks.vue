@@ -20,22 +20,24 @@
 <template>
     <label class="tlp-label document-label">{{ field.label }}</label>
     <div
-        class="artidoc-link-field-row"
+        class="artidoc-link-field-row document-artifact-link-row"
         v-for="link of field.value"
         v-bind:key="link.artifact_id"
         v-bind:title="link.title"
         data-test="linked-artifact"
     >
         <span>{{ link.link_label }}</span>
-        <span class="artidoc-link-field-xref">
-            <a v-bind:href="link.html_uri" class="artidoc-link-field-link cross-reference"
+        <span class="artidoc-link-field-xref document-xref">
+            <a
+                v-bind:href="link.html_uri"
+                class="artidoc-link-field-link document-artifact-link-row-anchor cross-reference"
                 ><span v-bind:class="getCrossRefBadgeClasses(link)"
                     >{{ link.tracker_shortname }} #{{ link.artifact_id }}</span
                 ><span class="artidoc-link-field-title">{{ link.title }}</span></a
             >
             <span
                 v-if="!isLinkedArtifactInCurrentProject(link)"
-                class="artidoc-link-field-artifact-project"
+                class="artidoc-link-field-artifact-project document-artifact-link-project"
                 >{{ getLabelAndIcon(link.project) }}</span
             >
         </span>
@@ -70,12 +72,15 @@ defineProps<{
 }>();
 
 function getCrossRefBadgeClasses(link: ReadonlyFieldLinkedArtifact): string {
-    return `cross-ref-badge tlp-swatch-${link.tracker_color}`;
+    return `cross-ref-badge document-cross-ref-badge tlp-swatch-${link.tracker_color}`;
 }
 
 function getStatusBadgeClasses(status: LinkedArtifactStatus): string {
-    const badge_class = status.color !== "" ? `tlp-badge-${status.color}` : "tlp-badge-secondary";
-    return `tlp-badge-outline ${badge_class}`;
+    const badge_class =
+        status.color !== ""
+            ? `tlp-badge-${status.color} tlp-swatch-${status.color}`
+            : "tlp-badge-secondary tlp-swatch-secondary";
+    return `tlp-badge-outline document-badge-outline ${badge_class}`;
 }
 
 function isLinkedArtifactInCurrentProject(link: ReadonlyFieldLinkedArtifact): boolean {
