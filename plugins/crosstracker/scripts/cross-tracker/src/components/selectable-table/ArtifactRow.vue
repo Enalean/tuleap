@@ -66,7 +66,6 @@ import type {
     ArtifactsTable,
 } from "../../domain/ArtifactsTable";
 import { FORWARD_DIRECTION, REVERSE_DIRECTION } from "../../domain/ArtifactsTable";
-import type { ArtifactsTableWithTotal } from "../../domain/RetrieveArtifactsTable";
 import RowErrorMessage from "../feedback/RowErrorMessage.vue";
 import { RETRIEVE_ARTIFACT_LINKS, WIDGET_ID } from "../../injection-symbols";
 import ArtifactLinkRows from "./ArtifactLinkRows.vue";
@@ -141,10 +140,17 @@ function toggleLinks(current_element: HTMLElement, current_caret: HTMLElement): 
     artifact_links_retriever
         .getForwardLinks(widget_id, props.row.id, props.tql_query)
         .match(
-            (artifacts: ArtifactsTableWithTotal) => {
-                forward_links.value = artifacts.table.rows.filter(
-                    (row) => row.id !== props.ancestors.slice(-1)[0],
-                );
+            (artifacts: ArtifactsTable[]) => {
+                if (artifacts.length === 0) {
+                    return;
+                }
+                const rows: ArtifactRow[] = [];
+                for (const artifact of artifacts) {
+                    if (artifact.rows) {
+                        rows.push(...artifact.rows);
+                    }
+                }
+                forward_links.value = rows.filter((row) => row.id !== props.ancestors.slice(-1)[0]);
             },
             (fault: Fault) => {
                 error_message.value = String(fault);
@@ -157,10 +163,17 @@ function toggleLinks(current_element: HTMLElement, current_caret: HTMLElement): 
     artifact_links_retriever
         .getReverseLinks(widget_id, props.row.id, props.tql_query)
         .match(
-            (artifacts: ArtifactsTableWithTotal) => {
-                reverse_links.value = artifacts.table.rows.filter(
-                    (row) => row.id !== props.ancestors.slice(-1)[0],
-                );
+            (artifacts: ArtifactsTable[]) => {
+                if (artifacts.length === 0) {
+                    return;
+                }
+                const rows: ArtifactRow[] = [];
+                for (const artifact of artifacts) {
+                    if (artifact.rows) {
+                        rows.push(...artifact.rows);
+                    }
+                }
+                reverse_links.value = rows.filter((row) => row.id !== props.ancestors.slice(-1)[0]);
             },
             (fault: Fault) => {
                 error_message.value = String(fault);

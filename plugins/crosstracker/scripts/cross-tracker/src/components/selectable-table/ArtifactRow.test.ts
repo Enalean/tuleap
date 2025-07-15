@@ -26,11 +26,11 @@ import { Option } from "@tuleap/option";
 import { Fault } from "@tuleap/fault";
 import { ArtifactRowBuilder } from "../../../tests/builders/ArtifactRowBuilder";
 import { ArtifactsTableBuilder as ArtifactsTableBuilderForTests } from "../../../tests/builders/ArtifactsTableBuilder";
+import type { ArtifactsTable } from "../../domain/ArtifactsTable";
 import { NUMERIC_CELL, PRETTY_TITLE_CELL } from "../../domain/ArtifactsTable";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-tests";
 import type { ColumnName } from "../../domain/ColumnName";
 import { PRETTY_TITLE_COLUMN_NAME } from "../../domain/ColumnName";
-import type { ArtifactsTableWithTotal } from "../../domain/RetrieveArtifactsTable";
 import type { RetrieveArtifactLinks } from "../../domain/RetrieveArtifactLinks";
 import RowErrorMessage from "../feedback/RowErrorMessage.vue";
 import { RETRIEVE_ARTIFACT_LINKS, WIDGET_ID } from "../../injection-symbols";
@@ -40,8 +40,8 @@ import ArtifactLinkRows from "./ArtifactLinkRows.vue";
 
 const RetrieveArtifactLinksTableStub = {
     withContent(
-        forward_links: ResultAsync<ArtifactsTableWithTotal, Fault>,
-        reverse_links: ResultAsync<ArtifactsTableWithTotal, Fault>,
+        forward_links: ResultAsync<ArtifactsTable[], Fault>,
+        reverse_links: ResultAsync<ArtifactsTable[], Fault>,
     ): RetrieveArtifactLinks {
         return {
             getForwardLinks: () => forward_links,
@@ -76,13 +76,13 @@ const forward_table = new ArtifactsTableBuilderForTests()
     .withColumn(NUMERIC_COLUMN_NAME)
     .withArtifactRow(artifact_row)
     .withArtifactRow(artifact_row)
-    .buildWithTotal(2);
+    .build();
 
 const reverse_table = new ArtifactsTableBuilderForTests()
     .withColumn(PRETTY_TITLE_COLUMN_NAME)
     .withColumn(NUMERIC_COLUMN_NAME)
     .withArtifactRow(artifact_row)
-    .buildWithTotal(2);
+    .build();
 
 describe("ArtifactRow", () => {
     let artifact_links_table_retriever: RetrieveArtifactLinks,
@@ -93,8 +93,8 @@ describe("ArtifactRow", () => {
         artifact_id = 512;
         ancestors = [123, 234];
         artifact_links_table_retriever = RetrieveArtifactLinksTableStub.withContent(
-            okAsync(forward_table),
-            okAsync(reverse_table),
+            okAsync([forward_table]),
+            okAsync([reverse_table]),
         );
     });
 
@@ -188,8 +188,8 @@ describe("ArtifactRow", () => {
     });
 
     it.each([
-        ["forward links", errAsync(fault), okAsync(forward_table)],
-        ["reverse links", okAsync(reverse_table), errAsync(fault)],
+        ["forward links", errAsync(fault), okAsync([forward_table])],
+        ["reverse links", okAsync([reverse_table]), errAsync(fault)],
         ["forward and reverse links", errAsync(fault), errAsync(fault)],
     ])(
         "should display an error message if an error occurred when retrieving %s",
@@ -274,11 +274,11 @@ describe("ArtifactRow", () => {
                     .withColumn(NUMERIC_COLUMN_NAME)
                     .withArtifactRow(row_1)
                     .withArtifactRow(row_2)
-                    .buildWithTotal(2);
+                    .build();
 
                 artifact_links_table_retriever = RetrieveArtifactLinksTableStub.withContent(
-                    okAsync(links_table),
-                    okAsync(links_table),
+                    okAsync([links_table]),
+                    okAsync([links_table]),
                 );
 
                 const wrapper = getWrapper();
@@ -293,7 +293,7 @@ describe("ArtifactRow", () => {
                 const artifact_links_rows =
                     artifact_link_rows_component.props("artifact_links_rows");
 
-                expect(artifact_links_rows).toHaveLength(links_table.total);
+                expect(artifact_links_rows).toHaveLength(links_table.rows.length);
             },
         );
 
@@ -338,11 +338,11 @@ describe("ArtifactRow", () => {
                     .withColumn(NUMERIC_COLUMN_NAME)
                     .withArtifactRow(row_1)
                     .withArtifactRow(row_2)
-                    .buildWithTotal(2);
+                    .build();
 
                 artifact_links_table_retriever = RetrieveArtifactLinksTableStub.withContent(
-                    okAsync(links_table),
-                    okAsync(links_table),
+                    okAsync([links_table]),
+                    okAsync([links_table]),
                 );
 
                 ancestors = [345, 5498, artifact_id];
@@ -399,11 +399,11 @@ describe("ArtifactRow", () => {
                 .withColumn(NUMERIC_COLUMN_NAME)
                 .withArtifactRow(reverse_row_1)
                 .withArtifactRow(reverse_row_2)
-                .buildWithTotal(2);
+                .build();
 
             artifact_links_table_retriever = RetrieveArtifactLinksTableStub.withContent(
-                okAsync(forward_table),
-                okAsync(reverse_links_table),
+                okAsync([forward_table]),
+                okAsync([reverse_links_table]),
             );
 
             ancestors = [];
@@ -418,7 +418,7 @@ describe("ArtifactRow", () => {
             const reverse_artifact_link_rows = wrapper.findAllComponents(ArtifactLinkRows)[1];
             const reverse_rows = reverse_artifact_link_rows.props("artifact_links_rows");
 
-            expect(reverse_rows).toHaveLength(reverse_links_table.total);
+            expect(reverse_rows).toHaveLength(reverse_links_table.rows.length);
         });
     });
 });

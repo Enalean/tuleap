@@ -39,8 +39,8 @@ const TEXT_COLUMN_NAME = "details";
 const RetrieveArtifactLinksTableStub = {
     withDefaultContent(): RetrieveArtifactLinks {
         return {
-            getForwardLinks: () => okAsync(new ArtifactsTableBuilder().buildWithTotal(0)),
-            getReverseLinks: () => okAsync(new ArtifactsTableBuilder().buildWithTotal(0)),
+            getForwardLinks: () => okAsync([new ArtifactsTableBuilder().build()]),
+            getReverseLinks: () => okAsync([new ArtifactsTableBuilder().build()]),
         };
     },
 };
