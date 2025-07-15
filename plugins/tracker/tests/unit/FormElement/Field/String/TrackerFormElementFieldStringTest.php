@@ -26,7 +26,6 @@ use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use PHPUnit\Framework\MockObject\MockObject;
 use Rule_NoCr;
 use Rule_String;
-use Tracker_FormElement_Field_String;
 use Tuleap\GlobalResponseMock;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -40,12 +39,12 @@ final class TrackerFormElementFieldStringTest extends TestCase
     private Artifact $artifact;
     private Rule_String&MockObject $rule_string;
     private Rule_NoCr&MockObject $rule_nocr;
-    private Tracker_FormElement_Field_String&MockObject $string;
+    private StringField&MockObject $string;
 
     public function setUp(): void
     {
         $this->string = $this->createPartialMock(
-            Tracker_FormElement_Field_String::class,
+            StringField::class,
             ['getProperty', 'getRuleString', 'getRuleNoCr'],
         );
 

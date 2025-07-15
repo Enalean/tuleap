@@ -23,6 +23,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Tracker\Admin\GlobalAdmin\GlobalAdminPermissionsChecker;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\String\StringField;
 use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -696,7 +697,7 @@ final class Tracker_Permission_PermissionCheckerTest extends \Tuleap\Test\PHPUni
         $this->assignee->method('isAdmin')->willReturn(false);
         $this->u_ass->method('isAdmin')->willReturn(false);
 
-        $contributor_field = $this->createMock(Tracker_FormElement_Field_String::class);
+        $contributor_field = $this->createMock(StringField::class);
         $this->tracker->method('getContributorField')->willReturn($contributor_field);
         $artifact_assignee = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact_assignee->method('getTracker')->willReturn($this->tracker);
@@ -739,7 +740,7 @@ final class Tracker_Permission_PermissionCheckerTest extends \Tuleap\Test\PHPUni
         $this->assignee->method('isAdmin')->willReturn(false);
         $this->u_ass->method('isAdmin')->willReturn(false);
 
-        $contributor_field = $this->createMock(Tracker_FormElement_Field_String::class);
+        $contributor_field = $this->createMock(StringField::class);
         $this->tracker->method('getContributorField')->willReturn($contributor_field);
         $artifact_subass = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact_subass->method('getTracker')->willReturn($this->tracker);
@@ -827,7 +828,7 @@ final class Tracker_Permission_PermissionCheckerTest extends \Tuleap\Test\PHPUni
         $this->tracker->method('isDeleted')->willReturn(false);
         $this->tracker->method('userIsAdmin')->willReturn(false);
 
-        $contributor_field = $this->createMock(Tracker_FormElement_Field_String::class);
+        $contributor_field = $this->createMock(StringField::class);
         $this->tracker->method('getContributorField')->willReturn($contributor_field);
         $artifact_subass = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
         $artifact_subass->method('getTracker')->willReturn($this->tracker);

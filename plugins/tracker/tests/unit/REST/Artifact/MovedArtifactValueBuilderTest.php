@@ -21,8 +21,8 @@
 namespace Tuleap\Tracker\REST\Artifact;
 
 use PHPUnit\Framework\MockObject\MockObject;
-use Tracker_FormElement_Field_String;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\String\StringField;
 use Tuleap\Tracker\Test\Builders\ArtifactValuesRepresentationBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Tracker;
@@ -36,7 +36,7 @@ final class MovedArtifactValueBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private Tracker&MockObject $tracker;
 
-    private Tracker_FormElement_Field_String $field_string;
+    private StringField $field_string;
 
     protected function setUp(): void
     {

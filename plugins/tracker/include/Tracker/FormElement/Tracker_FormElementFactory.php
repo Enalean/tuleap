@@ -30,6 +30,7 @@ use Tuleap\Tracker\FormElement\Field\ListFields\RetrieveUsedListField;
 use Tuleap\Tracker\FormElement\Field\RetrieveFieldById;
 use Tuleap\Tracker\FormElement\Field\RetrieveUsedFields;
 use Tuleap\Tracker\FormElement\Field\Shareable\PropagatePropertiesDao;
+use Tuleap\Tracker\FormElement\Field\String\StringField;
 use Tuleap\Tracker\FormElement\Field\Text\TextField;
 use Tuleap\Tracker\FormElement\FieldNameFormatter;
 use Tuleap\Tracker\FormElement\FormElementDeletedEvent;
@@ -89,7 +90,7 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
 
     // Please use unique key for each element
     protected $classnames = [
-        self::FIELD_STRING_TYPE           => Tracker_FormElement_Field_String::class,
+        self::FIELD_STRING_TYPE           => StringField::class,
         self::FIELD_TEXT_TYPE             => TextField::class,
         self::FIELD_FLOAT_TYPE            => Tracker_FormElement_Field_Float::class,
         self::FIELD_DATE_TYPE => Tracker_FormElement_Field_Date::class,

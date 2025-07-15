@@ -30,7 +30,6 @@ use Tracker_FormElement_Field_List_Bind_Ugroups;
 use Tracker_FormElement_Field_List_Bind_Users;
 use Tracker_FormElement_Field_List_UnsavedValue;
 use Tracker_FormElement_Field_OpenList;
-use Tracker_FormElement_Field_String;
 use Tracker_FormElement_InvalidFieldValueException;
 use Tracker_Report;
 use Tracker_Report_AdditionalCriterion;
@@ -39,6 +38,7 @@ use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\FormElement\Field\String\StringField;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserGroupValueBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserValueBuilder;
@@ -168,7 +168,7 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
 
     private function buildStringCriterion(Tracker_Report $report): Tracker_Report_Criteria
     {
-        $string_field = $this->createMock(Tracker_FormElement_Field_String::class);
+        $string_field = $this->createMock(StringField::class);
 
         $criterion_string = new Tracker_Report_Criteria(
             1,

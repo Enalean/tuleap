@@ -26,7 +26,6 @@ use PFUser;
 use PHPUnit\Framework\Attributes\TestWith;
 use Tracker_Artifact_Changeset;
 use Tracker_FormElement_Field_File;
-use Tracker_FormElement_Field_String;
 use Tuleap\Artidoc\Adapter\Document\ArtidocDocument;
 use Tuleap\Artidoc\Adapter\Document\Section\RequiredSectionInformationCollector;
 use Tuleap\Artidoc\Document\Field\ConfiguredFieldCollection;
@@ -51,6 +50,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\UploadDataAttributesForRichTextEditorBuilder;
+use Tuleap\Tracker\FormElement\Field\String\StringField;
 use Tuleap\Tracker\FormElement\Field\Text\TextField;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFileFullRepresentation;
 use Tuleap\Tracker\REST\Artifact\FileInfoRepresentation;
@@ -139,7 +139,7 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
      */
     private function getArtifact(
         int $id,
-        Tracker_FormElement_Field_String $title,
+        StringField $title,
         TextField $description_field,
         string $format,
     ): Artifact {
@@ -170,7 +170,7 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
         return ArtifactTestBuilder::anArtifact($id)->userCannotView($this->user)->build();
     }
 
-    private function setTitleValue(Tracker_FormElement_Field_String $title, Tracker_Artifact_Changeset $changeset, int $id): void
+    private function setTitleValue(StringField $title, Tracker_Artifact_Changeset $changeset, int $id): void
     {
         $changeset->setFieldValue(
             $title,

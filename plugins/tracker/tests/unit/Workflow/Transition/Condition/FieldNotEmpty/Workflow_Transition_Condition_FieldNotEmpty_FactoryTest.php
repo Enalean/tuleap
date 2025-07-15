@@ -21,6 +21,7 @@
 declare(strict_types=1);
 
 use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Tracker\FormElement\Field\String\StringField;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 
@@ -28,12 +29,12 @@ use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 final class Workflow_Transition_Condition_FieldNotEmpty_FactoryTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     private int $field_id = 3;
-    private Tracker_FormElement_Field_String $field;
+    private StringField $field;
     private Workflow_Transition_Condition_FieldNotEmpty_Dao&MockObject $dao;
     private Workflow_Transition_Condition_FieldNotEmpty_Factory $factory;
     private Transition $transition;
-    private Tracker_FormElement_Field_String $field_string;
-    private Tracker_FormElement_Field_String $field_string_f15;
+    private StringField $field_string;
+    private StringField $field_string_f15;
     private array $xml_mapping;
 
     protected function setUp(): void

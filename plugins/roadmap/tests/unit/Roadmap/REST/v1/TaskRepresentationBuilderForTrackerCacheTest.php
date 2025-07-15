@@ -69,7 +69,7 @@ final class TaskRepresentationBuilderForTrackerCacheTest extends \Tuleap\Test\PH
 
     public function testItReturnsNullWhenTitleFieldIsNotReadable(): void
     {
-        $title_field = $this->createMock(\Tracker_FormElement_Field_String::class);
+        $title_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\String\StringField::class);
         $title_field->method('userCanRead')->willReturn(false);
 
         $tracker = $this->createMock(\Tuleap\Tracker\Tracker::class);
@@ -81,7 +81,7 @@ final class TaskRepresentationBuilderForTrackerCacheTest extends \Tuleap\Test\PH
 
     public function testItReturnsNullWhenTimeframeIsNotDefined(): void
     {
-        $title_field = $this->createMock(\Tracker_FormElement_Field_String::class);
+        $title_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\String\StringField::class);
         $title_field->method('userCanRead')->willReturn(true);
 
         $tracker = $this->createMock(\Tuleap\Tracker\Tracker::class);
@@ -97,7 +97,7 @@ final class TaskRepresentationBuilderForTrackerCacheTest extends \Tuleap\Test\PH
 
     public function testItReturnsNullWhenStartDateIsNotReadable(): void
     {
-        $title_field = $this->createMock(\Tracker_FormElement_Field_String::class);
+        $title_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\String\StringField::class);
         $title_field->method('userCanRead')->willReturn(true);
 
         $tracker = $this->createMock(\Tuleap\Tracker\Tracker::class);
@@ -118,7 +118,7 @@ final class TaskRepresentationBuilderForTrackerCacheTest extends \Tuleap\Test\PH
 
     public function testItReturnsNullWhenEndDateIsNotReadable(): void
     {
-        $title_field = $this->createMock(\Tracker_FormElement_Field_String::class);
+        $title_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\String\StringField::class);
         $title_field->method('userCanRead')->willReturn(true);
 
         $tracker = $this->createMock(\Tuleap\Tracker\Tracker::class);
@@ -139,7 +139,7 @@ final class TaskRepresentationBuilderForTrackerCacheTest extends \Tuleap\Test\PH
 
     public function testItReturnsNullWhenDurationIsNotReadable(): void
     {
-        $title_field = $this->createMock(\Tracker_FormElement_Field_String::class);
+        $title_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\String\StringField::class);
         $title_field->method('userCanRead')->willReturn(true);
 
         $tracker = $this->createMock(\Tuleap\Tracker\Tracker::class);
@@ -164,7 +164,7 @@ final class TaskRepresentationBuilderForTrackerCacheTest extends \Tuleap\Test\PH
         $semantic->method('getComputationMethod')->willReturn($this->createMock(IComputeProgression::class));
         $this->progress_builder->method('getSemantic')->willReturn($semantic);
 
-        $title_field = $this->createMock(\Tracker_FormElement_Field_String::class);
+        $title_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\String\StringField::class);
         $title_field->method('userCanRead')->willReturn(true);
 
         $tracker = $this->createMock(\Tuleap\Tracker\Tracker::class);
@@ -195,7 +195,7 @@ final class TaskRepresentationBuilderForTrackerCacheTest extends \Tuleap\Test\PH
             ->method('getSemantic')
             ->willReturn($semantic);
 
-        $title_field = $this->createMock(\Tracker_FormElement_Field_String::class);
+        $title_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\String\StringField::class);
         $title_field->method('userCanRead')->willReturn(true);
 
         $tracker = $this->createMock(\Tuleap\Tracker\Tracker::class);

@@ -4270,14 +4270,6 @@
       <code><![CDATA[$in_condition]]></code>
     </ImplicitToStringCast>
   </file>
-  <file src="plugins/crosstracker/include/Query/Advanced/QueryBuilder/Metadata/Semantic/Title/TitleFromWhereBuilder.php">
-    <UndefinedClass>
-      <code><![CDATA[$title_field]]></code>
-      <code><![CDATA[$title_field]]></code>
-      <code><![CDATA[$title_field]]></code>
-      <code><![CDATA[$title_field]]></code>
-    </UndefinedClass>
-  </file>
   <file src="plugins/crosstracker/include/Query/Advanced/QueryBuilderVisitor.php">
     <MissingParamType>
       <code><![CDATA[$from_where_expression]]></code>
@@ -21645,11 +21637,6 @@
       <code><![CDATA[$ids]]></code>
     </MissingPropertyType>
   </file>
-  <file src="plugins/kanban/include/Kanban/REST/v1/KanbanItemsResource.php">
-    <UndefinedClass>
-      <code><![CDATA[$summary_field]]></code>
-    </UndefinedClass>
-  </file>
   <file src="plugins/kanban/include/Kanban/REST/v1/KanbanRepresentation.php">
     <InvalidDocblock>
       <code><![CDATA[public $columns;]]></code>
@@ -26975,29 +26962,18 @@
       <code><![CDATA[! $start_date]]></code>
       <code><![CDATA[! $widget_row]]></code>
     </RiskyTruthyFalsyComparison>
-    <UndefinedClass>
-      <code><![CDATA[$title_field]]></code>
-    </UndefinedClass>
   </file>
   <file src="plugins/roadmap/include/Roadmap/REST/v1/RoadmapTasksRetriever.php">
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[! $selected_trackers]]></code>
       <code><![CDATA[! $widget_row]]></code>
     </RiskyTruthyFalsyComparison>
-    <UndefinedClass>
-      <code><![CDATA[$title_field]]></code>
-    </UndefinedClass>
   </file>
   <file src="plugins/roadmap/include/Roadmap/REST/v1/TaskRepresentationBuilderForTracker.php">
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[$end_date]]></code>
       <code><![CDATA[$start_date]]></code>
     </RiskyTruthyFalsyComparison>
-  </file>
-  <file src="plugins/roadmap/include/Roadmap/REST/v1/TaskRepresentationBuilderForTrackerCache.php">
-    <UndefinedClass>
-      <code><![CDATA[$title_field]]></code>
-    </UndefinedClass>
   </file>
   <file src="plugins/roadmap/include/Roadmap/ReportToFilterArtifactsRetriever.php">
     <RiskyTruthyFalsyComparison>
@@ -30712,14 +30688,6 @@
       <code><![CDATA[$_SERVER['REQUEST_URI']]]></code>
     </PossiblyUndefinedArrayOffset>
   </file>
-  <file src="plugins/taskboard/tests/unit/Tracker/TrackerPresenterCollectionBuilderTest.php">
-    <ArgumentTypeCoercion>
-      <code><![CDATA[$title_field]]></code>
-    </ArgumentTypeCoercion>
-    <UndefinedClass>
-      <code><![CDATA[\Tracker_FormElement_Field_Text]]></code>
-    </UndefinedClass>
-  </file>
   <file src="plugins/tee_container/include/tee_containerPlugin.php">
     <MissingParamType>
       <code><![CDATA[$id]]></code>
@@ -32219,6 +32187,28 @@
       <code><![CDATA[$value]]></code>
     </UndefinedVariable>
   </file>
+  <file src="plugins/tracker/include/FormElement/Field/String/StringField.php">
+    <InvalidNullableReturnType>
+      <code><![CDATA[Tracker_Artifact_ChangesetValue]]></code>
+    </InvalidNullableReturnType>
+    <MissingParamType>
+      <code><![CDATA[$value]]></code>
+      <code><![CDATA[$value]]></code>
+    </MissingParamType>
+    <MissingReturnType>
+      <code><![CDATA[accept]]></code>
+      <code><![CDATA[getRestFieldData]]></code>
+      <code><![CDATA[getRuleNoCr]]></code>
+      <code><![CDATA[isEmpty]]></code>
+    </MissingReturnType>
+    <NullableReturnStatement>
+      <code><![CDATA[$changeset_value]]></code>
+    </NullableReturnStatement>
+    <UndefinedMethod>
+      <code><![CDATA[getText]]></code>
+      <code><![CDATA[getText]]></code>
+    </UndefinedMethod>
+  </file>
   <file src="plugins/tracker/include/FormElement/Field/Text/TextField.php">
     <ForbiddenCode>
       <code><![CDATA[var_dump($this, 'Properties must be "maxchars" and "size"')]]></code>
@@ -32265,7 +32255,7 @@
       <code><![CDATA[! $user_preference]]></code>
     </RiskyTruthyFalsyComparison>
     <TypeDoesNotContainType>
-      <code><![CDATA[static::class == 'Tracker_FormElement_Field_String']]></code>
+      <code><![CDATA[static::class == 'Tuleap\Tracker\FormElement\Field\String\StringField']]></code>
       <code><![CDATA[static::class == 'Tuleap\Tracker\FormElement\Field\Text\TextField']]></code>
     </TypeDoesNotContainType>
     <UndefinedMethod>
@@ -32542,9 +32532,6 @@
     <RiskyTruthyFalsyComparison>
       <code><![CDATA[! $artifact->getTitle()]]></code>
     </RiskyTruthyFalsyComparison>
-    <UndefinedClass>
-      <code><![CDATA[$title_field]]></code>
-    </UndefinedClass>
   </file>
   <file src="plugins/tracker/include/REST/Artifact/UsersArtifactsResource.php">
     <MissingReturnType>
@@ -33319,39 +33306,6 @@
       <code><![CDATA[addChild]]></code>
     </PossiblyNullReference>
   </file>
-  <file src="plugins/tracker/include/Semantic/Status/TrackerSemanticStatusDao.php">
-    <DeprecatedMethod>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeInt]]></code>
-      <code><![CDATA[escapeIntImplode]]></code>
-      <code><![CDATA[escapeIntImplode]]></code>
-      <code><![CDATA[parent::__construct()]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieveFirstRow]]></code>
-      <code><![CDATA[retrieveIds]]></code>
-      <code><![CDATA[update]]></code>
-      <code><![CDATA[update]]></code>
-      <code><![CDATA[update]]></code>
-    </DeprecatedMethod>
-    <MissingParamType>
-      <code><![CDATA[$field_id]]></code>
-      <code><![CDATA[$open_value_ids]]></code>
-      <code><![CDATA[$tracker_id]]></code>
-      <code><![CDATA[$tracker_id]]></code>
-      <code><![CDATA[$tracker_id]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[delete]]></code>
-      <code><![CDATA[save]]></code>
-      <code><![CDATA[searchByTrackerId]]></code>
-    </MissingReturnType>
-    <PossiblyInvalidArrayAccess>
-      <code><![CDATA[$row['nb']]]></code>
-    </PossiblyInvalidArrayAccess>
-  </file>
   <file src="plugins/tracker/include/Semantic/Status/TrackerSemanticStatusFactory.php">
     <PossiblyNullArrayAccess>
       <code><![CDATA[$xml_field_attributes['REF']]]></code>
@@ -33664,9 +33618,6 @@
     <InvalidArgument>
       <code><![CDATA[$report_id]]></code>
     </InvalidArgument>
-    <InvalidDocblock>
-      <code><![CDATA[public function getTitleField(): ?Tracker_FormElement_Field_Text]]></code>
-    </InvalidDocblock>
     <InvalidNullableReturnType>
       <code><![CDATA[Tracker_FormElement_Field_List]]></code>
     </InvalidNullableReturnType>
@@ -33675,12 +33626,10 @@
       <code><![CDATA[PFUser]]></code>
     </InvalidParamDefault>
     <InvalidReturnStatement>
-      <code><![CDATA[CachedSemanticTitleFieldRetriever::instance()->fromTracker($this)]]></code>
       <code><![CDATA[is_array($this->cache_permissions)]]></code>
       <code><![CDATA[true]]></code>
     </InvalidReturnStatement>
     <InvalidReturnType>
-      <code><![CDATA[?Tracker_FormElement_Field_Text]]></code>
       <code><![CDATA[String]]></code>
       <code><![CDATA[int]]></code>
       <code><![CDATA[void]]></code>
@@ -33852,9 +33801,6 @@
       <code><![CDATA[empty($this->cached_permission_authorized_ugroups)]]></code>
       <code><![CDATA[empty($this->cached_permission_authorized_ugroups)]]></code>
     </TypeDoesNotContainType>
-    <UndefinedClass>
-      <code><![CDATA[?Tracker_FormElement_Field_Text]]></code>
-    </UndefinedClass>
     <UndefinedMethod>
       <code><![CDATA[getFieldDataFromCSVValue]]></code>
     </UndefinedMethod>
@@ -34020,11 +33966,6 @@
       <code><![CDATA[$external_errors]]></code>
       <code><![CDATA[$forbidden_move_error]]></code>
     </RiskyTruthyFalsyComparison>
-  </file>
-  <file src="plugins/tracker/include/Tracker/Artifact/ActionButtons/ArtifactMoveModalPresenter.php">
-    <PossiblyInvalidPropertyAssignmentValue>
-      <code><![CDATA[$artifact->getTracker()->getProject()->getID()]]></code>
-    </PossiblyInvalidPropertyAssignmentValue>
   </file>
   <file src="plugins/tracker/include/Tracker/Artifact/ActionButtons/ArtifactNotificationActionButtonPresenterBuilder.php">
     <MissingReturnType>
@@ -34800,9 +34741,6 @@
     <PossiblyInvalidOperand>
       <code><![CDATA[$changeset->getId()]]></code>
     </PossiblyInvalidOperand>
-    <UndefinedClass>
-      <code><![CDATA[$title_field]]></code>
-    </UndefinedClass>
   </file>
   <file src="plugins/tracker/include/Tracker/Artifact/MailGateway/MailGatewayBuilder.php">
     <MissingReturnType>
@@ -37466,7 +37404,6 @@
   <file src="plugins/tracker/include/Tracker/FormElement/Field/ArtifactLink/Type/TypePresenterFactory.php">
     <MissingParamType>
       <code><![CDATA[$row]]></code>
-      <code><![CDATA[$shortname]]></code>
       <code><![CDATA[$shortname]]></code>
     </MissingParamType>
     <MissingReturnType>
@@ -40325,7 +40262,7 @@
       <code><![CDATA[addChild]]></code>
     </PossiblyNullReference>
     <TypeDoesNotContainType>
-      <code><![CDATA[static::class == 'Tracker_FormElement_Field_String']]></code>
+      <code><![CDATA[static::class == 'Tuleap\Tracker\FormElement\Field\String\StringField']]></code>
       <code><![CDATA[static::class == 'Tuleap\Tracker\FormElement\Field\Text\TextField']]></code>
     </TypeDoesNotContainType>
     <UndefinedDocblockClass>
@@ -40669,28 +40606,6 @@
     <MissingReturnType>
       <code><![CDATA[fixOriginalValueIds]]></code>
     </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_String.php">
-    <InvalidNullableReturnType>
-      <code><![CDATA[Tracker_Artifact_ChangesetValue]]></code>
-    </InvalidNullableReturnType>
-    <MissingParamType>
-      <code><![CDATA[$value]]></code>
-      <code><![CDATA[$value]]></code>
-    </MissingParamType>
-    <MissingReturnType>
-      <code><![CDATA[accept]]></code>
-      <code><![CDATA[getRestFieldData]]></code>
-      <code><![CDATA[getRuleNoCr]]></code>
-      <code><![CDATA[isEmpty]]></code>
-    </MissingReturnType>
-    <NullableReturnStatement>
-      <code><![CDATA[$changeset_value]]></code>
-    </NullableReturnStatement>
-    <UndefinedMethod>
-      <code><![CDATA[getText]]></code>
-      <code><![CDATA[getText]]></code>
-    </UndefinedMethod>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_SubmittedBy.php">
     <InvalidNullableReturnType>
@@ -45609,11 +45524,6 @@
       <code><![CDATA[$trackers]]></code>
     </PossiblyUndefinedVariable>
   </file>
-  <file src="plugins/tracker/include/Tracker/Tracker_ArtifactByEmailStatus.php">
-    <InvalidArgument>
-      <code><![CDATA[$title_field]]></code>
-    </InvalidArgument>
-  </file>
   <file src="plugins/tracker/include/Tracker/Tracker_FileInfo.php">
     <InvalidArrayOffset>
       <code><![CDATA[$s[$e]]]></code>
@@ -48678,17 +48588,6 @@
       <code><![CDATA[$new_links]]></code>
       <code><![CDATA[$new_links]]></code>
     </PossiblyInvalidArgument>
-  </file>
-  <file src="plugins/tracker/tests/unit/Semantic/Title/SemanticTitleFieldRetrieverTest.php">
-    <InvalidPropertyAssignmentValue>
-      <code><![CDATA[TextFieldBuilder::aTextField(1005)->inTracker($this->tracker)->build()]]></code>
-    </InvalidPropertyAssignmentValue>
-    <UndefinedClass>
-      <code><![CDATA[$this->title_field]]></code>
-      <code><![CDATA[$this->title_field]]></code>
-      <code><![CDATA[$this->title_field]]></code>
-      <code><![CDATA[Tracker_FormElement_Field_Text]]></code>
-    </UndefinedClass>
   </file>
   <file src="plugins/tracker/tests/unit/Test/Builders/Fields/DateFieldBuilder.php">
     <DeprecatedMethod>
@@ -77567,9 +77466,6 @@
       <code><![CDATA[getLabel]]></code>
       <code><![CDATA[getListValueById]]></code>
     </PossiblyNullReference>
-    <TypeDoesNotContainType>
-      <code><![CDATA[assertInstanceOf]]></code>
-    </TypeDoesNotContainType>
   </file>
   <file src="tests/integration/tests/TrackersV3ToV5/TaskTrackerTest.php">
     <DeprecatedMethod>
@@ -77593,9 +77489,6 @@
       <code><![CDATA[getLabel]]></code>
       <code><![CDATA[getListValueById]]></code>
     </PossiblyNullReference>
-    <TypeDoesNotContainType>
-      <code><![CDATA[assertInstanceOf]]></code>
-    </TypeDoesNotContainType>
   </file>
   <file src="tests/integration/tests/WebAuthn/Challenge/WebAuthnChallengeDaoTest.php">
     <PossiblyInvalidArrayAccess>

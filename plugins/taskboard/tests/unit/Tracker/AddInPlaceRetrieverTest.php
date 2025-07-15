@@ -324,7 +324,7 @@ class AddInPlaceRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         if (! $is_set) {
             return;
         }
-        $title_field = $this->createMock(\Tracker_FormElement_Field_String::class);
+        $title_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\String\StringField::class);
         $title_field->method('userCanSubmit')->willReturn($user_can_submit);
         $title_field->method('getId')->willReturn(self::SEMANTIC_TITLE_FIELD_ID);
         $this->title_field_retriever = RetrieveSemanticTitleFieldStub::build()->withTitleField($child_tracker, $title_field);
@@ -348,7 +348,7 @@ class AddInPlaceRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         bool $is_desc_field_required,
         bool $is_mapped_field_required,
     ): void {
-        $title_field = $this->createMock(\Tracker_FormElement_Field_String::class);
+        $title_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\String\StringField::class);
         $title_field->method('isRequired')->willReturn($is_title_field_required);
         $title_field->method('getId')->willReturn(self::SEMANTIC_TITLE_FIELD_ID);
 

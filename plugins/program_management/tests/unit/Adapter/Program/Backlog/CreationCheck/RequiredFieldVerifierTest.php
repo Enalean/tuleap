@@ -105,7 +105,7 @@ final class RequiredFieldVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testAllowsCreationWhenOnlySynchronizedFieldsAreRequired(): void
     {
-        $required_title = $this->createMock(\Tracker_FormElement_Field_String::class);
+        $required_title = $this->createMock(\Tuleap\Tracker\FormElement\Field\String\StringField::class);
         $required_title->method('isRequired')->willReturn(true);
         $required_title->method('getId')->willReturn(self::TITLE_FIELD_ID);
         $required_title->method('getLabel')->willReturn('Title');
@@ -152,7 +152,7 @@ final class RequiredFieldVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $teams = TeamProjectsCollectionBuilder::withProjects(ProjectReferenceStub::withId(147));
 
-        $required_title = $this->createMock(\Tracker_FormElement_Field_String::class);
+        $required_title = $this->createMock(\Tuleap\Tracker\FormElement\Field\String\StringField::class);
         $required_title->method('isRequired')->willReturn(true);
         $required_title->method('getId')->willReturn(self::TITLE_FIELD_ID);
         $required_title->method('getLabel')->willReturn('Title');
@@ -163,7 +163,7 @@ final class RequiredFieldVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
             ->thatIsRequired()
             ->build();
 
-        $other_required_field = $this->createMock(\Tracker_FormElement_Field_String::class);
+        $other_required_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\String\StringField::class);
         $other_required_field->method('isRequired')->willReturn(true);
         $other_required_field->method('getId')->willReturn(self::ARTIFACT_LINK_FIELD_ID);
         $other_required_field->method('getLabel')->willReturn('some_label');

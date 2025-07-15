@@ -23,14 +23,14 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\FormElement;
 
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
-use Tracker_FormElement_Field_String;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\FormElement\Field\String\StringField;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 
 #[DisableReturnValueGenerationForTestDoubles]
 final class TrackerFormElementJsonTest extends TestCase
 {
-    private Tracker_FormElement_Field_String $form_element;
+    private StringField $form_element;
 
     protected function setUp(): void
     {

@@ -49,7 +49,7 @@ final class Tracker_ArtifactByEmailStatusTest extends \Tuleap\Test\PHPUnit\TestC
 
     public function testItDoesNotAcceptArtifactByInsecureEmailWhenSemanticDescriptionIsNotDefined(): void
     {
-        $field_title = $this->createMock(\Tracker_FormElement_Field_String::class);
+        $field_title = $this->createMock(\Tuleap\Tracker\FormElement\Field\String\StringField::class);
 
         $this->tracker_plugin_conf->method('isInsecureEmailgatewayEnabled')->willReturn(true);
         $this->tracker->method('isEmailgatewayEnabled')->willReturn(true);
@@ -62,7 +62,7 @@ final class Tracker_ArtifactByEmailStatusTest extends \Tuleap\Test\PHPUnit\TestC
 
     public function testItAcceptsArtifactByInsecureEmailWhenSemanticIsDefined(): void
     {
-        $field_title       = $this->createMock(\Tracker_FormElement_Field_String::class);
+        $field_title       = $this->createMock(\Tuleap\Tracker\FormElement\Field\String\StringField::class);
         $field_description = $this->createMock(\Tuleap\Tracker\FormElement\Field\Text\TextField::class);
 
         $field_title->method('isRequired')->willReturn(false);
@@ -85,7 +85,7 @@ final class Tracker_ArtifactByEmailStatusTest extends \Tuleap\Test\PHPUnit\TestC
         $this->tracker_plugin_conf->method('isInsecureEmailgatewayEnabled')->willReturn(true);
         $this->tracker->method('isEmailgatewayEnabled')->willReturn(true);
 
-        $field_title       = $this->createMock(\Tracker_FormElement_Field_String::class);
+        $field_title       = $this->createMock(\Tuleap\Tracker\FormElement\Field\String\StringField::class);
         $field_description = $this->createMock(\Tuleap\Tracker\FormElement\Field\Text\TextField::class);
         $field_title->method('isRequired')->willReturn(false);
         $field_description->method('isRequired')->willReturn(false);
@@ -104,7 +104,7 @@ final class Tracker_ArtifactByEmailStatusTest extends \Tuleap\Test\PHPUnit\TestC
         $this->tracker_plugin_conf->method('isInsecureEmailgatewayEnabled')->willReturn(true);
         $this->tracker->method('isEmailgatewayEnabled')->willReturn(true);
 
-        $field_title = $this->createMock(\Tracker_FormElement_Field_String::class);
+        $field_title = $this->createMock(\Tuleap\Tracker\FormElement\Field\String\StringField::class);
         $field_title->method('getId')->willReturn(1);
         $field_title->method('isRequired')->willReturn(false);
         $this->tracker->method('getTitleField')->willReturn($field_title);
@@ -216,7 +216,7 @@ final class Tracker_ArtifactByEmailStatusTest extends \Tuleap\Test\PHPUnit\TestC
         $this->tracker_plugin_conf->method('isInsecureEmailgatewayEnabled')->willReturn(true);
         $this->tracker->method('isEmailgatewayEnabled')->willReturn(true);
 
-        $field_title = $this->createMock(\Tracker_FormElement_Field_String::class);
+        $field_title = $this->createMock(\Tuleap\Tracker\FormElement\Field\String\StringField::class);
         $field_title->method('getId')->willReturn(1);
         $field_title->method('isRequired')->willReturn($is_title_required);
 
@@ -248,7 +248,7 @@ final class Tracker_ArtifactByEmailStatusTest extends \Tuleap\Test\PHPUnit\TestC
 
     public function testIsSemanticConfiguredReturnsFalseIfNoDescription(): void
     {
-        $field_title = $this->createMock(\Tracker_FormElement_Field_String::class);
+        $field_title = $this->createMock(\Tuleap\Tracker\FormElement\Field\String\StringField::class);
 
         $this->tracker_plugin_conf->method('isInsecureEmailgatewayEnabled')->willReturn(true);
         $this->tracker->method('isEmailgatewayEnabled')->willReturn(true);
@@ -261,7 +261,7 @@ final class Tracker_ArtifactByEmailStatusTest extends \Tuleap\Test\PHPUnit\TestC
 
     public function testIsSemanticConfiguredReturnsTrue(): void
     {
-        $field_title       = $this->createMock(\Tracker_FormElement_Field_String::class);
+        $field_title       = $this->createMock(\Tuleap\Tracker\FormElement\Field\String\StringField::class);
         $field_description = $this->createMock(\Tuleap\Tracker\FormElement\Field\Text\TextField::class);
 
 

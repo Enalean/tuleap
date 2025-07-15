@@ -27,8 +27,8 @@ use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use SimpleXMLElement;
 use Tracker_FormElement_Container_Column;
 use Tracker_FormElement_Field_Float;
-use Tracker_FormElement_Field_String;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\FormElement\Field\String\StringField;
 use Tuleap\Tracker\FormElement\Field\Text\TextField;
 use Tuleap\Tracker\Test\Builders\Fields\ColumnContainerBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
@@ -53,7 +53,7 @@ final class Tracker_FormElement_Container_ColumnTest extends TestCase // phpcs:i
 
     public function testItCallsExportPermissionsToXMLForEachSubfield(): void
     {
-        $field_01 = $this->createMock(Tracker_FormElement_Field_String::class);
+        $field_01 = $this->createMock(StringField::class);
         $field_02 = $this->createMock(Tracker_FormElement_Field_Float::class);
         $field_03 = $this->createMock(TextField::class);
 

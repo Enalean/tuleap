@@ -24,11 +24,12 @@ namespace Tuleap\Artidoc\Document\Field;
 
 use Tuleap\Artidoc\Domain\Document\Section\Field\DisplayType;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
+use Tuleap\Tracker\FormElement\Field\String\StringField;
 
 final readonly class ConfiguredField
 {
     public function __construct(
-        public \Tracker_FormElement_Field_String|\Tracker_FormElement_Field_List|ArtifactLinkField $field,
+        public StringField|\Tracker_FormElement_Field_List|ArtifactLinkField $field,
         public DisplayType $display_type,
     ) {
     }

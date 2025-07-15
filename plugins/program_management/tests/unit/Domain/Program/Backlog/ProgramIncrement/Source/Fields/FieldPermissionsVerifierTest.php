@@ -38,7 +38,7 @@ final class FieldPermissionsVerifierTest extends TestCase
     private Tracker_FormElementFactory&Stub $form_element_factory;
     private FieldPermissionsVerifier $permission_verifier;
     private UserIdentifierStub $user_identifier;
-    private \Tracker_FormElement_Field_String $full_field;
+    private \Tuleap\Tracker\FormElement\Field\String\StringField $full_field;
     private TitleFieldReferenceProxy $field;
 
     protected function setUp(): void

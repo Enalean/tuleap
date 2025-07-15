@@ -24,7 +24,6 @@ namespace Tuleap\Artidoc\Adapter\Document\Section\Artifact;
 
 use Luracast\Restler\RestException;
 use PFUser;
-use Tracker_FormElement_Field_String;
 use Tuleap\Artidoc\Adapter\Document\ArtidocDocument;
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\Artidoc\Domain\Document\Section\Artifact\ArtifactContent;
@@ -34,6 +33,7 @@ use Tuleap\NeverThrow\Result;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\FormElement\Field\String\StringField;
 use Tuleap\Tracker\FormElement\Field\Text\TextField;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\FileFieldBuilder;
@@ -53,8 +53,8 @@ final class ArtifactContentCreatorTest extends TestCase
     private const FILES_ID       = 1002;
 
     private PFUser $user;
-    private Tracker_FormElement_Field_String $readonly_title_field;
-    private Tracker_FormElement_Field_String $submitable_title_field;
+    private StringField $readonly_title_field;
+    private StringField $submitable_title_field;
     private TextField $readonly_description_field;
     private TextField $submitable_description_field;
     private ArtidocWithContext $artidoc;
@@ -387,7 +387,7 @@ final class ArtifactContentCreatorTest extends TestCase
         self::assertEquals([123, 124], $payload[2]->value);
     }
 
-    private function getStringField(int $id, bool $submittable): Tracker_FormElement_Field_String
+    private function getStringField(int $id, bool $submittable): StringField
     {
         return StringFieldBuilder::aStringField($id)
             ->withSubmitPermission($this->user, $submittable)

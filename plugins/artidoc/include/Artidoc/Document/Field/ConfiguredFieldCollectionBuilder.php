@@ -26,6 +26,7 @@ use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\Artidoc\Domain\Document\Section\Field\ArtifactSectionField;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
+use Tuleap\Tracker\FormElement\Field\String\StringField;
 
 final readonly class ConfiguredFieldCollectionBuilder
 {
@@ -58,7 +59,7 @@ final readonly class ConfiguredFieldCollectionBuilder
         $fields = [];
         foreach ($stored_fields as $stored_field) {
             $this->field_retriever->retrieveField($stored_field->field_id, $user)
-                ->map(static function (\Tracker_FormElement_Field_String|\Tracker_FormElement_Field_List|ArtifactLinkField $field) use (&$fields, $stored_field) {
+                ->map(static function (StringField|\Tracker_FormElement_Field_List|ArtifactLinkField $field) use (&$fields, $stored_field) {
                     if (! isset($fields[$field->tracker_id])) {
                         $fields[$field->tracker_id] = [];
                     }

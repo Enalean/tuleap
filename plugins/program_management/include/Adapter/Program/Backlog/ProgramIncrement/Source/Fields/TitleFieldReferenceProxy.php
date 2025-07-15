@@ -33,7 +33,7 @@ final class TitleFieldReferenceProxy implements TitleFieldReference
     {
     }
 
-    public static function fromTrackerField(\Tracker_FormElement_Field_String $field): self
+    public static function fromTrackerField(\Tuleap\Tracker\FormElement\Field\String\StringField $field): self
     {
         return new self($field->getId(), $field->getLabel());
     }

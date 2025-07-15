@@ -30,7 +30,6 @@ use Tracker_FormElement_Field_MultiSelectbox;
 use Tracker_FormElement_Field_OpenList;
 use Tracker_FormElement_Field_PermissionsOnArtifact;
 use Tracker_FormElement_Field_Selectbox;
-use Tracker_FormElement_Field_String;
 use Tracker_FormElement_Field_SubmittedBy;
 use Tracker_FormElement_Field_SubmittedOn;
 use Tracker_FormElement_StaticField_LineBreak;
@@ -52,6 +51,7 @@ use Tracker_FormElement_View_Admin_StaticField_LineBreak;
 use Tracker_FormElement_View_Admin_StaticField_Separator;
 use Tracker_FormElement_View_Admin_Visitor;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\FormElement\Field\String\StringField;
 
 #[DisableReturnValueGenerationForTestDoubles]
 final class AdminVisitorTest extends TestCase
@@ -59,7 +59,7 @@ final class AdminVisitorTest extends TestCase
     public function testVisitAStringShouldFallbackOnField(): void
     {
         $visitor     = new Tracker_FormElement_View_Admin_Visitor([]);
-        $formElement = new Tracker_FormElement_Field_String(null, null, null, null, null, null, null, null, null, null, null, null);
+        $formElement = new StringField(null, null, null, null, null, null, null, null, null, null, null, null);
         $formElement->accept($visitor);
         self::assertInstanceOf(Tracker_FormElement_View_Admin_Field::class, $visitor->getAdmin());
     }

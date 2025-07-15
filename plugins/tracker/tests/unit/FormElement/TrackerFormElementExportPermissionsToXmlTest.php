@@ -24,8 +24,8 @@ namespace Tuleap\Tracker\FormElement;
 
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use SimpleXMLElement;
-use Tracker_FormElement_Field_String;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\FormElement\Field\String\StringField;
 
 #[DisableReturnValueGenerationForTestDoubles]
 final class TrackerFormElementExportPermissionsToXmlTest extends TestCase
@@ -40,7 +40,7 @@ final class TrackerFormElementExportPermissionsToXmlTest extends TestCase
             'UGROUP_5' => 5,
         ];
 
-        $field_01 = $this->createPartialMock(Tracker_FormElement_Field_String::class, [
+        $field_01 = $this->createPartialMock(StringField::class, [
             'getId', 'getPermissionsByUgroupId', 'isUsed',
         ]);
 
