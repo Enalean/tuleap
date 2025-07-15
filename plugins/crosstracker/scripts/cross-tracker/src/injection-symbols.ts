@@ -49,4 +49,3 @@ export const QUERY_UPDATER: StrictInjectionKey<UpdateQuery> = Symbol();
 export const WIDGET_TITLE_UPDATER: StrictInjectionKey<WidgetTitleUpdater> = Symbol();
 export const ARROW_REDRAW_TRIGGERER: StrictInjectionKey<ArrowRedrawTriggerer> = Symbol();
 export const WIDGET_CONTAINER: StrictInjectionKey<HTMLElement> = Symbol();
-export const CAN_DISPLAY_ARTIFACT_LINK: StrictInjectionKey<boolean> = Symbol();

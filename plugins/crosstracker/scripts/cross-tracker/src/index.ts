@@ -39,7 +39,6 @@ import {
     ARROW_REDRAW_TRIGGERER,
     QUERY_UPDATER,
     WIDGET_CONTAINER,
-    CAN_DISPLAY_ARTIFACT_LINK,
     RETRIEVE_ARTIFACT_LINKS,
 } from "./injection-symbols";
 import { ArtifactsTableRetriever } from "./api/ArtifactsTableRetriever";
@@ -119,7 +118,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             .provide(WIDGET_TITLE_UPDATER, widget_title_updater)
             .provide(ARROW_REDRAW_TRIGGERER, arrow_redraw_triggerer)
             .provide(WIDGET_CONTAINER, widget_element)
-            .provide(CAN_DISPLAY_ARTIFACT_LINK, widget_data.can_display_artifact_link)
             .mount(vue_mount_point);
     }
 });

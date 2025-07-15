@@ -26,8 +26,6 @@ use LogicException;
 use Project;
 use SimpleXMLElement;
 use TemplateRendererFactory;
-use Tuleap\Config\ConfigKeyInt;
-use Tuleap\Config\FeatureFlagConfigKey;
 use Tuleap\Layout\CssAssetCollection;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeCoreAssets;
@@ -41,10 +39,6 @@ use function Psl\Json\encode;
 class CrossTrackerSearchWidget extends Widget
 {
     public const NAME = 'crosstrackersearch';
-
-    #[FeatureFlagConfigKey('Support artifact links display in Cross Tracker widget')]
-    #[ConfigKeyInt(0)]
-    public const FEATURE_FLAG = 'cross_tracker_widget_display_artifact_link';
 
     public function __construct(
         private readonly WidgetInheritanceHandler $inheritance_handler,

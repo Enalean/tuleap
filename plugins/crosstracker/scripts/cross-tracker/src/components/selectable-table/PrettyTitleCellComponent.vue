@@ -44,7 +44,6 @@
         <caret-indentation v-bind:level="level" />
         <button
             type="button"
-            v-if="can_display_artifact_link"
             v-on:click="toggleArtifactLinksDisplay()"
             class="caret-button"
             v-bind:aria-hidden="!should_display_links()"
@@ -70,21 +69,17 @@
 <script setup lang="ts">
 import { computed, ref, useTemplateRef } from "vue";
 import { useGettext } from "vue3-gettext";
-import { strictInject } from "@tuleap/vue-strict-inject";
 import {
     type ArtifactLinkDirection,
     type Cell,
     PRETTY_TITLE_CELL,
     type PrettyTitleCell,
 } from "../../domain/ArtifactsTable";
-import { CAN_DISPLAY_ARTIFACT_LINK } from "../../injection-symbols";
 import type { ToggleLinks } from "../../helpers/ToggleLinksEmit";
 import CaretIndentation from "./CaretIndentation.vue";
 import ArtifactLinkArrow from "./ArtifactLinkArrow.vue";
 
 const { $gettext } = useGettext();
-
-const can_display_artifact_link = strictInject(CAN_DISPLAY_ARTIFACT_LINK);
 
 const props = defineProps<{
     cell: Cell | undefined;
