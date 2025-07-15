@@ -1,9 +1,0 @@
-{
-    "extends": "@tuleap/build-system-configurator/tsc/tsconfig-for-apps.json",
-    "compilerOptions": {
-        "types": ["jest"],
-        "incremental": false
-    },
-    "include": ["scripts/**/*"],
-    "exclude": ["scripts/lib/**/*"]
-}

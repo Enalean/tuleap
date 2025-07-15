@@ -26,6 +26,8 @@ use HTTPRequest;
 use Tuleap\Docman\View\Admin\AdminView;
 use Tuleap\Document\Tree\IExtractProjectFromVariables;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Layout\IncludeViteAssets;
+use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithProject;
 use Tuleap\Request\DispatchableWithRequest;
@@ -79,20 +81,22 @@ final class SearchView extends AdminView implements DispatchableWithBurningParro
         $user        = $request->getCurrentUser();
         $default_url = '/plugins/docman/?group_id=' . urlencode((string) $project->getID());
 
+        $layout->addJavascriptAsset(
+            new JavascriptViteAsset(
+                new IncludeViteAssets(
+                    __DIR__ . '/../../../scripts/admin-search-view/frontend-assets',
+                    '/assets/document/admin-search-view'
+                ),
+                'src/main.ts'
+            )
+        );
+
         $this->displayForProject(
             $project,
             $user,
             $default_url,
             [],
             function () use ($project) {
-                $include_assets = new \Tuleap\Layout\IncludeAssets(
-                    __DIR__ . '/../../../frontend-assets',
-                    '/assets/document'
-                );
-                $GLOBALS['Response']->addJavascriptAsset(
-                    new \Tuleap\Layout\JavascriptAsset($include_assets, 'admin-search-view.js')
-                );
-
                 $metadata_factory = new \Docman_MetadataFactory($project->getID());
 
                 $renderer = \TemplateRendererFactory::build()->getRenderer(__DIR__);
