@@ -24,14 +24,12 @@ import { shallowMount } from "@vue/test-utils";
 import type { ArtifactLinkDirection } from "../../domain/ArtifactsTable";
 import { FORWARD_DIRECTION, PRETTY_TITLE_CELL } from "../../domain/ArtifactsTable";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-tests";
-import { CAN_DISPLAY_ARTIFACT_LINK } from "../../injection-symbols";
 import PrettyTitleCellComponent from "./PrettyTitleCellComponent.vue";
 import CaretIndentation from "./CaretIndentation.vue";
 import ArtifactLinkArrow from "./ArtifactLinkArrow.vue";
 
 describe("PrettyTitleCellComponent", () => {
     let artifact_uri: string;
-    let can_display_artifact_link: boolean;
     let expected_number_of_forward_link: number;
     let expected_number_of_reverse_link: number;
     let parent_element: HTMLElement | undefined;
@@ -42,7 +40,6 @@ describe("PrettyTitleCellComponent", () => {
 
     beforeEach(() => {
         artifact_uri = "/plugins/tracker/?aid=286";
-        can_display_artifact_link = true;
         expected_number_of_forward_link = 0;
         expected_number_of_reverse_link = 0;
         level = 0;
@@ -56,9 +53,6 @@ describe("PrettyTitleCellComponent", () => {
         return shallowMount(PrettyTitleCellComponent, {
             global: {
                 ...getGlobalTestOptions(),
-                provide: {
-                    [CAN_DISPLAY_ARTIFACT_LINK.valueOf()]: can_display_artifact_link,
-                },
             },
             props: {
                 cell: {
@@ -86,21 +80,6 @@ describe("PrettyTitleCellComponent", () => {
         const wrapper = getWrapper();
 
         expect(wrapper.get("a").attributes("href")).toBe(artifact_uri);
-    });
-
-    describe("Feature flag", () => {
-        it("when the feature flag is enabled, it should renders artifact link", () => {
-            const wrapper = getWrapper();
-
-            expect(wrapper.find("[data-test=pretty-title-caret]").exists()).toBe(true);
-        });
-
-        it("when the feature flag is disabled, it should NOT renders artifact link", () => {
-            can_display_artifact_link = false;
-            const wrapper = getWrapper();
-
-            expect(wrapper.find("[data-test=pretty-title-caret]").exists()).toBe(false);
-        });
     });
 
     describe("Button", () => {
