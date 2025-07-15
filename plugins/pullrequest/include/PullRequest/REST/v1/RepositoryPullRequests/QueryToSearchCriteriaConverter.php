@@ -60,9 +60,7 @@ class QueryToSearchCriteriaConverter
 
     private function buildFaultFromMappingError(MappingError $mapping_error): Fault
     {
-        return MalformedQueryFault::buildFromMappingErrors(
-            \CuyZ\Valinor\Mapper\Tree\Message\Messages::flattenFromNode($mapping_error->node())->errors()
-        );
+        return MalformedQueryFault::buildFromMappingErrors($mapping_error->messages());
     }
 
     /**
