@@ -91,4 +91,22 @@ describe("SectionContainer", () => {
             "section-with-artifact-parent",
         ]);
     });
+
+    it(`should add a class when it is an artifact section with fields`, () => {
+        artidoc_section = ArtifactSectionFactory.override({
+            fields: [
+                {
+                    type: "string",
+                    label: "Label",
+                    value: "Value",
+                    display_type: "column",
+                },
+            ],
+        });
+        expect(getWrapper().classes()).toStrictEqual([
+            "artidoc-section-container",
+            "tlp-swatch-fiesta-red",
+            "section-with-fields",
+        ]);
+    });
 });
