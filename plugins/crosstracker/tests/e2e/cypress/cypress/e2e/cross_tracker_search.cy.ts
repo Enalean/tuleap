@@ -107,7 +107,7 @@ describe("CrossTracker search", function () {
         cy.get("[data-test=query-creation-save-button]").click();
         cy.get("[data-test=cross-tracker-query-success]");
 
-        cy.intercept("/api/v1/crosstracker_query/*/content*").as("getSpecificQueryContent");
+        cy.intercept("/api/v1/crosstracker_query/content*").as("getSpecificQueryContent");
         cy.log("reload page and check widget still has results");
         cy.reload();
         cy.wait("@getSpecificQueryContent", { timeout: 5000 });
