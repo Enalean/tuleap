@@ -28,7 +28,7 @@ namespace Tuleap\Timetracking\Time;
 use Project;
 use Tracker_REST_TrackerRestBuilder;
 use TrackerFactory;
-use Tuleap\Color\ItemColor;
+use Tuleap\Color\ColorName;
 use Tuleap\Timetracking\Admin\AdminDao;
 use Tuleap\Timetracking\Permissions\PermissionsRetriever;
 use Tuleap\Timetracking\REST\v1\TimetrackingOverviewRepresentationsBuilder;
@@ -94,7 +94,7 @@ final class TimetrackingOverviewRepresentationsBuilderTest extends \Tuleap\Test\
         $this->tracker = $this->createMock(Tracker::class);
         $this->tracker->method('getId')->willReturn(16);
         $this->tracker->method('getName')->willReturn('tracker name');
-        $this->tracker->method('getColor')->willReturn(ItemColor::default());
+        $this->tracker->method('getColor')->willReturn(ColorName::default());
         $this->tracker->method('getProject')->willReturn($this->project);
     }
 

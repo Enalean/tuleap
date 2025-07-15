@@ -27,7 +27,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Project_AccessException;
 use Project_AccessProjectNotFoundException;
 use Psr\Log\NullLogger;
-use Tuleap\Color\ItemColor;
+use Tuleap\Color\ColorName;
 use Tuleap\Project\REST\ProjectReference;
 use Tuleap\Roadmap\RetrieveReportToFilterArtifacts;
 use Tuleap\Roadmap\RoadmapWidgetDao;
@@ -72,7 +72,7 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     private RoadmapTasksOutOfDateFilter&MockObject $tasks_filter;
     private SemanticProgressBuilder&MockObject $progress_builder;
 
-    private function getTracker(int $tracker_id, \Tuleap\Tracker\FormElement\Field\String\StringField $title_field, ItemColor $color, string $name): Tracker&MockObject
+    private function getTracker(int $tracker_id, \Tuleap\Tracker\FormElement\Field\String\StringField $title_field, ColorName $color, string $name): Tracker&MockObject
     {
         $tracker = $this->createMock(Tracker::class);
         $tracker->method('getId')->willReturn($tracker_id);
@@ -630,7 +630,7 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $title_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\String\StringField::class);
         $title_field->method('userCanRead')->willReturn(true);
-        $tracker = $this->getTracker(self::TRACKER_ID, $title_field, ItemColor::ACID_GREEN, 'task');
+        $tracker = $this->getTracker(self::TRACKER_ID, $title_field, ColorName::ACID_GREEN, 'task');
 
         $start_date_field = DateFieldBuilder::aDateField(1)
             ->withReadPermission($this->user, true)
@@ -771,7 +771,7 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $title_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\String\StringField::class);
         $title_field->method('userCanRead')->willReturn(true);
 
-        $tracker = $this->getTracker(self::TRACKER_ID, $title_field, ItemColor::ACID_GREEN, 'task');
+        $tracker = $this->getTracker(self::TRACKER_ID, $title_field, ColorName::ACID_GREEN, 'task');
 
         $start_date_field = DateFieldBuilder::aDateField(1)
             ->withReadPermission($this->user, true)
@@ -918,7 +918,7 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $title_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\String\StringField::class);
         $title_field->method('userCanRead')->willReturn(true);
 
-        $tracker = $this->getTracker(self::TRACKER_ID, $title_field, ItemColor::ACID_GREEN, 'task');
+        $tracker = $this->getTracker(self::TRACKER_ID, $title_field, ColorName::ACID_GREEN, 'task');
 
         $start_date_field   = DateFieldBuilder::aDateField(1)
             ->withReadPermission($this->user, true)
@@ -1040,8 +1040,8 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $another_title_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\String\StringField::class);
         $another_title_field->method('userCanRead')->willReturn(true);
 
-        $tracker         = $this->getTracker(self::TRACKER_ID, $title_field, ItemColor::ACID_GREEN, 'task');
-        $another_tracker = $this->getTracker(self::ANOTHER_TRACKER_ID, $another_title_field, ItemColor::RED_WINE, 'bug');
+        $tracker         = $this->getTracker(self::TRACKER_ID, $title_field, ColorName::ACID_GREEN, 'task');
+        $another_tracker = $this->getTracker(self::ANOTHER_TRACKER_ID, $another_title_field, ColorName::RED_WINE, 'bug');
 
         $start_date_field = DateFieldBuilder::aDateField(1)
             ->withReadPermission($this->user, true)

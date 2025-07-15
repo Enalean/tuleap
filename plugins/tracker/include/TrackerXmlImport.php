@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Color\ItemColor;
+use Tuleap\Color\ColorName;
 use Tuleap\Project\UGroupRetrieverWithLegacy;
 use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
 use Tuleap\Project\XML\Import\ImportConfig;
@@ -432,7 +432,7 @@ class TrackerXmlImport
                 $name,
                 $description,
                 $item_name,
-                ItemColor::default()->value,
+                ColorName::default()->value,
                 [],
                 $this->xml_fields_mapping,
                 $this->reports_xml_mapping,
@@ -568,7 +568,7 @@ class TrackerXmlImport
                 $name,
                 $description,
                 $item_name,
-                ItemColor::default()->value,
+                ColorName::default()->value,
                 [],
                 $this->xml_fields_mapping,
                 $this->reports_xml_mapping,

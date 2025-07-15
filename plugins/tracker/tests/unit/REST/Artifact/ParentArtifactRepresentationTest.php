@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\REST\Artifact;
 
-use Tuleap\Color\ItemColor;
+use Tuleap\Color\ColorName;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -36,7 +36,7 @@ final class ParentArtifactRepresentationTest extends \Tuleap\Test\PHPUnit\TestCa
     private const TRACKER_ID               = 25;
     private const TRACKER_LABEL            = 'Hortation';
     private const TRACKER_SHORTNAME        = 'hortation';
-    private const TRACKER_COLOR            = ItemColor::CLOCKWORK_ORANGE;
+    private const TRACKER_COLOR            = ColorName::CLOCKWORK_ORANGE;
     private const ARTIFACT_ID              = 251;
     private const ARTIFACT_TITLE           = 'irisroot';
     private const STATUS_VALUE             = 'On going';

@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Artifact\CrossReference;
 
 use PHPUnit\Framework\MockObject\MockObject;
-use Tuleap\Color\ItemColor;
+use Tuleap\Color\ColorName;
 use Tuleap\Reference\CrossReferenceByNatureOrganizer;
 use Tuleap\Reference\CrossReferencePresenter;
 use Tuleap\Test\Builders\CrossReferencePresenterBuilder;
@@ -91,7 +91,7 @@ final class CrossReferenceArtifactOrganizerTest extends TestCase
         $artifact = $this->createMock(Artifact::class);
         $artifact->method('getXRef')->willReturn('bug #123');
         $artifact->method('getTitle')->willReturn('Issue on submit button. Please fix ASAP!');
-        $artifact->method('getTracker')->willReturn(TrackerTestBuilder::aTracker()->withColor(ItemColor::FIESTA_RED)->build());
+        $artifact->method('getTracker')->willReturn(TrackerTestBuilder::aTracker()->withColor(ColorName::FIESTA_RED)->build());
         $this->artifact_factory
             ->method('getArtifactByIdUserCanView')
             ->with($user, 123)
@@ -127,7 +127,7 @@ final class CrossReferenceArtifactOrganizerTest extends TestCase
         $artifact = $this->createMock(Artifact::class);
         $artifact->method('getXRef')->willReturn('bug #123');
         $artifact->method('getTitle')->willReturn(null);
-        $artifact->method('getTracker')->willReturn(TrackerTestBuilder::aTracker()->withColor(ItemColor::FIESTA_RED)->build());
+        $artifact->method('getTracker')->willReturn(TrackerTestBuilder::aTracker()->withColor(ColorName::FIESTA_RED)->build());
         $this->artifact_factory
             ->method('getArtifactByIdUserCanView')
             ->with($user, 123)

@@ -24,7 +24,7 @@ namespace Tuleap\Color;
 
 use InvalidArgumentException;
 
-enum ItemColor: string
+enum ColorName: string
 {
     case INCA_SILVER      = 'inca-silver';
     case CHROME_SILVER    = 'chrome-silver';

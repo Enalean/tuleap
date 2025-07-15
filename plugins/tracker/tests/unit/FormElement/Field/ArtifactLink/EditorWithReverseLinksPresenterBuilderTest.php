@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
 
-use Tuleap\Color\ItemColor;
+use Tuleap\Color\ColorName;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -44,7 +44,7 @@ final class EditorWithReverseLinksPresenterBuilderTest extends TestCase
     private const LINK_FIELD_LABEL          = 'My Artifact Links';
     private const CURRENT_ARTIFACT_ID       = 891;
     private const CURRENT_TRACKER_ID        = 611;
-    private const CURRENT_TRACKER_COLOR     = ItemColor::DEEP_BLUE;
+    private const CURRENT_TRACKER_COLOR     = ColorName::DEEP_BLUE;
     private const CURRENT_TRACKER_SHORTNAME = 'story';
     private const PARENT_TRACKER_ID         = 487;
     private const CURRENT_PROJECT_ID        = 565;

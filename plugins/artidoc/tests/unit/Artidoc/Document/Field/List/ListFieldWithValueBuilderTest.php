@@ -34,7 +34,7 @@ use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserListValue;
 use Tuleap\Artidoc\Stubs\Document\Field\List\BuildStaticListFieldWithValueStub;
 use Tuleap\Artidoc\Stubs\Document\Field\List\BuildUserGroupListFieldWithValueStub;
 use Tuleap\Artidoc\Stubs\Document\Field\List\BuildUserListFieldWithValueStub;
-use Tuleap\Color\ItemColor;
+use Tuleap\Color\ColorName;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueListTestBuilder;
@@ -91,8 +91,8 @@ final class ListFieldWithValueBuilderTest extends TestCase
             $static_list_field->getLabel(),
             DisplayType::BLOCK,
             [
-                new StaticListValue('Red', ItemColor::FIESTA_RED),
-                new StaticListValue('Blue', ItemColor::DEEP_BLUE),
+                new StaticListValue('Red', ColorName::FIESTA_RED),
+                new StaticListValue('Blue', ColorName::DEEP_BLUE),
             ]
         );
 

@@ -26,7 +26,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Tracker_FormElementFactory;
 use Tracker_REST_TrackerRestBuilder;
 use Tracker_RulesManager;
-use Tuleap\Color\ItemColor;
+use Tuleap\Color\ColorName;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -154,7 +154,7 @@ final class TrackerRestBuilderTest extends TestCase
             'getDescription' => 'Tracks User Stories for developers',
             'getName' => 'User Stories',
             'getItemName' => 'story',
-            'getColor' => ItemColor::DEEP_BLUE,
+            'getColor' => ColorName::DEEP_BLUE,
             'getWorkflow' => $workflow,
             'userIsAdmin' => false,
             'getProject' => $project,

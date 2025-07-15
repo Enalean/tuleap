@@ -26,7 +26,7 @@ namespace Tuleap\Tracker\Artifact\XML\Exporter;
 use PHPUnit\Framework\MockObject\MockObject;
 use SimpleXMLElement;
 use Tracker_RulesManager;
-use Tuleap\Color\ItemColor;
+use Tuleap\Color\ColorName;
 use Tuleap\Project\UGroupRetrieverWithLegacy;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -246,7 +246,7 @@ final class TrackerStructureXMLExporterTest extends TestCase
         );
 
         $color = $xml->color;
-        self::assertEquals(ItemColor::default()->value, (string) $color);
+        self::assertEquals(ColorName::default()->value, (string) $color);
     }
 
     public function testItExportTheTrackerUsageInNewDropDown(): void
@@ -524,7 +524,7 @@ final class TrackerStructureXMLExporterTest extends TestCase
         $tracker->method('getItemName')->willReturn('bug');
         $tracker->method('getName')->willReturn('Bugs');
         $tracker->method('getDescription')->willReturn('');
-        $tracker->method('getColor')->willReturn(ItemColor::default());
+        $tracker->method('getColor')->willReturn(ColorName::default());
         $tracker->method('isEmailgatewayEnabled')->willReturn(false);
         $tracker->method('isCopyAllowed')->willReturn(false);
         $tracker->method('getNotificationsLevel')->willReturn(0);

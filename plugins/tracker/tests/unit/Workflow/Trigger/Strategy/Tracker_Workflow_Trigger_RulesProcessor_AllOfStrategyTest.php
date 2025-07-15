@@ -21,7 +21,7 @@
 declare(strict_types=1);
 
 use PHPUnit\Framework\MockObject\MockObject;
-use Tuleap\Color\ItemColor;
+use Tuleap\Color\ColorName;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
@@ -139,7 +139,7 @@ final class Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategyTest extends \T
             null,
             null,
             null,
-            ItemColor::default(),
+            ColorName::default(),
             null
         );
     }

@@ -25,7 +25,7 @@ namespace Tuleap\JiraImport\JiraAgile;
 
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\AgileDashboard\FormElement\Burnup\XML\XMLBurnupField;
-use Tuleap\Color\ItemColor;
+use Tuleap\Color\ColorName;
 use Tuleap\Tracker\FormElement\Container\Column\XML\XMLColumn;
 use Tuleap\Tracker\FormElement\Container\Fieldset\XML\XMLFieldset;
 use Tuleap\Tracker\FormElement\Field\ArtifactId\XML\XMLArtifactIdField;
@@ -94,7 +94,7 @@ final class ScrumTrackerBuilder
 
         $tracker = (new XMLTracker($id_generator, 'sprint'))
             ->withName('Sprints')
-            ->withColor(ItemColor::ACID_GREEN)
+            ->withColor(ColorName::ACID_GREEN)
             ->withFormElement(
                 (new XMLFieldset($id_generator, 'details'))
                     ->withLabel('Details')

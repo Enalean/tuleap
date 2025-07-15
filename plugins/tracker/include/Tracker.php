@@ -103,7 +103,7 @@ use TrackerDao;
 use TrackerFactory;
 use trackerPlugin;
 use TransitionFactory;
-use Tuleap\Color\ItemColor;
+use Tuleap\Color\ColorName;
 use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
@@ -317,7 +317,7 @@ class Tracker implements Tracker_Dispatchable_Interface
     public $name;
     public $description;
     /**
-     * @var ItemColor
+     * @var ColorName
      */
     private $color;
     public $item_name;
@@ -386,7 +386,7 @@ class Tracker implements Tracker_Dispatchable_Interface
         $instantiate_for_new_projects,
         $log_priority_changes,
         $notifications_level,
-        ItemColor $color,
+        ColorName $color,
         $enable_emailgateway,
     ) {
         $this->id                           = $id;
@@ -1599,7 +1599,7 @@ class Tracker implements Tracker_Dispatchable_Interface
     }
 
     /**
-     * @return ItemColor
+     * @return ColorName
      */
     public function getColor()
     {
@@ -1817,7 +1817,7 @@ class Tracker implements Tracker_Dispatchable_Interface
         $this->log_priority_changes         = $request->getValidated('log_priority_changes') ? 1 : 0;
 
         try {
-            $this->color = ItemColor::fromName((string) $request_tracker_color);
+            $this->color = ColorName::fromName((string) $request_tracker_color);
 
             //Update reference and cross references
             //WARNING this replace existing reference(s) so that all old_item_name reference won't be extracted anymore

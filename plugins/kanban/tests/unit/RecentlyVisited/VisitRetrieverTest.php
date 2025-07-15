@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Kanban\RecentlyVisited;
 
 use PHPUnit\Framework\MockObject\MockObject;
-use Tuleap\Color\ItemColor;
+use Tuleap\Color\ColorName;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -40,13 +40,13 @@ final class VisitRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     private const FIRST_KANBAN_NAME            = 'Kanban Tasks';
     private const FIRST_KANBAN_VISIT_TIMESTAMP = 1491246376;
     private const FIRST_TRACKER_ID             = 12;
-    private const FIRST_TRACKER_COLOR          = ItemColor::CHROME_SILVER;
+    private const FIRST_TRACKER_COLOR          = ColorName::CHROME_SILVER;
 
     private const SECOND_KANBAN_ID              = 2;
     private const SECOND_KANBAN_NAME            = 'Another Kanban';
     private const SECOND_KANBAN_VISIT_TIMESTAMP = 1522959274;
     private const SECOND_TRACKER_ID             = 24;
-    private const SECOND_TRACKER_COLOR          = ItemColor::RED_WINE;
+    private const SECOND_TRACKER_COLOR          = ColorName::RED_WINE;
 
     /**
      * @var \Tuleap\Kanban\RecentlyVisited\RecentlyVisitedKanbanDao&MockObject

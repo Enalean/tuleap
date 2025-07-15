@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue;
 
-use Tuleap\Color\ItemColor;
+use Tuleap\Color\ColorName;
 use Tuleap\Option\Option;
 
 /**
@@ -31,7 +31,7 @@ use Tuleap\Option\Option;
 final readonly class ArtifactLinkStatusValue
 {
     /**
-     * @param Option<ItemColor> $color
+     * @param Option<ColorName> $color
      */
     public function __construct(
         public string $label,

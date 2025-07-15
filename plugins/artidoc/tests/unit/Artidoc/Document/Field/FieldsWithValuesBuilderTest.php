@@ -36,7 +36,7 @@ use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserListFieldWit
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserListValue;
 use Tuleap\Artidoc\Stubs\Document\Field\ArtifactLink\BuildArtifactLinkFieldWithValueStub;
 use Tuleap\Artidoc\Stubs\Document\Field\List\BuildListFieldWithValueStub;
-use Tuleap\Color\ItemColor;
+use Tuleap\Color\ColorName;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Option\Option;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -326,7 +326,7 @@ final class FieldsWithValuesBuilderTest extends TestCase
                 new ArtifactLinkValue(
                     'Child',
                     'my_tracker',
-                    ItemColor::fromName('red-wine'),
+                    ColorName::RED_WINE,
                     new ArtifactLinkProject(903, 'unprinceliness', ''),
                     33,
                     'My artifact',

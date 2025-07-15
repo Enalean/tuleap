@@ -24,7 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\XML;
 
 use PHPUnit\Framework\Attributes\CoversClass;
-use Tuleap\Color\ItemColor;
+use Tuleap\Color\ColorName;
 use Tuleap\Tracker\Artifact\Changeset\XML\XMLChangeset;
 use Tuleap\Tracker\Artifact\XML\Exporter\FieldChange\ArtifactLinkChange;
 use Tuleap\Tracker\Artifact\XML\XMLArtifact;
@@ -165,7 +165,7 @@ class XMLTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
                 false,
                 false,
                 false,
-                ItemColor::FLAMINGO_PINK,
+                ColorName::FLAMINGO_PINK,
                 false,
             )
         );

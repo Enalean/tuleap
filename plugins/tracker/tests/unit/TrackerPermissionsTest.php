@@ -31,7 +31,7 @@ use Tracker_CannedResponseManager;
 use Tracker_DateReminderManager;
 use Tracker_Permission_PermissionController;
 use TrackerManager;
-use Tuleap\Color\ItemColor;
+use Tuleap\Color\ColorName;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\GlobalResponseMock;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
@@ -113,7 +113,7 @@ final class TrackerPermissionsTest extends TestCase
         $this->tracker2->method('getWorkflowManager')->willReturn($this->workflow_manager);
         $this->tracker->method('getGroupId')->willReturn(self::PUBLIC_PROJECT_ID);
         $this->tracker->method('getId')->willReturn(110);
-        $this->tracker->method('getColor')->willReturn(ItemColor::default());
+        $this->tracker->method('getColor')->willReturn(ColorName::default());
         $this->tracker1->method('getGroupId')->willReturn(self::PUBLIC_PROJECT_ID);
         $this->tracker1->method('getId')->willReturn(111);
         $this->tracker2->method('getGroupId')->willReturn(self::PUBLIC_PROJECT_ID);
