@@ -18,43 +18,51 @@
   -->
 
 <template>
-    <empty-state v-if="is_table_empty" v-bind:tql_query="tql_query" />
-    <div class="cross-tracker-loader" v-if="is_loading" data-test="loading"></div>
-    <div class="overflow-wrapper" v-if="total > 0">
-        <div class="selectable-table" v-if="!is_loading">
-            <span
-                class="headers-cell"
-                v-for="(column_name, column_index) of columns"
-                v-bind:key="column_name"
-                v-bind:class="{
-                    'is-last-cell-of-row': isLastCellOfRow(column_index, columns.size),
-                    'is-pretty-title-column': column_name === PRETTY_TITLE_COLUMN_NAME,
-                }"
-                data-test="column-header"
-                >{{ getColumnName(column_name) }}</span
-            >
-            <artifact-rows
-                v-bind:rows="rows"
-                v-bind:columns="columns"
-                v-bind:level="0"
-                v-bind:tql_query="tql_query"
-                v-bind:ancestors="[]"
-            />
+    <section class="tlp-pane-section artifact-table" ref="selectable-table">
+        <empty-state v-if="is_table_empty" v-bind:tql_query="tql_query" />
+        <div class="cross-tracker-loader" v-if="is_loading" data-test="loading"></div>
+        <div class="overflow-wrapper" v-if="total > 0">
+            <div class="selectable-table" v-if="!is_loading">
+                <span
+                    class="headers-cell"
+                    v-for="(column_name, column_index) of columns"
+                    v-bind:key="column_name"
+                    v-bind:class="{
+                        'is-last-cell-of-row': isLastCellOfRow(column_index, columns.size),
+                        'is-pretty-title-column': column_name === PRETTY_TITLE_COLUMN_NAME,
+                    }"
+                    data-test="column-header"
+                    >{{ getColumnName(column_name) }}</span
+                >
+                <artifact-rows
+                    v-bind:rows="rows"
+                    v-bind:columns="columns"
+                    v-bind:level="0"
+                    v-bind:tql_query="tql_query"
+                    v-bind:ancestors="[]"
+                />
+            </div>
         </div>
-    </div>
-    <selectable-pagination
-        v-if="!is_table_empty"
-        v-bind:limit="limit"
-        v-bind:offset="offset"
-        v-bind:total_number="total"
-        v-on:new-page="handleNewPage"
-    />
+        <selectable-pagination
+            v-if="!is_table_empty"
+            v-bind:limit="limit"
+            v-bind:offset="offset"
+            v-bind:total_number="total"
+            v-on:new-page="handleNewPage"
+        />
+    </section>
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref } from "vue";
+import { computed, onBeforeUnmount, onMounted, ref, useTemplateRef } from "vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
-import { EMITTER, GET_COLUMN_NAME, RETRIEVE_ARTIFACTS_TABLE } from "../../injection-symbols";
+import {
+    ARROW_REDRAW_TRIGGERER,
+    EMITTER,
+    GET_COLUMN_NAME,
+    RETRIEVE_ARTIFACTS_TABLE,
+} from "../../injection-symbols";
+
 import type { ArtifactsTable } from "../../domain/ArtifactsTable";
 import SelectablePagination from "./SelectablePagination.vue";
 import EmptyState from "../EmptyState.vue";
@@ -68,11 +76,13 @@ import ArtifactRows from "./ArtifactRows.vue";
 const column_name_getter = strictInject(GET_COLUMN_NAME);
 
 const artifacts_retriever = strictInject(RETRIEVE_ARTIFACTS_TABLE);
+const arrow_redraw_triggerer = strictInject(ARROW_REDRAW_TRIGGERER);
 
 const props = defineProps<{
     tql_query: string;
 }>();
 
+const selectable_table_element = useTemplateRef<HTMLElement>("selectable-table");
 const is_loading = ref(false);
 const columns = ref<ArtifactsTable["columns"]>(new Set());
 const rows = ref<ArtifactsTable["rows"]>([]);
@@ -109,10 +119,19 @@ function resetArtifactList(): void {
 onMounted(() => {
     refreshArtifactList();
     emitter.on(REFRESH_ARTIFACTS_EVENT, handleRefreshArtifactsEvent);
+
+    if (!selectable_table_element.value) {
+        return;
+    }
+    arrow_redraw_triggerer.listenToSelectableTableResize(selectable_table_element.value);
 });
 
 onBeforeUnmount(() => {
     emitter.off(REFRESH_ARTIFACTS_EVENT, handleRefreshArtifactsEvent);
+    if (!selectable_table_element.value) {
+        return;
+    }
+    arrow_redraw_triggerer.removeListener(selectable_table_element.value);
 });
 
 function handleRefreshArtifactsEvent(event: RefreshArtifactsEvent): void {
@@ -189,5 +208,9 @@ function isLastCellOfRow(index: number, size: number): boolean {
 
 .is-pretty-title-column {
     @include pretty-title.is-pretty-title-column;
+}
+
+.artifact-table {
+    position: relative;
 }
 </style>

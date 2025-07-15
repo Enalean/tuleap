@@ -35,8 +35,7 @@ export const NOTIFY_SUCCESS_EVENT = "notify-success";
 export const DISPLAY_QUERY_PREVIEW_EVENT = "display-query-preview";
 export const TOGGLE_QUERY_DETAILS_EVENT = "toggle-query-details";
 export const STARTING_XLSX_EXPORT_EVENT = "starting-xlsx-export-event";
-export const ROW_INSERTED_IN_TABLE_EVENT = "row-inserted-in-table-event";
-export const ROW_REMOVED_IN_TABLE_EVENT = "row-removed-in-table-event";
+export const SELECTABLE_TABLE_RESIZED_EVENT = "selectable-table-resized-event";
 
 export type Events = {
     [SWITCH_QUERY_EVENT]: SwitchQueryEvent;
@@ -53,8 +52,7 @@ export type Events = {
     [DISPLAY_QUERY_PREVIEW_EVENT]: DisplayQueryPreviewEvent;
     [TOGGLE_QUERY_DETAILS_EVENT]: ToggleQueryDetailsEvent;
     [STARTING_XLSX_EXPORT_EVENT]: void;
-    [ROW_INSERTED_IN_TABLE_EVENT]: void;
-    [ROW_REMOVED_IN_TABLE_EVENT]: void;
+    [SELECTABLE_TABLE_RESIZED_EVENT]: void;
 };
 
 export type ToggleQueryDetailsEvent = {
