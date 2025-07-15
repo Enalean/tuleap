@@ -44,7 +44,7 @@ final readonly class MalformedQueryFault extends Fault
         $all_error_messages = 'Query is malformed.';
 
         foreach ($errors as $error) {
-            $all_error_messages .= "\n" . $error->node()->path() . ': ' . $error;
+            $all_error_messages .= "\n" . $error->path() . ': ' . $error->toString();
         }
 
         return new self($all_error_messages);
