@@ -127,7 +127,6 @@ file_admin_editreleases	submit_refresh	Submit/Refresh
 file_admin_editreleases	attach_files	Attach Files To This Release
 file_admin_editreleases	no_available_files	No available files
 file_admin_editreleases	upload_files	Please upload files as explained above, then hit <B>Refresh File List</B>.
-file_admin_editreleases	refresh_file_list	Refresh File List
 file_admin_editreleases	attach_marked_files	Attach Marked Files
 file_admin_editreleases	edit_files	Edit Files in this Release
 file_admin_editreleases	update_each	You <B>must</B> update each of these files with the correct information or they will not appear on your download summary page.

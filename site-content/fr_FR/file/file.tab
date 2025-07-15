@@ -119,7 +119,6 @@ file_admin_editreleases	submit_refresh	Soumettre/rafraîchir
 file_admin_editreleases	attach_files	Ajouter des fichiers à cette version
 file_admin_editreleases	no_available_files	Aucun fichier disponible
 file_admin_editreleases	upload_files	Veuillez télécharger les fichiers comme expliqué ci-dessus, puis appuyez sur le bouton "Rafraîchir la liste des fichiers"</B>
-file_admin_editreleases	refresh_file_list	Rafraîchir la liste des fichiers
 file_admin_editreleases	attach_marked_files	Ajouter les fichiers sélectionnés
 file_admin_editreleases	edit_files	Editer les fichiers dans cette version
 file_admin_editreleases	update_each	Vous <B>devez</B> renseigner les différents champs avec les valeurs appropriées faute de quoi les fichiers n'apparaîtront pas sur la page de téléchargement des fichiers.

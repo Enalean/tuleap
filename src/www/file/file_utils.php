@@ -395,7 +395,6 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
     $script  .= "var add_file_text = '" . $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'add_file'), CODENDI_PURIFIER_JS_QUOTE) . "';";
     $script  .= "var add_change_log_text = '" . $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'add_change_log'), CODENDI_PURIFIER_JS_QUOTE) . "';";
     $script  .= "var view_change_text = '" . $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'view_change'), CODENDI_PURIFIER_JS_QUOTE) . "';";
-    $script  .= "var refresh_files_list = '" . $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'refresh_file_list'), CODENDI_PURIFIER_JS_QUOTE) . "';";
     $script  .= "var release_mode = '" . $hp->purify($is_update ? 'edition' : 'creation', CODENDI_PURIFIER_JS_QUOTE) . "';";
 
     if ($is_update) {

@@ -28,7 +28,7 @@ use Tuleap\JSONHeader;
 require_once __DIR__ . '/../../include/pre.php';
 require_once __DIR__ . '/../../project/admin/permissions.php';
 
-$vAction = new Valid_WhiteList('action', ['permissions_frs_package', 'permissions_frs_release', 'validator_frs_create', 'validator_frs_update', 'refresh_file_list']);
+$vAction = new Valid_WhiteList('action', ['permissions_frs_package', 'permissions_frs_release', 'validator_frs_create', 'validator_frs_update']);
 if ($request->valid($vAction)) {
     $action = $request->get('action');
 } else {
@@ -155,16 +155,6 @@ if ($action == 'permissions_frs_package') {
                         $header = ['valid' => false, 'msg' => $feedback->fetch()];
                     }
                     header(JSONHeader::getHeaderForPrototypeJS($header));
-                }
-            } else {
-                if ($action == 'refresh_file_list') {
-                    $project             = $request->getProject();
-                    $frsff               = new FRSFileFactory();
-                    $file_list           = $frsff->getUploadedFileNames($project);
-                    $available_ftp_files = implode(',', $file_list);
-                    $purifier            = Codendi_HTMLPurifier::instance();
-                    $available_ftp_files = $purifier->purify($available_ftp_files, CODENDI_PURIFIER_JS_DQUOTE);
-                    echo '{"valid":true, "msg":"' . $available_ftp_files . '"}';
                 }
             }
         }

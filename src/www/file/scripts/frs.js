@@ -388,25 +388,6 @@ function view_change_permissions() {
     Element.show("permissions");
 }
 
-//eslint-disable-next-line @typescript-eslint/no-unused-vars
-function refresh_file_list() {
-    var url = "frsajax.php?group_id=" + group_id + "&action=refresh_file_list";
-
-    new Ajax.Request(url, {
-        method: "get",
-        onSuccess: function (transport) {
-            //eslint-disable-next-line no-eval
-            var json = eval("(" + transport.responseText + ")");
-            available_ftp_files = json.msg.split(",");
-            $H(selects)
-                .keys()
-                .each(function (number) {
-                    build_select_file(number);
-                });
-        },
-    });
-}
-
 Event.observe(window, "load", function () {
     //Add new file part
     //Element.hide('row_0');
