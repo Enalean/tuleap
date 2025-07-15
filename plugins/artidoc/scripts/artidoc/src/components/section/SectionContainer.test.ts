@@ -70,18 +70,12 @@ describe("SectionContainer", () => {
 
     it("should not use the tlp-swatch palette if it is a skeleton", () => {
         artidoc_section = ArtifactSectionFactory.skeleton();
-        expect(getWrapper().classes()).toStrictEqual([
-            "artidoc-section-container",
-            "artidoc-section-container-without-border",
-        ]);
+        expect(getWrapper().classes()).toStrictEqual(["artidoc-section-container"]);
     });
 
     it("should not use the tlp-swatch palette if it is a Freetext section", () => {
         artidoc_section = FreetextSectionFactory.create();
-        expect(getWrapper().classes()).toStrictEqual([
-            "artidoc-section-container",
-            "artidoc-section-container-without-border",
-        ]);
+        expect(getWrapper().classes()).toStrictEqual(["artidoc-section-container"]);
     });
 
     it(`should show a class when it is below an artifact section (which is not allowed)`, () => {
