@@ -45,14 +45,15 @@ be added.
 
 * Aurélien Tisné
 * Fábio F. Silva
-* Chloé Masoni
 * Guilhem Bonnefille
-* Lou-Evan Rouby
 * Jihyun Park
 * Clément Gayot
+* Antoine Sauzeau
 
 ### Previous contributors (no longer active committers)
 
+* Lou-Evan Rouby
+* Chloé Masoni
 * Sandra Echinard
 * Yannis Rossetto
 * Florian Caillol
