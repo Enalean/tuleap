@@ -64,7 +64,7 @@ final class TooltipFetcherTest extends TestCase
         $artifact->method('getTitle')->willReturn('The title');
         $artifact->method('getTracker')->willReturn(
             TrackerTestBuilder::aTracker()
-                ->withColor(ItemColor::fromName('fiesta-red'))
+                ->withColor(ItemColor::FIESTA_RED)
                 ->build()
         );
 
@@ -103,7 +103,7 @@ final class TooltipFetcherTest extends TestCase
         $artifact->method('getTitle')->willReturn('The title');
         $artifact->method('getTracker')->willReturn(
             TrackerTestBuilder::aTracker()
-                ->withColor(ItemColor::fromName('fiesta-red'))
+                ->withColor(ItemColor::FIESTA_RED)
                 ->build()
         );
 

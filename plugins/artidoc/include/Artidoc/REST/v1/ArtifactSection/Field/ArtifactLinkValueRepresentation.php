@@ -43,7 +43,7 @@ final readonly class ArtifactLinkValueRepresentation
     {
         $this->link_label        = $link_value->link_label;
         $this->tracker_shortname = $link_value->tracker_shortname;
-        $this->tracker_color     = $link_value->tracker_color->getName();
+        $this->tracker_color     = $link_value->tracker_color->value;
         $this->project           = new ArtifactLinkProjectReference($link_value->project);
         $this->artifact_id       = $link_value->artifact_id;
         $this->title             = $link_value->title;

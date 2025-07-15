@@ -90,7 +90,7 @@ final class StaticListSelectBuilderTest extends CrossTrackerFieldTestCase
         $tracker_builder->buildColorForStaticListValue(
             $sprint_list_field_id,
             $sprint_bind_list_ids['Elan'],
-            ItemColor::fromName('acid-green'),
+            ItemColor::ACID_GREEN,
         );
 
         $tracker_builder->grantReadPermissionOnField(

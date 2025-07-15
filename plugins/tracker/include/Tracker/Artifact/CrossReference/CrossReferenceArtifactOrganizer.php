@@ -69,7 +69,7 @@ final readonly class CrossReferenceArtifactOrganizer
                 (string) $artifact->getTitle(),
                 TitleBadgePresenter::buildLabelBadge(
                     $artifact->getXRef(),
-                    $artifact->getTracker()->getColor()->getName(),
+                    $artifact->getTracker()->getColor()->value,
                 ),
             );
     }

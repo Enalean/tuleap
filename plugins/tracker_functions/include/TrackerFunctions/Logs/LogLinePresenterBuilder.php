@@ -55,7 +55,7 @@ final class LogLinePresenterBuilder
             $fake_changeset_for_url->getUri(),
             $log->artifact->getXRef(),
             $log->artifact->getTitle() ?? '',
-            $log->artifact->getTracker()->getColor()->getName(),
+            $log->artifact->getTracker()->getColor()->value,
             PayloadDownloaderController::buildURL($log->log_line->changeset_id),
             $log->log_line->error_message,
         );

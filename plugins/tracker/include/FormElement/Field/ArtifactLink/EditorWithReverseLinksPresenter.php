@@ -59,7 +59,7 @@ final readonly class EditorWithReverseLinksPresenter
         $this->link_field_label           = $link_field->getLabel();
         $this->current_artifact_id        = $current_artifact?->getId();
         $this->current_tracker_id         = $current_tracker->getId();
-        $this->current_tracker_color      = $current_tracker->getColor()->getName();
+        $this->current_tracker_color      = $current_tracker->getColor()->value;
         $this->current_tracker_short_name = $current_tracker->getItemName();
         $this->current_project_id         = (int) $current_tracker->getGroupId();
         $this->parent_tracker_id          = $parent_tracker?->getId();

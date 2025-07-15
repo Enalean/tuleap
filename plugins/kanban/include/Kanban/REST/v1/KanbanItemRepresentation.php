@@ -43,10 +43,7 @@ final class KanbanItemRepresentation
      */
     public $label;
 
-    /**
-     * @var String
-     */
-    public $color;
+    public string $color;
 
     /*
      * @var array
@@ -101,11 +98,12 @@ final class KanbanItemRepresentation
         array $card_fields,
         BackgroundColor $background_color,
     ): self {
+        $tracker = $artifact->getTracker();
         return new self(
             JsonCast::toInt($artifact->getId()),
-            $artifact->getTracker()->getItemName(),
+            $tracker->getItemName(),
             $artifact->getTitle() ?? '',
-            $artifact->getTracker()->getColor()->getName(),
+            $tracker->getColor()->value,
             $card_fields,
             $timeinfo,
             $in_column,

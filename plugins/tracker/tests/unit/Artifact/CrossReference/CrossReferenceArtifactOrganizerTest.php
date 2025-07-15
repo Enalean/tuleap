@@ -91,7 +91,7 @@ final class CrossReferenceArtifactOrganizerTest extends TestCase
         $artifact = $this->createMock(Artifact::class);
         $artifact->method('getXRef')->willReturn('bug #123');
         $artifact->method('getTitle')->willReturn('Issue on submit button. Please fix ASAP!');
-        $artifact->method('getTracker')->willReturn(TrackerTestBuilder::aTracker()->withColor(ItemColor::fromName('fiesta-red'))->build());
+        $artifact->method('getTracker')->willReturn(TrackerTestBuilder::aTracker()->withColor(ItemColor::FIESTA_RED)->build());
         $this->artifact_factory
             ->method('getArtifactByIdUserCanView')
             ->with($user, 123)
@@ -127,7 +127,7 @@ final class CrossReferenceArtifactOrganizerTest extends TestCase
         $artifact = $this->createMock(Artifact::class);
         $artifact->method('getXRef')->willReturn('bug #123');
         $artifact->method('getTitle')->willReturn(null);
-        $artifact->method('getTracker')->willReturn(TrackerTestBuilder::aTracker()->withColor(ItemColor::fromName('fiesta-red'))->build());
+        $artifact->method('getTracker')->willReturn(TrackerTestBuilder::aTracker()->withColor(ItemColor::FIESTA_RED)->build());
         $this->artifact_factory
             ->method('getArtifactByIdUserCanView')
             ->with($user, 123)

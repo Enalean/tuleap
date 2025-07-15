@@ -92,8 +92,8 @@ class TrackerCreationPresenterBuilder
         $trackers_from_other_projects = $this->getTrackersUserIsAdmin($user);
 
         $tracker_colors = [
-            'colors_names' => ItemColor::COLOR_NAMES,
-            'default_color' => ItemColor::default()->getName(),
+            'colors_names' => ItemColor::listValues(),
+            'default_color' => ItemColor::default()->value,
         ];
 
         return new TrackerCreationPresenter(
@@ -167,7 +167,7 @@ class TrackerCreationPresenterBuilder
                     'id' => $tracker->getId(),
                     'name' => $tracker->getName(),
                     'description' => $tracker->getDescription(),
-                    'tlp_color' => $tracker->getColor()->getName(),
+                    'tlp_color' => $tracker->getColor()->value,
                 ];
             }
 

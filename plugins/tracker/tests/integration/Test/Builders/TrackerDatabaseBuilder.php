@@ -39,9 +39,8 @@ final class TrackerDatabaseBuilder
     {
     }
 
-    public function buildTracker(int $project_id, string $name, string $color = 'inca-silver'): Tracker
+    public function buildTracker(int $project_id, string $name, ItemColor $color = ItemColor::INCA_SILVER): Tracker
     {
-        $color_name = ItemColor::fromName($color);
         $factory    = \TrackerFactory::instance();
         $tracker_id = (int) $this->db->insertReturnId(
             'tracker',
@@ -50,7 +49,7 @@ final class TrackerDatabaseBuilder
                 'name'      => $name,
                 'item_name' => lowercase($name),
                 'status'    => 'A',
-                'color'     => $color_name->getName(),
+                'color'     => $color->value,
             ]
         );
         $tracker    = $factory->getTrackerById($tracker_id);
@@ -594,7 +593,7 @@ final class TrackerDatabaseBuilder
             [
                 'field_id'       => $field_id,
                 'value_id'       => $value_id,
-                'tlp_color_name' => $color->getName(),
+                'tlp_color_name' => $color->value,
             ]
         );
     }

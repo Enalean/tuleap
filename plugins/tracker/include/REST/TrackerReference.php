@@ -58,7 +58,7 @@ class TrackerReference
         $this->id    = $tracker->getId();
         $this->uri   = CompleteTrackerRepresentation::ROUTE . '/' . $this->id;
         $this->label = $tracker->getName();
-        $this->color = $tracker->getColor()->getName();
+        $this->color = $tracker->getColor()->value;
 
         $this->project = $project;
     }

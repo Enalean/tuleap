@@ -70,7 +70,7 @@ final readonly class DocumentTrackerRepresentation
         return new self(
             $tracker->getId(),
             $tracker->getName(),
-            $tracker->getColor()->getName(),
+            $tracker->getColor()->value,
             $tracker->getItemName(),
             $title,
             $description,

@@ -36,7 +36,7 @@ final class ParentArtifactRepresentationTest extends \Tuleap\Test\PHPUnit\TestCa
     private const TRACKER_ID               = 25;
     private const TRACKER_LABEL            = 'Hortation';
     private const TRACKER_SHORTNAME        = 'hortation';
-    private const TRACKER_COLOR            = 'clockwork-orange';
+    private const TRACKER_COLOR            = ItemColor::CLOCKWORK_ORANGE;
     private const ARTIFACT_ID              = 251;
     private const ARTIFACT_TITLE           = 'irisroot';
     private const STATUS_VALUE             = 'On going';
@@ -54,7 +54,7 @@ final class ParentArtifactRepresentationTest extends \Tuleap\Test\PHPUnit\TestCa
             ->withId(self::TRACKER_ID)
             ->withName(self::TRACKER_LABEL)
             ->withShortName(self::TRACKER_SHORTNAME)
-            ->withColor(ItemColor::fromName(self::TRACKER_COLOR))
+            ->withColor(self::TRACKER_COLOR)
             ->withProject($project)
             ->build();
         $artifact = ArtifactTestBuilder::anArtifact(self::ARTIFACT_ID)
@@ -72,7 +72,7 @@ final class ParentArtifactRepresentationTest extends \Tuleap\Test\PHPUnit\TestCa
         $tracker_representation = $representation->tracker;
         self::assertSame(self::TRACKER_ID, $tracker_representation->id);
         self::assertSame(self::TRACKER_LABEL, $tracker_representation->label);
-        self::assertSame(self::TRACKER_COLOR, $tracker_representation->color_name);
+        self::assertSame(self::TRACKER_COLOR->value, $tracker_representation->color_name);
         self::assertSame('trackers/' . self::TRACKER_ID, $tracker_representation->uri);
 
         $project_representation = $tracker_representation->project;

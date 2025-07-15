@@ -31,7 +31,7 @@ class SingleCardPreviewDetailsBuilder
         $fields_details = $this->extractDetailsFields($semantic_card, $possible_background);
 
         $card_preview['card_preview_details'] = $fields_details;
-        $card_preview['tracker_color']        = $semantic_card->getTracker()->getColor()->getName();
+        $card_preview['tracker_color']        = $semantic_card->getTracker()->getColor()->value;
 
         return $card_preview;
     }

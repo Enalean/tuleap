@@ -101,7 +101,7 @@ final class StaticListFieldWithValueBuilderTest extends TestCase
 
         self::assertEquals(
             new StaticListFieldWithValue('static list field with decorators', DisplayType::COLUMN, [
-                new StaticListValue('Red', ItemColor::fromName('red-wine')),
+                new StaticListValue('Red', ItemColor::RED_WINE),
                 new StaticListValue('No color', null),
             ]),
             $this->getField(new ConfiguredField($list_field, DisplayType::COLUMN)),

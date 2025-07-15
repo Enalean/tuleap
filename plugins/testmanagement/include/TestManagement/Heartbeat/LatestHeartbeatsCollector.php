@@ -93,7 +93,7 @@ class LatestHeartbeatsCollector
     {
         $purifier = Codendi_HTMLPurifier::instance();
 
-        $tlp_badge_color = $purifier->purify('tlp-swatch-' . $campaign->getTracker()->getColor()->getName());
+        $tlp_badge_color = $purifier->purify('tlp-swatch-' . $campaign->getTracker()->getColor()->value);
         $campaign_url    = '/plugins/testmanagement/?group_id=' .
             urlencode((string) $project->getId()) . '#!/campaigns/' . $campaign->getId();
         $title           = '

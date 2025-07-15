@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\ServiceHomepage;
 use Tuleap\Option\Option;
 use Tuleap\Tracker\Tooltip\TooltipStatsPresenter;
 use Tuleap\Tracker\Tooltip\TrackerStats;
+use Tuleap\Tracker\Tracker;
 
 final readonly class HomepageTrackerPresenter
 {
@@ -41,10 +42,10 @@ final readonly class HomepageTrackerPresenter
      * @param Option<TrackerStats>          $stats
      * @param Option<TooltipStatsPresenter> $tooltip_presenter
      */
-    public function __construct(\Tuleap\Tracker\Tracker $tracker, Option $stats, Option $tooltip_presenter)
+    public function __construct(Tracker $tracker, Option $stats, Option $tooltip_presenter)
     {
         $this->tracker_id     = $tracker->getId();
-        $this->color          = $tracker->getColor()->getName();
+        $this->color          = $tracker->getColor()->value;
         $this->label          = $tracker->getName();
         $this->description    = $tracker->getDescription();
         $this->uri            = $tracker->getUri();

@@ -638,7 +638,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
     {
         $hp = Codendi_HTMLPurifier::instance();
 
-        return '<span class="' . $hp->purify($this->getTracker()->getColor()->getName()) . ' xref-in-title">' .
+        return '<span class="' . $hp->purify($this->getTracker()->getColor()->value) . ' xref-in-title">' .
                $hp->purify($this->getXRef()) . "\n" .
                '</span>' .
                $hp->purify($this->getTitle());
@@ -649,7 +649,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
         $purifier = Codendi_HTMLPurifier::instance();
 
         return '<span class="colored-xref ' . $purifier->purify(
-            $this->getTracker()->getColor()->getName()
+            $this->getTracker()->getColor()->value
         ) . '"><a class="cross-reference" href="' . $this->getUri() . '">' . $this->getXRef() . '</a></span>';
     }
 

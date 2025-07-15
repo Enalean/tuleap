@@ -94,7 +94,7 @@ final class ScrumTrackerBuilder
 
         $tracker = (new XMLTracker($id_generator, 'sprint'))
             ->withName('Sprints')
-            ->withColor(ItemColor::fromName('acid-green'))
+            ->withColor(ItemColor::ACID_GREEN)
             ->withFormElement(
                 (new XMLFieldset($id_generator, 'details'))
                     ->withLabel('Details')

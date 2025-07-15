@@ -265,9 +265,9 @@ class ProjectMilestonesPresenterBuilder
 
         foreach ($trackers_backlogs as $tracker_backlog) {
             $tracker_agile_dashboard = [
-                'id' => $tracker_backlog->getId(),
-                'color_name' => $tracker_backlog->getColor()->getName(),
-                'label' => $tracker_backlog->getName(),
+                'id'         => $tracker_backlog->getId(),
+                'color_name' => $tracker_backlog->getColor()->value,
+                'label'      => $tracker_backlog->getName(),
             ];
 
             $trackers_agile_dashboard[] = $tracker_agile_dashboard;

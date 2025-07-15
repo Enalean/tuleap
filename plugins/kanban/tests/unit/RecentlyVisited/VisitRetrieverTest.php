@@ -40,13 +40,13 @@ final class VisitRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     private const FIRST_KANBAN_NAME            = 'Kanban Tasks';
     private const FIRST_KANBAN_VISIT_TIMESTAMP = 1491246376;
     private const FIRST_TRACKER_ID             = 12;
-    private const FIRST_TRACKER_COLOR          = 'chrome-silver';
+    private const FIRST_TRACKER_COLOR          = ItemColor::CHROME_SILVER;
 
     private const SECOND_KANBAN_ID              = 2;
     private const SECOND_KANBAN_NAME            = 'Another Kanban';
     private const SECOND_KANBAN_VISIT_TIMESTAMP = 1522959274;
     private const SECOND_TRACKER_ID             = 24;
-    private const SECOND_TRACKER_COLOR          = 'red-wine';
+    private const SECOND_TRACKER_COLOR          = ItemColor::RED_WINE;
 
     /**
      * @var \Tuleap\Kanban\RecentlyVisited\RecentlyVisitedKanbanDao&MockObject
@@ -164,11 +164,11 @@ final class VisitRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $tracker_12 = TrackerTestBuilder::aTracker()->withName('release')
             ->withProject($project)
-            ->withColor(ItemColor::fromName(self::FIRST_TRACKER_COLOR))
+            ->withColor(self::FIRST_TRACKER_COLOR)
             ->build();
         $tracker_24 = TrackerTestBuilder::aTracker()->withName('sprint')
             ->withProject($project)
-            ->withColor(ItemColor::fromName(self::SECOND_TRACKER_COLOR))
+            ->withColor(self::SECOND_TRACKER_COLOR)
             ->build();
 
         $this->dao->method('searchVisitByUserId')
@@ -205,7 +205,7 @@ final class VisitRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         );
         self::assertSame(self::FIRST_KANBAN_ID, $first_entry->getPerTypeId());
         self::assertSame(self::FIRST_KANBAN_NAME, $first_entry->getTitle());
-        self::assertSame(self::FIRST_TRACKER_COLOR, $first_entry->getColor());
+        self::assertSame(self::FIRST_TRACKER_COLOR->value, $first_entry->getColor());
 
         self::assertSame(self::SECOND_KANBAN_VISIT_TIMESTAMP, $second_entry->getVisitTime());
         self::assertSame(
@@ -214,6 +214,6 @@ final class VisitRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         );
         self::assertSame(self::SECOND_KANBAN_ID, $second_entry->getPerTypeId());
         self::assertSame(self::SECOND_KANBAN_NAME, $second_entry->getTitle());
-        self::assertSame(self::SECOND_TRACKER_COLOR, $second_entry->getColor());
+        self::assertSame(self::SECOND_TRACKER_COLOR->value, $second_entry->getColor());
     }
 }

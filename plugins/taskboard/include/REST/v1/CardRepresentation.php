@@ -166,7 +166,7 @@ class CardRepresentation
             $artifact->getTitle() ?? '',
             $artifact->getXRef(),
             $artifact->isOpen(),
-            $artifact->getTracker()->getColor()->getName(),
+            $artifact->getTracker()->getColor()->value,
             JsonCast::toBoolean($artifact->hasChildrenInSameProject()),
             $background_color,
             $rank,

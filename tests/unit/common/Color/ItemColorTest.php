@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Color;
 
 use InvalidArgumentException;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use Tuleap\Test\PHPUnit\TestCase;
 
@@ -33,23 +34,25 @@ final class ItemColorTest extends TestCase
     {
         $color_name = 'inca-silver';
         $color      = ItemColor::fromName($color_name);
-        self::assertEquals($color_name, $color->getName());
+        self::assertSame(ItemColor::INCA_SILVER, $color);
     }
 
-    /**
-     * @testWith ["inca_silver"]
-     *           ["inca-silver"]
-     */
+    public static function generateNames(): iterable
+    {
+        yield ['inca_silver'];
+        yield ['inca-silver'];
+    }
+
+    #[DataProvider('generateNames')]
     public function testColorCanBeBuiltFromColorNameThatMightNotBeStandardized(string $color_name): void
     {
         $color = ItemColor::fromNotStandardizedName($color_name);
-        self::assertEquals('inca-silver', $color->getName());
+        self::assertSame(ItemColor::INCA_SILVER, $color);
     }
 
     public function testDefaultColorCanBeBuilt(): void
     {
-        $color = ItemColor::default();
-        self::assertNotEmpty($color->getName());
+        self::assertSame(ItemColor::INCA_SILVER, ItemColor::default());
     }
 
     public function testInvalidColorNameIsRejected(): void

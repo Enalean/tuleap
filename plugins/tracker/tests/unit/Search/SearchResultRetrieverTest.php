@@ -39,7 +39,7 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SearchResultRetrieverTest extends TestCase
 {
-    private const TRACKER_COLOR   = 'teddy-brown';
+    private const TRACKER_COLOR   = ItemColor::TEDDY_BROWN;
     private const ARTIFACT_ID     = 123;
     private const ARTIFACT_TITLE  = 'title';
     private const CROPPED_CONTENT = '... excerpt ...';
@@ -91,7 +91,7 @@ final class SearchResultRetrieverTest extends TestCase
         );
 
         $project  = ProjectTestBuilder::aProject()->build();
-        $tracker  = TrackerTestBuilder::aTracker()->withColor(ItemColor::fromName(self::TRACKER_COLOR))
+        $tracker  = TrackerTestBuilder::aTracker()->withColor(self::TRACKER_COLOR)
             ->withProject($project)
             ->build();
         $artifact = ArtifactTestBuilder::anArtifact(self::ARTIFACT_ID)->withTitle(self::ARTIFACT_TITLE)
@@ -109,7 +109,7 @@ final class SearchResultRetrieverTest extends TestCase
                 2 => SearchResultEntryBuilder::anEntry()->withCrossReference($artifact->getXRef())
                     ->withLink($artifact->getUri())
                     ->withTitle(self::ARTIFACT_TITLE)
-                    ->withColorName(self::TRACKER_COLOR)
+                    ->withColorName(self::TRACKER_COLOR->value)
                     ->withType(SearchResultRetriever::TYPE)
                     ->withPerTypeId(self::ARTIFACT_ID)
                     ->withIconName('fa-solid fa-tlp-tracker')
@@ -135,7 +135,7 @@ final class SearchResultRetrieverTest extends TestCase
         );
 
         $project  = ProjectTestBuilder::aProject()->build();
-        $tracker  = TrackerTestBuilder::aTracker()->withColor(ItemColor::fromName(self::TRACKER_COLOR))
+        $tracker  = TrackerTestBuilder::aTracker()->withColor(self::TRACKER_COLOR)
             ->withProject($project)
             ->build();
         $artifact = ArtifactTestBuilder::anArtifact(self::ARTIFACT_ID)->withTitle(self::ARTIFACT_TITLE)
@@ -150,7 +150,7 @@ final class SearchResultRetrieverTest extends TestCase
                 2 => SearchResultEntryBuilder::anEntry()->withCrossReference($artifact->getXRef())
                     ->withLink($artifact->getUri())
                     ->withTitle(self::ARTIFACT_TITLE)
-                    ->withColorName(self::TRACKER_COLOR)
+                    ->withColorName(self::TRACKER_COLOR->value)
                     ->withType(SearchResultRetriever::TYPE)
                     ->withPerTypeId(self::ARTIFACT_ID)
                     ->withIconName('fa-solid fa-tlp-tracker')

@@ -35,6 +35,6 @@ final readonly class StaticListValueRepresentation
     public function __construct(StaticListValue $value)
     {
         $this->label     = $value->label;
-        $this->tlp_color = $value->tlp_color ? $value->tlp_color->getName() : '';
+        $this->tlp_color = $value->tlp_color ? $value->tlp_color->value : '';
     }
 }

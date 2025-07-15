@@ -24,6 +24,7 @@ namespace Tuleap\CrossTracker\Query\Advanced\Select;
 
 use PFUser;
 use ProjectUGroup;
+use Tuleap\Color\ItemColor;
 use Tuleap\CrossTracker\Query\Advanced\CrossTrackerFieldTestCase;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Representations\TrackerRepresentation;
 use Tuleap\CrossTracker\Tests\CrossTrackerQueryTestBuilder;
@@ -56,7 +57,7 @@ final class TrackerNameSelectBuilderTest extends CrossTrackerFieldTestCase
         $this->uuid = $this->addWidgetToProject(1, $project_id);
 
         $release_tracker = $tracker_builder->buildTracker($project_id, 'Release');
-        $sprint_tracker  = $tracker_builder->buildTracker($project_id, 'Sprint', 'fiesta-red');
+        $sprint_tracker  = $tracker_builder->buildTracker($project_id, 'Sprint', ItemColor::FIESTA_RED);
         $tracker_builder->setViewPermissionOnTracker($release_tracker->getId(), Tracker::PERMISSION_FULL, ProjectUGroup::PROJECT_MEMBERS);
         $tracker_builder->setViewPermissionOnTracker($sprint_tracker->getId(), Tracker::PERMISSION_FULL, ProjectUGroup::PROJECT_MEMBERS);
 

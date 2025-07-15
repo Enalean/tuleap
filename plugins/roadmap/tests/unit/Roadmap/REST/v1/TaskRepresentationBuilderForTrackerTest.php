@@ -63,7 +63,7 @@ final class TaskRepresentationBuilderForTrackerTest extends \Tuleap\Test\PHPUnit
         $this->tracker = TrackerTestBuilder::aTracker()
             ->withId(101)
             ->withName('bug')
-            ->withColor(ItemColor::fromName('fiesta-red'))
+            ->withColor(ItemColor::FIESTA_RED)
             ->build();
 
         $semantic_status = $this->createMock(\Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus::class);
