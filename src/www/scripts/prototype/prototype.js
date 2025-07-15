@@ -586,10 +586,6 @@ Object.extend(String, {
 });
 
 Object.extend(String.prototype, (function() {
-  var NATIVE_JSON_PARSE_SUPPORT = window.JSON &&
-    typeof JSON.parse === 'function' &&
-    JSON.parse('{"test": true}').test;
-
   function prepareReplacement(replacement) {
     if (Object.isFunction(replacement)) return replacement;
     var template = new Template(replacement);
@@ -756,20 +752,6 @@ Object.extend(String.prototype, (function() {
     return (/^[\],:{}\s]*$/).test(str);
   }
 
-  function evalJSON(sanitize) {
-    var json = this.unfilterJSON(),
-        cx = /[\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff\u0000]/g;
-    if (cx.test(json)) {
-      json = json.replace(cx, function (a) {
-        return '\\u' + ('0000' + a.charCodeAt(0).toString(16)).slice(-4);
-      });
-    }
-    try {
-      if (!sanitize || json.isJSON()) return eval('(' + json + ')');
-    } catch (e) { }
-    throw new SyntaxError('Badly formed JSON string: ' + this.inspect());
-  }
-
   function parseJSON() {
     var json = this.unfilterJSON();
     return JSON.parse(json);
@@ -828,7 +810,7 @@ Object.extend(String.prototype, (function() {
     inspect:        inspect,
     unfilterJSON:   unfilterJSON,
     isJSON:         isJSON,
-    evalJSON:       NATIVE_JSON_PARSE_SUPPORT ? parseJSON : evalJSON,
+    evalJSON:       parseJSON,
     include:        include,
     startsWith:     String.prototype.startsWith || startsWith,
     endsWith:       String.prototype.endsWith || endsWith,
@@ -1798,12 +1780,6 @@ Ajax.Request = Class.create(Ajax.Base, {
       } catch (e) {
         this.dispatchException(e);
       }
-
-      var contentType = response.getHeader('Content-type');
-      if (this.options.evalJS == 'force'
-          || (this.options.evalJS && this.isSameOrigin() && contentType
-          && contentType.match(/^\s*(text|application)\/(x-)?(java|ecma)script(;.*)?\s*$/i)))
-        this.evalResponse();
     }
 
     try {
@@ -1831,14 +1807,6 @@ Ajax.Request = Class.create(Ajax.Base, {
     try {
       return this.transport.getResponseHeader(name) || null;
     } catch (e) { return null; }
-  },
-
-  evalResponse: function() {
-    try {
-      return eval((this.transport.responseText || '').unfilterJSON());
-    } catch (e) {
-      this.dispatchException(e);
-    }
   },
 
   dispatchException: function(exception) {
