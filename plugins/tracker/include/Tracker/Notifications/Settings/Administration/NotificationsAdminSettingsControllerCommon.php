@@ -22,6 +22,7 @@ namespace Tuleap\Tracker\Notifications\Settings;
 
 use Tracker_DateReminderManager;
 use Tracker_NotificationsManager;
+use Tuleap\Notification\Mention\MentionedUserInTextRetriever;
 use Tuleap\Request\NotFoundException;
 use Tuleap\Tracker\Notifications\CollectionOfUgroupToBeNotifiedPresenterBuilder;
 use Tuleap\Tracker\Notifications\CollectionOfUserInvolvedInNotificationPresenterBuilder;
@@ -112,7 +113,8 @@ trait NotificationsAdminSettingsControllerCommon
                     ),
                     $only_status_change_dao,
                     new NotificationOnAllUpdatesRetriever($user_preferences_dao),
-                    new NotificationOnOwnActionRetriever($user_preferences_dao)
+                    new NotificationOnOwnActionRetriever($user_preferences_dao),
+                    new MentionedUserInTextRetriever($user_manager),
                 ),
                 new UserNotificationSettingsDAO()
             )

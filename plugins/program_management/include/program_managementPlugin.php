@@ -31,7 +31,6 @@ use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Glyph\GlyphLocation;
 use Tuleap\Glyph\GlyphLocationsCollector;
-use Tuleap\Notification\Mention\MentionedUserInTextRetriever;
 use Tuleap\Plugin\ListeningToEventClass;
 use Tuleap\Plugin\ListeningToEventName;
 use Tuleap\ProgramManagement\Adapter\ArtifactLinks\DeletedArtifactLinksProxy;
@@ -996,7 +995,6 @@ final class program_managementPlugin extends Plugin implements PluginWithService
                     $event_dispatcher,
                     new \Tracker_Artifact_Changeset_CommentDao(),
                 ),
-                new MentionedUserInTextRetriever($user_manager),
             ),
         );
 

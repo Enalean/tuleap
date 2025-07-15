@@ -41,7 +41,7 @@ final readonly class ActionsQueuer implements PostCreationActionsQueuer
         );
     }
 
-    public function queuePostCreation(Tracker_Artifact_Changeset $changeset, bool $send_notifications, array $mentioned_users): void
+    public function queuePostCreation(Tracker_Artifact_Changeset $changeset, bool $send_notifications): void
     {
         $queue = $this->queue_factory->getPersistentQueue(Worker::EVENT_QUEUE_NAME);
         $queue->pushSinglePersistentMessage(
@@ -50,7 +50,6 @@ final readonly class ActionsQueuer implements PostCreationActionsQueuer
                 'artifact_id'        => $changeset->getArtifact()->getId(),
                 'changeset_id'       => (int) $changeset->getId(),
                 'send_notifications' => $send_notifications,
-                'mentioned_user_ids' => $mentioned_users,
             ]
         );
     }

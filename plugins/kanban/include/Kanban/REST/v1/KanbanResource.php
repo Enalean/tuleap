@@ -82,7 +82,6 @@ use Tuleap\Kanban\REST\v1\TrackerReport\FilteredItemCollectionRepresentationBuil
 use Tuleap\Kanban\TrackerReport\ReportFilterFromWhereBuilder;
 use Tuleap\Kanban\TrackerReport\TrackerReportDao;
 use Tuleap\Kanban\TrackerReport\TrackerReportUpdater;
-use Tuleap\Notification\Mention\MentionedUserInTextRetriever;
 use Tuleap\RealTime\NodeJSClient;
 use Tuleap\RealTimeMercure\Client;
 use Tuleap\RealTimeMercure\ClientBuilder;
@@ -1697,7 +1696,6 @@ final class KanbanResource extends AuthenticatedResource
                     $event_dispatcher,
                     new \Tracker_Artifact_Changeset_CommentDao(),
                 ),
-                new MentionedUserInTextRetriever($user_manager),
             ),
         );
     }

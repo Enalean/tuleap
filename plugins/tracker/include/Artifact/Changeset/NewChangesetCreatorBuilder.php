@@ -32,7 +32,6 @@ use Tracker_FormElementFactory;
 use TransitionFactory;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
-use Tuleap\Notification\Mention\MentionedUserInTextRetriever;
 use Tuleap\Search\ItemToIndexQueueEventBased;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Artifact\Changeset\Comment\ChangesetCommentIndexer;
@@ -122,7 +121,6 @@ final readonly class NewChangesetCreatorBuilder
                     $event_manager,
                     $comment_changeset_dao,
                 ),
-                new MentionedUserInTextRetriever($user_manager),
             ),
         );
     }

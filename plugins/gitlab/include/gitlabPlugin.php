@@ -108,7 +108,6 @@ use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Mail\MailFilter;
 use Tuleap\Mail\MailLogger;
-use Tuleap\Notification\Mention\MentionedUserInTextRetriever;
 use Tuleap\Project\Admin\Reference\Browse\ExternalSystemReferencePresenter;
 use Tuleap\Project\Admin\Reference\Browse\ExternalSystemReferencePresentersCollector;
 use Tuleap\Project\Admin\Reference\ReferenceAdministrationWarningsCollectorEvent;
@@ -356,7 +355,6 @@ class gitlabPlugin extends Plugin
                     $event_manager,
                     new \Tracker_Artifact_Changeset_CommentDao(),
                 ),
-                new MentionedUserInTextRetriever($user_manager),
             ),
         );
 
@@ -592,7 +590,6 @@ class gitlabPlugin extends Plugin
                     $event_manager,
                     new \Tracker_Artifact_Changeset_CommentDao(),
                 ),
-                new MentionedUserInTextRetriever($user_manager),
             )
         );
 

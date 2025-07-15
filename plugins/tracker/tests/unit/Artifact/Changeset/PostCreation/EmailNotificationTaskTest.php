@@ -40,7 +40,6 @@ use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 use Tuleap\Tracker\Notifications\ConfigNotificationEmailCustomSender;
 use Tuleap\Tracker\Notifications\RecipientsManager;
 use Tuleap\Tracker\Test\Stub\Artifact\Changeset\PostCreation\ProvideEmailNotificationAttachmentStub;
-use Tuleap\Tracker\Test\Stub\Artifact\Changeset\PostCreation\SendMailStub;
 use Tuleap\Tracker\Test\Stub\Semantic\Description\RetrieveSemanticDescriptionFieldStub;
 use Tuleap\Tracker\Tracker;
 use UserHelper;
@@ -176,69 +175,6 @@ final class EmailNotificationTaskTest extends TestCase
             RetrieveSemanticDescriptionFieldStub::withNoField(),
         );
         $mail_notification_task->execute($this->changeset, new PostCreationTaskConfiguration(true, [UserTestBuilder::anActiveUser()->withUserName('peralta')->build()]));
-    }
-
-    public function testItDoesNotSendNotificationRelatedToArtifactField(): void
-    {
-        $this->tracker->method('isNotificationStopped')->willReturn(false);
-
-        $mail_sender = $this->createMock(MailSender::class);
-        $mail_sender->expects($this->never())->method('send');
-
-        $mail_notification_task = new EmailNotificationTask(
-            $this->logger,
-            $this->user_helper,
-            $this->createMock(RecipientsManager::class),
-            $this->mail_gateway_recipient_factory,
-            $this->mail_gateway_config,
-            $mail_sender,
-            $this->config_notification_assigned_to,
-            $this->custom_email_sender,
-            ProvideEmailNotificationAttachmentStub::withoutAttachments(),
-            RetrieveSemanticDescriptionFieldStub::withNoField(),
-        );
-        $mail_notification_task->execute($this->changeset, new PostCreationTaskConfiguration(false, []));
-    }
-
-    public function testItSendsNotificationToMentionedUserInComment(): void
-    {
-        $language = $this->createStub(BaseLanguage::class);
-        $language->method('getText')->willReturn('');
-
-        $this->tracker->method('isNotificationStopped')->willReturn(false);
-        $notified_user_1 = UserTestBuilder::anActiveUser()->withUserName('peralta')->withLanguage($language)->withEmail('peralta@example.com')->build();
-        $notified_user_2 = UserTestBuilder::anActiveUser()->withUserName('santiago')->withLanguage($language)->withEmail('santiago@example.com')->build();
-        /** @var list<PFUser> $notified_users */
-        $notified_users = [$notified_user_1, $notified_user_2];
-
-        $mail_sender = SendMailStub::withAssertionHelperCallback(function (array $recipients) use ($notified_users) {
-            $expected_mails = [$notified_users[0]->getEmail(), $notified_users[1]->getEmail()];
-            self::assertCount(2, $recipients);
-            self::assertEqualsCanonicalizing($expected_mails, $recipients);
-        });
-
-        $recipients_manager = $this->createStub(RecipientsManager::class);
-        $recipients_manager->method('getRecipientFromComment')->willReturn([$notified_users[0]->getUserName() => true, $notified_users[1]->getUserName() => true]);
-        $recipients_manager->method('getUserFromRecipientName')->willReturnCallback(function (string $recipient_name) use ($notified_user_1, $notified_user_2) {
-            return match ($recipient_name) {
-                $notified_user_1->getUserName() => $notified_user_1,
-                $notified_user_2->getUserName() => $notified_user_2,
-            };
-        });
-        $mail_notification_task = new EmailNotificationTask(
-            $this->logger,
-            $this->user_helper,
-            $recipients_manager,
-            $this->mail_gateway_recipient_factory,
-            $this->mail_gateway_config,
-            $mail_sender,
-            $this->config_notification_assigned_to,
-            $this->custom_email_sender,
-            ProvideEmailNotificationAttachmentStub::withoutAttachments(),
-            RetrieveSemanticDescriptionFieldStub::withNoField(),
-        );
-
-        $mail_notification_task->execute($this->changeset, new PostCreationTaskConfiguration(false, $notified_users));
     }
 
     public function testChangesetShouldUseUserLanguageInGetBody(): void

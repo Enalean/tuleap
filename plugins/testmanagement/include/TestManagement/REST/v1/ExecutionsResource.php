@@ -42,7 +42,6 @@ use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Markdown\CommonMarkInterpreter;
-use Tuleap\Notification\Mention\MentionedUserInTextRetriever;
 use Tuleap\RealTime\NodeJSClient;
 use Tuleap\RealTimeMercure\ClientBuilder;
 use Tuleap\REST\Header;
@@ -310,7 +309,6 @@ class ExecutionsResource
                     $event_dispatcher,
                     new \Tracker_Artifact_Changeset_CommentDao(),
                 ),
-                new MentionedUserInTextRetriever($user_manager),
             ),
         );
 

@@ -24,8 +24,6 @@ namespace Tuleap\Tracker\Artifact\Changeset\PostCreation;
 use Tracker_ArtifactFactory;
 use Tuleap\Queue\WorkerEvent;
 use Tuleap\Tracker\Artifact\RetrieveArtifact;
-use Tuleap\User\RetrieveUserById;
-use UserManager;
 
 final readonly class AsynchronousActionsRunner
 {
@@ -34,7 +32,6 @@ final readonly class AsynchronousActionsRunner
     public function __construct(
         private ActionsRunner $actions_runner,
         private RetrieveArtifact $tracker_artifact_factory,
-        private RetrieveUserById $user_manager,
     ) {
     }
 
@@ -44,7 +41,7 @@ final readonly class AsynchronousActionsRunner
             return;
         }
 
-        $async_runner = new self(ActionsRunner::build($event->getLogger()), Tracker_ArtifactFactory::instance(), UserManager::instance());
+        $async_runner = new self(ActionsRunner::build($event->getLogger()), Tracker_ArtifactFactory::instance());
         $async_runner->process($event);
     }
 
@@ -52,7 +49,7 @@ final readonly class AsynchronousActionsRunner
     {
         $message = $event->getPayload();
 
-        if (! isset($message['artifact_id'], $message['changeset_id'], $message['mentioned_user_ids'])) {
+        if (! isset($message['artifact_id'], $message['changeset_id'])) {
             $event_name = $event->getEventName();
             $event->getLogger()->warning("The payload for $event_name seems to be malformed, ignoring");
             $event->getLogger()->debug("Malformed payload for $event_name: " . var_export($event->getPayload(), true));
@@ -78,15 +75,6 @@ final readonly class AsynchronousActionsRunner
             return;
         }
 
-        $mentioned_users = [];
-        foreach ($message['mentioned_user_ids'] as $mentioned_user_id) {
-            $user = $this->user_manager->getUserById($mentioned_user_id);
-            if ($user === null) {
-                $event->getLogger()->warning('Ignoring user #' . $mentioned_user_id . ' : not found');
-                continue;
-            }
-            $mentioned_users[] = $user;
-        }
-        $this->actions_runner->processAsyncPostCreationActions($changeset, new PostCreationTaskConfiguration($send_notifications, $mentioned_users));
+        $this->actions_runner->processAsyncPostCreationActions($changeset, new PostCreationTaskConfiguration($send_notifications));
     }
 }

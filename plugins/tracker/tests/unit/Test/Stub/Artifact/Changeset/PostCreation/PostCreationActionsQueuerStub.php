@@ -47,11 +47,10 @@ final class PostCreationActionsQueuerStub implements PostCreationActionsQueuer
     public function queuePostCreation(
         Tracker_Artifact_Changeset $changeset,
         bool $send_notifications,
-        array $mentioned_users,
     ): void {
         $this->count++;
         if ($this->callback) {
-            ($this->callback)($changeset, $send_notifications, $mentioned_users);
+            ($this->callback)($changeset, $send_notifications);
         }
     }
 

@@ -87,7 +87,6 @@ use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\NeverThrow\Fault;
-use Tuleap\Notification\Mention\MentionedUserInTextRetriever;
 use Tuleap\Option\Option;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
@@ -632,7 +631,6 @@ final class ArtidocSectionsResource extends AuthenticatedResource
                     $event_dispatcher,
                     $changeset_comment_dao,
                 ),
-                new MentionedUserInTextRetriever(UserManager::instance()),
             ),
         );
 

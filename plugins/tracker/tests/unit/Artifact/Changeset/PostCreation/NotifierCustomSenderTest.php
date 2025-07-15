@@ -142,7 +142,7 @@ final class NotifierCustomSenderTest extends TestCase
         ]);
 
         $logger = new NullLogger();
-        return $this->mail_notification_task->buildOneMessageForMultipleRecipients($changeset, $this->recipients_manager->getRecipients($changeset, true, $logger), false, $logger);
+        return $this->mail_notification_task->buildOneMessageForMultipleRecipients($changeset, $this->recipients_manager->getRecipients($changeset, true, true, $logger), false, $logger);
     }
 
     public function testFetchesTheCorrectlyFormattedSenderFieldWhenEnabled(): void
