@@ -63,6 +63,9 @@ const additional_class = computed(() => {
     if (has_artifact_parent.value) {
         return [color_class, "section-with-artifact-parent"];
     }
+    if (props.section.value.type === "artifact" && props.section.value.fields.length > 0) {
+        return [color_class, "section-with-fields"];
+    }
     return [color_class];
 });
 </script>
@@ -144,8 +147,14 @@ const additional_class = computed(() => {
     }
 }
 
+.section-with-fields {
+    padding-bottom: var(--tlp-medium-spacing);
+}
+
 .section-with-artifact-parent {
     --tuleap-artidoc-section-background: var(--tlp-alert-danger-background);
+
+    padding-bottom: var(--tlp-medium-spacing);
 }
 
 .section-with-artifact-parent-error {
