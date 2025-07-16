@@ -18,6 +18,8 @@
  *
  */
 
+import Chainable = Cypress.Chainable;
+
 declare global {
     // Be consistent with Cypress declaration
     // eslint-disable-next-line @typescript-eslint/no-namespace
@@ -37,6 +39,11 @@ declare global {
             createAndPushTag(repository_name: string, tag_name: string): void;
             createAndPushTagWillFail(repository_name: string, tag_name: string): void;
             cloneRepository(user: string, repository_path: string, repository_name: string): void;
+            cloneRepositoryWillFail(
+                user: string,
+                repository_path: string,
+                repository_name: string,
+            ): Chainable<string>;
             deleteClone(repository_name: string): void;
             pullBranch(repository_name: string): void;
         }
@@ -114,6 +121,22 @@ Cypress.Commands.add(
             git config user.email "admin@example.com"
              `;
         cy.exec(branch_command);
+    },
+);
+
+Cypress.Commands.add(
+    "cloneRepositoryWillFail",
+    (user: string, repository_path: string, repository_name: string): Chainable<string> => {
+        const uri = encodeURI(`https://${user}:Correct Horse Battery Staple@${repository_path}`);
+        const branch_command = `cd /tmp &&
+            git -c http.sslVerify=false clone ${uri} ${repository_name} &&
+            cd /tmp/${repository_name} &&
+            git config user.name "admin" &&
+            git config user.email "admin@example.com"
+             `;
+        return cy.exec(branch_command, { failOnNonZeroExit: false }).then(function (result) {
+            return result.stderr;
+        });
     },
 );
 
