@@ -14,7 +14,7 @@ tests manually, do the following instead:
 
 ``` bash
 $> make tests-rest SETUP_ONLY=1
-$root@d4601e92ca3f> /opt/remi/php82/root/usr/bin/php \
+$root@d4601e92ca3f> /opt/remi/php84/root/usr/bin/php \
   /usr/share/tuleap/tests/rest/vendor/bin/phpunit \
   --configuration /usr/share/tuleap/tests/rest/phpunit.xml \
   --do-not-cache-result \

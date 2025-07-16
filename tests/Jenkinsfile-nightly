@@ -37,7 +37,7 @@ pipeline {
         }
 
         stage('Unit tests PHP') {
-            steps { script { actions.runPHPUnitTests('82', false) } }
+            steps { script { actions.runPHPUnitTests('84', false) } }
             post { always { junit 'results/ut-phpunit/*/phpunit_tests_results.xml' } }
         }
 
@@ -58,23 +58,6 @@ pipeline {
             post {
                 always {
                     junit 'results/e2e/full/*.xml'
-                }
-            }
-        }
-        stage ('PHP 8.2') {
-            failFast false
-            parallel {
-                stage('Unit tests') {
-                    steps { script { actions.runPHPUnitTests('82', false) } }
-                    post { always { junit 'results/ut-phpunit/*/phpunit_tests_results.xml' } }
-                }
-                stage('DB/Integration') {
-                    steps { script { actions.runDBTests('mysql80', '82') } }
-                    post { always { junit 'results/db/*/db_tests.xml' } }
-                }
-                stage('REST') {
-                    steps { script { actions.runRESTTests('mysql80', '82') } }
-                    post { always { junit 'results/api-rest/*/*' } }
                 }
             }
         }

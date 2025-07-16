@@ -53,7 +53,7 @@ final class SiteDeployFPMTest extends \Tuleap\Test\PHPUnit\TestCase
     protected function setUp(): void
     {
         $base_dir                       = $this->getTmpDir();
-        $this->php_configuration_folder = $base_dir . '/etc/opt/remi/php82';
+        $this->php_configuration_folder = $base_dir . '/etc/opt/remi/php84';
         mkdir($this->php_configuration_folder . '/php-fpm.d', 0755, true);
         $this->temp_dir = $base_dir . '/var/tmp';
         mkdir($this->temp_dir, 0755, true);
@@ -63,7 +63,7 @@ final class SiteDeployFPMTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->current_user           = posix_getpwuid(posix_geteuid())['name'];
     }
 
-    public function testDeployphp82Prod(): void
+    public function testDeployphp84Prod(): void
     {
         file_put_contents(
             $this->php_configuration_folder . '/php-fpm.conf',
@@ -80,7 +80,7 @@ final class SiteDeployFPMTest extends \Tuleap\Test\PHPUnit\TestCase
             new FPMSessionFiles(),
             ['php-fpm.service'],
             $this->php_configuration_folder,
-            __DIR__ . '/../../../../../src/etc/fpm82',
+            __DIR__ . '/../../../../../src/etc/fpm84',
             [],
             $this->temp_dir,
         );
@@ -99,7 +99,7 @@ final class SiteDeployFPMTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertStringContainsString('user = ' . $this->current_user, $tuleap_conf);
         $this->assertStringContainsString('group = ' . $this->current_user, $tuleap_conf);
 
-        $this->assertFileEquals(__DIR__ . '/../../../../../src/etc/fpm82/tuleap_errors_prod.part', $this->php_configuration_folder . '/php-fpm.d/tuleap_errors.part');
+        $this->assertFileEquals(__DIR__ . '/../../../../../src/etc/fpm84/tuleap_errors_prod.part', $this->php_configuration_folder . '/php-fpm.d/tuleap_errors.part');
 
         $this->assertStringContainsString('error_log = syslog', file_get_contents($this->php_configuration_folder . '/php-fpm.conf'));
     }
@@ -126,7 +126,7 @@ final class SiteDeployFPMTest extends \Tuleap\Test\PHPUnit\TestCase
             new FPMSessionFiles(),
             ['php-fpm.service'],
             $this->php_configuration_folder,
-            __DIR__ . '/../../../../../src/etc/fpm82',
+            __DIR__ . '/../../../../../src/etc/fpm84',
             [],
             $this->temp_dir,
         );
@@ -158,7 +158,7 @@ final class SiteDeployFPMTest extends \Tuleap\Test\PHPUnit\TestCase
             new FPMSessionFiles(),
             ['php-fpm.service'],
             $this->php_configuration_folder,
-            __DIR__ . '/../../../../../src/etc/fpm82',
+            __DIR__ . '/../../../../../src/etc/fpm84',
             [],
             $this->temp_dir,
         );
@@ -184,7 +184,7 @@ final class SiteDeployFPMTest extends \Tuleap\Test\PHPUnit\TestCase
             new FPMSessionFiles(),
             ['php-fpm.service'],
             $this->php_configuration_folder,
-            __DIR__ . '/../../../../../src/etc/fpm82',
+            __DIR__ . '/../../../../../src/etc/fpm84',
             [],
             $this->temp_dir,
         );
@@ -215,7 +215,7 @@ final class SiteDeployFPMTest extends \Tuleap\Test\PHPUnit\TestCase
             new FPMSessionFiles(),
             ['php-fpm.service'],
             $this->php_configuration_folder,
-            __DIR__ . '/../../../../../src/etc/fpm82',
+            __DIR__ . '/../../../../../src/etc/fpm84',
             [],
             $this->temp_dir,
         );
@@ -227,7 +227,7 @@ final class SiteDeployFPMTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertStringContainsString('user = ' . $this->current_user, file_get_contents($this->php_configuration_folder . '/php-fpm.d/tuleap_common.part'));
     }
 
-    public function testDeployphp82WithSimpleRedisSession(): void
+    public function testDeployphp84WithSimpleRedisSession(): void
     {
         touch($this->php_configuration_folder . '/php-fpm.conf');
         $deploy = new SiteDeployFPM(
@@ -238,7 +238,7 @@ final class SiteDeployFPMTest extends \Tuleap\Test\PHPUnit\TestCase
             new FPMSessionRedis($this->tuleap_redis_conf_file, $this->current_user, 'redis'),
             ['php-fpm.service'],
             $this->php_configuration_folder,
-            __DIR__ . '/../../../../../src/etc/fpm82',
+            __DIR__ . '/../../../../../src/etc/fpm84',
             [],
             $this->temp_dir,
         );
@@ -254,7 +254,7 @@ final class SiteDeployFPMTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals('', $redis_password);
     }
 
-    public function testDeployphp82WithAuthenticatedRedisSession(): void
+    public function testDeployphp84WithAuthenticatedRedisSession(): void
     {
         touch($this->php_configuration_folder . '/php-fpm.conf');
         $deploy = new SiteDeployFPM(
@@ -265,7 +265,7 @@ final class SiteDeployFPMTest extends \Tuleap\Test\PHPUnit\TestCase
             new FPMSessionRedis($this->tuleap_redis_conf_file, $this->current_user, 'another-redis', false, 7222, 'this_is_secure,really'),
             ['php-fpm.service'],
             $this->php_configuration_folder,
-            __DIR__ . '/../../../../../src/etc/fpm82',
+            __DIR__ . '/../../../../../src/etc/fpm84',
             [],
             $this->temp_dir,
         );
@@ -281,7 +281,7 @@ final class SiteDeployFPMTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertEquals('this_is_secure,really', $redis_password);
     }
 
-    public function testDeployphp82WithAuthenticatedRedisSessionWithTLS(): void
+    public function testDeployphp84WithAuthenticatedRedisSessionWithTLS(): void
     {
         touch($this->php_configuration_folder . '/php-fpm.conf');
         $deploy = new SiteDeployFPM(
@@ -292,7 +292,7 @@ final class SiteDeployFPMTest extends \Tuleap\Test\PHPUnit\TestCase
             new FPMSessionRedis($this->tuleap_redis_conf_file, $this->current_user, 'another-redis', true, 7222, ''),
             ['php-fpm.service'],
             $this->php_configuration_folder,
-            __DIR__ . '/../../../../../src/etc/fpm82',
+            __DIR__ . '/../../../../../src/etc/fpm84',
             [],
             $this->temp_dir,
         );

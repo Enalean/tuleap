@@ -37,7 +37,6 @@ final class SiteDeployFPMCommand extends Command
 {
     public const NAME            = 'site-deploy:fpm';
     public const OPT_PHP_VERSION = 'php-version';
-    private const PHP82          = 'php82';
     public const PHP84           = 'php84';
     public const OPT_FORCE       = 'force';
 
@@ -51,7 +50,7 @@ final class SiteDeployFPMCommand extends Command
     protected function configure(): void
     {
         $this->setDescription('Deploy PHP FPM configuration files')
-            ->addOption(self::OPT_PHP_VERSION, '', InputOption::VALUE_REQUIRED, 'Target php version: `php82`, `php84` (default)')
+            ->addOption(self::OPT_PHP_VERSION, '', InputOption::VALUE_REQUIRED, 'Target PHP version: `php84` (default)')
             ->addOption(self::OPT_DEVELOPMENT, '', InputOption::VALUE_NONE, 'Deploy development version of the configuration files')
             ->addOption(self::OPT_FORCE, '', InputOption::VALUE_NONE, 'Force files to be rewritten (by default existing files are not modified)');
     }
@@ -68,9 +67,7 @@ final class SiteDeployFPMCommand extends Command
 
         $console_logger = new ConsoleLogger($output, [LogLevel::INFO => OutputInterface::VERBOSITY_NORMAL]);
 
-        if ($php_version === self::PHP82) {
-            $deploy = SiteDeployFPM::buildForPHP82(new ProcessFactory(), $console_logger, ForgeConfig::get('sys_http_user'), $development);
-        } elseif ($php_version === self::PHP84) {
+        if ($php_version === self::PHP84) {
             $deploy = SiteDeployFPM::buildForPHP84(new ProcessFactory(), $console_logger, ForgeConfig::get('sys_http_user'), $development);
         } else {
             $output->write(
