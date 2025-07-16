@@ -287,7 +287,7 @@ window.wgUploadLicenseObj = {
 		var req = sajax_init_object();
 		req.onreadystatechange = function() {
 			if ( req.readyState == 4 && req.status == 200 )
-				wgUploadLicenseObj.processResult( eval( '(' + req.responseText + ')' ), license );
+				wgUploadLicenseObj.processResult(JSON.parse(req.responseText), license );
 		};
 		req.open( 'GET', url, true );
 		req.send( '' );
