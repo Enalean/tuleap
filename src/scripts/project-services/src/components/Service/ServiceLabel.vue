@@ -20,7 +20,7 @@
 <template>
     <div class="tlp-form-element">
         <label class="tlp-label" v-bind:for="id">
-            <translate>Label</translate>
+            {{ $gettext("Label") }}
             <i class="fa fa-asterisk"></i>
         </label>
         <input

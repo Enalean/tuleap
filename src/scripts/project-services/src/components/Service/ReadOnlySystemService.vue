@@ -23,7 +23,7 @@
         <hidden-service-shortname v-if="service.short_name" v-bind:value="service.short_name" />
         <read-only-service-icon v-bind:value="service.icon_name" />
         <div class="tlp-property">
-            <label class="tlp-label" v-translate>Label</label>
+            <label class="tlp-label">{{ $gettext("Label") }}</label>
             <span>{{ service.label }}</span>
             <input type="hidden" name="label" v-bind:value="service.label" />
         </div>
@@ -47,7 +47,7 @@
             v-bind:disabled="!service.is_link_customizable"
         />
         <div class="tlp-property">
-            <label class="tlp-label" v-translate>Description</label>
+            <label class="tlp-label">{{ $gettext("Description") }}</label>
             <span>{{ service.description }}</span>
             <input type="hidden" name="description" v-bind:value="service.description" />
         </div>

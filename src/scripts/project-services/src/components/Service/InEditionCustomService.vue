@@ -65,7 +65,7 @@
                     v-bind:disabled="service.is_in_new_tab"
                     data-test="iframe-switch"
                 />
-                <translate>Display in iframe</translate>
+                {{ $gettext("Display in iframe") }}
             </label>
         </div>
 
@@ -74,22 +74,24 @@
             v-if="is_iframe_deprecation_warning_shown || is_new_tab_warning_shown"
             ref="warnings"
         >
-            <translate
-                v-if="is_new_tab_warning_shown"
-                key="new_tab_warning"
-                data-test="new-tab-warning"
-            >
-                The service can't be displayed in an iframe because you want it to be open in a new
-                tab.
-            </translate>
-            <translate
+            <span v-if="is_new_tab_warning_shown" key="new_tab_warning" data-test="new-tab-warning">
+                {{
+                    $gettext(
+                        "The service can't be displayed in an iframe because you want it to be open in a new tab.",
+                    )
+                }}
+            </span>
+            <span
                 v-if="is_iframe_deprecation_warning_shown"
                 key="iframe_deprecation_warning"
                 data-test="iframe-deprecation-warning"
             >
-                Opening in iframe is deprecated. If you switch it off, you won't be able to switch
-                it back on again.
-            </translate>
+                {{
+                    $gettext(
+                        "Opening in iframe is deprecated. If you switch it off, you won't be able to switch it back on again.",
+                    )
+                }}
+            </span>
         </div>
     </div>
 </template>
