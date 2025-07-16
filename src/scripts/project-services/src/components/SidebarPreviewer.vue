@@ -17,25 +17,31 @@
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<template functional>
+<template>
     <div class="tlp-modal-body project-admin-services-modal-preview">
         <div class="project-admin-services-modal-preview-sidebar">
             <div class="project-sidebar-nav-item active">
                 <i
                     class="fa-fw project-sidebar-nav-item-icon"
-                    v-if="props.allowed_icons[props.icon_name]"
-                    v-bind:class="[props.allowed_icons[props.icon_name]['fa-icon']]"
+                    v-if="allowed_icons[icon_name]"
+                    v-bind:class="[allowed_icons[icon_name]['fa-icon']]"
                 ></i>
                 <span
                     class="project-sidebar-nav-item-label project-admin-services-modal-preview-label"
                 >
-                    {{ props.label }}
+                    {{ label }}
                 </span>
                 <i
-                    v-if="props.is_in_new_tab"
+                    v-if="is_in_new_tab"
                     class="fas fa-arrow-right project-sidebar-nav-item-new-tab"
                 ></i>
             </div>
         </div>
     </div>
 </template>
+<script>
+export default {
+    name: "SidebarPreviewer",
+    props: ["label", "icon_name", "is_in_new_tab", "allowed_icons"],
+};
+</script>

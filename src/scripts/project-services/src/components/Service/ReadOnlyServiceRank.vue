@@ -17,9 +17,20 @@
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<template functional>
+<template>
     <div class="tlp-property">
-        <label class="tlp-label" v-translate>Rank</label>
-        <span>{{ props.value }}</span>
+        <label class="tlp-label">{{ $gettext("Rank") }}</label>
+        <span>{{ value }}</span>
     </div>
 </template>
+<script>
+export default {
+    name: "ReadOnlyServiceRank",
+    props: {
+        value: {
+            type: Number,
+            required: true,
+        },
+    },
+};
+</script>

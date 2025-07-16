@@ -17,23 +17,42 @@
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<template functional>
+<template>
     <div class="tlp-form-element">
-        <label class="tlp-label" v-bind:for="props.id">
-            <translate>Rank</translate>
+        <label class="tlp-label" v-bind:for="id">
+            {{ $gettext("Rank") }}
             <i class="fa fa-asterisk"></i>
         </label>
         <input
             type="number"
             class="tlp-input"
-            v-bind:id="props.id"
+            v-bind:id="id"
             name="rank"
             placeholder="150"
             size="5"
             maxlength="5"
-            v-bind:min="props.minimal_rank"
+            v-bind:min="minimal_rank"
             required
-            v-bind:value="props.value"
+            v-bind:value="value"
         />
     </div>
 </template>
+<script>
+export default {
+    name: "ServiceRank",
+    props: {
+        id: {
+            type: String,
+            required: true,
+        },
+        value: {
+            type: Number,
+            required: true,
+        },
+        minimal_rank: {
+            type: Number,
+            required: true,
+        },
+    },
+};
+</script>

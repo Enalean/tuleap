@@ -17,9 +17,20 @@
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<template functional>
+<template>
     <div class="tlp-property">
-        <label class="tlp-label" v-translate>Icon</label>
-        <i class="fa fa-fw" v-bind:class="props.value"></i>
+        <label class="tlp-label">Icon</label>
+        <i class="fa fa-fw" v-bind:class="value"></i>
     </div>
 </template>
+<script>
+export default {
+    name: "ReadOnlyServiceIcon",
+    props: {
+        value: {
+            type: String,
+            required: true,
+        },
+    },
+};
+</script>
