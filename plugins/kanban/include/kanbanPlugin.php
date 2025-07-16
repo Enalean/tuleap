@@ -96,6 +96,9 @@ use Tuleap\Tracker\RealTime\RealTimeArtifactMessageSender;
 use Tuleap\Tracker\RealtimeMercure\RealTimeMercureArtifactMessageSender;
 use Tuleap\Tracker\Report\Event\TrackerReportDeleted;
 use Tuleap\Tracker\Report\Event\TrackerReportSetToPrivate;
+use Tuleap\Tracker\Semantic\Status\SemanticStatusFieldRetriever;
+use Tuleap\Tracker\Semantic\Status\SemanticStatusRetriever;
+use Tuleap\Tracker\Semantic\Status\StatusSemanticDAO;
 use Tuleap\Tracker\Semantic\Title\CachedSemanticTitleFieldRetriever;
 use Tuleap\Tracker\TrackerCrumbInContext;
 use Tuleap\Tracker\TrackerEventTrackersDuplicated;
@@ -625,9 +628,14 @@ final class KanbanPlugin extends Plugin implements PluginWithService
 
     private function getKanbanColumnFactory(): KanbanColumnFactory
     {
+        $status_semantic_dao = new StatusSemanticDAO();
         return new KanbanColumnFactory(
             new KanbanColumnDao(),
             new KanbanUserPreferences(),
+            new SemanticStatusRetriever(
+                new SemanticStatusFieldRetriever($status_semantic_dao, Tracker_FormElementFactory::instance()),
+                $status_semantic_dao,
+            ),
         );
     }
 

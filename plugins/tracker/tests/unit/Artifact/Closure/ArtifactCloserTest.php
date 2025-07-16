@@ -42,7 +42,7 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\BadSemanticCommentInCommonMarkFormatStub;
 use Tuleap\Tracker\Test\Stub\CreateCommentOnlyChangesetStub;
 use Tuleap\Tracker\Test\Stub\CreateNewChangesetStub;
-use Tuleap\Tracker\Test\Stub\RetrieveStatusFieldStub;
+use Tuleap\Tracker\Test\Stub\RetrieveSemanticStatusFieldStub;
 use Tuleap\Tracker\Workflow\NoPossibleValueException;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -76,14 +76,14 @@ final class ArtifactCloserTest extends TestCase
      */
     private $status_field;
     private CreateNewChangesetStub $changeset_creator;
-    private RetrieveStatusFieldStub $status_retriever;
+    private RetrieveSemanticStatusFieldStub $status_retriever;
 
     protected function setUp(): void
     {
         $this->status_field = $this->createStub(\Tracker_FormElement_Field_List::class);
         $this->status_field->method('getId')->willReturn(self::STATUS_FIELD_ID);
 
-        $this->status_retriever       = RetrieveStatusFieldStub::withField($this->status_field);
+        $this->status_retriever       = RetrieveSemanticStatusFieldStub::withField($this->status_field);
         $this->status_value_retriever = $this->createMock(StatusValueRetriever::class);
         $this->done_value_retriever   = $this->createMock(DoneValueRetriever::class);
         $this->comment_creator        = CreateCommentOnlyChangesetStub::withChangeset(
@@ -239,7 +239,7 @@ final class ArtifactCloserTest extends TestCase
     public function testItAddsOnlyACommentIfStatusSemanticIsNotDefined(): void
     {
         $this->mockArtifactIsOpen();
-        $this->status_retriever = RetrieveStatusFieldStub::withNoField();
+        $this->status_retriever = RetrieveSemanticStatusFieldStub::withNoField();
 
         $result = $this->closeArtifact();
 
@@ -277,7 +277,7 @@ final class ArtifactCloserTest extends TestCase
     public function testItReturnsErrIfAnErrorOccursDuringTheCommentCreation(): void
     {
         $this->mockArtifactIsOpen();
-        $this->status_retriever = RetrieveStatusFieldStub::withNoField();
+        $this->status_retriever = RetrieveSemanticStatusFieldStub::withNoField();
         $this->comment_creator  = CreateCommentOnlyChangesetStub::withFault(
             Fault::fromMessage('Error during comment creation')
         );

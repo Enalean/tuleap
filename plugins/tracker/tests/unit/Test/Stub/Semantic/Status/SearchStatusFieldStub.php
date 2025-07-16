@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,9 +20,28 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Semantic\Status;
+namespace Tuleap\Tracker\Test\Stub\Semantic\Status;
 
-interface RetrieveStatusField
+use Tuleap\Option\Option;
+use Tuleap\Tracker\Semantic\Status\SearchStatusField;
+
+final class SearchStatusFieldStub implements SearchStatusField
 {
-    public function getStatusField(\Tuleap\Tracker\Tracker $tracker): ?\Tracker_FormElement_Field_List;
+    /** @psalm-var callable(int): Option */
+    private $callback;
+
+    private function __construct(callable $callback)
+    {
+        $this->callback = $callback;
+    }
+
+    public static function withCallback(callable $callback): self
+    {
+        return new self($callback);
+    }
+
+    public function searchFieldByTrackerId(int $tracker_id): Option
+    {
+        return ($this->callback)($tracker_id);
+    }
 }

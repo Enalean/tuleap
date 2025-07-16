@@ -361,7 +361,7 @@ class TrackerSemanticStatus extends TrackerSemantic
 
     private function doesTrackerNotificationUseStatusSemantic()
     {
-         return $this->tracker->getNotificationsLevel() === \Tuleap\Tracker\Tracker::NOTIFICATIONS_LEVEL_STATUS_CHANGE;
+        return $this->tracker->getNotificationsLevel() === \Tuleap\Tracker\Tracker::NOTIFICATIONS_LEVEL_STATUS_CHANGE;
     }
 
     /**
@@ -421,31 +421,8 @@ class TrackerSemanticStatus extends TrackerSemantic
     public static function load(Tracker $tracker)
     {
         if (! isset(self::$_instances[$tracker->getId()])) {
-            return self::forceLoad($tracker);
+            self::$_instances[$tracker->getId()] = CachedSemanticStatusRetriever::instance()->fromTracker($tracker);
         }
-
-        return self::$_instances[$tracker->getId()];
-    }
-
-    public static function forceLoad(Tracker $tracker)
-    {
-        $field_id    = null;
-        $open_values = [];
-        $dao         = new StatusSemanticDAO();
-
-        foreach ($dao->searchByTrackerId($tracker->getId()) as $row) {
-            $field_id      = $row['field_id'];
-            $open_values[] = $row['open_value_id'];
-        }
-
-        if (! $open_values) {
-            $open_values[] = 100;
-        }
-
-        $fef   = Tracker_FormElementFactory::instance();
-        $field = $fef->getFieldById($field_id);
-
-        self::$_instances[$tracker->getId()] = new TrackerSemanticStatus($tracker, $field, $open_values);
 
         return self::$_instances[$tracker->getId()];
     }

@@ -124,7 +124,10 @@ use Tuleap\Tracker\REST\v1\Report\MatchingIdsOrderer;
 use Tuleap\Tracker\REST\v1\ReportArtifactFactory;
 use Tuleap\Tracker\Rule\FirstValidValueAccordingToDependenciesRetriever;
 use Tuleap\Tracker\Semantic\Status\SemanticStatusClosedValueNotFoundException;
+use Tuleap\Tracker\Semantic\Status\SemanticStatusFieldRetriever;
 use Tuleap\Tracker\Semantic\Status\SemanticStatusNotDefinedException;
+use Tuleap\Tracker\Semantic\Status\SemanticStatusRetriever;
+use Tuleap\Tracker\Semantic\Status\StatusSemanticDAO;
 use Tuleap\Tracker\Semantic\Status\StatusValueRetriever;
 use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatusFactory;
 use Tuleap\Tracker\Semantic\Title\CachedSemanticTitleFieldRetriever;
@@ -191,9 +194,14 @@ final class KanbanResource extends AuthenticatedResource
         );
 
         $this->user_preferences      = new KanbanUserPreferences();
+        $status_semantic_dao         = new StatusSemanticDAO();
         $this->kanban_column_factory = new KanbanColumnFactory(
             new KanbanColumnDao(),
-            $this->user_preferences
+            $this->user_preferences,
+            new SemanticStatusRetriever(
+                new SemanticStatusFieldRetriever($status_semantic_dao, Tracker_FormElementFactory::instance()),
+                $status_semantic_dao,
+            ),
         );
 
         $this->artifact_factory = Tracker_ArtifactFactory::instance();

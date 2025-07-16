@@ -46,6 +46,9 @@ use Tuleap\Kanban\KanbanStatisticsAggregator;
 use TrackerFactory;
 use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\Tracker\Permission\SubmissionPermissionVerifier;
+use Tuleap\Tracker\Semantic\Status\SemanticStatusFieldRetriever;
+use Tuleap\Tracker\Semantic\Status\SemanticStatusRetriever;
+use Tuleap\Tracker\Semantic\Status\StatusSemanticDAO;
 use Tuleap\Tracker\Semantic\Title\CachedSemanticTitleFieldRetriever;
 use Tuleap\User\Avatar\AvatarHashDao;
 use Tuleap\User\Avatar\ComputeAvatarHash;
@@ -103,9 +106,14 @@ class KanbanColumnsResource
 
         $kanban_column_dao           = new KanbanColumnDao();
         $permissions_manager         = new KanbanPermissionsManager();
+        $status_semantic_dao         = new StatusSemanticDAO();
         $this->kanban_column_factory = new KanbanColumnFactory(
             $kanban_column_dao,
-            new KanbanUserPreferences()
+            new KanbanUserPreferences(),
+            new SemanticStatusRetriever(
+                new SemanticStatusFieldRetriever($status_semantic_dao, Tracker_FormElementFactory::instance()),
+                $status_semantic_dao,
+            ),
         );
         $this->kanban_column_manager = new KanbanColumnManager(
             $kanban_column_dao,

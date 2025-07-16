@@ -42,7 +42,7 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\CreateCommentOnlyChangesetStub;
 use Tuleap\Tracker\Test\Stub\CreateNewChangesetStub;
 use Tuleap\Tracker\Test\Stub\RetrieveArtifactStub;
-use Tuleap\Tracker\Test\Stub\RetrieveStatusFieldStub;
+use Tuleap\Tracker\Test\Stub\RetrieveSemanticStatusFieldStub;
 use Tuleap\User\UserName;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -59,7 +59,7 @@ final class ArtifactClosingReferencesHandlerTest extends \Tuleap\Test\PHPUnit\Te
     private RetrieveArtifactStub $artifact_retriever;
     private RetrieveUserByIdStub $user_retriever;
     private CreateNewChangesetStub $changeset_creator;
-    private RetrieveStatusFieldStub $status_retriever;
+    private RetrieveSemanticStatusFieldStub $status_retriever;
     /**
      * @var DoneValueRetriever&Stub
      */
@@ -88,7 +88,7 @@ final class ArtifactClosingReferencesHandlerTest extends \Tuleap\Test\PHPUnit\Te
         $this->changeset_creator    = CreateNewChangesetStub::withReturnChangeset(
             ChangesetTestBuilder::aChangeset(9667)->build()
         );
-        $this->status_retriever     = RetrieveStatusFieldStub::withNoField();
+        $this->status_retriever     = RetrieveSemanticStatusFieldStub::withNoField();
         $this->done_value_retriever = $this->createStub(DoneValueRetriever::class);
     }
 
@@ -271,7 +271,7 @@ final class ArtifactClosingReferencesHandlerTest extends \Tuleap\Test\PHPUnit\Te
         $done_value = ListStaticValueBuilder::aStaticValue('Closed')->build();
 
         $status_field           = $this->getStatusField(718, $done_value);
-        $this->status_retriever = RetrieveStatusFieldStub::withField($status_field);
+        $this->status_retriever = RetrieveSemanticStatusFieldStub::withField($status_field);
         $this->done_value_retriever->method('getFirstDoneValueUserCanRead')->willReturn($done_value);
 
         $this->handlePotentialReferencesReceived();
@@ -385,7 +385,7 @@ final class ArtifactClosingReferencesHandlerTest extends \Tuleap\Test\PHPUnit\Te
         $first_done_value  = ListStaticValueBuilder::aStaticValue('Closed')->build();
         $second_done_value = ListStaticValueBuilder::aStaticValue('Done')->build();
 
-        $this->status_retriever = RetrieveStatusFieldStub::withSuccessiveFields(
+        $this->status_retriever = RetrieveSemanticStatusFieldStub::withSuccessiveFields(
             $this->getStatusField(564, $first_done_value),
             $this->getStatusField(618, $second_done_value),
         );

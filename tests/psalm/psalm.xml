@@ -1123,7 +1123,6 @@
             <file name="plugins/tracker/tests/unit/Semantic/Status/Done/SemanticDoneValueCheckerTest.php"/>
             <file name="plugins/tracker/tests/unit/Semantic/Status/Open/AdminPresenterBuilderTest.php"/>
             <file name="plugins/tracker/tests/unit/Semantic/Status/StatusColorForChangesetProviderTest.php"/>
-            <file name="plugins/tracker/tests/unit/Semantic/Status/StatusFieldRetrieverTest.php"/>
             <file name="plugins/tracker/tests/unit/Semantic/Status/StatusValueForChangesetProviderTest.php"/>
             <file name="plugins/tracker/tests/unit/Semantic/Status/StatusValueProviderTest.php"/>
             <file name="plugins/tracker/tests/unit/Semantic/Status/StatusValueRetrieverTest.php"/>

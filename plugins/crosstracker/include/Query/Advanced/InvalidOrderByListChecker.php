@@ -26,13 +26,13 @@ use LogicException;
 use Tracker_FormElement_Field_List;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 use Tuleap\Tracker\Semantic\Contributor\RetrieveContributorField;
-use Tuleap\Tracker\Semantic\Status\RetrieveStatusField;
+use Tuleap\Tracker\Semantic\Status\RetrieveSemanticStatusField;
 use Tuleap\Tracker\Tracker;
 
 final readonly class InvalidOrderByListChecker
 {
     public function __construct(
-        private RetrieveStatusField $status_field_retriever,
+        private RetrieveSemanticStatusField $status_field_retriever,
         private RetrieveContributorField $contributor_field_retriever,
     ) {
     }
@@ -56,7 +56,7 @@ final readonly class InvalidOrderByListChecker
     {
         return match ($metadata->getName()) {
             AllowedMetadata::ASSIGNED_TO => $this->contributor_field_retriever->getContributorField($tracker),
-            AllowedMetadata::STATUS      => $this->status_field_retriever->getStatusField($tracker),
+            AllowedMetadata::STATUS      => $this->status_field_retriever->fromTracker($tracker),
             default                      => throw new LogicException('Should not be called'),
         };
     }

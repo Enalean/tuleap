@@ -82,8 +82,6 @@ use Tuleap\Tracker\Report\Query\Advanced\ListFieldBindValueNormalizer;
 use Tuleap\Tracker\Report\Query\Advanced\UgroupLabelConverter;
 use Tuleap\Tracker\Semantic\Contributor\ContributorFieldRetriever;
 use Tuleap\Tracker\Semantic\Contributor\TrackerSemanticContributorFactory;
-use Tuleap\Tracker\Semantic\Status\StatusFieldRetriever;
-use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatusFactory;
 use Tuleap\Tracker\Test\Builders\Fields\CheckboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ExternalFieldBuilder;
@@ -100,6 +98,7 @@ use Tuleap\Tracker\Test\Builders\Fields\TextFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\Permission\RetrieveUserPermissionOnFieldsStub;
 use Tuleap\Tracker\Test\Stub\RetrieveFieldTypeStub;
+use Tuleap\Tracker\Test\Stub\RetrieveSemanticStatusFieldStub;
 use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -179,7 +178,7 @@ final class InvalidTermCollectorVisitorTest extends TestCase
                         new ArtifactIdMetadataChecker(),
                     ),
                     new InvalidOrderByListChecker(
-                        new StatusFieldRetriever(TrackerSemanticStatusFactory::instance()),
+                        RetrieveSemanticStatusFieldStub::withNoField(),
                         new ContributorFieldRetriever(TrackerSemanticContributorFactory::instance()),
                     ),
                 ),

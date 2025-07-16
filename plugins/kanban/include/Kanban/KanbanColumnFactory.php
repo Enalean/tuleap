@@ -27,6 +27,7 @@ use PFUser;
 use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Tracker_FormElement_Field_List_BindValue;
 use TrackerFactory;
+use Tuleap\Tracker\Semantic\Status\RetrieveSemanticStatus;
 use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
 
 class KanbanColumnFactory
@@ -34,6 +35,7 @@ class KanbanColumnFactory
     public function __construct(
         private readonly KanbanColumnDao $column_dao,
         private readonly KanbanUserPreferences $user_preferences,
+        private readonly RetrieveSemanticStatus $semantic_status_retriever,
     ) {
     }
 
@@ -139,8 +141,8 @@ class KanbanColumnFactory
             return null;
         }
 
-        $semantic = TrackerSemanticStatus::forceLoad($tracker);
-        if (! $semantic->getFieldId()) {
+        $semantic = $this->semantic_status_retriever->fromTracker($tracker);
+        if ($semantic->getField() === null) {
             return null;
         }
 

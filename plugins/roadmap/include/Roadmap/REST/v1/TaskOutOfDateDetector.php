@@ -26,34 +26,18 @@ use DateTimeImmutable;
 use Psr\Log\LoggerInterface;
 use Tuleap\Date\DatePeriodWithOpenDays;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\Semantic\Status\SemanticStatusRetriever;
+use Tuleap\Tracker\Semantic\Status\RetrieveSemanticStatus;
 use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 
-final class TaskOutOfDateDetector implements IDetectIfArtifactIsOutOfDate
+final readonly class TaskOutOfDateDetector implements IDetectIfArtifactIsOutOfDate
 {
-    /**
-     * @var SemanticStatusRetriever
-     */
-    private $semantic_status_retriever;
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-    /**
-     * @var SemanticTimeframeBuilder
-     */
-    private $semantic_timeframe_builder;
-
     public function __construct(
-        SemanticStatusRetriever $semantic_status_retriever,
-        SemanticTimeframeBuilder $semantic_timeframe_builder,
-        LoggerInterface $logger,
+        private RetrieveSemanticStatus $semantic_status_retriever,
+        private SemanticTimeframeBuilder $semantic_timeframe_builder,
+        private LoggerInterface $logger,
     ) {
-        $this->semantic_status_retriever  = $semantic_status_retriever;
-        $this->semantic_timeframe_builder = $semantic_timeframe_builder;
-        $this->logger                     = $logger;
     }
 
     public function isArtifactOutOfDate(
@@ -62,7 +46,7 @@ final class TaskOutOfDateDetector implements IDetectIfArtifactIsOutOfDate
         \PFUser $user,
         TrackersWithUnreadableStatusCollection $trackers_with_unreadable_status_collection,
     ): bool {
-        $semantic_status    = $this->semantic_status_retriever->retrieveSemantic($artifact->getTracker());
+        $semantic_status    = $this->semantic_status_retriever->fromTracker($artifact->getTracker());
         $semantic_timeframe = $this->semantic_timeframe_builder->getSemantic($artifact->getTracker());
 
         $status_field = $semantic_status->getField();

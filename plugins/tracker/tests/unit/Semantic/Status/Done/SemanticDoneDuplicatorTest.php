@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Semantic\Status\Done;
 
 use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Option\Option;
 use Tuleap\Tracker\Semantic\Status\StatusSemanticDAO;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -70,12 +71,8 @@ final class SemanticDoneDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->status_dao
             ->expects($this->once())
-            ->method('searchByTrackerId')
-            ->willReturn([
-                [
-                    'field_id' => 712,
-                ],
-            ]);
+            ->method('searchFieldByTrackerId')
+            ->willReturn(Option::fromValue(712));
 
         $this->done_dao
             ->expects($this->once())
@@ -104,7 +101,7 @@ final class SemanticDoneDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('getSelectedValues')
             ->willReturn([]);
 
-        $this->status_dao->expects($this->never())->method('searchByTrackerId');
+        $this->status_dao->expects($this->never())->method('searchFieldByTrackerId');
         $this->done_dao->expects($this->never())->method('addForTracker');
 
         $this->duplicator->duplicate(101, 201, $mapping);
@@ -133,8 +130,8 @@ final class SemanticDoneDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->status_dao
             ->expects($this->once())
-            ->method('searchByTrackerId')
-            ->willReturn([]);
+            ->method('searchFieldByTrackerId')
+            ->willReturn(Option::nothing(\Psl\Type\int()));
 
         $this->done_dao->expects($this->never())->method('addForTracker');
 
@@ -164,12 +161,8 @@ final class SemanticDoneDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->status_dao
             ->expects($this->once())
-            ->method('searchByTrackerId')
-            ->willReturn([
-                [
-                    'field_id' => 712,
-                ],
-            ]);
+            ->method('searchFieldByTrackerId')
+            ->willReturn(Option::fromValue(712));
 
         $this->done_dao->expects($this->never())->method('addForTracker');
 
