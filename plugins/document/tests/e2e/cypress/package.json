@@ -1,6 +1,6 @@
 {
   "author": "Enalean Team",
-  "name": "@tuleap/plugin-document-e2e",
+  "name": "@tuleap/plugin-document-e2e-tests",
   "homepage": "https://tuleap.org",
   "license": "GPL-2.0-or-later",
   "private": true,
