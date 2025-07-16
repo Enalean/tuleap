@@ -222,9 +222,6 @@ codendi.tracker.report.table.AddRemoveColumn = Class.create({
                     //Remove entry from the selectbox
                     dropdown.setUsed(li);
 
-                    //eval scripts now (prototype defer scripts eval but we need them now for decorators)
-                    //transport.responseText.evalScripts();
-
                     codendi.tracker.report.setHasChanged();
 
                     tuleap.trackers.report.table.fixAggregatesHeights();
@@ -378,9 +375,6 @@ codendi.tracker.report.AddRemoveCriteria = Class.create({
 
                         codendi.tracker.report.setHasChanged();
 
-                        //eval scripts now (prototype defer scripts eval but we need them now for decorators)
-                        transport.responseText.evalScripts();
-
                         //initialize events and other dynamic stuffs
                         codendi.tracker.report.loadAdvancedCriteria(
                             crit.down("img.tracker_report_criteria_advanced_toggle"),
@@ -441,7 +435,7 @@ codendi.tracker.report.loadAdvancedCriteria = function (element) {
                     field: field_id,
                     challenge: form_data.get("challenge"),
                 },
-                onComplete: function (transport) {
+                onComplete: function () {
                     //Force refresh of decorators and calendar
                     li.select("input", "select").each(function (el) {
                         if (el.id && $("fd-" + el.id)) {
@@ -451,9 +445,6 @@ codendi.tracker.report.loadAdvancedCriteria = function (element) {
                     });
 
                     codendi.tracker.report.setHasChanged();
-
-                    //eval scripts now (prototype defer scripts eval but we need them now for decorators)
-                    transport.responseText.evalScripts();
 
                     //initialize events and other dynamic stuffs
                     codendi.tracker.report.loadAdvancedCriteria(
