@@ -25,14 +25,17 @@
 
 (function ($) {
     $(document).ready(function () {
-        var isFullScreen = false;
+        function isCurrentlyInFullscreen() {
+            return document.fullscreenElement !== null;
+        }
+
         var body = $("body");
         var main = $(".main");
         var info = $(".cardwall_board-milestone-info");
         var button = $("#go-to-fullscreen");
 
         function defineFullscreenClasses() {
-            if (isFullScreen) {
+            if (isCurrentlyInFullscreen()) {
                 body.addClass("fullscreen");
                 info.removeClass("mini");
             } else {
@@ -42,36 +45,8 @@
             }
         }
 
-        /**
-         * Comes from http://www.sitepoint.com/html5-full-screen-api/
-         * Modified in December 2013 by the Enalean team
-         *
-         */
-        function RunPrefixMethod(obj, method) {
-            var prefix = ["webkit", "moz", "ms", "o", ""];
-            var position = 0;
-            var method_name;
-            var type;
-
-            while (position < prefix.length && !obj[method_name]) {
-                method_name = method;
-                if (prefix[position] == "") {
-                    method_name = method_name.substr(0, 1).toLowerCase() + method_name.substr(1);
-                }
-                method_name = prefix[position] + method_name;
-                type = typeof obj[method_name];
-                if (type != "undefined") {
-                    prefix = [prefix[position]];
-                    return type == "function"
-                        ? obj[method_name](Element.ALLOW_KEYBOARD_INPUT)
-                        : obj[method_name];
-                }
-                position++;
-            }
-        }
-
         function defineMilestoneInfoBlockSize() {
-            if (isFullScreen) {
+            if (isCurrentlyInFullscreen()) {
                 main.css("margin-left", 0);
                 $(".milestone-name").addClass("span3");
                 $(".milestone-days").removeClass("span5").addClass("span3");
@@ -84,7 +59,7 @@
         }
 
         function updateButtonLabel() {
-            if (isFullScreen) {
+            if (isCurrentlyInFullscreen()) {
                 button.html(
                     '<i class="fa fa-compress"></i>' + codendi.locales.cardwall.exit_fullscreen,
                 );
@@ -99,63 +74,19 @@
             $("html, body").scrollTop(0);
         }
 
-        function exitFullScreen() {
-            isFullScreen = false;
-
-            RunPrefixMethod(document, "CancelFullScreen");
+        document.addEventListener("fullscreenchange", function () {
             scrollToTop();
             defineFullscreenClasses();
             defineMilestoneInfoBlockSize();
             updateButtonLabel();
-        }
-
-        function requestFullScreen() {
-            isFullScreen = true;
-
-            RunPrefixMethod(document.querySelector("html"), "RequestFullScreen");
-            scrollToTop();
-            defineFullscreenClasses();
-            defineMilestoneInfoBlockSize();
-            updateButtonLabel();
-        }
-
-        function browserIsIE() {
-            //eslint-disable-next-line no-eval
-            return eval("/*@cc_on !@*/false");
-        }
-
-        $(document).on("webkitfullscreenchange mozfullscreenchange fullscreenchange", function () {
-            var fullscreenElement =
-                document.fullscreenElement ||
-                document.mozFullScreenElement ||
-                document.webkitFullscreenElement;
-
-            if (fullscreenElement == null) {
-                exitFullScreen();
-            }
         });
 
-        if (browserIsIE()) {
-            button.popover({
-                trigger: "hover",
-                placement: "left",
-                html: true,
-                title: codendi.locales.cardwall.no_fullscreen_title,
-                content: codendi.locales.cardwall.no_fullscreen_content,
-            });
-        } else {
-            button.on("click", function () {
-                (function fullscreen() {
-                    if (
-                        RunPrefixMethod(document, "FullScreen") ||
-                        RunPrefixMethod(document, "IsFullScreen")
-                    ) {
-                        exitFullScreen();
-                    } else {
-                        requestFullScreen();
-                    }
-                })();
-            });
-        }
+        button.on("click", function () {
+            if (isCurrentlyInFullscreen()) {
+                document.exitFullscreen();
+            } else {
+                document.querySelector("html").requestFullscreen();
+            }
+        });
     });
 })(jQuery);
