@@ -2,6 +2,7 @@
     <div id="pullrequest-app"
          ng-app="tuleap.pull-request"
          ng-controller="MainController"
+         ng-csp="no-unsafe-eval"
     >
         <div class="pullrequest-init-data" ng-non-bindable
              data-project-id="{{ project_id }}"
