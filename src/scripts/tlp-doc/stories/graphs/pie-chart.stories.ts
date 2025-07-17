@@ -23,7 +23,6 @@ import { createPieChartElement } from "@tuleap/plugin-graphs";
 import "./pie-chart.scss";
 
 export interface PieChartArgs {
-    id: string;
     width: number;
     height: number;
     first_slice_label: string;
