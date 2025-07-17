@@ -27,7 +27,7 @@
     >
         <div class="tlp-modal-header">
             <h1 class="tlp-modal-title" id="project-admin-services-add-modal-title">
-                <translate>Add a new service</translate>
+                {{ $gettext("Add a new service") }}
             </h1>
             <button
                 class="tlp-modal-close"
@@ -44,13 +44,12 @@
                 type="reset"
                 class="tlp-button-primary tlp-button-outline tlp-modal-action"
                 data-dismiss="modal"
-                v-translate
             >
-                Cancel
+                {{ $gettext("Cancel") }}
             </button>
             <button type="submit" class="tlp-button-primary tlp-modal-action">
                 <i class="fa fa-plus tlp-button-icon"></i>
-                <translate>Add service</translate>
+                {{ $gettext("Add service") }}
             </button>
         </div>
     </form>
@@ -82,7 +81,7 @@ export default {
             this.$emit("reset-modal");
         });
     },
-    beforeDestroy() {
+    beforeUnmount() {
         if (this.modal !== null) {
             this.modal.destroy();
         }

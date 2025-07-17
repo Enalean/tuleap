@@ -20,7 +20,7 @@
 <template>
     <div class="tlp-form-element">
         <label class="tlp-label" v-bind:for="id">
-            <translate>Icon</translate>
+            {{ $gettext("Icon") }}
             <i class="fas fa-asterisk" aria-hidden="true"></i>
         </label>
         <select
@@ -82,7 +82,7 @@ export default {
             locale: document.body.dataset.userLocale ?? "en_US",
         });
     },
-    beforeDestroy() {
+    beforeUnmount() {
         if (this.selector !== null) {
             this.selector.destroy();
         }

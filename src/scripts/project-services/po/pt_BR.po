@@ -56,8 +56,7 @@ msgstr ""
 
 msgid ""
 "Opening in iframe is deprecated. If you switch it off, you won't be able to "
-"switch\n"
-"            it back on again."
+"switch it back on again."
 msgstr ""
 
 msgid "Please, enter a http:// or https:// link"
@@ -77,8 +76,7 @@ msgstr ""
 
 msgid ""
 "The service can't be displayed in an iframe because you want it to be open "
-"in a new\n"
-"            tab."
+"in a new tab."
 msgstr ""
 
 #. javascript-format

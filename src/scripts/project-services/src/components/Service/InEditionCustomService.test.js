@@ -89,11 +89,12 @@ describe(`InEditionCustomService`, () => {
             wrapper.vm.onNewTabChange({ target: { checked: true } });
             await wrapper.vm.$nextTick();
 
-            const new_tab_warning = wrapper.get("[data-test=new-tab-warning");
+            let new_tab_warning = wrapper.find("[data-test=new-tab-warning");
             expect(new_tab_warning.exists()).toBe(true);
 
             wrapper.vm.onNewTabChange({ target: { checked: false } });
             await wrapper.vm.$nextTick();
+            new_tab_warning = wrapper.find("[data-test=new-tab-warning");
 
             expect(new_tab_warning.exists()).toBe(false);
         });

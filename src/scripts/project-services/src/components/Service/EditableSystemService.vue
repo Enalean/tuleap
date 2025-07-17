@@ -34,7 +34,7 @@
             v-bind:value="service.is_active"
         />
         <div class="tlp-property" v-if="service.shortname">
-            <label class="tlp-label" v-translate>Short name</label>
+            <label class="tlp-label">{{ $gettext("Short name") }}</label>
             <span>{{ service.short_name }}</span>
         </div>
         <read-only-service-rank v-if="is_summary_service" v-bind:value="service.rank" />

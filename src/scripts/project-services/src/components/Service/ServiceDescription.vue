@@ -19,7 +19,7 @@
 
 <template>
     <div class="tlp-form-element">
-        <label class="tlp-label" v-bind:for="id" v-translate>Description</label>
+        <label class="tlp-label" v-bind:for="id">{{ $gettext("Description") }}</label>
         <input
             type="text"
             class="tlp-input"
