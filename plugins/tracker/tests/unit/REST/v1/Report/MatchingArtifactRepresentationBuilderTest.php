@@ -28,7 +28,7 @@ use Tracker_Artifact_Changeset;
 use Tracker_FormElement_Field;
 use Tracker_Report;
 use Tracker_Report_Renderer_Table;
-use Tuleap\Color\ItemColor;
+use Tuleap\Color\ColorName;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -95,7 +95,7 @@ final class MatchingArtifactRepresentationBuilderTest extends TestCase
 
         $tracker->method('getId')->willReturn(52);
         $tracker->method('getName')->willReturn('Tracker01');
-        $tracker->method('getColor')->willReturn(ItemColor::default());
+        $tracker->method('getColor')->willReturn(ColorName::default());
         $tracker->method('getProject')->willReturn($project);
 
         $report->method('getTracker')->willReturn($tracker);

@@ -28,13 +28,13 @@ use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use Tuleap\Test\PHPUnit\TestCase;
 
 #[DisableReturnValueGenerationForTestDoubles]
-final class ItemColorTest extends TestCase
+final class ColorNameTest extends TestCase
 {
     public function testColorCanBeBuiltFromAValidColorName(): void
     {
         $color_name = 'inca-silver';
-        $color      = ItemColor::fromName($color_name);
-        self::assertSame(ItemColor::INCA_SILVER, $color);
+        $color      = ColorName::fromName($color_name);
+        self::assertSame(ColorName::INCA_SILVER, $color);
     }
 
     public static function generateNames(): iterable
@@ -46,24 +46,24 @@ final class ItemColorTest extends TestCase
     #[DataProvider('generateNames')]
     public function testColorCanBeBuiltFromColorNameThatMightNotBeStandardized(string $color_name): void
     {
-        $color = ItemColor::fromNotStandardizedName($color_name);
-        self::assertSame(ItemColor::INCA_SILVER, $color);
+        $color = ColorName::fromNotStandardizedName($color_name);
+        self::assertSame(ColorName::INCA_SILVER, $color);
     }
 
     public function testDefaultColorCanBeBuilt(): void
     {
-        self::assertSame(ItemColor::INCA_SILVER, ItemColor::default());
+        self::assertSame(ColorName::INCA_SILVER, ColorName::default());
     }
 
     public function testInvalidColorNameIsRejected(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        ItemColor::fromName('notvalidcolorname');
+        ColorName::fromName('notvalidcolorname');
     }
 
     public function testInvalidNotStandardizedColorNameIsRejected(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        ItemColor::fromNotStandardizedName('notvalidcolorname');
+        ColorName::fromNotStandardizedName('notvalidcolorname');
     }
 }

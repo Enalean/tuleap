@@ -24,7 +24,7 @@ namespace Tuleap\TestPlan\TestDefinition;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use TemplateRendererFactory;
-use Tuleap\Color\ItemColor;
+use Tuleap\Color\ColorName;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\GlobalResponseMock;
 use Tuleap\Templating\TemplateCache;
@@ -187,13 +187,13 @@ final class RedirectParameterInjectorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->backlog_item->method('getTitle')->willReturn('My story');
         $this->backlog_item->method('getXref')->willReturn('story #123');
         $backlog_item_tracker = $this->createMock(Tracker::class);
-        $backlog_item_tracker->method('getColor')->willReturn(ItemColor::default());
+        $backlog_item_tracker->method('getColor')->willReturn(ColorName::default());
         $this->backlog_item->method('getTracker')->willReturn($backlog_item_tracker);
         $milestone->method('getUri')->willReturn('/plugins/tracker/?aid=42');
         $milestone->method('getTitle')->willReturn('Some milestone');
         $milestone->method('getXref')->willReturn('rel #42');
         $milestone_tracker = $this->createMock(Tracker::class);
-        $milestone_tracker->method('getColor')->willReturn(ItemColor::default());
+        $milestone_tracker->method('getColor')->willReturn(ColorName::default());
         $milestone->method('getTracker')->willReturn($milestone_tracker);
 
         $this->response

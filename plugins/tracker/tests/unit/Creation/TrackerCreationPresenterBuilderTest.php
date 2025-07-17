@@ -30,7 +30,7 @@ use Project;
 use ProjectManager;
 use TrackerDao;
 use TrackerFactory;
-use Tuleap\Color\ItemColor;
+use Tuleap\Color\ColorName;
 use Tuleap\Request\CSRFSynchronizerTokenInterface;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -207,7 +207,7 @@ final class TrackerCreationPresenterBuilderTest extends TestCase
             ->withId(4)
             ->withName('MyAwesomeTracker')
             ->withDescription('Description')
-            ->withColor(ItemColor::RED_WINE)
+            ->withColor(ColorName::RED_WINE)
             ->build();
 
         $this->project_manager->method('getProject')->with('101')->willReturn($project);
@@ -303,8 +303,8 @@ final class TrackerCreationPresenterBuilderTest extends TestCase
     private function getTrackerColors(): array
     {
         return [
-            'colors_names'  => ItemColor::listValues(),
-            'default_color' => ItemColor::default()->value,
+            'colors_names'  => ColorName::listValues(),
+            'default_color' => ColorName::default()->value,
         ];
     }
 }

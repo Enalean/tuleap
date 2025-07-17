@@ -34,7 +34,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
-use Tuleap\Color\ItemColor;
+use Tuleap\Color\ColorName;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
@@ -156,7 +156,7 @@ final class ReplayImportCommand extends Command
         $tracker = (new XMLTracker('T200', $item_name))
             ->withName($item_name)
             ->withDescription('Bug')
-            ->withColor(ItemColor::default());
+            ->withColor(ColorName::default());
 
         $tracker_xml = $jira_xml_exporter->exportIssuesToXml(
             $platform_configuration_collection,

@@ -29,7 +29,7 @@ use Tracker_Artifact_Changeset;
 use Tracker_Artifact_Changeset_InitialChangesetFieldsValidator;
 use Tracker_ArtifactDao;
 use Tracker_ArtifactFactory;
-use Tuleap\Color\ItemColor;
+use Tuleap\Color\ColorName;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Option\Option;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
@@ -99,7 +99,7 @@ final class TrackerArtifactCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             null,
             null,
             null,
-            ItemColor::default(),
+            ColorName::default(),
             null
         );
 

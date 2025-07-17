@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Test\Builders\Fields\List;
 
 use Tracker_FormElement_Field_List_BindDecorator;
-use Tuleap\Color\ItemColor;
+use Tuleap\Color\ColorName;
 
 final class StaticBindDecoratorBuilder
 {
@@ -31,11 +31,11 @@ final class StaticBindDecoratorBuilder
     private int $value_id = 1;
 
     private function __construct(
-        private readonly ItemColor $tlp_color,
+        private readonly ColorName $tlp_color,
     ) {
     }
 
-    public static function withColor(ItemColor $tlp_color): self
+    public static function withColor(ColorName $tlp_color): self
     {
         return new self($tlp_color);
     }

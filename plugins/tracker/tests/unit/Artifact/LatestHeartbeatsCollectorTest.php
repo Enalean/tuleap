@@ -27,7 +27,7 @@ use Project;
 use TestHelper;
 use Tracker_ArtifactDao;
 use Tracker_ArtifactFactory;
-use Tuleap\Color\ItemColor;
+use Tuleap\Color\ColorName;
 use Tuleap\Project\HeartbeatsEntry;
 use Tuleap\Project\HeartbeatsEntryCollection;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -56,7 +56,7 @@ final class LatestHeartbeatsCollectorTest extends TestCase
             ->with(101, HeartbeatsEntryCollection::NB_MAX_ENTRIES)
             ->willReturn(TestHelper::arrayToDar(['id' => 1], ['id' => 2], ['id' => 3]));
 
-        $tracker   = TrackerTestBuilder::aTracker()->withColor(ItemColor::default())->build();
+        $tracker   = TrackerTestBuilder::aTracker()->withColor(ColorName::default())->build();
         $artifact1 = ArtifactTestBuilder::anArtifact(1)
             ->inTracker($tracker)
             ->userCanView($this->user)

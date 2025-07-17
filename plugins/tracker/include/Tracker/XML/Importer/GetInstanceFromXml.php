@@ -34,7 +34,7 @@ use Tracker_FormElementFactory;
 use Tracker_ReportFactory;
 use Tracker_RuleFactory;
 use TrackerFactory;
-use Tuleap\Color\ItemColor;
+use Tuleap\Color\ColorName;
 use Tuleap\Project\UGroupRetrieverWithLegacy;
 use Tuleap\Tracker\Semantic\TrackerSemanticFactory;
 use Tuleap\Tracker\Tracker;
@@ -118,9 +118,9 @@ readonly class GetInstanceFromXml
     ): array {
         $xml_tracker_color_name = $color ?? (string) $xml->color;
         if ($xml_tracker_color_name === '') {
-            $tracker_color = ItemColor::default();
+            $tracker_color = ColorName::default();
         } else {
-            $tracker_color = ItemColor::fromNotStandardizedName($xml_tracker_color_name);
+            $tracker_color = ColorName::fromNotStandardizedName($xml_tracker_color_name);
         }
 
         $att = $xml->attributes();

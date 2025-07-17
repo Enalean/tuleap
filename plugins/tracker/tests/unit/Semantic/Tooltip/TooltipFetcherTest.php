@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Semantic\Tooltip;
 
 use TemplateRendererFactory;
-use Tuleap\Color\ItemColor;
+use Tuleap\Color\ColorName;
 use Tuleap\Templating\TemplateCache;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -64,7 +64,7 @@ final class TooltipFetcherTest extends TestCase
         $artifact->method('getTitle')->willReturn('The title');
         $artifact->method('getTracker')->willReturn(
             TrackerTestBuilder::aTracker()
-                ->withColor(ItemColor::FIESTA_RED)
+                ->withColor(ColorName::FIESTA_RED)
                 ->build()
         );
 
@@ -103,7 +103,7 @@ final class TooltipFetcherTest extends TestCase
         $artifact->method('getTitle')->willReturn('The title');
         $artifact->method('getTracker')->willReturn(
             TrackerTestBuilder::aTracker()
-                ->withColor(ItemColor::FIESTA_RED)
+                ->withColor(ColorName::FIESTA_RED)
                 ->build()
         );
 

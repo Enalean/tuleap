@@ -24,7 +24,7 @@ namespace Tuleap\Tracker\ServiceHomepage;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub;
-use Tuleap\Color\ItemColor;
+use Tuleap\Color\ColorName;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -173,7 +173,7 @@ final class HomepagePresenterBuilderTest extends TestCase
     ): Stub&\Tuleap\Tracker\Tracker {
         $tracker = $this->createStub(\Tuleap\Tracker\Tracker::class);
         $tracker->method('getId')->willReturn(15);
-        $tracker->method('getColor')->willReturn(ItemColor::SHERWOOD_GREEN);
+        $tracker->method('getColor')->willReturn(ColorName::SHERWOOD_GREEN);
         $tracker->method('getName')->willReturn('task');
         $tracker->method('getDescription')->willReturn('Track development tasks');
         $tracker->method('getUri')->willReturn('/plugins/tracker/?tracker=15');

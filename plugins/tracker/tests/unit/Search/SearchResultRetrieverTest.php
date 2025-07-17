@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Search;
 
 use Tracker_FormElement_Field;
-use Tuleap\Color\ItemColor;
+use Tuleap\Color\ColorName;
 use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Search\IndexedItemFound;
 use Tuleap\Search\IndexedItemFoundToSearchResult;
@@ -39,7 +39,7 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SearchResultRetrieverTest extends TestCase
 {
-    private const TRACKER_COLOR   = ItemColor::TEDDY_BROWN;
+    private const TRACKER_COLOR   = ColorName::TEDDY_BROWN;
     private const ARTIFACT_ID     = 123;
     private const ARTIFACT_TITLE  = 'title';
     private const CROPPED_CONTENT = '... excerpt ...';

@@ -27,7 +27,7 @@ use DOMDocument;
 use org\bovigo\vfs\vfsStream;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\NullLogger;
-use Tuleap\Color\ItemColor;
+use Tuleap\Color\ColorName;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\JiraImport\Project\CreateProjectFromJiraCommand;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -305,7 +305,7 @@ final class JiraIssuesFromProjectInMonoTrackerInXmlExporterTest extends TestCase
         $tracker_for_export = (new XMLTracker('T1', 'issue'))
             ->withName('Issues')
             ->withDescription('Issues')
-            ->withColor(ItemColor::default());
+            ->withColor(ColorName::default());
 
         $tracker_xml = $exporter->exportIssuesToXml(
             $platform_configuration_collection,

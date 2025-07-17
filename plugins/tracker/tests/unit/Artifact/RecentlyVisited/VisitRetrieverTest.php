@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Artifact\RecentlyVisited;
 
 use PHPUnit\Framework\MockObject\Stub;
-use Tuleap\Color\ItemColor;
+use Tuleap\Color\ColorName;
 use Tuleap\Glyph\Glyph;
 use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -42,13 +42,13 @@ final class VisitRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     private const FIRST_ARTIFACT_ID              = 1;
     private const FIRST_ARTIFACT_VISIT_TIMESTAMP = 1584987154;
     private const FIRST_ARTIFACT_TITLE           = 'Random title';
-    private const FIRST_TRACKER_COLOR            = ItemColor::FIESTA_RED;
+    private const FIRST_TRACKER_COLOR            = ColorName::FIESTA_RED;
     private const FIRST_TRACKER_SHORTNAME        = 'bug';
 
     private const SECOND_ARTIFACT_ID              = 2;
     private const SECOND_ARTIFACT_VISIT_TIMESTAMP = 1844678754;
     private const SECOND_ARTIFACT_TITLE           = 'lowland';
-    private const SECOND_TRACKER_COLOR            = ItemColor::DEEP_BLUE;
+    private const SECOND_TRACKER_COLOR            = ColorName::DEEP_BLUE;
     private const SECOND_TRACKER_SHORTNAME        = 'story';
 
     private \PFUser $user;

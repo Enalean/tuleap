@@ -29,7 +29,7 @@ use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\ArtifactLinkFiel
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\ArtifactLinkProject;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\ArtifactLinkStatusValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\ArtifactLinkValue;
-use Tuleap\Color\ItemColor;
+use Tuleap\Color\ColorName;
 use Tuleap\Option\Option;
 use Tuleap\Project\Icons\EmojiCodepointConverter;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -150,8 +150,8 @@ final readonly class ArtifactLinkFieldWithValueBuilder implements BuildArtifactL
             new ArtifactLinkStatusValue(
                 $value->getLabel(),
                 isset($decorators[$value->getId()])
-                    ? Option::fromValue(ItemColor::fromName($decorators[$value->getId()]->getCurrentColor()))
-                    : Option::nothing(ItemColor::class),
+                    ? Option::fromValue(ColorName::fromName($decorators[$value->getId()]->getCurrentColor()))
+                    : Option::nothing(ColorName::class),
                 $semantic_status->isOpen($artifact),
             )
         );

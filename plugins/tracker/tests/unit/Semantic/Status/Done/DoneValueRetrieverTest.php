@@ -26,7 +26,7 @@ use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_BindValue;
-use Tuleap\Color\ItemColor;
+use Tuleap\Color\ColorName;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -356,7 +356,7 @@ final class DoneValueRetrieverTest extends TestCase
             null,
             null,
             null,
-            ItemColor::default(),
+            ColorName::default(),
             null
         );
     }

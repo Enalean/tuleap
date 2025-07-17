@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog;
 
-use Tuleap\Color\ItemColor;
+use Tuleap\Color\ColorName;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Masschange\TrackerMasschangeProcessExternalActionsEvent;
 
@@ -78,7 +78,7 @@ final class MassChangeTopBacklogSourceInformationTest extends \Tuleap\Test\PHPUn
             true,
             false,
             0,
-            ItemColor::default(),
+            ColorName::default(),
             false
         );
     }

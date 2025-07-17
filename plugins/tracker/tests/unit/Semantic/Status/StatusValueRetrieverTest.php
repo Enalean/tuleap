@@ -25,7 +25,7 @@ namespace Tuleap\Tracker\Semantic\Status;
 use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tracker_FormElement_Field_List_BindValue;
-use Tuleap\Color\ItemColor;
+use Tuleap\Color\ColorName;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
@@ -428,7 +428,7 @@ final class StatusValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             null,
             null,
             null,
-            ItemColor::default(),
+            ColorName::default(),
             null
         );
     }

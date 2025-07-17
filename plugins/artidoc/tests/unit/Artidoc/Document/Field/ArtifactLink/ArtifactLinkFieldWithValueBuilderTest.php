@@ -34,7 +34,7 @@ use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\ArtifactLinkFiel
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\ArtifactLinkProject;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\ArtifactLinkStatusValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\ArtifactLinkValue;
-use Tuleap\Color\ItemColor;
+use Tuleap\Color\ColorName;
 use Tuleap\Option\Option;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -85,7 +85,7 @@ final class ArtifactLinkFieldWithValueBuilderTest extends TestCase
             ->withShortName('my_tracker')
             ->withId(35)
             ->withProject($project)
-            ->withColor(ItemColor::fromName('panther-pink'))
+            ->withColor(ColorName::PANTHER_PINK)
             ->build();
         $link_field   = ArtifactLinkFieldBuilder::anArtifactLinkField(456)->build();
         $title_field  = StringFieldBuilder::aStringField(854)->inTracker($tracker)->build();
@@ -97,7 +97,7 @@ final class ArtifactLinkFieldWithValueBuilderTest extends TestCase
                 $closed_value->getId() => $closed_value,
             ])
             ->withDecorators([
-                $open_value->getId() => StaticBindDecoratorBuilder::withColor(ItemColor::fromName('neon-green'))->withValueId($open_value->getId())->build(),
+                $open_value->getId() => StaticBindDecoratorBuilder::withColor(ColorName::NEON_GREEN)->withValueId($open_value->getId())->build(),
             ])
             ->build()
             ->getField();
@@ -147,27 +147,27 @@ final class ArtifactLinkFieldWithValueBuilderTest extends TestCase
                     new ArtifactLinkValue(
                         'is Parent of',
                         'my_tracker',
-                        ItemColor::fromName('panther-pink'),
+                        ColorName::PANTHER_PINK,
                         $link_project,
                         15,
                         'Artifact 15',
                         '/plugins/tracker/?aid=15',
-                        Option::fromValue(new ArtifactLinkStatusValue('Open', Option::fromValue(ItemColor::fromName('neon-green')), true)),
+                        Option::fromValue(new ArtifactLinkStatusValue('Open', Option::fromValue(ColorName::NEON_GREEN), true)),
                     ),
                     new ArtifactLinkValue(
                         'Covers',
                         'my_tracker',
-                        ItemColor::fromName('panther-pink'),
+                        ColorName::PANTHER_PINK,
                         $link_project,
                         16,
                         'Artifact 16',
                         '/plugins/tracker/?aid=16',
-                        Option::fromValue(new ArtifactLinkStatusValue('Closed', Option::nothing(ItemColor::class), false)),
+                        Option::fromValue(new ArtifactLinkStatusValue('Closed', Option::nothing(ColorName::class), false)),
                     ),
                     new ArtifactLinkValue(
                         'is Linked to',
                         'my_tracker',
-                        ItemColor::fromName('panther-pink'),
+                        ColorName::PANTHER_PINK,
                         $link_project,
                         17,
                         '',
@@ -177,27 +177,27 @@ final class ArtifactLinkFieldWithValueBuilderTest extends TestCase
                     new ArtifactLinkValue(
                         'is Child of',
                         'my_tracker',
-                        ItemColor::fromName('panther-pink'),
+                        ColorName::PANTHER_PINK,
                         $link_project,
                         21,
                         'Artifact 21',
                         '/plugins/tracker/?aid=21',
-                        Option::fromValue(new ArtifactLinkStatusValue('Open', Option::fromValue(ItemColor::fromName('neon-green')), true)),
+                        Option::fromValue(new ArtifactLinkStatusValue('Open', Option::fromValue(ColorName::NEON_GREEN), true)),
                     ),
                     new ArtifactLinkValue(
                         'Covered by',
                         'my_tracker',
-                        ItemColor::fromName('panther-pink'),
+                        ColorName::PANTHER_PINK,
                         $link_project,
                         22,
                         '',
                         '/plugins/tracker/?aid=22',
-                        Option::fromValue(new ArtifactLinkStatusValue('Closed', Option::nothing(ItemColor::class), false)),
+                        Option::fromValue(new ArtifactLinkStatusValue('Closed', Option::nothing(ColorName::class), false)),
                     ),
                     new ArtifactLinkValue(
                         'is Linked to',
                         'my_tracker',
-                        ItemColor::fromName('panther-pink'),
+                        ColorName::PANTHER_PINK,
                         $link_project,
                         23,
                         'Artifact 23',

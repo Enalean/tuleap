@@ -18,7 +18,7 @@
  */
 
 use Psr\EventDispatcher\EventDispatcherInterface;
-use Tuleap\Color\ItemColor;
+use Tuleap\Color\ColorName;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
@@ -274,7 +274,7 @@ class TrackerFactory implements RetrieveTracker, RetrieveTrackersByProjectIdUser
             $row['instantiate_for_new_projects'],
             $row['log_priority_changes'],
             $row['notifications_level'],
-            ItemColor::fromName($row['color']),
+            ColorName::fromName($row['color']),
             $row['enable_emailgateway']
         );
     }

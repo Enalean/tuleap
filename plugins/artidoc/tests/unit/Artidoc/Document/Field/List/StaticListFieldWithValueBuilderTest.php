@@ -26,7 +26,7 @@ use Tuleap\Artidoc\Document\Field\ConfiguredField;
 use Tuleap\Artidoc\Domain\Document\Section\Field\DisplayType;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StaticListFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StaticListValue;
-use Tuleap\Color\ItemColor;
+use Tuleap\Color\ColorName;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
@@ -87,7 +87,7 @@ final class StaticListFieldWithValueBuilderTest extends TestCase
             $list_field_value_red,
             $list_field_value_no_color,
         ])->withDecorators([
-            $list_field_value_red->getId() => StaticBindDecoratorBuilder::withColor(ItemColor::fromName('red-wine'))->withFieldId(124)->withValueId($list_field_value_red->getId())->build(),
+            $list_field_value_red->getId() => StaticBindDecoratorBuilder::withColor(ColorName::RED_WINE)->withFieldId(124)->withValueId($list_field_value_red->getId())->build(),
         ])->build()->getField();
 
         $this->changeset->setFieldValue(
@@ -101,7 +101,7 @@ final class StaticListFieldWithValueBuilderTest extends TestCase
 
         self::assertEquals(
             new StaticListFieldWithValue('static list field with decorators', DisplayType::COLUMN, [
-                new StaticListValue('Red', ItemColor::RED_WINE),
+                new StaticListValue('Red', ColorName::RED_WINE),
                 new StaticListValue('No color', null),
             ]),
             $this->getField(new ConfiguredField($list_field, DisplayType::COLUMN)),

@@ -24,7 +24,7 @@ namespace Tuleap\AgileDashboard\Artifact;
 
 use AgileDashboard_PaneRedirectionExtractor;
 use TemplateRendererFactory;
-use Tuleap\Color\ItemColor;
+use Tuleap\Color\ColorName;
 use Tuleap\GlobalResponseMock;
 use Tuleap\Templating\TemplateCache;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
@@ -109,7 +109,7 @@ final class RedirectParameterInjectorTest extends \Tuleap\Test\PHPUnit\TestCase
                 'getXref'    => 'rel #42',
                 'getTracker' => $this->createConfiguredMock(
                     Tracker::class,
-                    ['getColor' => ItemColor::default()]
+                    ['getColor' => ColorName::default()]
                 ),
             ]
         );

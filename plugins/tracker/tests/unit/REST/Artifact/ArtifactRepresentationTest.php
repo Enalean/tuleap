@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\REST\Artifact;
 
-use Tuleap\Color\ItemColor;
+use Tuleap\Color\ColorName;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -63,7 +63,7 @@ final class ArtifactRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
         $tracker = TrackerTestBuilder::aTracker()
             ->withId(self::TRACKER_ID)
             ->withName('User Stories')
-            ->withColor(ItemColor::PLUM_CRAZY)
+            ->withColor(ColorName::PLUM_CRAZY)
             ->withProject($project)
             ->build();
 
