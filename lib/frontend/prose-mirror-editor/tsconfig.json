@@ -4,6 +4,7 @@
         "declarationDir": "./types",
         "outDir": "./dist",
         "lib": ["ES2023", "DOM", "DOM.Iterable"],
+        "resolveJsonModule": true
     },
     "include": ["src/**/*.ts"],
     "exclude": ["node_modules"]
