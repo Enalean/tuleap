@@ -70,13 +70,8 @@ class BurnupDataBuilder
         $server_timezone = TimezoneRetriever::getServerTimezone();
         date_default_timezone_set($server_timezone);
 
-        $start = new DateTime();
-        $start->setTimestamp((int) $date_period->getStartDate());
-        $start->setTime(0, 0, 0);
+        $this->logger->debug('Start date: ' . (string) $date_period->getStartDate());
 
-        $this->logger->debug('Start date after updating timezone: ' . $start->getTimestamp());
-
-        $date_period          = DatePeriodWithOpenDays::buildFromDuration($start->getTimestamp(), $date_period->getDuration());
         $is_under_calculation = $this->cache_checker->isBurnupUnderCalculation(
             $artifact,
             $this->date_retriever->getWorkedDaysToCacheForPeriod($date_period, new DateTime('yesterday')),
