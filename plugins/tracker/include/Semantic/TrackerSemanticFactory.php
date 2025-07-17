@@ -31,6 +31,7 @@ use Tuleap\Tracker\Semantic\Progress\SemanticProgress;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgressDao;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgressDuplicator;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgressFromXMLBuilder;
+use Tuleap\Tracker\Semantic\Status\CachedSemanticStatusRetriever;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDone;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneDao;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneDuplicator;
@@ -230,7 +231,8 @@ class TrackerSemanticFactory
     {
         return new SemanticDoneFactory(
             new SemanticDoneDao(),
-            new SemanticDoneValueChecker()
+            new SemanticDoneValueChecker(),
+            CachedSemanticStatusRetriever::instance(),
         );
     }
 

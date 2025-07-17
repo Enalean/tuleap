@@ -155,6 +155,8 @@ use Tuleap\Tracker\REST\v1\Event\GetExternalPostActionJsonParserEvent;
 use Tuleap\Tracker\REST\v1\Event\PostActionVisitExternalActionsEvent;
 use Tuleap\Tracker\REST\v1\Workflow\PostAction\CheckPostActionsForTracker;
 use Tuleap\Tracker\Semantic\Progress\Events\GetSemanticProgressUsageEvent;
+use Tuleap\Tracker\Semantic\Status\CachedSemanticStatusFieldRetriever;
+use Tuleap\Tracker\Semantic\Status\CachedSemanticStatusRetriever;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneDao;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneFactory;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneUsedExternalService;
@@ -832,7 +834,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
 
     private function getSemanticDoneFactory(): SemanticDoneFactory
     {
-        return new SemanticDoneFactory(new SemanticDoneDao(), new SemanticDoneValueChecker());
+        return new SemanticDoneFactory(new SemanticDoneDao(), new SemanticDoneValueChecker(), CachedSemanticStatusRetriever::instance());
     }
 
     /**
@@ -1182,7 +1184,8 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
             $changeset_factory,
             $this->getArtifactFactory(),
             Tracker_FormElementFactory::instance(),
-            new BurnupDataDAO()
+            new BurnupDataDAO(),
+            CachedSemanticStatusRetriever::instance(),
         );
     }
 
@@ -1365,6 +1368,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
             new PriorityDao(),
             \Tuleap\Tracker\Permission\TrackersPermissionsRetriever::build(),
             CachedSemanticTitleFieldRetriever::instance(),
+            CachedSemanticStatusFieldRetriever::instance(),
         );
     }
 

@@ -60,7 +60,7 @@ use Tuleap\Tracker\Semantic\Contributor\ContributorFieldRetriever;
 use Tuleap\Tracker\Semantic\Contributor\TrackerSemanticContributorFactory;
 use Tuleap\Tracker\Test\Stub\Permission\RetrieveUserPermissionOnFieldsStub;
 use Tuleap\Tracker\Test\Stub\RetrieveFieldTypeStub;
-use Tuleap\Tracker\Test\Stub\RetrieveSemanticStatusFieldStub;
+use Tuleap\Tracker\Test\Stub\RetrieveSemanticStatusFieldIterativeStub;
 use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
 use UserManager;
 
@@ -127,7 +127,7 @@ final class InvalidSelectablesCollectionBuilderTest extends TestCase
                     new ArtifactIdMetadataChecker(),
                 ),
                 new InvalidOrderByListChecker(
-                    RetrieveSemanticStatusFieldStub::withNoField(),
+                    RetrieveSemanticStatusFieldIterativeStub::withNoField(),
                     new ContributorFieldRetriever(TrackerSemanticContributorFactory::instance()),
                 ),
             )),

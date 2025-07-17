@@ -145,6 +145,8 @@ use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInit
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\FieldsDataBuilder;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\FieldsDataFromValuesByFieldBuilder;
 use Tuleap\Tracker\Rule\FirstValidValueAccordingToDependenciesRetriever;
+use Tuleap\Tracker\Semantic\Status\CachedSemanticStatusFieldRetriever;
+use Tuleap\Tracker\Semantic\Status\CachedSemanticStatusRetriever;
 use Tuleap\Tracker\Semantic\Status\SemanticStatusClosedValueNotFoundException;
 use Tuleap\Tracker\Semantic\Status\SemanticStatusNotDefinedException;
 use Tuleap\Tracker\Semantic\Status\StatusValueRetriever;
@@ -316,6 +318,7 @@ class CampaignsResource
                 ),
                 \Tuleap\Tracker\Artifact\PriorityManager::build(),
                 new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
+                CachedSemanticStatusRetriever::instance(),
             ),
             $this->provide_user_avatar_url,
         );
@@ -461,7 +464,8 @@ class CampaignsResource
                 new StatusValueRetriever(
                     TrackerSemanticStatusFactory::instance(),
                     $this->getFirstPossibleValueInListRetriever()
-                )
+                ),
+                CachedSemanticStatusFieldRetriever::instance(),
             )
         );
 

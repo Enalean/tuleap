@@ -38,6 +38,7 @@ use Tuleap\Tracker\Semantic\Progress\SemanticProgress;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgressBuilder;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgressDao;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDone;
+use Tuleap\Tracker\Semantic\Status\RetrieveSemanticStatus;
 use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
@@ -73,6 +74,7 @@ class TrackerSemanticManager
     public function __construct(
         private readonly RetrieveSemanticDescriptionField $retrieve_description_field,
         private readonly RetrieveSemanticTitleField $retrieve_title_field,
+        private readonly RetrieveSemanticStatus $retrieve_semantic_status,
         protected Tracker $tracker,
     ) {
     }
@@ -215,7 +217,7 @@ class TrackerSemanticManager
                 $this->retrieve_description_field->fromTracker($this->tracker),
             ),
         );
-        $semantics->add(TrackerSemanticStatus::load($this->tracker));
+        $semantics->add($this->retrieve_semantic_status->fromTracker($this->tracker));
         $semantics->insertAfter(
             TrackerSemanticStatus::NAME,
             SemanticDone::load($this->tracker)

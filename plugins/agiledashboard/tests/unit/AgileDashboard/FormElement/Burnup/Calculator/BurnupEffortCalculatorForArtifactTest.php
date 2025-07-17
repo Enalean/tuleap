@@ -28,7 +28,6 @@ use Tracker_Artifact_ChangesetFactory;
 use Tuleap\AgileDashboard\FormElement\BurnupEffort;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneFactory;
-use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueFloatTestBuilder;
@@ -140,13 +139,6 @@ final class BurnupEffortCalculatorForArtifactTest extends \Tuleap\Test\PHPUnit\T
         $changeset_value = ChangesetValueFloatTestBuilder::aValue(123, $this->changeset, $this->initial_effort_field)->withValue(42)->build();
         $this->changeset->setFieldValue($this->initial_effort_field, $changeset_value);
 
-        $user_story_status_semantic = $this->createMock(TrackerSemanticStatus::class);
-        TrackerSemanticStatus::setInstance($user_story_status_semantic, $this->tracker);
-        $user_story_status_semantic->method('isOpenAtGivenChangeset')
-            ->willReturnMap([
-                [$this->changeset, false],
-            ]);
-
         $burnup_effort = $this->calculator->getEffort($this->artifact, 123456789);
 
         $this->assertSame(0.0, $burnup_effort->getTeamEffort());
@@ -176,13 +168,6 @@ final class BurnupEffortCalculatorForArtifactTest extends \Tuleap\Test\PHPUnit\T
         $changeset_value = new \Tracker_Artifact_ChangesetValue_Float(376, $this->changeset, $this->initial_effort_field, true, 42);
         $this->changeset->setFieldValue($this->initial_effort_field, $changeset_value);
 
-        $user_story_status_semantic = $this->createMock(TrackerSemanticStatus::class);
-        TrackerSemanticStatus::setInstance($user_story_status_semantic, $this->tracker);
-        $user_story_status_semantic->method('isOpenAtGivenChangeset')
-            ->willReturnMap([
-                [$this->changeset, true],
-            ]);
-
         $burnup_effort = $this->calculator->getEffort($this->artifact, 123456789);
 
         $this->assertSame(0.0, $burnup_effort->getTeamEffort());
@@ -211,13 +196,6 @@ final class BurnupEffortCalculatorForArtifactTest extends \Tuleap\Test\PHPUnit\T
 
         $changeset_value = new \Tracker_Artifact_ChangesetValue_Float(376, $this->changeset, $this->initial_effort_field, true, 42);
         $this->changeset->setFieldValue($this->initial_effort_field, $changeset_value);
-
-        $user_story_status_semantic = $this->createMock(TrackerSemanticStatus::class);
-        TrackerSemanticStatus::setInstance($user_story_status_semantic, $this->tracker);
-        $user_story_status_semantic->method('isOpenAtGivenChangeset')
-            ->willReturnMap([
-                [$this->changeset, true],
-            ]);
 
         $burnup_effort = $this->calculator->getEffort($this->artifact, 123456789);
 

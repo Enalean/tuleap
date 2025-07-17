@@ -19,28 +19,18 @@
  */
 
 use Tuleap\Cardwall\OnTop\Config\ColumnCollection;
+use Tuleap\Tracker\Semantic\Status\RetrieveSemanticStatusField;
 use Tuleap\Tracker\Tracker;
 
 require_once dirname(__FILE__) . '/../../constants.php';
 
-class Cardwall_OnTop_Config_ValueMappingFactory
+class Cardwall_OnTop_Config_ValueMappingFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    /**
-     * @var Tracker_FormElementFactory
-     */
-    private $element_factory;
-
-    /**
-     * @var Cardwall_OnTop_ColumnMappingFieldValueDao
-     */
-    private $dao;
-
     public function __construct(
-        Tracker_FormElementFactory $element_factory,
-        Cardwall_OnTop_ColumnMappingFieldValueDao $dao,
+        private readonly Tracker_FormElementFactory $element_factory,
+        private readonly Cardwall_OnTop_ColumnMappingFieldValueDao $dao,
+        private readonly RetrieveSemanticStatusField $status_field_retriever,
     ) {
-        $this->element_factory = $element_factory;
-        $this->dao             = $dao;
     }
 
     /**
@@ -98,7 +88,7 @@ class Cardwall_OnTop_Config_ValueMappingFactory
     private function getStatusValuesIndexedByLabel(Tracker $mapping_tracker)
     {
         $values = [];
-        $field  = $mapping_tracker->getStatusField();
+        $field  = $this->status_field_retriever->fromTracker($mapping_tracker);
         if ($field) {
             foreach ($field->getVisibleValuesPlusNoneIfAny() as $value) {
                 $values[$value->getLabel()] = $value;

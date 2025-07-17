@@ -40,6 +40,7 @@ use Tuleap\Tracker\REST\Artifact\ArtifactRepresentationBuilder;
 use Tuleap\Tracker\REST\Artifact\Changeset\ChangesetRepresentationBuilder;
 use Tuleap\Tracker\REST\Artifact\Changeset\Comment\CommentRepresentationBuilder;
 use Tuleap\Tracker\REST\Artifact\StatusValueRepresentation;
+use Tuleap\Tracker\Semantic\Status\RetrieveSemanticStatus;
 use Tuleap\User\Avatar\AvatarHashDao;
 use Tuleap\User\Avatar\ComputeAvatarHash;
 use Tuleap\User\Avatar\ProvideUserAvatarUrl;
@@ -139,6 +140,7 @@ final class ReleaseRepresentation
         UploadedLinksRetriever $uploaded_links_retriever,
         ReleasePermissionsForGroupsBuilder $permissions_for_groups_builder,
         ProvideUserAvatarUrl $provide_user_avatar_url,
+        RetrieveSemanticStatus $semantic_status_retriever,
     ) {
         $this->id           = JsonCast::toInt($release->getReleaseID());
         $this->uri          = self::ROUTE . '/' . urlencode((string) $release->getReleaseID());
@@ -148,7 +150,7 @@ final class ReleaseRepresentation
         $this->status       = self::$STATUS[$release->getStatusID()];
         $this->package      = self::getPackageRepresentation($release);
 
-        $this->artifact  = self::getArtifactRepresentation($release, $link_retriever, $user);
+        $this->artifact  = self::getArtifactRepresentation($release, $link_retriever, $user, $semantic_status_retriever);
         $this->resources = [
             'artifacts' => [
                 'uri' => $this->uri . '/artifacts',
@@ -176,7 +178,7 @@ final class ReleaseRepresentation
         return JsonCast::toBoolean($package->getApproveLicense());
     }
 
-    private static function getArtifactRepresentation(FRSRelease $release, Retriever $link_retriever, PFUser $user): ?ArtifactRepresentation
+    private static function getArtifactRepresentation(FRSRelease $release, Retriever $link_retriever, PFUser $user, RetrieveSemanticStatus $semantic_status_retriever): ?ArtifactRepresentation
     {
         $artifact_id = $link_retriever->getLinkedArtifactId($release->getReleaseID());
 
@@ -208,7 +210,7 @@ final class ReleaseRepresentation
             return null;
         }
 
-        return $tracker_artifact_builder->getArtifactRepresentation($user, $artifact, StatusValueRepresentation::buildFromArtifact($artifact, $user));
+        return $tracker_artifact_builder->getArtifactRepresentation($user, $artifact, StatusValueRepresentation::buildFromArtifact($artifact, $user, $semantic_status_retriever));
     }
 
     private static function getPackageRepresentation(FRSRelease $release): PackageMinimalRepresentation

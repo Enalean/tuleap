@@ -38,6 +38,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\Artifact\ArtifactRepresentation;
 use Tuleap\Tracker\REST\Artifact\ArtifactRepresentationBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Test\Stub\Semantic\Status\RetrieveSemanticStatusStub;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DefinitionRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -49,6 +50,7 @@ final class DefinitionRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Tes
     private MockObject&ContentInterpretor $interpreter;
     private DefinitionRepresentationBuilder $definition_representation_builder;
     private MockObject&ArtifactRepresentationBuilder $artifact_representation_builder;
+    private RetrieveSemanticStatusStub $semantic_status_retriever;
 
     protected function setUp(): void
     {
@@ -58,6 +60,7 @@ final class DefinitionRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Tes
         $this->purifier                        = $this->createMock(\Codendi_HTMLPurifier::class);
         $this->interpreter                     = $this->createMock(ContentInterpretor::class);
         $this->artifact_representation_builder = $this->createMock(ArtifactRepresentationBuilder::class);
+        $this->semantic_status_retriever       = RetrieveSemanticStatusStub::build();
         $priority_manager                      = $this->createStub(\Tuleap\Tracker\Artifact\PriorityManager::class);
         $priority_manager->method('getGlobalRank')->willReturn(1);
 
@@ -70,14 +73,8 @@ final class DefinitionRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Tes
             $this->artifact_representation_builder,
             $priority_manager,
             ProvideUserAvatarUrlStub::build(),
+            $this->semantic_status_retriever,
         );
-    }
-
-    protected function tearDown(): void
-    {
-        \Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus::clearInstances();
-
-        parent::tearDown();
     }
 
     public function testItGetsTheTextDefinitionRepresentation(): void
@@ -300,10 +297,8 @@ final class DefinitionRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Tes
     {
         $semantic_status = $this->createMock(\Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus::class);
         $semantic_status->method('getColor');
-        \Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus::setInstance(
-            $semantic_status,
-            $definition_artifact->getTracker(),
-        );
+        $semantic_status->method('getTracker')->willReturn($definition_artifact->getTracker());
+        $this->semantic_status_retriever->withSemanticStatus($semantic_status);
 
         $this->artifact_representation_builder->method('getArtifactRepresentation')->willReturn(
             $this->createMock(ArtifactRepresentation::class)

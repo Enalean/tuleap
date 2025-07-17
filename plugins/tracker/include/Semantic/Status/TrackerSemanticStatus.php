@@ -409,24 +409,6 @@ class TrackerSemanticStatus extends TrackerSemantic
         return $this->save();
     }
 
-    protected static $_instances; // phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
-
-    /**
-     * Load an instance of a Tracker_Semantic_Status
-     *
-     * @param Tracker $tracker the tracker
-     *
-     * @return TrackerSemanticStatus
-     */
-    public static function load(Tracker $tracker)
-    {
-        if (! isset(self::$_instances[$tracker->getId()])) {
-            self::$_instances[$tracker->getId()] = CachedSemanticStatusRetriever::instance()->fromTracker($tracker);
-        }
-
-        return self::$_instances[$tracker->getId()];
-    }
-
     /**
      * Export semantic to XML
      *
@@ -492,22 +474,6 @@ class TrackerSemanticStatus extends TrackerSemantic
     public function isOpenValue($label)
     {
         return in_array($label, $this->getOpenLabels());
-    }
-
-    /**
-     * Allows to inject a fake Semantic for tests. DO NOT USE IT IN PRODUCTION!
-     */
-    public static function setInstance(TrackerSemanticStatus $status, Tracker $tracker)
-    {
-        self::$_instances[$tracker->getId()] = $status;
-    }
-
-    /**
-     * Allows to clear Semantics for tests. DO NOT USE IT IN PRODUCTION!
-     */
-    public static function clearInstances()
-    {
-        self::$_instances = null;
     }
 
     private function processUpdate(Codendi_Request $request): void

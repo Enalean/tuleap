@@ -28,6 +28,7 @@ use Tuleap\TestManagement\Campaign\Campaign;
 use Tuleap\TestManagement\LabelFieldNotFoundException;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
+use Tuleap\Tracker\Semantic\Status\RetrieveSemanticStatusField;
 use Tuleap\Tracker\Semantic\Status\SemanticStatusClosedValueNotFoundException;
 use Tuleap\Tracker\Semantic\Status\SemanticStatusNotDefinedException;
 use Tuleap\Tracker\Semantic\Status\StatusValueRetriever;
@@ -42,21 +43,11 @@ class CampaignArtifactUpdateFieldValuesBuilder
     public const STATUS_CHANGE_CLOSED_VALUE = 'closed';
     public const STATUS_CHANGE_OPEN_VALUE   = 'open';
 
-    /**
-     * @var Tracker_FormElementFactory
-     */
-    private $formelement_factory;
-    /**
-     * @var StatusValueRetriever
-     */
-    private $status_value_retriever;
-
     public function __construct(
-        Tracker_FormElementFactory $formelement_factory,
-        StatusValueRetriever $status_value_retriever,
+        private readonly Tracker_FormElementFactory $formelement_factory,
+        private readonly StatusValueRetriever $status_value_retriever,
+        private readonly RetrieveSemanticStatusField $status_field_retriever,
     ) {
-        $this->formelement_factory    = $formelement_factory;
-        $this->status_value_retriever = $status_value_retriever;
     }
 
     /**
@@ -108,7 +99,7 @@ class CampaignArtifactUpdateFieldValuesBuilder
             return null;
         }
 
-        $status_field = $tracker->getStatusField();
+        $status_field = $this->status_field_retriever->fromTracker($tracker);
         if ($status_field === null) {
             throw new SemanticStatusNotDefinedException();
         }

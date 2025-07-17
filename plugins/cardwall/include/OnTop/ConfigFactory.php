@@ -19,24 +19,16 @@
  */
 
 use Tuleap\Cardwall\OnTop\Config\ColumnFactory;
+use Tuleap\Tracker\Semantic\Status\RetrieveSemanticStatusField;
 use Tuleap\Tracker\Tracker;
 
-class Cardwall_OnTop_ConfigFactory
+class Cardwall_OnTop_ConfigFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    /**
-     * @var TrackerFactory
-     */
-    private $tracker_factory;
-
-    /**
-     * @var Tracker_FormElementFactory
-     */
-    private $element_factory;
-
-    public function __construct(TrackerFactory $tracker_factory, Tracker_FormElementFactory $element_factory)
-    {
-        $this->tracker_factory = $tracker_factory;
-        $this->element_factory = $element_factory;
+    public function __construct(
+        private readonly TrackerFactory $tracker_factory,
+        private readonly Tracker_FormElementFactory $element_factory,
+        private readonly RetrieveSemanticStatusField $status_field_retriever,
+    ) {
     }
 
     /**
@@ -61,14 +53,16 @@ class Cardwall_OnTop_ConfigFactory
 
         $value_mapping_factory = new Cardwall_OnTop_Config_ValueMappingFactory(
             $this->element_factory,
-            $this->getOnTopColumnMappingFieldValueDao()
+            $this->getOnTopColumnMappingFieldValueDao(),
+            $this->status_field_retriever,
         );
 
         $tracker_mapping_factory = new Cardwall_OnTop_Config_TrackerMappingFactory(
             $this->tracker_factory,
             $this->element_factory,
             $this->getOnTopColumnMappingFieldDao(),
-            $value_mapping_factory
+            $value_mapping_factory,
+            $this->status_field_retriever,
         );
 
         $config = new Cardwall_OnTop_Config(

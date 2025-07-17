@@ -25,6 +25,7 @@ use Tuleap\Cardwall\Agiledashboard\CardwallPaneInfo;
 use Tuleap\Cardwall\OnTop\Config\ColumnCollection;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Dao\PriorityDao;
+use Tuleap\Tracker\Semantic\Status\CachedSemanticStatusFieldRetriever;
 use Tuleap\Tracker\Semantic\Title\CachedSemanticTitleFieldRetriever;
 
 /**
@@ -232,6 +233,7 @@ class Cardwall_Pane extends AgileDashboard_Pane // phpcs:ignore PSR1.Classes.Cla
             new PriorityDao(),
             \Tuleap\Tracker\Permission\TrackersPermissionsRetriever::build(),
             CachedSemanticTitleFieldRetriever::instance(),
+            CachedSemanticStatusFieldRetriever::instance(),
         );
 
         $backlog_factory = new AgileDashboard_Milestone_Backlog_BacklogFactory(

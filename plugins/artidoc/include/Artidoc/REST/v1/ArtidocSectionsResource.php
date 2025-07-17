@@ -134,6 +134,7 @@ use Tuleap\Tracker\REST\Artifact\CreateArtifact;
 use Tuleap\Tracker\REST\Artifact\HandlePUT;
 use Tuleap\Tracker\REST\Artifact\PUTHandler;
 use Tuleap\Tracker\Semantic\Description\CachedSemanticDescriptionFieldRetriever;
+use Tuleap\Tracker\Semantic\Status\CachedSemanticStatusRetriever;
 use Tuleap\Tracker\Semantic\Title\CachedSemanticTitleFieldRetriever;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
@@ -547,6 +548,7 @@ final class ArtidocSectionsResource extends AuthenticatedResource
                 new ArtifactLinkFieldWithValueBuilder(
                     $user,
                     $title_field_retriever,
+                    CachedSemanticStatusRetriever::instance(),
                     new TypePresenterFactory(new TypeDao(), new ArtifactLinksUsageDao()),
                 ),
             )

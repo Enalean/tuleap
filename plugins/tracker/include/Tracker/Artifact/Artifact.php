@@ -161,9 +161,9 @@ use Tuleap\Tracker\Semantic\Description\TrackerSemanticDescription;
 use Tuleap\Tracker\Semantic\Progress\MethodBuilder;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgressBuilder;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgressDao;
+use Tuleap\Tracker\Semantic\Status\CachedSemanticStatusRetriever;
 use Tuleap\Tracker\Semantic\Status\StatusValueForChangesetProvider;
 use Tuleap\Tracker\Semantic\Status\StatusValueProvider;
-use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Title\CachedSemanticTitleFieldRetriever;
 use Tuleap\Tracker\Tracker;
@@ -800,7 +800,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
     public function isOpen(): bool
     {
         if ($this->is_open === null) {
-            $this->is_open = TrackerSemanticStatus::load($this->getTracker())->isOpen($this);
+            $this->is_open = CachedSemanticStatusRetriever::instance()->fromTracker($this->getTracker())->isOpen($this);
         }
         return $this->is_open;
     }
@@ -808,11 +808,6 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
     public function setIsOpen(bool $is_open): void
     {
         $this->is_open = $is_open;
-    }
-
-    public function isOpenAtGivenChangeset(Tracker_Artifact_Changeset $changeset)
-    {
-        return TrackerSemanticStatus::load($this->getTracker())->isOpenAtGivenChangeset($changeset);
     }
 
     /**
@@ -1123,7 +1118,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
         $presenters = [];
         foreach ($this->getChildrenForUser($current_user) as $child) {
             $tracker   = $child->getTracker();
-            $semantics = TrackerSemanticStatus::load($tracker);
+            $semantics = CachedSemanticStatusRetriever::instance()->fromTracker($tracker);
 
             $presenters[] = new Tracker_ArtifactChildPresenter(
                 $child,

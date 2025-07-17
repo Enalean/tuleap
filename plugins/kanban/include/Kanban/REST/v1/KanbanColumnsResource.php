@@ -46,6 +46,7 @@ use Tuleap\Kanban\KanbanStatisticsAggregator;
 use TrackerFactory;
 use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\Tracker\Permission\SubmissionPermissionVerifier;
+use Tuleap\Tracker\Semantic\Status\CachedSemanticStatusRetriever;
 use Tuleap\Tracker\Semantic\Status\SemanticStatusFieldRetriever;
 use Tuleap\Tracker\Semantic\Status\SemanticStatusRetriever;
 use Tuleap\Tracker\Semantic\Status\StatusSemanticDAO;
@@ -124,6 +125,7 @@ class KanbanColumnsResource
                 Tracker_FormElementFactory::instance(),
                 SubmissionPermissionVerifier::instance(),
                 CachedSemanticTitleFieldRetriever::instance(),
+                CachedSemanticStatusRetriever::instance(),
             )
         );
 

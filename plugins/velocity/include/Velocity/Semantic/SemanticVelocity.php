@@ -31,6 +31,7 @@ use Tracker_FormElement_Field;
 use Tracker_FormElementFactory;
 use Tracker_HierarchyFactory;
 use TrackerManager;
+use Tuleap\Tracker\Semantic\Status\CachedSemanticStatusRetriever;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDone;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneDao;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneFactory;
@@ -87,7 +88,11 @@ class SemanticVelocity extends TrackerSemantic
     {
         return new MissingRequirementRetriever(
             Tracker_HierarchyFactory::instance(),
-            new SemanticDoneFactory(new SemanticDoneDao(), new SemanticDoneValueChecker()),
+            new SemanticDoneFactory(
+                new SemanticDoneDao(),
+                new SemanticDoneValueChecker(),
+                CachedSemanticStatusRetriever::instance(),
+            ),
             \AgileDashboard_Semantic_InitialEffortFactory::instance(),
             new SemanticVelocityFactory(),
             new BacklogRequiredTrackerCollectionFormatter()

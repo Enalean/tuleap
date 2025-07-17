@@ -144,6 +144,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
 use Tuleap\Tracker\Rule\FirstValidValueAccordingToDependenciesRetriever;
 use Tuleap\Tracker\Semantic\Status\CachedSemanticStatusFieldRetriever;
+use Tuleap\Tracker\Semantic\Status\CachedSemanticStatusRetriever;
 use Tuleap\Tracker\Semantic\Status\Done\DoneValueRetriever;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneDao;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneFactory;
@@ -393,6 +394,7 @@ class gitlabPlugin extends Plugin
                                 new SemanticDoneFactory(
                                     new SemanticDoneDao(),
                                     new SemanticDoneValueChecker(),
+                                    CachedSemanticStatusRetriever::instance(),
                                 ),
                                 $first_possible_value_retriever
                             ),
@@ -627,7 +629,8 @@ class gitlabPlugin extends Plugin
                             new DoneValueRetriever(
                                 new SemanticDoneFactory(
                                     new SemanticDoneDao(),
-                                    new SemanticDoneValueChecker()
+                                    new SemanticDoneValueChecker(),
+                                    CachedSemanticStatusRetriever::instance(),
                                 ),
                                 $first_possible_value_retriever
                             ),

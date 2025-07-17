@@ -25,6 +25,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Kanban\KanbanFactory;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Stub\Semantic\Status\RetrieveSemanticStatusStub;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RealTimeArtifactMessageControllerMercureTest extends TestCase
@@ -44,7 +45,7 @@ final class RealTimeArtifactMessageControllerMercureTest extends TestCase
         $this->kanban_factory->method('getKanbanIdByTrackerId')->willReturn(1);
         $artifact                    = ArtifactTestBuilder::anArtifact(1)->build();
         $event_name                  = RealTimeArtifactMessageControllerMercure::EVENT_NAME_ARTIFACT_CREATED;
-        $realtime_controller_mercure = new RealTimeArtifactMessageControllerMercure($this->kanban_factory, $this->kanban_artifact_message_sender_mercure);
+        $realtime_controller_mercure = new RealTimeArtifactMessageControllerMercure($this->kanban_factory, $this->kanban_artifact_message_sender_mercure, RetrieveSemanticStatusStub::build());
         $this->kanban_artifact_message_sender_mercure->expects($this->once())->method('sendMessageArtifactCreated');
         $this->kanban_artifact_message_sender_mercure->expects($this->never())->method('sendMessageArtifactReordered');
         $this->kanban_artifact_message_sender_mercure->expects($this->never())->method('sendMessageArtifactMoved');
@@ -57,7 +58,7 @@ final class RealTimeArtifactMessageControllerMercureTest extends TestCase
         $this->kanban_factory->method('getKanbanIdByTrackerId')->willReturn(null);
         $artifact                    = ArtifactTestBuilder::anArtifact(1)->build();
         $event_name                  = RealTimeArtifactMessageControllerMercure::EVENT_NAME_ARTIFACT_CREATED;
-        $realtime_controller_mercure = new RealTimeArtifactMessageControllerMercure($this->kanban_factory, $this->kanban_artifact_message_sender_mercure);
+        $realtime_controller_mercure = new RealTimeArtifactMessageControllerMercure($this->kanban_factory, $this->kanban_artifact_message_sender_mercure, RetrieveSemanticStatusStub::build());
         $this->kanban_artifact_message_sender_mercure->expects($this->never())->method('sendMessageArtifactCreated');
         $this->kanban_artifact_message_sender_mercure->expects($this->never())->method('sendMessageArtifactReordered');
         $this->kanban_artifact_message_sender_mercure->expects($this->never())->method('sendMessageArtifactMoved');

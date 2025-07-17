@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Semantic\Status\Done;
 
 use SimpleXMLElement;
+use Tuleap\Tracker\Semantic\Status\RetrieveSemanticStatus;
 use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
 use Tuleap\Tracker\Semantic\TrackerSemantic;
 use Tuleap\Tracker\Semantic\XML\IBuildSemanticFromXML;
@@ -30,20 +31,11 @@ use Tuleap\Tracker\Tracker;
 
 class SemanticDoneFactory implements IBuildSemanticFromXML
 {
-    /**
-     * @var SemanticDoneDao
-     */
-    private $dao;
-
-    /**
-     * @var SemanticDoneValueChecker
-     */
-    private $value_checker;
-
-    public function __construct(SemanticDoneDao $dao, SemanticDoneValueChecker $value_checker)
-    {
-        $this->dao           = $dao;
-        $this->value_checker = $value_checker;
+    public function __construct(
+        private readonly SemanticDoneDao $dao,
+        private readonly SemanticDoneValueChecker $value_checker,
+        private readonly RetrieveSemanticStatus $semantic_status_retriever,
+    ) {
     }
 
     /**
@@ -61,7 +53,7 @@ class SemanticDoneFactory implements IBuildSemanticFromXML
         Tracker $tracker,
         array $tracker_mapping,
     ): ?TrackerSemantic {
-        $semantic_status = TrackerSemanticStatus::load($tracker);
+        $semantic_status = $this->semantic_status_retriever->fromTracker($tracker);
         $done_values     = $this->getDoneValues($current_semantic_xml, $all_semantics_xml, $xml_mapping);
 
         return new SemanticDone($tracker, $semantic_status, $this->dao, $this->value_checker, $done_values);

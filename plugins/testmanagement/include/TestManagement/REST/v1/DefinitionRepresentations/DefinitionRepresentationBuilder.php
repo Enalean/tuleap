@@ -34,6 +34,7 @@ use Tuleap\Tracker\REST\Artifact\ArtifactRepresentation;
 use Tuleap\Tracker\REST\Artifact\ArtifactRepresentationBuilder;
 use Tuleap\Tracker\REST\Artifact\StatusValueRepresentation;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
+use Tuleap\Tracker\Semantic\Status\RetrieveSemanticStatus;
 use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 
 class DefinitionRepresentationBuilder
@@ -70,6 +71,7 @@ class DefinitionRepresentationBuilder
         private readonly ArtifactRepresentationBuilder $artifact_representation_builder,
         private readonly \Tuleap\Tracker\Artifact\PriorityManager $artifact_priority_manager,
         private readonly ProvideUserAvatarUrl $provide_user_avatar_url,
+        private readonly RetrieveSemanticStatus $semantic_status_retriever,
     ) {
         $this->tracker_form_element_factory = $tracker_form_element_factory;
         $this->conformance_validator        = $conformance_validator;
@@ -87,7 +89,7 @@ class DefinitionRepresentationBuilder
         $definition_artifact_representation = $this->artifact_representation_builder->getArtifactRepresentation(
             $user,
             $definition_artifact,
-            StatusValueRepresentation::buildFromArtifact($definition_artifact, $user),
+            StatusValueRepresentation::buildFromArtifact($definition_artifact, $user, $this->semantic_status_retriever),
         );
 
         return $this->buildDefinitionRepresentation(
@@ -108,7 +110,7 @@ class DefinitionRepresentationBuilder
             $user,
             $definition_artifact,
             MinimalTrackerRepresentation::build($definition_artifact->getTracker()),
-            StatusValueRepresentation::buildFromArtifact($definition_artifact, $user),
+            StatusValueRepresentation::buildFromArtifact($definition_artifact, $user, $this->semantic_status_retriever),
         );
 
         return $this->buildDefinitionRepresentation(
@@ -136,7 +138,7 @@ class DefinitionRepresentationBuilder
                 [],
                 [],
                 MinimalTrackerRepresentation::build($requirement->getTracker()),
-                StatusValueRepresentation::buildFromArtifact($definition_artifact, $user),
+                StatusValueRepresentation::buildFromArtifact($definition_artifact, $user, $this->semantic_status_retriever),
                 $this->provide_user_avatar_url,
             ),
             $this->requirement_retriever->getAllRequirementsForDefinition($definition_artifact, $user)

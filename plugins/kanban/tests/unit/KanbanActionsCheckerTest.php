@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Kanban;
 
-use PHPUnit\Framework\MockObject\MockObject;
 use Tracker_FormElement_Field_List;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -36,6 +35,7 @@ use Tuleap\Tracker\Test\Builders\Fields\TextFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveTrackerStub;
 use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
+use Tuleap\Tracker\Test\Stub\Semantic\Status\RetrieveSemanticStatusStub;
 use Tuleap\Tracker\Test\Stub\Semantic\Title\RetrieveSemanticTitleFieldStub;
 use Tuleap\Tracker\Test\Stub\VerifySubmissionPermissionStub;
 use Tuleap\Tracker\Tracker;
@@ -49,7 +49,7 @@ final class KanbanActionsCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     private Tracker_FormElement_Field_List $field_list;
     private Tracker $tracker;
     private RetrieveSemanticTitleField $title_field_retriever;
-    private TrackerSemanticStatus&MockObject $semantic_status;
+    private RetrieveSemanticStatusStub $semantic_status_retriever;
     private VerifySubmissionPermissionStub $verify_submission_permissions;
     private \PFUser $user;
 
@@ -64,22 +64,15 @@ final class KanbanActionsCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->inTracker($this->tracker)
             ->build();
 
-        $this->title_field_retriever = RetrieveSemanticTitleFieldStub::build();
-        $this->semantic_status       = $this->createMock(\Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus::class);
+        $this->title_field_retriever     = RetrieveSemanticTitleFieldStub::build();
+        $this->semantic_status_retriever = RetrieveSemanticStatusStub::build();
 
-        TrackerSemanticStatus::setInstance($this->semantic_status, $this->tracker);
         $this->verify_submission_permissions = VerifySubmissionPermissionStub::withSubmitPermission();
 
         $this->user = UserTestBuilder::anActiveUser()
             ->withMemberOf($this->tracker->getProject())
             ->withAdministratorOf($this->tracker->getProject())
             ->build();
-    }
-
-    protected function tearDown(): void
-    {
-        TrackerSemanticStatus::clearInstances();
-        parent::tearDown();
     }
 
     /**
@@ -112,6 +105,7 @@ final class KanbanActionsCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             $form_element_factory,
             $this->verify_submission_permissions,
             $this->title_field_retriever,
+            $this->semantic_status_retriever,
         );
         $checker->checkUserCanAddInPlace($user, $kanban);
     }
@@ -128,10 +122,9 @@ final class KanbanActionsCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->build();
 
         $this->title_field_retriever = RetrieveSemanticTitleFieldStub::build()->withTitleField($this->tracker, $this->field_string);
-        $this->semantic_status->method('getFieldId')->willReturn(202);
-        $status_field = $this->createMock(Tracker_FormElement_Field_List::class);
+        $status_field                = $this->createMock(Tracker_FormElement_Field_List::class);
         $status_field->method('userCanSubmit')->willReturn(true);
-        $this->semantic_status->method('getField')->willReturn($status_field);
+        $this->semantic_status_retriever->withSemanticStatus(new TrackerSemanticStatus($this->tracker, $status_field));
 
         $this->expectException(\Tuleap\Kanban\KanbanUserCantAddInPlaceException::class);
         $this->checkUserCanAddInPlace();
@@ -145,10 +138,9 @@ final class KanbanActionsCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->build();
 
         $this->title_field_retriever = RetrieveSemanticTitleFieldStub::build();
-        $this->semantic_status->method('getFieldId')->willReturn(202);
-        $status_field = $this->createMock(Tracker_FormElement_Field_List::class);
+        $status_field                = $this->createMock(Tracker_FormElement_Field_List::class);
         $status_field->method('userCanSubmit')->willReturn(true);
-        $this->semantic_status->method('getField')->willReturn($status_field);
+        $this->semantic_status_retriever->withSemanticStatus(new TrackerSemanticStatus($this->tracker, $status_field));
 
         $this->expectException(\Tuleap\Kanban\KanbanSemanticTitleNotDefinedException::class);
         $this->checkUserCanAddInPlace();
@@ -162,10 +154,9 @@ final class KanbanActionsCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->build();
 
         $this->title_field_retriever = RetrieveSemanticTitleFieldStub::build()->withTitleField($this->tracker, $this->field_string);
-        $this->semantic_status->method('getFieldId')->willReturn(202);
-        $status_field = $this->createMock(Tracker_FormElement_Field_List::class);
+        $status_field                = $this->createMock(Tracker_FormElement_Field_List::class);
         $status_field->method('userCanSubmit')->willReturn(true);
-        $this->semantic_status->method('getField')->willReturn($status_field);
+        $this->semantic_status_retriever->withSemanticStatus(new TrackerSemanticStatus($this->tracker, $status_field));
 
         $this->expectException(\Tuleap\Kanban\KanbanUserCantAddInPlaceException::class);
         $this->checkUserCanAddInPlace();
@@ -180,10 +171,9 @@ final class KanbanActionsCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->verify_submission_permissions = VerifySubmissionPermissionStub::withoutSubmitPermission();
 
         $this->title_field_retriever = RetrieveSemanticTitleFieldStub::build()->withTitleField($this->tracker, $this->field_string);
-        $this->semantic_status->method('getFieldId')->willReturn(202);
-        $status_field = $this->createMock(Tracker_FormElement_Field_List::class);
+        $status_field                = $this->createMock(Tracker_FormElement_Field_List::class);
         $status_field->method('userCanSubmit')->willReturn(true);
-        $this->semantic_status->method('getField')->willReturn($status_field);
+        $this->semantic_status_retriever->withSemanticStatus(new TrackerSemanticStatus($this->tracker, $status_field));
 
         $this->expectException(KanbanUserCantAddArtifactException::class);
         $this->checkUserCanAddInPlace();
@@ -197,10 +187,9 @@ final class KanbanActionsCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->build();
 
         $this->title_field_retriever = RetrieveSemanticTitleFieldStub::build()->withTitleField($this->tracker, $this->field_string);
-        $this->semantic_status->method('getFieldId')->willReturn(202);
-        $status_field = $this->createMock(Tracker_FormElement_Field_List::class);
+        $status_field                = $this->createMock(Tracker_FormElement_Field_List::class);
         $status_field->method('userCanSubmit')->willReturn(false);
-        $this->semantic_status->method('getField')->willReturn($status_field);
+        $this->semantic_status_retriever->withSemanticStatus(new TrackerSemanticStatus($this->tracker, $status_field));
 
         $this->expectException(KanbanUserCantAddArtifactException::class);
         $this->checkUserCanAddInPlace();
@@ -223,6 +212,7 @@ final class KanbanActionsCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             $form_element_factory,
             VerifySubmissionPermissionStub::withSubmitPermission(),
             $this->title_field_retriever,
+            $this->semantic_status_retriever,
         );
         $checker->checkUserCanAdministrate($this->user, $kanban);
     }

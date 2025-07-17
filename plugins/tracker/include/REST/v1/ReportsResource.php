@@ -56,6 +56,7 @@ use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 use Tuleap\Tracker\REST\ReportRepresentation;
 use Tuleap\Tracker\REST\v1\Report\MatchingArtifactRepresentationBuilder;
 use Tuleap\Tracker\REST\v1\Report\MatchingIdsOrderer;
+use Tuleap\Tracker\Semantic\Status\CachedSemanticStatusRetriever;
 use Tuleap\Tracker\Semantic\Status\StatusColorForChangesetProvider;
 use Tuleap\Tracker\Semantic\Status\StatusValueForChangesetProvider;
 use Tuleap\User\Avatar\AvatarHashDao;
@@ -268,8 +269,8 @@ class ReportsResource extends AuthenticatedResource
      */
     private function getListOfArtifactRepresentation(PFUser $user, $artifacts, $with_all_field_values): array
     {
-        $form_element_factory = Tracker_FormElementFactory::instance();
-        $builder              = new ArtifactRepresentationBuilder(
+        $form_element_factory      = Tracker_FormElementFactory::instance();
+        $builder                   = new ArtifactRepresentationBuilder(
             $form_element_factory,
             Tracker_ArtifactFactory::instance(),
             new TypeDao(),
@@ -284,11 +285,13 @@ class ReportsResource extends AuthenticatedResource
             ),
             new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
         );
+        $semantic_status_retriever = CachedSemanticStatusRetriever::instance();
 
         $build_artifact_representation = function (?Artifact $artifact) use (
             $builder,
             $user,
-            $with_all_field_values
+            $with_all_field_values,
+            $semantic_status_retriever,
         ) {
             if (! $artifact || ! $artifact->userCanView($user)) {
                 return;
@@ -297,9 +300,9 @@ class ReportsResource extends AuthenticatedResource
             if ($with_all_field_values) {
                 $tracker_representation = MinimalTrackerRepresentation::build($artifact->getTracker());
 
-                return $builder->getArtifactRepresentationWithFieldValues($user, $artifact, $tracker_representation, StatusValueRepresentation::buildFromArtifact($artifact, $user));
+                return $builder->getArtifactRepresentationWithFieldValues($user, $artifact, $tracker_representation, StatusValueRepresentation::buildFromArtifact($artifact, $user, $semantic_status_retriever));
             } else {
-                return $builder->getArtifactRepresentation($user, $artifact, StatusValueRepresentation::buildFromArtifact($artifact, $user));
+                return $builder->getArtifactRepresentation($user, $artifact, StatusValueRepresentation::buildFromArtifact($artifact, $user, $semantic_status_retriever));
             }
         };
 

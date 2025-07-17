@@ -26,6 +26,7 @@ use Psr\Log\LoggerInterface;
 use Tuleap\Project\REST\ProjectReference;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgressBuilder;
+use Tuleap\Tracker\Semantic\Status\RetrieveSemanticStatus;
 use Tuleap\Tracker\Semantic\Timeframe\IComputeTimeframes;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeImpliedFromAnotherTracker;
 use Tuleap\Tracker\Tracker;
@@ -58,6 +59,7 @@ final class TaskRepresentationBuilderForTracker implements IBuildATaskRepresenta
         IComputeTimeframes $timeframe_calculator,
         IRetrieveDependencies $dependencies_retriever,
         SemanticProgressBuilder $progress_builder,
+        private readonly RetrieveSemanticStatus $semantic_status_retriever,
         LoggerInterface $logger,
     ) {
         $this->tracker                = $tracker;
@@ -93,7 +95,7 @@ final class TaskRepresentationBuilderForTracker implements IBuildATaskRepresenta
             $start,
             $end,
             $are_dates_implied,
-            $artifact->isOpen(),
+            $this->semantic_status_retriever->fromTracker($artifact->getTracker())->isOpen($artifact),
             $date_period->getErrorMessage(),
             $this->dependencies_retriever->getDependencies($artifact),
             new ProjectReference($artifact->getTracker()->getProject()),

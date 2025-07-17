@@ -28,12 +28,12 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\TestManagement\Campaign\Campaign;
 use Tuleap\TestManagement\LabelFieldNotFoundException;
 use Tuleap\Tracker\Semantic\Status\StatusValueRetriever;
-use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Test\Stub\RetrieveSemanticStatusFieldStub;
 use function PHPUnit\Framework\assertCount;
 use function PHPUnit\Framework\assertSame;
 
@@ -44,11 +44,13 @@ final class CampaignArtifactUpdateFieldValuesBuilderTest extends \Tuleap\Test\PH
     private Tracker_FormElementFactory&MockObject $formelement_factory;
     private StatusValueRetriever&MockObject $status_value_retriever;
     private Campaign&MockObject $campaign;
+    private RetrieveSemanticStatusFieldStub $status_field_retriever;
 
     protected function setUp(): void
     {
         $this->formelement_factory    = $this->createMock(Tracker_FormElementFactory::class);
         $this->status_value_retriever = $this->createMock(StatusValueRetriever::class);
+        $this->status_field_retriever = RetrieveSemanticStatusFieldStub::build();
 
         $this->campaign = $this->createMock(Campaign::class);
         $this->campaign->method('getLabel')->willReturn('new_label');
@@ -56,24 +58,15 @@ final class CampaignArtifactUpdateFieldValuesBuilderTest extends \Tuleap\Test\PH
 
         $this->builder = new CampaignArtifactUpdateFieldValuesBuilder(
             $this->formelement_factory,
-            $this->status_value_retriever
+            $this->status_value_retriever,
+            $this->status_field_retriever,
         );
-    }
-
-    protected function tearDown(): void
-    {
-        \Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus::clearInstances();
     }
 
     public function testItBuildsFieldValueForLabel(): void
     {
         $tracker = TrackerTestBuilder::aTracker()->build();
         $user    = UserTestBuilder::aUser()->build();
-
-        \Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus::setInstance(
-            new TrackerSemanticStatus($tracker, null),
-            $tracker,
-        );
 
         $this->formelement_factory
             ->method('getUsedFieldByNameForUser')
@@ -96,10 +89,7 @@ final class CampaignArtifactUpdateFieldValuesBuilderTest extends \Tuleap\Test\PH
         $tracker = TrackerTestBuilder::aTracker()->build();
         $user    = UserTestBuilder::aUser()->build();
 
-        \Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus::setInstance(
-            new TrackerSemanticStatus($tracker, ListFieldBuilder::aListField(98)->build()),
-            $tracker,
-        );
+        $this->status_field_retriever->withField(ListFieldBuilder::aListField(98)->inTracker($tracker)->build());
 
         $this->status_value_retriever
             ->expects($this->once())
@@ -131,10 +121,7 @@ final class CampaignArtifactUpdateFieldValuesBuilderTest extends \Tuleap\Test\PH
         $tracker = TrackerTestBuilder::aTracker()->build();
         $user    = UserTestBuilder::aUser()->build();
 
-        \Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus::setInstance(
-            new TrackerSemanticStatus($tracker, ListFieldBuilder::aListField(98)->build()),
-            $tracker,
-        );
+        $this->status_field_retriever->withField(ListFieldBuilder::aListField(98)->inTracker($tracker)->build());
 
         $this->status_value_retriever
             ->expects($this->once())
