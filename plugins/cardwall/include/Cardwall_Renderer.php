@@ -23,9 +23,7 @@ use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\Cardwall\OnTop\Config\ColumnCollection;
 use Tuleap\Date\RelativeDatesAssetsRetriever;
 use Tuleap\Layout\CssAssetCollection;
-use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\CssViteAsset;
-use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Project\MappingRegistry;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
@@ -341,13 +339,13 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
             __DIR__ . '/../../tracker/scripts/styles/frontend-assets',
             '/assets/trackers/styles'
         );
-        $cardwall_assets = new IncludeAssets(
-            __DIR__ . '/../frontend-assets/',
-            '/assets/cardwall/'
+        $cardwall_assets = new IncludeViteAssets(
+            __DIR__ . '/../scripts/styles/frontend-assets',
+            '/assets/cardwall/styles'
         );
         return new CssAssetCollection([
             CssViteAsset::fromFileName($tracker_assets, 'themes/FlamingParrot/style.scss'),
-            new CssAssetWithoutVariantDeclinaisons($cardwall_assets, 'flamingparrot-theme'),
+            CssViteAsset::fromFileName($cardwall_assets, 'themes/FlamingParrot/style.scss'),
         ]);
     }
 }
