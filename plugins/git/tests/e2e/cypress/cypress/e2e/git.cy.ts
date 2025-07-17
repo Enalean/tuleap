@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { ConditionPredicate } from "@tuleap/cypress-utilities-support";
+
 function waitForRepositoryCreation(): void {
     cy.get("[data-test=delete]").click();
     cy.reloadUntilCondition(
@@ -164,18 +166,13 @@ describe("Git", function () {
                 cy.get("[data-test=no-repositories]").should("be.visible");
 
                 cy.log("User can no longer checkout the repository");
-                const uri = encodeURI(
-                    `https://ProjectAdministrator:Correct Horse Battery Staple@${repository_path}`,
-                );
-                const clone_command = `cd /tmp &&
-                    git -c http.sslVerify=false clone ${uri} ${repository_name} &&
-                    cd /tmp/${repository_name} &&
-                    git config user.name "admin" &&
-                    git config user.email "admin@example.com"
-                `;
-                cy.exec(clone_command, { failOnNonZeroExit: false })
-                    .its("stderr")
-                    .should("contain", "fatal");
+                cy.cloneRepositoryWillFail(
+                    "ProjectAdministrator",
+                    repository_path,
+                    repository_name,
+                ).then((result) => {
+                    expect(result.includes("fatal")).to.be.true;
+                });
             });
 
             it("other groups can be defined as git admin", function () {
@@ -357,6 +354,57 @@ describe("Git", function () {
                 cy.get("[data-test=submit-git-notifications]").click();
 
                 cy.get("[data-test=feedback]").contains("successfully added to notifications");
+            });
+        });
+        context("Repository permissions", function () {
+            it("User can choose permissions of his repository", function () {
+                cy.projectAdministratorSession();
+                cy.visitProjectService(`git-access`, "Git");
+                cy.get("[data-test=git-repository-card-admin-link]").click();
+
+                cy.log("User can change the access right of the repository");
+                cy.get("[data-test=perms]").click();
+
+                cy.get("[data-test=git-repository-read-permissions]").select("Nobody");
+                cy.get("[data-test=git-repository-write-permissions]").select("Nobody");
+                cy.get("[data-test=git-repository-rewind-permissions]").select("Nobody");
+
+                cy.get("[data-test=git-permissions-submit]").click();
+
+                cy.visitProjectService(`git-access`, "Git");
+                cy.get("[data-test=git-repository-path]").click();
+                cy.get("[data-test=git-repository-tree-table]").contains("No commits");
+
+                const reloadCallback = (): void => {
+                    cy.log("Checking permissions are respected");
+                };
+                const conditionCallback: ConditionPredicate = (
+                    number_of_attempts,
+                    max_attempts,
+                ) => {
+                    // eslint-disable-next-line cypress/no-unnecessary-waiting -- reload until condition is not enough to guarantee that new perms are effective
+                    cy.wait(1000);
+                    const reload_now = Date.now();
+                    const repository_path = "tuleap/plugins/git/git-access/Access";
+                    const repository_name = `access-${reload_now}`;
+                    cy.log(
+                        `Check that repository an no longer be cloned (attempt ${number_of_attempts}/${max_attempts})`,
+                    );
+                    return cy
+                        .cloneRepositoryWillFail(
+                            "ProjectAdministrator",
+                            repository_path,
+                            repository_name,
+                        )
+                        .then((result) => {
+                            return result.includes("error");
+                        });
+                };
+                cy.reloadUntilCondition(
+                    reloadCallback,
+                    conditionCallback,
+                    `User can still clone the repository`,
+                );
             });
         });
         context("Fine grained permissions", function () {
