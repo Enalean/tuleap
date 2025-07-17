@@ -443,7 +443,7 @@ class WikiPage
     /**
      * @return string[] List of pagename
      */
-    public function getAllInternalPages()
+    public static function getAllInternalPages(): array
     {
         $default_pages_db_escaped = [];
         foreach (self::getDefaultPages() as $default_page) {
@@ -503,7 +503,7 @@ class WikiPage
 
     private function getIndexablePageFromDefaultAndAdminPages(array &$indexable_pages)
     {
-        $default_pages_used = array_merge($this->getAllInternalPages(), $this->getAdminPages());
+        $default_pages_used = array_merge(self::getAllInternalPages(), $this->getAdminPages());
 
         foreach ($default_pages_used as $default_page_name) {
             $wiki_page = new WikiPage(self::$gid, $default_page_name);
