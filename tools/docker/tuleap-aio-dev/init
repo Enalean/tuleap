@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+set -x
+
+/usr/bin/systemctl set-default basic.target
+
 /bin/cp -f /usr/share/tuleap/tools/docker/tuleap-aio-dev/run-dev.service /etc/systemd/system
 
 /usr/bin/systemctl enable run-dev.service
