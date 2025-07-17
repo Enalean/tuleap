@@ -194,5 +194,12 @@ function controller($element, $scope, SharedPropertiesService) {
                 );
             }
         });
+
+        forceRedrawOfEditor(unidiff_codemirror, file_lines);
+    }
+
+    function forceRedrawOfEditor(unidiff_codemirror, file_lines) {
+        unidiff_codemirror.setCursor({ line: file_lines.length - 1, ch: 0 });
+        unidiff_codemirror.setCursor({ line: 0, ch: 0 });
     }
 }
