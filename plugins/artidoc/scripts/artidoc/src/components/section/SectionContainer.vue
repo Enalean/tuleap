@@ -57,8 +57,7 @@ const additional_class = computed(() => {
           ? props.section.value.tracker.color
           : "";
 
-    const color_class =
-        color !== "" ? `tlp-swatch-${color}` : "artidoc-section-container-without-border";
+    const color_class = color !== "" ? `tlp-swatch-${color}` : "";
 
     if (has_artifact_parent.value) {
         return [color_class, "section-with-artifact-parent"];
@@ -111,12 +110,8 @@ const additional_class = computed(() => {
     padding: var(--tlp-medium-spacing) 0 0
         calc(#{whitespace.$section-left-padding} - var(--border-width));
     transition: background-color 75ms ease-in-out;
-    border-left: var(--border-width) solid var(--border-color);
+    border-left: var(--border-width) solid var(--border-color, transparent);
     background: var(--tuleap-artidoc-section-background);
-
-    &-without-border {
-        --border-color: transparent;
-    }
 
     &:has(.document-section-cancel-save-buttons) {
         --tuleap-artidoc-section-background: var(--tlp-main-color-lighter-90);
