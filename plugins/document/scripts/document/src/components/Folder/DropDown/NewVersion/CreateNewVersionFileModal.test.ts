@@ -67,23 +67,23 @@ describe("CreateNewVersionFileModal", () => {
     it("Updates the version title", async () => {
         const wrapper = getWrapper();
 
-        expect(wrapper.vm.$data.version.title).toBe("");
+        expect(wrapper.vm.version.title).toBe("");
         emitter.emit("update-version-title", "A title");
 
         await nextTick();
 
-        expect(wrapper.vm.$data.version.title).toBe("A title");
+        expect(wrapper.vm.version.title).toBe("A title");
     });
 
     it("Updates the changelog", async () => {
         const wrapper = getWrapper();
 
-        expect(wrapper.vm.$data.version.changelog).toBe("");
+        expect(wrapper.vm.version.changelog).toBe("");
         emitter.emit("update-changelog-property", "A changelog");
 
         await nextTick();
 
-        expect(wrapper.vm.$data.version.changelog).toBe("A changelog");
+        expect(wrapper.vm.version.changelog).toBe("A changelog");
     });
 
     it("Updates the lock", async () => {
@@ -91,11 +91,11 @@ describe("CreateNewVersionFileModal", () => {
 
         await nextTick();
 
-        expect(wrapper.vm.$data.version.is_file_locked).toBe(true);
+        expect(wrapper.vm.version.is_file_locked).toBe(true);
         emitter.emit("update-lock", false);
 
         await nextTick();
 
-        expect(wrapper.vm.$data.version.is_file_locked).toBe(false);
+        expect(wrapper.vm.version.is_file_locked).toBe(false);
     });
 });
