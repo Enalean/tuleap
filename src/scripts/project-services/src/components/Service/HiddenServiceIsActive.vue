@@ -17,6 +17,17 @@
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<template functional>
-    <input type="hidden" name="is_active" v-bind:value="props.value ? '1' : '0'" />
+<template>
+    <input type="hidden" name="is_active" v-bind:value="value ? '1' : '0'" />
 </template>
+<script>
+export default {
+    name: "HiddenServiceIsActive",
+    props: {
+        value: {
+            type: Boolean,
+            required: true,
+        },
+    },
+};
+</script>

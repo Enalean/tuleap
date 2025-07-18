@@ -17,17 +17,23 @@
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<template functional>
+<template>
     <div class="tlp-form-element">
-        <label class="tlp-label tlp-checkbox" v-bind:for="props.id">
+        <label class="tlp-label tlp-checkbox" v-bind:for="id">
             <input
-                v-bind:id="props.id"
+                v-bind:id="id"
                 type="checkbox"
                 name="is_active"
                 value="1"
-                v-bind:checked="props.value"
+                v-bind:checked="value"
             />
-            <translate>Available (also available for new projects)</translate>
+            {{ $gettext("Available (also available for new projects)") }}
         </label>
     </div>
 </template>
+<script>
+export default {
+    name: "ServiceIsActive",
+    props: ["id", "value"],
+};
+</script>

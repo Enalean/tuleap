@@ -17,18 +17,33 @@
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<template functional>
+<template>
     <div class="tlp-form-element">
-        <label class="tlp-label tlp-checkbox" v-bind:for="props.id">
+        <label class="tlp-label tlp-checkbox" v-bind:for="id">
             <input
                 type="checkbox"
-                v-bind:id="props.id"
+                v-bind:id="id"
                 name="is_in_new_tab"
                 value="1"
-                v-bind:checked="props.value"
+                v-bind:checked="value"
                 v-on="listeners"
             />
-            <translate>Open in a new tab</translate>
+            {{ $gettext("Open in a new tab") }}
         </label>
     </div>
 </template>
+<script>
+export default {
+    name: "ServiceOpenInNewTab",
+    props: {
+        id: {
+            type: String,
+            required: true,
+        },
+        value: {
+            type: Boolean,
+            required: true,
+        },
+    },
+};
+</script>

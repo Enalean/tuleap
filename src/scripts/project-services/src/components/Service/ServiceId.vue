@@ -17,6 +17,17 @@
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<template functional>
-    <input type="hidden" name="service_id" v-bind:value="props.value" />
+<template>
+    <input type="hidden" name="service_id" v-bind:value="value" />
 </template>
+<script>
+export default {
+    name: "ServiceId",
+    props: {
+        value: {
+            type: Number,
+            required: true,
+        },
+    },
+};
+</script>
