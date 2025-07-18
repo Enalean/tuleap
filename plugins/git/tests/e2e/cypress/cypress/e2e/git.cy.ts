@@ -584,6 +584,28 @@ describe("Git", function () {
                 cy.pushGitCommit(repository_name);
             });
         });
+
+        context("Artifact actions", function () {
+            describe("Git branch", function () {
+                it("should create a Git branch through artifact action", () => {
+                    cy.projectAdministratorSession();
+                    cy.visitProjectService("git-artifact-action", "Trackers");
+                    cy.get("[data-test=tracker-link]").click();
+                    cy.get("[data-test=new-artifact]").click();
+                    cy.get("[data-test=summary]").type("My artifact");
+                    cy.get("[data-test=artifact-submit-and-stay]").click();
+                    cy.get("[data-test=tracker-artifact-actions]").click();
+                    cy.get("[data-test=create-git-branch-button]").click();
+                    cy.get("[data-test=create-branch-submit-button]").click();
+                    cy.get("[data-test=feedback]").contains("successfully created");
+
+                    cy.visitProjectService("git-artifact-action", "Git");
+                    cy.get("[data-test=pull-requests-badge]").click();
+                    cy.get("[data-test=pull-request-card]").contains("-my-artifact");
+                    cy.get("[data-test=pull-request-card]").contains("main");
+                });
+            });
+        });
     });
 
     function addToNotifiedPeople(user: string): void {
