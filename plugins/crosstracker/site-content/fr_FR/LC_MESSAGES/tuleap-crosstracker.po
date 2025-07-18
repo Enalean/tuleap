@@ -210,13 +210,6 @@ msgstr "Seulement 'self' et 'aggregated' sont supportés pour @project IN(...)"
 msgid "Only @project = 'self' and @project = 'aggregated' are supported"
 msgstr "Seulement @project = 'self' et @project = 'aggregated' sont supportés"
 
-msgid "Parameter 'query' is invalid"
-msgstr "Le paramètre 'query' est invalide"
-
-#, php-format
-msgid "Parameter 'query' is invalid: %s"
-msgstr "Le paramètre 'query' est invalide : %s"
-
 msgid "Query not found"
 msgstr "La requête n'a pas été trouvé"
 
