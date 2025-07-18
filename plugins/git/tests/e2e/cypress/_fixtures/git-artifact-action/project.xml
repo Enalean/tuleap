@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project unix-name="git-artifact-action" full-name="git-artifact-action" description="" access="public">
+  <long-description/>
+  <services>
+    <service shortname="summary" enabled="1"/>
+    <service shortname="admin" enabled="1"/>
+    <service shortname="plugin_tracker" enabled="1"/>
+    <service shortname="plugin_git" enabled="1"/>
+  </services>
+  <ugroups>
+    <ugroup name="project_admins" description="Project administrators">
+      <members>
+        <member format="username">ProjectAdministrator</member>
+      </members>
+    </ugroup>
+    <ugroup name="project_members" description="Project members">
+      <members>
+        <member format="username">ProjectAdministrator</member>
+      </members>
+    </ugroup>
+  </ugroups>
+  <trackers use-natures="true">
+    <tracker id="T7" parent_id="0" allow_copy="1" instantiate_for_new_projects="1" enable_move_artifacts="1">
+      <name><![CDATA[Bugs]]></name>
+      <item_name><![CDATA[bug]]></item_name>
+      <description><![CDATA[Incident, anomalies]]></description>
+      <color><![CDATA[fiesta-red]]></color>
+      <cannedResponses/>
+      <formElements>
+        <formElement type="fieldset" ID="F243" rank="28" id="243" tracker_id="7" parent_id="0" required="1">
+          <name><![CDATA[description]]></name>
+          <label><![CDATA[Description]]></label>
+          <formElements>
+            <formElement type="string" ID="F244" rank="0" id="244" tracker_id="7" parent_id="243" required="1">
+              <name><![CDATA[summary]]></name>
+              <label><![CDATA[Summary]]></label>
+              <description><![CDATA[One line description of the artifact]]></description>
+              <properties maxchars="150" size="60"/>
+            </formElement>
+          </formElements>
+        </formElement>
+      </formElements>
+      <semantics>
+        <semantic type="title">
+          <shortname><![CDATA[title]]></shortname>
+          <label><![CDATA[Title]]></label>
+          <description><![CDATA[Define the title of an artifact]]></description>
+          <field REF="F244"/>
+        </semantic>
+      </semantics>
+      <rules>
+        <date_rules/>
+        <list_rules/>
+      </rules>
+      <reports>
+        <report id="REPORT_111" is_default="0">
+          <name><![CDATA[All Bugs]]></name>
+          <description><![CDATA[Bugs Report]]></description>
+          <criterias>
+          </criterias>
+          <renderers>
+            <renderer ID="R123" type="table" rank="0" chunksz="15">
+              <name><![CDATA[All Bugs]]></name>
+              <columns/>
+            </renderer>
+          </renderers>
+        </report>
+      </reports>
+      <permissions>
+        <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+        <permission scope="field" REF="F244" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F244" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F244" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+      </permissions>
+    </tracker>
+  </trackers>
+  <git>
+    <ugroups-admin>
+      <ugroup><![CDATA[Project administrators]]></ugroup>
+      <ugroup><![CDATA[Project administrators]]></ugroup>
+    </ugroups-admin>
+    <repository name="MyRepository" description="-- Default description --" allow_artifact_closure="1" default_branch="main" bundle-path="export/repository-1.bundle">
+      <last-push-date push_date="1750319724" commits_number="1" refname="refs/heads/main" operation_type="create" refname_type="branch">
+        <user format="username">ProjectMember</user>
+      </last-push-date>
+      <read>
+        <ugroup><![CDATA[Registered users]]></ugroup>
+      </read>
+      <write>
+        <ugroup><![CDATA[Project members]]></ugroup>
+      </write>
+      <wplus/>
+    </repository>
+  </git>
+</project>

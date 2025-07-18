@@ -22,6 +22,7 @@
         v-bind:href="pullrequest_url()"
         class="git-pullrequest-badge-link"
         v-if="number_pull_request > 0"
+        data-test="pull-requests-badge"
     >
         <span class="tlp-badge-primary">{{ pull_requests }}</span>
     </a>
