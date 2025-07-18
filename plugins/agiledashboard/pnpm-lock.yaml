@@ -4,14 +4,6 @@ settings:
   autoInstallPeers: false
   excludeLinksFromLockfile: false
 
-dependencies:
-  '@tuleap/plugin-cardwall-column-colors':
-    specifier: workspace:^
-    version: link:../cardwall/scripts/lib/column-colors
-  '@tuleap/plugin-tracker-color-picker':
-    specifier: workspace:*
-    version: link:../tracker/scripts/lib/colorpicker
-
 devDependencies:
   '@tuleap/build-system-configurator':
     specifier: workspace:*

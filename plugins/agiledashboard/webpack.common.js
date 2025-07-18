@@ -29,7 +29,6 @@ const manifest_plugin = webpack_configurator.getManifestPlugin();
 
 const entry_points = {
     "style-fp": "./themes/FlamingParrot/css/style.scss",
-    "planning-admin-colorpicker": "./themes/FlamingParrot/css/planning-admin-colorpicker.scss",
 };
 
 const webpack_config_for_themes = {
@@ -42,18 +41,4 @@ const webpack_config_for_themes = {
     plugins: [manifest_plugin, ...webpack_configurator.getCSSExtractionPlugins()],
 };
 
-const webpack_config_for_javascript = {
-    entry: {
-        "planning-admin": "./scripts/planning-admin.js",
-    },
-    context,
-    output,
-    externals: {
-        tlp: "tlp",
-        codendi: "codendi",
-        tuleap: "tuleap",
-    },
-    plugins: [manifest_plugin],
-};
-
-module.exports = [webpack_config_for_themes, webpack_config_for_javascript];
+module.exports = [webpack_config_for_themes];

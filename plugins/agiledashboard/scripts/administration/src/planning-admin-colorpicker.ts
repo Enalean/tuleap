@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,28 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "pkg:@tuleap/plugin-tracker-color-picker";
-@use "pkg:@tuleap/plugin-cardwall-column-colors";
+import "../themes/FlamingParrot/planning-admin-colorpicker.scss";
+import { createColorPicker } from "@tuleap/plugin-tracker-color-picker";
 
-.tracker-colorpicker {
-    font-weight: normal;
-}
+document.addEventListener("DOMContentLoaded", () => {
+    const mount_points = document.querySelectorAll(".vue-colorpicker-mount-point");
 
-.colorpicker-circular-color {
-    font-size: 12.6px;
-}
-
-.old-color-picker-preview {
-    border: 1px solid #e3e5ed;
-}
-
-.table {
-    /* stylelint-disable-next-line selector-no-qualifying-type */
-    thead:first-child tr:first-child td.colorpicker-squared-shade {
-        border: 1px solid #000000;
+    for (const element of mount_points) {
+        if (!(element instanceof HTMLElement)) {
+            continue;
+        }
+        createColorPicker(element);
     }
-
-    .colorpicker-squared-shade {
-        padding: 0;
-    }
-}
+});

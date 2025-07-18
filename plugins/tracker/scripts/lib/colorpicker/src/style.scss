@@ -22,13 +22,8 @@
 @use "pkg:@tuleap/tlp-swatch-colors";
 @use "pkg:@tuleap/plugin-tracker-static-list-colors";
 
-.planning-admin-color-picker {
-    display: flex;
-    align-items: center;
-
-    > input {
-        margin: 0 10px 0 0;
-    }
+.tracker-colorpicker {
+    cursor: pointer;
 }
 
 .old-color-picker-preview {
@@ -36,20 +31,6 @@
     height: 16px;
     border: 0;
     vertical-align: middle;
-}
-
-.colorpicker-transparent-preview {
-    margin: 0 5px 0 0;
-    cursor: pointer;
-
-    + .old-colorpicker-no-color-label {
-        cursor: pointer;
-    }
-}
-
-.old-color-preview {
-    display: flex;
-    margin: 10px 10px 5px;
 }
 
 .colorpicker-row {
@@ -95,19 +76,6 @@
     }
 }
 
-.old-colorpicker-palette {
-    width: 250px;
-    margin: 10px 10px 0;
-}
-
-.colorpicker-squared-shade {
-    content: " ";
-    height: 15px;
-    padding: 0;
-    border: 1px solid #000000;
-    cursor: pointer;
-}
-
 .colorpicker-circular-color {
     display: inline-block;
     width: 15px;
@@ -144,29 +112,5 @@
     .color-picker-preview-#{$color-name} {
         border: 0;
         background-color: map.get($colors, "primary");
-    }
-}
-
-.colorpicker-switch {
-    margin: 5px 0 0;
-    padding: 10px 10px 5px;
-    border-top: 1px solid #ededed;
-    text-align: center;
-}
-
-.colorpicker-switch-to-old-palette {
-    max-width: 140px;
-}
-
-.colorpicker-switch-disabled {
-    color: #8f8f8f;
-    cursor: not-allowed;
-
-    &:hover,
-    &:link,
-    &:active,
-    &:visited {
-        color: #8f8f8f;
-        text-decoration: none;
     }
 }
