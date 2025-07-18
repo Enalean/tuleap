@@ -1,12 +1,15 @@
 services:
   tests:
-    image: ${DOCKER_REGISTRY:-ghcr.io}/enalean/tuleap-test-rest:el9-${PHP_VERSION}
+    image: ${DOCKER_REGISTRY:-ghcr.io}/enalean/tuleap-aio-dev:el9-${PHP_VERSION}
     environment:
       - DB_HOST=${DB_HOST}
       - PHP_VERSION=${PHP_VERSION}
+      - PHP_FPM=/opt/remi/${PHP_VERSION}/root/usr/sbin/php-fpm
+      - PHP_CLI=/opt/remi/${PHP_VERSION}/root/usr/bin/php
       - SKIP_SANITY_CHECK=1
     volumes:
       - ${BASEDIR}:/usr/share/tuleap:ro,cached
+    command: /usr/share/tuleap/tests/rest/bin/run.sh
     networks:
       default:
         aliases:
