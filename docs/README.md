@@ -30,6 +30,26 @@ doubts, the source code is always the reference.
 
 When working with sources, you must look closely to [Architecture Decision Records](./decisions/README.md) that will give insights on the evolutions of the code base and what is expected / current norm.
 
+## High-level architecture
+
+The following picture is a very high-level view of Tuleap Architecture. The main information to keep in mind:
+* Historically, Tuleap was a monolith. A plugin system was introduced to bring composability.
+* Tuleap Core corresponds to
+  * The central concepts of Tuleap: User, Projects, Services, Groups, Permissions, ... management
+  * The site wide features: site administration, help, welcome page, etc
+  * The shared libs (internal Framework)
+  * The historical/legacy services. Those will eventually be deleted or converted into plugins.
+* Tuleap Plugins can provide features like
+  * a Service like Tracker, Kanban, TestManagement, ...
+  * or be transversal like LDAP, OpendIDConnect, ...
+
+![](./Archi.png)
+
+Source: [Tuleap Architecture.drawio](./Tuleap_Architecture.drawio)
+
+You can also have a look at a more [infra oriented diagram](../slides/life-tuleap-request/public/img/Prod_SSRF.webp).
+This diagram is extracted from a more complete presentation on [Requests Lifecycle](./slides/life-tuleap-request).
+
 ## Getting started
 
 ### Setup you environment
