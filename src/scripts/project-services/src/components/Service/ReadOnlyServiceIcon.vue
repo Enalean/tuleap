@@ -19,7 +19,7 @@
 
 <template>
     <div class="tlp-property">
-        <label class="tlp-label">Icon</label>
+        <label class="tlp-label">{{ $gettext("Icon") }}</label>
         <i class="fa fa-fw" v-bind:class="value"></i>
     </div>
 </template>
