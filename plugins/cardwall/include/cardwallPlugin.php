@@ -34,8 +34,14 @@ use Tuleap\Cardwall\Semantic\BackgroundColorSemanticFactory;
 use Tuleap\Cardwall\Semantic\FieldUsedInSemanticObjectChecker;
 use Tuleap\Cardwall\XML\Template\CompleteIssuesTemplate;
 use Tuleap\Date\RelativeDatesAssetsRetriever;
+use Tuleap\Layout\CssViteAsset;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\IncludeViteAssets;
+use Tuleap\Layout\JavascriptAsset;
+use Tuleap\Layout\ThemeVariantColor;
+use Tuleap\Layout\ThemeVariation;
 use Tuleap\Plugin\ListeningToEventClass;
+use Tuleap\Plugin\ListeningToEventName;
 use Tuleap\Tracker\Artifact\RedirectAfterArtifactCreationOrUpdateEvent;
 use Tuleap\Tracker\Artifact\Renderer\BuildArtifactFormActionEvent;
 use Tuleap\Tracker\Artifact\XML\Exporter\TrackerEventExportFullXML;
@@ -81,7 +87,6 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
     public function getHooksAndCallbacks()
     {
         if (defined('TRACKER_BASE_URL')) {
-            $this->addHook('cssfile');
             $this->addHook('javascript_file');
             $this->addHook('tracker_report_renderer_types');
             $this->addHook('tracker_report_renderer_instance');
@@ -282,19 +287,25 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
         return $this->pluginInfo;
     }
 
-    public function cssfile($params)
+    #[ListeningToEventName('cssfile')]
+    public function cssfile(): void
     {
         if ($this->canIncludeStylesheets()) {
-            echo '<link rel="stylesheet" type="text/css" href="' . $this->getCSSURL() . '" />';
+            $style_assets   = new IncludeViteAssets(
+                __DIR__ . '/../scripts/styles/frontend-assets',
+                '/assets/cardwall/styles'
+            );
+            $current_user   = UserManager::instance()->getCurrentUser();
+            $fake_variation = new ThemeVariation(ThemeVariantColor::buildFromDefaultVariant(), $current_user);
+            $style_css_url  = CssViteAsset::fromFileName($style_assets, 'themes/FlamingParrot/style.scss')->getFileURL(
+                $fake_variation
+            );
+
+            echo '<link rel="stylesheet" type="text/css" href="' . $style_css_url . '" />';
         }
     }
 
-    private function getCSSURL()
-    {
-        return $this->getCssAssets()->getFileURL('flamingparrot-theme.css');
-    }
-
-    private function canIncludeStylesheets()
+    private function canIncludeStylesheets(): bool
     {
         return $this->isAgileDashboardOrTrackerUrl()
             || strpos($_SERVER['REQUEST_URI'], '/widgets/') === 0;
@@ -310,9 +321,9 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
             $agiledashboard_plugin = PluginManager::instance()->getEnabledPluginByName('agiledashboard');
             if ($agiledashboard_plugin && $agiledashboard_plugin->currentRequestIsForPlugin()) {
                 $tracker_legacy_assets = new IncludeAssets(__DIR__ . '/../../tracker/scripts/legacy/frontend-assets', '/assets/trackers/legacy');
-                $layout->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($tracker_legacy_assets, 'tracker.js'));
+                $layout->addJavascriptAsset(new JavascriptAsset($tracker_legacy_assets, 'tracker.js'));
                 $layout->addJavascriptAsset(
-                    new \Tuleap\Layout\JavascriptAsset(
+                    new JavascriptAsset(
                         new IncludeAssets(
                             __DIR__ . '/../../tracker/scripts/legacy-modal-v2/frontend-assets',
                             '/assets/trackers/legacy-modal-v2'
@@ -325,20 +336,12 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
                 __DIR__ . '/../scripts/legacy/frontend-assets/',
                 '/assets/cardwall/legacy/'
             );
-            $layout->addJavascriptAsset(new \Tuleap\Layout\JavascriptAsset($cardwall_assets, 'cardwall.js'));
+            $layout->addJavascriptAsset(new JavascriptAsset($cardwall_assets, 'cardwall.js'));
         }
 
         if (HTTPRequest::instance()->get('pane') === CardwallPaneInfo::IDENTIFIER) {
             $layout->addJavascriptAsset(RelativeDatesAssetsRetriever::getAsJavascriptAssets());
         }
-    }
-
-    private function getCssAssets(): IncludeAssets
-    {
-        return new IncludeAssets(
-            __DIR__ . '/../frontend-assets/',
-            '/assets/cardwall/'
-        );
     }
 
     /**
@@ -384,7 +387,7 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
         $params['duplicators'][] = new BackgroundColorSemanticFactory(new BackgroundColorDao());
     }
 
-    private function isAgileDashboardOrTrackerUrl()
+    private function isAgileDashboardOrTrackerUrl(): bool
     {
         return (defined('AGILEDASHBOARD_BASE_DIR') &&
                 strpos($_SERVER['REQUEST_URI'], AGILEDASHBOARD_BASE_URL . '/') === 0 ||

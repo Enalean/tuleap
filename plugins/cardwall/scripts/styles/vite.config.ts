@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,8 +17,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@use "../../default/css/cardwall";
+import { vite } from "@tuleap/build-system-configurator";
+import * as path from "node:path";
 
-.cardwall-cell-header {
-    background-color: var(--tlp-background-color);
-}
+export default vite.defineAppConfig(
+    {
+        plugin_name: path.basename(path.resolve(__dirname, "../..")),
+        sub_app_name: path.basename(__dirname),
+    },
+    {
+        build: {
+            rollupOptions: {
+                input: {
+                    "style-fp": path.resolve(__dirname, "themes/FlamingParrot/style.scss"),
+                },
+            },
+        },
+    },
+);

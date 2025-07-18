@@ -7,9 +7,9 @@ settings:
 dependencies:
   '@tuleap/plugin-cardwall-column-colors':
     specifier: workspace:^
-    version: link:scripts/lib/column-colors
+    version: link:../lib/column-colors
 
 devDependencies:
   '@tuleap/build-system-configurator':
     specifier: workspace:*
-    version: link:../../lib/frontend/build-system-configurator
+    version: link:../../../../lib/frontend/build-system-configurator
