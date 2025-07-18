@@ -37,6 +37,27 @@
               <description><![CDATA[One line description of the artifact]]></description>
               <properties maxchars="150" size="60"/>
             </formElement>
+            <formElement type="sb" ID="F137" rank="0" id="137" tracker_id="2" parent_id="136">
+              <name><![CDATA[status]]></name>
+              <label><![CDATA[Status]]></label>
+              <bind type="static" is_rank_alpha="0">
+                <items>
+                  <item ID="V121" label="To be done" is_hidden="0"/>
+                  <item ID="V122" label="In progress" is_hidden="0"/>
+                  <item ID="V123" label="Review" is_hidden="0"/>
+                  <item ID="V124" label="Done" is_hidden="0"/>
+                </items>
+                <decorators>
+                  <decorator REF="V121" tlp_color_name="firemist-silver"/>
+                  <decorator REF="V122" tlp_color_name="acid-green"/>
+                  <decorator REF="V123" tlp_color_name="neon-green"/>
+                  <decorator REF="V124" tlp_color_name="army-green"/>
+                </decorators>
+                <default_values>
+                  <value REF="V121"/>
+                </default_values>
+              </bind>
+            </formElement>
           </formElements>
         </formElement>
       </formElements>
@@ -46,6 +67,17 @@
           <label><![CDATA[Title]]></label>
           <description><![CDATA[Define the title of an artifact]]></description>
           <field REF="F244"/>
+        </semantic>
+        <semantic type="status">
+          <shortname><![CDATA[status]]></shortname>
+          <label><![CDATA[Status]]></label>
+          <description><![CDATA[Define the status of an artifact]]></description>
+          <field REF="F137"/>
+          <open_values>
+            <open_value REF="V121"/>
+            <open_value REF="V122"/>
+            <open_value REF="V123"/>
+          </open_values>
         </semantic>
       </semantics>
       <rules>
@@ -71,6 +103,9 @@
         <permission scope="field" REF="F244" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
         <permission scope="field" REF="F244" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
         <permission scope="field" REF="F244" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F137" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F137" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F137" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
       </permissions>
     </tracker>
   </trackers>
