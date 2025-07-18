@@ -60,4 +60,6 @@ const edit_mode_class = computed((): string[] => {
 
     return classes;
 });
+
+defineExpose({ edit_mode_class, should_no_mapping_message_be_displayed });
 </script>

@@ -17,24 +17,28 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import ChildCard from "./ChildCard.vue";
 import type { Card, User } from "../../../../../type";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import BaseCard from "./BaseCard.vue";
+import { getGlobalTestOptions } from "../../../../../helpers/global-options-for-test";
+import type { RootState } from "../../../../../store/type";
 
-function getWrapper(card: Card, are_closed_items_displayed: boolean): Wrapper<Vue> {
+function getWrapper(
+    card: Card,
+    are_closed_items_displayed: boolean,
+): VueWrapper<InstanceType<typeof ChildCard>> {
     return shallowMount(ChildCard, {
         attachTo: document.body,
-        propsData: {
+        props: {
             card,
         },
-        mocks: {
-            $store: createStoreMock({
+        global: {
+            ...getGlobalTestOptions({
                 state: {
                     are_closed_items_displayed,
-                },
+                } as RootState,
             }),
         },
     });
@@ -53,7 +57,7 @@ describe("ChildCard", () => {
 
             const wrapper = getWrapper(card, false);
 
-            expect(wrapper.html()).toBe("");
+            expect(wrapper.html()).toBe("<!--v-if-->");
         });
 
         it(`Given user wants to see closed items
@@ -68,7 +72,7 @@ describe("ChildCard", () => {
             const wrapper = getWrapper(card, true);
 
             expect(wrapper.html()).not.toBe("");
-            expect(wrapper.findComponent(BaseCard).props("card")).toBe(card);
+            expect(wrapper.findComponent(BaseCard).props("card")).toStrictEqual(card);
         });
 
         it(`adds draggable attributes`, () => {

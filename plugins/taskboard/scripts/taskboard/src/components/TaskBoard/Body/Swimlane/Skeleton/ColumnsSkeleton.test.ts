@@ -61,7 +61,7 @@ describe("ColumnsSkeleton", () => {
                 expected_number_of_skeletons: 1,
             },
         ].forEach(({ column_index, column, expected_number_of_skeletons }) => {
-            const wrapper = shallowMount(ColumnsSkeleton, { propsData: { column_index, column } });
+            const wrapper = shallowMount(ColumnsSkeleton, { props: { column_index, column } });
 
             expect(wrapper.classes("taskboard-cell-collapsed")).toBe(false);
             expect(wrapper.findAllComponents(CardSkeleton)).toHaveLength(
@@ -72,7 +72,7 @@ describe("ColumnsSkeleton", () => {
 
     it("Given a column is collapsed, no skeleton is displayed in it", () => {
         const wrapper = shallowMount(ColumnsSkeleton, {
-            propsData: {
+            props: {
                 column_index: 0,
                 column: { is_collapsed: true } as ColumnDefinition,
             },

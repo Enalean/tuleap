@@ -17,15 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import CollapsedLabel from "./CollapsedLabel.vue";
 import type { ColumnDefinition } from "../../../../type";
 import CardsInColumnCount from "../Expanded/CardsInColumnCount.vue";
 
-function getWrapper(column: ColumnDefinition): Wrapper<Vue> {
+function getWrapper(column: ColumnDefinition): VueWrapper<InstanceType<typeof CardsInColumnCount>> {
     return shallowMount(CollapsedLabel, {
-        propsData: { column },
+        props: { column },
     });
 }
 

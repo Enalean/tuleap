@@ -27,8 +27,7 @@
 </template>
 <script setup lang="ts">
 import { computed } from "vue";
-import EventBus from "../../../../../../helpers/event-bus";
-import { TaskboardEvent } from "../../../../../../type";
+import emitter from "../../../../../../helpers/emitter";
 import type { Card } from "../../../../../../type";
 import CancelSaveButtons from "./CancelSaveButtons.vue";
 
@@ -65,12 +64,12 @@ const is_action_ongoing = computed((): boolean => {
 });
 
 function cancel(): void {
-    EventBus.$emit(TaskboardEvent.CANCEL_CARD_EDITION, props.card);
+    emitter.emit("cancel-card-edition", props.card);
     emit("editor-closed");
 }
 
 function save(): void {
-    EventBus.$emit(TaskboardEvent.SAVE_CARD_EDITION, props.card);
+    emitter.emit("save-card-edition", props.card);
     emit("editor-closed");
 }
 </script>

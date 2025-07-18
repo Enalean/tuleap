@@ -19,18 +19,21 @@
 
 import { shallowMount } from "@vue/test-utils";
 import ExpandedHeaderCell from "./ExpandedHeaderCell.vue";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { UserState } from "../../../../store/user/type";
 import type { ColumnDefinition } from "../../../../type";
 import WrongColorPopover from "./WrongColorPopover.vue";
+import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
+import type { RootState } from "../../../../store/type";
 
 describe("ExpandedHeaderCell", () => {
     it("displays a cell with the column label", () => {
         const wrapper = shallowMount(ExpandedHeaderCell, {
-            mocks: {
-                $store: createStoreMock({ state: { user: { user_is_admin: false } as UserState } }),
+            global: {
+                ...getGlobalTestOptions({
+                    state: { user: { user_is_admin: false } as UserState } as RootState,
+                }),
             },
-            propsData: {
+            props: {
                 column: {
                     id: 2,
                     label: "To do",
@@ -46,10 +49,12 @@ describe("ExpandedHeaderCell", () => {
 
     it("displays a cell without color", () => {
         const wrapper = shallowMount(ExpandedHeaderCell, {
-            mocks: {
-                $store: createStoreMock({ state: { user: { user_is_admin: false } as UserState } }),
+            global: {
+                ...getGlobalTestOptions({
+                    state: { user: { user_is_admin: false } as UserState } as RootState,
+                }),
             },
-            propsData: {
+            props: {
                 column: {
                     id: 2,
                     label: "To do",
@@ -63,10 +68,12 @@ describe("ExpandedHeaderCell", () => {
 
     it("displays a cell with color", () => {
         const wrapper = shallowMount(ExpandedHeaderCell, {
-            mocks: {
-                $store: createStoreMock({ state: { user: { user_is_admin: false } as UserState } }),
+            global: {
+                ...getGlobalTestOptions({
+                    state: { user: { user_is_admin: false } as UserState } as RootState,
+                }),
             },
-            propsData: {
+            props: {
                 column: {
                     id: 2,
                     label: "To do",
@@ -80,10 +87,12 @@ describe("ExpandedHeaderCell", () => {
 
     it("displays a cell with default color", () => {
         const wrapper = shallowMount(ExpandedHeaderCell, {
-            mocks: {
-                $store: createStoreMock({ state: { user: { user_is_admin: false } as UserState } }),
+            global: {
+                ...getGlobalTestOptions({
+                    state: { user: { user_is_admin: false } as UserState } as RootState,
+                }),
             },
-            propsData: {
+            props: {
                 column: {
                     id: 2,
                     label: "To do",
@@ -97,10 +106,12 @@ describe("ExpandedHeaderCell", () => {
 
     it("displays a cell with legacy color to regular users", () => {
         const wrapper = shallowMount(ExpandedHeaderCell, {
-            mocks: {
-                $store: createStoreMock({ state: { user: { user_is_admin: false } as UserState } }),
+            global: {
+                ...getGlobalTestOptions({
+                    state: { user: { user_is_admin: false } as UserState } as RootState,
+                }),
             },
-            propsData: {
+            props: {
                 column: {
                     id: 2,
                     label: "To do",
@@ -115,10 +126,12 @@ describe("ExpandedHeaderCell", () => {
 
     it("displays a cell with legacy color to admin users", () => {
         const wrapper = shallowMount(ExpandedHeaderCell, {
-            mocks: {
-                $store: createStoreMock({ state: { user: { user_is_admin: true } as UserState } }),
+            global: {
+                ...getGlobalTestOptions({
+                    state: { user: { user_is_admin: true } as UserState } as RootState,
+                }),
             },
-            propsData: {
+            props: {
                 column: {
                     id: 2,
                     label: "To do",

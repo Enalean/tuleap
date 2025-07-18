@@ -186,7 +186,6 @@ module.exports = {
                 "plugins/baseline/scripts/baseline/src/**/*.vue",
                 "plugins/label/scripts/project-labeled-items/src/**/*.vue",
                 "plugins/roadmap/scripts/roadmap-widget/src/**/*.vue",
-                "plugins/taskboard/scripts/taskboard/src/**/*.vue",
                 "plugins/testmanagement/scripts/step-definition-field/**/*.vue",
                 "plugins/timetracking/scripts/timetracking-overview-widget/**/*.vue",
                 "plugins/tracker/scripts/tracker-creation/**/*.vue",

@@ -6,6 +6,6 @@ exports[`PeoplePicker Display a select2 element 1`] = `
   style="width: 100%;"
   value=""
 >
-  <!---->
+  <!--v-if-->
 </select>
 `;

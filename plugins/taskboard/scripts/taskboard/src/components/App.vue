@@ -29,9 +29,9 @@
 
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted } from "vue";
-import { type ColumnDefinition, TaskboardEvent } from "../type";
+import { type ColumnDefinition } from "../type";
 import TaskBoard from "./TaskBoard/TaskBoard.vue";
-import EventBus from "./../helpers/event-bus";
+import emitter from "../helpers/emitter";
 import NoContentEmptyState from "./EmptyState/NoContentEmptyState.vue";
 import BoardWithoutAnyColumnsError from "./GlobalError/BoardWithoutAnyColumnsError.vue";
 import GlobalAppError from "./GlobalError/GlobalAppError.vue";
@@ -84,7 +84,7 @@ function beforeUnload(event: Event): void {
 
 function keyup(event: KeyboardEvent): void {
     if (event.key === "Escape") {
-        EventBus.$emit(TaskboardEvent.ESC_KEY_PRESSED);
+        emitter.emit("esc-key-pressed");
     }
 }
 </script>

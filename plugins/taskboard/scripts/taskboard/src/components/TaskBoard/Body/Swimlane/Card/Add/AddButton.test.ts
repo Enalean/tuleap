@@ -19,13 +19,13 @@
 
 import { shallowMount } from "@vue/test-utils";
 import AddButton from "./AddButton.vue";
-import { createTaskboardLocalVue } from "../../../../../../helpers/local-vue-for-test";
+import { getGlobalTestOptions } from "../../../../../../helpers/global-options-for-test";
 
 describe("AddButton", () => {
-    it("displays the button if not in add mode", async () => {
+    it("displays the button if not in add mode", () => {
         const wrapper = shallowMount(AddButton, {
-            localVue: await createTaskboardLocalVue(),
-            propsData: {
+            global: { ...getGlobalTestOptions({}) },
+            props: {
                 label: "Lorem",
                 is_in_add_mode: false,
             },
@@ -34,10 +34,10 @@ describe("AddButton", () => {
         expect(wrapper.find("[data-test=add-in-place-button]").exists()).toBe(true);
     });
 
-    it("does not display the button if in add mode", async () => {
+    it("does not display the button if in add mode", () => {
         const wrapper = shallowMount(AddButton, {
-            localVue: await createTaskboardLocalVue(),
-            propsData: {
+            global: { ...getGlobalTestOptions({}) },
+            props: {
                 label: "Lorem",
                 is_in_add_mode: true,
             },
@@ -46,10 +46,10 @@ describe("AddButton", () => {
         expect(wrapper.find("[data-test=add-in-place-button]").exists()).toBe(false);
     });
 
-    it("propagates the click event", async () => {
+    it("propagates the click event", () => {
         const wrapper = shallowMount(AddButton, {
-            localVue: await createTaskboardLocalVue(),
-            propsData: {
+            global: { ...getGlobalTestOptions({}) },
+            props: {
                 label: "Lorem",
                 is_in_add_mode: false,
             },
@@ -59,10 +59,10 @@ describe("AddButton", () => {
         expect(wrapper.emitted().click).toBeTruthy();
     });
 
-    it("displays the given label in the button", async () => {
+    it("displays the given label in the button", () => {
         const wrapper = shallowMount(AddButton, {
-            localVue: await createTaskboardLocalVue(),
-            propsData: {
+            global: { ...getGlobalTestOptions({}) },
+            props: {
                 label: "Lorem",
                 is_in_add_mode: false,
             },

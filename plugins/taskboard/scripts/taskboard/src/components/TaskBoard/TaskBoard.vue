@@ -60,7 +60,7 @@ import {
     useStore,
 } from "vuex-composition-helpers";
 import type { ErrorState } from "../../store/error/type";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 
 const { has_modal_error } = useNamespacedState<Pick<ErrorState, "has_modal_error">>("error", [
     "has_modal_error",

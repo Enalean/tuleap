@@ -22,13 +22,8 @@
     <div ref="root" class="taskboard-card" v-bind:class="additional_classnames">
         <div class="taskboard-card-content">
             <card-xref-label v-bind:card="card" v-bind:label="label" />
-            <card-info
-                v-bind:card="card"
-                v-bind:tracker="tracker"
-                v-bind:value="assignees"
-                v-on:input="assignees = $event"
-            >
-                <template #initial_effort>
+            <card-info v-bind:card="card" v-bind:tracker="tracker" v-on:input="onAssigneesEdit">
+                <template v-slot:initial_effort>
                     <slot name="initial_effort" />
                 </template>
             </card-info>
@@ -65,8 +60,7 @@ import {
 } from "vuex-composition-helpers";
 import CardXrefLabel from "./CardXrefLabel.vue";
 import type { Card, Tracker, User } from "../../../../../type";
-import { TaskboardEvent } from "../../../../../type";
-import EventBus from "../../../../../helpers/event-bus";
+import emitter from "../../../../../helpers/emitter";
 import type { UpdateCardPayload } from "../../../../../store/swimlane/card/type";
 import LabelEditor from "./Editor/Label/LabelEditor.vue";
 import CardInfo from "./CardInfo.vue";
@@ -114,13 +108,13 @@ const is_label_changed = computed((): boolean => label.value !== props.card.labe
 onMounted(() => {
     label.value = props.card.label;
     assignees.value = props.card.assignees;
-    EventBus.$on(TaskboardEvent.CANCEL_CARD_EDITION, cancelButtonCallback);
-    EventBus.$on(TaskboardEvent.SAVE_CARD_EDITION, saveButtonCallback);
+    emitter.on("cancel-card-edition", cancelButtonCallback);
+    emitter.on("save-card-edition", saveButtonCallback);
 });
 
 onUnmounted(() => {
-    EventBus.$off(TaskboardEvent.CANCEL_CARD_EDITION, cancelButtonCallback);
-    EventBus.$off(TaskboardEvent.SAVE_CARD_EDITION, saveButtonCallback);
+    emitter.off("cancel-card-edition", cancelButtonCallback);
+    emitter.off("save-card-edition", saveButtonCallback);
 });
 
 function cancelButtonCallback(card: Card): void {
@@ -156,6 +150,10 @@ function cancel(): void {
     removeCardFromEditMode(props.card);
     label.value = props.card.label;
     emit("editor-closed");
+}
+
+function onAssigneesEdit(new_assignees: User[]): void {
+    assignees.value = new_assignees;
 }
 
 function switchToEditMode(): void {
@@ -208,5 +206,5 @@ const additional_classnames = computed((): string => {
     return classnames.join(" ");
 });
 
-defineExpose({ label });
+defineExpose({ label, assignees });
 </script>

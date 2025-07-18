@@ -21,23 +21,30 @@
 <template>
     <div class="taskboard-card-info">
         <slot name="initial_effort" v-if="!card.is_in_edit_mode" />
+        <div class="taskboard-card-assignees" v-if="!card.is_in_edit_mode || !can_edit_assignees">
+            <user-avatar
+                v-for="assignee in card.assignees"
+                class="taskboard-card-assignees-avatars"
+                v-bind:user="assignee"
+                v-bind:key="assignee.id"
+            />
+        </div>
         <card-assignees
+            v-if="card.is_in_edit_mode && can_edit_assignees"
             v-bind:card="card"
             v-bind:tracker="tracker"
-            v-bind:value="new_assignees"
-            v-on:input="new_assignees = $event"
+            v-on:input="onAssigneesEdit"
         />
     </div>
 </template>
 
 <script setup lang="ts">
-import type { WritableComputedRef } from "vue";
 import { computed } from "vue";
 import type { Card, Tracker, User } from "../../../../../type";
 import CardAssignees from "./CardAssignees.vue";
+import UserAvatar from "./UserAvatar.vue";
 
 const props = defineProps<{
-    value: User[];
     card: Card;
     tracker: Tracker;
 }>();
@@ -46,8 +53,9 @@ const emit = defineEmits<{
     (e: "input", value: User[]): void;
 }>();
 
-const new_assignees: WritableComputedRef<User[]> = computed({
-    get: (): User[] => props.value,
-    set: (value: User[]) => emit("input", value),
-});
+const can_edit_assignees = computed((): boolean => props.tracker.assigned_to_field !== null);
+
+function onAssigneesEdit(new_assignees: User[]): void {
+    emit("input", new_assignees);
+}
 </script>

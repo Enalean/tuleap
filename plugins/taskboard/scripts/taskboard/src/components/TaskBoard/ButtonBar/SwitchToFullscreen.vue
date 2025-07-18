@@ -30,7 +30,7 @@
 <script setup lang="ts">
 import { computed, onMounted } from "vue";
 import { useNamespacedState, useNamespacedMutations } from "vuex-composition-helpers";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 import fscreen from "fscreen";
 import type { FullscreenState } from "../../../store/fullscreen/type";
 

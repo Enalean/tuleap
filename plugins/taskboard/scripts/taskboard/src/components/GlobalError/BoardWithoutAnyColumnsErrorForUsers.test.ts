@@ -17,21 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Vue } from "vue/types/vue";
 import { shallowMount } from "@vue/test-utils";
-import { createTaskboardLocalVue } from "../../helpers/local-vue-for-test";
+import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 import BoardWithoutAnyColumnsErrorForUsers from "./BoardWithoutAnyColumnsErrorForUsers.vue";
 
 describe("BoardWithoutAnyColumnsError", () => {
-    let local_vue: typeof Vue;
-
-    beforeEach(async () => {
-        local_vue = await createTaskboardLocalVue();
-    });
-
     it("is displays misconfiguration error for regular user", () => {
         const wrapper = shallowMount(BoardWithoutAnyColumnsErrorForUsers, {
-            localVue: local_vue,
+            global: { ...getGlobalTestOptions({}) },
         });
         expect(wrapper.element).toMatchSnapshot();
     });

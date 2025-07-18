@@ -9,23 +9,16 @@ exports[`BoardWithoutAnyColumnsError is displays misconfiguration error for admi
   >
     <board-without-any-columns-error-for-admin-illustration-stub />
   </div>
-   
   <h1
     class="empty-state-title"
   >
-    
-        This taskboard is not properly configured
-    
+    This taskboard is not properly configured
   </h1>
-   
   <p
     class="empty-state-text"
   >
-    
-        You have to configure the columns mapping.
-    
+    You have to configure the columns mapping.
   </p>
-   
   <a
     class="tlp-button-primary empty-state-action"
     href="/path/to/admin"
@@ -34,9 +27,7 @@ exports[`BoardWithoutAnyColumnsError is displays misconfiguration error for admi
       aria-hidden="true"
       class="fas fa-long-arrow-alt-right tlp-button-icon"
     />
-    
-        Define columns
-    
+     Define columns
   </a>
 </section>
 `;

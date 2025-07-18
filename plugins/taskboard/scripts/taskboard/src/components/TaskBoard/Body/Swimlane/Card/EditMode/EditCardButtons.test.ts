@@ -18,16 +18,15 @@
  */
 
 import type { Card } from "../../../../../../type";
-import { TaskboardEvent } from "../../../../../../type";
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import EditCardButtons from "./EditCardButtons.vue";
 import CancelSaveButtons from "./CancelSaveButtons.vue";
-import EventBus from "../../../../../../helpers/event-bus";
+import emitter from "../../../../../../helpers/emitter";
 
-function createWrapper(card: Card): Wrapper<Vue> {
+function createWrapper(card: Card): VueWrapper<InstanceType<typeof EditCardButtons>> {
     return shallowMount(EditCardButtons, {
-        propsData: { card },
+        props: { card },
     });
 }
 
@@ -41,7 +40,7 @@ describe("EditCardButtons", () => {
                 },
             } as Card);
 
-            expect(wrapper.html()).toBe("");
+            expect(wrapper.html()).toBe("<!--v-if-->");
         });
 
         it("displays nothing if there isn't any remaining effort", () => {
@@ -50,7 +49,7 @@ describe("EditCardButtons", () => {
                 remaining_effort: null,
             } as Card);
 
-            expect(wrapper.html()).toBe("");
+            expect(wrapper.html()).toBe("<!--v-if-->");
         });
 
         it("displays buttons if remaining effort is in edit mode", () => {
@@ -76,11 +75,15 @@ describe("EditCardButtons", () => {
         it("Broadcasts cancel-card-edition and editor-closed events when buttons emit a cancel event", () => {
             const card = { is_in_edit_mode: true, remaining_effort: null } as Card;
             const wrapper = createWrapper(card);
-            const event_bus_emit = jest.spyOn(EventBus, "$emit");
+
+            let received_cancel = false;
+            emitter.on("cancel-card-edition", () => {
+                received_cancel = true;
+            });
 
             wrapper.findComponent(CancelSaveButtons).vm.$emit("cancel");
 
-            expect(event_bus_emit).toHaveBeenCalledWith(TaskboardEvent.CANCEL_CARD_EDITION, card);
+            expect(received_cancel).toBe(true);
             expect(wrapper.emitted("editor-closed")).toBeTruthy();
         });
 
@@ -90,11 +93,15 @@ describe("EditCardButtons", () => {
                 remaining_effort: null,
             } as Card;
             const wrapper = createWrapper(card);
-            const event_bus_emit = jest.spyOn(EventBus, "$emit");
+
+            let received_save = false;
+            emitter.on("save-card-edition", () => {
+                received_save = true;
+            });
 
             wrapper.findComponent(CancelSaveButtons).vm.$emit("save");
 
-            expect(event_bus_emit).toHaveBeenCalledWith(TaskboardEvent.SAVE_CARD_EDITION, card);
+            expect(received_save).toBe(true);
             expect(wrapper.emitted("editor-closed")).toBeTruthy();
         });
     });

@@ -28,6 +28,7 @@
         pattern="[0-9]*(\.[0-9]+)?"
         v-bind:aria-label="$gettext('New remaining effort')"
         ref="input_element"
+        data-test="remaining-effort"
     />
 </template>
 
@@ -35,9 +36,8 @@
 import { ref, computed, onMounted, onBeforeUnmount } from "vue";
 import { useNamespacedActions, useNamespacedMutations } from "vuex-composition-helpers";
 import type { Card } from "../../../../../../type";
-import { TaskboardEvent } from "../../../../../../type";
 import type { NewRemainingEffortPayload } from "../../../../../../store/swimlane/card/type";
-import EventBus from "../../../../../../helpers/event-bus";
+import emitter from "../../../../../../helpers/emitter";
 import { autoFocusAutoSelect } from "../../../../../../helpers/autofocus-autoselect";
 
 const { saveRemainingEffort } = useNamespacedActions("swimlane", ["saveRemainingEffort"]);
@@ -80,13 +80,13 @@ onMounted((): void => {
     }
     autoFocusAutoSelect(input_element.value);
 
-    EventBus.$on(TaskboardEvent.CANCEL_CARD_EDITION, cancelButtonCallback);
-    EventBus.$on(TaskboardEvent.SAVE_CARD_EDITION, saveButtonCallback);
+    emitter.on("cancel-card-edition", cancelButtonCallback);
+    emitter.on("save-card-edition", saveButtonCallback);
 });
 
 onBeforeUnmount((): void => {
-    EventBus.$off(TaskboardEvent.CANCEL_CARD_EDITION, cancelButtonCallback);
-    EventBus.$off(TaskboardEvent.SAVE_CARD_EDITION, saveButtonCallback);
+    emitter.off("cancel-card-edition", cancelButtonCallback);
+    emitter.off("save-card-edition", saveButtonCallback);
 });
 
 function initValue(): void {

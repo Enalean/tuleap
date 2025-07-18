@@ -28,16 +28,20 @@
                     v-if="swimlane.card.is_collapsed"
                 />
                 <children-swimlane
-                    v-bind:key="swimlane.card.id"
+                    v-bind:key="`${swimlane.card.id}-children`"
                     v-bind:swimlane="swimlane"
                     v-else-if="is_there_at_least_one_children_to_display(swimlane)"
                 />
                 <invalid-mapping-swimlane
-                    v-bind:key="swimlane.card.id"
+                    v-bind:key="`${swimlane.card.id}-invalid`"
                     v-bind:swimlane="swimlane"
                     v-else-if="hasInvalidMapping(swimlane)"
                 />
-                <solo-swimlane v-bind:key="swimlane.card.id" v-bind:swimlane="swimlane" v-else />
+                <solo-swimlane
+                    v-bind:key="`${swimlane.card.id}-solo`"
+                    v-bind:swimlane="swimlane"
+                    v-else
+                />
             </template>
         </template>
         <swimlane-skeleton v-if="is_loading_swimlanes" />

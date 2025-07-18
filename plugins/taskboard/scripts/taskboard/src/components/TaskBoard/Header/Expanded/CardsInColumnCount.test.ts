@@ -20,22 +20,27 @@
 import { shallowMount } from "@vue/test-utils";
 import CardsInColumnCount from "./CardsInColumnCount.vue";
 import type { ColumnDefinition } from "../../../../type";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
+import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
 
 describe("CardsInColumnCount", () => {
     it("Displays the number of cards in the given column", () => {
         const wrapper = shallowMount(CardsInColumnCount, {
-            propsData: {
+            props: {
                 column: {} as ColumnDefinition,
             },
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        swimlane: {},
-                    },
-                    getters: {
-                        "swimlane/is_loading_cards": false,
-                        "swimlane/nb_cards_in_column": (): number => 4,
+            global: {
+                ...getGlobalTestOptions({
+                    modules: {
+                        swimlane: {
+                            namespaced: true,
+                            getters: {
+                                is_loading_cards: () => false,
+                                nb_cards_in_column: () => (): number => 4,
+                            },
+                            actions: {
+                                loadSwimlanes: jest.fn(),
+                            },
+                        },
                     },
                 }),
             },
@@ -48,17 +53,22 @@ describe("CardsInColumnCount", () => {
 
     it("Add loading class if we are still counting elements", () => {
         const wrapper = shallowMount(CardsInColumnCount, {
-            propsData: {
+            props: {
                 column: {} as ColumnDefinition,
             },
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        swimlane: {},
-                    },
-                    getters: {
-                        "swimlane/is_loading_cards": true,
-                        "swimlane/nb_cards_in_column": (): number => 4,
+            global: {
+                ...getGlobalTestOptions({
+                    modules: {
+                        swimlane: {
+                            namespaced: true,
+                            getters: {
+                                is_loading_cards: () => (): boolean => true,
+                                nb_cards_in_column: () => (): number => 4,
+                            },
+                            actions: {
+                                loadSwimlanes: jest.fn(),
+                            },
+                        },
                     },
                 }),
             },

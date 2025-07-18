@@ -9,8 +9,6 @@ exports[`CardInitialEffort displays the initial effort of the card in a badge 1`
     aria-hidden="true"
     class="fa fa-flag-checkered fa-flip-horizontal tlp-badge-icon"
   />
-  
-    666
-
+   666
 </span>
 `;

@@ -18,19 +18,26 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import * as tlp_popovers from "@tuleap/tlp-popovers";
+import { buildVueDompurifyHTMLDirective } from "vue-dompurify-html";
 import WrongColorPopover from "./WrongColorPopover.vue";
-import { createTaskboardLocalVue } from "../../../../helpers/local-vue-for-test";
+import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
+import type { RootState } from "../../../../store/type";
 
 describe("WrongColorPopover", () => {
-    it("initiates a popover to inform user that the chosen color is wrong", async () => {
+    it("initiates a popover to inform user that the chosen color is wrong", () => {
         const tlpCreatePopover = jest.spyOn(tlp_popovers, "createPopover").mockImplementation();
 
         const wrapper = shallowMount(WrongColorPopover, {
-            localVue: await createTaskboardLocalVue(),
-            mocks: { $store: createStoreMock({ state: { admin_url: "/path/to/admin" } }) },
-            propsData: { color: "#87DBEF" },
+            global: {
+                ...getGlobalTestOptions({
+                    state: { admin_url: "/path/to/admin" } as RootState,
+                }),
+            },
+            directives: {
+                "dompurify-html": buildVueDompurifyHTMLDirective(),
+            },
+            props: { color: "#87DBEF" },
         });
 
         expect(wrapper.element).toMatchSnapshot();

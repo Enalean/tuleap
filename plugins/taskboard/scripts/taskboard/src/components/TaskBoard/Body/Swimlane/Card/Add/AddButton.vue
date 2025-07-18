@@ -37,7 +37,7 @@
 
 <script setup lang="ts">
 import { ref, watch, nextTick, computed } from "vue";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 
 const { $gettext } = useGettext();
 const props = defineProps<{

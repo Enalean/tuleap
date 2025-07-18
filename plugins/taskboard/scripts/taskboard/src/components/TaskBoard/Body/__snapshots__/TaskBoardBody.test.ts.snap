@@ -5,13 +5,22 @@ exports[`TaskBoardBody displays swimlanes for solo cards or cards with children 
   class="taskboard-body"
   data-test="taskboard-body"
 >
+  
+  
+  
   <solo-swimlane-stub
     swimlane="[object Object]"
   />
+  
+  
+  
+  
   <children-swimlane-stub
     swimlane="[object Object]"
   />
-   
-  <!---->
+  
+  
+  
+  <!--v-if-->
 </div>
 `;

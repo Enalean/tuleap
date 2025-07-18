@@ -17,42 +17,45 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import { createTaskboardLocalVue } from "../../../../helpers/local-vue-for-test";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
+import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
 import ExpandButton from "./ExpandButton.vue";
 import type { ColumnDefinition } from "../../../../type";
-import type { RootState } from "../../../../store/type";
-
-async function getWrapper(column: ColumnDefinition): Promise<Wrapper<Vue>> {
-    return shallowMount(ExpandButton, {
-        localVue: await createTaskboardLocalVue(),
-        mocks: {
-            $store: createStoreMock({
-                state: {
-                    column: {},
-                } as RootState,
-            }),
-        },
-        propsData: { column },
-    });
-}
 
 describe("ExpandButton", () => {
-    it("Displays column label as a title", async () => {
+    const mock_expand_column = jest.fn();
+
+    function getWrapper(column: ColumnDefinition): VueWrapper<InstanceType<typeof ExpandButton>> {
+        return shallowMount(ExpandButton, {
+            global: {
+                ...getGlobalTestOptions({
+                    modules: {
+                        column: {
+                            actions: {
+                                expandColumn: mock_expand_column,
+                            },
+                            namespaced: true,
+                        },
+                    },
+                }),
+            },
+            props: { column },
+        });
+    }
+    it("Displays column label as a title", () => {
         const column: ColumnDefinition = { label: "Done" } as ColumnDefinition;
-        const wrapper = await getWrapper(column);
+        const wrapper = getWrapper(column);
 
         expect(wrapper.attributes("title")).toBe('Expand "Done" column');
     });
 
-    it("When user clicks on the button, the column is expanded", async () => {
+    it("When user clicks on the button, the column is expanded", () => {
         const column: ColumnDefinition = { label: "Done" } as ColumnDefinition;
-        const wrapper = await getWrapper(column);
+        const wrapper = getWrapper(column);
 
         const button = wrapper.get("[data-test=button]");
         button.trigger("click");
-        expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith("column/expandColumn", column);
+        expect(mock_expand_column).toHaveBeenCalledWith(expect.anything(), column);
     });
 });

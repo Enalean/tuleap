@@ -19,25 +19,25 @@
 
 import { shallowMount } from "@vue/test-utils";
 import CellDisallowsDropOverlay from "./CellDisallowsDropOverlay.vue";
-import { createTaskboardLocalVue } from "../../../../../helpers/local-vue-for-test";
+import { getGlobalTestOptions } from "../../../../../helpers/global-options-for-test";
 
 describe("CellDisallowsDropOverlay", () => {
-    it("displays div with an icon and an error message", async () => {
+    it("displays div with an icon and an error message", () => {
         const wrapper = shallowMount(CellDisallowsDropOverlay, {
-            propsData: {
-                isColumnCollapsed: false,
+            props: {
+                is_column_collapsed: false,
             },
-            localVue: await createTaskboardLocalVue(),
+            global: { ...getGlobalTestOptions({}) },
         });
         expect(wrapper.element).toMatchSnapshot();
     });
 
-    it("Does not render the error message when the column is collapsed", async () => {
+    it("Does not render the error message when the column is collapsed", () => {
         const wrapper = shallowMount(CellDisallowsDropOverlay, {
-            propsData: {
-                isColumnCollapsed: true,
+            props: {
+                is_column_collapsed: true,
             },
-            localVue: await createTaskboardLocalVue(),
+            global: { ...getGlobalTestOptions({}) },
         });
 
         expect(wrapper.find("[data-test=overlay-error-message]").exists()).toBe(false);

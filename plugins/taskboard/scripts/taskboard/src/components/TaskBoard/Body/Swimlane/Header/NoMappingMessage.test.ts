@@ -18,15 +18,21 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
+import { buildVueDompurifyHTMLDirective } from "vue-dompurify-html";
 import NoMappingMessage from "./NoMappingMessage.vue";
 import type { Card } from "../../../../../type";
-import { createTaskboardLocalVue } from "../../../../../helpers/local-vue-for-test";
+import { getGlobalTestOptions } from "../../../../../helpers/global-options-for-test";
 
 describe("NoMappingMessage", () => {
-    it("displays a message when card has a status", async () => {
+    it("displays a message when card has a status", () => {
         const wrapper = shallowMount(NoMappingMessage, {
-            localVue: await createTaskboardLocalVue(),
-            propsData: {
+            global: {
+                ...getGlobalTestOptions({}),
+            },
+            directives: {
+                "dompurify-html": buildVueDompurifyHTMLDirective(),
+            },
+            props: {
                 card: {
                     mapped_list_value: { label: "YOLO" },
                 } as Card,
@@ -35,9 +41,14 @@ describe("NoMappingMessage", () => {
 
         expect(wrapper.element).toMatchSnapshot();
     });
-    it("displays another message when card has no status", async () => {
+    it("displays another message when card has no status", () => {
         const wrapper = shallowMount(NoMappingMessage, {
-            localVue: await createTaskboardLocalVue(),
+            global: {
+                ...getGlobalTestOptions({}),
+            },
+            directives: {
+                "dompurify-html": buildVueDompurifyHTMLDirective(),
+            },
             propsData: {
                 card: {
                     mapped_list_value: null,
