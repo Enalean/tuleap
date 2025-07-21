@@ -39,72 +39,15 @@ div.milestones > fieldset.milestone {
 }
 /* stylelint-enable */
 
-.tuleap-artifact-modal {
-    .followups-title {
-        color: var(--tlp-main-color);
-    }
-
-    .modal-body fieldset > legend {
-        border-bottom-color: var(--tlp-main-color);
-        color: var(--tlp-main-color);
-    }
-}
-
 /* stylelint-disable-next-line selector-no-qualifying-type */
 #details .table > tbody > tr:hover > td.agiledashboard-milestone-details-items-list-is-closed {
     background: var(--tlp-main-color-transparent-90);
 }
 
-/* stylelint-disable selector-no-qualifying-type, selector-class-pattern */
-body {
-    &.FlamingParrot_Orange {
-        .empty-home {
-            background: transparent url("../images/agile-dashboard-not-configured-orange.png")
-                no-repeat center 20px;
-        }
-    }
-
-    &.FlamingParrot_Blue {
-        .empty-home {
-            background: transparent url("../images/agile-dashboard-not-configured-blue.png")
-                no-repeat center 20px;
-        }
-    }
-
-    &.FlamingParrot_Green {
-        .empty-home {
-            background: transparent url("../images/agile-dashboard-not-configured-green.png")
-                no-repeat center 20px;
-        }
-    }
-
-    &.FlamingParrot_BlueGrey {
-        .empty-home {
-            background: transparent url("../images/agile-dashboard-not-configured-bluegrey.png")
-                no-repeat center 20px;
-        }
-    }
-
-    &.FlamingParrot_Purple {
-        .empty-home {
-            background: transparent url("../images/agile-dashboard-not-configured-purple.png")
-                no-repeat center 20px;
-        }
-    }
-
-    &.FlamingParrot_Red {
-        .empty-home {
-            background: transparent url("../images/agile-dashboard-not-configured-red.png")
-                no-repeat center 20px;
-        }
-    }
-}
-
+/* stylelint-disable-next-line selector-no-qualifying-type */
 body.agiledashboard-body .main .content {
     padding: 0;
 }
-
-/* stylelint-enable */
 
 .agiledashboard-content {
     padding: 16px 12px 0;

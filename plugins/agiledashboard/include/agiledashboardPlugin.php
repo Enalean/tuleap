@@ -95,10 +95,12 @@ use Tuleap\Http\Server\ServiceInstrumentationMiddleware;
 use Tuleap\Kanban\Service\KanbanService;
 use Tuleap\Layout\AfterStartProjectContainer;
 use Tuleap\Layout\BeforeStartProjectHeader;
+use Tuleap\Layout\CssViteAsset;
 use Tuleap\Layout\Feedback\FeedbackSerializer;
 use Tuleap\Layout\HomePage\StatisticsCollectionCollector;
-use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\IncludeViteAssets;
+use Tuleap\Layout\ThemeVariantColor;
+use Tuleap\Layout\ThemeVariation;
 use Tuleap\Plugin\ListeningToEventClass;
 use Tuleap\Plugin\ListeningToEventName;
 use Tuleap\Project\Admin\GetProjectHistoryEntryValue;
@@ -189,7 +191,6 @@ require_once 'constants.php';
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, PluginWithService
 {
-    public const PLUGIN_NAME      = 'agiledashboard';
     public const PLUGIN_SHORTNAME = 'plugin_agiledashboard';
 
     public const AGILEDASHBOARD_EVENT_REST_RESOURCES = 'agiledashboard_event_rest_resources';
@@ -218,7 +219,6 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
     {
         // Do not load the plugin if tracker is not installed & active
         if (defined('TRACKER_BASE_URL')) {
-            $this->addHook('cssfile', 'cssfile');
             $this->addHook(trackerPlugin::TRACKER_EVENT_INCLUDE_CSS_FILE);
             $this->addHook(BuildArtifactFormActionEvent::NAME);
             $this->addHook(RedirectAfterArtifactCreationOrUpdateEvent::NAME);
@@ -298,7 +298,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
         return self::PLUGIN_SHORTNAME;
     }
 
-    #[\Tuleap\Plugin\ListeningToEventClass]
+    #[ListeningToEventClass]
     public function serviceClassnamesCollector(ServiceClassnamesCollector $event): void
     {
         $event->addService($this->getServiceShortname(), \Tuleap\AgileDashboard\AgileDashboardService::class);
@@ -585,7 +585,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
         }
     }
 
-    #[\Tuleap\Plugin\ListeningToEventClass]
+    #[ListeningToEventClass]
     public function generalSettingsEvent(GeneralSettingsEvent $event): void
     {
         $hierarchyChecker = new AgileDashboard_HierarchyChecker(
@@ -614,7 +614,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
         }
     }
 
-    #[\Tuleap\Plugin\ListeningToEventClass]
+    #[ListeningToEventClass]
     public function getProjectHistoryEntryValue(GetProjectHistoryEntryValue $event): void
     {
         $history_entry = BacklogHistoryEntry::tryFrom($event->getKey());
@@ -637,7 +637,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
         );
     }
 
-    #[\Tuleap\Plugin\ListeningToEventClass]
+    #[ListeningToEventClass]
     public function trackerEventTrackersDuplicated(TrackerEventTrackersDuplicated $event): void
     {
         PlanningFactory::build()->duplicatePlannings(
@@ -724,11 +724,21 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
         return $this->pluginInfo;
     }
 
-    public function cssfile($params)
+    #[ListeningToEventName('cssfile')]
+    public function cssfile(): void
     {
         if ($this->isAnAgiledashboardRequest()) {
-            $css_file_url = $this->getIncludeAssets()->getFileURL('style-fp.css');
-            echo '<link rel="stylesheet" type="text/css" href="' . $css_file_url . '" />';
+            $style_assets   = new IncludeViteAssets(
+                __DIR__ . '/../scripts/styles/frontend-assets',
+                '/assets/agiledashboard/styles'
+            );
+            $current_user   = UserManager::instance()->getCurrentUser();
+            $fake_variation = new ThemeVariation(ThemeVariantColor::buildFromDefaultVariant(), $current_user);
+            $style_css_url  = CssViteAsset::fromFileName($style_assets, 'FlamingParrot/styles.scss')->getFileURL(
+                $fake_variation
+            );
+
+            echo '<link rel="stylesheet" type="text/css" href="' . $style_css_url . '" />';
         }
     }
 
@@ -745,7 +755,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
         );
     }
 
-    private function isAnAgiledashboardRequest()
+    private function isAnAgiledashboardRequest(): bool
     {
         return $this->currentRequestIsForPlugin();
     }
@@ -1404,14 +1414,6 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
         );
     }
 
-    private function getIncludeAssets(): IncludeAssets
-    {
-        return new IncludeAssets(
-            __DIR__ . '/../frontend-assets',
-            '/assets/agiledashboard'
-        );
-    }
-
     public function statisticsCollectionCollector(StatisticsCollectionCollector $collector): void
     {
         $collector->addStatistics(
@@ -1813,7 +1815,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
         );
     }
 
-    #[\Tuleap\Plugin\ListeningToEventClass]
+    #[ListeningToEventClass]
     public function collectMovableExternalFieldEvent(CollectMovableExternalFieldEvent $event): void
     {
         AgileDashboardMovableFieldsCollector::collectMovableFields($event);
@@ -1824,7 +1826,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
         return Tracker_FormElementFactory::instance();
     }
 
-    #[\Tuleap\Plugin\ListeningToEventClass]
+    #[ListeningToEventClass]
     public function beforeStartProjectHeader(BeforeStartProjectHeader $event): void
     {
         if (! $this->shouldDisplaySplitModal($event->project, $event->user)) {
@@ -1842,7 +1844,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
         );
     }
 
-    #[\Tuleap\Plugin\ListeningToEventClass]
+    #[ListeningToEventClass]
     public function afterStartProjectContainer(AfterStartProjectContainer $event): void
     {
         if (! $this->shouldDisplaySplitModal($event->project, $event->user)) {
