@@ -9,15 +9,11 @@ if [ -z "$PHP_CLI" ]; then
     exit 1
 fi
 
-setup_tuleap() {
-    echo "Setup Tuleap"
-
-	install -m 00755 -o codendiadm -g codendiadm /usr/share/tuleap/src/utils/tuleap /usr/bin/tuleap
-	ln -s /usr/share/tuleap/src/tuleap-cfg/tuleap-cfg.php /usr/bin/tuleap-cfg
-
-	install -m 00755 -o codendiadm -g codendiadm -d /var/lib/tuleap/tracker
-	install -m 00750 -o codendiadm -g codendiadm -d /etc/tuleap
-	install -m 00750 -o codendiadm -g codendiadm -d /etc/tuleap/conf
+setup_php() {
+    php_ini_location="$($PHP_CLI -r 'echo php_ini_loaded_file();')"
+    echo "zend.assertions = 1" >> "$php_ini_location"
+    echo "assert.exception = 1" >> "$php_ini_location"
+    echo "date.timezone = Europe/Paris" >> "$php_ini_location"
 }
 
 setup_database() {
@@ -91,7 +87,7 @@ seed_plugin_data() {
     done
 }
 
-setup_tuleap
+setup_php
 setup_database
 seed_data
 seed_plugin_data
