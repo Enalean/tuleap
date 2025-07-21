@@ -30,11 +30,9 @@ use TuleapCfg\Command\TemplateHelper;
 
 final class SiteDeployFPM
 {
-    private const PHP82_DST_CONF_DIR             = '/etc/opt/remi/php82';
-    private const PHP82_SRC_CONF_DIR             = __DIR__ . '/../../../../etc/fpm82';
     private const PHP84_DST_CONF_DIR             = '/etc/opt/remi/php84';
     private const PHP84_SRC_CONF_DIR             = __DIR__ . '/../../../../etc/fpm84';
-    private const PHP_DEFAULT_UNIT_SERVICE_NAMES = ['php82-php-fpm.service', 'php84-php-fpm.service'];
+    private const PHP_DEFAULT_UNIT_SERVICE_NAMES = ['php84-php-fpm.service'];
 
     private const FPM_PART_ERRORS             = 'tuleap_errors.part';
     private const FPM_PART_ERRORS_PROD        = 'tuleap_errors_prod.part';
@@ -117,25 +115,6 @@ final class SiteDeployFPM
             return new FPMSessionRedis(\ForgeConfig::get('redis_config_file'), \ForgeConfig::get('sys_http_user'), $server, $use_tls, $port, $password);
         }
         return new FPMSessionFiles();
-    }
-
-    public static function buildForPHP82(
-        ProcessFactory $process_factory,
-        LoggerInterface $logger,
-        string $application_user,
-        bool $development,
-    ): self {
-        return new self(
-            $process_factory,
-            $logger,
-            $application_user,
-            $development,
-            self::buildSessionFromEnv(),
-            self::PHP_DEFAULT_UNIT_SERVICE_NAMES,
-            self::PHP82_DST_CONF_DIR,
-            self::PHP82_SRC_CONF_DIR,
-            []
-        );
     }
 
     public static function buildForPHP84(

@@ -49,11 +49,6 @@ Packager: Tuleap team <security@tuleap.org>
 AutoReqProv: no
 
 # Php and web related stuff
-Requires: php82-php-common
-Requires: php82-php, php82-php-mysql, php82-php-xml, php82-php-mbstring, php82-php-gd
-Requires: php82-php-intl, php82-php-process, php82-php-opcache, php82-php-fpm, php82-php-pecl-redis5, php82-php-sodium
-Requires: php82-php-pecl-zip
-Requires: php82-php-ffi
 Requires: php84-php-common
 Requires: php84-php, php84-php-mysql, php84-php-xml, php84-php-mbstring, php84-php-gd
 Requires: php84-php-intl, php84-php-process, php84-php-opcache, php84-php-fpm, php84-php-pecl-redis5, php84-php-sodium
@@ -141,7 +136,6 @@ Group: Development/Tools
 %package plugin-ldap
 Summary: Tuleap plugin to manage LDAP integration
 Group: Development/Tools
-Requires: php82-php-ldap
 Requires: php84-php-ldap
 %description plugin-ldap
 LDAP Plugin for Tuleap. Provides LDAP information, LDAP
@@ -179,7 +173,7 @@ Plugin to access to file releases & docman though WebDAV
 AutoReqProv: no
 Summary: Tracker v5 for Tuleap
 Group: Development/Tools
-Requires: %{name} = %{tuleap_version}-%{tuleap_release}%{?dist}, libxslt, php82-php-pecl-mailparse, php84-php-pecl-mailparse
+Requires: %{name} = %{tuleap_version}-%{tuleap_release}%{?dist}, libxslt, php84-php-pecl-mailparse
 %description plugin-tracker
 New tracker generation for Tuleap.
 
@@ -637,8 +631,6 @@ done
 %{__install} -d $RPM_BUILD_ROOT/etc/%{APP_NAME}/plugins/pluginsadministration
 
 # PHP configuration
-%{__install} -d $RPM_BUILD_ROOT/etc/opt/remi/php82/php.d/
-%{__install} src/etc/php.d/99-tuleap.ini $RPM_BUILD_ROOT/etc/opt/remi/php82/php.d/
 %{__install} -d $RPM_BUILD_ROOT/etc/opt/remi/php84/php.d/
 %{__install} src/etc/php.d/99-tuleap.ini $RPM_BUILD_ROOT/etc/opt/remi/php84/php.d/
 
@@ -1083,8 +1075,6 @@ fi
 %attr(00750,codendiadm,codendiadm) /etc/%{APP_NAME}/plugins/pluginsadministration
 
 # PHP Configuration
-%attr(00755,root,root) /etc/opt/remi/php82/php.d/
-%attr(00644,root,root) /etc/opt/remi/php82/php.d/99-tuleap.ini
 %attr(00755,root,root) /etc/opt/remi/php84/php.d/
 %attr(00644,root,root) /etc/opt/remi/php84/php.d/99-tuleap.ini
 

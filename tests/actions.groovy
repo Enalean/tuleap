@@ -91,7 +91,7 @@ def runPsalm(String configPath, String root='.') {
         dir ('sources') {
             sh """
             mkdir -p ../results/psalm/
-            scl enable php82 "src/vendor/bin/psalm --show-info=false --report-show-info=false --config='${configPath}' --no-cache --root='${root}' --report=../results/psalm/checkstyle.xml"
+            scl enable php84 "src/vendor/bin/psalm --show-info=false --report-show-info=false --config='${configPath}' --no-cache --root='${root}' --report=../results/psalm/checkstyle.xml"
             """
         }
     }
@@ -102,7 +102,7 @@ def runPsalmTaintAnalysis(String configPath, String root='.') {
         dir ('sources') {
             sh """
             mkdir -p ../results/psalm/
-            scl enable php82 "src/vendor/bin/psalm --taint-analysis --memory-limit=4096M --threads=1 --config='${configPath}' --no-cache --root='${root}' --report=../results/psalm/checkstyle.xml"
+            scl enable php84 "src/vendor/bin/psalm --taint-analysis --memory-limit=4096M --threads=1 --config='${configPath}' --no-cache --root='${root}' --report=../results/psalm/checkstyle.xml"
             """
         }
     }
@@ -113,8 +113,8 @@ def runPHPCodingStandards(String phpcsPath, String rulesetPath, String filesToAn
         return;
     }
     sh """
-    docker run --rm -v $WORKSPACE/sources:/sources:ro -w /sources --network none \${DOCKER_REGISTRY:-ghcr.io}/enalean/tuleap-test-phpunit:el9-php82 \
-        scl enable php82 "php -d memory_limit=2536M ${phpcsPath} --extensions=php,phpstub --encoding=utf-8 --standard="${rulesetPath}" -p ${filesToAnalyze}"
+    docker run --rm -v $WORKSPACE/sources:/sources:ro -w /sources --network none \${DOCKER_REGISTRY:-ghcr.io}/enalean/tuleap-test-phpunit:el9-php84 \
+        scl enable php84 "php -d memory_limit=2536M ${phpcsPath} --extensions=php,phpstub --encoding=utf-8 --standard="${rulesetPath}" -p ${filesToAnalyze}"
     """
 }
 
@@ -123,7 +123,7 @@ def runDeptrac() {
         sh """
         export CI_REPORT_OUTPUT_PATH="\$WORKSPACE/results/deptrac/"
         mkdir -p "\$CI_REPORT_OUTPUT_PATH"
-        scl enable php82 "./tests/deptrac/run.sh"
+        scl enable php84 "./tests/deptrac/run.sh"
         """
     }
 }
