@@ -656,6 +656,18 @@ Object.extend(String.prototype, (function() {
     return this.replace(new RegExp(Prototype.ScriptFragment, 'img'), '');
   }
 
+  function extractScripts() {
+    var matchAll = new RegExp(Prototype.ScriptFragment, 'img'),
+        matchOne = new RegExp(Prototype.ScriptFragment, 'im');
+    return (this.match(matchAll) || []).map(function(scriptTag) {
+      return (scriptTag.match(matchOne) || ['', ''])[1];
+    });
+  }
+
+  function evalScripts() {
+    return this.extractScripts().map(function(script) { return eval(script); });
+  }
+
   function escapeHTML() {
     return this.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   }
@@ -749,6 +761,20 @@ Object.extend(String.prototype, (function() {
     return this.indexOf(pattern) > -1;
   }
 
+  function startsWith(pattern, position) {
+    position = Object.isNumber(position) ? position : 0;
+    return this.lastIndexOf(pattern, position) === position;
+  }
+
+  function endsWith(pattern, position) {
+    pattern = String(pattern);
+    position = Object.isNumber(position) ? position : this.length;
+    if (position < 0) position = 0;
+    if (position > this.length) position = this.length;
+    var d = position - pattern.length;
+    return d >= 0 && this.indexOf(pattern, d) === d;
+  }
+
   function empty() {
     return this == '';
   }
@@ -769,6 +795,8 @@ Object.extend(String.prototype, (function() {
     strip:          String.prototype.trim || strip,
     stripTags:      stripTags,
     stripScripts:   stripScripts,
+    extractScripts: extractScripts,
+    evalScripts:    evalScripts,
     escapeHTML:     escapeHTML,
     unescapeHTML:   unescapeHTML,
     toQueryParams:  toQueryParams,
@@ -784,8 +812,8 @@ Object.extend(String.prototype, (function() {
     isJSON:         isJSON,
     evalJSON:       parseJSON,
     include:        include,
-    startsWith:     String.prototype.startsWith,
-    endsWith:       String.prototype.endsWith,
+    startsWith:     String.prototype.startsWith || startsWith,
+    endsWith:       String.prototype.endsWith || endsWith,
     empty:          empty,
     blank:          blank,
     interpolate:    interpolate
