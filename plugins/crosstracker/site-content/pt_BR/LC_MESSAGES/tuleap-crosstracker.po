@@ -164,13 +164,6 @@ msgstr ""
 msgid "Only @project = 'self' and @project = 'aggregated' are supported"
 msgstr ""
 
-msgid "Parameter 'query' is invalid"
-msgstr ""
-
-#, php-format
-msgid "Parameter 'query' is invalid: %s"
-msgstr ""
-
 msgid "Query not found"
 msgstr ""
 
