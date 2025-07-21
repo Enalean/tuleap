@@ -103,7 +103,7 @@ final readonly class CrossTrackerArtifactQueryFactory
         private RetrieveArtifact $artifact_retriever,
         private ForwardLinkFromWhereBuilder $forward_link_from_where_builder,
         private ReverseLinkFromWhereBuilder $reverse_link_from_where_builder,
-        private InstantiateRetrievedQueryTrackerIds $trackers_instantiator,
+        private InstantiateRetrievedQueryTrackers $trackers_instantiator,
         private RetrieveUserPermissionOnTrackers $trackers_permissions,
     ) {
     }

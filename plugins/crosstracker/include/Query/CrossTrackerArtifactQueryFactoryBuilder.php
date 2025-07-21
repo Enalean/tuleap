@@ -357,7 +357,13 @@ final class CrossTrackerArtifactQueryFactoryBuilder
                 new ProjectNameResultBuilder(),
                 new TrackerNameResultBuilder(),
                 new PrettyTitleResultBuilder(),
-                new ArtifactResultBuilder($tracker_artifact_factory),
+                new ArtifactResultBuilder(
+                    $tracker_artifact_factory,
+                    new TrackersListAllowedByPlugins(
+                        EventManager::instance(),
+                        TrackerFactory::instance()
+                    )
+                ),
             ),
         );
         $text_order_builder        = new TextFromOrderBuilder();
@@ -408,7 +414,10 @@ final class CrossTrackerArtifactQueryFactoryBuilder
             $tracker_artifact_factory,
             new ForwardLinkFromWhereBuilder($tracker_artifact_factory),
             new ReverseLinkFromWhereBuilder($tracker_artifact_factory),
-            $query_trackers_retriever,
+            new TrackersListAllowedByPlugins(
+                EventManager::instance(),
+                TrackerFactory::instance()
+            ),
             TrackersPermissionsRetriever::build(),
         );
     }
@@ -421,11 +430,14 @@ final class CrossTrackerArtifactQueryFactoryBuilder
             $this->getFromBuilderVisitor(),
             TrackersPermissionsRetriever::build(),
             new CrossTrackerTQLQueryDao(),
-            TrackerFactory::instance(),
             new WidgetInProjectChecker($widget_dao),
             $widget_dao,
             ProjectManager::instance(),
             EventManager::instance(),
+            new TrackersListAllowedByPlugins(
+                EventManager::instance(),
+                TrackerFactory::instance()
+            ),
         );
     }
 }
