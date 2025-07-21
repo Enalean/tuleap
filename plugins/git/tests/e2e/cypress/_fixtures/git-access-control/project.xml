@@ -49,12 +49,14 @@
   <git>
     <repository name="Access" description="-- Default description --" allow_artifact_closure="1" default_branch="main" bundle-path="">
       <read>
-        <ugroup>ProjectMember</ugroup>
+        <ugroup>nobody</ugroup>
       </read>
       <write>
-        <ugroup>ProjectAdministrator</ugroup>
+        <ugroup>nobody</ugroup>
       </write>
-      <wplus/>
+      <wplus>
+        <ugroup>nobody</ugroup>
+      </wplus>
     </repository>
   </git>
 </project>

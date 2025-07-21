@@ -17,8 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { ConditionPredicate } from "@tuleap/cypress-utilities-support";
-
 function waitForRepositoryCreation(): void {
     cy.get("[data-test=delete]").click();
     cy.reloadUntilCondition(
@@ -57,6 +55,14 @@ describe("Git", function () {
         cy.get("[data-test=create-repository-button]").click();
         cy.get("[data-test=create-repository-modal-form]").within(() => {
             cy.get("[data-test=create_repository_name]").type("ToBeForked");
+            cy.root().submit();
+        });
+
+        cy.visitProjectService(`git-access`, "Git");
+        cy.log("Create a repository for access test");
+        cy.get("[data-test=create-repository-button]").click();
+        cy.get("[data-test=create-repository-modal-form]").within(() => {
+            cy.get("[data-test=create_repository_name]").type(`UpdateRepository${now}`);
             cy.root().submit();
         });
 
@@ -357,10 +363,29 @@ describe("Git", function () {
             });
         });
         context("Repository permissions", function () {
+            it("When Nobody can read a repository, it cannot be cloned", function () {
+                cy.projectAdministratorSession();
+                cy.visitProjectService(`git-access`, "Git");
+                cy.get("[data-test=git-repository-path]").contains("Access").click();
+                cy.get("[data-test=git-repository-tree-table]").contains("No commits");
+
+                const repository_path = "tuleap/plugins/git/git-access/Access";
+                const repository_name = `access-${now}`;
+                cy.cloneRepositoryWillFail(
+                    "ProjectAdministrator",
+                    repository_path,
+                    repository_name,
+                ).then((result) => {
+                    expect(result.includes("error")).to.be.true;
+                });
+            });
             it("User can choose permissions of his repository", function () {
                 cy.projectAdministratorSession();
                 cy.visitProjectService(`git-access`, "Git");
-                cy.get("[data-test=git-repository-card-admin-link]").click();
+                cy.get("[data-test=git-repository-path]")
+                    .contains(`UpdateRepository${now}`)
+                    .click();
+                cy.get("[data-test=git-repository-settings]").click();
 
                 cy.log("User can change the access right of the repository");
                 cy.get("[data-test=perms]").click();
@@ -370,41 +395,7 @@ describe("Git", function () {
                 cy.get("[data-test=git-repository-rewind-permissions]").select("Nobody");
 
                 cy.get("[data-test=git-permissions-submit]").click();
-
-                cy.visitProjectService(`git-access`, "Git");
-                cy.get("[data-test=git-repository-path]").click();
-                cy.get("[data-test=git-repository-tree-table]").contains("No commits");
-
-                const reloadCallback = (): void => {
-                    cy.log("Checking permissions are respected");
-                };
-                const conditionCallback: ConditionPredicate = (
-                    number_of_attempts,
-                    max_attempts,
-                ) => {
-                    // eslint-disable-next-line cypress/no-unnecessary-waiting -- reload until condition is not enough to guarantee that new perms are effective
-                    cy.wait(1000);
-                    const reload_now = Date.now();
-                    const repository_path = "tuleap/plugins/git/git-access/Access";
-                    const repository_name = `access-${reload_now}`;
-                    cy.log(
-                        `Check that repository an no longer be cloned (attempt ${number_of_attempts}/${max_attempts})`,
-                    );
-                    return cy
-                        .cloneRepositoryWillFail(
-                            "ProjectAdministrator",
-                            repository_path,
-                            repository_name,
-                        )
-                        .then((result) => {
-                            return result.includes("error");
-                        });
-                };
-                cy.reloadUntilCondition(
-                    reloadCallback,
-                    conditionCallback,
-                    `User can still clone the repository`,
-                );
+                cy.get("[data-test=feedback]").contains("Repository informations have been saved");
             });
         });
         context("Fine grained permissions", function () {
