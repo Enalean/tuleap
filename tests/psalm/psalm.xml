@@ -1314,6 +1314,13 @@
             <file name="plugins/tracker/tests/unit/XML/Updater/Tracker_XML_Updater_ChangesetXMLUpdaterTest.php"/>
             <file name="plugins/tracker/tests/unit/XML/Updater/Tracker_XML_Updater_TemporaryFileCreatorTest.php"/>
             <file name="plugins/tracker/tests/unit/XML/Updater/Tracker_XML_Updater_TemporaryFileXMLUpdaterTest.php"/>
+            <!-- Avoid issues when executed inside the dev container since it will want to scan MW code -->
+            <file name="plugins/mediawiki/www/LocalSettings.php"/>
+            <file name="plugins/mediawiki/www/upgrade_sample.php"/>
+            <file name="plugins/mediawiki/www/setenv.php"/>
+            <file name="plugins/mediawiki/www/setpath.php"/>
+            <file name="plugins/mediawiki/bin/migrate_to_123.php"/>
+            <file name="plugins/mediawiki/bin/mw-maintenance-wrapper.php"/>
         </ignoreFiles>
     </projectFiles>
 

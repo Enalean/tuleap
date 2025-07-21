@@ -52,7 +52,7 @@ function execDeptrac() {
     fi
 
     echo "Processing $config_file_path"
-    "${PHP:-php}" "$root_path"/src/vendor/bin/deptrac analyse --config-file="$config_file_path" "${args[@]}"
+    "${PHP:-php}" -d opcache.preload="" "$root_path"/src/vendor/bin/deptrac analyse --config-file="$config_file_path" "${args[@]}"
 }
 
 pushd "$root_path" > /dev/null

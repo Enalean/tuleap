@@ -196,8 +196,8 @@ phpunit-ci-run:
 		--do-not-cache-result
 
 run-as-owner:
-	@USER_ID=`stat -c '%u' /tuleap`; \
-	GROUP_ID=`stat -c '%g' /tuleap`; \
+	@USER_ID=`stat -c '%u' /usr/share/tuleap`; \
+	GROUP_ID=`stat -c '%g' /usr/share/tuleap`; \
 	groupadd -g $$GROUP_ID runner; \
 	useradd -u $$USER_ID -g $$GROUP_ID runner
 	su -c "$(MAKE) -C $(CURDIR) $(TARGET) PHP=$(PHP)" -l runner
@@ -206,12 +206,12 @@ phpunit-ci:
 	$(eval COVERAGE_ENABLED ?= 1)
 	$(eval PHP_VERSION ?= 84)
 	mkdir -p $(WORKSPACE)/results/ut-phpunit/php-$(PHP_VERSION)
-	@$(DOCKER) run --rm -v $(CURDIR):/tuleap:ro --network none -v $(WORKSPACE)/results/ut-phpunit/php-$(PHP_VERSION):/tmp/results ghcr.io/enalean/tuleap-test-phpunit:el9-php$(PHP_VERSION) make -C /tuleap TARGET="phpunit-ci-run COVERAGE_ENABLED=$(COVERAGE_ENABLED)" PHP=/opt/remi/php$(PHP_VERSION)/root/usr/bin/php run-as-owner
+	@$(DOCKER) run --rm -v $(CURDIR):/usr/share/tuleap:ro --network none -v $(WORKSPACE)/results/ut-phpunit/php-$(PHP_VERSION):/tmp/results ghcr.io/enalean/tuleap-aio-dev:el9-php$(PHP_VERSION) make -C /usr/share/tuleap TARGET="phpunit-ci-run COVERAGE_ENABLED=$(COVERAGE_ENABLED)" PHP=/opt/remi/php$(PHP_VERSION)/root/usr/bin/php run-as-owner
 
 .PHONY: tests-unit-php
 tests-unit-php: ## Run PHPUnit unit tests in a Docker container. PHP_VERSION to select the version of PHP to use (84). FILES to run specific tests.
 	$(eval PHP_VERSION ?= 84)
-	@$(DOCKER) run --rm -v $(CURDIR):/usr/share/tuleap:ro --network none test-t scl enable php$(PHP_VERSION) "make phpunit FILES=$(FILES)"
+	@$(DOCKER) run --rm -v $(CURDIR):/usr/share/tuleap:ro --network none ghcr.io/enalean/tuleap-aio-dev:el9-php$(PHP_VERSION) scl enable php$(PHP_VERSION) "make phpunit FILES=$(FILES)"
 
 ifneq ($(origin SEED),undefined)
     RANDOM_ORDER_SEED_ARGUMENT=--random-order-seed=$(SEED)
@@ -273,7 +273,6 @@ bash-web: ## Give a bash on web container
 
 .PHONY:pull-docker-images
 pull-docker-images: ## Pull all docker images used for development
-	@$(MAKE) --no-print-directory docker-pull-verify-keyless-gha IMAGE_NAME=ghcr.io/enalean/tuleap-test-phpunit:el9-php84
 	@$(MAKE) --no-print-directory docker-pull-verify IMAGE_NAME=tuleap/tuleap-community-edition:latest KEY_PATH=tools/utils/signing-keys/tuleap-community.pub
 	@$(MAKE) --no-print-directory docker-pull-verify-keyless-gha IMAGE_NAME=ghcr.io/enalean/tuleap-aio-dev:el9-php84
 	@$(MAKE) --no-print-directory docker-pull-verify-keyless-gha IMAGE_NAME=ghcr.io/enalean/ldap:latest

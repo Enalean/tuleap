@@ -106,7 +106,7 @@ pipeline {
                 stage('Psalm static analysis') {
                     agent {
                         docker {
-                            image 'ghcr.io/enalean/tuleap-test-phpunit:el9-php84'
+                            image 'ghcr.io/enalean/tuleap-aio-dev:el9-php84'
                             reuseNode true
                             args '--network none'
                         }
@@ -126,7 +126,7 @@ pipeline {
                 stage('Architecture: deptrac') {
                     agent {
                         docker {
-                            image 'ghcr.io/enalean/tuleap-test-phpunit:el9-php84'
+                            image 'ghcr.io/enalean/tuleap-aio-dev:el9-php84'
                             reuseNode true
                             args '--network none'
                         }
