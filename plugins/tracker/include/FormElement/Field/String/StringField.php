@@ -65,26 +65,31 @@ class StringField extends TextField
         ],
     ];
 
+    #[\Override]
     protected function getDuplicateSpecificPropertiesDao(): DuplicateSpecificProperties
     {
         return new StringFieldSpecificPropertiesDAO();
     }
 
+    #[\Override]
     protected function getDeleteSpecificPropertiesDao(): DeleteSpecificProperties
     {
         return new StringFieldSpecificPropertiesDAO();
     }
 
+    #[\Override]
     protected function getSaveSpecificPropertiesDao(): SaveSpecificFieldProperties
     {
         return new StringFieldSpecificPropertiesDAO();
     }
 
+    #[\Override]
     protected function getSearchSpecificPropertiesDao(): SearchSpecificProperties
     {
         return new StringFieldSpecificPropertiesDAO();
     }
 
+    #[\Override]
     public function getDeleteCriteriaValueDAO(): DeleteReportCriteriaValue
     {
         return new CriteriaAlphaNumValueDAO();
