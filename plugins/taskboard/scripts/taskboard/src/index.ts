@@ -28,6 +28,7 @@ import type { RootState } from "./store/type";
 import type { ColumnState } from "./store/column/type";
 import { pinHeaderWhileScrolling } from "@tuleap/pinned-header";
 import { createGettext } from "vue3-gettext";
+import "@tuleap/plugin-agiledashboard-scrum-milestone-header";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const vue_mount_point = document.getElementById("taskboard");
