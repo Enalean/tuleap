@@ -44,6 +44,10 @@
                 v-bind:user_list_field="readonly_field"
             />
             <field-links v-if="readonly_field.type === LINKS_FIELD" v-bind:field="readonly_field" />
+            <field-numeric
+                v-if="readonly_field.type === NUMERIC_FIELD"
+                v-bind:field="readonly_field"
+            />
         </div>
     </div>
 </template>
@@ -52,6 +56,7 @@
 import FieldString from "@/components/section/readonly-fields/FieldString.vue";
 import type { ReadonlyField } from "@/sections/readonly-fields/ReadonlyFields";
 import {
+    NUMERIC_FIELD,
     LINKS_FIELD,
     STATIC_LIST_FIELD,
     STRING_FIELD,
@@ -63,6 +68,7 @@ import FieldUserGroupsList from "@/components/section/readonly-fields/FieldUserG
 import FieldStaticList from "@/components/section/readonly-fields/FieldStaticList.vue";
 import FieldUserList from "@/components/section/readonly-fields/FieldUserList.vue";
 import FieldLinks from "@/components/section/readonly-fields/FieldLinks.vue";
+import FieldNumeric from "@/components/section/readonly-fields/FieldNumeric.vue";
 import { DISPLAY_TYPE_BLOCK } from "@/sections/readonly-fields/AvailableReadonlyFields";
 
 defineProps<{

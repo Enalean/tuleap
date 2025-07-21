@@ -17,22 +17,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import type { ReadonlyField } from "@/sections/readonly-fields/ReadonlyFields";
-import FieldString from "@/components/section/readonly-fields/FieldString.vue";
-import ReadonlyFields from "@/components/section/readonly-fields/ReadonlyFields.vue";
+import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import { ReadonlyFieldStub } from "@/sections/stubs/ReadonlyFieldStub";
 import {
     DISPLAY_TYPE_BLOCK,
     DISPLAY_TYPE_COLUMN,
 } from "@/sections/readonly-fields/AvailableReadonlyFields";
+import ReadonlyFields from "@/components/section/readonly-fields/ReadonlyFields.vue";
+import FieldString from "@/components/section/readonly-fields/FieldString.vue";
 import FieldUserGroupsList from "@/components/section/readonly-fields/FieldUserGroupsList.vue";
 import FieldStaticList from "@/components/section/readonly-fields/FieldStaticList.vue";
 import FieldUserList from "@/components/section/readonly-fields/FieldUserList.vue";
 import FieldLinks from "@/components/section/readonly-fields/FieldLinks.vue";
+import FieldNumeric from "@/components/section/readonly-fields/FieldNumeric.vue";
 
 describe("ReadonlyFields", () => {
     const getWrapper = (fields: ReadonlyField[]): VueWrapper => {
@@ -85,6 +86,7 @@ describe("ReadonlyFields", () => {
                 DISPLAY_TYPE_BLOCK,
             ),
             ReadonlyFieldStub.linkField([]),
+            ReadonlyFieldStub.numericField(42, DISPLAY_TYPE_COLUMN),
         ];
         const wrapper = getWrapper(fields);
 
@@ -94,5 +96,6 @@ describe("ReadonlyFields", () => {
         expect(wrapper.findComponent(FieldStaticList).exists()).toBe(true);
         expect(wrapper.findComponent(FieldUserList).exists()).toBe(true);
         expect(wrapper.findComponent(FieldLinks).exists()).toBe(true);
+        expect(wrapper.findComponent(FieldNumeric).exists()).toBe(true);
     });
 });
