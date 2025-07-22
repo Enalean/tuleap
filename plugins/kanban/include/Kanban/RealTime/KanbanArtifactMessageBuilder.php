@@ -25,13 +25,14 @@ use Tuleap\Kanban\ColumnIdentifier;
 use Tuleap\Kanban\KanbanItemDao;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\RealTime\RealTimeArtifactMessageException;
-use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
+use Tuleap\Tracker\Semantic\Status\RetrieveSemanticStatus;
 
-final class KanbanArtifactMessageBuilder
+final readonly class KanbanArtifactMessageBuilder
 {
     public function __construct(
-        private readonly KanbanItemDao $kanban_item_dao,
-        private readonly Tracker_Artifact_ChangesetFactory $changeset_factory,
+        private KanbanItemDao $kanban_item_dao,
+        private Tracker_Artifact_ChangesetFactory $changeset_factory,
+        private RetrieveSemanticStatus $semantic_status_retriever,
     ) {
     }
 
@@ -47,7 +48,7 @@ final class KanbanArtifactMessageBuilder
      */
     public function buildArtifactMoved(Artifact $artifact): ?KanbanArtifactMovedMessageRepresentation
     {
-        $tracker_semantic = TrackerSemanticStatus::load($artifact->getTracker());
+        $tracker_semantic = $this->semantic_status_retriever->fromTracker($artifact->getTracker());
         $status_field     = $tracker_semantic->getField();
 
         if ($status_field === null) {
@@ -101,7 +102,7 @@ final class KanbanArtifactMessageBuilder
      */
     public function buildArtifactReordered(Artifact $artifact): ?KanbanArtifactMovedMessageRepresentation
     {
-        $tracker_semantic = TrackerSemanticStatus::load($artifact->getTracker());
+        $tracker_semantic = $this->semantic_status_retriever->fromTracker($artifact->getTracker());
         $status_field     = $tracker_semantic->getField();
 
         if ($status_field === null) {

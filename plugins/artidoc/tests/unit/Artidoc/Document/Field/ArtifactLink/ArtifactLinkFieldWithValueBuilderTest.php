@@ -58,6 +58,7 @@ use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\FormElement\Field\ArtifactLink\Type\RetrieveTypeFromShortnameStub;
+use Tuleap\Tracker\Test\Stub\Semantic\Status\RetrieveSemanticStatusStub;
 use Tuleap\Tracker\Test\Stub\Semantic\Title\RetrieveSemanticTitleFieldStub;
 use Tuleap\Tracker\Tracker;
 
@@ -71,7 +72,6 @@ final class ArtifactLinkFieldWithValueBuilderTest extends TestCase
     protected function tearDown(): void
     {
         Tracker_ArtifactFactory::clearInstance();
-        TrackerSemanticStatus::clearInstances();
     }
 
     public function testItBuildsArtifactLinkField(): void
@@ -114,8 +114,6 @@ final class ArtifactLinkFieldWithValueBuilderTest extends TestCase
         });
         Tracker_ArtifactFactory::setInstance($artifact_factory);
 
-        TrackerSemanticStatus::setInstance(new TrackerSemanticStatus($tracker, $status_field, [$open_value->getId()]), $tracker);
-
         $changeset = ChangesetValueArtifactLinkTestBuilder::aValue(12, ChangesetTestBuilder::aChangeset(852)->build(), $link_field)
             ->withForwardLinks([
                 15 => new Tracker_ArtifactLinkInfo(15, 'art', 101, 35, 123, ArtifactLinkField::TYPE_IS_CHILD),
@@ -132,6 +130,7 @@ final class ArtifactLinkFieldWithValueBuilderTest extends TestCase
         $builder = new ArtifactLinkFieldWithValueBuilder(
             $user,
             RetrieveSemanticTitleFieldStub::build()->withTitleField($tracker, $title_field),
+            RetrieveSemanticStatusStub::build()->withSemanticStatus(new TrackerSemanticStatus($tracker, $status_field, [$open_value->getId()])),
             RetrieveTypeFromShortnameStub::build()
                 ->withTypePresenter(ArtifactLinkField::TYPE_IS_CHILD, new TypeIsChildPresenter())
                 ->withTypePresenter('_covered_by', new TypePresenter('_covered_by', 'Covers', 'Covered by', true))

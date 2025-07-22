@@ -43,6 +43,7 @@ use Tuleap\Tracker\Semantic\Progress\MethodNotConfigured;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgress;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgressBuilder;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgressDao;
+use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeNotConfigured;
@@ -53,6 +54,7 @@ use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueDateTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveTrackerStub;
+use Tuleap\Tracker\Test\Stub\Semantic\Status\RetrieveSemanticStatusStub;
 use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -71,6 +73,7 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     private \Tracker_ArtifactFactory&MockObject $artifact_factory;
     private RoadmapTasksOutOfDateFilter&MockObject $tasks_filter;
     private SemanticProgressBuilder&MockObject $progress_builder;
+    private RetrieveSemanticStatusStub $semantic_status_retriever;
 
     private function getTracker(int $tracker_id, \Tuleap\Tracker\FormElement\Field\String\StringField $title_field, ColorName $color, string $name): Tracker&MockObject
     {
@@ -95,6 +98,7 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->artifact_factory           = $this->createMock(\Tracker_ArtifactFactory::class);
         $this->tasks_filter               = $this->createMock(RoadmapTasksOutOfDateFilter::class);
         $this->progress_builder           = $this->createMock(SemanticProgressBuilder::class);
+        $this->semantic_status_retriever  = RetrieveSemanticStatusStub::build();
 
         $this->user    = UserTestBuilder::anActiveUser()->build();
         $this->project = ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build();
@@ -118,6 +122,7 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->progress_builder,
             new NullLogger(),
             $report_to_filter_retriever,
+            $this->semantic_status_retriever,
         );
     }
 
@@ -665,6 +670,8 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 )
             );
 
+        $this->semantic_status_retriever->withSemanticStatus(new TrackerSemanticStatus($tracker, null));
+
         $task_201 = $this->anArtifact(201, 'Do this', $tracker, true, $semantic_timeframe);
         $task_202 = $this->anArtifact(202, 'Do that', $tracker, false, $semantic_timeframe);
         $task_203 = $this->anArtifactWithoutStartDate(203, 'Do those', $tracker, $semantic_timeframe);
@@ -804,6 +811,8 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                     )
                 )
             );
+
+        $this->semantic_status_retriever->withSemanticStatus(new TrackerSemanticStatus($tracker, null));
 
         $task_201 = $this->anArtifact(201, 'Do this', $tracker, true, $semantic_timeframe);
         $task_202 = $this->anArtifact(202, 'Do that', $tracker, false, $semantic_timeframe);
@@ -951,6 +960,8 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 )
             );
 
+        $this->semantic_status_retriever->withSemanticStatus(new TrackerSemanticStatus($tracker, null));
+
         $task_201 = $this->anArtifact(201, 'Do this', $tracker, true, $semantic_timeframe);
         $task_202 = $this->anArtifact(202, 'Do that', $tracker, false, $semantic_timeframe);
 
@@ -1078,6 +1089,10 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 $tracker         => new SemanticProgress($tracker, new MethodNotConfigured()),
                 $another_tracker => new SemanticProgress($another_tracker, new MethodNotConfigured()),
             });
+
+        $this->semantic_status_retriever
+            ->withSemanticStatus(new TrackerSemanticStatus($tracker, null))
+            ->withSemanticStatus(new TrackerSemanticStatus($another_tracker, null));
 
         $task_201 = $this->anArtifact(201, 'Do this', $tracker, true, $semantic_timeframe_tracker);
         $task_203 = $this->anArtifactWithoutStartDate(203, 'Do those', $another_tracker, $semantic_timeframe_another_tracker);

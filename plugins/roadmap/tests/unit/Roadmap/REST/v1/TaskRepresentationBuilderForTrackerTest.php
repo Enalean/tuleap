@@ -30,10 +30,12 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Semantic\Progress\MethodNotConfigured;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgress;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgressBuilder;
+use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeImpliedFromAnotherTracker;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Test\Stub\Semantic\Status\RetrieveSemanticStatusStub;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TaskRepresentationBuilderForTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -43,6 +45,7 @@ final class TaskRepresentationBuilderForTrackerTest extends \Tuleap\Test\PHPUnit
     private \PHPUnit\Framework\MockObject\MockObject&IRetrieveDependencies $dependencies_retriever;
     private \PHPUnit\Framework\MockObject\MockObject&TimeframeImpliedFromAnotherTracker $timeframe_calculator;
     private \Tuleap\Tracker\Tracker $tracker;
+    private TrackerSemanticStatus $semantic_status;
 
     protected function setUp(): void
     {
@@ -66,14 +69,9 @@ final class TaskRepresentationBuilderForTrackerTest extends \Tuleap\Test\PHPUnit
             ->withColor(ColorName::FIESTA_RED)
             ->build();
 
-        $semantic_status = $this->createMock(\Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus::class);
-        $semantic_status->method('isOpen')->willReturn(true);
-        \Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus::setInstance($semantic_status, $this->tracker);
-    }
-
-    protected function tearDown(): void
-    {
-        \Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus::clearInstances();
+        $this->semantic_status = $this->createMock(TrackerSemanticStatus::class);
+        $this->semantic_status->method('isOpen')->willReturn(true);
+        $this->semantic_status->method('getTracker')->willReturn($this->tracker);
     }
 
     public function testBuildRepresentation(): void
@@ -90,6 +88,7 @@ final class TaskRepresentationBuilderForTrackerTest extends \Tuleap\Test\PHPUnit
             $this->timeframe_calculator,
             $this->dependencies_retriever,
             $this->progress_builder,
+            RetrieveSemanticStatusStub::build()->withSemanticStatus($this->semantic_status),
             new NullLogger()
         );
 
@@ -126,6 +125,7 @@ final class TaskRepresentationBuilderForTrackerTest extends \Tuleap\Test\PHPUnit
             $this->timeframe_calculator,
             $this->dependencies_retriever,
             $this->progress_builder,
+            RetrieveSemanticStatusStub::build()->withSemanticStatus($this->semantic_status),
             new NullLogger()
         );
 

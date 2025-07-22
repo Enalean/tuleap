@@ -19,40 +19,18 @@
  */
 
 use Tuleap\Cardwall\OnTop\Config\ColumnCollection;
+use Tuleap\Tracker\Semantic\Status\RetrieveSemanticStatusField;
 use Tuleap\Tracker\Tracker;
 
-class Cardwall_OnTop_Config_TrackerMappingFactory
+class Cardwall_OnTop_Config_TrackerMappingFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    /**
-     * @var TrackerFactory
-     */
-    private $tracker_factory;
-
-    /**
-     * @var Tracker_FormElementFactory
-     */
-    private $element_factory;
-
-    /**
-     * @var Cardwall_OnTop_ColumnMappingFieldDao
-     */
-    private $dao;
-
-    /**
-     * @var Cardwall_OnTop_Config_ValueMappingFactory
-     */
-    private $value_mapping_factory;
-
     public function __construct(
-        TrackerFactory $tracker_factory,
-        Tracker_FormElementFactory $element_factory,
-        Cardwall_OnTop_ColumnMappingFieldDao $dao,
-        Cardwall_OnTop_Config_ValueMappingFactory $value_mapping_factory,
+        private readonly TrackerFactory $tracker_factory,
+        private readonly Tracker_FormElementFactory $element_factory,
+        private readonly Cardwall_OnTop_ColumnMappingFieldDao $dao,
+        private readonly Cardwall_OnTop_Config_ValueMappingFactory $value_mapping_factory,
+        private readonly RetrieveSemanticStatusField $status_field_retriever,
     ) {
-        $this->tracker_factory       = $tracker_factory;
-        $this->element_factory       = $element_factory;
-        $this->dao                   = $dao;
-        $this->value_mapping_factory = $value_mapping_factory;
     }
 
     /**
@@ -88,7 +66,7 @@ class Cardwall_OnTop_Config_TrackerMappingFactory
             if ($mapping_field) {
                 $mapping = $this->instantiateFreestyleMapping($tracker, $mappings, $mapping_tracker, $available_fields, $mapping_field);
             } else {
-                $status_field = $mapping_tracker->getStatusField();
+                $status_field = $this->status_field_retriever->fromTracker($mapping_tracker);
                 if ($status_field) {
                     $mapping = $this->instantiateMappingStatus($status_field, $mapping_tracker, $available_fields, $columns);
                 } else {

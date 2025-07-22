@@ -47,6 +47,8 @@ use Tuleap\Markdown\ContentInterpretor;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\NotFoundException;
+use Tuleap\Tracker\Semantic\Status\CachedSemanticStatusRetriever;
+use Tuleap\Tracker\Semantic\Status\RetrieveSemanticStatus;
 use Tuleap\User\Avatar\AvatarHashDao;
 use Tuleap\User\Avatar\ComputeAvatarHash;
 use Tuleap\User\Avatar\ProvideUserAvatarUrl;
@@ -68,6 +70,7 @@ readonly class ReleaseNotesController implements DispatchableWithRequest, Dispat
         private TemplateRenderer $renderer,
         private IncludeAssets $assets,
         private ProvideUserAvatarUrl $provide_user_avatar_url,
+        private RetrieveSemanticStatus $semantic_status_retriever,
     ) {
     }
 
@@ -95,6 +98,7 @@ readonly class ReleaseNotesController implements DispatchableWithRequest, Dispat
                 '/assets/frs'
             ),
             new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
+            CachedSemanticStatusRetriever::instance(),
         );
     }
 
@@ -122,6 +126,7 @@ readonly class ReleaseNotesController implements DispatchableWithRequest, Dispat
             $this->uploaded_links_retriever,
             $this->permissions_for_groups_builder,
             $this->provide_user_avatar_url,
+            $this->semantic_status_retriever,
         );
 
         $license_agreement = $this->license_agreement_factory->getLicenseAgreementForPackage($release->getPackage());

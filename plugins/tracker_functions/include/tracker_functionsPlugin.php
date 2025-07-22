@@ -90,6 +90,7 @@ use Tuleap\Tracker\REST\PermissionsExporter;
 use Tuleap\Tracker\REST\Tracker\PermissionsRepresentationBuilder;
 use Tuleap\Tracker\REST\WorkflowRestBuilder;
 use Tuleap\Tracker\Semantic\Description\CachedSemanticDescriptionFieldRetriever;
+use Tuleap\Tracker\Semantic\Status\CachedSemanticStatusRetriever;
 use Tuleap\Tracker\Semantic\Title\CachedSemanticTitleFieldRetriever;
 use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\Webhook\ArtifactPayloadBuilder;
@@ -219,6 +220,7 @@ final class tracker_functionsPlugin extends Plugin
                     static fn(Tracker $tracker) => new \Tuleap\Tracker\Semantic\TrackerSemanticManager(
                         CachedSemanticDescriptionFieldRetriever::instance(),
                         CachedSemanticTitleFieldRetriever::instance(),
+                        CachedSemanticStatusRetriever::instance(),
                         $tracker,
                     ),
                     new ParentInHierarchyRetriever(new HierarchyDAO(), TrackerFactory::instance()),

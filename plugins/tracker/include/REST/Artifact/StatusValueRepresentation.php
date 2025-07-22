@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\REST\Artifact;
 
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Semantic\Status\RetrieveSemanticStatus;
 
 /**
  * @psalm-immutable
@@ -44,9 +45,9 @@ final class StatusValueRepresentation
         $this->color = $color;
     }
 
-    public static function buildFromArtifact(Artifact $artifact, \PFUser $user): self
+    public static function buildFromArtifact(Artifact $artifact, \PFUser $user, RetrieveSemanticStatus $semantic_status_retriever): self
     {
-        $semantic_status = \Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus::load($artifact->getTracker());
+        $semantic_status = $semantic_status_retriever->fromTracker($artifact->getTracker());
         return new self($artifact->getStatus(), $semantic_status->getColor($artifact->getLastChangeset(), $user));
     }
 

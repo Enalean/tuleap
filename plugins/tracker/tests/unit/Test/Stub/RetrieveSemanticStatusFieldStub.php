@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,54 +22,38 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Test\Stub;
 
-final class RetrieveSemanticStatusFieldStub implements \Tuleap\Tracker\Semantic\Status\RetrieveSemanticStatusField
+use Tracker_FormElement_Field_List;
+use Tuleap\Tracker\Semantic\Status\RetrieveSemanticStatusField;
+use Tuleap\Tracker\Tracker;
+
+final class RetrieveSemanticStatusFieldStub implements RetrieveSemanticStatusField
 {
-    private int $call_count = 0;
-
     /**
-     * @param list<\Tracker_FormElement_Field_List> $return_values
+     * @var array<int, Tracker_FormElement_Field_List>
      */
-    private function __construct(private bool $return_null, private bool $always_return, private array $return_values)
+    private array $fields = [];
+
+    private function __construct()
     {
     }
 
-    public static function withField(\Tracker_FormElement_Field_List $field): self
+    public static function build(): self
     {
-        return new self(false, true, [$field]);
+        return new self();
     }
 
-    /**
-     * @no-named-arguments
-     */
-    public static function withSuccessiveFields(
-        \Tracker_FormElement_Field_List $field,
-        \Tracker_FormElement_Field_List ...$other_fields,
-    ): self {
-        return new self(false, false, [$field, ...$other_fields]);
+    public function withField(Tracker_FormElement_Field_List $field): self
+    {
+        $this->fields[$field->getTrackerId()] = $field;
+        return $this;
     }
 
-    public static function withNoField(): self
+    public function fromTracker(Tracker $tracker): ?Tracker_FormElement_Field_List
     {
-        return new self(true, false, []);
-    }
-
-    public function fromTracker(\Tuleap\Tracker\Tracker $tracker): ?\Tracker_FormElement_Field_List
-    {
-        $this->call_count++;
-        if ($this->return_null) {
+        if (! isset($this->fields[$tracker->getId()])) {
             return null;
         }
-        if ($this->always_return) {
-            return $this->return_values[0];
-        }
-        if (count($this->return_values) > 0) {
-            return array_shift($this->return_values);
-        }
-        throw new \LogicException('No status field configured');
-    }
 
-    public function getCallCount(): int
-    {
-        return $this->call_count;
+        return $this->fields[$tracker->getId()];
     }
 }

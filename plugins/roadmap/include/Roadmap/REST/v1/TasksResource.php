@@ -79,6 +79,7 @@ final class TasksResource
 
         $form_element_factory       = \Tracker_FormElementFactory::instance();
         $semantic_timeframe_builder = SemanticTimeframeBuilder::build();
+        $semantic_status_retriever  = CachedSemanticStatusRetriever::instance();
 
         $progress_dao = new SemanticProgressDao();
         $logger       = \BackendLogger::getDefaultLogger();
@@ -99,10 +100,11 @@ final class TasksResource
                         )
                     )
                 ),
+                $semantic_status_retriever,
                 $logger
             ),
             new TaskOutOfDateDetector(
-                CachedSemanticStatusRetriever::instance(),
+                $semantic_status_retriever,
                 $semantic_timeframe_builder,
                 $logger,
             ),

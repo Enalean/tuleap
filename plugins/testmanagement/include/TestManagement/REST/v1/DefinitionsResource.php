@@ -42,6 +42,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\REST\Artifact\ArtifactRepresentationBuilder;
 use Tuleap\Tracker\REST\Artifact\Changeset\ChangesetRepresentationBuilder;
 use Tuleap\Tracker\REST\Artifact\Changeset\Comment\CommentRepresentationBuilder;
+use Tuleap\Tracker\Semantic\Status\CachedSemanticStatusRetriever;
 use Tuleap\User\Avatar\AvatarHashDao;
 use Tuleap\User\Avatar\ComputeAvatarHash;
 use Tuleap\User\Avatar\UserAvatarUrlProvider;
@@ -102,6 +103,7 @@ class DefinitionsResource
             ),
             \Tuleap\Tracker\Artifact\PriorityManager::build(),
             new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
+            CachedSemanticStatusRetriever::instance(),
         );
     }
 

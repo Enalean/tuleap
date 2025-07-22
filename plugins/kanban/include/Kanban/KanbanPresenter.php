@@ -40,6 +40,7 @@ use Tuleap\Dashboard\User\UserDashboardRetriever;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\RealTimeMercure\MercureClient;
 use Tuleap\Tracker\Permission\SubmissionPermissionVerifier;
+use Tuleap\Tracker\Semantic\Status\CachedSemanticStatusRetriever;
 use Tuleap\Tracker\Semantic\Status\SemanticStatusFieldRetriever;
 use Tuleap\Tracker\Semantic\Status\SemanticStatusRetriever;
 use Tuleap\Tracker\Semantic\Status\StatusSemanticDAO;
@@ -97,6 +98,7 @@ final class KanbanPresenter
                 Tracker_FormElementFactory::instance(),
                 SubmissionPermissionVerifier::instance(),
                 CachedSemanticTitleFieldRetriever::instance(),
+                CachedSemanticStatusRetriever::instance(),
             )
         );
 

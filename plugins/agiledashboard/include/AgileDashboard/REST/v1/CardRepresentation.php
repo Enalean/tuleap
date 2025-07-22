@@ -21,7 +21,7 @@
 use Tuleap\Project\REST\ProjectReference;
 use Tuleap\REST\JsonCast;
 use Tuleap\Tracker\REST\Artifact\ArtifactReference;
-use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
+use Tuleap\Tracker\Semantic\Status\CachedSemanticStatusRetriever;
 
 /**
  * @psalm-immutable
@@ -160,9 +160,9 @@ class AgileDashboard_CardRepresentation // phpcs:ignore PSR1.Classes.ClassDeclar
         };
     }
 
-    private static function getCardStatus(Cardwall_CardInCellPresenter $card)
+    private static function getCardStatus(Cardwall_CardInCellPresenter $card): string
     {
-        $semantic = TrackerSemanticStatus::load($card->getArtifact()->getTracker());
+        $semantic = CachedSemanticStatusRetriever::instance()->fromTracker($card->getArtifact()->getTracker());
 
         return $semantic->getNormalizedStatusLabel($card->getArtifact());
     }

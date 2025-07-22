@@ -48,7 +48,7 @@ use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\CreateCommentOnlyChangesetStub;
 use Tuleap\Tracker\Test\Stub\CreateNewChangesetStub;
-use Tuleap\Tracker\Test\Stub\RetrieveSemanticStatusFieldStub;
+use Tuleap\Tracker\Test\Stub\RetrieveSemanticStatusFieldIterativeStub;
 use Tuleap\Tracker\Workflow\NoPossibleValueException;
 use UserManager;
 use UserNotExistException;
@@ -106,7 +106,7 @@ final class PostPushWebhookCloseArtifactHandlerTest extends TestCase
     private \Project $project;
     private CreateCommentOnlyChangesetStub $comment_creator;
     private CreateNewChangesetStub $changeset_creator;
-    private RetrieveSemanticStatusFieldStub $status_retriever;
+    private RetrieveSemanticStatusFieldIterativeStub $status_retriever;
 
     protected function setUp(): void
     {
@@ -130,7 +130,7 @@ final class PostPushWebhookCloseArtifactHandlerTest extends TestCase
         $field->method('getId')->willReturn(945);
         $field->method('getFieldData')->willReturn(self::DONE_BIND_VALUE_ID);
 
-        $this->status_retriever = RetrieveSemanticStatusFieldStub::withField($field);
+        $this->status_retriever = RetrieveSemanticStatusFieldIterativeStub::withField($field);
 
         $this->project       = ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build();
         $this->workflow_user = UserTestBuilder::anActiveUser()->withId(Tracker_Workflow_WorkflowUser::ID)->build();
@@ -316,7 +316,7 @@ final class PostPushWebhookCloseArtifactHandlerTest extends TestCase
         $this->mockGitlabProjectDefaultBranch();
         $this->mockArtifactIsOpen();
         $this->mockCommitterMatchingTuleapUser();
-        $this->status_retriever = RetrieveSemanticStatusFieldStub::withNoField();
+        $this->status_retriever = RetrieveSemanticStatusFieldIterativeStub::withNoField();
 
         $this->handleArtifactClosure();
 
@@ -343,7 +343,7 @@ final class PostPushWebhookCloseArtifactHandlerTest extends TestCase
         $this->mockGitlabProjectDefaultBranch();
         $this->mockArtifactIsOpen();
         $this->user_manager->method('getUserByEmail')->with(self::COMMITTER_EMAIL)->willReturn(null);
-        $this->status_retriever = RetrieveSemanticStatusFieldStub::withNoField();
+        $this->status_retriever = RetrieveSemanticStatusFieldIterativeStub::withNoField();
 
         $this->handleArtifactClosure();
 

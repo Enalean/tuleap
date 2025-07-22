@@ -74,6 +74,7 @@ use Tuleap\Tracker\REST\PermissionsExporter;
 use Tuleap\Tracker\REST\Tracker\PermissionsRepresentationBuilder;
 use Tuleap\Tracker\REST\WorkflowRestBuilder;
 use Tuleap\Tracker\Semantic\Description\CachedSemanticDescriptionFieldRetriever;
+use Tuleap\Tracker\Semantic\Status\CachedSemanticStatusRetriever;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Title\CachedSemanticTitleFieldRetriever;
 use Tuleap\Tracker\Tracker;
@@ -239,6 +240,7 @@ class ActionsRunner
                             return new \Tuleap\Tracker\Semantic\TrackerSemanticManager(
                                 $description_field_retriever,
                                 CachedSemanticTitleFieldRetriever::instance(),
+                                CachedSemanticStatusRetriever::instance(),
                                 $tracker,
                             );
                         },

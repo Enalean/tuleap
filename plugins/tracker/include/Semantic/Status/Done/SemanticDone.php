@@ -37,6 +37,7 @@ use Tracker_FormElement_Field_List_Value;
 use TrackerManager;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\JavascriptAsset;
+use Tuleap\Tracker\Semantic\Status\CachedSemanticStatusRetriever;
 use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
 use Tuleap\Tracker\Semantic\TrackerSemantic;
 use Tuleap\Tracker\Semantic\TrackerSemanticManager;
@@ -498,7 +499,7 @@ class SemanticDone extends TrackerSemantic
 
     private static function forceLoad(Tracker $tracker): SemanticDone
     {
-        $semantic_status = TrackerSemanticStatus::load($tracker);
+        $semantic_status = CachedSemanticStatusRetriever::instance()->fromTracker($tracker);
         $dao             = new SemanticDoneDao();
         $value_checker   = new SemanticDoneValueChecker();
 

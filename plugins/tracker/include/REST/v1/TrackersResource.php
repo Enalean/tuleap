@@ -84,6 +84,7 @@ use Tuleap\Tracker\REST\v1\Report\MatchingIdsOrderer;
 use Tuleap\Tracker\REST\v1\Workflow\ModeUpdater;
 use Tuleap\Tracker\REST\WorkflowRestBuilder;
 use Tuleap\Tracker\Semantic\Description\CachedSemanticDescriptionFieldRetriever;
+use Tuleap\Tracker\Semantic\Status\CachedSemanticStatusRetriever;
 use Tuleap\Tracker\Semantic\Title\CachedSemanticTitleFieldRetriever;
 use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
@@ -420,7 +421,7 @@ class TrackersResource extends AuthenticatedResource
      */
     private function getListOfArtifactRepresentation(PFUser $user, $artifacts, $with_all_field_values)
     {
-        $builder = new ArtifactRepresentationBuilder(
+        $builder                   = new ArtifactRepresentationBuilder(
             $this->formelement_factory,
             $this->tracker_artifact_factory,
             new TypeDao(),
@@ -435,11 +436,13 @@ class TrackersResource extends AuthenticatedResource
             ),
             new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash()),
         );
+        $semantic_status_retriever = CachedSemanticStatusRetriever::instance();
 
         $build_artifact_representation = function (?Artifact $artifact) use (
             $builder,
             $user,
-            $with_all_field_values
+            $with_all_field_values,
+            $semantic_status_retriever,
         ) {
             if (! $artifact || ! $artifact->userCanView($user)) {
                 return;
@@ -448,9 +451,18 @@ class TrackersResource extends AuthenticatedResource
             if ($with_all_field_values) {
                 $tracker_representation = MinimalTrackerRepresentation::build($artifact->getTracker());
 
-                return $builder->getArtifactRepresentationWithFieldValues($user, $artifact, $tracker_representation, StatusValueRepresentation::buildFromArtifact($artifact, $user));
+                return $builder->getArtifactRepresentationWithFieldValues(
+                    $user,
+                    $artifact,
+                    $tracker_representation,
+                    StatusValueRepresentation::buildFromArtifact($artifact, $user, $semantic_status_retriever),
+                );
             } else {
-                return $builder->getArtifactRepresentation($user, $artifact, StatusValueRepresentation::buildFromArtifact($artifact, $user));
+                return $builder->getArtifactRepresentation(
+                    $user,
+                    $artifact,
+                    StatusValueRepresentation::buildFromArtifact($artifact, $user, $semantic_status_retriever),
+                );
             }
         };
 
@@ -520,7 +532,7 @@ class TrackersResource extends AuthenticatedResource
         $user                  = $this->user_manager->getCurrentUser();
         $status_representation = null;
         if ($artifact->getStatus()) {
-            $status_representation = StatusValueRepresentation::buildFromArtifact($artifact, $user);
+            $status_representation = StatusValueRepresentation::buildFromArtifact($artifact, $user, CachedSemanticStatusRetriever::instance());
         }
         return ParentArtifactRepresentation::build($artifact, $status_representation);
     }
@@ -870,6 +882,7 @@ class TrackersResource extends AuthenticatedResource
             static fn(Tracker $tracker) => new \Tuleap\Tracker\Semantic\TrackerSemanticManager(
                 CachedSemanticDescriptionFieldRetriever::instance(),
                 CachedSemanticTitleFieldRetriever::instance(),
+                CachedSemanticStatusRetriever::instance(),
                 $tracker,
             ),
             new ParentInHierarchyRetriever(new HierarchyDAO(), $this->tracker_factory),

@@ -24,6 +24,7 @@ namespace Tuleap\Roadmap\REST\v1;
 
 use Psr\Log\LoggerInterface;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgressBuilder;
+use Tuleap\Tracker\Semantic\Status\RetrieveSemanticStatus;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Tracker;
 
@@ -32,34 +33,15 @@ final class TaskRepresentationBuilderForTrackerCache implements ICacheTaskRepres
     /**
      * @var array<int, IBuildATaskRepresentation|null>
      */
-    private $builders = [];
-    /**
-     * @var SemanticProgressBuilder
-     */
-    private $progress_builder;
-    /**
-     * @var SemanticTimeframeBuilder
-     */
-    private $semantic_timeframe_builder;
-    /**
-     * @var IRetrieveDependencies
-     */
-    private $dependencies_retriever;
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
+    private array $builders = [];
 
     public function __construct(
-        SemanticTimeframeBuilder $semantic_timeframe_builder,
-        IRetrieveDependencies $dependencies_retriever,
-        SemanticProgressBuilder $progress_builder,
-        LoggerInterface $logger,
+        private readonly SemanticTimeframeBuilder $semantic_timeframe_builder,
+        private readonly IRetrieveDependencies $dependencies_retriever,
+        private readonly SemanticProgressBuilder $progress_builder,
+        private readonly RetrieveSemanticStatus $semantic_status_retriever,
+        private readonly LoggerInterface $logger,
     ) {
-        $this->semantic_timeframe_builder = $semantic_timeframe_builder;
-        $this->progress_builder           = $progress_builder;
-        $this->dependencies_retriever     = $dependencies_retriever;
-        $this->logger                     = $logger;
     }
 
     public function getRepresentationBuilderForTracker(Tracker $tracker, \PFUser $user): ?IBuildATaskRepresentation
@@ -102,6 +84,7 @@ final class TaskRepresentationBuilderForTrackerCache implements ICacheTaskRepres
             $semantic_timeframe->getTimeframeCalculator(),
             $this->dependencies_retriever,
             $this->progress_builder,
+            $this->semantic_status_retriever,
             $this->logger
         );
     }

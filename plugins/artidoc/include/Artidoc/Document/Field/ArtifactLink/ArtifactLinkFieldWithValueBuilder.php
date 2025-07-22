@@ -38,7 +38,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\RetrieveTypeFromShortname
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeIsChildPresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
 use Tuleap\Tracker\REST\Artifact\ArtifactReferenceWithType;
-use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
+use Tuleap\Tracker\Semantic\Status\RetrieveSemanticStatus;
 use Tuleap\Tracker\Semantic\Title\RetrieveSemanticTitleField;
 use Tuleap\Tracker\Tracker;
 
@@ -47,6 +47,7 @@ final readonly class ArtifactLinkFieldWithValueBuilder implements BuildArtifactL
     public function __construct(
         private PFUser $current_user,
         private RetrieveSemanticTitleField $title_field_retriever,
+        private RetrieveSemanticStatus $semantic_status_retriever,
         private RetrieveTypeFromShortname $from_shortname_type_retriever,
     ) {
     }
@@ -129,7 +130,7 @@ final readonly class ArtifactLinkFieldWithValueBuilder implements BuildArtifactL
      */
     private function getArtifactStatus(Tracker $tracker, Artifact $artifact): Option
     {
-        $semantic_status = TrackerSemanticStatus::load($tracker);
+        $semantic_status = $this->semantic_status_retriever->fromTracker($tracker);
         $status_field    = $semantic_status->getField();
         if ($status_field === null) {
             return Option::nothing(ArtifactLinkStatusValue::class);

@@ -45,6 +45,7 @@ use Tuleap\Request\NotFoundException;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\Stubs\User\Avatar\ProvideUserAvatarUrlStub;
+use Tuleap\Tracker\Test\Stub\Semantic\Status\RetrieveSemanticStatusStub;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ReleaseNotesControllerTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -126,6 +127,7 @@ final class ReleaseNotesControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->renderer,
             $this->script_assets,
             ProvideUserAvatarUrlStub::build(),
+            RetrieveSemanticStatusStub::build(),
         );
         $GLOBALS['Language']->method('getText')->willReturn('');
     }

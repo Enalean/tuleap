@@ -26,6 +26,7 @@ use Cardwall_OnTop_ConfigFactory;
 use Planning_Milestone;
 use Tracker_FormElementFactory;
 use TrackerFactory;
+use Tuleap\Tracker\Semantic\Status\CachedSemanticStatusFieldRetriever;
 
 class TrackerCollectionRetriever
 {
@@ -42,7 +43,8 @@ class TrackerCollectionRetriever
         return new self(
             new Cardwall_OnTop_ConfigFactory(
                 TrackerFactory::instance(),
-                Tracker_FormElementFactory::instance()
+                Tracker_FormElementFactory::instance(),
+                CachedSemanticStatusFieldRetriever::instance(),
             )
         );
     }

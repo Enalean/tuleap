@@ -29,14 +29,16 @@ use Tracker_FormElementFactory;
 use Tuleap\AgileDashboard\FormElement\BurnupDataDAO;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\ArtifactLink\ArtifactLinkChangesetValue;
+use Tuleap\Tracker\Semantic\Status\RetrieveSemanticStatus;
 
 class CountElementsCalculator
 {
     public function __construct(
-        private Tracker_Artifact_ChangesetFactory $changeset_factory,
-        private Tracker_ArtifactFactory $artifact_factory,
-        private Tracker_FormElementFactory $form_element_factory,
-        private BurnupDataDAO $burnup_dao,
+        private readonly Tracker_Artifact_ChangesetFactory $changeset_factory,
+        private readonly Tracker_ArtifactFactory $artifact_factory,
+        private readonly Tracker_FormElementFactory $form_element_factory,
+        private readonly BurnupDataDAO $burnup_dao,
+        private readonly RetrieveSemanticStatus $semantic_status_retriever,
     ) {
     }
 
@@ -115,7 +117,7 @@ class CountElementsCalculator
             return new ElementsCount($total_subelements, $closed_subelements, $already_seen_artifacts);
         }
 
-        if (! $artifact->isOpenAtGivenChangeset($changeset)) {
+        if (! $this->semantic_status_retriever->fromTracker($artifact->getTracker())->isOpenAtGivenChangeset($changeset)) {
             $closed_subelements += 1;
         }
 

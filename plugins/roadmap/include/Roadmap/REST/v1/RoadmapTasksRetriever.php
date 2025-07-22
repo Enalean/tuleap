@@ -32,26 +32,28 @@ use Tuleap\Roadmap\RetrieveReportToFilterArtifacts;
 use Tuleap\Roadmap\RoadmapWidgetDao;
 use Tuleap\Tracker\RetrieveTracker;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgressBuilder;
+use Tuleap\Tracker\Semantic\Status\RetrieveSemanticStatus;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\User\ProvideCurrentUser;
 use URLVerification;
 
-final class RoadmapTasksRetriever
+final readonly class RoadmapTasksRetriever
 {
     public function __construct(
-        private readonly RoadmapWidgetDao $dao,
-        private readonly ProjectByIDFactory $project_manager,
-        private readonly ProvideCurrentUser $user_manager,
-        private readonly URLVerification $url_verification,
-        private readonly RetrieveTracker $tracker_factory,
-        private readonly SemanticTimeframeBuilder $semantic_timeframe_builder,
-        private readonly \Tracker_ArtifactFactory $artifact_factory,
-        private readonly IRetrieveDependencies $dependencies_retriever,
-        private readonly RoadmapTasksOutOfDateFilter $tasks_filter,
-        private readonly SemanticProgressBuilder $progress_builder,
-        private readonly LoggerInterface $logger,
-        private readonly RetrieveReportToFilterArtifacts $report_to_filter_retriever,
+        private RoadmapWidgetDao $dao,
+        private ProjectByIDFactory $project_manager,
+        private ProvideCurrentUser $user_manager,
+        private URLVerification $url_verification,
+        private RetrieveTracker $tracker_factory,
+        private SemanticTimeframeBuilder $semantic_timeframe_builder,
+        private \Tracker_ArtifactFactory $artifact_factory,
+        private IRetrieveDependencies $dependencies_retriever,
+        private RoadmapTasksOutOfDateFilter $tasks_filter,
+        private SemanticProgressBuilder $progress_builder,
+        private LoggerInterface $logger,
+        private RetrieveReportToFilterArtifacts $report_to_filter_retriever,
+        private RetrieveSemanticStatus $semantic_status_retriever,
     ) {
     }
 
@@ -179,6 +181,7 @@ final class RoadmapTasksRetriever
                 $semantic_timeframe->getTimeframeCalculator(),
                 $this->dependencies_retriever,
                 $this->progress_builder,
+                $this->semantic_status_retriever,
                 $this->logger
             );
         }

@@ -114,6 +114,7 @@ use Tuleap\Tracker\REST\Artifact\ChangesetValue\FieldsDataFromValuesByFieldBuild
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 use Tuleap\Tracker\REST\TrackerReference;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
+use Tuleap\Tracker\Semantic\Status\CachedSemanticStatusRetriever;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsRetriever;
@@ -237,6 +238,7 @@ class ExecutionsResource
                 ),
                 \Tuleap\Tracker\Artifact\PriorityManager::build(),
                 $provide_user_avatar_url,
+                CachedSemanticStatusRetriever::instance(),
             ),
             $provide_user_avatar_url,
         );

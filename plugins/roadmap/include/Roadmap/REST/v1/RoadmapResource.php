@@ -83,6 +83,7 @@ final class RoadmapResource
         $form_element_factory       = \Tracker_FormElementFactory::instance();
         $tracker_factory            = \TrackerFactory::instance();
         $semantic_timeframe_builder = SemanticTimeframeBuilder::build();
+        $semantic_status_retriever  = CachedSemanticStatusRetriever::instance();
 
         $progress_dao = new SemanticProgressDao();
         $retriever    = new RoadmapTasksRetriever(
@@ -96,7 +97,7 @@ final class RoadmapResource
             new DependenciesRetriever(new NatureForRoadmapDao()),
             new RoadmapTasksOutOfDateFilter(
                 new TaskOutOfDateDetector(
-                    CachedSemanticStatusRetriever::instance(),
+                    $semantic_status_retriever,
                     $semantic_timeframe_builder,
                     $this->getLogger(),
                 ),
@@ -114,6 +115,7 @@ final class RoadmapResource
             ),
             \BackendLogger::getDefaultLogger(),
             new ReportToFilterArtifactsRetriever(new FilterReportDao(), \Tracker_ReportFactory::instance()),
+            $semantic_status_retriever,
         );
 
         $tasks = $retriever->getTasks($id, $limit, $offset);

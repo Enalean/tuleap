@@ -26,7 +26,7 @@ use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
-use Tuleap\Tracker\Test\Stub\RetrieveSemanticStatusFieldStub;
+use Tuleap\Tracker\Test\Stub\RetrieveSemanticStatusFieldIterativeStub;
 use Tuleap\Tracker\Test\Stub\Semantic\Status\SearchStatusOpenValuesStub;
 
 #[DisableReturnValueGenerationForTestDoubles]
@@ -35,7 +35,7 @@ final class SemanticStatusRetrieverTest extends TestCase
     public function testItReturnsEmptySemanticWhenNoField(): void
     {
         $retriever = new SemanticStatusRetriever(
-            RetrieveSemanticStatusFieldStub::withNoField(),
+            RetrieveSemanticStatusFieldIterativeStub::withNoField(),
             SearchStatusOpenValuesStub::withCallback(static fn() => self::fail('Should not be called')),
         );
 
@@ -53,7 +53,7 @@ final class SemanticStatusRetrieverTest extends TestCase
         $open_values = [12, 15, 16];
 
         $retriever = new SemanticStatusRetriever(
-            RetrieveSemanticStatusFieldStub::withField($field),
+            RetrieveSemanticStatusFieldIterativeStub::withField($field),
             SearchStatusOpenValuesStub::withCallback(static function (int $field_id) use ($field, $open_values) {
                 self::assertSame($field->getId(), $field_id);
                 return $open_values;

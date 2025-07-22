@@ -58,6 +58,7 @@ use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
 use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFullRepresentation;
+use Tuleap\Tracker\Semantic\Status\CachedSemanticStatusRetriever;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneDao;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneFactory;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneValueChecker;
@@ -426,7 +427,8 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
                 Tracker_Artifact_ChangesetFactoryBuilder::build(),
                 Tracker_ArtifactFactory::instance(),
                 Tracker_FormElementFactory::instance(),
-                new BurnupDataDAO()
+                new BurnupDataDAO(),
+                CachedSemanticStatusRetriever::instance(),
             ),
             $this->getCountElementsModeChecker(),
             new PlanningDao(),
@@ -445,7 +447,11 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
             new BurnupEffortCalculatorForArtifact(
                 $changeset_factory,
                 AgileDashboard_Semantic_InitialEffortFactory::instance(),
-                new SemanticDoneFactory(new SemanticDoneDao(), new SemanticDoneValueChecker())
+                new SemanticDoneFactory(
+                    new SemanticDoneDao(),
+                    new SemanticDoneValueChecker(),
+                    CachedSemanticStatusRetriever::instance(),
+                )
             )
         );
     }

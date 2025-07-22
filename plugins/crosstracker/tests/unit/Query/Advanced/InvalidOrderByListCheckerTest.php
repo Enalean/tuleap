@@ -28,26 +28,20 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 use Tuleap\Tracker\Semantic\Contributor\ContributorFieldRetriever;
 use Tuleap\Tracker\Semantic\Contributor\TrackerSemanticContributorFactory;
-use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
 use Tuleap\Tracker\Test\Builders\Fields\CheckboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\OpenListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\RadioButtonFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
-use Tuleap\Tracker\Test\Stub\RetrieveSemanticStatusFieldStub;
+use Tuleap\Tracker\Test\Stub\RetrieveSemanticStatusFieldIterativeStub;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class InvalidOrderByListCheckerTest extends TestCase
 {
-    protected function tearDown(): void
-    {
-        TrackerSemanticStatus::clearInstances();
-    }
-
     public function testItThrowIfUsedWithNotHandledMetadata(): void
     {
         $checker = new InvalidOrderByListChecker(
-            RetrieveSemanticStatusFieldStub::withNoField(),
+            RetrieveSemanticStatusFieldIterativeStub::withNoField(),
             new ContributorFieldRetriever(TrackerSemanticContributorFactory::instance()),
         );
         self::expectException(LogicException::class);
@@ -67,7 +61,7 @@ final class InvalidOrderByListCheckerTest extends TestCase
     public function testItAllowsSingleValueListFields(Tracker_FormElement_Field_List $list, bool $is_allowed): void
     {
         $checker = new InvalidOrderByListChecker(
-            RetrieveSemanticStatusFieldStub::withField($list),
+            RetrieveSemanticStatusFieldIterativeStub::withField($list),
             new ContributorFieldRetriever(TrackerSemanticContributorFactory::instance()),
         );
         $tracker = TrackerTestBuilder::aTracker()->withId(45)->build();

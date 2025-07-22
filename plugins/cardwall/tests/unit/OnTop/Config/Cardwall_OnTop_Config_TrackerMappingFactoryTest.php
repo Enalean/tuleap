@@ -36,9 +36,9 @@ use Tracker_FormElementFactory;
 use TrackerFactory;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
 use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Test\Stub\RetrieveSemanticStatusFieldStub;
 use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -61,18 +61,13 @@ final class Cardwall_OnTop_Config_TrackerMappingFactoryTest extends TestCase // 
         $this->field_122    = ListFieldBuilder::aListField(122)->build();
         $this->field_123    = ListFieldBuilder::aListField(123)->build();
         $this->field_124    = ListFieldBuilder::aListField(124)->build();
-        $this->status_field = ListFieldBuilder::aListField(125)->build();
+        $this->tracker_10   = TrackerTestBuilder::aTracker()->withId(10)->build();
+        $this->status_field = ListFieldBuilder::aListField(125)->inTracker($this->tracker_10)->build();
 
         $group_id         = 234;
         $project          = ProjectTestBuilder::aProject()->withId($group_id)->build();
         $this->tracker    = TrackerTestBuilder::aTracker()->withId(3)->withProject($project)->build();
-        $this->tracker_10 = TrackerTestBuilder::aTracker()->withId(10)->build();
-        TrackerSemanticStatus::setInstance(
-            new TrackerSemanticStatus($this->tracker_10, $this->status_field),
-            $this->tracker_10,
-        );
         $this->tracker_20 = TrackerTestBuilder::aTracker()->withId(20)->build();
-        TrackerSemanticStatus::setInstance(new TrackerSemanticStatus($this->tracker_20, null), $this->tracker_20);
         $project_trackers = [
             3  => $this->tracker,
             10 => $this->tracker_10,
@@ -108,7 +103,13 @@ final class Cardwall_OnTop_Config_TrackerMappingFactoryTest extends TestCase // 
             new Cardwall_Column(3, 'Done', 'white'),
         ]);
 
-        $this->factory = new Cardwall_OnTop_Config_TrackerMappingFactory($tracker_factory, $element_factory, $this->dao, $this->value_mapping_factory);
+        $this->factory = new Cardwall_OnTop_Config_TrackerMappingFactory(
+            $tracker_factory,
+            $element_factory,
+            $this->dao,
+            $this->value_mapping_factory,
+            RetrieveSemanticStatusFieldStub::build()->withField($this->status_field),
+        );
     }
 
     public function testItRemovesTheCurrentTrackerFromTheProjectTrackers(): void

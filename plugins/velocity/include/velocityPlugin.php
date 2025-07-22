@@ -23,11 +23,11 @@ use Tuleap\AgileDashboard\Planning\Admin\AdditionalPlanningConfigurationWarnings
 use Tuleap\AgileDashboard\Planning\Admin\PlanningWarningPossibleMisconfigurationPresenter;
 use Tuleap\JiraImport\JiraAgile\ScrumTrackerStructureEvent;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Tracker\Semantic\Status\CachedSemanticStatusRetriever;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDone;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneDao;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneFactory;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneValueChecker;
-use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
 use Tuleap\Tracker\Semantic\Timeframe\Events\DoesAPluginRenderAChartBasedOnSemanticTimeframeForTrackerEvent;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\TrackerSemanticCollection;
@@ -164,7 +164,7 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
     public function beforeEvent(BeforeEvent $before_event): void
     {
         $tracker         = $before_event->getArtifact()->getTracker();
-        $semantic_status = TrackerSemanticStatus::load($tracker);
+        $semantic_status = CachedSemanticStatusRetriever::instance()->fromTracker($tracker);
         $field           = $semantic_status->getField();
         if (! $field || $field->isMultiple()) {
             return;
@@ -177,7 +177,6 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
 
         $tracker = $before_event->getArtifact()->getTracker();
 
-        $semantic_status   = TrackerSemanticStatus::load($tracker);
         $semantic_done     = SemanticDone::load($tracker);
         $semantic_velocity = SemanticVelocity::load($tracker);
 
@@ -198,7 +197,11 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
         $calculator = new \Tuleap\Velocity\VelocityCalculator(
             Tracker_ArtifactFactory::instance(),
             AgileDashboard_Semantic_InitialEffortFactory::instance(),
-            new SemanticDoneFactory(new SemanticDoneDao(), new SemanticDoneValueChecker()),
+            new SemanticDoneFactory(
+                new SemanticDoneDao(),
+                new SemanticDoneValueChecker(),
+                CachedSemanticStatusRetriever::instance(),
+            ),
             new VelocityDao()
         );
 
@@ -235,7 +238,8 @@ class velocityPlugin extends Plugin // @codingStandardsIgnoreLine
             new SemanticVelocityFactory(),
             new SemanticDoneFactory(
                 new SemanticDoneDao(),
-                new SemanticDoneValueChecker()
+                new SemanticDoneValueChecker(),
+                CachedSemanticStatusRetriever::instance(),
             ),
             SemanticTimeframeBuilder::build(),
             Planning_MilestoneFactory::build()

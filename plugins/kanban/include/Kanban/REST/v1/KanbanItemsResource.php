@@ -58,7 +58,7 @@ use Tuleap\Tracker\REST\Artifact\ChangesetValue\FieldsDataBuilder;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\FieldsDataFromValuesByFieldBuilder;
 use Tuleap\Tracker\REST\TrackerReference;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
-use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
+use Tuleap\Tracker\Semantic\Status\CachedSemanticStatusRetriever;
 use Tuleap\Tracker\Tracker;
 use UserManager;
 use WrapperLogger;
@@ -321,7 +321,7 @@ final class KanbanItemsResource extends AuthenticatedResource
 
         $value = Tracker_FormElement_Field_List::NONE_VALUE;
         if (! empty($item->column_id)) {
-            $semantic = TrackerSemanticStatus::load($tracker);
+            $semantic = CachedSemanticStatusRetriever::instance()->fromTracker($tracker);
 
             if (! $semantic->getFieldId()) {
                 throw new RestException(403);

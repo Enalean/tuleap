@@ -39,6 +39,7 @@ use Tuleap\REST\Header;
 use Tuleap\REST\ProjectAuthorization;
 use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
+use Tuleap\Tracker\Semantic\Status\CachedSemanticStatusFieldRetriever;
 use URLVerification;
 use UserManager;
 
@@ -62,7 +63,8 @@ class CardsResource
         $this->formelement_factory = Tracker_FormElementFactory::instance();
         $this->config_factory      = new Cardwall_OnTop_ConfigFactory(
             TrackerFactory::instance(),
-            $this->formelement_factory
+            $this->formelement_factory,
+            CachedSemanticStatusFieldRetriever::instance(),
         );
 
         $bind_decorator_retriever  = new BindDecoratorRetriever();

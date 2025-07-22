@@ -123,6 +123,7 @@ use Tuleap\Tracker\REST\Helpers\OrderValidator;
 use Tuleap\Tracker\REST\v1\Report\MatchingIdsOrderer;
 use Tuleap\Tracker\REST\v1\ReportArtifactFactory;
 use Tuleap\Tracker\Rule\FirstValidValueAccordingToDependenciesRetriever;
+use Tuleap\Tracker\Semantic\Status\CachedSemanticStatusRetriever;
 use Tuleap\Tracker\Semantic\Status\SemanticStatusClosedValueNotFoundException;
 use Tuleap\Tracker\Semantic\Status\SemanticStatusFieldRetriever;
 use Tuleap\Tracker\Semantic\Status\SemanticStatusNotDefinedException;
@@ -215,6 +216,7 @@ final class KanbanResource extends AuthenticatedResource
             $this->form_element_factory,
             SubmissionPermissionVerifier::instance(),
             CachedSemanticTitleFieldRetriever::instance(),
+            CachedSemanticStatusRetriever::instance(),
         );
 
         $this->kanban_representation_builder = new KanbanRepresentationBuilder(

@@ -50,6 +50,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Semantic\ExternalSemanticsExport
 use Tuleap\Tracker\Events\AllowedFieldTypeChangesRetriever;
 use Tuleap\Tracker\Report\Renderer\ImportRendererFromXmlEvent;
 use Tuleap\Tracker\Semantic\CollectionOfFieldsDuplicator;
+use Tuleap\Tracker\Semantic\Status\CachedSemanticStatusFieldRetriever;
 use Tuleap\Tracker\Semantic\TrackerSemanticCollection;
 use Tuleap\Tracker\Semantic\TrackerSemanticFactory;
 use Tuleap\Tracker\Semantic\TrackerSemanticManager;
@@ -71,12 +72,14 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
         bindTextDomain('tuleap-cardwall', CARDWALL_BASE_DIR . '/../site-content');
     }
 
-    public function getConfigFactory()
+    public function getConfigFactory(): Cardwall_OnTop_ConfigFactory
     {
         if (! $this->config_factory) {
-            $tracker_factory      = TrackerFactory::instance();
-            $element_factory      = Tracker_FormElementFactory::instance();
-            $this->config_factory = new Cardwall_OnTop_ConfigFactory($tracker_factory, $element_factory);
+            $this->config_factory = new Cardwall_OnTop_ConfigFactory(
+                TrackerFactory::instance(),
+                Tracker_FormElementFactory::instance(),
+                CachedSemanticStatusFieldRetriever::instance(),
+            );
         }
         return $this->config_factory;
     }
@@ -147,12 +150,16 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
         return AgileDashboard_XMLExporter::build();
     }
 
-    private function getCardwallXmlExporter($group_id)
+    private function getCardwallXmlExporter($group_id): CardwallConfigXmlExport
     {
         return new CardwallConfigXmlExport(
             ProjectManager::instance()->getProject($group_id),
             TrackerFactory::instance(),
-            new Cardwall_OnTop_ConfigFactory(TrackerFactory::instance(), Tracker_FormElementFactory::instance()),
+            new Cardwall_OnTop_ConfigFactory(
+                TrackerFactory::instance(),
+                Tracker_FormElementFactory::instance(),
+                CachedSemanticStatusFieldRetriever::instance(),
+            ),
             new XML_RNGValidator()
         );
     }

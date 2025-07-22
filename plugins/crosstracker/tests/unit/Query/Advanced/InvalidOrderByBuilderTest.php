@@ -60,13 +60,12 @@ use Tuleap\Tracker\Report\Query\Advanced\UgroupLabelConverter;
 use Tuleap\Tracker\Semantic\Contributor\ContributorFieldRetriever;
 use Tuleap\Tracker\Semantic\Contributor\TrackerSemanticContributorFactory;
 use Tuleap\Tracker\Semantic\Status\RetrieveSemanticStatusField;
-use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\Permission\RetrieveUserPermissionOnFieldsStub;
 use Tuleap\Tracker\Test\Stub\RetrieveFieldTypeStub;
-use Tuleap\Tracker\Test\Stub\RetrieveSemanticStatusFieldStub;
+use Tuleap\Tracker\Test\Stub\RetrieveSemanticStatusFieldIterativeStub;
 use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
 use Tuleap\Tracker\Tracker;
 use UserManager;
@@ -88,12 +87,7 @@ final class InvalidOrderByBuilderTest extends TestCase
     {
         $this->metadata_checker       = MetadataCheckerStub::withValidMetadata();
         $this->used_field_retriever   = RetrieveUsedFieldsStub::withNoFields();
-        $this->status_field_retriever = RetrieveSemanticStatusFieldStub::withNoField();
-    }
-
-    protected function tearDown(): void
-    {
-        TrackerSemanticStatus::clearInstances();
+        $this->status_field_retriever = RetrieveSemanticStatusFieldIterativeStub::withNoField();
     }
 
     private function checkOrderBy(OrderBy $order_by): ?InvalidOrderBy
@@ -184,7 +178,7 @@ final class InvalidOrderByBuilderTest extends TestCase
     public function testItReturnsErrorIfSemanticListWithMultipleValues(): void
     {
         $tracker                      = TrackerTestBuilder::aTracker()->build();
-        $this->status_field_retriever = RetrieveSemanticStatusFieldStub::withField(ListFieldBuilder::aListField(102)->withMultipleValues()->build());
+        $this->status_field_retriever = RetrieveSemanticStatusFieldIterativeStub::withField(ListFieldBuilder::aListField(102)->withMultipleValues()->build());
         $this->trackers               = [$tracker];
         $result                       = $this->checkOrderBy(new OrderBy(new Metadata('status'), OrderByDirection::ASCENDING));
         self::assertNotNull($result);
