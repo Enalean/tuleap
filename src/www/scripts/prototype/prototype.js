@@ -6,6 +6,14 @@
  *
  *--------------------------------------------------------------------------*/
 
+function evalScriptsElement(element) {
+    element.querySelectorAll("script").forEach(function (existing_script_element) {
+        const new_script_element = document.createElement("script");
+        new_script_element.text = existing_script_element.text;
+        existing_script_element.parentNode.replaceChild(new_script_element, existing_script_element);
+    })
+}
+
 // Function isEventSupported added on 03/15/2011 by R-No (http://blog.r-no.fr/?p=579)
 // Detect "touch" events, and link them with Scriptaculous Drag & Drop features
 // Source of the isEventSupported function : http://kangax.github.com/iseventsupported/
@@ -644,28 +652,12 @@ Object.extend(String.prototype, (function() {
       this.slice(0, length - truncation.length) + truncation : String(this);
   }
 
-  function strip() {
-    return this.replace(/^\s+/, '').replace(/\s+$/, '');
-  }
-
   function stripTags() {
     return this.replace(/<\w+(\s+("[^"]*"|'[^']*'|[^>])+)?(\/)?>|<\/\w+>/gi, '');
   }
 
   function stripScripts() {
     return this.replace(new RegExp(Prototype.ScriptFragment, 'img'), '');
-  }
-
-  function extractScripts() {
-    var matchAll = new RegExp(Prototype.ScriptFragment, 'img'),
-        matchOne = new RegExp(Prototype.ScriptFragment, 'im');
-    return (this.match(matchAll) || []).map(function(scriptTag) {
-      return (scriptTag.match(matchOne) || ['', ''])[1];
-    });
-  }
-
-  function evalScripts() {
-    return this.extractScripts().map(function(script) { return eval(script); });
   }
 
   function escapeHTML() {
@@ -761,20 +753,6 @@ Object.extend(String.prototype, (function() {
     return this.indexOf(pattern) > -1;
   }
 
-  function startsWith(pattern, position) {
-    position = Object.isNumber(position) ? position : 0;
-    return this.lastIndexOf(pattern, position) === position;
-  }
-
-  function endsWith(pattern, position) {
-    pattern = String(pattern);
-    position = Object.isNumber(position) ? position : this.length;
-    if (position < 0) position = 0;
-    if (position > this.length) position = this.length;
-    var d = position - pattern.length;
-    return d >= 0 && this.indexOf(pattern, d) === d;
-  }
-
   function empty() {
     return this == '';
   }
@@ -792,11 +770,8 @@ Object.extend(String.prototype, (function() {
     sub:            sub,
     scan:           scan,
     truncate:       truncate,
-    strip:          String.prototype.trim || strip,
+    strip:          String.prototype.trim,
     stripTags:      stripTags,
-    stripScripts:   stripScripts,
-    extractScripts: extractScripts,
-    evalScripts:    evalScripts,
     escapeHTML:     escapeHTML,
     unescapeHTML:   unescapeHTML,
     toQueryParams:  toQueryParams,
@@ -812,8 +787,8 @@ Object.extend(String.prototype, (function() {
     isJSON:         isJSON,
     evalJSON:       parseJSON,
     include:        include,
-    startsWith:     String.prototype.startsWith || startsWith,
-    endsWith:       String.prototype.endsWith || endsWith,
+    startsWith:     String.prototype.startsWith,
+    endsWith:       String.prototype.endsWith,
     empty:          empty,
     blank:          blank,
     interpolate:    interpolate
@@ -2147,37 +2122,13 @@ Ajax.Updater = Class.create(Ajax.Request, {
     content = Object.toHTML(content);
     var tagName = element.tagName.toUpperCase();
 
-    if (tagName === 'SCRIPT' && SCRIPT_ELEMENT_REJECTS_TEXTNODE_APPENDING) {
+    if (tagName === 'SCRIPT') {
       element.text = content;
       return element;
     }
+    element.innerHTML = content;
 
-    if (ANY_INNERHTML_BUGGY) {
-      if (tagName in INSERTION_TRANSLATIONS.tags) {
-        while (element.firstChild)
-          element.removeChild(element.firstChild);
-
-        var nodes = getContentFromAnonymousElement(tagName, content.stripScripts());
-        for (var i = 0, node; node = nodes[i]; i++)
-          element.appendChild(node);
-
-      } else if (LINK_ELEMENT_INNERHTML_BUGGY && Object.isString(content) && content.indexOf('<link') > -1) {
-        while (element.firstChild)
-          element.removeChild(element.firstChild);
-
-        var nodes = getContentFromAnonymousElement(tagName,
-         content.stripScripts(), true);
-
-        for (var i = 0, node; node = nodes[i]; i++)
-          element.appendChild(node);
-      } else {
-        element.innerHTML = content.stripScripts();
-      }
-    } else {
-      element.innerHTML = content.stripScripts();
-    }
-
-    content.evalScripts.bind(content).defer();
+    evalScriptsElement(element);
     return element;
   }
 
@@ -2190,11 +2141,12 @@ Ajax.Updater = Class.create(Ajax.Request, {
       content = Object.toHTML(content);
       var range = element.ownerDocument.createRange();
       range.selectNode(element);
-      content.evalScripts.bind(content).defer();
-      content = range.createContextualFragment(content.stripScripts());
+
+      content = range.createContextualFragment(content);
     }
 
     element.parentNode.replaceChild(content, element);
+    evalScriptsElement(element);
     return element;
   }
 
@@ -2259,7 +2211,7 @@ Ajax.Updater = Class.create(Ajax.Request, {
       element.outerHTML = content.stripScripts();
     }
 
-    content.evalScripts.bind(content).defer();
+    evalScriptsElement(element);
     return element;
   }
 
@@ -2290,14 +2242,14 @@ Ajax.Updater = Class.create(Ajax.Request, {
     var tagName = ((position === 'before' || position === 'after') ?
      element.parentNode : element).tagName.toUpperCase();
 
-    var childNodes = getContentFromAnonymousElement(tagName, content.stripScripts());
+    var childNodes = getContentFromAnonymousElement(tagName, content);
 
     if (position === 'top' || position === 'after') childNodes.reverse();
 
     for (var i = 0, node; node = childNodes[i]; i++)
       method(element, node);
 
-    content.evalScripts.bind(content).defer();
+    evalScriptsElement(element);
   }
 
   function insert(element, insertions) {
