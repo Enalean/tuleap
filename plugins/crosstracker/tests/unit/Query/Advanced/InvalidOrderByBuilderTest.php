@@ -59,13 +59,12 @@ use Tuleap\Tracker\Report\Query\Advanced\ListFieldBindValueNormalizer;
 use Tuleap\Tracker\Report\Query\Advanced\UgroupLabelConverter;
 use Tuleap\Tracker\Semantic\Contributor\ContributorFieldRetriever;
 use Tuleap\Tracker\Semantic\Contributor\TrackerSemanticContributorFactory;
-use Tuleap\Tracker\Semantic\Status\RetrieveSemanticStatusField;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\Permission\RetrieveUserPermissionOnFieldsStub;
 use Tuleap\Tracker\Test\Stub\RetrieveFieldTypeStub;
-use Tuleap\Tracker\Test\Stub\RetrieveSemanticStatusFieldIterativeStub;
+use Tuleap\Tracker\Test\Stub\RetrieveSemanticStatusFieldStub;
 use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
 use Tuleap\Tracker\Tracker;
 use UserManager;
@@ -81,13 +80,13 @@ final class InvalidOrderByBuilderTest extends TestCase
      */
     private array $trackers = [];
     private RetrieveUsedFields $used_field_retriever;
-    private RetrieveSemanticStatusField $status_field_retriever;
+    private RetrieveSemanticStatusFieldStub $status_field_retriever;
 
     protected function setUp(): void
     {
         $this->metadata_checker       = MetadataCheckerStub::withValidMetadata();
         $this->used_field_retriever   = RetrieveUsedFieldsStub::withNoFields();
-        $this->status_field_retriever = RetrieveSemanticStatusFieldIterativeStub::withNoField();
+        $this->status_field_retriever = RetrieveSemanticStatusFieldStub::build();
     }
 
     private function checkOrderBy(OrderBy $order_by): ?InvalidOrderBy
@@ -177,10 +176,15 @@ final class InvalidOrderByBuilderTest extends TestCase
 
     public function testItReturnsErrorIfSemanticListWithMultipleValues(): void
     {
-        $tracker                      = TrackerTestBuilder::aTracker()->build();
-        $this->status_field_retriever = RetrieveSemanticStatusFieldIterativeStub::withField(ListFieldBuilder::aListField(102)->withMultipleValues()->build());
-        $this->trackers               = [$tracker];
-        $result                       = $this->checkOrderBy(new OrderBy(new Metadata('status'), OrderByDirection::ASCENDING));
+        $tracker = TrackerTestBuilder::aTracker()->withId(646)->build();
+        $this->status_field_retriever->withField(
+            ListFieldBuilder::aListField(102)
+                ->withMultipleValues()
+                ->inTracker($tracker)
+                ->build()
+        );
+        $this->trackers = [$tracker];
+        $result         = $this->checkOrderBy(new OrderBy(new Metadata('status'), OrderByDirection::ASCENDING));
         self::assertNotNull($result);
         self::assertSame('@status is a list with multiple values, sorting artifacts by it is not allowed. Please refine your query or check the configuration of the trackers.', $result->message);
     }

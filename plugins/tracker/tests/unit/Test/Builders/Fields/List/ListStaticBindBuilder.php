@@ -73,11 +73,14 @@ final class ListStaticBindBuilder
     }
 
     /**
-     * @param array<int, Tracker_FormElement_Field_List_Bind_StaticValue|Tracker_FormElement_Field_List_OpenValue> $values
+     * @param list<Tracker_FormElement_Field_List_Bind_StaticValue|Tracker_FormElement_Field_List_OpenValue> $values
      */
     public function withBuildStaticValues(array $values): self
     {
-        $this->bind_values = $values;
+        foreach ($values as $value) {
+            $this->bind_values[$value->getId()] = $value;
+        }
+
         return $this;
     }
 
@@ -86,7 +89,9 @@ final class ListStaticBindBuilder
      */
     public function withDecorators(array $decorators): self
     {
-        $this->decorators = $decorators;
+        foreach ($decorators as $decorator) {
+            $this->decorators[$decorator->value_id] = $decorator;
+        }
 
         return $this;
     }

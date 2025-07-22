@@ -27,14 +27,13 @@ use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
 
 final class CreateNewChangesetStub implements \Tuleap\Tracker\Artifact\Changeset\CreateNewChangeset
 {
-    private int $calls_count             = 0;
-    private ?NewChangeset $new_changeset = null;
+    private int $calls_count = 0;
 
-    /** @var callable(NewChangeset, PostCreationContext): \Tracker_Artifact_Changeset | null */
+    /** @var null | callable(NewChangeset, PostCreationContext): ?\Tracker_Artifact_Changeset */
     private $callback;
 
     /**
-     * @param callable(NewChangeset, PostCreationContext): \Tracker_Artifact_Changeset | null $callback
+     * @param null | callable(NewChangeset, PostCreationContext): ?\Tracker_Artifact_Changeset $callback
      */
     private function __construct(
         private readonly ?\Tracker_Artifact_Changeset $changeset,
@@ -68,21 +67,15 @@ final class CreateNewChangesetStub implements \Tuleap\Tracker\Artifact\Changeset
     }
 
     /**
-     * @param callable(NewChangeset, PostCreationContext): \Tracker_Artifact_Changeset $callback
+     * @param callable(NewChangeset, PostCreationContext): ?\Tracker_Artifact_Changeset $callback
      */
     public static function withCallback(callable $callback): self
     {
         return new self(null, null, $callback);
     }
 
-    public function getNewChangeset(): ?NewChangeset
-    {
-        return $this->new_changeset;
-    }
-
     public function create(NewChangeset $changeset, PostCreationContext $context): ?\Tracker_Artifact_Changeset
     {
-        $this->new_changeset = $changeset;
         $this->calls_count++;
         if ($this->callback !== null) {
             return ($this->callback)($changeset, $context);

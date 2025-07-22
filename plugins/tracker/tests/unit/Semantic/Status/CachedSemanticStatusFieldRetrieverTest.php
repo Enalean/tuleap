@@ -26,7 +26,7 @@ use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
-use Tuleap\Tracker\Test\Stub\RetrieveSemanticStatusFieldIterativeStub;
+use Tuleap\Tracker\Test\Stub\RetrieveSemanticStatusFieldStub;
 
 #[DisableReturnValueGenerationForTestDoubles]
 final class CachedSemanticStatusFieldRetrieverTest extends TestCase
@@ -35,7 +35,7 @@ final class CachedSemanticStatusFieldRetrieverTest extends TestCase
     {
         $tracker   = TrackerTestBuilder::aTracker()->withId(12)->build();
         $field     = ListFieldBuilder::aListField(1002)->inTracker($tracker)->build();
-        $retriever = RetrieveSemanticStatusFieldIterativeStub::withField($field);
+        $retriever = RetrieveSemanticStatusFieldStub::build()->withField($field);
 
         $cache = new CachedSemanticStatusFieldRetriever($retriever);
 

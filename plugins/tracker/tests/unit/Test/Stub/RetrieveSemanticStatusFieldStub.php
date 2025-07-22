@@ -28,6 +28,7 @@ use Tuleap\Tracker\Tracker;
 
 final class RetrieveSemanticStatusFieldStub implements RetrieveSemanticStatusField
 {
+    private int $call_count = 0;
     /**
      * @var array<int, Tracker_FormElement_Field_List>
      */
@@ -51,10 +52,12 @@ final class RetrieveSemanticStatusFieldStub implements RetrieveSemanticStatusFie
     #[\Override]
     public function fromTracker(Tracker $tracker): ?Tracker_FormElement_Field_List
     {
-        if (! isset($this->fields[$tracker->getId()])) {
-            return null;
-        }
+        $this->call_count++;
+        return $this->fields[$tracker->getId()] ?? null;
+    }
 
-        return $this->fields[$tracker->getId()];
+    public function getCallCount(): int
+    {
+        return $this->call_count;
     }
 }

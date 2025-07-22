@@ -22,9 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact\Closure;
 
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Psr\Log\NullLogger;
 use Tracker_FormElement_Field_List_Bind_StaticValue;
+use Tracker_NoChangeException;
 use Tracker_Workflow_WorkflowUser;
+use Tuleap\GlobalLanguageMock;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
@@ -32,66 +36,78 @@ use Tuleap\NeverThrow\Result;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\ReferenceStringStub;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\Changeset\Comment\NewComment;
+use Tuleap\Tracker\Artifact\Changeset\NewChangeset;
+use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
 use Tuleap\Tracker\Semantic\Status\Done\DoneValueRetriever;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneValueNotFoundException;
 use Tuleap\Tracker\Semantic\Status\SemanticStatusClosedValueNotFoundException;
 use Tuleap\Tracker\Semantic\Status\StatusValueRetriever;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\BadSemanticCommentInCommonMarkFormatStub;
 use Tuleap\Tracker\Test\Stub\CreateCommentOnlyChangesetStub;
 use Tuleap\Tracker\Test\Stub\CreateNewChangesetStub;
-use Tuleap\Tracker\Test\Stub\RetrieveSemanticStatusFieldIterativeStub;
+use Tuleap\Tracker\Test\Stub\RetrieveSemanticStatusFieldStub;
 use Tuleap\Tracker\Workflow\NoPossibleValueException;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactCloserTest extends TestCase
 {
-    private const CLOSER_USERNAME      = '@asticotc';
-    private const STATUS_FIELD_ID      = 18;
-    private const DONE_BIND_VALUE_ID   = 1234;
-    private const CLOSED_BIND_VALUE_ID = 3174;
-    private const DONE_LABEL           = 'Done';
-    private const ORIGIN_REFERENCE     = 'git #heelmaker/54022373';
+    use GlobalLanguageMock;
 
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&StatusValueRetriever
-     */
-    private $status_value_retriever;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&DoneValueRetriever
-     */
-    private $done_value_retriever;
-    /**
-     * @var \PHPUnit\Framework\MockObject\Stub&Artifact
-     */
-    private $artifact;
+    private const string CLOSER_USERNAME      = '@asticotc';
+    private const int    STATUS_FIELD_ID      = 18;
+    private const int    DONE_BIND_VALUE_ID   = 1234;
+    private const int    CLOSED_BIND_VALUE_ID = 3174;
+    private const string DONE_LABEL           = 'Done';
+    private const string ORIGIN_REFERENCE     = 'git #heelmaker/54022373';
+
+    private MockObject&StatusValueRetriever $status_value_retriever;
+    private MockObject&DoneValueRetriever $done_value_retriever;
+    private Stub&Artifact $artifact;
     private Tracker_Workflow_WorkflowUser $workflow_user;
     private string $success_message;
     private string $no_semantic_defined_message;
     private CreateCommentOnlyChangesetStub $comment_creator;
-    /**
-     * @var \PHPUnit\Framework\MockObject\Stub&\Tracker_FormElement_Field_List
-     */
-    private $status_field;
     private CreateNewChangesetStub $changeset_creator;
-    private RetrieveSemanticStatusFieldIterativeStub $status_retriever;
+    private RetrieveSemanticStatusFieldStub $status_retriever;
+    private Tracker_FormElement_Field_List_Bind_StaticValue $done_value;
+    private Tracker_FormElement_Field_List_Bind_StaticValue $closed_value;
+    private bool $changeset_creator_was_called;
 
     protected function setUp(): void
     {
-        $this->status_field = $this->createStub(\Tracker_FormElement_Field_List::class);
-        $this->status_field->method('getId')->willReturn(self::STATUS_FIELD_ID);
+        $this->done_value   = ListStaticValueBuilder::aStaticValue(self::DONE_LABEL)
+            ->withId(self::DONE_BIND_VALUE_ID)
+            ->build();
+        $this->closed_value = ListStaticValueBuilder::aStaticValue('Closed')
+            ->withId(self::CLOSED_BIND_VALUE_ID)
+            ->build();
 
-        $this->status_retriever       = RetrieveSemanticStatusFieldIterativeStub::withField($this->status_field);
+        $tracker      = TrackerTestBuilder::aTracker()->build();
+        $status_field = ListStaticBindBuilder::aStaticBind(
+            ListFieldBuilder::aListField(self::STATUS_FIELD_ID)->inTracker($tracker)->build(),
+        )->withBuildStaticValues([$this->closed_value, $this->done_value])
+            ->build()
+            ->getField();
+
+        $this->status_retriever       = RetrieveSemanticStatusFieldStub::build()->withField($status_field);
         $this->status_value_retriever = $this->createMock(StatusValueRetriever::class);
         $this->done_value_retriever   = $this->createMock(DoneValueRetriever::class);
-        $this->comment_creator        = CreateCommentOnlyChangesetStub::withChangeset(
+
+        $this->comment_creator = CreateCommentOnlyChangesetStub::withChangeset(
             ChangesetTestBuilder::aChangeset(5438)->build()
         );
-        $this->changeset_creator      = CreateNewChangesetStub::withReturnChangeset(
-            ChangesetTestBuilder::aChangeset(2452)->build()
-        );
+
+        $this->changeset_creator_was_called = false;
+        $this->changeset_creator            = CreateNewChangesetStub::withCallback(function (NewChangeset $new_changeset, PostCreationContext $context) {
+            $this->changeset_creator_was_called = true;
+            return null;
+        });
 
         $this->workflow_user = new Tracker_Workflow_WorkflowUser(
             [
@@ -102,7 +118,7 @@ final class ArtifactCloserTest extends TestCase
 
         $this->artifact = $this->createStub(Artifact::class);
         $this->artifact->method('getId')->willReturn(25);
-        $this->artifact->method('getTracker')->willReturn(TrackerTestBuilder::aTracker()->build());
+        $this->artifact->method('getTracker')->willReturn($tracker);
 
         $this->success_message             = sprintf(
             'Solved by %s with %s.',
@@ -149,20 +165,25 @@ final class ArtifactCloserTest extends TestCase
         $this->mockArtifactIsOpen();
         $this->mockDoneValueIsFound();
 
+        $changeset_created       = false;
+        $this->changeset_creator = CreateNewChangesetStub::withCallback(
+            function (NewChangeset $new_changeset) use (&$changeset_created) {
+                $changeset_created = true;
+                self::assertSame($this->artifact, $new_changeset->getArtifact());
+                self::assertSame($this->workflow_user, $new_changeset->getSubmitter());
+                self::assertSame($this->success_message, $new_changeset->getComment()->getBody());
+                self::assertEqualsCanonicalizing(
+                    [self::STATUS_FIELD_ID => self::DONE_BIND_VALUE_ID],
+                    $new_changeset->getFieldsData()
+                );
+                return ChangesetTestBuilder::aChangeset(2452)->build();
+            }
+        );
+
         $result = $this->closeArtifact();
 
         self::assertTrue(Result::isOk($result));
-        $new_changeset = $this->changeset_creator->getNewChangeset();
-        if (! $new_changeset) {
-            throw new \Exception('Expected to receive a new changeset');
-        }
-        self::assertSame($this->artifact, $new_changeset->getArtifact());
-        self::assertSame($this->workflow_user, $new_changeset->getSubmitter());
-        self::assertSame($this->success_message, $new_changeset->getComment()->getBody());
-        self::assertEqualsCanonicalizing(
-            [self::STATUS_FIELD_ID => self::DONE_BIND_VALUE_ID],
-            $new_changeset->getFieldsData()
-        );
+        self::assertTrue($changeset_created);
     }
 
     public function testItClosesArtifactWithFirstClosedStatusValue(): void
@@ -171,20 +192,25 @@ final class ArtifactCloserTest extends TestCase
         $this->mockNoDoneValue();
         $this->mockClosedValueIsFound();
 
+        $changeset_created       = false;
+        $this->changeset_creator = CreateNewChangesetStub::withCallback(
+            function (NewChangeset $new_changeset) use (&$changeset_created) {
+                $changeset_created = true;
+                self::assertSame($this->artifact, $new_changeset->getArtifact());
+                self::assertSame($this->workflow_user, $new_changeset->getSubmitter());
+                self::assertSame($this->success_message, $new_changeset->getComment()->getBody());
+                self::assertEqualsCanonicalizing(
+                    [self::STATUS_FIELD_ID => self::CLOSED_BIND_VALUE_ID],
+                    $new_changeset->getFieldsData()
+                );
+                return ChangesetTestBuilder::aChangeset(2452)->build();
+            }
+        );
+
         $result = $this->closeArtifact();
 
         self::assertTrue(Result::isOk($result));
-        $new_changeset = $this->changeset_creator->getNewChangeset();
-        if (! $new_changeset) {
-            throw new \Exception('Expected to receive a new changeset');
-        }
-        self::assertSame($this->artifact, $new_changeset->getArtifact());
-        self::assertSame($this->workflow_user, $new_changeset->getSubmitter());
-        self::assertSame($this->success_message, $new_changeset->getComment()->getBody());
-        self::assertEqualsCanonicalizing(
-            [self::STATUS_FIELD_ID => self::CLOSED_BIND_VALUE_ID],
-            $new_changeset->getFieldsData()
-        );
+        self::assertTrue($changeset_created);
     }
 
     public function testItReturnsErrIfArtifactIsAlreadyClosed(): void
@@ -195,7 +221,7 @@ final class ArtifactCloserTest extends TestCase
 
         self::assertTrue(Result::isErr($result));
         self::assertInstanceOf(ArtifactIsAlreadyClosedFault::class, $result->error);
-        self::assertNull($this->changeset_creator->getNewChangeset());
+        self::assertFalse($this->changeset_creator_was_called);
     }
 
     public function testItReturnsErrIfNoPossibleValueAreFound(): void
@@ -209,48 +235,65 @@ final class ArtifactCloserTest extends TestCase
         $result = $this->closeArtifact();
 
         self::assertTrue(Result::isErr($result));
-        self::assertNull($this->changeset_creator->getNewChangeset());
+        self::assertFalse($this->changeset_creator_was_called);
     }
 
     public function testItReturnsErrIfChangesetIsNotCreated(): void
     {
         $this->mockArtifactIsOpen();
         $this->mockDoneValueIsFound();
-        $this->changeset_creator = CreateNewChangesetStub::withNullReturnChangeset();
+
+        $was_called              = false;
+        $this->changeset_creator = CreateNewChangesetStub::withCallback(
+            static function (NewChangeset $new_changeset, PostCreationContext $context) use (&$was_called) {
+                $was_called = true;
+                return null;
+            }
+        );
 
         $result = $this->closeArtifact();
 
         self::assertTrue(Result::isErr($result));
-        self::assertNotNull($this->changeset_creator->getNewChangeset());
+        self::assertTrue($was_called);
     }
 
     public function testItReturnsErrIfAnErrorOccursDuringTheChangesetCreation(): void
     {
         $this->mockArtifactIsOpen();
         $this->mockDoneValueIsFound();
-        $this->changeset_creator = CreateNewChangesetStub::withException(new \Tracker_NoChangeException(1, 'xref'));
+
+        $was_called              = false;
+        $this->changeset_creator = CreateNewChangesetStub::withCallback(
+            static function () use (&$was_called) {
+                $was_called = true;
+                throw new Tracker_NoChangeException(1, 'xref');
+            }
+        );
 
         $result = $this->closeArtifact();
 
         self::assertTrue(Result::isErr($result));
-        self::assertNotNull($this->changeset_creator->getNewChangeset());
+        self::assertTrue($was_called);
     }
 
     public function testItAddsOnlyACommentIfStatusSemanticIsNotDefined(): void
     {
         $this->mockArtifactIsOpen();
-        $this->status_retriever = RetrieveSemanticStatusFieldIterativeStub::withNoField();
+        $this->status_retriever = RetrieveSemanticStatusFieldStub::build();
+
+        $comment_was_created   = false;
+        $this->comment_creator = CreateCommentOnlyChangesetStub::withCallback(function (NewComment $new_comment, Artifact $artifact) use (&$comment_was_created) {
+            $comment_was_created = true;
+            self::assertSame($this->no_semantic_defined_message, $new_comment->getBody());
+            self::assertSame($this->workflow_user, $new_comment->getSubmitter());
+            self::assertSame($this->artifact, $artifact);
+            return Result::ok(ChangesetTestBuilder::aChangeset(5438)->build());
+        });
 
         $result = $this->closeArtifact();
 
         self::assertTrue(Result::isOk($result));
-        $new_comment = $this->comment_creator->getNewComment();
-        if (! $new_comment) {
-            throw new \Exception('Expected to receive a new comment');
-        }
-        self::assertSame($this->no_semantic_defined_message, $new_comment->getBody());
-        self::assertSame($this->workflow_user, $new_comment->getSubmitter());
-        self::assertSame($this->artifact, $this->comment_creator->getArtifact());
+        self::assertTrue($comment_was_created);
     }
 
     public function testItAddsOnlyACommentIfClosedValueNotFound(): void
@@ -262,30 +305,38 @@ final class ArtifactCloserTest extends TestCase
             ->with($this->workflow_user, $this->artifact)
             ->willThrowException(new SemanticStatusClosedValueNotFoundException());
 
+        $comment_was_created   = false;
+        $this->comment_creator = CreateCommentOnlyChangesetStub::withCallback(function (NewComment $new_comment, Artifact $artifact) use (&$comment_was_created) {
+            $comment_was_created = true;
+            self::assertSame($this->no_semantic_defined_message, $new_comment->getBody());
+            self::assertSame($this->workflow_user, $new_comment->getSubmitter());
+            self::assertSame($this->artifact, $artifact);
+            return Result::ok(ChangesetTestBuilder::aChangeset(5438)->build());
+        });
+
         $result = $this->closeArtifact();
 
         self::assertTrue(Result::isOk($result));
-        $new_comment = $this->comment_creator->getNewComment();
-        if (! $new_comment) {
-            throw new \Exception('Expected to receive a new comment');
-        }
-        self::assertSame($this->no_semantic_defined_message, $new_comment->getBody());
-        self::assertSame($this->workflow_user, $new_comment->getSubmitter());
-        self::assertSame($this->artifact, $this->comment_creator->getArtifact());
+        self::assertTrue($comment_was_created);
     }
 
     public function testItReturnsErrIfAnErrorOccursDuringTheCommentCreation(): void
     {
         $this->mockArtifactIsOpen();
-        $this->status_retriever = RetrieveSemanticStatusFieldIterativeStub::withNoField();
-        $this->comment_creator  = CreateCommentOnlyChangesetStub::withFault(
-            Fault::fromMessage('Error during comment creation')
+        $this->status_retriever = RetrieveSemanticStatusFieldStub::build();
+
+        $was_called            = false;
+        $this->comment_creator = CreateCommentOnlyChangesetStub::withCallback(
+            static function (NewComment $new_comment, Artifact $artifact) use (&$was_called) {
+                $was_called = true;
+                return Result::err(Fault::fromMessage('Error during comment creation'));
+            }
         );
 
         $result = $this->closeArtifact();
 
         self::assertTrue(Result::isErr($result));
-        self::assertNotNull($this->comment_creator->getNewComment());
+        self::assertTrue($was_called);
     }
 
     private function mockArtifactIsOpen(): void
@@ -295,12 +346,10 @@ final class ArtifactCloserTest extends TestCase
 
     private function mockDoneValueIsFound(): void
     {
-        $this->status_field->method('getFieldData')->willReturn(self::DONE_BIND_VALUE_ID);
-
         $this->done_value_retriever->expects($this->once())
             ->method('getFirstDoneValueUserCanRead')
             ->with($this->artifact, $this->workflow_user)
-            ->willReturn($this->getDoneValue());
+            ->willReturn($this->done_value);
     }
 
     private function mockNoDoneValue(): void
@@ -313,16 +362,9 @@ final class ArtifactCloserTest extends TestCase
 
     private function mockClosedValueIsFound(): void
     {
-        $this->status_field->method('getFieldData')->willReturn(self::CLOSED_BIND_VALUE_ID);
-
         $this->status_value_retriever->expects($this->once())
             ->method('getFirstClosedValueUserCanRead')
             ->with($this->workflow_user, $this->artifact)
-            ->willReturn($this->getDoneValue());
-    }
-
-    private function getDoneValue(): Tracker_FormElement_Field_List_Bind_StaticValue
-    {
-        return ListStaticValueBuilder::aStaticValue(self::DONE_LABEL)->withId(14)->build();
+            ->willReturn($this->closed_value);
     }
 }

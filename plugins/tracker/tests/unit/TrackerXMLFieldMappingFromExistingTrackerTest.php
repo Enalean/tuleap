@@ -71,21 +71,21 @@ final class TrackerXMLFieldMappingFromExistingTrackerTest extends TestCase
         $this->column_3 = $this->buildAColumn('stepC');
         $this->column_4 = $this->buildAColumn('stepD');
 
-        $this->bind_value_1 = $this->buildListStaticValue('To be done');
-        $this->bind_value_2 = $this->buildListStaticValue('On going');
-        $this->bind_value_3 = $this->buildListStaticValue('Done');
-        $this->bind_value_4 = $this->buildListStaticValue('Canceled');
-        $this->bind_value_5 = $this->buildListStaticValue('Functional review');
-        $this->bind_value_6 = $this->buildListStaticValue('Code review');
+        $this->bind_value_1 = ListStaticValueBuilder::aStaticValue('To be done')->withId(1)->build();
+        $this->bind_value_2 = ListStaticValueBuilder::aStaticValue('On going')->withId(2)->build();
+        $this->bind_value_3 = ListStaticValueBuilder::aStaticValue('Done')->withId(3)->build();
+        $this->bind_value_4 = ListStaticValueBuilder::aStaticValue('Canceled')->withId(4)->build();
+        $this->bind_value_5 = ListStaticValueBuilder::aStaticValue('Functional review')->withId(5)->build();
+        $this->bind_value_6 = ListStaticValueBuilder::aStaticValue('Code review')->withId(6)->build();
 
         $list_field = ListStaticBindBuilder::aStaticBind(ListFieldBuilder::aListField(65)->withName('stepE')->build())
             ->withBuildStaticValues([
-                1 => $this->bind_value_1,
-                2 => $this->bind_value_2,
-                3 => $this->bind_value_3,
-                4 => $this->bind_value_4,
-                5 => $this->bind_value_5,
-                6 => $this->bind_value_6,
+                $this->bind_value_1,
+                $this->bind_value_2,
+                $this->bind_value_3,
+                $this->bind_value_4,
+                $this->bind_value_5,
+                $this->bind_value_6,
             ])->build()->getField();
         self::assertInstanceOf(Tracker_FormElement_Field_Selectbox::class, $list_field);
         $this->select_box = $list_field;
@@ -133,21 +133,14 @@ final class TrackerXMLFieldMappingFromExistingTrackerTest extends TestCase
         $this->buildAColumn('stuffC');
         $this->buildAColumn('stuffD');
 
-        $this->buildListStaticValue('stuff1');
-        $this->buildListStaticValue('stuff2');
-        $this->buildListStaticValue('stuff3');
-        $this->buildListStaticValue('stuff4');
-        $this->buildListStaticValue('stuff5');
-        $this->buildListStaticValue('stuff5');
-
         $select_box     = ListStaticBindBuilder::aStaticBind(ListFieldBuilder::aListField(74)->withName('stuffE')->build())
             ->withBuildStaticValues([
-                1 => $this->bind_value_1,
-                2 => $this->bind_value_2,
-                3 => $this->bind_value_3,
-                4 => $this->bind_value_4,
-                5 => $this->bind_value_5,
-                6 => $this->bind_value_6,
+                $this->bind_value_1,
+                $this->bind_value_2,
+                $this->bind_value_3,
+                $this->bind_value_4,
+                $this->bind_value_5,
+                $this->bind_value_6,
             ])->build()->getField();
         $this->fields[] = $select_box;
 
@@ -172,21 +165,14 @@ final class TrackerXMLFieldMappingFromExistingTrackerTest extends TestCase
         $this->buildAColumn('stuffC');
         $this->buildAColumn('stuffD');
 
-        $this->buildListStaticValue('stuff1');
-        $this->buildListStaticValue('stuff2');
-        $this->buildListStaticValue('stuff3');
-        $this->buildListStaticValue('stuff4');
-        $this->buildListStaticValue('stuff5');
-        $this->buildListStaticValue('stuff5');
-
         $select_box     = ListStaticBindBuilder::aStaticBind(ListFieldBuilder::aListField(74)->withName('stuffE')->build())
             ->withBuildStaticValues([
-                1 => $this->bind_value_1,
-                2 => $this->bind_value_2,
-                3 => $this->bind_value_3,
-                4 => $this->bind_value_4,
-                5 => $this->bind_value_5,
-                6 => $this->bind_value_6,
+                $this->bind_value_1,
+                $this->bind_value_2,
+                $this->bind_value_3,
+                $this->bind_value_4,
+                $this->bind_value_5,
+                $this->bind_value_6,
             ])->build()->getField();
         $this->fields[] = $select_box;
 
@@ -204,11 +190,6 @@ final class TrackerXMLFieldMappingFromExistingTrackerTest extends TestCase
         $column         = ColumnContainerBuilder::aColumn(15)->withName($name)->build();
         $this->fields[] = $column;
         return $column;
-    }
-
-    private function buildListStaticValue(string $label): Tracker_FormElement_Field_List_Bind_StaticValue
-    {
-        return ListStaticValueBuilder::aStaticValue($label)->build();
     }
 
     private function buildATextField(string $name): TextField

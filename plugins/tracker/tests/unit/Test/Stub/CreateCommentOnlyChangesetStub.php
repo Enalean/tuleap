@@ -22,51 +22,59 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Test\Stub;
 
+use Tracker_Artifact_Changeset;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\Comment\NewComment;
+use Tuleap\Tracker\Artifact\Changeset\CreateCommentOnlyChangeset;
 
-final class CreateCommentOnlyChangesetStub implements \Tuleap\Tracker\Artifact\Changeset\CreateCommentOnlyChangeset
+final class CreateCommentOnlyChangesetStub implements CreateCommentOnlyChangeset
 {
-    private ?NewComment $new_comment = null;
-    private ?Artifact $artifact      = null;
+    /** @var null | callable(NewComment, Artifact): (Ok<Tracker_Artifact_Changeset>|Err<Fault>) */
+    private $callback;
 
+    /**
+     * @param null | callable(NewComment, Artifact): (Ok<Tracker_Artifact_Changeset>|Err<Fault>) $callback
+     */
     private function __construct(
-        private \Tracker_Artifact_Changeset|Fault $return_value,
+        private ?Tracker_Artifact_Changeset $return_value,
+        ?callable $callback,
     ) {
+        $this->callback = $callback;
     }
 
-    public static function withChangeset(\Tracker_Artifact_Changeset $changeset): self
+    /**
+     * @return Ok<Tracker_Artifact_Changeset>|Err<Fault>
+     */
+    private function defaultCallback(): Ok|Err
     {
-        return new self($changeset);
+        if ($this->return_value === null) {
+            throw new \LogicException('Did not expect to be called');
+        }
+        return Result::ok($this->return_value);
     }
 
-    public static function withFault(Fault $fault): self
+    public static function withChangeset(Tracker_Artifact_Changeset $changeset): self
     {
-        return new self($fault);
+        return new self($changeset, null);
     }
 
-    public function getNewComment(): ?NewComment
+    /**
+     * @param callable(NewComment, Artifact): (Ok<Tracker_Artifact_Changeset>|Err<Fault>) $callback
+     */
+    public static function withCallback(callable $callback): self
     {
-        return $this->new_comment;
-    }
-
-    public function getArtifact(): ?Artifact
-    {
-        return $this->artifact;
+        return new self(null, $callback);
     }
 
     public function createCommentOnlyChangeset(NewComment $new_comment, Artifact $artifact): Ok|Err
     {
-        $this->new_comment = $new_comment;
-        $this->artifact    = $artifact;
-
-        if ($this->return_value instanceof Fault) {
-            return Result::err($this->return_value);
+        if ($this->callback !== null) {
+            return ($this->callback)($new_comment, $artifact);
         }
-        return Result::ok($this->return_value);
+        return $this->defaultCallback();
     }
 }
