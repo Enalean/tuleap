@@ -35,6 +35,11 @@ import {
     LIST_BIND_STATIC,
     LIST_BIND_USERS,
     CHECKBOX_FIELD,
+    ARTIFACT_ID_FIELD,
+    ARTIFACT_ID_IN_TRACKER_FIELD,
+    FLOAT_FIELD,
+    INT_FIELD,
+    PRIORITY_FIELD,
 } from "@tuleap/plugin-tracker-constants";
 import { ConfigurationFieldBuilder } from "@/sections/readonly-fields/ConfigurationFieldBuilder";
 
@@ -158,6 +163,36 @@ describe("getAvailableFields", () => {
         bindings: { type: LIST_BIND_USERS },
     } as unknown as StructureFields;
 
+    const artifact_id_field = {
+        field_id: 140,
+        type: ARTIFACT_ID_FIELD,
+        label: "Artifact id",
+    } as StructureFields;
+
+    const per_tracker_id_field = {
+        field_id: 141,
+        type: ARTIFACT_ID_IN_TRACKER_FIELD,
+        label: "Per tracker id",
+    } as StructureFields;
+
+    const float_field = {
+        field_id: 142,
+        type: FLOAT_FIELD,
+        label: "Float",
+    } as StructureFields;
+
+    const int_field = {
+        field_id: 143,
+        type: INT_FIELD,
+        label: "Integer",
+    } as StructureFields;
+
+    const priority_field = {
+        field_id: 144,
+        type: PRIORITY_FIELD,
+        label: "Rank",
+    } as StructureFields;
+
     const all_fields: Readonly<StructureFields[]> = [
         string_field,
         summary_field,
@@ -181,6 +216,11 @@ describe("getAvailableFields", () => {
             label: "Access information left column",
             type: CONTAINER_COLUMN,
         } as StructureFields,
+        artifact_id_field,
+        per_tracker_id_field,
+        float_field,
+        int_field,
+        priority_field,
     ];
 
     const tracker_information = {
@@ -210,6 +250,11 @@ describe("getAvailableFields", () => {
                 ConfigurationFieldBuilder.fromSupportedTrackerField(user_open_list_field),
                 ConfigurationFieldBuilder.fromSupportedTrackerField(user_checkbox_field),
                 ConfigurationFieldBuilder.fromSupportedTrackerField(user_radio_button_field),
+                ConfigurationFieldBuilder.fromSupportedTrackerField(artifact_id_field),
+                ConfigurationFieldBuilder.fromSupportedTrackerField(per_tracker_id_field),
+                ConfigurationFieldBuilder.fromSupportedTrackerField(float_field),
+                ConfigurationFieldBuilder.fromSupportedTrackerField(int_field),
+                ConfigurationFieldBuilder.fromSupportedTrackerField(priority_field),
             ]);
         });
     });
