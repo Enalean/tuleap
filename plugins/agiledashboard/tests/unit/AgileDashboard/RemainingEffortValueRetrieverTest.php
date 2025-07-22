@@ -29,7 +29,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\FloatFieldBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\IntegerFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -76,7 +76,7 @@ final class RemainingEffortValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestC
     {
         $value = 76;
 
-        $this->field = IntFieldBuilder::anIntField(39)
+        $this->field = IntegerFieldBuilder::anIntField(39)
             ->withName(\Tuleap\Tracker\Tracker::REMAINING_EFFORT_FIELD_NAME)
             ->build();
         $this->form_element_factory->method('getNumericFieldByNameForUser')->willReturn($this->field);

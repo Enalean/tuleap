@@ -26,14 +26,14 @@ namespace Tuleap\Tracker;
 use Tracker_Artifact_ChangesetValue_Integer;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\IntegerFieldBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class Tracker_Artifact_ChangesetValue_IntegerTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public function testIntegers(): void
     {
-        $field     = IntFieldBuilder::anIntField(306)->build();
+        $field     = IntegerFieldBuilder::anIntField(306)->build();
         $changeset = ChangesetTestBuilder::aChangeset(164)->build();
         $integer   = new Tracker_Artifact_ChangesetValue_Integer(111, $changeset, $field, false, 42);
         self::assertSame(42, $integer->getInteger());
@@ -48,7 +48,7 @@ final class Tracker_Artifact_ChangesetValue_IntegerTest extends \Tuleap\Test\PHP
 
     public function testNoDiff(): void
     {
-        $field     = IntFieldBuilder::anIntField(306)->build();
+        $field     = IntegerFieldBuilder::anIntField(306)->build();
         $changeset = ChangesetTestBuilder::aChangeset(164)->build();
         $int_1     = new Tracker_Artifact_ChangesetValue_Integer(111, $changeset, $field, false, 54);
         $int_2     = new Tracker_Artifact_ChangesetValue_Integer(111, $changeset, $field, false, 54);
@@ -58,7 +58,7 @@ final class Tracker_Artifact_ChangesetValue_IntegerTest extends \Tuleap\Test\PHP
 
     public function testDiff(): void
     {
-        $field     = IntFieldBuilder::anIntField(306)->build();
+        $field     = IntegerFieldBuilder::anIntField(306)->build();
         $changeset = ChangesetTestBuilder::aChangeset(164)->build();
         $int_1     = new Tracker_Artifact_ChangesetValue_Integer(111, $changeset, $field, false, 66);
         $int_2     = new Tracker_Artifact_ChangesetValue_Integer(111, $changeset, $field, false, 666);
@@ -67,7 +67,7 @@ final class Tracker_Artifact_ChangesetValue_IntegerTest extends \Tuleap\Test\PHP
 
     public function testItReturnsTheRESTValue(): void
     {
-        $field     = IntFieldBuilder::anIntField(10)->withLabel('integer')->build();
+        $field     = IntegerFieldBuilder::anIntField(10)->withLabel('integer')->build();
         $changeset = ChangesetTestBuilder::aChangeset(164)->build();
 
         $value          = new Tracker_Artifact_ChangesetValue_Integer(111, $changeset, $field, true, 556);

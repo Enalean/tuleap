@@ -47,7 +47,7 @@ final class FrozenFieldsValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testValidateDoesNotThrowWhenValid(): void
     {
-        $integer_field = $this->createMock(\Tracker_FormElement_Field_Integer::class);
+        $integer_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\Integer\IntegerField::class);
         $integer_field
             ->method('getId')
             ->willReturn(1);
@@ -115,7 +115,7 @@ final class FrozenFieldsValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testValidateThrowsWhenFieldIdDoesNotMatchAUsedField(): void
     {
-        $integer_field = $this->createMock(\Tracker_FormElement_Field_Integer::class);
+        $integer_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\Integer\IntegerField::class);
         $integer_field
             ->method('getId')
             ->willReturn(1);

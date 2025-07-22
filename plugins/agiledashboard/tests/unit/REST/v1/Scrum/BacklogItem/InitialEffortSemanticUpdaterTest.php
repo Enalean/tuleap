@@ -37,7 +37,7 @@ use Tuleap\Tracker\Test\Builders\ChangesetValueFloatTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueIntegerTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueListTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\FloatFieldBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\IntegerFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
@@ -90,7 +90,7 @@ final class InitialEffortSemanticUpdaterTest extends TestCase
 
     public function testItSetsTheInitialEffortInTheBacklogItemWhenInitialEffortFieldIsInteger(): void
     {
-        $initial_effort_field = IntFieldBuilder::anIntField(153)
+        $initial_effort_field = IntegerFieldBuilder::anIntField(153)
             ->withName('Initial effort')
             ->withReadPermission($this->user, true)
             ->build();
@@ -163,7 +163,7 @@ final class InitialEffortSemanticUpdaterTest extends TestCase
 
     public function testItDoesNotSetTheInitialEffortInTheBacklogItemIfUserCannotReadTheField(): void
     {
-        $initial_effort_field = IntFieldBuilder::anIntField(1)
+        $initial_effort_field = IntegerFieldBuilder::anIntField(1)
             ->withReadPermission($this->user, false)
             ->build();
 
@@ -181,7 +181,7 @@ final class InitialEffortSemanticUpdaterTest extends TestCase
 
     public function testItDoesNotSetTheInitialEffortInTheBacklogItemIfFieldDoesNotHaveRESTValue(): void
     {
-        $initial_effort_field = IntFieldBuilder::anIntField(1)
+        $initial_effort_field = IntegerFieldBuilder::anIntField(1)
             ->withReadPermission($this->user, true)
             ->build();
         $this->last_changeset->setFieldValue($initial_effort_field, null);
@@ -200,7 +200,7 @@ final class InitialEffortSemanticUpdaterTest extends TestCase
 
     public function testItDoesNotSetTheInitialEffortInTheBacklogItemIfArtifactDoesNotHaveLastChangeset(): void
     {
-        $initial_effort_field = IntFieldBuilder::anIntField(1)
+        $initial_effort_field = IntegerFieldBuilder::anIntField(1)
             ->withReadPermission($this->user, true)
             ->build();
 

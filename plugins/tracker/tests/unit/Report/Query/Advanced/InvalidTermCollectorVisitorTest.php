@@ -79,7 +79,7 @@ use Tuleap\Tracker\Test\Builders\Fields\CheckboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\FileFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\FloatFieldBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\IntegerFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\LastUpdateByFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\LastUpdateDateFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
@@ -304,7 +304,7 @@ final class InvalidTermCollectorVisitorTest extends \Tuleap\Test\PHPUnit\TestCas
     {
         $this->formelement_factory->method('getUsedFormElementFieldByNameForUser')
             ->willReturn(
-                IntFieldBuilder::anIntField(479)
+                IntegerFieldBuilder::anIntField(479)
                     ->withName(self::FIELD_NAME)
                     ->build()
             );
@@ -585,7 +585,7 @@ final class InvalidTermCollectorVisitorTest extends \Tuleap\Test\PHPUnit\TestCas
 
     public static function generateFieldTypes(): iterable
     {
-        yield 'int' => [IntFieldBuilder::anIntField(132)->withName(self::FIELD_NAME)->build()];
+        yield 'int' => [IntegerFieldBuilder::anIntField(132)->withName(self::FIELD_NAME)->build()];
         yield 'float' => [FloatFieldBuilder::aFloatField(202)->withName(self::FIELD_NAME)->build()];
         yield 'string' => [StringFieldBuilder::aStringField(716)->withName(self::FIELD_NAME)->build()];
         yield 'text' => [TextFieldBuilder::aTextField(198)->withName(self::FIELD_NAME)->build()];
@@ -660,7 +660,7 @@ final class InvalidTermCollectorVisitorTest extends \Tuleap\Test\PHPUnit\TestCas
     #[DataProvider('generateNestedExpressions')]
     public function testItAddsInvalidFieldInNestedExpressions(Logical $parsed_query): void
     {
-        $int_field = IntFieldBuilder::anIntField(102)->build();
+        $int_field = IntegerFieldBuilder::anIntField(102)->build();
 
         $this->formelement_factory->method('getUsedFormElementFieldByNameForUser')
             ->willReturnOnConsecutiveCalls($int_field, $int_field, $int_field);

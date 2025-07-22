@@ -26,10 +26,10 @@ use PFUser;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\NullLogger;
-use Tracker_FormElement_Field_Integer;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\Integer\IntegerField;
 use Tuleap\Tracker\Semantic\Timeframe\IComputeTimeframes;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
@@ -47,7 +47,7 @@ final class ChartConfigurationValueRetrieverTest extends TestCase
     private Artifact $artifact_sprint;
     private PFUser $user;
     private ChartConfigurationValueRetriever $configuration_value_retriever;
-    private Tracker_FormElement_Field_Integer&MockObject $capacity_field;
+    private IntegerField&MockObject $capacity_field;
 
 
     protected function setUp(): void
@@ -57,7 +57,7 @@ final class ChartConfigurationValueRetrieverTest extends TestCase
         $this->artifact_sprint = ArtifactTestBuilder::anArtifact(201)->inTracker($this->tracker)->build();
         $this->user            = UserTestBuilder::buildWithDefaults();
 
-        $this->capacity_field = $this->createMock(Tracker_FormElement_Field_Integer::class);
+        $this->capacity_field = $this->createMock(IntegerField::class);
         $this->capacity_field->method('getId')->willReturn(645);
         $changeset = ChangesetTestBuilder::aChangeset(452)->build();
         $changeset->setFieldValue(

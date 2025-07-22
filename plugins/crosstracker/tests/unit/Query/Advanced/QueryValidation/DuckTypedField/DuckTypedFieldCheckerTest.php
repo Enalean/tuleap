@@ -62,7 +62,7 @@ use Tuleap\Tracker\Report\Query\Advanced\UgroupLabelConverter;
 use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ExternalFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\FloatFieldBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\IntegerFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
@@ -95,7 +95,7 @@ final class DuckTypedFieldCheckerTest extends TestCase
         $this->user                      = UserTestBuilder::buildWithId(103);
         $this->user_permission_on_fields = RetrieveUserPermissionOnFieldsStub::build();
         $this->fields_retriever          = RetrieveUsedFieldsStub::withFields(
-            IntFieldBuilder::anIntField(841)
+            IntegerFieldBuilder::anIntField(841)
                 ->withName(self::FIELD_NAME)
                 ->inTracker($this->first_tracker)
                 ->withReadPermission($this->user, true)
@@ -209,7 +209,7 @@ final class DuckTypedFieldCheckerTest extends TestCase
     public function testSearchCheckFailsWhenFieldsAreIncompatible(): void
     {
         $this->fields_retriever = RetrieveUsedFieldsStub::withFields(
-            IntFieldBuilder::anIntField(308)
+            IntegerFieldBuilder::anIntField(308)
                 ->withName(self::FIELD_NAME)
                 ->inTracker($this->first_tracker)
                 ->withReadPermission($this->user, true)
@@ -237,7 +237,7 @@ final class DuckTypedFieldCheckerTest extends TestCase
                 ->inTracker($this->first_tracker)
                 ->withReadPermission($this->user, true)
                 ->build(),
-            IntFieldBuilder::anIntField(308)
+            IntegerFieldBuilder::anIntField(308)
                 ->withName(self::FIELD_NAME)
                 ->inTracker($this->second_tracker)
                 ->withReadPermission($this->user, true)
@@ -255,7 +255,7 @@ final class DuckTypedFieldCheckerTest extends TestCase
     public function testSearchCheckFailsWhenUserCannotReadFieldInAnyTracker(): void
     {
         $this->fields_retriever = RetrieveUsedFieldsStub::withFields(
-            IntFieldBuilder::anIntField(841)
+            IntegerFieldBuilder::anIntField(841)
                 ->withName(self::FIELD_NAME)
                 ->inTracker($this->first_tracker)
                 ->withReadPermission($this->user, false)

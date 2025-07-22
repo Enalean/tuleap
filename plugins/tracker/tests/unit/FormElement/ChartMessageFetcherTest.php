@@ -26,12 +26,12 @@ use EventManager;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tracker_FormElement_Chart_Field_Exception;
-use Tracker_FormElement_Field_Integer;
 use Tracker_HierarchyFactory;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\ProvideCurrentUserStub;
+use Tuleap\Tracker\FormElement\Field\Integer\IntegerField;
 use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\IntegerFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Tracker;
 
@@ -39,7 +39,7 @@ use Tuleap\Tracker\Tracker;
 final class ChartMessageFetcherTest extends TestCase
 {
     private ChartMessageFetcher $message_fetcher;
-    private Tracker_FormElement_Field_Integer $field;
+    private IntegerField $field;
     private ChartConfigurationFieldRetriever&MockObject $configuration_field_retriever;
     private Tracker_HierarchyFactory&MockObject $hierarchy_factory;
 
@@ -57,7 +57,7 @@ final class ChartMessageFetcherTest extends TestCase
         $event_manager->method('processEvent');
 
         $tracker     = TrackerTestBuilder::aTracker()->withId(123)->build();
-        $this->field = IntFieldBuilder::anIntField(685)->inTracker($tracker)->build();
+        $this->field = IntegerFieldBuilder::anIntField(685)->inTracker($tracker)->build();
     }
 
     public function testItDisplaysWarningsWhenFieldsAreMissingInChartConfiguration(): void
@@ -83,7 +83,7 @@ final class ChartMessageFetcherTest extends TestCase
         $start_date_field = DateFieldBuilder::aDateField(985)->build();
 
         $this->configuration_field_retriever->method('getStartDateField')->willReturn($start_date_field);
-        $duration_field = IntFieldBuilder::anIntField(3543)->build();
+        $duration_field = IntegerFieldBuilder::anIntField(3543)->build();
 
         $this->configuration_field_retriever->method('getDurationField')->willReturn($duration_field);
 

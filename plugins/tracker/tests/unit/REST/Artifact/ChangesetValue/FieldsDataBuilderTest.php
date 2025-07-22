@@ -31,7 +31,7 @@ use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ArtifactValuesRepresentationBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ArtifactLinkFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\FloatFieldBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\IntegerFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\TextFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -52,7 +52,7 @@ final class FieldsDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     private const TEXT_VALUE      = 'fluttery Azerbaijanese';
     private const TEXT_FORMAT     = 'text';
     private const LINK_FIELD_ID   = 514;
-    private \Tracker_FormElement_Field_Integer $int_field;
+    private \Tuleap\Tracker\FormElement\Field\Integer\IntegerField $int_field;
     private \Tracker_FormElement_Field_Float $float_field;
     private \Tuleap\Tracker\FormElement\Field\String\StringField $string_field;
     private \Tuleap\Tracker\FormElement\Field\Text\TextField $text_field;
@@ -63,7 +63,7 @@ final class FieldsDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     protected function setUp(): void
     {
         $this->tracker      = TrackerTestBuilder::aTracker()->withId(self::TRACKER_ID)->build();
-        $this->int_field    = IntFieldBuilder::anIntField(self::INT_FIELD_ID)
+        $this->int_field    = IntegerFieldBuilder::anIntField(self::INT_FIELD_ID)
             ->inTracker($this->tracker)
             ->build();
         $this->float_field  = FloatFieldBuilder::aFloatField(self::FLOAT_FIELD_ID)

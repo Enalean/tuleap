@@ -30,7 +30,7 @@ use Tuleap\Test\Stubs\EventDispatcherStub;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ExternalFieldBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\IntegerFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -252,7 +252,7 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
             ->withName('release_number')
             ->inTracker($this->source_tracker)
             ->build();
-        $destination_int_field = IntFieldBuilder::anIntField(102)
+        $destination_int_field = IntegerFieldBuilder::anIntField(102)
             ->withName('release_number')
             ->inTracker($this->destination_tracker)
             ->build();

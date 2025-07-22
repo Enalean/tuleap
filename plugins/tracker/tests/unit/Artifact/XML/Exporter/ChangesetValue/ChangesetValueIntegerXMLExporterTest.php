@@ -29,7 +29,7 @@ use Tracker_FormElement_Field;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueIntegerTestBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\IntegerFieldBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ChangesetValueIntegerXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -46,7 +46,7 @@ final class ChangesetValueIntegerXMLExporterTest extends \Tuleap\Test\PHPUnit\Te
 
     protected function setUp(): void
     {
-        $this->field         = IntFieldBuilder::anIntField(1001)->withName('story_points')->build();
+        $this->field         = IntegerFieldBuilder::anIntField(1001)->withName('story_points')->build();
         $this->exporter      = new ChangesetValueIntegerXMLExporter();
         $this->artifact_xml  = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><artifact />');
         $this->changeset_xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><changeset />');

@@ -24,8 +24,9 @@ declare(strict_types=1);
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Tracker\FormElement\Field\Integer\IntegerField;
 use Tuleap\Tracker\FormElement\Field\Text\TextField;
-use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\IntegerFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 #[DisableReturnValueGenerationForTestDoubles]
@@ -70,14 +71,14 @@ final class TrackerReportRESTGetTest extends \Tuleap\Test\PHPUnit\TestCase //php
     public function testItChoosesTheFormElementIdOverTheShortName(): void
     {
         $this->formelement_factory->method('getFormElementById')->willReturnCallback(fn (mixed $id) => match ($id) {
-            137 => IntFieldBuilder::anIntField(137)->withReadPermission($this->current_user, true)->build(),
+            137 => IntegerFieldBuilder::anIntField(137)->withReadPermission($this->current_user, true)->build(),
             default => null,
         });
         $this->formelement_factory
             ->expects($this->exactly(2))
             ->method('getFormElementByName')
             ->willReturn(
-                IntFieldBuilder::anIntField(1001)
+                IntegerFieldBuilder::anIntField(1001)
                     ->withReadPermission($this->current_user, true)
                     ->build()
             );
@@ -88,7 +89,7 @@ final class TrackerReportRESTGetTest extends \Tuleap\Test\PHPUnit\TestCase //php
     public function testItThrowExceptionIfGivenFormelementsDontExist(): void
     {
         $this->formelement_factory->method('getFormElementById')->willReturnCallback(fn (mixed $id) => match ($id) {
-            137 => IntFieldBuilder::anIntField(137)->withReadPermission($this->current_user, true)->build(),
+            137 => IntegerFieldBuilder::anIntField(137)->withReadPermission($this->current_user, true)->build(),
             default => null,
         });
         $this->formelement_factory
@@ -107,9 +108,9 @@ final class TrackerReportRESTGetTest extends \Tuleap\Test\PHPUnit\TestCase //php
 
         $this->formelement_factory->expects($this->exactly(3))->method('getFormElementByName')
             ->willReturnCallback(fn (int $tracker_id, mixed $name) => match (true) {
-                $tracker_id === 444 && $name === 137 => IntFieldBuilder::anIntField(137)->withReadPermission($this->current_user, true)->build(),
-                $tracker_id === 444 && $name === 'my_field' => IntFieldBuilder::anIntField(1001)->withReadPermission($this->current_user, true)->build(),
-                $tracker_id === 444 && $name === 'my_other_field' => IntFieldBuilder::anIntField(1002)->withReadPermission($this->current_user, true)->build(),
+                $tracker_id === 444 && $name === 137 => IntegerFieldBuilder::anIntField(137)->withReadPermission($this->current_user, true)->build(),
+                $tracker_id === 444 && $name === 'my_field' => IntegerFieldBuilder::anIntField(1001)->withReadPermission($this->current_user, true)->build(),
+                $tracker_id === 444 && $name === 'my_other_field' => IntegerFieldBuilder::anIntField(1002)->withReadPermission($this->current_user, true)->build(),
             });
 
         $this->report->getCriteria();
@@ -117,9 +118,9 @@ final class TrackerReportRESTGetTest extends \Tuleap\Test\PHPUnit\TestCase //php
 
     public function testItOnlyAddsCriteriaOnFieldsUserCanSee(): void
     {
-        $field_1 = $this->createMock(Tracker_FormElement_Field_Integer::class);
-        $field_2 = $this->createMock(Tracker_FormElement_Field_Integer::class);
-        $field_3 = $this->createMock(Tracker_FormElement_Field_Integer::class);
+        $field_1 = $this->createMock(IntegerField::class);
+        $field_2 = $this->createMock(IntegerField::class);
+        $field_3 = $this->createMock(IntegerField::class);
 
         $this->formelement_factory->method('getFormElementById')->willReturnCallback(fn (mixed $id) => match ($id) {
             'my_field' => $field_1,
@@ -147,7 +148,7 @@ final class TrackerReportRESTGetTest extends \Tuleap\Test\PHPUnit\TestCase //php
 
     public function testItAddsCriteria(): void
     {
-        $integer = $this->createMock(Tracker_FormElement_Field_Integer::class);
+        $integer = $this->createMock(IntegerField::class);
         $integer->method('getId')->willReturn(22);
         $integer->method('userCanRead')->willReturn(true);
 
@@ -161,7 +162,7 @@ final class TrackerReportRESTGetTest extends \Tuleap\Test\PHPUnit\TestCase //php
         });
         $this->formelement_factory->method('getFormElementByName')->willReturnCallback(fn (int $tracker_id, mixed $name) => match ($name) {
             'my_field' => $label,
-            'my_other_field' => IntFieldBuilder::anIntField(1001)->withReadPermission($this->current_user, false)->build(),
+            'my_other_field' => IntegerFieldBuilder::anIntField(1001)->withReadPermission($this->current_user, false)->build(),
         });
 
         $integer->expects($this->once())->method('setCriteriaValueFromREST')->willReturn(true);

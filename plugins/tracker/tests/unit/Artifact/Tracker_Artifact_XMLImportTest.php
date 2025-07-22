@@ -69,7 +69,7 @@ use Tuleap\Tracker\Test\Builders\Fields\ArtifactLinkFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\FileFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\FloatFieldBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\IntegerFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\TextFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -1701,7 +1701,7 @@ final class Tracker_Artifact_XMLImportTest extends TestCase // phpcs:ignore Squi
         $string_field->method('getId')->willReturn(369);
         $string_field->method('validateField')->willReturn(true);
         $string_field->method('setTracker');
-        $int_field     = IntFieldBuilder::anIntField(234)->build();
+        $int_field     = IntegerFieldBuilder::anIntField(234)->build();
         $float_field   = FloatFieldBuilder::aFloatField(347)->build();
         $date_field    = DateFieldBuilder::aDateField(978)->build();
         $summary_field = StringFieldBuilder::aStringField($this->summary_field_id)->inTracker($this->tracker)->withName('summary')
@@ -1756,7 +1756,7 @@ final class Tracker_Artifact_XMLImportTest extends TestCase // phpcs:ignore Squi
         $string_field->method('getId')->willReturn(369);
         $string_field->method('validateField')->willReturn(true);
         $string_field->method('setTracker');
-        $int_field     = IntFieldBuilder::anIntField(234)->build();
+        $int_field     = IntegerFieldBuilder::anIntField(234)->build();
         $float_field   = FloatFieldBuilder::aFloatField(347)->build();
         $date_field    = DateFieldBuilder::aDateField(978)->withTime()->build();
         $summary_field = StringFieldBuilder::aStringField($this->summary_field_id)->inTracker($this->tracker)->withName('summary')
@@ -1822,7 +1822,7 @@ final class Tracker_Artifact_XMLImportTest extends TestCase // phpcs:ignore Squi
         $this->formelement_factory->method('getUsedFieldByName')->with(self::TRACKER_ID, self::isString())
             ->willReturnCallback(static fn(int $tracker_id, string $name) => match ($name) {
                 'i_want_to'        => StringFieldBuilder::aStringField(369)->build(),
-                'initial_effort'   => IntFieldBuilder::anIntField(234)->build(),
+                'initial_effort'   => IntegerFieldBuilder::anIntField(234)->build(),
                 'remaining_effort' => FloatFieldBuilder::aFloatField(347)->build(),
                 'start_date'       => DateFieldBuilder::aDateField(978)->build(),
             });

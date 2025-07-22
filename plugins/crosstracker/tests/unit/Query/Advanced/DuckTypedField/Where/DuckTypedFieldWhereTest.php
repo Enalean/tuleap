@@ -33,7 +33,7 @@ use Tuleap\NeverThrow\Result;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\Fields\ExternalFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\FloatFieldBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\IntegerFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveFieldTypeStub;
@@ -58,7 +58,7 @@ final class DuckTypedFieldWhereTest extends TestCase
         $this->second_tracker = TrackerTestBuilder::aTracker()->withId(self::SECOND_TRACKER_ID)->build();
 
         $this->fields = [
-            IntFieldBuilder::anIntField(self::INT_FIELD_ID)
+            IntegerFieldBuilder::anIntField(self::INT_FIELD_ID)
                 ->withName(self::FIELD_NAME)
                 ->inTracker($this->first_tracker)
                 ->build(),
@@ -126,7 +126,7 @@ final class DuckTypedFieldWhereTest extends TestCase
     public function testItReturnsErrWhenSecondFieldTypeIsNotSupported(): void
     {
         $this->fields = [
-            IntFieldBuilder::anIntField(self::INT_FIELD_ID)
+            IntegerFieldBuilder::anIntField(self::INT_FIELD_ID)
                 ->withName(self::FIELD_NAME)
                 ->inTracker($this->first_tracker)
                 ->build(),
@@ -145,7 +145,7 @@ final class DuckTypedFieldWhereTest extends TestCase
     public function testItReturnsErrWhenFieldHasAnIncompatibleTypeInSecondTracker(): void
     {
         $this->fields = [
-            IntFieldBuilder::anIntField(self::INT_FIELD_ID)
+            IntegerFieldBuilder::anIntField(self::INT_FIELD_ID)
                 ->withName(self::FIELD_NAME)
                 ->inTracker($this->first_tracker)
                 ->build(),

@@ -67,7 +67,7 @@ use Tuleap\Tracker\Test\Builders\Fields\ArtifactLinkFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ExternalFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\FloatFieldBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\IntegerFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserGroupBindBuilder;
@@ -264,7 +264,7 @@ EOL
     {
         $result = $this->getSelectedResult(
             RetrieveUsedFieldsStub::withFields(
-                IntFieldBuilder::anIntField(self::FIRST_FIELD_ID)
+                IntegerFieldBuilder::anIntField(self::FIRST_FIELD_ID)
                     ->withName(self::FIELD_NAME)
                     ->inTracker($this->first_tracker)
                     ->build(),

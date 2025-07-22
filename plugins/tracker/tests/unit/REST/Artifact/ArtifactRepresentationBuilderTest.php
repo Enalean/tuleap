@@ -154,7 +154,7 @@ final class ArtifactRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestC
     {
         $current_user = UserTestBuilder::buildWithDefaults();
 
-        $first_field = $this->createMock(\Tracker_FormElement_Field_Integer::class);
+        $first_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\Integer\IntegerField::class);
         $first_field->method('userCanRead')->willReturn(true);
         $first_field->method('getName')->willReturn('field01');
         $first_field->method('getRESTValue')->willReturn('01');
@@ -184,7 +184,7 @@ final class ArtifactRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestC
     {
         $current_user = UserTestBuilder::buildWithDefaults();
 
-        $first_field = $this->createMock(\Tracker_FormElement_Field_Integer::class);
+        $first_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\Integer\IntegerField::class);
         $first_field->method('userCanRead')->willReturn(true);
         $first_field->method('getName')->willReturn('field01');
         $first_field->method('getRESTValue')->willReturn('01');

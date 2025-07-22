@@ -47,7 +47,7 @@ use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueDateTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueIntegerTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\IntegerFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Tracker;
 
@@ -121,7 +121,7 @@ final class Tracker_FormElement_Field_BurndownTest extends TestCase // phpcs:ign
 
     private function getADurationField(?int $value): void
     {
-        $duration_field = IntFieldBuilder::anIntField(790)->withReadPermission($this->user, true)->build();
+        $duration_field = IntegerFieldBuilder::anIntField(790)->withReadPermission($this->user, true)->build();
         if ($value !== null) {
             $duration_changeset_value = ChangesetValueIntegerTestBuilder::aValue(2, $this->artifact->getLastChangeset(), $duration_field)
                 ->withValue($value)
@@ -213,7 +213,7 @@ final class Tracker_FormElement_Field_BurndownTest extends TestCase // phpcs:ign
 
         $this->burndown_field->method('buildBurndownDataForLegacy')->with($this->user, $this->sprint)->willReturn($burndown_data);
 
-        $duration_field = IntFieldBuilder::anIntField(452)->build();
+        $duration_field = IntegerFieldBuilder::anIntField(452)->build();
         $this->form_element_factory->method('getNumericFieldByNameForUser')
             ->with($this->sprint_tracker, $this->user, 'duration')->willReturn($duration_field);
 

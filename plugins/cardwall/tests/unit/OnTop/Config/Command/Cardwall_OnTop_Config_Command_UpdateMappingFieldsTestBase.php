@@ -33,7 +33,7 @@ use Tracker_FormElement_Field;
 use Tracker_FormElementFactory;
 use TrackerFactory;
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\IntegerFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Tracker;
 
@@ -98,6 +98,6 @@ abstract class Cardwall_OnTop_Config_Command_UpdateMappingFieldsTestBase extends
 
     private function buildField(int $id, Tracker $tracker): Tracker_FormElement_Field
     {
-        return IntFieldBuilder::anIntField($id)->inTracker($tracker)->build();
+        return IntegerFieldBuilder::anIntField($id)->inTracker($tracker)->build();
     }
 }

@@ -21,11 +21,12 @@
 use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\PriorityManager;
+use Tuleap\Tracker\FormElement\Field\Integer\IntegerField;
 use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
-class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integer implements Tracker_FormElement_Field_ReadOnly
+class Tracker_FormElement_Field_Priority extends IntegerField implements Tracker_FormElement_Field_ReadOnly
 {
     /**
      * Event emitted when a field data can be augmented by plugins

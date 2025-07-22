@@ -35,7 +35,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\UGroupRetrieverStub;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\PermissionsFunctionsWrapper;
-use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\IntegerFieldBuilder;
 use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
 
@@ -67,7 +67,7 @@ final class PermissionsForGroupsBuilderTest extends TestCase
     {
         $a_random_user = UserTestBuilder::aRandomActiveUser()->build();
 
-        $form_element = IntFieldBuilder::anIntField(1234)->inTracker($this->tracker)->build();
+        $form_element = IntegerFieldBuilder::anIntField(1234)->inTracker($this->tracker)->build();
 
         $builder = new PermissionsForGroupsBuilder(
             UGroupRetrieverStub::buildWithUserGroups(...[]),
@@ -79,7 +79,7 @@ final class PermissionsForGroupsBuilderTest extends TestCase
 
     public function testItReturnsNullWhenThereAreNoPermissionsSet(): void
     {
-        $form_element = IntFieldBuilder::anIntField(1234)->inTracker($this->tracker)->build();
+        $form_element = IntegerFieldBuilder::anIntField(1234)->inTracker($this->tracker)->build();
 
         $this->permissions_functions->method('getFieldUGroupsPermissions')->with($form_element)->willReturn([]);
 
@@ -94,7 +94,7 @@ final class PermissionsForGroupsBuilderTest extends TestCase
     public function testItReturnsEmptyRepresentationWhenNoPermissionsMatches(): void
     {
         $field_id     = 1234;
-        $form_element = IntFieldBuilder::anIntField($field_id)->inTracker($this->tracker)->build();
+        $form_element = IntegerFieldBuilder::anIntField($field_id)->inTracker($this->tracker)->build();
 
         $this->permissions_functions->method('getFieldUGroupsPermissions')->with($form_element)->willReturn(
             [
@@ -117,7 +117,7 @@ final class PermissionsForGroupsBuilderTest extends TestCase
     public function testItReturnsOneGroupThatCanRead(): void
     {
         $field_id     = 1234;
-        $form_element = IntFieldBuilder::anIntField($field_id)->inTracker($this->tracker)->build();
+        $form_element = IntegerFieldBuilder::anIntField($field_id)->inTracker($this->tracker)->build();
 
         $anonymous_ugroup = new ProjectUGroup([
             'ugroup_id' => ProjectUGroup::ANONYMOUS,
@@ -157,7 +157,7 @@ final class PermissionsForGroupsBuilderTest extends TestCase
     public function testItReturnsOneGroupThatCanSubmit(): void
     {
         $field_id     = 1234;
-        $form_element = IntFieldBuilder::anIntField($field_id)->inTracker($this->tracker)->build();
+        $form_element = IntegerFieldBuilder::anIntField($field_id)->inTracker($this->tracker)->build();
 
         $anonymous_ugroup = new ProjectUGroup([
             'ugroup_id' => ProjectUGroup::ANONYMOUS,
@@ -197,7 +197,7 @@ final class PermissionsForGroupsBuilderTest extends TestCase
     public function testItReturnsOneGroupThatCanUpdate(): void
     {
         $field_id     = 1234;
-        $form_element = IntFieldBuilder::anIntField($field_id)->inTracker($this->tracker)->build();
+        $form_element = IntegerFieldBuilder::anIntField($field_id)->inTracker($this->tracker)->build();
 
         $anonymous_ugroup = new ProjectUGroup([
             'ugroup_id' => ProjectUGroup::ANONYMOUS,
@@ -235,7 +235,7 @@ final class PermissionsForGroupsBuilderTest extends TestCase
     public function testItExcludedFromUpdateGroupsThatAreFrozenWhenThereIsAnArtifact(): void
     {
         $field_id     = 1234;
-        $form_element = IntFieldBuilder::anIntField($field_id)->inTracker($this->tracker)->build();
+        $form_element = IntegerFieldBuilder::anIntField($field_id)->inTracker($this->tracker)->build();
 
         $anonymous_ugroup = new ProjectUGroup([
             'ugroup_id' => ProjectUGroup::ANONYMOUS,
@@ -276,7 +276,7 @@ final class PermissionsForGroupsBuilderTest extends TestCase
     public function testItAllowUpdateWhenUseArifactButFieldIsNotFrozen(): void
     {
         $field_id     = 1234;
-        $form_element = IntFieldBuilder::anIntField($field_id)->inTracker($this->tracker)->build();
+        $form_element = IntegerFieldBuilder::anIntField($field_id)->inTracker($this->tracker)->build();
 
         $anonymous_ugroup = new ProjectUGroup([
             'ugroup_id' => ProjectUGroup::ANONYMOUS,
@@ -318,7 +318,7 @@ final class PermissionsForGroupsBuilderTest extends TestCase
     public function testItReturnsACompleteDefinitionOfGroups(): void
     {
         $field_id     = 1234;
-        $form_element = IntFieldBuilder::anIntField($field_id)->inTracker($this->tracker)->build();
+        $form_element = IntegerFieldBuilder::anIntField($field_id)->inTracker($this->tracker)->build();
 
         $anonymous_ugroup       = new ProjectUGroup([
             'ugroup_id' => ProjectUGroup::ANONYMOUS,

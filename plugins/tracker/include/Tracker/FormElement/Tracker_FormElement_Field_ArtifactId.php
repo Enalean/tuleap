@@ -21,11 +21,12 @@
 
 use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\Integer\IntegerField;
 use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
-class Tracker_FormElement_Field_ArtifactId extends Tracker_FormElement_Field_Integer implements Tracker_FormElement_Field_ReadOnly
+class Tracker_FormElement_Field_ArtifactId extends IntegerField implements Tracker_FormElement_Field_ReadOnly
 {
     public array $default_properties = [];
 

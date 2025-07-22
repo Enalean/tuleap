@@ -47,11 +47,11 @@ final class SetIntValueValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testValidateDoesNotThrowWhenValid(): void
     {
         $this->expectNotToPerformAssertions();
-        $integer_field = $this->createMock(\Tracker_FormElement_Field_Integer::class);
+        $integer_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\Integer\IntegerField::class);
         $integer_field
             ->method('getId')
             ->willReturn(1);
-        $other_int_field = $this->createMock(\Tracker_FormElement_Field_Integer::class);
+        $other_int_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\Integer\IntegerField::class);
         $other_int_field
             ->method('getId')
             ->willReturn(2);
@@ -89,7 +89,7 @@ final class SetIntValueValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testValidateThrowsWhenFieldIdDoesNotMatchAnIntegerField(): void
     {
-        $integer_field = $this->createMock(\Tracker_FormElement_Field_Integer::class);
+        $integer_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\Integer\IntegerField::class);
         $integer_field
             ->method('getId')
             ->willReturn(1);

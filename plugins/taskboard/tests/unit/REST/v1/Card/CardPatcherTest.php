@@ -27,12 +27,12 @@ use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tracker_FormElement_Field_Computed;
 use Tracker_FormElement_Field_Float;
-use Tracker_FormElement_Field_Integer;
 use Tracker_FormElement_Field_Numeric;
 use Tracker_FormElementFactory;
 use Tracker_NoChangeException;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\Integer\IntegerField;
 use Tuleap\Tracker\REST\Artifact\ArtifactUpdater;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
@@ -108,7 +108,7 @@ final class CardPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItUpdatesTheArtifactWithFormattedValueForIntegerField(): void
     {
-        $field = $this->createMock(Tracker_FormElement_Field_Integer::class);
+        $field = $this->createMock(IntegerField::class);
 
         $expected_value = ArtifactValuesRepresentationBuilder::aRepresentation(1001)->withValue(3.14)->build();
 
@@ -126,7 +126,7 @@ final class CardPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDoesNotRaisesExceptionIfThereIsNoChange(): void
     {
-        $field = $this->createMock(Tracker_FormElement_Field_Integer::class);
+        $field = $this->createMock(IntegerField::class);
 
         $field->method('userCanUpdate')
             ->with($this->user)

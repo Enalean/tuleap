@@ -21,13 +21,14 @@
 declare(strict_types=1);
 
 use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Tracker\FormElement\Field\Integer\IntegerField;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class Transition_PostAction_Field_IntTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     use \Tuleap\GlobalResponseMock;
 
-    private Tracker_FormElement_Field_Integer&MockObject $field;
+    private IntegerField&MockObject $field;
 
     private Transition_PostAction_Field_Int&MockObject $post_action;
 
@@ -36,7 +37,7 @@ final class Transition_PostAction_Field_IntTest extends \Tuleap\Test\PHPUnit\Tes
         $value          = 0;
         $post_action_id = 9348;
         $transition     = $this->createMock(\Transition::class);
-        $this->field    = $this->createMock(\Tracker_FormElement_Field_Integer::class);
+        $this->field    = $this->createMock(\Tuleap\Tracker\FormElement\Field\Integer\IntegerField::class);
         $this->field->method('getId')->willReturn(1131);
 
         $this->post_action = $this->getMockBuilder(\Transition_PostAction_Field_Int::class)
@@ -104,7 +105,7 @@ final class Transition_PostAction_Field_IntTest extends \Tuleap\Test\PHPUnit\Tes
         $transition = $this->createMock(Transition::class);
         $transition->method('getId')->willReturn(123);
 
-        $field_integer = $this->createMock(Tracker_FormElement_Field_Integer::class);
+        $field_integer = $this->createMock(IntegerField::class);
         $field_integer->method('getId')->willReturn(456);
 
         $post_action = new Transition_PostAction_Field_Int(

@@ -24,7 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Report\CSVExport;
 
 use Tuleap\Test\Builders\UserTestBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\IntegerFieldBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CSVFieldUsageCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -47,13 +47,13 @@ final class CSVFieldUsageCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testUnusedFieldsAreNotExportedInCSV(): void
     {
-        $field = IntFieldBuilder::anIntField(1)->unused()->build();
+        $field = IntegerFieldBuilder::anIntField(1)->unused()->build();
         $this->assertFalse(CSVFieldUsageChecker::canFieldBeExportedToCSV($field));
     }
 
     public function testUserCantExportFieldHeCanNotReadInCSV(): void
     {
-        $field = IntFieldBuilder::anIntField(1)->withReadPermission($this->user, false)->build();
+        $field = IntegerFieldBuilder::anIntField(1)->withReadPermission($this->user, false)->build();
         $this->assertFalse(CSVFieldUsageChecker::canFieldBeExportedToCSV($field));
     }
 

@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Semantic\Progress;
 
 use PHPUnit\Framework\MockObject\MockObject;
-use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\IntegerFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Tracker;
 
@@ -62,8 +62,8 @@ final class SemanticProgressBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItBuildsAnEffortBasedSemanticProgress(): void
     {
-        $total_effort_field     = IntFieldBuilder::anIntField(1001)->build();
-        $remaining_effort_field = IntFieldBuilder::anIntField(1002)->build();
+        $total_effort_field     = IntegerFieldBuilder::anIntField(1001)->build();
+        $remaining_effort_field = IntegerFieldBuilder::anIntField(1002)->build();
 
         $this->dao->expects($this->once())->method('searchByTrackerId')->willReturn(
             [

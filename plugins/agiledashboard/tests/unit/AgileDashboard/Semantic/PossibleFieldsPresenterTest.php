@@ -30,7 +30,7 @@ final class PossibleFieldsPresenterTest extends TestCase
 {
     public function testItBuildsPresenterFromNumericFieldList(): void
     {
-        $field          = new \Tracker_FormElement_Field_Integer(
+        $field          = new \Tuleap\Tracker\FormElement\Field\Integer\IntegerField(
             1,
             10,
             0,
@@ -43,7 +43,7 @@ final class PossibleFieldsPresenterTest extends TestCase
             false,
             1
         );
-        $selected_field = new \Tracker_FormElement_Field_Integer(
+        $selected_field = new \Tuleap\Tracker\FormElement\Field\Integer\IntegerField(
             2,
             10,
             0,

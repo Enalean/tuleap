@@ -26,7 +26,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Tracker_FormElementFactory;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\IntegerFieldBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FormattedChangesetValueForIntFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -44,7 +44,7 @@ final class FormattedChangesetValueForIntFieldRetrieverTest extends \Tuleap\Test
 
     public function testGetFormattedChangesetValueForIntFile(): void
     {
-        $field = IntFieldBuilder::anIntField(112)->build();
+        $field = IntegerFieldBuilder::anIntField(112)->build();
 
         $this->tracker_formelement_factory->method('getUsedFieldByNameForUser')->willReturn($field);
 
