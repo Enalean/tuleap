@@ -26,6 +26,7 @@ import type {
 } from "@tuleap/plugin-tracker-rest-api-types";
 import type {
     LINKS_FIELD,
+    NUMERIC_FIELD,
     STATIC_LIST_FIELD,
     STRING_FIELD,
     USER_GROUP_LIST_FIELD,
@@ -44,7 +45,8 @@ export type ConfigurationFieldType =
     | typeof LINKS_FIELD
     | typeof USER_GROUP_LIST_FIELD
     | typeof STATIC_LIST_FIELD
-    | typeof USER_LIST_FIELD;
+    | typeof USER_LIST_FIELD
+    | typeof NUMERIC_FIELD;
 
 export type ConfigurationField = {
     readonly type: ConfigurationFieldType;

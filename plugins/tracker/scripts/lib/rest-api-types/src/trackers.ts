@@ -36,6 +36,13 @@ import type { UserGroupRepresentation } from "./artifacts";
 import type { OpenListFieldStructure } from "./open-list-field";
 import type { ListFieldStructure } from "./list-field";
 import type { ArtifactLinkFieldStructure } from "./link-field";
+import type {
+    ArtifactIdFieldIdentifier,
+    ArtifactIdInTrackerFieldIdentifier,
+    FloatFieldIdentifier,
+    IntFieldIdentifier,
+    PriorityFieldIdentifier,
+} from "@tuleap/plugin-tracker-constants/src/constants";
 
 export * from "./open-list-field";
 export * from "./list-field";
@@ -87,6 +94,15 @@ export interface PermissionsOnArtifactFieldStructure extends BaseFieldStructure 
     };
 }
 
+export interface NumericFieldStructure extends BaseFieldStructure {
+    readonly type:
+        | ArtifactIdFieldIdentifier
+        | ArtifactIdInTrackerFieldIdentifier
+        | FloatFieldIdentifier
+        | IntFieldIdentifier
+        | PriorityFieldIdentifier;
+}
+
 export type StructureFields =
     | UnknownFieldStructure
     | ArtifactLinkFieldStructure
@@ -95,7 +111,8 @@ export type StructureFields =
     | ListFieldStructure
     | OpenListFieldStructure
     | PermissionsOnArtifactFieldStructure
-    | StringFieldStructure;
+    | StringFieldStructure
+    | NumericFieldStructure;
 
 export interface StructureFormat {
     readonly id: number;

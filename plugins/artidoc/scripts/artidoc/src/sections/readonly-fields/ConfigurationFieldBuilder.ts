@@ -30,6 +30,11 @@ import {
     SELECTBOX_FIELD,
     STRING_FIELD as TRACKER_STRING_FIELD,
     ARTIFACT_LINK_FIELD,
+    ARTIFACT_ID_FIELD,
+    ARTIFACT_ID_IN_TRACKER_FIELD,
+    FLOAT_FIELD,
+    INT_FIELD,
+    PRIORITY_FIELD,
 } from "@tuleap/plugin-tracker-constants";
 import type {
     ConfigurationField,
@@ -41,6 +46,7 @@ import {
 } from "@/sections/readonly-fields/AvailableReadonlyFields";
 import {
     LINKS_FIELD,
+    NUMERIC_FIELD,
     STATIC_LIST_FIELD,
     STRING_FIELD,
     USER_GROUP_LIST_FIELD,
@@ -61,6 +67,16 @@ const buildConfiguredListFieldType = (list_bind_type: ListBindType): Configurati
     throw new Error(`Unknown list bind type ${list_bind_type}`);
 };
 
+const isNumericField = (field: StructureFields): boolean => {
+    return [
+        ARTIFACT_ID_FIELD.toString(),
+        ARTIFACT_ID_IN_TRACKER_FIELD.toString(),
+        FLOAT_FIELD.toString(),
+        INT_FIELD.toString(),
+        PRIORITY_FIELD.toString(),
+    ].includes(field.type);
+};
+
 const buildConfiguredFieldIfSupported = (field: StructureFields): Option<ConfigurationField> => {
     const field_base = {
         field_id: field.field_id,
@@ -73,6 +89,14 @@ const buildConfiguredFieldIfSupported = (field: StructureFields): Option<Configu
             ...field_base,
             display_type: DISPLAY_TYPE_COLUMN,
             type: STRING_FIELD,
+        });
+    }
+
+    if (isNumericField(field)) {
+        return Option.fromValue<ConfigurationField>({
+            ...field_base,
+            display_type: DISPLAY_TYPE_COLUMN,
+            type: NUMERIC_FIELD,
         });
     }
 
