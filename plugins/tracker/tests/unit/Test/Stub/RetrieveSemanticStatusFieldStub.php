@@ -48,6 +48,7 @@ final class RetrieveSemanticStatusFieldStub implements RetrieveSemanticStatusFie
         return $this;
     }
 
+    #[\Override]
     public function fromTracker(Tracker $tracker): ?Tracker_FormElement_Field_List
     {
         if (! isset($this->fields[$tracker->getId()])) {

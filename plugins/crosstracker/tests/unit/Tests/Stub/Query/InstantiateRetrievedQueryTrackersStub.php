@@ -40,6 +40,7 @@ final readonly class InstantiateRetrievedQueryTrackersStub implements Instantiat
         return new self([]);
     }
 
+    #[\Override]
     public function getTrackers(array $trackers_ids): array
     {
         return $this->trackers;

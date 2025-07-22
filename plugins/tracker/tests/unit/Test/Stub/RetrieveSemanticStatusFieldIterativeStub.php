@@ -56,6 +56,7 @@ final class RetrieveSemanticStatusFieldIterativeStub implements \Tuleap\Tracker\
         return new self(true, false, []);
     }
 
+    #[\Override]
     public function fromTracker(\Tuleap\Tracker\Tracker $tracker): ?\Tracker_FormElement_Field_List
     {
         $this->call_count++;
