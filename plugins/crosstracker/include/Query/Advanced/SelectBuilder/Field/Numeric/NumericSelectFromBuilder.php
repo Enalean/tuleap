@@ -22,23 +22,28 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Query\Advanced\SelectBuilder\Field\Numeric;
 
+use ParagonIE\EasyDB\EasyDB;
 use ParagonIE\EasyDB\EasyStatement;
 use Tuleap\CrossTracker\Query\Advanced\DuckTypedField\Select\DuckTypedFieldSelect;
 use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\IProvideParametrizedSelectAndFromSQLFragments;
 use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\ParametrizedSelectFrom;
 use Tuleap\CrossTracker\Query\Advanced\SelectResultKey;
 
-final class NumericSelectFromBuilder
+final readonly class NumericSelectFromBuilder
 {
+    public function __construct(private EasyDB $easy_db)
+    {
+    }
+
     public function getSelectFrom(DuckTypedFieldSelect $field): IProvideParametrizedSelectAndFromSQLFragments
     {
         $suffix                      = SelectResultKey::fromDuckTypedField($field);
-        $suffix_int                  = "int_$suffix";
-        $suffix_float                = "float_$suffix";
-        $tracker_field_alias         = "TF_$suffix";
-        $changeset_value_alias       = "CV_$suffix";
-        $changeset_value_int_alias   = "CVInt_$suffix";
-        $changeset_value_float_alias = "CVFloat_$suffix";
+        $suffix_int                  = $this->easy_db->escapeIdentifier("int_$suffix");
+        $suffix_float                = $this->easy_db->escapeIdentifier("float_$suffix");
+        $tracker_field_alias         = $this->easy_db->escapeIdentifier("TF_$suffix");
+        $changeset_value_alias       = $this->easy_db->escapeIdentifier("CV_$suffix");
+        $changeset_value_int_alias   = $this->easy_db->escapeIdentifier("CVInt_$suffix");
+        $changeset_value_float_alias = $this->easy_db->escapeIdentifier("CVFloat_$suffix");
 
         $fields_id_statement = EasyStatement::open()->in(
             "$tracker_field_alias.id IN (?*)",

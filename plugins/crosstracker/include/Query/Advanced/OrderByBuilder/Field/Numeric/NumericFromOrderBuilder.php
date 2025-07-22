@@ -22,21 +22,26 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Query\Advanced\OrderByBuilder\Field\Numeric;
 
+use ParagonIE\EasyDB\EasyDB;
 use ParagonIE\EasyDB\EasyStatement;
 use Tuleap\CrossTracker\Query\Advanced\DuckTypedField\OrderBy\DuckTypedFieldOrderBy;
 use Tuleap\CrossTracker\Query\Advanced\OrderByBuilder\ParametrizedFromOrder;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrderByDirection;
 
-final class NumericFromOrderBuilder
+final readonly class NumericFromOrderBuilder
 {
+    public function __construct(private EasyDB $easy_db)
+    {
+    }
+
     public function getFromOrder(DuckTypedFieldOrderBy $field, OrderByDirection $direction): ParametrizedFromOrder
     {
-        $suffix                        = spl_object_hash($field);
-        $tracker_field_alias           = "TF_$suffix";
-        $changeset_value_alias         = "CV_$suffix";
-        $changeset_value_int_alias     = "CVInt_$suffix";
-        $changeset_value_float_alias   = "CVFloat_$suffix";
-        $changeset_value_numeric_alias = "CVNumeric_$suffix";
+        $suffix                        = $direction->value;
+        $tracker_field_alias           = $this->easy_db->escapeIdentifier("TF_$suffix");
+        $changeset_value_alias         = $this->easy_db->escapeIdentifier("CV_$suffix");
+        $changeset_value_int_alias     = $this->easy_db->escapeIdentifier("CVInt_$suffix");
+        $changeset_value_float_alias   = $this->easy_db->escapeIdentifier("CVFloat_$suffix");
+        $changeset_value_numeric_alias = $this->easy_db->escapeIdentifier("CVNumeric_$suffix");
 
         $fields_id_statement = EasyStatement::open()->in(
             "$tracker_field_alias.id IN (?*)",

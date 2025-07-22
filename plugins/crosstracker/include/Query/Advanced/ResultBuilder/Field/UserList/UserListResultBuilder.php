@@ -51,7 +51,8 @@ final readonly class UserListResultBuilder
     public function getResult(DuckTypedFieldSelect $field, array $select_results): SelectedValuesCollection
     {
         $values = [];
-        $alias  = SelectResultKey::fromDuckTypedField($field);
+        $alias  = SelectResultKey::fromDuckTypedField($field)->__toString();
+
 
         foreach ($select_results as $result) {
             $id = $result['id'];

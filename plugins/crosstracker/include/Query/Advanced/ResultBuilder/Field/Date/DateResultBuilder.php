@@ -49,7 +49,7 @@ final readonly class DateResultBuilder
     public function getResult(DuckTypedFieldSelect $field, array $select_results, PFUser $user): SelectedValuesCollection
     {
         $values = [];
-        $alias  = SelectResultKey::fromDuckTypedField($field);
+        $alias  = SelectResultKey::fromDuckTypedField($field)->__toString();
 
         foreach ($select_results as $result) {
             $id = (int) $result['id'];

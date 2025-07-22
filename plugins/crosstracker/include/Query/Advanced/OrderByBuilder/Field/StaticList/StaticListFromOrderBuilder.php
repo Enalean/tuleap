@@ -22,22 +22,27 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Query\Advanced\OrderByBuilder\Field\StaticList;
 
+use ParagonIE\EasyDB\EasyDB;
 use ParagonIE\EasyDB\EasyStatement;
 use Tuleap\CrossTracker\Query\Advanced\OrderByBuilder\ParametrizedFromOrder;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrderByDirection;
 
-final class StaticListFromOrderBuilder
+final readonly class StaticListFromOrderBuilder
 {
+    public function __construct(private EasyDB $easy_db)
+    {
+    }
+
     /**
      * @param list<int> $field_ids
      */
     public function getFromOrder(array $field_ids, OrderByDirection $direction): ParametrizedFromOrder
     {
-        $suffix                               = md5($direction->value);
-        $tracker_field_alias                  = "TF_$suffix";
-        $changeset_value_alias                = "CV_$suffix";
-        $tracker_changeset_value_list_alias   = "TCVL_$suffix";
-        $tracker_field_list_bind_static_alias = "TFLBSV_$suffix";
+        $suffix                               = $direction->value;
+        $tracker_field_alias                  = $this->easy_db->escapeIdentifier("TF_$suffix");
+        $changeset_value_alias                = $this->easy_db->escapeIdentifier("CV_$suffix");
+        $tracker_changeset_value_list_alias   = $this->easy_db->escapeIdentifier("TCVL_$suffix");
+        $tracker_field_list_bind_static_alias = $this->easy_db->escapeIdentifier("TFLBSV_$suffix");
 
         $fields_id_statement = EasyStatement::open()->in("$tracker_field_alias.id IN(?*)", $field_ids);
         $from                = <<<EOSQL

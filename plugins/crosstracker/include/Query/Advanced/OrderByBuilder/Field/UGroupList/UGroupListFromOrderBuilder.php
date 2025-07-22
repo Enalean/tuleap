@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Query\Advanced\OrderByBuilder\Field\UGroupList;
 
+use ParagonIE\EasyDB\EasyDB;
 use ParagonIE\EasyDB\EasyStatement;
 use ProjectUGroup;
 use Tuleap\CrossTracker\Query\Advanced\OrderByBuilder\ParametrizedFromOrder;
@@ -32,6 +33,7 @@ final readonly class UGroupListFromOrderBuilder
 {
     public function __construct(
         private UGroupManager $user_group_manager,
+        private EasyDB $easy_db,
     ) {
     }
 
@@ -40,12 +42,12 @@ final readonly class UGroupListFromOrderBuilder
      */
     public function getFromOrder(array $field_ids, OrderByDirection $direction): ParametrizedFromOrder
     {
-        $suffix                                      = md5($direction->value);
-        $tracker_field_alias                         = "TF_$suffix";
-        $changeset_value_alias                       = "CV_$suffix";
-        $tracker_changeset_value_list_alias          = "TCVL_$suffix";
-        $tracker_field_list_bind_ugroups_value_alias = "TFLBYV_$suffix";
-        $ugroup_alias                                = "UG_$suffix";
+        $suffix                                      = $direction->value;
+        $tracker_field_alias                         = $this->easy_db->escapeIdentifier("TF_$suffix");
+        $changeset_value_alias                       = $this->easy_db->escapeIdentifier("CV_$suffix");
+        $tracker_changeset_value_list_alias          = $this->easy_db->escapeIdentifier("TCVL_$suffix");
+        $tracker_field_list_bind_ugroups_value_alias = $this->easy_db->escapeIdentifier("TFLBYV_$suffix");
+        $ugroup_alias                                = $this->easy_db->escapeIdentifier("UG_$suffix");
 
         $fields_id_statement = EasyStatement::open()->in("$tracker_field_alias.id IN(?*)", $field_ids);
         $user_group_cases    = $this->getTranslatedUserGroupNamesCases();
