@@ -37,6 +37,7 @@ final readonly class TrackersListAllowedByPlugins implements InstantiateRetrieve
      * @param int[] $trackers_ids
      * @return Tracker[]
      */
+    #[\Override]
     public function getTrackers(array $trackers_ids): array
     {
         $event = $this->event_dispatcher->dispatch(new RetrievedQueryTrackerIds($trackers_ids));
