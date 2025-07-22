@@ -35,7 +35,7 @@ export interface DeleteItemEvent {
     item: Item;
 }
 
-export interface UpdatePermissionsEvent {
+export interface ShowUpdatePermissionsModalEvent {
     detail: { current_item: Item };
 }
 
@@ -90,6 +90,11 @@ export interface UpdateCriteriaDateEvent {
     value: SearchDate;
 }
 
+export interface UpdatePermissionsEvent {
+    label: string;
+    value: Array<{ id: number }>;
+}
+
 export type UpdateApplyPermissionsOnChildren = {
     do_permissions_apply_on_children: boolean;
 };
@@ -112,6 +117,10 @@ export type ShowFileCreationModalEvent = {
     detail: ShowFileCreationModalEventDetail;
 };
 
+export type CreateItemEvent =
+    | { item: Item; type: ItemType; from_alternative?: NewItemAlternative }
+    | { item: Item; type: string; is_other: true };
+
 export type Events = {
     "update-status-property": string;
     "update-status-recursion": boolean;
@@ -122,7 +131,7 @@ export type Events = {
     "update-changelog-property": string;
     "toggle-quick-look": { details: { item: Item } };
     "show-update-item-properties-modal": UpdatePropertiesEvent;
-    "show-update-permissions-modal": UpdatePermissionsEvent;
+    "show-update-permissions-modal": ShowUpdatePermissionsModalEvent;
     "show-create-new-item-version-modal": NewVersionEvent;
     "show-create-new-version-modal-for-empty": { item: Empty; type: ItemType };
     "set-dropdown-shown": { is_dropdown_shown: boolean };
@@ -133,9 +142,7 @@ export type Events = {
     "show-file-creation-modal": ShowFileCreationModalEvent;
     "hide-action-menu": void;
     "update-multiple-properties-list-value": UpdateMultipleListValueEvent;
-    createItem:
-        | { item: Item; type: ItemType; from_alternative?: NewItemAlternative }
-        | { item: Item; type: string; is_other: true };
+    createItem: CreateItemEvent;
     deleteItem: DeleteItemEvent;
     "new-item-has-just-been-created": { id: number };
     "item-properties-have-just-been-updated": void;
@@ -154,7 +161,7 @@ export type Events = {
     "update-file-properties": { FileProperties: FileProperties };
     "properties-recursion-list": UpdatePropertyListEvent;
 
-    "update-permissions": string;
+    "update-permissions": UpdatePermissionsEvent;
     "update-apply-permissions-on-children": UpdateApplyPermissionsOnChildren;
     "update-global-criteria": string;
 

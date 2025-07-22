@@ -70,7 +70,7 @@ import type {
     DeleteItemEvent,
     MaxArchiveSizeThresholdExceededEvent,
     NewVersionEvent,
-    UpdatePermissionsEvent,
+    ShowUpdatePermissionsModalEvent,
     UpdatePropertiesEvent,
 } from "../../helpers/emitter";
 import emitter from "../../helpers/emitter";
@@ -98,7 +98,7 @@ function hideDeleteItemModal(): void {
 
 const item_to_update_permissions = ref<Item | null>(null);
 
-function showUpdateItemPermissionsModal(event: UpdatePermissionsEvent): void {
+function showUpdateItemPermissionsModal(event: ShowUpdatePermissionsModalEvent): void {
     item_to_update_permissions.value = event.detail.current_item;
 }
 
