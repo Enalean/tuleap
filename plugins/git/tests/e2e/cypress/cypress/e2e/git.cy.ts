@@ -585,15 +585,43 @@ describe("Git", function () {
                     cy.get("[data-test=new-artifact]").click();
                     cy.get("[data-test=summary]").type("My artifact");
                     cy.get("[data-test=artifact-submit-and-stay]").click();
+
+                    cy.get("[data-test=tracker-artifact-value-status]").contains("To be done");
+
                     cy.get("[data-test=tracker-artifact-actions]").click();
                     cy.get("[data-test=create-git-branch-button]").click();
                     cy.get("[data-test=create-branch-submit-button]").click();
                     cy.get("[data-test=feedback]").contains("successfully created");
 
-                    cy.visitProjectService("git-artifact-action", "Git");
-                    cy.get("[data-test=pull-requests-badge]").click();
-                    cy.get("[data-test=pull-request-card]").contains("-my-artifact");
-                    cy.get("[data-test=pull-request-card]").contains("main");
+                    cy.get("[data-test=current-artifact-id]")
+                        .should("have.attr", "data-artifact-id")
+                        .then((artifact_id) => {
+                            cy.visitProjectService("git-artifact-action", "Git");
+                            cy.get("[data-test=pull-requests-badge]").click();
+                            cy.get("[data-test=pull-request-card]").contains(
+                                `${artifact_id}-my-artifact`,
+                            );
+                            cy.get("[data-test=pull-request-card]").contains("main");
+
+                            const repository_path =
+                                "tuleap/plugins/git/git-artifact-action/MyRepository";
+                            const repository_name = `MyRepository${now}`;
+                            cy.cloneRepository(
+                                "ProjectAdministrator",
+                                repository_path,
+                                repository_name,
+                            );
+
+                            const command = `cd /tmp/${repository_name}
+                                echo aa >> README &&
+                                git add README &&
+                                git commit -m 'Closes art #${artifact_id}' &&
+                                git -c http.sslVerify=false push`;
+                            cy.exec(command);
+
+                            cy.visit(`/plugins/tracker/?&aid=${artifact_id}`);
+                            cy.get("[data-test=tracker-artifact-value-status]").contains("Done");
+                        });
                 });
             });
         });
