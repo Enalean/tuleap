@@ -20,6 +20,7 @@
 import type {
     ReadonlyFieldLinkedArtifact,
     ReadonlyFieldLinks,
+    ReadonlyFieldNumeric,
     ReadonlyFieldStaticList,
     ReadonlyFieldStaticListValue,
     ReadonlyFieldString,
@@ -70,5 +71,14 @@ export const ReadonlyFieldStub = {
         label: "Readonly links field",
         display_type: DISPLAY_TYPE_BLOCK,
         value,
+    }),
+    numericField: (
+        value: number | null,
+        display_type: ConfigurationFieldDisplayType,
+    ): ReadonlyFieldNumeric => ({
+        type: "numeric",
+        label: "Readonly numeric field",
+        value,
+        display_type,
     }),
 };

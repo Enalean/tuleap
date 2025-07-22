@@ -27,6 +27,7 @@ export const USER_GROUP_LIST_FIELD = "user_groups_list";
 export const STATIC_LIST_FIELD = "static_list";
 export const USER_LIST_FIELD = "user_list";
 export const LINKS_FIELD = "links";
+export const NUMERIC_FIELD = "numeric";
 
 export type ReadonlyFieldString = Readonly<{
     type: typeof STRING_FIELD;
@@ -100,9 +101,17 @@ export type LinkedArtifactProject = Readonly<{
     icon: string;
 }>;
 
+export type ReadonlyFieldNumeric = Readonly<{
+    type: typeof NUMERIC_FIELD;
+    label: string;
+    value: number | null;
+    display_type: ConfigurationFieldDisplayType;
+}>;
+
 export type ReadonlyField =
     | ReadonlyFieldString
     | ReadonlyFieldUserGroupsList
     | ReadonlyFieldStaticList
     | ReadonlyFieldUserList
-    | ReadonlyFieldLinks;
+    | ReadonlyFieldLinks
+    | ReadonlyFieldNumeric;
