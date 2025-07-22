@@ -24,19 +24,15 @@
     position: absolute;
     z-index: roadmap-variables.$z-index-today;
     top: 0;
-    bottom: 0;
-    width: roadmap-variables.$today-pin-head-size;
-    transform: translateX(-3px);
+    height: 100%;
+    pointer-events: none;
 
     &::before {
         content: "";
         display: block;
         position: absolute;
         top: 0;
-        left: math.div(
-            roadmap-variables.$today-pin-head-size - roadmap-variables.$today-pin-shaft-size,
-            2
-        );
+        left: 0;
         width: roadmap-variables.$today-pin-shaft-size;
         height: 100%;
         background: var(--tlp-main-color);
@@ -47,10 +43,14 @@
         display: block;
         position: absolute;
         top: 0;
-        left: 0;
+        left: 0 - math.div(
+                roadmap-variables.$today-pin-head-size - roadmap-variables.$today-pin-shaft-size,
+                2
+            );
         width: roadmap-variables.$today-pin-head-size;
         height: roadmap-variables.$today-pin-head-size;
         border-radius: 50%;
         background: var(--tlp-main-color);
+        pointer-events: auto;
     }
 }

@@ -29,7 +29,7 @@ $caret-width: 20px;
     $padding-for-time-units: 2 * roadmap-variables.$time-unit-height;
 
     position: relative;
-    margin: (roadmap-variables.$today-pin-head-size + 2px) 0 0;
+    margin: roadmap-variables.$today-pin-head-empty-room 0 0;
     padding: $padding-for-time-units 0 0;
     border-right: 2px solid var(--tlp-neutral-normal-color);
 
