@@ -23,7 +23,8 @@
         <div class="roadmap-gantt-controls">
             <time-period-control v-bind:value="timescale" v-on:input="setTimescale($event)" />
             <dependency-nature-control
-                v-model="dependencies_nature_to_display"
+                v-bind:value="dependencies_nature_to_display"
+                v-on:input="updateDependenciesNatureToDisplay"
                 v-bind:available_natures="available_natures"
             />
             <show-closed-control />
@@ -343,5 +344,9 @@ function isErrorRow(row: Row): row is ErrorRow {
 
 function isEmptySubtasksRow(row: Row): row is EmptySubtasksRow {
     return "is_empty" in row && row.is_empty;
+}
+
+function updateDependenciesNatureToDisplay(value: string | null): void {
+    dependencies_nature_to_display.value = value;
 }
 </script>
