@@ -35,16 +35,19 @@ class Tracker_FormElement_Field_MultiSelectbox extends Tracker_FormElement_Field
         ],
     ];
 
+    #[\Override]
     protected function getDeleteSpecificPropertiesDao(): DeleteSpecificProperties
     {
         return new MultiSelectboxFieldSpecificPropertiesDAO();
     }
 
+    #[\Override]
     protected function getSearchSpecificPropertiesDao(): SearchSpecificProperties
     {
         return new MultiSelectboxFieldSpecificPropertiesDAO();
     }
 
+    #[\Override]
     protected function getSaveSpecificPropertiesDao(): SaveSpecificFieldProperties
     {
         return new MultiSelectboxFieldSpecificPropertiesDAO();

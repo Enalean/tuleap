@@ -87,6 +87,7 @@ class TextField extends Tracker_FormElement_Field_Alphanum
 
     private bool $is_artifact_copy = false;
 
+    #[\Override]
     public function getDeleteCriteriaValueDAO(): DeleteReportCriteriaValue
     {
         return new CriteriaAlphaNumValueDAO();
@@ -238,21 +239,25 @@ class TextField extends Tracker_FormElement_Field_Alphanum
         return new TextValueDao();
     }
 
+    #[\Override]
     protected function getDuplicateSpecificPropertiesDao(): DuplicateSpecificProperties
     {
         return new TextFieldSpecificPropertiesDAO();
     }
 
+    #[\Override]
     protected function getDeleteSpecificPropertiesDao(): DeleteSpecificProperties
     {
         return new TextFieldSpecificPropertiesDAO();
     }
 
+    #[\Override]
     protected function getSearchSpecificPropertiesDao(): SearchSpecificProperties
     {
         return new TextFieldSpecificPropertiesDAO();
     }
 
+    #[\Override]
     protected function getSaveSpecificPropertiesDao(): SaveSpecificFieldProperties
     {
         return new TextFieldSpecificPropertiesDAO();

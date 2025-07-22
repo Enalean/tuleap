@@ -251,21 +251,25 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
         return $value;
     }
 
+    #[\Override]
     protected function getDuplicateSpecificPropertiesDao(): ?DateFieldSpecificPropertiesDAO
     {
         return new DateFieldSpecificPropertiesDAO();
     }
 
+    #[\Override]
     protected function getDeleteSpecificPropertiesDao(): DeleteSpecificProperties
     {
         return new DateFieldSpecificPropertiesDAO();
     }
 
+    #[\Override]
     protected function getSearchSpecificPropertiesDao(): SearchSpecificProperties
     {
         return new DateFieldSpecificPropertiesDAO();
     }
 
+    #[\Override]
     protected function getSaveSpecificPropertiesDao(): SaveSpecificFieldProperties
     {
         return new DateFieldSpecificPropertiesDAO();
@@ -458,6 +462,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
         return new Tracker_Report_Criteria_Date_ValueDao();
     }
 
+    #[\Override]
     public function getDeleteCriteriaValueDAO(): DeleteReportCriteriaValue
     {
         return new CriteriaDateValueDAO();

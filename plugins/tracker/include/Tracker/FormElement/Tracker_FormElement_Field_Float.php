@@ -124,6 +124,7 @@ class Tracker_FormElement_Field_Float extends Tracker_FormElement_Field_Numeric
         return new Tracker_Report_Criteria_Float_ValueDao();
     }
 
+    #[\Override]
     public function getDeleteCriteriaValueDAO(): DeleteReportCriteriaValue
     {
         return new CriteriaAlphaNumValueDAO();
@@ -148,21 +149,25 @@ class Tracker_FormElement_Field_Float extends Tracker_FormElement_Field_Numeric
         return new FloatValueDao();
     }
 
+    #[\Override]
     protected function getDuplicateSpecificPropertiesDao(): ?DuplicateSpecificProperties
     {
         return new FloatFieldSpecificPropertiesDAO();
     }
 
+    #[\Override]
     protected function getDeleteSpecificPropertiesDao(): DeleteSpecificProperties
     {
         return new FloatFieldSpecificPropertiesDAO();
     }
 
+    #[\Override]
     protected function getSearchSpecificPropertiesDao(): SearchSpecificProperties
     {
         return new FloatFieldSpecificPropertiesDAO();
     }
 
+    #[\Override]
     protected function getSaveSpecificPropertiesDao(): SaveSpecificFieldProperties
     {
         return new FloatFieldSpecificPropertiesDAO();

@@ -90,6 +90,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         $this->bind = $bind;
     }
 
+    #[\Override]
     protected function getDeleteSpecificPropertiesDao(): DeleteSpecificProperties
     {
         return new ListFieldSpecificPropertiesDAO();
@@ -233,6 +234,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         return new Tracker_Report_Criteria_List_ValueDao();
     }
 
+    #[\Override]
     public function getDeleteCriteriaValueDAO(): DeleteReportCriteriaValue
     {
         return new CriteriaListValueDAO();

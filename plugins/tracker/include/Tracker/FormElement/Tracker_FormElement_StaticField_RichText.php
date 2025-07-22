@@ -47,21 +47,25 @@ class Tracker_FormElement_StaticField_RichText extends Tracker_FormElement_Stati
         }
     }
 
+    #[\Override]
     protected function getDuplicateSpecificPropertiesDao(): ?RichTextFieldSpecificPropertiesDAO
     {
         return new RichTextFieldSpecificPropertiesDAO();
     }
 
+    #[\Override]
     protected function getDeleteSpecificPropertiesDao(): DeleteSpecificProperties
     {
         return new RichTextFieldSpecificPropertiesDAO();
     }
 
+    #[\Override]
     protected function getSearchSpecificPropertiesDao(): RichTextFieldSpecificPropertiesDAO
     {
         return new RichTextFieldSpecificPropertiesDAO();
     }
 
+    #[\Override]
     protected function getSaveSpecificPropertiesDao(): RichTextFieldSpecificPropertiesDAO
     {
         return new RichTextFieldSpecificPropertiesDAO();

@@ -542,6 +542,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         return new Tracker_Report_Criteria_PermissionsOnArtifact_ValueDao();
     }
 
+    #[\Override]
     public function getDeleteCriteriaValueDAO(): DeleteReportCriteriaValue
     {
         return new CriteriaPermissionsOnArtifactValueDAO();

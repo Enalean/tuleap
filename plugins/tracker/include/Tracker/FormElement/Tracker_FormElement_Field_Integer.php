@@ -106,6 +106,7 @@ class Tracker_FormElement_Field_Integer extends Tracker_FormElement_Field_Numeri
         return new Tracker_Report_Criteria_Int_ValueDao();
     }
 
+    #[\Override]
     public function getDeleteCriteriaValueDAO(): DeleteReportCriteriaValue
     {
         return new CriteriaAlphaNumValueDAO();
@@ -131,21 +132,25 @@ class Tracker_FormElement_Field_Integer extends Tracker_FormElement_Field_Numeri
         return new IntegerValueDao();
     }
 
+    #[\Override]
     protected function getDuplicateSpecificPropertiesDao(): IntegerFieldSpecificPropertiesDAO
     {
         return new IntegerFieldSpecificPropertiesDAO();
     }
 
+    #[\Override]
     protected function getDeleteSpecificPropertiesDao(): IntegerFieldSpecificPropertiesDAO
     {
         return new IntegerFieldSpecificPropertiesDAO();
     }
 
+    #[\Override]
     protected function getSearchSpecificPropertiesDao(): IntegerFieldSpecificPropertiesDAO
     {
         return new IntegerFieldSpecificPropertiesDAO();
     }
 
+    #[\Override]
     protected function getSaveSpecificPropertiesDao(): IntegerFieldSpecificPropertiesDAO
     {
         return new IntegerFieldSpecificPropertiesDAO();
