@@ -57,23 +57,35 @@ final readonly class InvalidFromTrackerCollectorVisitor implements FromTrackerCo
         };
     }
 
+    /**
+     * @param list<string> $names
+     */
     private function checkTrackerName(array $names, InvalidFromTrackerCollectorParameters $parameters): void
     {
-        if ($parameters->is_tracker_condition_alone) {
-            if (! $this->in_project_checker->isWidgetInProjectDashboard($parameters->widget_id)) {
-                $parameters->collection->addInvalidFrom(dgettext(
-                    'tuleap-crosstracker',
-                    'In the context of a personal dashboard, you must provide a @project condition in the FROM part of your query',
-                ));
-                return;
-            }
-        }
-
         foreach ($names as $name) {
             if ($name === '') {
                 $parameters->collection->addInvalidFrom(dgettext('tuleap-crosstracker', '@tracker.name cannot be empty'));
                 return;
             }
+        }
+
+        if ($parameters->is_tracker_condition_alone) {
+            $parameters->widget_id->match(
+                function (int $widget_id) use ($parameters): void {
+                    if (! $this->in_project_checker->isWidgetInProjectDashboard($widget_id)) {
+                        $parameters->collection->addInvalidFrom(dgettext(
+                            'tuleap-crosstracker',
+                            'In the context of a personal dashboard, you must provide a @project condition in the FROM part of your query',
+                        ));
+                    }
+                },
+                function () use ($parameters): void {
+                    $parameters->collection->addInvalidFrom(dgettext(
+                        'tuleap-crosstracker',
+                        'You must provide a @project condition in the FROM part of your query when you are not in a personal dashboard',
+                    ));
+                }
+            );
         }
     }
 }

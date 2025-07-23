@@ -27,6 +27,7 @@ use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerQueryPostRepresentati
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerQueryPutRepresentation;
 use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\DB\UUID;
+use Tuleap\Option\Option;
 
 /**
  * @psalm-import-type CrossTrackerQueryRow from CrossTrackerQueryDao
@@ -66,7 +67,10 @@ final readonly class CrossTrackerQueryFactory
         return $result;
     }
 
-    public static function fromTqlQueryAndWidgetId(string $tql_query, int $widget_id): CrossTrackerQuery
+    /**
+     * @param Option<int> $widget_id
+     */
+    public static function fromTqlQueryAndWidgetId(string $tql_query, Option $widget_id): CrossTrackerQuery
     {
         $uuid_factory = new DatabaseUUIDV7Factory();
         return new CrossTrackerQuery(
@@ -87,7 +91,7 @@ final readonly class CrossTrackerQueryFactory
             $query_post_representation->tql_query,
             $query_post_representation->title,
             $query_post_representation->description,
-            $query_post_representation->widget_id,
+            Option::fromValue($query_post_representation->widget_id),
             $query_post_representation->is_default,
         );
     }
@@ -107,7 +111,7 @@ final readonly class CrossTrackerQueryFactory
     /** @psalm-param CrossTrackerQueryRow $row  */
     private static function fromRow(array $row): CrossTrackerQuery
     {
-        return new CrossTrackerQuery($row['id'], $row['query'], $row['title'], $row['description'], $row['widget_id'], $row['is_default']);
+        return new CrossTrackerQuery($row['id'], $row['query'], $row['title'], $row['description'], Option::fromValue($row['widget_id']), $row['is_default']);
     }
 
     public static function fromQueryToEdit(CrossTrackerQuery $query_to_edit, CrossTrackerQueryPutRepresentation $new_query): CrossTrackerQuery
@@ -117,7 +121,7 @@ final readonly class CrossTrackerQueryFactory
             $new_query->tql_query,
             $new_query->title,
             $new_query->description,
-            $new_query->widget_id,
+            Option::fromValue($new_query->widget_id),
             $new_query->is_default,
         );
     }
@@ -130,7 +134,7 @@ final readonly class CrossTrackerQueryFactory
             $tql,
             $title,
             $description,
-            $widget_id,
+            Option::fromValue($widget_id),
             $is_default,
         );
     }

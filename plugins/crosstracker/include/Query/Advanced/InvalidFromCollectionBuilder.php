@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\CrossTracker\Query\Advanced;
 
 use PFUser;
+use Tuleap\Option\Option;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\From;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\FromProject;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\FromSomethingVisitor;
@@ -35,10 +36,13 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidFromCollection;
  */
 final readonly class InvalidFromCollectionBuilder implements IBuildInvalidFromCollection, FromSomethingVisitor
 {
+    /**
+     * @param Option<int> $widget_id
+     */
     public function __construct(
         private InvalidFromTrackerCollectorVisitor $from_tracker_condition_visitor,
         private InvalidFromProjectCollectorVisitor $from_project_condition_visitor,
-        private int $widget_id,
+        private Option $widget_id,
     ) {
     }
 

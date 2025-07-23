@@ -25,6 +25,7 @@ namespace Tuleap\CrossTracker\Query\Advanced;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\CrossTracker\Tests\Stub\Widget\SearchCrossTrackerWidgetStub;
 use Tuleap\CrossTracker\Widget\SearchCrossTrackerWidget;
+use Tuleap\Option\Option;
 use Tuleap\Project\ProjectByIDFactory;
 use Tuleap\Project\Sidebar\CollectLinkedProjects;
 use Tuleap\Project\Sidebar\LinkedProjectsCollection;
@@ -62,6 +63,7 @@ final class InvalidFromCollectionBuilderTest extends TestCase
      */
     private function getInvalidFrom(
         From $from,
+        ?int $widget_id = 2,
     ): array {
         $in_project_checker = new WidgetInProjectChecker($this->widget_retriever);
         $builder            = new InvalidFromCollectionBuilder(
@@ -72,7 +74,7 @@ final class InvalidFromCollectionBuilderTest extends TestCase
                 $this->project_factory,
                 $this->event_dispatcher,
             ),
-            2,
+            Option::fromNullable($widget_id),
         );
 
         return $builder->buildCollectionOfInvalidFrom($from, UserTestBuilder::buildWithDefaults())->getInvalidFrom();
@@ -307,6 +309,10 @@ final class InvalidFromCollectionBuilderTest extends TestCase
         $result = $this->getInvalidFrom(new From(new FromTracker('@tracker.name', new FromTrackerIn(['release'])), null));
         self::assertCount(1, $result);
         self::assertEquals('In the context of a personal dashboard, you must provide a @project condition in the FROM part of your query', $result[0]);
+
+        $result = $this->getInvalidFrom(new From(new FromTracker('@tracker.name', new FromTrackerIn(['release'])), null), null);
+        self::assertCount(1, $result);
+        self::assertEquals('You must provide a @project condition in the FROM part of your query when you are not in a personal dashboard', $result[0]);
     }
 
     public function testItReturnsEmptyWhenTrackerNameWithProjectCondition(): void

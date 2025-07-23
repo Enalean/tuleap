@@ -27,6 +27,7 @@ use Tuleap\CrossTracker\Query\Advanced\FromBuilder\FromProjectBuilderVisitor;
 use Tuleap\CrossTracker\Query\Advanced\FromBuilder\FromProjectBuilderVisitorParameters;
 use Tuleap\CrossTracker\Query\Advanced\FromBuilder\FromTrackerBuilderVisitor;
 use Tuleap\CrossTracker\Query\Advanced\FromBuilder\FromTrackerBuilderVisitorParameters;
+use Tuleap\Option\Option;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\From;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\FromProject;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\FromSomethingVisitor;
@@ -45,7 +46,10 @@ final readonly class FromBuilderVisitor implements FromSomethingVisitor
     ) {
     }
 
-    public function buildFromWhere(From $from, int $widget_id, PFUser $user): IProvideParametrizedFromAndWhereSQLFragments
+    /**
+     * @param Option<int> $widget_id
+     */
+    public function buildFromWhere(From $from, Option $widget_id, PFUser $user): IProvideParametrizedFromAndWhereSQLFragments
     {
         $left = $from->getLeft()->acceptFromSomethingVisitor($this, new FromBuilderVisitorParameters($widget_id, $from->getRight() === null, $user));
         if ($from->getRight() === null) {

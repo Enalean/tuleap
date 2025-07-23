@@ -72,7 +72,15 @@ final readonly class FromTrackerBuilderVisitor implements FromTrackerConditionVi
         $where_parameters = $names;
 
         if ($parameters->is_tracker_condition_alone) {
-            $row = $this->widget_retriever->searchCrossTrackerWidgetDashboardById($parameters->widget_id);
+            $row = $parameters->widget_id->match(
+                /** @return array{dashboard_id: int, dashboard_type: string, user_id: int, project_id: int}|null */
+                function (int $widget_id): ?array {
+                    return $this->widget_retriever->searchCrossTrackerWidgetDashboardById($widget_id);
+                },
+                function (): never {
+                    throw new LogicException('Not expected to handle a query not associated with a project');
+                }
+            );
             if ($row === null || $row['dashboard_type'] !== 'project') {
                 throw new LogicException('Project id not found');
             }

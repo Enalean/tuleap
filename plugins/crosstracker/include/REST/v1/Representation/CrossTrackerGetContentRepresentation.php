@@ -22,14 +22,22 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\REST\v1\Representation;
 
+use Tuleap\Option\Option;
+
 /**
  * @psalm-immutable
  */
-final class CrossTrackerGetContentRepresentation
+final readonly class CrossTrackerGetContentRepresentation
 {
+    /**
+     * @var Option<int>
+     */
+    public Option $widget_id;
+
     public function __construct(
-        public int $widget_id,
+        ?int $widget_id,
         public string $tql_query,
     ) {
+        $this->widget_id = Option::fromNullable($widget_id);
     }
 }

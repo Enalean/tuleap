@@ -32,13 +32,20 @@ final readonly class QueryCreator
 
     public function createNewQuery(CrossTrackerQuery $query): CrossTrackerQuery
     {
-        return $this->transaction->execute(function () use ($query) {
-            if ($query->isDefault()) {
-                $this->reset_is_default_query_dao->resetIsDefaultColumnByWidgetId($query->getWidgetId());
-            }
-            $uuid = $this->query_dao->create($query->getQuery(), $query->getTitle(), $query->getDescription(), $query->getWidgetId(), $query->isDefault());
+        return $query->getWidgetId()->match(
+            function (int $widget_id) use ($query): CrossTrackerQuery {
+                return $this->transaction->execute(function () use ($query, $widget_id): CrossTrackerQuery {
+                    if ($query->isDefault()) {
+                        $this->reset_is_default_query_dao->resetIsDefaultColumnByWidgetId($widget_id);
+                    }
+                    $uuid = $this->query_dao->create($query->getQuery(), $query->getTitle(), $query->getDescription(), $widget_id, $query->isDefault());
 
-            return CrossTrackerQueryFactory::fromCreatedQuery($uuid, $query);
-        });
+                    return CrossTrackerQueryFactory::fromCreatedQuery($uuid, $query);
+                });
+            },
+            function (): never {
+                throw new \LogicException('Cannot create a cross-tracker query associated with a widget without providing a widget ID');
+            }
+        );
     }
 }

@@ -23,18 +23,22 @@ declare(strict_types=1);
 namespace Tuleap\CrossTracker\Query;
 
 use Tuleap\DB\UUID;
+use Tuleap\Option\Option;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Query;
 use Tuleap\Tracker\Report\Query\Advanced\ParserCacheProxy;
 
 final readonly class ParsedCrossTrackerQuery extends CrossTrackerQuery
 {
+    /**
+     * @param Option<int> $widget_id
+     */
     private function __construct(
         UUID $uuid,
         string $query,
         public Query $parsed_query,
         string $title,
         string $description,
-        int $widget_id,
+        Option $widget_id,
         bool $is_default,
     ) {
         parent::__construct($uuid, $query, $title, $description, $widget_id, $is_default);

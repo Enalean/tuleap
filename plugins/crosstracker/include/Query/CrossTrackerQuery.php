@@ -23,15 +23,19 @@ declare(strict_types=1);
 namespace Tuleap\CrossTracker\Query;
 
 use Tuleap\DB\UUID;
+use Tuleap\Option\Option;
 
 readonly class CrossTrackerQuery
 {
+    /**
+     * @param Option<int> $widget_id
+     */
     public function __construct(
         private UUID $uuid,
         private string $query,
         private string $title,
         private string $description,
-        private int $widget_id,
+        private Option $widget_id,
         private bool $is_default,
     ) {
     }
@@ -56,7 +60,10 @@ readonly class CrossTrackerQuery
         return $this->description;
     }
 
-    public function getWidgetId(): int
+    /**
+     * @return Option<int>
+     */
+    public function getWidgetId(): Option
     {
         return $this->widget_id;
     }

@@ -24,6 +24,9 @@ namespace Tuleap\CrossTracker\Widget;
 
 use Tuleap\DB\DataAccessObject;
 
+/**
+ * @psalm-import-type CrossTrackerWidgetDashboardRow from SearchCrossTrackerWidget
+ */
 final class CrossTrackerWidgetDao extends DataAccessObject implements SearchCrossTrackerWidget, CreateWidget, CloneWidget
 {
     public function searchWidgetExistence(int $widget_id): bool
@@ -32,7 +35,7 @@ final class CrossTrackerWidgetDao extends DataAccessObject implements SearchCros
     }
 
     /**
-     * @psalm-return array{dashboard_id: int, dashboard_type: string, user_id: int, project_id: int}|null
+     * @psalm-return CrossTrackerWidgetDashboardRow|null
      */
     public function searchCrossTrackerWidgetDashboardById(int $content_id): ?array
     {

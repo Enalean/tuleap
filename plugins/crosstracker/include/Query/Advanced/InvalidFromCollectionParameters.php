@@ -23,14 +23,18 @@ declare(strict_types=1);
 namespace Tuleap\CrossTracker\Query\Advanced;
 
 use PFUser;
+use Tuleap\Option\Option;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\VisitorParameters;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFromCollection;
 
 final class InvalidFromCollectionParameters implements VisitorParameters
 {
+    /**
+     * @param Option<int> $widget_id
+     */
     public function __construct(
         public InvalidFromCollection $collection,
-        public int $widget_id,
+        public Option $widget_id,
         public bool $is_condition_alone,
         public PFUser $user,
     ) {

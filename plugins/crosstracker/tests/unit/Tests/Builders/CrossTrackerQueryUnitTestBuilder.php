@@ -24,6 +24,7 @@ namespace Tuleap\CrossTracker\Tests\Builders;
 use Tuleap\CrossTracker\Query\CrossTrackerQuery;
 use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\DB\UUID;
+use Tuleap\Option\Option;
 
 final class CrossTrackerQueryUnitTestBuilder
 {
@@ -64,7 +65,7 @@ final class CrossTrackerQueryUnitTestBuilder
             $this->query,
             $this->title,
             $this->description,
-            $this->widget_id,
+            Option::fromValue($this->widget_id),
             $this->is_default
         );
     }

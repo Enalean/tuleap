@@ -196,4 +196,18 @@ final class CrossTrackerQueryTest extends RestBase
         self::assertCount(1, $json_response['artifacts']);
         self::assertEquals($this->epic_artifact_ids[1], $json_response['artifacts'][0]['@id']['value']);
     }
+
+    public function testGetContentWithoutBeingTiedToAWidget(): void
+    {
+        $query    = [
+            'tql_query' => "SELECT @id FROM @project = MY_PROJECTS() WHERE @id = {$this->epic_artifact_ids[1]}",
+        ];
+        $response = $this->getResponse($this->request_factory->createRequest('GET', 'crosstracker_query/content?query=' . urlencode(encode($query))));
+
+        self::assertSame(200, $response->getStatusCode());
+        $json_response = decode($response->getBody()->getContents());
+
+        self::assertNotEmpty($json_response['artifacts']);
+        self::assertNotEmpty($json_response['selected']);
+    }
 }
