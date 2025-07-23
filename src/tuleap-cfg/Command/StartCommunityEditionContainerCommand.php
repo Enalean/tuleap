@@ -147,7 +147,7 @@ final class StartCommunityEditionContainerCommand extends Command
     private function exec(LoggerInterface $logger, string $command): void
     {
         $logger->info("Execute command `$command`");
-        $process = Process::fromShellCommandline($command);
+        $process = Process::fromShellCommandline($command, '/');
         $process->setTimeout(0);
         $process->mustRun(function (string $type, string $cmd_output) use ($logger) {
             if ($type == Process::ERR) {

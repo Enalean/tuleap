@@ -80,7 +80,7 @@ class Git_GitoliteHousekeeping_ChainOfResponsibility_CleanUpGitoliteAdminRepo ex
             $cmd = "su -c '\$COMMAND' - \$EXECUTE_AS";
         }
 
-        $process = Process::fromShellCommandline($cmd);
+        $process = Process::fromShellCommandline($cmd, '/');
         $process->mustRun(null, ['COMMAND' => $cmd, 'EXECUTE_AS' => $this->execute_as ?? '']);
     }
 }
