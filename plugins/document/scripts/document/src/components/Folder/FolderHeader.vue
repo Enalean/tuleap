@@ -118,7 +118,7 @@ import type {
     ShowChangelogModalEventDetail,
     ShowFileCreationModalEvent,
     ShowFileCreationModalEventDetail,
-    UpdatePermissionsEvent,
+    ShowUpdatePermissionsModalEvent,
     UpdatePropertiesEvent,
 } from "../../helpers/emitter";
 import { useGetters, useState } from "vuex-composition-helpers";
@@ -291,7 +291,7 @@ function hideDownloadFolderModals(): void {
     folder_above_warning_threshold_props.value = null;
 }
 
-function showUpdateItemPermissionsModal(event: UpdatePermissionsEvent): void {
+function showUpdateItemPermissionsModal(event: ShowUpdatePermissionsModalEvent): void {
     item_to_update_permissions.value = event.detail.current_item;
 }
 

@@ -35,7 +35,7 @@ vi.mock("tlp", () => {
 });
 
 describe("NewItemModal", () => {
-    let factory;
+    let factory: () => VueWrapper<NewItemModal>;
     const load_projects_ugroups = vi.fn();
 
     const current_folder = {
@@ -80,22 +80,8 @@ describe("NewItemModal", () => {
     };
 
     beforeEach(() => {
-        factory = (item = {}): VueWrapper<NewItemModal> => {
+        factory = (): VueWrapper<NewItemModal> => {
             return shallowMount(NewItemModal, {
-                data() {
-                    return {
-                        item,
-                        is_displayed: false,
-                        is_loading: false,
-                        modal: null,
-                        parent: {},
-                        permissions_for_groups: {
-                            can_read: [],
-                            can_write: [],
-                            can_manage: [],
-                        },
-                    };
-                },
                 global: {
                     ...getGlobalTestOptions({
                         modules: {
@@ -153,7 +139,8 @@ describe("NewItemModal", () => {
             ],
         };
 
-        const wrapper = factory(item);
+        const wrapper = factory();
+        emitter.emit("createItem", { item, type: "folder" });
         expect(wrapper.vm.item.properties[0].value).toBe("");
         emitter.emit("update-custom-property", {
             property_short_name: "field_9",
@@ -192,25 +179,8 @@ describe("NewItemModal", () => {
     });
 
     it("Updates status", () => {
-        const item = {
-            id: 7,
-            title: "Color folder",
-            type: "folder",
-            status: "approved",
-            properties: [
-                {
-                    short_name: "status",
-                    list_value: [
-                        {
-                            id: 102,
-                        },
-                    ],
-                },
-            ],
-        };
-
-        const wrapper = factory(item);
-
+        const wrapper = factory();
+        emitter.emit("update-status-property", "approved");
         expect(wrapper.vm.item.status).toBe("approved");
         emitter.emit("update-status-property", "draft");
         expect(wrapper.vm.item.status).toBe("draft");
@@ -218,25 +188,8 @@ describe("NewItemModal", () => {
     });
 
     it("Updates title", () => {
-        const item = {
-            id: 7,
-            title: "Color folder",
-            type: "folder",
-            description: "A custom description",
-            properties: [
-                {
-                    short_name: "status",
-                    list_value: [
-                        {
-                            id: 103,
-                        },
-                    ],
-                },
-            ],
-        };
-
-        const wrapper = factory(item);
-
+        const wrapper = factory();
+        emitter.emit("update-title-property", "Color folder");
         expect(wrapper.vm.item.title).toBe("Color folder");
         emitter.emit("update-title-property", "A folder");
         expect(wrapper.vm.item.title).toBe("A folder");
@@ -250,7 +203,7 @@ describe("NewItemModal", () => {
             file: new File([], "document.docx", { type: "application/docx" }),
         });
 
-        const wrapper = factory({});
+        const wrapper = factory();
         const parent = {
             id: 123,
             type: TYPE_FOLDER,
@@ -276,24 +229,8 @@ describe("NewItemModal", () => {
     });
 
     it("Updates description", () => {
-        const item = {
-            id: 7,
-            title: "Color folder",
-            type: "folder",
-            description: "A custom description",
-            properties: [
-                {
-                    short_name: "status",
-                    list_value: [
-                        {
-                            id: 103,
-                        },
-                    ],
-                },
-            ],
-        };
-
-        const wrapper = factory(item);
+        const wrapper = factory();
+        emitter.emit("update-description-property", "A custom description");
         expect(wrapper.vm.item.description).toBe("A custom description");
         emitter.emit("update-description-property", "A description");
         expect(wrapper.vm.item.description).toBe("A description");
