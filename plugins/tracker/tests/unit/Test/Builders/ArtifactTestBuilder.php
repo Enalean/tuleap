@@ -32,14 +32,9 @@ use Tuleap\Tracker\Tracker;
 
 final class ArtifactTestBuilder
 {
-    /**
-     * @var int
-     */
-    private $id;
-    /**
-     * @var Tracker
-     */
-    private $tracker;
+    private int $id;
+    private int $per_tracker_id = 1;
+    private Tracker $tracker;
     private string $title       = '';
     private string $description = '';
     /**
@@ -47,20 +42,12 @@ final class ArtifactTestBuilder
      */
     private array $changesets                            = [];
     private ?\Tracker_Artifact_Changeset $last_changeset = null;
-    /**
-     * @var \Tracker_ArtifactFactory | null
-     */
-    private $artifact_factory;
-
+    private ?\Tracker_ArtifactFactory $artifact_factory  = null;
     /**
      * @var array<int, bool>
      */
-    private array $user_can_view = [];
-
-    /**
-     * @var \Project|null
-     */
-    private $project;
+    private array $user_can_view                          = [];
+    private ?\Project $project                            = null;
     private int $submission_timestamp                     = 1234567890;
     private ?PFUser $submitted_by_user                    = null;
     private ?Artifact $parent                             = null;
@@ -220,6 +207,12 @@ final class ArtifactTestBuilder
         return $this;
     }
 
+    public function withPerTrackerArtifactId(int $id): self
+    {
+        $this->per_tracker_id = $id;
+        return $this;
+    }
+
     public function build(): Artifact
     {
         $artifact = new class (
@@ -228,7 +221,8 @@ final class ArtifactTestBuilder
             $this->submission_timestamp,
             $this->user_can_view,
             $this->linked_artifact,
-            $this->linked_and_reverse_artifact
+            $this->linked_and_reverse_artifact,
+            $this->per_tracker_id,
         ) extends Artifact {
             /**
              * @param array<int, bool> $user_can_view
@@ -240,8 +234,10 @@ final class ArtifactTestBuilder
                 private readonly array $user_can_view,
                 private readonly ?array $linked_artifact,
                 private readonly array $linked_and_reverse_artifact,
+                int $per_tracker_id,
             ) {
                 parent::__construct($id, $tracker_id, 102, $submitted_on, false);
+                $this->per_tracker_id = $per_tracker_id;
             }
 
             #[\Override]

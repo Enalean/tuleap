@@ -22,10 +22,14 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Document\Field;
 
+use Override;
+use Tracker_Artifact_ChangesetValue_Numeric;
 use Tracker_Artifact_ChangesetValue_String;
 use Tracker_FormElement_Field_List;
+use Tracker_FormElement_Field_Numeric;
 use Tuleap\Artidoc\Document\Field\ArtifactLink\BuildArtifactLinkFieldWithValue;
 use Tuleap\Artidoc\Document\Field\List\BuildListFieldWithValue;
+use Tuleap\Artidoc\Document\Field\Numeric\BuildNumericFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StringFieldWithValue;
 use Tuleap\Tracker\Artifact\Changeset\ArtifactLink\ArtifactLinkChangesetValue;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
@@ -36,9 +40,11 @@ final readonly class FieldsWithValuesBuilder implements GetFieldsWithValues
         private ConfiguredFieldCollection $field_collection,
         private BuildListFieldWithValue $build_list_field_with_value,
         private BuildArtifactLinkFieldWithValue $build_artlink_field_with_value,
+        private BuildNumericFieldWithValue $build_numeric_field_with_value,
     ) {
     }
 
+    #[Override]
     public function getFieldsWithValues(\Tracker_Artifact_Changeset $changeset): array
     {
         $fields  = [];
@@ -62,6 +68,11 @@ final readonly class FieldsWithValuesBuilder implements GetFieldsWithValues
             if ($configured_field->field instanceof ArtifactLinkField) {
                 assert($changeset_value instanceof ArtifactLinkChangesetValue);
                 $fields[] = $this->build_artlink_field_with_value->buildArtifactLinkFieldWithValue($configured_field, $changeset_value);
+            }
+
+            if ($configured_field->field instanceof Tracker_FormElement_Field_Numeric) {
+                assert($changeset_value instanceof Tracker_Artifact_ChangesetValue_Numeric);
+                $fields[] = $this->build_numeric_field_with_value->buildNumericFieldWithValue($configured_field, $changeset->getArtifact(), $changeset_value);
             }
         }
 

@@ -25,6 +25,7 @@ namespace Tuleap\Artidoc\Document\Field;
 use PFUser;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Bind_Null;
+use Tracker_FormElement_Field_Numeric;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldIsDescriptionSemanticFault;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldIsTitleSemanticFault;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldNotFoundFault;
@@ -49,7 +50,7 @@ final readonly class SuitableFieldRetriever
     }
 
     /**
-     * @return Ok<StringField> | Ok<Tracker_FormElement_Field_List> | Ok<ArtifactLinkField> | Err<Fault>
+     * @return Ok<StringField> | Ok<Tracker_FormElement_Field_List> | Ok<ArtifactLinkField> | Ok<Tracker_FormElement_Field_Numeric> | Err<Fault>
      */
     public function retrieveField(int $field_id, PFUser $user): Ok|Err
     {
@@ -60,11 +61,12 @@ final readonly class SuitableFieldRetriever
         }
 
         return match (true) {
-            $field instanceof StringField             => $this->validateStringField($field),
+            $field instanceof StringField                       => $this->validateStringField($field),
             $field instanceof Tracker_FormElement_Field_List
-            && $this->isListBindTypeSupported($field) => Result::ok($field),
-            $field instanceof ArtifactLinkField => Result::ok($field),
-            default => Result::err(FieldNotSupportedFault::build($field_id))
+            && $this->isListBindTypeSupported($field)           => Result::ok($field),
+            $field instanceof ArtifactLinkField                 => Result::ok($field),
+            $field instanceof Tracker_FormElement_Field_Numeric => Result::ok($field),
+            default                                             => Result::err(FieldNotSupportedFault::build($field_id))
         };
     }
 

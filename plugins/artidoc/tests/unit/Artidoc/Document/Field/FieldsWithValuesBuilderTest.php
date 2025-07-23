@@ -22,11 +22,21 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Document\Field;
 
+use Exception;
+use Override;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use Tracker_Artifact_Changeset;
+use Tracker_FormElement_Field_Integer;
+use Tracker_FormElement_Field_List;
+use Tracker_FormElement_Field_List_Bind_Static;
+use Tracker_FormElement_Field_List_Bind_Ugroups;
+use Tracker_FormElement_Field_List_Bind_Users;
 use Tuleap\Artidoc\Domain\Document\Section\Field\DisplayType;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\ArtifactLinkFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\ArtifactLinkProject;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\ArtifactLinkStatusValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\ArtifactLinkValue;
+use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\NumericFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StaticListFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StaticListValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StringFieldWithValue;
@@ -36,6 +46,7 @@ use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserListFieldWit
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserListValue;
 use Tuleap\Artidoc\Stubs\Document\Field\ArtifactLink\BuildArtifactLinkFieldWithValueStub;
 use Tuleap\Artidoc\Stubs\Document\Field\List\BuildListFieldWithValueStub;
+use Tuleap\Artidoc\Stubs\Document\Field\Numeric\BuildNumericFieldWithValueStub;
 use Tuleap\Color\ColorName;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Option\Option;
@@ -46,9 +57,11 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueArtifactLinkTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetValueIntegerTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueListTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueStringTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ArtifactLinkFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserBindBuilder;
@@ -57,18 +70,19 @@ use Tuleap\Tracker\Test\Builders\Fields\List\ListUserValueBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Tracker;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
+#[DisableReturnValueGenerationForTestDoubles]
 final class FieldsWithValuesBuilderTest extends TestCase
 {
     use GlobalLanguageMock;
 
-    private const TRACKER_ID = 66;
-    private \Tuleap\Tracker\Tracker $tracker;
+    private const int TRACKER_ID = 66;
+    private Tracker $tracker;
     private ConfiguredFieldCollection $field_collection;
-    private \Tracker_Artifact_Changeset $changeset;
+    private Tracker_Artifact_Changeset $changeset;
 
-    #[\Override]
+    #[Override]
     protected function setUp(): void
     {
         $project                = ProjectTestBuilder::aProject()->withId(168)->build();
@@ -79,22 +93,15 @@ final class FieldsWithValuesBuilderTest extends TestCase
     }
 
     /**
-     * @return list<StringFieldWithValue | UserGroupsListFieldWithValue | StaticListFieldWithValue | UserListFieldWithValue | ArtifactLinkFieldWithValue>
+     * @return list<StringFieldWithValue | UserGroupsListFieldWithValue | StaticListFieldWithValue | UserListFieldWithValue | ArtifactLinkFieldWithValue | NumericFieldWithValue>
      */
     private function getFields(): array
     {
         $builder = new FieldsWithValuesBuilder(
             $this->field_collection,
-            BuildListFieldWithValueStub::withCallback(
-                static function () {
-                    throw new \Exception('This test was not supposed to build list fields.');
-                },
-            ),
-            BuildArtifactLinkFieldWithValueStub::withCallback(
-                static function () {
-                    throw new \Exception('This test was not supposed to build link fields.');
-                },
-            ),
+            BuildListFieldWithValueStub::withCallback($this->notCalledCallback(...)),
+            BuildArtifactLinkFieldWithValueStub::withCallback($this->notCalledCallback(...)),
+            BuildNumericFieldWithValueStub::withCallback($this->notCalledCallback(...)),
         );
         return $builder->getFieldsWithValues($this->changeset);
     }
@@ -209,17 +216,14 @@ final class FieldsWithValuesBuilderTest extends TestCase
             $this->field_collection,
             BuildListFieldWithValueStub::withCallback(
                 static function (ConfiguredField $configured_field) use ($expected_field_with_value): UserGroupsListFieldWithValue {
-                    assert($configured_field->field instanceof \Tracker_FormElement_Field_List);
-                    assert($configured_field->field->getBind() instanceof \Tracker_FormElement_Field_List_Bind_Ugroups);
+                    assert($configured_field->field instanceof Tracker_FormElement_Field_List);
+                    assert($configured_field->field->getBind() instanceof Tracker_FormElement_Field_List_Bind_Ugroups);
 
                     return $expected_field_with_value;
                 },
             ),
-            BuildArtifactLinkFieldWithValueStub::withCallback(
-                static function () {
-                    throw new \Exception('This test was not supposed to build link fields.');
-                },
-            ),
+            BuildArtifactLinkFieldWithValueStub::withCallback($this->notCalledCallback(...)),
+            BuildNumericFieldWithValueStub::withCallback($this->notCalledCallback(...)),
         );
 
         self::assertEquals([$expected_field_with_value], $builder->getFieldsWithValues($this->changeset));
@@ -252,17 +256,14 @@ final class FieldsWithValuesBuilderTest extends TestCase
             $this->field_collection,
             BuildListFieldWithValueStub::withCallback(
                 static function (ConfiguredField $configured_field) use ($expected_field_with_value): StaticListFieldWithValue {
-                    assert($configured_field->field instanceof \Tracker_FormElement_Field_List);
-                    assert($configured_field->field->getBind() instanceof \Tracker_FormElement_Field_List_Bind_Static);
+                    assert($configured_field->field instanceof Tracker_FormElement_Field_List);
+                    assert($configured_field->field->getBind() instanceof Tracker_FormElement_Field_List_Bind_Static);
 
                     return $expected_field_with_value;
                 },
             ),
-            BuildArtifactLinkFieldWithValueStub::withCallback(
-                static function () {
-                    throw new \Exception('This test was not supposed to build link fields.');
-                },
-            ),
+            BuildArtifactLinkFieldWithValueStub::withCallback($this->notCalledCallback(...)),
+            BuildNumericFieldWithValueStub::withCallback($this->notCalledCallback(...)),
         );
 
         self::assertEquals([$expected_field_with_value], $builder->getFieldsWithValues($this->changeset));
@@ -300,17 +301,14 @@ final class FieldsWithValuesBuilderTest extends TestCase
             ]),
             BuildListFieldWithValueStub::withCallback(
                 static function (ConfiguredField $configured_field) use ($expected_list_field_with_value): UserListFieldWithValue {
-                    assert($configured_field->field instanceof \Tracker_FormElement_Field_List);
-                    assert($configured_field->field->getBind() instanceof \Tracker_FormElement_Field_List_Bind_Users);
+                    assert($configured_field->field instanceof Tracker_FormElement_Field_List);
+                    assert($configured_field->field->getBind() instanceof Tracker_FormElement_Field_List_Bind_Users);
 
                     return $expected_list_field_with_value;
                 }
             ),
-            BuildArtifactLinkFieldWithValueStub::withCallback(
-                static function () {
-                    throw new \Exception('This test was not supposed to build link fields.');
-                },
-            ),
+            BuildArtifactLinkFieldWithValueStub::withCallback($this->notCalledCallback(...)),
+            BuildNumericFieldWithValueStub::withCallback($this->notCalledCallback(...)),
         );
 
         self::assertEquals([$expected_list_field_with_value], $builder->getFieldsWithValues($this->changeset));
@@ -348,19 +346,55 @@ final class FieldsWithValuesBuilderTest extends TestCase
                     new ConfiguredField($link_field, DisplayType::BLOCK),
                 ],
             ]),
-            BuildListFieldWithValueStub::withCallback(
-                static function () {
-                    throw new \Exception('This test was not supposed to build list fields.');
-                },
-            ),
+            BuildListFieldWithValueStub::withCallback($this->notCalledCallback(...)),
             BuildArtifactLinkFieldWithValueStub::withCallback(
                 static function (ConfiguredField $configured_field) use ($expected_link_field_with_value): ArtifactLinkFieldWithValue {
                     assert($configured_field->field instanceof ArtifactLinkField);
                     return $expected_link_field_with_value;
                 },
             ),
+            BuildNumericFieldWithValueStub::withCallback($this->notCalledCallback(...)),
         );
 
         self::assertEquals([$expected_link_field_with_value], $builder->getFieldsWithValues($this->changeset));
+    }
+
+    public function testItBuildsNumericFieldsWithValue(): void
+    {
+        $int_field = IntFieldBuilder::anIntField(123)->build();
+
+        $expected_int_field_with_value = new NumericFieldWithValue(
+            $int_field->getLabel(),
+            DisplayType::BLOCK,
+            Option::fromValue(23),
+        );
+
+        $this->changeset->setFieldValue(
+            $int_field,
+            ChangesetValueIntegerTestBuilder::aValue(1, $this->changeset, $int_field)->build(),
+        );
+
+        $builder = new FieldsWithValuesBuilder(
+            new ConfiguredFieldCollection([
+                self::TRACKER_ID => [
+                    new ConfiguredField($int_field, DisplayType::BLOCK),
+                ],
+            ]),
+            BuildListFieldWithValueStub::withCallback($this->notCalledCallback(...)),
+            BuildArtifactLinkFieldWithValueStub::withCallback($this->notCalledCallback(...)),
+            BuildNumericFieldWithValueStub::withCallback(
+                static function (ConfiguredField $configured_field) use ($expected_int_field_with_value): NumericFieldWithValue {
+                    self::assertInstanceOf(Tracker_FormElement_Field_Integer::class, $configured_field->field);
+                    return $expected_int_field_with_value;
+                },
+            ),
+        );
+
+        self::assertEquals([$expected_int_field_with_value], $builder->getFieldsWithValues($this->changeset));
+    }
+
+    private static function notCalledCallback(): never
+    {
+        throw new Exception('This test was not supposed to build these fields.');
     }
 }

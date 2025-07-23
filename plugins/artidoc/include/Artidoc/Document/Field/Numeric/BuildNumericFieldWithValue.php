@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2025 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,17 +20,18 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Artidoc\Document\Field;
+namespace Tuleap\Artidoc\Document\Field\Numeric;
 
-use Tuleap\Artidoc\Domain\Document\Section\Field\DisplayType;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
-use Tuleap\Tracker\FormElement\Field\String\StringField;
+use Tracker_Artifact_ChangesetValue_Numeric;
+use Tuleap\Artidoc\Document\Field\ConfiguredField;
+use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\NumericFieldWithValue;
+use Tuleap\Tracker\Artifact\Artifact;
 
-final readonly class ConfiguredField
+interface BuildNumericFieldWithValue
 {
-    public function __construct(
-        public StringField|\Tracker_FormElement_Field_List|ArtifactLinkField|\Tracker_FormElement_Field_Numeric $field,
-        public DisplayType $display_type,
-    ) {
-    }
+    public function buildNumericFieldWithValue(
+        ConfiguredField $configured_field,
+        Artifact $artifact,
+        ?Tracker_Artifact_ChangesetValue_Numeric $changeset_value,
+    ): NumericFieldWithValue;
 }

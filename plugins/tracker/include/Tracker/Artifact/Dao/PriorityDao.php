@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact\Dao;
 
+use Override;
 use ParagonIE\EasyDB\EasyStatement;
 use ParagonIE\EasyDB\Exception\MustBeNonEmpty;
 use Throwable;
@@ -33,7 +34,7 @@ use Tuleap\DB\DataAccessObject;
  *
  * @see PriorityDaoTest for the test cases
  */
-class PriorityDao extends DataAccessObject
+class PriorityDao extends DataAccessObject implements SearchArtifactGlobalRank
 {
     /**
      * Move an artifact after another one
@@ -124,6 +125,7 @@ class PriorityDao extends DataAccessObject
         return true;
     }
 
+    #[Override]
     public function getGlobalRank(int $artifact_id): ?int
     {
         $sql = 'SELECT `rank` FROM tracker_artifact_priority_rank WHERE artifact_id = ?';

@@ -20,14 +20,36 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Artidoc\REST\v1\ArtifactSection\Field;
+namespace Tuleap\Tracker\Test\Stub\Artifact\Dao;
 
-enum FieldType: string
+use Override;
+use Tuleap\Tracker\Artifact\Dao\SearchArtifactGlobalRank;
+
+final class SearchArtifactGlobalRankStub implements SearchArtifactGlobalRank
 {
-    case STRING           = 'string';
-    case USER_GROUPS_LIST = 'user_groups_list';
-    case STATIC_LIST      = 'static_list';
-    case USER_LIST        = 'user_list';
-    case ARTIFACT_LINK    = 'links';
-    case NUMERIC          = 'numeric';
+    /**
+     * @var array<int, int>
+     */
+    private array $ranks = [];
+
+    private function __construct()
+    {
+    }
+
+    public static function build(): self
+    {
+        return new self();
+    }
+
+    public function withArtifactRank(int $artifact_id, int $rank): self
+    {
+        $this->ranks[$artifact_id] = $rank;
+        return $this;
+    }
+
+    #[Override]
+    public function getGlobalRank(int $artifact_id): ?int
+    {
+        return $this->ranks[$artifact_id] ?? null;
+    }
 }
