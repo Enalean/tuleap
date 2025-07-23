@@ -29,8 +29,9 @@
                 type="checkbox"
                 v-bind:id="id"
                 class="tlp-switch-checkbox"
-                v-model="is_checked"
+                v-bind:value="is_checked"
                 v-on:change="toggleClosedElements(is_checked)"
+                v-on:input="updateIsChecked"
                 data-test="input"
             />
             <label v-bind:for="id" class="tlp-switch-button">{{
@@ -48,11 +49,19 @@ import { getUniqueId } from "../../helpers/uniq-id-generator";
 const { show_closed_elements } = useState(["show_closed_elements"]);
 const { toggleClosedElements } = useMutations(["toggleClosedElements"]);
 
-const is_checked = ref<boolean>(true);
+const is_checked = ref<boolean>(false);
 
 onMounted(() => {
     is_checked.value = show_closed_elements.value;
 });
 
 const id = computed(() => getUniqueId("roadmap-gantt-show-closed"));
+
+function updateIsChecked(event: Event): void {
+    if (!(event.target instanceof HTMLInputElement)) {
+        return;
+    }
+
+    is_checked.value = event.target.checked;
+}
 </script>
