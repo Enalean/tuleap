@@ -104,6 +104,9 @@ use TrackerFactory;
 use trackerPlugin;
 use TransitionFactory;
 use Tuleap\Color\ColorName;
+use Tuleap\Dashboard\Project\ProjectDashboardDao;
+use Tuleap\Dashboard\Project\ProjectDashboardRetriever;
+use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
@@ -241,6 +244,7 @@ use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
 use Tuleap\Tracker\Workflow\WorkflowMenuPresenterBuilder;
 use Tuleap\Tracker\Workflow\WorkflowUpdateChecker;
 use Tuleap\Tracker\XML\Updater\FieldChange\FieldChangeComputedXMLUpdater;
+use Tuleap\Widget\WidgetFactory;
 use UGroupDao;
 use UGroupManager;
 use User_ForgeUserGroupPermissionsDao;
@@ -959,6 +963,12 @@ class Tracker implements Tracker_Dispatchable_Interface
                     new ChangesetValueArtifactLinkDao(),
                     $artifact_factory,
                 );
+                $widget_factory          = new WidgetFactory(
+                    $this->getUserManager(),
+                    new \User_ForgeUserGroupPermissionsManager(new \User_ForgeUserGroupPermissionsDao()),
+                    \EventManager::instance(),
+                );
+                $widget_dao              = new DashboardWidgetDao($widget_factory);
                 $action                  = new CreateArtifactAction(
                     $this,
                     $this->getArtifactCreator(),
@@ -977,6 +987,8 @@ class Tracker implements Tracker_Dispatchable_Interface
                         new NewArtifactLinkChangesetValueBuilder($forward_links_retriever),
                         new NewArtifactLinkInitialChangesetValueBuilder(),
                     ),
+                    new ProjectDashboardRetriever(new ProjectDashboardDao($widget_dao)),
+                    ProjectManager::instance()
                 );
                 $action->process($layout, $request, $current_user);
                 break;

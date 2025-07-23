@@ -22,8 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Widget;
 
+use PHPUnit\Framework\Attributes\TestWith;
+use Tuleap\Dashboard\Project\ProjectDashboardController;
 use Tuleap\Dashboard\User\UserDashboardController;
 use Tuleap\ServerHostname;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Report\Widget\WidgetAdditionalButtonPresenter;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -50,12 +53,14 @@ final class WidgetAdditionalButtonPresenterTest extends TestCase
         );
     }
 
-    public function testItBuildsAnUrlForRegularTrackerRedirection(): void
+    #[TestWith([UserDashboardController::LEGACY_DASHBOARD_TYPE])]
+    #[TestWith([UserDashboardController::DASHBOARD_TYPE])]
+    public function testItBuildsAnUrlForTrackerRedirectionOnUserDashboard(string $owner_type): void
     {
         $tracker = TrackerTestBuilder::aTracker()->withId(17)->withName('bug')->withShortName('bug')->build();
 
         $widget             = $this->createMock(Widget::class);
-        $widget->owner_type = UserDashboardController::LEGACY_DASHBOARD_TYPE;
+        $widget->owner_type = $owner_type;
         $widget->expects($this->once())->method('getDashboardId')->willReturn(123);
 
         $presenter = new WidgetAdditionalButtonPresenter($tracker, false, $widget);
@@ -68,20 +73,23 @@ final class WidgetAdditionalButtonPresenterTest extends TestCase
         );
     }
 
-    public function testConstructWithLegacyDashboard(): void
+    #[TestWith([ProjectDashboardController::LEGACY_DASHBOARD_TYPE])]
+    #[TestWith([ProjectDashboardController::DASHBOARD_TYPE])]
+    public function testItBuildsAnUrlForTrackerRedirectionOnProjectDashboard(string $owner_type): void
     {
-        $tracker = TrackerTestBuilder::aTracker()->withId(8)->withName('epic')->withShortName('epic')->build();
+        $project = ProjectTestBuilder::aProject()->withId(103)->withUnixName('myproject')->build();
+        $tracker = TrackerTestBuilder::aTracker()->withId(17)->withName('bug')->withShortName('bug')->withProject($project)->build();
 
         $widget             = $this->createMock(Widget::class);
-        $widget->owner_type = UserDashboardController::LEGACY_DASHBOARD_TYPE;
-        $widget->expects($this->once())->method('getDashboardId')->willReturn(456);
+        $widget->owner_type = $owner_type;
+        $widget->expects($this->once())->method('getDashboardId')->willReturn(123);
 
-        $presenter = new WidgetAdditionalButtonPresenter($tracker, true, $widget);
+        $presenter = new WidgetAdditionalButtonPresenter($tracker, false, $widget);
 
         $base_url = ServerHostname::HTTPSUrl();
-        self::assertSame('Add a new epic', $presenter->new_artifact);
+        self::assertSame('Add a new bug', $presenter->new_artifact);
         self::assertSame(
-            $base_url . '/plugins/tracker/?tracker=8&func=new-artifact&my-dashboard-id=456',
+            $base_url . '/plugins/tracker/?tracker=17&func=new-artifact&project-dashboard-id=123',
             $presenter->url_artifact_submit
         );
     }
