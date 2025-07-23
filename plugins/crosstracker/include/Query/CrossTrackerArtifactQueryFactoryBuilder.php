@@ -307,6 +307,7 @@ final class CrossTrackerArtifactQueryFactoryBuilder
 
     public function getArtifactFactory(): CrossTrackerArtifactQueryFactory
     {
+        $tuleap_db                 = DBFactory::getMainTuleapDBConnection()->getDB();
         $form_element_factory      = Tracker_FormElementFactory::instance();
         $tracker_artifact_factory  = Tracker_ArtifactFactory::instance();
         $retrieve_field_type       = new FieldTypeRetrieverWrapper($form_element_factory);
@@ -316,12 +317,12 @@ final class CrossTrackerArtifactQueryFactoryBuilder
                 $form_element_factory,
                 $retrieve_field_type,
                 $trackers_permissions,
-                new DateSelectFromBuilder(),
-                new TextSelectFromBuilder(),
-                new NumericSelectFromBuilder(),
-                new StaticListSelectFromBuilder(),
-                new UGroupListSelectFromBuilder(),
-                new UserListSelectFromBuilder()
+                new DateSelectFromBuilder($tuleap_db),
+                new TextSelectFromBuilder($tuleap_db),
+                new NumericSelectFromBuilder($tuleap_db),
+                new StaticListSelectFromBuilder($tuleap_db),
+                new UGroupListSelectFromBuilder($tuleap_db),
+                new UserListSelectFromBuilder($tuleap_db)
             ),
             new MetadataSelectFromBuilder(
                 new TitleSelectFromBuilder(),
@@ -366,19 +367,19 @@ final class CrossTrackerArtifactQueryFactoryBuilder
                 ),
             ),
         );
-        $text_order_builder        = new TextFromOrderBuilder();
-        $static_list_order_builder = new StaticListFromOrderBuilder();
+        $text_order_builder        = new TextFromOrderBuilder($tuleap_db);
+        $static_list_order_builder = new StaticListFromOrderBuilder($tuleap_db);
         $user_order_by_builder     = new UserOrderByBuilder(UserManager::instance());
-        $user_list_builder         = new UserListFromOrderBuilder($user_order_by_builder);
+        $user_list_builder         = new UserListFromOrderBuilder($user_order_by_builder, $tuleap_db);
         $order_builder_visitor     = new OrderByBuilderVisitor(
             new FieldFromOrderBuilder(
                 $field_retriever,
                 $retrieve_field_type,
-                new DateFromOrderBuilder(),
-                new NumericFromOrderBuilder(),
+                new DateFromOrderBuilder($tuleap_db),
+                new NumericFromOrderBuilder($tuleap_db),
                 $text_order_builder,
                 $static_list_order_builder,
-                new UGroupListFromOrderBuilder($user_group_manager),
+                new UGroupListFromOrderBuilder($user_group_manager, $tuleap_db),
                 $user_list_builder,
             ),
             new MetadataFromOrderBuilder(
@@ -390,6 +391,7 @@ final class CrossTrackerArtifactQueryFactoryBuilder
                 $static_list_order_builder,
                 $user_list_builder,
                 $user_order_by_builder,
+                $tuleap_db
             ),
         );
         $field_checker             = $this->getDuckTypedFieldChecker();

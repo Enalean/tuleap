@@ -34,7 +34,7 @@ final readonly class SelectResultKey implements Stringable
 
     public static function fromDuckTypedField(DuckTypedFieldSelect $field): self
     {
-        return new self(md5($field->name));
+        return new self($field->name);
     }
 
     public function __toString(): string

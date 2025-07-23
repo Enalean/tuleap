@@ -44,7 +44,7 @@ final readonly class TextResultBuilder
     public function getResult(DuckTypedFieldSelect $field, array $select_results): SelectedValuesCollection
     {
         $values = [];
-        $alias  = SelectResultKey::fromDuckTypedField($field);
+        $alias  = SelectResultKey::fromDuckTypedField($field)->__toString();
 
         foreach ($select_results as $result) {
             $id = (int) $result['id'];

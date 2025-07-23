@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\CrossTracker\Query\Advanced\OrderByBuilder\Metadata;
 
 use LogicException;
+use ParagonIE\EasyDB\EasyDB;
 use Tuleap\CrossTracker\Query\Advanced\AllowedMetadata;
 use Tuleap\CrossTracker\Query\Advanced\OrderByBuilder\Field\StaticList\StaticListFromOrderBuilder;
 use Tuleap\CrossTracker\Query\Advanced\OrderByBuilder\Field\Text\TextFromOrderBuilder;
@@ -48,13 +49,14 @@ final readonly class MetadataFromOrderBuilder
         private StaticListFromOrderBuilder $static_list_builder,
         private UserListFromOrderBuilder $user_list_builder,
         private UserOrderByBuilder $user_order_by_builder,
+        private EasyDB $easy_db,
     ) {
     }
 
     public function getFromOrder(Metadata $metadata, OrderByBuilderParameters $parameters): ParametrizedFromOrder
     {
         $order      = $parameters->direction->value;
-        $user_alias = 'user_' . md5($order);
+        $user_alias = $this->easy_db->escapeIdentifier('user_' . $order, false);
 
         return match ($metadata->getName()) {
             AllowedMetadata::TITLE            => $this->text_builder->getFromOrder($this->getTitleFieldIds($parameters->trackers), $parameters->direction),

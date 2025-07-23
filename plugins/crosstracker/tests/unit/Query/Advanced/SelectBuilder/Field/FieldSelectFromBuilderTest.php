@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Query\Advanced\SelectBuilder\Field;
 
+use ParagonIE\EasyDB\EasyDB;
 use PFUser;
 use Tuleap\CrossTracker\Query\Advanced\DuckTypedField\FieldTypeRetrieverWrapper;
 use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\Field\Date\DateSelectFromBuilder;
@@ -71,6 +72,8 @@ final class FieldSelectFromBuilderTest extends TestCase
     private function getSelectFrom(
         RetrieveUsedFieldsStub $fields_retriever,
     ): IProvideParametrizedSelectAndFromSQLFragments {
+        $tuleap_db = $this->createStub(EasyDB::class);
+        $tuleap_db->method('escapeIdentifier');
         $builder = new FieldSelectFromBuilder(
             $fields_retriever,
             new FieldTypeRetrieverWrapper(RetrieveFieldTypeStub::withDetectionOfType()),
@@ -78,12 +81,12 @@ final class FieldSelectFromBuilderTest extends TestCase
                 [self::FIRST_FIELD_ID, self::SECOND_FIELD_ID],
                 FieldPermissionType::PERMISSION_READ,
             ),
-            new DateSelectFromBuilder(),
-            new TextSelectFromBuilder(),
-            new NumericSelectFromBuilder(),
-            new StaticListSelectFromBuilder(),
-            new UGroupListSelectFromBuilder(),
-            new UserListSelectFromBuilder()
+            new DateSelectFromBuilder($tuleap_db),
+            new TextSelectFromBuilder($tuleap_db),
+            new NumericSelectFromBuilder($tuleap_db),
+            new StaticListSelectFromBuilder($tuleap_db),
+            new UGroupListSelectFromBuilder($tuleap_db),
+            new UserListSelectFromBuilder($tuleap_db)
         );
 
         return $builder->getSelectFrom(

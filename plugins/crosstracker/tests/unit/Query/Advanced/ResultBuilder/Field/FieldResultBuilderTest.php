@@ -100,7 +100,7 @@ final class FieldResultBuilderTest extends TestCase
     protected function setUp(): void
     {
         ForgeConfig::set(ConfigurationVariables::SERVER_TIMEZONE, 'Europe/Paris');
-        $this->field_hash     = md5('my_field');
+        $this->field_hash     = 'my_field';
         $this->user           = UserTestBuilder::buildWithId(133);
         $project              = ProjectTestBuilder::aProject()->withId(154)->build();
         $this->first_tracker  = TrackerTestBuilder::aTracker()->withId(38)->withProject($project)->build();
@@ -121,7 +121,8 @@ final class FieldResultBuilderTest extends TestCase
                 FieldPermissionType::PERMISSION_READ,
             )
         );
-        $builder         = new FieldResultBuilder(
+
+        $builder = new FieldResultBuilder(
             new FieldTypeRetrieverWrapper(RetrieveFieldTypeStub::withDetectionOfType()),
             new DateResultBuilder($artifact_retriever, $fields_retriever),
             new TextResultBuilder(
@@ -145,7 +146,7 @@ final class FieldResultBuilderTest extends TestCase
                 ),
                 RetrieveUserByEmailStub::withNoUser(),
                 ProvideAndRetrieveUserStub::build(UserTestBuilder::buildWithDefaults()),
-                $user_helper,
+                $user_helper
             ),
             $field_retriever
         );

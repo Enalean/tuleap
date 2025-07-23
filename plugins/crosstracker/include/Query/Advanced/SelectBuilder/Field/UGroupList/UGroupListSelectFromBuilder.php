@@ -22,24 +22,29 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Query\Advanced\SelectBuilder\Field\UGroupList;
 
+use ParagonIE\EasyDB\EasyDB;
 use ParagonIE\EasyDB\EasyStatement;
 use Tuleap\CrossTracker\Query\Advanced\DuckTypedField\Select\DuckTypedFieldSelect;
 use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\IProvideParametrizedSelectAndFromSQLFragments;
 use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\ParametrizedSelectFrom;
 use Tuleap\CrossTracker\Query\Advanced\SelectResultKey;
 
-final class UGroupListSelectFromBuilder
+final readonly class UGroupListSelectFromBuilder
 {
+    public function __construct(private EasyDB $easy_db)
+    {
+    }
+
     public function getSelectFrom(DuckTypedFieldSelect $field): IProvideParametrizedSelectAndFromSQLFragments
     {
         $suffix                                      = SelectResultKey::fromDuckTypedField($field);
-        $tracker_field_alias                         = "TF_$suffix";
-        $changeset_value_alias                       = "CV_$suffix";
-        $changeset_value_openlist_alias              = "CVO_$suffix";
-        $tracker_field_openlist_value_alias          = "TFOV_$suffix";
-        $tracker_changeset_value_list_alias          = "TCVL_$suffix";
-        $tracker_field_list_bind_ugroups_value_alias = "TFLBYV_$suffix";
-        $ugroup_alias                                = "UG_$suffix";
+        $tracker_field_alias                         = $this->easy_db->escapeIdentifier("TF_$suffix");
+        $changeset_value_alias                       = $this->easy_db->escapeIdentifier("CV_$suffix");
+        $changeset_value_openlist_alias              = $this->easy_db->escapeIdentifier("CVO_$suffix");
+        $tracker_field_openlist_value_alias          = $this->easy_db->escapeIdentifier("TFOV_$suffix");
+        $tracker_changeset_value_list_alias          = $this->easy_db->escapeIdentifier("TCVL_$suffix");
+        $tracker_field_list_bind_ugroups_value_alias = $this->easy_db->escapeIdentifier("TFLBYV_$suffix");
+        $ugroup_alias                                = $this->easy_db->escapeIdentifier("UG_$suffix");
 
         $fields_id_statement = EasyStatement::open()->in(
             "$tracker_field_alias.id IN(?*)",

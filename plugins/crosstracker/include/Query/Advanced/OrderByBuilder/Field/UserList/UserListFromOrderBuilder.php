@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Query\Advanced\OrderByBuilder\Field\UserList;
 
+use ParagonIE\EasyDB\EasyDB;
 use ParagonIE\EasyDB\EasyStatement;
 use Tuleap\CrossTracker\Query\Advanced\OrderByBuilder\ParametrizedFromOrder;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrderByDirection;
@@ -30,6 +31,7 @@ final readonly class UserListFromOrderBuilder
 {
     public function __construct(
         private UserOrderByBuilder $user_order_by_builder,
+        private EasyDB $easy_db,
     ) {
     }
 
@@ -38,11 +40,11 @@ final readonly class UserListFromOrderBuilder
      */
     public function getFromOrder(array $field_ids, OrderByDirection $direction): ParametrizedFromOrder
     {
-        $suffix                             = md5($direction->value);
-        $tracker_field_alias                = "TF_$suffix";
-        $changeset_value_alias              = "CV_$suffix";
-        $tracker_changeset_value_list_alias = "TCVL_$suffix";
-        $user_alias                         = "U_$suffix";
+        $suffix                             = $direction->value;
+        $tracker_field_alias                = $this->easy_db->escapeIdentifier("TF_$suffix");
+        $changeset_value_alias              = $this->easy_db->escapeIdentifier("CV_$suffix");
+        $tracker_changeset_value_list_alias = $this->easy_db->escapeIdentifier("TCVL_$suffix");
+        $user_alias                         = $this->easy_db->escapeIdentifier("U_$suffix");
 
         $fields_id_statement = EasyStatement::open()->in("$tracker_field_alias.id IN(?*)", $field_ids);
 

@@ -22,21 +22,26 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Query\Advanced\OrderByBuilder\Field\Text;
 
+use ParagonIE\EasyDB\EasyDB;
 use ParagonIE\EasyDB\EasyStatement;
 use Tuleap\CrossTracker\Query\Advanced\OrderByBuilder\ParametrizedFromOrder;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\OrderByDirection;
 
-final class TextFromOrderBuilder
+final readonly class TextFromOrderBuilder
 {
+    public function __construct(private EasyDB $easy_db)
+    {
+    }
+
     /**
      * @param list<int> $field_ids
      */
     public function getFromOrder(array $field_ids, OrderByDirection $direction): ParametrizedFromOrder
     {
-        $suffix                     = md5($direction->value);
-        $tracker_field_alias        = "TF_$suffix";
-        $changeset_value_alias      = "CV_$suffix";
-        $changeset_value_text_alias = "CVText_$suffix";
+        $suffix                     = $direction->value;
+        $tracker_field_alias        = $this->easy_db->escapeIdentifier("TF_$suffix");
+        $changeset_value_alias      = $this->easy_db->escapeIdentifier("CV_$suffix");
+        $changeset_value_text_alias = $this->easy_db->escapeIdentifier("CVText_$suffix");
 
         $fields_id_statement = EasyStatement::open()->in("$tracker_field_alias.id IN (?*)", $field_ids);
         $from                = <<<EOSQL
