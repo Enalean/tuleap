@@ -27,95 +27,86 @@
                 id="document-new-item-embedded"
                 name="embedded-content"
                 ref="embedded_editor"
-                v-bind:placeholder="placeholder"
+                v-bind:placeholder="$gettext('My content...')"
                 v-bind:value="value"
             ></textarea>
         </div>
     </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import emitter from "../../../../helpers/emitter";
+import { onBeforeUnmount, onMounted, ref } from "vue";
 
-export default {
-    name: "EmbeddedProperties",
-    props: {
-        value: String,
-    },
-    data() {
-        return {
-            editor: null,
-        };
-    },
-    computed: {
-        placeholder() {
-            return this.$gettext("My content...");
-        },
-    },
-    mounted() {
-        const text_area = this.$refs.embedded_editor;
-        if (this.editor !== null) {
-            this.editor.destroy();
-        }
+defineProps<{ value: string }>();
 
-        // eslint-disable-next-line no-undef
-        this.editor = CKEDITOR.replace(text_area, {
-            toolbar: [
-                [
-                    "Cut",
-                    "Copy",
-                    "Paste",
-                    "PasteText",
-                    "PasteFromWord",
-                    "-",
-                    "Undo",
-                    "Redo",
-                    "Link",
-                    "Unlink",
-                    "Anchor",
-                ],
-                ["Image", "Table", "HorizontalRule", "SpecialChar", "-", "Source"],
-                "/",
-                ["Bold", "Italic", "Strike", "-"],
-                ["RemoveFormat", "NumberedList", "BulletedList", "Styles", "Format"],
+const embedded_editor = ref<HTMLTextAreaElement>();
+let editor = null;
+
+onMounted(() => {
+    const text_area = embedded_editor.value;
+    if (editor !== null) {
+        editor.destroy();
+    }
+
+    // eslint-disable-next-line no-undef
+    editor = CKEDITOR.replace(text_area, {
+        toolbar: [
+            [
+                "Cut",
+                "Copy",
+                "Paste",
+                "PasteText",
+                "PasteFromWord",
+                "-",
+                "Undo",
+                "Redo",
+                "Link",
+                "Unlink",
+                "Anchor",
             ],
-            stylesSet: [
-                { name: "Bold", element: "strong", overrides: "b" },
-                { name: "Italic", element: "em", overrides: "i" },
-                { name: "Strike", element: "s" },
-                { name: "Code", element: "code" },
-                { name: "Subscript", element: "sub" },
-                { name: "Superscript", element: "sup" },
-            ],
-            disableNativeSpellChecker: false,
-            linkShowTargetTab: false,
-        });
+            ["Image", "Table", "HorizontalRule", "SpecialChar", "-", "Source"],
+            "/",
+            ["Bold", "Italic", "Strike", "-"],
+            ["RemoveFormat", "NumberedList", "BulletedList", "Styles", "Format"],
+        ],
+        stylesSet: [
+            { name: "Bold", element: "strong", overrides: "b" },
+            { name: "Italic", element: "em", overrides: "i" },
+            { name: "Strike", element: "s" },
+            { name: "Code", element: "code" },
+            { name: "Subscript", element: "sub" },
+            { name: "Superscript", element: "sup" },
+        ],
+        disableNativeSpellChecker: false,
+        linkShowTargetTab: false,
+    });
 
-        this.editor.on("instanceReady", this.onInstanceReady);
-    },
-    methods: {
-        onChange() {
-            if (this.editor.getData()) {
-                emitter.emit("update-embedded-properties", this.editor.getData());
-            }
-        },
-        onInstanceReady() {
-            this.editor.on("change", this.onChange);
+    editor.on("instanceReady", onInstanceReady);
+});
 
-            this.editor.on("mode", () => {
-                if (this.editor.mode === "source") {
-                    const editable = this.editor.editable();
-                    editable.attachListener(editable, "input", () => {
-                        this.onChange();
-                    });
-                }
+onBeforeUnmount(() => {
+    if (editor) {
+        editor.destroy();
+    }
+});
+
+function onChange(): void {
+    if (editor.getData()) {
+        emitter.emit("update-embedded-properties", editor.getData());
+    }
+}
+
+function onInstanceReady() {
+    editor.on("change", onChange);
+
+    editor.on("mode", () => {
+        if (editor.mode === "source") {
+            const editable = editor.editable();
+            editable.attachListener(editable, "input", () => {
+                onChange();
             });
-        },
-        beforeUnmount() {
-            if (this.editor) {
-                this.editor.destroy();
-            }
-        },
-    },
-};
+        }
+    });
+}
 </script>
