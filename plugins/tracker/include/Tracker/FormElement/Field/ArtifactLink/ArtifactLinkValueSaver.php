@@ -108,20 +108,16 @@ class ArtifactLinkValueSaver
         array $submitted_value,
     ) {
         $artifact_ids_to_link = $this->getArtifactIdsToLink($field->getTracker(), $artifact, $submitted_value);
-        foreach ($artifact_ids_to_link as $artifact_to_be_linked_by_tracker) {
-            $tracker = $artifact_to_be_linked_by_tracker['tracker'];
-
-            foreach ($artifact_to_be_linked_by_tracker['types'] as $ype => $ids) {
-                if (! $ype) {
-                    $ype = null;
+        foreach ($artifact_ids_to_link as $artifact_to_be_linked_by_type) {
+            foreach ($artifact_to_be_linked_by_type as $type => $ids) {
+                if (! $type) {
+                    $type = null;
                 }
 
                 $this->dao->create(
                     $changeset_value_id,
-                    $ype,
+                    $type,
                     $ids,
-                    $tracker->getItemName(),
-                    $tracker->getGroupId()
                 );
             }
         }
@@ -346,11 +342,14 @@ class ArtifactLinkValueSaver
         );
     }
 
+    /**
+     * @return array<int, array<string, int[]>>
+     */
     private function getArtifactIdsToLink(
         Tracker $from_tracker,
         Artifact $artifact,
         array $submitted_value,
-    ) {
+    ): array {
         $all_artifact_to_be_linked = [];
         foreach ($submitted_value['list_of_artifactlinkinfo'] as $artifactlinkinfo) {
             $artifact_to_link = $artifactlinkinfo->getArtifact();
@@ -359,17 +358,14 @@ class ArtifactLinkValueSaver
                 $type    = $this->getType($artifact, $artifactlinkinfo, $from_tracker, $tracker, $submitted_value);
 
                 if (! isset($all_artifact_to_be_linked[$tracker->getId()])) {
-                    $all_artifact_to_be_linked[$tracker->getId()] = [
-                        'tracker' => $tracker,
-                        'types' => [],
-                    ];
+                    $all_artifact_to_be_linked[$tracker->getId()] = [];
                 }
 
-                if (! isset($all_artifact_to_be_linked[$tracker->getId()]['types'][$type])) {
-                    $all_artifact_to_be_linked[$tracker->getId()]['types'][$type] = [];
+                if (! isset($all_artifact_to_be_linked[$tracker->getId()][$type])) {
+                    $all_artifact_to_be_linked[$tracker->getId()][$type] = [];
                 }
 
-                $all_artifact_to_be_linked[$tracker->getId()]['types'][$type][] = $artifact_to_link->getId();
+                $all_artifact_to_be_linked[$tracker->getId()][$type][] = $artifact_to_link->getId();
             }
         }
 

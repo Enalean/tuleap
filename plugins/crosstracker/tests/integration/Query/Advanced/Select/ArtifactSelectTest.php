@@ -83,7 +83,6 @@ final class ArtifactSelectTest extends CrossTrackerFieldTestCase
         $tracker_builder->buildLastChangeset($sprint_artifact_id);
 
         $tracker_builder->buildArtifactLinkValue(
-            $project_id,
             $release_artifact_changeset_id,
             $sprint_artifact_link_field_id,
             $sprint_artifact_id,

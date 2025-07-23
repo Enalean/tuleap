@@ -30,7 +30,7 @@ class ArtifactLinkFieldValueDao extends FieldValueDao
     {
         $changeset_value_id = $this->da->escapeInt($changeset_value_id);
 
-        $sql = "SELECT cv.*, a.tracker_id, a.last_changeset_id
+        $sql = "SELECT cv.artifact_id, cv.nature, tracker.item_name as keyword, tracker.group_id, a.tracker_id, a.last_changeset_id
                 FROM tracker_changeset_value_artifactlink AS cv
                     INNER JOIN tracker_artifact AS a ON (a.id = cv.artifact_id)
                     INNER JOIN tracker_artifact_priority_rank ON (tracker_artifact_priority_rank.artifact_id = a.id)
@@ -101,21 +101,19 @@ class ArtifactLinkFieldValueDao extends FieldValueDao
         return $this->retrieve($sql);
     }
 
-    public function create($changeset_value_id, $type, array $artifact_ids, $keyword, $group_id)
+    public function create($changeset_value_id, $type, array $artifact_ids)
     {
         $changeset_value_id = $this->da->escapeInt($changeset_value_id);
         $type               = $type ? $this->da->quoteSmart($type) : 'NULL';
-        $keyword            = $this->da->quoteSmart($keyword);
-        $group_id           = $this->da->escapeInt($group_id);
 
         $sql_values = [];
         foreach ($artifact_ids as $id) {
             $id           = $this->da->escapeInt($id);
-            $sql_values[] = "($changeset_value_id, $type, $id, $keyword, $group_id)";
+            $sql_values[] = "($changeset_value_id, $type, $id)";
         }
 
         $sql = 'INSERT INTO tracker_changeset_value_artifactlink
-                    (changeset_value_id, nature, artifact_id, keyword, group_id)
+                    (changeset_value_id, nature, artifact_id)
                 VALUES' . implode(',', $sql_values);
 
         return $this->update($sql);
@@ -125,8 +123,8 @@ class ArtifactLinkFieldValueDao extends FieldValueDao
     {
         $from = $this->da->escapeInt($from);
         $to   = $this->da->escapeInt($to);
-        $sql  = "INSERT INTO tracker_changeset_value_artifactlink(changeset_value_id, nature, artifact_id, keyword, group_id)
-                SELECT $to, nature, artifact_id, keyword, group_id
+        $sql  = "INSERT INTO tracker_changeset_value_artifactlink(changeset_value_id, nature, artifact_id)
+                SELECT $to, nature, artifact_id
                 FROM tracker_changeset_value_artifactlink
                 WHERE changeset_value_id = $from";
         return $this->update($sql);
@@ -140,17 +138,6 @@ class ArtifactLinkFieldValueDao extends FieldValueDao
         }
 
         return true;
-    }
-
-    public function updateItemName($group_id, $oldKeyword, $keyword)
-    {
-        $group_id   = $this->da->quoteSmart($group_id);
-        $keyword    = $this->da->quoteSmart($keyword);
-        $oldKeyword = $this->da->quoteSmart($oldKeyword);
-        $sql        = "UPDATE tracker_changeset_value_artifactlink SET
-			keyword=$keyword
-            WHERE keyword=$oldKeyword AND group_id=$group_id";
-        return $this->update($sql);
     }
 
     public function deleteReference($artifact_id)

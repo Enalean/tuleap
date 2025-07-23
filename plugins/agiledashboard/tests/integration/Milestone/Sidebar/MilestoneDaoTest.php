@@ -330,7 +330,6 @@ final class MilestoneDaoTest extends TestIntegrationTestCase
 
         $this->tracker_builder->buildListValue($this->sprint_last_changeset_id, $this->sprint_list_field_id, $this->sprint_status_values['open'][0]);
         $this->tracker_builder->buildArtifactLinkValue(
-            $this->project_id,
             $this->milestone_changeset_id,
             $this->artifact_link_field_id,
             $this->sprint_id,
@@ -347,7 +346,6 @@ final class MilestoneDaoTest extends TestIntegrationTestCase
         $this->tracker_builder->buildListValue($closed_sprint_last_changeset_id, $this->sprint_list_field_id, $this->sprint_status_values['closed'][0]);
 
         $this->tracker_builder->buildArtifactLinkValue(
-            $this->project_id,
             $this->milestone_changeset_id,
             $this->artifact_link_field_id,
             $this->sprint_id,
@@ -373,7 +371,6 @@ final class MilestoneDaoTest extends TestIntegrationTestCase
             $this->sprint_status_values['open'][0]
         );
         $this->tracker_builder->buildArtifactLinkValue(
-            $this->project_id,
             $this->milestone_changeset_id,
             $this->artifact_link_field_id,
             $this->sprint_id,
@@ -401,7 +398,6 @@ final class MilestoneDaoTest extends TestIntegrationTestCase
             $other_status_values['open'][0]
         );
         $this->tracker_builder->buildArtifactLinkValue(
-            $this->project_id,
             $this->milestone_changeset_id,
             $this->artifact_link_field_id,
             $artifact_is_child,

@@ -234,7 +234,7 @@ final class ArtifactLinkValueSaverTest extends TestCase
         ];
 
         $this->dao->expects($this->once())->method('create')
-            ->with(self::anything(), '_is_child', self::anything(), self::anything(), self::anything());
+            ->with(self::anything(), '_is_child', self::anything());
         $this->reference_manager->method('insertBetweenTwoArtifacts');
         $this->artifact_link_usage_dao->method('isProjectUsingArtifactLinkTypes')->willReturn(false);
 
@@ -262,7 +262,7 @@ final class ArtifactLinkValueSaverTest extends TestCase
         $this->field->setTracker($this->tracker_child);
 
         $this->dao->expects($this->once())->method('create')
-            ->with(self::anything(), null, self::anything(), self::anything(), self::anything());
+            ->with(self::anything(), null, self::anything());
         $this->reference_manager->method('insertBetweenTwoArtifacts');
         $this->artifact_link_usage_dao->method('isProjectUsingArtifactLinkTypes')->willReturn(false);
 
@@ -290,7 +290,7 @@ final class ArtifactLinkValueSaverTest extends TestCase
         $this->artifact_link_usage_dao->method('isTypeDisabledInProject')->with(101, '_is_child')->willReturn(false);
 
         $this->dao->expects($this->once())->method('create')
-            ->with(self::anything(), '_is_child', self::anything(), self::anything(), self::anything());
+            ->with(self::anything(), '_is_child', self::anything());
         $this->reference_manager->method('insertBetweenTwoArtifacts');
         $this->artifact_link_usage_dao->method('isProjectUsingArtifactLinkTypes')->willReturn(false);
 
@@ -315,7 +315,7 @@ final class ArtifactLinkValueSaverTest extends TestCase
         ];
 
         $this->dao->expects($this->once())->method('create')
-            ->with(self::anything(), null, self::anything(), self::anything(), self::anything());
+            ->with(self::anything(), null, self::anything());
         $this->rules_manager->method('getForTargetTracker')->willReturn(new Tracker_Workflow_Trigger_TriggerRuleCollection());
         $this->reference_manager->method('insertBetweenTwoArtifacts');
         $this->artifact_link_usage_dao->method('isProjectUsingArtifactLinkTypes')->willReturn(false);
@@ -344,7 +344,7 @@ final class ArtifactLinkValueSaverTest extends TestCase
         $this->artifact_link_usage_dao->method('isProjectUsingArtifactLinkTypes')->willReturn(true);
 
         $this->dao->expects($this->once())->method('create')
-            ->with(self::anything(), null, self::anything(), self::anything(), self::anything());
+            ->with(self::anything(), null, self::anything());
         $this->reference_manager->method('insertBetweenTwoArtifacts');
 
         $this->saver->saveValue(
