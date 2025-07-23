@@ -42,7 +42,10 @@ use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLinkCollection;
 use Tuleap\Layout\BreadCrumbDropdown\SubItemsUnlabelledSection;
+use Tuleap\Test\Builders\IncludeAssetsBuilder;
+use Tuleap\Test\Builders\LayoutInspector;
 use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\TestLayout;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
@@ -116,6 +119,11 @@ final class MilestoneControllerTest extends TestCase
                 ),
             ),
             $this->createMock(HeaderOptionsProvider::class),
+            new PlanningFrontendDependenciesProvider(
+                IncludeAssetsBuilder::build(),
+                IncludeAssetsBuilder::build(),
+                new TestLayout(new LayoutInspector())
+            )
         );
     }
 

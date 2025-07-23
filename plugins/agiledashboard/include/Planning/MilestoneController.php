@@ -69,6 +69,7 @@ class Planning_MilestoneController extends BaseController
         VisitRecorder $visit_recorder,
         AllBreadCrumbsForMilestoneBuilder $bread_crumbs_for_milestone_builder,
         HeaderOptionsProvider $header_options_provider,
+        private readonly \Tuleap\AgileDashboard\Planning\PlanningFrontendDependenciesProvider $frontend_dependencies_provider,
     ) {
         parent::__construct('agiledashboard', $request);
         $this->milestone_factory                  = $milestone_factory;
@@ -95,6 +96,11 @@ class Planning_MilestoneController extends BaseController
 
         $presenter_data = $this->pane_factory->getPanePresenterData($this->milestone);
         $template_name  = $this->getTemplateName($presenter_data);
+
+        $this->frontend_dependencies_provider->loadStyleAssets();
+        if ($presenter_data->getActivePane()->getIdentifier() === PlanningV2PaneInfo::IDENTIFIER) {
+            $this->frontend_dependencies_provider->loadPlanningJavascriptAssets();
+        }
 
         $title = dgettext('tuleap-agiledashboard', 'View Planning');
 

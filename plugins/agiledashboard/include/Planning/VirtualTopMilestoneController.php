@@ -52,6 +52,7 @@ final class VirtualTopMilestoneController extends BaseController
         private readonly AgileDashboardCrumbBuilder $agile_dashboard_crumb_builder,
         private readonly CSRFSynchronizerTokenProvider $token_provider,
         private readonly RecentlyVisitedTopBacklogDao $recently_visited_top_backlog_dao,
+        private readonly PlanningFrontendDependenciesProvider $frontend_dependencies_provider,
     ) {
         parent::__construct('agiledashboard', $request);
         $this->project = $project_manager->getProject($request->get('group_id'));
@@ -84,6 +85,11 @@ final class VirtualTopMilestoneController extends BaseController
             $this->project,
             $current_user,
             $this->token_provider->getCSRF($this->project),
+        );
+
+        $this->frontend_dependencies_provider->loadStyleAssets();
+        $this->milestone->apply(
+            $this->frontend_dependencies_provider->loadPlanningJavascriptAssets(...)
         );
 
         $title = sprintf(

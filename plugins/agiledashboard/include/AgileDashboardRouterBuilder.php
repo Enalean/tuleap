@@ -37,6 +37,7 @@ use Tuleap\AgileDashboard\Planning\BacklogTrackersUpdateChecker;
 use Tuleap\AgileDashboard\Planning\HeaderOptionsForPlanningProvider;
 use Tuleap\AgileDashboard\Planning\MilestoneControllerFactory;
 use Tuleap\AgileDashboard\Planning\PlanningDao;
+use Tuleap\AgileDashboard\Planning\PlanningFrontendDependenciesProvider;
 use Tuleap\AgileDashboard\Planning\PlanningUpdater;
 use Tuleap\AgileDashboard\Planning\RootPlanning\BacklogTrackerRemovalChecker;
 use Tuleap\AgileDashboard\Planning\RootPlanning\UpdateIsAllowedChecker;
@@ -45,6 +46,8 @@ use Tuleap\AgileDashboard\Scrum\ScrumPresenterBuilder;
 use Tuleap\AgileDashboard\Workflow\AddToTopBacklogPostActionDao;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
+use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\IncludeCoreAssets;
 use Tuleap\Layout\NewDropdown\CurrentContextSectionToHeaderOptionsInserter;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupRepresentationBuilder;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
@@ -109,6 +112,9 @@ class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.
         $admin_crumb_builder     = new AdministrationCrumbBuilder();
         $header_options_inserter = new CurrentContextSectionToHeaderOptionsInserter();
 
+        $layout = $GLOBALS['Response'];
+        assert($layout instanceof \Tuleap\Layout\BaseLayout);
+
         $milestone_controller_factory = new MilestoneControllerFactory(
             ProjectManager::instance(),
             $milestone_factory,
@@ -141,6 +147,14 @@ class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.
             ),
             new \Tuleap\AgileDashboard\CSRFSynchronizerTokenProvider(),
             new RecentlyVisitedTopBacklogDao(),
+            new PlanningFrontendDependenciesProvider(
+                new IncludeCoreAssets(),
+                new IncludeAssets(
+                    __DIR__ . '/../scripts/planning-v2/frontend-assets',
+                    '/assets/agiledashboard/planning-v2'
+                ),
+                $layout,
+            )
         );
 
         $ugroup_manager = new UGroupManager();

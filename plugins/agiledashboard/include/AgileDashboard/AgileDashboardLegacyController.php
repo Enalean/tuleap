@@ -27,10 +27,7 @@ use AgileDashboardRouterBuilder;
 use Feedback;
 use HTTPRequest;
 use Tuleap\AgileDashboard\Milestone\Pane\Details\DetailsPaneInfo;
-use Tuleap\AgileDashboard\Planning\PlanningJavascriptDependenciesProvider;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
-use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Request\DispatchableWithRequest;
@@ -105,20 +102,6 @@ class AgileDashboardLegacyController implements DispatchableWithRequest, Dispatc
 
     private function includeAssets(HTTPRequest $request, BaseLayout $layout): void
     {
-        if (self::isPlanningV2URL($request)) {
-            $planning_assets = new IncludeAssets(
-                __DIR__ . '/../../scripts/planning-v2/frontend-assets',
-                '/assets/agiledashboard/planning-v2'
-            );
-            $provider        = new PlanningJavascriptDependenciesProvider($planning_assets);
-            foreach ($provider->getDependencies() as $dependency) {
-                $layout->includeFooterJavascriptFile($dependency['file']);
-            }
-            $layout->addCssAsset(
-                new CssAssetWithoutVariantDeclinaisons($planning_assets, 'planning-style')
-            );
-            return;
-        }
         if (self::isInOverviewTab($request)) {
             $layout->addJavascriptAsset(
                 new JavascriptViteAsset(
