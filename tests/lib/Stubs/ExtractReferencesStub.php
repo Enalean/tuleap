@@ -50,6 +50,7 @@ final class ExtractReferencesStub implements \Tuleap\Reference\ExtractReferences
         return new self(true, [[]]);
     }
 
+    #[\Override]
     public function extractReferences(string $html, int $group_id): array
     {
         if ($this->always_return) {

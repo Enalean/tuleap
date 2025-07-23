@@ -35,6 +35,7 @@ final class LegacyPermissionsMigratorStub implements LegacyPermissionsMigrator
         return new self();
     }
 
+    #[\Override]
     public function migrateFromLegacyPermissions(\Project $project): void
     {
         $this->has_been_migrated = true;

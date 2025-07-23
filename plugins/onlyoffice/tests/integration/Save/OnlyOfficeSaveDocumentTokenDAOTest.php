@@ -31,6 +31,7 @@ final class OnlyOfficeSaveDocumentTokenDAOTest extends TestIntegrationTestCase
 {
     private OnlyOfficeSaveDocumentTokenDAO $dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao = new OnlyOfficeSaveDocumentTokenDAO();

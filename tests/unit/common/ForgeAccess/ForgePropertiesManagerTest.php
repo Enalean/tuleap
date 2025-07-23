@@ -57,6 +57,7 @@ final class ForgePropertiesManagerTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $frs_permissions_manager;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->config_dao              = $this->createMock(ConfigDao::class);

@@ -44,6 +44,7 @@ final class SendMailStub implements SendMail
         return new self($callback);
     }
 
+    #[\Override]
     public function send(Tracker_Artifact_Changeset $changeset, array $recipients, array $headers, string $from, string $subject, string $htmlBody, string $txtBody, ?string $message_id, array $attachments): void
     {
         if ($this->callback !== null) {

@@ -35,6 +35,7 @@ final class CrossReferencePresenterFactoryTest extends TestCase
     private CrossReferencesDao&MockObject $dao;
     private CrossReferencePresenterFactory $factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao = $this->createMock(CrossReferencesDao::class);

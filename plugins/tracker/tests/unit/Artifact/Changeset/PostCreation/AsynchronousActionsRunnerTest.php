@@ -37,6 +37,7 @@ class AsynchronousActionsRunnerTest extends TestCase
     private MockObject&ActionsRunner $actions_runner;
     private RetrieveArtifact $artifact_factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->actions_runner   = $this->createMock(ActionsRunner::class);

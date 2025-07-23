@@ -30,6 +30,7 @@ final class BuildDisplayNameStub implements BuildDisplayName
     {
     }
 
+    #[\Override]
     public function getDisplayName(string $user_name, string $realname): string
     {
         return $realname . ' (' . $user_name . ')';

@@ -49,6 +49,7 @@ final class AdminReleaseNoteLinkControllerTest extends \Tuleap\Test\PHPUnit\Test
     private $layout;
     private PFUser $admin_user;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->admin_user = UserTestBuilder::buildSiteAdministrator();

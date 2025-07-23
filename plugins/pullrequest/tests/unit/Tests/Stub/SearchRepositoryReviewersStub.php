@@ -40,6 +40,7 @@ final class SearchRepositoryReviewersStub implements SearchRepositoryReviewers
         return new self([$first_reviewer, ...$other_reviewers]);
     }
 
+    #[\Override]
     public function searchRepositoryPullRequestsReviewersIds(int $repository_id, int $limit, int $offset): RepositoryPullRequestsReviewersIdsPage
     {
         $page = array_slice($this->reviewers, $offset, $limit);

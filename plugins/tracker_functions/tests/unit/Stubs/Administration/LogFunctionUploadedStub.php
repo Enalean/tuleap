@@ -37,6 +37,7 @@ final class LogFunctionUploadedStub implements LogFunctionUploaded
         return new self();
     }
 
+    #[\Override]
     public function logFunctionUploaded(\PFUser $user, \Tuleap\Tracker\Tracker $tracker): void
     {
         $this->logged = true;

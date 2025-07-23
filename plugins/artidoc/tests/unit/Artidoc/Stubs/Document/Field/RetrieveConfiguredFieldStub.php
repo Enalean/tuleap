@@ -48,11 +48,13 @@ final readonly class RetrieveConfiguredFieldStub implements RetrieveConfiguredFi
         return new self([]);
     }
 
+    #[\Override]
     public function retrieveConfiguredFieldsFromItemId(int $item_id): array
     {
         return $this->rows;
     }
 
+    #[\Override]
     public function retrieveConfiguredFieldsFromSectionId(SectionIdentifier $section_identifier): array
     {
         return $this->rows;

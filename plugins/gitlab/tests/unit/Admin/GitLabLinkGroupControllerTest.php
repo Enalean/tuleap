@@ -69,6 +69,7 @@ final class GitLabLinkGroupControllerTest extends TestCase
     private \HTTPRequest $request;
     private LayoutInspector $inspector;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->header_renderer        = $this->createMock(HeaderRenderer::class);

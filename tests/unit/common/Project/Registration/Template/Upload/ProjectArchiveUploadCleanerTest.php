@@ -37,6 +37,7 @@ final class ProjectArchiveUploadCleanerTest extends TestCase
 {
     use TemporaryTestDirectory;
 
+    #[\Override]
     protected function setUp(): void
     {
     }

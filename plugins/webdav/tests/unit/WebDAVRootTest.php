@@ -65,6 +65,7 @@ final class WebDAVRootTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $project_access_checker;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->plugin                 = $this->createMock(\WebDAVPlugin::class);

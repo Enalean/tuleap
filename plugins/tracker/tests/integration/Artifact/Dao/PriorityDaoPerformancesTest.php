@@ -37,6 +37,7 @@ final class PriorityDaoPerformancesTest extends TestIntegrationTestCase
     private PriorityDao $dao;
     private \ParagonIE\EasyDB\EasyDB $db;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->dao = new PriorityDao();

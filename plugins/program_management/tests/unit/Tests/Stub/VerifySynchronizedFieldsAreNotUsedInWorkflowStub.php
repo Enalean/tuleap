@@ -44,6 +44,7 @@ final class VerifySynchronizedFieldsAreNotUsedInWorkflowStub implements VerifySy
         return new self(false);
     }
 
+    #[\Override]
     public function areWorkflowsNotUsedWithSynchronizedFieldsInTeamTrackers(
         TrackerCollection $trackers,
         SynchronizedFieldFromProgramAndTeamTrackersCollection $field_collection,

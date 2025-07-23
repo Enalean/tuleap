@@ -30,6 +30,7 @@ final class QueueSupervisorTest extends TestCase
 {
     private TestLogger $logger;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->logger = new TestLogger();
@@ -75,14 +76,17 @@ final class QueueSupervisorTest extends TestCase
             {
             }
 
+            #[\Override]
             public function pushSinglePersistentMessage(string $topic, mixed $content): void
             {
             }
 
+            #[\Override]
             public function listen(string $queue_id, string $topic, callable $callback): void
             {
             }
 
+            #[\Override]
             public function getStatistics(): PersistentQueueStatistics
             {
                 return $this->statistics;

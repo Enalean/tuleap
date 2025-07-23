@@ -39,6 +39,7 @@ final class SendNotificationToTrackerAdministratorTest extends TestCase
     private TestLogger $logger;
     private Tracker_Artifact_Changeset $changeset;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->logger = new TestLogger();

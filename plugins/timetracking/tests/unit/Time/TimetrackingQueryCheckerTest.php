@@ -33,6 +33,7 @@ class TimetrackingQueryCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private TimetrackingQueryChecker $checker;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->checker = new TimetrackingQueryChecker();

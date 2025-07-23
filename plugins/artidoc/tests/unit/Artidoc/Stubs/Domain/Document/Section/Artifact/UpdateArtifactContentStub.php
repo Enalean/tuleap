@@ -42,6 +42,7 @@ final class UpdateArtifactContentStub implements UpdateArtifactContent
         return new self();
     }
 
+    #[\Override]
     public function updateArtifactContent(
         SectionIdentifier $section_identifier,
         int $artifact_id,

@@ -44,6 +44,7 @@ final class ArtifactVisibleVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $artifact_factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->artifact_factory = $this->createMock(\Tracker_ArtifactFactory::class);

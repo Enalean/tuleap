@@ -41,6 +41,7 @@ final class ProgramIncrementIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
     private ArtifactUpdatedEventStub $artifact_updated;
     private ArtifactCreatedEventStub $artifact_created;
 
+    #[\Override]
     protected function setUp(): void
     {
         $user_id    = 101;

@@ -41,6 +41,7 @@ final class ProcessProgramIncrementUpdateStub implements ProcessProgramIncrement
         return $this->call_count;
     }
 
+    #[\Override]
     public function processUpdate(ProgramIncrementUpdate $update): void
     {
         $this->call_count++;

@@ -50,6 +50,7 @@ final class ListOfSearchColumnDefinitionPresenterBuilderTest extends TestCase
         $columns = (new ListOfSearchColumnDefinitionPresenterBuilder(
             new SearchColumnCollectionBuilder(),
             new class implements IRetrieveColumns {
+                #[\Override]
                 public function searchByProjectId(int $project_id): array
                 {
                     return [
@@ -107,6 +108,7 @@ final class ListOfSearchColumnDefinitionPresenterBuilderTest extends TestCase
         $columns = (new ListOfSearchColumnDefinitionPresenterBuilder(
             new SearchColumnCollectionBuilder(),
             new class implements IRetrieveColumns {
+                #[\Override]
                 public function searchByProjectId(int $project_id): array
                 {
                     return [
@@ -152,6 +154,7 @@ final class ListOfSearchColumnDefinitionPresenterBuilderTest extends TestCase
         $columns = (new ListOfSearchColumnDefinitionPresenterBuilder(
             new SearchColumnCollectionBuilder(),
             new class implements IRetrieveColumns {
+                #[\Override]
                 public function searchByProjectId(int $project_id): array
                 {
                     return [];

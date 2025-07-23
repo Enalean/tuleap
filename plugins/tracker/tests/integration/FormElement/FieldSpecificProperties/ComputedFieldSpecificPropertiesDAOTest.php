@@ -34,6 +34,7 @@ final class ComputedFieldSpecificPropertiesDAOTest extends TestIntegrationTestCa
     private int $computed_field_id;
     private int $duplicate_field_id;
 
+    #[\Override]
     protected function setUp(): void
     {
         $db              = DBFactory::getMainTuleapDBConnection()->getDB();

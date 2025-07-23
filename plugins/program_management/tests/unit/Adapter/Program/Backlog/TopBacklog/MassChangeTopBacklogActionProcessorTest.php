@@ -37,6 +37,7 @@ final class MassChangeTopBacklogActionProcessorTest extends \Tuleap\Test\PHPUnit
     private $top_backlog_change_processor;
     private \PFUser $user;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->top_backlog_change_processor = $this->createMock(TopBacklogChangeProcessor::class);

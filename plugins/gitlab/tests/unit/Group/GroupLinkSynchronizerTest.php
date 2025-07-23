@@ -55,6 +55,7 @@ final class GroupLinkSynchronizerTest extends TestCase
     private BuildGitlabProjectsStub $project_builder;
     private UpdateSynchronizationDateStub $date_updater;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->project_builder = BuildGitlabProjectsStub::withProjects(

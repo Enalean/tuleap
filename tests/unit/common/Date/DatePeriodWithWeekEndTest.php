@@ -33,6 +33,7 @@ class DatePeriodWithWeekEndTest extends \Tuleap\Test\PHPUnit\TestCase
     private int $day_timestamp;
     private int $following_day_timestamp;
 
+    #[\Override]
     protected function setUp(): void
     {
         $start_date        = mktime(0, 0, 0, 7, 4, 2012);

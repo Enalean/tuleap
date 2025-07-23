@@ -47,6 +47,7 @@ final readonly class SearchUserGroupsPermissionOnFieldsStub implements SearchUse
         return new self($results);
     }
 
+    #[\Override]
     public function searchUserGroupsPermissionOnFields(array $user_groups, array $fields_id, FieldPermissionType $permission): array
     {
         return $this->result;

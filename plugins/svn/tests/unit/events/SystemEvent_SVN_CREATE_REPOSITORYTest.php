@@ -47,6 +47,7 @@ final class SystemEvent_SVN_CREATE_REPOSITORYTest extends \Tuleap\Test\PHPUnit\T
      */
     private $user_manager;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user_manager                = $this->createMock(\UserManager::class);

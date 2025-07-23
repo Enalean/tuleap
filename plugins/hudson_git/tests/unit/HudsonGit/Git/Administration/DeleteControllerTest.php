@@ -72,6 +72,7 @@ final class DeleteControllerTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $git_permissions_manager;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

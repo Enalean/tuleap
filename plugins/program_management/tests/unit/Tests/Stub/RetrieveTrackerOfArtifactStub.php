@@ -47,6 +47,7 @@ final class RetrieveTrackerOfArtifactStub implements RetrieveTrackerOfArtifact
         return new self($identifiers);
     }
 
+    #[\Override]
     public function getTrackerOfArtifact(ArtifactIdentifier $artifact): TrackerIdentifier
     {
         if (count($this->trackers) > 0) {

@@ -32,11 +32,13 @@ final class ProjectSidebarLegacyPNGHrefTest extends TestCase
     {
         $representation = $this->buildRepresentation(
             new class implements IDetectIfLogoIsCustomized {
+                #[\Override]
                 public function isLegacyOrganizationLogoCustomized(): bool
                 {
                     return false;
                 }
 
+                #[\Override]
                 public function isSvgOrganizationLogoCustomized(): bool
                 {
                     return false;
@@ -51,11 +53,13 @@ final class ProjectSidebarLegacyPNGHrefTest extends TestCase
     {
         $representation = $this->buildRepresentation(
             new class implements IDetectIfLogoIsCustomized {
+                #[\Override]
                 public function isLegacyOrganizationLogoCustomized(): bool
                 {
                     return true;
                 }
 
+                #[\Override]
                 public function isSvgOrganizationLogoCustomized(): bool
                 {
                     return false;

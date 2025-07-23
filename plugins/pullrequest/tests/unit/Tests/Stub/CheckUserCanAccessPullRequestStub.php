@@ -36,6 +36,7 @@ final class CheckUserCanAccessPullRequestStub implements CheckUserCanAccessPullR
     /**
      * @throws Throwable
      */
+    #[\Override]
     public function checkPullRequestIsReadableByUser(PullRequest $pull_request, PFUser $user): void
     {
         if ($this->exception) {

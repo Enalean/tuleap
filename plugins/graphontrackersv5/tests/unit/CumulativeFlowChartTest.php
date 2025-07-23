@@ -37,6 +37,7 @@ final class CumulativeFlowChartTest extends \Tuleap\Test\PHPUnit\TestCase
     private GraphOnTrackersV5_CumulativeFlow_DataBuilder $data_builder;
     private \PHPUnit\Framework\MockObject\MockObject&\Tracker_Report $report;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->report = $this->createMock(\Tracker_Report::class);

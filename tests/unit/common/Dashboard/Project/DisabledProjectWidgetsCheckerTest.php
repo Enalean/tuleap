@@ -44,6 +44,7 @@ class DisabledProjectWidgetsCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $widget;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

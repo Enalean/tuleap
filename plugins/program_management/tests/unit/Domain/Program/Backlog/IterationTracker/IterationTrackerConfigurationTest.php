@@ -36,6 +36,7 @@ final class IterationTrackerConfigurationTest extends \Tuleap\Test\PHPUnit\TestC
     private const SUB_LABEL            = 'iteration';
     private RetrieveVisibleIterationTrackerStub $tracker_retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->tracker_retriever = RetrieveVisibleIterationTrackerStub::withValidTracker(

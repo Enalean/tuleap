@@ -33,6 +33,7 @@ final class ProjectRenameStub implements ProjectRename
     {
     }
 
+    #[\Override]
     public function renameProject(Project $project, string $new_name): bool
     {
         $this->call_count++;

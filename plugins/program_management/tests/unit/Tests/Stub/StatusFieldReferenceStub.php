@@ -43,11 +43,13 @@ final class StatusFieldReferenceStub implements StatusFieldReference
         return new self($id, 'Status');
     }
 
+    #[\Override]
     public function getId(): int
     {
         return $this->id;
     }
 
+    #[\Override]
     public function getLabel(): string
     {
         return $this->label;

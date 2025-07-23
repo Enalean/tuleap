@@ -44,6 +44,7 @@ final class ProvideEmailNotificationAttachmentStub implements ProvideEmailNotifi
         return new self([]);
     }
 
+    #[\Override]
     public function getAttachments(
         \Tracker_Artifact_Changeset $changeset,
         \PFUser $recipient,

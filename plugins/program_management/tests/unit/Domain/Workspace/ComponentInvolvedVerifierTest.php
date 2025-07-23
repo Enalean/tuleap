@@ -35,6 +35,7 @@ final class ComponentInvolvedVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
     private VerifyIsTeam $team_verifier;
     private VerifyIsProgram $program_verifier;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->team_verifier    = VerifyIsTeamStub::withValidTeam();

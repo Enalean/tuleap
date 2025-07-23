@@ -51,6 +51,7 @@ final class TimeframeValueRetrieverTest extends TestCase
     private TimeboxIdentifier $artifact_identifier;
     private UserIdentifier $user_identifier;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->semantic_timeframe_builder = $this->createStub(SemanticTimeframeBuilder::class);

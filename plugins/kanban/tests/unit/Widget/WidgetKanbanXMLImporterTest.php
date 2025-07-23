@@ -36,6 +36,7 @@ final class WidgetKanbanXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $widget;
 
+    #[\Override]
     public function setUp(): void
     {
         $kanban = new \Tuleap\Kanban\Kanban(

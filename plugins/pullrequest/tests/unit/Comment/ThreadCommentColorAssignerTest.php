@@ -33,6 +33,7 @@ final class ThreadCommentColorAssignerTest extends TestCase
     private ParentCommentSearcherStub $parent_comment_searcher;
     private ThreadColorUpdaterStub $color_updater;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->parent_comment_searcher = ParentCommentSearcherStub::withNotFound();

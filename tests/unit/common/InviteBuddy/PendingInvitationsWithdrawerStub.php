@@ -35,6 +35,7 @@ final class PendingInvitationsWithdrawerStub implements PendingInvitationsWithdr
         return new self();
     }
 
+    #[\Override]
     public function withdrawPendingInvitationsForProject(string $to_email, int $project_id): void
     {
         $this->has_been_called = true;

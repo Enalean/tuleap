@@ -40,6 +40,7 @@ final class RetrieveMatchingBindValueByDuckTypingStub implements RetrieveMatchin
         return new self(null);
     }
 
+    #[\Override]
     public function getMatchingBindValueByDuckTyping(
         \Tracker_FormElement_Field_List_BindValue $source_value,
         \Tracker_FormElement_Field_List $destination_field,

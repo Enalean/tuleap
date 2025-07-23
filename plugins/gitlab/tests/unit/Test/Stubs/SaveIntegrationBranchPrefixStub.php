@@ -30,6 +30,7 @@ final class SaveIntegrationBranchPrefixStub implements \Tuleap\Gitlab\Artifact\A
     {
     }
 
+    #[\Override]
     public function setCreateBranchPrefixForIntegration(int $integration_id, string $prefix): void
     {
         $this->call_count++;

@@ -35,6 +35,7 @@ final class FeatureCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     private VerifyIsFeatureStub $feature_verifier;
     private VerifyFeatureIsVisibleStub $visibility_verifier;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->feature_verifier    = VerifyIsFeatureStub::withValidFeature();

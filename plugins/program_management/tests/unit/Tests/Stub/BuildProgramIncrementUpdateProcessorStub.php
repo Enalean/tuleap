@@ -31,6 +31,7 @@ final class BuildProgramIncrementUpdateProcessorStub implements BuildProgramIncr
     {
     }
 
+    #[\Override]
     public function getProcessor(): ProcessProgramIncrementUpdate
     {
         return $this->processor;

@@ -33,6 +33,7 @@ final class UpdateSynchronizationDateStub implements UpdateSynchronizationDate
     {
     }
 
+    #[\Override]
     public function updateSynchronizationDate(GroupLink $group_link, \DateTimeImmutable $new_date): void
     {
         $this->call_count++;

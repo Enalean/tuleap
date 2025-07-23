@@ -63,6 +63,7 @@ final class POSTHandlerTest extends TestCase
     private ParentCommentSearcherStub $parent_comment_searcher;
     private RetrieveGitRepositoryStub $repository_retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->format    = TimelineComment::FORMAT_TEXT;

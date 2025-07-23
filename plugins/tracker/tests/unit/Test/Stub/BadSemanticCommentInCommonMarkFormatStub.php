@@ -36,6 +36,7 @@ final class BadSemanticCommentInCommonMarkFormatStub implements \Tuleap\Tracker\
         return new self($comment);
     }
 
+    #[\Override]
     public function getBody(): string
     {
         return $this->comment;

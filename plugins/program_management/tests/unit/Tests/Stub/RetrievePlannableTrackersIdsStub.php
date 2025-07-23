@@ -42,6 +42,7 @@ final class RetrievePlannableTrackersIdsStub implements RetrievePlannableTracker
     /**
      * @return int[]
      */
+    #[\Override]
     public function getPlannableTrackersIdOfProgram(int $program_id): array
     {
         return $this->ids;

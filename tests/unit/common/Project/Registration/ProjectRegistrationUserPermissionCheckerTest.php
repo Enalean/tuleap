@@ -53,6 +53,7 @@ final class ProjectRegistrationUserPermissionCheckerTest extends \Tuleap\Test\PH
      */
     private $user;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->project_dao        = $this->createMock(ProjectDao::class);

@@ -51,6 +51,7 @@ final class UpdateSessionPreferencesControllerTest extends \Tuleap\Test\PHPUnit\
      */
     private $user;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->csrf_token   = $this->createMock(CSRFSynchronizerToken::class);

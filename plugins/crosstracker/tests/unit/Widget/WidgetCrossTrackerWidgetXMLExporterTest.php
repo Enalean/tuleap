@@ -36,6 +36,7 @@ final class WidgetCrossTrackerWidgetXMLExporterTest extends TestCase
 
     private UUID $query_id;
 
+    #[\Override]
     protected function setUp(): void
     {
         $query_id = (new DatabaseUUIDV7Factory())->buildUUIDFromHexadecimalString(self::QUERY_ID)->unwrapOr(null);

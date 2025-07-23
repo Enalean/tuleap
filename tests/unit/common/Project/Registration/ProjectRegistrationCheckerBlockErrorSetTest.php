@@ -38,6 +38,7 @@ final class ProjectRegistrationCheckerBlockErrorSetTest extends TestCase
         $user = UserTestBuilder::aUser()->build();
 
         $checker_01 = new class implements ProjectRegistrationChecker {
+            #[\Override]
             public function collectAllErrorsForProjectRegistration(PFUser $user, ProjectCreationData $project_creation_data): ProjectRegistrationErrorsCollection
             {
                 return new ProjectRegistrationErrorsCollection();
@@ -45,11 +46,13 @@ final class ProjectRegistrationCheckerBlockErrorSetTest extends TestCase
         };
 
         $checker_02 = new class implements ProjectRegistrationChecker {
+            #[\Override]
             public function collectAllErrorsForProjectRegistration(PFUser $user, ProjectCreationData $project_creation_data): ProjectRegistrationErrorsCollection
             {
                 $errors = new ProjectRegistrationErrorsCollection();
                 $errors->addError(
                     new class extends \Exception implements RegistrationErrorException {
+                        #[\Override]
                         public function getI18NMessage(): string
                         {
                             return '';
@@ -62,11 +65,13 @@ final class ProjectRegistrationCheckerBlockErrorSetTest extends TestCase
         };
 
         $checker_03 = new class implements ProjectRegistrationChecker {
+            #[\Override]
             public function collectAllErrorsForProjectRegistration(PFUser $user, ProjectCreationData $project_creation_data): ProjectRegistrationErrorsCollection
             {
                 $errors = new ProjectRegistrationErrorsCollection();
                 $errors->addError(
                     new class extends \Exception implements RegistrationErrorException {
+                        #[\Override]
                         public function getI18NMessage(): string
                         {
                             return '';
@@ -101,6 +106,7 @@ final class ProjectRegistrationCheckerBlockErrorSetTest extends TestCase
         $user = UserTestBuilder::aUser()->build();
 
         $checker_01 = new class implements ProjectRegistrationChecker {
+            #[\Override]
             public function collectAllErrorsForProjectRegistration(PFUser $user, ProjectCreationData $project_creation_data): ProjectRegistrationErrorsCollection
             {
                 return new ProjectRegistrationErrorsCollection();
@@ -108,6 +114,7 @@ final class ProjectRegistrationCheckerBlockErrorSetTest extends TestCase
         };
 
         $checker_02 = new class implements ProjectRegistrationChecker {
+            #[\Override]
             public function collectAllErrorsForProjectRegistration(PFUser $user, ProjectCreationData $project_creation_data): ProjectRegistrationErrorsCollection
             {
                 return new ProjectRegistrationErrorsCollection();
@@ -115,6 +122,7 @@ final class ProjectRegistrationCheckerBlockErrorSetTest extends TestCase
         };
 
         $checker_03 = new class implements ProjectRegistrationChecker {
+            #[\Override]
             public function collectAllErrorsForProjectRegistration(PFUser $user, ProjectCreationData $project_creation_data): ProjectRegistrationErrorsCollection
             {
                 return new ProjectRegistrationErrorsCollection();

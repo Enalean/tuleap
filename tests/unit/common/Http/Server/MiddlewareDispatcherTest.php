@@ -34,6 +34,7 @@ final class MiddlewareDispatcherTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testRequestIsDispatched(): void
     {
         $passthrough_middleware        = new class implements MiddlewareInterface {
+            #[\Override]
             public function process(
                 ServerRequestInterface $request,
                 RequestHandlerInterface $handler,
@@ -65,6 +66,7 @@ final class MiddlewareDispatcherTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testFinalMiddlewareInTheStackMustGenerateAResponse(): void
     {
         $passthrough_middleware = new class implements MiddlewareInterface {
+            #[\Override]
             public function process(
                 ServerRequestInterface $request,
                 RequestHandlerInterface $handler,

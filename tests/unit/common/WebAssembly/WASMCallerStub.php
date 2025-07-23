@@ -55,6 +55,7 @@ final class WASMCallerStub implements WASMCaller
     /**
      * @psalm-return Option<Result<string, Fault>>
      */
+    #[\Override]
     public function call(string $wasm_path, string $module_input, WASMCallerRuntimeSettings $runtime_settings): Option
     {
         $this->has_been_called = true;

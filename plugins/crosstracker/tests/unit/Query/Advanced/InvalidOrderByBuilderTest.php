@@ -82,6 +82,7 @@ final class InvalidOrderByBuilderTest extends TestCase
     private RetrieveUsedFields $used_field_retriever;
     private RetrieveSemanticStatusFieldStub $status_field_retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->metadata_checker       = MetadataCheckerStub::withValidMetadata();

@@ -38,6 +38,7 @@ final class LFSTransferVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
     private LFSObjectPathAllocator&\PHPUnit\Framework\MockObject\Stub $path_allocator;
     private LFSObjectDAO&\PHPUnit\Framework\MockObject\MockObject $dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->filesystem           = $this->createMock(FilesystemOperator::class);

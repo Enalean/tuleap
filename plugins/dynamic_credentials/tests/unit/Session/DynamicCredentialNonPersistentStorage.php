@@ -26,11 +26,13 @@ final class DynamicCredentialNonPersistentStorage implements DynamicCredentialId
 {
     private ?string $identifier = null;
 
+    #[\Override]
     public function setIdentifier(string $identifier): void
     {
         $this->identifier = $identifier;
     }
 
+    #[\Override]
     public function getIdentifier(): ?string
     {
         return $this->identifier;

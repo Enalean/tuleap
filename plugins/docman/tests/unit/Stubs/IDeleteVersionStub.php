@@ -43,6 +43,7 @@ class IDeleteVersionStub implements IDeleteVersion
         return new self(false);
     }
 
+    #[\Override]
     public function deleteSpecificVersion(Docman_Item $item, int $number): bool
     {
         $this->has_been_called = true;

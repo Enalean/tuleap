@@ -76,6 +76,7 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
     private RetrieveArtifactStub $artifact_retriever;
     private GetFileUploadDataStub $file_upload_provider;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user    = UserTestBuilder::buildWithDefaults();

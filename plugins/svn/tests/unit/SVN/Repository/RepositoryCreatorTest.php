@@ -65,6 +65,7 @@ final class RepositoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     private Repository $repository;
     private RepositoryCreator $repository_creator;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->system_event_manager = $this->createMock(\SystemEventManager::class);

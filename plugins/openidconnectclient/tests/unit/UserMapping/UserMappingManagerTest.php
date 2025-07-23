@@ -34,6 +34,7 @@ final class UserMappingManagerTest extends \Tuleap\Test\PHPUnit\TestCase
     private \UserDao&\PHPUnit\Framework\MockObject\MockObject $user_dao;
     private CanRemoveUserMappingChecker&\PHPUnit\Framework\MockObject\MockObject $can_remove_user_mapping_checker;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao                             = $this->createMock(UserMappingDao::class);

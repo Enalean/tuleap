@@ -69,6 +69,7 @@ final class WorkflowVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
     private ConfigurationErrorsCollector $errors_collector;
     private UserIdentifierStub $user;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->workflow_dao                = $this->createMock(\Workflow_Dao::class);

@@ -37,6 +37,7 @@ final class DocumentServerDaoTest extends TestIntegrationTestCase
     private int $project_b_id;
     private \ParagonIE\EasyDB\EasyDB $db;
 
+    #[\Override]
     protected function setUp(): void
     {
         $root = vfsStream::setup()->url();

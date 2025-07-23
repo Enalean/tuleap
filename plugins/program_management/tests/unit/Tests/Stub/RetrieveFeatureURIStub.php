@@ -27,6 +27,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\Feature\RetrieveFeatureURI;
 
 final class RetrieveFeatureURIStub implements RetrieveFeatureURI
 {
+    #[\Override]
     public function getFeatureURI(FeatureIdentifier $feature_identifier): string
     {
         return sprintf('/plugins/tracker/?aid=%d', $feature_identifier->getId());

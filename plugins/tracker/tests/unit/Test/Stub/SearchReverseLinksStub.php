@@ -47,6 +47,7 @@ final class SearchReverseLinksStub implements SearchReverseLinks
         return new self([]);
     }
 
+    #[\Override]
     public function searchReverseLinksById(int $artifact_id): array
     {
         return $this->rows;

@@ -37,6 +37,7 @@ final class CrossReferenceRetrieverTest extends TestCase
     private const ARTIFACT_ID = 1;
     private string $tracker_short_name;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->tracker_short_name = 'art';

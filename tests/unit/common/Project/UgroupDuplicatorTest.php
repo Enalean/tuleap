@@ -48,6 +48,7 @@ final class UgroupDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
     private UgroupDuplicator $ugroup_duplicator;
     private MemberAdder&MockObject $member_adder;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao               = $this->createMock(UGroupDao::class);

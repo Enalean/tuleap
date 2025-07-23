@@ -38,6 +38,7 @@ final class RetrieveUserByEmailStub implements \Tuleap\User\RetrieveUserByEmail
         return new self(null);
     }
 
+    #[\Override]
     public function getUserByEmail(string $email): ?\PFUser
     {
         if ($this->user && $this->user->getEmail() === $email) {

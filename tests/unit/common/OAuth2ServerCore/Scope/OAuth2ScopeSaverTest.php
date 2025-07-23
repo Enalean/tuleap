@@ -38,6 +38,7 @@ final class OAuth2ScopeSaverTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $saver;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao = $this->createMock(OAuth2ScopeIdentifierSaverDAO::class);

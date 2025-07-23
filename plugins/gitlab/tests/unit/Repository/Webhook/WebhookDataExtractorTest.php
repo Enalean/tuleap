@@ -43,6 +43,7 @@ class WebhookDataExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private WebhookDataExtractor $extractor;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

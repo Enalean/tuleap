@@ -36,6 +36,7 @@ final class ReferenceStringStub implements \Tuleap\Reference\ReferenceString
         return new self($reference);
     }
 
+    #[\Override]
     public function getStringReference(): string
     {
         return $this->reference;

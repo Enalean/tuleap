@@ -40,6 +40,7 @@ final class VerifyIsTeamOfProgramStub implements VerifyIsTeamOfProgram
         return new self(false);
     }
 
+    #[\Override]
     public function isATeamFromProgram(int $program_id, int $team_id): bool
     {
         return $this->is_team_of_program;

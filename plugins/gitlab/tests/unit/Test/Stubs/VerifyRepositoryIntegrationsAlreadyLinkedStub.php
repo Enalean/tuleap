@@ -30,6 +30,7 @@ final class VerifyRepositoryIntegrationsAlreadyLinkedStub implements VerifyRepos
     {
     }
 
+    #[\Override]
     public function isRepositoryIntegrationAlreadyLinkedToAGroup(int $integration_id): bool
     {
         return $this->is_repository_integration_already_linked;

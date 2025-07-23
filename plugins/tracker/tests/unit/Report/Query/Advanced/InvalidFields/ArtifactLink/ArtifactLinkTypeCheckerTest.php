@@ -33,6 +33,7 @@ final class ArtifactLinkTypeCheckerTest extends TestCase
     public function testValidType(): void
     {
         $checker = new ArtifactLinkTypeChecker(new class implements VisibleTypesRetriever {
+            #[\Override]
             public function getOnlyVisibleTypes(): array
             {
                 return [
@@ -49,6 +50,7 @@ final class ArtifactLinkTypeCheckerTest extends TestCase
     public function testInvalidType(): void
     {
         $checker = new ArtifactLinkTypeChecker(new class implements VisibleTypesRetriever {
+            #[\Override]
             public function getOnlyVisibleTypes(): array
             {
                 return [];
@@ -63,6 +65,7 @@ final class ArtifactLinkTypeCheckerTest extends TestCase
     public function testNoTypeIsValidType(): void
     {
         $checker = new ArtifactLinkTypeChecker(new class implements VisibleTypesRetriever {
+            #[\Override]
             public function getOnlyVisibleTypes(): array
             {
                 return [];

@@ -30,6 +30,7 @@ final class SwimlaneChildrenRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private SwimlaneChildrenRetriever $retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->retriever = new SwimlaneChildrenRetriever();

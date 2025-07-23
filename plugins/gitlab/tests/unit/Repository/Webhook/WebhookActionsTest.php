@@ -66,6 +66,7 @@ final class WebhookActionsTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $logger;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -192,16 +193,19 @@ final class WebhookActionsTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItThrowsALogicExceptionIfWebhookTypeNotKnown(): void
     {
         $webhook_data = new class implements WebhookData {
+            #[\Override]
             public function getEventName(): string
             {
                 return 'WHATEVER';
             }
 
+            #[\Override]
             public function getGitlabProjectId(): int
             {
                 return 0;
             }
 
+            #[\Override]
             public function getGitlabWebUrl(): string
             {
                 return '';

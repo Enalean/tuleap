@@ -47,6 +47,7 @@ final class EditControllerTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $csrf_token;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->data_builder = $this->createMock(ServicePOSTDataBuilder::class);

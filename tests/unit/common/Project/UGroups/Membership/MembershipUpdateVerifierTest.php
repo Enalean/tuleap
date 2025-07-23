@@ -29,6 +29,7 @@ final class MembershipUpdateVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private MembershipUpdateVerifier $verifier;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->verifier = new MembershipUpdateVerifier();

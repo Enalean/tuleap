@@ -55,6 +55,7 @@ final class TestPlanPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $tracker_factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         \ForgeConfig::set(\Tuleap\Config\ConfigurationVariables::NAME, 'Tuleap');
@@ -85,6 +86,7 @@ final class TestPlanPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $user_helper->method('getDisplayNameFromUser')->willReturn('User Name');
 
         $type_presenter_factory = new class implements IRetrieveAllUsableTypesInProject {
+            #[\Override]
             public function getAllUsableTypesInProject(\Project $project): array
             {
                 return [

@@ -35,6 +35,7 @@ class ConfigureCommandTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $root;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->root = vfsStream::setup('slash');

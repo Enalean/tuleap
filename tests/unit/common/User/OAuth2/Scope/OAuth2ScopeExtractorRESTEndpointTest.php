@@ -34,6 +34,7 @@ final class OAuth2ScopeExtractorRESTEndpointTest extends \Tuleap\Test\PHPUnit\Te
     private MockObject&AuthenticationScopeBuilder $scope_builder;
     private OAuth2ScopeExtractorRESTEndpoint $extractor;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->scope_builder = $this->createMock(AuthenticationScopeBuilder::class);

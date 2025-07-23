@@ -44,6 +44,7 @@ final class ProgramIdentifierTest extends TestCase
     private ProgramIncrementIdentifier $program_increment;
     private IterationIdentifier $iteration;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->program_builder   = BuildProgramStub::stubValidProgram();

@@ -38,6 +38,7 @@ final class UsersToBeImportedCollectionBuilderTest extends \Tuleap\Test\PHPUnit\
     private PFUser $john_doe;
     private PFUser $cat_steven;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -159,22 +160,27 @@ final class UsersToBeImportedCollectionBuilderTest extends \Tuleap\Test\PHPUnit\
                 $this->user_xml = $user_xml;
             }
 
+            #[\Override]
             public function cleanUp()
             {
             }
 
+            #[\Override]
             public function extractFiles()
             {
             }
 
+            #[\Override]
             public function getExtractionPath()
             {
             }
 
+            #[\Override]
             public function getProjectXML()
             {
             }
 
+            #[\Override]
             public function getUsersXML()
             {
                 return $this->user_xml;

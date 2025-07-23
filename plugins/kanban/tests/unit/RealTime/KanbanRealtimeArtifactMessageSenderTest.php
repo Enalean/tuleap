@@ -36,6 +36,7 @@ final class KanbanRealtimeArtifactMessageSenderTest extends TestCase
 
     private RealTimeArtifactMessageControllerMercure&MockObject $realtime_controller_mercure;
     private RealTimeArtifactMessageController&MockObject $realtime_controller;
+    #[\Override]
     protected function setUp(): void
     {
         $this->realtime_controller         = $this->createMock(RealTimeArtifactMessageController::class);

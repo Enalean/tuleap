@@ -38,6 +38,7 @@ final class ArtifactIdentifierStub implements ArtifactIdentifier
         return new self($id);
     }
 
+    #[\Override]
     public function getId(): int
     {
         return $this->id;

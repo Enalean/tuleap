@@ -43,6 +43,7 @@ final class VerifySubmissionPermissionStub implements VerifySubmissionPermission
         return new self(false);
     }
 
+    #[\Override]
     public function canUserSubmitArtifact(PFUser $user, Tracker $tracker): bool
     {
         return $this->can_user_submit;

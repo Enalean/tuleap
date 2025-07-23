@@ -37,6 +37,7 @@ final class LayoutHelperPassthrough implements LayoutHelper
         $this->current_user = $user;
     }
 
+    #[\Override]
     public function renderInProjectAdministrationLayout(
         \HTTPRequest $request,
         string $project_id,

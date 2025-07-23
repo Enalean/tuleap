@@ -43,6 +43,7 @@ final class SecretCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     private GitlabRepositoryIntegration $gitlab_repository_integration;
     private SecretChecker $secret_checker;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->gitlab_repository_integration = new GitlabRepositoryIntegration(

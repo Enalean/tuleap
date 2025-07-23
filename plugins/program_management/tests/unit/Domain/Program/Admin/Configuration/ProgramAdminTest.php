@@ -63,6 +63,7 @@ final class ProgramAdminTest extends TestCase
     private ProjectReferenceStub $team_reference;
     private SearchTeamsOfProgramStub $teams_searcher;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->project_reference = ProjectReferenceStub::withId(1233);

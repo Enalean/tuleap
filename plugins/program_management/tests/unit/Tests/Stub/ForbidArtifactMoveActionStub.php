@@ -35,6 +35,7 @@ final class ForbidArtifactMoveActionStub implements ForbidArtifactMoveAction
         return new self(false);
     }
 
+    #[\Override]
     public function forbidArtifactMove(string $reason): void
     {
         $this->is_move_forbidden = true;

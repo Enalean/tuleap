@@ -33,6 +33,7 @@ class QueryToCriterionStatusConverterTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $converter;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->converter = new QueryToCriterionStatusConverter();

@@ -38,11 +38,13 @@ final class JavascriptAssetGenericBuilder
                 );
             }
 
+            #[\Override]
             public function getType(): string
             {
                 return '';
             }
 
+            #[\Override]
             public function getAssociatedCSSAssets(): CssAssetCollection
             {
                 return new CssAssetCollection([]);

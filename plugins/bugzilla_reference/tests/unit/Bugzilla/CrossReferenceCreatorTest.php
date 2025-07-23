@@ -39,6 +39,7 @@ final class CrossReferenceCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private CrossReferenceCreator $cross_reference_creator;
 
+    #[\Override]
     public function setUp(): void
     {
         parent::setUp();

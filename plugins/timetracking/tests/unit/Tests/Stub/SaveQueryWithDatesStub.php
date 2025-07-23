@@ -50,6 +50,7 @@ final class SaveQueryWithDatesStub implements SaveQueryWithDates
         return $this->has_been_called;
     }
 
+    #[\Override]
     public function saveQueryWithDates(int $query_id, DateTimeImmutable $start_date, DateTimeImmutable $end_date, UserList $users,): void
     {
         if ($this->should_not_be_called) {

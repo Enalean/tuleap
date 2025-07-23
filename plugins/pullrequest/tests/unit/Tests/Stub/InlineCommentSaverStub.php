@@ -33,6 +33,7 @@ final class InlineCommentSaverStub implements \Tuleap\PullRequest\InlineComment\
     {
     }
 
+    #[\Override]
     public function saveUpdatedComment(InlineComment $comment): void
     {
         $this->call_count++;

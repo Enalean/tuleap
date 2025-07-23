@@ -32,6 +32,7 @@ final class NewArtifactLinkChangesetValueTest extends \Tuleap\Test\PHPUnit\TestC
 {
     private ChangeForwardLinksCommand $forward_links_command;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->forward_links_command = ChangeForwardLinksCommand::fromParts(

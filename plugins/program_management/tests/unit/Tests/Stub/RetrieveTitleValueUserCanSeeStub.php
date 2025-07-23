@@ -43,6 +43,7 @@ final class RetrieveTitleValueUserCanSeeStub implements RetrieveTitleValueUserCa
         return new self(null);
     }
 
+    #[\Override]
     public function getTitle(TimeboxIdentifier $timebox_identifier, UserIdentifier $user_identifier): ?string
     {
         return $this->value;

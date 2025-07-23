@@ -42,6 +42,7 @@ final class RetrieveAnArtifactLinkFieldStub implements RetrieveAnArtifactLinkFie
         return new self(null);
     }
 
+    #[\Override]
     public function getAnArtifactLinkField(\PFUser $user, Tracker $tracker): ?ArtifactLinkField
     {
         return $this->field;

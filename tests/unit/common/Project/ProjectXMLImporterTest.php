@@ -71,6 +71,7 @@ final class ProjectXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
     private string $xml_file_path_with_members = __DIR__ . '/_fixtures/ProjectXMLImporter/fake_project_with_project_members.xml';
     private SynchronizedProjectMembershipDao&MockObject $sync_members;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->event_manager   = $this->createMock(\EventManager::class);

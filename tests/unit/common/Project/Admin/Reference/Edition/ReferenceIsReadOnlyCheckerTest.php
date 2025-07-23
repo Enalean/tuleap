@@ -31,6 +31,7 @@ final class ReferenceIsReadOnlyCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     private ReferenceIsReadOnlyChecker $checker;
     private \EventManager&\PHPUnit\Framework\MockObject\MockObject $event_manager;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->event_manager = $this->createMock(\EventManager::class);

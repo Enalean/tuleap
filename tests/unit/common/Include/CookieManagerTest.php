@@ -27,6 +27,7 @@ final class CookieManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;
 
+    #[\Override]
     protected function setUp(): void
     {
         ForgeConfig::set('sys_cookie_prefix', 'test');

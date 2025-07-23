@@ -103,6 +103,7 @@ class RestBase extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classe
         $this->initialized = true;
     }
 
+    #[\Override]
     public function setUp(): void
     {
         parent::setUp();

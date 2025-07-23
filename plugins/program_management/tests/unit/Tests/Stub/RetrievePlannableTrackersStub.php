@@ -46,6 +46,7 @@ final class RetrievePlannableTrackersStub implements RetrievePlannableTrackers
     /**
      * @return TrackerReference[]
      */
+    #[\Override]
     public function getPlannableTrackersOfProgram(int $program_id): array
     {
         return $this->tracker_references;

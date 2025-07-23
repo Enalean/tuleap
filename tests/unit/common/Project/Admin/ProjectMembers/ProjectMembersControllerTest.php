@@ -40,6 +40,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProjectMembersControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
+    #[\Override]
     protected function tearDown(): void
     {
         if (isset($GLOBALS['_SESSION'])) {

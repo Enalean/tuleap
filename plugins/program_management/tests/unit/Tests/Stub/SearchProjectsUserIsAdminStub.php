@@ -43,6 +43,7 @@ final class SearchProjectsUserIsAdminStub implements SearchProjectsUserIsAdmin
         return new self($projects);
     }
 
+    #[\Override]
     public function getProjectsUserIsAdmin(UserIdentifier $user_identifier): array
     {
         return $this->projects;

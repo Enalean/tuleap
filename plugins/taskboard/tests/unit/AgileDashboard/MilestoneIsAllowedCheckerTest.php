@@ -39,6 +39,7 @@ final class MilestoneIsAllowedCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     private MockObject&Planning_Milestone $milestone;
     private MockObject&TaskboardUsage $usage;
 
+    #[\Override]
     protected function setUp(): void
     {
         $project = ProjectTestBuilder::aProject()->withId(102)->withPublicName('My project')->build();

@@ -41,6 +41,7 @@ final class BotDeletorTest extends TestCase
      */
     private $event_manager;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->bot_factory   = $this->createMock(BotFactory::class);

@@ -41,6 +41,7 @@ final class ServiceDisabledCollectorHandlerTest extends \Tuleap\Test\PHPUnit\Tes
     private BacklogBlocksProgramServiceIfNeededStub $program_blocker;
     private ProgramBlocksBacklogServiceIfNeededStub $backlog_blocker;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->team_verifier   = VerifyIsTeamStub::withNotValidTeam();

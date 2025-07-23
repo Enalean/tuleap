@@ -45,32 +45,39 @@ final class TestLayout extends BaseLayout
         $this->inspector  = $inspector;
     }
 
+    #[\Override]
     public function header(HeaderConfiguration|array $params): void
     {
         $this->header_has_been_written = true;
     }
 
+    #[\Override]
     protected function hasHeaderBeenWritten(): bool
     {
         return $this->header_has_been_written;
     }
 
+    #[\Override]
     public function footer(FooterConfiguration|array $params): void
     {
     }
 
+    #[\Override]
     public function displayStaticWidget(Widget_Static $widget)
     {
     }
 
+    #[\Override]
     public function includeCalendarScripts()
     {
     }
 
+    #[\Override]
     public function includeFooterJavascriptFile($file)
     {
     }
 
+    #[\Override]
     public function addJavascriptAsset(JavascriptAssetGeneric $asset): void
     {
         $this->javascript_assets[] = $asset;
@@ -84,6 +91,7 @@ final class TestLayout extends BaseLayout
         return $this->javascript_assets;
     }
 
+    #[\Override]
     public function addCssAsset(CssAssetGeneric $asset): void
     {
         $this->css_assets = $this->css_assets->merge(new CssAssetCollection([$asset]));
@@ -94,20 +102,24 @@ final class TestLayout extends BaseLayout
         return $this->css_assets;
     }
 
+    #[\Override]
     protected function getUser()
     {
     }
 
+    #[\Override]
     public function redirect(string $url): never
     {
         $this->inspector->setRedirectUrl($url);
     }
 
+    #[\Override]
     public function addFeedback($level, $message, $purify = CODENDI_PURIFIER_CONVERT_HTML)
     {
         $this->inspector->addFeedback($level, $message);
     }
 
+    #[\Override]
     public function permanentRedirect($redirect_url): never
     {
         $this->inspector->setPermanentRedirectUrl((string) $redirect_url);

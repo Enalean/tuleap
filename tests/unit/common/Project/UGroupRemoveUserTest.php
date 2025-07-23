@@ -32,6 +32,7 @@ final class UGroupRemoveUserTest extends \Tuleap\Test\PHPUnit\TestCase
     private PFUser $user;
     private PFUser $project_administrator;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

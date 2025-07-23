@@ -41,6 +41,7 @@ final class ProgramIncrementCreationEventProxyTest extends \Tuleap\Test\PHPUnit\
      */
     private $user_manager;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->logger       = new TestLogger();

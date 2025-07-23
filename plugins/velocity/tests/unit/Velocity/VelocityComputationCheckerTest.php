@@ -46,6 +46,7 @@ final class VelocityComputationCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     private VelocityComputationChecker $computation_checker;
     private Tracker_Artifact_ChangesetValue&\PHPUnit\Framework\MockObject\MockObject $last_changeset_value;
 
+    #[\Override]
     public function setUp(): void
     {
         parent::setUp();

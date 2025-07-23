@@ -71,6 +71,7 @@ final class HookTriggerControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private Project $project;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

@@ -33,6 +33,7 @@ final class PlanConfigurationChangeTest extends TestCase
 
     private UserReference $user_identifier;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user_identifier = UserReferenceStub::withDefaults();

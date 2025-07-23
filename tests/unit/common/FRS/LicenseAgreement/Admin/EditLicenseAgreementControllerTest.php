@@ -75,6 +75,7 @@ final class EditLicenseAgreementControllerTest extends TestCase
      */
     private $project_retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->layout = $this->createMock(BaseLayout::class);

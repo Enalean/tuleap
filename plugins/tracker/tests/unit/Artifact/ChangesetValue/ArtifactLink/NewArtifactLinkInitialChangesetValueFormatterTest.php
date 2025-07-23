@@ -35,6 +35,7 @@ final class NewArtifactLinkInitialChangesetValueFormatterTest extends \Tuleap\Te
     private Option $parent;
     private CollectionOfReverseLinks $reverse_links;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->new_links     = new CollectionOfForwardLinks([]);

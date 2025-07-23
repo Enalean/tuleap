@@ -39,6 +39,7 @@ final class LogUserStub implements LogUser
         return new self();
     }
 
+    #[\Override]
     public function login(string $name, ConcealedString $pwd): PFUser
     {
         $this->has_been_logged_in = true;

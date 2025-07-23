@@ -35,6 +35,7 @@ final class FunctionLogDaoTest extends TestIntegrationTestCase
     private int $changeset_id;
     private int $other_changeset_id;
 
+    #[\Override]
     protected function setUp(): void
     {
         $db                       = DBFactory::getMainTuleapDBConnection()->getDB();

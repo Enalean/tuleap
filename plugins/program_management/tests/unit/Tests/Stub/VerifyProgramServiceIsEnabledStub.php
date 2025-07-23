@@ -43,6 +43,7 @@ final readonly class VerifyProgramServiceIsEnabledStub implements VerifyProgramS
         return new self(false);
     }
 
+    #[\Override]
     public function hasProgramEnabled(int $source_project_id): bool
     {
         return $this->is_enabled;

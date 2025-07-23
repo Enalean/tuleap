@@ -38,6 +38,7 @@ class NotificationSettingsDuplicatorTest extends TestIntegrationTestCase
     private NotificationSettingsDuplicator $duplicator;
     private \ParagonIE\EasyDB\EasyDB $db;
 
+    #[\Override]
     public function setUp(): void
     {
         $db_connection    = DBFactory::getMainTuleapDBConnection();
@@ -54,6 +55,7 @@ class NotificationSettingsDuplicatorTest extends TestIntegrationTestCase
         );
     }
 
+    #[\Override]
     public function tearDown(): void
     {
         $this->db->query('SET FOREIGN_KEY_CHECKS=1'); // because plugin_tracker_notification_email_custom_sender_format has a constraint we don't want to resolve in tests

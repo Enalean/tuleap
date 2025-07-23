@@ -50,6 +50,7 @@ final class FRSFileDownloadControllerTest extends TestCase
      */
     private $file_factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->url_verification = $this->createMock(URLVerification::class);

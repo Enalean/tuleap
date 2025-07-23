@@ -35,6 +35,7 @@ final class BotCreatorTest extends TestCase
      */
     private $bot_factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->bot_factory = $this->createMock(BotFactory::class);

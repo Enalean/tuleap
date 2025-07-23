@@ -53,6 +53,7 @@ final class KanbanActionsCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     private VerifySubmissionPermissionStub $verify_submission_permissions;
     private \PFUser $user;
 
+    #[\Override]
     protected function setUp(): void
     {
         $project            = ProjectTestBuilder::aProject()->build();

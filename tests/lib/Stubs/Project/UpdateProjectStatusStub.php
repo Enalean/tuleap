@@ -33,6 +33,7 @@ final class UpdateProjectStatusStub implements UpdateProjectStatus
     {
     }
 
+    #[\Override]
     public function updateStatus(Project $project, string $status): void
     {
         $this->call_count++;

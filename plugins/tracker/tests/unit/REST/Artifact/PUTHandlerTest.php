@@ -58,6 +58,7 @@ final class PUTHandlerTest extends TestCase
     private RetrieveViewableArtifactStub $artifact_retriever;
     private array $payload;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->artifact_retriever                    = RetrieveViewableArtifactStub::withNoArtifact();

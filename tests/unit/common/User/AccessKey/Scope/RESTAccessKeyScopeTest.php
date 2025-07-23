@@ -28,6 +28,7 @@ use Tuleap\Authentication\Scope\AuthenticationScopeTestCase;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RESTAccessKeyScopeTest extends AuthenticationScopeTestCase
 {
+    #[\Override]
     public function getAuthenticationScopeClassname(): string
     {
         return RESTAccessKeyScope::class;

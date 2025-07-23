@@ -45,6 +45,7 @@ final class BurndownCommonDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     private BurndownCacheGenerationChecker&MockObject $cache_checker;
     private TestLogger $logger;
 
+    #[\Override]
     protected function setUp(): void
     {
         \ForgeConfig::set(ConfigurationVariables::SERVER_TIMEZONE, 'Europe/Paris');
@@ -64,6 +65,7 @@ final class BurndownCommonDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         \ForgeConfig::restore();

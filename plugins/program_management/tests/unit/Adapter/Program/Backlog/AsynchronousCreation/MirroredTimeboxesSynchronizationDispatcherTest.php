@@ -40,6 +40,7 @@ final class MirroredTimeboxesSynchronizationDispatcherTest extends \Tuleap\Test\
     private $queue_factory;
     private CommandTeamSynchronizationStub $command;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->queue_factory = $this->createStub(QueueFactory::class);

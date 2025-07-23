@@ -37,6 +37,7 @@ final class DefaultBranchPushReceivedTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $repository;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user       = UserTestBuilder::buildWithDefaults();

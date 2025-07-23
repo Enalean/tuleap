@@ -38,6 +38,7 @@ final class SVNLoginNameUserProviderTest extends TestCase
             {
             }
 
+            #[\Override]
             public function dispatch(object $event): object
             {
                 assert($event instanceof UserRetrieverBySVNLoginNameEvent);
@@ -54,6 +55,7 @@ final class SVNLoginNameUserProviderTest extends TestCase
     {
         $event_dispatcher = new class implements EventDispatcherInterface
         {
+            #[\Override]
             public function dispatch(object $event): object
             {
                 return $event;
@@ -72,6 +74,7 @@ final class SVNLoginNameUserProviderTest extends TestCase
     {
         $event_dispatcher = new class implements EventDispatcherInterface
         {
+            #[\Override]
             public function dispatch(object $event): object
             {
                 assert($event instanceof UserRetrieverBySVNLoginNameEvent);

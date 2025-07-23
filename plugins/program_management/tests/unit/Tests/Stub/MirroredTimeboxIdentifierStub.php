@@ -38,6 +38,7 @@ final class MirroredTimeboxIdentifierStub implements MirroredTimeboxIdentifier
         return new self($id);
     }
 
+    #[\Override]
     public function getId(): int
     {
         return $this->id;

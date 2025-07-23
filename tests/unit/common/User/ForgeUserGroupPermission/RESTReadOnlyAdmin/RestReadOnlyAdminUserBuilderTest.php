@@ -30,6 +30,7 @@ final class RestReadOnlyAdminUserBuilderTest extends \Tuleap\Test\PHPUnit\TestCa
 {
     use GlobalLanguageMock;
 
+    #[\Override]
     protected function tearDown(): void
     {
         unset($_SERVER['REQUEST_METHOD']);

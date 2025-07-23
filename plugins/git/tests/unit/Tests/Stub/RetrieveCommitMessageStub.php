@@ -46,6 +46,7 @@ final class RetrieveCommitMessageStub implements \Tuleap\Git\CommitMetadata\Retr
         return new self(true, ['']);
     }
 
+    #[\Override]
     public function getCommitMessage(string $ref): string
     {
         if ($this->should_throw) {

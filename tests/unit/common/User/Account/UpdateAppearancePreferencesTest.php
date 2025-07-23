@@ -56,6 +56,7 @@ final class UpdateAppearancePreferencesTest extends \Tuleap\Test\PHPUnit\TestCas
      */
     private $theme_variant;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->csrf_token    = $this->createMock(CSRFSynchronizerToken::class);

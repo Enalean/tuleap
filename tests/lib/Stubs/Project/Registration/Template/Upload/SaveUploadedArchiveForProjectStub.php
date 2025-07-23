@@ -37,6 +37,7 @@ final class SaveUploadedArchiveForProjectStub implements SaveUploadedArchiveForP
         return new self();
     }
 
+    #[\Override]
     public function save(int $project_id, string $archive_path): void
     {
         $this->saved = $archive_path;

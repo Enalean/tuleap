@@ -30,6 +30,7 @@ final class VerifyGitlabRepositoryIsIntegratedStub implements VerifyGitlabReposi
     {
     }
 
+    #[\Override]
     public function isTheGitlabRepositoryAlreadyIntegratedInProject(
         int $project_id,
         int $gitlab_repository_id,

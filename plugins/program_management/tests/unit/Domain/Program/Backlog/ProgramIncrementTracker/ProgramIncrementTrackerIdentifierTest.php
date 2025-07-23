@@ -34,6 +34,7 @@ final class ProgramIncrementTrackerIdentifierTest extends \Tuleap\Test\PHPUnit\T
     private const PROGRAM_INCREMENT_TRACKER_ID = 17;
     private TrackerIdentifierStub $tracker_identifier;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->tracker_identifier = TrackerIdentifierStub::withId(self::PROGRAM_INCREMENT_TRACKER_ID);

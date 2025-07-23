@@ -47,6 +47,7 @@ final class RetrieveBaselineUserGroupStub implements RetrieveBaselineUserGroup
         return new self($user_groups_by_ids);
     }
 
+    #[\Override]
     public function retrieveUserGroupFromBaselineProjectAndId(ProjectIdentifier $project, int $ugroup_id): BaselineUserGroup
     {
         if (! array_key_exists($ugroup_id, $this->user_groups)) {

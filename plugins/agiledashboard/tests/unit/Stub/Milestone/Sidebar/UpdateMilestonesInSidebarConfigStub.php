@@ -38,11 +38,13 @@ final class UpdateMilestonesInSidebarConfigStub implements UpdateMilestonesInSid
         return new self();
     }
 
+    #[\Override]
     public function deactivateMilestonesInSidebar(int $project_id): void
     {
         $this->has_deactivate_been_called = true;
     }
 
+    #[\Override]
     public function activateMilestonesInSidebar(int $project_id): void
     {
         $this->has_activate_been_called = true;

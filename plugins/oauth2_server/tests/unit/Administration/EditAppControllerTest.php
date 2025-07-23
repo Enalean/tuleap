@@ -54,6 +54,7 @@ final class EditAppControllerTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $app_dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->redirector       = $this->createMock(RedirectWithFeedbackFactory::class);

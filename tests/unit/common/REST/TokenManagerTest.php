@@ -58,6 +58,7 @@ final class TokenManagerTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $user;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user_manager  = $this->createMock(\UserManager::class);

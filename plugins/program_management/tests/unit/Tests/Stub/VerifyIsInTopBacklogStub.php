@@ -41,6 +41,7 @@ final class VerifyIsInTopBacklogStub implements VerifyIsInTopBacklog
         return new self(false);
     }
 
+    #[\Override]
     public function isInTheExplicitTopBacklog(int $artifact_id): bool
     {
         return $this->is_in_top_backlog;

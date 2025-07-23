@@ -54,6 +54,7 @@ final class VisibleTeamSearcherTest extends TestCase
     private UserIdentifierStub $user;
     private VerifyIsTeamOfProgram $verify_is_team_of_program;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->teams_searcher            = SearchTeamsOfProgramStub::withTeamIds(self::FIRST_TEAM_ID, self::SECOND_TEAM_ID);

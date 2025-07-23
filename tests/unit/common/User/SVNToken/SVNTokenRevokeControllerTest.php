@@ -39,6 +39,7 @@ final class SVNTokenRevokeControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     private MockObject&SVN_TokenHandler $svn_token_handler;
     private SVNTokenRevokeController $controller;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->csrf_token        = $this->createMock(CSRFSynchronizerToken::class);
@@ -47,6 +48,7 @@ final class SVNTokenRevokeControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->controller = new SVNTokenRevokeController($this->csrf_token, $this->svn_token_handler);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         unset($_SESSION);

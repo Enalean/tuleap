@@ -48,9 +48,11 @@ final class DisplayAppearanceControllerTest extends \Tuleap\Test\PHPUnit\TestCas
     private MockObject&AppearancePresenterBuilder $appearance_builder;
     private CSRFSynchronizerToken $csrf_token;
 
+    #[\Override]
     public function setUp(): void
     {
         $event_manager = new class implements EventDispatcherInterface {
+            #[\Override]
             public function dispatch(object $event)
             {
                 return $event;

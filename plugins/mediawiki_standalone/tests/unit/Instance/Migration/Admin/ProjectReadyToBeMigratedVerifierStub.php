@@ -39,6 +39,7 @@ final class ProjectReadyToBeMigratedVerifierStub implements ProjectReadyToBeMigr
         return new self(false);
     }
 
+    #[\Override]
     public function isProjectReadyToBeMigrated(int $project_id): bool
     {
         return $this->ready;

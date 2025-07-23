@@ -36,21 +36,25 @@ final class JiraClientStub implements JiraClient
         return new self();
     }
 
+    #[\Override]
     public function getUrl(string $url): ?array
     {
         return null;
     }
 
+    #[\Override]
     public function isJiraCloud(): bool
     {
         return false;
     }
 
+    #[\Override]
     public function isJiraServer9(): bool
     {
         return false;
     }
 
+    #[\Override]
     public function getAttachmentContents(Attachment $attachment): string
     {
         return '';

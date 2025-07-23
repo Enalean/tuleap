@@ -29,6 +29,7 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ContributorFieldRetrieverTest extends TestCase
 {
+    #[\Override]
     protected function tearDown(): void
     {
         TrackerSemanticContributor::clearInstances();

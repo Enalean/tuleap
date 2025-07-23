@@ -46,6 +46,7 @@ final class MessageSenderStub implements MessageSender
         return new self(Result::err(Fault::fromMessage($message)));
     }
 
+    #[\Override]
     public function sendMessages(array $messages, Tracker_Artifact_Changeset $changeset): Ok|Err
     {
         return $this->result;

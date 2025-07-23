@@ -38,6 +38,7 @@ final class UGroupBindingTest extends \Tuleap\Test\PHPUnit\TestCase
     private \UGroupUserDao&MockObject $ugroup_user_dao;
     private \UGroupManager&MockObject $ugroup_manager;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->ugroup_user_dao = $this->createMock(\UGroupUserDao::class);

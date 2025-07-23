@@ -35,6 +35,7 @@ final class RetrieveProgramIncrementLabelsStub implements RetrieveProgramIncreme
         $this->sub_label = $sub_label;
     }
 
+    #[\Override]
     public function getProgramIncrementLabels(int $program_increment_tracker_id): ?array
     {
         if ($this->label === null && $this->sub_label === null) {

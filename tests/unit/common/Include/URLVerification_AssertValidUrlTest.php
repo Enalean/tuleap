@@ -26,6 +26,7 @@ class URLVerification_AssertValidUrlTest extends \Tuleap\Test\PHPUnit\TestCase /
     private $request;
     private $url_verification;
 
+    #[\Override]
     public function setUp(): void
     {
         parent::setUp();
@@ -55,6 +56,7 @@ class URLVerification_AssertValidUrlTest extends \Tuleap\Test\PHPUnit\TestCase /
         );
     }
 
+    #[\Override]
     public function tearDown(): void
     {
         parent::tearDown();

@@ -39,6 +39,7 @@ final class HasExpectedNonce implements Constraint
     /**
      * @throws ConstraintViolation
      */
+    #[\Override]
     public function assert(Token $token): void
     {
         if (! ($token instanceof UnencryptedToken)) {

@@ -45,6 +45,7 @@ final class ListAppsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     /** @var \CSRFSynchronizerToken&\PHPUnit\Framework\MockObject\MockObject */
     private $csrf_token;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->layout_helper     = new LayoutHelperPassthrough();

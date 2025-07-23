@@ -31,6 +31,7 @@ final class QueryToSearchCriteriaConverterTest extends TestCase
 {
     private QueryToSearchCriteriaConverter $converter;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->converter = new QueryToSearchCriteriaConverter();

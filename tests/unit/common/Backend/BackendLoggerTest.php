@@ -37,6 +37,7 @@ class BackendLoggerTest extends \Tuleap\Test\PHPUnit\TestCase
     /** @var BackendLogger */
     private $logger;
 
+    #[\Override]
     protected function setUp(): void
     {
         ForgeConfig::set('codendi_log', $this->getTmpDir());

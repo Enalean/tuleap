@@ -44,6 +44,7 @@ final readonly class CheckPermissionStub implements CheckPermission
         return new self(false);
     }
 
+    #[\Override]
     public function checkThatCurrentUserCanUpdateTheQuery(int $query_id, \PFUser $current_user): Ok|Err
     {
         return $this->can_update ? Result::ok(true) : Result::err(WidgetNotFoundFault::build());

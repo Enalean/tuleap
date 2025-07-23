@@ -32,6 +32,7 @@ final class PullRequestAppsLoaderTest extends TestCase
 {
     private TestLayout $base_layout;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->base_layout = new TestLayout(new LayoutInspector());

@@ -57,6 +57,7 @@ final class RetrieveUserByIdStub implements \Tuleap\User\RetrieveUserById
         return new self([]);
     }
 
+    #[\Override]
     public function getUserById($user_id): ?\PFUser
     {
         return $this->users[$user_id] ?? null;

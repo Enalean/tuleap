@@ -66,6 +66,7 @@ final class DisplayProgramBacklogControllerTest extends \Tuleap\Test\PHPUnit\Tes
     private RetrieveVisibleProgramIncrementTracker $program_increment_tracker_retriever;
     private \PFUser $user;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->project_manager       = $this->createStub(\ProjectManager::class);

@@ -54,6 +54,7 @@ final class TransformRetrievedSectionsToRepresentationStub implements TransformR
         return new self(null);
     }
 
+    #[\Override]
     public function getRepresentation(PaginatedRetrievedSections $retrieved_sections, \PFUser $user): Ok|Err
     {
         if ($this->result === null) {

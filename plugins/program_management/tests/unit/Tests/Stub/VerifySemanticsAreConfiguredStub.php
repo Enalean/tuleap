@@ -44,6 +44,7 @@ final class VerifySemanticsAreConfiguredStub implements VerifySemanticsAreConfig
         return new self(false);
     }
 
+    #[\Override]
     public function areTrackerSemanticsWellConfigured(
         TrackerReference $tracker,
         SourceTrackerCollection $source_tracker_collection,

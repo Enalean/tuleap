@@ -67,6 +67,7 @@ final class WebDAVDocmanFileTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $event_manager;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->document_download = $this->createMock(DocumentDownloader::class);
@@ -80,6 +81,7 @@ final class WebDAVDocmanFileTest extends \Tuleap\Test\PHPUnit\TestCase
         $GLOBALS['Language']->method('getText')->willReturn('');
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         EventManager::clearInstance();

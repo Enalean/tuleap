@@ -42,6 +42,7 @@ final class CreatorTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $token_creator;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->hasher = $this->createMock(SplitTokenVerificationStringHasher::class);

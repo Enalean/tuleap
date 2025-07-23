@@ -40,6 +40,7 @@ final class MirroredIterationIdentifierTest extends \Tuleap\Test\PHPUnit\TestCas
     private UserIdentifierStub $user;
     private IterationIdentifier $iteration;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user      =  UserIdentifierStub::buildGenericUser();

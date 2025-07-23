@@ -42,6 +42,7 @@ final class IndexControllerTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $renderer;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->helper            = new LayoutHelperPassthrough();

@@ -46,6 +46,7 @@ final class ReviewerRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     private $permission_checker;
     private ReviewerRetriever $retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao                = $this->createMock(ReviewerDAO::class);

@@ -62,6 +62,7 @@ final class VisitRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     private $tracker_factory;
     private \PFUser $user;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user = UserTestBuilder::buildWithId(self::USER_ID);

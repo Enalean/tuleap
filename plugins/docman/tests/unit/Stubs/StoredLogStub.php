@@ -48,6 +48,7 @@ class StoredLogStub implements \Tuleap\Docman\Log\IRetrieveStoredLog
         ]);
     }
 
+    #[\Override]
     public function searchByItemIdOrderByTimestamp(int $item_id): array
     {
         if (! isset($this->storage[$item_id])) {
@@ -57,6 +58,7 @@ class StoredLogStub implements \Tuleap\Docman\Log\IRetrieveStoredLog
         return $this->storage[$item_id];
     }
 
+    #[\Override]
     public function paginatedSearchByItemIdOrderByTimestamp(int $item_id, int $limit, int $offset): array
     {
         if (! isset($this->storage[$item_id])) {
@@ -66,6 +68,7 @@ class StoredLogStub implements \Tuleap\Docman\Log\IRetrieveStoredLog
         return array_slice($this->storage[$item_id], $offset, $limit);
     }
 
+    #[\Override]
     public function countByItemId(int $item_id): int
     {
         if (! isset($this->storage[$item_id])) {

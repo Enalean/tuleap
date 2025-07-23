@@ -61,6 +61,7 @@ final class AddAppControllerTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $csrf_token;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->app_dao             = $this->createMock(AppDao::class);

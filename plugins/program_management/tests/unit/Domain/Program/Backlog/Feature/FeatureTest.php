@@ -44,6 +44,7 @@ final class FeatureTest extends \Tuleap\Test\PHPUnit\TestCase
     private const TITLE              = 'Satiable Ovovitellin';
     private RetrieveFeatureTitleStub $title_retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->title_retriever = RetrieveFeatureTitleStub::withTitle(self::TITLE);

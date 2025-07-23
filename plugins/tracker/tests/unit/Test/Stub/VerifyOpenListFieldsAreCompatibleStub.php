@@ -40,6 +40,7 @@ final class VerifyOpenListFieldsAreCompatibleStub implements VerifyOpenListField
         return new self(false);
     }
 
+    #[\Override]
     public function areOpenListFieldsCompatible(
         \Tracker_FormElement_Field_OpenList $source_field,
         \Tracker_FormElement_Field_OpenList $destination_field,

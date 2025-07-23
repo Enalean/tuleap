@@ -38,6 +38,7 @@ final class VerifyUserIsGitAdministratorStub implements \Tuleap\Git\Permissions\
         return new self(false);
     }
 
+    #[\Override]
     public function userIsGitAdmin(\PFUser $user, \Project $project): bool
     {
         return $this->return_value;

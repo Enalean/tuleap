@@ -37,6 +37,7 @@ final class DeleteGroupLinkStub implements \Tuleap\Gitlab\Group\DeleteGroupLink
         return new self();
     }
 
+    #[\Override]
     public function deleteGroupLink(GroupLink $group_link): void
     {
         $this->call_count++;

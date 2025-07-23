@@ -36,6 +36,7 @@ final class CompareToIsNotAChildSectionCheckerTest extends TestCase
     private RetrievedSection $section_AAA;
     private RetrievedSection $section_B;
 
+    #[\Override]
     protected function setUp(): void
     {
         $identifier_factory = new UUIDSectionIdentifierFactory(new DatabaseUUIDV7Factory());

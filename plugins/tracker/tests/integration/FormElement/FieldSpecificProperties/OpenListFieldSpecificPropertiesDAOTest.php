@@ -33,6 +33,7 @@ final class OpenListFieldSpecificPropertiesDAOTest extends TestIntegrationTestCa
     private OpenListSpecificPropertiesDAO $dao;
     private int $list_field_id;
 
+    #[\Override]
     protected function setUp(): void
     {
         $db              = DBFactory::getMainTuleapDBConnection()->getDB();

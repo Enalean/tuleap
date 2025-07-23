@@ -34,6 +34,7 @@ final class StoredForwardLinkTest extends \Tuleap\Test\PHPUnit\TestCase
     private RetrieveArtifactStub $artifact_retriever;
     private array $row;
 
+    #[\Override]
     protected function setUp(): void
     {
         $artifact = $this->createStub(Artifact::class);

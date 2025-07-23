@@ -39,6 +39,7 @@ final class SearchProgramsOfTeamStub implements SearchProgramsOfTeam
         $this->program_ids = $program_ids;
     }
 
+    #[\Override]
     public function searchProgramIdsOfTeam(int $project_id): array
     {
         return $this->program_ids;

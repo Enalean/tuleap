@@ -50,6 +50,7 @@ final class PrioritizeFeaturesPermissionVerifierTest extends \Tuleap\Test\PHPUni
     private VerifyUserIsProgramAdmin $verify_user_is_program_admin;
     private \Project $project;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user_retriever               = RetrieveUserStub::withUser(UserTestBuilder::buildWithId(self::USER_ID));

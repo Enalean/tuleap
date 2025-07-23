@@ -55,6 +55,7 @@ final class SearchMirroredTimeboxesStub implements SearchMirroredTimeboxes
         return new self(true, [[]]);
     }
 
+    #[\Override]
     public function searchMirroredTimeboxes(TimeboxIdentifier $timebox): array
     {
         if ($this->always_return) {

@@ -36,6 +36,7 @@ final class FreestyleMappedFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestC
     private RetrieveUsedListFieldStub $form_element_factory;
     private TaskboardTracker $taskboard_tracker;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->search_mapped_field  = SearchMappedFieldStub::withNoField();

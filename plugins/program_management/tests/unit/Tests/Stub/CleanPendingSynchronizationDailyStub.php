@@ -35,6 +35,7 @@ final class CleanPendingSynchronizationDailyStub implements CleanPendingSynchron
         return new self(0);
     }
 
+    #[\Override]
     public function dailyClean(int $start_date_purge): void
     {
         $this->call_count++;

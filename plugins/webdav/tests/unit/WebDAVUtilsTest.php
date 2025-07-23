@@ -47,6 +47,7 @@ final class WebDAVUtilsTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $project_manager;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

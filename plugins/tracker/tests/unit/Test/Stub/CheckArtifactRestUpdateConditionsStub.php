@@ -42,6 +42,7 @@ final class CheckArtifactRestUpdateConditionsStub implements CheckArtifactRestUp
         return new self(false);
     }
 
+    #[\Override]
     public function checkIfArtifactUpdateCanBePerformedThroughREST(\PFUser $user, Artifact $artifact): void
     {
         if ($this->will_allow_update) {

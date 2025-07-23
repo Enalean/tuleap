@@ -51,6 +51,7 @@ final readonly class FinishEmptyFileToUploadStub implements FinishEmptyFileToUpl
         return new self(false);
     }
 
+    #[\Override]
     public function createEmptyFile(FileToUpload $file_to_upload, PathAllocator $upload_path_allocator): Ok|Err
     {
         if ($this->success === null) {

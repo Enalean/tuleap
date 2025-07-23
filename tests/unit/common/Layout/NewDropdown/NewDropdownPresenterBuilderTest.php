@@ -49,18 +49,21 @@ class NewDropdownPresenterBuilderTest extends TestCase
     private ProjectRegistrationChecker $project_registration_checker_with_errors;
     private ProjectRegistrationChecker $project_registration_checker_without_errors;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->event_dispatcher = $this->createMock(EventDispatcherInterface::class);
 
         $this->project_registration_checker_with_errors = new class implements ProjectRegistrationChecker
         {
+            #[\Override]
             public function collectAllErrorsForProjectRegistration(PFUser $user, ProjectCreationData $project_creation_data): ProjectRegistrationErrorsCollection
             {
                 $errors_collection = new ProjectRegistrationErrorsCollection();
                 $errors_collection->addError(
                     new class extends RegistrationForbiddenException
                     {
+                        #[\Override]
                         public function getI18NMessage(): string
                         {
                             return '';
@@ -74,6 +77,7 @@ class NewDropdownPresenterBuilderTest extends TestCase
 
         $this->project_registration_checker_without_errors = new class implements ProjectRegistrationChecker
         {
+            #[\Override]
             public function collectAllErrorsForProjectRegistration(PFUser $user, ProjectCreationData $project_creation_data): ProjectRegistrationErrorsCollection
             {
                 $errors_collection = new ProjectRegistrationErrorsCollection();

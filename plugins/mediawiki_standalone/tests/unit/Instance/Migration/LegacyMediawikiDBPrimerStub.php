@@ -44,6 +44,7 @@ final class LegacyMediawikiDBPrimerStub implements LegacyMediawikiDBPrimer
         $this->db_prefix_used = Option::nothing(\Psl\Type\string());
     }
 
+    #[\Override]
     public function prepareDBForMigration(LoggerInterface $logger, \Project $project, string $db_name, string $db_prefix): Ok
     {
         $this->db_name_used   = Option::fromValue($db_name);

@@ -51,11 +51,13 @@ final class ParseXMLConfigStub implements ParseXMLConfig
         return $this;
     }
 
+    #[\Override]
     public function isThereAConfigToImport(string $extraction_path): bool
     {
         return $this->is_there_a_config_file;
     }
 
+    #[\Override]
     public function parseConfig(string $extraction_path): \SimpleXMLElement
     {
         if (! $this->is_there_a_config_file || $this->will_parsing_fail) {

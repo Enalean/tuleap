@@ -60,6 +60,7 @@ class FRSFileFactoryTest extends TestCase
     use TemporaryTestDirectory;
     use GlobalLanguageMock;
 
+    #[\Override]
     protected function setUp(): void
     {
         ForgeConfig::set('ftp_frs_dir_prefix', $this->getTmpDir());

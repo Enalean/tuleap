@@ -40,6 +40,7 @@ final class VerifyIsUserListFieldStub implements VerifyIsUserListField
         return new self(false);
     }
 
+    #[\Override]
     public function isUserListField(\Tracker_FormElement_Field $field): bool
     {
         return $this->is_user_list_field;

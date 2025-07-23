@@ -47,6 +47,7 @@ final class RetrieveSemanticStatusStub implements RetrieveSemanticStatus
         return $this;
     }
 
+    #[\Override]
     public function fromTracker(Tracker $tracker): TrackerSemanticStatus
     {
         $this->call_count++;

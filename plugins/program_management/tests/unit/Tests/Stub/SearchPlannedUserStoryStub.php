@@ -41,6 +41,7 @@ final class SearchPlannedUserStoryStub implements SearchPlannedUserStory
         return new self($user_stories);
     }
 
+    #[\Override]
     public function getPlannedUserStory(int $artifact_id): array
     {
         return $this->user_stories;

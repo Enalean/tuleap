@@ -60,6 +60,7 @@ class WebDAVFRSReleaseTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $utils;
 
+    #[\Override]
     protected function setUp(): void
     {
         \ForgeConfig::set('ftp_incoming_dir', __DIR__ . '/_fixtures/incoming');

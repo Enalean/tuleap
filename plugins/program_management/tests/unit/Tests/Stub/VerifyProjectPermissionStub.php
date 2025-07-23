@@ -35,6 +35,7 @@ final class VerifyProjectPermissionStub implements VerifyProjectPermission
         $this->is_admin = $is_admin;
     }
 
+    #[\Override]
     public function isProjectAdministrator(UserIdentifier $user_identifier, ProjectIdentifier $project_identifier): bool
     {
         return $this->is_admin;

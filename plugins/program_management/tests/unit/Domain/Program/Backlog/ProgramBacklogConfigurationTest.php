@@ -47,6 +47,7 @@ final class ProgramBacklogConfigurationTest extends \Tuleap\Test\PHPUnit\TestCas
     private ProgramIdentifier $program;
     private UserIdentifier $user;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->program                 = ProgramIdentifierBuilder::build();

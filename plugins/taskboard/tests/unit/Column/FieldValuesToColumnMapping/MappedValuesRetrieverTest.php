@@ -44,6 +44,7 @@ final class MappedValuesRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     private TaskboardTracker $taskboard_tracker;
     private \Cardwall_Column $column;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->status_retriever      = $this->createMock(\Cardwall_FieldProviders_SemanticStatusFieldRetriever::class);

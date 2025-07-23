@@ -38,6 +38,7 @@ class AddInPlaceRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     private \Tracker_FormElement_Field_Selectbox&MockObject $mapped_field;
     private RetrieveSemanticTitleField $title_field_retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->form_element_factory  = $this->createMock(\Tracker_FormElementFactory::class);

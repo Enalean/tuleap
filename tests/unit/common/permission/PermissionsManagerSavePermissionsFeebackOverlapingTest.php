@@ -24,9 +24,8 @@ use Tuleap\ForgeConfigSandbox;
 use Tuleap\GlobalResponseMock;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class PermissionsManagerSavePermissionsFeebackOverlapingTest extends \Tuleap\Test\PHPUnit\TestCase
+class PermissionsManagerSavePermissionsFeebackOverlapingTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     use ForgeConfigSandbox;
     use GlobalResponseMock;
@@ -42,6 +41,7 @@ class PermissionsManagerSavePermissionsFeebackOverlapingTest extends \Tuleap\Tes
     protected int $project_id;
     private PermissionsNormalizer $normalizer;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

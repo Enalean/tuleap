@@ -32,6 +32,7 @@ final class BuildUGroupRepresentationStub implements BuildUGroupRepresentation
         return new self();
     }
 
+    #[\Override]
     public function getUGroupRepresentation(int $project_id, int $ugroup_id): string
     {
         return '101_5';

@@ -36,6 +36,7 @@ final class ProgramIncrementChangedTest extends \Tuleap\Test\PHPUnit\TestCase
     private ProgramIncrementCreation $creation;
     private ProgramIncrementUpdate $update;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->creation = ProgramIncrementCreationBuilder::buildWithIds(

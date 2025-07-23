@@ -43,6 +43,7 @@ final class InlineCommentRepresentationsBuilderTest extends TestCase
     private RetrieveUserByIdStub $user_retriever;
     private PullRequest $pull_request;
 
+    #[\Override]
     protected function setUp(): void
     {
         $comments_author    = UserTestBuilder::buildWithId(self::COMMENTS_AUTHOR_ID);

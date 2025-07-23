@@ -40,6 +40,7 @@ class IProcessRegisterFormStub implements IProcessRegisterForm
         return new self();
     }
 
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, RegisterFormContext $context): void
     {
         $this->has_been_processed = true;

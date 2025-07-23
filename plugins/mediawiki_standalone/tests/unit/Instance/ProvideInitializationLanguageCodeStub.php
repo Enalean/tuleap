@@ -27,6 +27,7 @@ final class ProvideInitializationLanguageCodeStub implements InitializationLangu
     /**
      * @psalm-mutation-free
      */
+    #[\Override]
     public function getLanguageCode(): string
     {
         return 'en';

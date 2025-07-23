@@ -31,6 +31,7 @@ final class ProjectDashboardXMLImporterLinesTest extends ProjectDashboardXMLImpo
 {
     private \PFUser $user;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

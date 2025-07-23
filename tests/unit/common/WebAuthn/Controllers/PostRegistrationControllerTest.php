@@ -59,6 +59,7 @@ final class PostRegistrationControllerTest extends TestCase
     private FeedbackSerializerStub $serializer;
     private CSRFSynchronizerTokenStub $synchronizer_token_stub;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->source_dao              = WebAuthnCredentialSourceDaoStub::withoutCredentialSources();

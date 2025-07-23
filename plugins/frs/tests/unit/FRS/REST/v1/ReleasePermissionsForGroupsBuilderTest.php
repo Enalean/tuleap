@@ -51,6 +51,7 @@ final class ReleasePermissionsForGroupsBuilderTest extends \Tuleap\Test\PHPUnit\
     private FRSRelease $a_release;
     private string $a_release_id;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->project_id   = 350;

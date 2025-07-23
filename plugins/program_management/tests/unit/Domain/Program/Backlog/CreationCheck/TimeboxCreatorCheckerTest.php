@@ -62,6 +62,7 @@ final class TimeboxCreatorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     private TrackerCollection $team_trackers;
     private SourceTrackerCollection $program_and_team_trackers;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->program_increment_tracker = TrackerReferenceStub::withDefaults();

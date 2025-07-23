@@ -45,6 +45,7 @@ final class BuildProgramFlagsStub implements BuildProgramFlags
     /**
      * @return ProgramFlag[]
      */
+    #[\Override]
     public function build(ProgramIdentifier $program_identifier): array
     {
         return $this->program_flags;

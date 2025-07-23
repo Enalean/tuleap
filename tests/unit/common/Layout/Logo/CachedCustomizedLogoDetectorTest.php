@@ -33,6 +33,7 @@ class CachedCustomizedLogoDetectorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private string $cache_file;
 
+    #[\Override]
     protected function setUp(): void
     {
         // use TemporaryTestDirectory trait instead of vfsStream because the latter is not compatible with FileWriter

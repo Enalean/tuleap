@@ -37,6 +37,7 @@ final class ProcessIterationUpdateStub implements ProcessIterationUpdate
         return new self(0);
     }
 
+    #[\Override]
     public function processUpdate(IterationUpdate $update): void
     {
         $this->call_count++;

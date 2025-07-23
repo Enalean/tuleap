@@ -31,6 +31,7 @@ final class ProjectAdministratorCheckerTest extends \Tuleap\Test\PHPUnit\TestCas
 {
     private ProjectAdministratorChecker $project_administrator_checker;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->project_administrator_checker = new ProjectAdministratorChecker();

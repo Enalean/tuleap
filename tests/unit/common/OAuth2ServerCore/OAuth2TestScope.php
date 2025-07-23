@@ -50,11 +50,13 @@ final class OAuth2TestScope implements AuthenticationScope
         $this->identifier = $identifier;
         $this->definition = new /** @psalm-immutable */ class implements AuthenticationScopeDefinition
         {
+            #[\Override]
             public function getName(): string
             {
                 return 'Test scope';
             }
 
+            #[\Override]
             public function getDescription(): string
             {
                 return 'Scope test purposes';
@@ -65,6 +67,7 @@ final class OAuth2TestScope implements AuthenticationScope
     /**
      * @psalm-pure
      */
+    #[\Override]
     public static function fromItself(): AuthenticationScope
     {
         return new self(OAuth2ScopeIdentifier::fromIdentifierKey(self::IDENTIFIER_KEY));
@@ -73,6 +76,7 @@ final class OAuth2TestScope implements AuthenticationScope
     /**
      * @psalm-pure
      */
+    #[\Override]
     public static function fromIdentifier(AuthenticationScopeIdentifier $identifier): ?AuthenticationScope
     {
         if ($identifier instanceof OAuth2ScopeIdentifier && $identifier->toString() === self::IDENTIFIER_KEY) {
@@ -82,16 +86,19 @@ final class OAuth2TestScope implements AuthenticationScope
         return null;
     }
 
+    #[\Override]
     public function getIdentifier(): AuthenticationScopeIdentifier
     {
         return $this->identifier;
     }
 
+    #[\Override]
     public function getDefinition(): AuthenticationScopeDefinition
     {
         return $this->definition;
     }
 
+    #[\Override]
     public function covers(AuthenticationScope $scope): bool
     {
         return self::IDENTIFIER_KEY === $scope->getIdentifier()->toString();

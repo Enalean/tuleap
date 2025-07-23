@@ -50,6 +50,7 @@ final class SourceArtifactNatureAnalyzerTest extends \Tuleap\Test\PHPUnit\TestCa
     private UserIdentifier $user_identifier;
     private \Project $project;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user_identifier = UserIdentifierStub::withId(self::USER_ID);

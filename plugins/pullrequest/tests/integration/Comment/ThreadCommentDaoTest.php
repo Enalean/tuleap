@@ -32,6 +32,7 @@ final class ThreadCommentDaoTest extends TestIntegrationTestCase
     private const FIRST_COMMENT_ID  = 1;
     private const SECOND_COMMENT_ID = 2;
 
+    #[\Override]
     protected function setUp(): void
     {
         $db = DBFactory::getMainTuleapDBConnection()->getDB();

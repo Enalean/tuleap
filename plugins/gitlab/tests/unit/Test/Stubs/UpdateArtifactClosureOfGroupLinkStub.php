@@ -37,6 +37,7 @@ final class UpdateArtifactClosureOfGroupLinkStub implements UpdateArtifactClosur
         return new self();
     }
 
+    #[\Override]
     public function updateArtifactClosureOfGroupLink(int $id, bool $allow_artifact_closure,): void
     {
         $this->call_count++;

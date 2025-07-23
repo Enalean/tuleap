@@ -32,6 +32,7 @@ final class CalendarEventConfigDaoTest extends TestIntegrationTestCase
     private const STORY_TRACKER_ID = 3;
     private CalendarEventConfigDao $dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao = new CalendarEventConfigDao();

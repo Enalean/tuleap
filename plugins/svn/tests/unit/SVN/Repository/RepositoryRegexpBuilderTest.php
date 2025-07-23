@@ -25,6 +25,7 @@ class RepositoryRegexpBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private RepositoryRegexpBuilder $regexp;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

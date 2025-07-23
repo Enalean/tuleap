@@ -40,6 +40,7 @@ final class SearchTitleFieldStub implements SearchTitleField
         return new self($callback);
     }
 
+    #[\Override]
     public function searchByTrackerId(int $tracker_id): Option
     {
         return ($this->callback)($tracker_id);

@@ -70,6 +70,7 @@ final class StatusIsAlignedVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
     private $tracker_factory;
     private TrackerReference $timebox_program_tracker;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->semantic_status_dao     = $this->createMock(StatusSemanticDAO::class);

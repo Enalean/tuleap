@@ -54,6 +54,7 @@ final class GitlabReferenceBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $tag_reference_dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

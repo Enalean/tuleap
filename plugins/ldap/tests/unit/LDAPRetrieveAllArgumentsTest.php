@@ -51,6 +51,7 @@ final class LDAPRetrieveAllArgumentsTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private MockObject&LDAP $ldap;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

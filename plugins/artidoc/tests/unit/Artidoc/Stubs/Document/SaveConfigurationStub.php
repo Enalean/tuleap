@@ -53,6 +53,7 @@ final class SaveConfigurationStub implements SaveConfiguration
         //Do nothing
     }
 
+    #[\Override]
     public function saveConfiguration(int $item_id, int $tracker_id, array $fields): void
     {
         ($this->callback)($item_id, $tracker_id, $fields);

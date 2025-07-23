@@ -32,6 +32,7 @@ final class SSHKeyDumperTest extends GitoliteTestCase
     protected string $key1;
     protected string $key2;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

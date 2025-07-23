@@ -42,6 +42,7 @@ final class ReviewerDAOTest extends \Tuleap\Test\PHPUnit\TestCase
     private Dao $pull_requests_dao;
     private ReviewerDAO $reviewers_dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $db                = DBFactory::getMainTuleapDBConnection()->getDB();
@@ -78,6 +79,7 @@ final class ReviewerDAOTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->pull_request_in_fork_id = $this->createPullRequest($pull_request_in_fork);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         $db = DBFactory::getMainTuleapDBConnection()->getDB();

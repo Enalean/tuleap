@@ -32,6 +32,7 @@ final class FilenamePatternRetrieverStub implements RetrieveFilenamePattern
     {
     }
 
+    #[\Override]
     public function getPattern(int $project_id): FilenamePattern
     {
         return $this->pattern;

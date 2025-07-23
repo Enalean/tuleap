@@ -44,6 +44,7 @@ final class IterationUpdateDispatcherTest extends \Tuleap\Test\PHPUnit\TestCase
     private $queue_factory;
     private IterationUpdate $iteration_update;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->logger           = new TestLogger();

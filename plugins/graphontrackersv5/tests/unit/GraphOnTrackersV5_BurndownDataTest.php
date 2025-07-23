@@ -26,12 +26,12 @@ use Tuleap\GraphOnTrackersV5\DataTransformation\GraphOnTrackersV5_Burndown_Data;
 
 require_once __DIR__ . '/bootstrap.php';
 
-//phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class GraphOnTrackersV5_BurndownDataTest extends \Tuleap\Test\PHPUnit\TestCase
+final class GraphOnTrackersV5_BurndownDataTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
     private GraphOnTrackersV5_Burndown_Data&\PHPUnit\Framework\MockObject\MockObject $burndown_data;
 
+    #[\Override]
     public function setUp(): void
     {
         parent::setUp();

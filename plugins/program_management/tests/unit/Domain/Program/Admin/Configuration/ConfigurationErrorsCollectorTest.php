@@ -33,6 +33,7 @@ final class ConfigurationErrorsCollectorTest extends TestCase
 {
     private ConfigurationErrorsCollector $collector;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->collector = new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), true);

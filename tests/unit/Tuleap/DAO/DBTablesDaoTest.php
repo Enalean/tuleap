@@ -38,6 +38,7 @@ final class DBTablesDaoTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $db_tables_dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $db_connection = $this->createMock(DBConnection::class);

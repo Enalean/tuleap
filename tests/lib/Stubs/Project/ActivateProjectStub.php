@@ -40,6 +40,7 @@ final class ActivateProjectStub implements ActivateProject
         return new self();
     }
 
+    #[\Override]
     public function activateWithNotifications(Project $project): bool
     {
         $this->activate_with_notifications_called = true;
@@ -47,6 +48,7 @@ final class ActivateProjectStub implements ActivateProject
         return true;
     }
 
+    #[\Override]
     public function activateWithoutNotifications(Project $project): bool
     {
         $this->activate_without_notifications_called = true;

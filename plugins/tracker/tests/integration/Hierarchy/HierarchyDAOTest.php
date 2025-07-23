@@ -31,6 +31,7 @@ final class HierarchyDAOTest extends TestIntegrationTestCase
     private const PARENT_TRACKER_ID = 253;
     private HierarchyDAO $dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao = new HierarchyDAO();

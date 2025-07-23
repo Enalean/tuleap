@@ -52,6 +52,7 @@ final class RetrieveEventSummaryStub implements RetrieveEventSummary
         return new self(Result::err($message));
     }
 
+    #[\Override]
     public function retrieveEventSummary(
         \Tracker_Artifact_Changeset $changeset,
         \PFUser $recipient,

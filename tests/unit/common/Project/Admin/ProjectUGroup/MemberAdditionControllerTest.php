@@ -47,6 +47,7 @@ final class MemberAdditionControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     private MemberAdder&MockObject $member_adder;
     private \PFUser $project_admin;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->project_retriever     = $this->createMock(ProjectRetriever::class);

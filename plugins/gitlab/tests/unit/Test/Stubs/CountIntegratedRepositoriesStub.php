@@ -35,6 +35,7 @@ final class CountIntegratedRepositoriesStub implements \Tuleap\Gitlab\Group\Coun
         return new self($number_of_integrated_repositories);
     }
 
+    #[\Override]
     public function countIntegratedRepositories(GroupLink $group_link): int
     {
         return $this->return_value;

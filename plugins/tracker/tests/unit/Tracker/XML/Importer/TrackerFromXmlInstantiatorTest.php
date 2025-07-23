@@ -44,6 +44,7 @@ final class TrackerFromXmlInstantiatorTest extends TestCase
     private Tracker_FormElementFactory&MockObject $tracker_form_element_factory;
     private TrackerXMLFieldMappingFromExistingTracker&MockObject $mapping_from_existing_tracker;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->tracker_factory               = $this->createMock(TrackerFactory::class);

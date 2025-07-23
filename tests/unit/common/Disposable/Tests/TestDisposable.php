@@ -33,6 +33,7 @@ final class TestDisposable implements Disposable
     ) {
     }
 
+    #[\Override]
     public function dispose(): void
     {
         $this->dispose_was_called = true;

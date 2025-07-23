@@ -28,6 +28,7 @@ final readonly class SearchFileUploadStub implements SearchFileUpload
     {
     }
 
+    #[\Override]
     public function searchFileOngoingUploadById(int $id): array
     {
         return $this->row;

@@ -40,6 +40,7 @@ final class CheckMilestonesInSidebarStub implements CheckMilestonesInSidebar
         return new self(false);
     }
 
+    #[\Override]
     public function shouldSidebarDisplayLastMilestones(int $project_id): bool
     {
         return $this->should_sidebar_display_last_milestones;

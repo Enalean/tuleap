@@ -30,6 +30,7 @@ final class ProjectBackgroundPermissionsCheckerTest extends \Tuleap\Test\PHPUnit
 {
     private ProjectBackgroundPermissionsChecker $permissions_checker;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->permissions_checker = new ProjectBackgroundPermissionsChecker();

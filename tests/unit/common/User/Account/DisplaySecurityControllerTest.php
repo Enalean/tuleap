@@ -58,11 +58,13 @@ final class DisplaySecurityControllerTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $event_manager;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->event_manager = new class implements EventDispatcherInterface {
             private $password_change = true;
 
+            #[\Override]
             public function dispatch(object $event)
             {
                 if ($event instanceof PasswordPreUpdateEvent) {

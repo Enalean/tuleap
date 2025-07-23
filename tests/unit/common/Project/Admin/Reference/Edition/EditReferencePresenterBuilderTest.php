@@ -44,6 +44,7 @@ final class EditReferencePresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestC
     private \EventManager&\PHPUnit\Framework\MockObject\MockObject $event_manager;
     private EditReferencePresenterBuilder $builder;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->service_dao   = $this->createMock(ServiceDao::class);

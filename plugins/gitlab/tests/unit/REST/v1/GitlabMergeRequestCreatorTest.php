@@ -74,6 +74,7 @@ final class GitlabMergeRequestCreatorTest extends TestCase
      */
     private $gitlab_project_builder;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

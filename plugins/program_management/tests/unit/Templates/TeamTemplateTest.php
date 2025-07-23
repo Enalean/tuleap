@@ -39,6 +39,7 @@ final class TeamTemplateTest extends TestCase
     private TeamTemplate $program_template;
     private vfsStreamDirectory $root_dir;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->root_dir = vfsStream::setup();

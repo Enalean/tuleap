@@ -35,6 +35,7 @@ final class ProjectHistoryDaoTest extends TestIntegrationTestCase
     private \PFUser $another_admin;
     private \DateTimeImmutable $now;
 
+    #[\Override]
     protected function setUp(): void
     {
         $project_admin_id = $this->createUser('project_admin');

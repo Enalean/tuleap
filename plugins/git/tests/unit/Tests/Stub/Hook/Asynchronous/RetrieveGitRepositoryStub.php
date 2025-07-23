@@ -46,6 +46,7 @@ final class RetrieveGitRepositoryStub implements \Tuleap\Git\Hook\Asynchronous\R
         return new self(Result::err($fault));
     }
 
+    #[\Override]
     public function getRepository(int $repository_id, \PFUser $user): Ok|Err
     {
         return $this->result;

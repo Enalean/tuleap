@@ -33,6 +33,7 @@ final class JiraEpicRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $client = new class extends \Tuleap\Tracker\Test\Stub\Creation\JiraImporter\JiraCloudClientStub {
             public bool $called = false;
+            #[\Override]
             public function getUrl(string $url): ?array
             {
                 $this->called = true;
@@ -53,6 +54,7 @@ final class JiraEpicRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\TestCase
     public function testIfBuildEpics(): void
     {
         $client = new class extends \Tuleap\Tracker\Test\Stub\Creation\JiraImporter\JiraCloudClientStub {
+            #[\Override]
             public function getUrl(string $url): ?array
             {
                 return [

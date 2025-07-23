@@ -57,6 +57,7 @@ final class ProjectRegistrationPresenterBuilderTest extends \Tuleap\Test\PHPUnit
      */
     private $fields_factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->template_factory                     = $this->createMock(TemplateFactory::class);
@@ -93,6 +94,7 @@ final class ProjectRegistrationPresenterBuilderTest extends \Tuleap\Test\PHPUnit
         $this->template_factory->method('getCategorisedExternalTemplates')->willReturn(
             [
                 new class implements CategorisedTemplate {
+                    #[\Override]
                     public function getTemplateCategory(): TemplateCategory
                     {
                         return new class implements TemplateCategory {
@@ -101,36 +103,43 @@ final class ProjectRegistrationPresenterBuilderTest extends \Tuleap\Test\PHPUnit
                         };
                     }
 
+                    #[\Override]
                     public function getId(): string
                     {
                         return 'external_template';
                     }
 
+                    #[\Override]
                     public function getTitle(): string
                     {
                         return 'External template';
                     }
 
+                    #[\Override]
                     public function getDescription(): string
                     {
                         return 'It is a template, it is external';
                     }
 
+                    #[\Override]
                     public function getGlyph(): Glyph
                     {
                         return new Glyph('');
                     }
 
+                    #[\Override]
                     public function isBuiltIn(): bool
                     {
                         return true;
                     }
 
+                    #[\Override]
                     public function getXMLPath(): string
                     {
                         return 'path/to/xml';
                     }
 
+                    #[\Override]
                     public function isAvailable(): bool
                     {
                         return true;

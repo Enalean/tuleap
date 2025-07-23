@@ -33,6 +33,7 @@ final class TitleSemanticDAOTest extends TestIntegrationTestCase
     private const FIELD_ID   = 8898;
     private TitleSemanticDAO $dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao = new TitleSemanticDAO();

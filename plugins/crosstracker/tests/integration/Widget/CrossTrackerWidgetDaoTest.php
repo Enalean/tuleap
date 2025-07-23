@@ -29,6 +29,7 @@ final class CrossTrackerWidgetDaoTest extends TestIntegrationTestCase
 {
     private CrossTrackerWidgetDao $widget_dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->widget_dao = new CrossTrackerWidgetDao();

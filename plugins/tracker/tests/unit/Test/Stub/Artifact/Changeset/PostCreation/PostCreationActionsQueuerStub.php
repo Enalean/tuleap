@@ -44,6 +44,7 @@ final class PostCreationActionsQueuerStub implements PostCreationActionsQueuer
         return new self($callback);
     }
 
+    #[\Override]
     public function queuePostCreation(
         Tracker_Artifact_Changeset $changeset,
         bool $send_notifications,

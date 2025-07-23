@@ -29,6 +29,7 @@ final class JenkinsTuleapPluginHookTokenDAOTest extends TestIntegrationTestCase
 {
     private JenkinsTuleapPluginHookTokenDAO $dao;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->dao = new JenkinsTuleapPluginHookTokenDAO();

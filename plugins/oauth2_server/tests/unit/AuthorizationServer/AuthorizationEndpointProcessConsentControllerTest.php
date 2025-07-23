@@ -69,6 +69,7 @@ final class AuthorizationEndpointProcessConsentControllerTest extends \Tuleap\Te
      */
     private $csrf_token;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user_manager          = $this->createMock(\UserManager::class);

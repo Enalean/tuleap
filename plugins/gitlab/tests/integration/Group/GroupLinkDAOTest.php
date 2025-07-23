@@ -48,6 +48,7 @@ final class GroupLinkDAOTest extends TestIntegrationTestCase
     private GroupLinkApiTokenDAO $token_dao;
     private \Project $project;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->group_dao        = new GroupLinkDAO();

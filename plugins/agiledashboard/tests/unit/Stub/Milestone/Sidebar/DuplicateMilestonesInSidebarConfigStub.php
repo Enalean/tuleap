@@ -37,6 +37,7 @@ final class DuplicateMilestonesInSidebarConfigStub implements DuplicateMilestone
         return new self();
     }
 
+    #[\Override]
     public function duplicate(int $target_project_id, int $source_project_id): void
     {
         $this->has_been_called = true;

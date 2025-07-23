@@ -59,6 +59,7 @@ final class AccessFileHistoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     private $access_file_factory;
     private DefaultPermissionsStub $default_permissions;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->access_file_dao           = $this->createMock(AccessFileHistoryDao::class);
@@ -66,6 +67,7 @@ final class AccessFileHistoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->project_history_formatter = $this->createMock(ProjectHistoryFormatter::class);
         $this->project_history_dao       = $this->createMock(ProjectHistoryDao::class);
         $default_block_generator         = new class implements SVNAccessFileDefaultBlockGeneratorInterface {
+            #[\Override]
             public function getDefaultBlock(Repository $repository): SVNAccessFileDefaultBlock
             {
                 return new SVNAccessFileDefaultBlock('');

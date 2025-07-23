@@ -40,6 +40,7 @@ final class InlineCommentCodeContextExtractorTest extends \Tuleap\Test\PHPUnit\T
     private InlineComment $inline_comment;
     private PullRequest $pull_request;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->file_unidiff_builder   = $this->createMock(FileUniDiffBuilder::class);

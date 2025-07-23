@@ -42,6 +42,7 @@ final class ConfigureAtXMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
                 parent::__construct(1);
             }
 
+            #[\Override]
             public function create(Codendi_Request $request)
             {
                 throw new \Exception('Should not be called because it\'s not project milestone plugin');
@@ -72,6 +73,7 @@ final class ConfigureAtXMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
                 parent::__construct(DashboardProjectMilestones::NAME);
             }
 
+            #[\Override]
             public function create(Codendi_Request $request)
             {
                 $this->param   = $request->get(ProjectMilestonesWidgetRetriever::PARAM_SELECTED_PROJECT);

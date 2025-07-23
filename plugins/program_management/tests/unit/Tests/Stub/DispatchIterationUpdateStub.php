@@ -37,6 +37,7 @@ final class DispatchIterationUpdateStub implements DispatchIterationUpdate
         return new self(0);
     }
 
+    #[\Override]
     public function dispatchUpdate(IterationUpdate $update): void
     {
         $this->dispatch_update_call_count++;

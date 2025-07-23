@@ -41,6 +41,7 @@ final class TrackersPermissionsDaoOnTrackersTest extends TestIntegrationTestCase
     private int $tracker2_id;
     private int $tracker3_id;
 
+    #[\Override]
     protected function setUp(): void
     {
         $db              = DBFactory::getMainTuleapDBConnection()->getDB();
@@ -78,6 +79,7 @@ final class TrackersPermissionsDaoOnTrackersTest extends TestIntegrationTestCase
         $_SERVER['REQUEST_URI'] = '';
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         unset($_SERVER['REQUEST_URI']);

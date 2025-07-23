@@ -45,6 +45,7 @@ final class TimetrackingReportFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
     private $tracker_factory;
     private TimetrackingReportFactory $timetracking_report_factory;
 
+    #[\Override]
     public function setUp(): void
     {
         parent::setUp();

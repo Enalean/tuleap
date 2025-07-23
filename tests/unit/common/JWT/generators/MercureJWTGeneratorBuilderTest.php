@@ -36,6 +36,7 @@ final class MercureJWTGeneratorBuilderTest extends TestCase
     private string $mercure_key_path;
     private string $base_path;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

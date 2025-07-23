@@ -24,11 +24,13 @@ namespace TuleapCfg\Command\SiteDeploy\Nginx;
 
 final class FakeX8664CPUInformationStub implements CPUInformation
 {
+    #[\Override]
     public function wordSize(): int
     {
         return 8;
     }
 
+    #[\Override]
     public function l1CacheLineSize(): int
     {
         return 64;

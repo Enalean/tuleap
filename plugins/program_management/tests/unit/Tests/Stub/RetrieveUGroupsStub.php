@@ -46,6 +46,7 @@ final class RetrieveUGroupsStub implements RetrieveUGroups
         return new self(false);
     }
 
+    #[\Override]
     public function getUgroupsFromProgram(ProgramForAdministrationIdentifier $program): array
     {
         return [
@@ -54,6 +55,7 @@ final class RetrieveUGroupsStub implements RetrieveUGroups
         ];
     }
 
+    #[\Override]
     public function getUGroupByNameInProgram(ProgramForAdministrationIdentifier $program, string $ugroup_name): ?UserGroupProxy
     {
         if ($this->will_return_ugroups === false) {

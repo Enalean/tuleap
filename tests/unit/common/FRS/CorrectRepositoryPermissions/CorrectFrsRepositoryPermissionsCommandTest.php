@@ -58,6 +58,7 @@ class CorrectFrsRepositoryPermissionsCommandTest extends TestCase
      */
     private $project_3;
 
+    #[\Override]
     protected function setUp(): void
     {
         vfsStream::setup('slash');

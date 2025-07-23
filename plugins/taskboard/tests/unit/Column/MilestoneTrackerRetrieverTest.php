@@ -35,6 +35,7 @@ final class MilestoneTrackerRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     private Cardwall_OnTop_ColumnDao&MockObject $dao;
     private TrackerFactory&MockObject $tracker_factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao                         = $this->createMock(Cardwall_OnTop_ColumnDao::class);

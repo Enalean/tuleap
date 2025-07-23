@@ -19,12 +19,12 @@
  */
 
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class Rule_RealNameTest extends \Tuleap\Test\PHPUnit\TestCase
+class Rule_RealNameTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     private $rule;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

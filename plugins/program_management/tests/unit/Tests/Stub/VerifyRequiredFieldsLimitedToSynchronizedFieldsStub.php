@@ -46,6 +46,7 @@ final class VerifyRequiredFieldsLimitedToSynchronizedFieldsStub implements Verif
         return new self(false);
     }
 
+    #[\Override]
     public function areRequiredFieldsOfTeamTrackersLimitedToTheSynchronizedFields(
         TrackerCollection $trackers,
         SynchronizedFieldFromProgramAndTeamTrackersCollection $field_collection,

@@ -38,6 +38,7 @@ final class ICreateDocumentServerStub implements ICreateDocumentServer
         return new self();
     }
 
+    #[\Override]
     public function create(string $url, ConcealedString $secret_key): void
     {
         $this->has_been_created = true;

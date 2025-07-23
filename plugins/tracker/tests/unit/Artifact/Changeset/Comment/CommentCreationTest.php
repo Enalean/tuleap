@@ -39,6 +39,7 @@ final class CommentCreationTest extends \Tuleap\Test\PHPUnit\TestCase
     private array $ugroups_that_are_allowed_to_see;
     private CommentFormatIdentifier $format;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->submitter = UserTestBuilder::aUser()->withId(112)->build();

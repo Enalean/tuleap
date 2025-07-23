@@ -38,6 +38,7 @@ final class StoreProjectInformationStub implements StoreProjectInformation
         return new self();
     }
 
+    #[\Override]
     public function create(ProjectCreationData $data): int
     {
         $this->called = true;

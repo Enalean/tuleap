@@ -38,6 +38,7 @@ final class FeatureRemovalTest extends \Tuleap\Test\PHPUnit\TestCase
     private FeatureIdentifier $feature;
     private UserCanPrioritize $user_can_prioritize;
 
+    #[\Override]
     protected function setUp(): void
     {
         $user_identifier = UserIdentifierStub::buildGenericUser();

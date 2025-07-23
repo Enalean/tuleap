@@ -54,6 +54,7 @@ final class PostAdminReleaseNoteLinkControllerTest extends \Tuleap\Test\PHPUnit\
      */
     private $layout;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

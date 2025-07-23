@@ -40,6 +40,7 @@ final class IterationUpdateTest extends \Tuleap\Test\PHPUnit\TestCase
     private ArtifactUpdatedEventStub $event;
 
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->event = ArtifactUpdatedEventStub::withIds(

@@ -39,11 +39,13 @@ final class SwaggerJsonOAuth2SecurityDefinitionTest extends \Tuleap\Test\PHPUnit
         \ForgeConfig::set('sys_default_domain', 'example.com');
         $scopes_builder = new /** @psalm-immutable */class implements AuthenticationScopeBuilder
         {
+            #[\Override]
             public function buildAuthenticationScopeFromScopeIdentifier(AuthenticationScopeIdentifier $scope_identifier): ?AuthenticationScope
             {
                 throw new \LogicException('Not expected in the test');
             }
 
+            #[\Override]
             public function buildAllAvailableAuthenticationScopes(): array
             {
                 return [OAuth2TestScope::fromItself()];

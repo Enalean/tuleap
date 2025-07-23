@@ -46,6 +46,7 @@ final class GroupLinkUpdateHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
     private const PROJECT_ID    = 144;
     private GroupLink $updated_group_link;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->updated_group_link = GroupLinkBuilder::aGroupLink(self::GROUP_LINK_ID)

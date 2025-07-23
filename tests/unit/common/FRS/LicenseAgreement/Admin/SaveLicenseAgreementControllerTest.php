@@ -79,6 +79,7 @@ final class SaveLicenseAgreementControllerTest extends TestCase
      */
     private $layout;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->layout = $this->createMock(BaseLayout::class);

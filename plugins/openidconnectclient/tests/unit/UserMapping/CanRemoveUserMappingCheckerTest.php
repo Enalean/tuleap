@@ -28,6 +28,7 @@ final class CanRemoveUserMappingCheckerTest extends \Tuleap\Test\PHPUnit\TestCas
 {
     private CanRemoveUserMappingChecker $checker;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->checker = new CanRemoveUserMappingChecker();

@@ -45,6 +45,7 @@ final class PlanProgramIncrementsStub implements PlanProgramIncrements
         return new self(0, true);
     }
 
+    #[\Override]
     public function createProgramIncrementAndReturnPlanChange(ProgramIncrementCreation $creation, TeamIdentifierCollection $teams): ProgramIncrementChanged
     {
         if ($this->should_throw) {

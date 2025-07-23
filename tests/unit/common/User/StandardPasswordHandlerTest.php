@@ -36,6 +36,7 @@ final class StandardPasswordHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private StandardPasswordHandler $password_handler;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->password_handler = new StandardPasswordHandler();

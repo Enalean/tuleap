@@ -53,6 +53,7 @@ final class ServiceRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCa
      */
     private $ugroup_manager;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->project_id              = 120;

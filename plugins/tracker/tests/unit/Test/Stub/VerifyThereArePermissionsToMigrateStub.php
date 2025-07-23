@@ -42,6 +42,7 @@ final class VerifyThereArePermissionsToMigrateStub implements VerifyThereArePerm
         return new self(false);
     }
 
+    #[\Override]
     public function areTherePermissionsToMigrate(Tracker_FormElement_Field_PermissionsOnArtifact $source_field, Artifact $artifact): bool
     {
         return $this->with_permissions_to_migrate;

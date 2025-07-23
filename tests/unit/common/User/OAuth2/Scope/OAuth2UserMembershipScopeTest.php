@@ -27,6 +27,7 @@ use Tuleap\Authentication\Scope\AuthenticationScopeTestCase;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class OAuth2UserMembershipScopeTest extends AuthenticationScopeTestCase
 {
+    #[\Override]
     public function getAuthenticationScopeClassname(): string
     {
         return OAuth2UserMembershipScope::class;

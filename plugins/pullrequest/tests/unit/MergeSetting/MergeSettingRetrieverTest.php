@@ -28,6 +28,7 @@ final class MergeSettingRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     private MergeSettingDAO&MockObject $dao;
     private \GitRepository&MockObject $git_repository;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao            = $this->createMock(MergeSettingDAO::class);

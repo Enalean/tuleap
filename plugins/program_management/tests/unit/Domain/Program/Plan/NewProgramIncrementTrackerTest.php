@@ -35,6 +35,7 @@ final class NewProgramIncrementTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
     private const SUB_LABEL  = 'release';
     private CheckNewProgramIncrementTracker $program_increment_checker;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->program_increment_checker = CheckNewProgramIncrementTrackerStub::withValidTracker();

@@ -47,16 +47,19 @@ final class DeletedArtifactLinksEventStub implements DeletedArtifactLinksEvent
         return $this->call_count;
     }
 
+    #[\Override]
     public function getUpdatedArtifactId(): int
     {
         return $this->updated_artifact_id;
     }
 
+    #[\Override]
     public function getDeletedArtifactLinksIds(): array
     {
         return $this->deleted_links;
     }
 
+    #[\Override]
     public function setDeletedLinksAreNotValidWithMessage(string $message): void
     {
         $this->call_count++;

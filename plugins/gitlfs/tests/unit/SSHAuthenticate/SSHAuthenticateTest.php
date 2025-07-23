@@ -40,6 +40,7 @@ final class SSHAuthenticateTest extends \Tuleap\Test\PHPUnit\TestCase
     private \PHPUnit\Framework\MockObject\MockObject&SSHAuthenticateResponseBuilder $ssh_response;
     private \Tuleap\GitLFS\Authorization\User\Operation\UserOperationFactory&\PHPUnit\Framework\MockObject\MockObject $user_operation_factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->project_manager        = $this->createMock(\ProjectManager::class);

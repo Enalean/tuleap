@@ -38,6 +38,7 @@ final class MirroredIterationIdentifierCollectionTest extends \Tuleap\Test\PHPUn
     private SearchMirroredTimeboxesStub $mirror_searcher;
     private \Closure $getId;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->getId           = static fn(MirroredIterationIdentifier $identifier): int => $identifier->getId();

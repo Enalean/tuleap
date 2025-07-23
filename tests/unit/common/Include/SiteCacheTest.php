@@ -26,6 +26,7 @@ class SiteCacheTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.C
     use \Tuleap\GlobalLanguageMock;
     use \Tuleap\TemporaryTestDirectory;
 
+    #[\Override]
     protected function tearDown(): void
     {
         unset($GLOBALS['HTML']);

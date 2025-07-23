@@ -50,6 +50,7 @@ final class PullRequestNewInlineCommentNotificationTest extends TestCase
     private PFUser $mentioned_user;
     private PFUser $change_user;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user_103       = UserTestBuilder::anActiveUser()->withId(103)->build();

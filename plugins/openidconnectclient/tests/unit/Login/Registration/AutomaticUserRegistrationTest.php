@@ -33,6 +33,7 @@ final class AutomaticUserRegistrationTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private UsernameGenerator&\PHPUnit\Framework\MockObject\MockObject $username_generator;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->username_generator = $this->createMock(\Tuleap\OpenIDConnectClient\Login\Registration\UsernameGenerator::class);

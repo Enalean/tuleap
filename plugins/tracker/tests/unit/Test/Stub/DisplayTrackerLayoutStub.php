@@ -36,11 +36,13 @@ final class DisplayTrackerLayoutStub implements \Tracker_IDisplayTrackerLayout
         return new self();
     }
 
+    #[\Override]
     public function displayHeader(Project $project, string $title, array $breadcrumbs, array|HeaderConfiguration $params): void
     {
         // Do nothing
     }
 
+    #[\Override]
     public function displayFooter(Project $project): void
     {
         // Do nothing

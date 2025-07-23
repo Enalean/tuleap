@@ -44,6 +44,7 @@ final class FileUniDiffBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $git_exec;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

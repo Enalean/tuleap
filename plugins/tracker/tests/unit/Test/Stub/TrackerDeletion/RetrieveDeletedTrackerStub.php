@@ -41,6 +41,7 @@ final readonly class RetrieveDeletedTrackerStub implements RetrieveDeletedTracke
         return new self(null);
     }
 
+    #[\Override]
     public function retrieveTrackersMarkAsDeleted(): array
     {
         if (! $this->tracker) {

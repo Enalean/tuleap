@@ -41,6 +41,7 @@ class MilestoneExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
     private PFUser $user;
     private MilestoneIsAllowedChecker&MockObject $checker;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user = UserTestBuilder::aUser()->build();

@@ -249,6 +249,7 @@ final class ArtifactLinkChangesetValueTest extends TestCase
                 );
             }
 
+            #[\Override]
             public function getArtifact(): ?Artifact
             {
                 return $this->artifact;

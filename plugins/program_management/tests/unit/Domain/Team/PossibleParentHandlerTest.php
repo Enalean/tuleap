@@ -65,6 +65,7 @@ final class PossibleParentHandlerTest extends TestCase
     private PossibleParentHandler $possible_parent;
     private PossibleParentSelectorProxy $possible_parent_selector;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->search_open_features = SearchOpenFeaturesStub::withRows(

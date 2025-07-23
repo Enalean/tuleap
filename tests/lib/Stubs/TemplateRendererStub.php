@@ -33,6 +33,7 @@ final class TemplateRendererStub extends \TemplateRenderer
     /**
      * @param string $template_name
      */
+    #[\Override]
     public function renderToString($template_name, mixed $presenter): string
     {
         $this->has_rendered_something = true;
@@ -42,6 +43,7 @@ final class TemplateRendererStub extends \TemplateRenderer
     /**
      * @param string $template_name
      */
+    #[\Override]
     public function renderToPage($template_name, mixed $presenter): void
     {
         $this->has_rendered_something = true;

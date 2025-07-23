@@ -38,6 +38,7 @@ final class UserStatusBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     private array $status;
     private UserStatusBuilder $user_status_builder;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

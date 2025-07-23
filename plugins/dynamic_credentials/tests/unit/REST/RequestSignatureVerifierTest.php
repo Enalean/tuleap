@@ -35,6 +35,7 @@ final class RequestSignatureVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
     public const SECRET_KEY  = 'KOJqKTCvuBvSdKN/MgGLlTI7T3hrZKERlq2JDLB7Wc+RrsZy+jdE7QV6Sx9WQEKBOd0LP8gwt/AJADcOg3yTrw==';
     public const USED_DOMAIN = 'example.com';
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

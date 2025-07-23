@@ -44,6 +44,7 @@ final class SearchTrackersOfProgramStub implements SearchTrackersOfProgram
     /**
      * @return TrackerReference[]
      */
+    #[\Override]
     public function searchAllTrackersOfProgram(ProgramForAdministrationIdentifier $program): array
     {
         return $this->trackers;

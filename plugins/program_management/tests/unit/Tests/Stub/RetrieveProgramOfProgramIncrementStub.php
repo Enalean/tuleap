@@ -42,6 +42,7 @@ final class RetrieveProgramOfProgramIncrementStub implements RetrieveProgramOfPr
         return new self(null);
     }
 
+    #[\Override]
     public function getProgramOfProgramIncrement(ProgramIncrementIdentifier $program_increment): int
     {
         if ($this->program_id === null) {

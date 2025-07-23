@@ -54,6 +54,7 @@ final class RetrieveUserPermissionOnFieldsStub implements RetrieveUserPermission
         return $this;
     }
 
+    #[\Override]
     public function retrieveUserPermissionOnFields(PFUser $user, array $fields, FieldPermissionType $permission): UserPermissionsOnItems
     {
         if (isset($this->has_permission_on[$permission->value])) {

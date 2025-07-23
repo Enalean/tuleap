@@ -31,12 +31,14 @@ final class RequestTimeTest extends TestCase
 
     private mixed $request_time;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->request_time      = $_SERVER['REQUEST_TIME'];
         $_SERVER['REQUEST_TIME'] = self::REQUEST_TIMESTAMP;
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         $_SERVER['REQUEST_TIME'] = $this->request_time;

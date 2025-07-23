@@ -38,6 +38,7 @@ final class ProgramUserGroupRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $user_group_retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user_group_retriever         = $this->createMock(UserGroupRetriever::class);

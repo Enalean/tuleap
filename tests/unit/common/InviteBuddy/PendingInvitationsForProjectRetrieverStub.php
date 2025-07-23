@@ -45,6 +45,7 @@ class PendingInvitationsForProjectRetrieverStub implements PendingInvitationsFor
     /**
      * @return Invitation[]
      */
+    #[\Override]
     public function searchPendingInvitationsForProject(int $project_id): array
     {
         return $this->invitations;

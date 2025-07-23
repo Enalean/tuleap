@@ -48,6 +48,7 @@ final class RetrieveProgramIncrementStub implements RetrieveProgramIncrement
         return new self(true, []);
     }
 
+    #[\Override]
     public function retrieveProgramIncrementById(
         UserIdentifier $user_identifier,
         ProgramIncrementIdentifier $increment_identifier,

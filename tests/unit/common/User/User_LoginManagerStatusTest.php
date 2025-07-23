@@ -19,15 +19,15 @@
 
 declare(strict_types=1);
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class User_LoginManagerStatusTest extends \Tuleap\Test\PHPUnit\TestCase
+final class User_LoginManagerStatusTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     use \Tuleap\ForgeConfigSandbox;
     use \Tuleap\GlobalLanguageMock;
 
     private User_UserStatusManager $user_status_manager;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

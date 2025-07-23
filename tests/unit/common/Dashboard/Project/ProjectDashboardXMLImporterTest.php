@@ -29,6 +29,7 @@ use Tuleap\Widget\ProjectHeartbeat;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProjectDashboardXMLImporterTest extends ProjectDashboardXMLImporterBase
 {
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

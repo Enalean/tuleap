@@ -36,6 +36,7 @@ final class MirroredProgramIncrementTrackerIdentifierCollectionTest extends \Tul
     private const SECOND_TRACKER_ID = 90;
     private RetrieveMirroredProgramIncrementTrackerStub $tracker_retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->tracker_retriever = RetrieveMirroredProgramIncrementTrackerStub::withValidTrackers(

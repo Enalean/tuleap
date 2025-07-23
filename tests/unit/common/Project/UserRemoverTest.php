@@ -49,6 +49,7 @@ final class UserRemoverTest extends \Tuleap\Test\PHPUnit\TestCase
     private MockObject&UserPermissionsDao $user_permissions_dao;
 
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

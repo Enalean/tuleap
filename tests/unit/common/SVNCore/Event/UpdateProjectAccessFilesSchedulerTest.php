@@ -39,6 +39,7 @@ final class UpdateProjectAccessFilesSchedulerTest extends \Tuleap\Test\PHPUnit\T
      */
     private $scheduler;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->system_event_manager = $this->createMock(\SystemEventManager::class);

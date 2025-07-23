@@ -45,6 +45,7 @@ final class GitRepositoryRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $project;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->project    = $this->createStub(\Project::class);

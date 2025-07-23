@@ -33,6 +33,7 @@ final class ProvideCSRFTokenSynchronizerStub implements ProvideCSRFTokenSynchron
     {
     }
 
+    #[\Override]
     public function getCSRFToken(Project $project): CSRFSynchronizerTokenInterface
     {
         return CSRFSynchronizerTokenStub::buildSelf();

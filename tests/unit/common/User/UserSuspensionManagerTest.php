@@ -56,6 +56,7 @@ class UserSuspensionManagerTest extends \Tuleap\Test\PHPUnit\TestCase
     private UserSuspensionManager $user_suspension_manager;
     private MailAccountSuspensionPresenter&MockObject $mail_account_suspension_presenter;
 
+    #[\Override]
     public function setUp(): void
     {
         parent::setUp();

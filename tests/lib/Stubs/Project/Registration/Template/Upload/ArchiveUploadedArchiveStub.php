@@ -46,6 +46,7 @@ final readonly class ArchiveUploadedArchiveStub implements ArchiveUploadedArchiv
         return new self(null);
     }
 
+    #[\Override]
     public function archive(\Project $project, string $uploaded_archive_path): string
     {
         if ($this->destination === null) {

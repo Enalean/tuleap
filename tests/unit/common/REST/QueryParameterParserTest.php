@@ -26,6 +26,7 @@ class QueryParameterParserTest extends \Tuleap\Test\PHPUnit\TestCase
     /** @var QueryParameterParser */
     private $query_parser;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->query_parser = new QueryParameterParser(

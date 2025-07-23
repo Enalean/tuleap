@@ -49,6 +49,7 @@ final class PlanInheritanceHandlerTest extends TestCase
     private SaveNewPlanConfigurationStub $save_new_plan;
     private ProgramForAdministrationIdentifier $new_program;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->new_program     = ProgramForAdministrationIdentifierBuilder::buildWithId(227);

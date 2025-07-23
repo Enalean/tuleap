@@ -74,6 +74,7 @@ final class PullRequestUpdaterTest extends TestIntegrationTestCase
      */
     private $event_dispatcher;
 
+    #[\Override]
     protected function setUp(): void
     {
         $reference_manager = $this->createMock(ReferenceManager::class);

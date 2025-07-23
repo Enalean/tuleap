@@ -33,6 +33,7 @@ final class SearchCriteriaFilterTest extends TestCase
 {
     private SearchCriteriaFilter $search_criteria_filter;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->search_criteria_filter = new SearchCriteriaFilter(
@@ -90,6 +91,7 @@ final class SearchCriteriaFilterTest extends TestCase
     private function searchCriteriaDAOStub(): IRetrieveCriteria
     {
         return new class implements IRetrieveCriteria {
+            #[\Override]
             public function searchByProjectId(int $project_id): array
             {
                 return [

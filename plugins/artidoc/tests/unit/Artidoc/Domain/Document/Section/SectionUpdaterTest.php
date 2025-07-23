@@ -42,6 +42,7 @@ final class SectionUpdaterTest extends TestCase
 
     private SectionIdentifierFactory $identifier_factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->identifier_factory = new UUIDSectionIdentifierFactory(new DatabaseUUIDV7Factory());

@@ -37,6 +37,7 @@ final class AuthorizationComparatorTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->factory    = $this->createMock(AuthorizedScopeFactory::class);

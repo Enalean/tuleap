@@ -38,6 +38,7 @@ final class RetrieveProjectFromTrackerStub implements RetrieveProjectFromTracker
         return new self(ProjectReferenceStub::buildGeneric());
     }
 
+    #[\Override]
     public function fromTrackerReference(TrackerReference $tracker): ProjectReference
     {
         return $this->project_reference;

@@ -28,6 +28,7 @@ final readonly class SaveFileUploadStub implements SaveFileUpload
     {
     }
 
+    #[\Override]
     public function saveFileOnGoingUpload(InsertFileToUpload $file_to_upload): int
     {
         return $this->saved_file_id;

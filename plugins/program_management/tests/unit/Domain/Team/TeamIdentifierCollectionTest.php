@@ -38,6 +38,7 @@ final class TeamIdentifierCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
     private UserIdentifier $user;
     private SearchVisibleTeamsOfProgramStub $teams_searcher;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->program = ProgramIdentifierBuilder::build();

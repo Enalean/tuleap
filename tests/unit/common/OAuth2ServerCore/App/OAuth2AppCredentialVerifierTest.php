@@ -47,6 +47,7 @@ final class OAuth2AppCredentialVerifierTest extends \Tuleap\Test\PHPUnit\TestCas
      */
     private $verifier;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->app_factory = $this->createMock(AppFactory::class);

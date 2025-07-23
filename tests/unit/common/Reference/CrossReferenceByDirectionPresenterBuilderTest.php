@@ -38,6 +38,7 @@ final class CrossReferenceByDirectionPresenterBuilderTest extends TestCase
     private CrossReferenceByNatureInCoreOrganizer&MockObject $core_organizer;
     private CrossReferenceByDirectionPresenterBuilder $builder;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->event_dispatcher  = $this->createMock(EventDispatcherInterface::class);

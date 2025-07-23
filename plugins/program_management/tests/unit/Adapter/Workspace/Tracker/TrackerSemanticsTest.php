@@ -39,6 +39,7 @@ final class TrackerSemanticsTest extends TestCase
     private $tracker_factory;
     private TrackerSemantics $factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->tracker         = $this->createStub(\Tuleap\Tracker\Tracker::class);

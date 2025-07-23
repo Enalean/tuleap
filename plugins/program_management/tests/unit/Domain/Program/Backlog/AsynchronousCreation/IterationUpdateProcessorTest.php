@@ -72,6 +72,7 @@ final class IterationUpdateProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
     private AddChangesetStub $changeset_adder;
     private IterationUpdate $update;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->update = IterationUpdateBuilder::buildWithIds(

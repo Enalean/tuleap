@@ -52,6 +52,7 @@ final class ProgramIncrementUpdateEventProxyTest extends TestCase
     private VerifyIsChangesetStub $changeset_verifier;
     private WorkerEvent $worker_event;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->logger                     = new TestLogger();

@@ -40,6 +40,7 @@ class FileCopierTest extends \Tuleap\Test\PHPUnit\TestCase
     private string $source_file;
     private string $destination_file;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->logger           = new NullLogger();

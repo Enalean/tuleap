@@ -60,6 +60,7 @@ final class DiskUsageRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     private DiskUsageRetriever $disk_usage_retriever;
     private Project $project;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->project            = ProjectTestBuilder::aProject()->withId(111)->withUnixName('projet')->build();

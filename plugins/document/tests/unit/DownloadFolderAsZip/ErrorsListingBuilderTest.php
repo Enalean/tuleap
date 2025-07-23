@@ -29,6 +29,7 @@ final class ErrorsListingBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private ErrorsListingBuilder $builder;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->builder = new ErrorsListingBuilder();

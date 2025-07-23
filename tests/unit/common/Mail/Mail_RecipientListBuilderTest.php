@@ -27,9 +27,8 @@ use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Test\Builders\UserTestBuilder;
 
-// phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Mail_RecipientListBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
+final class Mail_RecipientListBuilderTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     private string $external_address           = 'toto@example.com';
     private string $external_address2          = 'toto2@example.com';
@@ -56,6 +55,7 @@ final class Mail_RecipientListBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private Mail_RecipientListBuilder $builder;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

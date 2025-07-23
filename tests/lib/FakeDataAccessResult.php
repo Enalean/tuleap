@@ -37,26 +37,31 @@ final class FakeDataAccessResult extends DataAccessResult
         $this->rewind(); // in case getRow is called explicitly
     }
 
+    #[\Override]
     protected function daFetch()
     {
         return isset($this->data[$this->_current]) ? $this->data[$this->_current] : false;
     }
 
+    #[\Override]
     protected function daSeek()
     {
         $this->_current = -1;
     }
 
+    #[\Override]
     protected function daIsError()
     {
         return false;
     }
 
+    #[\Override]
     public function rowCount()
     {
         return count($this->data);
     }
 
+    #[\Override]
     public function freeMemory()
     {
     }

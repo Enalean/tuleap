@@ -47,6 +47,7 @@ class ArtifactBase extends RestBase
     protected $project_burndown_id;
     protected $project_suspended_id;
 
+    #[\Override]
     public function setUp(): void
     {
         parent::setUp();

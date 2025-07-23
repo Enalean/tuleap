@@ -42,6 +42,7 @@ final class GitlabIntegrationAvailabilityCheckerTest extends TestCase
 
     private GitlabIntegrationAvailabilityChecker $checker;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

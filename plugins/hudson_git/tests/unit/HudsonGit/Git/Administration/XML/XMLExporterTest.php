@@ -51,6 +51,7 @@ final class XMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
     private $logger;
     private EncryptionKey $encryption_key;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

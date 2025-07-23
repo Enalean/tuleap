@@ -63,6 +63,7 @@ final class KanbanColumnManagerTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $kanban_column_manager;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->kanban_id = 2;

@@ -38,6 +38,7 @@ final class TimeboxIdentifierStub implements TimeboxIdentifier
         return new self($id);
     }
 
+    #[\Override]
     public function getId(): int
     {
         return $this->id;

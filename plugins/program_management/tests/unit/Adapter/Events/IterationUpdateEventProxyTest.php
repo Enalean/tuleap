@@ -45,6 +45,7 @@ final class IterationUpdateEventProxyTest extends TestCase
     private VerifyIsChangesetStub $changeset_verifier;
     private VerifyIsVisibleArtifactStub $artifact_visibility_verifier;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->logger                       = new TestLogger();

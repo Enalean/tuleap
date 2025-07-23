@@ -45,6 +45,7 @@ final class OpenStaticListDuckTypedFieldTest extends CrossTrackerFieldTestCase
     private int $sprint_artifact_with_cheese_id;
     private int $sprint_artifact_with_cheese_lead_id;
 
+    #[\Override]
     protected function setUp(): void
     {
         $db                   = DBFactory::getMainTuleapDBConnection()->getDB();

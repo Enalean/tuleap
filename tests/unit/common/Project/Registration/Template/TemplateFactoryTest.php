@@ -59,6 +59,7 @@ final class TemplateFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
     private $url_verification;
     private \PFUser $user;
 
+    #[\Override]
     protected function setUp(): void
     {
         \ForgeConfig::set('codendi_cache_dir', vfsStream::setup('TemplateFactoryTest')->url());

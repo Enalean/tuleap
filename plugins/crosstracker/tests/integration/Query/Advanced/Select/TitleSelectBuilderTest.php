@@ -45,6 +45,7 @@ final class TitleSelectBuilderTest extends CrossTrackerFieldTestCase
      */
     private array $expected_results;
 
+    #[\Override]
     public function setUp(): void
     {
         $db              = DBFactory::getMainTuleapDBConnection()->getDB();

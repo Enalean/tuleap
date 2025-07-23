@@ -32,6 +32,7 @@ final class GetReferenceByPullRequestIdStub implements GetReferenceByPullRequest
     {
     }
 
+    #[\Override]
     public function getReferenceByPullRequestId(int $pull_request_id): array
     {
         return $this->row;

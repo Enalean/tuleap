@@ -32,6 +32,7 @@ final class IncludeAssetsTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $assets_dir_path;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->assets_dir_path = vfsStream::setup()->url() . '/assets';

@@ -36,6 +36,7 @@ final class ItemToIndexLimitedBatchQueueTest extends TestCase
             public int $nb_items = 0;
             public int $nb_calls = 0;
 
+            #[\Override]
             public function indexItems(ItemToIndex ...$items): void
             {
                 $this->nb_items += count($items);

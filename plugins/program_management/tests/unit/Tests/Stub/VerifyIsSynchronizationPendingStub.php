@@ -42,6 +42,7 @@ final class VerifyIsSynchronizationPendingStub implements VerifyIsSynchronizatio
         return new self(true);
     }
 
+    #[\Override]
     public function hasSynchronizationPending(ProgramIdentifier $program_identifier, TeamIdentifier $team_identifier): bool
     {
         return $this->has_on_going_synchronization;

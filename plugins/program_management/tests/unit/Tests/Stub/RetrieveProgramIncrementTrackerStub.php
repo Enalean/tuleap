@@ -34,11 +34,13 @@ final class RetrieveProgramIncrementTrackerStub implements RetrieveProgramIncrem
         $this->tracker_id = $tracker_id;
     }
 
+    #[\Override]
     public function getProgramIncrementTrackerId(int $project_id): ?int
     {
         return $this->tracker_id;
     }
 
+    #[\Override]
     public function getProgramIncrementTrackerIdFromProgramIncrement(ProgramIncrementIdentifier $program_increment): int
     {
         if ($this->tracker_id === null) {

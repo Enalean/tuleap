@@ -56,6 +56,7 @@ final class MissingProgramIncrementCreatorTest extends TestCase
     private ProjectReference $team;
     private SearchOpenProgramIncrements $search_open_program_increment;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->logger                        = new TestLogger();

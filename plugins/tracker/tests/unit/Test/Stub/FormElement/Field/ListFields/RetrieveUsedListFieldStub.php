@@ -51,6 +51,7 @@ final class RetrieveUsedListFieldStub implements RetrieveUsedListField
         return new self([]);
     }
 
+    #[\Override]
     public function getUsedListFieldById(
         \Tuleap\Tracker\Tracker $tracker,
         int $field_id,

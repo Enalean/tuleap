@@ -20,9 +20,8 @@
 
 declare(strict_types=1);
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class User_ForgeUserGroupFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
+final class User_ForgeUserGroupFactoryTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /**
      * @var UserGroupDao&\PHPUnit\Framework\MockObject\MockObject
@@ -30,6 +29,7 @@ final class User_ForgeUserGroupFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
     protected $dao;
     protected User_ForgeUserGroupFactory $factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

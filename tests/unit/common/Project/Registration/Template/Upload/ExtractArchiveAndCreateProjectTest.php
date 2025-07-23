@@ -56,6 +56,7 @@ final class ExtractArchiveAndCreateProjectTest extends TestCase
     private \PFUser $user;
     private ArchiveWithoutDataChecker $archive_without_data_checker;
 
+    #[\Override]
     protected function setUp(): void
     {
         $tmp = $this->getTmpDir() . '/tmp';

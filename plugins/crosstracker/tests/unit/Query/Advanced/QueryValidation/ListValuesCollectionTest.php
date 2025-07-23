@@ -39,6 +39,7 @@ final class ListValuesCollectionTest extends TestCase
     private const CURRENT_USER_NAME = 'utian';
     private \PFUser $user;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user = UserTestBuilder::aUser()->withUserName(self::CURRENT_USER_NAME)->build();

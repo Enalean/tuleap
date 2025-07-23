@@ -40,11 +40,13 @@ final class ProvideAndPasswordlessUserStub implements ProvideCurrentUser, Switch
         return new self($current_user, $passwordless_only);
     }
 
+    #[\Override]
     public function getCurrentUser(): \PFUser
     {
         return $this->current_user;
     }
 
+    #[\Override]
     public function switchPasswordlessOnly(PFUser $user, bool $passwordless_only): void
     {
         if ($user->getId() === $this->current_user->getId()) {
@@ -52,6 +54,7 @@ final class ProvideAndPasswordlessUserStub implements ProvideCurrentUser, Switch
         }
     }
 
+    #[\Override]
     public function isPasswordlessOnly(PFUser $user): bool
     {
         if ($user->getId() === $this->current_user->getId()) {

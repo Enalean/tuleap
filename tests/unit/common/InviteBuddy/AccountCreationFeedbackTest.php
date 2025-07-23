@@ -42,6 +42,7 @@ final class AccountCreationFeedbackTest extends \Tuleap\Test\PHPUnit\TestCase
     private $invitation_instrumentation;
 
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->logger                     = $this->createMock(LoggerInterface::class);

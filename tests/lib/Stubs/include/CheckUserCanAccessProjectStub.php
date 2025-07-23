@@ -58,6 +58,7 @@ final class CheckUserCanAccessProjectStub implements CheckUserCanAccessProject, 
         return $this;
     }
 
+    #[\Override]
     public function userCanAccessProject(PFUser $user, Project $project): bool
     {
         if (
@@ -81,6 +82,7 @@ final class CheckUserCanAccessProjectStub implements CheckUserCanAccessProject, 
         return $this;
     }
 
+    #[\Override]
     public function userCanAccessProjectAndIsProjectAdmin(PFUser $user, Project $project): void
     {
         if (! isset($this->admins_users[(int) $user->getId()]) || ! in_array((int) $project->getID(), $this->admins_users[(int) $user->getId()])) {

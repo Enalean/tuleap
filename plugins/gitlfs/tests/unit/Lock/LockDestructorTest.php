@@ -29,6 +29,7 @@ final class LockDestructorTest extends \Tuleap\Test\PHPUnit\TestCase
     private LockDestructor $lock_destructor;
     private LockDao&\PHPUnit\Framework\MockObject\MockObject $lock_dao;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->lock_dao        = $this->createMock(LockDao::class);

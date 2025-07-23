@@ -28,6 +28,7 @@ final class SiteAdministratorPermissionCheckerTest extends \Tuleap\Test\PHPUnit\
     private SiteAdministratorPermissionChecker $permission_checker;
     private \User_ForgeUserGroupPermissionsDao&MockObject $permission_dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

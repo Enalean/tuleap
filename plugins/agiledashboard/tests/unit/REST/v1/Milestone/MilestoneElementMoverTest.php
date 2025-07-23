@@ -52,6 +52,7 @@ final class MilestoneElementMoverTest extends TestCase
     private MilestoneResourceValidator&MockObject $milestone_validator;
     private ResourcesPatcher&MockObject $resources_patcher;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->resources_patcher        = $this->createMock(ResourcesPatcher::class);

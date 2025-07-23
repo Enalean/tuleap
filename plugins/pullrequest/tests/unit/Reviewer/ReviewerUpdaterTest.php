@@ -51,6 +51,7 @@ final class ReviewerUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
     private \PFUser $user_doing_the_changes;
     private ReviewerUpdater $reviewer_updater;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao                 = $this->createMock(ReviewerDAO::class);

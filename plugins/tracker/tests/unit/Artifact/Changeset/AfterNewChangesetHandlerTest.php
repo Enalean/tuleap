@@ -41,6 +41,7 @@ final class AfterNewChangesetHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $form_element_factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->artifact_saver       = SaveArtifactStub::withSuccess();

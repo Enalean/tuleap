@@ -49,6 +49,7 @@ final class UpdatedCommentNotificationTest extends \Tuleap\Test\PHPUnit\TestCase
     private PFUser $comment_author;
     private PullRequest $pull_request;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->owner_user     = UserTestBuilder::buildWithId(103);

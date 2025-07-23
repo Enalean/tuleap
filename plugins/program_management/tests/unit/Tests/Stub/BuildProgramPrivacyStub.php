@@ -48,6 +48,7 @@ final class BuildProgramPrivacyStub implements BuildProgramPrivacy
         );
     }
 
+    #[\Override]
     public function build(ProgramIdentifier $program_identifier): ProgramPrivacy
     {
         return $this->privacy;

@@ -49,6 +49,7 @@ final class IBuildUserPermissionsStub implements IBuildUserPermissions
         return new self(UserPermissions::noAccess());
     }
 
+    #[\Override]
     public function getPermissions(\PFUser $user, \Project $project): UserPermissions
     {
         return $this->permissions;

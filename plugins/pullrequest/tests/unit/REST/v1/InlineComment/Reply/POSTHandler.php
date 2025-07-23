@@ -66,6 +66,7 @@ final class POSTHandler extends TestCase
     private \PFUser $reply_author;
     private InlineCommentReplyPOSTRepresentation $reply_data;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->reply_author = UserTestBuilder::anActiveUser()->build();

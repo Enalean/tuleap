@@ -41,6 +41,7 @@ final class BindValueLabelStub implements BindValueLabel
         return new self($label);
     }
 
+    #[\Override]
     public function getLabel(): string
     {
         return $this->label;

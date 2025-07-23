@@ -33,6 +33,7 @@ final class NewTrackerThatCanBePlannedTest extends \Tuleap\Test\PHPUnit\TestCase
     private const TRACKER_ID = 17;
     private CheckNewPlannableTrackerStub $tracker_checker;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->tracker_checker = CheckNewPlannableTrackerStub::withValidTracker();

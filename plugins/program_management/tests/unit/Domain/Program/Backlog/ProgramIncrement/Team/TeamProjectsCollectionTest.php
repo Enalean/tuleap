@@ -36,6 +36,7 @@ final class TeamProjectsCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
     private RetrieveProjectReferenceStub $project_builder;
     private ProgramIdentifier $program;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->search_teams    = SearchTeamsOfProgramStub::withTeamIds(103, 125);

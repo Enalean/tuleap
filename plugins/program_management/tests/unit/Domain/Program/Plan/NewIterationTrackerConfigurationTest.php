@@ -36,6 +36,7 @@ final class NewIterationTrackerConfigurationTest extends \Tuleap\Test\PHPUnit\Te
     private CheckNewIterationTrackerStub $iteration_checker;
     private PlanIterationChange $iteration_change;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->iteration_checker = CheckNewIterationTrackerStub::withValidTracker();

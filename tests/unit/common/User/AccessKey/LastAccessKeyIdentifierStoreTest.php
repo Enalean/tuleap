@@ -36,6 +36,7 @@ final class LastAccessKeyIdentifierStoreTest extends \Tuleap\Test\PHPUnit\TestCa
      */
     private $access_key_formatter;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->encryption_key = new EncryptionKey(

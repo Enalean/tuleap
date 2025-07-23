@@ -56,6 +56,7 @@ final class PullRequestRepresentationFactoryTest extends TestCase
     private \PFUser $current_user;
     private RetrieveUserByIdStub $user_retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->current_user = UserTestBuilder::anActiveUser()->withId(self::CREATOR_USER_ID)->build();

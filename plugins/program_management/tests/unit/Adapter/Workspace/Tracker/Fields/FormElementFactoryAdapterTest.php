@@ -38,6 +38,7 @@ final class FormElementFactoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
     private $form_element_factory;
     private TrackerIdentifierStub $tracker_identifier;
 
+    #[\Override]
     protected function setUp(): void
     {
         $tracker                    = TrackerTestBuilder::aTracker()->withId(self::TRACKER_ID)->build();

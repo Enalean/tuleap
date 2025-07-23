@@ -88,6 +88,7 @@ final class OnlyOfficeGlobalEditorJWTokenProviderTest extends TestCase
             new SignedWith(new Sha256(), InMemory::plainText($secret)),
             new class implements ValidAt
             {
+                #[\Override]
                 public function assert(Token $token): void
                 {
                     // Do nothing, we expect it to be valid
@@ -142,6 +143,7 @@ final class OnlyOfficeGlobalEditorJWTokenProviderTest extends TestCase
                 {
                 }
 
+                #[\Override]
                 public function getDocumentConfig(\PFUser $user, int $item_id, \DateTimeImmutable $now): Ok|Err
                 {
                     return $this->result;
@@ -149,6 +151,7 @@ final class OnlyOfficeGlobalEditorJWTokenProviderTest extends TestCase
             },
             new OnlyOfficeSaveCallbackURLGenerator(
                 new class implements OnlyOfficeSaveDocumentTokenGenerator {
+                    #[\Override]
                     public function generateSaveToken(
                         \PFUser $user,
                         OnlyOfficeDocument $document,

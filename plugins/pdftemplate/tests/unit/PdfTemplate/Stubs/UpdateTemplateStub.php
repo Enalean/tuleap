@@ -43,6 +43,7 @@ final class UpdateTemplateStub implements UpdateTemplate
         return $this->called;
     }
 
+    #[\Override]
     public function update(PdfTemplate $template): void
     {
         $this->called = true;

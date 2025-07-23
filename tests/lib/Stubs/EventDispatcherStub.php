@@ -40,6 +40,7 @@ final class EventDispatcherStub implements \Psr\EventDispatcher\EventDispatcherI
         return new self(static fn(object $event) => $event);
     }
 
+    #[\Override]
     public function dispatch(object $event): object
     {
         $this->call_count++;

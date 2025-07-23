@@ -60,6 +60,7 @@ final class OAuth2ClientAuthenticationMiddlewareTest extends \Tuleap\Test\PHPUni
      */
     private $middleware;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->client_secret_unserializer = $this->createMock(SplitTokenIdentifierTranslator::class);
@@ -186,6 +187,7 @@ final class OAuth2ClientAuthenticationMiddlewareTest extends \Tuleap\Test\PHPUni
                 $this->expected_app_attribute = $expected_app_attribute;
             }
 
+            #[\Override]
             public function handle(ServerRequestInterface $request): ResponseInterface
             {
                 TestCase::assertSame($this->expected_app_attribute, $request->getAttribute(OAuth2ClientAuthenticationMiddleware::class));

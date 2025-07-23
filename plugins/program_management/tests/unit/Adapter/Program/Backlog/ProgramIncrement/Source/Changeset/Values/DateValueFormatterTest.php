@@ -35,6 +35,7 @@ final class DateValueFormatterTest extends \Tuleap\Test\PHPUnit\TestCase
     private const TIMESTAMP = 1436068265;
     private \Rule_Date $date_validator;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->date_validator = new \Rule_Date();

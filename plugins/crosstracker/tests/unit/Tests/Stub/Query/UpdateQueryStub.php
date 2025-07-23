@@ -34,6 +34,7 @@ final class UpdateQueryStub implements UpdateQuery
         return new self();
     }
 
+    #[\Override]
     public function update(
         UUID $id,
         string $query,

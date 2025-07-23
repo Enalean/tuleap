@@ -44,6 +44,7 @@ final class LabelsUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private Labelable&MockObject $item;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->item = $this->createMock(\Tuleap\Label\Labelable::class);

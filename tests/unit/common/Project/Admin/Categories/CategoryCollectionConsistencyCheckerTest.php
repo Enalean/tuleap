@@ -35,6 +35,7 @@ class CategoryCollectionConsistencyCheckerTest extends TestCase
      */
     private $trove_cat_factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

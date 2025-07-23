@@ -28,11 +28,13 @@ namespace Tuleap\Config;
  */
 final class GetConfigKeysValueValidator implements ValueValidator
 {
+    #[\Override]
     public static function buildSelf(): self
     {
         return new self();
     }
 
+    #[\Override]
     public function checkIsValid(string $value): void
     {
     }

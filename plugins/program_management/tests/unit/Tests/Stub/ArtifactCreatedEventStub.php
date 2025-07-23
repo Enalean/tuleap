@@ -61,26 +61,31 @@ final class ArtifactCreatedEventStub implements ArtifactCreatedEvent
         );
     }
 
+    #[\Override]
     public function getArtifact(): ArtifactIdentifier
     {
         return $this->artifact;
     }
 
+    #[\Override]
     public function getTracker(): TrackerIdentifier
     {
         return $this->tracker;
     }
 
+    #[\Override]
     public function getUser(): UserIdentifier
     {
         return $this->user;
     }
 
+    #[\Override]
     public function getChangeset(): ChangesetIdentifier
     {
         return $this->changeset;
     }
 
+    #[\Override]
     public function getOldChangeset(): ChangesetIdentifier
     {
         return $this->changeset;

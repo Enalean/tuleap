@@ -32,6 +32,7 @@ final class DownloadURLBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     private PFUser&\PHPUnit\Framework\MockObject\Stub $user;
     private DownloadURLBuilder $download_url_builder;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

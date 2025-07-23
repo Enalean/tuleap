@@ -39,6 +39,7 @@ final class ForceLoginStub implements ForceLogin
         return new self();
     }
 
+    #[\Override]
     public function forceLogin(string $name): PFUser
     {
         $this->forced = true;

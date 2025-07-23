@@ -37,6 +37,7 @@ final class OnlyOfficeSaveCallbackURLGeneratorTest extends TestCase
 {
     use ForgeConfigSandbox;
 
+    #[\Override]
     protected function setUp(): void
     {
         \ForgeConfig::set('sys_default_domain', 'example.com');
@@ -46,6 +47,7 @@ final class OnlyOfficeSaveCallbackURLGeneratorTest extends TestCase
     {
         $generated_url = self::generateCallbackURL(
             new class implements OnlyOfficeSaveDocumentTokenGenerator {
+                #[\Override]
                 public function generateSaveToken(
                     \PFUser $user,
                     OnlyOfficeDocument $document,
@@ -63,6 +65,7 @@ final class OnlyOfficeSaveCallbackURLGeneratorTest extends TestCase
     {
         $generated_url = self::generateCallbackURL(
             new class implements OnlyOfficeSaveDocumentTokenGenerator {
+                #[\Override]
                 public function generateSaveToken(
                     \PFUser $user,
                     OnlyOfficeDocument $document,

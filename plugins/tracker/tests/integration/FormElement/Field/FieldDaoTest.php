@@ -32,6 +32,7 @@ final class FieldDaoTest extends TestIntegrationTestCase
     private const SCOPE      = 'P';
     private FieldDao $field_dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->field_dao = new FieldDao();

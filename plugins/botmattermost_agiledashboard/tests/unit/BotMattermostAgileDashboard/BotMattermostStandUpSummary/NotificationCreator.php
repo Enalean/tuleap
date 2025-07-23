@@ -36,6 +36,7 @@ final class NotificationCreatorTest extends TestCase
      */
     private $dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao = $this->createMock(Dao::class);

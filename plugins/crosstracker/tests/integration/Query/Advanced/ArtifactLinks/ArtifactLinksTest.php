@@ -44,6 +44,7 @@ final class ArtifactLinksTest extends CrossTrackerFieldTestCase
     private array $epics_with_children_ids;
     private int $id_that_does_not_match_any_artifact;
 
+    #[\Override]
     protected function setUp(): void
     {
         $db              = DBFactory::getMainTuleapDBConnection()->getDB();

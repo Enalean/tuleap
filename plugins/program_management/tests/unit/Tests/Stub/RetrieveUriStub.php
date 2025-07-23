@@ -41,6 +41,7 @@ final class RetrieveUriStub implements \Tuleap\ProgramManagement\Domain\Program\
         return new self('/plugins/tracker/?aid=' . $id);
     }
 
+    #[\Override]
     public function getUri(TimeboxIdentifier $timebox_identifier): string
     {
         return $this->uri;

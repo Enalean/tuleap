@@ -41,6 +41,7 @@ final class GitlabRepositoryIntegrationDaoTest extends TestIntegrationTestCase
     private GitlabRepositoryIntegrationDao $repository_dao;
     private GroupLinkRepositoryIntegrationDAO $group_repositories_dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->repository_dao         = new GitlabRepositoryIntegrationDao();

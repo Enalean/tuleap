@@ -31,6 +31,7 @@ use Tuleap\NeverThrow\Result;
 final class LegacyMediawikiCreateMissingUsersStub implements LegacyMediawikiCreateMissingUsers
 {
     public bool $was_called = false;
+    #[\Override]
     public function create(LoggerInterface $logger, \Project $project, string $db_prefix): Ok|Err
     {
         $this->was_called = true;

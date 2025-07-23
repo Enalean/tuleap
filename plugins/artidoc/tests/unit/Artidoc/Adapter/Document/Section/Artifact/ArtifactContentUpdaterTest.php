@@ -63,6 +63,7 @@ final class ArtifactContentUpdaterTest extends TestCase
     private TextField $readonly_description_field;
     private TextField $updatable_description_field;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user = UserTestBuilder::buildWithDefaults();

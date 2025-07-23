@@ -35,6 +35,7 @@ final class RemovePlannedFeaturesFromTopBacklogStub implements RemovePlannedFeat
         return new self(0);
     }
 
+    #[\Override]
     public function removeFeaturesPlannedInAProgramIncrementFromTopBacklog(int $potential_program_increment_id): void
     {
         $this->call_count++;

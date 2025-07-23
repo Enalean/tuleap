@@ -70,6 +70,7 @@ class PostPushCommitBotCommenterTest extends \Tuleap\Test\PHPUnit\TestCase
     private TemplateRendererFactory $template_factory;
     private PostPushCommitBotCommenter $commenter;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

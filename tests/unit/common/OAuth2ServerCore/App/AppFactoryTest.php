@@ -38,6 +38,7 @@ final class AppFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $project_manager;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->app_retriever   = $this->createMock(RetrieveAppMatchingClientID::class);

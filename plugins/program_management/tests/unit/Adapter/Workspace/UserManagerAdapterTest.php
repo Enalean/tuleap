@@ -35,6 +35,7 @@ final class UserManagerAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $user_manager;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user_manager = $this->createStub(\UserManager::class);

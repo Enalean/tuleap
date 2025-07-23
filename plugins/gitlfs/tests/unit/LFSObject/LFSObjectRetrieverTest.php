@@ -25,6 +25,7 @@ final class LFSObjectRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private LFSObjectDAO&\PHPUnit\Framework\MockObject\MockObject $dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao = $this->createMock(LFSObjectDAO::class);

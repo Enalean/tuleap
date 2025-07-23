@@ -359,6 +359,7 @@ class ListOfSearchCriterionPresenterBuilderTest extends TestCase
 
         $criteria = (new ListOfSearchCriterionPresenterBuilder(
             new class implements IRetrieveCriteria {
+                #[\Override]
                 public function searchByProjectId(int $project_id): array
                 {
                     return ['id', 'filename'];
@@ -402,6 +403,7 @@ class ListOfSearchCriterionPresenterBuilderTest extends TestCase
 
         $criteria = (new ListOfSearchCriterionPresenterBuilder(
             new class implements IRetrieveCriteria {
+                #[\Override]
                 public function searchByProjectId(int $project_id): array
                 {
                     return [];

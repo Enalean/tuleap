@@ -28,6 +28,7 @@ class BannerPermissionsCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private BannerPermissionsChecker $banner_permissions_checker;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->banner_permissions_checker = new BannerPermissionsChecker();

@@ -30,6 +30,7 @@ final class UserInfoResponseRepresentationTest extends \Tuleap\Test\PHPUnit\Test
 {
     use ForgeConfigSandbox;
 
+    #[\Override]
     protected function setUp(): void
     {
         \ForgeConfig::set('sys_default_domain', 'tuleap.example.com');

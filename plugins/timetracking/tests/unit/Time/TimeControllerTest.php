@@ -58,6 +58,7 @@ final class TimeControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     private $artifact;
     private CSRFSynchronizerTokenStub $csrf;
 
+    #[\Override]
     public function setUp(): void
     {
         parent::setUp();

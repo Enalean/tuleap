@@ -31,6 +31,7 @@ final class CommentSearcherStub implements CommentSearcher
     {
     }
 
+    #[\Override]
     public function searchByCommentID(int $comment_id): ?array
     {
         return $this->row;

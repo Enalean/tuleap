@@ -45,6 +45,7 @@ final class UserAccessKeyRepresentationRetrieverTest extends \Tuleap\Test\PHPUni
      */
     private $representation_retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->access_key_header_extractor = $this->createMock(AccessKeyHeaderExtractor::class);

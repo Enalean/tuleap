@@ -44,6 +44,7 @@ final class UserInfoControllerTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $controller;
 
+    #[\Override]
     protected function setUp(): void
     {
         \ForgeConfig::set('sys_default_domain', 'tuleap.example.com');

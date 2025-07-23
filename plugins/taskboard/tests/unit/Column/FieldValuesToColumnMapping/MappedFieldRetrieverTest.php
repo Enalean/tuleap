@@ -40,6 +40,7 @@ final class MappedFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     private \Tuleap\Tracker\Tracker $user_stories_tracker;
     private TaskboardTracker $taskboard_tracker;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->status_retriever     = $this->createMock(

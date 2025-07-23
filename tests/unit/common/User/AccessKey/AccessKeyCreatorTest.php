@@ -57,6 +57,7 @@ final class AccessKeyCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     private $notifier;
     private AccessKeyCreator $access_key_creator;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

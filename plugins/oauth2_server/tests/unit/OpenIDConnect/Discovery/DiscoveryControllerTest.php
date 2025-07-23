@@ -42,6 +42,7 @@ final class DiscoveryControllerTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $representation_builder;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->representation_builder = $this->createMock(ConfigurationResponseRepresentationBuilder::class);

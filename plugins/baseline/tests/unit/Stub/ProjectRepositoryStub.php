@@ -37,6 +37,7 @@ class ProjectRepositoryStub implements ProjectRepository
         $this->projects[] = $project;
     }
 
+    #[\Override]
     public function findById(UserIdentifier $current_user, int $id): ?ProjectIdentifier
     {
         $matching_projects = array_filter(

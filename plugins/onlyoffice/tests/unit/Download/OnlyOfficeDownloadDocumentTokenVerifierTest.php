@@ -39,6 +39,7 @@ final class OnlyOfficeDownloadDocumentTokenVerifierTest extends TestCase
     private SplitTokenVerificationStringHasher $hasher;
     private OnlyOfficeDownloadDocumentTokenVerifier $token_verifier;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao            = $this->createMock(OnlyOfficeDownloadDocumentTokenDAO::class);

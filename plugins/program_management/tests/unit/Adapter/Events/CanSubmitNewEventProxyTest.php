@@ -34,6 +34,7 @@ final class CanSubmitNewEventProxyTest extends TestCase
 {
     private CanSubmitNewArtifact $event;
 
+    #[\Override]
     protected function setUp(): void
     {
         $user    = UserTestBuilder::aUser()->build();

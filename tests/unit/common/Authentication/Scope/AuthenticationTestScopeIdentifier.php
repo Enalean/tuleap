@@ -34,11 +34,13 @@ final class AuthenticationTestScopeIdentifier implements AuthenticationScopeIden
         $this->identifier = $identifier;
     }
 
+    #[\Override]
     public static function fromIdentifierKey(string $identifier_key): AuthenticationScopeIdentifier
     {
         return new self($identifier_key);
     }
 
+    #[\Override]
     public function toString(): string
     {
         return $this->identifier;

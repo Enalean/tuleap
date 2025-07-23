@@ -49,6 +49,7 @@ final class BuildMessagesForAdminsTest extends TestCase
     private Tracker_Artifact_Changeset $changeset;
     private Artifact $artifact;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->mail_gateway_config       = $this->createMock(MailGatewayConfig::class);

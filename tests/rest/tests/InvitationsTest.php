@@ -32,6 +32,7 @@ class InvitationsTest extends \RestBase
 
     private TuleapConfig $tuleap_config;
 
+    #[\Override]
     public function setUp(): void
     {
         parent::setUp();

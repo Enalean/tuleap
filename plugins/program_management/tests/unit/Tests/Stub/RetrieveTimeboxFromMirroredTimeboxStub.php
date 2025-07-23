@@ -40,6 +40,7 @@ final class RetrieveTimeboxFromMirroredTimeboxStub implements RetrieveTimeboxFro
         return new self(null);
     }
 
+    #[\Override]
     public function getTimeboxFromMirroredTimeboxId(int $mirrored_timebox_id): ?int
     {
         return $this->timebox_id;

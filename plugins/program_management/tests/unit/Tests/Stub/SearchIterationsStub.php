@@ -31,6 +31,7 @@ final class SearchIterationsStub implements SearchIterations
     {
     }
 
+    #[\Override]
     public function searchIterations(ProgramIncrementIdentifier $program_increment): array
     {
         return $this->iterations;

@@ -47,6 +47,7 @@ final class ProjectIdentifierStub implements ProjectIdentifier
         return new self($id);
     }
 
+    #[\Override]
     public function getId(): int
     {
         return $this->project_id;

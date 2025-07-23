@@ -37,6 +37,7 @@ final class CheckBeforeMoveStub implements CheckBeforeMove
         return new self();
     }
 
+    #[\Override]
     public function check(Tracker $source_tracker, Tracker $target_tracker, \PFUser $user, Artifact $artifact, MoveArtifactActionAllowedByPluginRetriever $event): void
     {
         $this->call_count++;

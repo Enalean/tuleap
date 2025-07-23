@@ -28,6 +28,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\UserStory\UserStoryIdentifie
 
 final class RetrieveUserStoryURIStub implements RetrieveUserStoryURI
 {
+    #[\Override]
     public function getUserStoryURI(UserStoryIdentifier $user_story_identifier): string
     {
         return sprintf('/plugins/tracker/?aid=%d', $user_story_identifier->getId());

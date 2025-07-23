@@ -43,6 +43,7 @@ final class VerifyIsTeamStub implements VerifyIsTeam
         return new self(false);
     }
 
+    #[\Override]
     public function isATeam(int $project_id): bool
     {
         return $this->is_valid;

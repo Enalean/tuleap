@@ -36,6 +36,7 @@ final class ProjectManagerGetValidProjectTest extends \Tuleap\Test\PHPUnit\TestC
     private \ProjectDao&MockObject $dao;
     private ProjectManager $project_manager;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

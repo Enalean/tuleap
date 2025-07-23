@@ -40,6 +40,7 @@ final class MappingTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $collection;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

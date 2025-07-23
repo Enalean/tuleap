@@ -39,6 +39,7 @@ final class UpdateCategoriesProcessorTest extends TestCase
      */
     private $updater;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -62,6 +63,7 @@ final class UpdateCategoriesProcessorTest extends TestCase
 
         $exception = new class extends ProjectCategoriesException
         {
+            #[\Override]
             public function getI18NMessage(): string
             {
                 return '';

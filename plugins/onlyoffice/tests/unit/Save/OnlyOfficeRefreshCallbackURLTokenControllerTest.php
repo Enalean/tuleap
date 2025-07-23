@@ -79,6 +79,7 @@ final class OnlyOfficeRefreshCallbackURLTokenControllerTest extends TestCase
                 {
                 }
 
+                #[\Override]
                 public function refreshToken(ConcealedString $raw_save_token, \DateTimeImmutable $now): Ok|Err
                 {
                     return $this->token_refresher_return_value;

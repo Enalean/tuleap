@@ -40,6 +40,7 @@ final class RetrieveVisibleProgramIncrementTrackerStub implements RetrieveVisibl
         $this->is_visible = $is_visible;
     }
 
+    #[\Override]
     public function retrieveVisibleProgramIncrementTracker(ProgramIdentifier $program, UserIdentifier $user_identifier): TrackerReference
     {
         if (! $this->is_visible) {

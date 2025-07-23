@@ -37,6 +37,7 @@ final class SystemEventProcessManagerTest extends TestCase
     private SystemEventProcess&MockObject $process;
     private LockFactory $lock_factory;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->process = $this->createMock(SystemEventProcess::class);

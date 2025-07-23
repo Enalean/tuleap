@@ -54,6 +54,7 @@ final class GraphOnTrackerV5RendererTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $chart_factory;
 
+    #[\Override]
     public function setUp(): void
     {
         $report                     = $this->createMock(Tracker_Report::class);

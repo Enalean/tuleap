@@ -31,6 +31,7 @@ class ProjectLabelRequestDataValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $request;
 
+    #[\Override]
     public function setUp(): void
     {
         parent::setUp();

@@ -43,6 +43,7 @@ final class InvitationPurgerStub implements InvitationPurger
         return new self($purged_invitations);
     }
 
+    #[\Override]
     public function purgeObsoleteInvitations(\DateTimeImmutable $today, int $nb_days): array
     {
         $this->has_been_called = true;

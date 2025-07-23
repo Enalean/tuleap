@@ -31,6 +31,7 @@ final class VersionPresenterTest extends \Tuleap\Test\PHPUnit\TestCase
         $version = VersionPresenter::fromFlavorFinder(
             new class implements FlavorFinder
             {
+                #[\Override]
                 public function isEnterprise(): bool
                 {
                     return true;
@@ -52,6 +53,7 @@ final class VersionPresenterTest extends \Tuleap\Test\PHPUnit\TestCase
         $version = VersionPresenter::fromFlavorFinder(
             new class implements FlavorFinder
             {
+                #[\Override]
                 public function isEnterprise(): bool
                 {
                     return false;

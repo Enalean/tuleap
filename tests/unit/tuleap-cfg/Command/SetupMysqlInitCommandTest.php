@@ -40,6 +40,7 @@ final class SetupMysqlInitCommandTest extends \Tuleap\Test\PHPUnit\TestCase
     private CommandTester $command_tester;
     private TestDBWrapper $db_wrapper;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->base_dir = vfsStream::setup()->url();
@@ -58,6 +59,7 @@ final class SetupMysqlInitCommandTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         putenv('TULEAP_DB_SSL_MODE');

@@ -30,6 +30,7 @@ final class UserDashboardRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     private \PFUser $user_with_a_dashboard;
     private UserDashboardRetriever $user_retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         $dao = $this->createMock(\Tuleap\Dashboard\User\UserDashboardDao::class);

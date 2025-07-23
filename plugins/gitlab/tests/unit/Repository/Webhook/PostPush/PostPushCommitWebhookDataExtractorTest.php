@@ -32,6 +32,7 @@ class PostPushCommitWebhookDataExtractorTest extends \Tuleap\Test\PHPUnit\TestCa
      */
     private $extractor;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

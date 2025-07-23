@@ -38,6 +38,7 @@ final class SubmittedValueConvertorTest extends TestCase
     private SubmittedValueConvertor $convertor;
     private ArtifactLinkChangesetValue $previous_changesetvalue;
 
+    #[\Override]
     protected function setUp(): void
     {
         $tracker = TrackerTestBuilder::aTracker()->build();

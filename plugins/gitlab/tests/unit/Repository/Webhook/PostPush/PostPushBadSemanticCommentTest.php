@@ -32,6 +32,7 @@ final class PostPushBadSemanticCommentTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private UserName $committer_username;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->committer_username = UserName::fromUsername(self::USERNAME);

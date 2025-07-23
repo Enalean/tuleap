@@ -42,6 +42,7 @@ final class RetrieveProgramOfIterationStub implements RetrieveProgramOfIteration
         return new self(null);
     }
 
+    #[\Override]
     public function getProgramOfIteration(IterationIdentifier $iteration): int
     {
         if ($this->program_id === null) {

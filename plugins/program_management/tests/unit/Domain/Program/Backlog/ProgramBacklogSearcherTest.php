@@ -53,6 +53,7 @@ final class ProgramBacklogSearcherTest extends \Tuleap\Test\PHPUnit\TestCase
     private const BASE_URI              = '/plugins/tracker/?aid=';
     private SearchPlannableFeaturesStub $features_searcher;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->features_searcher = SearchPlannableFeaturesStub::withFeatureIds(self::BUG_ID, self::USER_STORY_ID);

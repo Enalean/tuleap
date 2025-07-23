@@ -48,6 +48,7 @@ final class DeleteSourceControllerTest extends TestCase
 {
     public FeedbackSerializerStub $serializer;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->serializer = FeedbackSerializerStub::buildSelf();

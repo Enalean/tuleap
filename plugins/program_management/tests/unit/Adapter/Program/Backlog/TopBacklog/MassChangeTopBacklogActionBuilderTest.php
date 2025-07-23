@@ -41,6 +41,7 @@ final class MassChangeTopBacklogActionBuilderTest extends \Tuleap\Test\PHPUnit\T
     private VerifyIsPlannable $verify_is_plannable;
     private VerifyPrioritizeFeaturesPermissionStub $prioritize_verifier;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->build_program       = BuildProgramStub::stubValidProgram();
@@ -61,6 +62,7 @@ final class MassChangeTopBacklogActionBuilderTest extends \Tuleap\Test\PHPUnit\T
             $this->prioritize_verifier,
             $this->verify_is_plannable,
             new class extends \TemplateRenderer {
+                #[\Override]
                 public function renderToString($template_name, $presenter): string
                 {
                     return 'Rendered template';

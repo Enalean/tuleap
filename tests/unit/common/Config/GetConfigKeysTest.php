@@ -26,11 +26,13 @@ namespace Tuleap\Config;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GetConfigKeysTest extends \Tuleap\Test\PHPUnit\TestCase
 {
+    #[\Override]
     protected function setUp(): void
     {
         \PluginManager::setInstance($this->createMock(\PluginManager::class));
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         \PluginManager::clearInstance();

@@ -47,6 +47,7 @@ final class ProgramIncrementCreationEventHandlerTest extends \Tuleap\Test\PHPUni
     private ProcessProgramIncrementCreationStub $processor;
     private ProgramIncrementCreationEventStub $event;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->logger                     = new TestLogger();

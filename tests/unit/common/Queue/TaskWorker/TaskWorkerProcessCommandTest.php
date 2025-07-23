@@ -37,6 +37,7 @@ final class TaskWorkerProcessCommandTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private vfsStreamDirectory $filesystem_root;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->filesystem_root = vfsStream::setup();

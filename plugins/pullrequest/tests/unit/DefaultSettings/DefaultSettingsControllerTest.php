@@ -49,6 +49,7 @@ final class DefaultSettingsControllerTest extends TestCase
     private MockObject&MergeSettingDAO $merge_setting_dao;
     private ProjectHistoryDao&MockObject $project_history_dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->admin_verifier = VerifyUserIsGitAdministratorStub::withAlwaysGitAdministrator();

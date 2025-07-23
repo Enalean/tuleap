@@ -50,6 +50,7 @@ final class RetrieveMirroredProgramIncrementFromTeamStub implements RetrieveMirr
         return new self(true, []);
     }
 
+    #[\Override]
     public function getMirrorId(ProgramIncrementIdentifier $program_increment, TeamIdentifier $team): ?int
     {
         if ($this->should_return_null) {

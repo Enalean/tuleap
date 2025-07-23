@@ -56,6 +56,7 @@ final class PullRequestUpdatedNotificationToProcessBuilderTest extends \Tuleap\T
     private SearchPullRequestStub $pull_request_dao;
     private PFUser $change_user;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->pull_request_dao       = SearchPullRequestStub::withAtLeastOnePullRequest(PullRequestTestBuilder::aPullRequestInReview()->build());

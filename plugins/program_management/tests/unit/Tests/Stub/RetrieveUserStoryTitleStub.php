@@ -46,6 +46,7 @@ final class RetrieveUserStoryTitleStub implements RetrieveUserStoryTitle
         return new self([$first_title, ...$other_titles]);
     }
 
+    #[\Override]
     public function getUserStoryTitle(UserStoryIdentifier $user_story_identifier, UserIdentifier $user_identifier): ?string
     {
         if (count($this->titles) > 0) {

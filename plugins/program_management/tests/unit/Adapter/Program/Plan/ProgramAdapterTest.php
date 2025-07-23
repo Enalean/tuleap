@@ -45,6 +45,7 @@ final class ProgramAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
     private CheckProjectAccessStub $project_access_checker;
     private VerifyIsProjectAProgramOrUsedInPlanStub $verify_is_program_in_administration;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->project_access_checker              = CheckProjectAccessStub::withValidAccess();

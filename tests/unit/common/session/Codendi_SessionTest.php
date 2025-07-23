@@ -32,6 +32,7 @@ class Codendi_SessionTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
      */
     private $codendi_session;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->pseudo_php_session                        = [];

@@ -33,6 +33,7 @@ final class VerifyIsIterationStub implements VerifyIsIteration
         $this->is_valid = $is_valid;
     }
 
+    #[\Override]
     public function isIteration(int $artifact_id): bool
     {
         return $this->is_valid;

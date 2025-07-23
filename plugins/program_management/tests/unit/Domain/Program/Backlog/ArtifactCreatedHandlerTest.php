@@ -36,6 +36,7 @@ final class ArtifactCreatedHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
     private VerifyIsProgramIncrementTrackerStub $program_increment_verifier;
     private DispatchProgramIncrementCreationStub $creation_dispatcher;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->event = ArtifactCreatedEventStub::withIds(1, 15, 1001, 21);

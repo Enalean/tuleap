@@ -43,6 +43,7 @@ final class ArtifactCollectionFormatterTest extends TestCase
 {
     private ArtifactCollectionFormatter $formatter;
 
+    #[\Override]
     protected function setUp(): void
     {
         $html_purifier = $this->createStub(\Codendi_HTMLPurifier::class);

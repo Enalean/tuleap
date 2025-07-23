@@ -39,6 +39,7 @@ final class InitialChangesetValuesContainerTest extends \Tuleap\Test\PHPUnit\Tes
     private Option $artifact_links;
     private array $fields_data;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->fields_data    = [self::FIELD_ID => self::FIELD_VALUE];

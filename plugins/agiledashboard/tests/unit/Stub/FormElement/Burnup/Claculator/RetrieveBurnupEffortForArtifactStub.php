@@ -40,6 +40,7 @@ final class RetrieveBurnupEffortForArtifactStub implements RetrieveBurnupEffortF
         return new self($effort);
     }
 
+    #[\Override]
     public function getEffort(Artifact $artifact, int $timestamp): BurnupEffort
     {
         return $this->burnup_effort;

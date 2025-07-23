@@ -35,6 +35,7 @@ final class ZipArchiveTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private ZipArchive $archive;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->tmp_dir = $this->getTmpDir();
@@ -45,6 +46,7 @@ final class ZipArchiveTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         $this->archive->cleanUp();

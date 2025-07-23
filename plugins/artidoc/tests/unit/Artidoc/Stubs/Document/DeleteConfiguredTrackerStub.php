@@ -39,6 +39,7 @@ final class DeleteConfiguredTrackerStub implements DeleteConfiguredTracker
         return new self($callback);
     }
 
+    #[\Override]
     public function deleteConfiguredTracker(int $item_id): void
     {
         ($this->callback)($item_id);

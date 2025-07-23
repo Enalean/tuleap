@@ -50,6 +50,7 @@ final class CreateBranchButtonFetcherTest extends TestCase
     private CreateBranchButtonFetcher $fetcher;
     private JavascriptAsset $javascript_asset;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

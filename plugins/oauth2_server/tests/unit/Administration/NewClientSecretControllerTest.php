@@ -51,6 +51,7 @@ final class NewClientSecretControllerTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $controller;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->redirector            = $this->createMock(RedirectWithFeedbackFactory::class);

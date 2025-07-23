@@ -45,6 +45,7 @@ final class LogCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     private $project_job_dao;
     private DBTransactionExecutorPassthrough $transaction_executor;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

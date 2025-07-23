@@ -37,6 +37,7 @@ final class OAuth2AppProjectVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $project_verifier;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->app_dao          = $this->createMock(AppDao::class);

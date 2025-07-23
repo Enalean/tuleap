@@ -37,6 +37,7 @@ final class CreateInlineCommentStub implements \Tuleap\PullRequest\InlineComment
         return new self($inserted_id);
     }
 
+    #[\Override]
     public function insert(NewInlineComment $comment): int
     {
         $this->last_argument = $comment;

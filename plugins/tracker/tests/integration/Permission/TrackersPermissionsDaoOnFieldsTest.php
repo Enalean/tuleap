@@ -40,6 +40,7 @@ final class TrackersPermissionsDaoOnFieldsTest extends TestIntegrationTestCase
     private int $field1_id;
     private int $field3_id;
 
+    #[\Override]
     protected function setUp(): void
     {
         $db              = DBFactory::getMainTuleapDBConnection()->getDB();

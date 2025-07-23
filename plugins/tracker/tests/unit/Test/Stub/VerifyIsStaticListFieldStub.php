@@ -41,6 +41,7 @@ final class VerifyIsStaticListFieldStub implements VerifyIsStaticListField
         return new self(false);
     }
 
+    #[\Override]
     public function isStaticListField(Tracker_FormElement_Field $field): bool
     {
         return $this->is_single_static_list_field;

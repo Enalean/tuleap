@@ -39,6 +39,7 @@ final class RetrieveVisibleIterationTrackerStub implements RetrieveVisibleIterat
         $this->is_visible = $is_visible;
     }
 
+    #[\Override]
     public function retrieveVisibleIterationTracker(ProgramIdentifier $program, UserIdentifier $user_identifier): ?TrackerReference
     {
         if (! $this->is_visible) {

@@ -30,6 +30,7 @@ final class UserDashboardSaverTest extends \Tuleap\Test\PHPUnit\TestCase
     private \PFUser $user;
     private UserDashboardSaver $user_saver;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao  = $this->createMock(\Tuleap\Dashboard\User\UserDashboardDao::class);

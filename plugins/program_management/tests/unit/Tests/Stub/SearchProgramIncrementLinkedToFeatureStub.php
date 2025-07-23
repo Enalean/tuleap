@@ -41,6 +41,7 @@ final class SearchProgramIncrementLinkedToFeatureStub implements SearchProgramIn
         return new self([]);
     }
 
+    #[\Override]
     public function getProgramIncrementsLinkToFeatureId(int $artifact_id): array
     {
         return $this->program_increments;

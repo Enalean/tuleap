@@ -43,6 +43,7 @@ final class SaveFileUploadStub implements SaveFileUpload
         return new self(null);
     }
 
+    #[\Override]
     public function saveFileOnGoingUpload(InsertFileToUpload $file_to_upload): FileIdentifier
     {
         if ($this->identifier === null) {

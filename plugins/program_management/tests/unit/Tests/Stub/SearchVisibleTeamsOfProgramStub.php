@@ -56,6 +56,7 @@ final class SearchVisibleTeamsOfProgramStub implements SearchVisibleTeamsOfProgr
         return new self([], false, true);
     }
 
+    #[\Override]
     public function searchTeamIdsOfProgram(ProgramIdentifier $program, UserIdentifier $user): array
     {
         if ($this->has_no_team) {
@@ -67,6 +68,7 @@ final class SearchVisibleTeamsOfProgramStub implements SearchVisibleTeamsOfProgr
         return $this->team_ids;
     }
 
+    #[\Override]
     public function searchTeamWithIdInProgram(ProgramIdentifier $program, UserIdentifier $user, int $team_id): int
     {
         if ($this->has_no_team || ! in_array($team_id, $this->team_ids, true)) {

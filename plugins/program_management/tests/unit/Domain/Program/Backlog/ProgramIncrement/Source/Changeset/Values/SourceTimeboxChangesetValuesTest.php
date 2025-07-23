@@ -41,6 +41,7 @@ final class SourceTimeboxChangesetValuesTest extends \Tuleap\Test\PHPUnit\TestCa
     private const STATUS_VALUE                        = 'Ongoing';
     private GatherFieldValuesStub $values_gatherer;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->values_gatherer = GatherFieldValuesStub::withValues(

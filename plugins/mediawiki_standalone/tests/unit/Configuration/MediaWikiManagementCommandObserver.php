@@ -37,6 +37,7 @@ final class MediaWikiManagementCommandObserver implements MediaWikiManagementCom
     {
     }
 
+    #[\Override]
     public function wait(): Ok|Err
     {
         $this->has_been_waited_on = true;

@@ -45,6 +45,7 @@ final class OwnerRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     private $timeline_dao;
     private OwnerRetriever $owner_retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user_manager       = $this->createMock(UserManager::class);

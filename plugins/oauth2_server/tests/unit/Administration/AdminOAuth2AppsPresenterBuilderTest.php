@@ -45,6 +45,7 @@ final class AdminOAuth2AppsPresenterBuilderTest extends \Tuleap\Test\PHPUnit\Tes
      */
     private $app_factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->app_factory         = $this->createMock(AppFactory::class);

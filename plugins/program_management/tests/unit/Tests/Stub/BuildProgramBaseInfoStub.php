@@ -43,6 +43,7 @@ final class BuildProgramBaseInfoStub implements BuildProgramBaseInfo
         );
     }
 
+    #[\Override]
     public function build(ProgramIdentifier $program_identifier): ProgramBaseInfo
     {
         return $this->program_base_info;

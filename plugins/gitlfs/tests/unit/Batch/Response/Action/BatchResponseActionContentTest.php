@@ -31,6 +31,7 @@ final class BatchResponseActionContentTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testActionContentHasAnAuthenticationHeader(): void
     {
         $action_href            = new class implements BatchResponseActionHref {
+            #[\Override]
             public function getHref(): string
             {
                 return 'https://example.com/action';
@@ -38,6 +39,7 @@ final class BatchResponseActionContentTest extends \Tuleap\Test\PHPUnit\TestCase
         };
         $authorization_token    = new SplitToken(1, SplitTokenVerificationString::generateNewSplitTokenVerificationString());
         $token_header_formatter = new class implements SplitTokenFormatter {
+            #[\Override]
             public function getIdentifier(SplitToken $token): ConcealedString
             {
                 return new ConcealedString('identifier');

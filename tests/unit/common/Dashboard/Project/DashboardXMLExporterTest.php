@@ -44,6 +44,7 @@ class DashboardXMLExporterTest extends TestCase
                 /**
                  * @return ProjectDashboard[]
                  */
+                #[\Override]
                 public function getAllProjectDashboards(Project $project): array
                 {
                     return [];
@@ -68,6 +69,7 @@ class DashboardXMLExporterTest extends TestCase
                 /**
                  * @return ProjectDashboard[]
                  */
+                #[\Override]
                 public function getAllProjectDashboards(Project $project): array
                 {
                     return [
@@ -80,6 +82,7 @@ class DashboardXMLExporterTest extends TestCase
                 /**
                  * @return DashboardWidgetLine[]
                  */
+                #[\Override]
                 public function getAllWidgets(int $dashboard_id, string $dashboard_type): array
                 {
                     return [];
@@ -104,6 +107,7 @@ class DashboardXMLExporterTest extends TestCase
                 /**
                  * @return ProjectDashboard[]
                  */
+                #[\Override]
                 public function getAllProjectDashboards(Project $project): array
                 {
                     return [
@@ -115,6 +119,7 @@ class DashboardXMLExporterTest extends TestCase
                 /**
                  * @return DashboardWidgetLine[]
                  */
+                #[\Override]
                 public function getAllWidgets(int $dashboard_id, string $dashboard_type): array
                 {
                     return [
@@ -156,6 +161,7 @@ class DashboardXMLExporterTest extends TestCase
                 }
             },
             new class implements IBuildInstanceOfWidgets {
+                #[\Override]
                 public function getInstanceByWidgetName(string $widget_name): ?\Widget
                 {
                     if ($widget_name === 'projectmembers') {

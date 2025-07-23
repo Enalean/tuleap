@@ -37,6 +37,7 @@ final class WorkerEventProcessorStub implements WorkerEventProcessor
         return new self();
     }
 
+    #[\Override]
     public function process(): void
     {
         $this->processed = true;

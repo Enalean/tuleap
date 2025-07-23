@@ -33,6 +33,7 @@ final class VerifyIsProgramIncrementTrackerStub implements VerifyIsProgramIncrem
         $this->is_valid = $is_valid;
     }
 
+    #[\Override]
     public function isProgramIncrementTracker(int $tracker_id): bool
     {
         return $this->is_valid;

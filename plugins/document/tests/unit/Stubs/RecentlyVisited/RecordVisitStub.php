@@ -37,6 +37,7 @@ final class RecordVisitStub implements RecordVisit
         return new self();
     }
 
+    #[\Override]
     public function save(int $user_id, int $item_id, int $created_on): void
     {
         $this->saved = true;

@@ -68,6 +68,7 @@ final class JiraAgileImporterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testSprintTrackerCanBeModifiedByPlugins(): void
     {
         $dispatcher = new class implements EventDispatcherInterface {
+            #[\Override]
             public function dispatch(object $event): ScrumTrackerStructureEvent
             {
                 assert($event instanceof ScrumTrackerStructureEvent);
@@ -325,6 +326,7 @@ final class JiraAgileImporterTest extends \Tuleap\Test\PHPUnit\TestCase
                     $this->fetched_board = $fetched_board;
                 }
 
+                #[\Override]
                 public function getAllSprints(JiraBoard $board): array
                 {
                     assertSame($this->fetched_board, $board);
@@ -666,6 +668,7 @@ final class JiraAgileImporterTest extends \Tuleap\Test\PHPUnit\TestCase
                 $this->sprints = $sprints;
             }
 
+            #[\Override]
             public function getAllSprints(JiraBoard $board): array
             {
                 return $this->sprints;
@@ -692,6 +695,7 @@ final class JiraAgileImporterTest extends \Tuleap\Test\PHPUnit\TestCase
                 $this->issue_ids = $issue_ids;
             }
 
+            #[\Override]
             public function getArtifactLinkChange(JiraSprint $sprint): array
             {
                 $issues = [];
@@ -725,6 +729,7 @@ final class JiraAgileImporterTest extends \Tuleap\Test\PHPUnit\TestCase
                 $this->issue_ids = $issue_ids;
             }
 
+            #[\Override]
             public function getBoardBacklogIssues(JiraBoard $board): array
             {
                 $issues = [];

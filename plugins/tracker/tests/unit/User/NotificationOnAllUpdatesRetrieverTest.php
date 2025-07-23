@@ -32,6 +32,7 @@ final class NotificationOnAllUpdatesRetrieverTest extends TestCase
     private const USER_ID = 121;
     private StoreUserPreferenceStub $dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao = new StoreUserPreferenceStub();

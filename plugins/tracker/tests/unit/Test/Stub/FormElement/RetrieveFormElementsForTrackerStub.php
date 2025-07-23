@@ -40,6 +40,7 @@ final class RetrieveFormElementsForTrackerStub implements \Tuleap\Tracker\FormEl
         return new self([$form_element, ...$other_elements]);
     }
 
+    #[\Override]
     public function getUsedFormElementForTracker(Tracker $tracker): array
     {
         return $this->elements;

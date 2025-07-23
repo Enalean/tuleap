@@ -34,6 +34,7 @@ final class IterationUpdateEventHandlerTest extends \Tuleap\Test\PHPUnit\TestCas
     private IterationUpdateEventHandler $iteration_update_event_handler;
     private ProcessIterationUpdateStub $processor;
 
+    #[\Override]
     protected function setUp(): void
     {
         $iteration_tracker_retriever = RetrieveIterationTrackerStub::withValidTracker(1);

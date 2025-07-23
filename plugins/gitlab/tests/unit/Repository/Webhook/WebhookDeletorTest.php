@@ -49,6 +49,7 @@ final class WebhookDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
     private Credentials $credentials;
     private WebhookDeletor $deletor;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao               = $this->createMock(WebhookDao::class);

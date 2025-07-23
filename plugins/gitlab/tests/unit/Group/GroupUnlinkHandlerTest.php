@@ -41,6 +41,7 @@ final class GroupUnlinkHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
     private const GROUP_LINK_ID = 29;
     private DeleteGroupLinkStub $group_link_deleter;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->group_link_deleter = DeleteGroupLinkStub::withCallCount();

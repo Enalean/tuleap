@@ -36,6 +36,7 @@ final readonly class RetrieveQueriesStub implements \Tuleap\CrossTracker\Query\R
     {
     }
 
+    #[\Override]
     public function searchQueryByUuid(string $uuid_hex): ?array
     {
         foreach ($this->queries as $row) {
@@ -46,6 +47,7 @@ final readonly class RetrieveQueriesStub implements \Tuleap\CrossTracker\Query\R
         return null;
     }
 
+    #[\Override]
     public function searchQueriesByWidgetId(int $widget_id): array
     {
         $result = [];

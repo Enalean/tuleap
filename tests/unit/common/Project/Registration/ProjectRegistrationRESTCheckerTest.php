@@ -49,6 +49,7 @@ final class ProjectRegistrationRESTCheckerTest extends TestCase
      */
     private $submitted_fields_collection_consistency_checker;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->category_collection_consistency_checker         = $this->createMock(CategoryCollectionConsistencyChecker::class);
@@ -143,6 +144,7 @@ final class ProjectRegistrationRESTCheckerTest extends TestCase
             ->willThrowException(
                 new class extends ProjectCategoriesException
                 {
+                    #[\Override]
                     public function getI18NMessage(): string
                     {
                         return '';
@@ -175,6 +177,7 @@ final class ProjectRegistrationRESTCheckerTest extends TestCase
 
         $submitted_fields_collection_consistency_checker = new class ($this->createMock(DescriptionFieldsFactory::class)) extends ProjectRegistrationSubmittedFieldsCollectionConsistencyChecker
         {
+            #[\Override]
             public function checkFieldConsistency(
                 ProjectRegistrationSubmittedFieldsCollection $field_collection,
                 ProjectRegistrationErrorsCollection $errors_collection,
@@ -182,6 +185,7 @@ final class ProjectRegistrationRESTCheckerTest extends TestCase
                 $errors_collection->addError(
                     new class extends \Exception implements RegistrationErrorException
                     {
+                        #[\Override]
                         public function getI18NMessage(): string
                         {
                             return '';
@@ -220,6 +224,7 @@ final class ProjectRegistrationRESTCheckerTest extends TestCase
             ->willThrowException(
                 new class extends ProjectCategoriesException
                 {
+                    #[\Override]
                     public function getI18NMessage(): string
                     {
                         return '';
@@ -229,6 +234,7 @@ final class ProjectRegistrationRESTCheckerTest extends TestCase
 
         $submitted_fields_collection_consistency_checker = new class ($this->createMock(DescriptionFieldsFactory::class)) extends ProjectRegistrationSubmittedFieldsCollectionConsistencyChecker
         {
+            #[\Override]
             public function checkFieldConsistency(
                 ProjectRegistrationSubmittedFieldsCollection $field_collection,
                 ProjectRegistrationErrorsCollection $errors_collection,
@@ -236,6 +242,7 @@ final class ProjectRegistrationRESTCheckerTest extends TestCase
                 $errors_collection->addError(
                     new class extends \Exception implements RegistrationErrorException
                     {
+                        #[\Override]
                         public function getI18NMessage(): string
                         {
                             return '';

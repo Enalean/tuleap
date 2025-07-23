@@ -38,6 +38,7 @@ final class EnsureUserCanManageProjectMembersStub implements EnsureUserCanManage
         return new self(false);
     }
 
+    #[\Override]
     public function checkUserCanManageProjectMembers(\PFUser $user, \Project $project): void
     {
         if (! $this->can_manage_members) {

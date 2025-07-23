@@ -50,9 +50,11 @@ final class DisplayKeysTokensControllerTest extends \Tuleap\Test\PHPUnit\TestCas
      */
     private $svn_token_handler;
 
+    #[\Override]
     public function setUp(): void
     {
         $event_manager                       = new class implements EventDispatcherInterface {
+            #[\Override]
             public function dispatch(object $event)
             {
                 return $event;
@@ -77,6 +79,7 @@ final class DisplayKeysTokensControllerTest extends \Tuleap\Test\PHPUnit\TestCas
         $_SESSION = [];
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         unset($_SESSION);

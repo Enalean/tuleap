@@ -51,6 +51,7 @@ final class DefaultBranchPushParserTest extends \Tuleap\Test\PHPUnit\TestCase
     private $git_repository;
     private RetrieveGitRepositoryStub $git_repository_retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->payload = [

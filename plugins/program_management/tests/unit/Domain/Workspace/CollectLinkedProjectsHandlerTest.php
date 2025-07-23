@@ -43,6 +43,7 @@ final class CollectLinkedProjectsHandlerTest extends TestCase
     private CollectLinkedProjects $original_event;
     private CheckProjectAccessStub $access_checker;
 
+    #[\Override]
     protected function setUp(): void
     {
         $source_project       = ProjectTestBuilder::aProject()->build();

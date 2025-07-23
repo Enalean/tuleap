@@ -44,6 +44,7 @@ final class FieldUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
     private ProjectDetailsDAO&MockObject $dao;
     private FieldUpdator $updater;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->default_project_visibility_retriever = new DefaultProjectVisibilityRetriever();

@@ -45,6 +45,7 @@ final class IValidateFormAndCreateUserStub implements IValidateFormAndCreateUser
     /**
      * @return Ok<PFUser>|Err<RegisterFormValidationIssue>|Err<null>
      */
+    #[\Override]
     public function process(\HTTPRequest $request, RegisterFormContext $context, string $mail_confirm_code): Ok|Err
     {
         return $this->user

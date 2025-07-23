@@ -43,6 +43,7 @@ final class RetrieveTrackersByProjectIdUserCanAdministrateStub implements Retrie
         return new self([$first_tracker, ...$other_trackers]);
     }
 
+    #[\Override]
     public function getTrackersByProjectIdUserCanAdministrate(int|string $project_id, PFUser $user): array
     {
         return $this->trackers;

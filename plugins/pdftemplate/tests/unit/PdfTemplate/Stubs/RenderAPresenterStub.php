@@ -43,6 +43,7 @@ final class RenderAPresenterStub implements RenderAPresenter
         return $this->called;
     }
 
+    #[\Override]
     public function renderAPresenter(
         BaseLayout $layout,
         \PFUser $user,

@@ -46,11 +46,13 @@ final class VerifyTrackerSemanticsStub implements VerifyTrackerSemantics
         return new self(true, false);
     }
 
+    #[\Override]
     public function hasTitleSemantic(int $tracker_id): bool
     {
         return $this->has_title_semantic;
     }
 
+    #[\Override]
     public function hasStatusSemantic(int $tracker_id): bool
     {
         return $this->has_status_semantic;

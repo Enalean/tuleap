@@ -115,31 +115,37 @@ final class GatherSynchronizedFieldsStub implements GatherSynchronizedFields
         );
     }
 
+    #[\Override]
     public function getTitleField(TrackerIdentifier $program_increment, ?ConfigurationErrorsCollector $errors_collector): TitleFieldReference
     {
         return $this->title_stub->getTitleField($program_increment, $errors_collector);
     }
 
+    #[\Override]
     public function getDescriptionField(TrackerIdentifier $program_increment): DescriptionFieldReference
     {
         return $this->description_stub->getDescriptionField($program_increment);
     }
 
+    #[\Override]
     public function getStatusField(TrackerIdentifier $program_increment): StatusFieldReference
     {
         return $this->status_stub->getStatusField($program_increment);
     }
 
+    #[\Override]
     public function getStartDateField(TrackerIdentifier $program_increment): StartDateFieldReference
     {
         return $this->start_date_stub->getStartDateField($program_increment);
     }
 
+    #[\Override]
     public function getEndPeriodField(TrackerIdentifier $tracker_identifier): EndDateFieldReference|DurationFieldReference
     {
         return $this->end_period_stub->getEndPeriodField($tracker_identifier);
     }
 
+    #[\Override]
     public function getArtifactLinkField(
         TrackerIdentifier $program_increment,
         ?ConfigurationErrorsCollector $errors_collector,

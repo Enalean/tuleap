@@ -38,6 +38,7 @@ final class FinishFileUploadPostActionStub implements FinishFileUploadPostAction
         return new self();
     }
 
+    #[\Override]
     public function process(int $project_id, string $filename, int $user_id): void
     {
         $this->processed_project_id = $project_id;

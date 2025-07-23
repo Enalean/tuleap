@@ -50,6 +50,7 @@ final class RetrieveProjectStub implements RetrieveProject
         return new self([]);
     }
 
+    #[\Override]
     public function getProjectWithId(int $project_id): ProjectIdentifier
     {
         if (count($this->projects) > 0) {

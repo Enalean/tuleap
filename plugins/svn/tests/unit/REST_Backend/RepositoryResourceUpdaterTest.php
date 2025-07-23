@@ -49,6 +49,7 @@ final class RepositoryResourceUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
     private RepositoryResourceUpdater $updater;
     private NotificationUpdateChecker&MockObject $notification_updater_checker;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

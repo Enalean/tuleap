@@ -37,6 +37,7 @@ final class BuildPlanningStub implements BuildPlanning
     {
     }
 
+    #[\Override]
     public function getRootPlanning(UserIdentifier $user_identifier, int $project_id): TeamPlanning
     {
         if ($this->valid_root_planning) {

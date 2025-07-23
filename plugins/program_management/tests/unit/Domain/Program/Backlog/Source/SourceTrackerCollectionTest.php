@@ -51,6 +51,7 @@ final class SourceTrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
     private TrackerCollection $team_trackers;
     private TrackerReference $timebox_tracker;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user    = UserIdentifierStub::buildGenericUser();

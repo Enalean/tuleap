@@ -41,6 +41,7 @@ final class FileSizeValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
     private FileSizeValidator $validator;
     private SvnRepository $repository;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

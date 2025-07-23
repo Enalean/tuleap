@@ -27,6 +27,7 @@ use Tuleap\CSRF\CSRFSigningKeyStorage;
 
 final readonly class CSRFSigningKeyStorageStub implements CSRFSigningKeyStorage
 {
+    #[\Override]
     public function getSigningKey(): ConcealedString
     {
         return new ConcealedString('FAKE_CSRF_SIGNING_KEY');

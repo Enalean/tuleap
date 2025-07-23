@@ -30,9 +30,8 @@ use Tuleap\GraphOnTrackersV5\DataAccess\GraphOnTrackersV5_InSessionChartSorter;
 
 require_once __DIR__ . '/bootstrap.php';
 
-//phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class GraphOnTrackersV5_InSessionChartSorterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class GraphOnTrackersV5_InSessionChartSorterTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /** @var GraphOnTrackersV5_Chart_Pie&\PHPUnit\Framework\MockObject\MockObject */
     private $pie;
@@ -51,6 +50,7 @@ final class GraphOnTrackersV5_InSessionChartSorterTest extends \Tuleap\Test\PHPU
 
     private GraphOnTrackersV5_InSessionChartSorter $sorter;
 
+    #[\Override]
     public function setUp(): void
     {
         parent::setUp();

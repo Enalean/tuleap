@@ -35,6 +35,7 @@ final class FeatureHasUserStoriesVerifierTest extends \Tuleap\Test\PHPUnit\TestC
     private SearchChildrenOfFeatureStub $search_children_of_feature;
     private VerifyUserStoryIsVisibleStub $visibility_verifier;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->search_children_of_feature = SearchChildrenOfFeatureStub::withUserStoryIds(

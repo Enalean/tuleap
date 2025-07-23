@@ -70,6 +70,7 @@ final class EmitterTest extends \Tuleap\Test\PHPUnit\TestCase
         $http_client   = new Client();
         $status_logger = new class implements StatusLogger {
             public bool $does_something_has_been_logged = false;
+            #[\Override]
             public function log(Webhook $webhook, $status): void
             {
                 $this->does_something_has_been_logged = true;
@@ -78,6 +79,7 @@ final class EmitterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $http_client->addException(
             new class extends \RuntimeException implements \Http\Client\Exception, \Psr\Http\Client\NetworkExceptionInterface {
+                #[\Override]
                 public function getRequest(): RequestInterface
                 {
                     return HTTPFactoryBuilder::requestFactory()->createRequest('POST', 'https://example.com/some_url');
@@ -98,6 +100,7 @@ final class EmitterTest extends \Tuleap\Test\PHPUnit\TestCase
     private static function buildPayload(): Payload
     {
         return new class implements Payload {
+            #[\Override]
             public function getPayload(): array
             {
                 return [];
@@ -108,11 +111,13 @@ final class EmitterTest extends \Tuleap\Test\PHPUnit\TestCase
     private static function buildWebhook(): Webhook
     {
         return new class implements Webhook {
+            #[\Override]
             public function getId(): int
             {
                 return 1;
             }
 
+            #[\Override]
             public function getUrl(): string
             {
                 return 'https://example.com/some_url';

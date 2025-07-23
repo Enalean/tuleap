@@ -33,6 +33,7 @@ class GenericProviderIssuerClaimValidatorTest extends \Tuleap\Test\PHPUnit\TestC
      */
     private $generic_issuer_claim_validator;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->generic_issuer_claim_validator = new GenericProviderIssuerClaimValidator();

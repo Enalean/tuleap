@@ -41,6 +41,7 @@ final class BuildUserGroupListFieldWithValueStub implements BuildUserGroupListWi
         return new self($callback);
     }
 
+    #[\Override]
     public function buildUserGroupsListFieldWithValue(ConfiguredField $configured_field, \Tracker_Artifact_ChangesetValue_List $changeset_value): UserGroupsListFieldWithValue
     {
         return ($this->callback)($configured_field);

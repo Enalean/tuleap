@@ -38,6 +38,7 @@ final class ProgramInheritanceMappingTest extends TestCase
     private array $user_group_mapping;
     private ProgramForAdministrationIdentifier $new_program;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->tracker_mapping    = [];

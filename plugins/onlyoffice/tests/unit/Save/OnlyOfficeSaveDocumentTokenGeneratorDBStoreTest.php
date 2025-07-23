@@ -42,6 +42,7 @@ final class OnlyOfficeSaveDocumentTokenGeneratorDBStoreTest extends TestCase
     private $dao;
     private OnlyOfficeSaveDocumentTokenGeneratorDBStore $token_generator;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao             = $this->createMock(OnlyOfficeSaveDocumentTokenDAO::class);

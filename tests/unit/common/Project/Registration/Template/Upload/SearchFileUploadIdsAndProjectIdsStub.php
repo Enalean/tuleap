@@ -28,6 +28,7 @@ final class SearchFileUploadIdsAndProjectIdsStub implements SearchFileUploadIdsA
     {
     }
 
+    #[\Override]
     public function searchFileOngoingUploadIdsAndProjectIds(): array
     {
         return $this->file_upload_ids;

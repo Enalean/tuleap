@@ -40,6 +40,7 @@ final class ReferenceFactoryTest extends TestCase
     private GitRepository&MockObject $repository;
     private SearchPullRequestStub $pull_request_dao;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->repository_factory  = $this->createMock(GitRepositoryFactory::class);

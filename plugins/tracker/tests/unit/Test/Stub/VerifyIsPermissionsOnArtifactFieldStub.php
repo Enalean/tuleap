@@ -40,6 +40,7 @@ final class VerifyIsPermissionsOnArtifactFieldStub implements VerifyIsPermission
         return new self(false);
     }
 
+    #[\Override]
     public function isPermissionsOnArtifactField(\Tracker_FormElement_Field $field): bool
     {
         return $this->is_permission_field;

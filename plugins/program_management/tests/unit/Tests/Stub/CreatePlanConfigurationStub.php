@@ -47,6 +47,7 @@ final class CreatePlanConfigurationStub implements CreatePlanConfiguration
     /**
      * @throws \Exception
      */
+    #[\Override]
     public function create(PlanConfigurationChange $plan_change): void
     {
         if ($this->will_throw_exception_on_plan_change_creation) {

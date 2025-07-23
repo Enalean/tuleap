@@ -35,6 +35,7 @@ final class ProjectFileUploadCancelerTest extends TestCase
     private DeleteFileUploadStub $dao;
     private ProjectFileUploadCanceler $canceler;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->path_allocator = new UploadPathAllocator(vfsStream::setup()->url() . '/project/ongoing-uploads');

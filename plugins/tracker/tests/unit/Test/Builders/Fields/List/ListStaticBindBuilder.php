@@ -106,6 +106,7 @@ final class ListStaticBindBuilder
             [],
             $this->decorators,
         ) extends Tracker_FormElement_Field_List_Bind_Static {
+            #[\Override]
             public function getQuerySelect(): string
             {
                 return 'Static_Bind' . $this->field->getId();

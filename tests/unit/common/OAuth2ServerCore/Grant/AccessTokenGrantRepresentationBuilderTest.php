@@ -55,6 +55,7 @@ final class AccessTokenGrantRepresentationBuilderTest extends \Tuleap\Test\PHPUn
      */
     private $builder;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->access_token_creator  = $this->createMock(OAuth2AccessTokenCreator::class);

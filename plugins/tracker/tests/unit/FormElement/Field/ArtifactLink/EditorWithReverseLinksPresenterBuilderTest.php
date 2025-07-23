@@ -51,6 +51,7 @@ final class EditorWithReverseLinksPresenterBuilderTest extends TestCase
     private SearchParentTrackerStub $search_parent_tracker;
     private RetrieveUserPermissionOnTrackersStub $tracker_permissions_retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->search_parent_tracker         = SearchParentTrackerStub::withParentTracker(self::PARENT_TRACKER_ID);

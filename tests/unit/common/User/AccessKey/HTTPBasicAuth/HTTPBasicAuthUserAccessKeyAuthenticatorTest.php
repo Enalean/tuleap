@@ -45,6 +45,7 @@ final class HTTPBasicAuthUserAccessKeyAuthenticatorTest extends \Tuleap\Test\PHP
     private $access_key_verifier;
     private HTTPBasicAuthUserAccessKeyAuthenticator $authenticator;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->access_key_identifier_unserializer = $this->createMock(SplitTokenIdentifierTranslator::class);

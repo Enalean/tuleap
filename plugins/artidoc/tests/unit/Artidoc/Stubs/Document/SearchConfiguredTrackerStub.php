@@ -40,6 +40,7 @@ final class SearchConfiguredTrackerStub implements SearchConfiguredTracker
         return new self(null);
     }
 
+    #[\Override]
     public function getTracker(int $item_id): ?int
     {
         return $this->tracker_id;

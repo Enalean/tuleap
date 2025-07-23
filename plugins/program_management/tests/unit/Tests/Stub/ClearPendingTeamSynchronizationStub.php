@@ -37,6 +37,7 @@ final class ClearPendingTeamSynchronizationStub implements ClearPendingTeamSynch
         return new self(0);
     }
 
+    #[\Override]
     public function clearPendingTeamSynchronisation(ProgramIdentifier $program_identifier, TeamIdentifier $team_identifier): void
     {
         $this->call_count++;

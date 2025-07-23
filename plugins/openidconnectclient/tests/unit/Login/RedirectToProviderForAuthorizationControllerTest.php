@@ -40,6 +40,7 @@ final class RedirectToProviderForAuthorizationControllerTest extends \Tuleap\Tes
     private \PHPUnit\Framework\MockObject\MockObject&ProviderManager $provider_manager;
     private AuthorizationRequestCreator&\PHPUnit\Framework\MockObject\MockObject $authorization_request_creator;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->provider_manager              = $this->createMock(ProviderManager::class);

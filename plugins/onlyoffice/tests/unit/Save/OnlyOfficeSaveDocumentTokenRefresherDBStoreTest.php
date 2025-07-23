@@ -91,6 +91,7 @@ final class OnlyOfficeSaveDocumentTokenRefresherDBStoreTest extends TestCase
                 {
                 }
 
+                #[\Override]
                 public function getSplitToken(ConcealedString $identifier): SplitToken
                 {
                     if ($this->split_token !== null) {

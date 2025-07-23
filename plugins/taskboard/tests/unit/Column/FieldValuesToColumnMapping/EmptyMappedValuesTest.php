@@ -27,6 +27,7 @@ final class EmptyMappedValuesTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private EmptyMappedValues $empty_mapped_values;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->empty_mapped_values = new EmptyMappedValues();

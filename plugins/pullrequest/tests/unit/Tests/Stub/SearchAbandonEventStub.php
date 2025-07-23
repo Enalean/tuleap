@@ -41,6 +41,7 @@ final class SearchAbandonEventStub implements SearchAbandonEvent
         return new self(null, null);
     }
 
+    #[\Override]
     public function searchAbandonEventForPullRequest(int $pull_request_id): ?array
     {
         if (! $this->user_id || ! $this->abandon_date_timestamp) {

@@ -32,6 +32,7 @@ class PaginatedArtifactDaoTest extends TestIntegrationTestCase
     private int $tasks_id;
     private int $bugs_id;
 
+    #[\Override]
     protected function setUp(): void
     {
         $db = DBFactory::getMainTuleapDBConnection()->getDB();

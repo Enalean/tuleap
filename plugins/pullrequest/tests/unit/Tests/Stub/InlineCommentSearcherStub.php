@@ -30,6 +30,7 @@ final class InlineCommentSearcherStub implements \Tuleap\PullRequest\InlineComme
     {
     }
 
+    #[\Override]
     public function searchByCommentID(int $inline_comment_id): ?array
     {
         return $this->row;

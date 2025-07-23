@@ -36,6 +36,7 @@ final class ActionAuthorizationVerifierTest extends \Tuleap\Test\PHPUnit\TestCas
     private \GitRepositoryFactory&\PHPUnit\Framework\MockObject\MockObject $repository_factory;
     private \DateTimeImmutable $current_time;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao                = $this->createMock(ActionAuthorizationDAO::class);

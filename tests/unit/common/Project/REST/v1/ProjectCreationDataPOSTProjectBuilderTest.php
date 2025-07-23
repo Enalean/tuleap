@@ -64,6 +64,7 @@ final class ProjectCreationDataPOSTProjectBuilderTest extends TestCase
      */
     private $from_xml_inheritor;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -150,36 +151,43 @@ final class ProjectCreationDataPOSTProjectBuilderTest extends TestCase
             ->willReturn(
                 new class implements \Tuleap\Project\Registration\Template\TuleapTemplate
                 {
+                    #[\Override]
                     public function getId(): string
                     {
                         return 'xmltemplate';
                     }
 
+                    #[\Override]
                     public function getTitle(): string
                     {
                         return 'XML Template';
                     }
 
+                    #[\Override]
                     public function getDescription(): string
                     {
                         return 'XML Template desc';
                     }
 
+                    #[\Override]
                     public function getGlyph(): Glyph
                     {
                         return new Glyph('');
                     }
 
+                    #[\Override]
                     public function isBuiltIn(): bool
                     {
                         return false;
                     }
 
+                    #[\Override]
                     public function getXMLPath(): string
                     {
                         return 'path/to/xml/template';
                     }
 
+                    #[\Override]
                     public function isAvailable(): bool
                     {
                         return true;

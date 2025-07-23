@@ -42,6 +42,7 @@ final class VerifyUserIsProgramAdminStub implements VerifyUserIsProgramAdmin
         return new self(false);
     }
 
+    #[\Override]
     public function isUserProgramAdmin(UserIdentifier $user_identifier, ProgramIdentifier $program_identifier): bool
     {
         return $this->is_user_program_admin;

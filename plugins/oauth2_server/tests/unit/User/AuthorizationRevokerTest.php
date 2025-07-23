@@ -42,6 +42,7 @@ final class AuthorizationRevokerTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $authorization_dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->auth_code_dao     = $this->createMock(OAuth2AuthorizationCodeDAO::class);

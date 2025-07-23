@@ -37,6 +37,7 @@ final class JustLinkedIterationCollectionTest extends \Tuleap\Test\PHPUnit\TestC
     private VerifyIterationHasBeenLinkedBeforeStub $link_verifier;
     private ProgramIncrementIdentifier $program_increment;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->program_increment = ProgramIncrementIdentifierBuilder::buildWithId(10);

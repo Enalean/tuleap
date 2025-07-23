@@ -54,6 +54,7 @@ final class RetrieveUserPermissionOnTrackersStub implements RetrieveUserPermissi
         return $this;
     }
 
+    #[\Override]
     public function retrieveUserPermissionOnTrackers(PFUser $user, array $trackers, TrackerPermissionType $permission): UserPermissionsOnItems
     {
         if (isset($this->has_permission_on[$permission->name])) {

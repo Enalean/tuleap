@@ -34,6 +34,7 @@ final class FileBeingUploadedLockerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private string $tmp_dir;
 
+    #[\Override]
     protected function setUp(): void
     {
         $path = sys_get_temp_dir() . '/' . bin2hex(random_bytes(8));
@@ -41,6 +42,7 @@ final class FileBeingUploadedLockerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->tmp_dir = $path;
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         $folders = new RecursiveIteratorIterator(

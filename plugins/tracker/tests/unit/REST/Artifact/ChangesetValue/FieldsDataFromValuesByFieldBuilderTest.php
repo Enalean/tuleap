@@ -57,6 +57,7 @@ final class FieldsDataFromValuesByFieldBuilderTest extends \Tuleap\Test\PHPUnit\
     private \Tuleap\Tracker\FormElement\Field\Text\TextField $text_field;
     private \Tuleap\Tracker\Tracker $tracker;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->tracker      = TrackerTestBuilder::aTracker()->withId(self::TRACKER_ID)->build();

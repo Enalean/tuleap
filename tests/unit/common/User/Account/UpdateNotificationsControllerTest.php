@@ -43,6 +43,7 @@ final class UpdateNotificationsControllerTest extends \Tuleap\Test\PHPUnit\TestC
      */
     private $csrf_token;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->user = $this->createMock(\PFUser::class);

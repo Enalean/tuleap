@@ -53,6 +53,7 @@ final class AppsPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $authorized_scope_factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dispatcher               = $this->createMock(EventDispatcherInterface::class);
@@ -140,11 +141,13 @@ final class AppsPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $foobar_scope      = $this->createMock(AuthenticationScope::class);
         $foobar_definition = new /** @psalm-immutable */ class implements AuthenticationScopeDefinition {
+            #[\Override]
             public function getName(): string
             {
                 return 'Foo Bar';
             }
 
+            #[\Override]
             public function getDescription(): string
             {
                 return 'Test scope';
@@ -158,11 +161,13 @@ final class AppsPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $typevalue_scope      = $this->createMock(AuthenticationScope::class);
         $typevalue_definition = new /** @psalm-immutable */ class implements AuthenticationScopeDefinition {
+            #[\Override]
             public function getName(): string
             {
                 return 'Type Value';
             }
 
+            #[\Override]
             public function getDescription(): string
             {
                 return 'Other test scope';

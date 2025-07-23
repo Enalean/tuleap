@@ -42,6 +42,7 @@ final readonly class RetrieveImageStub implements RetrieveImage
         return new self(null);
     }
 
+    #[\Override]
     public function retrieveImage(PdfTemplateImageIdentifier $identifier): ?PdfTemplateImage
     {
         return $this->image;

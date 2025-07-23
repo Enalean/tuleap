@@ -46,6 +46,7 @@ final class IndexControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     private JavascriptAssetGeneric $project_admin_assets;
     private JavascriptAssetGeneric $site_admin_assets;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user                 = UserTestBuilder::buildWithDefaults();
@@ -56,6 +57,7 @@ final class IndexControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $GLOBALS['Language']->method('getText')->willReturn('');
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         if (isset($GLOBALS['_SESSION'])) {

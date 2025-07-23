@@ -42,6 +42,7 @@ final class MatchPermissionsByDuckTypingStub implements MatchPermissionsByDuckTy
         return new self($user_groups_names);
     }
 
+    #[\Override]
     public function doesUserGroupExistsInDestinationField(Tracker_FormElement_Field_PermissionsOnArtifact $destination_field, string $user_group_name): bool
     {
         return in_array($user_group_name, $this->user_groups_names, true);

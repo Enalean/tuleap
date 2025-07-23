@@ -51,6 +51,7 @@ final class MemberRemovalControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     private ProjectMemberRemover&MockObject $project_member_remover;
     private \CSRFSynchronizerToken&MockObject $csrf;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->project_retriever      = $this->createMock(ProjectRetriever::class);

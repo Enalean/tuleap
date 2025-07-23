@@ -40,6 +40,7 @@ class ICountVersionsStub implements ICountVersions
         return new self(2);
     }
 
+    #[\Override]
     public function countByItemId(int $id): int
     {
         return $this->nb;

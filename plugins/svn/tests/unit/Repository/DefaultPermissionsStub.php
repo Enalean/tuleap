@@ -29,11 +29,13 @@ final class DefaultPermissionsStub implements DefaultPermissions
 {
     private array $store = [];
 
+    #[\Override]
     public function enableUseDefaultPermissions(Repository $repository): void
     {
         $this->store[$repository->getId()] = true;
     }
 
+    #[\Override]
     public function disableUseDefaultPermissions(Repository $repository): void
     {
         unset($this->store[$repository->getId()]);

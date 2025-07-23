@@ -118,6 +118,7 @@ final class OnlyOfficeSaveControllerTest extends TestCase
                 ) {
                 }
 
+                #[\Override]
                 public function parseCallbackResponseContent(
                     string $response_content,
                     SaveDocumentTokenData $save_token_information,
@@ -130,6 +131,7 @@ final class OnlyOfficeSaveControllerTest extends TestCase
                 {
                 }
 
+                #[\Override]
                 public function saveDocument(
                     SaveDocumentTokenData $save_token_information,
                     Option $optional_response_data,

@@ -38,6 +38,7 @@ final class AccessKeyDAOTest extends TestIntegrationTestCase
      */
     private $access_key_scope_dao;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->access_key_dao       = new AccessKeyDAO();

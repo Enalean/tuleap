@@ -23,11 +23,13 @@ class URLTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore
 {
     use \Tuleap\ForgeConfigSandbox;
 
+    #[\Override]
     protected function setUp(): void
     {
         ForgeConfig::set('sys_news_group', 46);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         unset($_REQUEST['forum_id'], $_REQUEST['artifact_id']);

@@ -36,6 +36,7 @@ final class RedirectUserAfterArtifactCreationOrUpdateEventProxyTest extends Test
     private Tracker_Artifact_Redirect $redirect;
     private RedirectAfterArtifactCreationOrUpdateEvent $event;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->redirect = new Tracker_Artifact_Redirect();

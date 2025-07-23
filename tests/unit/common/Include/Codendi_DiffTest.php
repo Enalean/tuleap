@@ -50,6 +50,7 @@ class Codendi_DiffTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
      */
     private array $g;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->a = ['Line 1', 'Line 2'];

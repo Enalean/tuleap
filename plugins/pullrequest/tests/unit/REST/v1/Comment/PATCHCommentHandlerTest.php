@@ -71,6 +71,7 @@ final class PATCHCommentHandlerTest extends TestCase
     private DateTimeImmutable $last_edition_date;
     private ExtractAndSaveCrossReferencesStub $cross_references_saver;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->comment_data = new CommentPATCHRepresentation(self::NEW_CONTENT);

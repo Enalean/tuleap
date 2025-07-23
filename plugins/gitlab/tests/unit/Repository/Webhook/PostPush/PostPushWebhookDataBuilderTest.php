@@ -32,6 +32,7 @@ class PostPushWebhookDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $builder;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

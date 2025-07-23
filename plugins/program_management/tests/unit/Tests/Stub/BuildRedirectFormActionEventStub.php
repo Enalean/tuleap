@@ -41,21 +41,25 @@ final class BuildRedirectFormActionEventStub implements BuildRedirectFormActionE
         return new self(0, 0, 0, 0);
     }
 
+    #[\Override]
     public function injectAndInformUserAboutUpdatingProgramItem(): void
     {
         $this->update_program_increment++;
     }
 
+    #[\Override]
     public function injectAndInformUserAboutCreatingIteration(IterationRedirectionParameters $iteration_redirection_parameters): void
     {
         $this->create_iteration++;
     }
 
+    #[\Override]
     public function injectAndInformUserAboutCreatingProgramIncrement(): void
     {
         $this->create_program_increment++;
     }
 
+    #[\Override]
     public function injectAndInformUserAboutUpdatingIteration(IterationRedirectionParameters $iteration_redirection_parameters): void
     {
         $this->update_iteration++;

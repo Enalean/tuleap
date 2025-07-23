@@ -36,6 +36,7 @@ final class CollectionOfReverseLinksTest extends TestCase
     /** @var ReverseLinkStub[] */
     private array $links;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->links = [

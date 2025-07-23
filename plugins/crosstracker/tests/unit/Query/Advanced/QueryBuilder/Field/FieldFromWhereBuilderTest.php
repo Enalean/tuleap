@@ -58,6 +58,7 @@ final class FieldFromWhereBuilderTest extends TestCase
     private \Tuleap\Tracker\Tracker $first_tracker;
     private \Tuleap\Tracker\Tracker $second_tracker;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user           = UserTestBuilder::buildWithId(133);

@@ -36,6 +36,7 @@ final class UserCanPrioritizeTest extends TestCase
     private UserIdentifierStub $user_identifier;
     private ProgramIdentifier $program_identifier;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user_identifier    = UserIdentifierStub::buildGenericUser();

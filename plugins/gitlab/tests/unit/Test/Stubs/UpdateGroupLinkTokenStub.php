@@ -44,6 +44,7 @@ final class UpdateGroupLinkTokenStub implements UpdateGroupLinkToken
         return $this->call_count;
     }
 
+    #[\Override]
     public function updateToken(GroupLink $group_link, ConcealedString $token): void
     {
         $this->call_count++;

@@ -38,6 +38,7 @@ final class RetrieveReportToFilterArtifactsStub implements \Tuleap\Roadmap\Retri
         return new self($report);
     }
 
+    #[\Override]
     public function getReportToFilterArtifacts(int $widget_id, \PFUser $user): ?\Tracker_Report
     {
         return $this->report;

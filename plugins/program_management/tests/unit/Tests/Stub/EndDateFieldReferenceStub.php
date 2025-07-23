@@ -43,11 +43,13 @@ final class EndDateFieldReferenceStub implements EndDateFieldReference
         return new self($id, 'End Date');
     }
 
+    #[\Override]
     public function getId(): int
     {
         return $this->id;
     }
 
+    #[\Override]
     public function getLabel(): string
     {
         return $this->label;

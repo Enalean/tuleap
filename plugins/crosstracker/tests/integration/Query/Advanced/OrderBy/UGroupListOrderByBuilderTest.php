@@ -45,6 +45,7 @@ final class UGroupListOrderByBuilderTest extends CrossTrackerFieldTestCase
     /** @var list<int> */
     private array $result_ascending;
 
+    #[\Override]
     protected function setUp(): void
     {
         $GLOBALS['Language'] = (new BaseLanguageFactory())->getBaseLanguage('en_US');

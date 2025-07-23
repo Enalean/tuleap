@@ -41,6 +41,7 @@ final class GroupLinkTokenRetrieverTest extends TestCase
     private $key_factory;
     private GetTokenByGroupLinkIdStub $get_token_by_group_id;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->key_factory = $this->createMock(KeyFactory::class);

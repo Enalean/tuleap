@@ -37,6 +37,7 @@ final class DeleteLogsPerTrackerStub implements DeleteLogsPerTracker
         return new self();
     }
 
+    #[\Override]
     public function deleteLogsPerTracker(int $tracker_id): void
     {
         $this->called = true;

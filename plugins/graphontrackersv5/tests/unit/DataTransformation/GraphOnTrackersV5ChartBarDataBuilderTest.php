@@ -43,6 +43,7 @@ final class GraphOnTrackersV5ChartBarDataBuilderTest extends TestCase
     private Tracker_FormElementFactory&MockObject $factory;
     private PFUser $user;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user = UserTestBuilder::buildWithId(101);

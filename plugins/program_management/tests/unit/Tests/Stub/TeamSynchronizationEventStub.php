@@ -35,16 +35,19 @@ final class TeamSynchronizationEventStub implements TeamSynchronizationEvent
         return new self($program_id, $team_id, $user_id);
     }
 
+    #[\Override]
     public function getProgramId(): int
     {
         return $this->program_id;
     }
 
+    #[\Override]
     public function getTeamId(): int
     {
         return $this->team_id;
     }
 
+    #[\Override]
     public function getUserId(): int
     {
         return $this->user_id;

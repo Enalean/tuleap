@@ -33,6 +33,7 @@ final class RetrieveGroupLinksCredentialsStub implements RetrieveGroupLinksCrede
     {
     }
 
+    #[\Override]
     public function retrieveCredentials(GroupLink $group_link): Credentials
     {
         return $this->credentials;

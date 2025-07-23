@@ -48,6 +48,7 @@ final class RetrieveArtidocStub implements RetrieveArtidoc
         return new self(Result::err(Fault::fromMessage('Not found')));
     }
 
+    #[\Override]
     public function retrieveArtidoc(int $id): Ok|Err
     {
         return $this->result;

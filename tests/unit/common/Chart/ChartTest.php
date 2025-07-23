@@ -35,6 +35,7 @@ namespace Tuleap\Chart {
         // See https://tools.ietf.org/html/rfc2083#section-12.11
         private const PNG_FILE_SIGNATURE = "\x89PNG\r\n\x1a\n";
 
+        #[\Override]
         protected function tearDown(): void
         {
             HTTPHeaderStack::clear();

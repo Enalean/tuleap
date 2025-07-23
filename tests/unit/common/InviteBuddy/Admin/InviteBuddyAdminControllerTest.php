@@ -38,6 +38,7 @@ final class InviteBuddyAdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     private \PHPUnit\Framework\MockObject\MockObject&InviteBuddyConfiguration $configuration;
     private CSRFSynchronizerTokenStub $csrf_token;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->admin_page_renderer = $this->createMock(AdminPageRenderer::class);

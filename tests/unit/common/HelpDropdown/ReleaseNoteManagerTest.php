@@ -43,6 +43,7 @@ class ReleaseNoteManagerTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $user_preferences_dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->release_note_dao     = $this->createMock(ReleaseLinkDao::class);

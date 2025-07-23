@@ -30,6 +30,7 @@ final class VerifyIsFeatureStub implements VerifyIsFeature
     {
     }
 
+    #[\Override]
     public function isFeature(int $potential_feature_id): bool
     {
         return $this->is_allowed;

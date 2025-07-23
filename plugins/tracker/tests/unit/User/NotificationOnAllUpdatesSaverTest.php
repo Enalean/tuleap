@@ -32,6 +32,7 @@ final class NotificationOnAllUpdatesSaverTest extends TestCase
     private const USER_ID = 164;
     private StoreUserPreferenceStub $store_preference;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->store_preference = new StoreUserPreferenceStub();

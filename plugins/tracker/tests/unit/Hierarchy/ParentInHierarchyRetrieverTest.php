@@ -34,6 +34,7 @@ final class ParentInHierarchyRetrieverTest extends TestCase
     private SearchParentTrackerStub $search_parent_tracker;
     private RetrieveTrackerStub $retrieve_tracker;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->parent_tracker = TrackerTestBuilder::aTracker()->withId(243)->withName('Parent Tracker')->build();

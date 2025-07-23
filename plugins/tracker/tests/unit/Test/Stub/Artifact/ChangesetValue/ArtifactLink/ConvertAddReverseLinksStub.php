@@ -55,6 +55,7 @@ final class ConvertAddReverseLinksStub implements ConvertAddReverseLinks
         return new self($expected_links_to_add, Result::err($fault));
     }
 
+    #[\Override]
     public function convertAddReverseLinks(AddReverseLinksCommand $command, \PFUser $submitter, \DateTimeImmutable $submission_date,): Ok|Err
     {
         if ($this->expected_links_to_add === $command->getLinksToAdd()) {

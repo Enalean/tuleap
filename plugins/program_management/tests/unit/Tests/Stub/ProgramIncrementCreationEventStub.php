@@ -39,16 +39,19 @@ final class ProgramIncrementCreationEventStub implements ProgramIncrementCreatio
         return new self($artifact_id, UserReferenceStub::withIdAndName($user_id, 'Harold Goodpaster'), $changeset_id);
     }
 
+    #[\Override]
     public function getArtifactId(): int
     {
         return $this->artifact_id;
     }
 
+    #[\Override]
     public function getUser(): UserIdentifier
     {
         return $this->user;
     }
 
+    #[\Override]
     public function getChangesetId(): int
     {
         return $this->changeset_id;

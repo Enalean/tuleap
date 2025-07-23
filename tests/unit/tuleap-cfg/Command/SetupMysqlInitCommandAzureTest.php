@@ -49,6 +49,7 @@ final class SetupMysqlInitCommandAzureTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $db_wrapper;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->base_dir = vfsStream::setup()->url();
@@ -66,6 +67,7 @@ final class SetupMysqlInitCommandAzureTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         putenv('TULEAP_DB_AZURE_SUFFIX');

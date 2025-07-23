@@ -36,6 +36,7 @@ final class SingleRepresentationBuilderTest extends TestCase
 {
     private ContentInterpretorStub $interpreter;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->interpreter = ContentInterpretorStub::withInterpretedText('');

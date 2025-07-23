@@ -37,6 +37,7 @@ final class FromPayloadUserListBuilderTest extends TestCase
     private \PFUser $alice;
     private \PFUser $bob;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->alice = UserTestBuilder::aUser()->withId(self::ALICE_ID)->build();

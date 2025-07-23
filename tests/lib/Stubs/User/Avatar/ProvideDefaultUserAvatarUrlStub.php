@@ -36,6 +36,7 @@ final class ProvideDefaultUserAvatarUrlStub implements ProvideDefaultUserAvatarU
         return new self();
     }
 
+    #[\Override]
     public function getDefaultAvatarUrl(): string
     {
         return 'default_avatar.png';

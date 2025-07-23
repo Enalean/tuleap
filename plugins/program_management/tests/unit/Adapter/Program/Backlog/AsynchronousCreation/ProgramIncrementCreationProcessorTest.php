@@ -47,6 +47,7 @@ final class ProgramIncrementCreationProcessorTest extends \Tuleap\Test\PHPUnit\T
     private ProgramIncrementCreation $creation;
     private PlanProgramIncrementsStub $plan_program_increment;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->logger                 = new TestLogger();

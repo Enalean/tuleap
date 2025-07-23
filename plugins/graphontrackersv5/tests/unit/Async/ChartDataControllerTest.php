@@ -51,6 +51,7 @@ final class ChartDataControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     private $chart_factory;
     private ChartDataController $chart_data_controller;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->report_factory   = $this->createMock(Tracker_ReportFactory::class);

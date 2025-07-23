@@ -40,6 +40,7 @@ final class LoaderSchedulerTest extends TestCase // phpcs:ignore
      */
     private $loader_scheduler;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->cookie_manager = $this->createMock(CookieManager::class);

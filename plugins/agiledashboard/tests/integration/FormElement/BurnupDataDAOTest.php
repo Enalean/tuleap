@@ -29,6 +29,7 @@ final class BurnupDataDAOTest extends TestIntegrationTestCase
 {
     private BurnupDataDAO $dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao = new BurnupDataDAO();

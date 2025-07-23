@@ -41,6 +41,7 @@ final readonly class RetrieveConfiguredTrackerStub implements RetrieveConfigured
         return new self(null);
     }
 
+    #[\Override]
     public function getTracker(Artidoc $document): ?\Tuleap\Tracker\Tracker
     {
         return $this->tracker;

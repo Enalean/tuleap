@@ -51,6 +51,7 @@ final class BuildPromotedMilestoneListStub implements BuildPromotedMilestoneList
         return new self($list);
     }
 
+    #[\Override]
     public function buildPromotedMilestoneList(PFUser $user, Planning_VirtualTopMilestone $virtual_top_milestone): PromotedMilestoneList
     {
         return $this->promoted_milestone_list;

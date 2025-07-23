@@ -34,6 +34,7 @@ final class GitlabProjectBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $credentials;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

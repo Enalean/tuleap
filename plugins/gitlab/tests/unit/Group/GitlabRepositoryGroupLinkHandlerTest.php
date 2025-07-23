@@ -48,6 +48,7 @@ final class GitlabRepositoryGroupLinkHandlerTest extends TestCase
     private const FIRST_GITLAB_REPOSITORY_ID  = 9;
     private string $branch_prefix;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->branch_prefix = 'dev-';

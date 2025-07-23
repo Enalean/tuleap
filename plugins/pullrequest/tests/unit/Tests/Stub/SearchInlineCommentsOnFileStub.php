@@ -44,6 +44,7 @@ final class SearchInlineCommentsOnFileStub implements \Tuleap\PullRequest\Inline
         return new self([$comment, ...$other_comments]);
     }
 
+    #[\Override]
     public function searchUpToDateByFilePath(int $pull_request_id, string $file_path): array
     {
         return $this->comments;

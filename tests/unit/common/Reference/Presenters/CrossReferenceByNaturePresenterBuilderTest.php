@@ -48,6 +48,7 @@ final class CrossReferenceByNaturePresenterBuilderTest extends TestCase
     private CrossReferenceLinkPresenterCollectionBuilder&MockObject $cross_ref_link_collection_presenter_builder;
 
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->cross_ref_link_list_presenter_builder       = $this->createMock(CrossReferenceLinkListPresenterBuilder::class);
@@ -72,6 +73,7 @@ final class CrossReferenceByNaturePresenterBuilderTest extends TestCase
         $GLOBALS['HTML'] = $this->createMock(\Layout::class);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         unset($GLOBALS['HTML']);

@@ -34,6 +34,7 @@ final class VerifyCanBePlannedInProgramIncrementStub implements VerifyCanBePlann
         $this->is_allowed = $is_allowed;
     }
 
+    #[\Override]
     public function canBePlannedInProgramIncrement(int $feature_id, int $program_increment_id): bool
     {
         return $this->is_allowed;

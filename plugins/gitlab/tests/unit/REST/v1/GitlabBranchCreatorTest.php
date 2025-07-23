@@ -68,6 +68,7 @@ final class GitlabBranchCreatorTest extends TestCase
      */
     private $gitlab_api_client;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

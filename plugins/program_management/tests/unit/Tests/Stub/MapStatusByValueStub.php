@@ -54,6 +54,7 @@ final class MapStatusByValueStub implements MapStatusByValue
         return new self([$bind_value_identifiers]);
     }
 
+    #[\Override]
     public function mapStatusValueByDuckTyping(StatusValue $source_value, StatusFieldReference $target_field): array
     {
         if (count($this->return_values) > 0) {

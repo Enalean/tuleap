@@ -52,6 +52,7 @@ final class UpdateSearchViewTest extends TestCase
                     {
                     }
 
+                    #[\Override]
                     public function getProject(array $variables): \Project
                     {
                         return $this->project;
@@ -62,6 +63,7 @@ final class UpdateSearchViewTest extends TestCase
                     {
                     }
 
+                    #[\Override]
                     public function saveColumns(int $project_id, array $columns): void
                     {
                         assertEquals(101, $project_id);
@@ -74,6 +76,7 @@ final class UpdateSearchViewTest extends TestCase
                     {
                     }
 
+                    #[\Override]
                     public function saveCriteria(int $project_id, array $criteria): void
                     {
                         assertEquals(101, $project_id);
@@ -131,6 +134,7 @@ final class UpdateSearchViewTest extends TestCase
                     {
                     }
 
+                    #[\Override]
                     public function getProject(array $variables): \Project
                     {
                         return $this->project;
@@ -141,6 +145,7 @@ final class UpdateSearchViewTest extends TestCase
                     {
                     }
 
+                    #[\Override]
                     public function saveColumns(int $project_id, array $columns): void
                     {
                         $this->assertions->columns = true;
@@ -151,6 +156,7 @@ final class UpdateSearchViewTest extends TestCase
                     {
                     }
 
+                    #[\Override]
                     public function saveCriteria(int $project_id, array $criteria): void
                     {
                         $this->assertions->criteria = true;
@@ -193,6 +199,7 @@ final class UpdateSearchViewTest extends TestCase
                     {
                     }
 
+                    #[\Override]
                     public function getProject(array $variables): \Project
                     {
                         return $this->project;
@@ -203,12 +210,14 @@ final class UpdateSearchViewTest extends TestCase
                     {
                     }
 
+                    #[\Override]
                     public function saveColumns(int $project_id, array $columns): void
                     {
                         $this->assertions->columns = true;
                     }
                 },
                 new class () implements IUpdateCriteria {
+                    #[\Override]
                     public function saveCriteria(int $project_id, array $criteria): void
                     {
                     }
@@ -261,12 +270,14 @@ final class UpdateSearchViewTest extends TestCase
                     {
                     }
 
+                    #[\Override]
                     public function getProject(array $variables): \Project
                     {
                         return $this->project;
                     }
                 },
                 new class implements IUpdateColumns {
+                    #[\Override]
                     public function saveColumns(int $project_id, array $columns): void
                     {
                     }
@@ -276,6 +287,7 @@ final class UpdateSearchViewTest extends TestCase
                     {
                     }
 
+                    #[\Override]
                     public function saveCriteria(int $project_id, array $criteria): void
                     {
                         $this->assertions->criteria = true;

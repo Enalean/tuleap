@@ -43,6 +43,7 @@ final class SearchMirrorTimeboxesFromProgramStub implements SearchMirrorTimeboxe
         return new self(true);
     }
 
+    #[\Override]
     public function hasMirroredTimeboxesFromProgram(ProjectIdentifier $team, ProgramIncrement $program_increment): bool
     {
         return $this->has_missing_mirror;

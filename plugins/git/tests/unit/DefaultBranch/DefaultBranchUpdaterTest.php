@@ -32,6 +32,7 @@ final class DefaultBranchUpdaterTest extends TestCase
     private DefaultBranchUpdateExecutorStub $default_branch_update_executor;
     private DefaultBranchUpdater $default_branch_updater;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->default_branch_update_executor = new DefaultBranchUpdateExecutorStub();

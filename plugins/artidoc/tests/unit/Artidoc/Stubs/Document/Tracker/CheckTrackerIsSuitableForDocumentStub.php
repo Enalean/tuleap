@@ -63,6 +63,7 @@ final class CheckTrackerIsSuitableForDocumentStub implements CheckTrackerIsSuita
         return new self(null);
     }
 
+    #[\Override]
     public function checkTrackerIsSuitableForDocument(\Tuleap\Tracker\Tracker $tracker, Artidoc $document, \PFUser $user): Ok|Err
     {
         if ($this->trackers === null) {

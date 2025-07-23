@@ -44,6 +44,7 @@ final class SearchFeaturesStub implements SearchFeatures
         return new self([]);
     }
 
+    #[\Override]
     public function searchFeatures(ProgramIncrementIdentifier $program_increment): array
     {
         return $this->rows;

@@ -55,6 +55,7 @@ final class PullRequestWithGitReferenceRetrieverTest extends TestCase
     private UpdateGitPullRequestReferenceStub $git_pull_request_reference_updater;
     private PullRequest $pull_request;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->pull_request = PullRequestTestBuilder::aPullRequestInReview()

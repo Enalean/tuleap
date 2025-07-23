@@ -33,6 +33,7 @@ final class SemanticStatusFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
     private const TRACKER_ID = 77;
     private ?\Tracker_FormElement_Field_Selectbox $field;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->field = new \Tracker_FormElement_Field_Selectbox(

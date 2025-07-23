@@ -36,6 +36,7 @@ final class AddValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
     private PFUser $current_user;
     private Artifact $swimlane_artifact;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->swimlane_artifact = ArtifactTestBuilder::anArtifact(21)->build();

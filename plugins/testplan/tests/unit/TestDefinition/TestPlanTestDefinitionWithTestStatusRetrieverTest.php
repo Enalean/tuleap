@@ -42,6 +42,7 @@ final class TestPlanTestDefinitionWithTestStatusRetrieverTest extends \Tuleap\Te
 
     private TestPlanTestDefinitionWithTestStatusRetriever $retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao                   = $this->createMock(TestPlanTestDefinitionsTestStatusDAO::class);

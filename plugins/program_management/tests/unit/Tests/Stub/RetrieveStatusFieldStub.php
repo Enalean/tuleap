@@ -43,6 +43,7 @@ final class RetrieveStatusFieldStub implements RetrieveStatusField
         return new self(...$statuses);
     }
 
+    #[\Override]
     public function getStatusField(TrackerIdentifier $tracker_identifier): StatusFieldReference
     {
         if (count($this->statuses) > 0) {

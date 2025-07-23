@@ -35,6 +35,7 @@ final class CachedProjectAccessCheckerTest extends TestCase
         $original_check = new class implements CheckProjectAccess
         {
             public int $call_count = 0;
+            #[\Override]
             public function checkUserCanAccessProject(\PFUser $user, \Project $project): void
             {
                 $this->call_count++;
@@ -54,6 +55,7 @@ final class CachedProjectAccessCheckerTest extends TestCase
         $original_check = new class implements CheckProjectAccess
         {
             public array $called = [];
+            #[\Override]
             public function checkUserCanAccessProject(\PFUser $user, \Project $project): void
             {
                 $this->called[$user->getId()][$project->getID()] = true;
@@ -73,6 +75,7 @@ final class CachedProjectAccessCheckerTest extends TestCase
     {
         $original_check = new class implements CheckProjectAccess
         {
+            #[\Override]
             public function checkUserCanAccessProject(\PFUser $user, \Project $project): void
             {
                 throw new \Project_AccessDeletedException();
@@ -91,6 +94,7 @@ final class CachedProjectAccessCheckerTest extends TestCase
         $original_check = new class implements CheckProjectAccess
         {
             public int $nb_called = 0;
+            #[\Override]
             public function checkUserCanAccessProject(\PFUser $user, \Project $project): void
             {
                 $this->nb_called++;

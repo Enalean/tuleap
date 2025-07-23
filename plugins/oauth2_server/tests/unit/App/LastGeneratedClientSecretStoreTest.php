@@ -36,6 +36,7 @@ final class LastGeneratedClientSecretStoreTest extends \Tuleap\Test\PHPUnit\Test
      */
     private $store;
 
+    #[\Override]
     protected function setUp(): void
     {
         $storage     = [];

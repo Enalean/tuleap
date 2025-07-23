@@ -39,6 +39,7 @@ final class TestConnectionManager implements ConnectionManagerInterface
         $this->db = $db;
     }
 
+    #[\Override]
     public function getDBWithoutDBName(
         SymfonyStyle $io,
         string $host,
@@ -52,6 +53,7 @@ final class TestConnectionManager implements ConnectionManagerInterface
         return $this->db;
     }
 
+    #[\Override]
     public function sanityCheck(DBWrapperInterface $db): Ok|Err
     {
         return Result::ok(null);

@@ -37,6 +37,7 @@ final class KanbanArtifactMessageBuilderMercureTest extends TestCase
     private KanbanArtifactMessageBuilderMercure $message_builder;
     private \Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus&MockObject $tracker_semantic;
     private \Tracker_FormElement_Field_List&MockObject $status_field;
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

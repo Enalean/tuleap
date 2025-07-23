@@ -52,6 +52,7 @@ final class AssignedToCheckerTest extends TestCase
     private Metadata $metadata;
     private ProvideAndRetrieveUserStub $user_retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->metadata       = new Metadata('assigned_to');

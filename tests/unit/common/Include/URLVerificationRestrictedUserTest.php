@@ -24,6 +24,7 @@ use PHPUnit\Framework\TestCase;
 
 class URLVerificationRestrictedUserTest extends TestCase //phpcs:ignore
 {
+    #[\Override]
     public function tearDown(): void
     {
         unset($_SERVER['REQUEST_URI']);

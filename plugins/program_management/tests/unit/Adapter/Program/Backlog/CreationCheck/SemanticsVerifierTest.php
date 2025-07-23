@@ -48,6 +48,7 @@ final class SemanticsVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
     private TrackerCollection $trackers;
     private SourceTrackerCollection $source_trackers;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->program_increment_tracker = TrackerReferenceStub::withDefaults();
@@ -84,6 +85,7 @@ final class SemanticsVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
             SearchTrackersWithoutTitleSemanticStub::withAllTrackersHaveTitle(),
             SearchTrackersWithoutDescriptionSemanticStub::withAllTrackersHaveDescription(),
             new class implements VerifyStatusIsAligned {
+                #[\Override]
                 public function isStatusWellConfigured(
                     TrackerReference $tracker,
                     SourceTrackerCollection $source_tracker_collection,
@@ -93,6 +95,7 @@ final class SemanticsVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
                 }
             },
             new class implements VerifyTimeframeIsAligned {
+                #[\Override]
                 public function isTimeframeWellConfigured(
                     TrackerReference $tracker,
                     SourceTrackerCollection $source_tracker_collection,
@@ -125,6 +128,7 @@ final class SemanticsVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
                 self::FIRST_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID
             ),
             new class implements VerifyStatusIsAligned {
+                #[\Override]
                 public function isStatusWellConfigured(
                     TrackerReference $tracker,
                     SourceTrackerCollection $source_tracker_collection,
@@ -134,6 +138,7 @@ final class SemanticsVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
                 }
             },
             new class implements VerifyTimeframeIsAligned {
+                #[\Override]
                 public function isTimeframeWellConfigured(
                     TrackerReference $tracker,
                     SourceTrackerCollection $source_tracker_collection,
@@ -170,6 +175,7 @@ final class SemanticsVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
                 self::FIRST_MIRRORED_PROGRAM_INCREMENT_TRACKER_ID
             ),
             new class implements VerifyStatusIsAligned {
+                #[\Override]
                 public function isStatusWellConfigured(
                     TrackerReference $tracker,
                     SourceTrackerCollection $source_tracker_collection,
@@ -179,6 +185,7 @@ final class SemanticsVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
                 }
             },
             new class implements VerifyTimeframeIsAligned {
+                #[\Override]
                 public function isTimeframeWellConfigured(
                     TrackerReference $tracker,
                     SourceTrackerCollection $source_tracker_collection,

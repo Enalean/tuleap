@@ -40,6 +40,7 @@ final class UpdateFreetextContentStub implements UpdateFreetextContent
         return new self();
     }
 
+    #[\Override]
     public function updateFreetextContent(
         SectionIdentifier $section_identifier,
         FreetextIdentifier $id,

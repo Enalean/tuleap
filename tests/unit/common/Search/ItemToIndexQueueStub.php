@@ -31,6 +31,7 @@ final class ItemToIndexQueueStub implements ItemToIndexQueue
     {
     }
 
+    #[\Override]
     public function addItemToQueue(ItemToIndex $item_to_index): void
     {
         ($this->callback)($item_to_index);

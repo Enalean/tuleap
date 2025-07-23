@@ -201,6 +201,7 @@ class EventManagerTest extends TestCase // phpcs:ignore
 
             public bool $stop = false;
 
+            #[\Override]
             public function isPropagationStopped(): bool
             {
                 return $this->stop;

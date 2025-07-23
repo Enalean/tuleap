@@ -36,6 +36,7 @@ final class LoginEventsGuardTest extends TestCase
     private UserMappingManager&\PHPUnit\Framework\MockObject\Stub $mapping_manager;
     private LoginEventsGuard $login_events_guard;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->mapping_manager    = $this->createStub(UserMappingManager::class);

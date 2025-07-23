@@ -44,6 +44,7 @@ final class RetrieveEnabledPluginsStub implements RetrieveEnabledPlugins
         return new self([]);
     }
 
+    #[\Override]
     public function getEnabledPlugins(): array
     {
         return $this->plugins;

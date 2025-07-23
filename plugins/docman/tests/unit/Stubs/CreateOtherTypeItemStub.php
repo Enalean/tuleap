@@ -58,6 +58,7 @@ final class CreateOtherTypeItemStub implements CreateOtherTypeItem
         return new self(null, null);
     }
 
+    #[\Override]
     public function createOtherType(
         \Docman_Folder $parent_item,
         PFUser $user,

@@ -47,6 +47,7 @@ final class ProjectMemberAdderWithStatusCheckAndNotificationsTest extends \Tulea
     private \Project $an_active_project;
     private \PFUser $project_admin;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->add_project_member = $this->createMock(AddProjectMember::class);

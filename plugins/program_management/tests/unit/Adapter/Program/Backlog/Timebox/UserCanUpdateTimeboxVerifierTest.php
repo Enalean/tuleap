@@ -37,6 +37,7 @@ final class UserCanUpdateTimeboxVerifierTest extends TestCase
 {
     private Artifact&Stub $artifact;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->artifact = $this->createStub(Artifact::class);

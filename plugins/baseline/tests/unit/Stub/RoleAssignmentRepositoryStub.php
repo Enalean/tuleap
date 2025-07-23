@@ -58,6 +58,7 @@ final class RoleAssignmentRepositoryStub implements RoleAssignmentRepository
         );
     }
 
+    #[\Override]
     public function findByProjectAndRole(ProjectIdentifier $project, Role $role): array
     {
         return match ($role->getName()) {
@@ -67,6 +68,7 @@ final class RoleAssignmentRepositoryStub implements RoleAssignmentRepository
         };
     }
 
+    #[\Override]
     public function saveAssignmentsForProject(RoleAssignmentsUpdate $role_assignments_update): void
     {
         $this->last_assignment_update = $role_assignments_update;
@@ -77,6 +79,7 @@ final class RoleAssignmentRepositoryStub implements RoleAssignmentRepository
         return $this->last_assignment_update;
     }
 
+    #[\Override]
     public function deleteUgroupAssignments(ProjectIdentifier $project, BaselineUserGroup $baseline_user_group): int
     {
         return 0;

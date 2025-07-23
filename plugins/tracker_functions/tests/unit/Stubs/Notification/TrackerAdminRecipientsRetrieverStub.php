@@ -50,6 +50,7 @@ final class TrackerAdminRecipientsRetrieverStub implements TrackerAdminRecipient
         return new self(Result::err(Fault::fromMessage($message)));
     }
 
+    #[\Override]
     public function retrieveRecipients(Tracker $tracker): Err|Ok
     {
         return $this->result;

@@ -20,14 +20,14 @@
 
 declare(strict_types=1);
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class LogoRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
+final class LogoRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     use \Tuleap\ForgeConfigSandbox;
 
     private $path;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->path = \org\bovigo\vfs\vfsStream::setup('/')->url();

@@ -38,6 +38,7 @@ final class AddRoleAssignmentsHistoryEntryStub implements AddRoleAssignmentsHist
         return new self([]);
     }
 
+    #[\Override]
     public function addProjectHistoryEntryForRoleAndGroups(ProjectIdentifier $project, string $history_key, RoleAssignment ...$assignments): void
     {
         $this->added_history_entries[] = [$project, $history_key, $assignments];
@@ -48,6 +49,7 @@ final class AddRoleAssignmentsHistoryEntryStub implements AddRoleAssignmentsHist
         return $this->added_history_entries;
     }
 
+    #[\Override]
     public function addProjectHistoryEntryForUgroupDeletion(ProjectIdentifier $project, string $history_key, BaselineUserGroup $baseline_user_group): void
     {
         $this->added_history_entries[] = [$project, $history_key, $baseline_user_group];

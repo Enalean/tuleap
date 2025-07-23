@@ -44,6 +44,7 @@ final class SuitableTrackersForDocumentRetrieverTest extends TestCase
     private \PFUser $user;
 
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->stories = TrackerTestBuilder::aTracker()->withId(101)->build();

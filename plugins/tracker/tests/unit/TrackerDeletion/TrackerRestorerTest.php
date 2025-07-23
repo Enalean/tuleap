@@ -38,6 +38,7 @@ final class TrackerRestorerTest extends TestCase
     private MockObject&BaseLayout $response;
 
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao      = RestoreDeletedTrackerStub::build();

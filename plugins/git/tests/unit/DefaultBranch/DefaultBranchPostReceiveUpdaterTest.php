@@ -32,6 +32,7 @@ final class DefaultBranchPostReceiveUpdaterTest extends TestCase
     private DefaultBranchUpdateExecutorStub $default_branch_update_executor;
     private DefaultBranchPostReceiveUpdater $default_branch_post_receive_updater;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->default_branch_update_executor      = new DefaultBranchUpdateExecutorStub();

@@ -65,6 +65,7 @@ final class OAuth2AccessTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $verifier;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao             = $this->createMock(OAuth2AccessTokenDAO::class);
@@ -216,6 +217,7 @@ final class OAuth2AccessTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
             /**
              * @psalm-pure
              */
+            #[\Override]
             public static function fromItself(): AuthenticationScope
             {
                 throw new \LogicException('This method is not supposed to be called in the test');
@@ -224,24 +226,29 @@ final class OAuth2AccessTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
             /**
              * @psalm-pure
              */
+            #[\Override]
             public static function fromIdentifier(AuthenticationScopeIdentifier $identifier): ?AuthenticationScope
             {
                 throw new \LogicException('This method is not supposed to be called in the test');
             }
 
+            #[\Override]
             public function getIdentifier(): AuthenticationScopeIdentifier
             {
                 return OAuth2ScopeIdentifier::fromIdentifierKey('required');
             }
 
+            #[\Override]
             public function getDefinition(): AuthenticationScopeDefinition
             {
                 return new /** @psalm-immutable */ class implements AuthenticationScopeDefinition {
+                    #[\Override]
                     public function getName(): string
                     {
                         return 'Name';
                     }
 
+                    #[\Override]
                     public function getDescription(): string
                     {
                         return 'Description';
@@ -249,6 +256,7 @@ final class OAuth2AccessTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
                 };
             }
 
+            #[\Override]
             public function covers(AuthenticationScope $scope): bool
             {
                 return true;
@@ -267,6 +275,7 @@ final class OAuth2AccessTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
             /**
              * @psalm-pure
              */
+            #[\Override]
             public static function fromItself(): AuthenticationScope
             {
                 throw new \LogicException('This method is not supposed to be called in the test');
@@ -275,11 +284,13 @@ final class OAuth2AccessTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
             /**
              * @psalm-pure
              */
+            #[\Override]
             public static function fromIdentifier(AuthenticationScopeIdentifier $identifier): ?AuthenticationScope
             {
                 throw new \LogicException('This method is not supposed to be called in the test');
             }
 
+            #[\Override]
             public function covers(AuthenticationScope $scope): bool
             {
                 return false;

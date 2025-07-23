@@ -29,6 +29,7 @@ final class UserDaoTest extends TestIntegrationTestCase
 {
     private \UserDao $dao;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->dao = new \UserDao();

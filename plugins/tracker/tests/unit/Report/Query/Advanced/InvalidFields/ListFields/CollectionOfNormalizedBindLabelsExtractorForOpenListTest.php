@@ -39,6 +39,7 @@ final class CollectionOfNormalizedBindLabelsExtractorForOpenListTest extends Tes
     private CollectionOfNormalizedBindLabelsExtractorForOpenList $extractor;
     private OpenListValueDao&MockObject $dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $bind_labels_extractor = BindVisitorStub::build(['first label']);

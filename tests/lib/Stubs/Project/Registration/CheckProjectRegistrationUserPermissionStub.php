@@ -34,6 +34,7 @@ final class CheckProjectRegistrationUserPermissionStub implements CheckProjectRe
     /**
      * @throws \Throwable
      */
+    #[\Override]
     public function checkUserCreateAProject(\PFUser $user): void
     {
         if ($this->exception !== null) {

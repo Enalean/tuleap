@@ -27,6 +27,7 @@ final class OkTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private \Closure $error_callback;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->error_callback = static fn(string $message): string => 'An error: ' . $message;

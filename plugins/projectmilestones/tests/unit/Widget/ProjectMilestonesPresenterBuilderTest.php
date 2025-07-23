@@ -68,6 +68,7 @@ final class ProjectMilestonesPresenterBuilderTest extends \Tuleap\Test\PHPUnit\T
     private CountElementsModeChecker&\PHPUnit\Framework\MockObject\MockObject $count_elements_mode_checker;
     private ProjectAccessChecker&\PHPUnit\Framework\MockObject\MockObject $project_access_checker;
 
+    #[\Override]
     public function setUp(): void
     {
         parent::setUp();

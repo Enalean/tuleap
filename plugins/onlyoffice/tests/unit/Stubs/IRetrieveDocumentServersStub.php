@@ -48,11 +48,13 @@ final class IRetrieveDocumentServersStub implements IRetrieveDocumentServers
     /**
      * @return list<DocumentServer>
      */
+    #[\Override]
     public function retrieveAll(): array
     {
         return $this->servers;
     }
 
+    #[\Override]
     public function retrieveById(string $uuid_hex): DocumentServer
     {
         foreach ($this->servers as $server) {

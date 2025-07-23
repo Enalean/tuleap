@@ -46,6 +46,7 @@ final class VelocityPluginComputationTest extends \Tuleap\Test\PHPUnit\TestCase
     private \PHPUnit\Framework\MockObject\MockObject&SemanticDone $semantic_done;
     private \PHPUnit\Framework\MockObject\MockObject&SemanticVelocity $semantic_velocity;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->velocity_calculator          = $this->createMock(VelocityCalculator::class);

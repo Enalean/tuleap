@@ -29,6 +29,7 @@ final class WebhookTuleapReferencesParserTest extends \Tuleap\Test\PHPUnit\TestC
      */
     private $parser;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

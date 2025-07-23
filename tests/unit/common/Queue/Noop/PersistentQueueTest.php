@@ -30,6 +30,7 @@ final class PersistentQueueTest extends TestCase
 {
     private PersistentQueue $queue;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->queue = new PersistentQueue();

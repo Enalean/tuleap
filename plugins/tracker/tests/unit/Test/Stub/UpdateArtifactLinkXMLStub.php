@@ -36,6 +36,7 @@ final class UpdateArtifactLinkXMLStub implements UpdateArtifactLinkXML
         return new self();
     }
 
+    #[\Override]
     public function updateArtifactLinks(SimpleXMLElement $changeset_xml, \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField $destination_field, int $index): void
     {
         // Side-effects

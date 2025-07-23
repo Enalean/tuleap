@@ -48,6 +48,7 @@ final class SearchAllSectionsStub implements SearchAllSections
         return new self($sections);
     }
 
+    #[\Override]
     public function searchAllSectionsOfDocument(ArtidocWithContext $artidoc): array
     {
         return $this->sections;

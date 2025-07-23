@@ -53,6 +53,7 @@ final class SearchUserStoryPlannedInIterationStub implements SearchUserStoryPlan
         return new self([]);
     }
 
+    #[\Override]
     public function searchStoriesOfMirroredIteration(MirroredIterationIdentifier $mirrored_iteration_identifier): array
     {
         if (count($this->user_stories) > 0) {

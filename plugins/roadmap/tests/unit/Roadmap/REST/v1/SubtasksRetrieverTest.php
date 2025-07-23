@@ -45,17 +45,20 @@ final class SubtasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     private \PHPUnit\Framework\MockObject\MockObject&\Tracker_ArtifactFactory $artifact_factory;
     private \PFUser $user;
 
+    #[\Override]
     protected function setUp(): void
     {
         $user_manager = $this->createMock(UserManager::class);
 
         $this->artifact_factory       = $this->createMock(\Tracker_ArtifactFactory::class);
         $representation_builder_cache = new class implements ICacheTaskRepresentationBuilderForTracker {
+            #[\Override]
             public function getRepresentationBuilderForTracker(
                 Tracker $tracker,
                 \PFUser $user,
             ): ?IBuildATaskRepresentation {
                 return new class implements IBuildATaskRepresentation {
+                    #[\Override]
                     public function buildRepresentation(Artifact $artifact, \PFUser $user): TaskRepresentation
                     {
                         return new TaskRepresentation(
@@ -90,6 +93,7 @@ final class SubtasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
                 $this->out_of_date_artifact_id = $out_of_date_artifact_id;
             }
 
+            #[\Override]
             public function isArtifactOutOfDate(Artifact $artifact, DateTimeImmutable $now, \PFUser $user, TrackersWithUnreadableStatusCollection $trackers_with_unreadable_status_collection): bool
             {
                 return $artifact->getId() === $this->out_of_date_artifact_id;

@@ -32,6 +32,7 @@ final class CurrentRequestUserProviderStub implements ProvideCurrentRequestUser
     {
     }
 
+    #[\Override]
     public function getCurrentRequestUser(ServerRequestInterface $request): ?\PFUser
     {
         return $this->user;

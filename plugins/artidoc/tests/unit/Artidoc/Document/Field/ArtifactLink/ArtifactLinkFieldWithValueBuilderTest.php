@@ -69,6 +69,7 @@ final class ArtifactLinkFieldWithValueBuilderTest extends TestCase
     private const PROJECT_ICON = '🛰️';
     private const PROJECT_NAME = 'Parabema retransit';
 
+    #[\Override]
     protected function tearDown(): void
     {
         Tracker_ArtifactFactory::clearInstance();

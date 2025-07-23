@@ -45,6 +45,7 @@ final class RelativeDatesDisplaySaveControllerTest extends \Tuleap\Test\PHPUnit\
      */
     private $config_dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $csrf_token = $this->createMock(\CSRFSynchronizerToken::class);

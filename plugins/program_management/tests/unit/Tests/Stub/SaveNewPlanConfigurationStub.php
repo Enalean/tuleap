@@ -36,6 +36,7 @@ final class SaveNewPlanConfigurationStub implements SaveNewPlanConfiguration
         return new self();
     }
 
+    #[\Override]
     public function save(NewPlanConfiguration $plan): void
     {
         $this->call_count++;

@@ -30,6 +30,7 @@ final class ProjectOwnerUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao = $this->createMock(ProjectOwnerDAO::class);

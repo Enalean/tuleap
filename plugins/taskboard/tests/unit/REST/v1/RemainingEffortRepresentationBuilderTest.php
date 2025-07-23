@@ -38,6 +38,7 @@ final class RemainingEffortRepresentationBuilderTest extends \Tuleap\Test\PHPUni
     private \Tuleap\Tracker\Artifact\Artifact $artifact;
     private \Tuleap\Tracker\Tracker $tracker;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user     = UserTestBuilder::aUser()->build();

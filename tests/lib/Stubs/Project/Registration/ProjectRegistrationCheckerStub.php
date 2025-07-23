@@ -44,6 +44,7 @@ final class ProjectRegistrationCheckerStub implements ProjectRegistrationChecker
         return new self($exception);
     }
 
+    #[\Override]
     public function collectAllErrorsForProjectRegistration(PFUser $user, ProjectCreationData $project_creation_data,): ProjectRegistrationErrorsCollection
     {
         $collection = new ProjectRegistrationErrorsCollection();

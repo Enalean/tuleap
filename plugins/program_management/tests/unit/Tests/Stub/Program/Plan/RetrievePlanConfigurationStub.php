@@ -42,6 +42,7 @@ final readonly class RetrievePlanConfigurationStub implements \Tuleap\ProgramMan
         return new self([$plan_configuration, ...$other_configurations]);
     }
 
+    #[\Override]
     public function retrievePlan(ProgramIdentifier $program_identifier): Option
     {
         foreach ($this->configurations as $configuration) {

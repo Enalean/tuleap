@@ -67,6 +67,7 @@ final class ListLicenseAgreementsControllerTest extends TestCase
      */
     private $helper;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->layout       = $this->createMock(BaseLayout::class);

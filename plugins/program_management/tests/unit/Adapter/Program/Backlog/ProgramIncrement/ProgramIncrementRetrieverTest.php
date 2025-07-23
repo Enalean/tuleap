@@ -42,6 +42,7 @@ final class ProgramIncrementRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     private RetrieveTitleValueUserCanSeeStub $title_retriever;
     private ProgramIncrementIdentifier $program_increment_identifier;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->title_retriever              = RetrieveTitleValueUserCanSeeStub::withValue('Increment 16');

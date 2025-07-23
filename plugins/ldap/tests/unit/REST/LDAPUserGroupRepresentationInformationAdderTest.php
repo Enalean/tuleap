@@ -47,6 +47,7 @@ final class LDAPUserGroupRepresentationInformationAdderTest extends TestCase
 
     private LDAPUserGroupRepresentationInformationAdder $event_processor;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->project_ugroup_manager = $this->createStub(\LDAP_ProjectGroupManager::class);

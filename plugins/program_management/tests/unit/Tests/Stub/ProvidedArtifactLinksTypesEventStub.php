@@ -53,6 +53,7 @@ final class ProvidedArtifactLinksTypesEventStub implements ProvidedArtifactLinks
         return $this->call_count;
     }
 
+    #[\Override]
     public function getUpdatedArtifactId(): int
     {
         return $this->updated_artifact_id;
@@ -61,11 +62,13 @@ final class ProvidedArtifactLinksTypesEventStub implements ProvidedArtifactLinks
     /**
      * @psalm-return list<array<int, string>>
      */
+    #[\Override]
     public function getProvidedArtifactLinksTypes(): array
     {
         return $this->provided_links;
     }
 
+    #[\Override]
     public function setProvidedLinksAreNotValidWithMessage(string $message): void
     {
         $this->call_count++;

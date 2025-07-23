@@ -28,6 +28,7 @@ final class UsersTest extends RestBase // phpcs:ignore
 
     private TuleapConfig $tuleap_config;
 
+    #[\Override]
     public function setUp(): void
     {
         parent::setUp();

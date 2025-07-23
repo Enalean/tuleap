@@ -50,6 +50,7 @@ final class SynchronizedFieldFromProgramAndTeamTrackersCollectionTest extends \T
     private TrackerReference $tracker;
     private SynchronizedFieldFromProgramAndTeamTrackers $synchronized_fields;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user_identifier = UserIdentifierStub::buildGenericUser();

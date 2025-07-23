@@ -43,6 +43,7 @@ final class SetupTuleapCommandTest extends TestCase
     private \PHPUnit\Framework\MockObject\MockObject|ProcessFactory $process_factory;
     private SecretKeyFile $key_factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -59,12 +60,14 @@ final class SetupTuleapCommandTest extends TestCase
             public bool $key_created     = false;
             public bool $permissions_set = false;
 
+            #[\Override]
             public function initAndGetEncryptionKeyPath(): string
             {
                 $this->key_created = true;
                 return '';
             }
 
+            #[\Override]
             public function restoreOwnership(LoggerInterface $logger): void
             {
                 $this->permissions_set = true;
@@ -72,6 +75,7 @@ final class SetupTuleapCommandTest extends TestCase
         };
 
         $forge_upgrade = new class implements ForgeUpgradeRecordOnly {
+            #[\Override]
             public function recordOnlyCore(): void
             {
             }

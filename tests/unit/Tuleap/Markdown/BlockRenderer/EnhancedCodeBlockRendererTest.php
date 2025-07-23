@@ -39,6 +39,7 @@ final class EnhancedCodeBlockRendererTest extends \Tuleap\Test\PHPUnit\TestCase
     private $code_block_features;
 
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->code_block_features = $this->createMock(CodeBlockFeaturesInterface::class);

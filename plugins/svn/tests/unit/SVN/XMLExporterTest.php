@@ -43,6 +43,7 @@ final class XMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
     private string $fixtures_dir;
     private SvnAdmin&MockObject $svn_admin;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

@@ -40,6 +40,7 @@ final class AnalyzePushTaskTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $git_repository;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->pusher         = UserTestBuilder::aUser()->withId(self::PUSHING_USER_ID)->build();

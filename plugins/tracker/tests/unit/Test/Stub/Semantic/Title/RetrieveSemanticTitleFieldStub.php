@@ -48,6 +48,7 @@ final class RetrieveSemanticTitleFieldStub implements RetrieveSemanticTitleField
         return $this;
     }
 
+    #[\Override]
     public function fromTracker(Tracker $tracker): ?TextField
     {
         $this->call_count++;

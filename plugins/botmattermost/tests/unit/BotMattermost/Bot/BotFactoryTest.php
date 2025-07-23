@@ -35,6 +35,7 @@ class BotFactoryTest extends TestCase
      */
     private $bot_dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->bot_dao     = $this->createMock(BotDao::class);

@@ -69,6 +69,7 @@ final class CreateArtifactStub implements CreateArtifact
         return $this->arguments;
     }
 
+    #[\Override]
     public function create(MirroredTimeboxFirstChangeset $first_changeset): MirroredTimeboxIdentifier
     {
         $this->call_count++;

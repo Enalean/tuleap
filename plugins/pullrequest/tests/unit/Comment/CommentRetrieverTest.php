@@ -33,6 +33,7 @@ final class CommentRetrieverTest extends TestCase
     private const COMMENT_ID = 15;
     private CommentSearcherStub $comment_dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $comment           = CommentTestBuilder::aMarkdownComment('squireless spitz')

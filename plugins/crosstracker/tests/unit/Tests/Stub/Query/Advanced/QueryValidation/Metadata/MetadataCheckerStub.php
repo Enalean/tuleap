@@ -43,6 +43,7 @@ final readonly class MetadataCheckerStub implements CheckMetadataUsage
         return new self(false);
     }
 
+    #[\Override]
     public function checkMetadataIsUsedByAllTrackers(Metadata $metadata, array $trackers, PFUser $user): void
     {
         if (! $this->is_valid) {

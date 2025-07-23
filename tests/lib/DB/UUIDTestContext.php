@@ -38,11 +38,13 @@ final class UUIDTestContext implements UUID
         $this->uuid = UuidV7::uuid7();
     }
 
+    #[\Override]
     public function getBytes(): string
     {
         return $this->uuid->getBytes();
     }
 
+    #[\Override]
     public function toString(): string
     {
         return $this->uuid->toString();

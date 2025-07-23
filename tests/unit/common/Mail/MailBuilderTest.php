@@ -56,6 +56,7 @@ final class MailBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $codendi_mail;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -106,6 +107,7 @@ final class MailBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $GLOBALS['HTML'] = $this->createMock(\Layout::class);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         UserManager::clearInstance();

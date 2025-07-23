@@ -46,6 +46,7 @@ class ProjectDashboardXMLImporterBase extends \Tuleap\Test\PHPUnit\TestCase
     protected \EventManager&MockObject $event_manager;
     protected DisabledProjectWidgetsChecker&MockObject $disabled_widgets_checker;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao                      = $this->createMock(ProjectDashboardDao::class);

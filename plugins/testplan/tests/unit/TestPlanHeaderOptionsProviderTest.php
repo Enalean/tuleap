@@ -59,6 +59,7 @@ final class TestPlanHeaderOptionsProviderTest extends \Tuleap\Test\PHPUnit\TestC
      */
     private mixed $milestone;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->header_options_provider = $this->createMock(HeaderOptionsProvider::class);

@@ -52,6 +52,7 @@ final class UserStoriesInMirroredProgramIncrementsPlannerTest extends TestCase
 
     private PlanUserStoryInOneMirrorStub $plan_user_story_in_one_mirror_stub;
 
+    #[\Override]
     protected function setUp(): void
     {
         $update                                   = ProgramIncrementUpdateBuilder::build();

@@ -42,6 +42,7 @@ final class IterationCreationDetectorTest extends \Tuleap\Test\PHPUnit\TestCase
     private VerifyIsVisibleArtifactStub $visibility_verifier;
     private VerifyIterationHasBeenLinkedBeforeStub $iteration_link_verifier;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->program_increment_update = ProgramIncrementUpdateBuilder::build();

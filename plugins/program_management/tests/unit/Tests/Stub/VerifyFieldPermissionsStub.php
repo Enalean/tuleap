@@ -55,11 +55,13 @@ final class VerifyFieldPermissionsStub implements VerifyFieldPermissions
         return new self(true, false);
     }
 
+    #[\Override]
     public function canUserSubmit(UserIdentifier $user_identifier, TitleFieldReference|DescriptionFieldReference|StatusFieldReference|StartDateFieldReference|DurationFieldReference|EndDateFieldReference|ArtifactLinkFieldReference $field): bool
     {
         return $this->is_submittable;
     }
 
+    #[\Override]
     public function canUserUpdate(UserIdentifier $user_identifier, TitleFieldReference|DescriptionFieldReference|StatusFieldReference|StartDateFieldReference|DurationFieldReference|EndDateFieldReference|ArtifactLinkFieldReference $field): bool
     {
         return $this->is_updatable;

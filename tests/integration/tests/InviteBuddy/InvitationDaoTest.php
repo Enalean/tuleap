@@ -36,6 +36,7 @@ class InvitationDaoTest extends TestIntegrationTestCase
     private InvitationDao $dao;
     private \PHPUnit\Framework\MockObject\MockObject&InvitationInstrumentation $instrumentation;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->instrumentation = $this->createMock(InvitationInstrumentation::class);

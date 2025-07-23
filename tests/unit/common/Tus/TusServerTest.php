@@ -34,6 +34,7 @@ final class TusServerTest extends \Tuleap\Test\PHPUnit\TestCase
     private TusDataStore&\PHPUnit\Framework\MockObject\MockObject $data_store;
     private TusFileInformationProvider&\PHPUnit\Framework\MockObject\MockObject $file_information_provider;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->response_factory          = HTTPFactoryBuilder::responseFactory();

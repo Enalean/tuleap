@@ -37,6 +37,7 @@ class JiraBoardsRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $client = new class extends \Tuleap\Tracker\Test\Stub\Creation\JiraImporter\JiraCloudClientStub
         {
+            #[\Override]
             public function getUrl(string $url): ?array
             {
                 return null;
@@ -54,6 +55,7 @@ class JiraBoardsRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $client = new class extends \Tuleap\Tracker\Test\Stub\Creation\JiraImporter\JiraCloudClientStub
         {
+            #[\Override]
             public function getUrl(string $url): ?array
             {
                 parse_str(parse_url($url, PHP_URL_QUERY), $url_query_parts);
@@ -77,6 +79,7 @@ class JiraBoardsRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $client = new class extends \Tuleap\Tracker\Test\Stub\Creation\JiraImporter\JiraCloudClientStub
         {
+            #[\Override]
             public function getUrl(string $url): ?array
             {
                 return [
@@ -108,6 +111,7 @@ class JiraBoardsRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $client = new class extends \Tuleap\Tracker\Test\Stub\Creation\JiraImporter\JiraCloudClientStub
         {
+            #[\Override]
             public function getUrl(string $url): ?array
             {
                 return [
@@ -137,6 +141,7 @@ class JiraBoardsRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $client = new class extends \Tuleap\Tracker\Test\Stub\Creation\JiraImporter\JiraCloudClientStub
         {
+            #[\Override]
             public function getUrl(string $url): ?array
             {
                 return [
@@ -164,6 +169,7 @@ class JiraBoardsRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $client = new class extends \Tuleap\Tracker\Test\Stub\Creation\JiraImporter\JiraCloudClientStub
         {
+            #[\Override]
             public function getUrl(string $url): ?array
             {
                 return [
@@ -187,6 +193,7 @@ class JiraBoardsRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $client = new class extends \Tuleap\Tracker\Test\Stub\Creation\JiraImporter\JiraCloudClientStub
         {
+            #[\Override]
             public function getUrl(string $url): ?array
             {
                 return [
@@ -208,6 +215,7 @@ class JiraBoardsRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $client = new class extends \Tuleap\Tracker\Test\Stub\Creation\JiraImporter\JiraCloudClientStub
         {
+            #[\Override]
             public function getUrl(string $url): ?array
             {
                 return [
@@ -235,6 +243,7 @@ class JiraBoardsRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\TestCase
     {
         return new class implements JiraBoardProjectsRetriever
         {
+            #[\Override]
             public function getBoardProjects(int $jira_board_id): JiraProjectCollection
             {
                 return new JiraProjectCollection();
@@ -246,6 +255,7 @@ class JiraBoardsRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\TestCase
     {
         return new class implements JiraBoardProjectsRetriever
         {
+            #[\Override]
             public function getBoardProjects(int $jira_board_id): JiraProjectCollection
             {
                 $collection = new JiraProjectCollection();

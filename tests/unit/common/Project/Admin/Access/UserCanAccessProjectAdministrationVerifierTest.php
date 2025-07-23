@@ -37,6 +37,7 @@ final class UserCanAccessProjectAdministrationVerifierTest extends TestCase
     private $membership_delegation_dao;
     private \Project $project;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->membership_delegation_dao = $this->createStub(MembershipDelegationDao::class);

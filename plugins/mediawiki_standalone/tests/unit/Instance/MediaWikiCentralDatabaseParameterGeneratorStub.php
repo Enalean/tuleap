@@ -29,6 +29,7 @@ final class MediaWikiCentralDatabaseParameterGeneratorStub implements MediaWikiC
 {
     public ?string $central_database = null;
 
+    #[\Override]
     public function getCentralDatabase(): ?string
     {
         return $this->central_database;

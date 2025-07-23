@@ -37,6 +37,7 @@ final class BuildIterationUpdateProcessorStub implements BuildIterationUpdatePro
         return new self($update_processor);
     }
 
+    #[\Override]
     public function getProcessor(): ProcessIterationUpdate
     {
         return $this->update_processor;

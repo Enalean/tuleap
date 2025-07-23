@@ -64,26 +64,31 @@ final readonly class TrackerReferenceStub implements TrackerReference
         return new self($id, $name, $project_id, $project_name);
     }
 
+    #[\Override]
     public function getId(): int
     {
         return $this->id;
     }
 
+    #[\Override]
     public function getLabel(): string
     {
         return $this->name;
     }
 
+    #[\Override]
     public function getProjectId(): int
     {
         return $this->project_id;
     }
 
+    #[\Override]
     public function getProjectLabel(): string
     {
         return $this->project_name;
     }
 
+    #[\Override]
     public function getURLToEditAField(int $field_id): string
     {
         return '/edit_field/' . $field_id;

@@ -32,6 +32,7 @@ final class ServiceEnableForXmlImportRetrieverTest extends \Tuleap\Test\PHPUnit\
     private ServiceEnableForXmlImportRetriever $retriever;
     private PluginFactory&MockObject $plugin_factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->plugin_factory = $this->createMock(PluginFactory::class);

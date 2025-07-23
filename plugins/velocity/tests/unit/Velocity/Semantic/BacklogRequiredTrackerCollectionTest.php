@@ -41,6 +41,7 @@ final class BacklogRequiredTrackerCollectionTest extends \Tuleap\Test\PHPUnit\Te
     private Tracker&\PHPUnit\Framework\MockObject\MockObject $other_tracker_without_done_semantic;
     private Tracker&\PHPUnit\Framework\MockObject\MockObject $other_tracker_without_initial_effort_semantic;
 
+    #[\Override]
     public function setUp(): void
     {
         parent::setUp();

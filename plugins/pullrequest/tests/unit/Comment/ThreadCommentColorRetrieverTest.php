@@ -34,6 +34,7 @@ final class ThreadCommentColorRetrieverTest extends TestCase
     private CountThreadsStub $thread_counter;
     private ParentCommentSearcherStub $comment_searcher;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->thread_counter   = CountThreadsStub::withNumberOfThreads(0);

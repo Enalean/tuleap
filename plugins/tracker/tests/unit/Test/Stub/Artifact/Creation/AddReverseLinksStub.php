@@ -40,6 +40,7 @@ final class AddReverseLinksStub implements AddReverseLinks
         return new self();
     }
 
+    #[\Override]
     public function addReverseLinks(PFUser $submitter, InitialChangesetValuesContainer $changeset_values, Artifact $artifact,): void
     {
         $this->has_been_called = true;

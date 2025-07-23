@@ -24,7 +24,7 @@ use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 /**
  * @deprecated See \Tuleap\DB\DataAccessObject
  */
-class DataAccessResult implements LegacyDataAccessResultInterface
+class DataAccessResult implements LegacyDataAccessResultInterface // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     /**
      * $da stores data access object
@@ -37,8 +37,8 @@ class DataAccessResult implements LegacyDataAccessResultInterface
      */
     protected $result;
 
-    protected $_current;
-    protected $_row;
+    protected $_current; //phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
+    protected $_row; //phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
     private $instance_callback = null;
 
     /**
@@ -58,6 +58,7 @@ class DataAccessResult implements LegacyDataAccessResultInterface
     /**
      * @deprecated
      */
+    #[\Override]
     public function getResult()
     {
         return $this->result;
@@ -72,6 +73,7 @@ class DataAccessResult implements LegacyDataAccessResultInterface
      *
      * @return LegacyDataAccessResultInterface
      */
+    #[\Override]
     public function instanciateWith($instance_callback)
     {
         $this->instance_callback = $instance_callback;
@@ -85,6 +87,7 @@ class DataAccessResult implements LegacyDataAccessResultInterface
      *
      * @return mixed
      */
+    #[\Override]
     public function getRow()
     {
         $row = $this->current();
@@ -99,6 +102,7 @@ class DataAccessResult implements LegacyDataAccessResultInterface
      *
      * @return int
      */
+    #[\Override]
     public function rowCount()
     {
         return $this->da->numRows($this->result);
@@ -111,6 +115,7 @@ class DataAccessResult implements LegacyDataAccessResultInterface
      *
      * @return mixed
      */
+    #[\Override]
     public function isError()
     {
         $error = $this->daIsError();
@@ -131,6 +136,7 @@ class DataAccessResult implements LegacyDataAccessResultInterface
      * @deprecated
      * @return array Return the current element
      */
+    #[\Override]
     public function current(): mixed
     {
         if ($this->instance_callback) {
@@ -145,6 +151,7 @@ class DataAccessResult implements LegacyDataAccessResultInterface
      *
      * @deprecated
      */
+    #[\Override]
     public function next(): void
     {
         $this->_current++;
@@ -164,6 +171,7 @@ class DataAccessResult implements LegacyDataAccessResultInterface
      *
      * @deprecated
      */
+    #[\Override]
     public function valid(): bool
     {
         return $this->_row !== false;
@@ -174,6 +182,7 @@ class DataAccessResult implements LegacyDataAccessResultInterface
      *
      * @deprecated
      */
+    #[\Override]
     public function rewind(): void
     {
         if ($this->rowCount() > 0) {
@@ -197,6 +206,7 @@ class DataAccessResult implements LegacyDataAccessResultInterface
      * @deprecated
      *
      */
+    #[\Override]
     public function key(): mixed
     {
         return $this->_current;
@@ -207,6 +217,7 @@ class DataAccessResult implements LegacyDataAccessResultInterface
     /**
      * @deprecated
      */
+    #[\Override]
     public function count(): int
     {
         return $this->rowCount();
@@ -217,6 +228,7 @@ class DataAccessResult implements LegacyDataAccessResultInterface
     /**
      * @deprecated
      */
+    #[\Override]
     public function freeMemory()
     {
     }

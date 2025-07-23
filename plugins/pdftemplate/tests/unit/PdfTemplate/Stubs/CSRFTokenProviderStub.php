@@ -36,6 +36,7 @@ final class CSRFTokenProviderStub implements CSRFTokenProvider
         return new self($token);
     }
 
+    #[\Override]
     public function getToken(): CSRFSynchronizerTokenInterface
     {
         return $this->token;

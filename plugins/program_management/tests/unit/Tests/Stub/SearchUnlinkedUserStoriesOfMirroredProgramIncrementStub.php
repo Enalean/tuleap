@@ -33,6 +33,7 @@ final class SearchUnlinkedUserStoriesOfMirroredProgramIncrementStub implements S
         return new self();
     }
 
+    #[\Override]
     public function getUserStoriesOfMirroredProgramIncrementThatAreNotLinkedToASprint(
         MirroredProgramIncrementIdentifier $mirrored_program_increment,
     ): array {

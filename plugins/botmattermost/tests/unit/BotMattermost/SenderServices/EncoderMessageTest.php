@@ -29,6 +29,7 @@ final class EncoderMessageTest extends TestCase
     private EncoderMessage $encoder_message;
     private Bot $bot;
 
+    #[\Override]
     public function setUp(): void
     {
         parent::setUp();

@@ -33,6 +33,7 @@ final class RecipientUsersRetrieverTest extends TestCase
      */
     private $dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao       = $this->createMock(RecipientUserDAO::class);

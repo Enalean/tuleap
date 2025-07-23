@@ -44,6 +44,7 @@ final class RetrieveProjectReferenceStub implements RetrieveProjectReference
         return new self([]);
     }
 
+    #[\Override]
     public function buildFromId(int $id): ProjectReference
     {
         if (count($this->projects)) {

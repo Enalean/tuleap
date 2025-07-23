@@ -46,6 +46,7 @@ final class CheckXMLMediawikiExportabilityStub implements CheckXMLMediawikiExpor
         return new self(false);
     }
 
+    #[\Override]
     public function checkMediawikiCanBeExportedToXML(ExportXmlProject $event, MediawikiDataDir $mediawiki_data_dir): Ok|Err
     {
         if ($this->is_xml_export_possible) {

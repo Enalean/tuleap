@@ -43,6 +43,7 @@ class DiskUsagePurgerIntegrationTest extends \Tuleap\Test\PHPUnit\TestCase
     /** @var Statistics_DiskUsagePurger */
     private $disk_data_purger;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->disk_usage_dao   = new Statistics_DiskUsageDao();

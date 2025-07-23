@@ -37,6 +37,7 @@ final class ServicePOSTDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private ServicePOSTDataBuilder $service_postdata_builder;
 
+    #[\Override]
     protected function setUp(): void
     {
         $link_data_builder              = new ServiceLinkDataBuilder();

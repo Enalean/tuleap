@@ -38,11 +38,13 @@ final class RetrieveTimeframeValueUserCanSeeStub implements RetrieveTimeframeVal
         return new self($start_date, $end_date);
     }
 
+    #[\Override]
     public function getStartDateValueTimestamp(ArtifactIdentifier $artifact_identifier, UserIdentifier $user_identifier): ?int
     {
         return $this->start_date;
     }
 
+    #[\Override]
     public function getEndDateValueTimestamp(ArtifactIdentifier $artifact_identifier, UserIdentifier $user_identifier): ?int
     {
         return $this->end_date;

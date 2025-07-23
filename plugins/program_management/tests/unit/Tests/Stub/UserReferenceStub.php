@@ -34,6 +34,7 @@ final class UserReferenceStub implements UserReference
     {
     }
 
+    #[\Override]
     public function getId(): int
     {
         return $this->id;
@@ -49,6 +50,7 @@ final class UserReferenceStub implements UserReference
         return new self($user_id, $name);
     }
 
+    #[\Override]
     public function getName(): string
     {
         return $this->name;

@@ -65,6 +65,7 @@ final class OAuth2GrantAccessTokenFromRefreshTokenTest extends \Tuleap\Test\PHPU
      */
     private $scope_extractor;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->representation_builder     = $this->createMock(AccessTokenGrantRepresentationBuilder::class);

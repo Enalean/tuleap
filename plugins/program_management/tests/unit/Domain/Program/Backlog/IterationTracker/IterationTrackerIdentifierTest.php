@@ -38,6 +38,7 @@ final class IterationTrackerIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
     private VerifyIsIterationTrackerStub $iteration_verifier;
     private RetrieveVisibleIterationTrackerStub $tracker_retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->iteration_verifier = VerifyIsIterationTrackerStub::buildValidIteration();

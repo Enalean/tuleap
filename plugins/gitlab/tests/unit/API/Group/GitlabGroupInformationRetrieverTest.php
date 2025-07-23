@@ -33,6 +33,7 @@ final class GitlabGroupInformationRetrieverTest extends TestCase
 {
     private GitlabClientWrapperStub $gitlab_client;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->gitlab_client = GitlabClientWrapperStub::buildWithNullResponse();

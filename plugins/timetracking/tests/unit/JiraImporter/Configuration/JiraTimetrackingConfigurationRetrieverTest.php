@@ -36,6 +36,7 @@ final class JiraTimetrackingConfigurationRetrieverTest extends \Tuleap\Test\PHPU
     private JiraCloudClientStub $jira_client;
     private JiraTimetrackingConfigurationRetriever $retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -91,6 +92,7 @@ final class JiraTimetrackingConfigurationRetrieverTest extends \Tuleap\Test\PHPU
             {
             }
 
+            #[\Override]
             public function getUrl(string $url): ?array
             {
                 throw JiraConnectionException::responseIsNotOk($this->request, $this->response, null);

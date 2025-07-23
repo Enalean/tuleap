@@ -31,6 +31,7 @@ final class ParentCommentSearcherStub implements \Tuleap\PullRequest\Comment\Par
     /**
      * @psalm-return null|array{id: int, parent_id: int, color: string}
      */
+    #[\Override]
     public function searchByCommentID(int $inline_comment_id): ?array
     {
         return $this->row;

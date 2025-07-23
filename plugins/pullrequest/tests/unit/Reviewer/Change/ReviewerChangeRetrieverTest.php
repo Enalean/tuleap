@@ -36,6 +36,7 @@ final class ReviewerChangeRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     private RetrieveUserByIdStub $user_manager;
     private SearchPullRequestStub $pull_request_dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->reviewer_change_dao = $this->createMock(ReviewerChangeDAO::class);

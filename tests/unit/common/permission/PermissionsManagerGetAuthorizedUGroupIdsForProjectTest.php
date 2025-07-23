@@ -24,9 +24,8 @@ use Tuleap\ForgeConfigSandbox;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class PermissionsManagerGetAuthorizedUGroupIdsForProjectTest extends \Tuleap\Test\PHPUnit\TestCase
+class PermissionsManagerGetAuthorizedUGroupIdsForProjectTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     use ForgeConfigSandbox;
     use GlobalLanguageMock;
@@ -38,6 +37,7 @@ class PermissionsManagerGetAuthorizedUGroupIdsForProjectTest extends \Tuleap\Tes
     private string $permission_type;
     private string $object_id;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

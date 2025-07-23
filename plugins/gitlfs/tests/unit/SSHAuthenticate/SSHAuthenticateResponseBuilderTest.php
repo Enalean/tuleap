@@ -39,6 +39,7 @@ final class SSHAuthenticateResponseBuilderTest extends \Tuleap\Test\PHPUnit\Test
     private SSHAuthenticateResponseBuilder $response_builder;
     private \DateTimeImmutable $current_time;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

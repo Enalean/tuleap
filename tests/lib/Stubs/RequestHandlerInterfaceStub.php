@@ -39,6 +39,7 @@ final class RequestHandlerInterfaceStub implements \Psr\Http\Server\RequestHandl
         return new self();
     }
 
+    #[\Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $this->captured_request = $request;

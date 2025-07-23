@@ -82,6 +82,7 @@ final class StatusPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $reopener;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

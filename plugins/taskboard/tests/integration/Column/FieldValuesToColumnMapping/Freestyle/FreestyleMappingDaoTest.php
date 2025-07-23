@@ -48,6 +48,7 @@ final class FreestyleMappingDaoTest extends \Tuleap\Test\PHPUnit\TestIntegration
     private \Cardwall_Column $todo_column;
     private \Cardwall_Column $ongoing_column;
 
+    #[\Override]
     protected function setUp(): void
     {
         $db = DBFactory::getMainTuleapDBConnection()->getDB();

@@ -38,6 +38,7 @@ final class TeamCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
     private BuildTeam $team_builder;
     private UserIdentifier $user_identifier;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user_identifier = UserReferenceStub::withDefaults();

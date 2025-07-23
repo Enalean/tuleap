@@ -46,6 +46,7 @@ final class TestStatusPerTestDefinitionsInformationForUserRetrieverTest extends 
 
     private TestStatusPerTestDefinitionsInformationForUserRetriever $retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->testmanagement_config = $this->createMock(Config::class);

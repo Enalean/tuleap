@@ -41,6 +41,7 @@ final class MentionedUserInTextRetrieverTest extends TestCase
     private const BOYLE_ID      = 104;
     private const BOYLE_NAME    = 'boyle';
 
+    #[\Override]
     protected function setUp(): void
     {
         $peralta  = UserTestBuilder::anActiveUser()->withId(self::PERALTA_ID)->withUserName(self::PERALTA_NAME)->build();

@@ -26,6 +26,7 @@ use Tuleap\CSRF\CSRFSessionKeyStorage;
 
 final readonly class CSRFSessionKeyStorageStub implements CSRFSessionKeyStorage
 {
+    #[\Override]
     public function getSessionKey(): string
     {
         return 'FAKE_CSRF_SESSION_KEY';

@@ -35,6 +35,7 @@ final class WidgetPermissionCheckerTest extends TestCase
 {
     private ProjectManager&MockObject $project_manager;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->project_manager = $this->createMock(ProjectManager::class);

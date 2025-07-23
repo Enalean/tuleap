@@ -51,6 +51,7 @@ final class InvitationToOneRecipientSenderStub implements InvitationToOneRecipie
         return new self($callback);
     }
 
+    #[\Override]
     public function sendToRecipient(
         PFUser $from_user,
         InvitationRecipient $recipient,

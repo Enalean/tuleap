@@ -28,6 +28,7 @@ use Tuleap\REST\ProjectBase;
 #[\PHPUnit\Framework\Attributes\Group('ProjectTests')]
 class ProjectTest extends ProjectBase
 {
+    #[\Override]
     protected function getResponse($request, $user_name = REST_TestDataBuilder::TEST_BOT_USER_NAME): ResponseInterface
     {
         return parent::getResponse($request, $user_name);

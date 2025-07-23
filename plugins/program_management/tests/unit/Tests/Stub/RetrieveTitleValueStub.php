@@ -42,6 +42,7 @@ final class RetrieveTitleValueStub implements RetrieveTitleValue
         return new self('', true);
     }
 
+    #[\Override]
     public function getTitleValue(TitleFieldReference $title): string
     {
         if ($this->has_error) {

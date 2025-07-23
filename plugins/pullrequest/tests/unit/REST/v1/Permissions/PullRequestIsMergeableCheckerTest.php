@@ -40,6 +40,7 @@ final class PullRequestIsMergeableCheckerTest extends TestCase
      */
     private $permission_checker;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->permission_checker = $this->createMock(PullRequestPermissionChecker::class);

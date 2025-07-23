@@ -39,6 +39,7 @@ final class VisibleProgramIncrementTrackerRetrieverTest extends \Tuleap\Test\PHP
     private \TrackerFactory&MockObject $tracker_factory;
     private RetrieveProgramIncrementTracker $tracker_id_retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->tracker_factory      = $this->createMock(\TrackerFactory::class);

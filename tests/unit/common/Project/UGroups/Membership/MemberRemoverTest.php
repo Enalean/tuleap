@@ -40,6 +40,7 @@ final class MemberRemoverTest extends \Tuleap\Test\PHPUnit\TestCase
     private \PFUser $user_to_remove;
     private \PFUser $project_administrator;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dynamic_ugroup_members_updater = $this->createMock(DynamicUGroupMembersUpdater::class);

@@ -39,6 +39,7 @@ final class MediaWikiOAuth2AppSecretGeneratorDBStoreTest extends TestCase
     private $dao;
     private MediaWikiOAuth2AppSecretGeneratorDBStore $secret_generator;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao              = $this->createStub(AppDao::class);
@@ -49,6 +50,7 @@ final class MediaWikiOAuth2AppSecretGeneratorDBStoreTest extends TestCase
             new SplitTokenVerificationStringHasher(),
             new class implements SplitTokenFormatter
             {
+                #[\Override]
                 public function getIdentifier(SplitToken $token): ConcealedString
                 {
                     return new ConcealedString('test_value');

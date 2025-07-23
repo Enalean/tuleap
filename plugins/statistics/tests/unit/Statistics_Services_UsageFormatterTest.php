@@ -26,9 +26,8 @@ namespace Tuleap\Statistics;
 use Statistics_Formatter;
 use Statistics_Services_UsageFormatter;
 
-//phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Statistics_Services_UsageFormatterTest extends \Tuleap\Test\PHPUnit\TestCase
+final class Statistics_Services_UsageFormatterTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /** @var Statistics_Services_UsageFormatter */
     private $usage_formatter;
@@ -38,6 +37,7 @@ final class Statistics_Services_UsageFormatterTest extends \Tuleap\Test\PHPUnit\
      */
     private $first_input_datas;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

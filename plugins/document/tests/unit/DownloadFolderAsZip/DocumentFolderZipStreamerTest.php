@@ -38,6 +38,7 @@ final class DocumentFolderZipStreamerTest extends \Tuleap\Test\PHPUnit\TestCase
     private DocumentFolderZipStreamer $controller;
     private MockObject&DocumentTreeProjectExtractor $project_extractor;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->project_extractor = $this->createMock(DocumentTreeProjectExtractor::class);

@@ -35,6 +35,7 @@ final class ProjectOwnerRemoverTest extends TestCase
     private MockObject&ProjectOwnerDAO $dao;
     private MockObject&ProjectOwnerRetriever $project_owner_retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

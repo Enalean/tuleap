@@ -37,6 +37,7 @@ final class GitXMLImportDefaultBranchRetrieverTest extends TestCase
         );
 
         $git_exec = new class ('') extends \Git_Exec {
+            #[\Override]
             public function getAllBranchesSortedByCreationDate(): array
             {
                 return [];
@@ -64,6 +65,7 @@ final class GitXMLImportDefaultBranchRetrieverTest extends TestCase
         );
 
         $git_exec = new class ('') extends \Git_Exec {
+            #[\Override]
             public function getAllBranchesSortedByCreationDate(): array
             {
                 return ['test', 'master', 'another'];
@@ -91,6 +93,7 @@ final class GitXMLImportDefaultBranchRetrieverTest extends TestCase
         );
 
         $git_exec = new class ('') extends \Git_Exec {
+            #[\Override]
             public function getAllBranchesSortedByCreationDate(): array
             {
                 return ['test', 'master', 'main', 'another'];
@@ -118,6 +121,7 @@ final class GitXMLImportDefaultBranchRetrieverTest extends TestCase
         );
 
         $git_exec = new class ('') extends \Git_Exec {
+            #[\Override]
             public function getAllBranchesSortedByCreationDate(): array
             {
                 return ['test', 'another'];
@@ -145,6 +149,7 @@ final class GitXMLImportDefaultBranchRetrieverTest extends TestCase
         );
 
         $git_exec = new class ('') extends \Git_Exec {
+            #[\Override]
             public function getAllBranchesSortedByCreationDate(): array
             {
                 return ['test', 'main', 'branch01', 'another'];

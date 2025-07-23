@@ -35,6 +35,7 @@ final class ArtifactLinkFieldSpecificPropertiesDAOTest extends TestIntegrationTe
     private TrackerDatabaseBuilder $tracker_builder;
     private CoreDatabaseBuilder $core_builder;
 
+    #[\Override]
     protected function setUp(): void
     {
         $db                    = DBFactory::getMainTuleapDBConnection()->getDB();

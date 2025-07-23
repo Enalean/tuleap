@@ -43,6 +43,7 @@ final class ClientSecretUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $client_secret_store;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->hasher              = new SplitTokenVerificationStringHasher();

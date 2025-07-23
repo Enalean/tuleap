@@ -38,6 +38,7 @@ final class LinkedProjectsCollectionTest extends TestCase
     private \Project $second_linked_project;
     private SearchLinkedProjectsStub $searcher;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->access_checker        = CheckProjectAccessStub::withValidAccess();

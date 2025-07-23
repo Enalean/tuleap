@@ -37,6 +37,7 @@ final class ProjectFromTrackerRetrieverTest extends \Tuleap\Test\PHPUnit\TestCas
     private const PROJECT_LABEL = 'My project';
     private TrackerReference $tracker_reference;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->tracker_reference = TrackerReferenceStub::withId(self::TRACKER_ID);

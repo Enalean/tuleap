@@ -38,6 +38,7 @@ final class JiraSprintIssuesRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\Te
         {
             public int $called = 0;
 
+            #[\Override]
             public function getUrl(string $url): ?array
             {
                 $this->called++;
@@ -67,6 +68,7 @@ final class JiraSprintIssuesRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\Te
         {
             public int $called = 0;
 
+            #[\Override]
             public function getUrl(string $url): ?array
             {
                 $this->called++;
@@ -95,6 +97,7 @@ final class JiraSprintIssuesRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\Te
         {
             public int $called = 0;
 
+            #[\Override]
             public function getUrl(string $url): ?array
             {
                 $this->called++;
@@ -122,6 +125,7 @@ final class JiraSprintIssuesRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\Te
         {
             public int $called = 0;
 
+            #[\Override]
             public function getUrl(string $url): ?array
             {
                 $this->called++;
@@ -156,6 +160,7 @@ final class JiraSprintIssuesRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\Te
         {
             public int $called = 0;
 
+            #[\Override]
             public function getUrl(string $url): ?array
             {
                 if ($this->called === 0) {
@@ -209,6 +214,7 @@ final class JiraSprintIssuesRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\Te
         {
             public int $called = 0;
 
+            #[\Override]
             public function getUrl(string $url): ?array
             {
                 $this->called++;

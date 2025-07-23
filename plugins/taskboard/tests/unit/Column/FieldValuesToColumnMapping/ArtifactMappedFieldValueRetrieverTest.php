@@ -47,6 +47,7 @@ final class ArtifactMappedFieldValueRetrieverTest extends \Tuleap\Test\PHPUnit\T
     private \PFUser $user;
     private \Tuleap\Tracker\Tracker $user_story_tracker;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user_story_tracker  = TrackerTestBuilder::aTracker()->withId(92)->build();

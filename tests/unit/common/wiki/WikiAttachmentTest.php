@@ -31,6 +31,7 @@ class WikiAttachmentTest extends TestCase // phpcs:ignore PSR1.Classes.ClassDecl
 {
     use TemporaryTestDirectory;
 
+    #[\Override]
     protected function tearDown(): void
     {
         clearstatcache();

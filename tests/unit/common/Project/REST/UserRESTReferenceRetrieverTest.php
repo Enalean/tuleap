@@ -30,6 +30,7 @@ final class UserRESTReferenceRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private \UserManager&MockObject $user_manager;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user_manager = $this->createMock(\UserManager::class);

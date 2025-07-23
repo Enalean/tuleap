@@ -45,6 +45,7 @@ final class TrackerErrorPresenterTest extends TestCase
     private UserReference $user_identifier;
     private ConfigurationErrorsGatherer $gatherer;
 
+    #[\Override]
     protected function setUp(): void
     {
         $program_increment_checker = ProgramIncrementCreatorCheckerBuilder::build();

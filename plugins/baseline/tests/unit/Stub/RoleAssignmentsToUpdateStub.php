@@ -42,11 +42,13 @@ final class RoleAssignmentsToUpdateStub implements RoleAssignmentsToUpdate
         );
     }
 
+    #[\Override]
     public function getBaselineAdministratorsUserGroupsIds(): array
     {
         return $this->administators_ids;
     }
 
+    #[\Override]
     public function getBaselineReadersUserGroupsIds(): array
     {
         return $this->readers_ids;

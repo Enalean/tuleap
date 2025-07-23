@@ -40,6 +40,7 @@ final class CheckThereIsAnOngoingTransactionStub implements CheckThereIsAnOngoin
         return new self(false);
     }
 
+    #[\Override]
     public function checkNoOngoingTransaction(): void
     {
         if ($this->in_transaction) {

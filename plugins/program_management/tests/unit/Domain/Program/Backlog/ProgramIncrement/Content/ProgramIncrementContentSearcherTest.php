@@ -54,6 +54,7 @@ final class ProgramIncrementContentSearcherTest extends \Tuleap\Test\PHPUnit\Tes
     private const BASE_URI              = '/plugins/tracker/?aid=';
     private SearchFeaturesStub $features_searcher;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->features_searcher = SearchFeaturesStub::withFeatureIds(self::BUG_ID, self::USER_STORY_ID);

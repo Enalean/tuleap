@@ -99,6 +99,7 @@ final class OAuth2RefreshTokenTest extends \Tuleap\Test\PHPUnit\TestCase
             /**
              * @psalm-pure
              */
+            #[\Override]
             public static function fromItself(): AuthenticationScope
             {
         throw new \LogicException('Not supposed to be called during the tests');
@@ -107,21 +108,25 @@ final class OAuth2RefreshTokenTest extends \Tuleap\Test\PHPUnit\TestCase
             /**
              * @psalm-pure
              */
+            #[\Override]
             public static function fromIdentifier(AuthenticationScopeIdentifier $identifier): ?AuthenticationScope
             {
         throw new \LogicException('Not supposed to be called during the tests');
             }
 
+            #[\Override]
             public function getIdentifier(): AuthenticationScopeIdentifier
             {
         return $this->identifier;
             }
 
+            #[\Override]
             public function getDefinition(): AuthenticationScopeDefinition
             {
         throw new \LogicException('Not supposed to be called during the tests');
             }
 
+            #[\Override]
             public function covers(AuthenticationScope $scope): bool
             {
         return $this->identifier->toString() === $scope->getIdentifier()->toString();

@@ -97,6 +97,7 @@ final class FieldResultBuilderTest extends TestCase
     private Tracker $first_tracker;
     private Tracker $second_tracker;
 
+    #[\Override]
     protected function setUp(): void
     {
         ForgeConfig::set(ConfigurationVariables::SERVER_TIMEZONE, 'Europe/Paris');

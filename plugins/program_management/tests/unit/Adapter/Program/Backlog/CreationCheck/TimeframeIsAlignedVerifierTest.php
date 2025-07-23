@@ -45,6 +45,7 @@ final class TimeframeIsAlignedVerifierTest extends TestCase
     private TimeframeIsAlignedVerifier $verifier;
     private SemanticTimeframeDao&\PHPUnit\Framework\MockObject\MockObject $dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

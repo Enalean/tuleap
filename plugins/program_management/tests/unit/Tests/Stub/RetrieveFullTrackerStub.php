@@ -36,6 +36,7 @@ final class RetrieveFullTrackerStub implements RetrieveFullTracker
         return new self($tracker);
     }
 
+    #[\Override]
     public function getNonNullTracker(TrackerIdentifier $tracker_identifier): \Tuleap\Tracker\Tracker
     {
         return $this->tracker;

@@ -40,6 +40,7 @@ final class LFSActionUserAccessHTTPRequestCheckerTest extends \Tuleap\Test\PHPUn
     private SplitTokenIdentifierTranslator&\PHPUnit\Framework\MockObject\MockObject $authorization_token_unserializer;
     private \PHPUnit\Framework\MockObject\MockObject&ActionAuthorizationVerifier $authorization_verifier;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->plugin                           = $this->createMock(\gitlfsPlugin::class);

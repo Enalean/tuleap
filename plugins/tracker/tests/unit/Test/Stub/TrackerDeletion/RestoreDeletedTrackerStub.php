@@ -33,6 +33,7 @@ final class RestoreDeletedTrackerStub implements RestoreDeletedTracker
         return new self();
     }
 
+    #[\Override]
     public function restoreTrackerMarkAsDeleted(int $tracker_id): void
     {
         $this->call_count++;

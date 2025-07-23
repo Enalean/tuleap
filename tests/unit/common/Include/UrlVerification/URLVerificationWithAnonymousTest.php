@@ -38,6 +38,7 @@ final class URLVerificationWithAnonymousTest extends \Tuleap\Test\PHPUnit\TestCa
 
     private $urlVerification;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

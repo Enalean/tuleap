@@ -32,6 +32,7 @@ final class UGroupGetMembersTest extends \Tuleap\Test\PHPUnit\TestCase
     private array $garfield_incomplete_row = ['user_id' => 1234, 'user_name' => 'garfield'];
     private array $goofy_incomplete_row    = ['user_id' => 5677, 'user_name' => 'goofy'];
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -46,6 +47,7 @@ final class UGroupGetMembersTest extends \Tuleap\Test\PHPUnit\TestCase
         ]);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         UserManager::clearInstance();

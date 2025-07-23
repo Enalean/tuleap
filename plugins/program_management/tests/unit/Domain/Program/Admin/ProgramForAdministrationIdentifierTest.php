@@ -38,6 +38,7 @@ final class ProgramForAdministrationIdentifierTest extends \Tuleap\Test\PHPUnit\
     private ProjectIdentifierStub $project;
     private UserReference $user;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->project             = ProjectIdentifierStub::build();

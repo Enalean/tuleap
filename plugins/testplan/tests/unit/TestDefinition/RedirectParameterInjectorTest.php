@@ -52,6 +52,7 @@ final class RedirectParameterInjectorTest extends \Tuleap\Test\PHPUnit\TestCase
     private mixed $response;
     private RedirectParameterInjector $injector;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->artifact_factory = $this->createMock(\Tracker_ArtifactFactory::class);

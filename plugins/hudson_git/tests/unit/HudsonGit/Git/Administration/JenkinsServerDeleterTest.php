@@ -40,6 +40,7 @@ final class JenkinsServerDeleterTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $project_job_dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

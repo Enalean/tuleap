@@ -36,6 +36,7 @@ final class RetrieveUserDeletionForLastDayStub implements RetrieveUserDeletionFo
         return new self($number_of_deletions_done);
     }
 
+    #[\Override]
     public function getNumberOfArtifactsDeletionsForUserInTimePeriod(PFUser $user): int
     {
         return $this->number_of_deletions_done;

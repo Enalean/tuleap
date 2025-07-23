@@ -35,6 +35,7 @@ final class QueryCreatorTest extends TestCase
     private ResetIsDefaultColumnStub $reset_is_default_column_query_dao;
     private UUID $uuid;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->uuid                              = new UUIDTestContext();

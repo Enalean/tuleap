@@ -36,6 +36,7 @@ final class ScopeExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $scope_builder;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->scope_builder   = $this->createMock(AuthenticationScopeBuilder::class);

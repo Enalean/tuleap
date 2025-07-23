@@ -30,6 +30,7 @@ final class TrackerSemanticDescriptionTest extends \Tuleap\Test\PHPUnit\TestCase
     private TrackerSemanticDescription $semantic;
     private SimpleXMLElement $root;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->root = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');

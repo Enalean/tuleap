@@ -54,6 +54,7 @@ final class ReorderSectionsStub implements ReorderSections
         return new self(null);
     }
 
+    #[\Override]
     public function reorder(ArtidocWithContext $artidoc, SectionOrder $order): Ok|Err
     {
         $this->called = true;

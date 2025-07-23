@@ -33,6 +33,7 @@ final class AggregateRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     private Tracker_Report_Renderer_Table&MockObject $renderer;
     private AggregateRetriever $retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->aggregates_dao = $this->createMock(Tracker_Report_Renderer_Table_FunctionsAggregatesDao::class);

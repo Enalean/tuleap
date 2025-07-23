@@ -54,6 +54,7 @@ final class UserPermissionsBuilderTest extends TestCase
             {
             }
 
+            #[\Override]
             public function doesUserHavePermission(PFUser $user, User_ForgeUserGroupPermission $permission): bool
             {
                 if ($permission instanceof MediawikiAdminAllProjects) {
@@ -219,6 +220,7 @@ final class UserPermissionsBuilderTest extends TestCase
         bool $is_admin,
     ): void {
         $forge_permissions_retriever = new class implements ForgePermissionsRetriever {
+            #[\Override]
             public function doesUserHavePermission(PFUser $user, User_ForgeUserGroupPermission $permission): bool
             {
                 return false;

@@ -36,6 +36,7 @@ final class LocalSettingsPersistToPHPFileTest extends TestCase
     private PHPStringMustacheRenderer $renderer;
     private LocalSettingsRepresentation $representation;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->renderer       = new PHPStringMustacheRenderer(new NullTemplateCache(), __DIR__ . '/../../../templates');

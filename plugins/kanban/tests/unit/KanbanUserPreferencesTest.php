@@ -39,6 +39,7 @@ final class KanbanUserPreferencesTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private int $column_id = 10;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user = $this->createMock(\PFUser::class);

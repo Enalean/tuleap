@@ -40,6 +40,7 @@ final class LFSBasicTransferObjectSaverTest extends \Tuleap\Test\PHPUnit\TestCas
     private LFSObjectPathAllocator&\PHPUnit\Framework\MockObject\MockObject $path_allocator;
     private Prometheus $prometheus;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->filesystem           = $this->createMock(FilesystemOperator::class);

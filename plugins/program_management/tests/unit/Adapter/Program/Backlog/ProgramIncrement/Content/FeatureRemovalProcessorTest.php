@@ -46,6 +46,7 @@ final class FeatureRemovalProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
     private \Tracker_ArtifactFactory&MockObject $artifact_factory;
     private ArtifactLinkUpdater&MockObject $artifact_link_updater;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->program_increments_dao = SearchProgramIncrementLinkedToFeatureStub::withoutLink();

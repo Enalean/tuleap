@@ -46,6 +46,7 @@ final class ConfiguredFieldDaoTest extends TestIntegrationTestCase
     private SectionIdentifier $section_in_item_2_id;
     private SectionIdentifier $section_in_item_3_id;
 
+    #[\Override]
     protected function setUp(): void
     {
         $dao = new ConfiguredFieldDao();

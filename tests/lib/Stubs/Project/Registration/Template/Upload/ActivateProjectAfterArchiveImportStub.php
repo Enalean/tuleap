@@ -38,6 +38,7 @@ final class ActivateProjectAfterArchiveImportStub implements ActivateProjectAfte
         return new self();
     }
 
+    #[\Override]
     public function activateProject(Project $project, \PFUser $project_admin): void
     {
         $this->called = true;

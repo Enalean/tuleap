@@ -33,6 +33,7 @@ final class AppMatchingClientIDFilterAppTypeRetrieverTest extends TestCase
     private $app_dao;
     private AppMatchingClientIDFilterAppTypeRetriever $app_retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->app_dao       = $this->createStub(AppDao::class);

@@ -41,6 +41,7 @@ class IRetrieveVersionStub implements IRetrieveVersion
         return new self($version);
     }
 
+    #[\Override]
     public function getVersion(int $id): \Docman_Version
     {
         if ($this->version) {

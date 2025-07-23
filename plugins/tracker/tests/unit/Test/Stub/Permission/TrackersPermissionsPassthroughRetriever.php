@@ -33,6 +33,7 @@ use Tuleap\Tracker\Permission\UserPermissionsOnItems;
 
 final readonly class TrackersPermissionsPassthroughRetriever implements RetrieveUserPermissionOnFields, RetrieveUserPermissionOnTrackers, RetrieveUserPermissionOnArtifacts
 {
+    #[\Override]
     public function retrieveUserPermissionOnArtifacts(
         PFUser $user,
         array $artifacts,
@@ -41,6 +42,7 @@ final readonly class TrackersPermissionsPassthroughRetriever implements Retrieve
         return new UserPermissionsOnItems($user, $permission, $artifacts, []);
     }
 
+    #[\Override]
     public function retrieveUserPermissionOnFields(
         PFUser $user,
         array $fields,
@@ -49,6 +51,7 @@ final readonly class TrackersPermissionsPassthroughRetriever implements Retrieve
         return new UserPermissionsOnItems($user, $permission, $fields, []);
     }
 
+    #[\Override]
     public function retrieveUserPermissionOnTrackers(
         PFUser $user,
         array $trackers,

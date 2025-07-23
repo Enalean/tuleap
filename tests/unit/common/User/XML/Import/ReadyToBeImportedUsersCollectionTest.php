@@ -36,6 +36,7 @@ final class ReadyToBeImportedUsersCollectionTest extends \Tuleap\Test\PHPUnit\Te
     private string $username;
     private string $ldap_id;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

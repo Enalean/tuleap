@@ -31,6 +31,7 @@ final class CrossReportExportPropertiesFetcherTest extends TestCase
 {
     private CrossReportExportPropertiesFetcher $fetcher;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->fetcher = new CrossReportExportPropertiesFetcher();

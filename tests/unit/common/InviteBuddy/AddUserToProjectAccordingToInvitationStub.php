@@ -35,6 +35,7 @@ final class AddUserToProjectAccordingToInvitationStub implements AddUserToProjec
         return new self();
     }
 
+    #[\Override]
     public function addUserToProjectAccordingToInvitation(
         \PFUser $just_created_user,
         InvitationToEmail|Invitation $invitation,

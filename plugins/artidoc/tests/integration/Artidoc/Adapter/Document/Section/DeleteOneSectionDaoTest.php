@@ -41,6 +41,7 @@ final class DeleteOneSectionDaoTest extends TestIntegrationTestCase
     private SectionIdentifier $uuid_intro;
     private SectionIdentifier $uuid_2;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->artidoc = new ArtidocWithContext(new ArtidocDocument(['item_id' => 101]));

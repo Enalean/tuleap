@@ -43,6 +43,7 @@ final class FieldValuesGathererRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
      */
     private $artifact;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->artifact = $this->createStub(Artifact::class);

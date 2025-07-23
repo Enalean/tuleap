@@ -37,11 +37,13 @@ final class DumperStub implements Dumper
         return new self();
     }
 
+    #[\Override]
     public function dumpSSHKeys(IHaveAnSSHKey $user, InvalidKeysCollector $invalid_keys_collector): bool
     {
         return true;
     }
 
+    #[\Override]
     public function removeAllExistingKeysForUserName(string $user_name): void
     {
     }

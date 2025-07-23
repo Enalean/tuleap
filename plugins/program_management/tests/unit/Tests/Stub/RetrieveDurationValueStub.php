@@ -39,6 +39,7 @@ final class RetrieveDurationValueStub implements RetrieveDurationValue
         return new self($value);
     }
 
+    #[\Override]
     public function getDurationValue(DurationFieldReference $duration): int
     {
         return $this->value;

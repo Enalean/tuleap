@@ -36,6 +36,7 @@ final class DispatchProgramIncrementUpdateStub implements \Tuleap\ProgramManagem
         return new self(0);
     }
 
+    #[\Override]
     public function dispatchUpdate(ProgramIncrementUpdate $update, IterationCreation ...$creations): void
     {
         $this->call_count++;

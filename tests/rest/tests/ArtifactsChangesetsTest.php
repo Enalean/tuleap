@@ -24,6 +24,7 @@ class ArtifactsChangesetsTest extends RestBase //phpcs:ignore PSR1.Classes.Class
 {
     private $artifact_resource;
 
+    #[\Override]
     public function setUp(): void
     {
         parent::setUp();

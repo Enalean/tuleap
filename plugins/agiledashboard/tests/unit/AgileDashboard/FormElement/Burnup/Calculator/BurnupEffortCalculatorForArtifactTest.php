@@ -48,6 +48,7 @@ final class BurnupEffortCalculatorForArtifactTest extends \Tuleap\Test\PHPUnit\T
     private \Tuleap\Tracker\Tracker $tracker;
     private \Tuleap\Tracker\Semantic\Status\Done\SemanticDone&\PHPUnit\Framework\MockObject\MockObject $semantic_done;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->changeset_factory      = $this->createMock(Tracker_Artifact_ChangesetFactory::class);

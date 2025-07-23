@@ -51,6 +51,7 @@ final class CardPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
     private Tracker $tracker;
     private CardPatchRepresentation $payload;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user     = UserTestBuilder::aUser()->build();

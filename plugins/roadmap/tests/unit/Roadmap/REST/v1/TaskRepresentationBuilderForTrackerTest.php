@@ -47,6 +47,7 @@ final class TaskRepresentationBuilderForTrackerTest extends \Tuleap\Test\PHPUnit
     private \Tuleap\Tracker\Tracker $tracker;
     private TrackerSemanticStatus $semantic_status;
 
+    #[\Override]
     protected function setUp(): void
     {
         $semantic = $this->createMock(SemanticProgress::class);

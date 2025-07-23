@@ -77,6 +77,7 @@ final class RetrieveMilestonesWithSubMilestonesStub implements RetrieveMilestone
         return new self($milestones);
     }
 
+    #[\Override]
     public function retrieveMilestonesWithSubMilestones(int $project_id, int $parent_tracker_id): array
     {
         return $this->milestones;

@@ -42,6 +42,7 @@ final class VerifyUserGroupValuesCanBeFullyMovedStub implements VerifyUserGroupV
         return new self(true);
     }
 
+    #[\Override]
     public function canAllUserGroupFieldValuesBeMoved(\Tracker_FormElement_Field_List $source_field, \Tracker_FormElement_Field_List $destination_field, Artifact $artifact, LoggerInterface $logger): bool
     {
         return $this->is_fully_moved;

@@ -52,6 +52,7 @@ final class GitlabBranchInformationRetrieverTest extends TestCase
     private $credentials_retriever;
     private GitlabBranchInformationRetriever $branch_information_retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->repository_integration_factory = $this->createStub(GitlabRepositoryIntegrationFactory::class);

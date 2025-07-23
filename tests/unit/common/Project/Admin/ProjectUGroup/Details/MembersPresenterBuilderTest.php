@@ -41,6 +41,7 @@ final class MembersPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     private \UserHelper&MockObject $user_helper;
     private SynchronizedProjectMembershipDetector&MockObject $detector;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->event_manager = $this->createMock(\EventManager::class);

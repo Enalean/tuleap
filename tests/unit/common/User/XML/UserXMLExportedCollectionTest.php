@@ -35,6 +35,7 @@ final class UserXMLExportedCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
     private PFUser $another_user;
     private PFUser $none;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

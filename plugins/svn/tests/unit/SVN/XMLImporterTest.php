@@ -82,6 +82,7 @@ final class XMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $xml_user_checker;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

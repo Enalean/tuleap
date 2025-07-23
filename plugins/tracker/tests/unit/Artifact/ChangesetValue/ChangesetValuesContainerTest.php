@@ -40,6 +40,7 @@ final class ChangesetValuesContainerTest extends \Tuleap\Test\PHPUnit\TestCase
     private Option $artifact_links;
     private array $fields_data;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->fields_data    = [self::FIELD_ID => self::FIELD_VALUE];

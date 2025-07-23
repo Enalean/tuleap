@@ -39,6 +39,7 @@ final class VerifyIsVisibleArtifactStub implements VerifyIsVisibleArtifact
         $this->visible_artifact_ids = $visible_ids;
     }
 
+    #[\Override]
     public function isVisible(int $artifact_id, UserIdentifier $user_identifier): bool
     {
         if ($this->is_always_visible) {

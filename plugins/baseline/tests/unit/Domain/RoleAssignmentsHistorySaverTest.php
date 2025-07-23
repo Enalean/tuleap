@@ -38,6 +38,7 @@ class RoleAssignmentsHistorySaverTest extends TestCase
 
     private ProjectProxy $project_proxy;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->project_proxy = ProjectProxy::buildFromProject(

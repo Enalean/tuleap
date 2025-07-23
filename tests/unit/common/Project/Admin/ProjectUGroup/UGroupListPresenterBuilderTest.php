@@ -36,6 +36,7 @@ final class UGroupListPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     private \UGroupManager&MockObject $ugroup_manager;
     private SynchronizedProjectMembershipDetector&MockObject $detector;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->ugroup_manager = $this->createMock(\UGroupManager::class);

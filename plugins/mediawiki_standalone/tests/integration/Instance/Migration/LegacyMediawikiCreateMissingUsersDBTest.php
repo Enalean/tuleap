@@ -42,6 +42,7 @@ final class LegacyMediawikiCreateMissingUsersDBTest extends TestCase
     private const MW_REVISION_TABLE = self::DB_PREFIX . 'revision';
     private const TEST_USER_NAME    = 'mwuser1';
 
+    #[\Override]
     protected function setUp(): void
     {
         $db = DBFactory::getMainTuleapDBConnection()->getDB();
@@ -58,6 +59,7 @@ final class LegacyMediawikiCreateMissingUsersDBTest extends TestCase
         parent::setUp();
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         $db = DBFactory::getMainTuleapDBConnection()->getDB();
@@ -172,6 +174,7 @@ final class LegacyMediawikiCreateMissingUsersDBTest extends TestCase
             {
             }
 
+            #[\Override]
             public function create(LoggerInterface $logger, Project $project, string $rev_user_text): Ok|Err
             {
                 $this->db->run(
@@ -186,6 +189,7 @@ final class LegacyMediawikiCreateMissingUsersDBTest extends TestCase
     private function getCreateMissingUserError(): LegacyMediawikiCreateAndPromoteUser
     {
         return new class implements LegacyMediawikiCreateAndPromoteUser {
+            #[\Override]
             public function create(LoggerInterface $logger, Project $project, string $rev_user_text): Ok|Err
             {
                 return Result::err(Fault::fromMessage('Foo'));

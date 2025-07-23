@@ -48,6 +48,7 @@ final class UserImportTest extends \Tuleap\Test\PHPUnit\TestCase
     private $user_manager;
     private Project $project;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -60,6 +61,7 @@ final class UserImportTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->user_import         = new UserImport($this->user_manager, $this->user_helper, $this->createMock(ProjectMemberAdder::class));
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         parent::tearDown();

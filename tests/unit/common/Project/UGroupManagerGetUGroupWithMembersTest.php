@@ -31,6 +31,7 @@ final class UGroupManagerGetUGroupWithMembersTest extends \Tuleap\Test\PHPUnit\T
     private \Project $project;
     private \UGroupManager&MockObject $ugroup_manager;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

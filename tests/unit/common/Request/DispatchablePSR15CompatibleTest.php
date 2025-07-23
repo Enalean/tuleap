@@ -38,6 +38,7 @@ final class DispatchablePSR15CompatibleTest extends \Tuleap\Test\PHPUnit\TestCas
     public function testRequestIsProcessed(): void
     {
         $middleware = new class implements MiddlewareInterface {
+            #[\Override]
             public function process(
                 ServerRequestInterface $request,
                 RequestHandlerInterface $handler,
@@ -64,6 +65,7 @@ final class DispatchablePSR15CompatibleTest extends \Tuleap\Test\PHPUnit\TestCas
                 $this->expected_base_layout = $expected_base_layout;
             }
 
+            #[\Override]
             public function handle(ServerRequestInterface $request): ResponseInterface
             {
                 TestCase::assertSame($this->expected_base_layout, $request->getAttribute(BaseLayout::class));
@@ -94,6 +96,7 @@ final class DispatchablePSR15CompatibleTest extends \Tuleap\Test\PHPUnit\TestCas
         $emitter->method('emit')->willReturn(false);
 
         $dispatchable = new class ($emitter) extends DispatchablePSR15Compatible {
+            #[\Override]
             public function handle(ServerRequestInterface $request): ResponseInterface
             {
                 return HTTPFactoryBuilder::responseFactory()->createResponse();

@@ -45,6 +45,7 @@ final class DisplayPdfTemplateDuplicateFormControllerTest extends TestCase
 {
     use GlobalLanguageMock;
 
+    #[\Override]
     protected function setUp(): void
     {
         $GLOBALS['Language']

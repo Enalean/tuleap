@@ -41,22 +41,26 @@ class CSRFSynchronizerTokenStub implements CSRFSynchronizerTokenInterface
         return new self();
     }
 
+    #[\Override]
     public function isValid($token): bool
     {
         $this->has_been_checked = true;
         return true;
     }
 
+    #[\Override]
     public function check(?string $redirect_to = null, ?\Codendi_Request $request = null): void
     {
         $this->has_been_checked = true;
     }
 
+    #[\Override]
     public function getToken(): string
     {
         return $this->token;
     }
 
+    #[\Override]
     public function getTokenName(): string
     {
         return \CSRFSynchronizerToken::DEFAULT_TOKEN_NAME;

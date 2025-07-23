@@ -41,16 +41,19 @@ final class StreamFilterWrapperTest extends \Tuleap\Test\PHPUnit\TestCase
             /**
              * @param string $data_chunk
              */
+            #[\Override]
             public function process($data_chunk): string
             {
                 return $data_chunk;
             }
 
+            #[\Override]
             public function getFilteredChainIdentifier(): int
             {
                 return STREAM_FILTER_WRITE;
             }
 
+            #[\Override]
             public function filterDetachedEvent(): void
             {
             }

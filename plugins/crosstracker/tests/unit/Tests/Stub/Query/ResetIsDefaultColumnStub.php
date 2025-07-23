@@ -36,6 +36,7 @@ final class ResetIsDefaultColumnStub implements ResetIsDefaultColumn
         return new self();
     }
 
+    #[\Override]
     public function resetIsDefaultColumnByWidgetId(int $widget_id): void
     {
         $this->call_count++;

@@ -36,6 +36,7 @@ final class NewTrackerThatCanBePlannedCollectionTest extends TestCase
      */
     private array $trackers_ids;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->trackers_ids = [self::FIRST_TRACKER_ID, self::SECOND_TRACKER_ID];

@@ -35,6 +35,7 @@ class SenderTest extends TestCase
     private Sender $sender;
     private EncoderMessage $encoder_message;
 
+    #[\Override]
     public function setUp(): void
     {
         parent::setUp();

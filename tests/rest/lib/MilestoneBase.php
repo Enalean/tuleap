@@ -24,6 +24,7 @@ use RestBase;
 
 class MilestoneBase extends RestBase
 {
+    #[\Override]
     public function setUp(): void
     {
         parent::setUp();

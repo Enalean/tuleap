@@ -30,11 +30,13 @@ final class CurrentPageTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $current_page;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->current_page = new CurrentPage();
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         unset($_SERVER['REQUEST_URI']);

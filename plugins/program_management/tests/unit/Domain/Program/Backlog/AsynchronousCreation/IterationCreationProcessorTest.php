@@ -94,6 +94,7 @@ final class IterationCreationProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
     private AddArtifactLinkChangesetStub $link_adder;
     private SearchVisibleTeamsOfProgramStub $teams_searcher;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->creation = IterationCreationBuilder::buildWithIds(self::ITERATION_ID, 2, 53, self::USER_ID, 8612);

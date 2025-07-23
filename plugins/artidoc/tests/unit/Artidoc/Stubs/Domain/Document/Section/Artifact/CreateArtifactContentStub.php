@@ -54,6 +54,7 @@ final readonly class CreateArtifactContentStub implements CreateArtifactContent
         return new self(Result::err(Fault::fromMessage('Artifact creation failed')));
     }
 
+    #[\Override]
     public function createArtifact(ArtidocWithContext $artidoc, ArtifactContent $content): Ok|Err
     {
         if ($this->result === null) {

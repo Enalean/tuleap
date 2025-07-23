@@ -51,6 +51,7 @@ final class TrackersDuplicatedHandlerTest extends TestCase
     private \Project $new_project;
     private MappingRegistry $mapping_registry;
 
+    #[\Override]
     protected function setUp(): void
     {
         $source_iteration_tracker_id                  = 46;

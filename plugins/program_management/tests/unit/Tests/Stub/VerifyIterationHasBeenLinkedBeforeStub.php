@@ -35,6 +35,7 @@ final class VerifyIterationHasBeenLinkedBeforeStub implements VerifyIterationHas
     {
     }
 
+    #[\Override]
     public function hasIterationBeenLinkedBefore(
         ProgramIncrementIdentifier $program_increment,
         IterationIdentifier $iteration,

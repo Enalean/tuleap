@@ -46,6 +46,7 @@ final class RetrieveUsedFieldsStub implements RetrieveUsedFields
         return new self([]);
     }
 
+    #[\Override]
     public function getUsedFields(\Tuleap\Tracker\Tracker $tracker): array
     {
         $fields_of_tracker = [];
@@ -57,6 +58,7 @@ final class RetrieveUsedFieldsStub implements RetrieveUsedFields
         return $fields_of_tracker;
     }
 
+    #[\Override]
     public function getUsedFormElementFieldById(int $id): ?Tracker_FormElement_Field
     {
         foreach ($this->fields as $field) {
@@ -68,6 +70,7 @@ final class RetrieveUsedFieldsStub implements RetrieveUsedFields
         return null;
     }
 
+    #[\Override]
     public function getUsedFieldByName(int $tracker_id, string $field_name): ?Tracker_FormElement_Field
     {
         foreach ($this->fields as $field) {

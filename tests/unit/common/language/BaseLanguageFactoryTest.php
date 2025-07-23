@@ -35,6 +35,7 @@ final class BaseLanguageFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
     private string $supportedLanguages;
     private string|false $oldLocale;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->supportedLanguages = ForgeConfig::get('sys_supported_languages');
@@ -45,6 +46,7 @@ final class BaseLanguageFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         ForgeConfig::set('sys_custompluginsroot', $this->getTmpDir());
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         setlocale(LC_ALL, $this->oldLocale);

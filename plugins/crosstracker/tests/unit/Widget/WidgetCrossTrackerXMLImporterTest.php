@@ -37,6 +37,7 @@ final class WidgetCrossTrackerXMLImporterTest extends TestCase
 {
     private CrossTrackerSearchWidgetStub $widget;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->widget = CrossTrackerSearchWidgetStub::withDefault();

@@ -25,15 +25,15 @@ use Tuleap\PHPWiki\WikiPage;
 use Tuleap\Project\UGroupLiteralizer;
 use Tuleap\Test\PHPUnit\TestCase;
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Wiki_PermissionsManagerTest extends TestCase
+final class Wiki_PermissionsManagerTest extends TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     private Wiki_PermissionsManager $wiki_permissions_manager;
     private PermissionsManager&MockObject $permission_manager;
     private WikiPage&MockObject $wiki_page;
     private Project&MockObject $project;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

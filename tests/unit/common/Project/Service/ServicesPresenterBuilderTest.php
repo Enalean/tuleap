@@ -39,6 +39,7 @@ final class ServicesPresenterBuilderTest extends TestCase
     private Project $project;
     private EventDispatcherStub $event_manager;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->project = $this->createStub(Project::class);

@@ -40,6 +40,7 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private IterationsRetriever $retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         $verify_is_program_increment = VerifyIsProgramIncrementStub::withValidProgramIncrement();

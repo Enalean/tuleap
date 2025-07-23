@@ -36,6 +36,7 @@ final class StoreTeamSynchronizationErrorHasOccurredStub implements StoreTeamSyn
         return new self(0);
     }
 
+    #[\Override]
     public function storeErrorHasOccurred(int $program_id, int $team_id): void
     {
         $this->call_count++;

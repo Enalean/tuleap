@@ -36,6 +36,7 @@ final class WidgetInheritanceHandlerTest extends TestCase
     private CloneWidgetStub $widget_cloner;
     private TestLogger $logger;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->widget_dao    = SearchCrossTrackerWidgetStub::withoutExistingWidget();

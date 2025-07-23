@@ -38,6 +38,7 @@ final class GroupLinkFactoryTest extends TestCase
     private VerifyProjectIsAlreadyLinkedStub $project_verifier;
     private AddNewGroupLinkStub $group_adder;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->group_verifier   = VerifyGroupIsAlreadyLinkedStub::withNeverLinked();

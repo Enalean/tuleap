@@ -45,6 +45,7 @@ final class SearchFeaturesInChangesetStub implements SearchFeaturesInChangeset
         return $this;
     }
 
+    #[\Override]
     public function getArtifactsLinkedInChangeset(ChangesetIdentifier $changeset_identifier): array
     {
         if (! isset($this->changesets_and_features[$changeset_identifier->getId()])) {

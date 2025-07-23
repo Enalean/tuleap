@@ -46,6 +46,7 @@ final class CommentOnlyChangesetCreatorTest extends \Tuleap\Test\PHPUnit\TestCas
 
     private CreateNewChangesetStub $inner_creator;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->inner_creator = CreateNewChangesetStub::withReturnChangeset(

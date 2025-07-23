@@ -36,6 +36,7 @@ final readonly class GetExistingArtifactLinkTypesStub implements GetExistingArti
         return new self($type_presenter);
     }
 
+    #[\Override]
     public function getExistingArtifactLinkTypes(array $json_representation): ?TypePresenter
     {
         return $this->type_presenter;

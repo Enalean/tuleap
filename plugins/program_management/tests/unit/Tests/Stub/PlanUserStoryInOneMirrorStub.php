@@ -41,6 +41,7 @@ final class PlanUserStoryInOneMirrorStub implements PlanUserStoryInOneMirror
         return new self([], []);
     }
 
+    #[\Override]
     public function planInOneMirror(ProgramIncrementIdentifier $program_increment, MirroredProgramIncrementIdentifier $mirrored_program_increment, FeaturePlanChange $feature_plan_change, UserIdentifier $user_identifier,): void
     {
         $this->featured_planned_in_mirrors[$mirrored_program_increment->getId()]     = $feature_plan_change->user_stories;

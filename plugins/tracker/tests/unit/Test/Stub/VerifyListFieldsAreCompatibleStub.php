@@ -40,6 +40,7 @@ final class VerifyListFieldsAreCompatibleStub implements VerifyListFieldsAreComp
         return new self(false);
     }
 
+    #[\Override]
     public function areListFieldsCompatible(\Tracker_FormElement_Field_List $source_field, \Tracker_FormElement_Field_List $destination_field): bool
     {
         return $this->are_fields_compatible;

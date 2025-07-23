@@ -22,9 +22,8 @@ declare(strict_types=1);
 
 use Tuleap\User\ForgeUserGroupPermission\SiteAdministratorPermissionChecker;
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class User_ForgeUserGroupManagerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class User_ForgeUserGroupManagerTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /**
      * @var User_ForgeUserGroupPermissionsDao&\PHPUnit\Framework\MockObject\MockObject
@@ -32,6 +31,7 @@ final class User_ForgeUserGroupManagerTest extends \Tuleap\Test\PHPUnit\TestCase
     private $dao;
     private User_ForgeUserGroupManager $manager;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

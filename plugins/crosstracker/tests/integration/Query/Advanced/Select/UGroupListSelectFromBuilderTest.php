@@ -46,6 +46,7 @@ final class UGroupListSelectFromBuilderTest extends CrossTrackerFieldTestCase
     private array $expected_values;
     private PFUser $user;
 
+    #[\Override]
     public function setUp(): void
     {
         $GLOBALS['Language'] = (new BaseLanguageFactory())->getBaseLanguage('en_US');

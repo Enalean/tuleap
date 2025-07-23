@@ -47,6 +47,7 @@ final class BackendSVNTest extends TestIntegrationTestCase
     private ProjectManager&MockObject $project_manager;
     private BackendSVN&MockObject $backend;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -80,6 +81,7 @@ final class BackendSVNTest extends TestIntegrationTestCase
         ]);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         //clear the cache between each tests

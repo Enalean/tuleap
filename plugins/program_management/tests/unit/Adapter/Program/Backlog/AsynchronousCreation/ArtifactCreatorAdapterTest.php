@@ -71,6 +71,7 @@ final class ArtifactCreatorAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
     private TrackerArtifactCreator&MockObject $creator;
     private MirroredTimeboxFirstChangeset $changeset;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->creator = $this->createMock(TrackerArtifactCreator::class);

@@ -36,6 +36,7 @@ final class DeleteImageStub implements DeleteImage
         return new self(false);
     }
 
+    #[\Override]
     public function deleteImage(PdfTemplateImage $image): void
     {
         $this->deleted = true;

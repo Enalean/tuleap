@@ -49,6 +49,7 @@ final class ReviewerAutocompleterControllerTest extends \Tuleap\Test\PHPUnit\Tes
     private MockObject&PotentialReviewerRetriever $potential_reviewer_retriever;
     private SearchPullRequestStub $pull_request_dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user_manager                    = $this->createMock(UserManager::class);

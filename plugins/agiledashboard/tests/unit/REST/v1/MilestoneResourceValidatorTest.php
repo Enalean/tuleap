@@ -64,6 +64,7 @@ final class MilestoneResourceValidatorTest extends TestCase
     private MilestoneResourceValidator $milestone_resource_validator;
     private PFUser $user;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user = UserTestBuilder::buildWithDefaults();

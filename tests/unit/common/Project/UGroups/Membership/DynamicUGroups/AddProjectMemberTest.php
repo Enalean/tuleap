@@ -50,6 +50,7 @@ final class AddProjectMemberTest extends \Tuleap\Test\PHPUnit\TestCase
     private ProjectHistoryDao&MockObject $history_dao;
     private \UGroupBinding&MockObject $ugroup_binding;
 
+    #[\Override]
     protected function setUp(): void
     {
         \ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);

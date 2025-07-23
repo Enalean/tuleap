@@ -45,6 +45,7 @@ final class GetFileUploadDataStub implements GetFileUploadData
         return new self(new FileUploadData($field));
     }
 
+    #[\Override]
     public function getFileUploadData(Tracker $tracker, ?Artifact $artifact, PFUser $user): ?FileUploadData
     {
         return $this->file_upload_data;

@@ -42,6 +42,7 @@ final class RetrieveFullProjectStub implements RetrieveFullProject
         return new self([]);
     }
 
+    #[\Override]
     public function getProject(int $project_id): \Project
     {
         foreach ($this->projects as $project) {

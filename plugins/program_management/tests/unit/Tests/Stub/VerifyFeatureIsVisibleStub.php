@@ -31,6 +31,7 @@ final class VerifyFeatureIsVisibleStub implements VerifyFeatureIsVisible
     {
     }
 
+    #[\Override]
     public function isVisibleFeature(int $feature_id, UserIdentifier $user): bool
     {
         if ($this->always_visible) {

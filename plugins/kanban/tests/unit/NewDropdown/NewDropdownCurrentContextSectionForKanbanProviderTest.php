@@ -50,6 +50,7 @@ final class NewDropdownCurrentContextSectionForKanbanProviderTest extends \Tulea
     private NewDropdownCurrentContextSectionForKanbanProvider $provider;
     private \PFUser $user;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->kanban_factory         = $this->createMock(\Tuleap\Kanban\KanbanFactory::class);

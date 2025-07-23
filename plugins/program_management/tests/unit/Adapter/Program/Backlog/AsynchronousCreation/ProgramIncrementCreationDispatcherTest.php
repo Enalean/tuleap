@@ -40,6 +40,7 @@ final class ProgramIncrementCreationDispatcherTest extends \Tuleap\Test\PHPUnit\
     private $queue_factory;
     private ProgramIncrementCreation $creation;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->queue_factory = $this->createStub(QueueFactory::class);

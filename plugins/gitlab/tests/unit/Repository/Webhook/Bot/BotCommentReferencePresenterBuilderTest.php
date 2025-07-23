@@ -32,6 +32,7 @@ class BotCommentReferencePresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestC
 
     private BotCommentReferencePresenterBuilder $builder;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

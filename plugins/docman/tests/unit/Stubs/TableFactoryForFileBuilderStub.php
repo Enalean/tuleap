@@ -37,6 +37,7 @@ class TableFactoryForFileBuilderStub implements TableFactoryForFileBuilder
         return new self($factory);
     }
 
+    #[\Override]
     public function getTableFactoryForFile(Docman_File $item): Docman_ApprovalTableFileFactory
     {
         return $this->factory;

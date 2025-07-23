@@ -30,6 +30,7 @@ final readonly class GetQueryUsersStub implements GetQueryUsers
     {
     }
 
+    #[\Override]
     public function getUsersByQueryId(int $id): array
     {
         return $this->users;

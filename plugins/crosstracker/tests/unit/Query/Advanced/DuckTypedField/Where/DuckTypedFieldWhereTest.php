@@ -51,6 +51,7 @@ final class DuckTypedFieldWhereTest extends TestCase
     /** @var list<\Tracker_FormElement_Field> */
     private array $fields;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->first_tracker  = TrackerTestBuilder::aTracker()->withId(self::FIRST_TRACKER_ID)->build();

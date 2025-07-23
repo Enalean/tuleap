@@ -31,6 +31,7 @@ final class SystemEvent_COMPUTE_MD5SUMTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $language;
 
+    #[\Override]
     protected function setUp(): void
     {
         $now = (new DateTimeImmutable())->getTimestamp();

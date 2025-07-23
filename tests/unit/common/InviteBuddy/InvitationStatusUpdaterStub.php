@@ -37,11 +37,13 @@ final class InvitationStatusUpdaterStub implements InvitationStatusUpdater
         return new self();
     }
 
+    #[\Override]
     public function markAsError(int $id): void
     {
         $this->has_been_marked_as_error = true;
     }
 
+    #[\Override]
     public function markAsSent(int $id): void
     {
         $this->has_been_marked_as_sent = true;

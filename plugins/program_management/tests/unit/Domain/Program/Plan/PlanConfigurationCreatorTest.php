@@ -40,6 +40,7 @@ final class PlanConfigurationCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     private const ADMINISTRATORS_USER_GROUP_ID = 4;
     private SaveNewPlanConfigurationStub $plan_saver;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->plan_saver = SaveNewPlanConfigurationStub::withCount();

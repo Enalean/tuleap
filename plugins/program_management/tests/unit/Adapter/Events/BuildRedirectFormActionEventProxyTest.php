@@ -39,6 +39,7 @@ final class BuildRedirectFormActionEventProxyTest extends TestCase
     private BuildRedirectFormActionEventProxy $proxy;
     private Tracker_Artifact_Redirect $redirect;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->redirect = new Tracker_Artifact_Redirect();

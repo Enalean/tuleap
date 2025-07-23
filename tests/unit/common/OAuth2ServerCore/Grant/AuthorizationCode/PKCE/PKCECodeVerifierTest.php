@@ -36,6 +36,7 @@ final class PKCECodeVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $pkce_code_verifier;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->pkce_code_verifier = new PKCECodeVerifier();

@@ -34,6 +34,7 @@ final class ServiceDisabledCollectorProxyTest extends TestCase
     private ServiceDisabledCollectorProxy $proxy;
     private ServiceDisabledCollector $event;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->event = new ServiceDisabledCollector(

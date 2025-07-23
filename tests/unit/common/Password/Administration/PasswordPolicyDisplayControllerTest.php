@@ -41,6 +41,7 @@ final class PasswordPolicyDisplayControllerTest extends \Tuleap\Test\PHPUnit\Tes
     private MockObject&AdminPageRenderer $admin_renderer;
     private MockObject&PasswordConfigurationRetriever $configuration_retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->admin_renderer          = $this->createMock(AdminPageRenderer::class);
@@ -55,6 +56,7 @@ final class PasswordPolicyDisplayControllerTest extends \Tuleap\Test\PHPUnit\Tes
         $_SERVER['REQUEST_URI']        = '/some_page';
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         unset($_SERVER['REQUEST_URI']);

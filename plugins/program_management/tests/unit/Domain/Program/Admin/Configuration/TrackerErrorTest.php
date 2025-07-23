@@ -39,6 +39,7 @@ final class TrackerErrorTest extends TestCase
 {
     private VerifyIsTeamStub $verify_is_team;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->verify_is_team = VerifyIsTeamStub::withValidTeam();

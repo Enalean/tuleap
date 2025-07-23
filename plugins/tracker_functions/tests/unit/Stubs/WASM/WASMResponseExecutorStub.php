@@ -55,6 +55,7 @@ final class WASMResponseExecutorStub implements WASMResponseExecutor
         return $this;
     }
 
+    #[\Override]
     public function executeResponse(WASMResponseRepresentation $response, Artifact $artifact): Ok|Err
     {
         return $this->result;

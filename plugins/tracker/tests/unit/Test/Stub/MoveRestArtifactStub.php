@@ -69,6 +69,7 @@ final class MoveRestArtifactStub implements MoveRestArtifact
         return new self(false, false, false, true);
     }
 
+    #[\Override]
     public function move(Tracker $source_tracker, Tracker $target_tracker, Artifact $artifact, PFUser $user, bool $should_populate_feedback_on_success, LoggerInterface $logger): void
     {
         if ($this->move_artifact_not_done) {

@@ -31,6 +31,7 @@ final class AccessKeyRevokerTest extends \Tuleap\Test\PHPUnit\TestCase
     private $dao;
     private AccessKeyRevoker $revoker;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao = $this->createMock(AccessKeyDAO::class);

@@ -34,6 +34,7 @@ final class ExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
     private Project&MockObject $project;
     private RepositoryManager&MockObject $repository_manager;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->project = $this->createMock(\Project::class);

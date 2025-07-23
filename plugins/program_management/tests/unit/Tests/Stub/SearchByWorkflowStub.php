@@ -48,6 +48,7 @@ final class SearchByWorkflowStub implements SearchByWorkflow
         return new self([]);
     }
 
+    #[\Override]
     public function searchByWorkflowId(WorkflowIdentifier $workflow_identifier): array
     {
         return $this->transitions;

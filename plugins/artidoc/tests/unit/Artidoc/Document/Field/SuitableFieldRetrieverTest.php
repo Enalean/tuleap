@@ -59,6 +59,7 @@ final class SuitableFieldRetrieverTest extends TestCase
     private RetrieveSemanticDescriptionFieldStub $description_field_retriever;
     private RetrieveSemanticTitleField $title_field_retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->tracker                     = TrackerTestBuilder::aTracker()->withId(1001)->build();

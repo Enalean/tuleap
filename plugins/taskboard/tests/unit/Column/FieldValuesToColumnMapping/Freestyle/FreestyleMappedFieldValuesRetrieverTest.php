@@ -38,6 +38,7 @@ final class FreestyleMappedFieldValuesRetrieverTest extends TestCase
     private TaskboardTracker $taskboard_tracker;
     private \Cardwall_Column $column;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->verify_mapping_exists = VerifyMappingExistsStub::withNoMapping();

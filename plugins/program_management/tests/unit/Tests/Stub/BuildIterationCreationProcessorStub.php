@@ -36,6 +36,7 @@ final class BuildIterationCreationProcessorStub implements BuildIterationCreatio
         return new self($processor);
     }
 
+    #[\Override]
     public function getProcessor(): ProcessIterationCreation
     {
         return $this->processor;

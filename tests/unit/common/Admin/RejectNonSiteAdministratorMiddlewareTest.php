@@ -36,6 +36,7 @@ final class RejectNonSiteAdministratorMiddlewareTest extends \Tuleap\Test\PHPUni
     private MockObject&\UserManager $user_manager;
     private RejectNonSiteAdministratorMiddleware $middleware;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user_manager = $this->createMock(\UserManager::class);

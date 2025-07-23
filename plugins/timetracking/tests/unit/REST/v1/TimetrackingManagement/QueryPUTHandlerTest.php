@@ -43,6 +43,7 @@ final class QueryPUTHandlerTest extends TestCase
 
     private CheckPermissionStub $check_permission_stub;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->check_permission_stub = CheckPermissionStub::withPermission();

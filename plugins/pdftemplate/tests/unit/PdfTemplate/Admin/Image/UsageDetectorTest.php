@@ -40,6 +40,7 @@ final class UsageDetectorTest extends TestCase
     private PdfTemplateImage $another_logo;
     private PdfTemplateImageHrefBuilder $href_builder;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->identifier_factory = new PdfTemplateImageIdentifierFactory(new DatabaseUUIDV7Factory());

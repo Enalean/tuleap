@@ -42,6 +42,7 @@ final class DateValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     private StartDateFieldReferenceStub $start_date;
     private EndDateFieldReferenceStub $end_date;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->form_element_factory = $this->createStub(\Tracker_FormElementFactory::class);

@@ -40,6 +40,7 @@ final class AddToTopBacklogPostActionTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private TopBacklogChangeProcessorStub $top_backlog_change_processor;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->top_backlog_change_processor = TopBacklogChangeProcessorStub::withCallCount();

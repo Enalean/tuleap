@@ -43,6 +43,7 @@ final readonly class UserRolesCheckerInterfaceStub implements UserRolesCheckerIn
         return new self($exception);
     }
 
+    #[\Override]
     public function checkUserIsAdminOfJiraProject(JiraClient $jira_client, LoggerInterface $logger, string $jira_project): void
     {
         if ($this->exception !== null) {

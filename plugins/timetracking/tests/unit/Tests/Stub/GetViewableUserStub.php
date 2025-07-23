@@ -34,6 +34,7 @@ final readonly class GetViewableUserStub implements GetViewableUser
     {
     }
 
+    #[\Override]
     public function getViewableUser(PFUser $current_user, int $user_id): ?PFUser
     {
         if (! isset($this->users[$user_id])) {

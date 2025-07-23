@@ -191,6 +191,7 @@ final class TrackerTestBuilder
                 parent::__construct($id, $group_id, $name, $description, $item_name, $allow_copy, $submit_instructions, $browse_instructions, $status, $deletion_date, $instantiate_for_new_projects, $log_priority_changes, $notifications_level, $color, $enable_emailgateway);
             }
 
+            #[\Override]
             protected function getTrackerArtifactSubmissionPermission(): VerifySubmissionPermissions
             {
                 return $this->user_can_submit
@@ -198,11 +199,13 @@ final class TrackerTestBuilder
                     : VerifySubmissionPermissionStub::withoutSubmitPermission();
             }
 
+            #[\Override]
             public function userCanView($user = 0): bool
             {
                 return $this->user_can_view ?? parent::userCanView($user);
             }
 
+            #[\Override]
             public function userIsAdmin($user = 0): bool
             {
                 return $this->user_is_admin ?? parent::userIsAdmin($user);

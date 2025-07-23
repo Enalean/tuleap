@@ -61,6 +61,7 @@ final class MailFilterTest extends \Tuleap\Test\PHPUnit\TestCase
     private \PFUser $user_registered_bis;
 
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

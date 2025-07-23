@@ -39,6 +39,7 @@ final class RoadmapTasksOutOfDateFilterTest extends \Tuleap\Test\PHPUnit\TestCas
 
         $filter = new RoadmapTasksOutOfDateFilter(
             new class implements IDetectIfArtifactIsOutOfDate {
+                #[\Override]
                 public function isArtifactOutOfDate(
                     Artifact $artifact,
                     DateTimeImmutable $now,

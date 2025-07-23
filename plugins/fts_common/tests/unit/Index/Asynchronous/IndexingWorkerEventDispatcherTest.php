@@ -46,6 +46,7 @@ final class IndexingWorkerEventDispatcherTest extends TestCase
     {
         $inserter = new class implements InsertItemsIntoIndex {
             public bool $has_been_called = false;
+            #[\Override]
             public function indexItems(ItemToIndex ...$items): void
             {
                 $this->has_been_called = true;
@@ -65,11 +66,13 @@ final class IndexingWorkerEventDispatcherTest extends TestCase
     {
         $remover = new class implements DeleteIndexedItems {
             public bool $has_been_called = false;
+            #[\Override]
             public function deleteIndexedItems(IndexedItemsToRemove $items_to_remove): void
             {
                 $this->has_been_called = true;
             }
 
+            #[\Override]
             public function deleteIndexedItemsPerProjectID(int $project_id): void
             {
             }

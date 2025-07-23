@@ -45,6 +45,7 @@ final class SearchProgramIncrementsOfProgramStub implements SearchProgramIncreme
         return new self([]);
     }
 
+    #[\Override]
     public function searchOpenProgramIncrements(ProgramIdentifier $program): array
     {
         return $this->ids;

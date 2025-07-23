@@ -68,6 +68,7 @@ final class SetDefaultLicenseAgreementControllerTest extends TestCase
      */
     private $layout;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->current_user = new PFUser(['language_id' => 'en_US']);

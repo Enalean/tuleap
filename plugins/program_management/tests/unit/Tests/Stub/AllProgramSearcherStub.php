@@ -39,6 +39,7 @@ final class AllProgramSearcherStub implements AllProgramSearcher
         $this->program_ids = $program_ids;
     }
 
+    #[\Override]
     public function getAllPrograms(): array
     {
         return $this->program_ids;

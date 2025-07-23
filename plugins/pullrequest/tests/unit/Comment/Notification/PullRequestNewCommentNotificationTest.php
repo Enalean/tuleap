@@ -49,6 +49,7 @@ final class PullRequestNewCommentNotificationTest extends \Tuleap\Test\PHPUnit\T
     private PFUser $change_user;
     private PullRequest $pull_request;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user_103     = UserTestBuilder::buildWithId(103);

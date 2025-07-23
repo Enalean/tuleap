@@ -42,6 +42,7 @@ final readonly class RetrieveTemplateStub implements RetrieveTemplate
         return new self(null);
     }
 
+    #[\Override]
     public function retrieveTemplate(PdfTemplateIdentifier $identifier): ?PdfTemplate
     {
         return $this->template;

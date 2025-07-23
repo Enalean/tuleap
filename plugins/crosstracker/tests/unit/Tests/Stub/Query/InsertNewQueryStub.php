@@ -31,6 +31,7 @@ final class InsertNewQueryStub implements InsertNewQuery
     {
     }
 
+    #[\Override]
     public function create(
         string $query,
         string $title,

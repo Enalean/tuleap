@@ -42,6 +42,7 @@ final readonly class TrackerXmlFieldsMappingStub implements TrackerXmlFieldsMapp
         return new self($mapping);
     }
 
+    #[\Override]
     public function getNewValueId(mixed $old_value_id): string
     {
         if (isset($this->mapping[$old_value_id])) {
@@ -50,6 +51,7 @@ final readonly class TrackerXmlFieldsMappingStub implements TrackerXmlFieldsMapp
         throw new LogicException('test not covered');
     }
 
+    #[\Override]
     public function getNewOpenValueId(mixed $old_value_id): void
     {
     }

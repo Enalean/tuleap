@@ -38,6 +38,7 @@ final class IntegrateGitlabProjectStub implements IntegrateGitlabProject
     /**
      * @return Ok<null>|Err<Fault>
      */
+    #[\Override]
     public function integrateSeveralProjects(IntegrateRepositoriesInGroupLinkCommand $command): Ok|Err
     {
         return $this->result;

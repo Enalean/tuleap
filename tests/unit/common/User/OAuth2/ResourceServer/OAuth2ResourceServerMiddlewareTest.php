@@ -66,6 +66,7 @@ final class OAuth2ResourceServerMiddlewareTest extends \Tuleap\Test\PHPUnit\Test
      */
     private $middleware;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->access_token_unserializer = $this->createMock(SplitTokenIdentifierTranslator::class);
@@ -244,11 +245,13 @@ final class OAuth2ResourceServerMiddlewareTest extends \Tuleap\Test\PHPUnit\Test
         $scope_identifier = OAuth2ScopeIdentifier::fromIdentifierKey('foo');
         $scope_definition = new /** @psalm-immutable */class implements AuthenticationScopeDefinition
         {
+            #[\Override]
             public function getName(): string
             {
                 return 'Foo';
             }
 
+            #[\Override]
             public function getDescription(): string
             {
                 return 'Foo Description';

@@ -35,6 +35,7 @@ use org\bovigo\vfs\vfsStream;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class BackendTest extends \Tuleap\Test\PHPUnit\TestCase
 {
+    #[\Override]
     protected function tearDown(): void
     {
         Backend::clearInstances();

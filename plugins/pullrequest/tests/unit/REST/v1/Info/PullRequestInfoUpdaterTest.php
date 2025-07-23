@@ -47,6 +47,7 @@ final class PullRequestInfoUpdaterTest extends TestCase
     private $pull_request_is_mergeable_checker;
     private PullRequestInfoUpdater $info_updater;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->factory                           = $this->createMock(Factory::class);

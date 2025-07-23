@@ -34,6 +34,7 @@ final class CallWASMFunctionTest extends TestCase
 {
     private WASMResponseProcessor&MockObject $response_processor;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->response_processor = $this->createMock(WASMResponseProcessor::class);

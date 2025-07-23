@@ -71,6 +71,7 @@ final class PostPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\Test
      */
     private $action_branch_handler;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

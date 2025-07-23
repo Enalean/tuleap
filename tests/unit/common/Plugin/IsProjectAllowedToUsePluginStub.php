@@ -38,6 +38,7 @@ final class IsProjectAllowedToUsePluginStub implements IsProjectAllowedToUsePlug
         return new self(false);
     }
 
+    #[\Override]
     public function isAllowed($group_id): bool
     {
         return $this->is_allowed;

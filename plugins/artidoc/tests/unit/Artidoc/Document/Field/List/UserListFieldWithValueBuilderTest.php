@@ -50,6 +50,7 @@ final class UserListFieldWithValueBuilderTest extends TestCase
     private Tracker $tracker;
     private \Tracker_Artifact_Changeset $changeset;
 
+    #[\Override]
     protected function setUp(): void
     {
         $project         = ProjectTestBuilder::aProject()->withId(168)->build();

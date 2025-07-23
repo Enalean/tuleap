@@ -44,6 +44,7 @@ final class PriorityManagerTest extends TestCase
     private Tracker_ArtifactFactory&MockObject $artifact_factory;
     private EasyDB&MockObject $db;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->priority_dao         = $this->createMock(PriorityDao::class);

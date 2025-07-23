@@ -33,6 +33,7 @@ final class GroupAutocompleteControllerTest extends \Tuleap\Test\PHPUnit\TestCas
     private \LDAP&MockObject $ldap;
     private \HTTPRequest&MockObject $request;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->request = $this->createMock(\HTTPRequest::class);

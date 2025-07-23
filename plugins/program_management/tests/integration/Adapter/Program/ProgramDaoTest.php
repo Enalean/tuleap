@@ -35,6 +35,7 @@ final class ProgramDaoTest extends TestIntegrationTestCase
     private static int $valid_artifact_id;
     private ProgramDaoProject $dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $db = DBFactory::getMainTuleapDBConnection()->getDB();

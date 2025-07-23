@@ -38,6 +38,7 @@ final class RetrieveRootPlanningStub implements RetrieveRootPlanning
         return new self($team_project_id, $planning);
     }
 
+    #[\Override]
     public function getRootPlanning(PFUser $user, int $group_id): Planning|false
     {
         if ($group_id !== $this->team_project_id) {

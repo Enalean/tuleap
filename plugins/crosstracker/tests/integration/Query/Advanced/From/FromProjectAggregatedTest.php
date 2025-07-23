@@ -51,6 +51,7 @@ final class FromProjectAggregatedTest extends CrossTrackerFieldTestCase
     private Project $sub_project_1;
     private Project $sub_project_2;
 
+    #[\Override]
     protected function setUp(): void
     {
         $db                  = DBFactory::getMainTuleapDBConnection()->getDB();
@@ -86,6 +87,7 @@ final class FromProjectAggregatedTest extends CrossTrackerFieldTestCase
         $this->addWidgetToProject(2, $sub_project_1_id);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         EventManager::clearInstance();

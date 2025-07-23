@@ -37,6 +37,7 @@ final readonly class CodendiLogSwitcher implements Disposable
         \ForgeConfig::set('codendi_log', '/tmp');
     }
 
+    #[\Override]
     public function dispose(): void
     {
         \ForgeConfig::set('codendi_log', $this->original_log_path);

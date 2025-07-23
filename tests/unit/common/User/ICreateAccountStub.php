@@ -41,6 +41,7 @@ final class ICreateAccountStub implements ICreateAccount
         return new self($user);
     }
 
+    #[\Override]
     public function createAccount(\PFUser $user): ?\PFUser
     {
         return $this->created_user;

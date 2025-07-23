@@ -65,6 +65,7 @@ final class InstanceManagementTest extends TestCase
     private MediaWikiCentralDatabaseParameterGeneratorStub $central_database_parameter_generator;
     private OngoingInitializationsStateStub $initializations_state_stub;
 
+    #[\Override]
     protected function setUp(): void
     {
         \ForgeConfig::set(ServerHostname::DEFAULT_DOMAIN, 'tuleap.example.com');
@@ -82,6 +83,7 @@ final class InstanceManagementTest extends TestCase
                 {
                 }
 
+                #[\Override]
                 public function getHTTPClient(): ClientInterface
                 {
                     return $this->client;

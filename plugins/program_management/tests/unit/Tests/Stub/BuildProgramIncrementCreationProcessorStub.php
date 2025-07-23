@@ -36,6 +36,7 @@ final class BuildProgramIncrementCreationProcessorStub implements BuildProgramIn
         return new self($procesor);
     }
 
+    #[\Override]
     public function getProcessor(): ProcessProgramIncrementCreation
     {
         return $this->processor;

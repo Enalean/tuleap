@@ -28,6 +28,7 @@ final class ToBeCreatedUserTest extends \Tuleap\Test\PHPUnit\TestCase
     /** @var ToBeCreatedUser */
     private $user;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

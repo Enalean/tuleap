@@ -33,6 +33,7 @@ final class OnlyOfficeDocumentProviderTest extends TestCase
     private const ITEM_ID = 123;
     private \Project $project;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->project = ProjectTestBuilder::aProject()->build();

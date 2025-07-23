@@ -47,6 +47,7 @@ final class InlineCommentCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     private ThreadColorUpdaterStub $thread_color_updater;
     private EventDispatcherStub $event_dispatcher;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->reference_manager       = ExtractAndSaveCrossReferencesStub::withCallCount();

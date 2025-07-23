@@ -42,11 +42,13 @@ final class ProcessIterationCreationStub implements ProcessIterationCreation
         return $this->call_count;
     }
 
+    #[\Override]
     public function processCreation(IterationCreation $iteration_creation): void
     {
         $this->call_count++;
     }
 
+    #[\Override]
     public function processCreationForTeams(IterationCreation $iteration_creation, TeamIdentifierCollection $teams): void
     {
     }

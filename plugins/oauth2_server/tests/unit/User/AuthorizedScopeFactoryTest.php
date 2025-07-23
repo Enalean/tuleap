@@ -43,6 +43,7 @@ final class AuthorizedScopeFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $scope_dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $scope_builder           = new /** @psalm-immutable */ class implements AuthenticationScopeBuilder {
@@ -50,6 +51,7 @@ final class AuthorizedScopeFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
              * @psalm-suppress ImplementedReturnTypeMismatch Looks like there is a confusion caused by the anonymous class and the templated function
              * @psalm-return AuthenticationScope<AuthenticationScopeIdentifier>|null
              */
+            #[\Override]
             public function buildAuthenticationScopeFromScopeIdentifier(
                 AuthenticationScopeIdentifier $scope_identifier,
             ): ?AuthenticationScope {
@@ -59,6 +61,7 @@ final class AuthorizedScopeFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
                 return null;
             }
 
+            #[\Override]
             public function buildAllAvailableAuthenticationScopes(): array
             {
                 throw new \LogicException('This method is not supposed to be called in the test');

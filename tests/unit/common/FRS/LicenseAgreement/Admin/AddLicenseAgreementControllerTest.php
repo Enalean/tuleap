@@ -58,6 +58,7 @@ final class AddLicenseAgreementControllerTest extends TestCase
      */
     private $assets;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->project_retriever = $this->createMock(ProjectRetriever::class);

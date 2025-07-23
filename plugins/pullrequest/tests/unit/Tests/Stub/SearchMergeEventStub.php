@@ -41,6 +41,7 @@ final class SearchMergeEventStub implements SearchMergeEvent
         return new self(null, null);
     }
 
+    #[\Override]
     public function searchMergeEventForPullRequest(int $pull_request_id): ?array
     {
         if (! $this->user_id || ! $this->merge_date_timestamp) {

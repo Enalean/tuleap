@@ -33,6 +33,7 @@ final class QueryUpdaterTest extends TestCase
     private ResetIsDefaultColumnStub $reset_is_default_column_query_dao;
     private UpdateQueryStub $updater_query_dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->reset_is_default_column_query_dao =  ResetIsDefaultColumnStub::build();

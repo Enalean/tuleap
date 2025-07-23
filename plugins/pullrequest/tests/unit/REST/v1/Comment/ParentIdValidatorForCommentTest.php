@@ -35,6 +35,7 @@ final class ParentIdValidatorForCommentTest extends TestCase
     private int $parent_id;
     private CommentSearcherStub $comment_dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->parent_id   = 1;

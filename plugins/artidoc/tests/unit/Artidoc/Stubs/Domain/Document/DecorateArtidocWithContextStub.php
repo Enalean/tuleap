@@ -51,6 +51,7 @@ final readonly class DecorateArtidocWithContextStub implements DecorateArtidocWi
         return new self(false);
     }
 
+    #[\Override]
     public function decorate(Artidoc $artidoc): Ok|Err
     {
         if ($this->is_valid === null) {

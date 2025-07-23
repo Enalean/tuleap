@@ -38,11 +38,13 @@ final class UpdateCalendarConfigStub implements UpdateCalendarConfig
         return new self();
     }
 
+    #[\Override]
     public function deactivateCalendarEvent(int $tracker_id): void
     {
         $this->has_deactivate_been_called = true;
     }
 
+    #[\Override]
     public function activateCalendarEvent(int $tracker_id): void
     {
         $this->has_activate_been_called = true;

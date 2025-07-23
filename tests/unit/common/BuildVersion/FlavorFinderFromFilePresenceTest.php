@@ -36,6 +36,7 @@ final class FlavorFinderFromFilePresenceTest extends \Tuleap\Test\PHPUnit\TestCa
      */
     private $flavor_finder;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->root_sources = vfsStream::setup()->url();

@@ -74,6 +74,7 @@ final class CreateNewChangesetStub implements \Tuleap\Tracker\Artifact\Changeset
         return new self(null, null, $callback);
     }
 
+    #[\Override]
     public function create(NewChangeset $changeset, PostCreationContext $context): ?\Tracker_Artifact_Changeset
     {
         $this->calls_count++;

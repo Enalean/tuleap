@@ -59,6 +59,7 @@ final class RetrieveMirroredIterationTrackerStub implements RetrieveMirroredIter
         return new self(false, false, true, []);
     }
 
+    #[\Override]
     public function retrieveSecondPlanningMilestoneTracker(
         ProjectReference $project,
         UserIdentifier $user,

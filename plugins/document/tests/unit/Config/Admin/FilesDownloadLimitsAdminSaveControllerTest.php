@@ -39,6 +39,7 @@ final class FilesDownloadLimitsAdminSaveControllerTest extends \Tuleap\Test\PHPU
     private ConfigDao&MockObject $config_dao;
     private FilesDownloadLimitsAdminSaveController $controller;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->token      = $this->createMock(CSRFSynchronizerToken::class);

@@ -29,6 +29,7 @@ final class OnlyOfficeDownloadDocumentTokenDAOTest extends TestIntegrationTestCa
 {
     private OnlyOfficeDownloadDocumentTokenDAO $dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao = new OnlyOfficeDownloadDocumentTokenDAO();

@@ -33,6 +33,7 @@ final class NotificationOnOwnActionSaverTest extends TestCase
     private const USER_ID = 241;
     private StoreUserPreferenceStub $store_preference;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->store_preference = new StoreUserPreferenceStub();

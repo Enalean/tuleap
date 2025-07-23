@@ -42,6 +42,7 @@ final readonly class SearchExpiredUploadsStub implements SearchExpiredUploads
         return new self($results);
     }
 
+    #[\Override]
     public function searchExpiredUploads(\DateTimeImmutable $current_time): array
     {
         return $this->results;

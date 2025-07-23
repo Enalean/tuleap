@@ -56,6 +56,7 @@ final class SearchChildrenOfFeatureStub implements SearchChildrenOfFeature
         return new self(true, [[]]);
     }
 
+    #[\Override]
     public function getChildrenOfFeatureInTeamProjects(FeatureIdentifier $feature): array
     {
         if ($this->always_return) {

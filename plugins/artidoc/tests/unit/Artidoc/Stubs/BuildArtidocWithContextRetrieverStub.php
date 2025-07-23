@@ -36,6 +36,7 @@ final readonly class BuildArtidocWithContextRetrieverStub implements BuildArtido
         return new self($retriever);
     }
 
+    #[\Override]
     public function buildForUser(\PFUser $user): RetrieveArtidocWithContext
     {
         return $this->retriever;

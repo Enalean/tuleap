@@ -32,6 +32,7 @@ final class GitExecTest extends \Tuleap\Test\PHPUnit\TestCase
     private string $fixture_dir;
     private GitExec $git_exec;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

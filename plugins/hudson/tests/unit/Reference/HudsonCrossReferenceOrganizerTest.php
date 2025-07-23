@@ -43,6 +43,7 @@ final class HudsonCrossReferenceOrganizerTest extends \Tuleap\Test\PHPUnit\TestC
      */
     private $user;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->project_manager = $this->createMock(ProjectManager::class);

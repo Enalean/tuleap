@@ -47,6 +47,7 @@ final class PotentialReviewerRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     private $pull_request_permission_checker;
     private PotentialReviewerRetriever $retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user_manager                    = $this->createMock(UserManager::class);

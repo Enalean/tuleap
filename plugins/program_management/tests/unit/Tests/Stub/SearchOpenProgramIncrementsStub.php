@@ -45,6 +45,7 @@ final class SearchOpenProgramIncrementsStub implements SearchOpenProgramIncremen
         return new self([]);
     }
 
+    #[\Override]
     public function searchOpenProgramIncrements(int $potential_program_id, UserIdentifier $user): array
     {
         return $this->program_increments;

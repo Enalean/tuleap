@@ -33,6 +33,7 @@ final class VerifyIsIterationTrackerStub implements VerifyIsIterationTracker
         $this->is_valid = $is_valid;
     }
 
+    #[\Override]
     public function isIterationTracker(int $tracker_id): bool
     {
         return $this->is_valid;

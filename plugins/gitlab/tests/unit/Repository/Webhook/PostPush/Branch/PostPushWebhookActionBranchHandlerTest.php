@@ -60,6 +60,7 @@ final class PostPushWebhookActionBranchHandlerTest extends TestCase
      */
     private $cross_reference_manager;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

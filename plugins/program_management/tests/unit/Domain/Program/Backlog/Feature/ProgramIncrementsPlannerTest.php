@@ -64,6 +64,7 @@ final class ProgramIncrementsPlannerTest extends \Tuleap\Test\PHPUnit\TestCase
     private TeamIdentifierCollection $teams;
     private CreateProgramIncrementsStub $program_increment_creator;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->fields_gatherer = GatherSynchronizedFieldsStub::withFieldsPreparations(

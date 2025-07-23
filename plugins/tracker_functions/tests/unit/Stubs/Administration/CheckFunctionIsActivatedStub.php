@@ -40,6 +40,7 @@ final class CheckFunctionIsActivatedStub implements CheckFunctionIsActivated
         return new self(false);
     }
 
+    #[\Override]
     public function isFunctionActivated(int $tracker_id): bool
     {
         return $this->activated;

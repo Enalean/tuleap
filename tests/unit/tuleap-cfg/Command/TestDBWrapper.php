@@ -47,6 +47,7 @@ final class TestDBWrapper implements DBWrapperInterface
         $this->prepared_run[$statement] = $value;
     }
 
+    #[\Override]
     public function escapeIdentifier(string $identifier, bool $quote = true): string
     {
         if ($quote) {
@@ -55,11 +56,13 @@ final class TestDBWrapper implements DBWrapperInterface
         return $identifier;
     }
 
+    #[\Override]
     public function rawExec(string $statement): void
     {
         $this->statements[] = $statement;
     }
 
+    #[\Override]
     public function run(string $statement, ...$params)
     {
         $this->statements[]                                    = $statement;
@@ -67,11 +70,13 @@ final class TestDBWrapper implements DBWrapperInterface
         return $this->prepared_run[$statement] ?? null;
     }
 
+    #[\Override]
     public function row(string $statement)
     {
         $this->statements[] = $statement;
     }
 
+    #[\Override]
     public function single(string $statement)
     {
         $this->statements[] = $statement;

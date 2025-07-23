@@ -32,6 +32,7 @@ final class RecursiveBoundUGroupsRefresherTest extends \Tuleap\Test\PHPUnit\Test
     private BoundUGroupRefresher&MockObject $refresher;
     private \UGroupManager&MockObject $ugroup_manager;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->refresher           = $this->createMock(BoundUGroupRefresher::class);

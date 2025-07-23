@@ -53,6 +53,7 @@ class FRSPermissionManagerTest extends TestCase
      */
     private $access_checker;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->permission_dao     = $this->createMock(FRSPermissionDao::class);

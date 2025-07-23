@@ -27,6 +27,7 @@ final class MappedValuesTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private MappedValues $mapped_values;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->mapped_values = new MappedValues([123, 456]);

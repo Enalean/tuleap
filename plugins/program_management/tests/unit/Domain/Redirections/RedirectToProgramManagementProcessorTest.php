@@ -42,6 +42,7 @@ final class RedirectToProgramManagementProcessorTest extends \Tuleap\Test\PHPUni
     private Tracker_Artifact_Redirect $redirect;
     private RedirectUserAfterArtifactCreationOrUpdateEvent $event;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->program_redirection_parameters = ProgramRedirectionParametersStub::withOtherValue();

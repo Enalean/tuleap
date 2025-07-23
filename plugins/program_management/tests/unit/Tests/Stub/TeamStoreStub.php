@@ -37,6 +37,7 @@ final class TeamStoreStub implements TeamStore
         return new self(0);
     }
 
+    #[\Override]
     public function save(TeamCollection $team_collection): void
     {
         $this->call_count++;

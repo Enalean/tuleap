@@ -37,6 +37,7 @@ final class OngoingInitializationsStateStub implements OngoingInitializationsSta
         return new self();
     }
 
+    #[\Override]
     public function startInitialization(\Project $project): void
     {
         $this->is_started = true;
@@ -47,6 +48,7 @@ final class OngoingInitializationsStateStub implements OngoingInitializationsSta
         return $this->is_started;
     }
 
+    #[\Override]
     public function markAsError(\Project $project): void
     {
         $this->is_error = true;
@@ -57,6 +59,7 @@ final class OngoingInitializationsStateStub implements OngoingInitializationsSta
         return $this->is_error;
     }
 
+    #[\Override]
     public function finishInitialization(\Project $project): void
     {
         $this->is_finished = true;

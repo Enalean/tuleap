@@ -35,6 +35,7 @@ final class RetrieveAllImagesStub implements RetrieveAllImages
         return new self();
     }
 
+    #[\Override]
     public function retrieveAll(): array
     {
         return [];

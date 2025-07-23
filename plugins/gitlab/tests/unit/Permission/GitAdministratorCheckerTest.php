@@ -34,6 +34,7 @@ final class GitAdministratorCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private VerifyUserIsGitAdministratorStub $admin_verifier;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->admin_verifier = VerifyUserIsGitAdministratorStub::withAlwaysGitAdministrator();

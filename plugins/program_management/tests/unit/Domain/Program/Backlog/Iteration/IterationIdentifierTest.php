@@ -42,6 +42,7 @@ final class IterationIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
     private VerifyIsIterationStub $iteration_verifier;
     private VerifyIsVisibleArtifactStub $visibility_verifier;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user                = UserIdentifierStub::buildGenericUser();

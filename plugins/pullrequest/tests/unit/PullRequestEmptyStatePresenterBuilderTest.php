@@ -34,6 +34,7 @@ final class PullRequestEmptyStatePresenterBuilderTest extends TestCase
 
     private PullRequestEmptyStatePresenterBuilder $presenter_builder;
 
+    #[\Override]
     protected function setUp(): void
     {
         $url_verification = $this->createStub(\URLVerification::class);

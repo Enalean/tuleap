@@ -37,11 +37,13 @@ final class SystemEventManagerGetTypesForQueueTest extends TestCase
 {
     public const CUSTOM_QUEUE = 'custom_queue';
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
 
         $event_manager = new class extends EventManager {
+            #[\Override]
             public function processEvent($event, $params = []): void
             {
                 switch ($event) {
@@ -64,6 +66,7 @@ final class SystemEventManagerGetTypesForQueueTest extends TestCase
         EventManager::setInstance($event_manager);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         EventManager::clearInstance();

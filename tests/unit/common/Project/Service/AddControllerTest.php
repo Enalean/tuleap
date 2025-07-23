@@ -37,6 +37,7 @@ final class AddControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     private ProjectAdministratorChecker&MockObject $administrator_checker;
     private ServicePOSTDataBuilder&MockObject $data_builder;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->project_retriever     = $this->createMock(ProjectRetriever::class);

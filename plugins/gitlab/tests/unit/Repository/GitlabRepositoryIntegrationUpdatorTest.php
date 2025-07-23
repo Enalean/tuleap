@@ -51,6 +51,7 @@ final class GitlabRepositoryIntegrationUpdatorTest extends TestCase
      */
     private $updator;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->gitlab_repository_dao     = $this->createMock(GitlabRepositoryIntegrationDao::class);

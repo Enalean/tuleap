@@ -56,11 +56,13 @@ final class GroupMembersImporterTest extends TestCase
             {
             }
 
+            #[\Override]
             public function getAssignedTuleapUser(string $unique_account_identifier): PFUser
             {
                 return $this->users[$unique_account_identifier] ?? $this->default_user;
             }
 
+            #[\Override]
             public function retrieveJiraAuthor(JiraUser $update_author): PFUser
             {
                 return UserTestBuilder::aUser()->build();
@@ -238,11 +240,13 @@ final class GroupMembersImporterTest extends TestCase
             {
             }
 
+            #[\Override]
             public function getAssignedTuleapUser(string $unique_account_identifier): PFUser
             {
                 return $this->users[$unique_account_identifier] ?? $this->default_user;
             }
 
+            #[\Override]
             public function retrieveJiraAuthor(JiraUser $update_author): PFUser
             {
                 return UserTestBuilder::aUser()->build();

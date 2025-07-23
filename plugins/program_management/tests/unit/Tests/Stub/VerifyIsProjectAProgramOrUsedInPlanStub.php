@@ -43,6 +43,7 @@ final class VerifyIsProjectAProgramOrUsedInPlanStub implements VerifyIsProjectAP
         return new self(false);
     }
 
+    #[\Override]
     public function isProjectAProgramOrIsPartOfPlan(int $project_id): bool
     {
         return $this->is_valid;

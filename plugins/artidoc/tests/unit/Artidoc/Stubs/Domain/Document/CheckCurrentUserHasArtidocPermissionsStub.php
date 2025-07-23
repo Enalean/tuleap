@@ -55,6 +55,7 @@ final readonly class CheckCurrentUserHasArtidocPermissionsStub implements CheckC
         return new self(null, null);
     }
 
+    #[\Override]
     public function checkUserCanRead(Artidoc $artidoc): Ok|Err
     {
         if ($this->can_read === null) {
@@ -64,6 +65,7 @@ final readonly class CheckCurrentUserHasArtidocPermissionsStub implements CheckC
         return $this->can_read ? Result::ok($artidoc) : Result::err(Fault::fromMessage('cannot read'));
     }
 
+    #[\Override]
     public function checkUserCanWrite(Artidoc $artidoc): Ok|Err
     {
         if ($this->can_write === null) {

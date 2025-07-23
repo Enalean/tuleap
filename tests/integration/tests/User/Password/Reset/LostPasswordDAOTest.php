@@ -34,6 +34,7 @@ final class LostPasswordDAOTest extends TestIntegrationTestCase
      */
     private $dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao = new LostPasswordDAO();

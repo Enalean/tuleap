@@ -34,6 +34,7 @@ final class CustomizableContentLoaderTest extends \Tuleap\Test\PHPUnit\TestCase
     private PFUser $fr_user;
     private PFUser $br_user;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -52,6 +53,7 @@ final class CustomizableContentLoaderTest extends \Tuleap\Test\PHPUnit\TestCase
         ]);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         ForgeConfig::restore();

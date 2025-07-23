@@ -34,6 +34,7 @@ final class ImmutableTagCreatorTest extends TestCase
 {
     private ImmutableTagCreator $immutable_tag_creator;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->immutable_tag_creator = new ImmutableTagCreator(

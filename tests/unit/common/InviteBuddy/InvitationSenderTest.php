@@ -43,6 +43,7 @@ final class InvitationSenderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use ForgeConfigSandbox;
 
+    #[\Override]
     protected function setUp(): void
     {
         ForgeConfig::set(InviteBuddyConfiguration::CONFIG_MAX_INVITATIONS_BY_DAY, 5);

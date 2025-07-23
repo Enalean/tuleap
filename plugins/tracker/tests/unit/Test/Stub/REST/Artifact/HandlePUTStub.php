@@ -49,6 +49,7 @@ final class HandlePUTStub implements HandlePUT
         return new self(true);
     }
 
+    #[\Override]
     public function handle(array $values, Artifact $artifact, \PFUser $submitter, ?NewChangesetCommentRepresentation $comment,): void
     {
         $this->payload = $values;

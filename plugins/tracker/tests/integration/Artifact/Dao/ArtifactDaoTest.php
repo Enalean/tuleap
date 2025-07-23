@@ -36,6 +36,7 @@ final class ArtifactDaoTest extends TestIntegrationTestCase
     private int $child_artifact;
     private int $linked_artifact;
 
+    #[\Override]
     protected function setUp(): void
     {
         $db              = DBFactory::getMainTuleapDBConnection()->getDB();

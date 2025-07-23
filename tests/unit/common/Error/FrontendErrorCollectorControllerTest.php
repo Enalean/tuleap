@@ -41,6 +41,7 @@ final class FrontendErrorCollectorControllerTest extends TestCase
     private Prometheus $prometheus;
     private FrontendErrorCollectorController $controller;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->stream_factory = HTTPFactoryBuilder::streamFactory();
@@ -56,6 +57,7 @@ final class FrontendErrorCollectorControllerTest extends TestCase
                 {
                 }
 
+                #[\Override]
                 public function getCurrentUser(): \PFUser
                 {
                     return UserTestBuilder::buildWithId($this->user_id);

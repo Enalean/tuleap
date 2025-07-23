@@ -32,6 +32,7 @@ final readonly class ProvideCurrentUserWithLoggedInInformationStub implements Pr
     {
     }
 
+    #[\Override]
     public function getCurrentUserWithLoggedInInformation(): CurrentUserWithLoggedInInformation
     {
         return CurrentUserWithLoggedInInformation::fromLoggedInUser($this->user);

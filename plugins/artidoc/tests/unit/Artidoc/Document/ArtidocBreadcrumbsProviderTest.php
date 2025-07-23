@@ -42,6 +42,7 @@ final class ArtidocBreadcrumbsProviderTest extends TestCase
     private \Docman_PermissionsManager&MockObject $permissions_manager;
     private \Docman_ItemFactory&MockObject $item_factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user    = UserTestBuilder::buildWithDefaults();
@@ -53,6 +54,7 @@ final class ArtidocBreadcrumbsProviderTest extends TestCase
         \Docman_PermissionsManager::setInstance(self::PROJECT_ID, $this->permissions_manager);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         \Docman_PermissionsManager::clearInstances();

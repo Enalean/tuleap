@@ -57,6 +57,7 @@ final class OAuth2AuthorizationCodeDAOTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $dao;
 
+    #[\Override]
     public static function setUpBeforeClass(): void
     {
         $db                           = DBFactory::getMainTuleapDBConnection()->getDB();
@@ -91,11 +92,13 @@ final class OAuth2AuthorizationCodeDAOTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao = new OAuth2AuthorizationCodeDAO();
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         $db = DBFactory::getMainTuleapDBConnection()->getDB();
@@ -107,6 +110,7 @@ final class OAuth2AuthorizationCodeDAOTest extends \Tuleap\Test\PHPUnit\TestCase
         $db->run('DELETE FROM oauth2_refresh_token_scope');
     }
 
+    #[\Override]
     public static function tearDownAfterClass(): void
     {
         $db = DBFactory::getMainTuleapDBConnection()->getDB();

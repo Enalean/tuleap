@@ -68,6 +68,7 @@ final class TimetrackingOverviewRepresentationsBuilderTest extends \Tuleap\Test\
      */
     private $tracker;
 
+    #[\Override]
     public function setUp(): void
     {
         parent::setUp();

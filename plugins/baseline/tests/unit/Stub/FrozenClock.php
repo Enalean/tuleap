@@ -39,6 +39,7 @@ final class FrozenClock implements Clock
         $this->now = DateTimeFactory::one();
     }
 
+    #[\Override]
     public function now(): DateTimeImmutable
     {
         return $this->now;

@@ -38,6 +38,7 @@ final class AuthenticationTestCoveringScope implements AuthenticationScope
         $this->identifier = $identifier;
     }
 
+    #[\Override]
     public static function fromItself(): AuthenticationScope
     {
         self::throwUnexpectedCall();
@@ -46,21 +47,25 @@ final class AuthenticationTestCoveringScope implements AuthenticationScope
     /**
      * @psalm-pure
      */
+    #[\Override]
     public static function fromIdentifier(AuthenticationScopeIdentifier $identifier): AuthenticationScope
     {
         return new self($identifier);
     }
 
+    #[\Override]
     public function getIdentifier(): AuthenticationScopeIdentifier
     {
         return $this->identifier;
     }
 
+    #[\Override]
     public function getDefinition(): AuthenticationScopeDefinition
     {
         self::throwUnexpectedCall();
     }
 
+    #[\Override]
     public function covers(AuthenticationScope $scope): bool
     {
         return $scope->getIdentifier()->toString() === $this->identifier->toString();

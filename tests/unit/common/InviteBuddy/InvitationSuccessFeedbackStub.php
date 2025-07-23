@@ -37,6 +37,7 @@ final class InvitationSuccessFeedbackStub implements InvitationSuccessFeedback
         return new self();
     }
 
+    #[\Override]
     public function accountHasJustBeenCreated(\PFUser $just_created_user, RegisterFormContext $context): void
     {
         $this->has_been_called_with = $just_created_user;

@@ -60,6 +60,7 @@ final class AddArtifactLinkChangesetStub implements AddArtifactLinkChangeset
         return $this->arguments;
     }
 
+    #[\Override]
     public function addArtifactLinkChangeset(ArtifactLinkChangeset $changeset): void
     {
         $this->call_count++;
