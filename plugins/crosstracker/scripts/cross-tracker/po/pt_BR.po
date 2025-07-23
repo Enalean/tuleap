@@ -112,6 +112,9 @@ msgstr ""
 msgid "Last update date"
 msgstr ""
 
+msgid "Load all"
+msgstr ""
+
 msgid "Make this query displayed by default"
 msgstr ""
 

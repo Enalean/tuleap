@@ -34,6 +34,13 @@ export class ArtifactsTableBuilder {
         return this;
     }
 
+    public withTotalNumberOfRow(row: ArtifactRow, total_number_of_row: number): this {
+        for (let i = 0; i < total_number_of_row; i++) {
+            this.#rows.push(row);
+        }
+        return this;
+    }
+
     public buildWithTotal(total: number): ArtifactsTableWithTotal {
         return {
             table: this.build(),

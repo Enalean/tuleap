@@ -18,15 +18,14 @@
  */
 
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { ResultAsync } from "neverthrow";
 import { errAsync, okAsync } from "neverthrow";
 import { shallowMount } from "@vue/test-utils";
 import type { VueWrapper } from "@vue/test-utils";
 import { Option } from "@tuleap/option";
 import { Fault } from "@tuleap/fault";
 import { ArtifactRowBuilder } from "../../../tests/builders/ArtifactRowBuilder";
-import { ArtifactsTableBuilder as ArtifactsTableBuilderForTests } from "../../../tests/builders/ArtifactsTableBuilder";
-import type { ArtifactsTable } from "../../domain/ArtifactsTable";
+import { ArtifactsTableBuilder } from "../../../tests/builders/ArtifactsTableBuilder";
+import { RetrieveArtifactLinksStub } from "../../../tests/stubs/RetrieveArtifactLinksStub";
 import { NUMERIC_CELL, PRETTY_TITLE_CELL } from "../../domain/ArtifactsTable";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-tests";
 import type { ColumnName } from "../../domain/ColumnName";
@@ -37,18 +36,7 @@ import { RETRIEVE_ARTIFACT_LINKS, WIDGET_ID } from "../../injection-symbols";
 import ArtifactRow from "./ArtifactRow.vue";
 import SelectableCell from "./SelectableCell.vue";
 import ArtifactLinkRows from "./ArtifactLinkRows.vue";
-
-const RetrieveArtifactLinksTableStub = {
-    withContent(
-        forward_links: ResultAsync<ArtifactsTable[], Fault>,
-        reverse_links: ResultAsync<ArtifactsTable[], Fault>,
-    ): RetrieveArtifactLinks {
-        return {
-            getForwardLinks: () => forward_links,
-            getReverseLinks: () => reverse_links,
-        };
-    },
-};
+import RowLoadAllButton from "../feedback/RowLoadAllButton.vue";
 
 vi.useFakeTimers();
 
@@ -71,31 +59,30 @@ const artifact_row = new ArtifactRowBuilder()
     })
     .buildWithExpectedNumberOfLinks(1, 1);
 
-const forward_table = new ArtifactsTableBuilderForTests()
+const forward_table = new ArtifactsTableBuilder()
     .withColumn(PRETTY_TITLE_COLUMN_NAME)
     .withColumn(NUMERIC_COLUMN_NAME)
     .withArtifactRow(artifact_row)
     .withArtifactRow(artifact_row)
-    .build();
+    .buildWithTotal(2);
 
-const reverse_table = new ArtifactsTableBuilderForTests()
+const reverse_table = new ArtifactsTableBuilder()
     .withColumn(PRETTY_TITLE_COLUMN_NAME)
     .withColumn(NUMERIC_COLUMN_NAME)
     .withArtifactRow(artifact_row)
-    .build();
+    .buildWithTotal(2);
 
 describe("ArtifactRow", () => {
     let artifact_links_table_retriever: RetrieveArtifactLinks,
         ancestors: number[],
-        artifact_id: number;
+        artifact_id: number,
+        level: number;
 
     beforeEach(() => {
         artifact_id = 512;
         ancestors = [123, 234];
-        artifact_links_table_retriever = RetrieveArtifactLinksTableStub.withContent(
-            okAsync([forward_table]),
-            okAsync([reverse_table]),
-        );
+        artifact_links_table_retriever = RetrieveArtifactLinksStub.withDefaultContent();
+        level = 0;
     });
 
     function getWrapper(): VueWrapper<InstanceType<typeof ArtifactRow>> {
@@ -120,7 +107,7 @@ describe("ArtifactRow", () => {
                     })
                     .buildWithExpectedNumberOfLinks(1, 1),
                 columns: new Set<ColumnName>().add(PRETTY_TITLE_COLUMN_NAME),
-                level: 0,
+                level,
                 is_last: false,
                 parent_element: undefined,
                 parent_caret: undefined,
@@ -188,13 +175,13 @@ describe("ArtifactRow", () => {
     });
 
     it.each([
-        ["forward links", errAsync(fault), okAsync([forward_table])],
-        ["reverse links", okAsync([reverse_table]), errAsync(fault)],
+        ["forward links", errAsync(fault), okAsync(forward_table)],
+        ["reverse links", okAsync(reverse_table), errAsync(fault)],
         ["forward and reverse links", errAsync(fault), errAsync(fault)],
     ])(
         "should display an error message if an error occurred when retrieving %s",
         async (name, forward, reverse) => {
-            artifact_links_table_retriever = RetrieveArtifactLinksTableStub.withContent(
+            artifact_links_table_retriever = RetrieveArtifactLinksStub.withForwardAndReverseContent(
                 forward,
                 reverse,
             );
@@ -210,6 +197,84 @@ describe("ArtifactRow", () => {
             expect(row_error_message.props("error_message")).toStrictEqual(error_message);
         },
     );
+
+    describe("Load all button", () => {
+        it("should not display a load all button if there is less than 50 forward or reverse links", async () => {
+            artifact_links_table_retriever = RetrieveArtifactLinksStub.withTotalNumberOfLinks(
+                45,
+                45,
+            );
+            const wrapper = getWrapper();
+            wrapper
+                .findComponent(SelectableCell)
+                .vm.$emit("toggle-links", html_element, html_element);
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(wrapper.findComponent(RowLoadAllButton).exists()).toBe(false);
+        });
+
+        it.each([
+            ["forward", 59, 3],
+            ["reverse", 3, 62],
+            ["forward or reverse", 56, 72],
+        ])(
+            "should display a load all button if there is more than 50 %s links",
+            async (name, number_of_forward_links, number_of_reverse_links) => {
+                artifact_links_table_retriever = RetrieveArtifactLinksStub.withTotalNumberOfLinks(
+                    number_of_forward_links,
+                    number_of_reverse_links,
+                );
+                const wrapper = getWrapper();
+                wrapper
+                    .findComponent(SelectableCell)
+                    .vm.$emit("toggle-links", html_element, html_element);
+                await vi.runOnlyPendingTimersAsync();
+
+                expect(wrapper.findComponent(RowLoadAllButton).exists()).toBe(true);
+            },
+        );
+
+        it.each([
+            ["forward", 59, 3],
+            ["reverse", 3, 62],
+            ["forward or reverse", 56, 72],
+        ])(
+            "should fetch all forward and reverse links if load all button is clicked and the button should be hidden",
+            async (name, number_of_forward_links, number_of_reverse_links) => {
+                ancestors = [456, artifact_id];
+                level = 1;
+                artifact_links_table_retriever = RetrieveArtifactLinksStub.withTotalNumberOfLinks(
+                    number_of_forward_links,
+                    number_of_reverse_links,
+                );
+                const getAllForwardLinks = vi.spyOn(
+                    artifact_links_table_retriever,
+                    "getAllForwardLinks",
+                );
+                const getAllReverseLinks = vi.spyOn(
+                    artifact_links_table_retriever,
+                    "getAllReverseLinks",
+                );
+                const wrapper = getWrapper();
+
+                wrapper
+                    .findComponent(SelectableCell)
+                    .vm.$emit("toggle-links", html_element, html_element);
+                await vi.runOnlyPendingTimersAsync();
+
+                expect(wrapper.findComponent(RowLoadAllButton).exists()).toBe(true);
+                expect(getAllForwardLinks).toHaveBeenCalledTimes(0);
+                expect(getAllReverseLinks).toHaveBeenCalledTimes(0);
+
+                wrapper.findComponent(RowLoadAllButton).vm.$emit("click");
+                await vi.runOnlyPendingTimersAsync();
+
+                expect(wrapper.findComponent(RowLoadAllButton).exists()).toBe(false);
+                expect(getAllForwardLinks).toHaveBeenCalledTimes(1);
+                expect(getAllReverseLinks).toHaveBeenCalledTimes(1);
+            },
+        );
+    });
 
     describe("Ancestors propagation", () => {
         it("Should include its own row into the ancestors collection passed to ArtifactLinks", async () => {
@@ -269,17 +334,18 @@ describe("ArtifactRow", () => {
                     .withRowId(988)
                     .buildWithExpectedNumberOfLinks(1, 1);
 
-                const links_table = new ArtifactsTableBuilderForTests()
+                const links_table = new ArtifactsTableBuilder()
                     .withColumn(PRETTY_TITLE_COLUMN_NAME)
                     .withColumn(NUMERIC_COLUMN_NAME)
                     .withArtifactRow(row_1)
                     .withArtifactRow(row_2)
-                    .build();
+                    .buildWithTotal(2);
 
-                artifact_links_table_retriever = RetrieveArtifactLinksTableStub.withContent(
-                    okAsync([links_table]),
-                    okAsync([links_table]),
-                );
+                artifact_links_table_retriever =
+                    RetrieveArtifactLinksStub.withForwardAndReverseContent(
+                        okAsync(links_table),
+                        okAsync(links_table),
+                    );
 
                 const wrapper = getWrapper();
 
@@ -293,7 +359,7 @@ describe("ArtifactRow", () => {
                 const artifact_links_rows =
                     artifact_link_rows_component.props("artifact_links_rows");
 
-                expect(artifact_links_rows).toHaveLength(links_table.rows.length);
+                expect(artifact_links_rows).toHaveLength(links_table.total);
             },
         );
 
@@ -333,17 +399,18 @@ describe("ArtifactRow", () => {
                     .withRowId(artifact_id)
                     .buildWithExpectedNumberOfLinks(1, 1);
 
-                const links_table = new ArtifactsTableBuilderForTests()
+                const links_table = new ArtifactsTableBuilder()
                     .withColumn(PRETTY_TITLE_COLUMN_NAME)
                     .withColumn(NUMERIC_COLUMN_NAME)
                     .withArtifactRow(row_1)
                     .withArtifactRow(row_2)
-                    .build();
+                    .buildWithTotal(2);
 
-                artifact_links_table_retriever = RetrieveArtifactLinksTableStub.withContent(
-                    okAsync([links_table]),
-                    okAsync([links_table]),
-                );
+                artifact_links_table_retriever =
+                    RetrieveArtifactLinksStub.withForwardAndReverseContent(
+                        okAsync(links_table),
+                        okAsync(links_table),
+                    );
 
                 ancestors = [345, 5498, artifact_id];
 
@@ -394,16 +461,16 @@ describe("ArtifactRow", () => {
                 .withRowId(artifact_id)
                 .buildWithExpectedNumberOfLinks(1, 1);
 
-            const reverse_links_table = new ArtifactsTableBuilderForTests()
+            const reverse_links_table = new ArtifactsTableBuilder()
                 .withColumn(PRETTY_TITLE_COLUMN_NAME)
                 .withColumn(NUMERIC_COLUMN_NAME)
                 .withArtifactRow(reverse_row_1)
                 .withArtifactRow(reverse_row_2)
-                .build();
+                .buildWithTotal(2);
 
-            artifact_links_table_retriever = RetrieveArtifactLinksTableStub.withContent(
-                okAsync([forward_table]),
-                okAsync([reverse_links_table]),
+            artifact_links_table_retriever = RetrieveArtifactLinksStub.withForwardAndReverseContent(
+                okAsync(forward_table),
+                okAsync(reverse_links_table),
             );
 
             ancestors = [];
@@ -418,7 +485,7 @@ describe("ArtifactRow", () => {
             const reverse_artifact_link_rows = wrapper.findAllComponents(ArtifactLinkRows)[1];
             const reverse_rows = reverse_artifact_link_rows.props("artifact_links_rows");
 
-            expect(reverse_rows).toHaveLength(reverse_links_table.rows.length);
+            expect(reverse_rows).toHaveLength(reverse_links_table.total);
         });
     });
 });
