@@ -472,16 +472,16 @@
         },
         {
             "name": "cuyz/valinor",
-            "version": "2.0.0",
+            "version": "2.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/CuyZ/Valinor.git",
-                "reference": "914a8cbe64c71f9f0a9728df75e7d92a2988fb40"
+                "reference": "f51e9beebdefc968cbfcd4a2c561b40575288610"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/CuyZ/Valinor/zipball/914a8cbe64c71f9f0a9728df75e7d92a2988fb40",
-                "reference": "914a8cbe64c71f9f0a9728df75e7d92a2988fb40",
+                "url": "https://api.github.com/repos/CuyZ/Valinor/zipball/f51e9beebdefc968cbfcd4a2c561b40575288610",
+                "reference": "f51e9beebdefc968cbfcd4a2c561b40575288610",
                 "shasum": ""
             },
             "require": {
@@ -537,7 +537,7 @@
             ],
             "support": {
                 "issues": "https://github.com/CuyZ/Valinor/issues",
-                "source": "https://github.com/CuyZ/Valinor/tree/2.0.0"
+                "source": "https://github.com/CuyZ/Valinor/tree/2.1.1"
             },
             "funding": [
                 {
@@ -545,7 +545,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-06-27T06:38:26+00:00"
+            "time": "2025-07-23T20:32:01+00:00"
         },
         {
             "name": "dflydev/dot-access-data",
