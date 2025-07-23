@@ -24,7 +24,8 @@ namespace Tuleap\Gitlab\Repository\Webhook\PostPush;
 
 use ColinODell\PsrTestLogger\TestLogger;
 use DateTimeImmutable;
-use Tracker_FormElement_Field_Selectbox;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use Tracker_Workflow_WorkflowUser;
 use Tuleap\Gitlab\API\Credentials;
 use Tuleap\Gitlab\API\GitlabProject;
@@ -35,20 +36,27 @@ use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Gitlab\Repository\Project\GitlabRepositoryProjectDao;
 use Tuleap\Gitlab\Repository\Webhook\Bot\CredentialsRetriever;
 use Tuleap\Gitlab\Repository\Webhook\WebhookTuleapReference;
+use Tuleap\GlobalLanguageMock;
+use Tuleap\NeverThrow\Result;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\Changeset\Comment\NewComment;
+use Tuleap\Tracker\Artifact\Changeset\NewChangeset;
+use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
 use Tuleap\Tracker\Artifact\Closure\ArtifactCloser;
 use Tuleap\Tracker\Artifact\Closure\ClosingKeyword;
 use Tuleap\Tracker\Semantic\Status\Done\DoneValueRetriever;
 use Tuleap\Tracker\Semantic\Status\StatusValueRetriever;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\CreateCommentOnlyChangesetStub;
 use Tuleap\Tracker\Test\Stub\CreateNewChangesetStub;
-use Tuleap\Tracker\Test\Stub\RetrieveSemanticStatusFieldIterativeStub;
+use Tuleap\Tracker\Test\Stub\RetrieveSemanticStatusFieldStub;
 use Tuleap\Tracker\Workflow\NoPossibleValueException;
 use UserManager;
 use UserNotExistException;
@@ -56,57 +64,36 @@ use UserNotExistException;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PostPushWebhookCloseArtifactHandlerTest extends TestCase
 {
-    private const POST_PUSH_LOG_PREFIX  = '|  |  |_ ';
-    private const COMMITTER_EMAIL       = 'john-snow@example.com';
-    private const COMMITTER_USERNAME    = 'jsnow';
-    private const COMMITTER_FULL_NAME   = 'John Snow';
-    private const DONE_BIND_VALUE_ID    = 506;
-    private const GITLAB_INTEGRATION_ID = 1;
-    private const PROJECT_ID            = 101;
-    private const GITLAB_REPOSITORY_ID  = 12;
-    private const MASTER_BRANCH_NAME    = 'master';
-    private const ARTIFACT_ID           = 123;
-    private const COMMIT_SHA1           = 'feff4ced04b237abb8b4a50b4160099313152c3c';
+    use GlobalLanguageMock;
 
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&ArtifactRetriever
-     */
-    private $artifact_retriever;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&UserManager
-     */
-    private $user_manager;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&GitlabRepositoryProjectDao
-     */
-    private $repository_project_dao;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&CredentialsRetriever
-     */
-    private $credentials_retriever;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&GitlabProjectBuilder
-     */
-    private $gitlab_project_builder;
-    /**
-     * @var \PHPUnit\Framework\MockObject\Stub&Artifact
-     */
-    private $artifact;
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject&Credentials
-     */
-    private $credentials;
+    private const string POST_PUSH_LOG_PREFIX = '|  |  |_ ';
+    private const string COMMITTER_EMAIL      = 'john-snow@example.com';
+    private const string COMMITTER_USERNAME   = 'jsnow';
+    private const string COMMITTER_FULL_NAME  = 'John Snow';
+    private const int DONE_BIND_VALUE_ID      = 506;
+    private const int GITLAB_INTEGRATION_ID   = 1;
+    private const int PROJECT_ID              = 101;
+    private const int GITLAB_REPOSITORY_ID    = 12;
+    private const string MASTER_BRANCH_NAME   = 'master';
+    private const int ARTIFACT_ID             = 123;
+    private const string COMMIT_SHA1          = 'feff4ced04b237abb8b4a50b4160099313152c3c';
+
+    private MockObject&ArtifactRetriever $artifact_retriever;
+    private MockObject&UserManager $user_manager;
+    private MockObject&GitlabRepositoryProjectDao $repository_project_dao;
+    private MockObject&CredentialsRetriever $credentials_retriever;
+    private MockObject&GitlabProjectBuilder $gitlab_project_builder;
+    private Stub&Artifact $artifact;
+    private MockObject&Credentials $credentials;
     private \PFUser $workflow_user;
     private WebhookTuleapReference $reference;
     private TestLogger $logger;
-    /**
-     * @var \PHPUnit\Framework\MockObject\Stub&DoneValueRetriever
-     */
-    private $done_value_retriever;
+    private Stub&DoneValueRetriever $done_value_retriever;
     private \Project $project;
     private CreateCommentOnlyChangesetStub $comment_creator;
     private CreateNewChangesetStub $changeset_creator;
-    private RetrieveSemanticStatusFieldIterativeStub $status_retriever;
+    private RetrieveSemanticStatusFieldStub $status_retriever;
+    private bool $changeset_creator_was_called;
 
     protected function setUp(): void
     {
@@ -119,22 +106,34 @@ final class PostPushWebhookCloseArtifactHandlerTest extends TestCase
         $this->credentials            = $this->createMock(Credentials::class);
         $this->reference              = new WebhookTuleapReference(self::ARTIFACT_ID, ClosingKeyword::buildResolves());
         $this->done_value_retriever   = $this->createStub(DoneValueRetriever::class);
-        $this->comment_creator        = CreateCommentOnlyChangesetStub::withChangeset(
+
+        $this->comment_creator = CreateCommentOnlyChangesetStub::withChangeset(
             ChangesetTestBuilder::aChangeset(7290)->build()
         );
-        $this->changeset_creator      = CreateNewChangesetStub::withReturnChangeset(
-            ChangesetTestBuilder::aChangeset(4257)->build()
+
+        $this->changeset_creator_was_called = false;
+        $this->changeset_creator            = CreateNewChangesetStub::withCallback(function (NewChangeset $new_changeset, PostCreationContext $context) {
+            $this->changeset_creator_was_called = true;
+            return null;
+        });
+
+        $this->project = ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build();
+        $tracker       = TrackerTestBuilder::aTracker()->withProject($this->project)->build();
+        $field         = ListStaticBindBuilder::aStaticBind(
+            ListFieldBuilder::aListField(945)->inTracker($tracker)->build()
+        )->withBuildStaticValues([
+            ListStaticValueBuilder::aStaticValue('Done')->withId(self::DONE_BIND_VALUE_ID)->build(),
+        ])->build()
+            ->getField();
+
+        $this->status_retriever = RetrieveSemanticStatusFieldStub::build()->withField($field);
+
+        $this->workflow_user = new Tracker_Workflow_WorkflowUser(
+            [
+                'user_id'     => Tracker_Workflow_WorkflowUser::ID,
+                'language_id' => 'en',
+            ]
         );
-
-        $field = $this->createStub(Tracker_FormElement_Field_Selectbox::class);
-        $field->method('getId')->willReturn(945);
-        $field->method('getFieldData')->willReturn(self::DONE_BIND_VALUE_ID);
-
-        $this->status_retriever = RetrieveSemanticStatusFieldIterativeStub::withField($field);
-
-        $this->project       = ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build();
-        $this->workflow_user = UserTestBuilder::anActiveUser()->withId(Tracker_Workflow_WorkflowUser::ID)->build();
-        $tracker             = TrackerTestBuilder::aTracker()->withProject($this->project)->build();
         $this->artifact      = $this->createStub(Artifact::class);
         $this->artifact->method('getId')->willReturn(self::ARTIFACT_ID);
         $this->artifact->method('getTracker')->willReturn($tracker);
@@ -196,14 +195,18 @@ final class PostPushWebhookCloseArtifactHandlerTest extends TestCase
         $this->mockArtifactIsOpen();
         $this->mockDoneValueIsFound();
 
+        $changeset_created       = false;
+        $this->changeset_creator = CreateNewChangesetStub::withCallback(function (NewChangeset $new_changeset) use (&$changeset_created) {
+            $changeset_created = true;
+            self::assertSame($this->artifact, $new_changeset->getArtifact());
+            self::assertSame($this->workflow_user, $new_changeset->getSubmitter());
+
+            return ChangesetTestBuilder::aChangeset(4257)->build();
+        });
+
         $this->handleArtifactClosure();
 
-        $new_changeset = $this->changeset_creator->getNewChangeset();
-        if (! $new_changeset) {
-            throw new \Exception('Expected to receive a new changeset');
-        }
-        self::assertSame($this->artifact, $new_changeset->getArtifact());
-        self::assertSame($this->workflow_user, $new_changeset->getSubmitter());
+        self::assertTrue($changeset_created);
     }
 
     public function testItDoesNothingIfNoCloseKeywordDefined(): void
@@ -212,7 +215,7 @@ final class PostPushWebhookCloseArtifactHandlerTest extends TestCase
 
         $this->handleArtifactClosure();
 
-        self::assertNull($this->changeset_creator->getNewChangeset());
+        self::assertFalse($this->changeset_creator_was_called);
     }
 
     public function testItDoesNothingIfReferencedArtifactIsNotFound(): void
@@ -223,7 +226,7 @@ final class PostPushWebhookCloseArtifactHandlerTest extends TestCase
 
         $this->handleArtifactClosure();
 
-        self::assertNull($this->changeset_creator->getNewChangeset());
+        self::assertFalse($this->changeset_creator_was_called);
         $this->assertTrue($this->logger->hasError('|  |  |_ Artifact #123 not found'));
     }
 
@@ -237,7 +240,7 @@ final class PostPushWebhookCloseArtifactHandlerTest extends TestCase
 
         $this->handleArtifactClosure();
 
-        self::assertNull($this->changeset_creator->getNewChangeset());
+        self::assertFalse($this->changeset_creator_was_called);
         $this->assertTrue(
             $this->logger->hasWarning(
                 '|  |  |_ Artifact #123 cannot be closed. ' .
@@ -257,7 +260,7 @@ final class PostPushWebhookCloseArtifactHandlerTest extends TestCase
         $this->expectException(UserNotExistException::class);
         $this->handleArtifactClosure();
 
-        self::assertNull($this->changeset_creator->getNewChangeset());
+        self::assertFalse($this->changeset_creator_was_called);
     }
 
     public function testItDoesNothingIfRepositoryDoesNotHaveCredentials(): void
@@ -271,7 +274,7 @@ final class PostPushWebhookCloseArtifactHandlerTest extends TestCase
 
         $this->handleArtifactClosure();
 
-        self::assertNull($this->changeset_creator->getNewChangeset());
+        self::assertFalse($this->changeset_creator_was_called);
         $this->assertTrue(
             $this->logger->hasWarning(
                 '|  |  |_ Artifact #123 cannot be closed because no token found for integration. Skipping.'
@@ -304,7 +307,7 @@ final class PostPushWebhookCloseArtifactHandlerTest extends TestCase
 
         $this->handleArtifactClosure();
 
-        self::assertNull($this->changeset_creator->getNewChangeset());
+        self::assertFalse($this->changeset_creator_was_called);
     }
 
     public function testItAsksToAddACommentWhenNoSemanticDefined(): void
@@ -316,22 +319,27 @@ final class PostPushWebhookCloseArtifactHandlerTest extends TestCase
         $this->mockGitlabProjectDefaultBranch();
         $this->mockArtifactIsOpen();
         $this->mockCommitterMatchingTuleapUser();
-        $this->status_retriever = RetrieveSemanticStatusFieldIterativeStub::withNoField();
+        $this->status_retriever = RetrieveSemanticStatusFieldStub::build();
+
+        $changeset_created     = false;
+        $this->comment_creator = CreateCommentOnlyChangesetStub::withCallback(
+            function (NewComment $new_comment, Artifact $artifact) use (&$changeset_created) {
+                $changeset_created = true;
+                $message           = sprintf(
+                    '@%s attempts to close this artifact from GitLab but neither done nor status semantic defined.',
+                    self::COMMITTER_USERNAME
+                );
+
+                self::assertSame($message, $new_comment->getBody());
+                self::assertSame($this->workflow_user, $new_comment->getSubmitter());
+                self::assertSame($this->artifact, $artifact);
+                return Result::ok(ChangesetTestBuilder::aChangeset(7290)->build());
+            }
+        );
 
         $this->handleArtifactClosure();
 
-        $message = sprintf(
-            '@%s attempts to close this artifact from GitLab but neither done nor status semantic defined.',
-            self::COMMITTER_USERNAME
-        );
-
-        $new_comment = $this->comment_creator->getNewComment();
-        if (! $new_comment) {
-            throw new \Exception('Expected to receive a new comment');
-        }
-        self::assertSame($message, $new_comment->getBody());
-        self::assertSame($this->workflow_user, $new_comment->getSubmitter());
-        self::assertSame($this->artifact, $this->comment_creator->getArtifact());
+        self::assertTrue($changeset_created);
     }
 
     public function testItFallsBackOnGitLabCommitterIfItCannotMatchTuleapUser(): void
@@ -343,22 +351,27 @@ final class PostPushWebhookCloseArtifactHandlerTest extends TestCase
         $this->mockGitlabProjectDefaultBranch();
         $this->mockArtifactIsOpen();
         $this->user_manager->method('getUserByEmail')->with(self::COMMITTER_EMAIL)->willReturn(null);
-        $this->status_retriever = RetrieveSemanticStatusFieldIterativeStub::withNoField();
+        $this->status_retriever = RetrieveSemanticStatusFieldStub::build();
+
+        $changeset_created     = false;
+        $this->comment_creator = CreateCommentOnlyChangesetStub::withCallback(
+            function (NewComment $new_comment, Artifact $artifact) use (&$changeset_created) {
+                $changeset_created = true;
+                $message           = sprintf(
+                    '%s attempts to close this artifact from GitLab but neither done nor status semantic defined.',
+                    self::COMMITTER_FULL_NAME
+                );
+
+                self::assertSame($message, $new_comment->getBody());
+                self::assertSame($this->workflow_user, $new_comment->getSubmitter());
+                self::assertSame($this->artifact, $artifact);
+                return Result::ok(ChangesetTestBuilder::aChangeset(7290)->build());
+            }
+        );
 
         $this->handleArtifactClosure();
 
-        $message = sprintf(
-            '%s attempts to close this artifact from GitLab but neither done nor status semantic defined.',
-            self::COMMITTER_FULL_NAME
-        );
-
-        $new_comment = $this->comment_creator->getNewComment();
-        if (! $new_comment) {
-            throw new \Exception('Expected to receive a new comment');
-        }
-        self::assertSame($message, $new_comment->getBody());
-        self::assertSame($this->workflow_user, $new_comment->getSubmitter());
-        self::assertSame($this->artifact, $this->comment_creator->getArtifact());
+        self::assertTrue($changeset_created);
     }
 
     public function testItLogsInfoIfArtifactIsAlreadyClosed(): void

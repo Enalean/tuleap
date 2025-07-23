@@ -92,12 +92,9 @@ final class ArtifactLinkFieldWithValueBuilderTest extends TestCase
         $open_value   = ListStaticValueBuilder::aStaticValue('Open')->withId(12)->build();
         $closed_value = ListStaticValueBuilder::aStaticValue('Closed')->withId(13)->build();
         $status_field = ListStaticBindBuilder::aStaticBind(ListFieldBuilder::aListField(855)->inTracker($tracker)->build())
-            ->withBuildStaticValues([
-                $open_value->getId()   => $open_value,
-                $closed_value->getId() => $closed_value,
-            ])
+            ->withBuildStaticValues([$open_value, $closed_value])
             ->withDecorators([
-                $open_value->getId() => StaticBindDecoratorBuilder::withColor(ColorName::NEON_GREEN)->withValueId($open_value->getId())->build(),
+                StaticBindDecoratorBuilder::withColor(ColorName::NEON_GREEN)->withValueId($open_value->getId())->build(),
             ])
             ->build()
             ->getField();

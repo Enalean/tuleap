@@ -51,11 +51,8 @@ final class Cardwall_OnTop_Config_ValueMappingFactoryTest extends TestCase // ph
 
     protected function setUp(): void
     {
-        $element_factory        = $this->createMock(Tracker_FormElementFactory::class);
-        $dao                    = $this->createMock(Cardwall_OnTop_ColumnMappingFieldValueDao::class);
-        $status_field_retriever = RetrieveSemanticStatusFieldStub::build();
-        $this->factory          = new Cardwall_OnTop_Config_ValueMappingFactory($element_factory, $dao, $status_field_retriever);
-
+        $element_factory  = $this->createMock(Tracker_FormElementFactory::class);
+        $dao              = $this->createMock(Cardwall_OnTop_ColumnMappingFieldValueDao::class);
         $this->field_123  = ListStaticBindBuilder::aStaticBind(
             ListFieldBuilder::aListField(123)->build()
         )->build()->getField();
@@ -80,10 +77,9 @@ final class Cardwall_OnTop_Config_ValueMappingFactoryTest extends TestCase // ph
                 default => self::fail("Should not have been called with $field_id"),
             });
 
-        $group_id      = 234;
-        $project       = ProjectTestBuilder::aProject()->withId($group_id)->build();
-        $this->tracker = TrackerTestBuilder::aTracker()->withId(3)->withProject($project)->build();
-        $status_field_retriever->withField($status_field);
+        $group_id         = 234;
+        $project          = ProjectTestBuilder::aProject()->withId($group_id)->build();
+        $this->tracker    = TrackerTestBuilder::aTracker()->withId(3)->withProject($project)->build();
         $this->tracker_20 = TrackerTestBuilder::aTracker()->withId(20)->build();
 
         $dao->method('searchMappingFieldValues')->with($this->tracker->getId())->willReturn(TestHelper::arrayToDar(
@@ -106,6 +102,12 @@ final class Cardwall_OnTop_Config_ValueMappingFactoryTest extends TestCase // ph
                 'column_id'  => 2,
             ]
         ));
+
+        $this->factory = new Cardwall_OnTop_Config_ValueMappingFactory(
+            $element_factory,
+            $dao,
+            RetrieveSemanticStatusFieldStub::build()->withField($status_field)
+        );
     }
 
     public function testItLoadsMappingsFromTheDatabase(): void

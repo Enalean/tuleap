@@ -87,7 +87,7 @@ final class StaticListFieldWithValueBuilderTest extends TestCase
             $list_field_value_red,
             $list_field_value_no_color,
         ])->withDecorators([
-            $list_field_value_red->getId() => StaticBindDecoratorBuilder::withColor(ColorName::RED_WINE)->withFieldId(124)->withValueId($list_field_value_red->getId())->build(),
+            StaticBindDecoratorBuilder::withColor(ColorName::RED_WINE)->withFieldId(124)->withValueId($list_field_value_red->getId())->build(),
         ])->build()->getField();
 
         $this->changeset->setFieldValue(
