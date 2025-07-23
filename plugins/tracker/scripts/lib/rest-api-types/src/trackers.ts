@@ -29,6 +29,12 @@ import type {
     StringFieldIdentifier,
     SubmissionDateFieldIdentifier,
     UpdatePermission,
+    ArtifactIdFieldIdentifier,
+    ArtifactIdInTrackerFieldIdentifier,
+    ComputedFieldIdentifier,
+    FloatFieldIdentifier,
+    IntFieldIdentifier,
+    PriorityFieldIdentifier,
 } from "@tuleap/plugin-tracker-constants";
 import type { ProjectReference } from "@tuleap/core-rest-api-types";
 
@@ -36,13 +42,6 @@ import type { UserGroupRepresentation } from "./artifacts";
 import type { OpenListFieldStructure } from "./open-list-field";
 import type { ListFieldStructure } from "./list-field";
 import type { ArtifactLinkFieldStructure } from "./link-field";
-import type {
-    ArtifactIdFieldIdentifier,
-    ArtifactIdInTrackerFieldIdentifier,
-    FloatFieldIdentifier,
-    IntFieldIdentifier,
-    PriorityFieldIdentifier,
-} from "@tuleap/plugin-tracker-constants/src/constants";
 
 export * from "./open-list-field";
 export * from "./list-field";
@@ -100,7 +99,8 @@ export interface NumericFieldStructure extends BaseFieldStructure {
         | ArtifactIdInTrackerFieldIdentifier
         | FloatFieldIdentifier
         | IntFieldIdentifier
-        | PriorityFieldIdentifier;
+        | PriorityFieldIdentifier
+        | ComputedFieldIdentifier;
 }
 
 export type StructureFields =

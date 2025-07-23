@@ -40,6 +40,7 @@ import {
     FLOAT_FIELD,
     INT_FIELD,
     PRIORITY_FIELD,
+    COMPUTED_FIELD,
 } from "@tuleap/plugin-tracker-constants";
 import { ConfigurationFieldBuilder } from "@/sections/readonly-fields/ConfigurationFieldBuilder";
 
@@ -193,6 +194,12 @@ describe("getAvailableFields", () => {
         label: "Rank",
     } as StructureFields;
 
+    const computed_field = {
+        field_id: 145,
+        type: COMPUTED_FIELD,
+        label: "Total remaining effort",
+    } as StructureFields;
+
     const all_fields: Readonly<StructureFields[]> = [
         string_field,
         summary_field,
@@ -221,6 +228,7 @@ describe("getAvailableFields", () => {
         float_field,
         int_field,
         priority_field,
+        computed_field,
     ];
 
     const tracker_information = {
@@ -255,6 +263,7 @@ describe("getAvailableFields", () => {
                 ConfigurationFieldBuilder.fromSupportedTrackerField(float_field),
                 ConfigurationFieldBuilder.fromSupportedTrackerField(int_field),
                 ConfigurationFieldBuilder.fromSupportedTrackerField(priority_field),
+                ConfigurationFieldBuilder.fromSupportedTrackerField(computed_field),
             ]);
         });
     });

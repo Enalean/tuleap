@@ -35,6 +35,7 @@ import {
     FLOAT_FIELD,
     INT_FIELD,
     PRIORITY_FIELD,
+    COMPUTED_FIELD,
 } from "@tuleap/plugin-tracker-constants";
 import type {
     ConfigurationField,
@@ -68,13 +69,15 @@ const buildConfiguredListFieldType = (list_bind_type: ListBindType): Configurati
 };
 
 const isNumericField = (field: StructureFields): boolean => {
-    return [
-        ARTIFACT_ID_FIELD.toString(),
-        ARTIFACT_ID_IN_TRACKER_FIELD.toString(),
-        FLOAT_FIELD.toString(),
-        INT_FIELD.toString(),
-        PRIORITY_FIELD.toString(),
-    ].includes(field.type);
+    const numeric_types: string[] = [
+        ARTIFACT_ID_FIELD,
+        ARTIFACT_ID_IN_TRACKER_FIELD,
+        FLOAT_FIELD,
+        INT_FIELD,
+        PRIORITY_FIELD,
+        COMPUTED_FIELD,
+    ];
+    return numeric_types.includes(field.type);
 };
 
 const buildConfiguredFieldIfSupported = (field: StructureFields): Option<ConfigurationField> => {
