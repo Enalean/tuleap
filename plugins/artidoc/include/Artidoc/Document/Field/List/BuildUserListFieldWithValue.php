@@ -25,5 +25,5 @@ use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserListFieldWit
 
 interface BuildUserListFieldWithValue
 {
-    public function buildUserListFieldWithValue(ConfiguredField $configured_field, \Tracker_Artifact_ChangesetValue_List $changeset_value): UserListFieldWithValue;
+    public function buildUserListFieldWithValue(ConfiguredField $configured_field, ?\Tracker_Artifact_ChangesetValue_List $changeset_value): UserListFieldWithValue;
 }

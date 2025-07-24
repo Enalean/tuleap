@@ -42,7 +42,7 @@ final class BuildStaticListFieldWithValueStub implements BuildStaticListFieldWit
     }
 
     #[\Override]
-    public function buildStaticListFieldWithValue(ConfiguredField $configured_field, \Tracker_Artifact_ChangesetValue_List $changeset_value): StaticListFieldWithValue
+    public function buildStaticListFieldWithValue(ConfiguredField $configured_field, ?\Tracker_Artifact_ChangesetValue_List $changeset_value): StaticListFieldWithValue
     {
         return ($this->callback)($configured_field);
     }

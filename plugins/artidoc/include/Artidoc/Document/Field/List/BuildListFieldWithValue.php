@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Document\Field\List;
 
+use Tracker_Artifact_ChangesetValue_List;
 use Tuleap\Artidoc\Document\Field\ConfiguredField;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StaticListFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserGroupsListFieldWithValue;
@@ -31,6 +32,6 @@ interface BuildListFieldWithValue
 {
     public function buildListFieldWithValue(
         ConfiguredField $configured_field,
-        \Tracker_Artifact_ChangesetValue_List $changeset_value,
+        ?Tracker_Artifact_ChangesetValue_List $changeset_value,
     ): UserGroupsListFieldWithValue|StaticListFieldWithValue|UserListFieldWithValue;
 }

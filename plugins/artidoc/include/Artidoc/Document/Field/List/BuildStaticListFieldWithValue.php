@@ -25,5 +25,5 @@ use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StaticListFieldW
 
 interface BuildStaticListFieldWithValue
 {
-    public function buildStaticListFieldWithValue(ConfiguredField $configured_field, \Tracker_Artifact_ChangesetValue_List $changeset_value): StaticListFieldWithValue;
+    public function buildStaticListFieldWithValue(ConfiguredField $configured_field, ?\Tracker_Artifact_ChangesetValue_List $changeset_value): StaticListFieldWithValue;
 }

@@ -25,5 +25,5 @@ use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserGroupsListFi
 
 interface BuildUserGroupListWithValue
 {
-    public function buildUserGroupsListFieldWithValue(ConfiguredField $configured_field, \Tracker_Artifact_ChangesetValue_List $changeset_value): UserGroupsListFieldWithValue;
+    public function buildUserGroupsListFieldWithValue(ConfiguredField $configured_field, ?\Tracker_Artifact_ChangesetValue_List $changeset_value): UserGroupsListFieldWithValue;
 }

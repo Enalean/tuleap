@@ -42,7 +42,7 @@ final class BuildUserListFieldWithValueStub implements BuildUserListFieldWithVal
     }
 
     #[\Override]
-    public function buildUserListFieldWithValue(ConfiguredField $configured_field, \Tracker_Artifact_ChangesetValue_List $changeset_value): UserListFieldWithValue
+    public function buildUserListFieldWithValue(ConfiguredField $configured_field, ?\Tracker_Artifact_ChangesetValue_List $changeset_value): UserListFieldWithValue
     {
         return ($this->callback)($configured_field);
     }

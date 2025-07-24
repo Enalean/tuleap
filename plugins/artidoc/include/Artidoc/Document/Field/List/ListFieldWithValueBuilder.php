@@ -36,7 +36,8 @@ final readonly class ListFieldWithValueBuilder implements BuildListFieldWithValu
     ) {
     }
 
-    public function buildListFieldWithValue(ConfiguredField $configured_field, \Tracker_Artifact_ChangesetValue_List $changeset_value): UserGroupsListFieldWithValue|StaticListFieldWithValue|UserListFieldWithValue
+    #[\Override]
+    public function buildListFieldWithValue(ConfiguredField $configured_field, ?\Tracker_Artifact_ChangesetValue_List $changeset_value): UserGroupsListFieldWithValue|StaticListFieldWithValue|UserListFieldWithValue
     {
         assert($configured_field->field instanceof \Tracker_FormElement_Field_List);
 

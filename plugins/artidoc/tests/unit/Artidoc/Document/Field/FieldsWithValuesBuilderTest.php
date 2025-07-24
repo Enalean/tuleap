@@ -123,10 +123,15 @@ final class FieldsWithValuesBuilderTest extends TestCase
             ->withLabel('dictator')
             ->inTracker($this->tracker)
             ->build();
+        $third_string_field     = StringFieldBuilder::aStringField(274)
+            ->withLabel('reframe')
+            ->inTracker($this->tracker)
+            ->build();
         $this->field_collection = new ConfiguredFieldCollection([
             self::TRACKER_ID => [
                 new ConfiguredField($first_string_field, DisplayType::COLUMN),
                 new ConfiguredField($second_string_field, DisplayType::BLOCK),
+                new ConfiguredField($third_string_field, DisplayType::BLOCK),
             ],
         ]);
 
@@ -142,39 +147,12 @@ final class FieldsWithValuesBuilderTest extends TestCase
                 ->withValue('proficiently')
                 ->build()
         );
+        $this->changeset->setFieldValue($third_string_field, null);
 
         self::assertEquals([
             new StringFieldWithValue('naphthalol', DisplayType::COLUMN, 'pleurogenic'),
             new StringFieldWithValue('dictator', DisplayType::BLOCK, 'proficiently'),
-        ], $this->getFields());
-    }
-
-    public function testItSkipsMissingChangesetValues(): void
-    {
-        $first_string_field     = StringFieldBuilder::aStringField(268)
-            ->withLabel('slickenside')
-            ->inTracker($this->tracker)
-            ->build();
-        $second_string_field    = StringFieldBuilder::aStringField(255)
-            ->withLabel('roughwork')
-            ->inTracker($this->tracker)
-            ->build();
-        $this->field_collection = new ConfiguredFieldCollection([
-            self::TRACKER_ID => [
-                new ConfiguredField($first_string_field, DisplayType::COLUMN),
-                new ConfiguredField($second_string_field, DisplayType::BLOCK),
-            ],
-        ]);
-
-        $this->changeset->setNoFieldValue($first_string_field);
-        $this->changeset->setFieldValue(
-            $second_string_field,
-            ChangesetValueStringTestBuilder::aValue(364, $this->changeset, $second_string_field)
-                ->withValue('Scripture')
-                ->build()
-        );
-        self::assertEquals([
-            new StringFieldWithValue('roughwork', DisplayType::BLOCK, 'Scripture'),
+            new StringFieldWithValue('reframe', DisplayType::BLOCK, ''),
         ], $this->getFields());
     }
 

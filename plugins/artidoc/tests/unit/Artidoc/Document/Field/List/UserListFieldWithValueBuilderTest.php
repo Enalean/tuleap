@@ -46,7 +46,7 @@ use Tuleap\Tracker\Tracker;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UserListFieldWithValueBuilderTest extends TestCase
 {
-    private const TRACKER_ID = 65453;
+    private const int TRACKER_ID = 65453;
     private Tracker $tracker;
     private \Tracker_Artifact_Changeset $changeset;
 
@@ -135,6 +135,29 @@ final class UserListFieldWithValueBuilderTest extends TestCase
         self::assertEquals(
             new UserListFieldWithValue($user_list_field->getLabel(), DisplayType::BLOCK, []),
             $builder->buildUserListFieldWithValue($configured_field, $changeset_value)
+        );
+    }
+
+    public function testItReturnsEmptyValuesWhenNoChangesetValue(): void
+    {
+        $user_list_field = ListUserBindBuilder::aUserBind(
+            ListFieldBuilder::aListField(123)->inTracker($this->tracker)->withLabel('Empty user list field')->build(),
+        )->build()->getField();
+
+        $builder = new UserListFieldWithValueBuilder(
+            RetrieveUserByIdStub::withNoUser(),
+            ProvideUserAvatarUrlStub::build(),
+            ProvideDefaultUserAvatarUrlStub::build(),
+        );
+
+        $configured_field =  new ConfiguredField(
+            $user_list_field,
+            DisplayType::BLOCK,
+        );
+
+        self::assertEquals(
+            new UserListFieldWithValue($user_list_field->getLabel(), DisplayType::BLOCK, []),
+            $builder->buildUserListFieldWithValue($configured_field, null)
         );
     }
 

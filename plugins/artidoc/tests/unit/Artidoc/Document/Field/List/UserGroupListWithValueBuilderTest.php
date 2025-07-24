@@ -43,7 +43,7 @@ final class UserGroupListWithValueBuilderTest extends TestCase
 {
     use GlobalLanguageMock;
 
-    private const TRACKER_ID = 66;
+    private const int TRACKER_ID = 66;
     private \Tuleap\Tracker\Tracker $tracker;
     private \Tracker_Artifact_Changeset $changeset;
 
@@ -73,6 +73,23 @@ final class UserGroupListWithValueBuilderTest extends TestCase
             $empty_list_field,
             ChangesetValueListTestBuilder::aListOfValue(934, $this->changeset, $empty_list_field)->build()
         );
+
+        self::assertEquals(
+            new UserGroupsListFieldWithValue('presearch', DisplayType::BLOCK, []),
+            $this->getField(new ConfiguredField($empty_list_field, DisplayType::BLOCK))
+        );
+    }
+
+    public function testItBuildsEmptyValuesWhenNoChangesetValue(): void
+    {
+        $empty_list_field = ListUserGroupBindBuilder::aUserGroupBind(
+            ListFieldBuilder::aListField(843)
+                ->withLabel('presearch')
+                ->inTracker($this->tracker)
+                ->build()
+        )->build()->getField();
+
+        $this->changeset->setFieldValue($empty_list_field, null);
 
         self::assertEquals(
             new UserGroupsListFieldWithValue('presearch', DisplayType::BLOCK, []),
@@ -121,7 +138,7 @@ final class UserGroupListWithValueBuilderTest extends TestCase
     private function getField(ConfiguredField $configured_field): UserGroupsListFieldWithValue
     {
         $changeset_value = $this->changeset->getValue($configured_field->field);
-        assert($changeset_value instanceof \Tracker_Artifact_ChangesetValue_List);
+        assert($changeset_value === null || $changeset_value instanceof \Tracker_Artifact_ChangesetValue_List);
 
         return (new UserGroupListWithValueBuilder())->buildUserGroupsListFieldWithValue($configured_field, $changeset_value);
     }
