@@ -35,7 +35,7 @@ use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsQueuer;
 
 require_once __DIR__ . '/../../../../../src/www/include/utils.php';
 
-class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
+class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public const FIELDS_ALL      = 'all';
     public const FIELDS_COMMENTS = 'comments';
@@ -120,7 +120,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
         return null;
     }
 
-    public function setFieldValue(Tracker_FormElement_Field $field, ?Tracker_Artifact_ChangesetValue $value = null)
+    public function setFieldValue(Tracker_FormElement_Field $field, ?Tracker_Artifact_ChangesetValue $value): void
     {
         $this->values[$field->getId()] = $value;
     }

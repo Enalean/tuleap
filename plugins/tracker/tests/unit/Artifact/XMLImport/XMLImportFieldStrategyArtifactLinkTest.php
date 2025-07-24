@@ -184,15 +184,18 @@ final class XMLImportFieldStrategyArtifactLinkTest extends TestCase
                   </field_change>');
 
         $changeset = ChangesetTestBuilder::aChangeset(123)->build();
-        $changeset->setFieldValue($this->field, ChangesetValueArtifactLinkTestBuilder::aValue(
-            1,
-            $changeset,
-            $this->field
-        )->withForwardLinks([
-            1 => new Tracker_ArtifactLinkInfo(1, '', 101, 888, 123, null),
-            2 => new Tracker_ArtifactLinkInfo(2, '', 101, 888, 123, null),
-            3 => new Tracker_ArtifactLinkInfo(3, '', 101, 888, 123, null),
-        ])->build());
+        $changeset->setFieldValue(
+            $this->field,
+            ChangesetValueArtifactLinkTestBuilder::aValue(
+                1,
+                $changeset,
+                $this->field
+            )->withForwardLinks([
+                1 => new Tracker_ArtifactLinkInfo(1, '', 101, 888, 123, null),
+                2 => new Tracker_ArtifactLinkInfo(2, '', 101, 888, 123, null),
+                3 => new Tracker_ArtifactLinkInfo(3, '', 101, 888, 123, null),
+            ])->build()
+        );
         $this->artifact->setLastChangeset($changeset);
 
         $this->nature_dao->method('getTypeByShortname')->willReturn([['toto']]);

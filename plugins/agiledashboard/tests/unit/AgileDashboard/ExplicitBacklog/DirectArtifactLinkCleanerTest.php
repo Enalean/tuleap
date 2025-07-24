@@ -168,7 +168,7 @@ class DirectArtifactLinkCleanerTest extends TestCase
         $artifact->expects($this->once())->method('getLastChangeset')
             ->willReturn($changeset);
 
-        $changeset->setFieldValue($artifact_link_field);
+        $changeset->setFieldValue($artifact_link_field, null);
 
         $this->artifacts_in_explicit_backlog_dao->expects($this->never())->method('cleanUpDirectlyPlannedItemsInArtifact');
 

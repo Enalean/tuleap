@@ -67,7 +67,14 @@ final class RemoveRecipientThatCannotReadAnythingTest extends TestCase
         $field     = TextFieldBuilder::aTextField(120)->withReadPermission($recipient->user, true)->build();
         $changeset->setFieldValue(
             $field,
-            new Tracker_Artifact_ChangesetValue_Text(777, $changeset, $field, true, 'some text', Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT)
+            new Tracker_Artifact_ChangesetValue_Text(
+                777,
+                $changeset,
+                $field,
+                true,
+                'some text',
+                Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT
+            )
         );
 
         $expected_recipients = ['recipient' => $recipient];
@@ -111,7 +118,14 @@ final class RemoveRecipientThatCannotReadAnythingTest extends TestCase
         $field     = TextFieldBuilder::aTextField(120)->withReadPermission($recipient->user, false)->build();
         $changeset->setFieldValue(
             $field,
-            new Tracker_Artifact_ChangesetValue_Text(777, $changeset, $field, true, 'some text', Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT)
+            new Tracker_Artifact_ChangesetValue_Text(
+                777,
+                $changeset,
+                $field,
+                true,
+                'some text',
+                Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT
+            )
         );
 
         $expected_recipients = ['recipient' => $recipient];

@@ -119,16 +119,22 @@ final class PromotedMilestoneBuilderTest extends TestCase
             $this->tracker,
             new TimeframeNotConfigured()
         ));
-        $this->changeset->setFieldValue($this->start_field, ChangesetValueDateTestBuilder::aValue(
-            1,
-            $this->changeset,
-            $this->start_field
-        )->withTimestamp((new DateTime('-1day'))->getTimestamp())->build());
-        $this->changeset->setFieldValue($this->end_field, ChangesetValueDateTestBuilder::aValue(
-            2,
-            $this->changeset,
-            $this->end_field
-        )->withTimestamp((new DateTime('+1day'))->getTimestamp())->build());
+        $this->changeset->setFieldValue(
+            $this->start_field,
+            ChangesetValueDateTestBuilder::aValue(
+                1,
+                $this->changeset,
+                $this->start_field
+            )->withTimestamp((new DateTime('-1day'))->getTimestamp())->build()
+        );
+        $this->changeset->setFieldValue(
+            $this->end_field,
+            ChangesetValueDateTestBuilder::aValue(
+                2,
+                $this->changeset,
+                $this->end_field
+            )->withTimestamp((new DateTime('+1day'))->getTimestamp())->build()
+        );
         self::assertTrue($this->getBuilder()->build($this->artifact, $this->user, $this->project)->isNothing());
     }
 
@@ -145,16 +151,22 @@ final class PromotedMilestoneBuilderTest extends TestCase
                 new TimeframeWithEndDate($this->start_field, $this->end_field)
             )
         );
-        $this->changeset->setFieldValue($this->start_field, ChangesetValueDateTestBuilder::aValue(
-            1,
-            $this->changeset,
-            $this->start_field
-        )->withTimestamp($start_date_zero ? 0 : (new DateTime('-1day'))->getTimestamp())->build());
-        $this->changeset->setFieldValue($this->end_field, ChangesetValueDateTestBuilder::aValue(
-            2,
-            $this->changeset,
-            $this->end_field
-        )->withTimestamp($end_date_zero ? 0 : (new DateTime('+1day'))->getTimestamp())->build());
+        $this->changeset->setFieldValue(
+            $this->start_field,
+            ChangesetValueDateTestBuilder::aValue(
+                1,
+                $this->changeset,
+                $this->start_field
+            )->withTimestamp($start_date_zero ? 0 : (new DateTime('-1day'))->getTimestamp())->build()
+        );
+        $this->changeset->setFieldValue(
+            $this->end_field,
+            ChangesetValueDateTestBuilder::aValue(
+                2,
+                $this->changeset,
+                $this->end_field
+            )->withTimestamp($end_date_zero ? 0 : (new DateTime('+1day'))->getTimestamp())->build()
+        );
         self::assertTrue($this->getBuilder()->build($this->artifact, $this->user, $this->project)->isNothing());
     }
 
@@ -166,31 +178,43 @@ final class PromotedMilestoneBuilderTest extends TestCase
                 new TimeframeWithEndDate($this->start_field, $this->end_field)
             )
         );
-        $this->changeset->setFieldValue($this->start_field, ChangesetValueDateTestBuilder::aValue(
-            1,
-            $this->changeset,
-            $this->start_field
-        )->withTimestamp((new DateTime('-1month'))->getTimestamp())->build());
-        $this->changeset->setFieldValue($this->end_field, ChangesetValueDateTestBuilder::aValue(
-            2,
-            $this->changeset,
-            $this->end_field
-        )->withTimestamp((new DateTime('-1day'))->getTimestamp())->build());
+        $this->changeset->setFieldValue(
+            $this->start_field,
+            ChangesetValueDateTestBuilder::aValue(
+                1,
+                $this->changeset,
+                $this->start_field
+            )->withTimestamp((new DateTime('-1month'))->getTimestamp())->build()
+        );
+        $this->changeset->setFieldValue(
+            $this->end_field,
+            ChangesetValueDateTestBuilder::aValue(
+                2,
+                $this->changeset,
+                $this->end_field
+            )->withTimestamp((new DateTime('-1day'))->getTimestamp())->build()
+        );
         self::assertTrue($this->getBuilder()->build($this->artifact, $this->user, $this->project)->isNothing());
     }
 
     public function testItReturnsNothingOptionWhenPlanningTrackerIsNotDefined(): void
     {
-        $this->changeset->setFieldValue($this->start_field, ChangesetValueDateTestBuilder::aValue(
-            1,
-            $this->changeset,
-            $this->start_field
-        )->withTimestamp((new DateTime('-1month'))->getTimestamp())->build());
-        $this->changeset->setFieldValue($this->end_field, ChangesetValueDateTestBuilder::aValue(
-            2,
-            $this->changeset,
-            $this->end_field
-        )->withTimestamp((new DateTime('+1day'))->getTimestamp())->build());
+        $this->changeset->setFieldValue(
+            $this->start_field,
+            ChangesetValueDateTestBuilder::aValue(
+                1,
+                $this->changeset,
+                $this->start_field
+            )->withTimestamp((new DateTime('-1month'))->getTimestamp())->build()
+        );
+        $this->changeset->setFieldValue(
+            $this->end_field,
+            ChangesetValueDateTestBuilder::aValue(
+                2,
+                $this->changeset,
+                $this->end_field
+            )->withTimestamp((new DateTime('+1day'))->getTimestamp())->build()
+        );
         $this->timeframe_builder->method('getSemantic')->willReturn(
             new SemanticTimeframe(
                 $this->tracker,
@@ -209,16 +233,22 @@ final class PromotedMilestoneBuilderTest extends TestCase
                 new TimeframeWithEndDate($this->start_field, $this->end_field)
             )
         );
-        $this->changeset->setFieldValue($this->start_field, ChangesetValueDateTestBuilder::aValue(
-            1,
-            $this->changeset,
-            $this->start_field
-        )->withTimestamp((new DateTime('-1day'))->getTimestamp())->build());
-        $this->changeset->setFieldValue($this->end_field, ChangesetValueDateTestBuilder::aValue(
-            2,
-            $this->changeset,
-            $this->end_field
-        )->withTimestamp((new DateTime('+1day'))->getTimestamp())->build());
+        $this->changeset->setFieldValue(
+            $this->start_field,
+            ChangesetValueDateTestBuilder::aValue(
+                1,
+                $this->changeset,
+                $this->start_field
+            )->withTimestamp((new DateTime('-1day'))->getTimestamp())->build()
+        );
+        $this->changeset->setFieldValue(
+            $this->end_field,
+            ChangesetValueDateTestBuilder::aValue(
+                2,
+                $this->changeset,
+                $this->end_field
+            )->withTimestamp((new DateTime('+1day'))->getTimestamp())->build()
+        );
         $planning = PlanningBuilder::aPlanning((int) $this->project->getID())->build();
         $this->planning_factory->method('getPlanningByPlanningTracker')->willReturn($planning);
         self::assertFalse($this->getBuilder()->build($this->artifact, $this->user, $this->project)->isNothing());

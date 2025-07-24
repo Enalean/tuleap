@@ -55,7 +55,10 @@ final class ArtifactFilesDeletorVisitorTest extends TestCase
         $files = [$file1, $file2];
 
         $changeset = ChangesetTestBuilder::aChangeset(456)->build();
-        $changeset->setFieldValue($field, ChangesetValueFileTestBuilder::aValue(1, $changeset, $field)->withFiles($files)->build());
+        $changeset->setFieldValue(
+            $field,
+            ChangesetValueFileTestBuilder::aValue(1, $changeset, $field)->withFiles($files)->build()
+        );
 
         $this->artifact->setLastChangeset($changeset);
 
