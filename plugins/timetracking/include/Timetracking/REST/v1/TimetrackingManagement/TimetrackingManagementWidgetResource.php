@@ -23,10 +23,15 @@ declare(strict_types=1);
 namespace Tuleap\Timetracking\REST\v1\TimetrackingManagement;
 
 use Luracast\Restler\RestException;
+use Tuleap\NeverThrow\Fault;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\Timetracking\Widget\Management\ManagementDao;
+use Tuleap\Timetracking\Widget\Management\ManagerCanSeeTimetrackingOfUserVerifierDao;
 use Tuleap\Timetracking\Widget\Management\ViewableUserRetriever;
+use Tuleap\User\Avatar\AvatarHashDao;
+use Tuleap\User\Avatar\ComputeAvatarHash;
+use Tuleap\User\Avatar\UserAvatarUrlProvider;
 
 final class TimetrackingManagementWidgetResource extends AuthenticatedResource
 {
@@ -46,7 +51,12 @@ final class TimetrackingManagementWidgetResource extends AuthenticatedResource
 
         return (new QueryPUTHandler(
             new FromPayloadPeriodBuilder(),
-            new FromPayloadUserListBuilder(new ViewableUserRetriever(\UserManager::instance())),
+            new FromPayloadUserListBuilder(
+                new ViewableUserRetriever(
+                    \UserManager::instance(),
+                    new ManagerCanSeeTimetrackingOfUserVerifierDao(),
+                ),
+            ),
             new TimetrackingManagementWidgetSaver($dao, $dao),
             new PermissionChecker($dao),
         ));
@@ -89,17 +99,24 @@ final class TimetrackingManagementWidgetResource extends AuthenticatedResource
      * @param int $id Id of the timetracking management widget
      * @param QueryPUTRepresentation $item The edited query
      *
-     *
      * @throws RestException
      */
-    protected function putQuery(int $id, QueryPUTRepresentation $item): void
+    protected function putQuery(int $id, QueryPUTRepresentation $item): QueryPUTResultRepresentation
     {
         $this->checkAccess();
 
         Header::allowOptionsPut();
 
-        $this->getPUTHandler()
+        return $this->getPUTHandler()
             ->handle($id, $item, \UserManager::instance()->getCurrentUser())
-            ->mapErr(FaultMapper::mapToRestException(...));
+            ->match(
+                fn (UserList $users) => QueryPUTResultRepresentation::fromUserList(
+                    $users,
+                    new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash())
+                ),
+                function (Fault $fault) {
+                    FaultMapper::mapToRestException($fault);
+                }
+            );
     }
 }

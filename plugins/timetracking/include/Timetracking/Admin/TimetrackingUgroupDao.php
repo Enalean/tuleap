@@ -24,22 +24,15 @@ use Tuleap\DB\DataAccessObject;
 
 class TimetrackingUgroupDao extends DataAccessObject
 {
-    public function saveWriters($tracker_id, array $ugroup_ids)
+    public function saveWriters($tracker_id, array $ugroup_ids): void
     {
-        $this->getDB()->beginTransaction();
-
-        try {
+        $this->getDB()->tryFlatTransaction(function () use ($tracker_id, $ugroup_ids) {
             $this->deleteWritersForTracker($tracker_id);
             $this->addWritersForTracker($tracker_id, $ugroup_ids);
-        } catch (\PDOException $ex) {
-            $this->getDB()->rollBack();
-            throw $ex;
-        }
-
-        return $this->getDB()->commit();
+        });
     }
 
-    public function deleteWritersForTracker($tracker_id)
+    public function deleteWritersForTracker($tracker_id): void
     {
         $sql = 'DELETE FROM plugin_timetracking_writers
                 WHERE tracker_id = ?';
@@ -47,7 +40,7 @@ class TimetrackingUgroupDao extends DataAccessObject
         $this->getDB()->run($sql, $tracker_id);
     }
 
-    private function addWritersForTracker($tracker_id, array $ugroup_ids)
+    private function addWritersForTracker($tracker_id, array $ugroup_ids): void
     {
         $data_to_insert = [];
         foreach ($ugroup_ids as $ugroup_id) {
@@ -57,22 +50,15 @@ class TimetrackingUgroupDao extends DataAccessObject
         $this->getDB()->insertMany('plugin_timetracking_writers', $data_to_insert);
     }
 
-    public function saveReaders($tracker_id, array $ugroup_ids)
+    public function saveReaders($tracker_id, array $ugroup_ids): void
     {
-        $this->getDB()->beginTransaction();
-
-        try {
+        $this->getDB()->tryFlatTransaction(function () use ($tracker_id, $ugroup_ids) {
             $this->deleteReadersForTracker($tracker_id);
             $this->addReadersForTracker($tracker_id, $ugroup_ids);
-        } catch (\PDOException $ex) {
-            $this->getDB()->rollBack();
-            throw $ex;
-        }
-
-        return $this->getDB()->commit();
+        });
     }
 
-    public function deleteReadersForTracker($tracker_id)
+    public function deleteReadersForTracker($tracker_id): void
     {
         $sql = 'DELETE FROM plugin_timetracking_readers
                 WHERE tracker_id = ?';
@@ -80,7 +66,7 @@ class TimetrackingUgroupDao extends DataAccessObject
         $this->getDB()->run($sql, $tracker_id);
     }
 
-    private function addReadersForTracker($tracker_id, array $ugroup_ids)
+    private function addReadersForTracker($tracker_id, array $ugroup_ids): void
     {
         $data_to_insert = [];
         foreach ($ugroup_ids as $ugroup_id) {

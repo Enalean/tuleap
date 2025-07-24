@@ -25,6 +25,7 @@ namespace Tuleap\Timetracking\REST\v1\TimetrackingManagement;
 use DateTime;
 use DateTimeImmutable;
 use Tuleap\NeverThrow\Result;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Timetracking\Tests\Stub\SaveQueryWithDatesStub;
 use Tuleap\Timetracking\Tests\Stub\SaveQueryWithPredefinedTimePeriodStub;
@@ -32,6 +33,22 @@ use Tuleap\Timetracking\Tests\Stub\SaveQueryWithPredefinedTimePeriodStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TimetrackingManagementWidgetSaverTest extends TestCase
 {
+    private const ALICE_ID   = 101;
+    private const BOB_ID     = 102;
+    private const CHARLIE_ID = 103;
+
+    private \PFUser $alice;
+    private \PFUser $bob;
+    private \PFUser $charlie;
+
+    #[\Override]
+    protected function setUp(): void
+    {
+        $this->alice   = UserTestBuilder::aUser()->withId(self::ALICE_ID)->build();
+        $this->bob     = UserTestBuilder::aUser()->withId(self::BOB_ID)->build();
+        $this->charlie = UserTestBuilder::aUser()->withId(self::CHARLIE_ID)->build();
+    }
+
     public function testItReturnsTrueWhenQueryWasSavedWithDates(): void
     {
         $save_with_dates       = SaveQueryWithDatesStub::build();
@@ -48,7 +65,8 @@ final class TimetrackingManagementWidgetSaverTest extends TestCase
             89,
             Period::fromDates($start_date_immutable, $end_date_immutable),
             new UserList(
-                [101, 102, 103],
+                [$this->alice, $this->bob, $this->charlie],
+                [],
             ),
         );
 
@@ -68,7 +86,8 @@ final class TimetrackingManagementWidgetSaverTest extends TestCase
             89,
             Period::fromPredefinedTimePeriod(PredefinedTimePeriod::YESTERDAY),
             new UserList(
-                [101, 102, 103],
+                [$this->alice, $this->bob, $this->charlie],
+                [],
             ),
         );
 

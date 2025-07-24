@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,16 +23,28 @@ declare(strict_types=1);
 namespace Tuleap\Timetracking\REST\v1\TimetrackingManagement;
 
 use PFUser;
+use Tuleap\User\Avatar\ProvideUserAvatarUrl;
+use Tuleap\User\REST\MinimalUserRepresentation;
 
-final readonly class UserList
+/**
+ * @psalm-immutable
+ */
+final readonly class QueryPUTResultRepresentation
 {
     /**
-     * @param PFUser[] $viewable_users
-     * @param PFUser[] $not_viewable_users
+     * @param MinimalUserRepresentation[] $no_more_viewable_users
      */
-    public function __construct(
-        public array $viewable_users,
-        public array $not_viewable_users,
-    ) {
+    private function __construct(public array $no_more_viewable_users)
+    {
+    }
+
+    public static function fromUserList(UserList $users, ProvideUserAvatarUrl $provide_user_avatar_url): self
+    {
+        return new self(
+            array_map(
+                static fn (PFUser $user) => MinimalUserRepresentation::build($user, $provide_user_avatar_url),
+                $users->not_viewable_users,
+            ),
+        );
     }
 }

@@ -24,13 +24,14 @@ namespace Tuleap\Timetracking\REST\v1\TimetrackingManagement;
 
 use Luracast\Restler\RestException;
 use Tuleap\NeverThrow\Fault;
+use Tuleap\Timetracking\Widget\Management\QueryInvalidUserIdFault;
 
 final class FaultMapper
 {
     /**
      * @throws RestException
      */
-    public static function mapToRestException(Fault $fault): void
+    public static function mapToRestException(Fault $fault): never
     {
         $status_code = match ($fault::class) {
             QueryEndDateLesserThanStartDateFault::class,

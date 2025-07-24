@@ -115,6 +115,17 @@ final readonly class CoreDatabaseBuilder
         $this->user_permissions_dao->addUserAsProjectMember($project_id, $user_id);
     }
 
+    public function addUserToStaticUGroup(int $user_id, int $ugroup_id): void
+    {
+        $this->db->insert(
+            'ugroup_user',
+            [
+                'ugroup_id'   => $ugroup_id,
+                'user_id'     => $user_id,
+            ]
+        );
+    }
+
     public function addUserToProjectAdmins(int $user_id, int $project_id): void
     {
         $this->user_permissions_dao->addUserAsProjectAdmin($project_id, $user_id);

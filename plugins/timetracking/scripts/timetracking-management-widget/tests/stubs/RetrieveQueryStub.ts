@@ -49,6 +49,7 @@ export const injected_query: Query = {
     },
     has_the_query_been_modified,
     saveQuery: (): void => {},
+    no_more_viewable_users: ref([]),
 };
 
 export const RetrieveQueryStub = {
@@ -69,5 +70,6 @@ export const RetrieveQueryStub = {
         },
         has_the_query_been_modified,
         saveQuery: (): void => {},
+        no_more_viewable_users: ref([]),
     }),
 };

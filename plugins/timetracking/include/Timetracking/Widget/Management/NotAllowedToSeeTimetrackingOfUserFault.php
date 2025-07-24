@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,15 +22,29 @@ declare(strict_types=1);
 
 namespace Tuleap\Timetracking\Widget\Management;
 
-use PFUser;
-use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
-use Tuleap\NeverThrow\Ok;
 
-interface GetViewableUser
+/**
+ * @psalm-immutable
+ */
+final readonly class NotAllowedToSeeTimetrackingOfUserFault extends Fault
 {
-    /**
-     * @return Ok<PFUser>|Err<Fault>
-     */
-    public function getViewableUser(PFUser $current_user, int $user_id): Ok|Err;
+    protected function __construct(string $message, public \PFUser $user)
+    {
+        parent::__construct($message);
+    }
+
+    public static function build(\PFUser $manager, \PFUser $user): Fault
+    {
+        return new self(
+            sprintf(
+                'User #%d (%s) is not allowed to see times for user #%d (%s).',
+                (int) $manager->getId(),
+                $manager->getUserName(),
+                (int) $user->getId(),
+                $user->getUsername(),
+            ),
+            $user,
+        );
+    }
 }
