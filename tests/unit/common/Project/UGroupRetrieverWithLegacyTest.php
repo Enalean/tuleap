@@ -37,6 +37,7 @@ final class UGroupRetrieverWithLegacyTest extends \Tuleap\Test\PHPUnit\TestCase
     private Project $project;
     private ProjectUGroup&MockObject $ugroup;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->project          = ProjectTestBuilder::aProject()->build();

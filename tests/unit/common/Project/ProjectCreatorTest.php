@@ -74,6 +74,7 @@ final class ProjectCreatorTest extends TestCase
     private BannerRetriever&MockObject $banner_retriever;
     private BannerCreator&MockObject $banner_creator;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->project_manager = $this->createMock(ProjectManager::class);

@@ -35,6 +35,7 @@ final class RepositoryIntegrationRetrieverTest extends TestCase
 {
     private RetrieveIntegrationDaoStub $integration_retriever_dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->integration_retriever_dao = RetrieveIntegrationDaoStub::fromNullRow();

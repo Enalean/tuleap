@@ -54,36 +54,43 @@ final class IComputeTimeframesStub implements IComputeTimeframes
         return new self($date_period, $start, null, $duration);
     }
 
+    #[\Override]
     public function getName(): string
     {
         return '';
     }
 
+    #[\Override]
     public function getConfigDescription(): string
     {
         return '';
     }
 
+    #[\Override]
     public function getStartDateField(): ?\Tracker_FormElement_Field_Date
     {
         return $this->start;
     }
 
+    #[\Override]
     public function getEndDateField(): ?\Tracker_FormElement_Field_Date
     {
         return $this->end;
     }
 
+    #[\Override]
     public function getDurationField(): ?\Tracker_FormElement_Field_Numeric
     {
         return $this->duration;
     }
 
+    #[\Override]
     public function getTrackerFromWhichTimeframeIsImplied(): ?\Tuleap\Tracker\Tracker
     {
         return null;
     }
 
+    #[\Override]
     public function buildDatePeriodWithoutWeekendForChangesetForREST(
         ?\Tracker_Artifact_Changeset $changeset,
         \PFUser $user,
@@ -92,6 +99,7 @@ final class IComputeTimeframesStub implements IComputeTimeframes
         return $this->date_period;
     }
 
+    #[\Override]
     public function buildDatePeriodWithoutWeekendForChangeset(
         ?\Tracker_Artifact_Changeset $changeset,
         \PFUser $user,
@@ -100,6 +108,7 @@ final class IComputeTimeframesStub implements IComputeTimeframes
         return $this->date_period;
     }
 
+    #[\Override]
     public function buildDatePeriodWithoutWeekendForChangesetChartRendering(
         ?\Tracker_Artifact_Changeset $changeset,
         \PFUser $user,
@@ -108,30 +117,36 @@ final class IComputeTimeframesStub implements IComputeTimeframes
         return $this->date_period;
     }
 
+    #[\Override]
     public function exportToXML(\SimpleXMLElement $root, array $xml_mapping): void
     {
     }
 
+    #[\Override]
     public function exportToREST(\PFUser $user): ?IRepresentSemanticTimeframe
     {
         return null;
     }
 
+    #[\Override]
     public function save(\Tuleap\Tracker\Tracker $tracker, SemanticTimeframeDao $dao): bool
     {
         return true;
     }
 
+    #[\Override]
     public function isFieldUsed(\Tracker_FormElement_Field $field): bool
     {
         return true;
     }
 
+    #[\Override]
     public function isDefined(): bool
     {
         return true;
     }
 
+    #[\Override]
     public function userCanReadTimeframeFields(\PFUser $user): bool
     {
         return (! $this->start || $this->start->userCanRead($user)) &&
@@ -139,6 +154,7 @@ final class IComputeTimeframesStub implements IComputeTimeframes
                (! $this->duration || $this->duration->userCanRead($user));
     }
 
+    #[\Override]
     public function isAllSetToZero(\Tracker_Artifact_Changeset $changeset, \PFUser $user, LoggerInterface $logger): bool
     {
         return $this->date_period->getDuration() === 0 &&
@@ -146,6 +162,7 @@ final class IComputeTimeframesStub implements IComputeTimeframes
                $this->date_period->getEndDate() === 0;
     }
 
+    #[\Override]
     public function isTimeDisplayedForEvent(): bool
     {
         return false;

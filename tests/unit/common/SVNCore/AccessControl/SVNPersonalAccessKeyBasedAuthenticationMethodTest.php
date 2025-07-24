@@ -47,6 +47,7 @@ final class SVNPersonalAccessKeyBasedAuthenticationMethodTest extends TestCase
     private $user_provider;
     private SVNPersonalAccessKeyBasedAuthenticationMethod $auth_method;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->access_key_verifier = $this->createStub(AccessKeyVerifier::class);

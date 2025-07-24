@@ -40,6 +40,7 @@ class TuleapReferenceRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $event_manager;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->reference_manager          = $this->createMock(ReferenceManager::class);

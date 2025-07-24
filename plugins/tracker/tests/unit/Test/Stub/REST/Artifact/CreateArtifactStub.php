@@ -56,6 +56,7 @@ final class CreateArtifactStub implements CreateArtifact
         return new self(false, null);
     }
 
+    #[\Override]
     public function create(
         PFUser $submitter,
         TrackerReference $tracker_reference,

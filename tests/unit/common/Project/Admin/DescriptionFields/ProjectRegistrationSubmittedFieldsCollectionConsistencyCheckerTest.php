@@ -36,6 +36,7 @@ final class ProjectRegistrationSubmittedFieldsCollectionConsistencyCheckerTest e
      */
     private $fields_factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

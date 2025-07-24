@@ -51,11 +51,13 @@ final class AccessKeyScopeBuilderCollectorTest extends \Tuleap\Test\PHPUnit\Test
     {
         return new class implements AuthenticationScopeBuilder
         {
+            #[\Override]
             public function buildAuthenticationScopeFromScopeIdentifier(AuthenticationScopeIdentifier $scope_identifier): ?AuthenticationScope
             {
                 return null;
             }
 
+            #[\Override]
             public function buildAllAvailableAuthenticationScopes(): array
             {
                 return [];

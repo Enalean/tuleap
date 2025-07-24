@@ -44,6 +44,7 @@ final class StatusValueMapperTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $form_element_factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->form_element_factory = $this->createMock(Tracker_FormElementFactory::class);

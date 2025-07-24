@@ -47,6 +47,7 @@ final class ArtifactLinkerTest extends TestCase
     private RetrieveForwardLinksStub $links_retriever;
     private \Tuleap\Tracker\Tracker $tracker;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->tracker              = TrackerTestBuilder::aTracker()->withId(93)->build();

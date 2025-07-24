@@ -88,71 +88,84 @@ final class ExternalFieldBuilder
             null
         ) extends Tracker_FormElement_Field implements TrackerFormElementExternalField {
             /** @return void */
+            #[\Override]
             public function accept(Tracker_FormElement_FieldVisitor $visitor)
             {
                 $visitor->visitExternalField($this);
             }
 
             /** @return string */
+            #[\Override]
             public static function getFactoryLabel()
             {
                 return '';
             }
 
             /** @return string */
+            #[\Override]
             public static function getFactoryDescription()
             {
                 return '';
             }
 
             /** @return string */
+            #[\Override]
             public static function getFactoryIconUseIt()
             {
                 return '';
             }
 
             /** @return string */
+            #[\Override]
             public static function getFactoryIconCreate()
             {
                 return '';
             }
 
             /** @return void */
+            #[\Override]
             public function getFormAdminVisitor(Tracker_FormElement_Field $element, array $used_element)
             {
             }
 
             /** @return string */
+            #[\Override]
             protected function fetchAdminFormElement()
             {
                 return '';
             }
 
             /** @return void */
+            #[\Override]
             public function getRESTAvailableValues()
             {
             }
 
+            #[\Override]
             public function fetchCriteriaValue(Tracker_Report_Criteria $criteria): string
             {
                 return '';
             }
 
+            #[\Override]
             public function fetchRawValue(mixed $value): string
             {
                 return '';
             }
 
+            #[\Override]
             public function getCriteriaFromWhere(Tracker_Report_Criteria $criteria): Option
             {
                 return Option::nothing(ParametrizedFromWhere::class);
             }
 
             /** @return void */
+            #[\Override]
             protected function getCriteriaDao()
             {
             }
 
+            #[\Override]
             protected function fetchArtifactValue(
                 Artifact $artifact,
                 ?Tracker_Artifact_ChangesetValue $value,
@@ -162,6 +175,7 @@ final class ExternalFieldBuilder
             }
 
             /** @return string */
+            #[\Override]
             public function fetchArtifactValueReadOnly(
                 Artifact $artifact,
                 ?Tracker_Artifact_ChangesetValue $value = null,
@@ -169,26 +183,31 @@ final class ExternalFieldBuilder
                 return '';
             }
 
+            #[\Override]
             protected function fetchSubmitValue(array $submitted_values): string
             {
                 return '';
             }
 
+            #[\Override]
             protected function fetchSubmitValueMasschange(): string
             {
                 return '';
             }
 
+            #[\Override]
             protected function fetchTooltipValue(Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null): string
             {
                 return '';
             }
 
             /** @return void */
+            #[\Override]
             protected function getValueDao()
             {
             }
 
+            #[\Override]
             public function fetchRawValueFromChangeset(Tracker_Artifact_Changeset $changeset): string
             {
                 return '';
@@ -198,6 +217,7 @@ final class ExternalFieldBuilder
              * @param mixed $value
              * @return bool
              */
+            #[\Override]
             protected function validate(Artifact $artifact, $value)
             {
                 return true;
@@ -209,6 +229,7 @@ final class ExternalFieldBuilder
              * @param mixed $value
              * @return bool
              */
+            #[\Override]
             protected function saveValue(
                 $artifact,
                 $changeset_value_id,
@@ -225,11 +246,13 @@ final class ExternalFieldBuilder
              * @param bool $has_changed
              * @return \Tracker_Artifact_ChangesetValue|null
              */
+            #[\Override]
             public function getChangesetValue($changeset, $value_id, $has_changed)
             {
                 return null;
             }
 
+            #[\Override]
             public function fetchChangesetValue(
                 int $artifact_id,
                 int $changeset_id,
@@ -240,6 +263,7 @@ final class ExternalFieldBuilder
                 return '';
             }
 
+            #[\Override]
             public function isAlwaysInEditMode(): bool
             {
                 return false;

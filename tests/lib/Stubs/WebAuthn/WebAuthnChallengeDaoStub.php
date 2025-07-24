@@ -33,12 +33,14 @@ final class WebAuthnChallengeDaoStub implements SaveWebAuthnChallenge, RetrieveW
 
     public ?string $challenge_saved = null;
 
+    #[\Override]
     public function saveChallenge(int $user_id, string $challenge): void
     {
         $this->user_id_saved   = $user_id;
         $this->challenge_saved = $challenge;
     }
 
+    #[\Override]
     public function searchChallenge(int $user_id): Option
     {
         if ($user_id === $this->user_id_saved && is_string($this->challenge_saved)) {

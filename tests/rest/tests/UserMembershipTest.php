@@ -25,6 +25,7 @@ use Psr\Http\Message\ResponseInterface;
 #[\PHPUnit\Framework\Attributes\Group('UserMembershipTests')]
 final class UserMembershipTest extends RestBase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
+    #[\Override]
     protected function getResponse($request, $user_name = REST_TestDataBuilder::TEST_USER_1_NAME): ResponseInterface
     {
         return parent::getResponse($request, $user_name);

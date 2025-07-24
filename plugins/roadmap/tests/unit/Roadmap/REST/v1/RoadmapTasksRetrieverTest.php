@@ -90,6 +90,7 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         return $tracker;
     }
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao                        = $this->createMock(RoadmapWidgetDao::class);
@@ -131,6 +132,7 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         return $this->getRetriever(
             $tracker_factory,
             new class implements IRetrieveDependencies {
+                #[\Override]
                 public function getDependencies(Artifact $artifact): array
                 {
                     return [];
@@ -695,6 +697,7 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn([$task_201, $task_202, $task_203]);
 
         $dependency_retriever = new class implements IRetrieveDependencies {
+            #[\Override]
             public function getDependencies(Artifact $artifact): array
             {
                 if ($artifact->getId() === 201) {
@@ -837,6 +840,7 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn([$task_201, $task_202, $task_203]);
 
         $dependency_retriever = new class implements IRetrieveDependencies {
+            #[\Override]
             public function getDependencies(Artifact $artifact): array
             {
                 if ($artifact->getId() === 201) {
@@ -983,6 +987,7 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn([$task_201, $task_202]);
 
         $dependency_retriever = new class implements IRetrieveDependencies {
+            #[\Override]
             public function getDependencies(Artifact $artifact): array
             {
                 return [];
@@ -1113,6 +1118,7 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturn([$task_201, $task_203]);
 
         $dependency_retriever = new class implements IRetrieveDependencies {
+            #[\Override]
             public function getDependencies(Artifact $artifact): array
             {
                 return [];

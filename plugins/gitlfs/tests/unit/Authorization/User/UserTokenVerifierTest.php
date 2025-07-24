@@ -35,6 +35,7 @@ final class UserTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
     private \UserManager&\PHPUnit\Framework\MockObject\Stub $user_manager;
     private \DateTimeImmutable $current_time;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao          = $this->createMock(UserAuthorizationDAO::class);

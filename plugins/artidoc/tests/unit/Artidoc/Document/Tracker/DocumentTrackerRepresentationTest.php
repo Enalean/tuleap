@@ -40,6 +40,7 @@ final class DocumentTrackerRepresentationTest extends TestCase
 {
     private Tracker $tracker;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->tracker = TrackerTestBuilder::aTracker()->withId(101)->withName('Bugs')->withProject(ProjectTestBuilder::aProject()->withId(101)->build())->build();

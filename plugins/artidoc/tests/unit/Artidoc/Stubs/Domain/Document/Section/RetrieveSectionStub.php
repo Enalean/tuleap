@@ -64,11 +64,13 @@ final readonly class RetrieveSectionStub implements RetrieveSection
         return new self($ok, $ok);
     }
 
+    #[\Override]
     public function retrieveSectionUserCanRead(SectionIdentifier $id): Ok|Err
     {
         return $this->read;
     }
 
+    #[\Override]
     public function retrieveSectionUserCanWrite(SectionIdentifier $id): Ok|Err
     {
         return $this->write;

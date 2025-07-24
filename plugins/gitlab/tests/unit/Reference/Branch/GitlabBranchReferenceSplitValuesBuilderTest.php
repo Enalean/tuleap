@@ -33,6 +33,7 @@ final class GitlabBranchReferenceSplitValuesBuilderTest extends TestCase
      */
     private $dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

@@ -38,6 +38,7 @@ final class BuildTeamStub implements BuildTeam
         return new self(true);
     }
 
+    #[\Override]
     public function checkProjectIsATeam(int $team_id, UserIdentifier $user_identifier): void
     {
         if (! $this->is_team) {
@@ -45,6 +46,7 @@ final class BuildTeamStub implements BuildTeam
         }
     }
 
+    #[\Override]
     public function checkProjectIsATeamForRestTestInitialization(int $team_id): void
     {
         // should never be implemented

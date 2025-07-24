@@ -63,6 +63,7 @@ abstract class GitoliteTestCase extends TestIntegrationTestCase
     protected string $sys_data_dir;
     protected string $gitolite_admin_dir;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->cwd                = getcwd();
@@ -124,6 +125,7 @@ abstract class GitoliteTestCase extends TestIntegrationTestCase
         );
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         chdir($this->cwd);

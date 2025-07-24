@@ -48,26 +48,31 @@ final class ProjectReferenceStub implements ProjectReference
         return new self($project_id, $label, $short_name, $project_icon);
     }
 
+    #[\Override]
     public function getId(): int
     {
         return $this->id;
     }
 
+    #[\Override]
     public function getProjectLabel(): string
     {
         return $this->label;
     }
 
+    #[\Override]
     public function getUrl(): string
     {
         return '/projects/' . urlencode($this->short_name);
     }
 
+    #[\Override]
     public function getProjectIcon(): string
     {
         return $this->project_icon;
     }
 
+    #[\Override]
     public function getProjectShortName(): string
     {
         return $this->short_name;

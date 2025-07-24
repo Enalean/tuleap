@@ -37,6 +37,7 @@ final class PlatformBannerAdministrationControllerTest extends \Tuleap\Test\PHPU
     private BannerRetriever&\PHPUnit\Framework\MockObject\Stub $banner_retriever;
     private \PFUser $user;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->renderer         = $this->createMock(AdminPageRenderer::class);

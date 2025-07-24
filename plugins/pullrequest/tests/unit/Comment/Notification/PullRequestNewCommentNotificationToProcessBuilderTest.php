@@ -52,6 +52,7 @@ final class PullRequestNewCommentNotificationToProcessBuilderTest extends \Tulea
     private \PFUser $change_user;
     private SearchPullRequestStub $pull_request_dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->pull_request = PullRequestTestBuilder::aPullRequestInReview()->build();

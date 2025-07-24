@@ -45,6 +45,7 @@ final class DescriptionMetadataTest extends CrossTrackerFieldTestCase
     private int $sprint_artifact_with_description_id;
     private int $task_artifact_with_description_id;
 
+    #[\Override]
     protected function setUp(): void
     {
         $db              = DBFactory::getMainTuleapDBConnection()->getDB();

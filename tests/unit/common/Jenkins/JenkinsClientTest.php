@@ -39,6 +39,7 @@ final class JenkinsClientTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $jenkins_csrf_crumb_retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->jenkins_csrf_crumb_retriever = $this->createMock(JenkinsCSRFCrumbRetriever::class);

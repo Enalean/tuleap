@@ -42,6 +42,7 @@ final class RetrieveCrossRefStub implements RetrieveCrossRef
         return new self($tracker_shortname . ' #' . $id);
     }
 
+    #[\Override]
     public function getXRef(TimeboxIdentifier $timebox_identifier): string
     {
         return $this->cross_reference;

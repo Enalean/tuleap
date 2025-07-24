@@ -31,6 +31,7 @@ final class AgileDashboardPaneInfoTest extends \Tuleap\Test\PHPUnit\TestCase
     /** @var AgileDashboardPaneInfo */
     private $agile_dashboard_pane_info;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->agile_dashboard_pane_info = new AgileDashboardPaneInfo($this->release_id);

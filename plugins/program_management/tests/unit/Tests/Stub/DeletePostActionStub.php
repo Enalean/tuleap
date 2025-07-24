@@ -41,6 +41,7 @@ final class DeletePostActionStub implements DeletePostAction
         return $this->call_count;
     }
 
+    #[\Override]
     public function deleteTransitionPostActions(int $transition_id): void
     {
         $this->call_count++;

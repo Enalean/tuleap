@@ -43,6 +43,7 @@ final class VerifyFieldCanBeEasilyMigratedStub implements VerifyFieldCanBeEasily
         return new self(false);
     }
 
+    #[\Override]
     public function canFieldBeEasilyMigrated(
         \Tracker_FormElement_Field $source_field,
         \Tracker_FormElement_Field $destination_field,

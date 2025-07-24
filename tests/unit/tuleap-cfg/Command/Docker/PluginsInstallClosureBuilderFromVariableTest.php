@@ -33,11 +33,13 @@ final class PluginsInstallClosureBuilderFromVariableTest extends TestCase
     public function testDoNothingWhenVariableIsEmpty(): void
     {
         $variable_provider = new class implements VariableProviderInterface {
+            #[\Override]
             public function get(string $key): string
             {
                 return '';
             }
 
+            #[\Override]
             public function getOr(string $key): Option
             {
                 return Option::nothing(\Psl\Type\string());
@@ -53,11 +55,13 @@ final class PluginsInstallClosureBuilderFromVariableTest extends TestCase
     public function testProvideCallableInstallingPlugins(): void
     {
         $variable_provider = new class implements VariableProviderInterface {
+            #[\Override]
             public function get(string $key): string
             {
                 return 'plugin_a plugin_b';
             }
 
+            #[\Override]
             public function getOr(string $key): Option
             {
                 return Option::nothing(\Psl\Type\string());

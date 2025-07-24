@@ -47,6 +47,7 @@ final class DefaultBranchPushProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
     private \PFUser $pusher;
     private VerifyArtifactClosureIsAllowedStub $closure_verifier;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->project = ProjectTestBuilder::aProject()->withId(163)->build();

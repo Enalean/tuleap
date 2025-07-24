@@ -35,12 +35,14 @@ final class PluginManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private \ServiceManager&MockObject $service_manager;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->service_manager = $this->createMock(\ServiceManager::class);
         ServiceManager::setInstance($this->service_manager);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         ServiceManager::clearInstance();

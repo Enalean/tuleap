@@ -38,6 +38,7 @@ final class ProjectAdminsUGroupRetrieverStub implements ProjectAdminsUGroupRetri
         return new self($ugroup);
     }
 
+    #[\Override]
     public function getProjectAdminsUGroup(Project $project): ProjectUGroup
     {
         return $this->ugroup;

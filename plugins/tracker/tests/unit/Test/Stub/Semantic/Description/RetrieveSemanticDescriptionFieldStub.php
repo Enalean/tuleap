@@ -44,6 +44,7 @@ final class RetrieveSemanticDescriptionFieldStub implements RetrieveSemanticDesc
         return new self($field_text);
     }
 
+    #[\Override]
     public function fromTracker(Tracker $tracker): ?\Tuleap\Tracker\FormElement\Field\Text\TextField
     {
         $this->call_count++;

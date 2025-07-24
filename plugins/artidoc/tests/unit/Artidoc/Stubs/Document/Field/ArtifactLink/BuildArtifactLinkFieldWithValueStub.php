@@ -42,6 +42,7 @@ final class BuildArtifactLinkFieldWithValueStub implements BuildArtifactLinkFiel
         return new self($callback);
     }
 
+    #[\Override]
     public function buildArtifactLinkFieldWithValue(ConfiguredField $configured_field, ?ArtifactLinkChangesetValue $changeset_value): ArtifactLinkFieldWithValue
     {
         return ($this->callback)($configured_field);

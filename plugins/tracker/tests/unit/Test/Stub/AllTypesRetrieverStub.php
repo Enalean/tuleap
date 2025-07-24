@@ -39,6 +39,7 @@ final class AllTypesRetrieverStub implements AllTypesRetriever
         return new self($types);
     }
 
+    #[\Override]
     public function getAllTypes(): array
     {
         return $this->types;

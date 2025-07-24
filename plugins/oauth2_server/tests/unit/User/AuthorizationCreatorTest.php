@@ -40,6 +40,7 @@ final class AuthorizationCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $scope_dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->authorization_dao = $this->createMock(AuthorizationDao::class);

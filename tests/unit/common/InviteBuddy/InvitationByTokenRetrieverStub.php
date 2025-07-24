@@ -45,6 +45,7 @@ class InvitationByTokenRetrieverStub implements InvitationByTokenRetriever
         return new self(null, true);
     }
 
+    #[\Override]
     public function searchBySplitToken(SplitToken $split_token): Invitation
     {
         if ($this->invitation) {

@@ -39,6 +39,7 @@ final class ProcessTeamSynchronizationStub implements ProcessTeamSynchronization
         return new self();
     }
 
+    #[\Override]
     public function processTeamSynchronization(TeamSynchronizationEvent $event): void
     {
         $this->calls_count++;

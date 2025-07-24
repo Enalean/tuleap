@@ -37,6 +37,7 @@ final class SiteDeployGitolite3HooksTest extends \Tuleap\Test\PHPUnit\TestCase
     private \PHPUnit\Framework\MockObject\MockObject&ProcessFactory $process_factory;
     private string $gitolite_base_dir;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

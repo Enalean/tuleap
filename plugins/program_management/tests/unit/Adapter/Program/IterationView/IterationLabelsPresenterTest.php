@@ -32,6 +32,7 @@ final class IterationLabelsPresenterTest extends \Tuleap\Test\PHPUnit\TestCase
     private const SUB_LABEL = 'cycle';
     private IterationLabels $labels;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->labels = IterationLabelsBuilder::buildWithLabels(self::LABEL, self::SUB_LABEL);

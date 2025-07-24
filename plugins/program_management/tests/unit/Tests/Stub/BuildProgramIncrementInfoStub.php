@@ -45,6 +45,7 @@ final class BuildProgramIncrementInfoStub implements BuildProgramIncrementInfo
         );
     }
 
+    #[\Override]
     public function build(UserIdentifier $user_identifier, ProgramIncrementIdentifier $increment_identifier): ProgramIncrementInfo
     {
         return $this->increment_info;

@@ -46,6 +46,7 @@ final readonly class SearchUserGroupsPermissionOnArtifactsStub implements Search
         return new self($results);
     }
 
+    #[\Override]
     public function searchUserGroupsViewPermissionOnArtifacts(array $user_groups_id, array $artifacts_id): array
     {
         return $this->result;

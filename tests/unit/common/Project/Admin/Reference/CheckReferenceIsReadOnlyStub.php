@@ -36,6 +36,7 @@ final class CheckReferenceIsReadOnlyStub implements CheckReferenceIsReadOnly
         return new self(false);
     }
 
+    #[\Override]
     public function isReferenceReadOnly(\Reference $reference): bool
     {
         return $this->is_readonly;

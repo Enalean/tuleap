@@ -37,6 +37,7 @@ final class DeleteVisitByItemIdStub implements DeleteVisitByItemId
         return new self();
     }
 
+    #[\Override]
     public function deleteVisitByItemId(int $item_id): void
     {
         $this->deleted = true;

@@ -44,6 +44,7 @@ final class CrossReferenceFRSOrganizerTest extends TestCase
     private PFUser $user;
     private FRSFileFactory&MockObject $file_factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->package_factory = $this->createMock(FRSPackageFactory::class);

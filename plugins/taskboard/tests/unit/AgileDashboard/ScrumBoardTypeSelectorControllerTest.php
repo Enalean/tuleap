@@ -32,6 +32,7 @@ final class ScrumBoardTypeSelectorControllerTest extends \Tuleap\Test\PHPUnit\Te
     private TaskboardUsageDao&MockObject $dao;
     private \Project $project;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->project = ProjectTestBuilder::aProject()->withId(150)->build();

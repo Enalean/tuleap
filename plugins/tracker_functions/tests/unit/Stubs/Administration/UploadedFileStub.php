@@ -48,12 +48,14 @@ final class UploadedFileStub implements UploadedFileInterface
         return new self(UPLOAD_ERR_OK, false, 123);
     }
 
+    #[\Override]
     public function getStream(): StreamInterface
     {
         // Not needed yet
         throw new \Exception('Not used yet');
     }
 
+    #[\Override]
     public function moveTo($targetPath): void
     {
         if ($this->should_raise_exception_on_move) {
@@ -62,21 +64,25 @@ final class UploadedFileStub implements UploadedFileInterface
         $this->captured_moved_to_path = $targetPath;
     }
 
+    #[\Override]
     public function getSize(): int
     {
         return $this->size;
     }
 
+    #[\Override]
     public function getError(): int
     {
         return $this->error;
     }
 
+    #[\Override]
     public function getClientFilename(): null
     {
         return null;
     }
 
+    #[\Override]
     public function getClientMediaType(): null
     {
         return null;

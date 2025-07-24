@@ -38,6 +38,7 @@ final class JenkinsClientTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private EncryptionKey $encryption_key;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->encryption_key = new EncryptionKey(new ConcealedString(str_repeat('a', SODIUM_CRYPTO_SECRETBOX_KEYBYTES)));

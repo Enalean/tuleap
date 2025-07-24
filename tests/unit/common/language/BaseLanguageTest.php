@@ -30,6 +30,7 @@ class BaseLanguageTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
 
     protected $cache_dir;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -48,6 +49,7 @@ class BaseLanguageTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
         }
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         UserManager::clearInstance();

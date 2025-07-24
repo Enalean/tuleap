@@ -65,6 +65,7 @@ final class GetInstanceFromXmlTest extends TestCase
     private NullLogger $logger;
     private \Project $project;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->tracker_factory              = $this->createMock(TrackerFactory::class);

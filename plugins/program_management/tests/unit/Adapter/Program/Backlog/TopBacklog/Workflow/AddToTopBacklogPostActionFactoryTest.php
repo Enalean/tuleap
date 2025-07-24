@@ -46,6 +46,7 @@ final class AddToTopBacklogPostActionFactoryTest extends \Tuleap\Test\PHPUnit\Te
     private SearchByWorkflowStub $search_by_workflow;
     private \Project $project;
 
+    #[\Override]
     protected function setUp(): void
     {
         $workflow_id = 112;

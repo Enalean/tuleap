@@ -41,6 +41,7 @@ final class HomepagePresenterBuilderTest extends TestCase
     private \Tracker_Migration_MigrationManager&MockObject $migration_manager;
     private bool $is_tracker_admin;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->tracker_factory   = $this->createStub(\TrackerFactory::class);

@@ -35,6 +35,7 @@ class CredentialsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private CredentialsRetriever $credentials_retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

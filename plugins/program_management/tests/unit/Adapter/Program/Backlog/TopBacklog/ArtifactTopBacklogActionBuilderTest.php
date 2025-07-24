@@ -55,6 +55,7 @@ final class ArtifactTopBacklogActionBuilderTest extends \Tuleap\Test\PHPUnit\Tes
     private VerifyFeaturePlanned $verify_feature_planned;
 
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->build_program                 = BuildProgramStub::stubValidProgram();

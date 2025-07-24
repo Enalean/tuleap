@@ -30,6 +30,7 @@ class HookConfigCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     private Repository $repository;
     private HookConfigChecker $config_hook_checker;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->config_hook_retriever = $this->createMock(\Tuleap\SVN\Repository\HookConfigRetriever::class);

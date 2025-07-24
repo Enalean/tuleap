@@ -39,6 +39,7 @@ final class MetricsAuthenticationTest extends \Tuleap\Test\PHPUnit\TestCase
     private RequestHandlerInterface $request_handler;
     private string $config_dir_root;
 
+    #[\Override]
     public function setUp(): void
     {
         $response_factory      = HTTPFactoryBuilder::responseFactory();

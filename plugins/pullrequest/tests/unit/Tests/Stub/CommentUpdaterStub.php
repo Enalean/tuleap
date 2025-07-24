@@ -33,6 +33,7 @@ final class CommentUpdaterStub implements CommentUpdater
         $this->update_comment_method_count = 0;
     }
 
+    #[\Override]
     public function updateComment(Comment $new_comment): void
     {
         $this->update_comment_method_count++;

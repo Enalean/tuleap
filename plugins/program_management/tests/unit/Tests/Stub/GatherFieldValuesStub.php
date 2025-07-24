@@ -101,21 +101,25 @@ final class GatherFieldValuesStub implements GatherFieldValues
         );
     }
 
+    #[\Override]
     public function getTitleValue(TitleFieldReference $title): string
     {
         return $this->title_stub->getTitleValue($title);
     }
 
+    #[\Override]
     public function getDescriptionValue(DescriptionFieldReference $description): TextFieldValue
     {
         return $this->description_stub->getDescriptionValue($description);
     }
 
+    #[\Override]
     public function getStartDateValue(StartDateFieldReference $start_date): int
     {
         return $this->start_date_stub->getStartDateValue($start_date);
     }
 
+    #[\Override]
     public function getDurationValue(DurationFieldReference $duration): int
     {
         if (! $this->duration_stub) {
@@ -124,6 +128,7 @@ final class GatherFieldValuesStub implements GatherFieldValues
         return $this->duration_stub->getDurationValue($duration);
     }
 
+    #[\Override]
     public function getEndDateValue(EndDateFieldReference $end_date): int
     {
         if (! $this->end_date_stub) {
@@ -132,6 +137,7 @@ final class GatherFieldValuesStub implements GatherFieldValues
         return $this->end_date_stub->getEndDateValue($end_date);
     }
 
+    #[\Override]
     public function getStatusValues(StatusFieldReference $status): array
     {
         return $this->status_stub->getStatusValues($status);

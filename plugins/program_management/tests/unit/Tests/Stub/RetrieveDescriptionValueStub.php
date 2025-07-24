@@ -42,6 +42,7 @@ final class RetrieveDescriptionValueStub implements RetrieveDescriptionValue
         return new self($value, $format);
     }
 
+    #[\Override]
     public function getDescriptionValue(DescriptionFieldReference $description): TextFieldValue
     {
         return TextFieldValueStub::withValue($this->value, $this->format);

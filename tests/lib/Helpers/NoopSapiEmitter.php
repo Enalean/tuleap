@@ -27,6 +27,7 @@ use Psr\Http\Message\ResponseInterface;
 
 class NoopSapiEmitter implements EmitterInterface
 {
+    #[\Override]
     public function emit(ResponseInterface $response): bool
     {
         return true;

@@ -41,6 +41,7 @@ final class ArtifactXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase // php
     private $archive;
     private $logger;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -60,6 +61,7 @@ final class ArtifactXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase // php
         $this->logger->method('info');
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         $this->archive->close();

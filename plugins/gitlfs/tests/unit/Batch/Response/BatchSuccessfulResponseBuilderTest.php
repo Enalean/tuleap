@@ -45,6 +45,7 @@ final class BatchSuccessfulResponseBuilderTest extends \Tuleap\Test\PHPUnit\Test
     private ProjectQuotaChecker&\PHPUnit\Framework\MockObject\Stub $project_quota_checker;
     private \GitRepository&\PHPUnit\Framework\MockObject\Stub $repository;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->token_creator         = $this->createStub(ActionAuthorizationTokenCreator::class);

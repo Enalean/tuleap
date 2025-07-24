@@ -55,6 +55,7 @@ final class MirroredTimeboxChangesetValuesTest extends \Tuleap\Test\PHPUnit\Test
     private ArtifactLinkValue $artifact_link_value;
     private SynchronizedFieldReferences $target_fields;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->status_mapper = MapStatusByValueStub::withSuccessiveBindValueIds(self::MAPPED_STATUS_BIND_VALUE_ID);

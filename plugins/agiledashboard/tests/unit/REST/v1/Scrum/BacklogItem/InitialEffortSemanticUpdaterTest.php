@@ -52,6 +52,7 @@ final class InitialEffortSemanticUpdaterTest extends TestCase
     private AgileDashBoard_Semantic_InitialEffort&MockObject $semantic_initial_effort;
     private Tracker_Artifact_Changeset $last_changeset;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->updater = new InitialEffortSemanticUpdater();

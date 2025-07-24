@@ -37,6 +37,7 @@ final class CurrentUserHasArtidocPermissionsCheckerTest extends TestCase
     private \PFUser $user;
     private \Docman_PermissionsManager&MockObject $permissions_manager;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user = UserTestBuilder::buildWithDefaults();
@@ -45,6 +46,7 @@ final class CurrentUserHasArtidocPermissionsCheckerTest extends TestCase
         \Docman_PermissionsManager::setInstance(self::PROJECT_ID, $this->permissions_manager);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         \Docman_PermissionsManager::clearInstances();

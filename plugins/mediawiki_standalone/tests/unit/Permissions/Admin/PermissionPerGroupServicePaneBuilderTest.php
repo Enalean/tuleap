@@ -46,6 +46,7 @@ class PermissionPerGroupServicePaneBuilderTest extends TestCase
     private UGroupRetriever $ugroup_retriever;
     private PermissionPerGroupServicePaneBuilder $builder;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->project = ProjectTestBuilder::aProject()->build();

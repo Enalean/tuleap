@@ -42,6 +42,7 @@ final class SearchParentFeatureOfAUserStoryStub implements SearchParentFeatureOf
         return new self(null);
     }
 
+    #[\Override]
     public function getParentOfUserStory(UserStoryIdentifier $story_identifier): ?int
     {
         return $this->id;

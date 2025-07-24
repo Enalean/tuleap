@@ -87,6 +87,7 @@ final class ReleaseNotesControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     private $script_assets;
     private PackagePermissionManager&Stub $package_permission_manager;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->release_factory                = $this->createMock(FRSReleaseFactory::class);
@@ -99,16 +100,19 @@ final class ReleaseNotesControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->renderer                       = $this->createMock(TemplateRenderer::class);
         $this->script_assets                  = $this->createMock(IncludeAssets::class);
         $content_interpreter                  = new class implements ContentInterpretor {
+            #[\Override]
             public function getInterpretedContent(string $content): string
             {
                 return $content;
             }
 
+            #[\Override]
             public function getInterpretedContentWithReferences(string $content, int $project_id): string
             {
                 return $this->getInterpretedContent($content);
             }
 
+            #[\Override]
             public function getContentStrippedOfTags(string $content): string
             {
                 return $this->getInterpretedContent($content);

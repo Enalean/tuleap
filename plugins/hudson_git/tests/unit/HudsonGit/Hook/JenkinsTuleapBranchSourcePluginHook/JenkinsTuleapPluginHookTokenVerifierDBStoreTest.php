@@ -42,6 +42,7 @@ final class JenkinsTuleapPluginHookTokenVerifierDBStoreTest extends TestCase
     private SplitTokenVerificationStringHasher $hasher;
     private JenkinsTuleapPluginHookTokenVerifierDBStore $verifier;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao        = $this->createMock(JenkinsTuleapPluginHookTokenDAO::class);

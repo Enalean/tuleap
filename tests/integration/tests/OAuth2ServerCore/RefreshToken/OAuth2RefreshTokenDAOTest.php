@@ -61,6 +61,7 @@ final class OAuth2RefreshTokenDAOTest extends TestIntegrationTestCase
      */
     private $dao;
 
+    #[\Override]
     public static function setUpBeforeClass(): void
     {
         $db                                 = DBFactory::getMainTuleapDBConnection()->getDB();
@@ -112,11 +113,13 @@ final class OAuth2RefreshTokenDAOTest extends TestIntegrationTestCase
         );
     }
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao = new OAuth2RefreshTokenDAO();
     }
 
+    #[\Override]
     public static function tearDownAfterClass(): void
     {
         $db = DBFactory::getMainTuleapDBConnection()->getDB();

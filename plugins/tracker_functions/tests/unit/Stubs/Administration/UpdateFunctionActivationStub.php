@@ -38,11 +38,13 @@ final class UpdateFunctionActivationStub implements UpdateFunctionActivation
         return new self();
     }
 
+    #[\Override]
     public function deactivateFunction(int $tracker_id): void
     {
         $this->has_been_deactivated = true;
     }
 
+    #[\Override]
     public function activateFunction(int $tracker_id): void
     {
         $this->has_been_activated = true;

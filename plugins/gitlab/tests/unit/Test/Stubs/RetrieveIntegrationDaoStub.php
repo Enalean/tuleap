@@ -36,6 +36,7 @@ final class RetrieveIntegrationDaoStub implements RetrieveIntegrationDao
     /**
      * @psalm-return array{id:int, gitlab_repository_id:int, name:string, description:string, gitlab_repository_url:string, last_push_date:int, project_id:int, allow_artifact_closure:int}
      */
+    #[\Override]
     public function searchUniqueIntegration(Project $project, GitlabProject $gitlab_project): ?array
     {
         return $this->integration_row;

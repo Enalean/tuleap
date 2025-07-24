@@ -50,6 +50,7 @@ final class FeatureOfUserStoryRetrieverTest extends TestCase
     private SearchParentFeatureOfAUserStoryStub $search_parent_feature_of_a_user_story;
     private FeatureHasUserStoriesVerifier $feature_has_user_stories_verifier;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->search_parent_feature_of_a_user_story = SearchParentFeatureOfAUserStoryStub::withParentFeatureId(

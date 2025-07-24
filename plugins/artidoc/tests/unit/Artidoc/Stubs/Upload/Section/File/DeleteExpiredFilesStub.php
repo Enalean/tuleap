@@ -37,6 +37,7 @@ final class DeleteExpiredFilesStub implements DeleteExpiredFiles
         return new self();
     }
 
+    #[\Override]
     public function deleteExpiredFiles(\DateTimeImmutable $current_time): void
     {
         $this->called = true;

@@ -31,6 +31,7 @@ final class PostMergeRequestWebhookDataBuilderTest extends \Tuleap\Test\PHPUnit\
     private TestLogger $logger;
     private PostMergeRequestWebhookDataBuilder $builder;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

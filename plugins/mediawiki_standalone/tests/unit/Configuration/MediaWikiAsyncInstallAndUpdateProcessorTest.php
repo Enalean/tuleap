@@ -34,10 +34,12 @@ final class MediaWikiAsyncInstallAndUpdateProcessorTest extends TestCase
     private \Closure $has_update_been_executed;
     private MediaWikiAsyncUpdateProcessor $update_processor;
 
+    #[\Override]
     protected function setUp(): void
     {
         $update_handler = new class implements MediaWikiInstallAndUpdateHandler {
             public bool $has_update_been_executed = false;
+            #[\Override]
             public function runInstallAndUpdate(): void
             {
                 $this->has_update_been_executed = true;

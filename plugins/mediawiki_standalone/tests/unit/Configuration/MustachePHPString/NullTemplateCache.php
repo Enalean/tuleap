@@ -26,11 +26,13 @@ use Tuleap\Templating\TemplateCacheInterface;
 
 final class NullTemplateCache implements TemplateCacheInterface
 {
+    #[\Override]
     public function getPath(): ?string
     {
         return null;
     }
 
+    #[\Override]
     public function invalidate(): void
     {
     }

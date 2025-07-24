@@ -54,6 +54,7 @@ final class PullRequestCloserTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private PullRequestCloser $pull_request_closer;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao                    = $this->createMock(Dao::class);

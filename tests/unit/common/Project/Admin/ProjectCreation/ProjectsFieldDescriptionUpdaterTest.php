@@ -40,6 +40,7 @@ class ProjectsFieldDescriptionUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
     private ConfigDao&MockObject $config_dao;
     private Project_CustomDescription_CustomDescriptionDao&MockObject $custom_description_dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

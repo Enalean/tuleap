@@ -33,6 +33,7 @@ final class CloneWidgetStub implements \Tuleap\CrossTracker\Widget\CloneWidget
     {
     }
 
+    #[\Override]
     public function cloneWidget(int $template_widget_id): int
     {
         $this->call_count++;

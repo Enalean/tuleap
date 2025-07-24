@@ -41,21 +41,25 @@ final class IDisplayConfirmationPageStub implements IDisplayConfirmationPage
         return new self();
     }
 
+    #[\Override]
     public function displayConfirmationForAdmin(BaseLayout $layout, \PFUser $new_user, ConcealedString $password): void
     {
         $this->has_confirmation_for_admin_been_displayed = true;
     }
 
+    #[\Override]
     public function displayConfirmationLinkError(BaseLayout $layout): void
     {
         $this->has_confirmation_link_error_been_displayed = true;
     }
 
+    #[\Override]
     public function displayConfirmationLinkSent(BaseLayout $layout, \PFUser $new_user): void
     {
         $this->has_confirmation_link_sent_been_displayed = true;
     }
 
+    #[\Override]
     public function displayWaitForApproval(BaseLayout $layout, \PFUser $new_user): void
     {
         $this->has_wait_for_approvale_been_displayed = true;

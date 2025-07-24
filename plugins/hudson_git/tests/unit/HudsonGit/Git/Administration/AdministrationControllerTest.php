@@ -98,6 +98,7 @@ final class AdministrationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $log_factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -119,6 +120,7 @@ final class AdministrationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->renderer,
             $this->include_assets,
             new class implements EventDispatcherInterface {
+                #[\Override]
                 public function dispatch(object $event): object
                 {
                     return $event;
@@ -137,6 +139,7 @@ final class AdministrationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $GLOBALS['Language']->method('getText')->willReturn('');
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         unset($GLOBALS['_SESSION']);

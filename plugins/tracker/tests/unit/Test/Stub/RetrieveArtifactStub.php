@@ -57,6 +57,7 @@ final class RetrieveArtifactStub implements RetrieveArtifact
         $this->artifacts[$artifact->getId()] = $artifact;
     }
 
+    #[\Override]
     public function getArtifactById($id): ?Artifact
     {
         if ($this->order_by_id) {

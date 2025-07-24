@@ -40,6 +40,7 @@ final class ProjectDashboardSaverTest extends \Tuleap\Test\PHPUnit\TestCase
     private \Project $project;
     private DeleteVisitByDashboardId $delete_visit_by_dashboard_id;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao     = $this->createMock(ProjectDashboardDao::class);
@@ -59,6 +60,7 @@ final class ProjectDashboardSaverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->delete_visit_by_dashboard_id = new class implements DeleteVisitByDashboardId {
             public bool $called = false;
 
+            #[\Override]
             public function deleteVisitByDashboardId(int $dashboard_id): void
             {
                 $this->called = true;

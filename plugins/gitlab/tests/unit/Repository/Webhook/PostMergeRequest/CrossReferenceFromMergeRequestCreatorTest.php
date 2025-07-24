@@ -51,6 +51,7 @@ final class CrossReferenceFromMergeRequestCreatorTest extends \Tuleap\Test\PHPUn
 
     private CrossReferenceFromMergeRequestCreator $creator;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->tuleap_reference_retriever = $this->createMock(TuleapReferenceRetriever::class);

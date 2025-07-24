@@ -37,6 +37,7 @@ final class VerifyIsOpenStub implements VerifyIsOpen
         return new self(true);
     }
 
+    #[\Override]
     public function isOpen(UserStoryIdentifier $user_story_identifier): bool
     {
         return $this->is_open;

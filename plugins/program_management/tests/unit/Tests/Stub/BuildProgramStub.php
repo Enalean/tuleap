@@ -55,6 +55,7 @@ final class BuildProgramStub implements BuildProgram
         return new self(true, false);
     }
 
+    #[\Override]
     public function ensureProgramIsAProject(int $project_id, UserIdentifier $user): void
     {
         if (! $this->is_a_program) {

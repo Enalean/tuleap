@@ -59,6 +59,7 @@ final class ReverseLinksToNewChangesetsConverterTest extends TestCase
     private AddReverseLinksCommand $add_command;
     private ChangeReverseLinksCommand $change_command;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->artifact_retriever = RetrieveViewableArtifactStub::withNoArtifact();

@@ -34,6 +34,7 @@ final class ValidateNewChangesetStub implements ValidateNewChangeset
         return new self();
     }
 
+    #[\Override]
     public function validateNewChangeset(NewChangeset $new_changeset, ?string $email, \Workflow $workflow): void
     {
         $this->count++;

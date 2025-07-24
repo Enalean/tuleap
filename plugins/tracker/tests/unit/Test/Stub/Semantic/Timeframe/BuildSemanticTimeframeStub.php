@@ -64,6 +64,7 @@ final class BuildSemanticTimeframeStub implements BuildSemanticTimeframe
         );
     }
 
+    #[\Override]
     public function getSemantic(Tracker $tracker): SemanticTimeframe
     {
         return $this->semantic_timeframe;

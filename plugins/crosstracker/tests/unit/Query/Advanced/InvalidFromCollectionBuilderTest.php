@@ -50,6 +50,7 @@ final class InvalidFromCollectionBuilderTest extends TestCase
     private ProjectByIDFactory $project_factory;
     private EventDispatcherInterface $event_dispatcher;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->widget_retriever = SearchCrossTrackerWidgetStub::withExistingWidget(['dashboard_type' => 'user']);

@@ -90,6 +90,7 @@ final class DisplayAdminProgramManagementControllerTest extends \Tuleap\Test\PHP
      */
     private $project_manager;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->variables = ['project_name' => 'not_found'];

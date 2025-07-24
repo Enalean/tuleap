@@ -20,9 +20,8 @@
 
 use Tuleap\Test\PHPUnit\TestCase;
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class WikiTest extends TestCase
+final class WikiTest extends TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     /**
      * @var Int
@@ -38,6 +37,7 @@ final class WikiTest extends TestCase
     private $group_id;
     private PFUser&\PHPUnit\Framework\MockObject\MockObject $user;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -55,6 +55,7 @@ final class WikiTest extends TestCase
         $user_manager->method('getUserById')->with($this->user_id)->willReturn($this->user);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         UserManager::clearInstance();

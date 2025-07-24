@@ -42,6 +42,7 @@ final class PotentialTeamsCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
     private AllProgramSearcherStub $all_program_searcher;
     private ProgramForAdministrationIdentifier $program;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->teams_of_program_searcher = SearchTeamsOfProgramStub::withTeamIds(self::TEAM);

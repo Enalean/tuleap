@@ -29,6 +29,7 @@ final class LFSEndPointDiscoveryTest extends \Tuleap\Test\PHPUnit\TestCase
     private LFSEndPointDiscovery $endpoint_discovery;
     private \GitRepository&\PHPUnit\Framework\MockObject\Stub $git_repository;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

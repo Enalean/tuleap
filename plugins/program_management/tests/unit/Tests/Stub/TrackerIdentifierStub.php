@@ -42,6 +42,7 @@ final class TrackerIdentifierStub implements \Tuleap\ProgramManagement\Domain\Wo
         return new self($id);
     }
 
+    #[\Override]
     public function getId(): int
     {
         return $this->id;

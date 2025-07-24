@@ -31,6 +31,7 @@ final readonly class ProjectByStatusStub implements ProjectByStatus
     {
     }
 
+    #[\Override]
     public function getProjectsByStatus(string $status): array
     {
         return $this->projects;

@@ -38,6 +38,7 @@ final class JenkinsTuleapPluginHookPayloadTest extends \Tuleap\Test\PHPUnit\Test
             $git_repository,
             'refs/heads/chaise',
             new class implements JenkinsTuleapPluginHookTokenGenerator {
+                #[\Override]
                 public function generateTriggerToken(\DateTimeImmutable $now): ConcealedString
                 {
                     return new ConcealedString((string) $now->getTimestamp());

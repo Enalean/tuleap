@@ -58,6 +58,7 @@ final class AddChangesetStub implements AddChangeset
         return $this->arguments;
     }
 
+    #[\Override]
     public function addChangeset(MirroredTimeboxChangeset $changeset): void
     {
         $this->call_count++;

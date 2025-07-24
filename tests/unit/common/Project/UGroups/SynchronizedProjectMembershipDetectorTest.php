@@ -31,6 +31,7 @@ final class SynchronizedProjectMembershipDetectorTest extends \Tuleap\Test\PHPUn
     private SynchronizedProjectMembershipDetector $detector;
     private SynchronizedProjectMembershipDao&MockObject $dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao      = $this->createMock(SynchronizedProjectMembershipDao::class);

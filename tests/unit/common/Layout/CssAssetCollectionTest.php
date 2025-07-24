@@ -59,11 +59,13 @@ final class CssAssetCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
             {
             }
 
+            #[\Override]
             public function getFileURL(ThemeVariation $variant): string
             {
                 return '/';
             }
 
+            #[\Override]
             public function getIdentifier(): string
             {
                 return $this->identifier;

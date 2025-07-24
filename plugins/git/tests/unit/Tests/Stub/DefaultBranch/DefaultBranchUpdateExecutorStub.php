@@ -34,6 +34,7 @@ final class DefaultBranchUpdateExecutorStub implements DefaultBranchUpdateExecut
     private $callback_on_set_default_branch;
     private bool $does_default_branch_been_set = false;
 
+    #[\Override]
     public function setDefaultBranch(\Git_Exec $git_exec, string $default_branch): void
     {
         $this->does_default_branch_been_set = true;

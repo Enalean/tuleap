@@ -38,6 +38,7 @@ final class AdministrationLayoutHelperTest extends \Tuleap\Test\PHPUnit\TestCase
     private HeaderNavigationDisplayer&MockObject $header_displayer;
     private FooterDisplayer&MockObject $footer_displayer;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->project_retriever     = $this->createMock(ProjectRetriever::class);

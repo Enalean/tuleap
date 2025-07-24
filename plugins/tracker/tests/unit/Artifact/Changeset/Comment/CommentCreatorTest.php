@@ -59,6 +59,7 @@ final class CommentCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private array $user_groups_that_are_allowed_to_see;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao                       = $this->createMock(\Tracker_Artifact_Changeset_CommentDao::class);

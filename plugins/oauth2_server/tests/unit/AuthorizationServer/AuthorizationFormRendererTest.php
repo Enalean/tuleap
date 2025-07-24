@@ -46,6 +46,7 @@ final class AuthorizationFormRendererTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $presenter_builder;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->presenter_builder = $this->createMock(AuthorizationFormPresenterBuilder::class);
@@ -61,11 +62,13 @@ final class AuthorizationFormRendererTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $foobar_scope         = $this->createMock(AuthenticationScope::class);
         $foobar_definition    = new /** @psalm-immutable */ class implements AuthenticationScopeDefinition {
+            #[\Override]
             public function getName(): string
             {
                 return 'Foo Bar';
             }
 
+            #[\Override]
             public function getDescription(): string
             {
                 return 'Test scope';
@@ -73,11 +76,13 @@ final class AuthorizationFormRendererTest extends \Tuleap\Test\PHPUnit\TestCase
         };
         $typevalue_scope      = $this->createMock(AuthenticationScope::class);
         $typevalue_definition = new /** @psalm-immutable */ class implements AuthenticationScopeDefinition {
+            #[\Override]
             public function getName(): string
             {
                 return 'Type Value';
             }
 
+            #[\Override]
             public function getDescription(): string
             {
                 return 'Other test scope';

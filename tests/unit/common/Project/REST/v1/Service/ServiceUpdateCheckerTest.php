@@ -37,6 +37,7 @@ final class ServiceUpdateCheckerTest extends TestCase
 {
     private PFUser $user;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user = UserTestBuilder::buildWithId(101);

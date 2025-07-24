@@ -32,6 +32,7 @@ final class PKCEInformationExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $pkce_information_extractor;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->pkce_information_extractor = new PKCEInformationExtractor();

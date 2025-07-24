@@ -30,6 +30,7 @@ final class SearchCrossTrackerWidgetStub implements SearchCrossTrackerWidget
     {
     }
 
+    #[\Override]
     public function searchCrossTrackerWidgetDashboardById(int $content_id): ?array
     {
         return $this->row;
@@ -45,6 +46,7 @@ final class SearchCrossTrackerWidgetStub implements SearchCrossTrackerWidget
         return new self(null);
     }
 
+    #[\Override]
     public function searchWidgetExistence(int $widget_id): bool
     {
         return $this->row !== null;

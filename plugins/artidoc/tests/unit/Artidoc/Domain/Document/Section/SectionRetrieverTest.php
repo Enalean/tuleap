@@ -42,6 +42,7 @@ final class SectionRetrieverTest extends TestCase
     public const ARTIFACT_ID = 1001;
     private SectionIdentifierFactory $identifier_factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->identifier_factory = new UUIDSectionIdentifierFactory(new DatabaseUUIDV7Factory());

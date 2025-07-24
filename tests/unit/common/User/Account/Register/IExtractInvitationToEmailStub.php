@@ -43,6 +43,7 @@ final class IExtractInvitationToEmailStub implements IExtractInvitationToEmail
         return new self($invitation);
     }
 
+    #[\Override]
     public function getInvitationToEmail(\Codendi_Request $request): ?InvitationToEmail
     {
         return $this->invitation;

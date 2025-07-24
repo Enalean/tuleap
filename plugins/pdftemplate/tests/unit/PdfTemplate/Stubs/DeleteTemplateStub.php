@@ -43,6 +43,7 @@ final class DeleteTemplateStub implements DeleteTemplate
         return $this->called;
     }
 
+    #[\Override]
     public function delete(PdfTemplateIdentifier $identifier): void
     {
         $this->called = true;

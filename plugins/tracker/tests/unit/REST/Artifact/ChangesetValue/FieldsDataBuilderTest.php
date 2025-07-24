@@ -59,6 +59,7 @@ final class FieldsDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     private RetrieveUsedFieldsStub $fields_retriever;
     private \Tuleap\Tracker\Tracker $tracker;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->tracker      = TrackerTestBuilder::aTracker()->withId(self::TRACKER_ID)->build();

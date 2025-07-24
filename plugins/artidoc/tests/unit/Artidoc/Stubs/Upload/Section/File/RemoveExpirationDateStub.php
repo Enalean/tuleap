@@ -38,6 +38,7 @@ final class RemoveExpirationDateStub implements RemoveExpirationDate
         return new self();
     }
 
+    #[\Override]
     public function removeExpirationDate(FileIdentifier $id): void
     {
         $this->called = true;

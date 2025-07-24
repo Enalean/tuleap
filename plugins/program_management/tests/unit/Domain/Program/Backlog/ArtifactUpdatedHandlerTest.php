@@ -51,6 +51,7 @@ final class ArtifactUpdatedHandlerTest extends TestCase
     private DispatchIterationUpdateStub $iteration_update_dispatcher;
     private VerifyIsIterationTrackerStub $iteration_verifier;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->event = ArtifactUpdatedEventStub::withIds(87, 93, 194, 4208, 4207);

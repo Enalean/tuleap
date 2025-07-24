@@ -38,6 +38,7 @@ final class SubmissionDateStub implements SubmissionDate
         return new self($submission_date);
     }
 
+    #[\Override]
     public function getValue(): int
     {
         return $this->submission_date;

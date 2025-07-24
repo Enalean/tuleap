@@ -54,6 +54,7 @@ final class UpdatedInlineCommentNotificationToProcessBuilderTest extends TestCas
     private \PFUser $change_user;
     private SearchPullRequestStub $pull_request_dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->change_user  = UserTestBuilder::buildWithId(102);

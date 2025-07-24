@@ -55,6 +55,7 @@ final class AccountAppsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     private $user_manager;
     private \CSRFSynchronizerToken $csrf_token;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->presenter_builder = $this->createMock(AppsPresenterBuilder::class);

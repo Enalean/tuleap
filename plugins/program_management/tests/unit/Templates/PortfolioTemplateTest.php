@@ -35,6 +35,7 @@ final class PortfolioTemplateTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private vfsStreamDirectory $temp_dir;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->temp_dir = vfsStream::setup();

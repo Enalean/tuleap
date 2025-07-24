@@ -36,6 +36,7 @@ final class AccessKeyScopeSaverTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $saver;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao = $this->createMock(AccessKeyScopeDAO::class);

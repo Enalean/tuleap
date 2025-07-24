@@ -34,6 +34,7 @@ final class InlineCommentUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
     private FileUniDiff $changes_diff;
     private FileUniDiff $targeted_diff;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->original_diff = new FileUniDiff();

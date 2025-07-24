@@ -37,6 +37,7 @@ final readonly class IFindUserFromXMLReferenceStub implements IFindUserFromXMLRe
         return new self($user);
     }
 
+    #[\Override]
     public function getUser(SimpleXMLElement $xml_element): PFUser
     {
         return $this->user;

@@ -40,6 +40,7 @@ final class VerifyIsDefaultBranchStub implements VerifyIsDefaultBranch
         return new self(false);
     }
 
+    #[\Override]
     public function isDefaultBranch(string $refname): bool
     {
         return $this->return_value;

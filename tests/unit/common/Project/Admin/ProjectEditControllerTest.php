@@ -53,6 +53,7 @@ class ProjectEditControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     private Project $project;
     private ProjectRenameChecker&MockObject $project_rename_checker;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->project = ProjectTestBuilder::aProject()

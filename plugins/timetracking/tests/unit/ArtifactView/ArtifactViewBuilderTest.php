@@ -65,6 +65,7 @@ final class ArtifactViewBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     private TimePresenterBuilder $time_presenter_builder;
     private ArtifactViewBuilder $builder;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -101,6 +102,7 @@ final class ArtifactViewBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         unset($GLOBALS['_SESSION']);

@@ -29,6 +29,7 @@ final class ReferenceValidatorTest extends TestCase
 {
     private ReferenceValidator $reference_validator;
 
+    #[\Override]
     protected function setUp(): void
     {
         $event_manager = $this->createMock(EventManager::class);

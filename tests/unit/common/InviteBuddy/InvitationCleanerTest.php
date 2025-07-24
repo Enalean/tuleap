@@ -50,6 +50,7 @@ final class InvitationCleanerTest extends TestCase
      */
     private $invitation_instrumentation;
 
+    #[\Override]
     protected function setUp(): void
     {
         \ForgeConfig::set('sys_noreply', 'noreply@example.com');
@@ -89,6 +90,7 @@ final class InvitationCleanerTest extends TestCase
         $this->invitation_instrumentation = $this->createMock(InvitationInstrumentation::class);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         \UserManager::clearInstance();

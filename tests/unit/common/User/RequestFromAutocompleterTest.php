@@ -46,6 +46,7 @@ final class RequestFromAutocompleterTest extends \Tuleap\Test\PHPUnit\TestCase
     private PFUser $thomas;
     private InvalidEntryInAutocompleterCollection $invalid_entries;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

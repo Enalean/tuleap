@@ -56,6 +56,7 @@ final class AppRevocationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $redirector;
 
+    #[\Override]
     protected function setUp(): void
     {
         $csrf_token = $this->createMock(\CSRFSynchronizerToken::class);

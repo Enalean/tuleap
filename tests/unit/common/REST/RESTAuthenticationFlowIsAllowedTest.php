@@ -48,6 +48,7 @@ final class RESTAuthenticationFlowIsAllowedTest extends \Tuleap\Test\PHPUnit\Tes
      */
     private $rest_authentication_flow;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user_manager = $this->createMock(UserManager::class);
@@ -56,6 +57,7 @@ final class RESTAuthenticationFlowIsAllowedTest extends \Tuleap\Test\PHPUnit\Tes
         $this->rest_authentication_flow = new RESTAuthenticationFlowIsAllowed($this->user_manager, $this->logger);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         unset($_SERVER['REQUEST_METHOD']);

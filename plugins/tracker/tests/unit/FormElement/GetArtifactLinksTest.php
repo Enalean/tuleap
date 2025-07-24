@@ -49,6 +49,7 @@ final class GetArtifactLinksTest extends TestCase
     private Tracker_Artifact_Changeset $changeset;
     private Artifact $artifact;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user      = new PFUser(['language_id' => 'en']);
@@ -63,6 +64,7 @@ final class GetArtifactLinksTest extends TestCase
         $this->artifact->setHierarchyFactory($hierarchy_factory);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         $this->current_id++;

@@ -57,6 +57,7 @@ final class PullRequestReopenerTest extends TestCase
      */
     private TimelineEventCreator|\PHPUnit\Framework\MockObject\MockObject $timeline_event_creator;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

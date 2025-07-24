@@ -78,11 +78,13 @@ final class OpenIDConnectSigningKeyFactoryStaticForTestPurposes implements OpenI
         $this->private_key = new SigningPrivateKey($this->public_key, new ConcealedString(self::SIGNING_PRIVATE_KEY));
     }
 
+    #[\Override]
     public function getPublicKeys(\DateTimeImmutable $current_time): array
     {
         return [$this->public_key];
     }
 
+    #[\Override]
     public function getKey(\DateTimeImmutable $current_time): SigningPrivateKey
     {
         return $this->private_key;

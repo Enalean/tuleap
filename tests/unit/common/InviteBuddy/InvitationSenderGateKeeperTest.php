@@ -34,6 +34,7 @@ final class InvitationSenderGateKeeperTest extends \Tuleap\Test\PHPUnit\TestCase
     private \PHPUnit\Framework\MockObject\MockObject&InviteBuddyConfiguration $configuration;
     private PFUser $current_user;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->current_user = UserTestBuilder::buildWithDefaults();

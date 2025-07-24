@@ -47,6 +47,7 @@ final class UserStoryIdentifierTest extends TestCase
     private \Closure $getId;
     private MirroredIterationIdentifierCollection $mirrored_iterations;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->getId = static fn(UserStoryIdentifier $story): int => $story->getId();

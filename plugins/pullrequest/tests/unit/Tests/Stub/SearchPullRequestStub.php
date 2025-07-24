@@ -31,6 +31,7 @@ final class SearchPullRequestStub implements SearchPullRequest
     {
     }
 
+    #[\Override]
     public function searchByPullRequestId(int $pull_request_id): array
     {
         if (count($this->pull_request_rows) > 0) {

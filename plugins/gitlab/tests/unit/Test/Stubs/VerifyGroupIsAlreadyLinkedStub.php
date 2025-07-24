@@ -28,6 +28,7 @@ final class VerifyGroupIsAlreadyLinkedStub implements \Tuleap\Gitlab\Group\Verif
     {
     }
 
+    #[\Override]
     public function isGroupAlreadyLinked(int $gitlab_group_id): bool
     {
         return $this->is_linked;

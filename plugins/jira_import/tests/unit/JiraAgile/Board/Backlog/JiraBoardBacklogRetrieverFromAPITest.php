@@ -38,6 +38,7 @@ final class JiraBoardBacklogRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\Te
         {
             public int $called = 0;
 
+            #[\Override]
             public function getUrl(string $url): ?array
             {
                 $this->called++;
@@ -67,6 +68,7 @@ final class JiraBoardBacklogRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\Te
         {
             public int $called = 0;
 
+            #[\Override]
             public function getUrl(string $url): ?array
             {
                 $this->called++;
@@ -95,6 +97,7 @@ final class JiraBoardBacklogRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\Te
         {
             public int $called = 0;
 
+            #[\Override]
             public function getUrl(string $url): ?array
             {
                 $this->called++;
@@ -122,6 +125,7 @@ final class JiraBoardBacklogRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\Te
         {
             public int $called = 0;
 
+            #[\Override]
             public function getUrl(string $url): ?array
             {
                 $this->called++;
@@ -161,6 +165,7 @@ final class JiraBoardBacklogRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\Te
         {
             public int $called = 0;
 
+            #[\Override]
             public function getUrl(string $url): ?array
             {
                 if ($this->called === 0) {

@@ -38,6 +38,7 @@ final class UpdateEditionControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     private $csrf_token;
     private UpdateEditionController $controller;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->csrf_token = $this->createMock(CSRFSynchronizerToken::class);

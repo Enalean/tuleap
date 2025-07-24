@@ -43,6 +43,7 @@ final class SystemEventProcessorMutexTest extends TestCase
     private DBConnection&MockObject $db_connexion;
     private SystemEventProcessorMutex&MockObject $mutex;
 
+    #[\Override]
     protected function setUp(): void
     {
         $process      = $this->createMock(SystemEventProcess::class);

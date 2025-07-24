@@ -28,6 +28,7 @@ use Tuleap\Authentication\Scope\AuthenticationScopeTestCase;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SVNAccessKeyScopeTest extends AuthenticationScopeTestCase
 {
+    #[\Override]
     public function getAuthenticationScopeClassname(): string
     {
         return SVNAccessKeyScope::class;

@@ -51,11 +51,13 @@ class UGroupRetrieverStub implements \Tuleap\Project\UGroupRetriever
     /**
      * @inheritDoc
      */
+    #[\Override]
     public function getUGroup(Project $project, $ugroup_id): ?ProjectUGroup
     {
         return $this->ugroups_by_id[$ugroup_id] ?? null;
     }
 
+    #[\Override]
     public function getUGroupByName(Project $project, string $name): ?ProjectUGroup
     {
         if (isset($this->ugroups_by_name[$name])) {
@@ -69,6 +71,7 @@ class UGroupRetrieverStub implements \Tuleap\Project\UGroupRetriever
         return null;
     }
 
+    #[\Override]
     public function getUGroups(Project $project, array $excluded_ugroups_id = []): array
     {
         return array_values($this->ugroups_by_id);

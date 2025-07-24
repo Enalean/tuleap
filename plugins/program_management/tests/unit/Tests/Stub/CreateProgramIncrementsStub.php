@@ -38,6 +38,7 @@ final class CreateProgramIncrementsStub implements CreateProgramIncrements
         return new self(0);
     }
 
+    #[\Override]
     public function createProgramIncrements(
         SourceTimeboxChangesetValues $values,
         MirroredProgramIncrementTrackerIdentifierCollection $mirrored_trackers,

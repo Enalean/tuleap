@@ -46,6 +46,7 @@ final class LastUpdateDateMetadataTest extends CrossTrackerFieldTestCase
     private int $task_artifact_past_1_id;
     private int $task_artifact_today_id;
 
+    #[\Override]
     protected function setUp(): void
     {
         $db              = DBFactory::getMainTuleapDBConnection()->getDB();

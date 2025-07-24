@@ -46,6 +46,7 @@ final readonly class RetrieveViewableArtifactStub implements \Tuleap\Tracker\Art
         return new self([]);
     }
 
+    #[\Override]
     public function getArtifactByIdUserCanView(\PFUser $user, int $id): ?Artifact
     {
         foreach ($this->artifacts as $artifact) {

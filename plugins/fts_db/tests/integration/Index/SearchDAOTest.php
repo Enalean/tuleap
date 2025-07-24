@@ -34,11 +34,13 @@ final class SearchDAOTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private SearchDAO $dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao = new SearchDAO();
     }
 
+    #[\Override]
     public function tearDown(): void
     {
         $this->getDB()->run('DELETE FROM plugin_fts_db_search');

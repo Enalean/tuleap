@@ -43,6 +43,7 @@ final class RedirectToIterationsProcessorTest extends TestCase
     private RedirectUserAfterArtifactCreationOrUpdateEvent $event;
     private IterationRedirectionParameters $iteration_redirect_parameters;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->iteration_redirect_parameters = IterationRedirectionParametersStub::withValues('Nope', '100');

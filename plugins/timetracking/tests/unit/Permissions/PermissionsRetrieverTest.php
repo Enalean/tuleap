@@ -43,6 +43,7 @@ final class PermissionsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $tracker;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

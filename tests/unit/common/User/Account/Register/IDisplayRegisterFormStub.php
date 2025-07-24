@@ -40,6 +40,7 @@ final class IDisplayRegisterFormStub implements IDisplayRegisterForm
         return new self();
     }
 
+    #[\Override]
     public function display(\HTTPRequest $request, BaseLayout $layout, RegisterFormContext $context): void
     {
         $this->has_been_displayed = true;
@@ -66,6 +67,7 @@ final class IDisplayRegisterFormStub implements IDisplayRegisterForm
         return $this->has_been_displayed_with_possible_issue;
     }
 
+    #[\Override]
     public function displayWithPossibleIssue(
         \HTTPRequest $request,
         BaseLayout $layout,

@@ -29,6 +29,7 @@ final readonly class CreateWidgetStub implements CreateWidget
     {
     }
 
+    #[\Override]
     public function createWidget(): int
     {
         return $this->widget_id;

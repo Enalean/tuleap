@@ -64,6 +64,7 @@ final class TrackerRestBuilderTest extends TestCase
     private Tracker_FormElementFactory&MockObject $form_element_factory;
     private SearchParentTrackerStub $search_parent_tracker;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->form_element_factory  = $this->createMock(Tracker_FormElementFactory::class);

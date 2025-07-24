@@ -31,6 +31,7 @@ final class WelcomeUpdateControllerTest extends TestCase
 {
     private WelcomeUpdateController $controller;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->controller = new WelcomeUpdateController(

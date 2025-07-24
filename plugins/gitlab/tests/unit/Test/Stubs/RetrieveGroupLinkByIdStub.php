@@ -42,6 +42,7 @@ final class RetrieveGroupLinkByIdStub implements RetrieveGroupLinkById
         return new self([$first_group_link, ...$other_group_links]);
     }
 
+    #[\Override]
     public function retrieveGroupLink(int $group_link_id): ?GroupLink
     {
         if (count($this->return_values) > 0) {

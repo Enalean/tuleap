@@ -52,6 +52,7 @@ final class SSHKeyCreateControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     private WebAuthnCredentialSourceDaoStub $source_dao;
     private SSHKeyCreateController $controller;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->csrf_token              = $this->createMock(\CSRFSynchronizerToken::class);

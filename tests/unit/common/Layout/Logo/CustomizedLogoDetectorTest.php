@@ -32,6 +32,7 @@ class CustomizedLogoDetectorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private $data_dir_path;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->data_dir_path = vfsStream::setup('/')->url();

@@ -34,6 +34,7 @@ final class StringFieldSpecificPropertiesDAOTest extends TestIntegrationTestCase
     private int $string_field_id;
     private int $duplicate_field_id;
 
+    #[\Override]
     protected function setUp(): void
     {
         $db              = DBFactory::getMainTuleapDBConnection()->getDB();

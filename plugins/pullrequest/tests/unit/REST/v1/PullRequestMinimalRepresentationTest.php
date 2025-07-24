@@ -53,6 +53,7 @@ final class PullRequestMinimalRepresentationTest extends TestCase
     private PullRequest $pull_request;
     private MinimalUserRepresentation $pull_request_creator;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->url_generator        = $this->createStub(GitoliteAccessURLGenerator::class);

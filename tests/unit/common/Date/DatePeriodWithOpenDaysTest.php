@@ -34,6 +34,7 @@ class DatePeriodWithOpenDaysTest extends \Tuleap\Test\PHPUnit\TestCase
     private int $following_week_day_timestamp;
     private string $request_time;
 
+    #[\Override]
     protected function setUp(): void
     {
         $week_day                           = new DateTime('2016-02-01');
@@ -44,6 +45,7 @@ class DatePeriodWithOpenDaysTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->request_time = $_SERVER['REQUEST_TIME'];
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         $_SERVER['REQUEST_TIME'] = $this->request_time;

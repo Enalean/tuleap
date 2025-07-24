@@ -32,11 +32,13 @@ final class AuthenticationScopeBuilderFromClassNamesTest extends \Tuleap\Test\PH
         {
             use AuthenticationScopeThrowOnActualMethodCall;
 
+            #[\Override]
             public static function fromItself(): AuthenticationScope
             {
                 return new self();
             }
 
+            #[\Override]
             public static function fromIdentifier(AuthenticationScopeIdentifier $identifier): AuthenticationScope
             {
                 return self::fromItself();
@@ -49,6 +51,7 @@ final class AuthenticationScopeBuilderFromClassNamesTest extends \Tuleap\Test\PH
             /**
              * @psalm-pure
              */
+            #[\Override]
             public static function fromItself(): AuthenticationScope
             {
                 throw new \LogicException('Not supposed to be built');
@@ -57,6 +60,7 @@ final class AuthenticationScopeBuilderFromClassNamesTest extends \Tuleap\Test\PH
             /**
              * @psalm-pure
              */
+            #[\Override]
             public static function fromIdentifier(AuthenticationScopeIdentifier $identifier): AuthenticationScope
             {
                 throw new \LogicException('Not supposed to be tried');
@@ -83,6 +87,7 @@ final class AuthenticationScopeBuilderFromClassNamesTest extends \Tuleap\Test\PH
             /**
              * @psalm-pure
              */
+            #[\Override]
             public static function fromItself(): AuthenticationScope
             {
                 throw new \LogicException('Not supposed to be built');
@@ -91,6 +96,7 @@ final class AuthenticationScopeBuilderFromClassNamesTest extends \Tuleap\Test\PH
             /**
              * @psalm-pure
              */
+            #[\Override]
             public static function fromIdentifier(AuthenticationScopeIdentifier $identifier): ?AuthenticationScope
             {
                 return null;
@@ -115,6 +121,7 @@ final class AuthenticationScopeBuilderFromClassNamesTest extends \Tuleap\Test\PH
             /**
              * @psalm-pure
              */
+            #[\Override]
             public static function fromItself(): AuthenticationScope
             {
                 return new self();
@@ -123,6 +130,7 @@ final class AuthenticationScopeBuilderFromClassNamesTest extends \Tuleap\Test\PH
             /**
              * @psalm-pure
              */
+            #[\Override]
             public static function fromIdentifier(AuthenticationScopeIdentifier $identifier): ?AuthenticationScope
             {
                 return null;
@@ -135,6 +143,7 @@ final class AuthenticationScopeBuilderFromClassNamesTest extends \Tuleap\Test\PH
             /**
              * @psalm-pure
              */
+            #[\Override]
             public static function fromItself(): AuthenticationScope
             {
                 return new self();
@@ -143,6 +152,7 @@ final class AuthenticationScopeBuilderFromClassNamesTest extends \Tuleap\Test\PH
             /**
              * @psalm-pure
              */
+            #[\Override]
             public static function fromIdentifier(AuthenticationScopeIdentifier $identifier): ?AuthenticationScope
             {
                 return null;

@@ -30,6 +30,7 @@ final class SearchReviewersStub implements SearchReviewers
     {
     }
 
+    #[\Override]
     public function searchReviewers(int $pull_request_id): array
     {
         return $this->rows;

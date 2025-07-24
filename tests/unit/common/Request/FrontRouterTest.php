@@ -65,6 +65,7 @@ final class FrontRouterTest extends TestCase
     private RequestInstrumentation&MockObject $request_instrumentation;
     private ThemeManager&\PHPUnit\Framework\MockObject\Stub $theme_manager;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -101,6 +102,7 @@ final class FrontRouterTest extends TestCase
         );
     }
 
+    #[\Override]
     public function tearDown(): void
     {
         unset($_SERVER['REQUEST_METHOD']);
@@ -224,6 +226,7 @@ final class FrontRouterTest extends TestCase
         $this->route_collector->method('collect')->with(self::callback(function (FastRoute\RouteCollector $r): true {
             $r->get('/stuff', function (): DispatchableWithRequest {
                 return new class implements DispatchableWithRequest {
+                    #[\Override]
                     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
                     {
                         throw new Exception('Failure');
@@ -283,11 +286,13 @@ final class FrontRouterTest extends TestCase
             {
             }
 
+            #[\Override]
             public function getProject(array $variables): Project
             {
                 return $this->project;
             }
 
+            #[\Override]
             public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
             {
                 $this->request   = $request;
@@ -325,6 +330,7 @@ final class FrontRouterTest extends TestCase
             public ?BaseLayout $layout   = null;
             public ?array $variables     = null;
 
+            #[\Override]
             public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
             {
                 $this->request   = $request;
@@ -360,12 +366,14 @@ final class FrontRouterTest extends TestCase
         $handler = new class implements DispatchableWithRequest, DispatchableWithThemeSelection {
             public bool $has_processed = false;
 
+            #[\Override]
             public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
             {
                 $this->has_processed = true;
                 assertInstanceOf(BurningParrotTheme::class, $layout);
             }
 
+            #[\Override]
             public function isInABurningParrotPage(HTTPRequest $request, array $variables): bool
             {
                 return true;
@@ -435,6 +443,7 @@ final class FrontRouterTest extends TestCase
         self::assertSame(['some_param1', 'some_param2'], $args);
         return new class implements DispatchableWithRequest
         {
+            #[\Override]
             public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
             {
             }
@@ -457,6 +466,7 @@ final class FrontRouterTest extends TestCase
                 parent::__construct($event_manager);
             }
 
+            #[\Override]
             public function collect(FastRoute\RouteCollector $r): void
             {
                 $r->get('/stuff', ['core' => true, 'handler' => 'myHandler', 'params' => ['some_param1', 'some_param2']]);
@@ -474,6 +484,7 @@ final class FrontRouterTest extends TestCase
                     {
                     }
 
+                    #[\Override]
                     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
                     {
                         $this->counter_process++;

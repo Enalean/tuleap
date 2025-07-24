@@ -33,6 +33,7 @@ final class DeleteTrackerPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestC
 {
     use GlobalLanguageMock;
 
+    #[\Override]
     protected function setUp(): void
     {
         $GLOBALS['Language']->method('getText')->willReturn('');

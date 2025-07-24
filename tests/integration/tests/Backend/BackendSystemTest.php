@@ -40,6 +40,7 @@ final class BackendSystemTest extends TestIntegrationTestCase
     use GlobalLanguageMock;
     use TemporaryTestDirectory;
 
+    #[\Override]
     protected function setUp(): void
     {
         ForgeConfig::set('tmp_dir', $this->getTmpDir() . '/var/tmp');
@@ -57,6 +58,7 @@ final class BackendSystemTest extends TestIntegrationTestCase
         mkdir(ForgeConfig::get('ftp_anon_dir_prefix'), 0770, true);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         Backend::clearInstances();

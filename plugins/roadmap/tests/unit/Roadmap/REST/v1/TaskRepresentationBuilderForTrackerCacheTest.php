@@ -43,6 +43,7 @@ final class TaskRepresentationBuilderForTrackerCacheTest extends \Tuleap\Test\PH
     private \PHPUnit\Framework\MockObject\MockObject&SemanticProgressBuilder $progress_builder;
     private \PFUser $user;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->semantic_timeframe_builder = $this->createMock(SemanticTimeframeBuilder::class);

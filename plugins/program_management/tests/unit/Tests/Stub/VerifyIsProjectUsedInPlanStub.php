@@ -41,6 +41,7 @@ final class VerifyIsProjectUsedInPlanStub implements VerifyIsProjectUsedInPlan
         return new self(false);
     }
 
+    #[\Override]
     public function isProjectUsedInPlan(ProgramForAdministrationIdentifier $administration_identifier): bool
     {
         return $this->is_used_in_plan;

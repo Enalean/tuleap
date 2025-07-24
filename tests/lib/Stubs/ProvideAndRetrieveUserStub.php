@@ -53,11 +53,13 @@ final class ProvideAndRetrieveUserStub implements ProvideCurrentUser, RetrieveUs
         return $this;
     }
 
+    #[\Override]
     public function getCurrentUser(): PFUser
     {
         return $this->current_user;
     }
 
+    #[\Override]
     public function getUserByUserName(string $user_name): ?PFUser
     {
         foreach ($this->users as $user) {

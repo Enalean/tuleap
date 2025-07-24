@@ -46,6 +46,7 @@ final class CanSubmitNewArtifactHandlerTest extends TestCase
     private CanSubmitNewArtifact $event;
     private CanSubmitNewArtifactEventProxy $proxy;
 
+    #[\Override]
     protected function setUp(): void
     {
         $program_increment_creator_checker = ProgramIncrementCreatorCheckerBuilder::build();

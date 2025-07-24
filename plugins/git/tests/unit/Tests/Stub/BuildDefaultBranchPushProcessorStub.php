@@ -35,6 +35,7 @@ final class BuildDefaultBranchPushProcessorStub implements \Tuleap\Git\Hook\Asyn
         return new self($processor);
     }
 
+    #[\Override]
     public function getProcessor(\GitRepository $repository): DefaultBranchPushProcessor
     {
         return $this->processor;

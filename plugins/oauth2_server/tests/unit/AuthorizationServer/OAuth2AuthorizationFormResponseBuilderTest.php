@@ -34,6 +34,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class OAuth2AuthorizationFormResponseBuilderTest extends TestCase
 {
+    #[\Override]
     protected function tearDown(): void
     {
         unset($_SESSION);

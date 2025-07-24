@@ -29,6 +29,7 @@ final class UGroupGetsNameTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalLanguageMock;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

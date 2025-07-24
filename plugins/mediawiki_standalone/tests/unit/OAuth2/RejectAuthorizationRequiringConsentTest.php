@@ -40,6 +40,7 @@ final class RejectAuthorizationRequiringConsentTest extends TestCase
 {
     private RejectAuthorizationRequiringConsent $response_builder;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->response_builder = new RejectAuthorizationRequiringConsent(

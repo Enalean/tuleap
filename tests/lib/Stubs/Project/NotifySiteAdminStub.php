@@ -38,6 +38,7 @@ final class NotifySiteAdminStub implements NotifySiteAdmin
         return new self();
     }
 
+    #[\Override]
     public function notifySiteAdmin(Project $project): void
     {
         $this->called = true;

@@ -34,6 +34,7 @@ use Psalm\Type\Union;
 
 final class DoNotAllowWritableRESTRepresentation implements AfterClassLikeAnalysisInterface
 {
+    #[\Override]
     public static function afterStatementAnalysis(AfterClassLikeAnalysisEvent $event): void
     {
         $statements_source = $event->getStatementsSource();

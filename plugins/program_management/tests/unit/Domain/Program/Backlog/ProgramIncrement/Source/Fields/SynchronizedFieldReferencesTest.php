@@ -39,6 +39,7 @@ final class SynchronizedFieldReferencesTest extends \Tuleap\Test\PHPUnit\TestCas
     private GatherSynchronizedFieldsStub $gatherer;
     private TrackerIdentifier $program_increment_tracker;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->gatherer = GatherSynchronizedFieldsStub::withFieldsPreparations(

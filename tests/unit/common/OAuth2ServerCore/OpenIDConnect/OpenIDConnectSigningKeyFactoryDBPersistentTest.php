@@ -86,6 +86,7 @@ final class OpenIDConnectSigningKeyFactoryDBPersistentTest extends \Tuleap\Test\
      */
     private $signing_key_factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         $encryption_key_factory = $this->createMock(KeyFactory::class);

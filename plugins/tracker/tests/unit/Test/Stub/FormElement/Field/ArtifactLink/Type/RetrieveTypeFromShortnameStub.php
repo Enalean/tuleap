@@ -47,6 +47,7 @@ final class RetrieveTypeFromShortnameStub implements RetrieveTypeFromShortname
         return $this;
     }
 
+    #[\Override]
     public function getFromShortname(?string $shortname): ?TypePresenter
     {
         if (isset($this->presenters[$shortname ?? ''])) {

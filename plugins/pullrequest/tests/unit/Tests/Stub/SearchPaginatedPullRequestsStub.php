@@ -66,6 +66,7 @@ final class SearchPaginatedPullRequestsStub implements SearchPaginatedPullReques
         ];
     }
 
+    #[\Override]
     public function getPaginatedPullRequests(int $repository_id, SearchCriteria $criteria, PullRequestSortOrder $order, int $limit, int $offset): PullRequestsPage
     {
         return new PullRequestsPage(

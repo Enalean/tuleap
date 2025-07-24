@@ -41,6 +41,7 @@ final class ProjectSidebarToolsBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     private EventDispatcherStub $event_dispatcher;
     private \PFUser $user;
 
+    #[\Override]
     protected function setUp(): void
     {
         \ForgeConfig::set('sys_default_domain', 'example.com');

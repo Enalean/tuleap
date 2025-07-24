@@ -26,6 +26,7 @@ namespace Tuleap\Test\Network;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class HTTPResponseFunctionsOverloadTest extends \Tuleap\Test\PHPUnit\TestCase
 {
+    #[\Override]
     public function tearDown(): void
     {
         HTTPHeaderStack::clear();

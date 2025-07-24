@@ -37,6 +37,7 @@ final class FeatureHasPlannedUserStoriesVerifierTest extends \Tuleap\Test\PHPUni
     private BuildPlanningStub $planning_builder;
     private VerifyIsLinkedToAnotherMilestone $check_is_linked;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->planning_builder          = BuildPlanningStub::withValidRootPlanning();

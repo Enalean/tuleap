@@ -58,6 +58,7 @@ final class PostArtifactMoveReferencesCleanerTest extends TestCase
     private CrossReferencesDao&MockObject $cross_references_dao;
     private PostArtifactMoveReferenceManager $cross_references_manager;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->cross_references_dao     = $this->createMock(CrossReferencesDao::class);

@@ -40,6 +40,7 @@ final class VerifyIsExternalFieldStub implements VerifyIsExternalField
         return new self(false);
     }
 
+    #[\Override]
     public function isAnExternalField(\Tracker_FormElement_Field $field): bool
     {
         return $this->is_an_external_field;

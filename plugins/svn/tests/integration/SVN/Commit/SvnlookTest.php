@@ -42,6 +42,7 @@ final class SvnlookTest extends \Tuleap\Test\PHPUnit\TestCase
     private string $svnrepo;
     private string|bool $initial_sys_data_dir;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -62,6 +63,7 @@ final class SvnlookTest extends \Tuleap\Test\PHPUnit\TestCase
         ForgeConfig::set('sys_data_dir', $this->getTmpDir());
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         ForgeConfig::set('sys_data_dir', $this->initial_sys_data_dir);

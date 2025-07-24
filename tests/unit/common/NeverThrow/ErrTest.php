@@ -27,6 +27,7 @@ final class ErrTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private \Closure $ok_callback;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->ok_callback = static fn(int $value): int => $value * 2;

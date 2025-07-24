@@ -46,6 +46,7 @@ final class TextDuckTypedFieldTest extends CrossTrackerFieldTestCase
     private int $sprint_artifact_with_text_id;
     private int $task_artifact_with_text_id;
 
+    #[\Override]
     protected function setUp(): void
     {
         $db              = DBFactory::getMainTuleapDBConnection()->getDB();

@@ -38,6 +38,7 @@ final class GitlabApiTokenDAOTest extends TestIntegrationTestCase
     private const ENCRYPTED_TOKEN         = 'Oxt0ken1';
     private const UPDATED_ENCRYPTED_TOKEN = 'Oxt0ken1_update';
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->token_dao = new GroupLinkApiTokenDAO();

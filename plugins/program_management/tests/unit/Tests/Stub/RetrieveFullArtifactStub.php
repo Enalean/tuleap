@@ -51,6 +51,7 @@ final class RetrieveFullArtifactStub implements RetrieveFullArtifact
         return new self(true, false, []);
     }
 
+    #[\Override]
     public function getNonNullArtifact(ArtifactIdentifier $artifact_identifier): Artifact
     {
         if ($this->should_throw) {

@@ -49,6 +49,7 @@ final class ConfiguredFieldCollectionBuilderTest extends TestCase
     private PFUser $user;
     private \Tuleap\Tracker\Tracker $tracker;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->tracker    = TrackerTestBuilder::aTracker()->withId(1001)->build();

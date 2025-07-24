@@ -47,6 +47,7 @@ final class ReferenceManagerTest extends TestCase
     private UserManager&MockObject $user_manager;
     private ProjectManager&MockObject $project_manager;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->project_manager = $this->createMock(ProjectManager::class);
@@ -72,6 +73,7 @@ final class ReferenceManagerTest extends TestCase
         ForgeConfig::set(ServerHostname::DEFAULT_DOMAIN, 'example.com');
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         EventManager::clearInstance();

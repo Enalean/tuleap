@@ -33,6 +33,7 @@ final class OngoingInitializationsDaoTest extends TestIntegrationTestCase
     private OngoingInitializationsDao $dao;
     private \Project $project;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao     = new OngoingInitializationsDao(new MediawikiFlavorUsageDao());

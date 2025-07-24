@@ -35,6 +35,7 @@ final readonly class IDGeneratorStub implements IDGenerator
         return new self($id);
     }
 
+    #[\Override]
     public function getNextId(): int
     {
         return $this->id;

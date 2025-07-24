@@ -38,6 +38,7 @@ final class DeleteFileUploadStub implements DeleteFileUpload
         return new self();
     }
 
+    #[\Override]
     public function deleteById(FileIdentifier $id): void
     {
         $this->called = true;

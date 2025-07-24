@@ -48,6 +48,7 @@ final class UserStoryInOneMirrorPlannerTest extends \Tuleap\Test\PHPUnit\TestCas
     private Artifact&MockObject $artifact;
     private \Tracker_FormElementFactory&Stub $form_element_factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->artifact = $this->createMock(Artifact::class);

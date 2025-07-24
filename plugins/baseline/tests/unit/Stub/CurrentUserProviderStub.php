@@ -48,6 +48,7 @@ class CurrentUserProviderStub implements CurrentUserProvider
         $this->user = $current_user;
     }
 
+    #[\Override]
     public function getUser(): UserIdentifier
     {
         return $this->user;

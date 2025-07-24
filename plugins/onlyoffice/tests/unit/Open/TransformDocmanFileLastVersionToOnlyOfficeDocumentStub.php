@@ -64,6 +64,7 @@ class TransformDocmanFileLastVersionToOnlyOfficeDocumentStub implements Transfor
         );
     }
 
+    #[\Override]
     public function transformToOnlyOfficeDocument(DocmanFileLastVersion $file_last_version): Ok|Err
     {
         return $this->result;

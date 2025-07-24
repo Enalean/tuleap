@@ -46,6 +46,7 @@ final class ChangeSectionOrderTest extends TestCase
     private ArtidocWithContext $document;
     private SectionOrderBuilder $order_builder;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->order_builder = new SectionOrderBuilder(

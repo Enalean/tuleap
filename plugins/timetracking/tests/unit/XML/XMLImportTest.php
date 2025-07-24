@@ -70,6 +70,7 @@ final class XMLImportTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $project;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

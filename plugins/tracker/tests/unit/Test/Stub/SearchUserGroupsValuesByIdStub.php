@@ -46,6 +46,7 @@ final class SearchUserGroupsValuesByIdStub implements SearchUserGroupsValuesById
         return new self([]);
     }
 
+    #[\Override]
     public function searchById(int $id): ?array
     {
         foreach ($this->values as $value) {

@@ -52,6 +52,7 @@ final class RetrieveArtifactLinkFieldStub implements RetrieveArtifactLinkField
         return new self(true, []);
     }
 
+    #[\Override]
     public function getArtifactLinkField(TrackerIdentifier $tracker_identifier, ?ConfigurationErrorsCollector $errors_collector): ArtifactLinkFieldReference
     {
         if ($this->should_throw) {

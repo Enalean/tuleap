@@ -59,6 +59,7 @@ final class MilestoneDaoTest extends TestIntegrationTestCase
     private array $sprint_status_values = ['open' => [], 'closed' => []];
     private TrackerDatabaseBuilder $tracker_builder;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao = new MilestoneDao();

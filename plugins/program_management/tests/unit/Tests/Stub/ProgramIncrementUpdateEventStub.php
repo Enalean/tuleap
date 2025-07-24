@@ -72,26 +72,31 @@ final class ProgramIncrementUpdateEventStub implements ProgramIncrementUpdateEve
         return new self($program_increment, $user, $changeset, $old_changeset);
     }
 
+    #[\Override]
     public function getProgramIncrement(): ProgramIncrementIdentifier
     {
         return $this->program_increment;
     }
 
+    #[\Override]
     public function getUser(): UserIdentifier
     {
         return $this->user;
     }
 
+    #[\Override]
     public function getChangeset(): ChangesetIdentifier
     {
         return $this->changeset;
     }
 
+    #[\Override]
     public function getOldChangeset(): ChangesetIdentifier
     {
         return $this->old_changeset;
     }
 
+    #[\Override]
     public function getIterations(): array
     {
         return $this->iterations;

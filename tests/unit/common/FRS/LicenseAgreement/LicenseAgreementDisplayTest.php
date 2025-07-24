@@ -49,6 +49,7 @@ class LicenseAgreementDisplayTest extends TestCase
     private $renderer;
     private Project $project;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->project    = new Project(['group_id' => '101']);

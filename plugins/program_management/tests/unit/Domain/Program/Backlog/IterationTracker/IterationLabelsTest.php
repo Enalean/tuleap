@@ -34,6 +34,7 @@ final class IterationLabelsTest extends \Tuleap\Test\PHPUnit\TestCase
     private ?IterationTrackerIdentifier $iteration_tracker;
     private RetrieveIterationLabelsStub $label_retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->iteration_tracker = IterationTrackerIdentifierBuilder::buildWithId(35);

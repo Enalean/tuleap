@@ -37,6 +37,7 @@ final class TrackerCollectionRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     private TrackerCollectionRetriever $retriever;
     private Cardwall_OnTop_ConfigFactory&MockObject $config_factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->config_factory = $this->createMock(Cardwall_OnTop_ConfigFactory::class);

@@ -51,11 +51,13 @@ final class IRestrictDocumentServerStub implements IRestrictDocumentServer
     /**
      * @param int[] $project_ids
      */
+    #[\Override]
     public function restrict(UUID $id, array $project_ids): void
     {
         $this->has_been_restricted_with = $project_ids;
     }
 
+    #[\Override]
     public function unrestrict(UUID $id): void
     {
         if ($this->too_many_servers_for_unrestriction) {

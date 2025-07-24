@@ -56,6 +56,7 @@ final class WASMFunctionCallerStub implements WASMFunctionCaller
         return self::withErrResult('');
     }
 
+    #[\Override]
     public function callWASMFunction(string $wasm_function_path, string $payload): Ok|Err
     {
         $this->has_been_called = true;

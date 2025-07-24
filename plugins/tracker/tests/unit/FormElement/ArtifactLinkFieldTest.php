@@ -52,11 +52,13 @@ final class ArtifactLinkFieldTest extends TestCase
 
     private Tracker_Artifact_Changeset $changeset;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->changeset = ChangesetTestBuilder::aChangeset(624)->ofArtifact(ArtifactTestBuilder::anArtifact(623)->build())->build();
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         UserManager::clearInstance();

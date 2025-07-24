@@ -30,6 +30,7 @@ class TmpWatchTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private $target_dir;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->target_dir = vfsStream::setup()->url();

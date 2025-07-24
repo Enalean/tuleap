@@ -34,12 +34,14 @@ final class SearchColumnFilterTest extends TestCase
     private Docman_MetadataFactory&MockObject $metadata_factory;
     private SearchColumnFilter $search_column_filter;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->metadata_factory     = $this->createMock(Docman_MetadataFactory::class);
         $this->search_column_filter = new SearchColumnFilter(
             new SearchColumnCollectionBuilder(),
             new class implements IRetrieveColumns {
+                #[\Override]
                 public function searchByProjectId(int $project_id): array
                 {
                     return [

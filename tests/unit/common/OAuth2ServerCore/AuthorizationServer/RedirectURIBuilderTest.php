@@ -33,6 +33,7 @@ final class RedirectURIBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $builder;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->builder = new RedirectURIBuilder(HTTPFactoryBuilder::URIFactory());

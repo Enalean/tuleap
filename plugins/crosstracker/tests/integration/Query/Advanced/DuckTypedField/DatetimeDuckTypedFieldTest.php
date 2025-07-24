@@ -47,6 +47,7 @@ final class DatetimeDuckTypedFieldTest extends CrossTrackerFieldTestCase
     private int $sprint_artifact_with_future_id;
     private int $task_artifact_with_date_id;
 
+    #[\Override]
     protected function setUp(): void
     {
         $db              = DBFactory::getMainTuleapDBConnection()->getDB();

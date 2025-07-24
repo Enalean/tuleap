@@ -44,6 +44,7 @@ class GitlabCommitCrossReferenceEnhancerTest extends \Tuleap\Test\PHPUnit\TestCa
      */
     private $user_helper;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user_manager                    = $this->createMock(\UserManager::class);

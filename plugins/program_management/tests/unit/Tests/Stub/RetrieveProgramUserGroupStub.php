@@ -35,6 +35,7 @@ final class RetrieveProgramUserGroupStub implements RetrieveProgramUserGroup
     {
     }
 
+    #[\Override]
     public function getProjectUserGroupId(string $raw_user_group_id, ProgramForAdministrationIdentifier $program): int
     {
         if (count($this->user_group_ids) > 0) {

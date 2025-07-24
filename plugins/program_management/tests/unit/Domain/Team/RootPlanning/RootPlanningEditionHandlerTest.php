@@ -36,6 +36,7 @@ final class RootPlanningEditionHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
     private RootPlanningEditionEvent $event;
     private RootPlanningEditionEventProxy $event_proxy;
 
+    #[\Override]
     protected function setUp(): void
     {
         $project             = ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build();

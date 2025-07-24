@@ -56,6 +56,7 @@ class WebhookSecretGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private WebhookSecretGenerator $generator;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->repository_integration_factory = $this->createMock(GitlabRepositoryIntegrationFactory::class);

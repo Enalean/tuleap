@@ -24,6 +24,7 @@ final class HTTPRequestTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignor
 {
     use \Tuleap\ForgeConfigSandbox;
 
+    #[\Override]
     protected function setUp(): void
     {
         $_REQUEST['exists']               = '1';
@@ -42,6 +43,7 @@ final class HTTPRequestTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignor
         $_FILES['file1']                  = ['name' => 'Test file 1'];
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         unset($_REQUEST['exists']);

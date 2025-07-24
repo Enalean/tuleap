@@ -68,6 +68,7 @@ final class PermissionPerTypeExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $formatter;
 
+    #[\Override]
     public function setUp(): void
     {
         parent::setUp();

@@ -33,6 +33,7 @@ final class FolderSizeIsAllowedCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $checker;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->checker = new FolderSizeIsAllowedChecker(new ComputeFolderSizeVisitor());

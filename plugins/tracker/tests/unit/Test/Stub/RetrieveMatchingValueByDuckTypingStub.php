@@ -44,6 +44,7 @@ final class RetrieveMatchingValueByDuckTypingStub implements RetrieveMatchingVal
         return new self([]);
     }
 
+    #[\Override]
     public function getMatchingValueByDuckTyping(
         Tracker_FormElement_Field_List $source_field,
         Tracker_FormElement_Field_List $destination_field,

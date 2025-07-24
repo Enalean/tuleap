@@ -47,6 +47,7 @@ final readonly class RetrieveAllTemplatesStub implements RetrieveAllTemplates
         return new self($templates);
     }
 
+    #[\Override]
     public function retrieveAll(): array
     {
         return $this->templates;

@@ -71,6 +71,7 @@ final class ProgramIncrementsCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     private UserIdentifier $user_identifier;
     private GatherSynchronizedFieldsStub $fields_gatherer;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->artifact_creator = CreateArtifactStub::withIds(39, 40);

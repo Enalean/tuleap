@@ -32,6 +32,7 @@ final class IssuesLinkedToEpicsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
     public function testItReturnsIssuesLinkedToOneEpicFromBoard(): void
     {
         $epic_from_board_retriever = new class implements JiraEpicFromBoardRetriever {
+            #[\Override]
             public function getEpics(JiraBoard $board): array
             {
                 return [
@@ -41,6 +42,7 @@ final class IssuesLinkedToEpicsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
         };
 
         $epic_from_issue_type_retriever = new class implements JiraEpicFromIssueTypeRetriever {
+            #[\Override]
             public function getEpics(IssueType $issue_type, string $jira_project): array
             {
                 return [];
@@ -48,6 +50,7 @@ final class IssuesLinkedToEpicsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
         };
 
         $epic_issues_retriever = new class implements JiraEpicIssuesRetriever {
+            #[\Override]
             public function getIssueIds(JiraEpic $epic, string $jira_project): array
             {
                 return ['10005', '10013'];
@@ -67,6 +70,7 @@ final class IssuesLinkedToEpicsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
     public function testItReturnsIssuesLinkedToTwoEpicsFromBoard(): void
     {
         $epic_from_board_retriever = new class implements JiraEpicFromBoardRetriever {
+            #[\Override]
             public function getEpics(JiraBoard $board): array
             {
                 return [
@@ -77,6 +81,7 @@ final class IssuesLinkedToEpicsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
         };
 
         $epic_from_issue_type_retriever = new class implements JiraEpicFromIssueTypeRetriever {
+            #[\Override]
             public function getEpics(IssueType $issue_type, string $jira_project): array
             {
                 return [];
@@ -84,6 +89,7 @@ final class IssuesLinkedToEpicsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
         };
 
         $epic_issues_retriever = new class implements JiraEpicIssuesRetriever {
+            #[\Override]
             public function getIssueIds(JiraEpic $epic, string $jira_project): array
             {
                 if ($epic->key === 'SP-36') {
@@ -110,6 +116,7 @@ final class IssuesLinkedToEpicsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
     public function testItReturnsIssuesLinkedToOneEpicFromIssueType(): void
     {
         $epic_from_board_retriever = new class implements JiraEpicFromBoardRetriever {
+            #[\Override]
             public function getEpics(JiraBoard $board): array
             {
                 return [];
@@ -117,6 +124,7 @@ final class IssuesLinkedToEpicsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
         };
 
         $epic_from_issue_type_retriever = new class implements JiraEpicFromIssueTypeRetriever {
+            #[\Override]
             public function getEpics(IssueType $issue_type, string $jira_project): array
             {
                 return [
@@ -126,6 +134,7 @@ final class IssuesLinkedToEpicsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
         };
 
         $epic_issues_retriever = new class implements JiraEpicIssuesRetriever {
+            #[\Override]
             public function getIssueIds(JiraEpic $epic, string $jira_project): array
             {
                 return ['10005', '10013'];
@@ -148,6 +157,7 @@ final class IssuesLinkedToEpicsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
     public function testItReturnsIssuesLinkedToTwoEpicsFromIssueType(): void
     {
         $epic_from_board_retriever = new class implements JiraEpicFromBoardRetriever {
+            #[\Override]
             public function getEpics(JiraBoard $board): array
             {
                 return [];
@@ -155,6 +165,7 @@ final class IssuesLinkedToEpicsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
         };
 
         $epic_from_issue_type_retriever = new class implements JiraEpicFromIssueTypeRetriever {
+            #[\Override]
             public function getEpics(IssueType $issue_type, string $jira_project): array
             {
                 return [
@@ -165,6 +176,7 @@ final class IssuesLinkedToEpicsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCa
         };
 
         $epic_issues_retriever = new class implements JiraEpicIssuesRetriever {
+            #[\Override]
             public function getIssueIds(JiraEpic $epic, string $jira_project): array
             {
                 if ($epic->key === 'SP-36') {

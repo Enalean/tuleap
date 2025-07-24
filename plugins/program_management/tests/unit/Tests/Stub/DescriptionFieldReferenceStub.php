@@ -43,11 +43,13 @@ final class DescriptionFieldReferenceStub implements DescriptionFieldReference
         return new self($id, 'Description');
     }
 
+    #[\Override]
     public function getId(): int
     {
         return $this->id;
     }
 
+    #[\Override]
     public function getLabel(): string
     {
         return $this->label;

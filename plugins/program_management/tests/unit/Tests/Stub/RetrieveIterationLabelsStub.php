@@ -38,6 +38,7 @@ final class RetrieveIterationLabelsStub implements RetrieveIterationLabels
     /**
      * @inheritDoc
      */
+    #[\Override]
     public function getIterationLabels(int $iteration_tracker_id): ?array
     {
         if ($this->label === null && $this->sub_label === null) {

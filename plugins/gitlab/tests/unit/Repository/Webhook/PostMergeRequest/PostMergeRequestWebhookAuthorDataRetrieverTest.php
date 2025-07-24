@@ -41,6 +41,7 @@ final class PostMergeRequestWebhookAuthorDataRetrieverTest extends \Tuleap\Test\
 
     private PostMergeRequestWebhookAuthorDataRetriever $author_retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->credentials_retriever = $this->createMock(CredentialsRetriever::class);

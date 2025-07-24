@@ -40,6 +40,7 @@ final class LDAPDirectorySynchronizationTest extends \Tuleap\Test\PHPUnit\TestCa
     use ForgeConfigSandbox;
     use GlobalLanguageMock;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

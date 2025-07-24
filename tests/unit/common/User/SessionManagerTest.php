@@ -44,6 +44,7 @@ final class SessionManagerTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $session_dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

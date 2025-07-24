@@ -43,11 +43,13 @@ final class TitleFieldReferenceStub implements TitleFieldReference
         return new self($id, 'Title');
     }
 
+    #[\Override]
     public function getId(): int
     {
         return $this->id;
     }
 
+    #[\Override]
     public function getLabel(): string
     {
         return $this->label;

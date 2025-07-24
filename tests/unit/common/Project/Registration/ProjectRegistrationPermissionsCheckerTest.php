@@ -38,6 +38,7 @@ final class ProjectRegistrationPermissionsCheckerTest extends TestCase
      */
     private $permission_checker;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -60,6 +61,7 @@ final class ProjectRegistrationPermissionsCheckerTest extends TestCase
             ->willThrowException(
                 new class extends RegistrationForbiddenException
                 {
+                    #[\Override]
                     public function getI18NMessage(): string
                     {
                         return '';

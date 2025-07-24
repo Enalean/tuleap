@@ -33,6 +33,7 @@ use Tuleap\Cryptography\ConcealedString;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PreventConcealedStringMisusesTest extends \Tuleap\Test\PHPUnit\TestCase
 {
+    #[\Override]
     protected function tearDown(): void
     {
         IssueBuffer::clear();

@@ -40,6 +40,7 @@ final class ArtifactForwardLinksRetrieverTest extends \Tuleap\Test\PHPUnit\TestC
     private RetrieveArtifactStub $artifact_retriever;
     private ArtifactLinksByChangesetCache $cache;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao   = $this->createMock(ChangesetValueArtifactLinkDao::class);

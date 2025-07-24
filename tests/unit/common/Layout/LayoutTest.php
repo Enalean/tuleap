@@ -32,6 +32,7 @@ class LayoutTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use \Tuleap\ForgeConfigSandbox;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -45,6 +46,7 @@ class LayoutTest extends \Tuleap\Test\PHPUnit\TestCase
         UserManager::setInstance($user_manager);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         UserManager::clearInstance();
@@ -58,15 +60,18 @@ class LayoutTest extends \Tuleap\Test\PHPUnit\TestCase
                 parent::__construct('');
             }
 
+            #[\Override]
             public function header(array|HeaderConfiguration $params): void
             {
             }
 
+            #[\Override]
             protected function hasHeaderBeenWritten(): bool
             {
                 return false;
             }
 
+            #[\Override]
             public function footer(FooterConfiguration|array $params): void
             {
             }
@@ -83,14 +88,17 @@ class LayoutTest extends \Tuleap\Test\PHPUnit\TestCase
                 parent::__construct('');
             }
 
+            #[\Override]
             public function header(array|HeaderConfiguration $params): void
             {
             }
 
+            #[\Override]
             public function footer(FooterConfiguration|array $params): void
             {
             }
 
+            #[\Override]
             public function hasHeaderBeenWritten(): bool
             {
                 return false;
@@ -98,6 +106,7 @@ class LayoutTest extends \Tuleap\Test\PHPUnit\TestCase
 
             private \EventManager $event_manager;
 
+            #[\Override]
             protected function getEventManager(): \EventManager
             {
                 return $this->event_manager;
@@ -117,11 +126,13 @@ class LayoutTest extends \Tuleap\Test\PHPUnit\TestCase
         $l->addStylesheet($css);
         $l->addCssAsset(
             new class implements \Tuleap\Layout\CssAssetGeneric {
+                #[\Override]
                 public function getFileURL(\Tuleap\Layout\ThemeVariation $variant): string
                 {
                     return 'css-assets.css';
                 }
 
+                #[\Override]
                 public function getIdentifier(): string
                 {
                     return '/path';

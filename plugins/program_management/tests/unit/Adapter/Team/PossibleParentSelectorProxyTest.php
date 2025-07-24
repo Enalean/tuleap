@@ -56,6 +56,7 @@ final class PossibleParentSelectorProxyTest extends TestCase
     private ?FeatureIdentifier $feature_53;
     private FeatureReference $feature_53_reference;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user               = UserTestBuilder::buildWithDefaults();

@@ -41,6 +41,7 @@ final class PermissionPerGroupBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     private UGroupManager&MockObject $ugroup_manager;
     private PermissionPerGroupBuilder $builder;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

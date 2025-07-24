@@ -33,6 +33,7 @@ final class MilestonesInSidebarDaoTest extends TestIntegrationTestCase
     private const SKYNET_PROJECT_ID              = 3;
     private const LOS_POLLOS_HERMANOS_PROJECT_ID = 4;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao = new MilestonesInSidebarDao();

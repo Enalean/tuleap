@@ -32,6 +32,7 @@ final class TextValueInterpreterTest extends \Tuleap\Test\PHPUnit\TestCase
     private CommonMarkInterpreter $commonmark_interpreter;
     private Codendi_HTMLPurifier $purifier;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->purifier               = Codendi_HTMLPurifier::instance();

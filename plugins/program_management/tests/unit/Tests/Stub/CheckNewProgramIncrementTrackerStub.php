@@ -50,6 +50,7 @@ final class CheckNewProgramIncrementTrackerStub implements CheckNewProgramIncrem
         return new self(false, true);
     }
 
+    #[\Override]
     public function checkProgramIncrementTrackerIsValid(
         int $program_increment_tracker_id,
         ProgramForAdministrationIdentifier $program,

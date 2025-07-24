@@ -37,6 +37,7 @@ final class PendingIterationCreationTest extends \Tuleap\Test\PHPUnit\TestCase
     private VerifyIsChangesetStub $changeset_verifier;
     private UserIdentifierStub $user_identifier;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->iteration_verifier  = VerifyIsIterationStub::withValidIteration();

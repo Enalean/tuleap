@@ -41,6 +41,7 @@ final class ActivationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     private BaseLayout&MockObject $layout;
     private \HTTPRequest&MockObject $request;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->layout                = $this->createMock(BaseLayout::class);

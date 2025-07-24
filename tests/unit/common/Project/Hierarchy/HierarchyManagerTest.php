@@ -31,6 +31,7 @@ final class HierarchyManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private Project_HierarchyManager&MockObject $hierarchy_manager;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao               = $this->createMock(\ProjectHierarchyDao::class);

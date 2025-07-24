@@ -53,6 +53,7 @@ final class SystemEventUserActiveStatusChangeTest extends \Tuleap\Test\PHPUnit\T
      */
     private $user_remover;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->system_event = new SystemEventUserActiveStatusChange(
@@ -75,6 +76,7 @@ final class SystemEventUserActiveStatusChangeTest extends \Tuleap\Test\PHPUnit\T
         $this->system_event->injectDependencies($this->user_manager, $this->user_group_dao, $this->user_remover);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         Backend::clearInstances();

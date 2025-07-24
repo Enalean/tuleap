@@ -69,6 +69,7 @@ final class IterationContentSearcherTest extends TestCase
     private RetrieveTrackerFromUserStory $retrieve_tracker_id;
     private UserIdentifier $user_identifier;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->verify_is_iteration                    = VerifyIsIterationStub::withValidIteration();

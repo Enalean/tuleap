@@ -34,6 +34,7 @@ final class EventSubjectToNotificationAsynchronousQueueDispatcherTest extends \T
     private $queue_factory;
     private EventSubjectToNotificationAsynchronousQueueDispatcher $dispatcher;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->queue_factory = $this->createMock(QueueFactory::class);
@@ -45,11 +46,13 @@ final class EventSubjectToNotificationAsynchronousQueueDispatcherTest extends \T
     {
         $event = new class implements EventSubjectToNotification
         {
+            #[\Override]
             public static function fromWorkerEventPayload(array $payload): EventSubjectToNotification
             {
                 return new self();
             }
 
+            #[\Override]
             public function toWorkerEventPayload(): array
             {
                 return [];

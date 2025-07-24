@@ -40,6 +40,7 @@ final class MirroredTimeboxFirstChangesetTest extends \Tuleap\Test\PHPUnit\TestC
     private MapStatusByValueStub $status_mapper;
     private TrackerReferenceStub $mirrored_timebox_tracker;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->fields_gatherer = GatherSynchronizedFieldsStub::withDefaults();

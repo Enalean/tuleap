@@ -61,6 +61,7 @@ final class BacklogSearcherTest extends \Tuleap\Test\PHPUnit\TestCase
     private const EXPECTED_URI             = '/plugins/tracker/?aid=';
     private VerifyIsProgramIncrementStub $program_increment_verifier;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->program_increment_verifier = VerifyIsProgramIncrementStub::withValidProgramIncrement();

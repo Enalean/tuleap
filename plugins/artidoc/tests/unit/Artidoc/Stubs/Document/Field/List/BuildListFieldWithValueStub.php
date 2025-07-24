@@ -43,6 +43,7 @@ final class BuildListFieldWithValueStub implements BuildListFieldWithValue
         return new self($callback);
     }
 
+    #[\Override]
     public function buildListFieldWithValue(ConfiguredField $configured_field, \Tracker_Artifact_ChangesetValue_List $changeset_value): UserGroupsListFieldWithValue|StaticListFieldWithValue|UserListFieldWithValue
     {
         return ($this->callback)($configured_field);

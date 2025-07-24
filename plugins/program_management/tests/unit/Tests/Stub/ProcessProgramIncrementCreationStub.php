@@ -37,6 +37,7 @@ final class ProcessProgramIncrementCreationStub implements ProcessProgramIncreme
         return new self(0);
     }
 
+    #[\Override]
     public function processCreation(ProgramIncrementCreation $creation): void
     {
         $this->call_count++;
@@ -47,6 +48,7 @@ final class ProcessProgramIncrementCreationStub implements ProcessProgramIncreme
         return $this->call_count;
     }
 
+    #[\Override]
     public function synchronizeProgramIncrementAndIterationsForTeam(ProgramIncrementCreation $creation, TeamIdentifier $team): void
     {
         $this->call_count++;

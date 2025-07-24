@@ -40,6 +40,7 @@ final class FromTrackerTest extends CrossTrackerFieldTestCase
     private UUID $uuid;
     private PFUser $user;
 
+    #[\Override]
     protected function setUp(): void
     {
         $db              = DBFactory::getMainTuleapDBConnection()->getDB();

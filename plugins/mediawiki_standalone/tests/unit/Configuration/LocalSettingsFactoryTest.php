@@ -42,6 +42,7 @@ final class LocalSettingsFactoryTest extends TestCase
 
         $factory = new LocalSettingsFactory(
             new class implements MediaWikiOAuth2AppSecretGenerator {
+                #[\Override]
                 public function generateOAuth2AppSecret(): LastGeneratedClientSecret
                 {
                     return new LastGeneratedClientSecret(789, new ConcealedString('random_oauth2_secret'));
@@ -49,6 +50,7 @@ final class LocalSettingsFactoryTest extends TestCase
             },
             new class implements MediaWikiSharedSecretGenerator
             {
+                #[\Override]
                 public function generateSharedSecret(): ConcealedString
                 {
                     return new ConcealedString('random_shared_secret');
@@ -56,6 +58,7 @@ final class LocalSettingsFactoryTest extends TestCase
             },
             new class implements MediaWikiCentralDatabaseParameterGenerator
             {
+                #[\Override]
                 public function getCentralDatabase(): ?string
                 {
                     return 'tuleap_central';

@@ -35,6 +35,7 @@ final class SvnCoreAccessTest extends \Tuleap\Test\PHPUnit\TestCase
     private MockObject&RepositoryManager $repository_manager;
     private SvnCoreAccess $plugin_svn_access;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->project = ProjectTestBuilder::aProject()->build();

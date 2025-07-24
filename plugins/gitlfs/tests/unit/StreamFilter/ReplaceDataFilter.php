@@ -35,6 +35,7 @@ final class ReplaceDataFilter implements FilterInterface
     /**
      * @param string $data_chunk
      */
+    #[\Override]
     public function process($data_chunk): string
     {
         if ($this->has_already_written_expected_data) {
@@ -43,11 +44,13 @@ final class ReplaceDataFilter implements FilterInterface
         return $this->replacement_data;
     }
 
+    #[\Override]
     public function getFilteredChainIdentifier(): int
     {
         return STREAM_FILTER_READ;
     }
 
+    #[\Override]
     public function filterDetachedEvent(): void
     {
     }

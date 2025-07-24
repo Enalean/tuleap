@@ -60,6 +60,7 @@ final class IterationsCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     private TeamIdentifierCollection $teams;
     private IterationCreation $creation;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->milestone_retriever = RetrieveMirroredIterationTrackerStub::withValidTrackers(

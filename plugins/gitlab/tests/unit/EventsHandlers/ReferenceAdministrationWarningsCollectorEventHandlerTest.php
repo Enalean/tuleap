@@ -33,6 +33,7 @@ class ReferenceAdministrationWarningsCollectorEventHandlerTest extends \Tuleap\T
      */
     private $handler;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->handler = new ReferenceAdministrationWarningsCollectorEventHandler();

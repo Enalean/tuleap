@@ -55,6 +55,7 @@ final class DocmanFileLastVersionProviderTest extends TestCase
      */
     private $lock_factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->item_factory    = $this->createStub(\Docman_ItemFactory::class);
@@ -66,6 +67,7 @@ final class DocmanFileLastVersionProviderTest extends TestCase
         $this->lock_factory             = $this->createStub(\Docman_LockFactory::class);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         \Docman_PermissionsManager::clearInstances();

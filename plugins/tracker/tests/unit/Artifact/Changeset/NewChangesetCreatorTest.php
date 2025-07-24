@@ -65,6 +65,7 @@ final class NewChangesetCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     private ProcessChangesetPostCreationStub $post_changeset_creation;
     private ValidateNewChangesetStub $validate_new_changset;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->fields_data = [];

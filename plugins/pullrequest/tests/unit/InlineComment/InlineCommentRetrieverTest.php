@@ -32,6 +32,7 @@ final class InlineCommentRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     private const INLINE_COMMENT_ID = 12;
     private InlineCommentSearcherStub $dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao = InlineCommentSearcherStub::withNoComment();

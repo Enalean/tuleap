@@ -53,6 +53,7 @@ final class User_LoginManagerTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs
     private $password_handler;
     private User_LoginManager $login_manager;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->event_manager               = new EventManager();

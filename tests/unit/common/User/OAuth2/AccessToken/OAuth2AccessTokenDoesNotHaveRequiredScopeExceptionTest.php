@@ -35,30 +35,36 @@ final class OAuth2AccessTokenDoesNotHaveRequiredScopeExceptionTest extends \Tule
     {
         $scope = new class /** @psalm-immutable */ implements AuthenticationScope
         {
+            #[\Override]
             public static function fromItself(): AuthenticationScope
             {
                 throw new LogicException('Not Supposed to be called in the test');
             }
 
+            #[\Override]
             public static function fromIdentifier(AuthenticationScopeIdentifier $identifier): ?AuthenticationScope
             {
                 throw new LogicException('Not Supposed to be called in the test');
             }
 
+            #[\Override]
             public function getIdentifier(): AuthenticationScopeIdentifier
             {
                 return OAuth2ScopeIdentifier::fromIdentifierKey('foo');
             }
 
+            #[\Override]
             public function getDefinition(): AuthenticationScopeDefinition
             {
                 return new class /** @psalm-immutable */ implements AuthenticationScopeDefinition
                 {
+                    #[\Override]
                     public function getName(): string
                     {
                         return 'Test';
                     }
 
+                    #[\Override]
                     public function getDescription(): string
                     {
                         return 'For test';
@@ -66,6 +72,7 @@ final class OAuth2AccessTokenDoesNotHaveRequiredScopeExceptionTest extends \Tule
                 };
             }
 
+            #[\Override]
             public function covers(AuthenticationScope $scope): bool
             {
                 throw new LogicException('Not Supposed to be called in the test');

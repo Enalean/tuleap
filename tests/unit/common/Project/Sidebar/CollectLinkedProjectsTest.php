@@ -34,6 +34,7 @@ final class CollectLinkedProjectsTest extends TestCase
     private \Project $source_project;
     private \PFUser $user;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->source_project = ProjectTestBuilder::aProject()->build();

@@ -48,6 +48,7 @@ final class ISearchByProjectStub implements ISearchByProject
         return new self([]);
     }
 
+    #[\Override]
     public function searchByProject(\Project $project): array
     {
         return $this->permissions;

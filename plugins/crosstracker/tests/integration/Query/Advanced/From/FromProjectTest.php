@@ -43,6 +43,7 @@ final class FromProjectTest extends CrossTrackerFieldTestCase
     private PFUser $user_member;
     private PFUser $user_admin;
 
+    #[\Override]
     protected function setUp(): void
     {
         $db              = DBFactory::getMainTuleapDBConnection()->getDB();

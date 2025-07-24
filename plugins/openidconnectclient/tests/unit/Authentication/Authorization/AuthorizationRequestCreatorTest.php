@@ -38,6 +38,7 @@ final class AuthorizationRequestCreatorTest extends \Tuleap\Test\PHPUnit\TestCas
 
     private MockObject&StateManager $state_manager;
 
+    #[\Override]
     protected function setUp(): void
     {
         $state = $this->createMock(State::class);

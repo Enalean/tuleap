@@ -38,6 +38,7 @@ final class XMLUserGroupsTest extends TestCase
     use TemporaryTestDirectory;
     use ForgeConfigSandbox;
 
+    #[\Override]
     protected function setUp(): void
     {
         \ForgeConfig::set('codendi_cache_dir', $this->getTmpDir());

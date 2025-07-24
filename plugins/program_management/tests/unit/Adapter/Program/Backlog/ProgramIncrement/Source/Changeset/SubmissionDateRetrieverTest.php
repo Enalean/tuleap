@@ -43,6 +43,7 @@ final class SubmissionDateRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $artifact;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->artifact_identifier = ArtifactIdentifierStub::withId(self::ARTIFACT_ID);

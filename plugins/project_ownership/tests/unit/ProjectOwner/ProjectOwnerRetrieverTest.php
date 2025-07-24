@@ -32,6 +32,7 @@ final class ProjectOwnerRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $user_manager;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao          = $this->createMock(ProjectOwnerDAO::class);

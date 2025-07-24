@@ -47,12 +47,14 @@ final class PermissionPerGroupSectionBuilderTest extends \Tuleap\Test\PHPUnit\Te
     private $ugroup_manager;
     private \TemplateRenderer $template_renderer;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->retrieve_project_ugroups_can_prioritize_items = RetrieveProjectUgroupsCanPrioritizeItemsStub::buildWithIds(4);
         $this->formatter                                     = $this->createMock(PermissionPerGroupUGroupFormatter::class);
         $this->ugroup_manager                                = $this->createMock(UGroupManager::class);
         $this->template_renderer                             = new class extends \TemplateRenderer {
+            #[\Override]
             public function renderToString($template_name, $presenter): string
             {
                 return 'Rendered template';

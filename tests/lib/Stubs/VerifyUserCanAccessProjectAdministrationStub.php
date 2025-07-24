@@ -34,6 +34,7 @@ final class VerifyUserCanAccessProjectAdministrationStub implements VerifyUserCa
         $this->can_access = $can_access;
     }
 
+    #[\Override]
     public function canUserAccessProjectAdministration(CurrentUserWithLoggedInInformation $current_user, \Project $project): bool
     {
         return $this->can_access;

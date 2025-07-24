@@ -39,6 +39,7 @@ class CaptureRequestHandler implements RequestHandlerInterface
         return new self($response);
     }
 
+    #[\Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $this->captured_request = $request;

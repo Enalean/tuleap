@@ -52,6 +52,7 @@ final class OAuth2RefreshTokenRevokerTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $hasher;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->refresh_token_unserializer = $this->createMock(SplitTokenIdentifierTranslator::class);

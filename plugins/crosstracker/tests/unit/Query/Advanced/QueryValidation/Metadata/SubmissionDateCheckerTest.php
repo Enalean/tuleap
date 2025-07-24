@@ -51,6 +51,7 @@ final class SubmissionDateCheckerTest extends TestCase
 {
     private Metadata $metadata;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->metadata = new Metadata('submitted_on');

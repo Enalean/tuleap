@@ -40,6 +40,7 @@ final class FileToUploadCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     private OngoingUploadDao&MockObject $dao;
     private int $file_size;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->file_size = self::FILE_SIZE;

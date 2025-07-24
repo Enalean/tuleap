@@ -37,6 +37,7 @@ final readonly class ArtifactPayloadBuilderStub extends ArtifactPayloadBuilder
         return new self(new ArtifactPayload([]));
     }
 
+    #[\Override]
     public function buildPayload(\Tracker_Artifact_Changeset $last_changeset): ArtifactPayload
     {
         return $this->payload;

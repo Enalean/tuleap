@@ -60,6 +60,7 @@ final class WebhookCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $webhook_deletor;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->key_factory       = $this->createMock(KeyFactory::class);

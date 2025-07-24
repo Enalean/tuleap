@@ -44,6 +44,7 @@ final class AuthorizationCodeResponseFactoryTest extends \Tuleap\Test\PHPUnit\Te
      */
     private $url_redirect;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->authorization_code_creator          = $this->createMock(OAuth2AuthorizationCodeCreator::class);

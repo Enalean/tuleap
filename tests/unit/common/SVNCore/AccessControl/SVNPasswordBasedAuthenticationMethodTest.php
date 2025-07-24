@@ -38,6 +38,7 @@ final class SVNPasswordBasedAuthenticationMethodTest extends TestCase
     private $login_manager;
     private SVNPasswordBasedAuthenticationMethod $auth_method;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->login_manager = $this->createStub(\User_LoginManager::class);

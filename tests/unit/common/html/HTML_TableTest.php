@@ -23,15 +23,15 @@
  */
 
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class HTML_TableTest extends \Tuleap\Test\PHPUnit\TestCase
+final class HTML_TableTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /**
      * @var HTML_Table
      */
     protected $html_table;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

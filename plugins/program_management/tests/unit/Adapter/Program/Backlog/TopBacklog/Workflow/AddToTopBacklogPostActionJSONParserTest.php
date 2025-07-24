@@ -33,6 +33,7 @@ final class AddToTopBacklogPostActionJSONParserTest extends \Tuleap\Test\PHPUnit
     private AddToTopBacklogPostActionJSONParser $parser;
     private VerifyIsPlannable $verify_is_plannable;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->verify_is_plannable = VerifyIsPlannableStub::buildPlannableElement();

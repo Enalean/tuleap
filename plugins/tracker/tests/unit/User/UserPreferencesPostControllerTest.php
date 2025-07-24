@@ -43,6 +43,7 @@ final class UserPreferencesPostControllerTest extends TestCase
 {
     private StoreUserPreferenceStub $preferences_store;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->preferences_store = new StoreUserPreferenceStub();

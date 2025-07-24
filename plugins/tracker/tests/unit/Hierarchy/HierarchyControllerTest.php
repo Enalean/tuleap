@@ -55,6 +55,7 @@ final class HierarchyControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     private Tracker $unhierarchized_tracker;
     private LayoutInspector $layout_inspector;
 
+    #[\Override]
     protected function setUp(): void
     {
         $project = ProjectTestBuilder::aProject()->withId(101)->build();

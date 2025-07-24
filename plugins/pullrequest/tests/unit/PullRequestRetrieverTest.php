@@ -37,6 +37,7 @@ final class PullRequestRetrieverTest extends TestCase
     private const TITLE           = 'antasthenic pseudosessile';
     private SearchPullRequestStub $pull_request_dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $pull_request           = PullRequestTestBuilder::aPullRequestInReview()

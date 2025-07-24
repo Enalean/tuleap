@@ -46,6 +46,7 @@ final class WebDAVProjectTest extends \Tuleap\Test\PHPUnit\TestCase
     private $project;
     private PFUser $user;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user    = UserTestBuilder::aUser()->build();

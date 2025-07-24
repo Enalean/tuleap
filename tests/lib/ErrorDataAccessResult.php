@@ -26,26 +26,31 @@ class ErrorDataAccessResult extends DataAccessResult
     {
     }
 
+    #[\Override]
     public function valid(): bool
     {
         return false;
     }
 
+    #[\Override]
     public function current(): bool
     {
         return false;
     }
 
+    #[\Override]
     public function rowCount()
     {
         return 0;
     }
 
+    #[\Override]
     public function isError()
     {
         return true;
     }
 
+    #[\Override]
     public function getRow()
     {
         return false;

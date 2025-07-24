@@ -32,6 +32,7 @@ final class FunctionDaoTest extends TestIntegrationTestCase
 
     private FunctionDao $dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao = new FunctionDao();

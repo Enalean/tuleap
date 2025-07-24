@@ -41,11 +41,13 @@ final class BuildCompleteTrackerRESTRepresentationStub implements BuildCompleteT
         return new self();
     }
 
+    #[\Override]
     public function getTrackerRepresentationInTrackerContext(PFUser $user, Tracker $tracker): CompleteTrackerRepresentation
     {
         return $this->buildRepresentation($tracker);
     }
 
+    #[\Override]
     public function getTrackerRepresentationInArtifactContext(PFUser $user, Artifact $artifact): CompleteTrackerRepresentation
     {
         return $this->buildRepresentation(

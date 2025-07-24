@@ -58,6 +58,7 @@ final class IterationCreationTest extends \Tuleap\Test\PHPUnit\TestCase
     private TestLogger $logger;
     private RetrieveIterationTrackerStub $tracker_retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->changeset_retriever = RetrieveLastChangesetStub::withLastChangesetIds(

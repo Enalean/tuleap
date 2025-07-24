@@ -57,6 +57,7 @@ final readonly class BuildRequiredArtifactInformationStub implements BuildRequir
         return new self(null);
     }
 
+    #[\Override]
     public function getRequiredArtifactInformation(ArtidocWithContext $artidoc, int $artifact_id, \PFUser $user): Ok|Err
     {
         if ($this->info === null) {

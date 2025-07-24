@@ -47,6 +47,7 @@ final class UserCanSubmitInTrackerVerifierTest extends TestCase
     private UserIdentifier $user_identifier;
     private TrackerReference $tracker;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user_manager    = $this->createStub(\UserManager::class);

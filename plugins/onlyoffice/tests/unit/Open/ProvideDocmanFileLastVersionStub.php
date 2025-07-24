@@ -49,6 +49,7 @@ final class ProvideDocmanFileLastVersionStub implements ProvideDocmanFileLastVer
         return new self(Result::ok(new DocmanFileLastVersion($item, $version, true)));
     }
 
+    #[\Override]
     public function getLastVersionOfAFileUserCanAccess(\PFUser $user, int $item_id): Ok|Err
     {
         return $this->result;

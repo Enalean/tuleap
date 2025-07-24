@@ -36,6 +36,7 @@ final class ProcessChangesetPostCreationStub implements ProcessChangesetPostCrea
         return new self();
     }
 
+    #[\Override]
     public function postProcessCreation(NewChangesetCreated $changeset_created, \Tuleap\Tracker\Artifact\Artifact $artifact, PostCreationContext $context, ?\Tracker_Artifact_Changeset $old_changeset, \PFUser $submitter): void
     {
         $this->count++;

@@ -43,6 +43,7 @@ final class RetrievePromotedTrackersStub implements RetrievePromotedTrackers
         return new self([$tracker, ...$other_trackers]);
     }
 
+    #[\Override]
     public function getTrackers(\PFUser $current_user, \Project $project): array
     {
         return $this->trackers;

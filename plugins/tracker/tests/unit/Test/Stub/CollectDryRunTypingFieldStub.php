@@ -48,6 +48,7 @@ final class CollectDryRunTypingFieldStub implements CollectDryRunTypingField
         return new self(true, DuckTypedMoveFieldCollection::fromFields([], [], [], []));
     }
 
+    #[\Override]
     public function collect(\Tuleap\Tracker\Tracker $source_tracker, \Tuleap\Tracker\Tracker $destination_tracker, Artifact $artifact, \PFUser $user, LoggerInterface $logger): DuckTypedMoveFieldCollection
     {
         if ($this->should_throw_when_collect_is_called) {

@@ -55,6 +55,7 @@ final class SystemEventProcessorRootTest extends TestCase
     private TestLogger $logger;
     private SiteCache&MockObject $site_cache;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->system_event_manager = $this->createMock(SystemEventManager::class);

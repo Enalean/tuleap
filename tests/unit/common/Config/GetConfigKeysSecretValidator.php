@@ -29,11 +29,13 @@ use Tuleap\Cryptography\ConcealedString;
  */
 final class GetConfigKeysSecretValidator implements SecretValidator
 {
+    #[\Override]
     public static function buildSelf(): self
     {
         return new self();
     }
 
+    #[\Override]
     public function checkIsValid(ConcealedString $value): void
     {
     }

@@ -63,6 +63,7 @@ final class ProvideOnlyOfficeDocumentStub implements ProvideOnlyOfficeDocument
         );
     }
 
+    #[\Override]
     public function getDocument(\PFUser $user, int $item_id): Ok|Err
     {
         return $this->result;

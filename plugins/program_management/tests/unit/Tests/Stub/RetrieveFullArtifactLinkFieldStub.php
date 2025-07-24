@@ -41,6 +41,7 @@ final class RetrieveFullArtifactLinkFieldStub implements RetrieveFullArtifactLin
         return new self(null);
     }
 
+    #[\Override]
     public function getArtifactLinkField(
         TrackerIdentifier $tracker_identifier,
     ): ?\Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField {

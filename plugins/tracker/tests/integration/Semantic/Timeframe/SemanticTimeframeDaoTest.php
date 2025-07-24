@@ -34,6 +34,7 @@ final class SemanticTimeframeDaoTest extends TestIntegrationTestCase
     private static int $second_timeframe_using_duration_tracker_id;
     private SemanticTimeframeDao $dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao                                        = new SemanticTimeframeDao();

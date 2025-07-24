@@ -30,6 +30,7 @@ class RuleNameTest extends \Tuleap\Test\PHPUnit\TestCase
     private \Project $project;
     private RuleName $rule;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

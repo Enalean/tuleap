@@ -43,6 +43,7 @@ final class SystemEventPROJECTISPRIVATETest extends \Tuleap\Test\PHPUnit\TestCas
 
     private int $project_id = 102;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -51,6 +52,7 @@ final class SystemEventPROJECTISPRIVATETest extends \Tuleap\Test\PHPUnit\TestCas
         ForgeConfig::set(ProjectVisibilityConfigManager::SEND_MAIL_ON_PROJECT_VISIBILITY_CHANGE, false);
 
         $event_manager = new class extends EventManager {
+            #[\Override]
             public function processEvent($event, $params = [])
             {
                 return;
@@ -59,6 +61,7 @@ final class SystemEventPROJECTISPRIVATETest extends \Tuleap\Test\PHPUnit\TestCas
         EventManager::setInstance($event_manager);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         ProjectManager::clearInstance();

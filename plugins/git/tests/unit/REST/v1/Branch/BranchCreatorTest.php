@@ -52,6 +52,7 @@ final class BranchCreatorTest extends TestCase
      */
     private $access_control_verifier;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

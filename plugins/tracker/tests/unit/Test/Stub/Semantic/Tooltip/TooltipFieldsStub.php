@@ -44,6 +44,7 @@ final class TooltipFieldsStub implements \Tuleap\Tracker\Semantic\Tooltip\Toolti
         return new self([$field, ...$other_fields]);
     }
 
+    #[\Override]
     public function getFields(): array
     {
         return $this->fields;

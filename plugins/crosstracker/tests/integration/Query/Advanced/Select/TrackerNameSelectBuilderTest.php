@@ -44,6 +44,7 @@ final class TrackerNameSelectBuilderTest extends CrossTrackerFieldTestCase
      */
     private array $expected_values;
 
+    #[\Override]
     public function setUp(): void
     {
         $db              = DBFactory::getMainTuleapDBConnection()->getDB();

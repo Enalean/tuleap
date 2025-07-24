@@ -31,6 +31,7 @@ final class DeleteFileUploadStub implements DeleteFileUpload
     {
     }
 
+    #[\Override]
     public function deleteById(TusFileInformation $file_information): void
     {
         $this->delete_by_id_call_count++;

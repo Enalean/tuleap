@@ -57,6 +57,7 @@ final class OAuth2RefreshTokenVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $verifier;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->hasher            = $this->createMock(SplitTokenVerificationStringHasher::class);

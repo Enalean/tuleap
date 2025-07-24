@@ -30,6 +30,7 @@ class SVNCLITest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private $init_pwd;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -38,6 +39,7 @@ class SVNCLITest extends \Tuleap\Test\PHPUnit\TestCase
         system('/bin/rm -rf /tmp/sample');
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         parent::tearDown();

@@ -48,6 +48,7 @@ final class NewChangesetValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
     private \Tracker_Artifact_Changeset&\PHPUnit\Framework\MockObject\MockObject $changeset;
 
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->fields_validator     = $this->createMock(\Tracker_Artifact_Changeset_FieldsValidator::class);

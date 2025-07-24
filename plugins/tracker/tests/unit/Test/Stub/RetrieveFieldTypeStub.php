@@ -51,6 +51,7 @@ final class RetrieveFieldTypeStub implements RetrieveFieldType
         return new self('');
     }
 
+    #[\Override]
     public function getType(Tracker_FormElement $form_element): string
     {
         if ($this->predefined_type !== '') {

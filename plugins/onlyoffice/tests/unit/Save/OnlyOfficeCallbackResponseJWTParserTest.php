@@ -57,6 +57,7 @@ final class OnlyOfficeCallbackResponseJWTParserTest extends TestCase
     private string $encrypted_secret_server_1;
     private string $encrypted_secret_server_2;
 
+    #[\Override]
     protected function setUp(): void
     {
         $root = vfsStream::setup()->url();
@@ -252,6 +253,7 @@ final class OnlyOfficeCallbackResponseJWTParserTest extends TestCase
                 {
                 }
 
+                #[\Override]
                 public function assert(Token $token, Constraint ...$constraints): void
                 {
                     if ($this->validate($token, ...$constraints)) {
@@ -261,6 +263,7 @@ final class OnlyOfficeCallbackResponseJWTParserTest extends TestCase
                         ConstraintViolation::error(
                             'Not valid',
                             new class implements Constraint {
+                                #[\Override]
                                 public function assert(Token $token): void
                                 {
                                 }
@@ -269,6 +272,7 @@ final class OnlyOfficeCallbackResponseJWTParserTest extends TestCase
                     );
                 }
 
+                #[\Override]
                 public function validate(Token $token, Constraint ...$constraints): bool
                 {
                     return $this->is_valid;

@@ -87,6 +87,7 @@ final class CollectRequiredSectionInformationStub implements CollectRequiredSect
             ->andMissingRequiredInformationFor($artifact_id, ...$other_artifact_ids);
     }
 
+    #[\Override]
     public function collectRequiredSectionInformation(ArtidocWithContext $artidoc, int $artifact_id): Ok|Err
     {
         $this->called = true;

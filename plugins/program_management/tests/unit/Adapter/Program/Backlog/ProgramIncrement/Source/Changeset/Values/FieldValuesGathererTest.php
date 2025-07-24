@@ -55,6 +55,7 @@ final class FieldValuesGathererTest extends \Tuleap\Test\PHPUnit\TestCase
     private DurationFieldReferenceStub $duration_reference;
     private EndDateFieldReferenceStub $end_date_reference;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->title_field       = new \Tuleap\Tracker\FormElement\Field\String\StringField(1376, 89, 1000, 'title', 'Title', 'Irrelevant', true, 'P', true, '', 2);

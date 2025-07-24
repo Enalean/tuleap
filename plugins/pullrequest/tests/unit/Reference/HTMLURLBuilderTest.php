@@ -38,6 +38,7 @@ final class HTMLURLBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     private int $project_id;
     private HTMLURLBuilder $html_url_builder;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

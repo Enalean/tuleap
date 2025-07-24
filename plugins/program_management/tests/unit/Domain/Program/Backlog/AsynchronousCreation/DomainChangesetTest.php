@@ -33,6 +33,7 @@ final class DomainChangesetTest extends \Tuleap\Test\PHPUnit\TestCase
     private const CHANGESET_ID = 7715;
     private IterationIdentifier $iteration;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->iteration = IterationIdentifierBuilder::buildWithId(37);

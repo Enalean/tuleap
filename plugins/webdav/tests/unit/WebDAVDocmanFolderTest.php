@@ -52,6 +52,7 @@ final class WebDAVDocmanFolderTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $project;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user    = UserTestBuilder::aUser()->build();

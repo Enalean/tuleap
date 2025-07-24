@@ -35,6 +35,7 @@ final class SmtpTransportBuilderTest extends TestCase
 
     private const DEFAULT_PORT = 25;
 
+    #[\Override]
     protected function setUp(): void
     {
         \ForgeConfig::set('email_relayhost_smtp_use_implicit_tls', '0');

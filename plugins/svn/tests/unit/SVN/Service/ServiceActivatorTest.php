@@ -54,6 +54,7 @@ final class ServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $data;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

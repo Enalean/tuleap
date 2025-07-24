@@ -41,6 +41,7 @@ final class ConfigUpdaterStub implements ConfigUpdater
         return new self();
     }
 
+    #[\Override]
     public function set(string $key, ConcealedString|string $value): void
     {
         $this->updated_config[$key] = $value;

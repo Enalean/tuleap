@@ -30,11 +30,13 @@ class TimezoneSwitcherTest extends TestCase
 {
     private string $default_timezone;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->default_timezone = date_default_timezone_get();
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         date_default_timezone_set($this->default_timezone);

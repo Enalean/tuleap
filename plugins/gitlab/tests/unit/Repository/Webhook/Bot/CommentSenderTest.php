@@ -45,6 +45,7 @@ final class CommentSenderTest extends \Tuleap\Test\PHPUnit\TestCase
     private GitlabRepositoryIntegration $integration;
     private CommentSender $sender;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->credentials = CredentialsTestBuilder::get()->build();

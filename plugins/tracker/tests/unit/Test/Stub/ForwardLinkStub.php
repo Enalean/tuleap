@@ -43,11 +43,13 @@ final class ForwardLinkStub implements ForwardLink
         return new self($id, $type);
     }
 
+    #[\Override]
     public function getTargetArtifactId(): int
     {
         return $this->id;
     }
 
+    #[\Override]
     public function getType(): string
     {
         return $this->type;

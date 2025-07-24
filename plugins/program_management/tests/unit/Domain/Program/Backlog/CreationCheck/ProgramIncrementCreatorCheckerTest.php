@@ -55,6 +55,7 @@ final class ProgramIncrementCreatorCheckerTest extends \Tuleap\Test\PHPUnit\Test
     private UserReference $user_identifier;
     private TeamProjectsCollection $teams;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->timebox_creator_checker = TimeboxCreatorCheckerBuilder::buildValid();

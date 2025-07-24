@@ -40,6 +40,7 @@ final class RoleAssignmentRepositoryAdapterTest extends TestIntegrationTestCase
     private RoleAssignmentRepositoryAdapter $repository;
     private ProjectIdentifier $project;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->repository = new RoleAssignmentRepositoryAdapter(
@@ -52,6 +53,7 @@ final class RoleAssignmentRepositoryAdapterTest extends TestIntegrationTestCase
         );
 
         $this->project = new /** @psalm-immutable */ class implements ProjectIdentifier {
+            #[\Override]
             public function getID(): int
             {
                 return 101;

@@ -87,6 +87,7 @@ final class SaveOneSectionStub implements SaveOneSection
         return $this->saved_before[$id];
     }
 
+    #[\Override]
     public function saveSectionAtTheEnd(ArtidocWithContext $artidoc, ContentToInsert $content): Ok|Err
     {
         return $this->getSectionIdentifierFactory()
@@ -97,6 +98,7 @@ final class SaveOneSectionStub implements SaveOneSection
             });
     }
 
+    #[\Override]
     public function saveSectionBefore(ArtidocWithContext $artidoc, ContentToInsert $content, SectionIdentifier $sibling_section_id): Ok|Err
     {
         return $this->getSectionIdentifierFactory()

@@ -56,6 +56,7 @@ final class GroupLinkCreatorTest extends TestCase
     private VerifyProjectIsAlreadyLinkedStub $project_linked_verifier;
     private ?string $branch_prefix;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->project_builder = BuildGitlabProjectsStub::withProjects([

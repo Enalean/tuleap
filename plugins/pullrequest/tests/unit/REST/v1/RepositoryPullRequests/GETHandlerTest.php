@@ -61,6 +61,7 @@ final class GETHandlerTest extends TestCase
     private RetrieveUserByIdStub $retrieve_user_by_id;
     private GetReferenceByPullRequestId $get_reference_by_pull_request_id_stub;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->repository = GitRepositoryTestBuilder::aProjectRepository()->build();

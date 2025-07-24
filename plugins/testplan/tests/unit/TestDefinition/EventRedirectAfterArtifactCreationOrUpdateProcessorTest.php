@@ -51,6 +51,7 @@ final class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends \Tul
 
     private EventRedirectAfterArtifactCreationOrUpdateProcessor $processor;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->user = $this->createMock(\PFUser::class);

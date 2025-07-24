@@ -98,6 +98,7 @@ final class ConfigSetTest extends TestCase
             {
             }
 
+            #[\Override]
             public function getKeyMetadata(string $key): ConfigKeyMetadata
             {
                 if (! isset($this->metadata[$key])) {
@@ -107,6 +108,7 @@ final class ConfigSetTest extends TestCase
                 return $this->metadata[$key];
             }
 
+            #[\Override]
             public function getKeysThatCanBeModifiedWithConfigSet(): array
             {
                 return [];

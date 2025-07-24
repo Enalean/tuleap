@@ -52,6 +52,7 @@ final class ImportFromArchiveStub implements ImportFromArchive
         return new self(Result::err(Fault::fromMessage($message)));
     }
 
+    #[\Override]
     public function importFromArchive(
         ImportConfig $configuration,
         int $project_id,

@@ -62,6 +62,7 @@ final class FieldSelectFromBuilderTest extends TestCase
     private Tracker $first_tracker;
     private Tracker $second_tracker;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user           = UserTestBuilder::buildWithId(133);

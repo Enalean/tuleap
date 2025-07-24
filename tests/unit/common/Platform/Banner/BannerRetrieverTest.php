@@ -31,6 +31,7 @@ final class BannerRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     private BannerDao&MockObject $banner_dao;
     private BannerRetriever $banner_retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->banner_dao       = $this->createMock(BannerDao::class);

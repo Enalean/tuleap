@@ -27,6 +27,7 @@ use Tuleap\DB\DBFactory;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DBTablesDaoLoadKnowDataUTF8Test extends DBTablesDaoLoadKnowDataTestCase
 {
+    #[\Override]
     protected function createDatabase(string $db_name): void
     {
         $db = DBFactory::getMainTuleapDBConnection()->getDB();

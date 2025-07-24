@@ -41,6 +41,7 @@ final class StandUpNotificationBuilderTest extends TestCase
 {
     use ForgeConfigSandbox;
 
+    #[\Override]
     protected function setUp(): void
     {
         ForgeConfig::set(ConfigurationVariables::SERVER_TIMEZONE, 'Europe/Paris');

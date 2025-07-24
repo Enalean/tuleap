@@ -56,6 +56,7 @@ class FRSReleaseFactoryTest extends TestCase
      */
     private $permission_manager;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user                = $this->createMock(PFUser::class);
@@ -78,6 +79,7 @@ class FRSReleaseFactoryTest extends TestCase
         ProjectManager::setInstance($project_manager);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         parent::tearDown();

@@ -55,6 +55,7 @@ class ProjectXMLExporterWithSynchronizedUGroupsTest extends \Tuleap\Test\PHPUnit
     private ArchiveInterface&MockObject $archive;
     private SynchronizedProjectMembershipDetector&MockObject $synch_detector;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->event_manager  = $this->createMock(EventManager::class);

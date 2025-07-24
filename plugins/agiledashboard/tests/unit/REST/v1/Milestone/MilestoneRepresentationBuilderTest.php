@@ -58,6 +58,7 @@ final class MilestoneRepresentationBuilderTest extends TestCase
     private AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder&MockObject $sub_milestone_finder;
     private PlanningFactory&MockObject $planning_factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->milestone_factory        = $this->createMock(Planning_MilestoneFactory::class);

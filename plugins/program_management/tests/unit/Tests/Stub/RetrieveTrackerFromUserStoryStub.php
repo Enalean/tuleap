@@ -60,6 +60,7 @@ final class RetrieveTrackerFromUserStoryStub implements RetrieveTrackerFromUserS
         );
     }
 
+    #[\Override]
     public function getUserStoryTracker(UserStoryIdentifier $user_story_identifier): TrackerIdentifier
     {
         if ($this->always_return) {

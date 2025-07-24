@@ -35,6 +35,7 @@ final class PriorityDaoTest extends TestIntegrationTestCase
     private PriorityDao $dao;
     private EasyDB $db;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->db  = DBFactory::getMainTuleapDBConnection()->getDB();

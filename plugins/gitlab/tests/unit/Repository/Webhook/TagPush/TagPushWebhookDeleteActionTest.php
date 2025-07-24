@@ -43,6 +43,7 @@ final class TagPushWebhookDeleteActionTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private TagPushWebhookDeleteAction $delete_action;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

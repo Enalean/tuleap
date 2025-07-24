@@ -29,6 +29,7 @@ class BranchNameTuleapReferenceParserTest extends TestCase
 {
     private BranchNameTuleapReferenceParser $parser;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

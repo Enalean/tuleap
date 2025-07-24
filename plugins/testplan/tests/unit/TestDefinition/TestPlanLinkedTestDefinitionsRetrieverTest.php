@@ -49,6 +49,7 @@ final class TestPlanLinkedTestDefinitionsRetrieverTest extends \Tuleap\Test\PHPU
 
     private TestPlanLinkedTestDefinitionsRetriever $retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->testmanagement_config                      = $this->createMock(Config::class);

@@ -39,6 +39,7 @@ final class OAuth2ConsentCheckerTest extends TestCase
      */
     private $authorization_comparator;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->authorization_comparator = $this->createMock(AuthorizationComparator::class);

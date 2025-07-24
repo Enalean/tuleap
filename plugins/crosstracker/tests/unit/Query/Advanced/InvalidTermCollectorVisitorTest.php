@@ -117,6 +117,7 @@ final class InvalidTermCollectorVisitorTest extends TestCase
     private \Tuleap\Tracker\Tracker $second_tracker;
     private RetrieveUsedFieldsStub $fields_retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->first_tracker  = TrackerTestBuilder::aTracker()->withId(67)->build();

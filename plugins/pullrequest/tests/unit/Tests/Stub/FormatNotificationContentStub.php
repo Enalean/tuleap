@@ -42,6 +42,7 @@ final class FormatNotificationContentStub implements FormatNotificationContent
         return new self($formatted_content);
     }
 
+    #[\Override]
     public function getFormattedAndPurifiedNotificationContent(PullRequest $pull_request, TimelineComment $comment): string
     {
         return $this->formatted_content ?? $comment->getContent();

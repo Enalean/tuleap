@@ -35,6 +35,7 @@ final class ConfigurationArtifactsDeletionStub implements ConfigurationArtifacts
         return new self($limit);
     }
 
+    #[\Override]
     public function getArtifactsDeletionLimit(): int
     {
         return $this->deletion_limit;

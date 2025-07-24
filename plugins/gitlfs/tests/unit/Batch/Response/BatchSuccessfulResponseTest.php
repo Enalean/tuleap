@@ -29,6 +29,7 @@ final class BatchSuccessfulResponseTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $transfer        = new Transfer('test');
         $response_object = new class implements BatchResponseObject {
+            #[\Override]
             public function jsonSerialize(): \stdClass
             {
                 return new \stdClass();

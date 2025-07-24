@@ -34,6 +34,7 @@ final class AccessKeyHeaderExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $access_token_unserializer;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->access_token_unserializer = $this->createMock(SplitTokenIdentifierTranslator::class);

@@ -67,6 +67,7 @@ final class ArtifactClosingReferencesHandlerTest extends \Tuleap\Test\PHPUnit\Te
     private Tracker $bug_tracker;
     private Tracker $story_tracker;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->project       = ProjectTestBuilder::aProject()->withId(151)->build();

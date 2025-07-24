@@ -45,6 +45,7 @@ final class ProgramIncrementCreationTest extends \Tuleap\Test\PHPUnit\TestCase
     private ArtifactCreatedEventStub $artifact_created;
     private ProgramIncrementCreationEventStub $creation_event;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->tracker_verifier           = VerifyIsProgramIncrementTrackerStub::buildValidProgramIncrement();

@@ -32,11 +32,13 @@ final class OpenIDConnectSigningKeyDAOTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao = new OpenIDConnectSigningKeyDAO();
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         DBFactory::getMainTuleapDBConnection()->getDB()->run('DELETE FROM oauth2_server_oidc_signing_key');

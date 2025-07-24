@@ -77,6 +77,7 @@ final class AggregateAuthenticationScopeBuilderTest extends \Tuleap\Test\PHPUnit
                 $this->builder = $builder;
             }
 
+            #[\Override]
             public function getAuthenticationKeyScopeBuilders(): array
             {
                 return [$this->builder];
@@ -85,6 +86,7 @@ final class AggregateAuthenticationScopeBuilderTest extends \Tuleap\Test\PHPUnit
 
         $event_dispatcher = new class implements EventDispatcherInterface
         {
+            #[\Override]
             public function dispatch(object $event)
             {
                 assert($event instanceof AuthenticationScopeBuilderCollectorEvent);

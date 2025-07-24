@@ -35,6 +35,7 @@ final class MirroredProgramIncrementTrackerIdentifierTest extends \Tuleap\Test\P
     private const TRACKER_ID = 2;
     private RetrieveMirroredProgramIncrementTrackerStub $tracker_retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->tracker_retriever = RetrieveMirroredProgramIncrementTrackerStub::withValidTrackers(

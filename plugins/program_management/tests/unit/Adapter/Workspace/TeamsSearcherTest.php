@@ -35,6 +35,7 @@ final class TeamsSearcherTest extends TestCase
     private SearchTeamsOfProgram $team_ids_searcher;
     private RetrieveFullProject $retrieve_full_project;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->team_ids_searcher     = SearchTeamsOfProgramStub::withTeamIds(102, 103);

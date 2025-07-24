@@ -32,6 +32,7 @@ final class TaskboardPaneInfoBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     private MockObject&Planning_Milestone $milestone;
     private MockObject&MilestoneIsAllowedChecker $checker;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->milestone = $this->createMock(Planning_Milestone::class);

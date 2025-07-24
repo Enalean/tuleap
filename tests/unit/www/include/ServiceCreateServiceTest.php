@@ -31,6 +31,7 @@ class ServiceCreateServiceTest extends \Tuleap\Test\PHPUnit\TestCase
     private array $template;
     private Project $project;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->template = [

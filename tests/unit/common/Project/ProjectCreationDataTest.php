@@ -47,6 +47,7 @@ final class ProjectCreationDataTest extends \Tuleap\Test\PHPUnit\TestCase
     private ServiceManager&MockObject $service_manager;
     private DefaultProjectVisibilityRetriever $default_project_visibility_retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->default_project_visibility_retriever = new DefaultProjectVisibilityRetriever();

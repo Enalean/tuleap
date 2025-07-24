@@ -39,6 +39,7 @@ final class AddPostMoveArtifactFeedbackStub implements AddPostMoveArtifactFeedba
         return new self();
     }
 
+    #[\Override]
     public function addFeedback(Tracker $source_tracker, Tracker $target_tracker, Artifact $artifact, \PFUser $user,): void
     {
         $this->call_count++;

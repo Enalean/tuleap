@@ -56,6 +56,7 @@ class LicenseAgreementControllersHelperTest extends TestCase
     private PFUser $current_user;
     private LicenseAgreementControllersHelper $helper;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->current_user = new PFUser(['language_id' => 'en_US']);

@@ -45,6 +45,7 @@ final class ProjectByUnixUnixNameFactory implements ProjectByUnixNameFactory
         return new self(...$projects);
     }
 
+    #[\Override]
     public function getProjectByCaseInsensitiveUnixName(string $unix_name): ?\Project
     {
         if (isset($this->projects[$unix_name]) && $this->isValid($this->projects[$unix_name])) {

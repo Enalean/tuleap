@@ -50,6 +50,7 @@ final class CheckNewIterationTrackerStub implements CheckNewIterationTracker
         return new self(false, true);
     }
 
+    #[\Override]
     public function checkIterationTrackerIsValid(
         int $iteration_tracker_id,
         ProgramForAdministrationIdentifier $program,

@@ -34,6 +34,7 @@ final class SendMessagesForAdminsTest extends TestCase
     private SendMessagesForAdmins $send_messages_for_admins;
     private Tracker_Artifact_Changeset $changeset;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->mail_sender              = SendMailStub::build();

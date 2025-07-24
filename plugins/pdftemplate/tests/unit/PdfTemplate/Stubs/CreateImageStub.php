@@ -37,6 +37,7 @@ final class CreateImageStub implements CreateImage
         return new self(false);
     }
 
+    #[\Override]
     public function create(
         PdfTemplateImageIdentifier $identifier,
         string $filename,

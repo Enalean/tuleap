@@ -47,6 +47,7 @@ final class RetrieveMirroredProgramIncrementTrackerStub implements RetrieveMirro
         return new self(true, []);
     }
 
+    #[\Override]
     public function retrieveRootPlanningMilestoneTracker(
         ProjectReference $project,
         UserIdentifier $user_identifier,

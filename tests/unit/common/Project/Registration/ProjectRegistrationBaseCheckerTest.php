@@ -48,6 +48,7 @@ final class ProjectRegistrationBaseCheckerTest extends TestCase
      */
     private $rule_project_full_name;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

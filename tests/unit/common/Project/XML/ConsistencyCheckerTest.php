@@ -33,6 +33,7 @@ final class ConsistencyCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     private \EventManager&MockObject $event_manager;
     private \PluginFactory&MockObject $plugin_factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->event_manager = $this->createMock(\EventManager::class);

@@ -80,6 +80,7 @@ final class CardMappedFieldUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
     private \Cardwall_Column $done_column;
     private \Tuleap\Tracker\Tracker $tasks_tracker;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->mapped_list_field = $this->createMock(Tracker_FormElement_Field_Selectbox::class);

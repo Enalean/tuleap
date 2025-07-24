@@ -40,6 +40,7 @@ final class ProgramBlocksBacklogServiceIfNeededStub implements \Tuleap\ProgramMa
         return new self(false);
     }
 
+    #[\Override]
     public function shouldBacklogServiceBeBlocked(ProjectIdentifier $project_identifier): bool
     {
         return $this->should_block;

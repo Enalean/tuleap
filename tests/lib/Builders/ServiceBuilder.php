@@ -140,6 +140,7 @@ final class ServiceBuilder
         }
         $parameters['scope'] = Service::SCOPE_SYSTEM;
         return new class ($this->project, $parameters) extends Service {
+            #[\Override]
             public function getIconName(): string
             {
                 return $this->data['icon'];

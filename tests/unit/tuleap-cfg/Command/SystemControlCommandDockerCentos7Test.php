@@ -45,6 +45,7 @@ class SystemControlCommandDockerCentos7Test extends \Tuleap\Test\PHPUnit\TestCas
      */
     private $root;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->root            = vfsStream::setup('slash');
@@ -56,6 +57,7 @@ class SystemControlCommandDockerCentos7Test extends \Tuleap\Test\PHPUnit\TestCas
         mkdir($this->root->url() . '/etc/cron.d', 0755, true);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         parent::tearDown();

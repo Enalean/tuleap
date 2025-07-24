@@ -77,6 +77,7 @@ class UpdateVisibilityCheckerTest extends TestCase
                 /**
                  * @return UpdateVisibilityIsAllowedEvent
                  */
+                #[\Override]
                 public function dispatch(object $event)
                 {
                     return new UpdateVisibilityIsAllowedEvent(ProjectTestBuilder::aProject()->build());
@@ -102,6 +103,7 @@ class UpdateVisibilityCheckerTest extends TestCase
                 /**
                  * @return UpdateVisibilityIsAllowedEvent
                  */
+                #[\Override]
                 public function dispatch(object $event)
                 {
                     $event = new UpdateVisibilityIsAllowedEvent(ProjectTestBuilder::aProject()->build());
@@ -139,6 +141,7 @@ class UpdateVisibilityCheckerTest extends TestCase
                 /**
                  * @return void
                  */
+                #[\Override]
                 public function dispatch(object $event)
                 {
                     return;

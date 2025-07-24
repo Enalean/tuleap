@@ -40,6 +40,7 @@ final class UpdateProjectAccessFileSystemEventTest extends TestCase
     private EventDispatcherInterface&MockObject $event_dispatcher;
     private UpdateProjectAccessFileSystemEvent $system_event;
 
+    #[\Override]
     protected function setUp(): void
     {
         $backend_svn = $this->createMock(BackendSVN::class);
@@ -62,6 +63,7 @@ final class UpdateProjectAccessFileSystemEventTest extends TestCase
         $this->system_event->injectDependencies($this->project_manager, $this->event_dispatcher);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         Backend::clearInstances();

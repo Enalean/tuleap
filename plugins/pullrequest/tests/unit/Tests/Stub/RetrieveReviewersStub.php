@@ -41,6 +41,7 @@ final class RetrieveReviewersStub implements RetrieveReviewers
         return new self($reviewers);
     }
 
+    #[\Override]
     public function getReviewers(PullRequest $pull_request): array
     {
         return $this->reviewers;

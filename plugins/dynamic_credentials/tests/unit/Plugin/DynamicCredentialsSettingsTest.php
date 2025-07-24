@@ -34,6 +34,7 @@ final class DynamicCredentialsSettingsTest extends TestCase
 
     private DynamicCredentialsSettings $settings;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->settings = new DynamicCredentialsSettings();

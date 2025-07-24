@@ -40,6 +40,7 @@ final class ProviderManagerTest extends \Tuleap\Test\PHPUnit\TestCase
     private AzureADProviderManager&\PHPUnit\Framework\MockObject\MockObject $azure_provider_manager;
     private ProviderDao&\PHPUnit\Framework\MockObject\MockObject $provider_dao;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->generic_provider_manager = $this->createMock(GenericProviderManager::class);

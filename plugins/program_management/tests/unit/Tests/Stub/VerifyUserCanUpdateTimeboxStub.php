@@ -33,6 +33,7 @@ final class VerifyUserCanUpdateTimeboxStub implements VerifyUserCanUpdateTimebox
     {
     }
 
+    #[\Override]
     public function canUserUpdate(TimeboxIdentifier $timebox, UserIdentifier $user): bool
     {
         return $this->user_can_update;

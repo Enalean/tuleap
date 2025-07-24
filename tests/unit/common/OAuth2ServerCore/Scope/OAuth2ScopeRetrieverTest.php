@@ -44,6 +44,7 @@ final class OAuth2ScopeRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->scope_dao     = $this->createMock(OAuth2ScopeIdentifierSearcherDAO::class);

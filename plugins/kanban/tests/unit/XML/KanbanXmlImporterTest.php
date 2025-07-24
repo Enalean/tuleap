@@ -53,6 +53,7 @@ final class KanbanXmlImporterTest extends TestCase
     private TestLogger $logger;
     private TrackerReportUpdater&MockObject $tracker_report_updater;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

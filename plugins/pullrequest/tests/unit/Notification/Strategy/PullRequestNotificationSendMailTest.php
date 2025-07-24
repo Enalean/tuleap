@@ -52,6 +52,7 @@ final class PullRequestNotificationSendMailTest extends \Tuleap\Test\PHPUnit\Tes
 
     private PullRequestNotificationSendMail $notification_strategy;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->mail_builder                    = $this->createMock(\MailBuilder::class);
@@ -177,6 +178,7 @@ final class PullRequestNotificationSendMailTest extends \Tuleap\Test\PHPUnit\Tes
             /**
              * @psalm-mutation-free
              */
+            #[\Override]
             public function getPullRequest(): PullRequest
             {
                 return $this->pull_request;
@@ -185,6 +187,7 @@ final class PullRequestNotificationSendMailTest extends \Tuleap\Test\PHPUnit\Tes
             /**
              * @psalm-mutation-free
              */
+            #[\Override]
             public function getRecipients(): array
             {
                 return $this->recipients;
@@ -193,6 +196,7 @@ final class PullRequestNotificationSendMailTest extends \Tuleap\Test\PHPUnit\Tes
             /**
              * @psalm-mutation-free
              */
+            #[\Override]
             public function asPlaintext(): string
             {
                 return 'Plaintext mail body';
@@ -201,9 +205,11 @@ final class PullRequestNotificationSendMailTest extends \Tuleap\Test\PHPUnit\Tes
             /**
              * @psalm-mutation-free
              */
+            #[\Override]
             public function asEnhancedContent(): NotificationEnhancedContent
             {
                 return new class implements NotificationEnhancedContent {
+                    #[\Override]
                     public function toString(): string
                     {
                         return 'Markup content mail body';

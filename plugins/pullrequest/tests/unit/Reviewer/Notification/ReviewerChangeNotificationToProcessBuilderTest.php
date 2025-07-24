@@ -49,6 +49,7 @@ final class ReviewerChangeNotificationToProcessBuilderTest extends \Tuleap\Test\
 
     private ReviewerChangeNotificationToProcessBuilder $builder;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->reviewer_change_retriever = $this->createMock(ReviewerChangeRetriever::class);

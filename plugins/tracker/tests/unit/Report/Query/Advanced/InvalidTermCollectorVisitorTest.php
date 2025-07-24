@@ -110,6 +110,7 @@ final class InvalidTermCollectorVisitorTest extends \Tuleap\Test\PHPUnit\TestCas
     private ?Logical $parsed_query;
     private \UserManager&Stub $user_manager;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->tracker = TrackerTestBuilder::aTracker()->withId(self::TRACKER_ID)->build();

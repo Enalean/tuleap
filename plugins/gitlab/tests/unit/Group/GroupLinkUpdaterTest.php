@@ -44,6 +44,7 @@ final class GroupLinkUpdaterTest extends TestCase
     private ?bool $allow_artifact_closure;
     private ?GroupLinkApiToken $gitlab_token;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->branch_prefix_updater    = UpdateBranchPrefixOfGroupLinkStub::withCallCount();

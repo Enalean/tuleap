@@ -34,6 +34,7 @@ final class SynchronizedProjectMembershipProjectVisibilityTogglerTest extends \T
     private SynchronizedProjectMembershipProjectVisibilityToggler $toggler;
     private SynchronizedProjectMembershipDao $dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao     = $this->createMock(SynchronizedProjectMembershipDao::class);

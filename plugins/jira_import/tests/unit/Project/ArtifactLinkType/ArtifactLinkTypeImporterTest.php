@@ -45,6 +45,7 @@ final class ArtifactLinkTypeImporterTest extends \Tuleap\Test\PHPUnit\TestCase
             {
             }
 
+            #[\Override]
             public function getMissingArtifactLinkTypes(array $json_representation): ?TypePresenter
             {
                 return $this->type;
@@ -100,6 +101,7 @@ final class ArtifactLinkTypeImporterTest extends \Tuleap\Test\PHPUnit\TestCase
                 'creator' => new class implements TypeCreatorInterface
                 {
                     public array $natures = [];
+                    #[\Override]
                     public function createFromType(TypePresenter $type): void
                     {
                         throw new InvalidTypeParameterException();
@@ -135,6 +137,7 @@ final class ArtifactLinkTypeImporterTest extends \Tuleap\Test\PHPUnit\TestCase
         return new class implements TypeCreatorInterface
         {
             public array $natures = [];
+            #[\Override]
             public function createFromType(TypePresenter $type): void
             {
                 $this->natures[] = $type;

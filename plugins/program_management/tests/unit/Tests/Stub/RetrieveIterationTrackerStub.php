@@ -32,11 +32,13 @@ final class RetrieveIterationTrackerStub implements RetrieveIterationTracker
     {
     }
 
+    #[\Override]
     public function getIterationTrackerId(ProgramIdentifier $program_identifier): ?int
     {
         return $this->tracker_id;
     }
 
+    #[\Override]
     public function getIterationTrackerIdFromIteration(IterationIdentifier $iteration): int
     {
         if ($this->tracker_id === null) {

@@ -54,6 +54,7 @@ final class PlanConfigurationMapperTest extends TestCase
     private array $user_group_mapping;
     private ProgramForAdministrationIdentifier $new_program;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->new_program                 = ProgramForAdministrationIdentifierBuilder::buildWithId(

@@ -33,6 +33,7 @@ final class ProjectCreationDataServiceFromXmlInheritorTest extends \Tuleap\Test\
     private ProjectCreationDataServiceFromXmlInheritor $service_inheritor;
     private \ServiceManager&MockObject $service_manager;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->service_manager = $this->createMock(\ServiceManager::class);

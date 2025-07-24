@@ -35,6 +35,7 @@ final class CreateCommentStub implements \Tuleap\PullRequest\Comment\CreateComme
         return new self($inserted_id);
     }
 
+    #[\Override]
     public function create(NewComment $comment): int
     {
         return $this->inserted_id;

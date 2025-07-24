@@ -40,6 +40,7 @@ final class RetrieveFieldByIdStub implements RetrieveFieldById
         return new self($callback);
     }
 
+    #[\Override]
     public function getFieldById($field_id): ?Tracker_FormElement_Field
     {
         return ($this->callback)($field_id);

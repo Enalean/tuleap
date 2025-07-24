@@ -54,17 +54,20 @@ final class PasswordVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
             {
             }
 
+            #[\Override]
             public function verifyHashPassword(ConcealedString $plain_password, #[\SensitiveParameter]
             string $hash_password,): bool
             {
                 return true;
             }
 
+            #[\Override]
             public function computeHashPassword(ConcealedString $plain_password): string
             {
                 throw new \RuntimeException('Not expected to be called');
             }
 
+            #[\Override]
             public function isPasswordNeedRehash(#[\SensitiveParameter]
             string $hash_password,): bool
             {

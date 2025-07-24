@@ -77,6 +77,7 @@ final class AuthorizationEndpointControllerTest extends \Tuleap\Test\PHPUnit\Tes
      */
     private $consent_checker;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->form_renderer_builder      = $this->createMock(ConsentRequiredResponseBuilder::class);

@@ -48,6 +48,7 @@ final class BacklogBlocksProgramServiceIfNeededStub implements BacklogBlocksProg
         return new self(Option::nothing(string()));
     }
 
+    #[\Override]
     public function shouldProgramServiceBeBlocked(
         UserIdentifier $user_identifier,
         ProjectIdentifier $project_identifier,

@@ -80,12 +80,14 @@ final class UpdateAccountInformationControllerTest extends \Tuleap\Test\PHPUnit\
      */
     private $avatar_generator;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->event_manager = new class implements EventDispatcherInterface {
             public $disable_real_name_change = false;
             public $disable_email_change     = false;
 
+            #[\Override]
             public function dispatch(object $event)
             {
                 if ($event instanceof AccountInformationCollection) {

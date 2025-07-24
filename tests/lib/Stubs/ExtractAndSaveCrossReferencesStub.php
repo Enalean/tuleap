@@ -30,6 +30,7 @@ final class ExtractAndSaveCrossReferencesStub implements \Tuleap\Reference\Extra
     {
     }
 
+    #[\Override]
     public function extractCrossRef(
         mixed $html,
         int|string $source_id,

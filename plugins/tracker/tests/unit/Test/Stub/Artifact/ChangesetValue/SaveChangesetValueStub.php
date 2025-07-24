@@ -44,6 +44,7 @@ final class SaveChangesetValueStub implements SaveChangesetValue
         return new self(false);
     }
 
+    #[\Override]
     public function saveNewChangesetForField(\Tracker_FormElement_Field $field, Artifact $artifact, ?\Tracker_Artifact_Changeset $previous_changeset, array $fields_data, \PFUser $submitter, int $changeset_id, \Workflow $workflow, CreatedFileURLMapping $url_mapping,): bool
     {
         $this->count++;

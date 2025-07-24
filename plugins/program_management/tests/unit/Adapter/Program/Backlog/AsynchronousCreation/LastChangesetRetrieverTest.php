@@ -43,6 +43,7 @@ final class LastChangesetRetrieverTest extends TestCase
     private IterationIdentifier $iteration;
     private Artifact $artifact;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->changeset_factory = $this->createStub(\Tracker_Artifact_ChangesetFactory::class);

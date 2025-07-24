@@ -58,6 +58,7 @@ final class DaoTest extends TestCase
     private int $merged_pull_request_id;
     private int $abandoned_pull_request_id;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao                      = new Dao();
@@ -77,6 +78,7 @@ final class DaoTest extends TestCase
         $this->assignReviewerToPullRequest($this->abandoned_pull_request_id, self::BOB_USER_ID);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         $this->dao->deletePullRequestWithAllItsContent($this->open_pull_request_id);

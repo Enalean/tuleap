@@ -59,6 +59,7 @@ final class TaskTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
     private Tracker_ReportFactory $report_factory;
     private \Tracker_Report $tasks_report;
 
+    #[\Override]
     protected function setUp(): void
     {
         \Tuleap\Tracker\Semantic\Contributor\TrackerSemanticContributor::clearInstances();
@@ -66,6 +67,7 @@ final class TaskTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->report_factory       = Tracker_ReportFactory::instance();
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         if (isset($GLOBALS['_SESSION'])) {

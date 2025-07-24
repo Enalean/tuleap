@@ -33,6 +33,7 @@ final class CheckOngoingInitializationStatusStub implements CheckOngoingInitiali
         return new self($status);
     }
 
+    #[\Override]
     public function getStatus(\Project $project): OngoingInitializationStatus
     {
         return $this->status;

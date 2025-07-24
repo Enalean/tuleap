@@ -36,6 +36,7 @@ final class IGenerateMailConfirmationCodeStub implements IGenerateMailConfirmati
         return new self($code);
     }
 
+    #[\Override]
     public function getConfirmationCode(): string
     {
         return $this->code;

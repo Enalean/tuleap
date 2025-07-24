@@ -39,6 +39,7 @@ final class RetrieveLogsForTrackerStub implements RetrieveLogsForTracker
         return new self([]);
     }
 
+    #[\Override]
     public function searchLogsByTrackerId(int $tracker_id): array
     {
         return $this->logs;

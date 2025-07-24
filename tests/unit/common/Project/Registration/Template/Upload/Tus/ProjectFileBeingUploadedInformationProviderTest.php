@@ -45,6 +45,7 @@ final class ProjectFileBeingUploadedInformationProviderTest extends TestCase
     private SearchFileUploadByExpirationDateStub $file_upload_dao;
     private CurrentRequestUserProviderStub $current_user_provider;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->request = (new NullServerRequest())->withAttribute('id', self::FILE_ONGOING_UPLOAD_ID);

@@ -46,6 +46,7 @@ final class SearchOneSectionStub implements SearchOneSection
         return new self(Result::err(Fault::fromMessage('Section not found')));
     }
 
+    #[\Override]
     public function searchSectionById(SectionIdentifier $section_id): Ok|Err
     {
         return $this->result;

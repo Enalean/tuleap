@@ -43,6 +43,7 @@ final class VerifyIsProgramStub implements VerifyIsProgram
         return new self(false);
     }
 
+    #[\Override]
     public function isAProgram(int $project_id): bool
     {
         return $this->is_valid;

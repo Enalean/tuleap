@@ -50,6 +50,7 @@ final class MilestoneElementAdderTest extends TestCase
     private Tracker_ArtifactFactory&MockObject $artifact_factory;
     private UnplannedArtifactsAdder&MockObject $unplanned_artifact_adder;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->resources_patcher                   = $this->createMock(ResourcesPatcher::class);

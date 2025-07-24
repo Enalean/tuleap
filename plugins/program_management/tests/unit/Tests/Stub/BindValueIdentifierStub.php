@@ -41,6 +41,7 @@ final class BindValueIdentifierStub implements BindValueIdentifier
         return new self($id);
     }
 
+    #[\Override]
     public function getId(): int
     {
         return $this->id;

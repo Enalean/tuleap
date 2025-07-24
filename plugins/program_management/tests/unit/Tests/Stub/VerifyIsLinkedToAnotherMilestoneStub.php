@@ -41,6 +41,7 @@ final class VerifyIsLinkedToAnotherMilestoneStub implements VerifyIsLinkedToAnot
         return new self(false);
     }
 
+    #[\Override]
     public function isLinkedToASprintInMirroredProgramIncrement(
         int $artifact_id,
         int $release_tracker_id,

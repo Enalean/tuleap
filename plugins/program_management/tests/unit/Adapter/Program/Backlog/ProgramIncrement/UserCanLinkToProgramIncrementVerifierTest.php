@@ -41,6 +41,7 @@ final class UserCanLinkToProgramIncrementVerifierTest extends \Tuleap\Test\PHPUn
     private ProgramIncrementTrackerIdentifier $program_increment_tracker;
     private UserIdentifierStub $user;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->field                     = $this->createStub(\Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::class);

@@ -38,6 +38,7 @@ final class NotifyProjectImportStatusStub implements NotifyProjectImportStatus
         return new self();
     }
 
+    #[\Override]
     public function notify(\Project $project, \PFUser $project_admin, NotifyProjectImportMessage $message): void
     {
         $this->notified = true;

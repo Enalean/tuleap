@@ -33,6 +33,7 @@ final class BrowserUsageSessionsStatisticsRetrieverTest extends TestCase
     private $session_dao;
     private BrowserUsageSessionsStatisticsRetriever $retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->session_dao = $this->createStub(\SessionDao::class);

@@ -33,6 +33,7 @@ final class LineBreakHelperTest extends \Tuleap\Test\PHPUnit\TestCase
             {
             }
 
+            #[\Override]
             public function render($string)
             {
                 return $string;

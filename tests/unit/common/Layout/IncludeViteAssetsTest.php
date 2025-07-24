@@ -32,6 +32,7 @@ final class IncludeViteAssetsTest extends TestCase
 {
     private vfsStreamDirectory $assets_dir;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->assets_dir = vfsStream::setup();

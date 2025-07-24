@@ -36,6 +36,7 @@ final class ResponseFeedbackWrapperStub extends ResponseFeedbackWrapper
         return new self('');
     }
 
+    #[\Override]
     public function log($level, $msg, $purify = CODENDI_PURIFIER_CONVERT_HTML): void
     {
         $this->level = $level;

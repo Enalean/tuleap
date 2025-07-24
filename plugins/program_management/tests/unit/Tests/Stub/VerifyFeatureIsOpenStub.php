@@ -49,6 +49,7 @@ final class VerifyFeatureIsOpenStub implements VerifyFeatureIsOpen
         return new self(false, [$first_open, ...$other_open]);
     }
 
+    #[\Override]
     public function isFeatureOpen(FeatureIdentifier $feature): bool
     {
         if ($this->always_open) {

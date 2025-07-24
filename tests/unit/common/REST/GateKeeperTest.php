@@ -42,6 +42,7 @@ final class GateKeeperTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $gate_keeper;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user        = new PFUser(['user_id' => 112, 'language_id' => 'en']);
@@ -49,6 +50,7 @@ final class GateKeeperTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->gate_keeper = new GateKeeper();
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         unset($_SERVER['HTTP_REFERER'], $_SERVER['HTTP_SEC_FETCH_SITE'], $_SERVER['HTTP_SEC_FETCH_MODE']);

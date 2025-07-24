@@ -34,6 +34,7 @@ final class IterationIdentifierCollectionTest extends \Tuleap\Test\PHPUnit\TestC
     private const SECOND_ITERATION_ID = 540;
     private SearchIterationsStub $iteration_searcher;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->iteration_searcher = SearchIterationsStub::withIterations([

@@ -34,6 +34,7 @@ final class ProjectServiceBeforeActivationProxyTest extends TestCase
     private ProjectServiceBeforeActivationProxy $proxy;
     private ProjectServiceBeforeActivation $event;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->event = new ProjectServiceBeforeActivation(

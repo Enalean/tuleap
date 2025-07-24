@@ -46,6 +46,7 @@ final class TemplateFromProjectForCreationTest extends TestCase
      */
     private $url_verification;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->project_manager  = $this->createMock(ProjectManager::class);

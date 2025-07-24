@@ -30,6 +30,7 @@ final class DeleteUnusedFilesStub implements DeleteUnusedFiles
     {
     }
 
+    #[\Override]
     public function deleteUnusableFile(\DateTimeImmutable $current_time): void
     {
         $this->call_count++;

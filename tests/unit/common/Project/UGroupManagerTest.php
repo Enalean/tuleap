@@ -48,6 +48,7 @@ final class UGroupManagerTest extends \Tuleap\Test\PHPUnit\TestCase
     private UGroupUserDao&MockObject $user_group_user_dao;
     private DynamicUGroupMembersUpdater&MockObject $dynamic_user_group_member_updater;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user_group_dao      = $this->createMock(UGroupDao::class);

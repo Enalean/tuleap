@@ -42,6 +42,7 @@ final class AccessiblePullRequestRESTRetrieverTest extends TestCase
     private SearchPullRequestStub $pull_request_dao;
     private CheckUserCanAccessPullRequestStub $permission_checker;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->pull_request_dao   = SearchPullRequestStub::withAtLeastOnePullRequest(PullRequestTestBuilder::aPullRequestInReview()->build());

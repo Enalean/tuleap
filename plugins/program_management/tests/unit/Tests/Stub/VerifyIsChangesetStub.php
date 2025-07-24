@@ -33,6 +33,7 @@ final class VerifyIsChangesetStub implements VerifyIsChangeset
         $this->is_valid = $is_valid;
     }
 
+    #[\Override]
     public function isChangeset(int $changeset_id): bool
     {
         return $this->is_valid;

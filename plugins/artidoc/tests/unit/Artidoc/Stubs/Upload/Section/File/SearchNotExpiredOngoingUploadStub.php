@@ -51,6 +51,7 @@ final class SearchNotExpiredOngoingUploadStub implements SearchNotExpiredOngoing
         return new self(null, true);
     }
 
+    #[\Override]
     public function searchNotExpiredOngoingUpload(FileIdentifier $id, int $user_id, \DateTimeImmutable $current_time): Ok|Err
     {
         if ($this->should_raise_exception) {

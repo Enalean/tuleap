@@ -31,6 +31,7 @@ final class TeamSynchronizationEventProxyTest extends \Tuleap\Test\PHPUnit\TestC
 {
     private TestLogger $logger;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->logger = new TestLogger();

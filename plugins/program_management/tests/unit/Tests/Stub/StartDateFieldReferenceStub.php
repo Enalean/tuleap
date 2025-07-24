@@ -43,11 +43,13 @@ final class StartDateFieldReferenceStub implements StartDateFieldReference
         return new self($id, 'Start Date');
     }
 
+    #[\Override]
     public function getId(): int
     {
         return $this->id;
     }
 
+    #[\Override]
     public function getLabel(): string
     {
         return $this->label;

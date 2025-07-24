@@ -33,46 +33,55 @@ use Tuleap\Baseline\Domain\UserIdentifier;
 
 final class ReaderAuthorizationsStub implements Authorizations
 {
+    #[\Override]
     public function canCreateBaseline(UserIdentifier $current_user, TransientBaseline $baseline): bool
     {
         return false;
     }
 
+    #[\Override]
     public function canDeleteBaseline(UserIdentifier $current_user, Baseline $baseline): bool
     {
         return false;
     }
 
+    #[\Override]
     public function canReadBaseline(UserIdentifier $current_user, Baseline $baseline): bool
     {
         return true;
     }
 
+    #[\Override]
     public function canReadBaselinesOnProject(UserIdentifier $current_user, ProjectIdentifier $project): bool
     {
         return true;
     }
 
+    #[\Override]
     public function canCreateComparison(UserIdentifier $current_user, TransientComparison $comparison): bool
     {
         return false;
     }
 
+    #[\Override]
     public function canReadComparison(UserIdentifier $current_user, Comparison $comparison): bool
     {
         return true;
     }
 
+    #[\Override]
     public function canReadComparisonsOnProject(UserIdentifier $current_user, ProjectIdentifier $project): bool
     {
         return true;
     }
 
+    #[\Override]
     public function canDeleteComparison(UserIdentifier $current_user, Comparison $comparison): bool
     {
         return false;
     }
 
+    #[\Override]
     public function canUserAdministrateBaselineOnProject(UserIdentifier $current_user, ProjectIdentifier $project): bool
     {
         return false;

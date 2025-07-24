@@ -60,11 +60,13 @@ class TemplateRendererFactoryBuilder
                 $this->path = $path;
             }
 
+            #[\Override]
             public function getPath(): ?string
             {
                 return $this->path;
             }
 
+            #[\Override]
             public function invalidate(): void
             {
             }

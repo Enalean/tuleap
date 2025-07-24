@@ -37,6 +37,7 @@ final class RetrieveOpenFeatureCountStub implements RetrieveOpenFeatureCount
         return new self($open_feature_count);
     }
 
+    #[\Override]
     public function retrieveOpenFeaturesCount(ProgramIdentifier ...$program_identifiers): int
     {
         return $this->open_feature_count;

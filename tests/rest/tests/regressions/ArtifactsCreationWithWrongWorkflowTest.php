@@ -20,10 +20,11 @@
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 #[\PHPUnit\Framework\Attributes\Group('Regressions')]
-class ArtifactsCreationWithWrongWorkflowTest extends RestBase
+class ArtifactsCreationWithWrongWorkflowTest extends RestBase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     private \Test\Rest\Tracker\TrackerFactory $tracker_test_helper;
 
+    #[\Override]
     public function setUp(): void
     {
         parent::setUp();

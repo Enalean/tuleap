@@ -38,6 +38,7 @@ final class OrderFeatureRankStub implements OrderFeatureRank
         return new self(0);
     }
 
+    #[\Override]
     public function reorder(FeaturesToReorder $order, string $context_id, ProgramIdentifier $program): void
     {
         $this->call_count++;

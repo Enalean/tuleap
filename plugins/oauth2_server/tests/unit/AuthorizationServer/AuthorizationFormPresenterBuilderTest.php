@@ -37,6 +37,7 @@ final class AuthorizationFormPresenterBuilderTest extends \Tuleap\Test\PHPUnit\T
      */
     private $builder;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->builder = new AuthorizationFormPresenterBuilder(
@@ -48,11 +49,13 @@ final class AuthorizationFormPresenterBuilderTest extends \Tuleap\Test\PHPUnit\T
     {
         $foobar_identifier = OAuth2ScopeIdentifier::fromIdentifierKey('foo:bar');
         $foobar_definition = new /** @psalm-immutable */ class implements AuthenticationScopeDefinition {
+            #[\Override]
             public function getName(): string
             {
                 return 'Foo Bar';
             }
 
+            #[\Override]
             public function getDescription(): string
             {
                 return 'Test scope';
@@ -63,11 +66,13 @@ final class AuthorizationFormPresenterBuilderTest extends \Tuleap\Test\PHPUnit\T
         $foobar_scope->expects($this->once())->method('getIdentifier')->willReturn($foobar_identifier);
         $typevalue_identifier = OAuth2ScopeIdentifier::fromIdentifierKey('type:value');
         $typevalue_definition = new /** @psalm-immutable */ class implements AuthenticationScopeDefinition {
+            #[\Override]
             public function getName(): string
             {
                 return 'Type Value';
             }
 
+            #[\Override]
             public function getDescription(): string
             {
                 return 'Other test scope';

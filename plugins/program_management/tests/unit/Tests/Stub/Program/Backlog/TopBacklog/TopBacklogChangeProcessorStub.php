@@ -40,6 +40,7 @@ final class TopBacklogChangeProcessorStub implements \Tuleap\ProgramManagement\D
         return new self();
     }
 
+    #[\Override]
     public function processTopBacklogChangeForAProgram(
         ProgramIdentifier $program,
         TopBacklogChange $top_backlog_change,

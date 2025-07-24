@@ -35,6 +35,7 @@ final class SSHKeyDeleteControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     private \UserManager&MockObject $user_manager;
     private SSHKeyDeleteController $controller;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->csrf_token   = $this->createMock(\CSRFSynchronizerToken::class);

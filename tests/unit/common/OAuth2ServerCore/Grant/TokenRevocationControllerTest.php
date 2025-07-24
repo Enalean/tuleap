@@ -50,6 +50,7 @@ final class TokenRevocationControllerTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $access_token_revoker;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->refresh_token_revoker = $this->createMock(OAuth2RefreshTokenRevoker::class);

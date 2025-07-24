@@ -33,6 +33,7 @@ final class UserStatusCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     private UserStatusChecker $status_checker;
 
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

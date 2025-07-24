@@ -38,6 +38,7 @@ final class IUpdateDocumentServerStub implements IUpdateDocumentServer
         return new self();
     }
 
+    #[\Override]
     public function update(string $uuid_hex, string $url, ConcealedString $secret_key): void
     {
         $this->has_been_updated = true;

@@ -26,11 +26,13 @@ use Tuleap\Cryptography\ConcealedString;
 
 final class ConfigSetTestSecretValidator implements SecretValidator
 {
+    #[\Override]
     public static function buildSelf(): self
     {
         return new self();
     }
 
+    #[\Override]
     public function checkIsValid(ConcealedString $value): void
     {
         throw new InvalidConfigKeyValueException('Invalid secret');

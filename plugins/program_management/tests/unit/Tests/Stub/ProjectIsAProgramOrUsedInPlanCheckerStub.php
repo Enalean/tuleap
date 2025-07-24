@@ -45,6 +45,7 @@ final class ProjectIsAProgramOrUsedInPlanCheckerStub implements ProjectIsAProgra
         return new self(true, true);
     }
 
+    #[\Override]
     public function ensureProjectIsAProgramOrIsPartOfPlan(int $project_id, UserIdentifier $user): void
     {
         if (! $this->is_a_program) {

@@ -49,6 +49,7 @@ final class PreRevpropChangeTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private PreRevpropChange $hook;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -74,6 +75,7 @@ final class PreRevpropChangeTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
+    #[\Override]
     public function tearDown(): void
     {
         parent::tearDown();

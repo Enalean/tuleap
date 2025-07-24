@@ -36,6 +36,7 @@ final class CrossReferenceNewsOrganizerTest extends \Tuleap\Test\PHPUnit\TestCas
     private CrossReferenceNewsOrganizer $organizer;
     private NewsRetriever&MockObject $news_retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->news_retriever = $this->createMock(NewsRetriever::class);

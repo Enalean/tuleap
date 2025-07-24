@@ -35,6 +35,7 @@ final class WebAuthnCredentialSourceDaoTest extends TestIntegrationTestCase
 
     private const USER_ID = 101;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao = new WebAuthnCredentialSourceDao();

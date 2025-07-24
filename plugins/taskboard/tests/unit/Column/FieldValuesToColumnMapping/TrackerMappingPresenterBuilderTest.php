@@ -53,6 +53,7 @@ final class TrackerMappingPresenterBuilderTest extends \Tuleap\Test\PHPUnit\Test
     private \Planning_Milestone $milestone;
     private \Cardwall_Column $ongoing_column;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->search_mapped_field = SearchMappedFieldStub::withNoField();

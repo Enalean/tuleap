@@ -37,6 +37,7 @@ final class AllowedFieldRetrieverTest extends TestCase
     private AllowedFieldRetriever $allowed_field_retriever;
     private Tracker_FormElementFactory&MockObject $form_element_factory;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->checker                 = $this->createMock(FieldUsedInSemanticObjectChecker::class);

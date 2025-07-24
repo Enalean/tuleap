@@ -34,6 +34,7 @@ final class UpdateVisibilityCheckerTest extends TestCase
     private UpdateVisibilityChecker $checker;
     private MockObject&ProjectOwnerRetriever $project_owner_retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

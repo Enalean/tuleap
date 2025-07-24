@@ -40,6 +40,7 @@ final class SVNTokenBasedAuthenticationMethodTest extends TestCase
     private $token_handler;
     private SVNTokenBasedAuthenticationMethod $auth_method;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user_provider = $this->createStub(SVNLoginNameUserProvider::class);

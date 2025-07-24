@@ -43,11 +43,13 @@ final class DurationFieldReferenceStub implements DurationFieldReference
         return new self($id, 'Duration');
     }
 
+    #[\Override]
     public function getId(): int
     {
         return $this->id;
     }
 
+    #[\Override]
     public function getLabel(): string
     {
         return $this->label;

@@ -45,6 +45,7 @@ final class ProjectServiceActivatorTest extends \Tuleap\Test\PHPUnit\TestCase
     private ServiceCreator&MockObject $service_creator;
     private ReferenceManager&MockObject $reference_manager;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->service_creator   = $this->createMock(ServiceCreator::class);

@@ -71,6 +71,7 @@ final class WebAuthnCredentialSourceDaoStub implements PublicKeyCredentialSource
         return $this;
     }
 
+    #[\Override]
     public function findOneByCredentialId(string $publicKeyCredentialId): ?PublicKeyCredentialSource
     {
         if ($this->source !== null && $this->source->publicKeyCredentialId === $publicKeyCredentialId) {
@@ -94,6 +95,7 @@ final class WebAuthnCredentialSourceDaoStub implements PublicKeyCredentialSource
         return null;
     }
 
+    #[\Override]
     public function findAllForUserEntity(PublicKeyCredentialUserEntity $publicKeyCredentialUserEntity): array
     {
         return array_map(
@@ -112,16 +114,19 @@ final class WebAuthnCredentialSourceDaoStub implements PublicKeyCredentialSource
         );
     }
 
+    #[\Override]
     public function saveCredentialSource(PublicKeyCredentialSource $publicKeyCredentialSource): void
     {
         $this->sources_id[] = $publicKeyCredentialSource->publicKeyCredentialId;
     }
 
+    #[\Override]
     public function changeCredentialSourceName(string $public_key_credential_id, string $name): void
     {
         $this->sources_name[$public_key_credential_id] = $name;
     }
 
+    #[\Override]
     public function saveCredentialSourceWithName(PublicKeyCredentialSource $publicKeyCredentialSource, string $name): void
     {
         $this->sources_id[] = $publicKeyCredentialSource->publicKeyCredentialId;
@@ -129,6 +134,7 @@ final class WebAuthnCredentialSourceDaoStub implements PublicKeyCredentialSource
         $this->sources_name[$publicKeyCredentialSource->publicKeyCredentialId] = $name;
     }
 
+    #[\Override]
     public function getAllByUserId(int $user_id): array
     {
         $time = new \DateTimeImmutable();
@@ -143,6 +149,7 @@ final class WebAuthnCredentialSourceDaoStub implements PublicKeyCredentialSource
         );
     }
 
+    #[\Override]
     public function deleteCredentialSource(string $public_key_credential_id): void
     {
         if ($this->source !== null && $this->source->publicKeyCredentialId === $public_key_credential_id) {
@@ -155,6 +162,7 @@ final class WebAuthnCredentialSourceDaoStub implements PublicKeyCredentialSource
         }
     }
 
+    #[\Override]
     public function getCredentialSourceById(string $public_key_credential_id): Option
     {
         $source = $this->findOneByCredentialId($public_key_credential_id);

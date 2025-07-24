@@ -51,6 +51,7 @@ final class TeamCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     private SearchTeamsOfProgramStub $search_teams_of_program;
     private RetrieveProjectReferenceStub $retrieve_project_reference;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->project_retriever          = RetrieveProjectStub::withValidProjects(ProjectIdentifierStub::buildWithId(self::PROGRAM_ID));

@@ -87,6 +87,7 @@ final class DuckTypedFieldCheckerTest extends TestCase
     private RetrieveUsedFieldsStub $fields_retriever;
     private RetrieveUserPermissionOnFieldsStub $user_permission_on_fields;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->first_tracker             = TrackerTestBuilder::aTracker()->withId(86)->build();

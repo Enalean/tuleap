@@ -46,6 +46,7 @@ final class UserCanPlanInProgramIncrementVerifierTest extends \Tuleap\Test\PHPUn
     private SearchVisibleTeamsOfProgramStub $team_searcher;
     private BuildProgramStub $program_builder;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->update_verifier = VerifyUserCanUpdateTimeboxStub::withAllowed();

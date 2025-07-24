@@ -39,6 +39,7 @@ final class SearchStatusOpenValuesStub implements SearchStatusOpenValues
         return new self($callback);
     }
 
+    #[\Override]
     public function searchOpenValuesByFieldId(int $field_id): array
     {
         return ($this->callback)($field_id);

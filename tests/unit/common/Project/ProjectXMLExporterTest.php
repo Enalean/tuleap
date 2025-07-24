@@ -60,6 +60,7 @@ final class ProjectXMLExporterTest extends TestCase
     private ArchiveInterface&MockObject $archive;
     private DashboardXMLExporter&MockObject $dashboard_exporter;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->event_manager  = $this->createMock(EventManager::class);

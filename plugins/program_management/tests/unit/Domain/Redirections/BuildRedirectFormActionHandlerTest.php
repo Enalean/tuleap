@@ -35,6 +35,7 @@ final class BuildRedirectFormActionHandlerTest extends TestCase
     private ProgramRedirectionParameters $program_redirection_parameters;
     private IterationRedirectionParameters $iteration_redirection_parameters;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->program_redirection_parameters   = ProgramRedirectionParametersStub::withOtherValue();

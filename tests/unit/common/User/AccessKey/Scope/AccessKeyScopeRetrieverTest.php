@@ -44,6 +44,7 @@ final class AccessKeyScopeRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->scope_dao         = $this->createMock(AccessKeyScopeDAO::class);

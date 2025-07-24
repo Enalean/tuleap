@@ -56,6 +56,7 @@ final class DeleteControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     private ProjectAdministratorChecker&MockObject $administrator_checker;
     private \PFUser $project_admin;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->project_admin         = UserTestBuilder::buildWithDefaults();

@@ -37,6 +37,7 @@ final class TrackerAdministratorNotificationSenderStub implements TrackerAdminis
         return new self();
     }
 
+    #[\Override]
     public function sendNotificationToTrackerAdministrator(\Tracker_Artifact_Changeset $changeset): void
     {
         $this->called = true;

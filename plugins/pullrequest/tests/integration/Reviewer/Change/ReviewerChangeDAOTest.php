@@ -36,6 +36,7 @@ final class ReviewerChangeDAOTest extends TestIntegrationTestCase
     /** @var int */
     private static $pr_reviewer_3_id;
 
+    #[\Override]
     protected function setUp(): void
     {
         self::$pr_reviewer_1_id = $this->createUser('pr_reviewer_1');

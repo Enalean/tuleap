@@ -49,6 +49,7 @@ final class OAuth2AccessTokenCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $token_creator;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->access_token_dao = $this->createMock(OAuth2AccessTokenDAO::class);
@@ -56,6 +57,7 @@ final class OAuth2AccessTokenCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $formatter = new class implements SplitTokenFormatter
         {
+            #[\Override]
             public function getIdentifier(SplitToken $token): ConcealedString
             {
                 return $token->getVerificationString()->getString();

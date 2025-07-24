@@ -43,6 +43,7 @@ class ForgeConfigTest extends \Tuleap\Test\PHPUnit\TestCase
     use ForgeConfigSandbox;
     use GlobalLanguageMock;
 
+    #[\Override]
     protected function tearDown(): void
     {
         putenv('TULEAP_LOCAL_INC');
@@ -248,6 +249,7 @@ class ForgeConfigTest extends \Tuleap\Test\PHPUnit\TestCase
         $dao->method('searchAll')->willReturn([['name' => 'a_var', 'value' => 'its_value']]);
 
         (new class extends ForgeConfig {
+            #[\Override]
             public static function load(ConfigValueProvider $value_provider): void
             {
                 parent::load($value_provider);

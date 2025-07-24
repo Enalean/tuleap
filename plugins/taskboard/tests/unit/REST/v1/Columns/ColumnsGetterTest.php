@@ -39,6 +39,7 @@ final class ColumnsGetterTest extends \Tuleap\Test\PHPUnit\TestCase
     private MilestoneIsAllowedChecker&MockObject $milestone_checker;
     private \Cardwall_OnTop_ColumnDao&MockObject $column_dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user_manager      = $this->createMock(UserManager::class);

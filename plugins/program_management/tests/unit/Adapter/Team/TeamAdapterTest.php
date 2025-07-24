@@ -50,6 +50,7 @@ final class TeamAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
     private \Project $team_project;
     private CheckUserCanAccessProjectAndIsAdmin $url_verification;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->explicit_backlog_dao = $this->createStub(ExplicitBacklogDao::class);
@@ -69,6 +70,7 @@ final class TeamAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
         $GLOBALS['Language']->method('getText')->willReturn('');
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         unset($_SERVER['REQUEST_URI']);

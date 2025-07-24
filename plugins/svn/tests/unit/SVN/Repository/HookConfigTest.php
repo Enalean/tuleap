@@ -35,6 +35,7 @@ class HookConfigTest extends \Tuleap\Test\PHPUnit\TestCase
     private HookConfigUpdator $hook_updater;
     private \ProjectHistoryDao&\PHPUnit\Framework\MockObject\MockObject $project_history_dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -71,6 +72,7 @@ class HookConfigTest extends \Tuleap\Test\PHPUnit\TestCase
         $hook_checker->method('hasConfigurationChanged')->willReturn(true);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         ProjectManager::clearInstance();

@@ -34,11 +34,13 @@ use Tuleap\Cryptography\ConcealedString;
 
 final class PreventConcealedStringMisuses implements MethodReturnTypeProviderInterface, AfterStatementAnalysisInterface
 {
+    #[\Override]
     public static function getClassLikeNames(): array
     {
         return [ConcealedString::class];
     }
 
+    #[\Override]
     public static function getMethodReturnType(MethodReturnTypeProviderEvent $event): ?Type\Union
     {
         if ($event->getMethodNameLowercase() === 'getstring') {
@@ -48,6 +50,7 @@ final class PreventConcealedStringMisuses implements MethodReturnTypeProviderInt
         return null;
     }
 
+    #[\Override]
     public static function afterStatementAnalysis(AfterStatementAnalysisEvent $event): ?bool
     {
         $stmt = $event->getStmt();

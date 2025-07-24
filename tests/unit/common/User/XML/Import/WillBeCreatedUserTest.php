@@ -37,6 +37,7 @@ final class WillBeCreatedUserTest extends \Tuleap\Test\PHPUnit\TestCase
     private UserManager&MockObject $user_manager;
     private LoggerInterface $logger;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

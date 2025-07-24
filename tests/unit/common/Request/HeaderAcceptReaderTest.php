@@ -33,6 +33,7 @@ final class HeaderAcceptReaderTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $request;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->request = $this->createMock(\HTTPRequest::class);

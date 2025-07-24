@@ -40,6 +40,7 @@ final class UpdateGitPullRequestReferenceStub implements UpdateGitPullRequestRef
      * @throws \Git_Command_Exception
      * @throws GitReferenceNotFound
      */
+    #[\Override]
     public function updatePullRequestReference(PullRequest $pull_request, GitExec $executor_repository_source, GitExec $executor_repository_destination, GitRepository $repository_destination,): void
     {
         $this->update_pull_request_reference_call_count++;

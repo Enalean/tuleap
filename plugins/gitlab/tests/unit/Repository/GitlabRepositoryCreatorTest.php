@@ -67,6 +67,7 @@ final class GitlabRepositoryCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $token_inserter;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

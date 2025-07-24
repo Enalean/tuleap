@@ -40,6 +40,7 @@ final class SearchLinkedArtifactsStub implements SearchLinkedArtifacts
         return new self(false);
     }
 
+    #[\Override]
     public function doesArtifactHaveMirroredMilestonesInProvidedLinks(int $artifact_id, array $submitted_links_to_check): bool
     {
         return $this->has_mirrored_milestones;

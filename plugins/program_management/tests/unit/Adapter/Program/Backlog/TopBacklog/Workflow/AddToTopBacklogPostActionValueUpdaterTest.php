@@ -41,6 +41,7 @@ final class AddToTopBacklogPostActionValueUpdaterTest extends \Tuleap\Test\PHPUn
     private DeletePostActionStub $delete_post_action;
     private CreatePostActionStub $create_post_action;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->delete_post_action = DeletePostActionStub::withCount();
@@ -74,6 +75,7 @@ final class AddToTopBacklogPostActionValueUpdaterTest extends \Tuleap\Test\PHPUn
     private static function buildOtherPostAction(): PostAction
     {
         return new class implements PostAction {
+            #[\Override]
             public function accept(PostActionVisitor $visitor): void
             {
             }

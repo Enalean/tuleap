@@ -40,6 +40,7 @@ final class ClientInterfaceWithSeveralCallsStub implements ClientInterface
     /**
      * @throws Exception
      */
+    #[\Override]
     public function sendRequest(RequestInterface $request): ResponseInterface
     {
         $this->number_of_call++;

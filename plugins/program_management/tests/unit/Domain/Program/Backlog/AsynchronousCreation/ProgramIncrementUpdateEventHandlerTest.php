@@ -42,6 +42,7 @@ final class ProgramIncrementUpdateEventHandlerTest extends \Tuleap\Test\PHPUnit\
     private ProcessIterationCreationStub $iteration_processor;
     private ProgramIncrementUpdateEventStub $event;
 
+    #[\Override]
     protected function setUp(): void
     {
         $first_iteration  = PendingIterationCreationBuilder::buildWithIds(196, 5457);

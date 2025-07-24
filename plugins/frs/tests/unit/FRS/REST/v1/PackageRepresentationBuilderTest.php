@@ -51,6 +51,7 @@ final class PackageRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestCa
      */
     private $frs_permissions_manager;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->package_id              = 12;

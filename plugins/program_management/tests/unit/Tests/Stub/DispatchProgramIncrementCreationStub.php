@@ -36,6 +36,7 @@ final class DispatchProgramIncrementCreationStub implements DispatchProgramIncre
         return new self(0);
     }
 
+    #[\Override]
     public function dispatchCreation(ProgramIncrementCreation $creation): void
     {
         $this->call_count++;

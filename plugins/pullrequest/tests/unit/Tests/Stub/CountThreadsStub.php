@@ -39,6 +39,7 @@ final class CountThreadsStub implements \Tuleap\PullRequest\Comment\CountThreads
         return new self($number_of_threads);
     }
 
+    #[\Override]
     public function countAllThreadsOfPullRequest(int $id): int
     {
         return $this->number_of_threads;

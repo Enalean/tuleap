@@ -59,6 +59,7 @@ final class PullRequestPermissionCheckerTest extends \Tuleap\Test\PHPUnit\TestCa
      */
     private $repository;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

@@ -33,6 +33,7 @@ final class MeilisearchMetadataDAOTest extends TestIntegrationTestCase
 {
     private MeilisearchMetadataDAO $dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao = new MeilisearchMetadataDAO();

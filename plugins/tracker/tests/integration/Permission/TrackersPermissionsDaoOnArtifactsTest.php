@@ -44,6 +44,7 @@ final class TrackersPermissionsDaoOnArtifactsTest extends TestIntegrationTestCas
      */
     private array $artifacts;
 
+    #[\Override]
     protected function setUp(): void
     {
         $db              = DBFactory::getMainTuleapDBConnection()->getDB();

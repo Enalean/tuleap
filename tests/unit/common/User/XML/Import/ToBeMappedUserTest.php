@@ -28,6 +28,7 @@ final class ToBeMappedUserTest extends \Tuleap\Test\PHPUnit\TestCase
     /** @var ToBeMappedUser */
     private $user;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

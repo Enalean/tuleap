@@ -43,6 +43,7 @@ final class BuildUpdateTemplateRequestMiddlewareTest extends TestCase
 {
     use GlobalLanguageMock;
 
+    #[\Override]
     protected function setUp(): void
     {
         $GLOBALS['Language']

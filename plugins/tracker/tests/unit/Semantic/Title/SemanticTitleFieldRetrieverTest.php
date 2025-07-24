@@ -39,6 +39,7 @@ final class SemanticTitleFieldRetrieverTest extends TestCase
     private TextField $title_field;
     private Tracker $tracker;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->tracker     = TrackerTestBuilder::aTracker()->withId(12)->build();

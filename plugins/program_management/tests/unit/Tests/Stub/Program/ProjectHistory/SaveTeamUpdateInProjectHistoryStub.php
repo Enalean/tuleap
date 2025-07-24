@@ -44,6 +44,7 @@ final class SaveTeamUpdateInProjectHistoryStub implements SaveTeamUpdateInProjec
         return $this->call_count;
     }
 
+    #[\Override]
     public function logTeamUpdate(ProgramForAdministrationIdentifier $program, UserReference $user_identifier, TeamProjectsCollection $teams, TeamCollection $new_teams): void
     {
         $this->call_count++;

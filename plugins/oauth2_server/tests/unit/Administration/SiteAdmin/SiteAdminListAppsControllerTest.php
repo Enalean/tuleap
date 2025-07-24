@@ -55,6 +55,7 @@ final class SiteAdminListAppsControllerTest extends \Tuleap\Test\PHPUnit\TestCas
      */
     private $controller;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->admin_page_renderer = $this->createMock(AdminPageRenderer::class);

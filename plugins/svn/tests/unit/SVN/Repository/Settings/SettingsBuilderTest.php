@@ -46,6 +46,7 @@ final class SettingsBuilderTest extends TestCase
     private UserGroupRetriever&\PHPUnit\Framework\MockObject\MockObject $ugroup_retriever;
     private RetrieveUserByIdStub $user_manager;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

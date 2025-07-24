@@ -171,24 +171,29 @@ final class LDAPGroupManagerTest extends \Tuleap\Test\PHPUnit\TestCase
                 parent::__construct($ldap, $ldap_user_manager, $project_manager, $notifications_manager, new NullLogger());
             }
 
+            #[\Override]
             protected function addUserToGroup($id, $userId): void
             {
             }
 
+            #[\Override]
             protected function removeUserFromGroup($id, $userId): void
             {
             }
 
+            #[\Override]
             public function getLdapGroupMembersIds($groupDn): array
             {
                 return [101, 102];
             }
 
+            #[\Override]
             protected function getDbGroupMembersIds($id): array
             {
                 return [];
             }
 
+            #[\Override]
             protected function getDao(): LDAP_ProjectGroupDao
             {
                 return $this->dao;

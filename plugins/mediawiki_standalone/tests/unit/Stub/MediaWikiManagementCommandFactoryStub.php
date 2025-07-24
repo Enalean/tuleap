@@ -53,21 +53,25 @@ final class MediaWikiManagementCommandFactoryStub implements MediaWikiManagement
         );
     }
 
+    #[\Override]
     public function buildInstallCommand(): MediaWikiManagementCommand
     {
         return $this->install_command;
     }
 
+    #[\Override]
     public function buildFarmInstanceConfigurationUpdate(): MediaWikiManagementCommand
     {
         return $this->farm_instance_configuration_update;
     }
 
+    #[\Override]
     public function buildUpdateFarmInstanceCommand(): MediaWikiManagementCommand
     {
         return $this->update_farm_command;
     }
 
+    #[\Override]
     public function buildUpdateProjectInstanceCommand(string $project_name): MediaWikiManagementCommand
     {
         $command = $this->update_instance_commands_iterator->current();
@@ -75,6 +79,7 @@ final class MediaWikiManagementCommandFactoryStub implements MediaWikiManagement
         return $command;
     }
 
+    #[\Override]
     public function buildUpdateToMediaWiki135ProjectInstanceCommand(string $project_name): MediaWikiManagementCommand
     {
         return $this->buildUpdateProjectInstanceCommand($project_name);

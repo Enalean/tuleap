@@ -33,11 +33,13 @@ final class RetrieveGitRepositoryStub implements RetrieveGitRepository
     {
     }
 
+    #[\Override]
     public function getRepositoryById(int $id): ?GitRepository
     {
         return $this->git_repository;
     }
 
+    #[\Override]
     public function getRepositoryByIdUserCanSee(PFUser $user, int $id): GitRepository
     {
         if (! $this->git_repository) {

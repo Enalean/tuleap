@@ -71,6 +71,7 @@ final class ProgramIncrementUpdateProcessorTest extends \Tuleap\Test\PHPUnit\Tes
     private AddChangesetStub $changeset_adder;
     private ProgramIncrementUpdate $update;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->update = ProgramIncrementUpdateBuilder::buildWithIds(

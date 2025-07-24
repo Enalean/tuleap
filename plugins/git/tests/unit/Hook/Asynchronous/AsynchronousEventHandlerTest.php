@@ -50,6 +50,7 @@ final class AsynchronousEventHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
     private EventDispatcherStub $event_dispatcher;
     private RetrieveCommitMessageStub $commit_message_retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         $project     = ProjectTestBuilder::aProject()->withId(198)->build();

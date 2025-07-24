@@ -34,12 +34,14 @@ class ConvertAddHookToAttributesRuleTest extends AbstractRectorTestCase
 
     private array $globals = [];
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->globals = $GLOBALS;
         parent::setUp();
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         parent::tearDown();
@@ -59,6 +61,7 @@ class ConvertAddHookToAttributesRuleTest extends AbstractRectorTestCase
         $this->doTestFile($this->getTmpDir() . '/plugin-with-add-hook-calls.php.inc');
     }
 
+    #[\Override]
     public function provideConfigFilePath(): string
     {
         return __DIR__ . '/config/configured_rule.php';

@@ -39,6 +39,7 @@ final class PendingProgramIncrementUpdateRepresentationTest extends \Tuleap\Test
     private const USER_ID                            = 199;
     private ProgramIncrementUpdate $update;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->update = ProgramIncrementUpdateBuilder::buildWithIds(

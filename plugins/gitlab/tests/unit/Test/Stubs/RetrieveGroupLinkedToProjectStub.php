@@ -40,6 +40,7 @@ final class RetrieveGroupLinkedToProjectStub implements \Tuleap\Gitlab\Group\Ret
         return new self(null);
     }
 
+    #[\Override]
     public function retrieveGroupLinkedToProject(\Project $project): ?GroupLink
     {
         return $this->group;

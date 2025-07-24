@@ -52,6 +52,7 @@ final class HookConfigUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $repository;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

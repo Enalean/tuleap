@@ -48,6 +48,7 @@ final class SubmittedByMetadataTest extends CrossTrackerFieldTestCase
     private int $task_artifact_alice_id;
     private int $task_artifact_bob_id;
 
+    #[\Override]
     protected function setUp(): void
     {
         $db              = DBFactory::getMainTuleapDBConnection()->getDB();

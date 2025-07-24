@@ -36,6 +36,7 @@ final class RetrieveUserPreferenceStub implements RetrieveUserPreference
         return new self($preference_name, $preference_value);
     }
 
+    #[\Override]
     public function retrieveUserPreference(UserIdentifier $user_identifier, string $preference_name): ?string
     {
         if ($preference_name !== $this->preference_name) {

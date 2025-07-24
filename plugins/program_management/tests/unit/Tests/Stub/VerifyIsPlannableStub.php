@@ -41,6 +41,7 @@ final class VerifyIsPlannableStub implements VerifyIsPlannable
         return new self(false);
     }
 
+    #[\Override]
     public function isPlannable(int $plannable_tracker_id): bool
     {
         return $this->is_plannable;

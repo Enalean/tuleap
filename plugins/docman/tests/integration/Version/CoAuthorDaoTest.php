@@ -30,6 +30,7 @@ final class CoAuthorDaoTest extends TestIntegrationTestCase
 {
     private CoAuthorDao $co_author_dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->co_author_dao = new CoAuthorDao();

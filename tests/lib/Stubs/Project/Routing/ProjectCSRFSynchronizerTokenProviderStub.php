@@ -36,6 +36,7 @@ final class ProjectCSRFSynchronizerTokenProviderStub implements ProjectCSRFSynch
         return new self($csrf);
     }
 
+    #[\Override]
     public function getCSRF(\Project $project): CSRFSynchronizerTokenInterface
     {
         return $this->csrf;

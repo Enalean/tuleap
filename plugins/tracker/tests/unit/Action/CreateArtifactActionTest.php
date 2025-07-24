@@ -70,6 +70,7 @@ final class CreateArtifactActionTest extends TestCase
     private ProjectDashboardRetriever&MockObject $dashboard_retriever;
     private \Project $project;
 
+    #[\Override]
     protected function setUp(): void
     {
         $event_manager = $this->createMock(EventManager::class);
@@ -110,11 +111,13 @@ final class CreateArtifactActionTest extends TestCase
             $this->dashboard_retriever,
             ProjectByIDFactoryStub::buildWith($this->project)
         ) extends CreateArtifactAction {
+            #[\Override]
             public function redirectToParentCreationIfNeeded(Artifact $artifact, PFUser $current_user, Tracker_Artifact_Redirect $redirect, Codendi_Request $request): void
             {
                 parent::redirectToParentCreationIfNeeded($artifact, $current_user, $redirect, $request);
             }
 
+            #[\Override]
             public function redirectUrlAfterArtifactSubmission(Codendi_Request $request, $tracker_id, $artifact_id): Tracker_Artifact_Redirect
             {
                 return parent::redirectUrlAfterArtifactSubmission($request, $tracker_id, $artifact_id);
@@ -125,6 +128,7 @@ final class CreateArtifactActionTest extends TestCase
         $this->redirect = new Tracker_Artifact_Redirect();
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         EventManager::clearInstance();
@@ -250,6 +254,7 @@ final class CreateArtifactActionTest extends TestCase
             $this->dashboard_retriever,
             ProjectByIDFactoryStub::buildWith($this->project)
         ) extends CreateArtifactAction {
+            #[\Override]
             public function redirectToParentCreationIfNeeded(Artifact $artifact, PFUser $current_user, Tracker_Artifact_Redirect $redirect, Codendi_Request $request): void
             {
                 parent::redirectToParentCreationIfNeeded($artifact, $current_user, $redirect, $request);
@@ -297,6 +302,7 @@ final class CreateArtifactActionTest extends TestCase
             $this->dashboard_retriever,
             ProjectByIDFactoryStub::buildWith($this->project)
         ) extends CreateArtifactAction {
+            #[\Override]
             public function associateImmediatelyIfNeeded(Artifact $new_artifact, Codendi_Request $request, PFUser $current_user): void
             {
                 parent::associateImmediatelyIfNeeded($new_artifact, $request, $current_user);

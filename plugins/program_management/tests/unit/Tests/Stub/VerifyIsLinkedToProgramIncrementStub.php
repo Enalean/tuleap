@@ -41,6 +41,7 @@ final class VerifyIsLinkedToProgramIncrementStub implements VerifyIsLinkedToProg
         return new self(false);
     }
 
+    #[\Override]
     public function isLinkedToASprintInMirroredProgramIncrement(
         int $artifact_id,
         int $release_tracker_id,

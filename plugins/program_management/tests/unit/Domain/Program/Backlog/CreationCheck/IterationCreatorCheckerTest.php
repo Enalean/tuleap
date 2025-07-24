@@ -54,6 +54,7 @@ final class IterationCreatorCheckerTest extends TestCase
     private UserReference $user_identifier;
     private TeamProjectsCollection $teams;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->logger                     = new TestLogger();

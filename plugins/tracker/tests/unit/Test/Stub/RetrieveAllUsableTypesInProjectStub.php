@@ -45,6 +45,7 @@ final class RetrieveAllUsableTypesInProjectStub implements IRetrieveAllUsableTyp
     /**
      * @return list<TypePresenter>
      */
+    #[\Override]
     public function getAllUsableTypesInProject(\Project $project): array
     {
         return $this->types;

@@ -39,6 +39,7 @@ final class RetrieveEndDateValueStub implements RetrieveEndDateValue
         return new self($value);
     }
 
+    #[\Override]
     public function getEndDateValue(EndDateFieldReference $end_date): int
     {
         return $this->value;

@@ -48,6 +48,7 @@ final class SVNAccessFileDefaultBlockForLDAPTest extends TestCase
             {
             }
 
+            #[\Override]
             public function getLdapLoginFromUserIds(array $user_ids): array
             {
                 return $this->ldap_uids;
@@ -59,6 +60,7 @@ final class SVNAccessFileDefaultBlockForLDAPTest extends TestCase
             {
             }
 
+            #[\Override]
             public function hasSVNLDAPAuth(int $project_id): bool
             {
                 return $this->project_uses_ldap;
@@ -150,6 +152,7 @@ final class SVNAccessFileDefaultBlockForLDAPTest extends TestCase
         \ForgeConfig::set(\ForgeAccess::CONFIG, $platform_access);
 
         $ldap_logins_provider = new class implements LdapLoginFromTuleapUserIdProvider {
+            #[\Override]
             public function getLdapLoginFromUserIds(array $user_ids): array
             {
                 return [];
@@ -161,6 +164,7 @@ final class SVNAccessFileDefaultBlockForLDAPTest extends TestCase
             {
             }
 
+            #[\Override]
             public function hasSVNLDAPAuth(int $project_id): bool
             {
                 return $this->project_uses_ldap;

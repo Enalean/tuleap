@@ -45,6 +45,7 @@ final class UserListOrderByBuilderTest extends CrossTrackerFieldTestCase
     /** @var list<int> */
     private array $result_ascending;
 
+    #[\Override]
     protected function setUp(): void
     {
         $db              = DBFactory::getMainTuleapDBConnection()->getDB();

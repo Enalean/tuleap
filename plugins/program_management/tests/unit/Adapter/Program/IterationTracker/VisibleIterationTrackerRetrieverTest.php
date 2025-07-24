@@ -39,6 +39,7 @@ final class VisibleIterationTrackerRetrieverTest extends \Tuleap\Test\PHPUnit\Te
     private TrackerFactory&MockObject $tracker_factory;
     private RetrieveIterationTrackerStub $tracker_id_retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->tracker_factory      = $this->createMock(TrackerFactory::class);

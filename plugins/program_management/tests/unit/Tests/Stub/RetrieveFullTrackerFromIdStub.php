@@ -40,6 +40,7 @@ final class RetrieveFullTrackerFromIdStub implements RetrieveFullTrackerFromId
         return new self(null);
     }
 
+    #[\Override]
     public function getTrackerFromId(int $tracker_id): ?\Tuleap\Tracker\Tracker
     {
         return $this->tracker;

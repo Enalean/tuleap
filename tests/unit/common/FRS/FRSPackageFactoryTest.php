@@ -66,6 +66,7 @@ final class FRSPackageFactoryTest extends TestCase
      */
     private $project_manager;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->user                   = $this->createMock(PFUser::class);

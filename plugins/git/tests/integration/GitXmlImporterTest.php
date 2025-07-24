@@ -109,6 +109,7 @@ final class GitXmlImporterTest extends TestIntegrationTestCase
     private FineGrainedPermissionSaver&MockObject $fine_grained_saver;
     private Project $project;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->old_cwd  = getcwd();
@@ -235,6 +236,7 @@ final class GitXmlImporterTest extends TestIntegrationTestCase
         $this->event_manager->method('processEvent');
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         //revert gitolite driver setAdminPath in its builder

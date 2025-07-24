@@ -42,6 +42,7 @@ final class SearchArtifactsLinksStub implements SearchArtifactsLinks
         return $this;
     }
 
+    #[\Override]
     public function getArtifactsLinkedToId(int $artifact_id, int $program_increment_id): array
     {
         return $this->artifact_links[$artifact_id] ?? [];

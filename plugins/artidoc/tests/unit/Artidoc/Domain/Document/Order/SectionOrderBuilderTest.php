@@ -36,6 +36,7 @@ final class SectionOrderBuilderTest extends TestCase
     private SectionIdentifier $section_3;
     private SectionIdentifierFactory $identifier_factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->identifier_factory = new UUIDSectionIdentifierFactory(new \Tuleap\DB\DatabaseUUIDV7Factory());

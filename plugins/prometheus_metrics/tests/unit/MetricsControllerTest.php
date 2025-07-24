@@ -43,6 +43,7 @@ final class MetricsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $event_manager     = $this->createMock(EventManager::class);
         $version_presenter = VersionPresenter::fromFlavorFinder(
             new class implements FlavorFinder {
+                #[\Override]
                 public function isEnterprise(): bool
                 {
                     return false;

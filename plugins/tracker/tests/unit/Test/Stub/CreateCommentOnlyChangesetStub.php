@@ -70,6 +70,7 @@ final class CreateCommentOnlyChangesetStub implements CreateCommentOnlyChangeset
         return new self(null, $callback);
     }
 
+    #[\Override]
     public function createCommentOnlyChangeset(NewComment $new_comment, Artifact $artifact): Ok|Err
     {
         if ($this->callback !== null) {

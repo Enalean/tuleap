@@ -49,6 +49,7 @@ final class TrackerPresenterCollectionBuilderTest extends \Tuleap\Test\PHPUnit\T
     private \PFUser $user;
     private RetrieveSemanticTitleFieldStub $title_field_retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->trackers_retriever             = $this->createMock(TrackerCollectionRetriever::class);
@@ -66,6 +67,7 @@ final class TrackerPresenterCollectionBuilderTest extends \Tuleap\Test\PHPUnit\T
         $this->user      = UserTestBuilder::buildWithDefaults();
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         \Tuleap\Tracker\Semantic\Contributor\TrackerSemanticContributor::clearInstances();

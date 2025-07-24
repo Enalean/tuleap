@@ -100,6 +100,7 @@ final class ExtractXMLConfigStub implements ExtractXMLConfig
         );
     }
 
+    #[\Override]
     public function getIncrementsSourceTrackerId(SimpleXMLElement $xml_config, array $created_trackers_mapping): int
     {
         if ($this->source_tracker_id === null || $this->will_extraction_fail) {
@@ -109,6 +110,7 @@ final class ExtractXMLConfigStub implements ExtractXMLConfig
         return $this->source_tracker_id;
     }
 
+    #[\Override]
     public function getIncrementsPlannableTrackersIds(SimpleXMLElement $xml_config, array $created_trackers_mapping): array
     {
         if ($this->plannable_trackers_ids === null || $this->will_extraction_fail) {
@@ -118,6 +120,7 @@ final class ExtractXMLConfigStub implements ExtractXMLConfig
         return $this->plannable_trackers_ids;
     }
 
+    #[\Override]
     public function getUgroupsIdsThatCanPrioritizeIncrements(SimpleXMLElement $xml_config, ProgramForAdministrationIdentifier $program_identifier): array
     {
         if ($this->ugroups_that_can_prioritize === null || $this->will_extraction_fail) {
@@ -127,11 +130,13 @@ final class ExtractXMLConfigStub implements ExtractXMLConfig
         return $this->ugroups_that_can_prioritize;
     }
 
+    #[\Override]
     public function getCustomProgramIncrementsSectionName(SimpleXMLElement $xml_config): ?string
     {
         return $this->program_increments_section_name;
     }
 
+    #[\Override]
     public function getCustomProgramIncrementsMilestonesName(SimpleXMLElement $xml_config): ?string
     {
         return $this->milestones_name;
@@ -142,6 +147,7 @@ final class ExtractXMLConfigStub implements ExtractXMLConfig
         $this->will_extraction_fail = true;
     }
 
+    #[\Override]
     public function getIterationsSourceTrackerId(SimpleXMLElement $xml_config, array $created_trackers_mapping): ?int
     {
         if ($this->will_extraction_fail) {
@@ -151,11 +157,13 @@ final class ExtractXMLConfigStub implements ExtractXMLConfig
         return $this->iterations_source_tracker_id;
     }
 
+    #[\Override]
     public function getCustomIterationsSectionName(SimpleXMLElement $xml_config): ?string
     {
         return $this->iterations_section_name;
     }
 
+    #[\Override]
     public function getCustomIterationsMilestonesName(SimpleXMLElement $xml_config): ?string
     {
         return $this->iterations_milestones_name;

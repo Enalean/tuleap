@@ -40,6 +40,7 @@ final class CheckEventShouldBeSentInNotificationStub implements CheckEventShould
         return new self(false);
     }
 
+    #[\Override]
     public function shouldSendEventInNotification(int $tracker_id): bool
     {
         return $this->should_send_event_in_notification;

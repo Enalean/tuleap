@@ -46,6 +46,7 @@ final readonly class FindWorkerEventProcessorStub implements FindWorkerEventProc
         return new self(Option::nothing(WorkerEventProcessor::class));
     }
 
+    #[\Override]
     public function findFromWorkerEvent(WorkerEvent $worker_event): Option
     {
         return $this->processor;

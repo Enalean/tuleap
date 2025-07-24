@@ -37,6 +37,7 @@ final class ProjectStatusVerificatorTest extends \Tuleap\Test\PHPUnit\TestCase
     private ProjectStatusVerificator $verificator;
     private ProjectAccessChecker&MockObject $access_checker;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->access_checker = $this->createMock(ProjectAccessChecker::class);

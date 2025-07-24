@@ -29,6 +29,7 @@ final class DateHelperDistanceTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private int $today_at_midnight;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

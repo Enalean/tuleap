@@ -50,6 +50,7 @@ final class PlanUserStoriesInMirroredProgramIncrementsStub implements PlanUserSt
         return $this->call_count;
     }
 
+    #[\Override]
     public function plan(ProgramIncrementChanged $program_increment_changed): void
     {
         if ($this->has_error) {
@@ -61,6 +62,7 @@ final class PlanUserStoriesInMirroredProgramIncrementsStub implements PlanUserSt
         $this->call_count++;
     }
 
+    #[\Override]
     public function planForATeam(ProgramIncrementChanged $program_increment_changed, TeamIdentifier $team_identifier): void
     {
         $this->plan($program_increment_changed);

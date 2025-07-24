@@ -48,6 +48,7 @@ final class TrackerCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
     private ConfigurationErrorsCollector $error_collector;
     private TeamProjectsCollection $teams;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->mirrored_program_increment_tracker_retriever = RetrieveMirroredProgramIncrementTrackerStub::withValidTrackers(

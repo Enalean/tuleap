@@ -54,6 +54,7 @@ final class RepositoryDeleterTest extends \Tuleap\Test\PHPUnit\TestCase
     private string $fixtures_dir;
     private \ProjectHistoryDao&\PHPUnit\Framework\MockObject\MockObject $project_history_dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

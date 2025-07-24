@@ -32,6 +32,7 @@ final class VerifyHasAtLeastOnePlannedUserStoryStub implements VerifyHasAtLeastO
     {
     }
 
+    #[\Override]
     public function hasAtLeastOnePlannedUserStory(FeatureIdentifier $feature, UserIdentifier $user): bool
     {
         return $this->is_linked;

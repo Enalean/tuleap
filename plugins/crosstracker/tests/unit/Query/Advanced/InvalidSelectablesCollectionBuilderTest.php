@@ -72,6 +72,7 @@ final class InvalidSelectablesCollectionBuilderTest extends TestCase
 
     private InvalidSelectablesCollectionBuilder $builder;
 
+    #[\Override]
     public function setUp(): void
     {
         $list_field_bind_value_normalizer = new ListFieldBindValueNormalizer();

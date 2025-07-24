@@ -49,6 +49,7 @@ class AssetsIncluderTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $request;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

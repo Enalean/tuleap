@@ -35,6 +35,7 @@ final class ProjectRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     private ProjectByIDFactoryStub $project_factory;
     private \Project $project;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->project         = ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build();

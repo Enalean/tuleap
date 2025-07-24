@@ -65,6 +65,7 @@ final class UserManagerAuthenticateTest extends \Tuleap\Test\PHPUnit\TestCase
     private \LDAP_UserManager&MockObject $ldap_user_manager;
     private MockObject&UserNameNormalizer $username_normalizer;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -95,17 +96,20 @@ final class UserManagerAuthenticateTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->user_manager = $this->createMock(UserManager::class);
         $password_verifier  = new PasswordVerifier(
             new class implements \PasswordHandler {
+                #[\Override]
                 public function verifyHashPassword(ConcealedString $plain_password, #[\SensitiveParameter]
                 string $hash_password,): bool
                 {
                     return true;
                 }
 
+                #[\Override]
                 public function computeHashPassword(ConcealedString $plain_password): string
                 {
                     return 'hash';
                 }
 
+                #[\Override]
                 public function isPasswordNeedRehash(#[\SensitiveParameter]
                 string $hash_password,): bool
                 {

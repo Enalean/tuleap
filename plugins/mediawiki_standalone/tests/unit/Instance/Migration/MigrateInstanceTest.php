@@ -57,6 +57,7 @@ final class MigrateInstanceTest extends TestCase
     private ProjectByIDFactoryStub $project_factory;
     private \Project $project;
 
+    #[\Override]
     protected function setUp(): void
     {
         \ForgeConfig::set(ServerHostname::DEFAULT_DOMAIN, 'tuleap.example.com');

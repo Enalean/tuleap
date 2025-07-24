@@ -52,6 +52,7 @@ final class TextFieldTest extends TestCase
     private TextField&MockObject $text_field;
     private PFUser $user;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user = UserTestBuilder::buildWithDefaults();

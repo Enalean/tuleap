@@ -54,6 +54,7 @@ final class StatusValueRetrieverTest extends TestCase
     private TimeboxIdentifier $artifact_identifier;
     private UserIdentifier $user_identifier;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->status_field = $this->createStub(Tracker_FormElement_Field_List::class);

@@ -33,6 +33,7 @@ final class GitlabHTTPClientFactoryStub implements BuildGitlabHttpClient
     {
     }
 
+    #[\Override]
     public function buildHTTPClient(Credentials $gitlab_credentials): PluginClient
     {
         return new PluginClient($this->client_interface);

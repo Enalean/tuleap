@@ -37,6 +37,7 @@ final class RetrievePlanningStub implements RetrievePlannings
         $this->with_last_level_planning     = $with_last_level_planning;
     }
 
+    #[\Override]
     public function getNonLastLevelPlannings(\PFUser $user, int $project_id): array
     {
         if ($this->with_non_last_level_planning) {
@@ -46,6 +47,7 @@ final class RetrievePlanningStub implements RetrievePlannings
         return [];
     }
 
+    #[\Override]
     public function getLastLevelPlannings(\PFUser $user, int $project_id): array
     {
         if ($this->with_last_level_planning) {

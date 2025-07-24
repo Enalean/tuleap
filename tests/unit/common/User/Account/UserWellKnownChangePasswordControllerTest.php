@@ -49,6 +49,7 @@ final class UserWellKnownChangePasswordControllerTest extends \Tuleap\Test\PHPUn
      */
     private $controller;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user_manager     = $this->createMock(\UserManager::class);

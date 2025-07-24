@@ -30,6 +30,7 @@ final class BatchResponseObjectWithActionsTest extends \Tuleap\Test\PHPUnit\Test
     public function testBatchResponseObjectsWithActionsCanBeSerialized(): void
     {
         $action_content = new class implements BatchResponseActions {
+            #[\Override]
             public function jsonSerialize(): \stdClass
             {
                 return new \stdClass();

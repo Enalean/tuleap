@@ -43,6 +43,7 @@ final class RetrieveForwardLinksStub implements RetrieveForwardLinks
         return new self(new CollectionOfForwardLinks([]));
     }
 
+    #[\Override]
     public function retrieve(
         \PFUser $submitter,
         ArtifactLinkField $link_field,

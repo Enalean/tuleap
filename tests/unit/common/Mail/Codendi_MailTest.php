@@ -34,6 +34,7 @@ final class Codendi_MailTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:igno
 {
     use ForgeConfigSandbox;
 
+    #[\Override]
     public function setUp(): void
     {
         parent::setUp();

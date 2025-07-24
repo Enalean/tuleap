@@ -34,6 +34,7 @@ final class LFSAPIHTTPAccessControlTest extends \Tuleap\Test\PHPUnit\TestCase
     private MockObject&\UserManager $user_manager;
     private MockObject&AccessControlVerifier $access_control_verifier;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->lfs_http_api_access_control = $this->createMock(LSFAPIHTTPAuthorization::class);

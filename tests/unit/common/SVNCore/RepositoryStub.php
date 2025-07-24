@@ -53,41 +53,49 @@ final class RepositoryStub implements Repository
         return $new;
     }
 
+    #[\Override]
     public function getProject(): Project
     {
         return $this->project;
     }
 
+    #[\Override]
     public function getSettingUrl(): string
     {
         throw new \LogicException('Stub must deal with this case');
     }
 
+    #[\Override]
     public function setId(int $id): void
     {
         throw new \LogicException('Stub must deal with this case');
     }
 
+    #[\Override]
     public function getId(): int
     {
         throw new \LogicException('Stub must deal with this case');
     }
 
+    #[\Override]
     public function getName(): string
     {
         throw new \LogicException('Stub must deal with this case');
     }
 
+    #[\Override]
     public function getPublicPath(): string
     {
         throw new \LogicException('Stub must deal with this case');
     }
 
+    #[\Override]
     public function getFullName(): string
     {
         throw new \LogicException('Stub must deal with this case');
     }
 
+    #[\Override]
     public function getSystemPath(): string
     {
         if ($this->system_path !== null) {
@@ -96,66 +104,79 @@ final class RepositoryStub implements Repository
         throw new \LogicException('Stub must deal with this case');
     }
 
+    #[\Override]
     public function isRepositoryCreated(): bool
     {
         throw new \LogicException('Stub must deal with this case');
     }
 
+    #[\Override]
     public function getSvnUrl(): string
     {
         throw new \LogicException('Stub must deal with this case');
     }
 
+    #[\Override]
     public function getSvnDomain(): string
     {
         throw new \LogicException('Stub must deal with this case');
     }
 
+    #[\Override]
     public function getHtmlPath(): string
     {
         throw new \LogicException('Stub must deal with this case');
     }
 
+    #[\Override]
     public function canBeDeleted(): bool
     {
         throw new \LogicException('Stub must deal with this case');
     }
 
+    #[\Override]
     public function getBackupPath(): ?string
     {
         throw new \LogicException('Stub must deal with this case');
     }
 
+    #[\Override]
     public function getSystemBackupPath(): string
     {
         throw new \LogicException('Stub must deal with this case');
     }
 
+    #[\Override]
     public function getBackupFileName(): string
     {
         throw new \LogicException('Stub must deal with this case');
     }
 
+    #[\Override]
     public function getDeletionDate(): ?int
     {
         throw new \LogicException('Stub must deal with this case');
     }
 
+    #[\Override]
     public function setDeletionDate(int $deletion_date): void
     {
         throw new \LogicException('Stub must deal with this case');
     }
 
+    #[\Override]
     public function isDeleted(): bool
     {
         throw new \LogicException('Stub must deal with this case');
     }
 
+    #[\Override]
     public function hasDefaultPermissions(): bool
     {
         return $this->has_default_permissions;
     }
 
+    #[\Override]
     public function setDefaultPermissions(bool $use_it): void
     {
         $this->has_default_permissions = $use_it;

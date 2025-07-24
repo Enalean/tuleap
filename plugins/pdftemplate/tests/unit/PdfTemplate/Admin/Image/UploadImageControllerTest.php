@@ -42,12 +42,14 @@ final class UploadImageControllerTest extends TestCase
     private PdfTemplateImageIdentifierFactory $image_identifier_factory;
     private array $backup;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->image_identifier_factory = new PdfTemplateImageIdentifierFactory(new DatabaseUUIDV7Factory());
         $this->backup                   = $_FILES;
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         $_FILES = $this->backup;

@@ -41,6 +41,7 @@ class ZipStreamFolderFilesVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
     private ZipStream&MockObject $zip;
     private ZipStreamerLoggingHelper&MockObject $error_logging_helper;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->zip                  = $this->createMock(ZipStream::class);

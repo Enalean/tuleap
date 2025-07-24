@@ -40,6 +40,7 @@ final class HistoryEnforcementAdminSaveControllerTest extends \Tuleap\Test\PHPUn
     private ConfigDao&MockObject $config_dao;
     private HistoryEnforcementAdminSaveController $controller;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->token      = $this->createMock(CSRFSynchronizerToken::class);

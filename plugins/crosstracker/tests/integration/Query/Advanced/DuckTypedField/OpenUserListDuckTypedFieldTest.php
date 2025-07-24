@@ -45,6 +45,7 @@ final class OpenUserListDuckTypedFieldTest extends CrossTrackerFieldTestCase
     private int $sprint_artifact_empty_id;
     private int $sprint_artifact_with_alice_bob_id;
 
+    #[\Override]
     protected function setUp(): void
     {
         $db                   = DBFactory::getMainTuleapDBConnection()->getDB();

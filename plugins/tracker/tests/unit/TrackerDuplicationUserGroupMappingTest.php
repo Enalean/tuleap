@@ -34,6 +34,7 @@ final class TrackerDuplicationUserGroupMappingTest extends TestCase
 {
     private Tracker_UgroupMappingBuilder&\PHPUnit\Framework\MockObject\MockObject $builder;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->builder = $this->createMock(Tracker_UgroupMappingBuilder::class);

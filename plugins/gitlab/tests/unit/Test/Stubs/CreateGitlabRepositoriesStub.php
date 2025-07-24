@@ -44,6 +44,7 @@ final class CreateGitlabRepositoriesStub implements CreateGitlabRepositories
     /**
      * @throws Throwable
      */
+    #[\Override]
     public function createGitlabRepositoryIntegration(
         Credentials $credentials,
         GitlabProject $gitlab_project,

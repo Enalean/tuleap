@@ -27,6 +27,7 @@ use Tuleap\User\ProvideAnonymousUser;
 
 final class AnonymousUserTestProvider implements ProvideAnonymousUser
 {
+    #[\Override]
     public function getUserAnonymous(): \PFUser
     {
         return UserTestBuilder::anAnonymousUser()->build();

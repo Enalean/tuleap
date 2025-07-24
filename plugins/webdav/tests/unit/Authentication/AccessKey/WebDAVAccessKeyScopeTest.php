@@ -29,6 +29,7 @@ use Tuleap\User\AccessKey\Scope\AccessKeyScopeIdentifier;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class WebDAVAccessKeyScopeTest extends AuthenticationScopeTestCase
 {
+    #[\Override]
     public function getAuthenticationScopeClassname(): string
     {
         return WebDAVAccessKeyScope::class;

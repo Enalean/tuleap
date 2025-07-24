@@ -43,6 +43,7 @@ final class ReorderSectionsDaoTest extends TestIntegrationTestCase
     private ArtidocWithContext $artidoc_101;
     private ArtidocWithContext $artidoc_102;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->artidoc_101 = new ArtidocWithContext(new ArtidocDocument(['item_id' => 101]));

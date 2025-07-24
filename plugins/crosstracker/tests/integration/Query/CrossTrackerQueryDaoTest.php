@@ -30,6 +30,7 @@ final class CrossTrackerQueryDaoTest extends TestIntegrationTestCase
 {
     private CrossTrackerQueryDao $query_dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->query_dao = new CrossTrackerQueryDao();

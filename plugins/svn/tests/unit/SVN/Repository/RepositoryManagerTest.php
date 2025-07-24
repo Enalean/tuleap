@@ -58,6 +58,7 @@ final class RepositoryManagerTest extends \Tuleap\Test\PHPUnit\TestCase
     private $project;
     private RepositoryManager $manager;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao                   = $this->createMock(Dao::class);

@@ -55,6 +55,7 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
     private mixed $ugroup_manager;
     private ReportCriteriaJsonBuilder $builder;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->ugroup_manager = $this->createStub(\UGroupManager::class);

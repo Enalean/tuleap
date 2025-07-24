@@ -39,6 +39,7 @@ class ServiceRepresentationCollectionBuilderTest extends \Tuleap\Test\PHPUnit\Te
     private PFUser $projectadmin;
     private ServiceRepresentationCollectionBuilder $builder;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->service_manager = $this->createMock(ServiceManager::class);

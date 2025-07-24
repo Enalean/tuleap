@@ -33,6 +33,7 @@ final class GitlabTagReferenceSplitValuesBuilderTest extends TestCase
      */
     private $dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

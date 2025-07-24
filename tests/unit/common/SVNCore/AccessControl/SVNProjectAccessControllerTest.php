@@ -42,6 +42,7 @@ final class SVNProjectAccessControllerTest extends TestCase
      */
     private $user_retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user_retriever = $this->createStub(SVNLoginNameUserProvider::class);
@@ -59,6 +60,7 @@ final class SVNProjectAccessControllerTest extends TestCase
             {
             }
 
+            #[\Override]
             public function isAuthenticated(string $login_name, ConcealedString $user_secret, \Project $project, ServerRequestInterface $request): ?\PFUser
             {
                 if ($this->is_success) {

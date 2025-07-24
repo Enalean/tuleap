@@ -60,6 +60,7 @@ final class JenkinsTuleapPluginHookTokenVerifierControllerTest extends TestCase
                 {
                 }
 
+                #[\Override]
                 public function isTriggerTokenValid(ConcealedString $trigger_token, DateTimeImmutable $now): bool
                 {
                     return $this->is_valid;

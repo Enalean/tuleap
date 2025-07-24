@@ -31,6 +31,7 @@ final class AutolinkExtensionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private MarkdownConverter $converter;
 
+    #[\Override]
     protected function setUp(): void
     {
         $environment = new Environment();

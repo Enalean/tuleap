@@ -38,6 +38,7 @@ final class HelpMenuOpenedControllerTest extends TestCase
     private Prometheus $prometheus;
     private HelpMenuOpenedController $controller;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user_manager = $this->createStub(\UserManager::class);

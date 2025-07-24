@@ -32,6 +32,7 @@ final class POTFileDumperTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $tmp_dir;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->tmp_dir = vfsStream::setup()->url();

@@ -37,6 +37,7 @@ final class RetrieveGitlabGroupInformationStub implements RetrieveGitlabGroupInf
     /**
      * @throws Throwable
      */
+    #[\Override]
     public function getGitlabGroupFromGitlabApi(Credentials $credential, GitlabGroupPOSTRepresentation $representation): GitlabGroupApiDataRepresentation
     {
         if ($this->exception) {

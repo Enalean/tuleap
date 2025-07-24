@@ -47,6 +47,7 @@ final class JiraXMLExportTest extends \Tuleap\Test\PHPUnit\TestCase
     private $jira_user_retriever;
     private JiraXMLExport $exporter;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

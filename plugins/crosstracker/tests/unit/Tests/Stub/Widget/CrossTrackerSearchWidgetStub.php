@@ -35,6 +35,7 @@ final class CrossTrackerSearchWidgetStub extends Widget
      *
      * @return null|false|int
      */
+    #[\Override]
     public function create(Codendi_Request $request)
     {
         if ($this->callback !== null) {

@@ -43,12 +43,14 @@ final class InvitedByPresenterBuilderTest extends TestCase
 
     private \UserHelper&\PHPUnit\Framework\MockObject\MockObject $user_helper;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user_helper = $this->createMock(\UserHelper::class);
         \UserHelper::setInstance($this->user_helper);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         \UserHelper::clearInstance();

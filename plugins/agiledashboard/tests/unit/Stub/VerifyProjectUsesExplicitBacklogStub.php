@@ -38,6 +38,7 @@ final class VerifyProjectUsesExplicitBacklogStub implements \Tuleap\AgileDashboa
         return new self(false);
     }
 
+    #[\Override]
     public function isProjectUsingExplicitBacklog(int $project_id): bool
     {
         return $this->uses_explicit_backlog;

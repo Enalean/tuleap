@@ -78,12 +78,14 @@ final class UpdatePasswordControllerTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $event_manager;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->event_manager = new class implements EventDispatcherInterface {
             private $password_change       = true;
             private $old_password_required = true;
 
+            #[\Override]
             public function dispatch(object $event)
             {
                 assert($event instanceof PasswordPreUpdateEvent);

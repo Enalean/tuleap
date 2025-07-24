@@ -31,6 +31,7 @@ final class PromptParameterValuesExtractorTest extends \Tuleap\Test\PHPUnit\Test
      */
     private $extractor;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->extractor = new PromptParameterValuesExtractor();

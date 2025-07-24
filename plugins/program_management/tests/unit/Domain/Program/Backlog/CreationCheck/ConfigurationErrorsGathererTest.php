@@ -50,6 +50,7 @@ final class ConfigurationErrorsGathererTest extends TestCase
     private SearchTeamsOfProgram $teams_searcher;
     private RetrieveProjectReference $project_builder;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->build_program   = BuildProgramStub::stubValidProgram();

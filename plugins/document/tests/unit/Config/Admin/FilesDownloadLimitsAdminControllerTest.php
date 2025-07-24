@@ -36,6 +36,7 @@ final class FilesDownloadLimitsAdminControllerTest extends \Tuleap\Test\PHPUnit\
     private FilesDownloadLimitsAdminController $controller;
     private MockObject&AdminPageRenderer $admin_page_renderer;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->admin_page_renderer = $this->createMock(AdminPageRenderer::class);

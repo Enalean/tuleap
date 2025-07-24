@@ -36,6 +36,7 @@ final class ProjectDashboardDaoTest extends TestIntegrationTestCase
     private ProjectDashboardDao $dao;
     private DashboardWidgetDao $widget_dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->widget_dao = new DashboardWidgetDao(

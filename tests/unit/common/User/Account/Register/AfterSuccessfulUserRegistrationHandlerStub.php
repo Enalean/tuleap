@@ -39,6 +39,7 @@ final class AfterSuccessfulUserRegistrationHandlerStub implements AfterSuccessfu
         return new self();
     }
 
+    #[\Override]
     public function afterSuccessfullUserRegistration(
         PFUser $new_user,
         HTTPRequest $request,

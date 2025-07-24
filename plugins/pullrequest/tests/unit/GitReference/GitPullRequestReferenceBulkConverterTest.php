@@ -37,6 +37,7 @@ class GitPullRequestReferenceBulkConverterTest extends \Tuleap\Test\PHPUnit\Test
     private \GitRepositoryFactory&MockObject $git_repository_factory;
     private \Psr\Log\LoggerInterface&MockObject $logger;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao                      = $this->createMock(GitPullRequestReferenceDAO::class);

@@ -40,6 +40,7 @@ final readonly class SearchArtidocDocumentStub implements SearchArtidocDocument
         return new self(null);
     }
 
+    #[\Override]
     public function searchByItemId(int $item_id): ?array
     {
         return $this->results;

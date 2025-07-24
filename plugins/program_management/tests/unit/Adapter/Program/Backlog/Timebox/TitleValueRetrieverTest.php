@@ -47,6 +47,7 @@ final class TitleValueRetrieverTest extends TestCase
     private bool $is_title_semantic_defined = true;
     private bool $can_user_read_title_field = true;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user = UserTestBuilder::aUser()->build();

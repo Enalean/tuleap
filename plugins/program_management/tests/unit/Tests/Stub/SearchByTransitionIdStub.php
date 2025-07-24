@@ -44,6 +44,7 @@ final class SearchByTransitionIdStub implements SearchByTransitionId
     /**
      * @return array{id: int}|null
      */
+    #[\Override]
     public function searchByTransitionID(int $transition_id): ?array
     {
         return $this->transitions;

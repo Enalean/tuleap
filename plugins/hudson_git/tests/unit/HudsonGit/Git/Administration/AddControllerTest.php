@@ -75,6 +75,7 @@ final class AddControllerTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $csrf_token;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

@@ -46,6 +46,7 @@ final readonly class StorePdfTemplateImageStub implements StorePdfTemplateImage
         return new self(null);
     }
 
+    #[\Override]
     public function storeUploadedImage(string $uploaded_path, PdfTemplateImageIdentifier $identifier): bool
     {
         if ($this->result === null) {

@@ -39,6 +39,7 @@ final class SearchPaginatedPullRequestsAuthorsStub implements SearchPaginatedPul
         return new self([$first_author, ...$other_authors]);
     }
 
+    #[\Override]
     public function getPaginatedPullRequestsAuthorsIds(int $repository_id, int $limit, int $offset): PullRequestsAuthorsIdsPage
     {
         $page = array_slice($this->authors, $offset, $limit);

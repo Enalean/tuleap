@@ -37,6 +37,7 @@ final class DateFieldCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     private Comparison $comparison;
     private \Tracker_FormElement_Field_Date $field;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->field = DateFieldBuilder::aDateField(941)->withName(self::FIELD_NAME)->build();

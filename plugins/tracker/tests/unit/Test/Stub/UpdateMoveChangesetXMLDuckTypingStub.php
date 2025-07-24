@@ -41,6 +41,7 @@ final class UpdateMoveChangesetXMLDuckTypingStub implements UpdateMoveChangesetX
         return new self();
     }
 
+    #[\Override]
     public function updateFromDuckTypingCollection(
         PFUser $current_user,
         SimpleXMLElement $artifact_xml,

@@ -40,6 +40,7 @@ final readonly class VerifyMappingExistsStub implements VerifyMappingExists
         return new self(false);
     }
 
+    #[\Override]
     public function doesFreestyleMappingExist(TaskboardTracker $taskboard_tracker): bool
     {
         return $this->mapping_exists;

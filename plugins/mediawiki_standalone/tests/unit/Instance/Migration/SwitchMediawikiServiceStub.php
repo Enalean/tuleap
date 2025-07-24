@@ -35,6 +35,7 @@ final class SwitchMediawikiServiceStub implements SwitchMediawikiService
         return new self();
     }
 
+    #[\Override]
     public function switchToStandalone(\Project $project): void
     {
         $this->is_switched = true;

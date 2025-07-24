@@ -43,6 +43,7 @@ final class RetrieveChangesetSubmissionDateStub implements RetrieveChangesetSubm
         return new self($submission_date);
     }
 
+    #[\Override]
     public function getSubmissionDate(ArtifactIdentifier $artifact, ChangesetIdentifier $changeset_identifier): SubmissionDate
     {
         return SubmissionDateStub::withDate($this->submission_date);

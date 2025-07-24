@@ -40,6 +40,7 @@ final class ProvideUserFromRowStub implements ProvideUserFromRow
     /**
      * @param $row array
      */
+    #[\Override]
     public function getUserInstanceFromRow($row): PFUser
     {
         return UserTestBuilder::aUser()->withRow($row)->build();

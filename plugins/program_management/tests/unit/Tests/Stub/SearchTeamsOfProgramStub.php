@@ -33,6 +33,7 @@ final class SearchTeamsOfProgramStub implements SearchTeamsOfProgram
     {
     }
 
+    #[\Override]
     public function searchTeamIdsOfProgram(int $project_id): array
     {
         return $this->team_ids;

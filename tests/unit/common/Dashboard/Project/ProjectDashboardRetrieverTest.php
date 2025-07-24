@@ -35,6 +35,7 @@ class ProjectDashboardRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     private $project_retriever;
     private ProjectDashboardDao&MockObject $dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->project_with_a_dashboard = $this->createMock(\Project::class);

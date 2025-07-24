@@ -39,6 +39,7 @@ final class CachedProgramBuilderTest extends TestCase
     private const USER_ID    = 171;
     private UserIdentifierStub $user_identifier;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user_identifier = UserIdentifierStub::withId(self::USER_ID);

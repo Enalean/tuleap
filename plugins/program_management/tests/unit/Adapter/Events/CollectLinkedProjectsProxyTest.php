@@ -43,6 +43,7 @@ final class CollectLinkedProjectsProxyTest extends TestCase
     private ProgramsSearcher $programs_searcher;
     private \PFUser $user;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->source_project = ProjectTestBuilder::aProject()->withId(101)->build();

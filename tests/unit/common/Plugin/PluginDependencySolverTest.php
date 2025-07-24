@@ -34,6 +34,7 @@ final class PluginDependencySolverTest extends \Tuleap\Test\PHPUnit\TestCase
     private Plugin&MockObject $fusionforge_compat_plugin;
     private \PluginManager&MockObject $plugin_manager;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->tracker_plugin = $this->createMock(Plugin::class);

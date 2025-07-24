@@ -38,6 +38,7 @@ final class BannerAdministrationControllerTest extends \Tuleap\Test\PHPUnit\Test
     private TemplateRendererStub $renderer;
     private BannerRetriever&\PHPUnit\Framework\MockObject\Stub $banner_retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->renderer         = new TemplateRendererStub();

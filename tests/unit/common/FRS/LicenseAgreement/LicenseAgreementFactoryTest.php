@@ -44,6 +44,7 @@ class LicenseAgreementFactoryTest extends TestCase
     private Project $project;
     private FRSPackage $package;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao     = $this->createMock(LicenseAgreementDao::class);

@@ -49,6 +49,7 @@ final class SVNRefreshAllAccessFilesCommandTest extends \Tuleap\Test\PHPUnit\Tes
 
     private SVNRefreshAllAccessFilesCommand $command;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->repository_manager          = $this->createMock(RepositoryManager::class);

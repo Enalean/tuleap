@@ -41,6 +41,7 @@ class BaselineRepositoryStub implements BaselineRepository
     /** @var int */
     private $id_sequence = 1;
 
+    #[\Override]
     public function add(
         TransientBaseline $transient_baseline,
         UserIdentifier $current_user,
@@ -62,6 +63,7 @@ class BaselineRepositoryStub implements BaselineRepository
         return $baseline;
     }
 
+    #[\Override]
     public function findById(UserIdentifier $current_user, int $id): ?Baseline
     {
         if (! isset($this->baselines_by_id[$id])) {
@@ -70,6 +72,7 @@ class BaselineRepositoryStub implements BaselineRepository
         return $this->baselines_by_id[$id];
     }
 
+    #[\Override]
     public function delete(Baseline $baseline): void
     {
         unset($this->baselines_by_id[$baseline->getId()]);
@@ -100,6 +103,7 @@ class BaselineRepositoryStub implements BaselineRepository
     /**
      * @return Baseline[]
      */
+    #[\Override]
     public function findByProject(UserIdentifier $current_user, ProjectIdentifier $project, int $page_size, int $baseline_offset): array
     {
         $matching_baselines = array_filter(
@@ -111,6 +115,7 @@ class BaselineRepositoryStub implements BaselineRepository
         return array_slice($matching_baselines, $baseline_offset, $page_size);
     }
 
+    #[\Override]
     public function countByProject(ProjectIdentifier $project): int
     {
         return count($this->baselines_by_id);

@@ -39,6 +39,7 @@ abstract class DBTablesDaoLoadKnowDataTestCase extends \Tuleap\Test\PHPUnit\Test
      */
     private $db_tables_dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->createDatabase(self::DB_TEST_NAME);
@@ -47,6 +48,7 @@ abstract class DBTablesDaoLoadKnowDataTestCase extends \Tuleap\Test\PHPUnit\Test
         $this->db_tables_dao = new DBTablesDao($this->db_connection);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         DBFactory::getMainTuleapDBConnection()->getDB()->run('DROP DATABASE ' . self::DB_TEST_NAME);

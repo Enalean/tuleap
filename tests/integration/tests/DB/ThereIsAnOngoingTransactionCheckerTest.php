@@ -27,6 +27,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ThereIsAnOngoingTransactionCheckerTest extends TestCase
 {
+    #[\Override]
     protected function tearDown(): void
     {
         \ForgeConfig::setFeatureFlag(ThereIsAnOngoingTransactionChecker::FEATURE_FLAG, 0);

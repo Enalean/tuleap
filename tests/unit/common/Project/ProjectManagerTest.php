@@ -50,6 +50,7 @@ final class ProjectManagerTest extends \Tuleap\Test\PHPUnit\TestCase
     private ProjectManager&MockObject $project_manager_test_version;
     private ProjectDao&MockObject $project_dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -67,6 +68,7 @@ final class ProjectManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->project_manager_test_version->method('_getUserManager')->willReturn($this->user_manager);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         ProjectManager::clearInstance();

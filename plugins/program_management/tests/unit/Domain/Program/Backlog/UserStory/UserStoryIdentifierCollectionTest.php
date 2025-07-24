@@ -41,6 +41,7 @@ final class UserStoryIdentifierCollectionTest extends \Tuleap\Test\PHPUnit\TestC
     private SearchUserStoryPlannedInIterationStub $planned_stories_searcher;
     private \Closure $getId;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->getId                    = static fn(UserStoryIdentifier $story): int => $story->getId();

@@ -45,6 +45,7 @@ final class PreviouslySavedReferencesRetrieverTest extends \Tuleap\Test\PHPUnit\
 
     private PreviouslySavedReferencesRetriever $retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->tuleap_reference_retriever = $this->createMock(TuleapReferenceRetriever::class);

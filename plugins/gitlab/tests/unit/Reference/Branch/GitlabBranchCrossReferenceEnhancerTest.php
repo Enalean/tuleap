@@ -36,6 +36,7 @@ class GitlabBranchCrossReferenceEnhancerTest extends TestCase
 
     private GitlabBranchCrossReferenceEnhancer $enhancer;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

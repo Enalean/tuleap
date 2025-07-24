@@ -32,6 +32,7 @@ final class ExternalFieldsExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
     private EventManager&MockObject $event_manager;
     private ExternalFieldsExtractor $external_field_extractor;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->event_manager            = $this->createMock(EventManager::class);

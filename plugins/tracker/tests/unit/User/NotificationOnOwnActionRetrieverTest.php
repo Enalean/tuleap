@@ -32,6 +32,7 @@ final class NotificationOnOwnActionRetrieverTest extends TestCase
     private const USER_ID = 120;
     private StoreUserPreferenceStub $dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao = new StoreUserPreferenceStub();

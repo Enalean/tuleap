@@ -53,6 +53,7 @@ final class DeleteAppControllerTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $app_remover;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->redirector       = $this->createMock(RedirectWithFeedbackFactory::class);

@@ -50,6 +50,7 @@ final class MemberAdderTest extends \Tuleap\Test\PHPUnit\TestCase
     private ProjectMemberAdderWithoutStatusCheckAndNotifications&MockObject $project_member_adder;
     private SynchronizedProjectMembershipDetector&MockObject $detector;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->verifier = $this->createMock(MembershipUpdateVerifier::class);

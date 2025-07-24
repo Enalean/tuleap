@@ -36,6 +36,7 @@ final class UserAvatarUrlProviderTest extends TestCase
 
     private const HTTPS_HOST_IN_TESTS = 'https://';
 
+    #[\Override]
     protected function setUp(): void
     {
         ForgeConfig::set('sys_avatar_path', vfsStream::setup()->url());

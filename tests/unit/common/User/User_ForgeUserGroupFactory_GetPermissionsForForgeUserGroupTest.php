@@ -32,9 +32,8 @@ use User_ForgeUserGroupPermission_RetrieveUserMembershipInformation;
 use User_ForgeUserGroupPermission_UserManagement;
 use User_ForgeUserGroupPermissionsDao;
 
-// phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class User_ForgeUserGroupFactory_GetPermissionsForForgeUserGroupTest extends TestCase
+final class User_ForgeUserGroupFactory_GetPermissionsForForgeUserGroupTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /**
      * @var User_ForgeUserGroupPermissionsDao&\PHPUnit\Framework\MockObject\MockObject
@@ -42,6 +41,7 @@ final class User_ForgeUserGroupFactory_GetPermissionsForForgeUserGroupTest exten
     protected $dao;
     protected User_ForgeUserGroupPermissionsFactory $factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

@@ -30,6 +30,7 @@ final class UserNameNormalizerTest extends TestCase
     private \PHPUnit\Framework\MockObject\MockObject&Rule_UserName $rules;
     private UserNameNormalizer $username_normalizer;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->rules               = $this->createMock(Rule_UserName::class);

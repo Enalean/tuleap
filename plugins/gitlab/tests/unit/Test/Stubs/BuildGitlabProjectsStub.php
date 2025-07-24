@@ -37,6 +37,7 @@ final class BuildGitlabProjectsStub implements BuildGitlabProjects
      * @return GitlabProject[]
      * @throws Throwable
      */
+    #[\Override]
     public function getGroupProjectsFromGitlabAPI(Credentials $credentials, int $gitlab_group_id): array
     {
         if ($this->exception) {

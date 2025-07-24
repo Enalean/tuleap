@@ -57,6 +57,7 @@ final readonly class SearchMappedFieldStub implements SearchMappedField
         return new self([]);
     }
 
+    #[\Override]
     public function searchMappedField(TaskboardTracker $taskboard_tracker): Option
     {
         foreach ($this->mapped_field_ids as $mapping) {

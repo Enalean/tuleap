@@ -43,6 +43,7 @@ final class ArtifactLinkFieldRendererTest extends TestCase
 {
     private ArtifactLinkFieldRenderer $renderer;
 
+    #[\Override]
     protected function setUp(): void
     {
         $parent_tracker    = TrackerTestBuilder::aTracker()->withId(456)->build();

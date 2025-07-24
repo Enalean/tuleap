@@ -42,6 +42,7 @@ class MilestonesBacklogPatchTest extends MilestoneBase //phpcs:ignore PSR1.Class
     private $releases;
     private $sprints;
 
+    #[\Override]
     public function setUp(): void
     {
         parent::setUp();

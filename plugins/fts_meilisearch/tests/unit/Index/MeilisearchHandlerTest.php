@@ -43,6 +43,7 @@ final class MeilisearchHandlerTest extends TestCase
     private $metadata_dao;
     private MeilisearchHandler $handler;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->client_index = $this->createMock(Indexes::class);

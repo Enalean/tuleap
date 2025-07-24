@@ -42,6 +42,7 @@ final class CrossTrackerWidgetCreatorTest extends TestCase
 
     private const WIDGET_ID = 15;
 
+    #[\Override]
     protected function setUp(): void
     {
         $executor               = new DBTransactionExecutorPassthrough();

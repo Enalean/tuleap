@@ -35,6 +35,7 @@ final class CommonMarkInterpreterControllerTest extends \Tuleap\Test\PHPUnit\Tes
     private CommonMarkInterpreterController $interpreter_controller;
     private CommonMarkInterpreter $interpreter;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->interpreter            = CommonMarkInterpreter::build(\Codendi_HTMLPurifier::instance());

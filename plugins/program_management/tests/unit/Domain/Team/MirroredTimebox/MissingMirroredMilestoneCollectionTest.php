@@ -44,6 +44,7 @@ final class MissingMirroredMilestoneCollectionTest extends TestCase
 
     private const PROJECT_ID = 102;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->open_program_increments = [ProgramIncrementBuilder::buildWithId(1), ProgramIncrementBuilder::buildWithId(2)];

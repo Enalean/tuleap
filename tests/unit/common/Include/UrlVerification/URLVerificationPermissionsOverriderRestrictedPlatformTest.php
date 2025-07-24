@@ -37,6 +37,7 @@ final class URLVerificationPermissionsOverriderRestrictedPlatformTest extends \T
     private $url_verification;
     private $server;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

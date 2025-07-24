@@ -64,6 +64,7 @@ final class DisplayPlanIterationsControllerTest extends TestCase
     private string $variable_project_name;
     private RetrieveVisibleIterationTrackerStub $iteration_tracker_retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->project_manager               = $this->createStub(\ProjectManager::class);

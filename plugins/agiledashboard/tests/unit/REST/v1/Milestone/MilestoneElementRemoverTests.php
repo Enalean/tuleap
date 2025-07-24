@@ -43,6 +43,7 @@ final class MilestoneElementRemoverTests extends TestCase
     private ArtifactsInExplicitBacklogDao&MockObject $artifacts_in_explicit_backlog_dao;
     private BacklogRemoveRepresentation $backlog_remove_representation;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->project = ProjectTestBuilder::aProject()->withId(101)->build();

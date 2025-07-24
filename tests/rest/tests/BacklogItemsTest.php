@@ -31,6 +31,7 @@ class BacklogItemsTest extends RestBase  //phpcs:ignore PSR1.Classes.ClassDeclar
 
     private $stories_ids = [];
 
+    #[\Override]
     public function setUp(): void
     {
         parent::setUp();

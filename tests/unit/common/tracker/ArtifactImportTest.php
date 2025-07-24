@@ -23,9 +23,8 @@ declare(strict_types=1);
 
 use PHPUnit\Framework\MockObject\MockObject;
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class ArtifactImportTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ArtifactImportTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     use \Tuleap\GlobalLanguageMock;
 
@@ -38,6 +37,7 @@ final class ArtifactImportTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $dar;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -47,6 +47,7 @@ final class ArtifactImportTest extends \Tuleap\Test\PHPUnit\TestCase
         CodendiDataAccess::setInstance($this->da);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         parent::tearDown();

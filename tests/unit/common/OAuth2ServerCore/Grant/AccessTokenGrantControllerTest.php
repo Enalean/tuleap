@@ -51,6 +51,7 @@ final class AccessTokenGrantControllerTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $grant_access_token_from_refresh_token;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->grant_access_token_from_auth_code     = $this->createMock(OAuth2GrantAccessTokenFromAuthorizationCode::class);

@@ -68,6 +68,7 @@ final class PostMergeRequestWebhookActionProcessorTest extends \Tuleap\Test\PHPU
      */
     private $merge_request_retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

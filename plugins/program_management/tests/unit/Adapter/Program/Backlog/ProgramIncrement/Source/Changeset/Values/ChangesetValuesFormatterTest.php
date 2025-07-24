@@ -50,6 +50,7 @@ final class ChangesetValuesFormatterTest extends \Tuleap\Test\PHPUnit\TestCase
     private MirroredTimeboxChangesetValues $values_with_end_date;
     private MirroredTimeboxChangesetValues $values_with_duration;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->values_with_end_date = MirroredTimeboxChangesetValuesBuilder::buildWithIdsAndValues(

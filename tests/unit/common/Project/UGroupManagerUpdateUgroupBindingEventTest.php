@@ -34,6 +34,7 @@ final class UGroupManagerUpdateUgroupBindingEventTest extends \Tuleap\Test\PHPUn
     private \UGroupDao&MockObject $dao;
     private \UGroupManager&MockObject $ugroup_manager;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

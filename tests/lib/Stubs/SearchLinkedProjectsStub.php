@@ -44,6 +44,7 @@ final class SearchLinkedProjectsStub implements SearchLinkedProjects
         return new self($projects);
     }
 
+    #[\Override]
     public function searchLinkedProjects(\Project $source_project): array
     {
         return $this->projects;

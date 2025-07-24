@@ -79,6 +79,7 @@ final class ArtifactCloserTest extends TestCase
     private Tracker_FormElement_Field_List_Bind_StaticValue $closed_value;
     private bool $changeset_creator_was_called;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->done_value   = ListStaticValueBuilder::aStaticValue(self::DONE_LABEL)

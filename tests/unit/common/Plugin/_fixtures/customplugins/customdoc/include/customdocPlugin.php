@@ -27,11 +27,13 @@ class customdocPlugin extends Plugin// phpcs:ignore
      */
     private $is_custom = false;
 
+    #[\Override]
     public function isCustom(): bool
     {
         return $this->is_custom;
     }
 
+    #[\Override]
     public function setIsCustom($is_custom): void
     {
         $this->is_custom = $is_custom;

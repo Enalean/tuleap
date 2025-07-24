@@ -30,6 +30,7 @@ final class GetReleaseNotesLinkTest extends \Tuleap\Test\PHPUnit\TestCase
     private FRSRelease $release;
     private GetReleaseNotesLink $event;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->release = new FRSRelease(['release_id' => 124]);

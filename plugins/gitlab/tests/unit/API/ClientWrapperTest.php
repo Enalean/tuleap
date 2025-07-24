@@ -57,6 +57,7 @@ final class ClientWrapperTest extends TestCase
      */
     private $client_factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->factory        = $this->createMock(RequestFactoryInterface::class);
@@ -232,6 +233,7 @@ final class ClientWrapperTest extends TestCase
     public function testItThrowsExceptionIfThereIsAnErrorInTheGitlabSide(): void
     {
         $client_interface = new class implements ClientInterface {
+            #[\Override]
             public function sendRequest(RequestInterface $request): ResponseInterface
             {
                 throw new class extends \Exception implements ClientExceptionInterface {
@@ -250,6 +252,7 @@ final class ClientWrapperTest extends TestCase
     public function testItThrowsExceptionIfTheLinkHeaderIsMissing(): void
     {
         $client_interface = new class implements ClientInterface {
+            #[\Override]
             public function sendRequest(RequestInterface $request): ResponseInterface
             {
                 $body = HTTPFactoryBuilder::streamFactory()->createStream(json_encode([['id' => 100]]));
@@ -272,6 +275,7 @@ final class ClientWrapperTest extends TestCase
     public function testItReturnsTheResultWhenThereIsOnlyOnePage(): void
     {
         $client_interface = new class implements ClientInterface {
+            #[\Override]
             public function sendRequest(RequestInterface $request): ResponseInterface
             {
                 $body = HTTPFactoryBuilder::streamFactory()->createStream(json_encode([['id' => 100]]));

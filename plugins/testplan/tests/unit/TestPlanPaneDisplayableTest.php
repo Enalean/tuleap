@@ -43,6 +43,7 @@ final class TestPlanPaneDisplayableTest extends \Tuleap\Test\PHPUnit\TestCase
     private mixed $tracker_factory;
     private TestPlanPaneDisplayable $testplan_pane_displayable;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->testmanagement_config = $this->createMock(Config::class);

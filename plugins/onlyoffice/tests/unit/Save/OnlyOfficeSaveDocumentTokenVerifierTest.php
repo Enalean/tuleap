@@ -39,6 +39,7 @@ final class OnlyOfficeSaveDocumentTokenVerifierTest extends TestCase
     private SplitTokenVerificationStringHasher $hasher;
     private OnlyOfficeSaveDocumentTokenVerifier $token_verifier;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao            = $this->createStub(OnlyOfficeSaveDocumentTokenDAO::class);

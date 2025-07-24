@@ -65,6 +65,7 @@ final readonly class SearchMappedFieldValuesForColumnStub implements SearchMappe
         return new self([]);
     }
 
+    #[\Override]
     public function searchMappedFieldValuesForColumn(
         TaskboardTracker $taskboard_tracker,
         Cardwall_Column $column,

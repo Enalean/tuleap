@@ -47,6 +47,7 @@ final class AssignedToMetadataTest extends CrossTrackerFieldTestCase
     private int $sprint_artifact_with_alice_bob_id;
     private int $task_artifact_with_alice_id;
 
+    #[\Override]
     protected function setUp(): void
     {
         $db              = DBFactory::getMainTuleapDBConnection()->getDB();

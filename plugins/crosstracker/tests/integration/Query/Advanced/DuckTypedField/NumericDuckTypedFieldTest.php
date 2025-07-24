@@ -47,6 +47,7 @@ final class NumericDuckTypedFieldTest extends CrossTrackerFieldTestCase
     private int $task_with_5_id;
     private int $task_with_3_id;
 
+    #[\Override]
     protected function setUp(): void
     {
         $db              = DBFactory::getMainTuleapDBConnection()->getDB();

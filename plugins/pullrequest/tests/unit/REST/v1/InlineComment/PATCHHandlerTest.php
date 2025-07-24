@@ -64,6 +64,7 @@ final class PATCHHandlerTest extends TestCase
     private InlineCommentSaverStub $comment_saver;
     private ExtractAndSaveCrossReferencesStub $cross_references_saver;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->comment_author       = UserTestBuilder::buildWithId(150);

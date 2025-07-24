@@ -37,6 +37,7 @@ final class NewChangesetTest extends \Tuleap\Test\PHPUnit\TestCase
     private \PFUser $submitter;
     private array $fields_data;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->artifact    = ArtifactTestBuilder::anArtifact(63)->build();

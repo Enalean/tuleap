@@ -35,6 +35,7 @@ final class InsertGroupLinkTokenStub implements InsertGroupLinkToken
         $this->number_of_call = 0;
     }
 
+    #[\Override]
     public function insertToken(GroupLink $gitlab_group, ConcealedString $token): void
     {
         $this->number_of_call++;

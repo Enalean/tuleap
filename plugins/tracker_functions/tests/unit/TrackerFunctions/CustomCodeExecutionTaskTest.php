@@ -50,12 +50,14 @@ final class CustomCodeExecutionTaskTest extends TestCase
 
     private UserManager&MockObject $user_manager;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user_manager = $this->createMock(UserManager::class);
         UserManager::setInstance($this->user_manager);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         UserManager::clearInstance();
@@ -64,6 +66,7 @@ final class CustomCodeExecutionTaskTest extends TestCase
     private function buildPluginAllowed(): Plugin
     {
         return new class extends Plugin {
+            #[\Override]
             public function isAllowed($group_id): bool
             {
                 return true;
@@ -74,6 +77,7 @@ final class CustomCodeExecutionTaskTest extends TestCase
     private function buildPluginNotAllowed(): Plugin
     {
         return new class extends Plugin {
+            #[\Override]
             public function isAllowed($group_id): bool
             {
                 return false;

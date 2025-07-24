@@ -38,6 +38,7 @@ final class MappingFileOptimusPrimeTransformerTest extends \Tuleap\Test\PHPUnit\
      */
     private $user_manager;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

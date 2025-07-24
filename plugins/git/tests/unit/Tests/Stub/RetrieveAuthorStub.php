@@ -39,6 +39,7 @@ final class RetrieveAuthorStub implements RetrieveAuthor
         return new self($user);
     }
 
+    #[\Override]
     public function getAuthor(string $sha1): UserName
     {
         return $this->user;

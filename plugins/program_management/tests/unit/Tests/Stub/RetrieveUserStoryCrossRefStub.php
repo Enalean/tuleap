@@ -48,6 +48,7 @@ final class RetrieveUserStoryCrossRefStub implements RetrieveUserStoryCrossRef
         return new self(false, [$tracker_shortname, ...$other_names]);
     }
 
+    #[\Override]
     public function getUserStoryCrossRef(UserStoryIdentifier $user_story_identifier): string
     {
         if ($this->always_return) {

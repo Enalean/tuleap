@@ -33,6 +33,7 @@ final class RichTextFieldSpecificPropertiesDAOTest extends TestIntegrationTestCa
     private RichTextFieldSpecificPropertiesDAO $dao;
     private int $rich_text_field_id;
 
+    #[\Override]
     protected function setUp(): void
     {
         $db              = DBFactory::getMainTuleapDBConnection()->getDB();

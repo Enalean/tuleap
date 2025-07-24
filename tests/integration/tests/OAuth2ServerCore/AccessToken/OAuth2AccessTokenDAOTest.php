@@ -61,6 +61,7 @@ final class OAuth2AccessTokenDAOTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $dao;
 
+    #[\Override]
     public static function setUpBeforeClass(): void
     {
         $db                                 = DBFactory::getMainTuleapDBConnection()->getDB();
@@ -112,17 +113,20 @@ final class OAuth2AccessTokenDAOTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao = new OAuth2AccessTokenDAO();
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         $db = DBFactory::getMainTuleapDBConnection()->getDB();
         $db->run('DELETE FROM oauth2_access_token');
     }
 
+    #[\Override]
     public static function tearDownAfterClass(): void
     {
         $db = DBFactory::getMainTuleapDBConnection()->getDB();

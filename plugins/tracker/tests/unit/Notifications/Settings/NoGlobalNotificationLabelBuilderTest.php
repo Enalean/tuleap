@@ -37,6 +37,7 @@ final class NoGlobalNotificationLabelBuilderTest extends TestCase
 {
     private PFUser $current_user;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->current_user = UserTestBuilder::anActiveUser()->build();

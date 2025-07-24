@@ -244,6 +244,7 @@ final class ArtifactTestBuilder
                 parent::__construct($id, $tracker_id, 102, $submitted_on, false);
             }
 
+            #[\Override]
             public function userCanView(?PFUser $user = null): bool
             {
                 if ($user && isset($this->user_can_view[(int) $user->getId()])) {
@@ -255,6 +256,7 @@ final class ArtifactTestBuilder
             /**
              * @return Artifact[]
              */
+            #[\Override]
             public function getLinkedArtifacts(PFUser $user): array
             {
                 return $this->linked_artifact ?? parent::getLinkedArtifacts($user);
@@ -263,11 +265,13 @@ final class ArtifactTestBuilder
             /**
              * @return Artifact[]
              */
+            #[\Override]
             public function getLinkedAndReverseArtifacts(PFUser $user): array
             {
                 return $this->linked_and_reverse_artifact;
             }
 
+            #[\Override]
             public function getCSRFTokenForTrackerViewArtifactManipulation(): \CSRFSynchronizerToken
             {
                 return new \CSRFSynchronizerToken('/art?id=' . $this->id, 'token', new CSRFSigningKeyStorageStub(), new CSRFSessionKeyStorageStub());

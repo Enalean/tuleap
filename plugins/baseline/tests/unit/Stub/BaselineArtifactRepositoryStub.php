@@ -54,6 +54,7 @@ class BaselineArtifactRepositoryStub implements BaselineArtifactRepository
         $history->add($artifact, $date);
     }
 
+    #[\Override]
     public function findById(UserIdentifier $current_user, int $id): ?BaselineArtifact
     {
         $history = $this->artifact_histories_by_id[$id];
@@ -63,6 +64,7 @@ class BaselineArtifactRepositoryStub implements BaselineArtifactRepository
         return $history->findAt($this->clock->now());
     }
 
+    #[\Override]
     public function findByIdAt(UserIdentifier $current_user, int $id, DateTimeInterface $date): ?BaselineArtifact
     {
         $history = $this->artifact_histories_by_id[$id];

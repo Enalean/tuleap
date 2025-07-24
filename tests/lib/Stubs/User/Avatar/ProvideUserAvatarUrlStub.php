@@ -33,6 +33,7 @@ final class ProvideUserAvatarUrlStub implements \Tuleap\User\Avatar\ProvideUserA
         return new self();
     }
 
+    #[\Override]
     public function getAvatarUrl(\PFUser $user): string
     {
         return 'avatar.png';

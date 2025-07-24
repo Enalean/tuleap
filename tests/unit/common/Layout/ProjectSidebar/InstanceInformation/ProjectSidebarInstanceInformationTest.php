@@ -53,17 +53,20 @@ final class ProjectSidebarInstanceInformationTest extends TestCase
         return ProjectSidebarInstanceInformation::build(
             $language,
             new class implements FlavorFinder {
+                #[\Override]
                 public function isEnterprise(): bool
                 {
                     return false;
                 }
             },
             new class implements IDetectIfLogoIsCustomized {
+                #[\Override]
                 public function isLegacyOrganizationLogoCustomized(): bool
                 {
                     return false;
                 }
 
+                #[\Override]
                 public function isSvgOrganizationLogoCustomized(): bool
                 {
                     return false;

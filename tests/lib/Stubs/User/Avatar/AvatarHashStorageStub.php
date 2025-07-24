@@ -42,11 +42,13 @@ final class AvatarHashStorageStub implements \Tuleap\User\Avatar\AvatarHashStora
         return new self(Option::nothing(\Psl\Type\string()));
     }
 
+    #[\Override]
     public function retrieve(\PFUser $user): Option
     {
         return $this->hash;
     }
 
+    #[\Override]
     public function store(\PFUser $user, string $hash): void
     {
         $this->new_stored_hash = $hash;

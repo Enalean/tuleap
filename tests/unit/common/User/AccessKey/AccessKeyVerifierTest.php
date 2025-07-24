@@ -54,6 +54,7 @@ final class AccessKeyVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
     private $access_key;
     private AccessKeyVerifier $verifier;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao                        = $this->createMock(AccessKeyDAO::class);

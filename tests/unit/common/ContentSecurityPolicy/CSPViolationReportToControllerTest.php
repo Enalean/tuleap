@@ -41,6 +41,7 @@ final class CSPViolationReportToControllerTest extends \Tuleap\Test\PHPUnit\Test
      */
     private $controller;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->stream_factory = HTTPFactoryBuilder::streamFactory();

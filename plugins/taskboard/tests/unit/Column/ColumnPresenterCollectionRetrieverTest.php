@@ -41,6 +41,7 @@ final class ColumnPresenterCollectionRetrieverTest extends \Tuleap\Test\PHPUnit\
     private \Tuleap\Tracker\Tracker $release_tracker;
     private \Planning_ArtifactMilestone $milestone;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->column_factory   = $this->createMock(ColumnFactory::class);

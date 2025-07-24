@@ -31,6 +31,7 @@ use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
 final class CommentDAOTest extends TestIntegrationTestCase
 {
     private Dao $dao;
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao = new Dao();

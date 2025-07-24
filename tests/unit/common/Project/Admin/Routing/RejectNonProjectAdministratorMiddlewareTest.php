@@ -34,6 +34,7 @@ final class RejectNonProjectAdministratorMiddlewareTest extends \Tuleap\Test\PHP
     private \UserManager&MockObject $user_manager;
     private ProjectAdministratorChecker&MockObject $checker;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user_manager = $this->createMock(\UserManager::class);

@@ -43,6 +43,7 @@ final class NotificationUpdateCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     private Repository&MockObject $repository;
     private NotificationUpdateChecker $notification_update_checker;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

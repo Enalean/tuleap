@@ -39,6 +39,7 @@ class ProjectCreationNotifierTest extends \Tuleap\Test\PHPUnit\TestCase
     private Project $project;
     private TuleapRegisterMail&MockObject $register_mail;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->register_mail = $this->createMock(TuleapRegisterMail::class);

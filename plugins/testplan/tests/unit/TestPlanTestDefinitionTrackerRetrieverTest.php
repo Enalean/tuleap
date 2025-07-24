@@ -39,6 +39,7 @@ final class TestPlanTestDefinitionTrackerRetrieverTest extends \Tuleap\Test\PHPU
      */
     private $tracker_factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->testmanagement_config = $this->createMock(Config::class);

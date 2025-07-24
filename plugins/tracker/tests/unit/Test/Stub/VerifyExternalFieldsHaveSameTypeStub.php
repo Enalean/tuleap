@@ -38,6 +38,7 @@ final class VerifyExternalFieldsHaveSameTypeStub implements VerifyExternalFields
         return new self(false);
     }
 
+    #[\Override]
     public function haveBothFieldsSameType(\Tracker_FormElement_Field $source_field, \Tracker_FormElement_Field $destination_field): bool
     {
         return $this->have_same_type;

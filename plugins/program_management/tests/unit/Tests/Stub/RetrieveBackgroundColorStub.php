@@ -47,6 +47,7 @@ final class RetrieveBackgroundColorStub implements RetrieveBackgroundColor
         return new self([$color_name, ...$other_colors]);
     }
 
+    #[\Override]
     public function retrieveBackgroundColor(
         ArtifactIdentifier $artifact_identifier,
         UserIdentifier $user_identifier,

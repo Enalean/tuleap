@@ -47,6 +47,7 @@ final class FeatureIdentifierTest extends \Tuleap\Test\PHPUnit\TestCase
     private \Closure $getId;
     private SearchPlannableFeatures $program_features_searcher;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->getId                       = static fn(FeatureIdentifier $feature): int => $feature->getId();

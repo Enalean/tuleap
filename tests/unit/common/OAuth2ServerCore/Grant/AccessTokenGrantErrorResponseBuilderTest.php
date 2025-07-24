@@ -32,6 +32,7 @@ final class AccessTokenGrantErrorResponseBuilderTest extends \Tuleap\Test\PHPUni
      */
     private $response_builder;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->response_builder = new AccessTokenGrantErrorResponseBuilder(

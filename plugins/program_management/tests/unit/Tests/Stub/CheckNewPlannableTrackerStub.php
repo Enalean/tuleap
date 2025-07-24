@@ -50,6 +50,7 @@ final class CheckNewPlannableTrackerStub implements CheckNewPlannableTracker
         return new self(false, true);
     }
 
+    #[\Override]
     public function checkPlannableTrackerIsValid(
         int $plannable_tracker_id,
         ProgramForAdministrationIdentifier $program,

@@ -73,6 +73,7 @@ final class ArtifactTimeRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     private $user;
     private ArtifactTimeRetriever $retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

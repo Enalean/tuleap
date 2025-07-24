@@ -54,6 +54,7 @@ final class MercureJWTControllerTest extends TestCase
     private KanbanFactory&MockObject $agile_dashboard_kanban_factory;
     private ProvideCurrentUserStub $user_manager;
 
+    #[\Override]
     protected function setup(): void
     {
         parent::setup();

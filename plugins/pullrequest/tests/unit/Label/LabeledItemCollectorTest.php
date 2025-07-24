@@ -52,6 +52,7 @@ final class LabeledItemCollectorTest extends \Tuleap\Test\PHPUnit\TestCase
     private \TemplateRenderer&MockObject $template_renderer;
     private SearchPullRequestStub $pull_request_dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

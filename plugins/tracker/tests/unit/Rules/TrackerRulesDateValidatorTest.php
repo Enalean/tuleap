@@ -37,6 +37,7 @@ final class TrackerRulesDateValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private Tracker_FormElementFactory&MockObject $formelement_factory;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->formelement_factory          = $this->createMock(\Tracker_FormElementFactory::class);

@@ -35,6 +35,7 @@ final class HistoryCleanerTest extends \Tuleap\Test\PHPUnit\TestCase
         $delete_visit_by_user_id = new class implements DeleteVisitByUserId {
             public bool $called = false;
 
+            #[\Override]
             public function deleteVisitByUserId(int $user_id): void
             {
                 $this->called = true;

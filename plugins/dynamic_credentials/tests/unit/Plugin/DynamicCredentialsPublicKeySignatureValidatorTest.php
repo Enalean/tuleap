@@ -31,6 +31,7 @@ final class DynamicCredentialsPublicKeySignatureValidatorTest extends TestCase
     private const VALID_PUBLIC_KEY = 'ka7Gcvo3RO0FeksfVkBCgTndCz/IMLfwCQA3DoN8k68=';
     private \Tuleap\Config\ValueValidator $validator;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->validator = DynamicCredentialsPublicKeySignatureValidator::buildSelf();

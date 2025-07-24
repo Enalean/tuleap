@@ -33,6 +33,7 @@ final class RejectNonHTTPSRequestMiddlewareTest extends \Tuleap\Test\PHPUnit\Tes
      */
     private $middleware;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->middleware = new RejectNonHTTPSRequestMiddleware(

@@ -36,6 +36,7 @@ final class LegacyMediawikiLanguageRetrieverStub implements LegacyMediawikiLangu
         return new self($language);
     }
 
+    #[\Override]
     public function getLanguageFor(int $project_id): string|false
     {
         return $this->language;

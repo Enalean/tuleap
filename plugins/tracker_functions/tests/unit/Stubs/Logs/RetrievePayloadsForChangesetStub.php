@@ -45,6 +45,7 @@ final readonly class RetrievePayloadsForChangesetStub implements RetrievePayload
         return new self(Option::nothing(FunctionLogPayloads::class));
     }
 
+    #[\Override]
     public function searchPayloadsByChangesetID(int $changeset_id): Option
     {
         return $this->payloads;

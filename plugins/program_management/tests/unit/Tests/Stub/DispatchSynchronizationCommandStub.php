@@ -37,6 +37,7 @@ final class DispatchSynchronizationCommandStub implements DispatchMirroredTimebo
         return new self([]);
     }
 
+    #[\Override]
     public function dispatchSynchronizationCommand(CommandTeamSynchronization $team_synchronization_command): void
     {
         $this->calls[] = $team_synchronization_command;

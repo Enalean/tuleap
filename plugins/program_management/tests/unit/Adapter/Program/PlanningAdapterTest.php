@@ -45,6 +45,7 @@ final class PlanningAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
     private UserIdentifierStub $user_identifier;
     private ConfigurationErrorsCollector $error_collector;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->planning_factory = $this->createStub(\PlanningFactory::class);

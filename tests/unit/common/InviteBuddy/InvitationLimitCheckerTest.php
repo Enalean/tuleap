@@ -35,6 +35,7 @@ final class InvitationLimitCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     private InvitationLimitChecker $checker;
     private InvitationDao&\PHPUnit\Framework\MockObject\MockObject $dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao     = $this->createMock(InvitationDao::class);

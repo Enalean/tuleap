@@ -94,12 +94,14 @@ final class OnlyOfficeDocumentConfigProviderTest extends TestCase
                 {
                 }
 
+                #[\Override]
                 public function getDocument(\PFUser $user, int $item_id): Ok|Err
                 {
                     return $this->result;
                 }
             },
             new class implements OnlyOfficeDownloadDocumentTokenGenerator {
+                #[\Override]
                 public function generateDownloadToken(
                     \PFUser $user,
                     OnlyOfficeDocument $document,

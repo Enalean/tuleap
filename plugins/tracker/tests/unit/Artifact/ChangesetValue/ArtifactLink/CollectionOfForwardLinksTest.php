@@ -39,6 +39,7 @@ final class CollectionOfForwardLinksTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private array $artifact_links;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->artifact_links = [

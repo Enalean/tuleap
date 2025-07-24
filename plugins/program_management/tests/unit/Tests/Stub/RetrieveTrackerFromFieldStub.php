@@ -37,6 +37,7 @@ final class RetrieveTrackerFromFieldStub implements RetrieveTrackerFromField
         return new self($tracker);
     }
 
+    #[\Override]
     public function fromFieldId(int $field_id): TrackerReference
     {
         return $this->tracker;

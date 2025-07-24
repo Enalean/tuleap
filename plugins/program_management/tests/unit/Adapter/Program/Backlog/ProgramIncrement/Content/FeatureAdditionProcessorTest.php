@@ -51,6 +51,7 @@ final class FeatureAdditionProcessorTest extends \Tuleap\Test\PHPUnit\TestCase
     private ArtifactLinkUpdater&MockObject $artifact_link_updater;
     private Artifact $artifact;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->artifact              = ArtifactTestBuilder::anArtifact(self::PROGRAM_INCREMENT_ID)->build();

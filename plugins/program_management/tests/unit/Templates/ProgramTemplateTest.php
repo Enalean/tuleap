@@ -38,6 +38,7 @@ final class ProgramTemplateTest extends \Tuleap\Test\PHPUnit\TestCase
     private ProgramTemplate $program_template;
     private vfsStreamDirectory $root_dir;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->root_dir = vfsStream::setup();

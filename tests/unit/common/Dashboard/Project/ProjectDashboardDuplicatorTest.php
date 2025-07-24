@@ -56,6 +56,7 @@ class ProjectDashboardDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
     private \Tuleap\Dashboard\Widget\DashboardWidgetRetriever&MockObject $widget_retriever;
     private \Tuleap\Widget\WidgetFactory&MockObject $widget_factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao = $this->createMock(\Tuleap\Dashboard\Project\ProjectDashboardDao::class);

@@ -43,6 +43,7 @@ final class RetrieveDescriptionFieldStub implements RetrieveDescriptionField
         return new self(...$descriptions);
     }
 
+    #[\Override]
     public function getDescriptionField(TrackerIdentifier $tracker_identifier): DescriptionFieldReference
     {
         if (count($this->descriptions) > 0) {

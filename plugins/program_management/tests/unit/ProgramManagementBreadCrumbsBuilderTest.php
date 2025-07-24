@@ -33,6 +33,7 @@ final class ProgramManagementBreadCrumbsBuilderTest extends \Tuleap\Test\PHPUnit
     private $user;
     private Project $project;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user = $this->createStub(\PFUser::class);

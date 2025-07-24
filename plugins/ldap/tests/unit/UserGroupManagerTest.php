@@ -38,6 +38,7 @@ final class UserGroupManagerTest extends \Tuleap\Test\PHPUnit\TestCase
     private string $bind_option;
     private string $preserve_option;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

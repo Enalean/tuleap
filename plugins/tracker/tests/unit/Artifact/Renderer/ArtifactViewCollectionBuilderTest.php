@@ -42,6 +42,7 @@ final class ArtifactViewCollectionBuilderTest extends TestCase
     private ArtifactViewCollectionBuilder $builder;
     private \Tuleap\Tracker\Tracker&\PHPUnit\Framework\MockObject\MockObject $tracker;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->tracker = $this->createMock(\Tuleap\Tracker\Tracker::class);

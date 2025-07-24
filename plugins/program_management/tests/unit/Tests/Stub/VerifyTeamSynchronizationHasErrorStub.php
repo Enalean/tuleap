@@ -43,6 +43,7 @@ final class VerifyTeamSynchronizationHasErrorStub implements VerifyTeamSynchroni
         return new self(true);
     }
 
+    #[\Override]
     public function hasASynchronizationError(ProgramIdentifier $program_identifier, ProjectReference $team_identifier): bool
     {
         return $this->has_error;

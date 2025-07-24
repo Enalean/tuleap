@@ -44,6 +44,7 @@ final class RetrieveEventDescriptionStub implements RetrieveEventDescription
         return new self($description);
     }
 
+    #[\Override]
     public function retrieveEventDescription(
         CalendarEventData $calendar_event_data,
         \Tracker_Artifact_Changeset $changeset,

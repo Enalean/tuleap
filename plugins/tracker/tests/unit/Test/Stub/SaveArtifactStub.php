@@ -41,6 +41,7 @@ final class SaveArtifactStub implements SaveArtifact
         return new self(false);
     }
 
+    #[\Override]
     public function save(Artifact $artifact): bool
     {
         return $this->return_value;

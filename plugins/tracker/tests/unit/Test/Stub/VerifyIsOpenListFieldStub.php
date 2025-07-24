@@ -40,6 +40,7 @@ final class VerifyIsOpenListFieldStub implements VerifyIsOpenListField
         return new self(false);
     }
 
+    #[\Override]
     public function isAnOpenListField(\Tracker_FormElement_Field $field): bool
     {
         return $this->is_an_open_list_field;

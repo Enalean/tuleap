@@ -45,6 +45,7 @@ final class ArtifactLinkChangesetTest extends \Tuleap\Test\PHPUnit\TestCase
     private UserIdentifierStub $user;
     private ArtifactLinkValue $artifact_link_value;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->tracker_retriever          = RetrieveTrackerOfArtifactStub::withIds(1);

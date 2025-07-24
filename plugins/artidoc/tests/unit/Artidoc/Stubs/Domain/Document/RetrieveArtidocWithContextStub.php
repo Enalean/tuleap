@@ -59,6 +59,7 @@ final readonly class RetrieveArtidocWithContextStub implements RetrieveArtidocWi
         return new self(null, false);
     }
 
+    #[\Override]
     public function retrieveArtidocUserCanRead(int $id): Ok|Err
     {
         if ($this->result === null) {
@@ -68,6 +69,7 @@ final readonly class RetrieveArtidocWithContextStub implements RetrieveArtidocWi
         return $this->result;
     }
 
+    #[\Override]
     public function retrieveArtidocUserCanWrite(int $id): Ok|Err
     {
         if ($this->result === null) {

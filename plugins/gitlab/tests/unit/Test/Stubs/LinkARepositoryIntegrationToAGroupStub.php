@@ -28,6 +28,7 @@ final class LinkARepositoryIntegrationToAGroupStub implements \Tuleap\Gitlab\Gro
 {
     private int $call_count = 0;
 
+    #[\Override]
     public function linkARepositoryIntegrationToAGroup(NewRepositoryIntegrationLinkedToAGroup $command): void
     {
         $this->call_count++;

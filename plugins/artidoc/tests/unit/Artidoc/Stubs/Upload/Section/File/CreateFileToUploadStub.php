@@ -49,6 +49,7 @@ final readonly class CreateFileToUploadStub implements CreateFileToUpload
         return new self(null);
     }
 
+    #[\Override]
     public function create(Artidoc $artidoc, PFUser $user, DateTimeImmutable $current_time, string $filename, int $filesize): Ok|Err
     {
         return $this->identifier

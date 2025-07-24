@@ -43,6 +43,7 @@ final readonly class GetItemFromRowStub implements \Tuleap\Docman\Item\GetItemFr
         return new self($item, false);
     }
 
+    #[\Override]
     public function getItemFromRow(array $row)
     {
         if ($this->void) {

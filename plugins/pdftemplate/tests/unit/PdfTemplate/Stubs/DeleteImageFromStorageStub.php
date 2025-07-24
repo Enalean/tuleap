@@ -36,6 +36,7 @@ final class DeleteImageFromStorageStub implements DeleteImageFromStorage
         return new self(false);
     }
 
+    #[\Override]
     public function delete(PdfTemplateImage $image): void
     {
         $this->deleted = true;

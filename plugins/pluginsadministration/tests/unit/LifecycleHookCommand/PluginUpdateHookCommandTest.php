@@ -38,6 +38,7 @@ final class PluginUpdateHookCommandTest extends TestCase
         $event_dispatcher = new class implements EventDispatcherInterface {
             public bool $has_been_called_with_expected_event = false;
 
+            #[\Override]
             public function dispatch(object $event): object
             {
                 if ($event instanceof  PluginExecuteUpdateHookEvent) {
@@ -57,6 +58,7 @@ final class PluginUpdateHookCommandTest extends TestCase
     public function testLogsErrorWhenSomethingBadHappen(): void
     {
         $event_dispatcher = new class implements EventDispatcherInterface {
+            #[\Override]
             public function dispatch(object $event): object
             {
                 throw new \Exception('Something bad');

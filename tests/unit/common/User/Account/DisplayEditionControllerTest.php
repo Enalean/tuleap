@@ -40,9 +40,11 @@ final class DisplayEditionControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private DisplayEditionController $controller;
 
+    #[\Override]
     public function setUp(): void
     {
         $event_manager = new class implements EventDispatcherInterface {
+            #[\Override]
             public function dispatch(object $event)
             {
                 return $event;

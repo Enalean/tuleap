@@ -41,6 +41,7 @@ final class FieldPermissionsVerifierTest extends TestCase
     private \Tuleap\Tracker\FormElement\Field\String\StringField $full_field;
     private TitleFieldReferenceProxy $field;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user_identifier      = UserIdentifierStub::withId(110);

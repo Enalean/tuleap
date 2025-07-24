@@ -37,6 +37,7 @@ final class ProcessWASMResponseTest extends TestCase
     private TestLogger $logger;
     private ProcessWASMResponse $processor;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->logger    = new TestLogger();

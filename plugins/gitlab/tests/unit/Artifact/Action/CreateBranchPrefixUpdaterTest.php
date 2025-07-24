@@ -47,6 +47,7 @@ final class CreateBranchPrefixUpdaterTest extends TestCase
      */
     private $git_permissions_manager;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->integration_factory     = $this->createMock(GitlabRepositoryIntegrationFactory::class);

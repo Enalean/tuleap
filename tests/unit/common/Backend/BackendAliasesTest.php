@@ -38,6 +38,7 @@ final class BackendAliasesTest extends \Tuleap\Test\PHPUnit\TestCase
     private $alias_file;
     private $backend;
 
+    #[\Override]
     protected function setUp(): void
     {
         \ForgeConfig::set('alias_file', vfsStream::setup()->url() . '/aliases.codendi');
@@ -62,6 +63,7 @@ final class BackendAliasesTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         Backend::clearInstances();

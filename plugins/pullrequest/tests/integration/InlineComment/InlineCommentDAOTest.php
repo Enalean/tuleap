@@ -33,6 +33,7 @@ final class InlineCommentDAOTest extends TestIntegrationTestCase
 {
     private Dao $dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao = new Dao();

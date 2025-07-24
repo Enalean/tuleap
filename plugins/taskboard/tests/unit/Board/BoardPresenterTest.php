@@ -39,6 +39,7 @@ final class BoardPresenterTest extends \Tuleap\Test\PHPUnit\TestCase
     private \Project $project;
     private \Planning_Milestone&MockObject $milestone;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->milestone_presenter = $this->createMock(\AgileDashboard_MilestonePresenter::class);

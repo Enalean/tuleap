@@ -26,6 +26,7 @@ final class LocalSettingsPersistStub implements LocalSettingsPersist
 {
     public bool $has_persisted = false;
 
+    #[\Override]
     public function persist(LocalSettingsRepresentation $representation): void
     {
         $this->has_persisted = true;

@@ -34,6 +34,7 @@ final class MergeRequestTitleCreatorFromArtifactTest extends TestCase
 
     private MergeRequestTitleCreatorFromArtifact $merge_request_title_creator_from_artifact;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->merge_request_title_creator_from_artifact = new MergeRequestTitleCreatorFromArtifact();

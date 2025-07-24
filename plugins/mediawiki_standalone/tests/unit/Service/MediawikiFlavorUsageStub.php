@@ -27,11 +27,13 @@ final class MediawikiFlavorUsageStub implements MediawikiFlavorUsage
 {
     public bool $was_legacy_used     = false;
     public bool $was_standalone_used = false;
+    #[\Override]
     public function wasLegacyMediawikiUsed(\Project $project): bool
     {
         return $this->was_legacy_used;
     }
 
+    #[\Override]
     public function wasStandaloneMediawikiUsed(\Project $project): bool
     {
         return $this->was_standalone_used;

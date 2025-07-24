@@ -40,6 +40,7 @@ final class VerifyArtifactClosureIsAllowedStub implements VerifyArtifactClosureI
         return new self(false);
     }
 
+    #[\Override]
     public function isArtifactClosureAllowed(int $repository_id): bool
     {
         return $this->return_value;

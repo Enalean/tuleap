@@ -60,6 +60,7 @@ final class WebDAVTreeTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $docman_folder;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -78,6 +79,7 @@ final class WebDAVTreeTest extends \Tuleap\Test\PHPUnit\TestCase
         $GLOBALS['Language']->method('getText')->willReturn('');
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         Docman_ItemFactory::clearInstance(101);

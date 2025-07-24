@@ -38,6 +38,7 @@ final class SaveFunctionLogStub implements SaveFunctionLog
         return new self();
     }
 
+    #[\Override]
     public function saveFunctionLogLine(FunctionLogLineToSave $log_line): void
     {
         $this->line_saved = $log_line;

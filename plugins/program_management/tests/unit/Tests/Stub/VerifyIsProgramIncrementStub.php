@@ -30,6 +30,7 @@ final class VerifyIsProgramIncrementStub implements VerifyIsProgramIncrement
     {
     }
 
+    #[\Override]
     public function isProgramIncrement(int $artifact_id): bool
     {
         return $this->is_allowed;

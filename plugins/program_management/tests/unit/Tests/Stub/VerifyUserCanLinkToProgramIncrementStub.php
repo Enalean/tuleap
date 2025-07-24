@@ -41,6 +41,7 @@ final class VerifyUserCanLinkToProgramIncrementStub implements \Tuleap\ProgramMa
         return new self(false);
     }
 
+    #[\Override]
     public function canUserLinkToProgramIncrement(
         ProgramIncrementTrackerIdentifier $program_increment_tracker,
         UserIdentifier $user,

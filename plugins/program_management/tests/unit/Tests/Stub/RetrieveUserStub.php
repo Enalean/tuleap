@@ -33,6 +33,7 @@ final class RetrieveUserStub implements RetrieveUser
     {
     }
 
+    #[\Override]
     public function getUserWithId(UserIdentifier $user_identifier): \PFUser
     {
         foreach ($this->users as $user) {

@@ -415,6 +415,7 @@ final class PluginTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testImplementingPluginWithConfigKeysIsEnoughToListenToGetConfigKeysEvent(): void
     {
         $plugin = new class extends \Plugin implements PluginWithConfigKeys {
+            #[\Override]
             public function getConfigKeys(\Tuleap\Config\ConfigClassProvider $event): void
             {
             }
@@ -426,12 +427,14 @@ final class PluginTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testImplementingPluginWithConfigKeysAndListeningToEventManuallyDoesntRaiseException(): void
     {
         $plugin = new class extends \Plugin implements PluginWithConfigKeys {
+            #[\Override]
             public function getHooksAndCallbacks()
             {
                 $this->addHook(\Tuleap\Config\GetConfigKeys::NAME);
                 return parent::getHooksAndCallbacks();
             }
 
+            #[\Override]
             public function getConfigKeys(\Tuleap\Config\ConfigClassProvider $event): void
             {
             }
@@ -443,26 +446,32 @@ final class PluginTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testImplementingPluginWithServiceIsEnoughToListenToEvents(): void
     {
         $plugin = new class extends \Plugin implements PluginWithService {
+            #[\Override]
             public function serviceClassnamesCollector(ServiceClassnamesCollector $event): void
             {
             }
 
+            #[\Override]
             public function serviceIsUsed(array $params): void
             {
             }
 
+            #[\Override]
             public function projectServiceBeforeActivation(ProjectServiceBeforeActivation $event,): void
             {
             }
 
+            #[\Override]
             public function serviceDisabledCollector(ServiceDisabledCollector $event): void
             {
             }
 
+            #[\Override]
             public function addMissingService(AddMissingService $event): void
             {
             }
 
+            #[\Override]
             public function serviceEnableForXmlImportRetriever(\Tuleap\Project\XML\ServiceEnableForXmlImportRetriever $event): void
             {
             }
@@ -506,6 +515,7 @@ final class PluginTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testPluginCannotListeningHooksTwice(): void
     {
         $plugin = new class extends \Plugin {
+            #[\Override]
             public function getHooksAndCallbacks()
             {
                 $this->addHook(SiteAdministrationAddOption::NAME);

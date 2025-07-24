@@ -37,6 +37,7 @@ final class TrackerFromFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     private $form_element_factory;
     private TrackerFromFieldRetriever $retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->form_element_factory = $this->createStub(Tracker_FormElementFactory::class);

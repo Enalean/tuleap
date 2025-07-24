@@ -38,6 +38,7 @@ final class IndexControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     private \TemplateRenderer&MockObject $renderer;
     private IncludeAssets&MockObject $assets;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->layout_helper = new LayoutHelperPassthrough();
@@ -52,6 +53,7 @@ final class IndexControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         if (isset($GLOBALS['_SESSION'])) {

@@ -42,6 +42,7 @@ final class ProgramIncrementsSearcherTest extends \Tuleap\Test\PHPUnit\TestCase
     private VerifyIsVisibleArtifactStub $visibility_verifier;
     private RetrieveProgramIncrementStub $program_increment_retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user                     = UserIdentifierStub::buildGenericUser();

@@ -58,6 +58,7 @@ class FRSReleasePermissionManagerTest extends TestCase
      */
     private $release;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->frs_service_permission_manager = $this->createMock(FRSPermissionManager::class);

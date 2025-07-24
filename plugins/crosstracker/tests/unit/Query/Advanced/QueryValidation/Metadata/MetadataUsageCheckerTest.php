@@ -53,6 +53,7 @@ final class MetadataUsageCheckerTest extends TestCase
     private Tracker_FormElement_Field_SubmittedOn&MockObject $submitted_on_101;
     private Tracker_FormElement_Field_SubmittedOn&MockObject $submitted_on_102;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->tracker_101 = TrackerTestBuilder::aTracker()->withId(self::FIRST_TRACKER_ID)->build();

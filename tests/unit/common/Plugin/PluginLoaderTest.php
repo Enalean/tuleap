@@ -43,6 +43,7 @@ final class PluginLoaderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private LoggerInterface $logger;
 
+    #[\Override]
     protected function setUp(): void
     {
         $tuleap_cache_directory = $this->getTmpDir();

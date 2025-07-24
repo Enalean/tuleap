@@ -44,6 +44,7 @@ final class SearchPlannableFeaturesStub implements SearchPlannableFeatures
         return new self([]);
     }
 
+    #[\Override]
     public function searchPlannableFeatures(ProgramIdentifier $program): array
     {
         return $this->rows;

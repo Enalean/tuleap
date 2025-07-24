@@ -38,6 +38,7 @@ class InvitationByIdRetrieverStub implements InvitationByIdRetriever
         return new self(null);
     }
 
+    #[\Override]
     public function searchById(int $id): Invitation
     {
         if ($this->invitation) {

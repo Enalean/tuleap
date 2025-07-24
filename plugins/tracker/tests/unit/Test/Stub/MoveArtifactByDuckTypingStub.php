@@ -43,6 +43,7 @@ final class MoveArtifactByDuckTypingStub implements MoveArtifactByDuckTyping
         return new self();
     }
 
+    #[\Override]
     public function move(
         Artifact $artifact,
         Tracker $source_tracker,

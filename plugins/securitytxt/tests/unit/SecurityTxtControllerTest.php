@@ -36,6 +36,7 @@ final class SecurityTxtControllerTest extends TestCase
 
     private SecurityTxtController $controller;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->controller = new SecurityTxtController(

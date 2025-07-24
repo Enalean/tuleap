@@ -45,6 +45,7 @@ final class KanbanRealtimeMessageSenderTest extends TestCase
     private KanbanRealtimeStructureMessageSender $sender;
     private Tracker $tracker;
     private \HTTPRequest&MockObject $request;
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

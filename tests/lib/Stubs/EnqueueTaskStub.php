@@ -30,6 +30,7 @@ final class EnqueueTaskStub implements EnqueueTaskInterface
 {
     public ?QueueTask $queue_task = null;
 
+    #[\Override]
     public function enqueue(QueueTask $event): void
     {
         $this->queue_task = $event;

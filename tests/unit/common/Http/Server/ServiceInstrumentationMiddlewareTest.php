@@ -34,12 +34,14 @@ final class ServiceInstrumentationMiddlewareTest extends \Tuleap\Test\PHPUnit\Te
      */
     private $event_manager;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->event_manager = $this->createMock(\EventManager::class);
         \EventManager::setInstance($this->event_manager);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         \EventManager::clearInstance();

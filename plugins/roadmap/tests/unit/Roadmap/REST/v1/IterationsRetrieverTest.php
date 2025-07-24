@@ -59,6 +59,7 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     private \PFUser $user;
     private \PHPUnit\Framework\MockObject\MockObject&Tracker $tracker;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao                        = $this->createMock(RoadmapWidgetDao::class);

@@ -46,6 +46,7 @@ final class CrossReferenceForumOrganizerTest extends TestCase
     private Project $project;
     private CrossReferenceForumOrganizer $organizer;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->project   = ProjectTestBuilder::aProject()->build();

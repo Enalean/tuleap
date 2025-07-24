@@ -33,6 +33,7 @@ final class StatusSemanticDAOTest extends TestIntegrationTestCase
 {
     private StatusSemanticDAO $dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao = new StatusSemanticDAO();

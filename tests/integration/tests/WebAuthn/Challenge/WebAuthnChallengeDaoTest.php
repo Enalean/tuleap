@@ -36,6 +36,7 @@ final class WebAuthnChallengeDaoTest extends TestIntegrationTestCase
     private const USER_ID_WITH_CHALLENGE_2  = 102;
     private const USER_ID_WITHOUT_CHALLENGE = 103;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->dao = new WebAuthnChallengeDao();

@@ -40,6 +40,7 @@ final class PromotedTrackerConfigurationCheckerStub implements PromotedTrackerCo
         return new self(false);
     }
 
+    #[\Override]
     public function isProjectAllowedToPromoteTrackersInSidebar(\Project $project): bool
     {
         return $this->is_allowed;

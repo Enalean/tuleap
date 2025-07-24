@@ -35,6 +35,7 @@ final class LauncherTest extends \Tuleap\Test\PHPUnit\TestCase
     private SvnRepository $repository;
     private CommitInfo $commit_info;
 
+    #[\Override]
     public function setUp(): void
     {
         parent::setUp();

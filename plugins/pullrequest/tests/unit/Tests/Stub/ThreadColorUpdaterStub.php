@@ -36,6 +36,7 @@ final class ThreadColorUpdaterStub implements \Tuleap\PullRequest\Comment\Thread
         return new self();
     }
 
+    #[\Override]
     public function setThreadColor(int $pull_request_id, string $color): void
     {
         $this->call_count++;

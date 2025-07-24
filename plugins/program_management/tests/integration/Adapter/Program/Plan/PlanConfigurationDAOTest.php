@@ -42,6 +42,7 @@ final class PlanConfigurationDAOTest extends TestIntegrationTestCase
 {
     private PlanConfigurationDAO $dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao = new PlanConfigurationDAO();

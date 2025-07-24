@@ -45,6 +45,7 @@ final class RetrieveTrackerOfFeatureStub implements RetrieveTrackerOfFeature
         return new self([$tracker_id, ...$other_ids]);
     }
 
+    #[\Override]
     public function getFeatureTracker(FeatureIdentifier $feature): TrackerIdentifier
     {
         if (count($this->ids) > 0) {

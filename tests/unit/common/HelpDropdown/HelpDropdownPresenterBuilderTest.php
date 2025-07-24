@@ -40,6 +40,7 @@ final class HelpDropdownPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCa
     private ReleaseNoteManager&MockObject $release_note_manager;
     private URISanitizer $uri_sanitizer;
 
+    #[\Override]
     protected function setUp(): void
     {
         $event_dispatcher = $this->createMock(EventDispatcherInterface::class);

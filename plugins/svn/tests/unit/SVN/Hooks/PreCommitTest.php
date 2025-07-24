@@ -61,6 +61,7 @@ final class PreCommitTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $immutable_tag_factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

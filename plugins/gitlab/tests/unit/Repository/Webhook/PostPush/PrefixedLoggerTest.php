@@ -31,6 +31,7 @@ final class PrefixedLoggerTest extends \Tuleap\Test\PHPUnit\TestCase
     private const PREFIX = '| |';
     private TestLogger $sub_logger;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->sub_logger = new TestLogger();

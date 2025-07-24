@@ -87,6 +87,7 @@ final class RestProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     private UserManager&MockObject $user_manager;
     private URLVerification&MockObject $url_verification;
 
+    #[\Override]
     protected function setUp(): void
     {
         \ForgeConfig::set('codendi_cache_dir', vfsStream::setup('RestProjectCreatorTest')->url());

@@ -30,6 +30,7 @@ class WrapperLoggerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private LoggerInterface&MockObject $logger;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

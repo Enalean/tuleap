@@ -51,11 +51,13 @@ final class OAuth2ScopeBuilderCollectorTest extends \Tuleap\Test\PHPUnit\TestCas
     {
         return new class implements AuthenticationScopeBuilder
         {
+            #[\Override]
             public function buildAuthenticationScopeFromScopeIdentifier(AuthenticationScopeIdentifier $scope_identifier): ?AuthenticationScope
             {
                 return null;
             }
 
+            #[\Override]
             public function buildAllAvailableAuthenticationScopes(): array
             {
                 return [];

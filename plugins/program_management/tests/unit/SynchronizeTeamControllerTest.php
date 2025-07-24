@@ -47,6 +47,7 @@ final class SynchronizeTeamControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private const TEAM_ID = 123;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->project_manager                    = $this->createStub(\ProjectManager::class);

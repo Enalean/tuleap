@@ -39,6 +39,7 @@ final class DeleteDocumentConfiguredFieldsStub implements DeleteDocumentConfigur
         return new self($callback);
     }
 
+    #[\Override]
     public function deleteConfiguredFieldByArtidocId(int $item_id): void
     {
         ($this->callback)($item_id);

@@ -44,6 +44,7 @@ final class IntegrationApiTokenInserterTest extends \Tuleap\Test\PHPUnit\TestCas
      */
     private $key_factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

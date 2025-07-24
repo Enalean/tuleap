@@ -27,11 +27,13 @@ use Tuleap\Git\Gitolite\GenerateGitoliteAccessURL;
 
 final class GenerateGitoliteAccessURLStub implements GenerateGitoliteAccessURL
 {
+    #[\Override]
     public function getSSHURL(GitRepository $repository): string
     {
         return 'ssh://gitolit@example.com/my-project/' . $repository->getFullName() . '.git';
     }
 
+    #[\Override]
     public function getHTTPURL(GitRepository $repository): string
     {
         return 'https://example.com/plugins/git/my-project/' . $repository->getFullName() . '.git';

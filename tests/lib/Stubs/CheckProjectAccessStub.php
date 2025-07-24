@@ -68,6 +68,7 @@ final class CheckProjectAccessStub implements CheckProjectAccess
         return new self(false, false, false, false, true);
     }
 
+    #[\Override]
     public function checkUserCanAccessProject(\PFUser $user, \Project $project): void
     {
         $this->call_count++;

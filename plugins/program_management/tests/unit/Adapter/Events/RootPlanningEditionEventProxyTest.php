@@ -34,6 +34,7 @@ final class RootPlanningEditionEventProxyTest extends TestCase
     private const PROJECT_ID = 110;
     private CoreEvent $event;
 
+    #[\Override]
     protected function setUp(): void
     {
         $project     = ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build();

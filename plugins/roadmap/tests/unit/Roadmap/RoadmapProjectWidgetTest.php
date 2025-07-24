@@ -39,11 +39,13 @@ final class RoadmapProjectWidgetTest extends \Tuleap\Test\PHPUnit\TestCase
     private RoadmapWidgetPresenterBuilder&MockObject $presenter_builder;
     private RoadmapWidgetDao&MockObject $dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao = $this->createMock(RoadmapWidgetDao::class);
 
         $template_render = new class extends \TemplateRenderer {
+            #[\Override]
             public function renderToString($template_name, $presenter): string
             {
                 return '';
@@ -63,6 +65,7 @@ final class RoadmapProjectWidgetTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         \UserManager::clearInstance();

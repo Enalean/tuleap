@@ -63,6 +63,7 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
     private \Tuleap\Tracker\Tracker $tracker;
     private ProgramIncrementTrackerIdentifier $tracker_identifier;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->status_factory          = $this->createStub(\Tuleap\Tracker\Semantic\Status\TrackerSemanticStatusFactory::class);

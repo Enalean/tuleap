@@ -68,6 +68,7 @@ class PostMergeRequestBotCommenterTest extends \Tuleap\Test\PHPUnit\TestCase
     private TemplateRendererFactory $template_factory;
     private PostMergeRequestBotCommenter $commenter;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

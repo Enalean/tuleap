@@ -48,6 +48,7 @@ final class SaveQueryWithPredefinedTimePeriodStub implements SaveQueryWithPredef
         return $this->has_been_called;
     }
 
+    #[\Override]
     public function saveQueryWithPredefinedTimePeriod(int $query_id, PredefinedTimePeriod $predefined_time_period, UserList $users): void
     {
         if ($this->should_not_be_called) {

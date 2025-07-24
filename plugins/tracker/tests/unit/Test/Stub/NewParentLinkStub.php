@@ -38,6 +38,7 @@ final class NewParentLinkStub implements NewParentLink
         return new self($id);
     }
 
+    #[\Override]
     public function getParentArtifactId(): int
     {
         return $this->id;

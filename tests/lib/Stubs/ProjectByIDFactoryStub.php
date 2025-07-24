@@ -53,6 +53,7 @@ final class ProjectByIDFactoryStub implements ProjectByIDFactory
         return new self($first_project, ...$other_projects);
     }
 
+    #[\Override]
     public function getValidProjectById(int $project_id): \Project
     {
         if (isset($this->projects[$project_id]) && $this->isValid($this->projects[$project_id])) {
@@ -66,6 +67,7 @@ final class ProjectByIDFactoryStub implements ProjectByIDFactory
         return ! $project->isError() && ! $project->isDeleted();
     }
 
+    #[\Override]
     public function getProjectById(int $project_id): \Project
     {
         if (isset($this->projects[$project_id])) {

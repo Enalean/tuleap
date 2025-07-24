@@ -38,6 +38,7 @@ final class ProgramManagementConfigXMLImporterTest extends TestCase
     private TestLogger $logger;
     private UserReference $current_user;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->plan_creator = CreatePlanConfigurationStub::build();

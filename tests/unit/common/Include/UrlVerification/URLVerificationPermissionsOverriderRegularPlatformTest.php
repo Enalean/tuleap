@@ -37,6 +37,7 @@ final class URLVerificationPermissionsOverriderRegularPlatformTest extends \Tule
     private $url_verification;
     private $server;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

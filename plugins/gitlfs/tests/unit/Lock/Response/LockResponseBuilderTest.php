@@ -30,6 +30,7 @@ final class LockResponseBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private LockResponseBuilder $lock_response_builder;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->lock_response_builder = new LockResponseBuilder();

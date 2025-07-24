@@ -33,6 +33,7 @@ final class NewUserGroupThatCanPrioritizeTest extends \Tuleap\Test\PHPUnit\TestC
 {
     private ProgramForAdministrationIdentifier $program;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->program = ProgramForAdministrationIdentifierBuilder::build();

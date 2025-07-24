@@ -37,6 +37,7 @@ final class FeaturesRankOrdererTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $priority_manager;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->priority_manager = $this->createMock(\Tuleap\Tracker\Artifact\PriorityManager::class);

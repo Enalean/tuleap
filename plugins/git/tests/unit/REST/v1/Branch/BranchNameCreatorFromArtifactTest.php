@@ -33,6 +33,7 @@ final class BranchNameCreatorFromArtifactTest extends TestCase
 {
     private BranchNameCreatorFromArtifact $branch_name_creator_from_artifact;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->branch_name_creator_from_artifact = new BranchNameCreatorFromArtifact(

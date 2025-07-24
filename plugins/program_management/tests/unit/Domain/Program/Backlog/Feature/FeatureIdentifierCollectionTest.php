@@ -34,6 +34,7 @@ final class FeatureIdentifierCollectionTest extends \Tuleap\Test\PHPUnit\TestCas
     private const SECOND_FEATURE_ID = 399;
     private SearchFeaturesStub $feature_searcher;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->feature_searcher = SearchFeaturesStub::withFeatureIds(self::FIRST_FEATURE_ID, self::SECOND_FEATURE_ID);

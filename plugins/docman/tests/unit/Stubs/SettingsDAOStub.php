@@ -38,6 +38,7 @@ final class SettingsDAOStub implements DAOSettings
         return new self(0);
     }
 
+    #[\Override]
     public function saveFilenamePattern(int $project_id, FilenamePattern $filename_pattern): void
     {
         $this->count_save_filename_pattern++;

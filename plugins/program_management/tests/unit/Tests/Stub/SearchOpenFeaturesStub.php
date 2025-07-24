@@ -43,6 +43,7 @@ final class SearchOpenFeaturesStub implements SearchOpenFeatures
         return new self($open_features, []);
     }
 
+    #[\Override]
     public function searchOpenFeatures(int $offset, int $limit, ProgramIdentifier ...$program_identifiers): array
     {
         $this->program_identifiers = $program_identifiers;

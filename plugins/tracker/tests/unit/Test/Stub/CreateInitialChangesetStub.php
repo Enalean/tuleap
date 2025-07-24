@@ -46,6 +46,7 @@ final class CreateInitialChangesetStub implements CreateInitialChangeset
         return new self(true);
     }
 
+    #[\Override]
     public function create(Artifact $artifact, array $fields_data, \PFUser $submitter, int $submitted_on, CreatedFileURLMapping $url_mapping, TrackerImportConfig $import_config, ChangesetValidationContext $changeset_validation_context,): ?int
     {
         $this->nb_calls++;

@@ -53,6 +53,7 @@ final class MercureClientTest extends TestCase
      */
     private $jwt_configuration;
 
+    #[\Override]
     protected function setup(): void
     {
         parent::setup();

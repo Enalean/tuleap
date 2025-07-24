@@ -40,6 +40,7 @@ final class BranchNameCreatorFromArtifactTest extends TestCase
      */
     private $create_branch_prefix_dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->create_branch_prefix_dao = $this->createMock(CreateBranchPrefixDao::class);

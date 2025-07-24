@@ -32,6 +32,7 @@ final class ServiceAvailabilityHandlerTest extends TestCase
     private ServiceAvailabilityHandler $handler;
     private MediawikiFlavorUsageStub $legacy_mediawiki_usage;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->legacy_mediawiki_usage = new MediawikiFlavorUsageStub();

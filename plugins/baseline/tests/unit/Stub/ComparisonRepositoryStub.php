@@ -47,6 +47,7 @@ class ComparisonRepositoryStub implements ComparisonRepository
         $this->clock = $clock;
     }
 
+    #[\Override]
     public function add(TransientComparison $transient_comparison, UserIdentifier $current_user): Comparison
     {
         $comparison = new Comparison(
@@ -63,6 +64,7 @@ class ComparisonRepositoryStub implements ComparisonRepository
         return $comparison;
     }
 
+    #[\Override]
     public function findById(UserIdentifier $current_user, int $id): ?Comparison
     {
         if (! isset($this->comparisons_by_id[$id])) {
@@ -87,6 +89,7 @@ class ComparisonRepositoryStub implements ComparisonRepository
     /**
      * @return Comparison[]
      */
+    #[\Override]
     public function findByProject(UserIdentifier $current_user, ProjectIdentifier $project, int $page_size, int $comparison_offset): array
     {
         $matching_comparisons = array_filter(
@@ -98,6 +101,7 @@ class ComparisonRepositoryStub implements ComparisonRepository
         return array_slice($matching_comparisons, $comparison_offset, $page_size);
     }
 
+    #[\Override]
     public function countByProject(ProjectIdentifier $project): int
     {
         return count($this->comparisons_by_id);
@@ -112,11 +116,13 @@ class ComparisonRepositoryStub implements ComparisonRepository
         return $this->comparisons_by_id;
     }
 
+    #[\Override]
     public function delete(Comparison $comparison, UserIdentifier $current_user): void
     {
         unset($this->comparisons_by_id[$comparison->getId()]);
     }
 
+    #[\Override]
     public function countByBaseline(Baseline $baseline): int
     {
         return count(

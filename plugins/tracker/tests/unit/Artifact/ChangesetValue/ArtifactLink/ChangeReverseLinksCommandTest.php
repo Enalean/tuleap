@@ -37,6 +37,7 @@ final class ChangeReverseLinksCommandTest extends TestCase
     private CollectionOfReverseLinks $submitted_links;
     private Artifact $artifact;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->artifact        = ArtifactTestBuilder::anArtifact(811)->build();

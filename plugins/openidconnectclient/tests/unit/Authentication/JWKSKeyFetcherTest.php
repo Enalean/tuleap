@@ -38,6 +38,7 @@ final class JWKSKeyFetcherTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $key_fetcher;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->client      = new Client();

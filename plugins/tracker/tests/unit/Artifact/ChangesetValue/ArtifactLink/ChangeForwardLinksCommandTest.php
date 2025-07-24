@@ -39,6 +39,7 @@ final class ChangeForwardLinksCommandTest extends TestCase
      */
     private Option $submitted_links;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->existing_links  = new CollectionOfForwardLinks([

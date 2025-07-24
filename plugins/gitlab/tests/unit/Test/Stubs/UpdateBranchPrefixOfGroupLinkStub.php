@@ -35,6 +35,7 @@ final class UpdateBranchPrefixOfGroupLinkStub implements \Tuleap\Gitlab\Group\Up
         return new self();
     }
 
+    #[\Override]
     public function updateBranchPrefixOfGroupLink(int $id, string $prefix_branch_name,): void
     {
         $this->call_count++;

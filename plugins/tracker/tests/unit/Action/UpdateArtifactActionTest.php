@@ -83,6 +83,7 @@ final class UpdateArtifactActionTest extends TestCase
     private RetrieveForwardLinksStub $forward_links_retriever;
     private RetrieveViewableArtifactStub $artifact_retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         $tracker_user_story_id = 103;

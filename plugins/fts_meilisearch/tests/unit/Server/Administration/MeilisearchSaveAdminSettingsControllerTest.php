@@ -130,6 +130,7 @@ final class MeilisearchSaveAdminSettingsControllerTest extends TestCase
                 {
                 }
 
+                #[\Override]
                 public function getCurrentKey(): ?ConcealedString
                 {
                     return $this->key;

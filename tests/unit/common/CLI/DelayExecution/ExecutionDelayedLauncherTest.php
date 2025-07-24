@@ -31,6 +31,7 @@ final class ExecutionDelayedLauncherTest extends \Tuleap\Test\PHPUnit\TestCase
         $execution_delayer = new class implements ExecutionDelayer {
             public $nb_delay = 0;
 
+            #[\Override]
             public function delay(): void
             {
                 $this->nb_delay++;

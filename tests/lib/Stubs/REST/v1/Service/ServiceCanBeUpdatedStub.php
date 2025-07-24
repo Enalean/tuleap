@@ -36,6 +36,7 @@ final class ServiceCanBeUpdatedStub implements ServiceCanBeUpdated
     /**
      * @throws Throwable
      */
+    #[\Override]
     public function checkServiceCanBeUpdated(Project $project, string $short_name, bool $is_used, PFUser $user): void
     {
         if ($this->exception) {

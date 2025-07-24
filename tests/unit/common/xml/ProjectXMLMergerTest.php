@@ -30,6 +30,7 @@ class ProjectXMLMergerTest extends \Tuleap\Test\PHPUnit\TestCase
     private string $fixtures;
     private string $destination;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -37,6 +38,7 @@ class ProjectXMLMergerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->destination = tempnam($this->getTmpDir(), 'XML');
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         unlink($this->destination);

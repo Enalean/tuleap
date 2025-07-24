@@ -45,6 +45,7 @@ final class StatusMetadataTest extends CrossTrackerFieldTestCase
     private int $task_artifact_open_id;
     private int $task_artifact_close_id;
 
+    #[\Override]
     protected function setUp(): void
     {
         $db              = DBFactory::getMainTuleapDBConnection()->getDB();

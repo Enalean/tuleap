@@ -39,6 +39,7 @@ class KeyMetadataProviderStub implements KeyMetadataProvider
         return new self($metadata);
     }
 
+    #[\Override]
     public function getKeyMetadata(string $key): ConfigKeyMetadata
     {
         return $this->metadata[$key];

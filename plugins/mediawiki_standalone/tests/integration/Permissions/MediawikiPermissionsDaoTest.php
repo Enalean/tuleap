@@ -45,6 +45,7 @@ final class MediawikiPermissionsDaoTest extends TestIntegrationTestCase
     private \ProjectUGroup $qa_ugroup;
     private \ProjectUGroup $integrators_ugroup;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao = new MediawikiPermissionsDao();

@@ -82,6 +82,7 @@ final class PackagePermissionPerGroupRepresentationBuilderTest extends \Tuleap\T
 
     private $package_id;
 
+    #[\Override]
     public function setUp(): void
     {
         parent::setUp();

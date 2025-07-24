@@ -53,6 +53,7 @@ final class TimeRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $artifact;
 
+    #[\Override]
     public function setUp(): void
     {
         parent::setUp();

@@ -46,6 +46,7 @@ final class CreateTemplateStub implements CreateTemplate
         return $this->called;
     }
 
+    #[\Override]
     public function create(
         string $label,
         string $description,

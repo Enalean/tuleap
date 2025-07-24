@@ -37,6 +37,7 @@ final class StorePendingTeamSynchronizationStub implements StorePendingTeamSynch
         return new self(0);
     }
 
+    #[\Override]
     public function storePendingTeamSynchronization(ProgramIdentifier $program_identifier, TeamIdentifier $team_identifier): void
     {
         $this->call_count++;

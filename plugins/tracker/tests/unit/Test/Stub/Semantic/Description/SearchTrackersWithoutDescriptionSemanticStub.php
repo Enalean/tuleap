@@ -47,11 +47,13 @@ final readonly class SearchTrackersWithoutDescriptionSemanticStub implements Sea
         return new self([$tracker_id, ...$other_tracker_ids]);
     }
 
+    #[\Override]
     public function countTrackersWithoutDescriptionSemantic(array $tracker_ids): int
     {
         return count($this->getTrackerIdsWithoutDescriptionSemantic($tracker_ids));
     }
 
+    #[\Override]
     public function getTrackerIdsWithoutDescriptionSemantic(array $tracker_ids): array
     {
         return array_values(array_intersect($this->tracker_ids_without_description, $tracker_ids));

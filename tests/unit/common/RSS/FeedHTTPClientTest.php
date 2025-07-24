@@ -40,6 +40,7 @@ final class FeedHTTPClientTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $feed_http_client;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->http_client = new Client();

@@ -26,6 +26,7 @@ use Tuleap\Cryptography\ConcealedString;
 
 final class LocalSettingsRepresentationForTestBuilder implements LocalSettingsRepresentationBuilder
 {
+    #[\Override]
     public function generateTuleapLocalSettingsRepresentation(): LocalSettingsRepresentation
     {
         return new LocalSettingsRepresentation(

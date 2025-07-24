@@ -41,6 +41,7 @@ final class TagPushWebhookActionProcessorTest extends \Tuleap\Test\PHPUnit\TestC
 
     private TagPushWebhookActionProcessor $action_processor;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

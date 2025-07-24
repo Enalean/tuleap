@@ -38,6 +38,7 @@ final class TrackerFactoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $tracker_factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->tracker_factory = $this->createStub(\TrackerFactory::class);

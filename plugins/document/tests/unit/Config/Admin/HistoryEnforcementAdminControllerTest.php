@@ -36,6 +36,7 @@ final class HistoryEnforcementAdminControllerTest extends \Tuleap\Test\PHPUnit\T
     private HistoryEnforcementAdminController $controller;
     private MockObject&AdminPageRenderer $admin_page_renderer;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->admin_page_renderer = $this->createMock(AdminPageRenderer::class);

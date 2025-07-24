@@ -41,6 +41,7 @@ final class ListOfAllowedServicesForProjectRetrieverStub implements ListOfAllowe
         return new self([$service, ...$other_services]);
     }
 
+    #[\Override]
     public function getListOfAllowedServicesForProject(Project $project): array
     {
         return $this->services;

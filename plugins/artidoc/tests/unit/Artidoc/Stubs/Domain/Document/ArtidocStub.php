@@ -35,21 +35,25 @@ final class ArtidocStub implements Artidoc
         return new self();
     }
 
+    #[\Override]
     public function getId(): int
     {
         return 123;
     }
 
+    #[\Override]
     public function getTitle(): string
     {
         return 'Title';
     }
 
+    #[\Override]
     public function getParentId(): int
     {
         return 1;
     }
 
+    #[\Override]
     public function getProjectId(): int
     {
         return 101;

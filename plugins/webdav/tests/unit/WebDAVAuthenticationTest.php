@@ -53,6 +53,7 @@ final class WebDAVAuthenticationTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $access_key_authenticator;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -63,6 +64,7 @@ final class WebDAVAuthenticationTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->access_key_authenticator = $this->createMock(HTTPBasicAuthUserAccessKeyAuthenticator::class);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         unset($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'], $_SERVER['REMOTE_ADDR']);

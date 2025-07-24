@@ -42,6 +42,7 @@ final class URLVerificationExpiredPasswordTest extends \Tuleap\Test\PHPUnit\Test
      */
     private $url_verification;
 
+    #[\Override]
     protected function setUp(): void
     {
         $fifteen_days_ago = new \DateTimeImmutable('15 days ago');
@@ -57,6 +58,7 @@ final class URLVerificationExpiredPasswordTest extends \Tuleap\Test\PHPUnit\Test
         $GLOBALS['Language']->method('getText')->willReturn('');
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         UserManager::clearInstance();

@@ -56,6 +56,7 @@ final class MasschangeUpdaterTest extends TestCase
     private RetrieveArtifact $artifact_factory;
     private CreateNewChangesetStub $changeset_creator;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->artifact_dao         = $this->createMock(Tracker_ArtifactDao::class);

@@ -28,6 +28,7 @@ final class AlreadyExistingUserTest extends \Tuleap\Test\PHPUnit\TestCase
     /** @var AlreadyExistingUser */
     private $user;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user = new AlreadyExistingUser(

@@ -29,6 +29,7 @@ final class UGroupSourceInitializationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private \ProjectUGroup&MockObject $ugroup;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

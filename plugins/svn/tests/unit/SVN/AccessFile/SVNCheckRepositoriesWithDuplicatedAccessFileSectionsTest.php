@@ -38,6 +38,7 @@ final class SVNCheckRepositoriesWithDuplicatedAccessFileSectionsTest extends Tes
     private RepositoryManager&\PHPUnit\Framework\MockObject\MockObject $repository_manager;
     private SVNAccessFileReader&\PHPUnit\Framework\MockObject\MockObject $access_file_reader;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

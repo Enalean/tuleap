@@ -30,6 +30,7 @@ final class AddNewGroupLinkStub implements \Tuleap\Gitlab\Group\AddNewGroupLink
     {
     }
 
+    #[\Override]
     public function addNewGroup(NewGroupLink $gitlab_group): int
     {
         return $this->group_id;

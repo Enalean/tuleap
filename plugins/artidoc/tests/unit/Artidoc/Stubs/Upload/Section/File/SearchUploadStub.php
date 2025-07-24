@@ -46,6 +46,7 @@ final readonly class SearchUploadStub implements SearchUpload
         return new self(null);
     }
 
+    #[\Override]
     public function searchUpload(FileIdentifier $id): Ok|Err
     {
         return $this->file

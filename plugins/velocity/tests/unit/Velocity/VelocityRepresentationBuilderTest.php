@@ -47,6 +47,7 @@ final class VelocityRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestC
     private \PHPUnit\Framework\MockObject\MockObject&Planning_Milestone $milestone;
     private \PHPUnit\Framework\MockObject\MockObject&PFUser $user;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

@@ -55,6 +55,7 @@ final class PromotedMilestoneBuilderStub implements BuildPromotedMilestone
         return new self($milestone_list);
     }
 
+    #[\Override]
     public function build(Artifact $milestone_artifact, PFUser $user, \Project $project): Option
     {
         $this->nb_called++;

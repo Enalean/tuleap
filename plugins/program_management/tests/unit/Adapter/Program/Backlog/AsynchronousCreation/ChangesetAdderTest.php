@@ -78,6 +78,7 @@ final class ChangesetAdderTest extends \Tuleap\Test\PHPUnit\TestCase
     private ArtifactLinkChangeset $artifact_link_changeset;
     private Artifact $artifact;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->changeset_creator = $this->createMock(NewChangesetCreator::class);

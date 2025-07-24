@@ -68,6 +68,7 @@ final class FieldsWithValuesBuilderTest extends TestCase
     private ConfiguredFieldCollection $field_collection;
     private \Tracker_Artifact_Changeset $changeset;
 
+    #[\Override]
     protected function setUp(): void
     {
         $project                = ProjectTestBuilder::aProject()->withId(168)->build();

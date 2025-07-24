@@ -64,6 +64,7 @@ final class CardColumnFinderTest extends TestCase
     private \Cardwall_Column $ongoing_column;
     private \Cardwall_Column $done_column;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user              = UserTestBuilder::buildWithDefaults();

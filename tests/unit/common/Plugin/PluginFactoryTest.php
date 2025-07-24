@@ -40,6 +40,7 @@ final class PluginFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private PluginFactory $factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         ForgeConfig::set('sys_pluginsroot', __DIR__ . '/_fixtures/plugins');
@@ -211,6 +212,7 @@ final class PluginFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
         $plugin = new class (123) extends Plugin {
             public bool $post_enable_called = false;
 
+            #[\Override]
             public function postEnable(): void
             {
                 $this->post_enable_called = true;
@@ -225,21 +227,25 @@ final class PluginFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testCannotEnablePluginWithAMissingInstallRequirement(): void
     {
         $plugin = new class extends Plugin {
+            #[\Override]
             public function getName(): string
             {
                 return 'test_plugin';
             }
 
+            #[\Override]
             public function getInstallRequirements(): array
             {
                 return [
                     new class implements PluginInstallRequirement {
+                        #[\Override]
                         public function getDescriptionOfMissingInstallRequirement(): ?string
                         {
                             return null;
                         }
                     },
                     new class implements PluginInstallRequirement {
+                        #[\Override]
                         public function getDescriptionOfMissingInstallRequirement(): ?string
                         {
                             return 'missing_requirement';

@@ -49,6 +49,7 @@ final class DisplayAccountInformationControllerTest extends \Tuleap\Test\PHPUnit
     private $user;
     private EventDispatcherInterface $event_manager;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->event_manager = new class implements EventDispatcherInterface {
@@ -56,6 +57,7 @@ final class DisplayAccountInformationControllerTest extends \Tuleap\Test\PHPUnit
             public $disable_email_change     = false;
             public $add_ldap_extra_info      = false;
 
+            #[\Override]
             public function dispatch(object $event)
             {
                 if ($event instanceof AccountInformationCollection) {

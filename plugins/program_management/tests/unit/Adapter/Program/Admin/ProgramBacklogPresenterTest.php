@@ -47,6 +47,7 @@ final class ProgramBacklogPresenterTest extends \Tuleap\Test\PHPUnit\TestCase
     private const ITERATION_LABEL              = 'Iterations';
     private ProgramBacklogConfiguration $configuration;
 
+    #[\Override]
     protected function setUp(): void
     {
         $program                         = ProgramIdentifierBuilder::build();

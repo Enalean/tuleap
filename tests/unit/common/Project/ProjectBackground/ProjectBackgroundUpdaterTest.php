@@ -31,6 +31,7 @@ final class ProjectBackgroundUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
     private ProjectBackgroundDao&MockObject $project_background_dao;
     private ProjectBackgroundUpdater $project_background_updater;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->project_background_dao     = $this->createMock(ProjectBackgroundDao::class);

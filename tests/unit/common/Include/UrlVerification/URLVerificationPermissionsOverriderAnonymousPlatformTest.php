@@ -38,6 +38,7 @@ final class URLVerificationPermissionsOverriderAnonymousPlatformTest extends \Tu
     private $url_verification;
     private $server;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

@@ -54,6 +54,7 @@ final class GitlabProjectIntegratorTest extends TestCase
     private Project $project;
     private GroupLink $group_link;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->group_link = GroupLinkBuilder::aGroupLink(3)->build();

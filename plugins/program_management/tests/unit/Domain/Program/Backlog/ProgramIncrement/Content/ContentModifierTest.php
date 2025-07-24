@@ -57,6 +57,7 @@ final class ContentModifierTest extends \Tuleap\Test\PHPUnit\TestCase
     private OrderFeatureRank $feature_reorderer;
     private VerifyFeatureIsPlannedInProgramIncrementStub $feature_is_planned_verifier;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user                           = UserIdentifierStub::buildGenericUser();
@@ -197,6 +198,7 @@ final class ContentModifierTest extends \Tuleap\Test\PHPUnit\TestCase
     private function buildFeatureRemoverStub(): RemoveFeature
     {
         return new class implements RemoveFeature {
+            #[\Override]
             public function removeFromAllProgramIncrements(FeatureRemoval $feature_removal): void
             {
                 // Side effects
@@ -212,11 +214,13 @@ final class ContentModifierTest extends \Tuleap\Test\PHPUnit\TestCase
                 throw new \LogicException('This method is not supposed to be called in the test');
             }
 
+            #[\Override]
             public function addArtifactsToTheExplicitTopBacklog(array $artifact_ids): void
             {
                 throw new \LogicException('This method is not supposed to be called in the test');
             }
 
+            #[\Override]
             public function removeArtifactsFromExplicitTopBacklog(array $artifact_ids): void
             {
                 // Side effects
@@ -227,6 +231,7 @@ final class ContentModifierTest extends \Tuleap\Test\PHPUnit\TestCase
     private function buildFeatureAdderStub(): AddFeature
     {
         return new class implements AddFeature {
+            #[\Override]
             public function add(FeatureAddition $feature_addition): void
             {
                 // Side effects
@@ -241,6 +246,7 @@ final class ContentModifierTest extends \Tuleap\Test\PHPUnit\TestCase
             {
             }
 
+            #[\Override]
             public function reorder(
                 FeaturesToReorder $order,
                 string $context_id,

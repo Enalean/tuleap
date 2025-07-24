@@ -42,6 +42,7 @@ final class PullRequestAbandonedNotificationToProcessBuilderTest extends \Tuleap
     private MockObject&HTMLURLBuilder $html_url_builder;
     private SearchPullRequestStub $pull_request_dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user_manager     = RetrieveUserByIdStub::withNoUser();

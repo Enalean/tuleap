@@ -43,6 +43,7 @@ final class RetrieveStatusValuesStub implements RetrieveStatusValues
         return new self(...$labels);
     }
 
+    #[\Override]
     public function getStatusValues(StatusFieldReference $status): array
     {
         return array_map(

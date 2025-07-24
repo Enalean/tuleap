@@ -49,21 +49,25 @@ final class ProgramRedirectionParametersStub implements ProgramRedirectionParame
         return new self('other');
     }
 
+    #[\Override]
     public function getValue(): string
     {
         return $this->redirect_value;
     }
 
+    #[\Override]
     public function isRedirectionNeeded(): bool
     {
         return $this->needsRedirectionAfterCreate() || $this->needsRedirectionAfterUpdate();
     }
 
+    #[\Override]
     public function needsRedirectionAfterCreate(): bool
     {
         return $this->redirect_value === self::REDIRECT_AFTER_CREATE_ACTION;
     }
 
+    #[\Override]
     public function needsRedirectionAfterUpdate(): bool
     {
         return $this->redirect_value === self::REDIRECT_AFTER_UPDATE_ACTION;

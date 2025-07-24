@@ -63,6 +63,7 @@ final class ProjectSidebarConfigRepresentationTest extends TestCase
             $project_flags_builder,
             new class implements EventDispatcherInterface
             {
+                #[\Override]
                 public function dispatch(object $event): object
                 {
                     return $event;
@@ -70,17 +71,20 @@ final class ProjectSidebarConfigRepresentationTest extends TestCase
             },
             VerifyUserCanAccessProjectAdministrationStub::withPermittedAccess(),
             new class implements FlavorFinder {
+                #[\Override]
                 public function isEnterprise(): bool
                 {
                     return false;
                 }
             },
             new class implements IDetectIfLogoIsCustomized {
+                #[\Override]
                 public function isLegacyOrganizationLogoCustomized(): bool
                 {
                     return false;
                 }
 
+                #[\Override]
                 public function isSvgOrganizationLogoCustomized(): bool
                 {
                     return false;

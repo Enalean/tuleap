@@ -42,6 +42,7 @@ final class RetrieveProjectUgroupsCanPrioritizeItemsStub implements RetrieveProj
     /**
      * @return int[]
      */
+    #[\Override]
     public function searchUserGroupIDsWhoCanPrioritizeFeaturesByProjectID(int $project_id): array
     {
         return $this->ids;

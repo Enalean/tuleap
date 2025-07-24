@@ -44,6 +44,7 @@ final class JWTGeneratorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private Configuration $jwt_configuration;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

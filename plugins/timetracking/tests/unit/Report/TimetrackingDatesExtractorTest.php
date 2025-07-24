@@ -40,6 +40,7 @@ final class TimetrackingDatesExtractorTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $dates_extractor;
 
+    #[\Override]
     public function setUp(): void
     {
         parent::setUp();

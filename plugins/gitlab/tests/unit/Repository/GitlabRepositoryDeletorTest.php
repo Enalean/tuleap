@@ -102,6 +102,7 @@ final class GitlabRepositoryDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $branch_prefix_dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

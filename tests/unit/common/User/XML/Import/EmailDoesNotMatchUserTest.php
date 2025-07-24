@@ -28,6 +28,7 @@ final class EmailDoesNotMatchUserTest extends \Tuleap\Test\PHPUnit\TestCase
     /** @var EmailDoesNotMatchUser */
     private $user;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user = new EmailDoesNotMatchUser(

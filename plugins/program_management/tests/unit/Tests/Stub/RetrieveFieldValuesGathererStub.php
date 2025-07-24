@@ -37,6 +37,7 @@ final class RetrieveFieldValuesGathererStub implements RetrieveFieldValuesGather
         return new self($gatherer);
     }
 
+    #[\Override]
     public function getFieldValuesGatherer(TimeboxMirroringOrder $order): GatherFieldValues
     {
         return $this->gatherer;

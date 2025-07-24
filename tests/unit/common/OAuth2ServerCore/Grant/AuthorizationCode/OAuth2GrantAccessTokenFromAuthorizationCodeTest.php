@@ -63,6 +63,7 @@ final class OAuth2GrantAccessTokenFromAuthorizationCodeTest extends \Tuleap\Test
      */
     private $grant_access_token_from_auth_code;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->representation_builder = $this->createMock(AccessTokenGrantRepresentationBuilder::class);

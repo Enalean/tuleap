@@ -37,6 +37,7 @@ final class InvitationCreatorStub implements InvitationCreator
         return new self();
     }
 
+    #[\Override]
     public function create(
         int $created_on,
         int $from_user_id,

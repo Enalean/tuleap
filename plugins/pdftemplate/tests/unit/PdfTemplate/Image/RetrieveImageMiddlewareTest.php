@@ -37,6 +37,7 @@ final class RetrieveImageMiddlewareTest extends TestCase
 {
     private PdfTemplateImageIdentifierFactory $image_identifier_factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->image_identifier_factory = new PdfTemplateImageIdentifierFactory(new DatabaseUUIDV7Factory());

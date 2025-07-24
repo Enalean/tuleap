@@ -25,6 +25,7 @@ class URLRedirectTest extends \PHPUnit\Framework\TestCase //phpcs:ignore
 
     private $url_redirect;
 
+    #[\Override]
     public function setUp(): void
     {
         ForgeConfig::set('sys_default_domain', 'example.com');

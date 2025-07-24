@@ -50,6 +50,7 @@ final class RetrieveFeatureTitleStub implements RetrieveFeatureTitle
         return new self([]);
     }
 
+    #[\Override]
     public function getFeatureTitle(FeatureIdentifier $feature_identifier, UserIdentifier $user_identifier): ?string
     {
         if (count($this->titles) > 0) {

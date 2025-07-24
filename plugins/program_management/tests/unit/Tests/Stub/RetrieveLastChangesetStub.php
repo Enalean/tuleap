@@ -39,6 +39,7 @@ final class RetrieveLastChangesetStub implements RetrieveLastChangeset
         $this->last_changeset_ids = $last_changeset_ids;
     }
 
+    #[\Override]
     public function retrieveLastChangesetId(TimeboxIdentifier $timebox_identifier): ?int
     {
         if ($this->should_return_null) {

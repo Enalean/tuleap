@@ -39,6 +39,7 @@ final class UpdateLevelStub implements UpdateLevel
         return new self();
     }
 
+    #[\Override]
     public function updateLevel(SectionIdentifier $section_identifier, Level $level,): void
     {
         $this->called = true;

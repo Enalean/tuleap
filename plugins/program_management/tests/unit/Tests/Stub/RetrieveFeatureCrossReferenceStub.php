@@ -44,6 +44,7 @@ final class RetrieveFeatureCrossReferenceStub implements RetrieveFeatureCrossRef
         return new self([$tracker_short_name, ...$other_short_names]);
     }
 
+    #[\Override]
     public function getFeatureCrossReference(FeatureIdentifier $feature_identifier): string
     {
         if (count($this->tracker_short_names) > 0) {

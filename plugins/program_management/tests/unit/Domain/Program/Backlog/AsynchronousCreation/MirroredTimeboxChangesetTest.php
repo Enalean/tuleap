@@ -41,6 +41,7 @@ final class MirroredTimeboxChangesetTest extends \Tuleap\Test\PHPUnit\TestCase
     private MapStatusByValueStub $status_mapper;
     private MirroredProgramIncrementIdentifier $mirrored_program_increment;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->tracker_retriever = RetrieveTrackerOfArtifactStub::withIds(1);

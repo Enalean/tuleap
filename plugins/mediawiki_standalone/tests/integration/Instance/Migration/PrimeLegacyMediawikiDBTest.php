@@ -38,6 +38,7 @@ final class PrimeLegacyMediawikiDBTest extends TestCase
     private const ADDITIONAL_TEST_DB   = 'testdb_mw_standalone_preparation';
     private const TEST_TABLE_BASE_NAME = 'test_migration';
 
+    #[\Override]
     protected function setUp(): void
     {
         $db = DBFactory::getMainTuleapDBConnection()->getDB();
@@ -51,6 +52,7 @@ final class PrimeLegacyMediawikiDBTest extends TestCase
         );
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         $db = DBFactory::getMainTuleapDBConnection()->getDB();

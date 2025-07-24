@@ -36,6 +36,7 @@ final class FieldDataTest extends \Tuleap\Test\PHPUnit\TestCase
     private array $user_stories_to_add;
     private array $user_stories_to_remove;
 
+    #[\Override]
     protected function setUp(): void
     {
         $first_feature_change         = FeatureChange::fromRaw([

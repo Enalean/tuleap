@@ -30,6 +30,7 @@ final class DateFormatterTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $formatter;
 
+    #[\Override]
     public function setUp(): void
     {
         parent::setUp();

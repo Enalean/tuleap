@@ -64,6 +64,7 @@ class ProjectDetailsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
     private Project&MockObject $current_project;
     private DescriptionFieldsFactory&MockObject $description_fields_factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -103,6 +104,7 @@ class ProjectDetailsControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $GLOBALS['Response'] = $this->createMock(BaseLayout::class);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         unset($GLOBALS['Response']);

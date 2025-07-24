@@ -51,6 +51,7 @@ final class ProjectMilestonesWidgetRetrieverTest extends \Tuleap\Test\PHPUnit\Te
     private Project $project;
     private ProjectMilestonesWidgetRetriever $retriever;
 
+    #[\Override]
     public function setUp(): void
     {
         parent::setUp();

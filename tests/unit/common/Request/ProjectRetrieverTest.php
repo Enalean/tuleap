@@ -33,6 +33,7 @@ final class ProjectRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     private $project_retriever;
     private ProjectManager|\PHPUnit\Framework\MockObject\MockObject $project_manager;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->project_manager   = $this->createMock(ProjectManager::class);

@@ -43,6 +43,7 @@ final class AppFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $project_manager;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->app_dao         = $this->createMock(AppDao::class);

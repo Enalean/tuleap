@@ -36,11 +36,13 @@ final class IUpdatePermissionsFollowingSiteAccessChangeStub implements IUpdatePe
         return new self();
     }
 
+    #[\Override]
     public function updateAllAnonymousAccessToRegistered(): void
     {
         $this->has_conversion_from_anon_to_registered_be_called = true;
     }
 
+    #[\Override]
     public function updateAllAuthenticatedAccessToRegistered(): void
     {
         $this->has_conversion_from_authenticated_to_registered_be_called = true;

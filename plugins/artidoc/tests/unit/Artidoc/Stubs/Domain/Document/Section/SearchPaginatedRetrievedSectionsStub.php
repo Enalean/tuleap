@@ -42,6 +42,7 @@ final readonly class SearchPaginatedRetrievedSectionsStub implements SearchPagin
         return new self(null);
     }
 
+    #[\Override]
     public function searchPaginatedRetrievedSections(ArtidocWithContext $artidoc, int $limit, int $offset): PaginatedRetrievedSections
     {
         if ($this->sections === null) {

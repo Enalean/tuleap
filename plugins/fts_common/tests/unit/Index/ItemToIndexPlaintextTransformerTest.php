@@ -46,6 +46,7 @@ final class ItemToIndexPlaintextTransformerTest extends TestCase
         {
             public array $indexed_items = [];
 
+            #[\Override]
             public function indexItems(PlaintextItemToIndex ...$items): void
             {
                 $this->indexed_items = array_merge($this->indexed_items, $items);
@@ -59,16 +60,19 @@ final class ItemToIndexPlaintextTransformerTest extends TestCase
             $stub_plaintext_item_inserter,
             $html_purifier,
             new class implements ContentInterpretor {
+                #[\Override]
                 public function getInterpretedContent(string $content): string
                 {
                     return 'not expected';
                 }
 
+                #[\Override]
                 public function getInterpretedContentWithReferences(string $content, int $project_id): string
                 {
                     return 'not expected';
                 }
 
+                #[\Override]
                 public function getContentStrippedOfTags(string $content): string
                 {
                     return 'commonmark';

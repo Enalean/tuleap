@@ -38,6 +38,7 @@ final class PotentialTimeboxTrackerConfigurationPresenterCollectionTest extends 
     private const SECOND_TRACKER_ID = 500;
     private ProgramForAdministrationIdentifier $program;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->program = ProgramForAdministrationIdentifierBuilder::build();

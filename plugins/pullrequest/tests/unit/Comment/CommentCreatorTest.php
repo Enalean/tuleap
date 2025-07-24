@@ -45,6 +45,7 @@ final class CommentCreatorTest extends TestCase
     private ParentCommentSearcherStub $parent_comment_searcher;
     private ThreadColorUpdaterStub $thread_color_updater;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->reference_manager       = ExtractAndSaveCrossReferencesStub::withCallCount();

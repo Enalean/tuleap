@@ -46,6 +46,7 @@ final class ArtidocDaoTest extends TestIntegrationTestCase
     private ArtidocWithContext $artidoc_102;
     private ArtidocWithContext $artidoc_103;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->artidoc_101 = new ArtidocWithContext(new ArtidocDocument(['item_id' => 101]));

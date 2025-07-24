@@ -41,6 +41,7 @@ final class CreatePostActionStub implements CreatePostAction
         return $this->call_count;
     }
 
+    #[\Override]
     public function createPostActionForTransitionID(int $transition_id): void
     {
         $this->call_count++;

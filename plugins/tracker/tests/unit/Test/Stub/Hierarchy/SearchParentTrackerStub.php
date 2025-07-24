@@ -43,6 +43,7 @@ final readonly class SearchParentTrackerStub implements \Tuleap\Tracker\Hierarch
         return new self(Option::nothing(\Psl\Type\int()));
     }
 
+    #[\Override]
     public function searchParentId(int $child_tracker_id): Option
     {
         return $this->parent_tracker_id;

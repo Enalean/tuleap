@@ -37,6 +37,7 @@ final class LogFunctionActivatedStub implements LogFunctionActivated
         return new self();
     }
 
+    #[\Override]
     public function logFunctionActivated(\PFUser $user, \Tuleap\Tracker\Tracker $tracker): void
     {
         $this->logged = true;

@@ -60,6 +60,7 @@ final class ArtifactContentCreatorTest extends TestCase
     private ArtidocWithContext $artidoc;
     private \Tuleap\Tracker\Tracker $tracker;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user = UserTestBuilder::buildWithDefaults();

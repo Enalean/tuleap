@@ -52,6 +52,7 @@ final class OAuth2RefreshTokenCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $refresh_token_creator;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->refresh_token_dao = $this->createMock(OAuth2RefreshTokenDAO::class);
@@ -59,6 +60,7 @@ final class OAuth2RefreshTokenCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $formatter = new class implements SplitTokenFormatter
         {
+            #[\Override]
             public function getIdentifier(SplitToken $token): ConcealedString
             {
                 return $token->getVerificationString()->getString();

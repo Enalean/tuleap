@@ -35,16 +35,19 @@ final class StubServiceAvailability implements ServiceAvailability
     {
     }
 
+    #[\Override]
     public function isForService(string $service_shortname): bool
     {
         return $this->service_shortname === $service_shortname;
     }
 
+    #[\Override]
     public function getProject(): \Project
     {
         return $this->project;
     }
 
+    #[\Override]
     public function cannotBeActivated(string $reason): void
     {
         $this->cannot_be_activated = true;

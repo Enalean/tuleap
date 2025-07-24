@@ -38,11 +38,13 @@ final class TextFieldValueStub implements TextFieldValue
         return new self($value, $format);
     }
 
+    #[\Override]
     public function getValue(): string
     {
         return $this->value;
     }
 
+    #[\Override]
     public function getFormat(): string
     {
         return $this->format;

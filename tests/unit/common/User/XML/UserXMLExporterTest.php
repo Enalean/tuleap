@@ -34,6 +34,7 @@ final class UserXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
     private $user_manager;
     private $base_xml;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

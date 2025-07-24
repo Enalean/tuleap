@@ -32,6 +32,7 @@ final class ReportCriteriaDaoTest extends TestIntegrationTestCase
     private ReportCriteriaDao $dao;
     private EasyDB $db;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->dao = new ReportCriteriaDao();

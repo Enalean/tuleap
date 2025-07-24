@@ -32,6 +32,7 @@ final class ProvideCurrentUserStub implements ProvideCurrentUser
     {
     }
 
+    #[\Override]
     public function getCurrentUser(): PFUser
     {
         return $this->user;

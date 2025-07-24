@@ -58,6 +58,7 @@ final class SwaggerJsonControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $resources_injector = new class extends ResourcesInjector
         {
+            #[\Override]
             public function populate(Restler $restler): void
             {
                 $restler->addAPIClass(SwaggerJsonDemoResource::class, 'somepath');

@@ -33,6 +33,7 @@ final class GetUserAuthenticatorsEventHandlerTest extends TestCase
 {
     use GlobalLanguageMock;
 
+    #[\Override]
     protected function setUp(): void
     {
         $GLOBALS['Language']->method('getText')->willReturn('c');

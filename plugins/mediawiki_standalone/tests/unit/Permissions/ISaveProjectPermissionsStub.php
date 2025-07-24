@@ -47,6 +47,7 @@ final class ISaveProjectPermissionsStub implements ISaveProjectPermissions
      * @param \ProjectUGroup[] $writers
      * @param \ProjectUGroup[] $admins
      */
+    #[\Override]
     public function saveProjectPermissions(\Project $project, array $readers, array $writers, array $admins): void
     {
         $this->captured_readers_ugroup_ids = array_map(

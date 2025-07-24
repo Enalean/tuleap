@@ -38,6 +38,7 @@ final class MediaWikiSharedSecretGeneratorForgeConfigStoreTest extends TestCase
     private $dao;
     private MediaWikiSharedSecretGeneratorForgeConfigStore $secret_generator;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao              = $this->createStub(ConfigDao::class);

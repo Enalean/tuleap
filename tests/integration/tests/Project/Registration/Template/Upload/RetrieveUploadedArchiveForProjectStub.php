@@ -39,6 +39,7 @@ final readonly class RetrieveUploadedArchiveForProjectStub implements RetrieveUp
         return new self($path);
     }
 
+    #[\Override]
     public function searchByProjectId(int $project_id): ?string
     {
         return $this->path;

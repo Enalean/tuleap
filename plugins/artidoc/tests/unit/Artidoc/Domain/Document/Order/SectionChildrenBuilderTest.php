@@ -46,6 +46,7 @@ final class SectionChildrenBuilderTest extends TestCase
     private RetrievedSection $section_BBB;
     private RetrievedSection $section_C;
 
+    #[\Override]
     protected function setUp(): void
     {
         $identifier_factory = new UUIDSectionIdentifierFactory(new DatabaseUUIDV7Factory());

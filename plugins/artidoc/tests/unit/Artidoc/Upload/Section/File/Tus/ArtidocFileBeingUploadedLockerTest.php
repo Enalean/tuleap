@@ -41,6 +41,7 @@ final class ArtidocFileBeingUploadedLockerTest extends TestCase
 
     private string $data_dir;
 
+    #[\Override]
     protected function setUp(): void
     {
         $path = sys_get_temp_dir() . '/' . bin2hex(random_bytes(8));
@@ -50,6 +51,7 @@ final class ArtidocFileBeingUploadedLockerTest extends TestCase
         \ForgeConfig::set('sys_data_dir', $this->data_dir);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         $folders = new RecursiveIteratorIterator(

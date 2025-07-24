@@ -67,6 +67,7 @@ final class TagPushWebhookCreateActionTest extends \Tuleap\Test\PHPUnit\TestCase
     private WebhookTuleapReferencesParser $tuleap_references_parser;
     private TagPushWebhookCreateAction $action;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

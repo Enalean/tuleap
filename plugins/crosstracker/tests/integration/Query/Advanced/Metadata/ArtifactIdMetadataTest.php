@@ -44,6 +44,7 @@ final class ArtifactIdMetadataTest extends CrossTrackerFieldTestCase
     private int $release_artifact_3_id;
     private int $sprint_artifact_2_id;
 
+    #[\Override]
     protected function setUp(): void
     {
         $db              = DBFactory::getMainTuleapDBConnection()->getDB();

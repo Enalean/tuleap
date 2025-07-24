@@ -36,6 +36,7 @@ class GitlabCommitFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $commit_dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->commit_dao = $this->createMock(CommitTuleapReferenceDao::class);

@@ -46,6 +46,7 @@ final class WASMFunctionPathHelperStub implements WASMFunctionPathHelper
     /**
      * @psalm-return non-empty-string
      */
+    #[\Override]
     public function getPathForTracker(Tracker $tracker): string
     {
         return $this->path;

@@ -43,6 +43,7 @@ final class RetrieveStartDateFieldStub implements RetrieveStartDateField
         return new self(...$start_dates);
     }
 
+    #[\Override]
     public function getStartDateField(TrackerIdentifier $tracker_identifier): StartDateFieldReference
     {
         if (count($this->start_dates) > 0) {

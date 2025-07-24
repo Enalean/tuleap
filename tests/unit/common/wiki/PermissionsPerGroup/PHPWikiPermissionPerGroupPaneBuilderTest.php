@@ -35,6 +35,7 @@ final class PHPWikiPermissionPerGroupPaneBuilderTest extends \Tuleap\Test\PHPUni
     private PermissionPerGroupUGroupFormatter $formatter;
     private MockObject&\TemplateRenderer $renderer;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

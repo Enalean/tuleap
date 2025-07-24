@@ -28,6 +28,7 @@ final class VerifyProjectIsAlreadyLinkedStub implements \Tuleap\Gitlab\Group\Ver
     {
     }
 
+    #[\Override]
     public function isProjectAlreadyLinked(int $project_id): bool
     {
         return $this->is_linked;

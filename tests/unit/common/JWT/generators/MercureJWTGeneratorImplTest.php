@@ -48,6 +48,7 @@ final class MercureJWTGeneratorImplTest extends \Tuleap\Test\PHPUnit\TestCase
     private MercureJWTGeneratorImpl $mercure_jwt_generator;
     private Configuration $jwt_configuration;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

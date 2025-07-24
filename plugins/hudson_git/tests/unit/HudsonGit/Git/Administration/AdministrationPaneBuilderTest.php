@@ -30,6 +30,7 @@ final class AdministrationPaneBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private Project $project;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

@@ -37,6 +37,7 @@ final class JiraSprintRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $client = new class extends \Tuleap\Tracker\Test\Stub\Creation\JiraImporter\JiraCloudClientStub
         {
+            #[\Override]
             public function getUrl(string $url): ?array
             {
                 assertEquals('/rest/agile/latest/board/1/sprint?startAt=0', $url);
@@ -58,6 +59,7 @@ final class JiraSprintRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $client = new class extends \Tuleap\Tracker\Test\Stub\Creation\JiraImporter\JiraCloudClientStub
         {
+            #[\Override]
             public function getUrl(string $url): ?array
             {
                 assertEquals('/rest/agile/latest/board/1/sprint?startAt=0', $url);
@@ -103,6 +105,7 @@ final class JiraSprintRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\TestCase
         {
             private int $call_count = 0;
 
+            #[\Override]
             public function getUrl(string $url): ?array
             {
                 if ($this->call_count === 0) {
@@ -162,6 +165,7 @@ final class JiraSprintRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $client = new class extends \Tuleap\Tracker\Test\Stub\Creation\JiraImporter\JiraCloudClientStub
         {
+            #[\Override]
             public function getUrl(string $url): ?array
             {
                 assertEquals('/rest/agile/latest/board/1/sprint?startAt=0', $url);

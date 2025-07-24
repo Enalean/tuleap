@@ -45,6 +45,7 @@ final class GetVisitHistoryStub implements GetVisitHistory
         return new self([]);
     }
 
+    #[\Override]
     public function getVisitHistory(HistoryEntryCollection $collection, int $max_length_history): void
     {
         foreach ($this->entries as $entry) {

@@ -33,6 +33,7 @@ final class MultiSelectBoxFieldSpecificPropertiesDAOTest extends TestIntegration
     private MultiSelectboxFieldSpecificPropertiesDAO $dao;
     private int $list_field_id;
 
+    #[\Override]
     protected function setUp(): void
     {
         $db              = DBFactory::getMainTuleapDBConnection()->getDB();

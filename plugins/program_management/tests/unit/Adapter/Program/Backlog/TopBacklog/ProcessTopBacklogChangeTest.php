@@ -58,6 +58,7 @@ final class ProcessTopBacklogChangeTest extends \Tuleap\Test\PHPUnit\TestCase
     private VerifyHasAtLeastOnePlannedUserStoryStub $story_verifier;
     private VerifyPrioritizeFeaturesPermissionStub $prioritize_features_permission_verifier;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->artifact_factory         = $this->createMock(\Tracker_ArtifactFactory::class);

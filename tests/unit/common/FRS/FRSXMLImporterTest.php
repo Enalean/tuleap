@@ -27,10 +27,12 @@ use Tuleap\FRS\UploadedLinksUpdater;
 class FRSPackageFactoryMock extends FRSPackageFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     // bypass it for the tests as it calls global functions which access to the db
+    #[\Override]
     public function setDefaultPermissions(FRSPackage $package)
     {
     }
 
+    #[\Override]
     protected function setLicenseAgreementAtPackageCreation(FRSPackage $package, ?int $original_approval_license)
     {
     }
@@ -109,6 +111,7 @@ class FRSXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore P
     private $xml_import_helper;
     private FRSXMLImporter $frs_importer;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->package_factory = new FRSPackageFactoryMock();
@@ -174,6 +177,7 @@ class FRSXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore P
         ForgeConfig::set('ftp_frs_dir_prefix', $this->getTmpDir());
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         FRSPackageFactory::clearInstance();

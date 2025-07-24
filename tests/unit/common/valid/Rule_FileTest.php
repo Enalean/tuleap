@@ -23,9 +23,8 @@ use Tuleap\ForgeConfigSandbox;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\TemporaryTestDirectory;
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class Rule_FileTest extends \Tuleap\Test\PHPUnit\TestCase
+final class Rule_FileTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     use TemporaryTestDirectory;
     use GlobalLanguageMock;
@@ -33,6 +32,7 @@ final class Rule_FileTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private array $file;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

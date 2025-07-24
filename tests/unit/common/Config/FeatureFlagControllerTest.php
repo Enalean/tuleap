@@ -39,6 +39,7 @@ final class FeatureFlagControllerTest extends TestCase
 
     private const FEATURE_FLAG_KEY = 'stop_linking_artifact';
 
+    #[\Override]
     protected function setUp(): void
     {
         ForgeConfig::set(ForgeConfig::FEATURE_FLAG_PREFIX . self::FEATURE_FLAG_KEY, 1);

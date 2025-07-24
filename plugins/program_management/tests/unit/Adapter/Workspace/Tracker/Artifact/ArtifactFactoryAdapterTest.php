@@ -35,6 +35,7 @@ final class ArtifactFactoryAdapterTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $artifact_factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->artifact_factory = $this->createStub(\Tracker_ArtifactFactory::class);

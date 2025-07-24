@@ -42,6 +42,7 @@ final class MirroredProgramIncrementIdentifierTest extends \Tuleap\Test\PHPUnit\
     private UserIdentifierStub $user;
     private \Closure $getId;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->timebox_searcher    = SearchMirroredTimeboxesStub::withIds(

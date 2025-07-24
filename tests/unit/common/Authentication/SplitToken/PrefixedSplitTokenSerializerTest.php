@@ -97,6 +97,7 @@ final class PrefixedSplitTokenSerializerTest extends \Tuleap\Test\PHPUnit\TestCa
                 $this->prefix = $prefix;
             }
 
+            #[\Override]
             public function getString(): string
             {
                 return $this->prefix;

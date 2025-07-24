@@ -45,6 +45,7 @@ final class CopyItemStub implements CopyItem
         return new self(null);
     }
 
+    #[\Override]
     public function copyItem(
         DateTimeImmutable $current_time,
         Docman_Folder $destination_folder,

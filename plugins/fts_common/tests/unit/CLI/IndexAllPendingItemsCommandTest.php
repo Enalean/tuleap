@@ -33,6 +33,7 @@ final class IndexAllPendingItemsCommandTest extends TestCase
     public function testCommandCanAskForIndexationOfAllPendingItems(): void
     {
         $index_queue      = new class implements ItemToIndexBatchQueue {
+            #[\Override]
             public function startBatchingItemsIntoQueue(callable $callback): void
             {
             }

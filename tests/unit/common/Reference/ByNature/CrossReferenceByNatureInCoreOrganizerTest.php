@@ -42,6 +42,7 @@ final class CrossReferenceByNatureInCoreOrganizerTest extends TestCase
     private CrossReferenceForumOrganizer&MockObject $forum_organizer;
     private CrossReferenceNewsOrganizer&MockObject $news_organizer;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->by_nature_organizer = $this->createMock(CrossReferenceByNatureOrganizer::class);

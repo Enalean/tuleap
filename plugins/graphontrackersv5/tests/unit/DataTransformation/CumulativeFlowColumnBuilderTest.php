@@ -39,6 +39,7 @@ final class CumulativeFlowColumnBuilderTest extends \Tuleap\Test\PHPUnit\TestCas
     private $dao;
     private CumulativeFlowColumnBuilder $column_builder;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao            = $this->createMock(CumulativeFlowDAO::class);

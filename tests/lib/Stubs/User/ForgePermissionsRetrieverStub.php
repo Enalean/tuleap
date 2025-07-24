@@ -42,6 +42,7 @@ final readonly class ForgePermissionsRetrieverStub implements ForgePermissionsRe
         return new self(false);
     }
 
+    #[\Override]
     public function doesUserHavePermission(PFUser $user, User_ForgeUserGroupPermission $permission): bool
     {
         return $this->allowed;

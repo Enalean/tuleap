@@ -50,6 +50,7 @@ final class VelocityCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
     private Tracker&\PHPUnit\Framework\MockObject\MockObject $tracker;
     private \PHPUnit\Framework\MockObject\MockObject&PFUser $user;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

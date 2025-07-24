@@ -33,6 +33,7 @@ final class VerifyIsUserStub implements VerifyIsUser
         $this->is_valid = $is_valid;
     }
 
+    #[\Override]
     public function isUser(int $user_id): bool
     {
         return $this->is_valid;

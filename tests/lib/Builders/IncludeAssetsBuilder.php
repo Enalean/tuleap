@@ -34,6 +34,7 @@ class IncludeAssetsBuilder
             {
             }
 
+            #[\Override]
             public function getFileURL(string $file_name): string
             {
                 return $file_name;

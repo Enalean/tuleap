@@ -31,6 +31,7 @@ class SelectedDateDisplayPreferenceValidatorTest extends \Tuleap\Test\PHPUnit\Te
      */
     private $validator;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->validator = new SelectedDateDisplayPreferenceValidator();

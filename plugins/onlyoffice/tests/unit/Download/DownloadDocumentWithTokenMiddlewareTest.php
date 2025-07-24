@@ -69,6 +69,7 @@ final class DownloadDocumentWithTokenMiddlewareTest extends TestCase
             {
             }
 
+            #[\Override]
             public function handle(ServerRequestInterface $request): ResponseInterface
             {
                 ($this->test_expectations)($request);

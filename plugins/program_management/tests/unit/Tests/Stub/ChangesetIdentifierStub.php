@@ -38,6 +38,7 @@ final class ChangesetIdentifierStub implements ChangesetIdentifier
         return new self($changeset_id);
     }
 
+    #[\Override]
     public function getId(): int
     {
         return $this->id;

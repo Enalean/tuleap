@@ -43,6 +43,7 @@ class DocmanFileLastVersionToOnlyOfficeDocumentTransformerTest extends TestCase
 
     private \Project $project;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->project = ProjectTestBuilder::aProject()
@@ -119,6 +120,7 @@ class DocmanFileLastVersionToOnlyOfficeDocumentTransformerTest extends TestCase
                 {
                 }
 
+                #[\Override]
                 public function isOnlyOfficeIntegrationAvailableForProject(\Project $project): bool
                 {
                     return $this->is_onlyoffice_available_for_project;

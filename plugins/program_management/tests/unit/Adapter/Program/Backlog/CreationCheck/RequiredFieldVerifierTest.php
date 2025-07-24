@@ -64,6 +64,7 @@ final class RequiredFieldVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
     private SynchronizedFieldFromProgramAndTeamTrackersCollection $collection;
     private UserIdentifierStub $user;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->tracker_factory             = $this->createStub(\TrackerFactory::class);

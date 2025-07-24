@@ -46,6 +46,7 @@ final class UserIsAllowedToSeeWidgetCheckerTest extends TestCase
     private ProjectByIDFactoryStub $project_manager;
     private CheckUserCanAccessProject&CheckUserCanAccessProjectAndIsAdmin $url_verification;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user             = UserTestBuilder::buildWithId(self::USER_ID);

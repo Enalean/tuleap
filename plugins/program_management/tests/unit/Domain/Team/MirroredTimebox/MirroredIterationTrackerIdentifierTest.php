@@ -35,6 +35,7 @@ final class MirroredIterationTrackerIdentifierTest extends \Tuleap\Test\PHPUnit\
     private const TRACKER_ID = 21;
     private RetrieveMirroredIterationTrackerStub $tracker_retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->tracker_retriever = RetrieveMirroredIterationTrackerStub::withValidTrackers(

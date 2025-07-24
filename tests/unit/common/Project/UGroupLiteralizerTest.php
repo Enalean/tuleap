@@ -36,6 +36,7 @@ final class UGroupLiteralizerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private UGroupLiteralizer $ugroup_literalizer;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -46,6 +47,7 @@ final class UGroupLiteralizerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->ugroup_literalizer = new UGroupLiteralizer();
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         UserManager::clearInstance();

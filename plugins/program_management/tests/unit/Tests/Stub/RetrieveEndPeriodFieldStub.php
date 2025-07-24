@@ -58,6 +58,7 @@ final class RetrieveEndPeriodFieldStub implements RetrieveEndPeriodField
         return new self(true, []);
     }
 
+    #[\Override]
     public function getEndPeriodField(
         TrackerIdentifier $tracker_identifier,
     ): EndDateFieldReference|DurationFieldReference {

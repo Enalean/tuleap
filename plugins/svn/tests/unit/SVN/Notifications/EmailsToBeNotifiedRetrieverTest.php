@@ -50,6 +50,7 @@ final class EmailsToBeNotifiedRetrieverTest extends \Tuleap\Test\PHPUnit\TestCas
     private $notification_manager;
     private EmailsToBeNotifiedRetriever $retriever;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

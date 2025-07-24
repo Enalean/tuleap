@@ -95,6 +95,7 @@ final class PostPushWebhookCloseArtifactHandlerTest extends TestCase
     private RetrieveSemanticStatusFieldStub $status_retriever;
     private bool $changeset_creator_was_called;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->artifact_retriever     = $this->createMock(ArtifactRetriever::class);

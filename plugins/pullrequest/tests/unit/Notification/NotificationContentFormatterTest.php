@@ -39,6 +39,7 @@ final class NotificationContentFormatterTest extends \Tuleap\Test\PHPUnit\TestCa
     private ContentInterpretorStub $content_interpreter;
     private Comment $comment;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->content_interpreter  = ContentInterpretorStub::withInterpretedText(self::INTERPRETED_COMMENT);

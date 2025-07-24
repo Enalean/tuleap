@@ -31,6 +31,7 @@ final class UsersToBeImportedCollectionTest extends \Tuleap\Test\PHPUnit\TestCas
     private UsersToBeImportedCollection $collection;
     private string $output_filename;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

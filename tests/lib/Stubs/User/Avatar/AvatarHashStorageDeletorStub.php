@@ -36,6 +36,7 @@ final class AvatarHashStorageDeletorStub implements \Tuleap\User\Avatar\AvatarHa
         return new self();
     }
 
+    #[\Override]
     public function delete(\PFUser $user): void
     {
         $this->has_been_deleted = true;

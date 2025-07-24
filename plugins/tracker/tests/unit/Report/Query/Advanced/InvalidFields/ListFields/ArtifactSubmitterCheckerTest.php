@@ -41,6 +41,7 @@ final class ArtifactSubmitterCheckerTest extends TestCase
     private const INVALID_USERNAME = 'fake_user';
     private Stub&\UserManager $user_manager;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user_manager = $this->createStub(\UserManager::class);

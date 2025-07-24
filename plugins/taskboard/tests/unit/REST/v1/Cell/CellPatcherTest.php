@@ -46,6 +46,7 @@ final class CellPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
     private CardMappedFieldUpdater&MockObject $mapped_field_updater;
     private \PFUser $current_user;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user_manager         = $this->createMock(UserManager::class);

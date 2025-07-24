@@ -29,26 +29,31 @@ final class StoreUserPreferenceStub implements StoreUserPreference
 {
     private array $preferences = [];
 
+    #[\Override]
     public function search(int $user_id, string $preference_name): array
     {
         return $this->preferences[$user_id][$preference_name] ?? [];
     }
 
+    #[\Override]
     public function set(int $user_id, string $preference_name, string $preference_value): void
     {
         $this->preferences[$user_id][$preference_name] = ['preference_value' => $preference_value];
     }
 
+    #[\Override]
     public function delete(int $user_id, string $preference_name): void
     {
         throw new \LogicException('not implemented yet');
     }
 
+    #[\Override]
     public function deleteByPreferenceNameAndValue(string $preference_name, string $preference_value): void
     {
         throw new \LogicException('not implemented yet');
     }
 
+    #[\Override]
     public function deletePreferenceForAllUsers(string $preference_name): void
     {
         throw new \LogicException('not implemented yet');

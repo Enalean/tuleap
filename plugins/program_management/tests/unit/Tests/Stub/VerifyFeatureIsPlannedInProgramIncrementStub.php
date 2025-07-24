@@ -44,6 +44,7 @@ final class VerifyFeatureIsPlannedInProgramIncrementStub implements VerifyFeatur
         return new self(true);
     }
 
+    #[\Override]
     public function isFeaturePlannedInProgramIncrement(int $program_increment_id, int $feature_id): bool
     {
         return $this->is_planned;

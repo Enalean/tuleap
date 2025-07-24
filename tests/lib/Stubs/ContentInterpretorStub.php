@@ -35,16 +35,19 @@ final class ContentInterpretorStub implements ContentInterpretor
         return new self($interpreted_text);
     }
 
+    #[\Override]
     public function getInterpretedContent(string $content): string
     {
         return $this->return_value;
     }
 
+    #[\Override]
     public function getInterpretedContentWithReferences(string $content, int $project_id): string
     {
         return $this->return_value;
     }
 
+    #[\Override]
     public function getContentStrippedOfTags(string $content): string
     {
         return $this->return_value;

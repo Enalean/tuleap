@@ -43,11 +43,13 @@ final class ArtifactLinkFieldReferenceStub implements ArtifactLinkFieldReference
         return new self($id, 'Artifact Links');
     }
 
+    #[\Override]
     public function getId(): int
     {
         return $this->id;
     }
 
+    #[\Override]
     public function getLabel(): string
     {
         return $this->label;

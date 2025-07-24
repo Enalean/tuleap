@@ -24,9 +24,8 @@ use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
-// phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class SVN_TokenHandlerTest extends TestCase
+final class SVN_TokenHandlerTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
     private const VALID_TOKEN = 'valid_token';
     // crypt(self::VALID_TOKEN, '$6$rounds=20000$16$')
@@ -38,6 +37,7 @@ final class SVN_TokenHandlerTest extends TestCase
     private $token_dao;
     private \SVN_TokenHandler $token_handler;
 
+    #[\Override]
     protected function setUp(): void
     {
         $password_handler = new \StandardPasswordHandler();

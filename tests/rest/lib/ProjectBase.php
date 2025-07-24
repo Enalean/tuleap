@@ -24,6 +24,7 @@ use RestBase;
 
 class ProjectBase extends RestBase
 {
+    #[\Override]
     public function setUp(): void
     {
         parent::setUp();

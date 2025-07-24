@@ -44,6 +44,7 @@ final class DateSelectBuilderTest extends CrossTrackerFieldTestCase
     private array $expected_values;
     private PFUser $user;
 
+    #[\Override]
     public function setUp(): void
     {
         $db              = DBFactory::getMainTuleapDBConnection()->getDB();

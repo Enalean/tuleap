@@ -31,6 +31,7 @@ final class VerifyUserStoryIsVisibleStub implements VerifyUserStoryIsVisible
     {
     }
 
+    #[\Override]
     public function isUserStoryVisible(int $user_story_id, UserIdentifier $user): bool
     {
         if ($this->always_visible) {

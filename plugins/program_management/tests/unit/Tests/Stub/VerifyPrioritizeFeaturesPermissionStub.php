@@ -46,6 +46,7 @@ final class VerifyPrioritizeFeaturesPermissionStub implements VerifyPrioritizeFe
         return new self(false);
     }
 
+    #[\Override]
     public function canUserPrioritizeFeatures(
         ProgramIdentifier $program,
         UserIdentifier $user_identifier,

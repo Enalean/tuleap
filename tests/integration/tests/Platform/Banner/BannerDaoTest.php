@@ -29,6 +29,7 @@ final class BannerDaoTest extends TestIntegrationTestCase
 {
     private BannerDao $dao;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->dao = new BannerDao();

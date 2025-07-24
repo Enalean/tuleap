@@ -31,6 +31,7 @@ final class SynchronizedProjectMembershipDuplicatorTest extends \Tuleap\Test\PHP
     private SynchronizedProjectMembershipDuplicator $duplicator;
     private SynchronizedProjectMembershipDao&MockObject $dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->dao        = $this->createMock(SynchronizedProjectMembershipDao::class);

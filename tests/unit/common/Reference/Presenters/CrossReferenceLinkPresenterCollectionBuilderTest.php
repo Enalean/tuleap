@@ -36,6 +36,7 @@ final class CrossReferenceLinkPresenterCollectionBuilderTest extends TestCase
     private CrossReference&MockObject $cross_ref_target_1;
     private CrossReference&MockObject $cross_ref_target_2;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->cross_ref_target_1 = $this->mockCrossReference(
@@ -65,6 +66,7 @@ final class CrossReferenceLinkPresenterCollectionBuilderTest extends TestCase
         $GLOBALS['HTML'] = $this->createMock(\Layout::class);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         unset($GLOBALS['HTML']);

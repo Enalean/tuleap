@@ -36,6 +36,7 @@ final class SemanticDescriptionFieldRetrieverTest extends TestCase
     private \Tuleap\Tracker\FormElement\Field\Text\TextField $description_field;
     private Tracker $tracker;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->tracker           = TrackerTestBuilder::aTracker()->withId(12)->build();

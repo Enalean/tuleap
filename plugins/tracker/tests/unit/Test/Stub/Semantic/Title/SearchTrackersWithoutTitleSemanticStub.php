@@ -47,11 +47,13 @@ final class SearchTrackersWithoutTitleSemanticStub implements SearchTrackersWith
         return new self([$tracker_id, ...$other_tracker_ids]);
     }
 
+    #[\Override]
     public function countTrackersWithoutTitleSemantic(array $tracker_ids): int
     {
         return count($this->getTrackerIdsWithoutTitleSemantic($tracker_ids));
     }
 
+    #[\Override]
     public function getTrackerIdsWithoutTitleSemantic(array $tracker_ids): array
     {
         return array_values(array_intersect($this->tracker_ids_without_title, $tracker_ids));

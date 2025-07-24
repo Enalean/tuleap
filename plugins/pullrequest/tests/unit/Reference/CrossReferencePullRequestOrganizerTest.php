@@ -56,6 +56,7 @@ final class CrossReferencePullRequestOrganizerTest extends TestCase
     private MockObject&UserHelper $user_helper;
     private SearchPullRequestStub $pull_request_dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->project_manager        = $this->createMock(ProjectManager::class);

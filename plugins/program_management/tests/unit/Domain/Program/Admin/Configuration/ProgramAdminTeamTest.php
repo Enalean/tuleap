@@ -42,6 +42,7 @@ final class ProgramAdminTeamTest extends TestCase
     private \Tuleap\ProgramManagement\Domain\Program\Admin\ProgramForAdministrationIdentifier $program_for_admin;
     private UserIdentifierStub $user_identifier;
 
+    #[\Override]
     protected function setUp(): void
     {
         $program_increment                     = ProgramIncrementBuilder::buildWithId(222);

@@ -34,6 +34,7 @@ final class RetrieveTrackerStub implements RetrieveTracker
     {
     }
 
+    #[\Override]
     public function getTrackerById($tracker_id): ?Tracker
     {
         return $this->trackers[$tracker_id] ?? null;

@@ -35,6 +35,7 @@ final class ChangeForwardLinksCommandFormatterTest extends \Tuleap\Test\PHPUnit\
     /** @var Option<NewParentLink> $parent */
     private Option $parent;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->links_to_add    = new CollectionOfForwardLinks([]);

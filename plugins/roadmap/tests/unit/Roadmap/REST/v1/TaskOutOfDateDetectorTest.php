@@ -54,6 +54,7 @@ final class TaskOutOfDateDetectorTest extends TestCase
     private const ON_GOING_VALUE_ID = 129;
     private const DONE_VALUE_ID     = 130;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->artifact = ArtifactTestBuilder::anArtifact(150)->build();

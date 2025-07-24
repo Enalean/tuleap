@@ -40,6 +40,7 @@ final readonly class VerifyProjectCreationFromArchiveIsAllowedStub implements Ve
         return new self(false);
     }
 
+    #[\Override]
     public function canCreateFromCustomArchive(): bool
     {
         return $this->allowed;

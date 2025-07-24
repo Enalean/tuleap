@@ -37,6 +37,7 @@ final class PlannableTrackersRetrieverTest extends TestCase
      */
     private $tracker_factory;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->plan_dao        = RetrievePlannableTrackersIdsStub::buildIds(1, 2);

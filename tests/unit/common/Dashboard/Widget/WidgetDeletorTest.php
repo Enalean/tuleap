@@ -41,6 +41,7 @@ class WidgetDeletorTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $column;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->widget_one = new DashboardWidget(1, 'image', 10, 1, 0, 0);

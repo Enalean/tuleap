@@ -46,6 +46,7 @@ final class SearchUserGroupsValuesByFieldIdAndUserGroupIdStub implements SearchU
         return new self([]);
     }
 
+    #[\Override]
     public function searchByFieldIdAndGroupId(int $field_id, int $ugroup_id): ?array
     {
         foreach ($this->values as $value) {

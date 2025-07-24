@@ -44,6 +44,7 @@ final class OpenUGroupListDuckTypedFieldTest extends CrossTrackerFieldTestCase
     private int $sprint_artifact_empty_id;
     private int $sprint_artifact_with_members_static_id;
 
+    #[\Override]
     protected function setUp(): void
     {
         $GLOBALS['Language'] = (new BaseLanguageFactory())->getBaseLanguage('en_US');

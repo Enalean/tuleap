@@ -68,6 +68,7 @@ final class OnlyOfficeCallbackDocumentSaverTest extends TestCase
      */
     private $co_author_dao;
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();
@@ -80,6 +81,7 @@ final class OnlyOfficeCallbackDocumentSaverTest extends TestCase
         $this->co_author_dao   = $this->createStub(CoAuthorDao::class);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         \Docman_PermissionsManager::clearInstances();
@@ -340,6 +342,7 @@ final class OnlyOfficeCallbackDocumentSaverTest extends TestCase
                 {
                 }
 
+                #[\Override]
                 public function sendAsyncRequest(RequestInterface $request)
                 {
                     return new HttpFulfilledPromise(HTTPFactoryBuilder::responseFactory()->createResponse($this->http_status_code));

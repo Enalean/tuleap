@@ -57,6 +57,7 @@ final class OpenIDConnectIDTokenCreatorTest extends \Tuleap\Test\PHPUnit\TestCas
      */
     private $id_token_creator;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->user_manager = $this->createMock(\UserManager::class);

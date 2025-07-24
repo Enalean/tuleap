@@ -39,6 +39,7 @@ final class LSFAPIHTTPAuthorizationTest extends \Tuleap\Test\PHPUnit\TestCase
     private UserTokenVerifier&\PHPUnit\Framework\MockObject\MockObject $token_verifier;
     private SplitTokenIdentifierTranslator&\PHPUnit\Framework\MockObject\Stub $token_unserializer;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->token_verifier     = $this->createMock(UserTokenVerifier::class);

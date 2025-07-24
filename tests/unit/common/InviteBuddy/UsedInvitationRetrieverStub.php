@@ -39,6 +39,7 @@ class UsedInvitationRetrieverStub implements UsedInvitationRetriever
         return new self(null);
     }
 
+    #[\Override]
     public function searchInvitationUsedToRegister(int $user_id): ?Invitation
     {
         return $this->invitation;

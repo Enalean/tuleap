@@ -50,6 +50,7 @@ final class SiteDeployFPMTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $tuleap_redis_conf_file;
 
+    #[\Override]
     protected function setUp(): void
     {
         $base_dir                       = $this->getTmpDir();
@@ -312,6 +313,7 @@ final class SiteDeployFPMTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         return new class extends ProcessFactory
         {
+            #[\Override]
             public function getProcess(array $args): Process
             {
                 return new Process(['/bin/sh', '-c', 'true']);

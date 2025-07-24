@@ -58,6 +58,7 @@ final class FRSPackagePermissionManagerTest extends TestCase
      */
     private $project;
 
+    #[\Override]
     public function setUp(): void
     {
         $this->package_factory = $this->createMock(FRSPackageFactory::class);
