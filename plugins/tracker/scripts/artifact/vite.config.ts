@@ -41,7 +41,6 @@ export default vite.defineAppConfig(
         build: {
             rollupOptions: {
                 input: {
-                    "children-view": path.resolve(__dirname, "src/children-view.ts"),
                     "create-view": path.resolve(__dirname, "src/creation/create-view.ts"),
                     "edit-view": path.resolve(__dirname, "src/edition/edit-view.ts"),
                     "link-tab-view": path.resolve(__dirname, "src/link-tab/link-tab-view.ts"),

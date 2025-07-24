@@ -18,9 +18,6 @@ msgstr "Annuler"
 msgid "Choose a value in the list"
 msgstr "Choisissez une valeur dans la liste"
 
-msgid "Status"
-msgstr "Statut"
-
 msgid "Submit"
 msgstr "Modifier"
 
@@ -30,9 +27,6 @@ msgid ""
 msgstr ""
 "Les notifications de ce tracker sont désactivées, lorsque vous utilisez @ "
 "pour mentionner quelqu'un, aucun e-mail ne sera envoyé."
-
-msgid "Title"
-msgstr "Titre"
 
 msgid "When you use @ to mention someone, they will get an email notification."
 msgstr ""

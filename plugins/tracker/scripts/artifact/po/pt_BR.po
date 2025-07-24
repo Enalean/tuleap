@@ -12,18 +12,12 @@ msgstr ""
 msgid "Choose a value in the list"
 msgstr "Escolha um valor na lista"
 
-msgid "Status"
-msgstr ""
-
 msgid "Submit"
 msgstr ""
 
 msgid ""
 "This tracker's notifications are disabled, when you use @ to mention "
 "someone, no email will be sent."
-msgstr ""
-
-msgid "Title"
 msgstr ""
 
 msgid "When you use @ to mention someone, they will get an email notification."

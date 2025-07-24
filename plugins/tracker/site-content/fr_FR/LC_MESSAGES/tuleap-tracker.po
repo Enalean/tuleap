@@ -943,9 +943,6 @@ msgstr "Case à cocher"
 msgid "Child"
 msgstr "Enfant"
 
-msgid "Children"
-msgstr "Enfants"
-
 msgid "Choose a field..."
 msgstr "Choisir un champ ..."
 
@@ -4193,12 +4190,6 @@ msgstr "Cette transition existe déjà."
 msgid "This type can't be deleted because it is or has been already used."
 msgstr ""
 "Cette nature ne peut être supprimée car elle est ou a déjà été utilisée."
-
-msgid ""
-"This view will be removed soon, it is replaced by the brand new Links tab"
-msgstr ""
-"Cette vue sera bientôt supprimée, elle est remplacée par le nouvel onglet "
-"Liens"
 
 msgid "Those rules will be applied on each creation/update of artifacts."
 msgstr "Ces règles s'appliqueront à chaque création/ modification d'artifacts."
