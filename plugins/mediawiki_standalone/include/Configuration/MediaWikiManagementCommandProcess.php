@@ -39,7 +39,7 @@ final class MediaWikiManagementCommandProcess implements MediaWikiManagementComm
      */
     public function __construct(private LoggerInterface $logger, string $commandline, array $parameters = [])
     {
-        $this->process = Process::fromShellCommandline($commandline);
+        $this->process = Process::fromShellCommandline($commandline, '/');
         $this->process->setEnv($parameters);
         $this->process->setTimeout(null);
         $this->process->start();

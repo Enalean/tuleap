@@ -61,7 +61,7 @@ class User_SSHKeyValidator // phpcs:ignore PSR1.Classes.ClassDeclaration.Missing
             return false;
         }
 
-        $ssh_keygen_process = Process::fromShellCommandline('echo "$SSH_KEY" | ssh-keygen -l -f /dev/stdin');
+        $ssh_keygen_process = Process::fromShellCommandline('echo "$SSH_KEY" | ssh-keygen -l -f /dev/stdin', '/');
         $ssh_keygen_process->run(null, ['SSH_KEY' => $key]);
         return $ssh_keygen_process->isSuccessful();
     }

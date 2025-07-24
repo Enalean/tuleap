@@ -102,7 +102,7 @@ class SystemEventProcessor_Root extends SystemEventProcessor
     protected function launchAs(string $user, string $command): void
     {
         $cmd     = 'sudo -E -u ' . $user . ' -- ' . $command;
-        $process = Symfony\Component\Process\Process::fromShellCommandline($cmd);
+        $process = Symfony\Component\Process\Process::fromShellCommandline($cmd, '/');
         $process->start();
 
         $output = '';
