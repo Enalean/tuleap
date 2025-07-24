@@ -20,17 +20,25 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Artidoc\Document\Field;
+namespace Tuleap\Artidoc\REST\v1\ArtifactSection\Field;
 
-use Tuleap\Artidoc\Domain\Document\Section\Field\DisplayType;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
-use Tuleap\Tracker\FormElement\Field\String\StringField;
+use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\NumericFieldWithValue;
 
-final readonly class ConfiguredField
+/**
+ * @psalm-immutable
+ */
+final readonly class SectionNumericFieldRepresentation
 {
-    public function __construct(
-        public StringField|\Tracker_FormElement_Field_List|ArtifactLinkField|\Tracker_FormElement_Field_Numeric $field,
-        public DisplayType $display_type,
-    ) {
+    public string $type;
+    public string $label;
+    public string $display_type;
+    public float|int|null $value;
+
+    public function __construct(NumericFieldWithValue $field)
+    {
+        $this->type         = FieldType::NUMERIC->value;
+        $this->label        = $field->label;
+        $this->display_type = $field->display_type->value;
+        $this->value        = $field->value->unwrapOr(null);
     }
 }

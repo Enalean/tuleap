@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2023-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,24 +22,22 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Test\Builders\Fields;
 
-use Tracker_FormElement_Field_Computed;
+use Tracker_FormElement_Field_ArtifactId;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Tracker;
 
-final class ComputedFieldBuilder
+final class ArtifactIdFieldBuilder
 {
     use FieldBuilderWithPermissions;
-    use FieldBuilderWithSpecificProperties;
 
-    private \Tuleap\Tracker\Tracker $tracker;
-    private bool $required = false;
+    private Tracker $tracker;
 
     private function __construct(private readonly int $id)
     {
-        $this->tracker = TrackerTestBuilder::aTracker()->withId(10)->build();
+        $this->tracker = TrackerTestBuilder::aTracker()->withId(19)->build();
     }
 
-    public static function aComputedField(int $id): self
+    public static function anArtifactIdField(int $id): self
     {
         return new self($id);
     }
@@ -50,31 +48,25 @@ final class ComputedFieldBuilder
         return $this;
     }
 
-    public function thatIsRequired(): self
+    public function build(): Tracker_FormElement_Field_ArtifactId
     {
-        $this->required = true;
-        return $this;
-    }
-
-    public function build(): Tracker_FormElement_Field_Computed
-    {
-        $field = new Tracker_FormElement_Field_Computed(
+        $field = new Tracker_FormElement_Field_ArtifactId(
             $this->id,
             $this->tracker->getId(),
             15,
-            'computed',
-            'Computed field',
+            'artifact_id',
+            'Artifact ID',
             '',
             true,
-            'P',
-            $this->required,
             '',
+            false,
+            false,
             10,
             null
         );
         $field->setTracker($this->tracker);
         $this->setPermissions($field);
-        $this->setSpecificProperties($field);
+
         return $field;
     }
 }

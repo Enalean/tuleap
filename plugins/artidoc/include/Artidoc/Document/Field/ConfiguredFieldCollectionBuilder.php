@@ -22,6 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Document\Field;
 
+use PFUser;
+use Tracker_FormElement_Field_List;
+use Tracker_FormElement_Field_Numeric;
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\Artidoc\Domain\Document\Section\Field\ArtifactSectionField;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
@@ -36,17 +39,17 @@ final readonly class ConfiguredFieldCollectionBuilder
     ) {
     }
 
-    public function buildFromSectionIdentifier(SectionIdentifier $section_identifier, \PFUser $user): ConfiguredFieldCollection
+    public function buildFromSectionIdentifier(SectionIdentifier $section_identifier, PFUser $user): ConfiguredFieldCollection
     {
         return $this->buildFromRows($this->dao->retrieveConfiguredFieldsFromSectionId($section_identifier), $user);
     }
 
-    public function buildFromArtidoc(ArtidocWithContext $artidoc, \PFUser $user): ConfiguredFieldCollection
+    public function buildFromArtidoc(ArtidocWithContext $artidoc, PFUser $user): ConfiguredFieldCollection
     {
         return $this->buildFromArtidocId($artidoc->document->getId(), $user);
     }
 
-    private function buildFromArtidocId(int $artidoc_id, \PFUser $user): ConfiguredFieldCollection
+    private function buildFromArtidocId(int $artidoc_id, PFUser $user): ConfiguredFieldCollection
     {
         return $this->buildFromRows($this->dao->retrieveConfiguredFieldsFromItemId($artidoc_id), $user);
     }
@@ -54,12 +57,12 @@ final readonly class ConfiguredFieldCollectionBuilder
     /**
      * @param list<ArtifactSectionField> $stored_fields
      */
-    private function buildFromRows(array $stored_fields, \PFUser $user): ConfiguredFieldCollection
+    private function buildFromRows(array $stored_fields, PFUser $user): ConfiguredFieldCollection
     {
         $fields = [];
         foreach ($stored_fields as $stored_field) {
             $this->field_retriever->retrieveField($stored_field->field_id, $user)
-                ->map(static function (StringField|\Tracker_FormElement_Field_List|ArtifactLinkField $field) use (&$fields, $stored_field) {
+                ->map(static function (StringField|Tracker_FormElement_Field_List|ArtifactLinkField|Tracker_FormElement_Field_Numeric $field) use (&$fields, $stored_field) {
                     if (! isset($fields[$field->tracker_id])) {
                         $fields[$field->tracker_id] = [];
                     }

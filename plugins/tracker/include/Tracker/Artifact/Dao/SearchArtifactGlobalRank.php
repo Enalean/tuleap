@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2025 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,17 +20,9 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Artidoc\Document\Field;
+namespace Tuleap\Tracker\Artifact\Dao;
 
-use Tuleap\Artidoc\Domain\Document\Section\Field\DisplayType;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
-use Tuleap\Tracker\FormElement\Field\String\StringField;
-
-final readonly class ConfiguredField
+interface SearchArtifactGlobalRank
 {
-    public function __construct(
-        public StringField|\Tracker_FormElement_Field_List|ArtifactLinkField|\Tracker_FormElement_Field_Numeric $field,
-        public DisplayType $display_type,
-    ) {
-    }
+    public function getGlobalRank(int $artifact_id): ?int;
 }
