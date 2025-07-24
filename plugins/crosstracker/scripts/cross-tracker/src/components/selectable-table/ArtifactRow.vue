@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <div class="artifact-row">
+    <div class="artifact-row" data-test="artifact-row">
         <edit-cell v-bind:uri="row.uri" />
         <selectable-cell
             v-for="column_name of columns"
