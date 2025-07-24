@@ -27,7 +27,11 @@
         >
             {{ error_message }}
         </div>
-        <tracker-from-jira-server v-if="should_display_connection" v-bind:value="credentials" />
+        <tracker-from-jira-server
+            v-if="should_display_connection"
+            v-bind:credentials="credentials"
+            v-on:input="updateCredentials"
+        />
         <button
             type="submit"
             class="tlp-button-primary create-from-jira-button"
@@ -96,6 +100,10 @@ const checkConnexionIsReady = async (): Promise<void> => {
         is_loading.value = false;
     }
 };
+
+function updateCredentials(new_credentials: Credentials): void {
+    credentials.value = new_credentials;
+}
 
 const should_display_connection = computed((): boolean => {
     return !is_connection_valid.value && !project_list.value;

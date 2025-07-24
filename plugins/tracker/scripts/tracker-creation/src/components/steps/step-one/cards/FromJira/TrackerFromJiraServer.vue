@@ -29,7 +29,8 @@
                 id="jira-url"
                 name="jira-url"
                 placeholder="https://jira.example.com"
-                v-model="value.server_url"
+                v-bind:value="credentials.server_url"
+                v-on:input="updateServerUrl"
                 pattern="https?://.+"
                 class="tlp-input"
             />
@@ -45,7 +46,8 @@
                     id="jira-email"
                     name="jira-email"
                     placeholder="Bob@example.com"
-                    v-model="value.user_email"
+                    v-bind:value="credentials.user_email"
+                    v-on:input="updateUserEmail"
                     class="tlp-input"
                 />
             </div>
@@ -61,7 +63,8 @@
                     id="jira-token"
                     name="jira-token"
                     placeholder="ToKeNGLsLC1wY4j6qiuk61kFX"
-                    v-model="value.token"
+                    v-bind:value="credentials.token"
+                    v-on:input="updateToken"
                     class="tlp-input"
                 />
             </div>
@@ -69,17 +72,50 @@
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { Component, Prop } from "vue-property-decorator";
+<script setup lang="ts">
 import type { Credentials } from "../../../../../store/type";
-import TrackerFromJiraProject from "./TrackerFromJiraProject.vue";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 
-@Component({
-    components: { TrackerFromJiraProject },
-})
-export default class TrackerFromJiraServer extends Vue {
-    @Prop({ required: true })
-    readonly value!: Credentials;
+const { $gettext } = useGettext();
+
+const props = defineProps<{
+    credentials: Credentials;
+}>();
+
+const emit = defineEmits<{
+    (e: "input", value: Credentials): void;
+}>();
+
+function updateServerUrl(event: Event): void {
+    if (!(event.target instanceof HTMLInputElement)) {
+        return;
+    }
+
+    emit("input", {
+        ...props.credentials,
+        server_url: event.target.value,
+    });
+}
+
+function updateUserEmail(event: Event): void {
+    if (!(event.target instanceof HTMLInputElement)) {
+        return;
+    }
+
+    emit("input", {
+        ...props.credentials,
+        user_email: event.target.value,
+    });
+}
+
+function updateToken(event: Event): void {
+    if (!(event.target instanceof HTMLInputElement)) {
+        return;
+    }
+
+    emit("input", {
+        ...props.credentials,
+        token: event.target.value,
+    });
 }
 </script>
