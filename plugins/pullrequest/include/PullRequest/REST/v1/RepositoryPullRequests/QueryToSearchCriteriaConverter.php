@@ -21,6 +21,7 @@
 namespace Tuleap\PullRequest\REST\v1\RepositoryPullRequests;
 
 use CuyZ\Valinor\Mapper\MappingError;
+use CuyZ\Valinor\MapperBuilder;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
@@ -31,8 +32,12 @@ use Tuleap\PullRequest\Criterion\SearchCriteria;
 /**
  * I convert a json query string to a SearchCriteria.
  */
-class QueryToSearchCriteriaConverter
+final readonly class QueryToSearchCriteriaConverter
 {
+    public function __construct(private MapperBuilder $mapper_builder)
+    {
+    }
+
     /**
      * @return Ok<SearchCriteria> | Err<Fault>
      */
@@ -43,7 +48,7 @@ class QueryToSearchCriteriaConverter
         }
 
         try {
-            $search_criteria = (new \CuyZ\Valinor\MapperBuilder())
+            $search_criteria = $this->mapper_builder
                 ->mapper()
                 ->map(
                     SearchCriteria::class,

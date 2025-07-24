@@ -217,6 +217,18 @@
         </properties>
         <exclude-pattern>tests/lib/PHPUnit/TestCase.php</exclude-pattern>
     </rule>
+    <rule ref="SlevomatCodingStandard.PHP.ForbiddenClasses">
+      <properties>
+        <property name="forbiddenClasses" type="array">
+          <!-- Force usage of Tuleap Valinor Mapper builder (handle cache) -->
+          <element key="CuyZ\Valinor\MapperBuilder" value="Tuleap\Mapper\ValinorMapperBuilderFactory"/>
+        </property>
+      </properties>
+      <exclude-pattern>src/common/Mapper/ValinorMapperBuilderFactory.php</exclude-pattern>
+      <exclude-pattern>**/tests/unit/**</exclude-pattern>
+      <exclude-pattern>**/tests/integration/**</exclude-pattern>
+      <exclude-pattern>tools/utils/CVE-2024-30246/**</exclude-pattern>
+    </rule>
     <!-- Forbid named arguments -->
     <rule ref="SlevomatCodingStandard.Functions.DisallowNamedArguments"/>
     <!-- Force trailing comma in multilines arrays and function/method declaration -->
