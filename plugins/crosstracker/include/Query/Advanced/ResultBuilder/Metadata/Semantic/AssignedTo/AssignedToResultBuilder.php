@@ -30,6 +30,7 @@ use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\SelectedValue;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\SelectedValuesCollection;
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerSelectedRepresentation;
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerSelectedType;
+use Tuleap\Option\Option;
 use Tuleap\User\RetrieveUserById;
 use UserHelper;
 
@@ -52,20 +53,41 @@ final readonly class AssignedToResultBuilder
                 $values[$id] = [];
             }
 
-            $value = $result[$alias];
-            if (! is_int($value) || $value === Tracker_FormElement_Field_List_Bind::NONE_VALUE) {
-                continue;
+            $value    = $result[$alias];
+            $user_ids = is_array($value) ? $value : [$value];
+
+            foreach ($user_ids as $user_id) {
+                if (! is_int($user_id) || $user_id === Tracker_FormElement_Field_List_Bind::NONE_VALUE) {
+                    continue;
+                }
+
+                $this->buildUserValueFromAssignedTo($user_id)->apply(
+                    static function (UserRepresentation $user) use (&$values, $id): void {
+                        $values[$id][] = $user;
+                    },
+                );
             }
-            $user = $this->user_retriever->getUserById($value);
-            if ($user === null) {
-                throw new LogicException("User $value not found");
-            }
-            $values[$id][] = UserRepresentation::fromPFUser($user, $this->user_helper);
         }
 
         return new SelectedValuesCollection(
             new CrossTrackerSelectedRepresentation('@assigned_to', CrossTrackerSelectedType::TYPE_USER_LIST),
             array_map(static fn(array $selected_values) => new SelectedValue('@assigned_to', new UserListRepresentation($selected_values)), $values),
         );
+    }
+
+    /**
+     * @return Option<UserRepresentation>
+     */
+    private function buildUserValueFromAssignedTo(int $user_id): Option
+    {
+        if ($user_id === Tracker_FormElement_Field_List_Bind::NONE_VALUE) {
+            return Option::nothing(UserRepresentation::class);
+        }
+        $user = $this->user_retriever->getUserById($user_id);
+        if ($user === null) {
+            throw new LogicException("User $user_id not found");
+        }
+
+        return Option::fromValue(UserRepresentation::fromPFUser($user, $this->user_helper));
     }
 }
