@@ -772,6 +772,7 @@ Object.extend(String.prototype, (function() {
     truncate:       truncate,
     strip:          String.prototype.trim,
     stripTags:      stripTags,
+    stripScripts:   stripScripts,
     escapeHTML:     escapeHTML,
     unescapeHTML:   unescapeHTML,
     toQueryParams:  toQueryParams,
