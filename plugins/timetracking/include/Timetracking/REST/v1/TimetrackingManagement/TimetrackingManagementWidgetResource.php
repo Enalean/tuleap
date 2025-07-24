@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Timetracking\REST\v1\TimetrackingManagement;
 
 use Luracast\Restler\RestException;
+use Psr\Log\LoggerInterface;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
@@ -110,13 +111,28 @@ final class TimetrackingManagementWidgetResource extends AuthenticatedResource
         return $this->getPUTHandler()
             ->handle($id, $item, \UserManager::instance()->getCurrentUser())
             ->match(
-                fn (UserList $users) => QueryPUTResultRepresentation::fromUserList(
-                    $users,
-                    new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash())
-                ),
+                function (UserList $users) {
+                    if (count($users->invalid_user_ids) > 0) {
+                        $this->getLogger()->debug(
+                            sprintf(
+                                'The following users do not exist or are not active nor restricted: [%s]',
+                                implode(', ', $users->invalid_user_ids),
+                            ),
+                        );
+                    }
+                    return QueryPUTResultRepresentation::fromUserList(
+                        $users,
+                        new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash())
+                    );
+                },
                 function (Fault $fault) {
                     FaultMapper::mapToRestException($fault);
                 }
             );
+    }
+
+    private function getLogger(): LoggerInterface
+    {
+        return new \WrapperLogger(\Tuleap\REST\RESTLogger::getLogger(), 'timetracking');
     }
 }

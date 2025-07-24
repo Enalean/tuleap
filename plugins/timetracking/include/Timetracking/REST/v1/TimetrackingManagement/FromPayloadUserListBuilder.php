@@ -48,6 +48,7 @@ final readonly class FromPayloadUserListBuilder
 
         $viewable_users     = [];
         $not_viewable_users = [];
+        $invalid_user_ids   = [];
         foreach ($user_ids as $user_id) {
             $result = $this->check_that_user_is_active->getViewableUser($current_user, $user_id);
 
@@ -56,14 +57,13 @@ final readonly class FromPayloadUserListBuilder
             } elseif ($result->error instanceof NotAllowedToSeeTimetrackingOfUserFault) {
                 $not_viewable_users[] = $result->error->user;
             } elseif ($result->error instanceof QueryInvalidUserIdFault) {
-                // silently ignore invalid user ids
-                continue;
+                $invalid_user_ids[] = $user_id;
             } else {
                 return $result;
             }
         }
 
-        return Result::ok(new UserList($viewable_users, $not_viewable_users));
+        return Result::ok(new UserList($viewable_users, $not_viewable_users, $invalid_user_ids));
     }
 
     /**

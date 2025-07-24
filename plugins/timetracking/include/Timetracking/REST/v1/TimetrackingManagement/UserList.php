@@ -29,10 +29,12 @@ final readonly class UserList
     /**
      * @param PFUser[] $viewable_users
      * @param PFUser[] $not_viewable_users
+     * @param int[] $invalid_user_ids
      */
     public function __construct(
         public array $viewable_users,
         public array $not_viewable_users,
+        public array $invalid_user_ids,
     ) {
     }
 }

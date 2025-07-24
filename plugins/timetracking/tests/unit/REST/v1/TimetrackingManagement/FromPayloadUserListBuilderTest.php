@@ -65,6 +65,7 @@ final class FromPayloadUserListBuilderTest extends TestCase
             new UserList(
                 [$this->alice],
                 [],
+                [self::CHARLIE_ID],
             ),
             $result->value
         );
@@ -89,6 +90,7 @@ final class FromPayloadUserListBuilderTest extends TestCase
         self::assertEquals(
             new UserList(
                 [$this->alice, $this->bob],
+                [],
                 [],
             ),
             $result->value
@@ -116,6 +118,7 @@ final class FromPayloadUserListBuilderTest extends TestCase
             new UserList(
                 [$this->alice],
                 [$this->bob],
+                [],
             ),
             $result->value
         );

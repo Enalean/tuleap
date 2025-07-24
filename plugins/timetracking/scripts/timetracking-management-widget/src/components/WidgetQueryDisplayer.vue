@@ -38,12 +38,12 @@
                 >
                     <div
                         class="tlp-avatar-small"
-                        v-for="user in getQuery().users_list"
+                        v-for="user in getQuery().users_list.value"
                         v-bind:key="user.id"
                     >
                         <img v-bind:src="user.avatar_url" data-test="img-avatar" />
                     </div>
-                    <div v-if="getQuery().users_list.length === 0">
+                    <div v-if="getQuery().users_list.value.length === 0">
                         {{ $gettext("No user selected") }}
                     </div>
                 </div>

@@ -32,15 +32,22 @@ use Tuleap\User\REST\MinimalUserRepresentation;
 final readonly class QueryPUTResultRepresentation
 {
     /**
+     * @param MinimalUserRepresentation[] $viewable_users
      * @param MinimalUserRepresentation[] $no_more_viewable_users
      */
-    private function __construct(public array $no_more_viewable_users)
-    {
+    private function __construct(
+        public array $viewable_users,
+        public array $no_more_viewable_users,
+    ) {
     }
 
     public static function fromUserList(UserList $users, ProvideUserAvatarUrl $provide_user_avatar_url): self
     {
         return new self(
+            array_map(
+                static fn (PFUser $user) => MinimalUserRepresentation::build($user, $provide_user_avatar_url),
+                $users->viewable_users,
+            ),
             array_map(
                 static fn (PFUser $user) => MinimalUserRepresentation::build($user, $provide_user_avatar_url),
                 $users->not_viewable_users,
