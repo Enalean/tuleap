@@ -43,6 +43,7 @@ class MilestoneControllerFactory
         private readonly HeaderOptionsProvider $header_options_provider,
         private readonly CSRFSynchronizerTokenProvider $token_provider,
         private readonly RecentlyVisitedTopBacklogDao $recently_visited_top_backlog_dao,
+        private readonly PlanningFrontendDependenciesProvider $frontend_dependencies_provider,
     ) {
     }
 
@@ -56,6 +57,7 @@ class MilestoneControllerFactory
             $this->visit_recorder,
             $this->bread_crumbs_for_milestone_builder,
             $this->header_options_provider,
+            $this->frontend_dependencies_provider,
         );
     }
 
@@ -69,6 +71,7 @@ class MilestoneControllerFactory
             $this->service_crumb_builder,
             $this->token_provider,
             $this->recently_visited_top_backlog_dao,
+            $this->frontend_dependencies_provider,
         );
     }
 }

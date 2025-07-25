@@ -137,7 +137,7 @@ class AgileDashboardRouter
                 $this->routeShowPlanning($request);
                 break;
             case 'show-top':
-                $this->routeShowTopPlanning($request, $planning_controller);
+                $this->routeShowTopPlanning($request);
                 break;
             case 'new':
                 $this->renderAction($planning_controller, 'new_', $request);
@@ -387,7 +387,7 @@ class AgileDashboardRouter
         }
     }
 
-    public function routeShowTopPlanning(Codendi_Request $request, $default_controller)
+    public function routeShowTopPlanning(Codendi_Request $request)
     {
         $service = $this->getService($request);
         if (! $service) {
