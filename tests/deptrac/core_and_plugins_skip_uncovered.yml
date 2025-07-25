@@ -83,6 +83,10 @@ deptrac:
       collectors:
         - type: directory
           value: plugins/graphontrackersv5/include/.*
+    - name: Graphs
+      collectors:
+        - type: directory
+          value: plugins/graphs/include/.*
     - name: Jenkins
       collectors:
         - type: directory
@@ -223,6 +227,9 @@ deptrac:
       - Core
       - Git
     GraphOnTracker:
+      - Core
+      - Tracker
+    Graphs:
       - Core
       - Tracker
     Jenkins:

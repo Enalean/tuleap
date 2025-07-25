@@ -1,0 +1,9 @@
+{
+    "name": "graphs",
+    "gettext-ts": {
+        "graphs": {
+            "src": "scripts/graphs/src",
+            "po" : "scripts/graphs/po"
+        }
+    }
+}

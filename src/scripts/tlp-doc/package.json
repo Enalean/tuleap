@@ -12,6 +12,8 @@
     "@tuleap/lazybox": "workspace:^",
     "@tuleap/list-picker": "workspace:^",
     "@tuleap/option": "workspace:^",
+    "@tuleap/pie-chart": "workspace:^",
+    "@tuleap/plugin-graphs": "workspace:^",
     "@tuleap/plugin-tracker-artifact-common": "workspace:^",
     "@tuleap/plugin-tracker-constants": "workspace:^",
     "@tuleap/plugin-tracker-link-field": "workspace:^",

@@ -1,0 +1,34 @@
+{
+  "author": "Enalean Team",
+  "name": "@tuleap/plugin-graphs",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "type": "module",
+  "types": "./dist/main.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/type.d.ts",
+      "import": "./dist/plugin-graphs.js",
+      "require": "./dist/plugin-graphs.umd.cjs"
+    }
+  },
+  "dependencies": {
+    "@tuleap/build-system-configurator": "workspace:*",
+    "@tuleap/core-constants": "workspace:*",
+    "@tuleap/gettext": "workspace:*",
+    "@tuleap/pie-chart": "workspace:*",
+    "@tuleap/tlp-swatch-colors": "workspace:*",
+    "d3": "^7.8.5"
+  },
+  "devDependencies": {
+    "@tuleap/build-system-configurator": "workspace:*",
+    "@tuleap/po-gettext-plugin": "workspace:*",
+    "@types/d3": "^7.4.3"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "vite build",
+    "watch": "vite build --watch --mode development --minify false"
+  }
+}

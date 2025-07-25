@@ -1,0 +1,11 @@
+{
+  "name": "tuleap/plugin-graphs",
+  "autoload": {
+    "psr-4": {
+      "Tuleap\\Graphs\\": ["include/"]
+    }
+  },
+  "config": {
+    "sort-packages": true
+  }
+}
