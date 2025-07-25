@@ -66,6 +66,7 @@ import type {
     ArtifactRow,
     ArtifactsTable,
 } from "../../domain/ArtifactsTable";
+import { MAXIMAL_LIMIT_OF_ARTIFACT_LINKS_FETCHED } from "../../api/ArtifactLinksRetriever";
 import type { ArtifactsTableWithTotal } from "../../domain/RetrieveArtifactsTable";
 import { FORWARD_DIRECTION, REVERSE_DIRECTION } from "../../domain/ArtifactsTable";
 import RowErrorMessage from "../feedback/RowErrorMessage.vue";
@@ -130,11 +131,14 @@ const reverse = computed((): ArtifactLinksFetchStatus => {
 });
 
 const display_a_load_all_button = computed((): boolean => {
-    return totalNumberOfLinksIsGreaterThan50() && linksAreNotAllLoaded();
+    return totalNumberOfLinksIsGreaterThanMaximalLimit() && linksAreNotAllLoaded();
 });
 
-function totalNumberOfLinksIsGreaterThan50(): boolean {
-    return total_number_of_forward_links.value > 50 || total_number_of_reverse_links.value > 50;
+function totalNumberOfLinksIsGreaterThanMaximalLimit(): boolean {
+    return (
+        total_number_of_forward_links.value > MAXIMAL_LIMIT_OF_ARTIFACT_LINKS_FETCHED ||
+        total_number_of_reverse_links.value > MAXIMAL_LIMIT_OF_ARTIFACT_LINKS_FETCHED
+    );
 }
 
 function linksAreNotAllLoaded(): boolean {

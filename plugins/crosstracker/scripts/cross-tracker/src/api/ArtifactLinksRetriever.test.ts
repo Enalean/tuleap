@@ -23,7 +23,10 @@ import * as fetch_result from "@tuleap/fetch-result";
 import { SelectableQueryContentRepresentationStub } from "../../tests/builders/SelectableQueryContentRepresentationStub";
 import { ArtifactRepresentationStub } from "../../tests/builders/ArtifactRepresentationStub";
 import type { RetrieveArtifactLinks } from "../domain/RetrieveArtifactLinks";
-import { ArtifactLinksRetriever } from "./ArtifactLinksRetriever";
+import {
+    ArtifactLinksRetriever,
+    MAXIMAL_LIMIT_OF_ARTIFACT_LINKS_FETCHED,
+} from "./ArtifactLinksRetriever";
 import { ArtifactsTableBuilder } from "./ArtifactsTableBuilder";
 import type { ArtifactsTable } from "../domain/ArtifactsTable";
 import { FORWARD_DIRECTION, REVERSE_DIRECTION } from "../domain/ArtifactsTable";
@@ -43,7 +46,7 @@ describe("ArtifactsLinksRetriever", () => {
             {
                 source_artifact_id: artifact_id,
                 tql_query: 'SELECT @pretty_title FROM @project="self"',
-                limit: 50,
+                limit: MAXIMAL_LIMIT_OF_ARTIFACT_LINKS_FETCHED,
             },
         ],
         [
@@ -52,7 +55,7 @@ describe("ArtifactsLinksRetriever", () => {
             {
                 target_artifact_id: artifact_id,
                 tql_query: 'SELECT @pretty_title FROM @project="self"',
-                limit: 50,
+                limit: MAXIMAL_LIMIT_OF_ARTIFACT_LINKS_FETCHED,
             },
         ],
     ])(
@@ -111,6 +114,7 @@ describe("ArtifactsLinksRetriever", () => {
             {
                 source_artifact_id: artifact_id,
                 tql_query: 'SELECT @pretty_title FROM @project="self"',
+                limit: MAXIMAL_LIMIT_OF_ARTIFACT_LINKS_FETCHED,
             },
         ],
         [
@@ -119,6 +123,7 @@ describe("ArtifactsLinksRetriever", () => {
             {
                 target_artifact_id: artifact_id,
                 tql_query: 'SELECT @pretty_title FROM @project="self"',
+                limit: MAXIMAL_LIMIT_OF_ARTIFACT_LINKS_FETCHED,
             },
         ],
     ])(
