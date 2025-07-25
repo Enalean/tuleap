@@ -27,6 +27,9 @@ msgstr ""
 msgid "An error occurred: %{error}"
 msgstr ""
 
+msgid "Are you sure you want to continue ?"
+msgstr ""
+
 msgid "Are you sure you want to permanently delete it?"
 msgstr ""
 
@@ -37,6 +40,12 @@ msgid "Artifact id"
 msgstr ""
 
 msgid "Assigned to"
+msgstr ""
+
+msgid ""
+"By clicking the 'Load all' button, all available data will be loaded and "
+"displayed in the table. This may result in slower performance or temporary "
+"latency, especially if the dataset is large."
 msgstr ""
 
 msgid "Cancel"
@@ -113,6 +122,9 @@ msgid "Last update date"
 msgstr ""
 
 msgid "Load all"
+msgstr ""
+
+msgid "Loading all the data"
 msgstr ""
 
 msgid "Make this query displayed by default"

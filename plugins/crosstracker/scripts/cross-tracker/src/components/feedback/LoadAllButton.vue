@@ -22,20 +22,43 @@
     <button
         type="button"
         class="tlp-button-primary tlp-button-mini load-all-button"
-        v-on:click="loadAll"
+        v-on:click="openConfirmationModal"
+        v-bind:disabled="is_loading"
+        data-test="load-all-button"
     >
-        <i class="fa-solid fa-arrow-down"></i>
+        <i
+            class="tlp-button-icon fa-solid"
+            v-bind:class="is_loading ? 'fa-spin fa-circle-notch' : 'fa-arrow-down'"
+        ></i>
         {{ $gettext("Load all") }}
     </button>
+    <load-all-confirmation-modal
+        v-if="should_the_modal_be_displayed"
+        v-on:should-load-all="shouldLoadAll"
+    />
 </template>
 
 <script setup lang="ts">
+import { ref } from "vue";
+import LoadAllConfirmationModal from "./LoadAllConfirmationModal.vue";
+
+const should_the_modal_be_displayed = ref(false);
+const is_loading = ref(false);
+
 const emit = defineEmits<{
-    click: [];
+    (e: "load-all"): void;
 }>();
 
-function loadAll(): void {
-    emit("click");
+function openConfirmationModal(): void {
+    should_the_modal_be_displayed.value = true;
+}
+
+function shouldLoadAll(should_load_all: boolean): void {
+    should_the_modal_be_displayed.value = false;
+    if (should_load_all) {
+        is_loading.value = true;
+        emit("load-all");
+    }
 }
 </script>
 

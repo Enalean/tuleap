@@ -54,7 +54,7 @@
             v-bind:ancestors="[...ancestors, row.id]"
         />
         <row-error-message v-if="error_message !== ''" v-bind:error_message="error_message" />
-        <row-load-all-button v-if="display_a_load_all_button" v-on:click="loadAllArtifactLinks" />
+        <load-all-button v-if="display_a_load_all_button" v-on:load-all="loadAllArtifactLinks" />
     </template>
 </template>
 <script setup lang="ts">
@@ -70,7 +70,7 @@ import { MAXIMAL_LIMIT_OF_ARTIFACT_LINKS_FETCHED } from "../../api/ArtifactLinks
 import type { ArtifactsTableWithTotal } from "../../domain/RetrieveArtifactsTable";
 import { FORWARD_DIRECTION, REVERSE_DIRECTION } from "../../domain/ArtifactsTable";
 import RowErrorMessage from "../feedback/RowErrorMessage.vue";
-import RowLoadAllButton from "../feedback/RowLoadAllButton.vue";
+import LoadAllButton from "../feedback/LoadAllButton.vue";
 import { RETRIEVE_ARTIFACT_LINKS, WIDGET_ID } from "../../injection-symbols";
 import ArtifactLinkRows from "./ArtifactLinkRows.vue";
 import SelectableCell from "./SelectableCell.vue";
@@ -206,51 +206,59 @@ function toggleLinks(current_element: HTMLElement, current_caret: HTMLElement): 
 }
 
 function loadAllArtifactLinks(): void {
-    artifact_links_retriever
-        .getAllForwardLinks(widget_id, props.row.id, props.tql_query)
-        .match(
-            (artifacts: ArtifactsTable[]) => {
-                if (artifacts.length === 0) {
-                    return;
-                }
-                const rows: ArtifactRow[] = [];
-                for (const artifact of artifacts) {
-                    if (artifact.rows) {
-                        rows.push(...artifact.rows);
+    if (total_number_of_forward_links.value > MAXIMAL_LIMIT_OF_ARTIFACT_LINKS_FETCHED) {
+        artifact_links_retriever
+            .getAllForwardLinks(widget_id, props.row.id, props.tql_query)
+            .match(
+                (artifacts: ArtifactsTable[]) => {
+                    if (artifacts.length === 0) {
+                        return;
                     }
-                }
-                forward_links.value = rows.filter((row) => row.id !== props.ancestors.slice(-1)[0]);
-            },
-            (fault: Fault) => {
-                error_message.value = String(fault);
-            },
-        )
-        .then(() => {
-            are_forward_links_loading.value = false;
-        });
+                    const rows: ArtifactRow[] = [];
+                    for (const artifact of artifacts) {
+                        if (artifact.rows) {
+                            rows.push(...artifact.rows);
+                        }
+                    }
+                    forward_links.value = rows.filter(
+                        (row) => row.id !== props.ancestors.slice(-1)[0],
+                    );
+                },
+                (fault: Fault) => {
+                    error_message.value = String(fault);
+                },
+            )
+            .then(() => {
+                are_forward_links_loading.value = false;
+            });
+    }
 
-    artifact_links_retriever
-        .getAllReverseLinks(widget_id, props.row.id, props.tql_query)
-        .match(
-            (artifacts: ArtifactsTable[]) => {
-                if (artifacts.length === 0) {
-                    return;
-                }
-                const rows: ArtifactRow[] = [];
-                for (const artifact of artifacts) {
-                    if (artifact.rows) {
-                        rows.push(...artifact.rows);
+    if (total_number_of_reverse_links.value > MAXIMAL_LIMIT_OF_ARTIFACT_LINKS_FETCHED) {
+        artifact_links_retriever
+            .getAllReverseLinks(widget_id, props.row.id, props.tql_query)
+            .match(
+                (artifacts: ArtifactsTable[]) => {
+                    if (artifacts.length === 0) {
+                        return;
                     }
-                }
-                reverse_links.value = rows.filter((row) => row.id !== props.ancestors.slice(-1)[0]);
-            },
-            (fault: Fault) => {
-                error_message.value = String(fault);
-            },
-        )
-        .then(() => {
-            are_reverse_links_loading.value = false;
-        });
+                    const rows: ArtifactRow[] = [];
+                    for (const artifact of artifacts) {
+                        if (artifact.rows) {
+                            rows.push(...artifact.rows);
+                        }
+                    }
+                    reverse_links.value = rows.filter(
+                        (row) => row.id !== props.ancestors.slice(-1)[0],
+                    );
+                },
+                (fault: Fault) => {
+                    error_message.value = String(fault);
+                },
+            )
+            .then(() => {
+                are_reverse_links_loading.value = false;
+            });
+    }
 }
 </script>
 <style scoped lang="scss">

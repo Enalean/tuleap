@@ -28,6 +28,9 @@ msgstr "Tous les artifacts ouverts"
 msgid "An error occurred: %{error}"
 msgstr "Une erreur s'est produite : %{error}"
 
+msgid "Are you sure you want to continue ?"
+msgstr "Êtes-vous sûr de vouloir continuer ?"
+
 msgid "Are you sure you want to permanently delete it?"
 msgstr "Êtes-vous de vouloir la supprimer définitivement ?"
 
@@ -39,6 +42,16 @@ msgstr "ID de l'artifact"
 
 msgid "Assigned to"
 msgstr "Assigné à"
+
+msgid ""
+"By clicking the 'Load all' button, all available data will be loaded and "
+"displayed in the table. This may result in slower performance or temporary "
+"latency, especially if the dataset is large."
+msgstr ""
+"En cliquant sur le bouton 'Charger tout', toutes les données disponibles "
+"seront chargées et affichées dans le tableau. Cela peut entraîner un "
+"ralentissement des performances ou une latence temporaire, en particulier si "
+"l'ensemble de données est volumineux."
 
 msgid "Cancel"
 msgstr "Annuler"
@@ -121,6 +134,9 @@ msgstr "Mis à jour le"
 
 msgid "Load all"
 msgstr "Charger tout"
+
+msgid "Loading all the data"
+msgstr "Chargement de toutes les données"
 
 msgid "Make this query displayed by default"
 msgstr "Afficher cette requête par défaut"
