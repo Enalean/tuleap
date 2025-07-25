@@ -38,7 +38,7 @@ use Tuleap\Tracker\Test\Builders\ChangesetValueIntegerTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ArtifactIdFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ComputedFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\FloatFieldBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\IntegerFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\PerTrackerArtifactIdFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\PriorityFieldBuilder;
 use Tuleap\Tracker\Test\Stub\Artifact\Dao\SearchArtifactGlobalRankStub;
@@ -61,7 +61,7 @@ final class NumericFieldWithValueBuilderTest extends TestCase
 
     public function testItBuildsIntField(): void
     {
-        $field = IntFieldBuilder::anIntField(12)->build();
+        $field = IntegerFieldBuilder::anIntField(12)->build();
         $value = ChangesetValueIntegerTestBuilder::aValue(54, ChangesetTestBuilder::aChangeset(85)->build(), $field)
             ->withValue(23)->build();
 
@@ -153,7 +153,7 @@ final class NumericFieldWithValueBuilderTest extends TestCase
 
     public function testItReturnsNullWhenChangesetIsNull(): void
     {
-        $field = IntFieldBuilder::anIntField(12)->build();
+        $field = IntegerFieldBuilder::anIntField(12)->build();
         self::assertEquals(
             new NumericFieldWithValue(
                 $field->getLabel(),

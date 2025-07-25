@@ -43,7 +43,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Semantic\Timeframe\IComputeTimeframes;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\IntegerFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\Semantic\Timeframe\BuildSemanticTimeframeStub;
 use Tuleap\Tracker\Tracker;
@@ -91,7 +91,7 @@ final class MilestoneFactoryTest extends TestCase
             ]);
 
         $formelement_factory = $this->createMock(Tracker_FormElementFactory::class);
-        $formelement_factory->method('getFormElementByName')->willReturn(IntFieldBuilder::anIntField(1)->build());
+        $formelement_factory->method('getFormElementByName')->willReturn(IntegerFieldBuilder::anIntField(1)->build());
 
         $status_counter               = $this->createMock(AgileDashboard_Milestone_MilestoneStatusCounter::class);
         $planning_permissions_manager = $this->createMock(PlanningPermissionsManager::class);

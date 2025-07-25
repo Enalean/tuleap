@@ -84,9 +84,9 @@ final class InitialEffortSemanticAdminPresenterBuilderTest extends TestCase
         );
     }
 
-    private function getFieldWithLabel(int $id, string $label): \Tracker_FormElement_Field_Integer
+    private function getFieldWithLabel(int $id, string $label): \Tuleap\Tracker\FormElement\Field\Integer\IntegerField
     {
-        return new \Tracker_FormElement_Field_Integer(
+        return new \Tuleap\Tracker\FormElement\Field\Integer\IntegerField(
             $id,
             $this->tracker->getId(),
             0,

@@ -19,10 +19,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\Tracker\FormElement\Field\Integer;
+
+use Codendi_HTMLPurifier;
+use Tracker_Artifact_Changeset;
+use Tracker_Artifact_ChangesetValue;
+use Tracker_Artifact_ChangesetValue_Integer;
+use Tracker_FormElement_Field_Numeric;
+use Tracker_FormElement_FieldVisitor;
+use Tracker_Report;
+use Tracker_Report_Criteria;
+use Tracker_Report_Criteria_Int_ValueDao;
 use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\FormElement\Field\Integer\ChangesChecker;
-use Tuleap\Tracker\FormElement\Field\Integer\IntegerValueDao;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\IntegerFieldSpecificPropertiesDAO;
 use Tuleap\Tracker\Report\Criteria\CriteriaAlphaNumValueDAO;
 use Tuleap\Tracker\Report\Criteria\DeleteReportCriteriaValue;
@@ -30,9 +39,9 @@ use Tuleap\Tracker\Report\Query\ParametrizedFrom;
 use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
-class Tracker_FormElement_Field_Integer extends Tracker_FormElement_Field_Numeric
+class IntegerField extends Tracker_FormElement_Field_Numeric
 {
+    #[\Override]
     public function getCriteriaFromWhere(Tracker_Report_Criteria $criteria): Option
     {
         //Only filter query if field is used
@@ -72,6 +81,7 @@ class Tracker_FormElement_Field_Integer extends Tracker_FormElement_Field_Numeri
         );
     }
 
+    #[\Override]
     public function fetchCriteriaValue(Tracker_Report_Criteria $criteria): string
     {
         $html           = '<input data-test="integer-report-criteria" type="text" name="criteria[' . $this->id . ']" id="tracker_report_criteria_' . $this->id . '" value="';
@@ -86,6 +96,7 @@ class Tracker_FormElement_Field_Integer extends Tracker_FormElement_Field_Numeri
         return $html;
     }
 
+    #[\Override]
     public function getQueryFrom()
     {
         $R1 = 'R1_' . $this->id;
@@ -96,11 +107,13 @@ class Tracker_FormElement_Field_Integer extends Tracker_FormElement_Field_Numeri
                 ) ON ($R1.changeset_id = c.id AND $R1.field_id = " . $this->id . ' )';
     }
 
+    #[\Override]
     protected function buildMatchExpression(string $field_name, $criteria_value): Option
     {
         return parent::buildMatchExpression($field_name, $criteria_value);
     }
 
+    #[\Override]
     protected function getCriteriaDao()
     {
         return new Tracker_Report_Criteria_Int_ValueDao();
@@ -112,11 +125,13 @@ class Tracker_FormElement_Field_Integer extends Tracker_FormElement_Field_Numeri
         return new CriteriaAlphaNumValueDAO();
     }
 
+    #[\Override]
     public function canBeUsedToSortReport()
     {
         return true;
     }
 
+    #[\Override]
     public function fetchChangesetValue(
         int $artifact_id,
         int $changeset_id,
@@ -127,6 +142,7 @@ class Tracker_FormElement_Field_Integer extends Tracker_FormElement_Field_Numeri
         return (string) $value;
     }
 
+    #[\Override]
     protected function getValueDao()
     {
         return new IntegerValueDao();
@@ -156,26 +172,31 @@ class Tracker_FormElement_Field_Integer extends Tracker_FormElement_Field_Numeri
         return new IntegerFieldSpecificPropertiesDAO();
     }
 
+    #[\Override]
     public static function getFactoryLabel()
     {
         return dgettext('tuleap-tracker', 'Integer');
     }
 
+    #[\Override]
     public static function getFactoryDescription()
     {
         return dgettext('tuleap-tracker', 'A textfield wich accept only integers');
     }
 
+    #[\Override]
     public static function getFactoryIconUseIt()
     {
         return $GLOBALS['HTML']->getImagePath('ic/ui-text-field-int.png');
     }
 
+    #[\Override]
     public static function getFactoryIconCreate()
     {
         return $GLOBALS['HTML']->getImagePath('ic/ui-text-field-int--plus.png');
     }
 
+    #[\Override]
     protected function fetchTooltipValue(Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null): string
     {
         $html = '';
@@ -188,6 +209,7 @@ class Tracker_FormElement_Field_Integer extends Tracker_FormElement_Field_Numeri
     /**
      * @return string the i18n error message to display if the value submitted by the user is not valid
      */
+    #[\Override]
     protected function getValidatorErrorMessage()
     {
         return $this->getLabel() . ' ' . dgettext('tuleap-tracker', 'is not an integer.');
@@ -202,6 +224,7 @@ class Tracker_FormElement_Field_Integer extends Tracker_FormElement_Field_Numeri
      *
      * @return Tracker_Artifact_ChangesetValue or null if not found
      */
+    #[\Override]
     public function getChangesetValue($changeset, $value_id, $has_changed)
     {
         $changeset_value = null;
@@ -215,6 +238,7 @@ class Tracker_FormElement_Field_Integer extends Tracker_FormElement_Field_Numeri
         return $changeset_value;
     }
 
+    #[\Override]
     public function accept(Tracker_FormElement_FieldVisitor $visitor)
     {
         return $visitor->visitInteger($this);
@@ -223,12 +247,14 @@ class Tracker_FormElement_Field_Integer extends Tracker_FormElement_Field_Numeri
     /**
      * @see Tracker_FormElement_Field::hasChanges()
      */
+    #[\Override]
     public function hasChanges(Artifact $artifact, Tracker_Artifact_ChangesetValue $old_value, $new_value)
     {
         assert($old_value instanceof Tracker_Artifact_ChangesetValue_Integer);
         return (new ChangesChecker())->hasChanges($old_value, $new_value);
     }
 
+    #[\Override]
     public function isAlwaysInEditMode(): bool
     {
         return false;

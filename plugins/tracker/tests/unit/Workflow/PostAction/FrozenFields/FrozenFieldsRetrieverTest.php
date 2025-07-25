@@ -62,7 +62,7 @@ final class FrozenFieldsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ['transition_id' => (int) $transition_id, 'postaction_id' => $postaction_id, 'field_id' => 987],
         ]);
 
-        $int_field    = $this->createMock(\Tracker_FormElement_Field_Integer::class);
+        $int_field    = $this->createMock(\Tuleap\Tracker\FormElement\Field\Integer\IntegerField::class);
         $float_field  = $this->createMock(\Tracker_FormElement_Field_Float::class);
         $string_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\String\StringField::class);
 
@@ -109,7 +109,7 @@ final class FrozenFieldsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ['transition_id' => 99, 'postaction_id' => $postaction_id, 'field_id' => 987],
         ]);
 
-        $int_field = $this->createMock(\Tracker_FormElement_Field_Integer::class);
+        $int_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\Integer\IntegerField::class);
 
         $this->form_element_factory->method('getFieldById')->with(331)->willReturn($int_field);
 

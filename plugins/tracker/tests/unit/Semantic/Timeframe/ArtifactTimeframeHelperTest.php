@@ -23,7 +23,7 @@ namespace Tuleap\Tracker\Semantic\Timeframe;
 use Psr\Log\NullLogger;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\IntegerFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -41,7 +41,7 @@ final class ArtifactTimeframeHelperTest extends \Tuleap\Test\PHPUnit\TestCase
         $semantic_timeframe_builder = $this->createMock(SemanticTimeframeBuilder::class);
         $user                       = UserTestBuilder::buildWithDefaults();
         $tracker                    = TrackerTestBuilder::aTracker()->build();
-        $duration_field             = IntFieldBuilder::anIntField(1002)->inTracker($tracker)->build();
+        $duration_field             = IntegerFieldBuilder::anIntField(1002)->inTracker($tracker)->build();
         $semantic                   = $this->createMock(SemanticTimeframe::class);
 
         $semantic_timeframe_builder->method('getSemantic')->with($tracker)->willReturn($semantic);
@@ -57,7 +57,7 @@ final class ArtifactTimeframeHelperTest extends \Tuleap\Test\PHPUnit\TestCase
         $semantic_timeframe_builder = $this->createMock(SemanticTimeframeBuilder::class);
         $user                       = UserTestBuilder::buildWithDefaults();
         $tracker                    = TrackerTestBuilder::aTracker()->build();
-        $duration_field             = IntFieldBuilder::anIntField(1002)->inTracker($tracker)->build();
+        $duration_field             = IntegerFieldBuilder::anIntField(1002)->inTracker($tracker)->build();
         $semantic                   = $this->createMock(SemanticTimeframe::class);
         $start_date_field           = DateFieldBuilder::aDateField(1001)->withReadPermission($user, true)->build();
 
@@ -76,7 +76,7 @@ final class ArtifactTimeframeHelperTest extends \Tuleap\Test\PHPUnit\TestCase
         $semantic_timeframe_builder = $this->createMock(SemanticTimeframeBuilder::class);
         $user                       = UserTestBuilder::buildWithDefaults();
         $tracker                    = TrackerTestBuilder::aTracker()->build();
-        $duration_field             = IntFieldBuilder::anIntField(1002)->inTracker($tracker)->build();
+        $duration_field             = IntegerFieldBuilder::anIntField(1002)->inTracker($tracker)->build();
         $semantic                   = $this->createMock(SemanticTimeframe::class);
         $start_date_field           = DateFieldBuilder::aDateField(1001)->withReadPermission($user, false)->build();
 
@@ -95,7 +95,7 @@ final class ArtifactTimeframeHelperTest extends \Tuleap\Test\PHPUnit\TestCase
         $semantic_timeframe_builder = $this->createMock(SemanticTimeframeBuilder::class);
         $user                       = UserTestBuilder::buildWithDefaults();
         $tracker                    = TrackerTestBuilder::aTracker()->build();
-        $duration_field             = IntFieldBuilder::anIntField(1002)->inTracker($tracker)->build();
+        $duration_field             = IntegerFieldBuilder::anIntField(1002)->inTracker($tracker)->build();
         $semantic                   = $this->createMock(SemanticTimeframe::class);
         $start_date_field           = DateFieldBuilder::aDateField(1001)->withReadPermission($user, true)->build();
 
@@ -114,7 +114,7 @@ final class ArtifactTimeframeHelperTest extends \Tuleap\Test\PHPUnit\TestCase
         $semantic_timeframe_builder = $this->createMock(SemanticTimeframeBuilder::class);
         $user                       = UserTestBuilder::buildWithDefaults();
         $tracker                    = TrackerTestBuilder::aTracker()->build();
-        $end_date_field             = IntFieldBuilder::anIntField(1002)->inTracker($tracker)->build();
+        $end_date_field             = IntegerFieldBuilder::anIntField(1002)->inTracker($tracker)->build();
         $semantic                   = $this->createMock(SemanticTimeframe::class);
         $start_date_field           = DateFieldBuilder::aDateField(1001)->withReadPermission($user, true)->build();
 

@@ -26,7 +26,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Permission\FieldPermissionType;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
-use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\IntegerFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\Permission\RetrieveUserPermissionOnFieldsStub;
 use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
@@ -48,19 +48,19 @@ final class ReadableFieldRetrieverTest extends TestCase
         $user      = UserTestBuilder::buildWithId(105);
         $tracker_1 = TrackerTestBuilder::aTracker()->withId(3)->build();
 
-        $field_1_readable = IntFieldBuilder::anIntField(self::FIELD_1_ID)
+        $field_1_readable = IntegerFieldBuilder::anIntField(self::FIELD_1_ID)
                 ->withName(self::FIELD_NAME)
                     ->inTracker($tracker_1)
                         ->build();
 
         $tracker_2            = TrackerTestBuilder::aTracker()->withId(4)->build();
-        $field_2_not_readable =  IntFieldBuilder::anIntField(self::FIELD_2_ID)
+        $field_2_not_readable =  IntegerFieldBuilder::anIntField(self::FIELD_2_ID)
             ->withName(self::FIELD_NAME)
             ->inTracker($tracker_2)
             ->build();
 
         $tracker_3        = TrackerTestBuilder::aTracker()->withId(5)->build();
-        $field_3_readable =  IntFieldBuilder::anIntField(self::FIELD_3_ID)
+        $field_3_readable =  IntegerFieldBuilder::anIntField(self::FIELD_3_ID)
             ->withName(self::FIELD_NAME)
             ->inTracker($tracker_3)
             ->build();

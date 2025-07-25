@@ -25,7 +25,7 @@ namespace Tuleap\Cardwall\Semantic;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tracker_FormElement_Field;
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\IntegerFieldBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FieldUsedInSemanticObjectCheckerTest extends TestCase
@@ -38,13 +38,13 @@ final class FieldUsedInSemanticObjectCheckerTest extends TestCase
     {
         $this->background_dao = $this->createMock(BackgroundColorDao::class);
         $this->checker        = new FieldUsedInSemanticObjectChecker($this->background_dao);
-        $this->field          = IntFieldBuilder::anIntField(101)->build();
+        $this->field          = IntegerFieldBuilder::anIntField(101)->build();
     }
 
     public function testItShouldReturnTrueIfFieldIsUsedInCardFieldSemantic(): void
     {
-        $card_field1 = IntFieldBuilder::anIntField(100)->build();
-        $card_field2 = IntFieldBuilder::anIntField(101)->build();
+        $card_field1 = IntegerFieldBuilder::anIntField(100)->build();
+        $card_field2 = IntegerFieldBuilder::anIntField(101)->build();
         $card_fields = [$card_field1, $card_field2];
 
         self::assertTrue($this->checker->isUsedInSemantic($this->field, $card_fields));
@@ -59,8 +59,8 @@ final class FieldUsedInSemanticObjectCheckerTest extends TestCase
 
     public function testItShouldShouldReturnFalseWhenFieldIsNotACardFieldAndNotABAckgroundColorField(): void
     {
-        $card_field1 = IntFieldBuilder::anIntField(104)->build();
-        $card_field2 = IntFieldBuilder::anIntField(105)->build();
+        $card_field1 = IntegerFieldBuilder::anIntField(104)->build();
+        $card_field2 = IntegerFieldBuilder::anIntField(105)->build();
         $card_fields = [$card_field1, $card_field2];
 
         $this->background_dao->method('isFieldUsedAsBackgroundColor')->willReturn(false);

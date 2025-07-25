@@ -26,7 +26,7 @@ use Tracker_FormElement;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\FloatFieldBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\IntegerFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserGroupBindBuilder;
@@ -84,7 +84,7 @@ final class FieldTypeRetrieverWrapperTest extends TestCase
 
     public static function notHandledTypeProvider(): iterable
     {
-        yield 'int field' => [IntFieldBuilder::anIntField(784)->build()];
+        yield 'int field' => [IntegerFieldBuilder::anIntField(784)->build()];
         yield 'float field' => [FloatFieldBuilder::aFloatField(456)->build()];
         yield 'date field' => [DateFieldBuilder::aDateField(134)->build()];
         yield 'text field' => [TextFieldBuilder::aTextField(458)->build()];

@@ -23,7 +23,7 @@ declare(strict_types=1);
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\DB\DatabaseUUIDV7Factory;
-use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\IntegerFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
@@ -91,7 +91,7 @@ final class Tracker_Workflow_Trigger_RulesFactoryTest extends \Tuleap\Test\PHPUn
 
     public function testItRaisesAnExceptionWhenFieldDoesntBelongToTracker(): void
     {
-        $field   = IntFieldBuilder::anIntField(30)
+        $field   = IntegerFieldBuilder::anIntField(30)
             ->inTracker(TrackerTestBuilder::aTracker()->withId(37)->build())
             ->build();
         $factory = new Tracker_Workflow_Trigger_RulesFactory(

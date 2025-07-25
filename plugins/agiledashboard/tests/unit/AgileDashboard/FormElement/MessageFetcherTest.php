@@ -33,7 +33,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDone;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneFactory;
-use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\IntegerFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Tracker;
 
@@ -63,7 +63,7 @@ final class MessageFetcherTest extends TestCase
 
         $this->tracker         = TrackerTestBuilder::aTracker()->build();
         $this->backlog_tracker = TrackerTestBuilder::aTracker()->build();
-        $this->field           = IntFieldBuilder::anIntField(145)->build();
+        $this->field           = IntegerFieldBuilder::anIntField(145)->build();
         $this->user            = UserTestBuilder::buildWithDefaults();
     }
 

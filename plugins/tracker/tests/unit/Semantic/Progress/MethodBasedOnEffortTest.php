@@ -27,7 +27,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\IntegerFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -59,10 +59,10 @@ final class MethodBasedOnEffortTest extends \Tuleap\Test\PHPUnit\TestCase
         ?float $expected_progress_value,
         string $expected_error_message,
     ): void {
-        $total_effort_field     = IntFieldBuilder::anIntField(1001)
+        $total_effort_field     = IntegerFieldBuilder::anIntField(1001)
             ->withReadPermission($this->user, true)
             ->build();
-        $remaining_effort_field = IntFieldBuilder::anIntField(1002)
+        $remaining_effort_field = IntegerFieldBuilder::anIntField(1002)
             ->withReadPermission($this->user, true)
             ->build();
         $method                 = new MethodBasedOnEffort(
@@ -136,10 +136,10 @@ final class MethodBasedOnEffortTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsNullWhenUserHasNotPermissionToReadTotalEffortField(): void
     {
-        $total_effort_field     = IntFieldBuilder::anIntField(1001)
+        $total_effort_field     = IntegerFieldBuilder::anIntField(1001)
             ->withReadPermission($this->user, false)
             ->build();
-        $remaining_effort_field = IntFieldBuilder::anIntField(1002)
+        $remaining_effort_field = IntegerFieldBuilder::anIntField(1002)
             ->withReadPermission($this->user, true)
             ->build();
 
@@ -156,10 +156,10 @@ final class MethodBasedOnEffortTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsNullWhenUserHasNotPermissionToReadRemainingEffortField(): void
     {
-        $total_effort_field     = IntFieldBuilder::anIntField(1001)
+        $total_effort_field     = IntegerFieldBuilder::anIntField(1001)
             ->withReadPermission($this->user, true)
             ->build();
-        $remaining_effort_field = IntFieldBuilder::anIntField(1002)
+        $remaining_effort_field = IntegerFieldBuilder::anIntField(1002)
             ->withReadPermission($this->user, false)
             ->build();
         $method                 = new MethodBasedOnEffort(
@@ -176,10 +176,10 @@ final class MethodBasedOnEffortTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItExportsToREST(): void
     {
-        $total_effort_field     = IntFieldBuilder::anIntField(1001)
+        $total_effort_field     = IntegerFieldBuilder::anIntField(1001)
             ->withReadPermission($this->user, true)
             ->build();
-        $remaining_effort_field = IntFieldBuilder::anIntField(1002)
+        $remaining_effort_field = IntegerFieldBuilder::anIntField(1002)
             ->withReadPermission($this->user, true)
             ->build();
         $method                 = new MethodBasedOnEffort(
@@ -196,10 +196,10 @@ final class MethodBasedOnEffortTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItExportsNothingToRESTIfUserCannotReadTotalEffortField(): void
     {
-        $total_effort_field     = IntFieldBuilder::anIntField(1001)
+        $total_effort_field     = IntegerFieldBuilder::anIntField(1001)
             ->withReadPermission($this->user, false)
             ->build();
-        $remaining_effort_field = IntFieldBuilder::anIntField(1002)
+        $remaining_effort_field = IntegerFieldBuilder::anIntField(1002)
             ->withReadPermission($this->user, true)
             ->build();
         $method                 = new MethodBasedOnEffort(
@@ -213,10 +213,10 @@ final class MethodBasedOnEffortTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItExportsNothingToRESTIfUserCannotReadRemainingEffortField(): void
     {
-        $total_effort_field     = IntFieldBuilder::anIntField(1001)
+        $total_effort_field     = IntegerFieldBuilder::anIntField(1001)
             ->withReadPermission($this->user, true)
             ->build();
-        $remaining_effort_field = IntFieldBuilder::anIntField(1002)
+        $remaining_effort_field = IntegerFieldBuilder::anIntField(1002)
             ->withReadPermission($this->user, false)
             ->build();
         $method                 = new MethodBasedOnEffort(
@@ -230,8 +230,8 @@ final class MethodBasedOnEffortTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItExportsSemanticConfigurationToXml(): void
     {
-        $total_effort_field     = IntFieldBuilder::anIntField(1001)->build();
-        $remaining_effort_field = IntFieldBuilder::anIntField(1002)->build();
+        $total_effort_field     = IntegerFieldBuilder::anIntField(1001)->build();
+        $remaining_effort_field = IntegerFieldBuilder::anIntField(1002)->build();
         $method                 = new MethodBasedOnEffort(
             $this->dao,
             $total_effort_field,
@@ -254,8 +254,8 @@ final class MethodBasedOnEffortTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDoesNotExportToXMLWhenThereIsNoReferenceToTotalEffortField(): void
     {
-        $total_effort_field     = IntFieldBuilder::anIntField(1001)->build();
-        $remaining_effort_field = IntFieldBuilder::anIntField(1002)->build();
+        $total_effort_field     = IntegerFieldBuilder::anIntField(1001)->build();
+        $remaining_effort_field = IntegerFieldBuilder::anIntField(1002)->build();
         $method                 = new MethodBasedOnEffort(
             $this->dao,
             $total_effort_field,
@@ -274,8 +274,8 @@ final class MethodBasedOnEffortTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDoesNotExportToXMLWhenThereIsNoReferenceToRemainingEffortField(): void
     {
-        $total_effort_field     = IntFieldBuilder::anIntField(1001)->build();
-        $remaining_effort_field = IntFieldBuilder::anIntField(1002)->build();
+        $total_effort_field     = IntegerFieldBuilder::anIntField(1001)->build();
+        $remaining_effort_field = IntegerFieldBuilder::anIntField(1002)->build();
         $method                 = new MethodBasedOnEffort(
             $this->dao,
             $total_effort_field,
@@ -294,8 +294,8 @@ final class MethodBasedOnEffortTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItSavesItsConfiguration(): void
     {
-        $total_effort_field     = IntFieldBuilder::anIntField(1001)->build();
-        $remaining_effort_field = IntFieldBuilder::anIntField(1002)->build();
+        $total_effort_field     = IntegerFieldBuilder::anIntField(1001)->build();
+        $remaining_effort_field = IntegerFieldBuilder::anIntField(1002)->build();
         $method                 = new MethodBasedOnEffort(
             $this->dao,
             $total_effort_field,
@@ -311,8 +311,8 @@ final class MethodBasedOnEffortTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDeletesItsConfiguration(): void
     {
-        $total_effort_field     = IntFieldBuilder::anIntField(1001)->build();
-        $remaining_effort_field = IntFieldBuilder::anIntField(1002)->build();
+        $total_effort_field     = IntegerFieldBuilder::anIntField(1001)->build();
+        $remaining_effort_field = IntegerFieldBuilder::anIntField(1002)->build();
         $method                 = new MethodBasedOnEffort(
             $this->dao,
             $total_effort_field,

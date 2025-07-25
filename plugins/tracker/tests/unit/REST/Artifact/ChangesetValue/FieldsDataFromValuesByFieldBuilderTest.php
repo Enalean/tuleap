@@ -26,7 +26,7 @@ use Tuleap\Tracker\Artifact\ChangesetValue\InitialChangesetValuesContainer;
 use Tuleap\Tracker\FormElement\Field\RetrieveUsedFields;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValueBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\FloatFieldBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\IntegerFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\TextFieldBuilder;
@@ -51,7 +51,7 @@ final class FieldsDataFromValuesByFieldBuilderTest extends \Tuleap\Test\PHPUnit\
     private const STRING_FIELD_NAME = 'string';
     private const TEXT_FIELD_NAME   = 'text';
     private RetrieveUsedFields $fields_retriever;
-    private \Tracker_FormElement_Field_Integer $int_field;
+    private \Tuleap\Tracker\FormElement\Field\Integer\IntegerField $int_field;
     private \Tracker_FormElement_Field_Float $float_field;
     private \Tuleap\Tracker\FormElement\Field\String\StringField $string_field;
     private \Tuleap\Tracker\FormElement\Field\Text\TextField $text_field;
@@ -61,7 +61,7 @@ final class FieldsDataFromValuesByFieldBuilderTest extends \Tuleap\Test\PHPUnit\
     protected function setUp(): void
     {
         $this->tracker      = TrackerTestBuilder::aTracker()->withId(self::TRACKER_ID)->build();
-        $this->int_field    = IntFieldBuilder::anIntField(self::INT_FIELD_ID)
+        $this->int_field    = IntegerFieldBuilder::anIntField(self::INT_FIELD_ID)
             ->withName(self::INT_FIELD_NAME)
             ->inTracker($this->tracker)
             ->build();

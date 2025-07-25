@@ -316,9 +316,9 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    private function getIntField(int $id, string $label): \Tracker_FormElement_Field_Integer
+    private function getIntField(int $id, string $label): \Tuleap\Tracker\FormElement\Field\Integer\IntegerField
     {
-        return new \Tracker_FormElement_Field_Integer(
+        return new \Tuleap\Tracker\FormElement\Field\Integer\IntegerField(
             $id,
             self::PROGRAM_INCREMENT_TRACKER_ID,
             1,

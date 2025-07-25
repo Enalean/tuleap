@@ -39,7 +39,7 @@ use Tuleap\Tracker\Report\Query\CommentWithoutPrivateCheckFromWhereBuilder;
 use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\FloatFieldBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\IntegerFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\TextFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -61,7 +61,7 @@ final class QueryBuilderVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
                 ->inTracker($tracker)
                 ->withName('field')
                 ->build(),
-            IntFieldBuilder::anIntField(2)
+            IntegerFieldBuilder::anIntField(2)
                 ->inTracker($tracker)
                 ->withName('int')
                 ->build(),

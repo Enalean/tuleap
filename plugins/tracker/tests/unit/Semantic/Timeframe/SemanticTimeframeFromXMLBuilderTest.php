@@ -72,7 +72,7 @@ final class SemanticTimeframeFromXMLBuilderTest extends \Tuleap\Test\PHPUnit\Tes
             $all_semantics_xml,
             [
                 'F201' => $this->getMockedField(\Tracker_FormElement_Field_Date::class),
-                'F202' => $this->getMockedField(\Tracker_FormElement_Field_Integer::class),
+                'F202' => $this->getMockedField(\Tuleap\Tracker\FormElement\Field\Integer\IntegerField::class),
             ],
             $this->getMockedTracker(),
             self::TRACKER_MAPPING
@@ -415,7 +415,7 @@ final class SemanticTimeframeFromXMLBuilderTest extends \Tuleap\Test\PHPUnit\Tes
             ], [
                 'xml' => $xml_with_duration,
                 'mapping' => [
-                    'F202' => new \Tracker_FormElement_Field_Integer(202, 113, 2, 'name', 'label', 'description', true, '', false, [], 1),
+                    'F202' => new \Tuleap\Tracker\FormElement\Field\Integer\IntegerField(202, 113, 2, 'name', 'label', 'description', true, '', false, [], 1),
                 ],
             ], [
                 'xml' => $xml_with_duration,

@@ -30,16 +30,16 @@ use Tracker_Artifact_ChangesetValue_Date;
 use Tracker_Artifact_ChangesetValue_Integer;
 use Tracker_FormElement_Chart_Field_Exception;
 use Tracker_FormElement_Field_Date;
-use Tracker_FormElement_Field_Integer;
 use Tuleap\Date\DatePeriodWithOpenDays;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\Integer\IntegerField;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueDateTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\IntegerFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Tracker;
 
@@ -49,7 +49,7 @@ final class ChartConfigurationValueCheckerTest extends TestCase
     private const DURATION_VALUE       = 10;
     private const START_DATE_TIMESTAMP = 1488470204;
 
-    public Tracker_FormElement_Field_Integer $duration_field;
+    public IntegerField $duration_field;
     private Tracker_Artifact_Changeset $new_changeset;
     private Tracker_Artifact_ChangesetValue_Integer&MockObject $duration_changeset;
     private Tracker_Artifact_ChangesetValue_Date&MockObject $start_date_changeset;
@@ -75,7 +75,7 @@ final class ChartConfigurationValueCheckerTest extends TestCase
         $this->tracker              = TrackerTestBuilder::aTracker()->build();
         $this->start_date_field     = DateFieldBuilder::aDateField(6541)->build();
         $this->end_date_field       = DateFieldBuilder::aDateField(6542)->build();
-        $this->duration_field       = IntFieldBuilder::anIntField(6543)->build();
+        $this->duration_field       = IntegerFieldBuilder::anIntField(6543)->build();
         $this->new_changeset        = ChangesetTestBuilder::aChangeset(1786)->build();
         $this->artifact             = ArtifactTestBuilder::anArtifact(9874)->inTracker($this->tracker)->withChangesets($this->new_changeset)->build();
         $this->user                 = UserTestBuilder::buildWithDefaults();

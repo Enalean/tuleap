@@ -26,7 +26,6 @@ use Exception;
 use Override;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use Tracker_Artifact_Changeset;
-use Tracker_FormElement_Field_Integer;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Bind_Static;
 use Tracker_FormElement_Field_List_Bind_Ugroups;
@@ -54,6 +53,7 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\ProjectUGroupTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
+use Tuleap\Tracker\FormElement\Field\Integer\IntegerField;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueArtifactLinkTestBuilder;
@@ -61,7 +61,7 @@ use Tuleap\Tracker\Test\Builders\ChangesetValueIntegerTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueListTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueStringTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ArtifactLinkFieldBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\IntegerFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserBindBuilder;
@@ -339,7 +339,7 @@ final class FieldsWithValuesBuilderTest extends TestCase
 
     public function testItBuildsNumericFieldsWithValue(): void
     {
-        $int_field = IntFieldBuilder::anIntField(123)->build();
+        $int_field = IntegerFieldBuilder::anIntField(123)->build();
 
         $expected_int_field_with_value = new NumericFieldWithValue(
             $int_field->getLabel(),
@@ -362,7 +362,7 @@ final class FieldsWithValuesBuilderTest extends TestCase
             BuildArtifactLinkFieldWithValueStub::withCallback($this->notCalledCallback(...)),
             BuildNumericFieldWithValueStub::withCallback(
                 static function (ConfiguredField $configured_field) use ($expected_int_field_with_value): NumericFieldWithValue {
-                    self::assertInstanceOf(Tracker_FormElement_Field_Integer::class, $configured_field->field);
+                    self::assertInstanceOf(IntegerField::class, $configured_field->field);
                     return $expected_int_field_with_value;
                 },
             ),

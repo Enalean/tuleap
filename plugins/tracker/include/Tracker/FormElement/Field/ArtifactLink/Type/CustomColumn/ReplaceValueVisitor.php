@@ -31,7 +31,6 @@ use Tracker_FormElement_Field_CrossReferences;
 use Tracker_FormElement_Field_Date;
 use Tracker_FormElement_Field_File;
 use Tracker_FormElement_Field_Float;
-use Tracker_FormElement_Field_Integer;
 use Tracker_FormElement_Field_LastModifiedBy;
 use Tracker_FormElement_Field_LastUpdateDate;
 use Tracker_FormElement_Field_MultiSelectbox;
@@ -45,6 +44,7 @@ use Tracker_FormElement_Field_SubmittedBy;
 use Tracker_FormElement_Field_SubmittedOn;
 use Tracker_FormElement_FieldVisitor;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
+use Tuleap\Tracker\FormElement\Field\Integer\IntegerField;
 use Tuleap\Tracker\FormElement\Field\String\StringField;
 use Tuleap\Tracker\FormElement\Field\Text\TextField;
 use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
@@ -100,7 +100,7 @@ class ReplaceValueVisitor implements Tracker_FormElement_FieldVisitor
         return $changeset_value->getFloat();
     }
 
-    public function visitInteger(Tracker_FormElement_Field_Integer $field)
+    public function visitInteger(IntegerField $field)
     {
         $changeset_value = $this->changeset->getValue($field);
         if (! $changeset_value) {

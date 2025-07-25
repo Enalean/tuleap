@@ -36,7 +36,7 @@ use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueDateTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueIntegerTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\IntegerFieldBuilder;
 use Tuleap\Tracker\Test\Stub\Semantic\Timeframe\BuildSemanticTimeframeStub;
 use Tuleap\Tracker\Test\Stub\Semantic\Timeframe\IComputeTimeframesStub;
 
@@ -323,7 +323,7 @@ final class EventDatesRetrieverTest extends TestCase
 
     public function testDatesAreReturnedEvenIfTimeframeIsZero(): void
     {
-        $duration_field = IntFieldBuilder::anIntField(3)->build();
+        $duration_field = IntegerFieldBuilder::anIntField(3)->build();
         $builder        = new EventDatesRetriever(
             BuildSemanticTimeframeStub::withTimeframeCalculator(
                 $this->changeset->getTracker(),
@@ -419,7 +419,7 @@ final class EventDatesRetrieverTest extends TestCase
 
     public function testItReturnsTrueForTimeDisplayTimeframeWithDuration(): void
     {
-        $duration_field = IntFieldBuilder::anIntField(3)->build();
+        $duration_field = IntegerFieldBuilder::anIntField(3)->build();
         $builder        = new EventDatesRetriever(
             BuildSemanticTimeframeStub::withTimeframeCalculator(
                 $this->changeset->getTracker(),

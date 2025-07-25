@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\FormElement\FieldSpecificProperties;
 
 use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\IntegerFieldBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FieldPropertiesRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -93,7 +93,7 @@ final class FieldPropertiesRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $field_properties_retriever = new FieldPropertiesRetriever($dao);
 
         $cache              = null;
-        $field              = IntFieldBuilder::anIntField(1)->build();
+        $field              = IntegerFieldBuilder::anIntField(1)->build();
         $default_properties =   $field->default_properties;
 
         $result = $field_properties_retriever->getProperties($cache, $default_properties, $field->id);

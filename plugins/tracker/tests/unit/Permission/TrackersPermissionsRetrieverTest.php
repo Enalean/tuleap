@@ -35,7 +35,7 @@ use Tuleap\Test\Stubs\EventDispatcherStub;
 use Tuleap\Test\Stubs\RetrieveUserByIdStub;
 use Tuleap\Tracker\Artifact\CanSubmitNewArtifact;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\IntegerFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\Permission\SearchUserGroupsPermissionOnArtifactsStub;
 use Tuleap\Tracker\Test\Stub\Permission\SearchUserGroupsPermissionOnFieldsStub;
@@ -78,10 +78,10 @@ final class TrackersPermissionsRetrieverTest extends TestCase
         $user             = $this->createMock(PFUser::class);
         $project          = ProjectTestBuilder::aProject()->withId(101)->build();
         $tracker          = TrackerTestBuilder::aTracker()->withId(201)->withProject($project)->build();
-        $field1           = IntFieldBuilder::anIntField(301)->inTracker($tracker)->build();
-        $field2           = IntFieldBuilder::anIntField(302)->inTracker($tracker)->build();
-        $field3           = IntFieldBuilder::anIntField(303)->inTracker($tracker)->build();
-        $field4           = IntFieldBuilder::anIntField(304)->inTracker($tracker)->build();
+        $field1           = IntegerFieldBuilder::anIntField(301)->inTracker($tracker)->build();
+        $field2           = IntegerFieldBuilder::anIntField(302)->inTracker($tracker)->build();
+        $field3           = IntegerFieldBuilder::anIntField(303)->inTracker($tracker)->build();
+        $field4           = IntegerFieldBuilder::anIntField(304)->inTracker($tracker)->build();
         $this->fields_dao = SearchUserGroupsPermissionOnFieldsStub::buildWithResults([301, 303, 304]);
         $user->method('getUgroups')->willReturn([]);
 
@@ -100,10 +100,10 @@ final class TrackersPermissionsRetrieverTest extends TestCase
         $user             = $this->createMock(PFUser::class);
         $project          = ProjectTestBuilder::aProject()->withId(101)->build();
         $tracker          = TrackerTestBuilder::aTracker()->withId(201)->withProject($project)->build();
-        $field1           = IntFieldBuilder::anIntField(301)->inTracker($tracker)->build();
-        $field2           = IntFieldBuilder::anIntField(302)->inTracker($tracker)->build();
-        $field3           = IntFieldBuilder::anIntField(303)->inTracker($tracker)->build();
-        $field4           = IntFieldBuilder::anIntField(304)->inTracker($tracker)->build();
+        $field1           = IntegerFieldBuilder::anIntField(301)->inTracker($tracker)->build();
+        $field2           = IntegerFieldBuilder::anIntField(302)->inTracker($tracker)->build();
+        $field3           = IntegerFieldBuilder::anIntField(303)->inTracker($tracker)->build();
+        $field4           = IntegerFieldBuilder::anIntField(304)->inTracker($tracker)->build();
         $this->fields_dao = $this->createMock(SearchUserGroupsPermissionOnFields::class);
         $user->method('getUgroups')->willReturn([]);
         $this->fields_dao->expects($this->exactly(2))->method('searchUserGroupsPermissionOnFields')
@@ -135,10 +135,10 @@ final class TrackersPermissionsRetrieverTest extends TestCase
         $project = ProjectTestBuilder::aProject()->withId(101)->build();
         $tracker = TrackerTestBuilder::aTracker()->withId(201)->withProject($project)->build();
         $fields  = [
-            IntFieldBuilder::anIntField(301)->inTracker($tracker)->build(),
-            IntFieldBuilder::anIntField(302)->inTracker($tracker)->build(),
-            IntFieldBuilder::anIntField(303)->inTracker($tracker)->build(),
-            IntFieldBuilder::anIntField(304)->inTracker($tracker)->build(),
+            IntegerFieldBuilder::anIntField(301)->inTracker($tracker)->build(),
+            IntegerFieldBuilder::anIntField(302)->inTracker($tracker)->build(),
+            IntegerFieldBuilder::anIntField(303)->inTracker($tracker)->build(),
+            IntegerFieldBuilder::anIntField(304)->inTracker($tracker)->build(),
         ];
 
         $result = $this->getRetriever()->retrieveUserPermissionOnFields(

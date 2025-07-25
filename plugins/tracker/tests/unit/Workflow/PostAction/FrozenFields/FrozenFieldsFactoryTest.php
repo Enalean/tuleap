@@ -25,7 +25,7 @@ namespace Tuleap\Tracker\Workflow\PostAction\FrozenFields;
 use PHPUnit\Framework\MockObject\MockObject;
 use SimpleXMLElement;
 use Tuleap\Tracker\Test\Builders\Fields\FloatFieldBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\IntegerFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -90,7 +90,7 @@ final class FrozenFieldsFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 XML;
         $xml         = new SimpleXMLElement($xml_content);
 
-        $int_field   = IntFieldBuilder::anIntField(1)->build();
+        $int_field   = IntegerFieldBuilder::anIntField(1)->build();
         $float_field = FloatFieldBuilder::aFloatField(2)->build();
 
         $mapping = [
@@ -116,7 +116,7 @@ XML;
 XML;
         $xml         = new SimpleXMLElement($xml_content);
 
-        $int_field = IntFieldBuilder::anIntField(1)->build();
+        $int_field = IntegerFieldBuilder::anIntField(1)->build();
 
         $mapping = [
             'F1' => $int_field,

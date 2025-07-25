@@ -38,7 +38,7 @@ use Tuleap\Tracker\Report\Query\Advanced\UgroupLabelConverter;
 use Tuleap\Tracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
 use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ExternalFieldBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\IntegerFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserGroupBindBuilder;
@@ -101,12 +101,12 @@ final class FieldFromWhereBuilderTest extends TestCase
     public function testItReturnsSQLForNumericField(): void
     {
         $fields_retriever = RetrieveUsedFieldsStub::withFields(
-            IntFieldBuilder::anIntField(134)
+            IntegerFieldBuilder::anIntField(134)
                 ->withName(self::FIELD_NAME)
                 ->inTracker($this->first_tracker)
                 ->withReadPermission($this->user, true)
                 ->build(),
-            IntFieldBuilder::anIntField(859)
+            IntegerFieldBuilder::anIntField(859)
                 ->withName(self::FIELD_NAME)
                 ->inTracker($this->second_tracker)
                 ->withReadPermission($this->user, true)

@@ -30,7 +30,7 @@ use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueDateTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueIntegerTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\IntegerFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -105,7 +105,7 @@ final class TimeframeChangesetFieldsValueRetrieverTest extends TestCase
 
     public function testItCanGetDurationFromChangeset(): void
     {
-        $duration_field = IntFieldBuilder::anIntField(1002)->build();
+        $duration_field = IntegerFieldBuilder::anIntField(1002)->build();
         $duration_field->setUserCanRead($this->user, true);
         $this->changeset->setFieldValue(
             $duration_field,
@@ -121,7 +121,7 @@ final class TimeframeChangesetFieldsValueRetrieverTest extends TestCase
 
     public function testItCannotGetDurationFromChangesetIfUserCantReadField(): void
     {
-        $duration_field = IntFieldBuilder::anIntField(1002)->build();
+        $duration_field = IntegerFieldBuilder::anIntField(1002)->build();
         $duration_field->setUserCanRead($this->user, false);
         $this->changeset->setFieldValue(
             $duration_field,
@@ -139,7 +139,7 @@ final class TimeframeChangesetFieldsValueRetrieverTest extends TestCase
 
     public function testItCanGetDurationIfUserIsEncapsulatedInTrackerUserWithReadAllPermission(): void
     {
-        $duration_field = IntFieldBuilder::anIntField(1002)->build();
+        $duration_field = IntegerFieldBuilder::anIntField(1002)->build();
         $duration_field->setUserCanRead($this->user, false);
         $this->changeset->setFieldValue(
             $duration_field,

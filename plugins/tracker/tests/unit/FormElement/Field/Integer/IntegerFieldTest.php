@@ -21,38 +21,36 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\FormElement;
+namespace Tuleap\Tracker\FormElement\Field\Integer;
 
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use ReflectionClass;
 use TestHelper;
 use Tracker_Artifact_ChangesetValue_Integer;
-use Tracker_FormElement_Field_Integer;
 use Tracker_Report_Criteria;
 use Tuleap\GlobalResponseMock;
 use Tuleap\Option\Option;
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Tracker\FormElement\Field\Integer\IntegerValueDao;
 use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\IntegerFieldBuilder;
 use Tuleap\Tracker\Test\Builders\ReportTestBuilder;
 
 #[DisableReturnValueGenerationForTestDoubles]
-final class Tracker_FormElement_Field_IntegerTest extends TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+final class IntegerFieldTest extends TestCase
 {
     use GlobalResponseMock;
 
     public function testNoDefaultValue(): void
     {
-        $int_field = IntFieldBuilder::anIntField(456)->build();
+        $int_field = IntegerFieldBuilder::anIntField(456)->build();
         self::assertFalse($int_field->hasDefaultValue());
     }
 
     public function testDefaultValue(): void
     {
-        $int_field = IntFieldBuilder::anIntField(456)->withSpecificProperty('default_value', ['value' => 12])->build();
+        $int_field = IntegerFieldBuilder::anIntField(456)->withSpecificProperty('default_value', ['value' => 12])->build();
         self::assertTrue($int_field->hasDefaultValue());
         self::assertEquals(12, $int_field->getDefaultValue());
     }
@@ -64,7 +62,7 @@ final class Tracker_FormElement_Field_IntegerTest extends TestCase //phpcs:ignor
         $result = ['id' => 123, 'field_id' => 1, 'value' => '42'];
         $value_dao->method('searchById')->willReturn(TestHelper::arrayToDar($result));
 
-        $integer_field = $this->createPartialMock(Tracker_FormElement_Field_Integer::class, ['getValueDao']);
+        $integer_field = $this->createPartialMock(IntegerField::class, ['getValueDao']);
         $integer_field->method('getValueDao')->willReturn($value_dao);
 
         self::assertInstanceOf(
@@ -78,7 +76,7 @@ final class Tracker_FormElement_Field_IntegerTest extends TestCase //phpcs:ignor
         $value_dao = $this->createMock(IntegerValueDao::class);
         $value_dao->method('searchById')->willReturn(TestHelper::arrayToDar([]));
 
-        $integer_field = $this->createPartialMock(Tracker_FormElement_Field_Integer::class, ['getValueDao']);
+        $integer_field = $this->createPartialMock(IntegerField::class, ['getValueDao']);
         $integer_field->method('getValueDao')->willReturn($value_dao);
 
         self::assertNull($integer_field->getChangesetValue(ChangesetTestBuilder::aChangeset(123)->build(), 123, false));
@@ -86,7 +84,7 @@ final class Tracker_FormElement_Field_IntegerTest extends TestCase //phpcs:ignor
 
     public function testIsValidRequiredField(): void
     {
-        $field    = IntFieldBuilder::anIntField(456)->thatIsRequired()->build();
+        $field    = IntegerFieldBuilder::anIntField(456)->thatIsRequired()->build();
         $artifact = ArtifactTestBuilder::anArtifact(123)->build();
         self::assertTrue($field->isValid($artifact, 2));
         self::assertTrue($field->isValid($artifact, 789));
@@ -104,7 +102,7 @@ final class Tracker_FormElement_Field_IntegerTest extends TestCase //phpcs:ignor
 
     public function testIsValidNotRequiredField(): void
     {
-        $field    = IntFieldBuilder::anIntField(456)->build();
+        $field    = IntegerFieldBuilder::anIntField(456)->build();
         $artifact = ArtifactTestBuilder::anArtifact(123)->build();
         self::assertTrue($field->isValid($artifact, ''));
         self::assertTrue($field->isValid($artifact, null));
@@ -112,13 +110,13 @@ final class Tracker_FormElement_Field_IntegerTest extends TestCase //phpcs:ignor
 
     public function testGetFieldData(): void
     {
-        $field = IntFieldBuilder::anIntField(456)->build();
+        $field = IntegerFieldBuilder::anIntField(456)->build();
         self::assertEquals('42', $field->getFieldData('42'));
     }
 
     public function testBuildMatchExpression(): void
     {
-        $field      = IntFieldBuilder::anIntField(456)->build();
+        $field      = IntegerFieldBuilder::anIntField(456)->build();
         $reflection = new ReflectionClass($field::class);
         $method     = $reflection->getMethod('buildMatchExpression');
         $method->setAccessible(true);
@@ -149,7 +147,7 @@ final class Tracker_FormElement_Field_IntegerTest extends TestCase //phpcs:ignor
 
     public function testItSearchOnZeroValue(): void
     {
-        $field    = $this->createPartialMock(Tracker_FormElement_Field_Integer::class, ['isUsed', 'getCriteriaValue']);
+        $field    = $this->createPartialMock(IntegerField::class, ['isUsed', 'getCriteriaValue']);
         $criteria = new Tracker_Report_Criteria(1, ReportTestBuilder::aPublicReport()->build(), $field, 1, false);
 
         $field->method('isUsed')->willReturn(true);
@@ -160,7 +158,7 @@ final class Tracker_FormElement_Field_IntegerTest extends TestCase //phpcs:ignor
 
     public function testItSearchOnCustomQuery(): void
     {
-        $field    = $this->createPartialMock(Tracker_FormElement_Field_Integer::class, ['isUsed', 'getCriteriaValue']);
+        $field    = $this->createPartialMock(IntegerField::class, ['isUsed', 'getCriteriaValue']);
         $criteria = new Tracker_Report_Criteria(1, ReportTestBuilder::aPublicReport()->build(), $field, 1, false);
 
         $field->method('isUsed')->willReturn(true);
@@ -171,7 +169,7 @@ final class Tracker_FormElement_Field_IntegerTest extends TestCase //phpcs:ignor
 
     public function testItDoesntSearchOnEmptyString(): void
     {
-        $field    = $this->createPartialMock(Tracker_FormElement_Field_Integer::class, ['isUsed', 'getCriteriaValue']);
+        $field    = $this->createPartialMock(IntegerField::class, ['isUsed', 'getCriteriaValue']);
         $criteria = new Tracker_Report_Criteria(1, ReportTestBuilder::aPublicReport()->build(), $field, 1, false);
 
         $field->method('isUsed')->willReturn(true);
@@ -182,7 +180,7 @@ final class Tracker_FormElement_Field_IntegerTest extends TestCase //phpcs:ignor
 
     public function testItDoesntSearchOnNullCriteria(): void
     {
-        $field    = $this->createPartialMock(Tracker_FormElement_Field_Integer::class, ['isUsed', 'getCriteriaValue']);
+        $field    = $this->createPartialMock(IntegerField::class, ['isUsed', 'getCriteriaValue']);
         $criteria = new Tracker_Report_Criteria(1, ReportTestBuilder::aPublicReport()->build(), $field, 1, false);
 
         $field->method('isUsed')->willReturn(true);
@@ -193,7 +191,7 @@ final class Tracker_FormElement_Field_IntegerTest extends TestCase //phpcs:ignor
 
     public function testItFetchCriteriaAndSetValueZero(): void
     {
-        $field    = $this->createPartialMock(Tracker_FormElement_Field_Integer::class, ['getCriteriaValue']);
+        $field    = $this->createPartialMock(IntegerField::class, ['getCriteriaValue']);
         $criteria = new Tracker_Report_Criteria(1, ReportTestBuilder::aPublicReport()->build(), $field, 1, false);
 
         $field->setId(1);
@@ -207,7 +205,7 @@ final class Tracker_FormElement_Field_IntegerTest extends TestCase //phpcs:ignor
 
     public function testItFetchCriteriaAndLeaveItEmptyValue(): void
     {
-        $field    = $this->createPartialMock(Tracker_FormElement_Field_Integer::class, ['getCriteriaValue']);
+        $field    = $this->createPartialMock(IntegerField::class, ['getCriteriaValue']);
         $criteria = new Tracker_Report_Criteria(1, ReportTestBuilder::aPublicReport()->build(), $field, 1, false);
 
         $field->setId(1);
@@ -221,7 +219,7 @@ final class Tracker_FormElement_Field_IntegerTest extends TestCase //phpcs:ignor
 
     public function itReturnsTheValueIndexedByFieldName(): void
     {
-        $field = IntFieldBuilder::anIntField(873)->build();
+        $field = IntegerFieldBuilder::anIntField(873)->build();
         $value = [
             'field_id' => 873,
             'value'    => 42,

@@ -44,7 +44,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\IntegerFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\Semantic\Timeframe\BuildSemanticTimeframeStub;
 use Tuleap\Tracker\Test\Stub\Semantic\Timeframe\IComputeTimeframesStub;
@@ -79,7 +79,7 @@ final class MilestoneFactoryGetMilestoneTest extends TestCase
                 IComputeTimeframesStub::fromStartAndDuration(
                     DatePeriodWithOpenDays::buildFromDuration(1, 1),
                     DateFieldBuilder::aDateField(1)->build(),
-                    IntFieldBuilder::anIntField(2)->build(),
+                    IntegerFieldBuilder::anIntField(2)->build(),
                 ),
             ),
             new NullLogger(),

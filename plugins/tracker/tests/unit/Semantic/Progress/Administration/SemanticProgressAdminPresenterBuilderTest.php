@@ -29,7 +29,7 @@ use Tuleap\Tracker\Semantic\Progress\MethodBasedOnEffort;
 use Tuleap\Tracker\Semantic\Progress\MethodBasedOnLinksCount;
 use Tuleap\Tracker\Semantic\Progress\MethodNotConfigured;
 use Tuleap\Tracker\Semantic\Progress\SemanticProgressDao;
-use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\IntegerFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Tracker;
 
@@ -208,7 +208,7 @@ final class SemanticProgressAdminPresenterBuilderTest extends \Tuleap\Test\PHPUn
 
     private function getNumericField(int $id, string $label): \Tracker_FormElement_Field_Numeric
     {
-        return IntFieldBuilder::anIntField($id)->withLabel($label)->build();
+        return IntegerFieldBuilder::anIntField($id)->withLabel($label)->build();
     }
 
     private function mockFormElementFactory(bool $has_a_links_field = true): void

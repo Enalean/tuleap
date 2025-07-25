@@ -22,18 +22,19 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Test\Builders\Fields;
 
+use Tuleap\Tracker\FormElement\Field\Integer\IntegerField;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Tracker;
 
-final class IntFieldBuilder
+final class IntegerFieldBuilder
 {
     use FieldBuilderWithSpecificProperties;
+    use FieldBuilderWithPermissions;
 
-    private string $name                        = 'initial_effort';
-    private string $label                       = 'Initial effort';
-    private bool $read_permission               = false;
-    private ?\PFUser $user_with_read_permission = null;
-    private bool $use_it                        = true;
-    private \Tuleap\Tracker\Tracker $tracker;
+    private string $name  = 'initial_effort';
+    private string $label = 'Initial effort';
+    private bool $use_it  = true;
+    private Tracker $tracker;
     private bool $is_required = false;
 
     private function __construct(private readonly int $id)
@@ -59,16 +60,9 @@ final class IntFieldBuilder
         return $this;
     }
 
-    public function inTracker(\Tuleap\Tracker\Tracker $tracker): self
+    public function inTracker(Tracker $tracker): self
     {
         $this->tracker = $tracker;
-        return $this;
-    }
-
-    public function withReadPermission(\PFUser $user, bool $user_can_read): self
-    {
-        $this->user_with_read_permission = $user;
-        $this->read_permission           = $user_can_read;
         return $this;
     }
 
@@ -85,9 +79,9 @@ final class IntFieldBuilder
         return $this;
     }
 
-    public function build(): \Tracker_FormElement_Field_Integer
+    public function build(): IntegerField
     {
-        $field = new \Tracker_FormElement_Field_Integer(
+        $field = new IntegerField(
             $this->id,
             $this->tracker->getId(),
             15,
@@ -102,9 +96,7 @@ final class IntFieldBuilder
             null
         );
         $field->setTracker($this->tracker);
-        if ($this->user_with_read_permission !== null) {
-            $field->setUserCanRead($this->user_with_read_permission, $this->read_permission);
-        }
+        $this->setPermissions($field);
         $this->setSpecificProperties($field);
         return $field;
     }

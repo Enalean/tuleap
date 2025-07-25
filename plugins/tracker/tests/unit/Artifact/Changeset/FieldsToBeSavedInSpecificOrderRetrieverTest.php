@@ -26,7 +26,7 @@ use Tracker_FormElementFactory;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\FileFieldBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\IntegerFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\TextFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
@@ -40,7 +40,7 @@ final class FieldsToBeSavedInSpecificOrderRetrieverTest extends TestCase
 
         $text_field = TextFieldBuilder::aTextField(125)->build();
         $file_field = FileFieldBuilder::aFileField(126)->build();
-        $int_field  = IntFieldBuilder::anIntField(127)->build();
+        $int_field  = IntegerFieldBuilder::anIntField(127)->build();
 
         $factory = $this->createPartialMock(Tracker_FormElementFactory::class, ['getUsedFields']);
         $factory->method('getUsedFields')->willReturn([$text_field, $file_field, $int_field]);

@@ -28,18 +28,18 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\NullLogger;
 use Tracker_FormElement_Chart_Field_Exception;
 use Tracker_FormElement_Field_Date;
-use Tracker_FormElement_Field_Integer;
 use Tracker_FormElementFactory;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\Integer\IntegerField;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeNotConfigured;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeWithDuration;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\IntegerFieldBuilder;
 use Tuleap\Tracker\Tracker;
 
 #[DisableReturnValueGenerationForTestDoubles]
@@ -50,9 +50,9 @@ final class ChartConfigurationFieldRetrieverTest extends TestCase
     private ChartConfigurationFieldRetriever $configuration_retriever;
     private Artifact $artifact;
     private PFUser $user;
-    private Tracker_FormElement_Field_Integer $field_duration;
-    private Tracker_FormElement_Field_Integer $field_capacity;
-    private Tracker_FormElement_Field_Integer $field_remaining_effort;
+    private IntegerField $field_duration;
+    private IntegerField $field_capacity;
+    private IntegerField $field_remaining_effort;
     private SemanticTimeframeBuilder&MockObject $semantic_timeframe_builder;
     private Tracker_FormElement_Field_Date $field_start_date;
 
@@ -70,9 +70,9 @@ final class ChartConfigurationFieldRetrieverTest extends TestCase
         $this->artifact = ArtifactTestBuilder::anArtifact(65431)->inTracker($this->tracker)->build();
         $this->user     = UserTestBuilder::anActiveUser()->build();
 
-        $this->field_duration         = IntFieldBuilder::anIntField(65413)->withName('duration')->build();
-        $this->field_capacity         = IntFieldBuilder::anIntField(65414)->withName('capacity')->build();
-        $this->field_remaining_effort = IntFieldBuilder::anIntField(65415)->withName('remaining_effort')->build();
+        $this->field_duration         = IntegerFieldBuilder::anIntField(65413)->withName('duration')->build();
+        $this->field_capacity         = IntegerFieldBuilder::anIntField(65414)->withName('capacity')->build();
+        $this->field_remaining_effort = IntegerFieldBuilder::anIntField(65415)->withName('remaining_effort')->build();
         $this->field_start_date       = DateFieldBuilder::aDateField(65416)->withName('start_date')->build();
 
         $this->semantic_timeframe_builder = $this->createMock(SemanticTimeframeBuilder::class);

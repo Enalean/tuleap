@@ -26,7 +26,7 @@ use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\Fields\ColumnContainerBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\FieldsetContainerBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\IntegerFieldBuilder;
 
 #[DisableReturnValueGenerationForTestDoubles]
 final class FieldsExtractorTest extends TestCase
@@ -40,8 +40,8 @@ final class FieldsExtractorTest extends TestCase
 
     public function testItExtractsFieldsDirectlyInsideTheContainer(): void
     {
-        $field_01 = IntFieldBuilder::anIntField(1)->build();
-        $field_02 = IntFieldBuilder::anIntField(2)->build();
+        $field_01 = IntegerFieldBuilder::anIntField(1)->build();
+        $field_02 = IntegerFieldBuilder::anIntField(2)->build();
 
         $container = FieldsetContainerBuilder::aFieldset(1486)->containsFormElements($field_01, $field_02)->build();
 
@@ -53,9 +53,9 @@ final class FieldsExtractorTest extends TestCase
 
     public function testItExtractsFieldsDirectlyInsideTheContainerAndInsideContainerIntoContainer(): void
     {
-        $field_01 = IntFieldBuilder::anIntField(1)->build();
-        $field_02 = IntFieldBuilder::anIntField(2)->build();
-        $field_03 = IntFieldBuilder::anIntField(3)->build();
+        $field_01 = IntegerFieldBuilder::anIntField(1)->build();
+        $field_02 = IntegerFieldBuilder::anIntField(2)->build();
+        $field_03 = IntegerFieldBuilder::anIntField(3)->build();
 
         $column_02 = ColumnContainerBuilder::aColumn(12)->containsFormElements($field_02)->build();
         $column_03 = ColumnContainerBuilder::aColumn(13)->containsFormElements($field_03)->build();

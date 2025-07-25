@@ -28,7 +28,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\FormElement\Field\String\StringField;
 use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
 use Tuleap\Tracker\Semantic\Title\RetrieveSemanticTitleField;
-use Tuleap\Tracker\Test\Builders\Fields\IntFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\IntegerFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\TextFieldBuilder;
@@ -87,7 +87,7 @@ final class KanbanActionsCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $field_text = TextFieldBuilder::aTextField(20)
             ->inTracker($this->tracker)
             ->build();
-        $field_int  = IntFieldBuilder::anIntField(30)
+        $field_int  = IntegerFieldBuilder::anIntField(30)
             ->inTracker($this->tracker)
             ->build();
 

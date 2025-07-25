@@ -40,7 +40,7 @@ final class TimeframeWithDurationTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $start_date_field;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\Tracker_FormElement_Field_Integer
+     * @var \PHPUnit\Framework\MockObject\MockObject|\Tuleap\Tracker\FormElement\Field\Integer\IntegerField
      */
     private $duration_field;
     private \PFUser $user;
@@ -454,7 +454,7 @@ final class TimeframeWithDurationTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private function getMockedDurationField(int $field_id)
     {
-        $mock = $this->getMockBuilder(\Tracker_FormElement_Field_Integer::class)
+        $mock = $this->getMockBuilder(\Tuleap\Tracker\FormElement\Field\Integer\IntegerField::class)
             ->disableOriginalConstructor()
             ->getMock();
 

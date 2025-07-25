@@ -28,7 +28,6 @@ use Tracker_FormElement_Field_CrossReferences;
 use Tracker_FormElement_Field_Date;
 use Tracker_FormElement_Field_File;
 use Tracker_FormElement_Field_Float;
-use Tracker_FormElement_Field_Integer;
 use Tracker_FormElement_Field_LastModifiedBy;
 use Tracker_FormElement_Field_LastUpdateDate;
 use Tracker_FormElement_Field_MultiSelectbox;
@@ -42,6 +41,7 @@ use Tracker_FormElement_Field_SubmittedBy;
 use Tracker_FormElement_Field_SubmittedOn;
 use Tracker_FormElement_FieldVisitor;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
+use Tuleap\Tracker\FormElement\Field\Integer\IntegerField;
 use Tuleap\Tracker\FormElement\Field\String\StringField;
 use Tuleap\Tracker\FormElement\Field\Text\TextField;
 use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
@@ -82,7 +82,7 @@ final class LesserThanFieldComparisonVisitor implements Tracker_FormElement_Fiel
         );
     }
 
-    public function visitInteger(Tracker_FormElement_Field_Integer $field)
+    public function visitInteger(IntegerField $field)
     {
         return new LesserThanComparison\ForInteger(
             new FromWhereComparisonFieldBuilder()

@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
+use Tuleap\Tracker\FormElement\Field\Integer\IntegerField;
 use Tuleap\Tracker\FormElement\Field\String\StringField;
 use Tuleap\Tracker\FormElement\Field\Text\TextField;
 use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
@@ -38,7 +39,7 @@ interface Tracker_FormElement_FieldVisitor // phpcs:ignore PSR1.Classes.ClassDec
 
     public function visitFloat(Tracker_FormElement_Field_Float $field);
 
-    public function visitInteger(Tracker_FormElement_Field_Integer $field);
+    public function visitInteger(IntegerField $field);
 
     public function visitOpenList(Tracker_FormElement_Field_OpenList $field);
 
