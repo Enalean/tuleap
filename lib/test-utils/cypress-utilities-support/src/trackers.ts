@@ -113,14 +113,25 @@ Cypress.Commands.add(
         }),
 );
 
-interface ArtifactFieldToCreate {
-    field_id: number;
-    value: string;
-}
+type ArtifactFieldToCreate =
+    | {
+          field_id: number;
+          value: string;
+      }
+    | {
+          all_links?: Array<ArtifactLinkField>;
+      };
+
+type ArtifactLinkField = {
+    id: number;
+    direction: "reverse" | "forward";
+    type: string;
+};
 
 interface TrackerField {
     shortname: string;
-    value: string;
+    value?: string;
+    all_links?: Array<ArtifactLinkField>;
 }
 
 export interface ArtifactWithFieldCreationPayload {
@@ -145,11 +156,18 @@ Cypress.Commands.add(
                         `Unable to find a field using the shortname ${field_to_add.shortname}`,
                     );
                 }
-
-                fields_to_create.push({
-                    field_id: target_field.field_id,
-                    value: field_to_add.value,
-                });
+                if (target_field.type === "art_link") {
+                    fields_to_create.push({
+                        field_id: target_field.field_id,
+                        all_links: field_to_add.all_links,
+                    });
+                }
+                if (field_to_add.value) {
+                    fields_to_create.push({
+                        field_id: target_field.field_id,
+                        value: field_to_add.value,
+                    });
+                }
             });
 
             const artifact_payload = {
