@@ -27,6 +27,9 @@ use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
+use Tuleap\Tracker\ForgeUserGroupPermission\TrackerAdminAllProjects;
+use Tuleap\User\ForgePermissionsRetriever;
+use Tuleap\User\ForgeUserGroupPermission\RESTReadOnlyAdmin\RestReadOnlyAdminPermission;
 use Tuleap\User\RetrieveUserById;
 
 final readonly class ViewableUserRetriever implements GetViewableUser
@@ -34,6 +37,7 @@ final readonly class ViewableUserRetriever implements GetViewableUser
     public function __construct(
         private RetrieveUserById $retrieve_user,
         private VerifyManagerCanSeeTimetrackingOfUser $perms_verifier,
+        private ForgePermissionsRetriever $forge_user_group_permissions_manager,
     ) {
     }
 
@@ -54,6 +58,14 @@ final readonly class ViewableUserRetriever implements GetViewableUser
         }
 
         if ($current_user->isSuperUser()) {
+            return Result::ok($user);
+        }
+
+        if ($this->forge_user_group_permissions_manager->doesUserHavePermission($current_user, new TrackerAdminAllProjects())) {
+            return Result::ok($user);
+        }
+
+        if ($this->forge_user_group_permissions_manager->doesUserHavePermission($current_user, new RestReadOnlyAdminPermission())) {
             return Result::ok($user);
         }
 

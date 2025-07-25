@@ -32,6 +32,8 @@ use Tuleap\Timetracking\Widget\Management\ViewableUserRetriever;
 use Tuleap\User\Avatar\AvatarHashDao;
 use Tuleap\User\Avatar\ComputeAvatarHash;
 use Tuleap\User\Avatar\UserAvatarUrlProvider;
+use User_ForgeUserGroupPermissionsDao;
+use User_ForgeUserGroupPermissionsManager;
 
 final class TimetrackingManagementWidgetResource extends AuthenticatedResource
 {
@@ -55,6 +57,9 @@ final class TimetrackingManagementWidgetResource extends AuthenticatedResource
                 new ViewableUserRetriever(
                     \UserManager::instance(),
                     new ManagerCanSeeTimetrackingOfUserVerifierDao(),
+                    new User_ForgeUserGroupPermissionsManager(
+                        new User_ForgeUserGroupPermissionsDao(),
+                    ),
                 ),
             ),
             new TimetrackingManagementWidgetSaver($dao, $dao),

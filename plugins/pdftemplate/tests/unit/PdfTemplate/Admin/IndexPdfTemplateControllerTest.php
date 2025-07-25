@@ -97,7 +97,7 @@ final class IndexPdfTemplateControllerTest extends TestCase
         $controller = new IndexPdfTemplateController(
             $admin_page_renderer,
             new UserCanManageTemplatesChecker(
-                ForgePermissionsRetrieverStub::withPermission(),
+                ForgePermissionsRetrieverStub::withPermission(new ManagePdfTemplates()),
             ),
             RetrieveAllTemplatesStub::withoutTemplates(),
             CSRFTokenProviderStub::withToken(CSRFSynchronizerTokenStub::buildSelf()),

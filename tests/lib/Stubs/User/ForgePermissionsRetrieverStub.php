@@ -28,23 +28,23 @@ use User_ForgeUserGroupPermission;
 
 final readonly class ForgePermissionsRetrieverStub implements ForgePermissionsRetriever
 {
-    private function __construct(private bool $allowed)
+    private function __construct(private ?User_ForgeUserGroupPermission $allowed)
     {
     }
 
-    public static function withPermission(): self
+    public static function withPermission(User_ForgeUserGroupPermission $permission): self
     {
-        return new self(true);
+        return new self($permission);
     }
 
     public static function withoutPermission(): self
     {
-        return new self(false);
+        return new self(null);
     }
 
     #[\Override]
     public function doesUserHavePermission(PFUser $user, User_ForgeUserGroupPermission $permission): bool
     {
-        return $this->allowed;
+        return $this->allowed && $this->allowed->getId() === $permission->getId();
     }
 }
