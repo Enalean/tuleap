@@ -41,7 +41,8 @@ final readonly class UserListFieldWithValueBuilder implements BuildUserListField
     ) {
     }
 
-    public function buildUserListFieldWithValue(ConfiguredField $configured_field, \Tracker_Artifact_ChangesetValue_List $changeset_value): UserListFieldWithValue
+    #[\Override]
+    public function buildUserListFieldWithValue(ConfiguredField $configured_field, ?\Tracker_Artifact_ChangesetValue_List $changeset_value): UserListFieldWithValue
     {
         return new UserListFieldWithValue(
             $configured_field->field->getLabel(),
@@ -55,7 +56,7 @@ final readonly class UserListFieldWithValueBuilder implements BuildUserListField
                         );
                     },
                     array_filter(
-                        $changeset_value->getListValues(),
+                        $changeset_value?->getListValues() ?? [],
                         fn ($value) => $value->getId() !== Tracker_FormElement_Field_List::NONE_VALUE,
                     ),
                 )

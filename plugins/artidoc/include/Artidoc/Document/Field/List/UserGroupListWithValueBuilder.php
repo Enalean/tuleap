@@ -29,7 +29,8 @@ use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserGroupsListFi
 
 final readonly class UserGroupListWithValueBuilder implements BuildUserGroupListWithValue
 {
-    public function buildUserGroupsListFieldWithValue(ConfiguredField $configured_field, \Tracker_Artifact_ChangesetValue_List $changeset_value): UserGroupsListFieldWithValue
+    #[\Override]
+    public function buildUserGroupsListFieldWithValue(ConfiguredField $configured_field, ?\Tracker_Artifact_ChangesetValue_List $changeset_value): UserGroupsListFieldWithValue
     {
         return new UserGroupsListFieldWithValue(
             $configured_field->field->getLabel(),
@@ -39,7 +40,7 @@ final readonly class UserGroupListWithValueBuilder implements BuildUserGroupList
                     static fn(Tracker_FormElement_Field_List_BindValue $value) => new UserGroupListValue(
                         $value->getLabel()
                     ),
-                    $changeset_value->getListValues()
+                    $changeset_value?->getListValues() ?? [],
                 )
             )
         );
