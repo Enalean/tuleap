@@ -19,9 +19,9 @@
 
 <template>
     <label class="tlp-label document-label">{{ user_list_field.label }}</label>
-    <p v-if="user_list_field.value.length > 0" class="user-list document-item-list">
+    <p v-if="users_list.length > 0" class="user-list document-item-list">
         <span
-            v-for="user in user_list_field.value"
+            v-for="user in users_list"
             v-bind:key="user.display_name"
             class="user-list-item document-list-item-inline document-list-item-with-avatar"
             data-test="user-list-item"
@@ -41,13 +41,23 @@
 
 <script setup lang="ts">
 import { useGettext } from "vue3-gettext";
-import type { ReadonlyFieldUserList } from "@/sections/readonly-fields/ReadonlyFields";
+import type {
+    ReadonlyFieldUser,
+    ReadonlyFieldUserList,
+} from "@/sections/readonly-fields/ReadonlyFields";
+import { USER_FIELD } from "@/sections/readonly-fields/ReadonlyFields";
 
 const gettext_provider = useGettext();
 const { $gettext } = gettext_provider;
-defineProps<{
-    user_list_field: ReadonlyFieldUserList;
+
+const props = defineProps<{
+    user_list_field: ReadonlyFieldUserList | ReadonlyFieldUser;
 }>();
+
+const users_list =
+    props.user_list_field.type === USER_FIELD
+        ? [props.user_list_field.value]
+        : props.user_list_field.value;
 </script>
 
 <style scoped lang="scss">

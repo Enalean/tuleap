@@ -28,6 +28,7 @@ export const STATIC_LIST_FIELD = "static_list";
 export const USER_LIST_FIELD = "user_list";
 export const LINKS_FIELD = "links";
 export const NUMERIC_FIELD = "numeric";
+export const USER_FIELD = "user";
 
 export type ReadonlyFieldString = Readonly<{
     type: typeof STRING_FIELD;
@@ -108,10 +109,18 @@ export type ReadonlyFieldNumeric = Readonly<{
     display_type: ConfigurationFieldDisplayType;
 }>;
 
+export type ReadonlyFieldUser = Readonly<{
+    type: typeof USER_FIELD;
+    label: string;
+    value: ReadonlyFieldUserListValue;
+    display_type: ConfigurationFieldDisplayType;
+}>;
+
 export type ReadonlyField =
     | ReadonlyFieldString
     | ReadonlyFieldUserGroupsList
     | ReadonlyFieldStaticList
     | ReadonlyFieldUserList
     | ReadonlyFieldLinks
-    | ReadonlyFieldNumeric;
+    | ReadonlyFieldNumeric
+    | ReadonlyFieldUser;
