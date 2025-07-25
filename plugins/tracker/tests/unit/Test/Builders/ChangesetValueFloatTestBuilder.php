@@ -29,11 +29,11 @@ final class ChangesetValueFloatTestBuilder
     private function __construct(
         private readonly int $id,
         private readonly \Tracker_Artifact_Changeset $changeset,
-        private readonly \Tracker_FormElement_Field_Float $field,
+        private readonly \Tuleap\Tracker\FormElement\Field\Float\FloatField $field,
     ) {
     }
 
-    public static function aValue(int $id, \Tracker_Artifact_Changeset $changeset, \Tracker_FormElement_Field_Float $field): self
+    public static function aValue(int $id, \Tracker_Artifact_Changeset $changeset, \Tuleap\Tracker\FormElement\Field\Float\FloatField $field): self
     {
         return new self($id, $changeset, $field);
     }

@@ -20,6 +20,7 @@
 use Tuleap\JSONHeader;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldAdmin;
+use Tuleap\Tracker\FormElement\Field\Float\FloatField;
 use Tuleap\Tracker\FormElement\Field\Integer\IntegerField;
 use Tuleap\Tracker\FormElement\Field\String\StringField;
 use Tuleap\Tracker\FormElement\Field\Text\TextField;
@@ -98,7 +99,7 @@ class Tracker_FormElement_View_Admin_Visitor implements Tracker_FormElement_Visi
         $this->visitField($field);
     }
 
-    public function visitFloat(Tracker_FormElement_Field_Float $field)
+    public function visitFloat(FloatField $field)
     {
         $this->visitField($field);
     }

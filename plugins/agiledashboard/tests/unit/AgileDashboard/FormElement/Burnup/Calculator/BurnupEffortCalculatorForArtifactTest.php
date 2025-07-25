@@ -43,7 +43,7 @@ final class BurnupEffortCalculatorForArtifactTest extends \Tuleap\Test\PHPUnit\T
     private SemanticDoneFactory&\PHPUnit\Framework\MockObject\MockObject $semantic_done_factory;
     private Artifact $artifact;
     private Tracker_Artifact_Changeset $changeset;
-    private \Tracker_FormElement_Field_Float $initial_effort_field;
+    private \Tuleap\Tracker\FormElement\Field\Float\FloatField $initial_effort_field;
     private \PHPUnit\Framework\MockObject\MockObject&\AgileDashBoard_Semantic_InitialEffort $semantic_initial_effort;
     private \Tuleap\Tracker\Tracker $tracker;
     private \Tuleap\Tracker\Semantic\Status\Done\SemanticDone&\PHPUnit\Framework\MockObject\MockObject $semantic_done;

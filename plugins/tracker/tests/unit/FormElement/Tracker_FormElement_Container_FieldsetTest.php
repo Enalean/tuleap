@@ -26,11 +26,11 @@ namespace Tuleap\Tracker\FormElement;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use SimpleXMLElement;
 use Tracker_FormElement_Container_Fieldset;
-use Tracker_FormElement_Field_Float;
 use Tracker_FormElementFactory;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\User\XML\Import\IFindUserFromXMLReferenceStub;
+use Tuleap\Tracker\FormElement\Field\Float\FloatField;
 use Tuleap\Tracker\FormElement\Field\String\StringField;
 use Tuleap\Tracker\FormElement\Field\Text\TextField;
 use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
@@ -175,7 +175,7 @@ final class Tracker_FormElement_Container_FieldsetTest extends TestCase // phpcs
         $container_fieldset = $this->createPartialMock(Tracker_FormElement_Container_Fieldset::class, ['getAllFormElements']);
 
         $field_01 = $this->createMock(StringField::class);
-        $field_02 = $this->createMock(Tracker_FormElement_Field_Float::class);
+        $field_02 = $this->createMock(FloatField::class);
         $field_03 = $this->createMock(TextField::class);
 
         $container_fieldset->method('getAllFormElements')->willReturn([$field_01, $field_02, $field_03]);

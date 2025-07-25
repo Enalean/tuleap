@@ -19,10 +19,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\FormElement\Field\Float\FloatField;
+
 /**
  * Manage values in changeset for float fields
  */
-class Tracker_Artifact_ChangesetValue_Float extends Tracker_Artifact_ChangesetValue_Numeric
+class Tracker_Artifact_ChangesetValue_Float extends Tracker_Artifact_ChangesetValue_Numeric // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /**
      * @return mixed
@@ -63,7 +65,7 @@ class Tracker_Artifact_ChangesetValue_Float extends Tracker_Artifact_ChangesetVa
     public function getValue()
     {
         if ($this->getFloat() !== null) {
-            return (string) (float) number_format($this->getFloat(), Tracker_FormElement_Field_Float::FLOAT_DECIMALS, '.', '');
+            return (string) (float) number_format($this->getFloat(), FloatField::FLOAT_DECIMALS, '.', '');
         }
         return null;
     }

@@ -48,11 +48,11 @@ final class SetFloatValueValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->expectNotToPerformAssertions();
 
-        $float_field = $this->createMock(\Tracker_FormElement_Field_Float::class);
+        $float_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\Float\FloatField::class);
         $float_field
             ->method('getId')
             ->willReturn(1);
-        $other_float_field = $this->createMock(\Tracker_FormElement_Field_Float::class);
+        $other_float_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\Float\FloatField::class);
         $other_float_field
             ->method('getId')
             ->willReturn(2);
@@ -91,7 +91,7 @@ final class SetFloatValueValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testValidateThrowsWhenFieldIdDoesNotMatchAUsedFloatField(): void
     {
-        $float_field = $this->createMock(\Tracker_FormElement_Field_Float::class);
+        $float_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\Float\FloatField::class);
         $float_field
             ->method('getId')
             ->willReturn(1);

@@ -30,7 +30,7 @@ final class RetrieveFieldTypeStub implements RetrieveFieldType
     private const TRACKER_FIELDS = [
         \Tracker_FormElementFactory::FIELD_STRING_TYPE => \Tuleap\Tracker\FormElement\Field\String\StringField::class,
         \Tracker_FormElementFactory::FIELD_INTEGER_TYPE => \Tuleap\Tracker\FormElement\Field\Integer\IntegerField::class,
-        \Tracker_FormElementFactory::FIELD_FLOAT_TYPE => \Tracker_FormElement_Field_Float::class,
+        \Tracker_FormElementFactory::FIELD_FLOAT_TYPE => \Tuleap\Tracker\FormElement\Field\Float\FloatField::class,
         \Tracker_FormElementFactory::FIELD_DATE_TYPE => \Tracker_FormElement_Field_Date::class,
         \Tracker_FormElementFactory::FIELD_TEXT_TYPE => \Tuleap\Tracker\FormElement\Field\Text\TextField::class,
         \Tracker_FormElementFactory::FIELD_SUBMITTED_ON_TYPE => \Tracker_FormElement_Field_SubmittedOn::class,

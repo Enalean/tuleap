@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Tracker\FormElement\Field\Float\FloatField;
 use Tuleap\Tracker\FormElement\Field\Integer\IntegerField;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 
@@ -117,7 +118,7 @@ final class Transition_PostAction_FieldFactoryTest extends \Tuleap\Test\PHPUnit\
         $this->element_factory
             ->method('getFormElementById')
             ->with($this->field_id)
-            ->willReturn(new Tracker_FormElement_Field_Float(null, null, null, null, null, null, null, null, null, null, null));
+            ->willReturn(new FloatField(null, null, null, null, null, null, null, null, null, null, null));
 
         $this->int_dao->method('searchByTransitionId')->with($this->transition_id)->willReturn(
             \TestHelper::emptyDar()
@@ -328,7 +329,7 @@ final class Transition_PostAction_FieldFactoryTest extends \Tuleap\Test\PHPUnit\
         $transition = $this->createMock(Transition::class);
         $transition->method('getId')->willReturn(123);
 
-        $field_float = $this->createMock(Tracker_FormElement_Field_Float::class);
+        $field_float = $this->createMock(FloatField::class);
         $field_float->method('getId')->willReturn(456);
 
         $post_action = new Transition_PostAction_Field_Float(

@@ -24,8 +24,8 @@ namespace Tuleap\Tracker\FormElement\Field\Numeric;
 
 use PFUser;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
-use Tracker_FormElement_Field_Float;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\FormElement\Field\Float\FloatField;
 use Tuleap\Tracker\FormElement\Field\FloatingPointNumber\FloatValueDao;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\FloatFieldBuilder;
@@ -39,7 +39,7 @@ final class Tracker_FormElement_Field_NumericTest extends TestCase // phpcs:igno
         $value_dao = $this->createMock(FloatValueDao::class);
         $value_dao->method('getLastValue')->willReturn(['value' => '123.45']);
         $artifact = ArtifactTestBuilder::anArtifact(123)->build();
-        $field    = $this->createPartialMock(Tracker_FormElement_Field_Float::class, ['userCanRead', 'getValueDao']);
+        $field    = $this->createPartialMock(FloatField::class, ['userCanRead', 'getValueDao']);
         $field->method('userCanRead')->with($user)->willReturn(true);
         $field->method('getValueDao')->willReturn($value_dao);
 
@@ -54,7 +54,7 @@ final class Tracker_FormElement_Field_NumericTest extends TestCase // phpcs:igno
         $user        = new PFUser(['language_id' => 'en']);
         $value_dao   = $this->createMock(FloatValueDao::class);
         $artifact    = ArtifactTestBuilder::anArtifact($artifact_id)->build();
-        $field       = $this->createPartialMock(Tracker_FormElement_Field_Float::class, ['getId', 'userCanRead', 'getValueDao']);
+        $field       = $this->createPartialMock(FloatField::class, ['getId', 'userCanRead', 'getValueDao']);
         $timestamp   = 9340590569;
         $value       = 67.89;
 

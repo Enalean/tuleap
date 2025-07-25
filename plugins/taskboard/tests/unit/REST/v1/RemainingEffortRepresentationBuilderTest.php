@@ -64,7 +64,7 @@ final class RemainingEffortRepresentationBuilderTest extends \Tuleap\Test\PHPUni
 
     public function testItTellsIfUserCannotUpdateTheField(): void
     {
-        $field = $this->createMock(\Tracker_FormElement_Field_Float::class);
+        $field = $this->createMock(\Tuleap\Tracker\FormElement\Field\Float\FloatField::class);
         $field->method('userCanUpdate')
             ->with($this->user)
             ->willReturn(false);
@@ -85,7 +85,7 @@ final class RemainingEffortRepresentationBuilderTest extends \Tuleap\Test\PHPUni
 
     public function testItTellsIfUserCanUpdateTheField(): void
     {
-        $field = $this->createMock(\Tracker_FormElement_Field_Float::class);
+        $field = $this->createMock(\Tuleap\Tracker\FormElement\Field\Float\FloatField::class);
         $field->expects($this->once())
             ->method('userCanUpdate')
             ->with($this->user)
@@ -107,7 +107,7 @@ final class RemainingEffortRepresentationBuilderTest extends \Tuleap\Test\PHPUni
 
     public function testItGivesTheFloatValueOfTheField(): void
     {
-        $field = $this->createMock(\Tracker_FormElement_Field_Float::class);
+        $field = $this->createMock(\Tuleap\Tracker\FormElement\Field\Float\FloatField::class);
         $field->method('userCanUpdate')
             ->with($this->user)
             ->willReturn(true);
@@ -131,7 +131,7 @@ final class RemainingEffortRepresentationBuilderTest extends \Tuleap\Test\PHPUni
 
     public function testItGivesANullValueIfValueIsNotNumeric(): void
     {
-        $field = $this->createMock(\Tracker_FormElement_Field_Float::class);
+        $field = $this->createMock(\Tuleap\Tracker\FormElement\Field\Float\FloatField::class);
         $field->expects($this->once())
             ->method('userCanUpdate')
             ->with($this->user)
