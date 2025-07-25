@@ -52,11 +52,14 @@ final class TransitionListValidatorTest extends TestCase
         $tracker   = TrackerTestBuilder::aTracker()->build();
         $field->method('getId')->willReturn(2864);
 
-        $changeset->setFieldValue($field, ChangesetValueListTestBuilder::aListOfValue(1, $changeset, $field)->withValues([
-            ListStaticValueBuilder::aStaticValue('Open')->build(),
-            ListStaticValueBuilder::aStaticValue('Waiting for Information')->build(),
-            ListStaticValueBuilder::aStaticValue('Closed')->build(),
-        ])->build());
+        $changeset->setFieldValue(
+            $field,
+            ChangesetValueListTestBuilder::aListOfValue(1, $changeset, $field)->withValues([
+                ListStaticValueBuilder::aStaticValue('Open')->build(),
+                ListStaticValueBuilder::aStaticValue('Waiting for Information')->build(),
+                ListStaticValueBuilder::aStaticValue('Closed')->build(),
+            ])->build()
+        );
 
         $this->transition_factory->method('getTransitionId')->with($tracker, 'Open', $value)->willReturn(10);
 
@@ -74,11 +77,14 @@ final class TransitionListValidatorTest extends TestCase
         $value   = ChangesetValueListTestBuilder::aListOfValue(101, $changeset, $field)->build();
         $tracker = TrackerTestBuilder::aTracker()->build();
 
-        $changeset->setFieldValue($field, ChangesetValueListTestBuilder::aListOfValue(1, $changeset, $field)->withValues([
-            ListStaticValueBuilder::aStaticValue('Open')->build(),
-            ListStaticValueBuilder::aStaticValue('Waiting for Information')->build(),
-            ListStaticValueBuilder::aStaticValue('Closed')->build(),
-        ])->build());
+        $changeset->setFieldValue(
+            $field,
+            ChangesetValueListTestBuilder::aListOfValue(1, $changeset, $field)->withValues([
+                ListStaticValueBuilder::aStaticValue('Open')->build(),
+                ListStaticValueBuilder::aStaticValue('Waiting for Information')->build(),
+                ListStaticValueBuilder::aStaticValue('Closed')->build(),
+            ])->build()
+        );
 
         $this->transition_factory->method('getTransitionId')->with($tracker, 'Open', '101')->willReturn(10);
 
@@ -96,11 +102,14 @@ final class TransitionListValidatorTest extends TestCase
         $tracker   = TrackerTestBuilder::aTracker()->build();
         $field->method('getId')->willReturn(2864);
 
-        $changeset->setFieldValue($field, ChangesetValueListTestBuilder::aListOfValue(1, $changeset, $field)->withValues([
-            ListStaticValueBuilder::aStaticValue('Open')->build(),
-            ListStaticValueBuilder::aStaticValue('Waiting for Information')->build(),
-            ListStaticValueBuilder::aStaticValue('Closed')->build(),
-        ])->build());
+        $changeset->setFieldValue(
+            $field,
+            ChangesetValueListTestBuilder::aListOfValue(1, $changeset, $field)->withValues([
+                ListStaticValueBuilder::aStaticValue('Open')->build(),
+                ListStaticValueBuilder::aStaticValue('Waiting for Information')->build(),
+                ListStaticValueBuilder::aStaticValue('Closed')->build(),
+            ])->build()
+        );
 
         $this->transition_factory->method('getTransitionId')->with($tracker, 'Open', $value)->willReturn(10);
 

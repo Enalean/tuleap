@@ -98,7 +98,7 @@ final class ChartConfigurationValueCheckerTest extends TestCase
         $this->configuration_field_retriever->method('getStartDateField')
             ->with($this->tracker, $this->user)->willReturn($this->start_date_field);
 
-        $this->new_changeset->setFieldValue($this->start_date_field);
+        $this->new_changeset->setFieldValue($this->start_date_field, null);
 
         self::assertFalse($this->chart_configuration_value_checker->hasStartDate($this->artifact, $this->user));
     }
@@ -187,7 +187,7 @@ final class ChartConfigurationValueCheckerTest extends TestCase
             ->willReturn(DatePeriodWithOpenDays::buildFromDuration(12345678, 5));
 
         $this->new_changeset->setFieldValue($this->start_date_field, $this->start_date_changeset);
-        $this->new_changeset->setFieldValue($this->duration_field);
+        $this->new_changeset->setFieldValue($this->duration_field, null);
 
         $this->start_date_changeset->method('hasChanged')->willReturn(false);
         $this->duration_changeset->method('hasChanged')->willReturn(false);

@@ -606,7 +606,7 @@ final class Tracker_FormElement_Field_ComputedTest extends TestCase // phpcs:ign
         $changeset = ChangesetTestBuilder::aChangeset(101)->build();
 
         $field = $this->getComputedFieldForManualValueRetrievement($value_dao);
-        $changeset->setFieldValue($field);
+        $changeset->setFieldValue($field, null);
 
         $value_dao->method('create')->with(1234, 20);
 
@@ -634,7 +634,7 @@ final class Tracker_FormElement_Field_ComputedTest extends TestCase // phpcs:ign
         $changeset = ChangesetTestBuilder::aChangeset(68771)->build();
 
         $field = $this->getComputedFieldForManualValueRetrievement($value_dao);
-        $changeset->setFieldValue($field);
+        $changeset->setFieldValue($field, null);
 
         $value = json_encode([
             'manual_value'    => 20,
@@ -662,7 +662,7 @@ final class Tracker_FormElement_Field_ComputedTest extends TestCase // phpcs:ign
         $changeset = ChangesetTestBuilder::aChangeset(9697854)->build();
 
         $field = $this->getComputedFieldForManualValueRetrievement($value_dao);
-        $changeset->setFieldValue($field);
+        $changeset->setFieldValue($field, null);
 
         $value = 'aaa';
         $value_dao->method('create')->with(1234, null);

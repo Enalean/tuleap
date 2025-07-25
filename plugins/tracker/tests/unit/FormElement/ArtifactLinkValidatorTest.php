@@ -424,9 +424,12 @@ final class ArtifactLinkValidatorTest extends TestCase
         $this->type_presenter_factory->method('getFromShortname')->with('fixed_in_not_editable')->willReturn($this->type_fixed_in);
         $this->type_presenter_factory->method('getAllTypesEditableInProject')->willReturn([]);
         $changeset = ChangesetTestBuilder::aChangeset(1)->build();
-        $changeset->setFieldValue($this->field, ChangesetValueArtifactLinkTestBuilder::aValue(1, $changeset, $this->field)->withForwardLinks([
-            new Tracker_ArtifactLinkInfo(123, '', 101, 15, 1, 'an_editable_link'),
-        ])->build());
+        $changeset->setFieldValue(
+            $this->field,
+            ChangesetValueArtifactLinkTestBuilder::aValue(1, $changeset, $this->field)->withForwardLinks([
+                new Tracker_ArtifactLinkInfo(123, '', 101, 15, 1, 'an_editable_link'),
+            ])->build()
+        );
         $this->artifact->method('getLastChangesetWithFieldValue')->willReturn($changeset);
 
         $returned_event = ValidateArtifactLinkValueEvent::buildFromSubmittedValues(
@@ -458,9 +461,12 @@ final class ArtifactLinkValidatorTest extends TestCase
         $this->type_presenter_factory->method('getFromShortname')->with('fixed_in_not_editable')->willReturn($this->type_fixed_in);
         $this->type_presenter_factory->method('getAllTypesEditableInProject')->willReturn([]);
         $changeset = ChangesetTestBuilder::aChangeset(1)->build();
-        $changeset->setFieldValue($this->field, ChangesetValueArtifactLinkTestBuilder::aValue(1, $changeset, $this->field)->withForwardLinks([
-            123 => new Tracker_ArtifactLinkInfo(123, '', 101, 15, 1, 'fixed_in_not_editable'),
-        ])->build());
+        $changeset->setFieldValue(
+            $this->field,
+            ChangesetValueArtifactLinkTestBuilder::aValue(1, $changeset, $this->field)->withForwardLinks([
+                123 => new Tracker_ArtifactLinkInfo(123, '', 101, 15, 1, 'fixed_in_not_editable'),
+            ])->build()
+        );
         $this->artifact->method('getLastChangesetWithFieldValue')->willReturn($changeset);
 
         $returned_event = ValidateArtifactLinkValueEvent::buildFromSubmittedValues(
@@ -492,9 +498,12 @@ final class ArtifactLinkValidatorTest extends TestCase
         $this->type_presenter_factory->method('getFromShortname')->with('fixed_in_not_editable')->willReturn($this->type_fixed_in);
         $this->type_presenter_factory->method('getAllTypesEditableInProject')->willReturn([]);
         $changeset = ChangesetTestBuilder::aChangeset(1)->build();
-        $changeset->setFieldValue($this->field, ChangesetValueArtifactLinkTestBuilder::aValue(1, $changeset, $this->field)->withForwardLinks([
-            new Tracker_ArtifactLinkInfo(123, '', 101, 15, 1, 'an_editable_link'),
-        ])->build());
+        $changeset->setFieldValue(
+            $this->field,
+            ChangesetValueArtifactLinkTestBuilder::aValue(1, $changeset, $this->field)->withForwardLinks([
+                new Tracker_ArtifactLinkInfo(123, '', 101, 15, 1, 'an_editable_link'),
+            ])->build()
+        );
         $this->artifact->method('getLastChangesetWithFieldValue')->willReturn($changeset);
 
         $returned_event = ValidateArtifactLinkValueEvent::buildFromSubmittedValues(
@@ -525,9 +534,12 @@ final class ArtifactLinkValidatorTest extends TestCase
         ];
 
         $changeset = ChangesetTestBuilder::aChangeset(1)->build();
-        $changeset->setFieldValue($this->field, ChangesetValueArtifactLinkTestBuilder::aValue(1, $changeset, $this->field)->withForwardLinks([
-            new Tracker_ArtifactLinkInfo(123, '', 101, 15, 1, 'an_editable_link'),
-        ])->build());
+        $changeset->setFieldValue(
+            $this->field,
+            ChangesetValueArtifactLinkTestBuilder::aValue(1, $changeset, $this->field)->withForwardLinks([
+                new Tracker_ArtifactLinkInfo(123, '', 101, 15, 1, 'an_editable_link'),
+            ])->build()
+        );
         $this->artifact->method('getLastChangesetWithFieldValue')->willReturn($changeset);
         $this->type_presenter_factory->method('getAllTypesEditableInProject')->willReturn([]);
         $this->type_presenter_factory->method('getFromShortname')->willReturn(null);

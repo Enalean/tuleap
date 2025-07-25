@@ -119,7 +119,10 @@ final class StatusBadgeBuilderTest extends TestCase
         $last_changeset = \Tuleap\Tracker\Test\Builders\ChangesetTestBuilder::aChangeset(1001)
             ->ofArtifact($artifact)
             ->build();
-        $last_changeset->setFieldValue($field, new \Tracker_Artifact_ChangesetValue_List(1010, $last_changeset, $field, true, []));
+        $last_changeset->setFieldValue(
+            $field,
+            new \Tracker_Artifact_ChangesetValue_List(1010, $last_changeset, $field, true, [])
+        );
         $artifact->setChangesets([$last_changeset]);
 
         $badges = $builder->buildBadgesFromArtifactStatus(
@@ -155,13 +158,16 @@ final class StatusBadgeBuilderTest extends TestCase
             ListStaticValueBuilder::aStaticValue('On going')->build(),
             ListStaticValueBuilder::aStaticValue('Other')->build(),
         ];
-        $last_changeset->setFieldValue($field, new \Tracker_Artifact_ChangesetValue_List(
-            1010,
-            $last_changeset,
+        $last_changeset->setFieldValue(
             $field,
-            true,
-            $list_values
-        ));
+            new \Tracker_Artifact_ChangesetValue_List(
+                1010,
+                $last_changeset,
+                $field,
+                true,
+                $list_values
+            )
+        );
         $artifact->setChangesets([$last_changeset]);
 
         $badges = $builder->buildBadgesFromArtifactStatus(
@@ -204,13 +210,16 @@ final class StatusBadgeBuilderTest extends TestCase
             ListStaticValueBuilder::aStaticValue('Value with legacy color')->withId(2001)->build(),
             ListStaticValueBuilder::aStaticValue('Value with TLP color')->withId(2002)->build(),
         ];
-        $last_changeset->setFieldValue($field, new \Tracker_Artifact_ChangesetValue_List(
-            1010,
-            $last_changeset,
+        $last_changeset->setFieldValue(
             $field,
-            true,
-            $list_values
-        ));
+            new \Tracker_Artifact_ChangesetValue_List(
+                1010,
+                $last_changeset,
+                $field,
+                true,
+                $list_values
+            )
+        );
         $artifact->setChangesets([$last_changeset]);
 
         $badges = $builder->buildBadgesFromArtifactStatus(

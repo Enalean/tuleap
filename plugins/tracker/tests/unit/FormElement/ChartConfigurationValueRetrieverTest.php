@@ -60,7 +60,10 @@ final class ChartConfigurationValueRetrieverTest extends TestCase
         $this->capacity_field = $this->createMock(Tracker_FormElement_Field_Integer::class);
         $this->capacity_field->method('getId')->willReturn(645);
         $changeset = ChangesetTestBuilder::aChangeset(452)->build();
-        $changeset->setFieldValue($this->capacity_field, ChangesetValueIntegerTestBuilder::aValue(1, $changeset, $this->capacity_field)->build());
+        $changeset->setFieldValue(
+            $this->capacity_field,
+            ChangesetValueIntegerTestBuilder::aValue(1, $changeset, $this->capacity_field)->build()
+        );
         $this->artifact_sprint->setLastChangeset($changeset);
 
         $this->configuration_value_retriever = new ChartConfigurationValueRetriever(

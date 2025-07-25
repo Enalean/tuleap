@@ -189,7 +189,7 @@ final class ArtifactLinkFieldTest extends TestCase
         $changeset = ChangesetTestBuilder::aChangeset(1)->build();
         $user      = UserTestBuilder::buildWithDefaults();
 
-        $changeset->setFieldValue($field);
+        $changeset->setFieldValue($field, null);
 
         $artifacts = $field->getLinkedArtifacts($changeset, $user);
         self::assertEmpty($artifacts);
@@ -201,7 +201,7 @@ final class ArtifactLinkFieldTest extends TestCase
         $changeset = ChangesetTestBuilder::aChangeset(1)->build();
         $user      = UserTestBuilder::buildWithDefaults();
 
-        $changeset->setFieldValue($field);
+        $changeset->setFieldValue($field, null);
 
         $sliced = $field->getSlicedLinkedArtifacts($changeset, $user, 10, 0);
         self::assertEmpty($sliced->getArtifacts());
@@ -434,7 +434,7 @@ final class ArtifactLinkFieldTest extends TestCase
         $field->expects($this->once())->method('getValueDao')->willReturn($value_dao);
         $value_dao->method('searchReverseLinksById')->willReturn(TestHelper::emptyDar());
         $changeset = ChangesetTestBuilder::aChangeset(98451)->build();
-        $changeset->setFieldValue($field);
+        $changeset->setFieldValue($field, null);
         self::assertNotNull($field->getFullRESTValue(UserTestBuilder::buildWithDefaults(), $changeset));
     }
 

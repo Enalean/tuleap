@@ -185,16 +185,22 @@ final class EventDatesRetrieverTest extends TestCase
             'display_time' => ['value' => 0],
         ]);
 
-        $this->changeset->setFieldValue($this->start_field, ChangesetValueDateTestBuilder::aValue(
-            1,
-            $this->changeset,
-            $this->start_field
-        )->withTimestamp(1234567890)->build());
-        $this->changeset->setFieldValue($this->end_field, ChangesetValueDateTestBuilder::aValue(
-            1,
-            $this->changeset,
-            $this->end_field
-        )->withTimestamp(1324567890)->build());
+        $this->changeset->setFieldValue(
+            $this->start_field,
+            ChangesetValueDateTestBuilder::aValue(
+                1,
+                $this->changeset,
+                $this->start_field
+            )->withTimestamp(1234567890)->build()
+        );
+        $this->changeset->setFieldValue(
+            $this->end_field,
+            ChangesetValueDateTestBuilder::aValue(
+                1,
+                $this->changeset,
+                $this->end_field
+            )->withTimestamp(1324567890)->build()
+        );
 
         $result = $builder->retrieveEventDates(
             CalendarEventData::fromSummary('Christmas Party'),
@@ -236,16 +242,22 @@ final class EventDatesRetrieverTest extends TestCase
         $this->start_field->setUserCanRead($this->recipient, $can_read);
         $this->end_field->setUserCanRead($this->recipient, $can_read);
 
-        $this->changeset->setFieldValue($this->start_field, ChangesetValueDateTestBuilder::aValue(
-            1,
-            $this->changeset,
-            $this->start_field
-        )->withTimestamp($start_date ? 0 : 1234567890)->build());
-        $this->changeset->setFieldValue($this->end_field, ChangesetValueDateTestBuilder::aValue(
-            1,
-            $this->changeset,
-            $this->end_field
-        )->withTimestamp($start_date ? 1324567890 : 0)->build());
+        $this->changeset->setFieldValue(
+            $this->start_field,
+            ChangesetValueDateTestBuilder::aValue(
+                1,
+                $this->changeset,
+                $this->start_field
+            )->withTimestamp($start_date ? 0 : 1234567890)->build()
+        );
+        $this->changeset->setFieldValue(
+            $this->end_field,
+            ChangesetValueDateTestBuilder::aValue(
+                1,
+                $this->changeset,
+                $this->end_field
+            )->withTimestamp($start_date ? 1324567890 : 0)->build()
+        );
 
         $result = $builder->retrieveEventDates(
             CalendarEventData::fromSummary('Christmas Party'),
@@ -277,16 +289,22 @@ final class EventDatesRetrieverTest extends TestCase
         $this->start_field->setUserCanRead($this->recipient, false);
         $this->end_field->setUserCanRead($this->recipient, false);
 
-        $this->changeset->setFieldValue($this->start_field, ChangesetValueDateTestBuilder::aValue(
-            1,
-            $this->changeset,
-            $this->start_field
-        )->withTimestamp(1234567890)->build());
-        $this->changeset->setFieldValue($this->end_field, ChangesetValueDateTestBuilder::aValue(
-            1,
-            $this->changeset,
-            $this->end_field
-        )->withTimestamp(1324567890)->build());
+        $this->changeset->setFieldValue(
+            $this->start_field,
+            ChangesetValueDateTestBuilder::aValue(
+                1,
+                $this->changeset,
+                $this->start_field
+            )->withTimestamp(1234567890)->build()
+        );
+        $this->changeset->setFieldValue(
+            $this->end_field,
+            ChangesetValueDateTestBuilder::aValue(
+                1,
+                $this->changeset,
+                $this->end_field
+            )->withTimestamp(1324567890)->build()
+        );
 
         $result = $builder->retrieveEventDates(
             CalendarEventData::fromSummary('Christmas Party'),
@@ -316,16 +334,22 @@ final class EventDatesRetrieverTest extends TestCase
             ),
         );
 
-        $this->changeset->setFieldValue($this->start_field, ChangesetValueDateTestBuilder::aValue(
-            1,
-            $this->changeset,
-            $this->start_field
-        )->withTimestamp(0)->build());
-        $this->changeset->setFieldValue($duration_field, ChangesetValueIntegerTestBuilder::aValue(
-            1,
-            $this->changeset,
-            $duration_field
-        )->withValue(0)->build());
+        $this->changeset->setFieldValue(
+            $this->start_field,
+            ChangesetValueDateTestBuilder::aValue(
+                1,
+                $this->changeset,
+                $this->start_field
+            )->withTimestamp(0)->build()
+        );
+        $this->changeset->setFieldValue(
+            $duration_field,
+            ChangesetValueIntegerTestBuilder::aValue(
+                1,
+                $this->changeset,
+                $duration_field
+            )->withValue(0)->build()
+        );
 
         $result = $builder->retrieveEventDates(
             CalendarEventData::fromSummary('Christmas Party'),
@@ -354,16 +378,22 @@ final class EventDatesRetrieverTest extends TestCase
             ),
         );
 
-        $this->changeset->setFieldValue($this->start_field, ChangesetValueDateTestBuilder::aValue(
-            1,
-            $this->changeset,
-            $this->start_field
-        )->withTimestamp(1234567890)->build());
-        $this->changeset->setFieldValue($this->end_field, ChangesetValueDateTestBuilder::aValue(
-            1,
-            $this->changeset,
-            $this->end_field
-        )->withTimestamp(1324567890)->build());
+        $this->changeset->setFieldValue(
+            $this->start_field,
+            ChangesetValueDateTestBuilder::aValue(
+                1,
+                $this->changeset,
+                $this->start_field
+            )->withTimestamp(1234567890)->build()
+        );
+        $this->changeset->setFieldValue(
+            $this->end_field,
+            ChangesetValueDateTestBuilder::aValue(
+                1,
+                $this->changeset,
+                $this->end_field
+            )->withTimestamp(1324567890)->build()
+        );
         $this->start_field->setCacheSpecificProperties([
             'display_time' => ['value' => 1],
         ]);
@@ -400,16 +430,22 @@ final class EventDatesRetrieverTest extends TestCase
             ),
         );
 
-        $this->changeset->setFieldValue($this->start_field, ChangesetValueDateTestBuilder::aValue(
-            1,
-            $this->changeset,
-            $this->start_field
-        )->withTimestamp(1234567890)->build());
-        $this->changeset->setFieldValue($duration_field, ChangesetValueIntegerTestBuilder::aValue(
-            1,
-            $this->changeset,
-            $duration_field
-        )->withValue(10)->build());
+        $this->changeset->setFieldValue(
+            $this->start_field,
+            ChangesetValueDateTestBuilder::aValue(
+                1,
+                $this->changeset,
+                $this->start_field
+            )->withTimestamp(1234567890)->build()
+        );
+        $this->changeset->setFieldValue(
+            $duration_field,
+            ChangesetValueIntegerTestBuilder::aValue(
+                1,
+                $this->changeset,
+                $duration_field
+            )->withValue(10)->build()
+        );
         $this->start_field->setCacheSpecificProperties([
             'display_time' => ['value' => 1],
         ]);

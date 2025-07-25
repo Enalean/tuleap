@@ -116,7 +116,7 @@ final class ProcessChildrenTriggersCommandTest extends TestCase
     public function testItDoesntFailWhenPreviousChangesetHasNoValue(): void
     {
         $previous_changeset = ChangesetTestBuilder::aChangeset(678)->build();
-        $previous_changeset->setFieldValue($this->field);
+        $previous_changeset->setFieldValue($this->field, null);
 
         $new_changeset = ChangesetTestBuilder::aChangeset(679)->build();
         $new_changeset->setFieldValue(
