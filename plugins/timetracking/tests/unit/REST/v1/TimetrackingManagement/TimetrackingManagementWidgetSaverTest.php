@@ -67,6 +67,7 @@ final class TimetrackingManagementWidgetSaverTest extends TestCase
             new UserList(
                 [$this->alice, $this->bob, $this->charlie],
                 [],
+                [],
             ),
         );
 
@@ -87,6 +88,7 @@ final class TimetrackingManagementWidgetSaverTest extends TestCase
             Period::fromPredefinedTimePeriod(PredefinedTimePeriod::YESTERDAY),
             new UserList(
                 [$this->alice, $this->bob, $this->charlie],
+                [],
                 [],
             ),
         );

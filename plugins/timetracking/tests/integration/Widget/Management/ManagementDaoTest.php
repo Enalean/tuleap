@@ -53,8 +53,8 @@ final class ManagementDaoTest extends TestIntegrationTestCase
         $dao    = new ManagementDao();
         $query1 = $dao->create(self::PERIOD);
         $query2 = $dao->create(self::PERIOD);
-        $dao->saveQueryWithPredefinedTimePeriod($query1, self::PERIOD, new UserList([$this->alice], []));
-        $dao->saveQueryWithPredefinedTimePeriod($query2, self::PERIOD, new UserList([$this->alice, $this->bob], []));
+        $dao->saveQueryWithPredefinedTimePeriod($query1, self::PERIOD, new UserList([$this->alice], [], []));
+        $dao->saveQueryWithPredefinedTimePeriod($query2, self::PERIOD, new UserList([$this->alice, $this->bob], [], []));
 
         self::assertNotNull($dao->searchQueryById($query1));
         self::assertNotNull($dao->searchQueryById($query2));
@@ -74,13 +74,13 @@ final class ManagementDaoTest extends TestIntegrationTestCase
         $dao    = new ManagementDao();
         $query1 = $dao->create(self::PERIOD);
         $query2 = $dao->create(self::PERIOD);
-        $dao->saveQueryWithPredefinedTimePeriod($query1, self::PERIOD, new UserList([$this->alice], []));
-        $dao->saveQueryWithPredefinedTimePeriod($query2, self::PERIOD, new UserList([$this->alice, $this->bob], []));
+        $dao->saveQueryWithPredefinedTimePeriod($query1, self::PERIOD, new UserList([$this->alice], [], []));
+        $dao->saveQueryWithPredefinedTimePeriod($query2, self::PERIOD, new UserList([$this->alice, $this->bob], [], []));
 
         self::assertSame([self::ALICE_ID], $dao->searchUsersByQueryId($query1));
         self::assertSame([self::ALICE_ID, self::BOB_ID], $dao->searchUsersByQueryId($query2));
 
-        $dao->saveQueryWithPredefinedTimePeriod($query1, self::PERIOD, new UserList([$this->bob, $this->charlie], []));
+        $dao->saveQueryWithPredefinedTimePeriod($query1, self::PERIOD, new UserList([$this->bob, $this->charlie], [], []));
 
         self::assertSame([self::BOB_ID, self::CHARLIE_ID], $dao->searchUsersByQueryId($query1));
         self::assertSame([self::ALICE_ID, self::BOB_ID], $dao->searchUsersByQueryId($query2));
@@ -93,13 +93,13 @@ final class ManagementDaoTest extends TestIntegrationTestCase
         $dao    = new ManagementDao();
         $query1 = $dao->create(self::PERIOD);
         $query2 = $dao->create(self::PERIOD);
-        $dao->saveQueryWithDates($query1, $now, $now, new UserList([$this->alice], []));
-        $dao->saveQueryWithDates($query2, $now, $now, new UserList([$this->alice, $this->bob], []));
+        $dao->saveQueryWithDates($query1, $now, $now, new UserList([$this->alice], [], []));
+        $dao->saveQueryWithDates($query2, $now, $now, new UserList([$this->alice, $this->bob], [], []));
 
         self::assertSame([self::ALICE_ID], $dao->searchUsersByQueryId($query1));
         self::assertSame([self::ALICE_ID, self::BOB_ID], $dao->searchUsersByQueryId($query2));
 
-        $dao->saveQueryWithDates($query1, $now, $now, new UserList([$this->bob, $this->charlie], []));
+        $dao->saveQueryWithDates($query1, $now, $now, new UserList([$this->bob, $this->charlie], [], []));
 
         self::assertSame([self::BOB_ID, self::CHARLIE_ID], $dao->searchUsersByQueryId($query1));
         self::assertSame([self::ALICE_ID, self::BOB_ID], $dao->searchUsersByQueryId($query2));

@@ -153,7 +153,7 @@ onMounted((): void => {
 
     initUsersAutocompleter(
         users_input.value,
-        query.getQuery().users_list,
+        query.getQuery().users_list.value,
         (selected_users: ReadonlyArray<User>): void => {
             currently_selected_users.value = [...selected_users];
         },

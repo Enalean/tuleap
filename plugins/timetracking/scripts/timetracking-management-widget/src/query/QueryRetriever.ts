@@ -28,7 +28,7 @@ export type TimetrackingManagementQuery = {
     start_date: string;
     end_date: string;
     predefined_time_period: PredefinedTimePeriod | "";
-    users_list: User[];
+    users_list: Ref<User[]>;
 };
 
 export type Query = {
@@ -48,7 +48,7 @@ export const QueryRetriever = (): Query => {
     let start_date = new Date().toISOString().split("T")[0];
     let end_date = new Date().toISOString().split("T")[0];
     let predefined_period: PredefinedTimePeriod | "" = TODAY;
-    let users_list: User[] = [];
+    const users_list: Ref<User[]> = ref([]);
     const has_the_query_been_modified = ref(false);
     const no_more_viewable_users: Ref<User[]> = ref([]);
 
@@ -70,14 +70,17 @@ export const QueryRetriever = (): Query => {
         start_date = start;
         end_date = end;
         predefined_period = period;
-        users_list = users.sort((a, b) =>
-            a.display_name.localeCompare(b.display_name, undefined, { numeric: true }),
-        );
+        users_list.value = users.sort(compareUsers);
     };
+
+    function compareUsers(a: User, b: User): number {
+        return a.display_name.localeCompare(b.display_name, undefined, { numeric: true });
+    }
 
     const saveQuery = (widget_id: number): void => {
         putQuery(widget_id, getQuery()).match(
             (result) => {
+                users_list.value = result.viewable_users.sort(compareUsers);
                 no_more_viewable_users.value = result.no_more_viewable_users;
             },
             () => {},

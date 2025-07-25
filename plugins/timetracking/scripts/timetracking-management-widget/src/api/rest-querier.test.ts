@@ -18,6 +18,7 @@
  */
 
 import { describe, expect, it, vi } from "vitest";
+import { ref } from "vue";
 import { putQuery } from "./rest-querier";
 import * as fetch_result from "@tuleap/fetch-result";
 import { okAsync } from "neverthrow";
@@ -34,7 +35,7 @@ const query: TimetrackingManagementQuery = {
     start_date: start_date,
     end_date: end_date,
     predefined_time_period: "",
-    users_list: users,
+    users_list: ref(users),
 };
 
 describe("rest-querier", () => {
