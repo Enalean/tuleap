@@ -39,7 +39,7 @@ describe("ArtifactsLinksRetriever", () => {
     it.each([
         [
             FORWARD_DIRECTION,
-            getRetriever().getForwardLinks,
+            getRetriever().getAllForwardLinks,
             {
                 source_artifact_id: artifact_id,
                 tql_query: 'SELECT @pretty_title FROM @project="self"',
@@ -48,7 +48,7 @@ describe("ArtifactsLinksRetriever", () => {
         ],
         [
             REVERSE_DIRECTION,
-            getRetriever().getReverseLinks,
+            getRetriever().getAllReverseLinks,
             {
                 target_artifact_id: artifact_id,
                 tql_query: 'SELECT @pretty_title FROM @project="self"',
@@ -56,7 +56,7 @@ describe("ArtifactsLinksRetriever", () => {
             },
         ],
     ])(
-        "should call for the %s links linked to an artifact and return an ArtifactTable accordingly",
+        "should call for all the %s links linked to an artifact and return an ArtifactTable accordingly",
         async (direction, retriever_call, params) => {
             const date_field_name = "start_date";
             const first_date_value = "2022-04-27T11:54:15+07:00";
@@ -101,6 +101,69 @@ describe("ArtifactsLinksRetriever", () => {
                     throw new Error(`Unexpected error: ${error}`);
                 },
             );
+        },
+    );
+
+    it.each([
+        [
+            FORWARD_DIRECTION,
+            getRetriever().getForwardLinks,
+            {
+                source_artifact_id: artifact_id,
+                tql_query: 'SELECT @pretty_title FROM @project="self"',
+            },
+        ],
+        [
+            REVERSE_DIRECTION,
+            getRetriever().getReverseLinks,
+            {
+                target_artifact_id: artifact_id,
+                tql_query: 'SELECT @pretty_title FROM @project="self"',
+            },
+        ],
+    ])(
+        "should call for the %s links linked to an artifact and return an ArtifactTable accordingly",
+        async (direction, retriever_call, params) => {
+            const total = 45;
+            const date_field_name = "start_date";
+            const first_date_value = "2022-04-27T11:54:15+07:00";
+            const query_content = SelectableQueryContentRepresentationStub.build(
+                [{ type: "date", name: date_field_name }],
+                [
+                    ArtifactRepresentationStub.build({
+                        [date_field_name]: { value: first_date_value, with_time: true },
+                    }),
+                    ArtifactRepresentationStub.build({
+                        [date_field_name]: { value: null, with_time: false },
+                    }),
+                ],
+            );
+            const getResponse = vi.spyOn(fetch_result, "getResponse").mockReturnValue(
+                okAsync({
+                    headers: new Headers({ "X-PAGINATION-SIZE": String(total) }),
+                    json: () => Promise.resolve(query_content),
+                } as Response),
+            );
+
+            const result = await retriever_call(
+                widget_id,
+                artifact_id,
+                'SELECT @pretty_title FROM @project="self"',
+            );
+
+            expect(getResponse).toHaveBeenCalledWith(
+                fetch_result.uri`/api/v1/crosstracker_widget/${widget_id}/${direction}_links`,
+                {
+                    params,
+                },
+            );
+            if (!result.isOk()) {
+                throw Error("Expected an Ok");
+            }
+            expect(result.value.total).toBe(total);
+            const table = result.value.table;
+            expect(table.columns).toHaveLength(2);
+            expect(table.rows).toHaveLength(2);
         },
     );
 });

@@ -119,6 +119,9 @@ msgstr "Mis à jour par"
 msgid "Last update date"
 msgstr "Mis à jour le"
 
+msgid "Load all"
+msgstr "Charger tout"
+
 msgid "Make this query displayed by default"
 msgstr "Afficher cette requête par défaut"
 

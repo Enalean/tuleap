@@ -19,17 +19,64 @@
 
 import type { ResultAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
-import type { ArtifactsTableBuilder } from "./ArtifactsTableBuilder";
+import { decodeJSON, getResponse, uri, getAllJSON } from "@tuleap/fetch-result";
+import type { ArtifactsTableWithTotal } from "../domain/RetrieveArtifactsTable";
 import type { RetrieveArtifactLinks } from "../domain/RetrieveArtifactLinks";
-import type { SelectableQueryContentRepresentation } from "./cross-tracker-rest-api-types";
-import { getAllJSON, uri } from "@tuleap/fetch-result";
 import type { ArtifactsTable } from "../domain/ArtifactsTable";
+import type { SelectableQueryContentRepresentation } from "./cross-tracker-rest-api-types";
+import type { ArtifactsTableBuilder } from "./ArtifactsTableBuilder";
 
 export const ArtifactLinksRetriever = (
     table_builder: ArtifactsTableBuilder,
 ): RetrieveArtifactLinks => {
     return {
         getForwardLinks(
+            widget_id: number,
+            artifact_id: number,
+            tql_query: string,
+        ): ResultAsync<ArtifactsTableWithTotal, Fault> {
+            return getResponse(uri`/api/v1/crosstracker_widget/${widget_id}/forward_links`, {
+                params: {
+                    source_artifact_id: artifact_id,
+                    tql_query,
+                },
+            }).andThen((response) => {
+                const total = Number.parseInt(response.headers.get("X-PAGINATION-SIZE") ?? "0", 10);
+                return decodeJSON<SelectableQueryContentRepresentation>(response).map(
+                    (query_content) => {
+                        return {
+                            table: table_builder.mapQueryContentToArtifactsTable(query_content),
+                            total,
+                        };
+                    },
+                );
+            });
+        },
+
+        getReverseLinks(
+            widget_id: number,
+            artifact_id: number,
+            tql_query: string,
+        ): ResultAsync<ArtifactsTableWithTotal, Fault> {
+            return getResponse(uri`/api/v1/crosstracker_widget/${widget_id}/reverse_links`, {
+                params: {
+                    target_artifact_id: artifact_id,
+                    tql_query,
+                },
+            }).andThen((response) => {
+                const total = Number.parseInt(response.headers.get("X-PAGINATION-SIZE") ?? "0", 10);
+                return decodeJSON<SelectableQueryContentRepresentation>(response).map(
+                    (query_content) => {
+                        return {
+                            table: table_builder.mapQueryContentToArtifactsTable(query_content),
+                            total,
+                        };
+                    },
+                );
+            });
+        },
+
+        getAllForwardLinks(
             widget_id: number,
             artifact_id: number,
             tql_query: string,
@@ -50,7 +97,7 @@ export const ArtifactLinksRetriever = (
             });
         },
 
-        getReverseLinks(
+        getAllReverseLinks(
             widget_id: number,
             artifact_id: number,
             tql_query: string,

@@ -18,12 +18,12 @@
  */
 
 import { describe, it, expect, beforeEach } from "vitest";
-import { okAsync } from "neverthrow";
 import { shallowMount } from "@vue/test-utils";
 import type { VueWrapper } from "@vue/test-utils";
 import { Option } from "@tuleap/option";
 import { ArtifactsTableBuilder } from "../../../tests/builders/ArtifactsTableBuilder";
 import { ArtifactRowBuilder } from "../../../tests/builders/ArtifactRowBuilder";
+import { RetrieveArtifactLinksStub } from "../../../tests/stubs/RetrieveArtifactLinksStub";
 import { DATE_CELL, NUMERIC_CELL, TEXT_CELL } from "../../domain/ArtifactsTable";
 import type { ArtifactsTable } from "../../domain/ArtifactsTable";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-tests";
@@ -36,22 +36,13 @@ const DATE_COLUMN_NAME = "start_date";
 const NUMERIC_COLUMN_NAME = "remaining_effort";
 const TEXT_COLUMN_NAME = "details";
 
-const RetrieveArtifactLinksTableStub = {
-    withDefaultContent(): RetrieveArtifactLinks {
-        return {
-            getForwardLinks: () => okAsync([new ArtifactsTableBuilder().build()]),
-            getReverseLinks: () => okAsync([new ArtifactsTableBuilder().build()]),
-        };
-    },
-};
-
 describe("ArtifactRows", () => {
     let table: ArtifactsTable,
         artifact_links_table_retriever: RetrieveArtifactLinks,
         ancestors: number[];
 
     beforeEach(() => {
-        artifact_links_table_retriever = RetrieveArtifactLinksTableStub.withDefaultContent();
+        artifact_links_table_retriever = RetrieveArtifactLinksStub.withDefaultContent();
         ancestors = [123, 135];
 
         table = new ArtifactsTableBuilder()
