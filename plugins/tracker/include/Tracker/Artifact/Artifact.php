@@ -996,7 +996,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
                     $this->getTypeIsChildLinkRetriever(),
                     $this->getVisitRecorder(),
                     $this->getHiddenFieldsetsDetector(),
-                    new Renderer\ArtifactViewCollectionBuilder($this->getEventManager(), $this->getTypeIsChildLinkRetriever())
+                    new Renderer\ArtifactViewCollectionBuilder($this->getEventManager())
                 );
 
                 $renderer->display($request, $current_user);
@@ -1037,7 +1037,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
                         $this->getTypeIsChildLinkRetriever(),
                         $this->getVisitRecorder(),
                         $this->getHiddenFieldsetsDetector(),
-                        new Renderer\ArtifactViewCollectionBuilder($this->getEventManager(), $this->getTypeIsChildLinkRetriever())
+                        new Renderer\ArtifactViewCollectionBuilder($this->getEventManager())
                     );
                     $renderer->display($request, $current_user);
                 }

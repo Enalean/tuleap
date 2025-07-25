@@ -181,7 +181,7 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
 
     protected function fetchView(Codendi_Request $request, PFUser $user): string
     {
-        return $this->collection_builder->build($this->artifact, $this->tracker, $request, $user, $this)->fetchRequestedView($request);
+        return $this->collection_builder->build($this->artifact, $request, $user, $this)->fetchRequestedView($request);
     }
 
     protected function fetchTitle()

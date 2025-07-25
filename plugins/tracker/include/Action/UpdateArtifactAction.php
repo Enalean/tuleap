@@ -148,7 +148,7 @@ final readonly class UpdateArtifactAction
                     $this->artifact_retriever,
                     $this->visit_recorder,
                     $this->hidden_fieldsets_detector,
-                    new ArtifactViewCollectionBuilder($this->event_manager, $this->artifact_retriever)
+                    new ArtifactViewCollectionBuilder($this->event_manager)
                 );
                 $render->display($request, $current_user);
             }
@@ -179,7 +179,7 @@ final readonly class UpdateArtifactAction
                 $this->artifact_retriever,
                 $this->visit_recorder,
                 $this->hidden_fieldsets_detector,
-                new ArtifactViewCollectionBuilder($this->event_manager, $this->artifact_retriever)
+                new ArtifactViewCollectionBuilder($this->event_manager)
             );
             $render->display($request, $current_user);
             exit();

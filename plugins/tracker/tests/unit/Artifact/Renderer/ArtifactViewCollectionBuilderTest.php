@@ -28,9 +28,7 @@ use Tracker_Artifact_EditRenderer;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeIsChildLinkRetriever;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactViewCollectionBuilderTest extends TestCase
@@ -38,7 +36,6 @@ final class ArtifactViewCollectionBuilderTest extends TestCase
     use ForgeConfigSandbox;
 
     private \EventManager&\PHPUnit\Framework\MockObject\MockObject $event_manager;
-    private TypeIsChildLinkRetriever&\PHPUnit\Framework\MockObject\MockObject $retriever;
     private ArtifactViewCollectionBuilder $builder;
     private \Tuleap\Tracker\Tracker&\PHPUnit\Framework\MockObject\MockObject $tracker;
 
@@ -49,89 +46,37 @@ final class ArtifactViewCollectionBuilderTest extends TestCase
         $this->tracker->method('getId')->willReturn(123);
 
         $this->event_manager = $this->createMock(\EventManager::class);
-        $this->retriever     = $this->createMock(TypeIsChildLinkRetriever::class);
 
-        $this->builder = new ArtifactViewCollectionBuilder($this->event_manager, $this->retriever);
+        $this->builder = new ArtifactViewCollectionBuilder($this->event_manager);
     }
 
-    public function testItAddsTabWhenThereIsArtifactLinksForProjectAllowedToUseType(): void
-    {
-        $this->tracker->method('isProjectAllowedToUseType')->willReturn(true);
-        $artifact = ArtifactTestBuilder::anArtifact(1)->inTracker($this->tracker)->build();
-        $this->retriever->method('getChildren')->willReturn([ArtifactTestBuilder::anArtifact(2)->build()]);
-        $this->event_manager->expects($this->once())->method('processEvent');
-
-        $view_collection = $this->builder->build($artifact, $this->tracker, new Codendi_Request([]), UserTestBuilder::anActiveUser()->build(), $this->createMock(Tracker_Artifact_EditRenderer::class));
-        self::assertCount(2, $view_collection->views);
-        self::assertSame('edit', $view_collection->views['edit']->getIdentifier());
-        self::assertSame('artifact-links', $view_collection->views['artifact-links']->getIdentifier());
-    }
-
-    public function testItAddsChildrenTabWhenFeatureFlagIsSet(): void
-    {
-        \ForgeConfig::set('feature_flag_reactivate_tab_children_in_artifact_view', '1');
-
-        $this->tracker->method('isProjectAllowedToUseType')->willReturn(true);
-        $artifact = ArtifactTestBuilder::anArtifact(1)->inTracker($this->tracker)->build();
-        $this->retriever->method('getChildren')->willReturn([ArtifactTestBuilder::anArtifact(2)->build()]);
-        $this->event_manager->expects($this->once())->method('processEvent');
-
-        $view_collection = $this->builder->build($artifact, $this->tracker, new Codendi_Request([]), UserTestBuilder::anActiveUser()->build(), $this->createMock(Tracker_Artifact_EditRenderer::class));
-        self::assertCount(3, $view_collection->views);
-        self::assertSame('edit', $view_collection->views['edit']->getIdentifier());
-        self::assertSame('link', $view_collection->views['link']->getIdentifier());
-        self::assertSame('artifact-links', $view_collection->views['artifact-links']->getIdentifier());
-    }
-
-    public function testItDoesNothingWhenThereIsNoArtifactLinksForProjectAllowedToUseType(): void
-    {
-        $this->tracker->method('isProjectAllowedToUseType')->willReturn(true);
-        $artifact = ArtifactTestBuilder::anArtifact(1)->inTracker($this->tracker)->build();
-        $this->retriever->method('getChildren')->willReturn([]);
-        $this->event_manager->expects($this->once())->method('processEvent');
-
-        $view_collection = $this->builder->build($artifact, $this->tracker, new Codendi_Request([]), UserTestBuilder::anActiveUser()->build(), $this->createMock(Tracker_Artifact_EditRenderer::class));
-        self::assertCount(2, $view_collection->views);
-        self::assertSame('edit', $view_collection->views['edit']->getIdentifier());
-        self::assertSame('artifact-links', $view_collection->views['artifact-links']->getIdentifier());
-    }
-
-    public function testWhenProjectDoesNotUseTypedLinkTabIsAddedWhenTrackerHasChildrenInHierarchy(): void
-    {
-        $this->tracker->method('isProjectAllowedToUseType')->willReturn(false);
-        $this->tracker->method('getChildren')->willReturn(TrackerTestBuilder::aTracker()->build());
-        $artifact = ArtifactTestBuilder::anArtifact(1)->inTracker($this->tracker)->build();
-        $this->event_manager->expects($this->once())->method('processEvent');
-
-        $view_collection = $this->builder->build($artifact, $this->tracker, new Codendi_Request([]), UserTestBuilder::anActiveUser()->build(), $this->createMock(Tracker_Artifact_EditRenderer::class));
-        self::assertCount(2, $view_collection->views);
-        self::assertSame('edit', $view_collection->views['edit']->getIdentifier());
-        self::assertSame('artifact-links', $view_collection->views['artifact-links']->getIdentifier());
-    }
-
-    public function testWhenProjectDoesNotUseTypedLinkNoTabIsAddedWhenTrackerHasNoChildrenInHierarchy(): void
+    public function testItAlwaysAddsArtifactLinkAndEditTab(): void
     {
         $this->tracker->method('isProjectAllowedToUseType')->willReturn(false);
         $this->tracker->method('getChildren')->willReturn([]);
         $artifact = ArtifactTestBuilder::anArtifact(1)->inTracker($this->tracker)->build();
         $this->event_manager->expects($this->once())->method('processEvent');
 
-        $view_collection = $this->builder->build($artifact, $this->tracker, new Codendi_Request([]), UserTestBuilder::anActiveUser()->build(), $this->createMock(Tracker_Artifact_EditRenderer::class));
+        $view_collection = $this->builder->build($artifact, new Codendi_Request([]), UserTestBuilder::anActiveUser()->build(), $this->createMock(Tracker_Artifact_EditRenderer::class));
         self::assertCount(2, $view_collection->views);
         self::assertSame('edit', $view_collection->views['edit']->getIdentifier());
         self::assertSame('artifact-links', $view_collection->views['artifact-links']->getIdentifier());
     }
 
-    public function testItAlwaysAddsArtifactLinkTab(): void
+    public function testEventIsProcessedWithCorrectParameters(): void
     {
-        $this->tracker->method('isProjectAllowedToUseType')->willReturn(false);
-        $this->tracker->method('getChildren')->willReturn([]);
-        $artifact = ArtifactTestBuilder::anArtifact(1)->inTracker($this->tracker)->build();
-        $this->event_manager->expects($this->once())->method('processEvent');
+        $artifact = ArtifactTestBuilder::anArtifact(1)->build();
+        $request  = new Codendi_Request([]);
+        $user     = UserTestBuilder::anActiveUser()->build();
+        $renderer = $this->createMock(\Tracker_Artifact_EditRenderer::class);
 
-        $view_collection = $this->builder->build($artifact, $this->tracker, new Codendi_Request([]), UserTestBuilder::anActiveUser()->build(), $this->createMock(Tracker_Artifact_EditRenderer::class));
-        self::assertCount(2, $view_collection->views);
-        self::assertSame('edit', $view_collection->views['edit']->getIdentifier());
-        self::assertSame('artifact-links', $view_collection->views['artifact-links']->getIdentifier());
+        $this->event_manager->expects($this->once())
+            ->method('processEvent')
+            ->with(
+                \Tracker_Artifact_EditRenderer::EVENT_ADD_VIEW_IN_COLLECTION,
+                self::anything()
+            );
+
+        $this->builder->build($artifact, $request, $user, $renderer);
     }
 }
