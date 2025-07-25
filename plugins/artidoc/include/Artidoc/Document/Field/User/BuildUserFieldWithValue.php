@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2025 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,16 +20,13 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue;
+namespace Tuleap\Artidoc\Document\Field\User;
 
-/**
- * @psalm-immutable
- */
-final readonly class UserListValue
+use Tracker_Artifact_Changeset;
+use Tuleap\Artidoc\Document\Field\ConfiguredField;
+use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserFieldWithValue;
+
+interface BuildUserFieldWithValue
 {
-    public function __construct(
-        public string $display_name,
-        public string $avatar_url,
-    ) {
-    }
+    public function buildUserFieldWithValue(ConfiguredField $configured_field, Tracker_Artifact_Changeset $changeset): UserFieldWithValue;
 }

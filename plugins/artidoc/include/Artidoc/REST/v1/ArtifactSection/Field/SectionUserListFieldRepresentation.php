@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Artidoc\REST\v1\ArtifactSection\Field;
 
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserListFieldWithValue;
-use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserListValue;
+use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserValue;
 
 /**
  * @psalm-immutable
@@ -44,7 +44,7 @@ final readonly class SectionUserListFieldRepresentation
         $this->label        = $field->label;
         $this->display_type = $field->display_type->value;
         $this->value        = array_map(
-            fn(UserListValue $user_value) => new UserListValueRepresentation($user_value),
+            fn(UserValue $user_value) => new UserListValueRepresentation($user_value),
             $field->values,
         );
     }

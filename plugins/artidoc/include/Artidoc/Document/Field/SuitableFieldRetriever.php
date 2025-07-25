@@ -23,9 +23,11 @@ declare(strict_types=1);
 namespace Tuleap\Artidoc\Document\Field;
 
 use PFUser;
+use Tracker_FormElement_Field_LastModifiedBy;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Bind_Null;
 use Tracker_FormElement_Field_Numeric;
+use Tracker_FormElement_Field_SubmittedBy;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldIsDescriptionSemanticFault;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldIsTitleSemanticFault;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldNotFoundFault;
@@ -62,8 +64,7 @@ final readonly class SuitableFieldRetriever
 
         return match (true) {
             $field instanceof StringField                       => $this->validateStringField($field),
-            $field instanceof Tracker_FormElement_Field_List
-            && $this->isListBindTypeSupported($field)           => Result::ok($field),
+            $field instanceof Tracker_FormElement_Field_List    => $this->validateListField($field),
             $field instanceof ArtifactLinkField                 => Result::ok($field),
             $field instanceof Tracker_FormElement_Field_Numeric => Result::ok($field),
             default                                             => Result::err(FieldNotSupportedFault::build($field_id))
@@ -91,10 +92,26 @@ final readonly class SuitableFieldRetriever
         return Result::ok($field);
     }
 
-    private function isListBindTypeSupported(Tracker_FormElement_Field_List $field): bool
+    /**
+     * @return Ok<Tracker_FormElement_Field_List>|Err<Fault>
+     */
+    private function validateListField(Tracker_FormElement_Field_List $field): Ok|Err
     {
+        if (
+            $field instanceof Tracker_FormElement_Field_LastModifiedBy
+            || $field instanceof Tracker_FormElement_Field_SubmittedBy
+        ) {
+            /** @psalm-var Tracker_FormElement_Field_List $field_return */
+            $field_return = $field;
+            return Result::ok($field_return);
+        }
+
         $bind_type = $field->getBind()?->getType();
 
-        return $bind_type !== Tracker_FormElement_Field_List_Bind_Null::TYPE;
+        if ($bind_type !== Tracker_FormElement_Field_List_Bind_Null::TYPE && $bind_type !== null) {
+            return Result::ok($field);
+        }
+
+        return Result::err(FieldNotSupportedFault::build($field->getId()));
     }
 }

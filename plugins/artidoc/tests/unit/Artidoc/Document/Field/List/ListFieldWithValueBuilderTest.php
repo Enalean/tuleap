@@ -30,7 +30,7 @@ use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StaticListValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserGroupListValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserGroupsListFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserListFieldWithValue;
-use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserListValue;
+use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserValue;
 use Tuleap\Artidoc\Stubs\Document\Field\List\BuildStaticListFieldWithValueStub;
 use Tuleap\Artidoc\Stubs\Document\Field\List\BuildUserGroupListFieldWithValueStub;
 use Tuleap\Artidoc\Stubs\Document\Field\List\BuildUserListFieldWithValueStub;
@@ -56,8 +56,8 @@ final class ListFieldWithValueBuilderTest extends TestCase
             $user_list_field->getLabel(),
             DisplayType::BLOCK,
             [
-                new UserListValue('Bob', 'bob_avatar_url.png'),
-                new UserListValue('Alice', 'alice_avatar_url.png'),
+                new UserValue('Bob', 'bob_avatar_url.png'),
+                new UserValue('Alice', 'alice_avatar_url.png'),
             ]
         );
 

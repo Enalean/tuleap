@@ -30,7 +30,7 @@ use Tuleap\Artidoc\Domain\Document\Section\Field\DisplayType;
 final readonly class UserListFieldWithValue
 {
     /**
-     * @param list<UserListValue> $values
+     * @param list<UserValue> $values
      */
     public function __construct(
         public string $label,

@@ -40,6 +40,7 @@ use Tuleap\Artidoc\REST\v1\ArtifactSection\RequiredArtifactInformationBuilder;
 use Tuleap\Artidoc\Stubs\Document\Field\ArtifactLink\BuildArtifactLinkFieldWithValueStub;
 use Tuleap\Artidoc\Stubs\Document\Field\List\BuildListFieldWithValueStub;
 use Tuleap\Artidoc\Stubs\Document\Field\Numeric\BuildNumericFieldWithValueStub;
+use Tuleap\Artidoc\Stubs\Document\Field\User\BuildUserFieldWithValueStub;
 use Tuleap\Artidoc\Stubs\Document\FreetextIdentifierStub;
 use Tuleap\Artidoc\Stubs\Document\SectionIdentifierStub;
 use Tuleap\NeverThrow\Err;
@@ -104,21 +105,10 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
                     $this->file_upload_provider,
                     new FieldsWithValuesBuilder(
                         new ConfiguredFieldCollection([]),
-                        BuildListFieldWithValueStub::withCallback(
-                            static function () {
-                                throw new \Exception('This test was not supposed to build list fields.');
-                            },
-                        ),
-                        BuildArtifactLinkFieldWithValueStub::withCallback(
-                            static function () {
-                                throw new \Exception('This test was not supposed to build link fields.');
-                            },
-                        ),
-                        BuildNumericFieldWithValueStub::withCallback(
-                            static function () {
-                                throw new \Exception('This test was not supposed to build numeric fields.');
-                            },
-                        ),
+                        BuildListFieldWithValueStub::withCallback($this->notCalledCallback(...)),
+                        BuildArtifactLinkFieldWithValueStub::withCallback($this->notCalledCallback(...)),
+                        BuildNumericFieldWithValueStub::withCallback($this->notCalledCallback(...)),
+                        BuildUserFieldWithValueStub::withCallback($this->notCalledCallback(...))
                     )
                 ),
             ),
@@ -746,5 +736,10 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
                 '/preview/image.png',
             ),
         ]);
+    }
+
+    private function notCalledCallback(): never
+    {
+        throw new \Exception('This test was not supposed to build these fields.');
     }
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,13 +22,23 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\REST\v1\ArtifactSection\Field;
 
-enum FieldType: string
+use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserFieldWithValue;
+
+/**
+ * @psalm-immutable
+ */
+final readonly class SectionUserFieldRepresentation
 {
-    case STRING           = 'string';
-    case USER_GROUPS_LIST = 'user_groups_list';
-    case STATIC_LIST      = 'static_list';
-    case USER_LIST        = 'user_list';
-    case ARTIFACT_LINK    = 'links';
-    case NUMERIC          = 'numeric';
-    case USER             = 'user';
+    public string $type;
+    public string $label;
+    public string $display_type;
+    public UserListValueRepresentation $value;
+
+    public function __construct(UserFieldWithValue $field)
+    {
+        $this->type         = FieldType::USER->value;
+        $this->label        = $field->label;
+        $this->display_type = $field->display_type->value;
+        $this->value        = new UserListValueRepresentation($field->value);
+    }
 }

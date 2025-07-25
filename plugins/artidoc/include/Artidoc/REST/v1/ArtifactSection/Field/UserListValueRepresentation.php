@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\REST\v1\ArtifactSection\Field;
 
-use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserListValue;
+use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserValue;
 
 /**
  * @psalm-immutable
@@ -32,7 +32,7 @@ final readonly class UserListValueRepresentation
     public string $display_name;
     public string $avatar_url;
 
-    public function __construct(UserListValue $value)
+    public function __construct(UserValue $value)
     {
         $this->display_name = $value->display_name;
         $this->avatar_url   = $value->avatar_url;

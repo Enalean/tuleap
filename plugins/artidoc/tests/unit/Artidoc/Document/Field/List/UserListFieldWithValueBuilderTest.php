@@ -25,7 +25,7 @@ namespace Tuleap\Artidoc\Document\Field\List;
 use Tuleap\Artidoc\Document\Field\ConfiguredField;
 use Tuleap\Artidoc\Domain\Document\Section\Field\DisplayType;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserListFieldWithValue;
-use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserListValue;
+use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserValue;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -97,8 +97,8 @@ final class UserListFieldWithValueBuilderTest extends TestCase
                 $user_list_field->getLabel(),
                 DisplayType::BLOCK,
                 [
-                    new UserListValue($bob->getUserName(), 'avatar.png'),
-                    new UserListValue($alice->getUserName(), 'avatar.png'),
+                    new UserValue($bob->getUserName(), 'avatar.png'),
+                    new UserValue($alice->getUserName(), 'avatar.png'),
                 ]
             ),
             $builder->buildUserListFieldWithValue($configured_field, $changeset_value)
@@ -197,7 +197,7 @@ final class UserListFieldWithValueBuilderTest extends TestCase
                 $user_list_field->getLabel(),
                 DisplayType::BLOCK,
                 [
-                    new UserListValue('alice@example.com', 'default_avatar.png'),
+                    new UserValue('alice@example.com', 'default_avatar.png'),
                 ]
             ),
             $builder->buildUserListFieldWithValue($configured_field, $changeset_value)

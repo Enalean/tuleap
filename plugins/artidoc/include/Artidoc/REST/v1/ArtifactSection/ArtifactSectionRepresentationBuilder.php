@@ -28,6 +28,7 @@ use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\ArtifactLinkFiel
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\NumericFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StaticListFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StringFieldWithValue;
+use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserGroupsListFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserListFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
@@ -36,6 +37,7 @@ use Tuleap\Artidoc\REST\v1\ArtifactSection\Field\SectionArtifactLinkFieldReprese
 use Tuleap\Artidoc\REST\v1\ArtifactSection\Field\SectionNumericFieldRepresentation;
 use Tuleap\Artidoc\REST\v1\ArtifactSection\Field\SectionStaticListFieldRepresentation;
 use Tuleap\Artidoc\REST\v1\ArtifactSection\Field\SectionStringFieldRepresentation;
+use Tuleap\Artidoc\REST\v1\ArtifactSection\Field\SectionUserFieldRepresentation;
 use Tuleap\Artidoc\REST\v1\ArtifactSection\Field\SectionUserGroupsListFieldRepresentation;
 use Tuleap\Artidoc\REST\v1\ArtifactSection\Field\SectionUserListFieldRepresentation;
 use Tuleap\Tracker\Artifact\GetFileUploadData;
@@ -93,7 +95,7 @@ final readonly class ArtifactSectionRepresentationBuilder
     }
 
     /**
-     * @return list<SectionStringFieldRepresentation | SectionUserGroupsListFieldRepresentation | SectionStaticListFieldRepresentation | SectionUserListFieldRepresentation | SectionArtifactLinkFieldRepresentation | SectionNumericFieldRepresentation>
+     * @return list<SectionStringFieldRepresentation | SectionUserGroupsListFieldRepresentation | SectionStaticListFieldRepresentation | SectionUserListFieldRepresentation | SectionArtifactLinkFieldRepresentation | SectionNumericFieldRepresentation | SectionUserFieldRepresentation>
      */
     private function getFieldValues(RequiredArtifactInformation $artifact_information): array
     {
@@ -107,6 +109,7 @@ final readonly class ArtifactSectionRepresentationBuilder
                 UserListFieldWithValue::class       => new SectionUserListFieldRepresentation($field),
                 ArtifactLinkFieldWithValue::class   => new SectionArtifactLinkFieldRepresentation($field),
                 NumericFieldWithValue::class        => new SectionNumericFieldRepresentation($field),
+                UserFieldWithValue::class           => new SectionUserFieldRepresentation($field),
             };
         }
         return $representations;
