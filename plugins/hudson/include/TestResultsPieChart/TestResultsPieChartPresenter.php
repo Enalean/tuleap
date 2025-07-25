@@ -68,6 +68,7 @@ class TestResultsPieChartPresenter
                     dgettext('tuleap-hudson', 'Passed (%s)'),
                     $successful_tests
                 ),
+                'color' => 'tlp-success-color',
             ];
         }
 
@@ -80,6 +81,7 @@ class TestResultsPieChartPresenter
                     dgettext('tuleap-hudson', 'Skipped (%s)'),
                     $skipped_tests
                 ),
+                'color' => 'tlp-warning-color',
             ];
         }
 
@@ -92,6 +94,7 @@ class TestResultsPieChartPresenter
                     dgettext('tuleap-hudson', 'Failed (%s)'),
                     $failed_tests
                 ),
+                'color' => 'tlp-danger-color',
             ];
         }
 

@@ -113,21 +113,25 @@ describe("PieChartDrawer", () => {
             count: 10,
             key: "blocked",
             label: "Blocked",
+            color: "tlp-info-color",
         });
         data.push({
             count: 1,
             key: "passed",
             label: "Passed",
+            color: "tlp-success-color",
         });
         data.push({
             count: 100,
             key: "notrun",
             label: "Not Run",
+            color: "tlp-dimmed-color",
         });
         data.push({
             count: 0,
             key: "failed",
             label: "Failed",
+            color: "tlp-error-color",
         });
 
         return data;
@@ -139,21 +143,25 @@ describe("PieChartDrawer", () => {
             count: 10,
             key: "blocked",
             label: "Blocked",
+            color: "tlp-info-color",
         });
         data.push({
             count: 5,
             key: "passed",
             label: "Passed",
+            color: "tlp-success-color",
         });
         data.push({
             count: 100,
             key: "notrun",
             label: "Not Run",
+            color: "tlp-dimmed-color",
         });
         data.push({
             count: 0,
             key: "failed",
             label: "Failed",
+            color: "tlp-error-color",
         });
 
         return data;

@@ -82,23 +82,23 @@ $purifier               = Codendi_HTMLPurifier::instance();
 $statistics_users_graph = [];
 
 if ($actif_users > 0) {
-    $statistics_users_graph[] = ['key' => 'active', 'label' => _('active'), 'count' => $actif_users];
+    $statistics_users_graph[] = ['key' => 'active', 'label' => _('active'), 'count' => $actif_users, 'color' => 'tlp-success-color'];
 }
 
 if ($hold_users > 0) {
-    $statistics_users_graph[] = ['key' => 'suspended', 'label' => _('suspended'), 'count' => $hold_users];
+    $statistics_users_graph[] = ['key' => 'suspended', 'label' => _('suspended'), 'count' => $hold_users, 'color' => 'tlp-dimmed-color'];
 }
 
 if ($deleted_users > 0) {
-    $statistics_users_graph[] = ['key' => 'deleted', 'label' => _('deleted'), 'count' => $deleted_users];
+    $statistics_users_graph[] = ['key' => 'deleted', 'label' => _('deleted'), 'count' => $deleted_users, 'color' => 'tlp-danger-color'];
 }
 
 if ($validated_users + $realpending_users > 0) {
-    $statistics_users_graph[] = ['key' => 'waiting', 'label' => _('waiting'), 'count' => $validated_users + $realpending_users];
+    $statistics_users_graph[] = ['key' => 'waiting', 'label' => _('waiting'), 'count' => $validated_users + $realpending_users, 'color' => 'tlp-info-color'];
 }
 
 if (ForgeConfig::areRestrictedUsersAllowed() && $restricted_users > 0) {
-    $statistics_users_graph[] = ['key' => 'restricted', 'label' => _('restricted'), 'count' => $restricted_users];
+    $statistics_users_graph[] = ['key' => 'restricted', 'label' => _('restricted'), 'count' => $restricted_users, 'color' => 'tlp-warning-color'];
 }
 
 function stats_getactiveusers(DateTimeImmutable $since): int
@@ -146,19 +146,19 @@ $project_stats->setAdditionalClass('siteadmin-homepage-statistics');
 $statistics_projects_graph = [];
 
 if (isset($project_count[Project::STATUS_ACTIVE])) {
-    $statistics_projects_graph[] = ['key' => 'active', 'label' => _('active'), 'count' => $project_count[Project::STATUS_ACTIVE]];
+    $statistics_projects_graph[] = ['key' => 'active', 'label' => _('active'), 'count' => $project_count[Project::STATUS_ACTIVE], 'color' => 'tlp-success-color'];
 }
 
 if (isset($project_count[Project::STATUS_PENDING])) {
-    $statistics_projects_graph[] = ['key' => 'pending', 'label' => _('pending'), 'count' => $project_count[Project::STATUS_PENDING]];
+    $statistics_projects_graph[] = ['key' => 'pending', 'label' => _('pending'), 'count' => $project_count[Project::STATUS_PENDING], 'color' => 'tlp-info-color'];
 }
 
 if (isset($project_count[Project::STATUS_DELETED])) {
-    $statistics_projects_graph[] = ['key' => 'deleted', 'label' => _('deleted'), 'count' => $project_count[Project::STATUS_DELETED]];
+    $statistics_projects_graph[] = ['key' => 'deleted', 'label' => _('deleted'), 'count' => $project_count[Project::STATUS_DELETED], 'color' => 'tlp-danger-color'];
 }
 
 if (isset($project_count[Project::STATUS_SUSPENDED])) {
-    $statistics_projects_graph[] = ['key' => 'suspended', 'label' => _('suspended'), 'count' => $project_count[Project::STATUS_SUSPENDED]];
+    $statistics_projects_graph[] = ['key' => 'suspended', 'label' => _('suspended'), 'count' => $project_count[Project::STATUS_SUSPENDED], 'color' => 'tlp-dimmed-color'];
 }
 
 $project_stats->setContent('
@@ -188,8 +188,8 @@ $session_browser_stats->setContent(
             'short_locale' => UserManager::instance()->getCurrentUser()->getShortLocale(),
             'statistics' => json_encode(
                 [
-                    ['key' => 'really-outdated', 'label' => _('unsupported browsers'), 'count' => $statistics->number_sessions_using_really_outdated_browsers],
-                    ['key' => 'supported', 'label' => _('supported browsers'), 'count' => $statistics->number_sessions_using_supported_browsers],
+                    ['key' => 'really-outdated', 'label' => _('unsupported browsers'), 'count' => $statistics->number_sessions_using_really_outdated_browsers, 'color' => 'tlp-danger-color'],
+                    ['key' => 'supported', 'label' => _('supported browsers'), 'count' => $statistics->number_sessions_using_supported_browsers, 'color' => 'tlp-dimmed-color'],
                 ],
                 JSON_THROW_ON_ERROR
             ),
