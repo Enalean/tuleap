@@ -21,16 +21,19 @@ import { describe, it, expect } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import type { VueWrapper } from "@vue/test-utils";
 import { createGettext } from "vue3-gettext";
-import type { ReadonlyFieldUserListValue } from "@/sections/readonly-fields/ReadonlyFields";
+import type {
+    ReadonlyFieldUser,
+    ReadonlyFieldUserList,
+} from "@/sections/readonly-fields/ReadonlyFields";
 import FieldUserList from "@/components/section/readonly-fields/FieldUserList.vue";
 import { DISPLAY_TYPE_COLUMN } from "@/sections/readonly-fields/AvailableReadonlyFields";
 import { ReadonlyFieldStub } from "@/sections/stubs/ReadonlyFieldStub";
 
 describe("FieldUserList", () => {
-    const getWrapper = (selected_values: ReadonlyFieldUserListValue[]): VueWrapper =>
+    const getWrapper = (user_list_field: ReadonlyFieldUserList | ReadonlyFieldUser): VueWrapper =>
         shallowMount(FieldUserList, {
             props: {
-                user_list_field: ReadonlyFieldStub.userList(selected_values, DISPLAY_TYPE_COLUMN),
+                user_list_field,
             },
             global: {
                 plugins: [createGettext({ silent: true })],
@@ -38,19 +41,21 @@ describe("FieldUserList", () => {
         });
 
     it("When the field has no values, then it should display an empty state", () => {
-        const wrapper = getWrapper([]);
+        const wrapper = getWrapper(ReadonlyFieldStub.userList([], DISPLAY_TYPE_COLUMN));
 
         expect(wrapper.find("[data-test=empty-state]").exists()).toBe(true);
         expect(wrapper.findAll("[data-test=user-list-item]")).toHaveLength(0);
     });
 
-    it("should display the users with their avatars", () => {
+    it("Given a user list field, then it should display the users with their avatars", () => {
         const user_bob = { display_name: "Bob", avatar_url: "https://example.com/bob_avatar.png" };
         const user_alice = {
             display_name: "Alice",
             avatar_url: "https://example.com/alice_avatar.png",
         };
-        const wrapper = getWrapper([user_bob, user_alice]);
+        const wrapper = getWrapper(
+            ReadonlyFieldStub.userList([user_bob, user_alice], DISPLAY_TYPE_COLUMN),
+        );
 
         expect(wrapper.findAll("[data-test=user-list-item]")).toHaveLength(2);
 
@@ -64,6 +69,18 @@ describe("FieldUserList", () => {
         expect(alice.text()).toBe(user_alice.display_name);
         expect(alice.find("[data-test=user-list-item-avatar]").attributes("src")).toBe(
             user_alice.avatar_url,
+        );
+    });
+
+    it("Given a user field, then it should display it", () => {
+        const user_bob = { display_name: "Bob", avatar_url: "https://example.com/bob_avatar.png" };
+        const wrapper = getWrapper(ReadonlyFieldStub.userField(user_bob, DISPLAY_TYPE_COLUMN));
+
+        const bob = wrapper.find("[data-test=user-list-item]");
+
+        expect(bob.text()).toBe(user_bob.display_name);
+        expect(bob.find("[data-test=user-list-item-avatar]").attributes("src")).toBe(
+            user_bob.avatar_url,
         );
     });
 });

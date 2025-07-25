@@ -71,6 +71,7 @@ describe("ReadonlyFields", () => {
     });
 
     it("should display all kinds of readonly fields", () => {
+        const bob = { display_name: "Bob", avatar_url: "https://example.com/bob_avatar.png" };
         const fields = [
             ReadonlyFieldStub.string("String field", DISPLAY_TYPE_COLUMN),
             ReadonlyFieldStub.userGroupsList(
@@ -81,12 +82,10 @@ describe("ReadonlyFields", () => {
                 [{ label: "Red", tlp_color: "fiesta-red" }],
                 DISPLAY_TYPE_BLOCK,
             ),
-            ReadonlyFieldStub.userList(
-                [{ display_name: "Bob", avatar_url: "https://example.com/bob_avatar.png" }],
-                DISPLAY_TYPE_BLOCK,
-            ),
+            ReadonlyFieldStub.userList([bob], DISPLAY_TYPE_BLOCK),
             ReadonlyFieldStub.linkField([]),
             ReadonlyFieldStub.numericField(42, DISPLAY_TYPE_COLUMN),
+            ReadonlyFieldStub.userField(bob, DISPLAY_TYPE_COLUMN),
         ];
         const wrapper = getWrapper(fields);
 
@@ -94,7 +93,7 @@ describe("ReadonlyFields", () => {
         expect(wrapper.findComponent(FieldString).exists()).toBe(true);
         expect(wrapper.findComponent(FieldUserGroupsList).exists()).toBe(true);
         expect(wrapper.findComponent(FieldStaticList).exists()).toBe(true);
-        expect(wrapper.findComponent(FieldUserList).exists()).toBe(true);
+        expect(wrapper.findAllComponents(FieldUserList)).toHaveLength(2);
         expect(wrapper.findComponent(FieldLinks).exists()).toBe(true);
         expect(wrapper.findComponent(FieldNumeric).exists()).toBe(true);
     });

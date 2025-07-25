@@ -24,6 +24,7 @@ import type {
     ReadonlyFieldStaticList,
     ReadonlyFieldStaticListValue,
     ReadonlyFieldString,
+    ReadonlyFieldUser,
     ReadonlyFieldUserGroupsList,
     ReadonlyFieldUserGroupsListValue,
     ReadonlyFieldUserList,
@@ -78,6 +79,15 @@ export const ReadonlyFieldStub = {
     ): ReadonlyFieldNumeric => ({
         type: "numeric",
         label: "Readonly numeric field",
+        value,
+        display_type,
+    }),
+    userField: (
+        value: ReadonlyFieldUserListValue,
+        display_type: ConfigurationFieldDisplayType,
+    ): ReadonlyFieldUser => ({
+        type: "user",
+        label: "Readonly user field",
         value,
         display_type,
     }),
