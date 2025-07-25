@@ -196,7 +196,7 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
         int $changeset_id,
         mixed $value,
         ?\Tracker_Report $report = null,
-        ?int $from_aid = null,
+        ?array $redirection_parameters = null,
     ): string {
         return '';
     }

@@ -85,7 +85,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         int $changeset_id,
         mixed $value,
         ?Tracker_Report $report = null,
-        ?int $from_aid = null,
+        ?array $redirection_parameters = null,
     ): string {
         return $this->fetchChangesetRegardingPermissions($artifact_id, $changeset_id);
     }

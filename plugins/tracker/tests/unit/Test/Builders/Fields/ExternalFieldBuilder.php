@@ -258,7 +258,7 @@ final class ExternalFieldBuilder
                 int $changeset_id,
                 mixed $value,
                 ?Tracker_Report $report = null,
-                ?int $from_aid = null,
+                ?array $redirection_parameters = null,
             ): string {
                 return '';
             }

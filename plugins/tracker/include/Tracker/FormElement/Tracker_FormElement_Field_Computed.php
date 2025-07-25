@@ -501,7 +501,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         int $changeset_id,
         mixed $value,
         ?Tracker_Report $report = null,
-        ?int $from_aid = null,
+        ?array $redirection_parameters = null,
     ): string {
         $current_user = UserManager::instance()->getCurrentUser();
         $artifact     = Tracker_ArtifactFactory::instance()->getArtifactById($artifact_id);

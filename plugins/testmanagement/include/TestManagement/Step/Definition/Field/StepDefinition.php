@@ -477,7 +477,7 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
         int $changeset_id,
         mixed $value,
         ?\Tracker_Report $report = null,
-        ?int $from_aid = null,
+        ?array $redirection_parameters = null,
     ): string {
         return '';
     }

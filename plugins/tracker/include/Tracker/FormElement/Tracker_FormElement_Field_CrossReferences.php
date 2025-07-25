@@ -159,7 +159,7 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
         int $changeset_id,
         mixed $value,
         ?Tracker_Report $report = null,
-        ?int $from_aid = null,
+        ?array $redirection_parameters = null,
     ): string {
         $crossref_fact = $this->getCrossReferencesFactory($artifact_id);
 

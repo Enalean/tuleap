@@ -282,7 +282,7 @@ class Tracker_FormElement_Field_LastModifiedBy extends Tracker_FormElement_Field
         int $changeset_id,
         mixed $value,
         ?Tracker_Report $report = null,
-        ?int $from_aid = null,
+        ?array $redirection_parameters = null,
     ): string {
         if (! $value) {
             $artifact_factory  = Tracker_ArtifactFactory::instance();
