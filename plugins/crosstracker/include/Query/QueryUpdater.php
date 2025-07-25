@@ -32,11 +32,18 @@ final class QueryUpdater
 
     public function updateQuery(CrossTrackerQuery $query): void
     {
-        $this->transaction->execute(function () use ($query) {
-            if ($query->isDefault()) {
-                $this->reset_is_default_query_dao->resetIsDefaultColumnByWidgetId($query->getWidgetId());
+        $query->getWidgetId()->match(
+            function (int $widget_id) use ($query): void {
+                $this->transaction->execute(function () use ($query, $widget_id): void {
+                    if ($query->isDefault()) {
+                        $this->reset_is_default_query_dao->resetIsDefaultColumnByWidgetId($widget_id);
+                    }
+                    $this->query_dao->update($query->getUUID(), $query->getQuery(), $query->getTitle(), $query->getDescription(), $query->isDefault());
+                });
+            },
+            function (): never {
+                throw new \LogicException('Cannot update a cross-tracker query associated with a widget without providing a widget ID');
             }
-            $this->query_dao->update($query->getUUID(), $query->getQuery(), $query->getTitle(), $query->getDescription(), $query->isDefault());
-        });
+        );
     }
 }

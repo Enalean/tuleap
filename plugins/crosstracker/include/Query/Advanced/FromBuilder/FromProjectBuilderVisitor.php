@@ -102,11 +102,18 @@ final readonly class FromProjectBuilderVisitor implements FromProjectConditionVi
 
     private function getCurrentProjectId(FromProjectBuilderVisitorParameters $parameters): int
     {
-        $row = $this->widget_retriever->searchCrossTrackerWidgetDashboardById($parameters->widget_id);
-        if ($row === null || $row['dashboard_type'] !== 'project') {
-            throw new LogicException('Project id not found');
-        }
-        return $row['project_id'];
+        return $parameters->widget_id->match(
+            function (int $widget_id): int {
+                $row = $this->widget_retriever->searchCrossTrackerWidgetDashboardById($widget_id);
+                if ($row === null || $row['dashboard_type'] !== 'project') {
+                    throw new LogicException('Project id not found');
+                }
+                return $row['project_id'];
+            },
+            function (): never {
+                throw new LogicException('Could not find the project ID of a query not associated with a widget');
+            }
+        );
     }
 
     /**
@@ -114,18 +121,26 @@ final readonly class FromProjectBuilderVisitor implements FromProjectConditionVi
      */
     private function getAggregatedProjectsIds(FromProjectBuilderVisitorParameters $parameters): array
     {
-        $row = $this->widget_retriever->searchCrossTrackerWidgetDashboardById($parameters->widget_id);
-        if ($row === null || $row['dashboard_type'] !== 'project') {
-            throw new LogicException('Project id not found');
-        }
-        $project_id      = $row['project_id'];
-        $project         = $this->project_factory->getValidProjectById($project_id);
-        $linked_projects = $this->event_dispatcher->dispatch(new CollectLinkedProjects($project, $parameters->user));
-        assert($linked_projects instanceof CollectLinkedProjects);
-        return array_values(array_map(
-            static fn(LinkedProject $project) => $project->id,
-            $linked_projects->getChildrenProjects()->getProjects(),
-        ));
+        return $parameters->widget_id->match(
+            /** @return list<int> */
+            function (int $widget_id) use ($parameters): array {
+                $row = $this->widget_retriever->searchCrossTrackerWidgetDashboardById($widget_id);
+                if ($row === null || $row['dashboard_type'] !== 'project') {
+                    throw new LogicException('Project id not found');
+                }
+                $project_id      = $row['project_id'];
+                $project         = $this->project_factory->getValidProjectById($project_id);
+                $linked_projects = $this->event_dispatcher->dispatch(new CollectLinkedProjects($project, $parameters->user));
+                assert($linked_projects instanceof CollectLinkedProjects);
+                return array_values(array_map(
+                    static fn(LinkedProject $project) => $project->id,
+                    $linked_projects->getChildrenProjects()->getProjects(),
+                ));
+            },
+            function (): never {
+                throw new LogicException('Could not find the aggregated projects of a query not associated with a widget');
+            }
+        );
     }
 
     private function buildFromProjectCategoryEqual(string $category): IProvideParametrizedFromAndWhereSQLFragments

@@ -22,17 +22,21 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Query\Advanced;
 
+use Tuleap\Option\Option;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\FromTracker;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\VisitorParameters;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFromCollection;
 
 final class InvalidFromTrackerCollectorParameters implements VisitorParameters
 {
+    /**
+     * @param Option<int> $widget_id
+     */
     public function __construct(
         public FromTracker $from_tracker,
         public InvalidFromCollection $collection,
         public bool $is_tracker_condition_alone,
-        public int $widget_id,
+        public Option $widget_id,
     ) {
     }
 }

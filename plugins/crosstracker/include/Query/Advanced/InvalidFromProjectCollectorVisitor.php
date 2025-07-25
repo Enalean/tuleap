@@ -25,14 +25,17 @@ namespace Tuleap\CrossTracker\Query\Advanced;
 use LogicException;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\CrossTracker\Widget\SearchCrossTrackerWidget;
+use Tuleap\Option\Option;
 use Tuleap\Project\ProjectByIDFactory;
 use Tuleap\Project\Sidebar\CollectLinkedProjects;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\FromProjectConditionVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\FromProjectEqual;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\FromProjectIn;
+use Tuleap\Tracker\Report\Query\Advanced\InvalidFromCollection;
 
 /**
  * @template-implements FromProjectConditionVisitor<InvalidFromProjectCollectorParameters, void>
+ * @psalm-import-type CrossTrackerWidgetDashboardRow from SearchCrossTrackerWidget
  */
 final readonly class InvalidFromProjectCollectorVisitor implements FromProjectConditionVisitor
 {
@@ -140,18 +143,70 @@ final readonly class InvalidFromProjectCollectorVisitor implements FromProjectCo
 
     private function checkProjectSelf(InvalidFromProjectCollectorParameters $parameters): void
     {
-        if (! $this->in_project_checker->isWidgetInProjectDashboard($parameters->widget_id)) {
-            $parameters->collection->addInvalidFrom(dgettext(
-                'tuleap-crosstracker',
-                "You cannot use @project with 'self' in the context of a personal dashboard",
-            ));
-        }
+        $parameters->widget_id->match(
+            function (int $widget_id) use ($parameters): void {
+                if (! $this->in_project_checker->isWidgetInProjectDashboard($widget_id)) {
+                    $parameters->collection->addInvalidFrom(dgettext(
+                        'tuleap-crosstracker',
+                        "You cannot use @project with 'self' in the context of a personal dashboard",
+                    ));
+                }
+            },
+            function () use ($parameters): void {
+                $parameters->collection->addInvalidFrom(dgettext(
+                    'tuleap-crosstracker',
+                    "You cannot use @project with 'self' in a query not associated with a project dashboard widget",
+                ));
+            }
+        );
     }
 
     private function checkProjectAggregated(InvalidFromProjectCollectorParameters $parameters): void
     {
-        $row = $this->widget_retriever->searchCrossTrackerWidgetDashboardById($parameters->widget_id);
-        if ($row === null || $row['dashboard_type'] !== 'project') {
+        $parameters->widget_id
+            ->andThen($this->getDashboardRowFromWidgetID(...))
+            ->orElse(
+                /** @return Option<CrossTrackerWidgetDashboardRow> */
+                fn(): Option => $this->defineErrorForQueriesNotAssociatedWithADashboardUsingAggregatedFunction($parameters->collection)
+            )
+            ->apply(
+                fn(array $row) => $this->validateQueriesAssociatedWithAWidget($row, $parameters)
+            );
+    }
+
+    /**
+     * @return Option<CrossTrackerWidgetDashboardRow>
+     */
+    private function getDashboardRowFromWidgetID(int $widget_id): Option
+    {
+        return Option::fromNullable($this->widget_retriever->searchCrossTrackerWidgetDashboardById($widget_id));
+    }
+
+    /**
+     * @return Option<CrossTrackerWidgetDashboardRow>
+     */
+    private function defineErrorForQueriesNotAssociatedWithADashboardUsingAggregatedFunction(InvalidFromCollection $collection): Option
+    {
+        $collection->addInvalidFrom(dgettext(
+            'tuleap-crosstracker',
+            "You cannot use @project with 'aggregated' in a query not associated with a project dashboard widget",
+        ));
+        return Option::nothing(
+            \Psl\Type\shape([
+                'dashboard_id' => \Psl\Type\int(),
+                'dashboard_type' => \Psl\Type\string(),
+                'project_id' => \Psl\Type\int(),
+                'user_id' => \Psl\Type\int(),
+            ])
+        );
+    }
+
+    /**
+     * @param CrossTrackerWidgetDashboardRow $row
+     */
+    private function validateQueriesAssociatedWithAWidget(array $row, InvalidFromProjectCollectorParameters $parameters): void
+    {
+        if ($row['dashboard_type'] !== 'project') {
             $parameters->collection->addInvalidFrom(dgettext(
                 'tuleap-crosstracker',
                 "You cannot use @project with 'aggregated' in the context of a personal dashboard",
@@ -172,7 +227,6 @@ final readonly class InvalidFromProjectCollectorVisitor implements FromProjectCo
                 'tuleap-crosstracker',
                 "You can use @project with 'aggregated' only in a Program project",
             ));
-            return;
         }
     }
 }

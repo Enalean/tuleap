@@ -23,12 +23,16 @@ declare(strict_types=1);
 namespace Tuleap\CrossTracker\Query\Advanced;
 
 use PFUser;
+use Tuleap\Option\Option;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\VisitorParameters;
 
 final readonly class FromBuilderVisitorParameters implements VisitorParameters
 {
+    /**
+     * @param Option<int> $widget_id
+     */
     public function __construct(
-        public int $widget_id,
+        public Option $widget_id,
         public bool $is_condition_alone,
         public PFUser $user,
     ) {

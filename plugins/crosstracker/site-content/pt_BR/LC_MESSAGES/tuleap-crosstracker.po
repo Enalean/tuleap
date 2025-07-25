@@ -212,12 +212,27 @@ msgid ""
 msgstr ""
 
 msgid ""
+"You cannot use @project with 'aggregated' in a query not associated with a "
+"project dashboard widget"
+msgstr ""
+
+msgid ""
 "You cannot use @project with 'aggregated' in the context of a personal "
 "dashboard"
 msgstr ""
 
 msgid ""
+"You cannot use @project with 'self' in a query not associated with a project "
+"dashboard widget"
+msgstr ""
+
+msgid ""
 "You cannot use @project with 'self' in the context of a personal dashboard"
+msgstr ""
+
+msgid ""
+"You must provide a @project condition in the FROM part of your query when "
+"you are not in a personal dashboard"
 msgstr ""
 
 msgid "end of input"

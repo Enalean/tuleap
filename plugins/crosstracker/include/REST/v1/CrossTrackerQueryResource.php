@@ -75,7 +75,7 @@ final class CrossTrackerQueryResource extends AuthenticatedResource
     {
         $this->current_user_provider = UserManager::instance();
         $this->factory_builder       = new CrossTrackerArtifactQueryFactoryBuilder();
-        $this->object_mapper         = \Tuleap\Mapper\ValinorMapperBuilderFactory::mapperBuilder()->mapper();
+        $this->object_mapper         = \Tuleap\Mapper\ValinorMapperBuilderFactory::mapperBuilder()->allowUndefinedValues()->mapper();
     }
 
     /**
@@ -87,7 +87,7 @@ final class CrossTrackerQueryResource extends AuthenticatedResource
     }
 
     /**
-     * Get results of the CrossTracker query in context of widget
+     * Get results of the CrossTracker query
      *
      * query is required. It is a json object. Example:
      * <pre>{ "widget_id": 3, "tql_query": "SELECT  @id FROM  @project = 'self' WHERE  @id >= 1" }</pre>
@@ -120,16 +120,20 @@ final class CrossTrackerQueryResource extends AuthenticatedResource
             throw new RestException(400, "Parameter 'query' is invalid: " . implode(',', $mapping_error->messages()->toArray()));
         }
 
-        try {
-            if (! $this->getWidgetDao()->searchWidgetExistence($query_representation->widget_id)) {
-                throw new CrossTrackerWidgetNotFoundException();
-            }
+        $current_user = $this->current_user_provider->getCurrentUser();
 
-            $current_user = $this->current_user_provider->getCurrentUser();
-            $this->getUserIsAllowedToSeeWidgetChecker()->checkUserIsAllowedToSeeWidget($current_user, $query_representation->widget_id);
+        try {
+            $query_representation->widget_id->apply(
+                function (int $widget_id) use ($current_user): void {
+                    if (! $this->getWidgetDao()->searchWidgetExistence($widget_id)) {
+                        throw new I18NRestException(404, sprintf(dgettext('tuleap-crosstracker', 'Widget with id %d not found'), $widget_id));
+                    }
+                    $this->getUserIsAllowedToSeeWidgetChecker()->checkUserIsAllowedToSeeWidget($current_user, $widget_id);
+                }
+            );
 
             $artifacts = $this->factory_builder->getInstrumentation()->updateQueryDuration(
-                fn() => $this->factory_builder->getArtifactFactory()->getArtifactsMatchingQuery(
+                fn(): CrossTrackerQueryContentRepresentation => $this->factory_builder->getArtifactFactory()->getArtifactsMatchingQuery(
                     CrossTrackerQueryFactory::fromTqlQueryAndWidgetId($query_representation->tql_query, $query_representation->widget_id),
                     $current_user,
                     $limit,
@@ -137,11 +141,8 @@ final class CrossTrackerQueryResource extends AuthenticatedResource
                 )
             );
 
-            assert($artifacts instanceof CrossTrackerQueryContentRepresentation);
             Header::sendPaginationHeaders($limit, $offset, $artifacts->getTotalSize(), self::MAX_LIMIT);
             return $artifacts;
-        } catch (CrossTrackerWidgetNotFoundException) {
-            throw new I18NRestException(404, sprintf(dgettext('tuleap-crosstracker', 'Widget with id %d not found'), $query_representation->widget_id));
         } catch (SyntaxError $error) {
             throw new RestException(400, '', SyntaxErrorTranslator::fromSyntaxError($error));
         } catch (LimitSizeIsExceededException | InvalidSelectException | SelectablesMustBeUniqueException | SelectLimitExceededException | MissingFromException $exception) {
@@ -246,27 +247,33 @@ final class CrossTrackerQueryResource extends AuthenticatedResource
         $this->checkAccess();
         Header::allowOptionsPutDelete();
 
+        $current_user = $this->current_user_provider->getCurrentUser();
         try {
-            $current_user   = $this->current_user_provider->getCurrentUser();
             $previous_query = $this->getQuery($id, $current_user);
-            $this->getUserIsAllowedToSeeWidgetChecker()->checkUserIsAllowedToUpdateWidget($current_user, $previous_query->getWidgetId());
-            if ($previous_query->getWidgetId() !== $query_representation->widget_id) {
-                throw new I18NRestException(400, dgettext('tuleap-crosstracker', "Given 'widget_id' parameter is invalid"));
-            }
-            $new_query = CrossTrackerQueryFactory::fromQueryToEdit($previous_query, $query_representation);
-
-            $query_dao = $this->getQueryDao();
-            (new QueryUpdater(
-                new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
-                $query_dao,
-                $query_dao
-            ))
-                ->updateQuery($new_query);
-
-            return CrossTrackerQueryRepresentation::fromQuery($new_query);
         } catch (CrossTrackerQueryNotFoundException) {
             throw new I18NRestException(404, dgettext('tuleap-crosstracker', 'Query not found'));
         }
+
+        $previous_query->getWidgetId()->apply(
+            function (int $previous_query_widget_id) use ($query_representation, $current_user): void {
+                $this->getUserIsAllowedToSeeWidgetChecker()->checkUserIsAllowedToUpdateWidget($current_user, $previous_query_widget_id);
+                if ($previous_query_widget_id !== $query_representation->widget_id) {
+                    throw new I18NRestException(400, dgettext('tuleap-crosstracker', "Given 'widget_id' parameter is invalid"));
+                }
+            }
+        );
+
+        $new_query = CrossTrackerQueryFactory::fromQueryToEdit($previous_query, $query_representation);
+
+        $query_dao = $this->getQueryDao();
+        (new QueryUpdater(
+            new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
+            $query_dao,
+            $query_dao
+        ))
+            ->updateQuery($new_query);
+
+        return CrossTrackerQueryRepresentation::fromQuery($new_query);
     }
 
     /**
@@ -286,15 +293,18 @@ final class CrossTrackerQueryResource extends AuthenticatedResource
         $this->checkAccess();
         Header::allowOptionsPutDelete();
 
+        $current_user = $this->current_user_provider->getCurrentUser();
         try {
-            $current_user = $this->current_user_provider->getCurrentUser();
-            $query        = $this->getQuery($id, $current_user);
-            $this->getUserIsAllowedToSeeWidgetChecker()->checkUserIsAllowedToUpdateWidget($current_user, $query->getWidgetId());
-
-            $this->getQueryDao()->delete($query->getUUID());
+            $query = $this->getQuery($id, $current_user);
         } catch (CrossTrackerQueryNotFoundException) {
             throw new I18NRestException(404, dgettext('tuleap-crosstracker', 'Query not found'));
         }
+        $query->getWidgetId()->apply(
+            function (int $widget_id) use ($current_user): void {
+                $this->getUserIsAllowedToSeeWidgetChecker()->checkUserIsAllowedToUpdateWidget($current_user, $widget_id);
+            }
+        );
+        $this->getQueryDao()->delete($query->getUUID());
     }
 
     /**
@@ -353,7 +363,11 @@ final class CrossTrackerQueryResource extends AuthenticatedResource
     {
         $factory = new CrossTrackerQueryFactory(new CrossTrackerQueryDao());
         $query   = $factory->getById($id);
-        $this->getUserIsAllowedToSeeWidgetChecker()->checkUserIsAllowedToSeeWidget($current_user, $query->getWidgetId());
+        $query->getWidgetId()->apply(
+            function (int $widget_id) use ($current_user): void {
+                $this->getUserIsAllowedToSeeWidgetChecker()->checkUserIsAllowedToSeeWidget($current_user, $widget_id);
+            }
+        );
 
         return $query;
     }

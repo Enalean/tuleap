@@ -22,14 +22,18 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Query\Advanced\FromBuilder;
 
+use Tuleap\Option\Option;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\FromTracker;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\VisitorParameters;
 
 final readonly class FromTrackerBuilderVisitorParameters implements VisitorParameters
 {
+    /**
+     * @param Option<int> $widget_id
+     */
     public function __construct(
         public FromTracker $from_tracker,
-        public int $widget_id,
+        public Option $widget_id,
         public bool $is_tracker_condition_alone,
     ) {
     }

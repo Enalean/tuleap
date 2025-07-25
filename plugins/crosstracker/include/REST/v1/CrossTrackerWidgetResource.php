@@ -28,11 +28,11 @@ use Tuleap\CrossTracker\Query\Advanced\ExpertQueryIsEmptyException;
 use Tuleap\CrossTracker\Query\CrossTrackerArtifactQueryFactoryBuilder;
 use Tuleap\CrossTracker\Query\CrossTrackerQueryDao;
 use Tuleap\CrossTracker\Query\CrossTrackerQueryFactory;
-use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerGetContentRepresentation;
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerQueryContentRepresentation;
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerQueryRepresentation;
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerWidgetRepresentation;
 use Tuleap\CrossTracker\Widget\CrossTrackerWidgetDao;
+use Tuleap\Option\Option;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
@@ -150,15 +150,16 @@ final class CrossTrackerWidgetResource extends AuthenticatedResource
         Header::allowOptionsGet();
 
         $current_user = $this->current_user_provider->getCurrentUser();
-        $query        = new CrossTrackerGetContentRepresentation($id, $tql_query);
         try {
-            if (! $this->getWidgetDao()->searchWidgetExistence($query->widget_id)) {
+            if (! $this->getWidgetDao()->searchWidgetExistence($id)) {
                 throw new CrossTrackerWidgetNotFoundException();
             }
 
+            $this->getUserIsAllowedToSeeWidgetChecker()->checkUserIsAllowedToSeeWidget($current_user, $id);
+
             $artifacts = $this->factory_builder->getInstrumentation()->updateQueryDuration(
-                fn() => $this->factory_builder->getArtifactFactory()->getForwardLinks(
-                    CrossTrackerQueryFactory::fromTqlQueryAndWidgetId($query->tql_query, $query->widget_id),
+                fn(): CrossTrackerQueryContentRepresentation => $this->factory_builder->getArtifactFactory()->getForwardLinks(
+                    CrossTrackerQueryFactory::fromTqlQueryAndWidgetId($tql_query, Option::fromValue($id)),
                     $source_artifact_id,
                     $current_user,
                     $limit,
@@ -166,11 +167,10 @@ final class CrossTrackerWidgetResource extends AuthenticatedResource
                 )
             );
 
-            assert($artifacts instanceof CrossTrackerQueryContentRepresentation);
             Header::sendPaginationHeaders($limit, $offset, $artifacts->getTotalSize(), self::MAX_LIMIT);
             return $artifacts;
         } catch (CrossTrackerWidgetNotFoundException) {
-            throw new I18NRestException(404, sprintf(dgettext('tuleap-crosstracker', 'Widget with id %d not found'), $query->widget_id));
+            throw new I18NRestException(404, sprintf(dgettext('tuleap-crosstracker', 'Widget with id %d not found'), $id));
         } catch (SyntaxError $error) {
             throw new RestException(400, '', SyntaxErrorTranslator::fromSyntaxError($error));
         } catch (LimitSizeIsExceededException | InvalidSelectException | SelectablesMustBeUniqueException | SelectLimitExceededException | MissingFromException $exception) {
@@ -222,15 +222,16 @@ final class CrossTrackerWidgetResource extends AuthenticatedResource
         Header::allowOptionsGet();
 
         $current_user = $this->current_user_provider->getCurrentUser();
-        $query        = new CrossTrackerGetContentRepresentation($id, $tql_query);
         try {
-            if (! $this->getWidgetDao()->searchWidgetExistence($query->widget_id)) {
+            if (! $this->getWidgetDao()->searchWidgetExistence($id)) {
                 throw new CrossTrackerWidgetNotFoundException();
             }
 
+            $this->getUserIsAllowedToSeeWidgetChecker()->checkUserIsAllowedToSeeWidget($current_user, $id);
+
             $artifacts = $this->factory_builder->getInstrumentation()->updateQueryDuration(
-                fn() => $this->factory_builder->getArtifactFactory()->getReverseLinks(
-                    CrossTrackerQueryFactory::fromTqlQueryAndWidgetId($query->tql_query, $query->widget_id),
+                fn(): CrossTrackerQueryContentRepresentation => $this->factory_builder->getArtifactFactory()->getReverseLinks(
+                    CrossTrackerQueryFactory::fromTqlQueryAndWidgetId($tql_query, Option::fromValue($id)),
                     $target_artifact_id,
                     $current_user,
                     $limit,
@@ -238,11 +239,10 @@ final class CrossTrackerWidgetResource extends AuthenticatedResource
                 )
             );
 
-            assert($artifacts instanceof CrossTrackerQueryContentRepresentation);
             Header::sendPaginationHeaders($limit, $offset, $artifacts->getTotalSize(), self::MAX_LIMIT);
             return $artifacts;
         } catch (CrossTrackerWidgetNotFoundException) {
-            throw new I18NRestException(404, sprintf(dgettext('tuleap-crosstracker', 'Widget with id %d not found'), $query->widget_id));
+            throw new I18NRestException(404, sprintf(dgettext('tuleap-crosstracker', 'Widget with id %d not found'), $id));
         } catch (SyntaxError $error) {
             throw new RestException(400, '', SyntaxErrorTranslator::fromSyntaxError($error));
         } catch (LimitSizeIsExceededException | InvalidSelectException | SelectablesMustBeUniqueException | SelectLimitExceededException | MissingFromException $exception) {
