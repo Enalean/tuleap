@@ -26,7 +26,7 @@ use Tuleap\NeverThrow\Result;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\TextFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\Notifications\Settings\CheckEventShouldBeSentInNotificationStub;
 use Tuleap\Tracker\Test\Stub\Notifications\Settings\UpdateCalendarConfigStub;
@@ -40,7 +40,7 @@ final class CalendarConfigUpdaterTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->tracker = TrackerTestBuilder::aTracker()->build();
+        $this->tracker = TrackerTestBuilder::aTracker()->withId(83)->build();
     }
 
     public function testNothingIsUpdatedWhenRequestDoesNotAskTo(): void
@@ -133,7 +133,9 @@ final class CalendarConfigUpdaterTest extends TestCase
                 DateFieldBuilder::aDateField(1001)->build(),
                 DateFieldBuilder::aDateField(1002)->build(),
             ),
-            RetrieveSemanticTitleFieldStub::build()->withTitleField($this->tracker, TextFieldBuilder::aTextField(1)->build()),
+            RetrieveSemanticTitleFieldStub::build()->withTitleField(
+                StringFieldBuilder::aStringField(1)->inTracker($this->tracker)->build()
+            ),
         );
 
         $result = $updater->updateConfigAccordingToRequest(
@@ -207,7 +209,9 @@ final class CalendarConfigUpdaterTest extends TestCase
             CheckEventShouldBeSentInNotificationStub::withoutEventInNotification(),
             $update_config,
             BuildSemanticTimeframeStub::withTimeframeSemanticNotConfigured($this->tracker),
-            RetrieveSemanticTitleFieldStub::build()->withTitleField($this->tracker, TextFieldBuilder::aTextField(1)->build()),
+            RetrieveSemanticTitleFieldStub::build()->withTitleField(
+                StringFieldBuilder::aStringField(1)->inTracker($this->tracker)->build()
+            ),
         );
 
         $result = $updater->updateConfigAccordingToRequest(

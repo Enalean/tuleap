@@ -23,15 +23,17 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Artifact\Changeset\PostCreation\CalendarEvent;
 
 use PFUser;
+use PHPUnit\Framework\Attributes\TestWith;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue_Text;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Tracker\FormElement\Field\Text\TextField;
+use Tuleap\Tracker\FormElement\Field\String\StringField;
 use Tuleap\Tracker\Semantic\Title\RetrieveSemanticTitleField;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\Semantic\Title\RetrieveSemanticTitleFieldStub;
 use Tuleap\Tracker\Tracker;
@@ -53,19 +55,19 @@ final class EventSummaryRetrieverTest extends TestCase
             ->ofArtifact(ArtifactTestBuilder::anArtifact(963)->inTracker($this->tracker)->build())
             ->build();
         $this->recipient = UserTestBuilder::buildWithDefaults();
+
+        $this->title_field_retriever = RetrieveSemanticTitleFieldStub::build();
     }
 
-    /**
-     * @testWith [true]
-     *           [false]
-     */
+    #[TestWith([true])]
+    #[TestWith([false])]
     public function testErrorWhenTrackerDoesNotHaveTitleSemantic(bool $should_check_permissions): void
     {
-        $retriever = new EventSummaryRetriever(RetrieveSemanticTitleFieldStub::build());
+        $retriever = new EventSummaryRetriever($this->title_field_retriever);
 
         $result = $retriever->retrieveEventSummary($this->changeset, $this->recipient, $should_check_permissions);
         self::assertTrue(Result::isErr($result));
-        self::assertEquals(
+        self::assertSame(
             'The tracker does not have title semantic, we cannot build calendar event',
             (string) $result->error,
         );
@@ -76,72 +78,67 @@ final class EventSummaryRetrieverTest extends TestCase
         $title_field = $this->getTitleField(self::USER_CANNOT_READ);
         $this->setTitleValue('Christmas Party', $title_field);
 
-        $retriever = new EventSummaryRetriever(RetrieveSemanticTitleFieldStub::build()->withTitleField($this->tracker, $title_field));
+        $retriever = new EventSummaryRetriever($this->title_field_retriever->withTitleField($title_field));
 
         $should_check_permissions = true;
 
         $result = $retriever->retrieveEventSummary($this->changeset, $this->recipient, $should_check_permissions);
         self::assertTrue(Result::isErr($result));
-        self::assertEquals(
+        self::assertSame(
             'The user #110 (john@example.com) cannot read the title, we cannot build calendar event',
             (string) $result->error,
         );
     }
 
-    /**
-     * @testWith [false, false, ""]
-     *           [true, false, ""]
-     *           [true, true, ""]
-     *           [true, true, " "]
-     */
+    #[TestWith([false, false, ''])]
+    #[TestWith([true, false, ''])]
+    #[TestWith([true, true, ''])]
+    #[TestWith([true, true, ' '])]
     public function testErrorWhenTitleIsEmpty(bool $user_can_read, bool $should_check_permissions, string $empty_text): void
     {
         $title_field = $this->getTitleField($user_can_read);
         $this->setTitleValue($empty_text, $title_field);
 
-        $retriever = new EventSummaryRetriever(RetrieveSemanticTitleFieldStub::build()->withTitleField($this->tracker, $title_field));
+        $retriever = new EventSummaryRetriever($this->title_field_retriever->withTitleField($title_field));
 
         $result = $retriever->retrieveEventSummary($this->changeset, $this->recipient, $should_check_permissions);
         self::assertTrue(Result::isErr($result));
-        self::assertEquals(
+        self::assertSame(
             'Title is empty, we cannot build calendar event',
             (string) $result->error,
         );
     }
 
-    /**
-     * @testWith [false, false]
-     *           [true, false]
-     *           [true, true]
-     */
+    #[TestWith([false, false])]
+    #[TestWith([true, false])]
+    #[TestWith([true, true])]
     public function testSummaryIsTitleWhenEverythingIsFine(bool $user_can_read, bool $should_check_permissions): void
     {
         $title_field = $this->getTitleField($user_can_read);
         $this->setTitleValue('Christmas Party', $title_field);
 
-        $retriever = new EventSummaryRetriever(RetrieveSemanticTitleFieldStub::build()->withTitleField($this->tracker, $title_field));
+        $retriever = new EventSummaryRetriever($this->title_field_retriever->withTitleField($title_field));
 
         $result = $retriever->retrieveEventSummary($this->changeset, $this->recipient, $should_check_permissions);
         self::assertTrue(Result::isOk($result));
         assert($result->value instanceof CalendarEventData);
-        self::assertEquals(
+        self::assertSame(
             'Christmas Party',
             $result->value->summary,
         );
     }
 
-    private function setTitleValue(string $title, TextField $title_field): void
+    private function setTitleValue(string $title, StringField $title_field): void
     {
         $title_field_value = new Tracker_Artifact_ChangesetValue_Text(1, $this->changeset, $title_field, false, $title, 'text');
         $this->changeset->setFieldValue($title_field, $title_field_value);
     }
 
-    private function getTitleField(bool $user_can_read): TextField
+    private function getTitleField(bool $user_can_read): StringField
     {
-        $title_field = $this->createMock(TextField::class);
-        $title_field->method('userCanRead')->willReturn($user_can_read);
-        $title_field->method('getId')->willReturn(1);
-
-        return $title_field;
+        return StringFieldBuilder::aStringField(1)
+            ->inTracker($this->tracker)
+            ->withReadPermission($this->recipient, $user_can_read)
+            ->build();
     }
 }

@@ -28,13 +28,12 @@ use Tuleap\Tracker\Tracker;
 
 final class RetrieveSemanticTitleFieldStub implements RetrieveSemanticTitleField
 {
-    private int $call_count;
+    private int $call_count = 0;
     /** @var array<int, TextField> */
     private array $tracker_titles = [];
 
     private function __construct()
     {
-        $this->call_count = 0;
     }
 
     public static function build(): self
@@ -42,9 +41,9 @@ final class RetrieveSemanticTitleFieldStub implements RetrieveSemanticTitleField
         return new self();
     }
 
-    public function withTitleField(Tracker $tracker, TextField $title_field): self
+    public function withTitleField(TextField $title_field): self
     {
-        $this->tracker_titles[$tracker->getId()] = $title_field;
+        $this->tracker_titles[$title_field->getTrackerId()] = $title_field;
         return $this;
     }
 
@@ -52,10 +51,7 @@ final class RetrieveSemanticTitleFieldStub implements RetrieveSemanticTitleField
     public function fromTracker(Tracker $tracker): ?TextField
     {
         $this->call_count++;
-        if (isset($this->tracker_titles[$tracker->getId()])) {
-            return $this->tracker_titles[$tracker->getId()];
-        }
-        return null;
+        return $this->tracker_titles[$tracker->getId()] ?? null;
     }
 
     public function getCallCount(): int

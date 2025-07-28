@@ -50,7 +50,9 @@ final class ArtifactCannotBeCreatedReasonsGetterTest extends TestCase
             ->inTracker($this->tracker)
             ->build();
         $this->used_fields_retriever        = RetrieveUsedFieldsStub::withFields($this->semantic_title_field);
-        $this->title_field_retriever        = RetrieveSemanticTitleFieldStub::build()->withTitleField($this->tracker, $this->semantic_title_field);
+        $this->title_field_retriever        = RetrieveSemanticTitleFieldStub::build()->withTitleField(
+            $this->semantic_title_field
+        );
     }
 
     private function getReasons(CollectionOfCreationSemanticToCheck $semantics_to_check): CollectionOfCannotCreateArtifactReason
@@ -122,7 +124,7 @@ final class ArtifactCannotBeCreatedReasonsGetterTest extends TestCase
         $form_element->method('getId')->willReturn(15);
         $form_element->method('getTrackerId')->willReturn($this->tracker->getId());
         $form_element->method('isRequired')->willReturn(false);
-        $this->title_field_retriever = RetrieveSemanticTitleFieldStub::build()->withTitleField($this->tracker, $form_element);
+        $this->title_field_retriever = RetrieveSemanticTitleFieldStub::build()->withTitleField($form_element);
         $this->used_fields_retriever = RetrieveUsedFieldsStub::withFields($form_element);
         $semantics_to_check          = CollectionOfCreationSemanticToCheck::fromREST(['title'])->value;
         $cannot_create_reasons       = $this->getReasons($semantics_to_check);

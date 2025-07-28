@@ -119,7 +119,7 @@ final class SuitableFieldRetrieverTest extends TestCase
             ->build();
         $this->field_retriever = RetrieveUsedFieldsStub::withFields($field);
 
-        $this->title_field_retriever = RetrieveSemanticTitleFieldStub::build()->withTitleField($this->tracker, $field);
+        $this->title_field_retriever = RetrieveSemanticTitleFieldStub::build()->withTitleField($field);
 
         $result = $this->retrieve();
         self::assertTrue(Result::isErr($result));

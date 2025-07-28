@@ -107,14 +107,14 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsWhenTitleIsNotAString(): void
     {
-        $this->retrieve_semantic_title_field->withTitleField($this->tracker, $this->getTextField(1, 'Title'));
+        $this->retrieve_semantic_title_field->withTitleField($this->getTextField(1, 'Title'));
         $this->expectException(TitleFieldHasIncorrectTypeException::class);
         $this->getGatherer()->getTitleField($this->tracker_identifier, null);
     }
 
     public function testItCollectsErrorWhenTitleIsNotAString(): void
     {
-        $this->retrieve_semantic_title_field->withTitleField($this->tracker, $this->getTextField(1, 'Title'));
+        $this->retrieve_semantic_title_field->withTitleField($this->getTextField(1, 'Title'));
         $this->expectException(TitleFieldHasIncorrectTypeException::class);
         $errors_collector = new ConfigurationErrorsCollector(VerifyIsTeamStub::withValidTeam(), false);
         $this->getGatherer()->getTitleField($this->tracker_identifier, $errors_collector);
@@ -124,7 +124,6 @@ final class SynchronizedFieldsGathererTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItReturnsTitleReference(): void
     {
         $this->retrieve_semantic_title_field->withTitleField(
-            $this->tracker,
             StringFieldBuilder::aStringField(832)
                 ->inTracker($this->tracker)
                 ->withLabel('Semiacquaintance')

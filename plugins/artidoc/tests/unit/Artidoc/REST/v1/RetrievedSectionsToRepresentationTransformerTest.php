@@ -201,7 +201,7 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
             ->withReadPermission($this->user, true)
             ->withUpdatePermission($this->user, $can_user_edit_title)
             ->build();
-        $this->retrieve_title_field->withTitleField($this->tracker, $title_field);
+        $this->retrieve_title_field->withTitleField($title_field);
 
         $description_field = TextFieldBuilder::aTextField(1002)
             ->inTracker($this->tracker)
@@ -270,7 +270,7 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
             ->withReadPermission($this->user, true)
             ->withUpdatePermission($this->user, true)
             ->build();
-        $this->retrieve_title_field->withTitleField($this->tracker, $title_field);
+        $this->retrieve_title_field->withTitleField($title_field);
 
         $description_field = TextFieldBuilder::aTextField(1002)
             ->inTracker($this->tracker)
@@ -315,7 +315,7 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
             ->withReadPermission($this->user, true)
             ->withUpdatePermission($this->user, true)
             ->build();
-        $this->retrieve_title_field->withTitleField($this->tracker, $title_field);
+        $this->retrieve_title_field->withTitleField($title_field);
 
         $description_field = TextFieldBuilder::aTextField(1002)
             ->inTracker($this->tracker)
@@ -360,7 +360,7 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
             ->withReadPermission($this->user, true)
             ->withUpdatePermission($this->user, true)
             ->build();
-        $this->retrieve_title_field->withTitleField($this->tracker, $title_field);
+        $this->retrieve_title_field->withTitleField($title_field);
 
         $description_field = TextFieldBuilder::aTextField(1002)
             ->inTracker($this->tracker)
@@ -421,7 +421,7 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
             ->withReadPermission($this->user, true)
             ->withUpdatePermission($this->user, true)
             ->build();
-        $this->retrieve_title_field->withTitleField($this->tracker, $title_field);
+        $this->retrieve_title_field->withTitleField($title_field);
 
         $description_field = TextFieldBuilder::aTextField(1002)
             ->inTracker($this->tracker)
@@ -460,7 +460,7 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
             ->withReadPermission($this->user, true)
             ->withUpdatePermission($this->user, true)
             ->build();
-        $this->retrieve_title_field->withTitleField($this->tracker, $title_field);
+        $this->retrieve_title_field->withTitleField($title_field);
 
         $description_field = TextFieldBuilder::aTextField(1002)
             ->inTracker($this->tracker)
@@ -509,7 +509,7 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
             ->withReadPermission($this->user, true)
             ->withUpdatePermission($this->user, false)
             ->build();
-        $this->retrieve_title_field->withTitleField($this->tracker, $title_field);
+        $this->retrieve_title_field->withTitleField($title_field);
 
         $description_field = TextFieldBuilder::aTextField(1002)
             ->inTracker($this->tracker)
@@ -596,7 +596,7 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
             ->inTracker($this->tracker)
             ->withReadPermission($this->user, false)
             ->build();
-        $this->retrieve_title_field->withTitleField($this->tracker, $title_field);
+        $this->retrieve_title_field->withTitleField($title_field);
 
         $description_field = TextFieldBuilder::aTextField(1002)
             ->inTracker($this->tracker)
@@ -629,7 +629,7 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
             ->inTracker($this->tracker)
             ->withReadPermission($this->user, true)
             ->build();
-        $this->retrieve_title_field->withTitleField($this->tracker, $title_field);
+        $this->retrieve_title_field->withTitleField($title_field);
 
         $description_field = TextFieldBuilder::aTextField(1002)
             ->inTracker($this->tracker)
@@ -662,7 +662,7 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
             ->inTracker($this->tracker)
             ->withReadPermission($this->user, true)
             ->build();
-        $this->retrieve_title_field->withTitleField($this->tracker, $title_field);
+        $this->retrieve_title_field->withTitleField($title_field);
 
         $description_field = TextFieldBuilder::aTextField(1002)
             ->inTracker($this->tracker)
@@ -694,7 +694,7 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
             ->inTracker($this->tracker)
             ->withReadPermission($this->user, true)
             ->build();
-        $this->retrieve_title_field->withTitleField($this->tracker, $title_field);
+        $this->retrieve_title_field->withTitleField($title_field);
 
         $description_field = TextFieldBuilder::aTextField(1002)
             ->inTracker($this->tracker)
