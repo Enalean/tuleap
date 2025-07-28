@@ -34,7 +34,7 @@ final class CachedSemanticDescriptionFieldRetrieverTest extends TestCase
     {
         $tracker                    = TrackerTestBuilder::aTracker()->withId(12)->build();
         $description_field          = TextFieldBuilder::aTextField(1002)->inTracker($tracker)->build();
-        $retrieve_description_field = RetrieveSemanticDescriptionFieldStub::withTextField($description_field);
+        $retrieve_description_field = RetrieveSemanticDescriptionFieldStub::build()->withDescriptionField($description_field);
 
         $cache = new CachedSemanticDescriptionFieldRetriever($retrieve_description_field);
 

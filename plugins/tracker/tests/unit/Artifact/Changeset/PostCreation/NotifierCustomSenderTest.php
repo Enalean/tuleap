@@ -83,7 +83,7 @@ final class NotifierCustomSenderTest extends TestCase
             $config_notification_assigned_to,
             $this->custom_email_sender,
             ProvideEmailNotificationAttachmentStub::withoutAttachments(),
-            RetrieveSemanticDescriptionFieldStub::withNoField(),
+            RetrieveSemanticDescriptionFieldStub::build(),
         );
 
         $this->user_realname        = 'J. Doe';

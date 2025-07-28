@@ -74,7 +74,7 @@ final class SuitableFieldRetrieverTest extends TestCase
         $this->tracker                     = TrackerTestBuilder::aTracker()->withId(1001)->build();
         $this->user                        = UserTestBuilder::buildWithDefaults();
         $this->field_retriever             = RetrieveUsedFieldsStub::withNoFields();
-        $this->description_field_retriever = RetrieveSemanticDescriptionFieldStub::withNoField();
+        $this->description_field_retriever = RetrieveSemanticDescriptionFieldStub::build();
         $this->title_field_retriever       = RetrieveSemanticTitleFieldStub::build();
     }
 
@@ -128,12 +128,12 @@ final class SuitableFieldRetrieverTest extends TestCase
 
     public function testErrForFieldThatIsSemanticDescription(): void
     {
-        $field                             = StringFieldBuilder::aStringField(self::FIELD_ID)
+        $field                 = StringFieldBuilder::aStringField(self::FIELD_ID)
             ->inTracker($this->tracker)
             ->withReadPermission($this->user, true)
             ->build();
-        $this->field_retriever             = RetrieveUsedFieldsStub::withFields($field);
-        $this->description_field_retriever = RetrieveSemanticDescriptionFieldStub::withTextField($field);
+        $this->field_retriever = RetrieveUsedFieldsStub::withFields($field);
+        $this->description_field_retriever->withDescriptionField($field);
 
         $result = $this->retrieve();
         self::assertTrue(Result::isErr($result));

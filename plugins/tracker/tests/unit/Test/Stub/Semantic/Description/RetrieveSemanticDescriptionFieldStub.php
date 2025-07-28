@@ -22,33 +22,36 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Test\Stub\Semantic\Description;
 
+use Tuleap\Tracker\FormElement\Field\Text\TextField;
 use Tuleap\Tracker\Semantic\Description\RetrieveSemanticDescriptionField;
 use Tuleap\Tracker\Tracker;
 
 final class RetrieveSemanticDescriptionFieldStub implements RetrieveSemanticDescriptionField
 {
-    private int $call_count;
+    private int $call_count = 0;
+    /** @var array<int, TextField> */
+    private array $tracker_descriptions = [];
 
-    private function __construct(private readonly ?\Tuleap\Tracker\FormElement\Field\Text\TextField $field_text)
+    private function __construct()
     {
-        $this->call_count = 0;
     }
 
-    public static function withNoField(): self
+    public static function build(): self
     {
-        return new self(null);
+        return new self();
     }
 
-    public static function withTextField(\Tuleap\Tracker\FormElement\Field\Text\TextField $field_text): self
+    public function withDescriptionField(TextField $description_field): self
     {
-        return new self($field_text);
+        $this->tracker_descriptions[$description_field->getTrackerId()] = $description_field;
+        return $this;
     }
 
     #[\Override]
-    public function fromTracker(Tracker $tracker): ?\Tuleap\Tracker\FormElement\Field\Text\TextField
+    public function fromTracker(Tracker $tracker): ?TextField
     {
         $this->call_count++;
-        return $this->field_text;
+        return $this->tracker_descriptions[$tracker->getId()] ?? null;
     }
 
     public function getCallCount(): int

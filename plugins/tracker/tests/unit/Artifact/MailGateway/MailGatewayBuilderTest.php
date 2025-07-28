@@ -60,7 +60,7 @@ final class MailGatewayBuilderTest extends TestCase
             $this->createMock(Tracker_ArtifactByEmailStatus::class),
             new NullLogger(),
             new MailGatewayFilter(),
-            RetrieveSemanticDescriptionFieldStub::withNoField(),
+            RetrieveSemanticDescriptionFieldStub::build(),
         );
     }
 

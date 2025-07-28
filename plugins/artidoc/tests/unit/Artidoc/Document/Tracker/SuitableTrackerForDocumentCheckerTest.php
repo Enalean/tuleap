@@ -51,7 +51,7 @@ final class SuitableTrackerForDocumentCheckerTest extends TestCase
 
         $checker = new SuitableTrackerForDocumentChecker(
             RetrieveUsedFieldsStub::withFields($title, $description, $status),
-            RetrieveSemanticDescriptionFieldStub::withTextField($description),
+            RetrieveSemanticDescriptionFieldStub::build()->withDescriptionField($description),
             RetrieveSemanticTitleFieldStub::build()->withTitleField($tracker, $title),
         );
 
@@ -78,7 +78,7 @@ final class SuitableTrackerForDocumentCheckerTest extends TestCase
 
         $checker = new SuitableTrackerForDocumentChecker(
             RetrieveUsedFieldsStub::withFields($title, $description, $status),
-            RetrieveSemanticDescriptionFieldStub::withTextField($description),
+            RetrieveSemanticDescriptionFieldStub::build()->withDescriptionField($description),
             RetrieveSemanticTitleFieldStub::build()->withTitleField($tracker, $title),
         );
 
@@ -105,7 +105,7 @@ final class SuitableTrackerForDocumentCheckerTest extends TestCase
 
         $checker = new SuitableTrackerForDocumentChecker(
             RetrieveUsedFieldsStub::withFields($title, $description, $status),
-            RetrieveSemanticDescriptionFieldStub::withTextField($description),
+            RetrieveSemanticDescriptionFieldStub::build()->withDescriptionField($description),
             RetrieveSemanticTitleFieldStub::build(),
         );
 
@@ -132,7 +132,7 @@ final class SuitableTrackerForDocumentCheckerTest extends TestCase
 
         $checker = new SuitableTrackerForDocumentChecker(
             RetrieveUsedFieldsStub::withFields($title, $description, $status),
-            RetrieveSemanticDescriptionFieldStub::withTextField($description),
+            RetrieveSemanticDescriptionFieldStub::build()->withDescriptionField($description),
             RetrieveSemanticTitleFieldStub::build()->withTitleField($tracker, TextFieldBuilder::aTextField(1004)->build()),
         );
 
@@ -159,7 +159,7 @@ final class SuitableTrackerForDocumentCheckerTest extends TestCase
 
         $checker = new SuitableTrackerForDocumentChecker(
             RetrieveUsedFieldsStub::withFields($title, $description, $status),
-            RetrieveSemanticDescriptionFieldStub::withNoField(),
+            RetrieveSemanticDescriptionFieldStub::build(),
             RetrieveSemanticTitleFieldStub::build()->withTitleField($tracker, $title),
         );
 
@@ -186,7 +186,7 @@ final class SuitableTrackerForDocumentCheckerTest extends TestCase
 
         $checker = new SuitableTrackerForDocumentChecker(
             RetrieveUsedFieldsStub::withFields($title, $description, $status),
-            RetrieveSemanticDescriptionFieldStub::withTextField($description),
+            RetrieveSemanticDescriptionFieldStub::build()->withDescriptionField($description),
             RetrieveSemanticTitleFieldStub::build()->withTitleField($tracker, $title),
         );
 
@@ -213,7 +213,7 @@ final class SuitableTrackerForDocumentCheckerTest extends TestCase
 
         $checker = new SuitableTrackerForDocumentChecker(
             RetrieveUsedFieldsStub::withFields($title, $description, $status),
-            RetrieveSemanticDescriptionFieldStub::withTextField($description),
+            RetrieveSemanticDescriptionFieldStub::build()->withDescriptionField($description),
             RetrieveSemanticTitleFieldStub::build()->withTitleField($tracker, $title),
         );
 
