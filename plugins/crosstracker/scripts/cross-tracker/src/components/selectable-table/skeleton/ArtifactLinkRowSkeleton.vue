@@ -19,7 +19,10 @@
   -->
 
 <template>
-    <template v-for="index of expected_number_of_links" v-bind:key="index">
+    <template
+        v-for="index of Math.min(expected_number_of_links, MAXIMAL_LIMIT_OF_ARTIFACT_LINKS_FETCHED)"
+        v-bind:key="index"
+    >
         <empty-edit-cell class="tlp-skeleton-icon" />
         <empty-selectable-cell
             v-for="column_name of columns"
@@ -31,6 +34,7 @@
 </template>
 
 <script setup lang="ts">
+import { MAXIMAL_LIMIT_OF_ARTIFACT_LINKS_FETCHED } from "../../../api/ArtifactLinksRetriever";
 import type { ArtifactRow, ArtifactsTable } from "../../../domain/ArtifactsTable";
 import EmptySelectableCell from "./EmptySelectableCell.vue";
 import EmptyEditCell from "./EmptyEditCell.vue";

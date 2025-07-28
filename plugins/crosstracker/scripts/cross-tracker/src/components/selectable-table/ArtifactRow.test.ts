@@ -26,17 +26,18 @@ import { Fault } from "@tuleap/fault";
 import { ArtifactRowBuilder } from "../../../tests/builders/ArtifactRowBuilder";
 import { ArtifactsTableBuilder } from "../../../tests/builders/ArtifactsTableBuilder";
 import { RetrieveArtifactLinksStub } from "../../../tests/stubs/RetrieveArtifactLinksStub";
+import { MAXIMAL_LIMIT_OF_ARTIFACT_LINKS_FETCHED } from "../../api/ArtifactLinksRetriever";
 import { NUMERIC_CELL, PRETTY_TITLE_CELL } from "../../domain/ArtifactsTable";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-tests";
 import type { ColumnName } from "../../domain/ColumnName";
 import { PRETTY_TITLE_COLUMN_NAME } from "../../domain/ColumnName";
 import type { RetrieveArtifactLinks } from "../../domain/RetrieveArtifactLinks";
-import RowErrorMessage from "../feedback/RowErrorMessage.vue";
 import { RETRIEVE_ARTIFACT_LINKS, WIDGET_ID } from "../../injection-symbols";
-import ArtifactRow from "./ArtifactRow.vue";
-import SelectableCell from "./SelectableCell.vue";
-import ArtifactLinkRows from "./ArtifactLinkRows.vue";
 import RowLoadAllButton from "../feedback/RowLoadAllButton.vue";
+import RowErrorMessage from "../feedback/RowErrorMessage.vue";
+import ArtifactLinkRows from "./ArtifactLinkRows.vue";
+import SelectableCell from "./SelectableCell.vue";
+import ArtifactRow from "./ArtifactRow.vue";
 
 vi.useFakeTimers();
 
@@ -199,10 +200,10 @@ describe("ArtifactRow", () => {
     );
 
     describe("Load all button", () => {
-        it("should not display a load all button if there is less than 50 forward or reverse links", async () => {
+        it("should not display a load all button if there is less than MAXIMAL_LIMIT_OF_ARTIFACT_LINKS_FETCHED forward or reverse links", async () => {
             artifact_links_table_retriever = RetrieveArtifactLinksStub.withTotalNumberOfLinks(
-                45,
-                45,
+                MAXIMAL_LIMIT_OF_ARTIFACT_LINKS_FETCHED - 5,
+                MAXIMAL_LIMIT_OF_ARTIFACT_LINKS_FETCHED - 1,
             );
             const wrapper = getWrapper();
             wrapper
@@ -214,11 +215,15 @@ describe("ArtifactRow", () => {
         });
 
         it.each([
-            ["forward", 59, 3],
-            ["reverse", 3, 62],
-            ["forward or reverse", 56, 72],
+            ["forward", MAXIMAL_LIMIT_OF_ARTIFACT_LINKS_FETCHED + 9, 3],
+            ["reverse", 3, MAXIMAL_LIMIT_OF_ARTIFACT_LINKS_FETCHED + 16],
+            [
+                "forward or reverse",
+                MAXIMAL_LIMIT_OF_ARTIFACT_LINKS_FETCHED + 6,
+                MAXIMAL_LIMIT_OF_ARTIFACT_LINKS_FETCHED + 22,
+            ],
         ])(
-            "should display a load all button if there is more than 50 %s links",
+            "should display a load all button if there is more than MAXIMAL_LIMIT_OF_ARTIFACT_LINKS_FETCHED %s links",
             async (name, number_of_forward_links, number_of_reverse_links) => {
                 artifact_links_table_retriever = RetrieveArtifactLinksStub.withTotalNumberOfLinks(
                     number_of_forward_links,
