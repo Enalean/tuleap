@@ -17,27 +17,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, it, expect, beforeEach, vi } from "vitest";
+import { describe, it, expect, beforeEach } from "vitest";
 import { okAsync, errAsync } from "neverthrow";
 import type { GroupOfItems } from "@tuleap/lazybox";
 import { Fault } from "@tuleap/fault";
 import type { User } from "@tuleap/core-rest-api-types";
 import { LazyboxStub } from "../tests/stubs/LazyboxStub";
-import * as tuleap_api from "./api/rest-querier";
 import { UsersAutocompleter } from "./UsersAutocompleter";
-import type { AutocompleteUsers } from "./UsersAutocompleter";
 import { GroupOfUsersBuilder } from "./GroupOfUsersBuilder";
 import { UsersToLazyboxItemsTransformer } from "./UsersToLazyboxItemsTransformer";
 import { GettextProviderStub } from "../tests/stubs/GettextProviderStub";
 
 describe("UsersAutocompleter", () => {
-    let lazybox: LazyboxStub, autocompleter: AutocompleteUsers;
+    let lazybox: LazyboxStub;
 
     beforeEach(() => {
         lazybox = LazyboxStub.build();
-        autocompleter = UsersAutocompleter(
-            GroupOfUsersBuilder(UsersToLazyboxItemsTransformer(), GettextProviderStub),
-        );
     });
 
     const getNotNullGroupInDropdown = (): GroupOfItems => {
@@ -51,6 +46,10 @@ describe("UsersAutocompleter", () => {
 
     it(`Given that the user has typed less than 3 characters
         Then it should display an empty group with an empty message asking for more characters`, () => {
+        const autocompleter = UsersAutocompleter(
+            GroupOfUsersBuilder(UsersToLazyboxItemsTransformer(), GettextProviderStub),
+            () => okAsync([]),
+        );
         autocompleter.autocomplete(lazybox, [], "jo");
 
         const group = getNotNullGroupInDropdown();
@@ -61,6 +60,10 @@ describe("UsersAutocompleter", () => {
 
     it(`Given that the user has typed a user name
         Then it should push a loading group inside the dropdown while matching users are being fetched`, () => {
+        const autocompleter = UsersAutocompleter(
+            GroupOfUsersBuilder(UsersToLazyboxItemsTransformer(), GettextProviderStub),
+            () => okAsync([]),
+        );
         autocompleter.autocomplete(lazybox, [], "joe");
 
         const group = getNotNullGroupInDropdown();
@@ -70,17 +73,19 @@ describe("UsersAutocompleter", () => {
 
     it(`Given that matching users have been found
         Then it should display them in the dropdown`, async () => {
-        vi.spyOn(tuleap_api, "fetchMatchingUsers").mockReturnValue(
-            okAsync([
-                {
-                    id: 101,
-                    display_name: "Joe l'Asticot",
-                } as User,
-                {
-                    id: 102,
-                    display_name: "Joe the Hobo",
-                } as User,
-            ]),
+        const autocompleter = UsersAutocompleter(
+            GroupOfUsersBuilder(UsersToLazyboxItemsTransformer(), GettextProviderStub),
+            () =>
+                okAsync([
+                    {
+                        id: 101,
+                        display_name: "Joe l'Asticot",
+                    } as User,
+                    {
+                        id: 102,
+                        display_name: "Joe the Hobo",
+                    } as User,
+                ]),
         );
 
         await autocompleter.autocomplete(lazybox, [], "joe");
@@ -93,7 +98,10 @@ describe("UsersAutocompleter", () => {
 
     it(`Given that no matching users have been found
         Then it should display an empty group in the dropdown`, async () => {
-        vi.spyOn(tuleap_api, "fetchMatchingUsers").mockReturnValue(okAsync([]));
+        const autocompleter = UsersAutocompleter(
+            GroupOfUsersBuilder(UsersToLazyboxItemsTransformer(), GettextProviderStub),
+            () => okAsync([]),
+        );
 
         await autocompleter.autocomplete(lazybox, [], "nobody");
 
@@ -106,8 +114,9 @@ describe("UsersAutocompleter", () => {
 
     it(`Given that an error occurred while retrieving matching users
         Then it should display an empty group`, async () => {
-        vi.spyOn(tuleap_api, "fetchMatchingUsers").mockReturnValue(
-            errAsync(Fault.fromMessage("An error that should probably never happen")),
+        const autocompleter = UsersAutocompleter(
+            GroupOfUsersBuilder(UsersToLazyboxItemsTransformer(), GettextProviderStub),
+            () => errAsync(Fault.fromMessage("An error that should probably never happen")),
         );
 
         await autocompleter.autocomplete(lazybox, [], "joe");

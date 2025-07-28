@@ -22,9 +22,11 @@ import type { Lazybox } from "@tuleap/lazybox";
 import type { User } from "@tuleap/core-rest-api-types";
 import { initGettextSync } from "@tuleap/gettext";
 import { getAssignableUserTemplate, getSelectedUsers } from "./AssignableUserTemplate";
+import type { FetchMatchingUsers } from "./UsersAutocompleter";
 import { UsersAutocompleter } from "./UsersAutocompleter";
 import { GroupOfUsersBuilder } from "./GroupOfUsersBuilder";
 import { UsersToLazyboxItemsTransformer } from "./UsersToLazyboxItemsTransformer";
+import { fetchMatchingUsers } from "./api/rest-querier";
 
 type OnSelectionCallback = (selected_users: ReadonlyArray<User>) => void;
 
@@ -33,12 +35,13 @@ export const initUsersAutocompleter = (
     already_selected_users: ReadonlyArray<User>,
     selection_callback: OnSelectionCallback,
     locale: string = "en_US",
+    fetch_matching_users_callback: FetchMatchingUsers = fetchMatchingUsers,
 ): void => {
     const gettext_provider = initGettextSync("lazybox-users-autocomplete", { fr_FR }, locale);
 
     const users_transformer = UsersToLazyboxItemsTransformer();
     const group_builder = GroupOfUsersBuilder(users_transformer, gettext_provider);
-    const autocompleter = UsersAutocompleter(group_builder);
+    const autocompleter = UsersAutocompleter(group_builder, fetch_matching_users_callback);
 
     lazybox.options = {
         is_multiple: true,

@@ -17,10 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { fetchMatchingUsers } from "./api/rest-querier";
 import type { Lazybox } from "@tuleap/lazybox";
 import type { User } from "@tuleap/core-rest-api-types";
+import type { ResultAsync } from "neverthrow";
+import type { Fault } from "@tuleap/fault";
 import type { BuildGroupOfUsers } from "./GroupOfUsersBuilder";
+
+export type FetchMatchingUsers = (query: string) => ResultAsync<User[], Fault>;
 
 export interface AutocompleteUsers {
     autocomplete(
@@ -30,7 +33,10 @@ export interface AutocompleteUsers {
     ): void;
 }
 
-export const UsersAutocompleter = (group_builder: BuildGroupOfUsers): AutocompleteUsers => {
+export const UsersAutocompleter = (
+    group_builder: BuildGroupOfUsers,
+    fetch_matching_users_callback: FetchMatchingUsers,
+): AutocompleteUsers => {
     return {
         autocomplete(
             lazybox: Lazybox,
@@ -44,7 +50,7 @@ export const UsersAutocompleter = (group_builder: BuildGroupOfUsers): Autocomple
 
             lazybox.replaceDropdownContent([group_builder.buildLoading()]);
 
-            fetchMatchingUsers(query).match(
+            fetch_matching_users_callback(query).match(
                 (users: User[]) => {
                     lazybox.replaceDropdownContent([
                         group_builder.buildWithUsers(users, currently_selected_users),

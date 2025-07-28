@@ -108,6 +108,9 @@ import { strictInject } from "@tuleap/vue-strict-inject";
 import { RETRIEVE_QUERY, USER_LOCALE_KEY } from "../injection-symbols";
 import type { User } from "@tuleap/core-rest-api-types";
 import { initUsersAutocompleter } from "@tuleap/lazybox-users-autocomplete";
+import type { ResultAsync } from "neverthrow";
+import type { Fault } from "@tuleap/fault";
+import { uri, getJSON } from "@tuleap/fetch-result";
 
 const { $gettext } = useGettext();
 
@@ -158,6 +161,13 @@ onMounted((): void => {
             currently_selected_users.value = [...selected_users];
         },
         user_locale,
+        (query: string): ResultAsync<User[], Fault> => {
+            return getJSON(uri`/api/v1/timetracking_management_users`, {
+                params: {
+                    query,
+                },
+            });
+        },
     );
 });
 
