@@ -20,32 +20,25 @@
 <template>
     <input type="hidden" name="tracker-template-id" v-bind:value="tracker_id" />
 </template>
-<script lang="ts">
-import Vue from "vue";
-import { State, Getter } from "vuex-class";
-import { Component } from "vue-property-decorator";
-import type { Tracker } from "../../../../store/type";
+<script setup lang="ts">
+import { computed } from "vue";
+import { useState, useGetters } from "vuex-composition-helpers";
 
-@Component
-export default class FieldTrackerTemplateId extends Vue {
-    @State
-    readonly selected_tracker_template!: Tracker;
+const { selected_tracker_template, selected_project_tracker_template } = useState([
+    "selected_tracker_template",
+    "selected_project_tracker_template",
+]);
 
-    @State
-    readonly selected_project_tracker_template!: Tracker;
+const { is_created_from_default_template, is_a_duplication } = useGetters([
+    "is_created_from_default_template",
+    "is_a_duplication",
+]);
 
-    @Getter
-    readonly is_created_from_default_template!: boolean;
-
-    @Getter
-    readonly is_a_duplication!: boolean;
-
-    get tracker_id(): string {
-        if (this.is_a_duplication || this.is_created_from_default_template) {
-            return this.selected_tracker_template.id;
-        }
-
-        return this.selected_project_tracker_template.id;
+const tracker_id = computed((): string => {
+    if (is_a_duplication.value || is_created_from_default_template.value) {
+        return selected_tracker_template.value.id;
     }
-}
+
+    return selected_project_tracker_template.value.id;
+});
 </script>
