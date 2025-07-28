@@ -32,6 +32,7 @@ use Tuleap\Git\Gitolite\GitoliteAccessURLGenerator;
 use Tuleap\Git\Permissions\AccessControlVerifier;
 use Tuleap\Git\Permissions\FineGrainedDao;
 use Tuleap\Git\Permissions\FineGrainedRetriever;
+use Tuleap\Mapper\ValinorMapperBuilderFactory;
 use Tuleap\PullRequest\REST\v1\Authors\RepositoryPullRequestsAuthorsRepresentation;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\PullRequest\Authorization\PullRequestPermissionChecker;
@@ -158,7 +159,7 @@ class RepositoryResource extends AuthenticatedResource
             ProjectManager::instance()
         );
         return new GETHandler(
-            new QueryToSearchCriteriaConverter(),
+            new QueryToSearchCriteriaConverter(ValinorMapperBuilderFactory::mapperBuilder()),
             $pull_request_dao,
             $user_manager,
             $git_repository_factory,
