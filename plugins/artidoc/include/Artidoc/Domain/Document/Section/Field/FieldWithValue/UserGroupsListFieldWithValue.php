@@ -27,7 +27,7 @@ use Tuleap\Artidoc\Domain\Document\Section\Field\DisplayType;
 /**
  * @psalm-immutable
  */
-final readonly class UserGroupsListFieldWithValue
+final readonly class UserGroupsListFieldWithValue implements FieldWithValue
 {
     /**
      * @param list<UserGroupListValue> $user_groups
