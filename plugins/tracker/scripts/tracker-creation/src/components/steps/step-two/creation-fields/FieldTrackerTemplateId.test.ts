@@ -22,12 +22,13 @@ import { shallowMount } from "@vue/test-utils";
 import FieldTrackerTemplateId from "./FieldTrackerTemplateId.vue";
 import type { State } from "../../../../store/type";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
+import type Vue from "vue";
 
 describe("FieldTrackerTemplateId", () => {
     function getWrapper(
         is_a_duplication: boolean,
         is_created_from_default_template: boolean,
-    ): Wrapper<FieldTrackerTemplateId> {
+    ): Wrapper<Vue> {
         return shallowMount(FieldTrackerTemplateId, {
             mocks: {
                 $store: createStoreMock({
