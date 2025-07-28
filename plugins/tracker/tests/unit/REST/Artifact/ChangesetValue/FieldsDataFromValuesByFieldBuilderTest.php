@@ -52,7 +52,7 @@ final class FieldsDataFromValuesByFieldBuilderTest extends \Tuleap\Test\PHPUnit\
     private const TEXT_FIELD_NAME   = 'text';
     private RetrieveUsedFields $fields_retriever;
     private \Tuleap\Tracker\FormElement\Field\Integer\IntegerField $int_field;
-    private \Tracker_FormElement_Field_Float $float_field;
+    private \Tuleap\Tracker\FormElement\Field\Float\FloatField $float_field;
     private \Tuleap\Tracker\FormElement\Field\String\StringField $string_field;
     private \Tuleap\Tracker\FormElement\Field\Text\TextField $text_field;
     private \Tuleap\Tracker\Tracker $tracker;

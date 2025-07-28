@@ -53,7 +53,7 @@ final class FieldsDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
     private const TEXT_FORMAT     = 'text';
     private const LINK_FIELD_ID   = 514;
     private \Tuleap\Tracker\FormElement\Field\Integer\IntegerField $int_field;
-    private \Tracker_FormElement_Field_Float $float_field;
+    private \Tuleap\Tracker\FormElement\Field\Float\FloatField $float_field;
     private \Tuleap\Tracker\FormElement\Field\String\StringField $string_field;
     private \Tuleap\Tracker\FormElement\Field\Text\TextField $text_field;
     private RetrieveUsedFieldsStub $fields_retriever;

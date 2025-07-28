@@ -59,9 +59,9 @@ final class DurationFieldReferenceProxyTest extends \Tuleap\Test\PHPUnit\TestCas
         );
     }
 
-    private function getFloatField(): \Tracker_FormElement_Field_Float
+    private function getFloatField(): \Tuleap\Tracker\FormElement\Field\Float\FloatField
     {
-        return new \Tracker_FormElement_Field_Float(
+        return new \Tuleap\Tracker\FormElement\Field\Float\FloatField(
             self::FIELD_ID,
             68,
             1,

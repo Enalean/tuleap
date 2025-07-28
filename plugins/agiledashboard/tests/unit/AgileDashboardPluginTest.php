@@ -20,6 +20,7 @@
 
 declare(strict_types=1);
 
+use Tuleap\Tracker\FormElement\Field\Float\FloatField;
 use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -39,7 +40,7 @@ class AgileDashboardPluginTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ig
 </semantic>'
         );
 
-        $xml_mapping = ['F13' => $this->createStub(Tracker_FormElement_Field_Float::class)];
+        $xml_mapping = ['F13' => $this->createStub(FloatField::class)];
         $tracker     = $this->createStub(Tracker::class);
         $semantic    = null;
         $type        = AgileDashBoard_Semantic_InitialEffort::NAME;

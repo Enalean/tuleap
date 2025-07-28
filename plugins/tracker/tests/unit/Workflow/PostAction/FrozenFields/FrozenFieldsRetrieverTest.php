@@ -63,7 +63,7 @@ final class FrozenFieldsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         ]);
 
         $int_field    = $this->createMock(\Tuleap\Tracker\FormElement\Field\Integer\IntegerField::class);
-        $float_field  = $this->createMock(\Tracker_FormElement_Field_Float::class);
+        $float_field  = $this->createMock(\Tuleap\Tracker\FormElement\Field\Float\FloatField::class);
         $string_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\String\StringField::class);
 
         $this->form_element_factory->method('getFieldById')->willReturnCallback(

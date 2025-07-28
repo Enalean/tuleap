@@ -26,12 +26,12 @@ use Luracast\Restler\RestException;
 use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tracker_FormElement_Field_Computed;
-use Tracker_FormElement_Field_Float;
 use Tracker_FormElement_Field_Numeric;
 use Tracker_FormElementFactory;
 use Tracker_NoChangeException;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\Float\FloatField;
 use Tuleap\Tracker\FormElement\Field\Integer\IntegerField;
 use Tuleap\Tracker\REST\Artifact\ArtifactUpdater;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
@@ -81,7 +81,7 @@ final class CardPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItRaisesExceptionIfFieldIsNotUpdatable(): void
     {
-        $field = $this->createMock(Tracker_FormElement_Field_Float::class);
+        $field = $this->createMock(FloatField::class);
         $field->method('userCanUpdate')
             ->with($this->user)
             ->willReturn(false);
@@ -99,7 +99,7 @@ final class CardPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItUpdatesTheArtifactWithFormattedValueForFloatField(): void
     {
-        $field = $this->createMock(Tracker_FormElement_Field_Float::class);
+        $field = $this->createMock(FloatField::class);
 
         $expected_value = ArtifactValuesRepresentationBuilder::aRepresentation(1001)->withValue(3.14)->build();
 

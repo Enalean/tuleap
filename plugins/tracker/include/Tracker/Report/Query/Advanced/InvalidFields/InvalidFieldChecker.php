@@ -55,7 +55,7 @@ final readonly class InvalidFieldChecker
     public function checkFieldIsValidForComparison(Comparison $comparison, \Tracker_FormElement_Field $field): void
     {
         match ($field::class) {
-            \Tracker_FormElement_Field_Float::class                       => $this->float_field_checker->checkFieldIsValidForComparison($comparison, $field),
+            \Tuleap\Tracker\FormElement\Field\Float\FloatField::class     => $this->float_field_checker->checkFieldIsValidForComparison($comparison, $field),
             \Tuleap\Tracker\FormElement\Field\Integer\IntegerField::class => $this->int_field_checker->checkFieldIsValidForComparison($comparison, $field),
             \Tuleap\Tracker\FormElement\Field\String\StringField::class,
             \Tuleap\Tracker\FormElement\Field\Text\TextField::class       => $this->text_field_checker->checkFieldIsValidForComparison($comparison, $field),

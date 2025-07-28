@@ -26,8 +26,8 @@ use PFUser;
 use Planning_Milestone;
 use Planning_MilestoneFactory;
 use Tracker_Artifact_Changeset;
-use Tracker_FormElement_Field_Float;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\Float\FloatField;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDone;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneFactory;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
@@ -72,7 +72,7 @@ final class VelocityRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestC
     {
         $tracker = $this->createMock(Tracker::class);
 
-        $velocity_field = $this->createMock(Tracker_FormElement_Field_Float::class);
+        $velocity_field = $this->createMock(FloatField::class);
 
         $last_changeset_value = $this->createMock(\Tracker_Artifact_ChangesetValue_Numeric::class);
         $last_changeset_value->method('getNumeric')->willReturn(10);
@@ -131,7 +131,7 @@ final class VelocityRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestC
     {
         $tracker = $this->createMock(Tracker::class);
 
-        $velocity_field = $this->createMock(Tracker_FormElement_Field_Float::class);
+        $velocity_field = $this->createMock(FloatField::class);
 
         $last_changeset = $this->createMock(Tracker_Artifact_Changeset::class);
         $last_changeset->expects($this->never())->method('getValue')->with($velocity_field);
@@ -231,7 +231,7 @@ final class VelocityRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestC
     {
         $tracker = $this->createMock(Tracker::class);
 
-        $velocity_field = $this->createMock(Tracker_FormElement_Field_Float::class);
+        $velocity_field = $this->createMock(FloatField::class);
 
         $last_changeset_value = $this->createMock(\Tracker_Artifact_ChangesetValue_Numeric::class);
         $last_changeset_value->method('getNumeric')->willReturn(10);
@@ -293,7 +293,7 @@ final class VelocityRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestC
         $tracker = $this->createMock(Tracker::class);
         $tracker->method('getName')->willReturn('Sprints');
 
-        $velocity_field = $this->createMock(Tracker_FormElement_Field_Float::class);
+        $velocity_field = $this->createMock(FloatField::class);
 
         $last_changeset_value = $this->createMock(\Tracker_Artifact_ChangesetValue_Numeric::class);
         $last_changeset_value->method('getNumeric')->willReturn(10);
@@ -352,7 +352,7 @@ final class VelocityRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestC
     {
         $tracker = $this->createMock(Tracker::class);
 
-        $velocity_field = $this->createMock(Tracker_FormElement_Field_Float::class);
+        $velocity_field = $this->createMock(FloatField::class);
 
         $last_changeset_value = $this->createMock(\Tracker_Artifact_ChangesetValue_Numeric::class);
         $last_changeset_value->method('getNumeric')->willReturn(10);

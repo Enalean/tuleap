@@ -23,13 +23,14 @@ declare(strict_types=1);
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\GlobalResponseMock;
+use Tuleap\Tracker\FormElement\Field\Float\FloatField;
 
 #[DisableReturnValueGenerationForTestDoubles]
 final class Transition_PostAction_Field_FloatTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     use GlobalResponseMock;
 
-    private Tracker_FormElement_Field_Float&MockObject $field;
+    private FloatField&MockObject $field;
 
     private Transition_PostAction_Field_Float&MockObject $post_action;
 
@@ -38,7 +39,7 @@ final class Transition_PostAction_Field_FloatTest extends \Tuleap\Test\PHPUnit\T
         $value          = 1.5;
         $post_action_id = 9348;
         $transition     = $this->createMock(Transition::class);
-        $this->field    = $this->createMock(Tracker_FormElement_Field_Float::class);
+        $this->field    = $this->createMock(FloatField::class);
         $this->field->method('getId')->willReturn(1131);
 
         $this->post_action = $this->getMockBuilder(Transition_PostAction_Field_Float::class)
@@ -106,7 +107,7 @@ final class Transition_PostAction_Field_FloatTest extends \Tuleap\Test\PHPUnit\T
         $post_action = new Transition_PostAction_Field_Float(
             $this->createMock(Transition::class),
             0,
-            $this->createMock(Tracker_FormElement_Field_Float::class),
+            $this->createMock(FloatField::class),
             0.0
         );
 

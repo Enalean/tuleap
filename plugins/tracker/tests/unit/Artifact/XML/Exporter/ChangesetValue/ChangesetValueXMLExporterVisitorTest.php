@@ -32,11 +32,11 @@ use Tracker_Artifact_ChangesetValue_Float;
 use Tracker_Artifact_ChangesetValue_Integer;
 use Tracker_Artifact_ChangesetValueVisitor;
 use Tracker_FormElement_Field;
-use Tracker_FormElement_Field_Float;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\ArtifactLink\ArtifactLinkChangesetValue;
 use Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValueXMLExporterVisitor;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
+use Tuleap\Tracker\FormElement\Field\Float\FloatField;
 use Tuleap\Tracker\FormElement\Field\Integer\IntegerField;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 
@@ -125,7 +125,7 @@ final class ChangesetValueXMLExporterVisitorTest extends \Tuleap\Test\PHPUnit\Te
         $float_changeset_value = new Tracker_Artifact_ChangesetValue_Float(
             '2',
             $this->changeset,
-            $this->createMock(Tracker_FormElement_Field_Float::class),
+            $this->createMock(FloatField::class),
             false,
             false
         );

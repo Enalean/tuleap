@@ -21,13 +21,13 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\FormElement;
+namespace Tuleap\Tracker\FormElement\Field\Float;
 
+use Override;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use PHPUnit\Framework\MockObject\MockObject;
 use TestHelper;
 use Tracker_Artifact_ChangesetValue_Float;
-use Tracker_FormElement_Field_Float;
 use Tracker_Report_Criteria;
 use Tuleap\GlobalResponseMock;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -42,12 +42,13 @@ use Tuleap\Tracker\Test\Builders\ReportTestBuilder;
 use UserManager;
 
 #[DisableReturnValueGenerationForTestDoubles]
-final class Tracker_FormElement_Field_FloatTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+final class FloatFieldTest extends TestCase
 {
     use GlobalResponseMock;
 
     private UserManager&MockObject $user_manager;
 
+    #[Override]
     protected function setUp(): void
     {
         $this->user_manager = $this->createMock(UserManager::class);
@@ -55,6 +56,7 @@ final class Tracker_FormElement_Field_FloatTest extends TestCase // phpcs:ignore
         UserManager::setInstance($this->user_manager);
     }
 
+    #[Override]
     protected function tearDown(): void
     {
         UserManager::clearInstance();
@@ -80,7 +82,7 @@ final class Tracker_FormElement_Field_FloatTest extends TestCase // phpcs:ignore
             TestHelper::arrayToDar(['id' => 123, 'field_id' => 1, 'value' => '1.003'])
         );
 
-        $float_field = $this->createPartialMock(Tracker_FormElement_Field_Float::class, ['getValueDao']);
+        $float_field = $this->createPartialMock(FloatField::class, ['getValueDao']);
         $float_field->method('getValueDao')->willReturn($value_dao);
 
         self::assertInstanceOf(
@@ -94,7 +96,7 @@ final class Tracker_FormElement_Field_FloatTest extends TestCase // phpcs:ignore
         $value_dao = $this->createMock(FloatValueDao::class);
         $value_dao->method('searchById')->willReturn(TestHelper::emptyDar());
 
-        $float_field = $this->createPartialMock(Tracker_FormElement_Field_Float::class, ['getValueDao']);
+        $float_field = $this->createPartialMock(FloatField::class, ['getValueDao']);
         $float_field->method('getValueDao')->willReturn($value_dao);
 
         self::assertNull($float_field->getChangesetValue(ChangesetTestBuilder::aChangeset(987)->build(), 123, false));
@@ -144,7 +146,7 @@ final class Tracker_FormElement_Field_FloatTest extends TestCase // phpcs:ignore
 
     public function testItSearchOnZeroValue(): void
     {
-        $float_field = $this->createPartialMock(Tracker_FormElement_Field_Float::class, ['isUsed', 'getCriteriaValue']);
+        $float_field = $this->createPartialMock(FloatField::class, ['isUsed', 'getCriteriaValue']);
         $criteria    = new Tracker_Report_Criteria(12, ReportTestBuilder::aPublicReport()->withId(1)->build(), $float_field, 24, false);
 
         $float_field->method('isUsed')->willReturn(true);
@@ -155,7 +157,7 @@ final class Tracker_FormElement_Field_FloatTest extends TestCase // phpcs:ignore
 
     public function testItSearchOnCustomQuery(): void
     {
-        $float_field = $this->createPartialMock(Tracker_FormElement_Field_Float::class, ['isUsed', 'getCriteriaValue']);
+        $float_field = $this->createPartialMock(FloatField::class, ['isUsed', 'getCriteriaValue']);
         $criteria    = new Tracker_Report_Criteria(12, ReportTestBuilder::aPublicReport()->withId(1)->build(), $float_field, 24, false);
 
         $float_field->method('isUsed')->willReturn(true);
@@ -166,7 +168,7 @@ final class Tracker_FormElement_Field_FloatTest extends TestCase // phpcs:ignore
 
     public function testItDoesntSearchOnEmptyString(): void
     {
-        $float_field = $this->createPartialMock(Tracker_FormElement_Field_Float::class, ['isUsed', 'getCriteriaValue']);
+        $float_field = $this->createPartialMock(FloatField::class, ['isUsed', 'getCriteriaValue']);
         $criteria    = new Tracker_Report_Criteria(12, ReportTestBuilder::aPublicReport()->withId(1)->build(), $float_field, 24, false);
 
         $float_field->method('isUsed')->willReturn(true);
@@ -177,7 +179,7 @@ final class Tracker_FormElement_Field_FloatTest extends TestCase // phpcs:ignore
 
     public function testItDoesntSearchOnNullCriteria(): void
     {
-        $float_field = $this->createPartialMock(Tracker_FormElement_Field_Float::class, ['isUsed', 'getCriteriaValue']);
+        $float_field = $this->createPartialMock(FloatField::class, ['isUsed', 'getCriteriaValue']);
         $criteria    = new Tracker_Report_Criteria(12, ReportTestBuilder::aPublicReport()->withId(1)->build(), $float_field, 24, false);
 
         $float_field->method('isUsed')->willReturn(true);
@@ -188,7 +190,7 @@ final class Tracker_FormElement_Field_FloatTest extends TestCase // phpcs:ignore
 
     public function testItFetchCriteriaAndSetValueZero(): void
     {
-        $float_field = $this->createPartialMock(Tracker_FormElement_Field_Float::class, ['getCriteriaValue']);
+        $float_field = $this->createPartialMock(FloatField::class, ['getCriteriaValue']);
         $criteria    = new Tracker_Report_Criteria(12, ReportTestBuilder::aPublicReport()->withId(1)->build(), $float_field, 24, false);
 
         $float_field->setId(1);
@@ -202,7 +204,7 @@ final class Tracker_FormElement_Field_FloatTest extends TestCase // phpcs:ignore
 
     public function testItFetchCriteriaAndLeaveItEmptyValue(): void
     {
-        $float_field = $this->createPartialMock(Tracker_FormElement_Field_Float::class, ['getCriteriaValue']);
+        $float_field = $this->createPartialMock(FloatField::class, ['getCriteriaValue']);
         $criteria    = new Tracker_Report_Criteria(12, ReportTestBuilder::aPublicReport()->withId(1)->build(), $float_field, 24, false);
 
         $float_field->setId(1);
@@ -227,7 +229,7 @@ final class Tracker_FormElement_Field_FloatTest extends TestCase // phpcs:ignore
 
     public function testItDisplaysTheFloatValueInReadOnly(): void
     {
-        $float_field = $this->createPartialMock(Tracker_FormElement_Field_Float::class, ['getArtifactTimeframeHelper']);
+        $float_field = $this->createPartialMock(FloatField::class, ['getArtifactTimeframeHelper']);
 
         $timeframe_helper = $this->createMock(ArtifactTimeframeHelper::class);
         $float_field->expects($this->once())->method('getArtifactTimeframeHelper')->willReturn($timeframe_helper);
@@ -247,7 +249,7 @@ final class Tracker_FormElement_Field_FloatTest extends TestCase // phpcs:ignore
 
     public function testItDisplaysTheFloatValue0InReadOnly(): void
     {
-        $float_field = $this->createPartialMock(Tracker_FormElement_Field_Float::class, ['getArtifactTimeframeHelper']);
+        $float_field = $this->createPartialMock(FloatField::class, ['getArtifactTimeframeHelper']);
 
         $timeframe_helper = $this->createMock(ArtifactTimeframeHelper::class);
         $float_field->expects($this->once())->method('getArtifactTimeframeHelper')->willReturn($timeframe_helper);
