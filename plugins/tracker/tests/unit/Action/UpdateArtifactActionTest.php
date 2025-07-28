@@ -34,11 +34,16 @@ use Tracker_FormElement_Field_Computed;
 use Tracker_FormElementFactory;
 use Tracker_HierarchyFactory;
 use Tracker_IDisplayTrackerLayout;
+use Tuleap\Dashboard\Project\ProjectDashboard;
+use Tuleap\Dashboard\Project\ProjectDashboardRetriever;
 use Tuleap\GlobalResponseMock;
 use Tuleap\Mapper\ValinorMapperBuilderFactory;
+use Tuleap\Option\Option;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
+use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\ProjectByIDFactoryStub;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\Comment\CommentFormatIdentifier;
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\CollectionOfForwardLinks;
@@ -82,6 +87,8 @@ final class UpdateArtifactActionTest extends TestCase
     private Tracker_HierarchyFactory&MockObject $hierarchy_factory;
     private RetrieveForwardLinksStub $forward_links_retriever;
     private RetrieveViewableArtifactStub $artifact_retriever;
+    private ProjectDashboardRetriever&\PHPUnit\Framework\MockObject\Stub $project_dashboard_retriever;
+    private \Project $project;
 
     #[\Override]
     protected function setUp(): void
@@ -117,11 +124,13 @@ final class UpdateArtifactActionTest extends TestCase
         $this->us_computed_field->method('fetchCardValue')->with($this->user_story)->willReturn(23);
         $this->us_computed_field->method('getName')->willReturn(Tracker::REMAINING_EFFORT_FIELD_NAME);
 
-        $this->forward_links_retriever = RetrieveForwardLinksStub::withLinks(new CollectionOfForwardLinks([
+        $this->forward_links_retriever     = RetrieveForwardLinksStub::withLinks(new CollectionOfForwardLinks([
             ForwardLinkProxy::buildFromData(1, ArtifactLinkField::TYPE_IS_CHILD),
             ForwardLinkProxy::buildFromData(2, ArtifactLinkField::NO_TYPE),
         ]));
-        $this->artifact_retriever      = RetrieveViewableArtifactStub::withNoArtifact();
+        $this->artifact_retriever          = RetrieveViewableArtifactStub::withNoArtifact();
+        $this->project_dashboard_retriever = $this->createStub(ProjectDashboardRetriever::class);
+        $this->project                     = ProjectTestBuilder::aProject()->withId(267)->withUnixName('myproject')->build();
     }
 
     private function process(): void
@@ -150,6 +159,8 @@ final class UpdateArtifactActionTest extends TestCase
                 new NewArtifactLinkChangesetValueBuilder($this->forward_links_retriever),
                 new NewArtifactLinkInitialChangesetValueBuilder(),
             ),
+            $this->project_dashboard_retriever,
+            ProjectByIDFactoryStub::buildWithoutProject()
         );
         $action->process($tracker_layout, $this->request, $this->user);
     }
@@ -452,6 +463,8 @@ final class UpdateArtifactActionTest extends TestCase
                 new NewArtifactLinkChangesetValueBuilder(RetrieveForwardLinksStub::withoutLinks()),
                 new NewArtifactLinkInitialChangesetValueBuilder(),
             ),
+            $this->project_dashboard_retriever,
+            ProjectByIDFactoryStub::buildWith($this->project),
         );
         return $action->getRedirectUrlAfterArtifactUpdate($this->request);
     }
@@ -489,6 +502,17 @@ final class UpdateArtifactActionTest extends TestCase
             ->build();
         $redirect_uri  = $this->getRedirectUrl();
         $this->assertEquals('/my/?tracker=' . self::TRACKER_ID . '&dashboard_id=123', $redirect_uri->toUrl());
+    }
+
+    public function testItReturnsOnProjectDashboardWhenDashboardIdIsProvided(): void
+    {
+        $project_dashboard = new ProjectDashboard(1, (int) $this->project->getID(), 'My dashboard');
+        $this->project_dashboard_retriever->method('getProjectDashboardById')->willReturn(Option::fromValue($project_dashboard));
+        $this->request = HTTPRequestBuilder::get()->withParam('func', 'artifact-update')
+            ->withParam('project-dashboard-id', '456')
+            ->build();
+        $redirect_uri  = $this->getRedirectUrl();
+        $this->assertEquals('/projects/myproject/?tracker=' . self::TRACKER_ID . '&dashboard_id=456', $redirect_uri->toUrl());
     }
 
     private function assertURIHasArgument(string $url, string $argument, string $argument_value): void

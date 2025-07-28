@@ -77,6 +77,8 @@ use TrackerFactory;
 use trackerPlugin;
 use TransitionFactory;
 use Tuleap;
+use Tuleap\Dashboard\Project\ProjectDashboardRetriever;
+use Tuleap\Dashboard\Widget\DashboardWidgetDao;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\JSONResponseBuilder;
@@ -179,6 +181,7 @@ use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionExtractor;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
 use Tuleap\Tracker\Workflow\ValidValuesAccordingToTransitionsRetriever;
 use Tuleap\Tracker\Workflow\WorkflowUpdateChecker;
+use Tuleap\Widget\WidgetFactory;
 use User_ForgeUserGroupPermissionsDao;
 use User_ForgeUserGroupPermissionsManager;
 use UserManager;
@@ -909,6 +912,13 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
                 $this->checkIsAnAcceptableRequestForTrackerViewArtifactManipulation($request);
                 $artifact_factory     = $this->getArtifactFactory();
                 $form_element_factory = $this->getFormElementFactory();
+                $widget_dao           = new DashboardWidgetDao(
+                    new WidgetFactory(
+                        UserManager::instance(),
+                        new User_ForgeUserGroupPermissionsManager(new User_ForgeUserGroupPermissionsDao()),
+                        EventManager::instance(),
+                    )
+                );
                 $action               = new UpdateArtifactAction(
                     $this,
                     $form_element_factory,
@@ -934,6 +944,8 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
                         ),
                         new NewArtifactLinkInitialChangesetValueBuilder(),
                     ),
+                    new ProjectDashboardRetriever(new Tuleap\Dashboard\Project\ProjectDashboardDao($widget_dao)),
+                    ProjectManager::instance()
                 );
                 $action->process($layout, $request, $current_user);
                 break;

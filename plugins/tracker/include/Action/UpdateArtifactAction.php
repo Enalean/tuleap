@@ -33,8 +33,11 @@ use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_Computed;
 use Tracker_FormElementFactory;
 use Tracker_IDisplayTrackerLayout;
+use Tuleap\Dashboard\Project\ProjectDashboard;
+use Tuleap\Dashboard\Project\ProjectDashboardRetriever;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\NeverThrow\Fault;
+use Tuleap\Project\ProjectByIDFactory;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\ArtifactDoesNotExistFault;
 use Tuleap\Tracker\Artifact\Changeset\Comment\NewComment;
@@ -62,6 +65,8 @@ final readonly class UpdateArtifactAction
         private ArtifactReverseLinksUpdater $artifact_updater,
         private RetrieveUserPermissionOnArtifacts $user_permission_on_artifacts,
         private BuildChangesetValuesContainer $changeset_values_container_builder,
+        private ProjectDashboardRetriever $project_dashboard_retriever,
+        private ProjectByIDFactory $project_by_id_factory,
     ) {
     }
 
@@ -204,24 +209,32 @@ final readonly class UpdateArtifactAction
 
     public function getRedirectUrlAfterArtifactUpdate(Codendi_Request $request): Tracker_Artifact_Redirect
     {
-        $stay            = $request->get('submit_and_stay');
-        $from_aid        = $request->get('from_aid');
-        $my_dashboard_id = $request->get('my-dashboard-id');
+        $stay                 = $request->get('submit_and_stay');
+        $from_aid             = $request->get('from_aid');
+        $my_dashboard_id      = $request->get('my-dashboard-id');
+        $project_dashboard_id = $request->get('project-dashboard-id');
 
         $redirect                   = new Tracker_Artifact_Redirect();
         $redirect->mode             = Tracker_Artifact_Redirect::STATE_SUBMIT;
         $redirect->base_url         = TRACKER_BASE_URL;
-        $redirect->query_parameters = $this->calculateRedirectParams($stay, $from_aid, $my_dashboard_id);
+        $redirect->query_parameters = $this->calculateRedirectParams($stay, $from_aid, $my_dashboard_id, $project_dashboard_id);
         if ($stay) {
             $redirect->mode = Tracker_Artifact_Redirect::STATE_STAY;
         } elseif ($my_dashboard_id !== false) {
             $redirect->base_url = '/my/';
             $redirect->mode     = Tracker_Artifact_Redirect::TO_MY_DASHBOARD;
+        } elseif ($project_dashboard_id !== false) {
+            $this->project_dashboard_retriever
+                ->getProjectDashboardById((int) $project_dashboard_id)
+                ->match(
+                    fn (ProjectDashboard $dashboard) => $this->redirectToProjectDashboard($dashboard, $redirect),
+                    fn () => $this->fallbackRedirectOnTracker($redirect)
+                );
         }
         return $redirect;
     }
 
-    private function calculateRedirectParams($stay, $from_aid, string|bool $my_dashboard_id): array
+    private function calculateRedirectParams($stay, $from_aid, string|bool $my_dashboard_id, string|bool $project_dashboard_id): array
     {
         $redirect_params = [];
         if ($stay) {
@@ -235,7 +248,24 @@ final readonly class UpdateArtifactAction
         if ($my_dashboard_id !== false) {
             $redirect_params['dashboard_id'] = $my_dashboard_id;
         }
+        if ($project_dashboard_id !== false) {
+            $redirect_params['dashboard_id'] = $project_dashboard_id;
+        }
         return array_filter($redirect_params);
+    }
+
+    private function redirectToProjectDashboard(
+        ProjectDashboard $dashboard,
+        Tracker_Artifact_Redirect $redirect,
+    ): void {
+        $project            = $this->project_by_id_factory->getProjectById($dashboard->getProjectId());
+        $redirect->base_url = '/projects/' . urlencode($project->getUnixName()) . '/';
+        $redirect->mode     = Tracker_Artifact_Redirect::TO_PROJECT_DASHBOARD;
+    }
+
+    private function fallbackRedirectOnTracker(Tracker_Artifact_Redirect $redirect): void
+    {
+        $redirect->mode = Tracker_Artifact_Redirect::STATE_SUBMIT;
     }
 
     private function sendAjaxCardsUpdateInfo(PFUser $current_user): void
