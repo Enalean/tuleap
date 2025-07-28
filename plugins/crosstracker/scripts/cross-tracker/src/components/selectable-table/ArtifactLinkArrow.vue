@@ -19,7 +19,7 @@
   -->
 
 <template>
-    <svg class="arrow" v-bind:style="svg_styling">
+    <svg class="arrow" v-bind:style="svg_styling" data-test="link-arrow">
         <path class="path" v-bind:d="path" />
     </svg>
 </template>
