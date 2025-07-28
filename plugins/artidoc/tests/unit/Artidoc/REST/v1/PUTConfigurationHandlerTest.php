@@ -104,7 +104,7 @@ final class PUTConfigurationHandlerTest extends TestCase
             $this->tracker_checker,
             new SuitableFieldRetriever(
                 $this->field_retriever,
-                RetrieveSemanticDescriptionFieldStub::withNoField(),
+                RetrieveSemanticDescriptionFieldStub::build(),
                 RetrieveSemanticTitleFieldStub::build(),
             ),
         );

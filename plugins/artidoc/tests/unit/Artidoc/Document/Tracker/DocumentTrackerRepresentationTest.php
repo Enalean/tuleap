@@ -38,12 +38,17 @@ use Tuleap\Tracker\Tracker;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DocumentTrackerRepresentationTest extends TestCase
 {
+    private const int TRACKER_ID = 101;
     private Tracker $tracker;
 
     #[\Override]
     protected function setUp(): void
     {
-        $this->tracker = TrackerTestBuilder::aTracker()->withId(101)->withName('Bugs')->withProject(ProjectTestBuilder::aProject()->withId(101)->build())->build();
+        $this->tracker = TrackerTestBuilder::aTracker()
+            ->withId(self::TRACKER_ID)
+            ->withName('Bugs')
+            ->withProject(ProjectTestBuilder::aProject()->withId(132)->build())
+            ->build();
     }
 
     public function testIdAndLabelAreExposed(): void
@@ -51,12 +56,12 @@ final class DocumentTrackerRepresentationTest extends TestCase
         $representation = DocumentTrackerRepresentation::fromTracker(
             GetFileUploadDataStub::withoutField(),
             RetrieveSemanticTitleFieldStub::build(),
-            RetrieveSemanticDescriptionFieldStub::withNoField(),
+            RetrieveSemanticDescriptionFieldStub::build(),
             $this->tracker,
             UserTestBuilder::buildWithDefaults(),
         );
 
-        self::assertSame(101, $representation->id);
+        self::assertSame(self::TRACKER_ID, $representation->id);
         self::assertSame('Bugs', $representation->label);
     }
 
@@ -65,7 +70,7 @@ final class DocumentTrackerRepresentationTest extends TestCase
         $representation = DocumentTrackerRepresentation::fromTracker(
             GetFileUploadDataStub::withoutField(),
             RetrieveSemanticTitleFieldStub::build(),
-            RetrieveSemanticDescriptionFieldStub::withNoField(),
+            RetrieveSemanticDescriptionFieldStub::build(),
             $this->tracker,
             UserTestBuilder::buildWithDefaults(),
         );
@@ -78,7 +83,7 @@ final class DocumentTrackerRepresentationTest extends TestCase
         $representation = DocumentTrackerRepresentation::fromTracker(
             GetFileUploadDataStub::withoutField(),
             RetrieveSemanticTitleFieldStub::build()->withTitleField($this->tracker, TextFieldBuilder::aTextField(1004)->build()),
-            RetrieveSemanticDescriptionFieldStub::withNoField(),
+            RetrieveSemanticDescriptionFieldStub::build(),
             $this->tracker,
             UserTestBuilder::buildWithDefaults(),
         );
@@ -91,7 +96,7 @@ final class DocumentTrackerRepresentationTest extends TestCase
         $representation = DocumentTrackerRepresentation::fromTracker(
             GetFileUploadDataStub::withoutField(),
             RetrieveSemanticTitleFieldStub::build()->withTitleField($this->tracker, $this->getStringField(1004, false)),
-            RetrieveSemanticDescriptionFieldStub::withNoField(),
+            RetrieveSemanticDescriptionFieldStub::build(),
             $this->tracker,
             UserTestBuilder::buildWithDefaults(),
         );
@@ -104,7 +109,7 @@ final class DocumentTrackerRepresentationTest extends TestCase
         $representation = DocumentTrackerRepresentation::fromTracker(
             GetFileUploadDataStub::withoutField(),
             RetrieveSemanticTitleFieldStub::build()->withTitleField($this->tracker, $this->getStringField(1004, true)),
-            RetrieveSemanticDescriptionFieldStub::withNoField(),
+            RetrieveSemanticDescriptionFieldStub::build(),
             $this->tracker,
             UserTestBuilder::buildWithDefaults(),
         );
@@ -119,7 +124,7 @@ final class DocumentTrackerRepresentationTest extends TestCase
         $representation = DocumentTrackerRepresentation::fromTracker(
             GetFileUploadDataStub::withoutField(),
             RetrieveSemanticTitleFieldStub::build(),
-            RetrieveSemanticDescriptionFieldStub::withNoField(),
+            RetrieveSemanticDescriptionFieldStub::build(),
             $this->tracker,
             UserTestBuilder::buildWithDefaults(),
         );
@@ -132,7 +137,7 @@ final class DocumentTrackerRepresentationTest extends TestCase
         $representation = DocumentTrackerRepresentation::fromTracker(
             GetFileUploadDataStub::withoutField(),
             RetrieveSemanticTitleFieldStub::build()->withTitleField($this->tracker, $this->getStringField(1004, true)),
-            RetrieveSemanticDescriptionFieldStub::withTextField($this->getTextField(1005, false)),
+            RetrieveSemanticDescriptionFieldStub::build()->withDescriptionField($this->getTextField(1005, false)),
             $this->tracker,
             UserTestBuilder::buildWithDefaults(),
         );
@@ -145,7 +150,7 @@ final class DocumentTrackerRepresentationTest extends TestCase
         $representation = DocumentTrackerRepresentation::fromTracker(
             GetFileUploadDataStub::withoutField(),
             RetrieveSemanticTitleFieldStub::build()->withTitleField($this->tracker, $this->getStringField(1004, true)),
-            RetrieveSemanticDescriptionFieldStub::withTextField($this->getTextField(1005, true)),
+            RetrieveSemanticDescriptionFieldStub::build()->withDescriptionField($this->getTextField(1005, true)),
             $this->tracker,
             UserTestBuilder::buildWithDefaults(),
         );
@@ -160,7 +165,7 @@ final class DocumentTrackerRepresentationTest extends TestCase
         $representation = DocumentTrackerRepresentation::fromTracker(
             GetFileUploadDataStub::withoutField(),
             RetrieveSemanticTitleFieldStub::build()->withTitleField($this->tracker, $this->getStringField(1004, true)),
-            RetrieveSemanticDescriptionFieldStub::withTextField($this->getTextField(1005, true)),
+            RetrieveSemanticDescriptionFieldStub::build()->withDescriptionField($this->getTextField(1005, true)),
             $this->tracker,
             UserTestBuilder::buildWithDefaults(),
         );
@@ -173,7 +178,7 @@ final class DocumentTrackerRepresentationTest extends TestCase
         $representation = DocumentTrackerRepresentation::fromTracker(
             GetFileUploadDataStub::withField($this->getFileField(1006, false)),
             RetrieveSemanticTitleFieldStub::build()->withTitleField($this->tracker, $this->getStringField(1004, true)),
-            RetrieveSemanticDescriptionFieldStub::withTextField($this->getTextField(1005, true)),
+            RetrieveSemanticDescriptionFieldStub::build()->withDescriptionField($this->getTextField(1005, true)),
             $this->tracker,
             UserTestBuilder::buildWithDefaults(),
         );
@@ -186,7 +191,7 @@ final class DocumentTrackerRepresentationTest extends TestCase
         $representation = DocumentTrackerRepresentation::fromTracker(
             GetFileUploadDataStub::withField($this->getFileField(1006, true)),
             RetrieveSemanticTitleFieldStub::build()->withTitleField($this->tracker, $this->getStringField(1004, true)),
-            RetrieveSemanticDescriptionFieldStub::withTextField($this->getTextField(1005, true)),
+            RetrieveSemanticDescriptionFieldStub::build()->withDescriptionField($this->getTextField(1005, true)),
             $this->tracker,
             UserTestBuilder::buildWithDefaults(),
         );
@@ -221,6 +226,7 @@ final class DocumentTrackerRepresentationTest extends TestCase
     {
         $field = $this->createMock(TextField::class);
         $field->method('getId')->willReturn($id);
+        $field->method('getTrackerId')->willReturn(self::TRACKER_ID);
         $field->method('getLabel')->willReturn('A Text Field');
         $field->method('userCanSubmit')->willReturn($submittable);
         $field->method('getDefaultRESTValue')->willReturn(['format' => 'html', 'content' => '']);

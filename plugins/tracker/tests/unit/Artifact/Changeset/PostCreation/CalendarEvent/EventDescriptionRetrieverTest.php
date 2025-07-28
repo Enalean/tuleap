@@ -24,6 +24,7 @@ namespace Tuleap\Tracker\Artifact\Changeset\PostCreation\CalendarEvent;
 
 use ColinODell\PsrTestLogger\TestLogger;
 use PFUser;
+use PHPUnit\Framework\Attributes\TestWith;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue_Text;
 use Tuleap\ForgeConfigSandbox;
@@ -31,39 +32,50 @@ use Tuleap\NeverThrow\Result;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueTextTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\TextFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\Semantic\Description\RetrieveSemanticDescriptionFieldStub;
+use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class EventDescriptionRetrieverTest extends TestCase
 {
     use ForgeConfigSandbox;
 
-    private const USER_CANNOT_READ = false;
+    private const bool USER_CANNOT_READ = false;
+    private const int ARTIFACT_ID       = 777;
 
     private readonly Tracker_Artifact_Changeset $changeset;
     private readonly PFUser $recipient;
+    private Tracker $tracker;
 
     protected function setUp(): void
     {
-        $this->changeset = ChangesetTestBuilder::aChangeset(1001)->build();
+        $this->tracker   = TrackerTestBuilder::aTracker()
+            ->withId(9)
+            ->withProject(ProjectTestBuilder::aProject()->withId(101)->build())
+            ->build();
+        $this->changeset = ChangesetTestBuilder::aChangeset(1001)
+            ->ofArtifact(
+                ArtifactTestBuilder::anArtifact(self::ARTIFACT_ID)->inTracker($this->tracker)->build(),
+            )
+            ->build();
         $this->recipient = UserTestBuilder::buildWithDefaults();
 
         \ForgeConfig::set('sys_default_domain', 'example.com');
     }
 
-    /**
-     * @testWith [true]
-     *           [false]
-     */
+
+    #[TestWith([true])]
+    #[TestWith([false])]
     public function testDescriptionContainsOnlyLinkToArtifactWhenTrackerDoesNotHaveDescriptionSemantic(bool $should_check_permissions): void
     {
         $logger    = new TestLogger();
         $retriever = new EventDescriptionRetriever(
-            RetrieveSemanticDescriptionFieldStub::withNoField(),
+            RetrieveSemanticDescriptionFieldStub::build(),
         );
 
         $result = $retriever->retrieveEventDescription(
@@ -77,7 +89,7 @@ final class EventDescriptionRetrieverTest extends TestCase
         assert($result->value instanceof CalendarEventData);
         self::assertSame(
             <<<EOS
-            https://example.com/plugins/tracker/?aid=171
+            https://example.com/plugins/tracker/?aid=777
             EOS,
             $result->value->description
         );
@@ -88,7 +100,7 @@ final class EventDescriptionRetrieverTest extends TestCase
     {
         $logger    = new TestLogger();
         $retriever = new EventDescriptionRetriever(
-            RetrieveSemanticDescriptionFieldStub::withTextField(
+            RetrieveSemanticDescriptionFieldStub::build()->withDescriptionField(
                 $this->buildDescriptionFieldWithValue('Ho ho ho, Merry Christmas!', self::USER_CANNOT_READ),
             ),
         );
@@ -106,23 +118,21 @@ final class EventDescriptionRetrieverTest extends TestCase
         assert($result->value instanceof CalendarEventData);
         self::assertSame(
             <<<EOS
-            https://example.com/plugins/tracker/?aid=171
+            https://example.com/plugins/tracker/?aid=777
             EOS,
             $result->value->description
         );
         self::assertTrue($logger->hasDebug('User cannot read description'));
     }
 
-    /**
-     * @testWith [false, false]
-     *           [true, false]
-     *           [true, true]
-     */
+    #[TestWith([false, false])]
+    #[TestWith([true, false])]
+    #[TestWith([true, true])]
     public function testDescriptionContainsOnlyLinkToArtifactWhenNoValueForDescription(bool $user_can_read, bool $should_check_permissions): void
     {
         $logger    = new TestLogger();
         $retriever = new EventDescriptionRetriever(
-            RetrieveSemanticDescriptionFieldStub::withTextField(
+            RetrieveSemanticDescriptionFieldStub::build()->withDescriptionField(
                 $this->buildDescriptionFieldWithValue(null, $user_can_read),
             ),
         );
@@ -142,23 +152,21 @@ final class EventDescriptionRetrieverTest extends TestCase
         );
         self::assertSame(
             <<<EOS
-            https://example.com/plugins/tracker/?aid=171
+            https://example.com/plugins/tracker/?aid=777
             EOS,
             $result->value->description
         );
         self::assertTrue($logger->hasDebug('No value for description'));
     }
 
-    /**
-     * @testWith [false, false]
-     *           [true, false]
-     *           [true, true]
-     */
+    #[TestWith([false, false])]
+    #[TestWith([true, false])]
+    #[TestWith([true, true])]
     public function testDescriptionContainsLinkToArtifactPlusArtifactDescription(bool $user_can_read, bool $should_check_permissions): void
     {
         $logger    = new TestLogger();
         $retriever = new EventDescriptionRetriever(
-            RetrieveSemanticDescriptionFieldStub::withTextField(
+            RetrieveSemanticDescriptionFieldStub::build()->withDescriptionField(
                 $this->buildDescriptionFieldWithValue('Ho ho ho, Merry Christmas!', $user_can_read),
             ),
         );
@@ -178,7 +186,7 @@ final class EventDescriptionRetrieverTest extends TestCase
         );
         self::assertSame(
             <<<EOS
-            https://example.com/plugins/tracker/?aid=171
+            https://example.com/plugins/tracker/?aid=777
             Ho ho ho, Merry Christmas!
             EOS,
             $result->value->description
@@ -189,9 +197,7 @@ final class EventDescriptionRetrieverTest extends TestCase
     private function buildDescriptionFieldWithValue(?string $value, bool $user_can_read): \Tuleap\Tracker\FormElement\Field\Text\TextField
     {
         $description_field = TextFieldBuilder::aTextField(1)
-            ->inTracker(TrackerTestBuilder::aTracker()->withProject(
-                ProjectTestBuilder::aProject()->withId(101)->build()
-            )->build())
+            ->inTracker($this->tracker)
             ->withReadPermission($this->recipient, $user_can_read)->build();
 
         if ($value !== null) {

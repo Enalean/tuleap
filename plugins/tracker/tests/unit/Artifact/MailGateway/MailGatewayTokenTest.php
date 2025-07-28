@@ -89,7 +89,7 @@ final class MailGatewayTokenTest extends TestCase
         $notifier->method('sendErrorMailTrackerGeneric');
         $notifier->method('sendErrorMailInsufficientPermissionUpdate');
 
-        $retrieve_description_field = RetrieveSemanticDescriptionFieldStub::withNoField();
+        $retrieve_description_field = RetrieveSemanticDescriptionFieldStub::build();
 
         $this->mailgateway = new Tracker_Artifact_MailGateway_TokenMailGateway(
             $incoming_message_factory,

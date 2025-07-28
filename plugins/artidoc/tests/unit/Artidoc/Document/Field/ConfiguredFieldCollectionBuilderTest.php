@@ -64,7 +64,7 @@ final class ConfiguredFieldCollectionBuilderTest extends TestCase
             RetrieveConfiguredFieldStub::withoutConfiguredFields(),
             new SuitableFieldRetriever(
                 RetrieveUsedFieldsStub::withNoFields(),
-                RetrieveSemanticDescriptionFieldStub::withNoField(),
+                RetrieveSemanticDescriptionFieldStub::build(),
                 RetrieveSemanticTitleFieldStub::build(),
             ),
         );
@@ -86,7 +86,7 @@ final class ConfiguredFieldCollectionBuilderTest extends TestCase
                         ->inTracker($this->tracker)
                         ->build()
                 ),
-                RetrieveSemanticDescriptionFieldStub::withNoField(),
+                RetrieveSemanticDescriptionFieldStub::build(),
                 RetrieveSemanticTitleFieldStub::build(),
             ),
         );
@@ -117,7 +117,7 @@ final class ConfiguredFieldCollectionBuilderTest extends TestCase
                         ->inTracker($this->tracker)
                         ->build(),
                 ),
-                RetrieveSemanticDescriptionFieldStub::withNoField(),
+                RetrieveSemanticDescriptionFieldStub::build(),
                 RetrieveSemanticTitleFieldStub::build(),
             )
         );
