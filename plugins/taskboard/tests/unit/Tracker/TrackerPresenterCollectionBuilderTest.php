@@ -31,9 +31,11 @@ use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle\SearchMappedFie
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\MappedFieldRetriever;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
-use Tuleap\Tracker\FormElement\Field\Text\TextField;
+use Tuleap\Tracker\Semantic\Contributor\TrackerSemanticContributor;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ArtifactLinkFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\TextFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\FormElement\Field\ListFields\RetrieveUsedListFieldStub;
 use Tuleap\Tracker\Test\Stub\Semantic\Title\RetrieveSemanticTitleFieldStub;
@@ -70,7 +72,7 @@ final class TrackerPresenterCollectionBuilderTest extends \Tuleap\Test\PHPUnit\T
     #[\Override]
     protected function tearDown(): void
     {
-        \Tuleap\Tracker\Semantic\Contributor\TrackerSemanticContributor::clearInstances();
+        TrackerSemanticContributor::clearInstances();
     }
 
     /** @return TrackerPresenter[] */
@@ -181,8 +183,8 @@ final class TrackerPresenterCollectionBuilderTest extends \Tuleap\Test\PHPUnit\T
         $this->field_retriever     = RetrieveUsedListFieldStub::withFields($field_01, $field_02, $field_03, $field_04);
 
         $this->mockSemanticTitle($first_taskboard_tracker, false, true);
-        $this->mockSemanticTitle($second_taskboard_tracker, true, true);
-        $this->mockSemanticTitle($third_taskboard_tracker, true, true, \Tuleap\Tracker\FormElement\Field\String\StringField::class);
+        $this->mockSemanticTitleAsTextField($second_taskboard_tracker);
+        $this->mockSemanticTitle($third_taskboard_tracker, true, true);
         $this->mockSemanticTitle($fourth_taskboard_tracker, true, true);
 
         $this->mockSemanticContributor($first_taskboard_tracker, false, false);
@@ -275,24 +277,30 @@ final class TrackerPresenterCollectionBuilderTest extends \Tuleap\Test\PHPUnit\T
         return $sb_field;
     }
 
-    /**
-     * @param class-string $classname
-     */
     private function mockSemanticTitle(
         TaskboardTracker $taskboard_tracker,
         bool $is_semantic_set,
         bool $can_user_update,
-        string $classname = TextField::class,
     ): void {
         if (! $is_semantic_set) {
             return;
         }
 
-        $title_field = $this->createMock($classname);
-        $title_field->method('getId')->willReturn(1533);
-        $title_field->method('userCanUpdate')->willReturn($can_user_update);
-        assert($title_field instanceof TextField);
-        $this->title_field_retriever->withTitleField($taskboard_tracker->getTracker(), $title_field);
+        $title_field = StringFieldBuilder::aStringField(1213)
+            ->withUpdatePermission($this->user, $can_user_update)
+            ->inTracker($taskboard_tracker->getTracker())
+            ->build();
+        $this->title_field_retriever->withTitleField($title_field);
+    }
+
+    private function mockSemanticTitleAsTextField(TaskboardTracker $taskboard_tracker): void
+    {
+        $this->title_field_retriever->withTitleField(
+            TextFieldBuilder::aTextField(1533)
+                ->inTracker($taskboard_tracker->getTracker())
+                ->withUpdatePermission($this->user, true)
+                ->build()
+        );
     }
 
     /**
@@ -304,8 +312,8 @@ final class TrackerPresenterCollectionBuilderTest extends \Tuleap\Test\PHPUnit\T
         bool $can_user_update,
         string $classname = \Tracker_FormElement_Field_Selectbox::class,
     ): void {
-        $semantic_contributor = $this->createMock(\Tuleap\Tracker\Semantic\Contributor\TrackerSemanticContributor::class);
-        \Tuleap\Tracker\Semantic\Contributor\TrackerSemanticContributor::setInstance($semantic_contributor, $taskboard_tracker->getTracker());
+        $semantic_contributor = $this->createMock(TrackerSemanticContributor::class);
+        TrackerSemanticContributor::setInstance($semantic_contributor, $taskboard_tracker->getTracker());
 
         $contributor_field = null;
 

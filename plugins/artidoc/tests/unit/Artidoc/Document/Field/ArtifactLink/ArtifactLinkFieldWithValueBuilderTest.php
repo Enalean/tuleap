@@ -127,7 +127,7 @@ final class ArtifactLinkFieldWithValueBuilderTest extends TestCase
 
         $builder = new ArtifactLinkFieldWithValueBuilder(
             $user,
-            RetrieveSemanticTitleFieldStub::build()->withTitleField($tracker, $title_field),
+            RetrieveSemanticTitleFieldStub::build()->withTitleField($title_field),
             RetrieveSemanticStatusStub::build()->withSemanticStatus(new TrackerSemanticStatus($tracker, $status_field, [$open_value->getId()])),
             RetrieveTypeFromShortnameStub::build()
                 ->withTypePresenter(ArtifactLinkField::TYPE_IS_CHILD, new TypeIsChildPresenter())

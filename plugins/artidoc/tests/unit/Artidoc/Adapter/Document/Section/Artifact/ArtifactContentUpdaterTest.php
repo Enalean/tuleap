@@ -89,7 +89,9 @@ final class ArtifactContentUpdaterTest extends TestCase
         $this->artifact_retriever         = RetrieveArtifactStub::withArtifacts($artifact);
         $this->file_upload_data_provider  = GetFileUploadDataStub::withoutField();
         $this->retrieve_description_field = RetrieveSemanticDescriptionFieldStub::build()->withDescriptionField($this->updatable_description_field);
-        $this->retrieve_title_field       = RetrieveSemanticTitleFieldStub::build()->withTitleField($this->tracker, $this->updatable_title_field);
+        $this->retrieve_title_field       = RetrieveSemanticTitleFieldStub::build()->withTitleField(
+            $this->updatable_title_field
+        );
     }
 
     private function getUpdater(UpdateLevelStub $update_level, HandlePUTStub $update_artifact): ArtifactContentUpdater
@@ -159,7 +161,7 @@ final class ArtifactContentUpdaterTest extends TestCase
     {
         $update_artifact = HandlePUTStub::build();
         $update_level    = UpdateLevelStub::build();
-        $this->retrieve_title_field->withTitleField($this->tracker, $this->readonly_title_field);
+        $this->retrieve_title_field->withTitleField($this->readonly_title_field);
 
         $updater = $this->getUpdater($update_level, $update_artifact);
 
@@ -294,7 +296,7 @@ final class ArtifactContentUpdaterTest extends TestCase
     {
         $update_artifact = HandlePUTStub::build();
         $update_level    = UpdateLevelStub::build();
-        $this->retrieve_title_field->withTitleField($this->tracker, $this->getTextField(self::TITLE_ID, true));
+        $this->retrieve_title_field->withTitleField($this->getTextField(self::TITLE_ID, true));
 
         $updater = $this->getUpdater($update_level, $update_artifact);
 

@@ -35,7 +35,7 @@ final class CachedSemanticTitleFieldRetrieverTest extends TestCase
     {
         $tracker              = TrackerTestBuilder::aTracker()->withId(12)->build();
         $title_field          = TextFieldBuilder::aTextField(1002)->inTracker($tracker)->build();
-        $retrieve_title_field = RetrieveSemanticTitleFieldStub::build()->withTitleField($tracker, $title_field);
+        $retrieve_title_field = RetrieveSemanticTitleFieldStub::build()->withTitleField($title_field);
 
         $cache = new CachedSemanticTitleFieldRetriever($retrieve_title_field);
 

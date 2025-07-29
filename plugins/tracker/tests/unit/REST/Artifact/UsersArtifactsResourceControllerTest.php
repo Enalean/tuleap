@@ -147,7 +147,9 @@ final class UsersArtifactsResourceControllerTest extends \Tuleap\Test\PHPUnit\Te
 
         $my_artifacts_collection = new MyArtifactsCollection(
             $tracker_factory,
-            RetrieveSemanticTitleFieldStub::build()->withTitleField($tracker, StringFieldBuilder::aStringField(1001)->withReadPermission($this->current_user, true)->build()),
+            RetrieveSemanticTitleFieldStub::build()->withTitleField(
+                StringFieldBuilder::aStringField(1001)->withReadPermission($this->current_user, true)->build()
+            ),
         );
         $my_artifacts_collection->setTotalNumberOfArtifacts(2);
         $my_artifacts_collection->setTracker($tracker_id, $this->current_user);

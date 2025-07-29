@@ -84,7 +84,9 @@ final class ArtifactContentCreatorTest extends TestCase
         $this->tracker_retriever          = RetrieveConfiguredTrackerStub::withTracker($this->tracker);
         $this->file_upload_data_provider  = GetFileUploadDataStub::withoutField();
         $this->retrieve_description_field = RetrieveSemanticDescriptionFieldStub::build()->withDescriptionField($this->submitable_description_field);
-        $this->retrieve_title_field       = RetrieveSemanticTitleFieldStub::build()->withTitleField($this->tracker, $this->submitable_title_field);
+        $this->retrieve_title_field       = RetrieveSemanticTitleFieldStub::build()->withTitleField(
+            $this->submitable_title_field
+        );
     }
 
     private function getCreator(CreateArtifactStub $create_artifact): ArtifactContentCreator
@@ -146,7 +148,7 @@ final class ArtifactContentCreatorTest extends TestCase
     public function testFaultWhenTitleFieldIsNotSubmittable(): void
     {
         $create_artifact = CreateArtifactStub::shouldNotBeCalled();
-        $this->retrieve_title_field->withTitleField($this->tracker, $this->readonly_title_field);
+        $this->retrieve_title_field->withTitleField($this->readonly_title_field);
 
         $creator = $this->getCreator($create_artifact);
 
@@ -271,7 +273,7 @@ final class ArtifactContentCreatorTest extends TestCase
         $create_artifact = CreateArtifactStub::withCreatedArtifact(
             ArtifactTestBuilder::anArtifact(123)->build(),
         );
-        $this->retrieve_title_field->withTitleField($this->tracker, $this->getTextField(self::TITLE_ID, true));
+        $this->retrieve_title_field->withTitleField($this->getTextField(self::TITLE_ID, true));
 
         $creator = $this->getCreator($create_artifact);
 

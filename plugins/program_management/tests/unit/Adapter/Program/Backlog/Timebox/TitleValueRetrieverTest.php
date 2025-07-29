@@ -70,7 +70,7 @@ final class TitleValueRetrieverTest extends TestCase
         );
         $title_field_retriever = RetrieveSemanticTitleFieldStub::build();
         if ($this->is_title_semantic_defined) {
-            $title_field_retriever->withTitleField($tracker, $title_field);
+            $title_field_retriever->withTitleField($title_field);
         }
 
         return new TitleValueRetriever(

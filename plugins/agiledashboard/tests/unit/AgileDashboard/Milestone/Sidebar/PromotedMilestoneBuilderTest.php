@@ -72,7 +72,9 @@ final class PromotedMilestoneBuilderTest extends TestCase
             ->userCanView($this->user)
             ->withChangesets($this->changeset)
             ->build();
-        $this->title_field = StringFieldBuilder::aStringField(301)->build();
+        $this->title_field = StringFieldBuilder::aStringField(301)
+            ->inTracker($this->tracker)
+            ->build();
 
         $this->timeframe_builder = $this->createMock(SemanticTimeframeBuilder::class);
         $this->start_field       = DateFieldBuilder::aDateField(302)->build();
@@ -84,7 +86,9 @@ final class PromotedMilestoneBuilderTest extends TestCase
         $this->changeset->setFieldValue($this->title_field, $title_value);
         $this->planning_factory = $this->createMock(PlanningFactory::class);
 
-        $this->retrieve_semantic_title_field = RetrieveSemanticTitleFieldStub::build()->withTitleField($this->tracker, $this->title_field);
+        $this->retrieve_semantic_title_field = RetrieveSemanticTitleFieldStub::build()->withTitleField(
+            $this->title_field
+        );
     }
 
     private function getBuilder(): PromotedMilestoneBuilder
