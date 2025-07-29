@@ -17,23 +17,31 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { getAttributeOrThrow } from "@tuleap/dom";
+
 export function buildCreateModalCallback(vue_mount_point_id, RootComponent) {
     const vue_mount_point = document.getElementById(vue_mount_point_id);
 
     if (!vue_mount_point) {
-        throw new Error(`Could not find Vue mount point ${vue_mount_point_id}`);
+        throw Error(`Could not find Vue mount point ${vue_mount_point_id}`);
     }
-    const { projectId, minimalRank, csrfToken, csrfTokenName, allowedIcons } =
-        vue_mount_point.dataset;
+    const project_id = getAttributeOrThrow(vue_mount_point, "data-project-id");
+    const minimal_rank = Number.parseInt(
+        getAttributeOrThrow(vue_mount_point, "data-minimal-rank"),
+        10,
+    );
+    const csrf_token = getAttributeOrThrow(vue_mount_point, "data-csrf-token");
+    const csrf_token_name = getAttributeOrThrow(vue_mount_point, "data-csrf-token-name");
+    const allowed_icons = JSON.parse(getAttributeOrThrow(vue_mount_point, "data-allowed-icons"));
 
     return () => {
         return new RootComponent({
             propsData: {
-                project_id: projectId,
-                minimal_rank: Number.parseInt(minimalRank, 10),
-                csrf_token_name: csrfTokenName,
-                csrf_token: csrfToken,
-                allowed_icons: JSON.parse(allowedIcons),
+                project_id,
+                minimal_rank,
+                csrf_token_name,
+                csrf_token,
+                allowed_icons,
             },
         }).$mount(vue_mount_point);
     };
