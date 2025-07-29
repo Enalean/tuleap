@@ -23,11 +23,10 @@ import { shallowMount } from "@vue/test-utils";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import { createTrackerCreationLocalVue } from "../../../../../helpers/local-vue-for-tests";
 import TrackerFromAnotherProjectSelector from "./TrackerFromAnotherProjectSelector.vue";
+import type Vue from "vue";
 
 describe("TrackerFromAnotherProject", () => {
-    async function getWrapper(
-        state: State = {} as State,
-    ): Promise<Wrapper<TrackerFromAnotherProjectSelector>> {
+    async function getWrapper(state: State = {} as State): Promise<Wrapper<Vue>> {
         return shallowMount(TrackerFromAnotherProjectSelector, {
             mocks: {
                 $store: createStoreMock({

@@ -53,7 +53,7 @@
             <select
                 data-test="project-tracker-select"
                 v-model="selected_tracker_model"
-                v-on:change="setSelectedProjectTrackerTemplate(selected_tracker_model)"
+                v-on:change="setTrackerTemplate(selected_tracker_model)"
                 v-bind:disabled="selected_project === null"
                 class="tlp-select"
                 id="template-selector"
@@ -76,57 +76,49 @@
         </div>
     </div>
 </template>
-<script lang="ts">
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
+<script setup lang="ts">
+import { ref, computed, onMounted } from "vue";
 import type { ProjectWithTrackers, Tracker } from "../../../../../store/type";
-import { State, Mutation } from "vuex-class";
+import { useStore } from "vuex-composition-helpers";
 
-@Component({
-    components: {},
-})
-export default class TrackerFromAnotherProjectSelector extends Vue {
-    @State
-    readonly trackers_from_other_projects!: ProjectWithTrackers[];
+const store = useStore();
 
-    @State
-    readonly selected_project!: ProjectWithTrackers | null;
+const selected_project_model = ref<ProjectWithTrackers | null>(null);
+const trackers_of_selected_project = ref<Tracker[]>([]);
+const selected_tracker_model = ref<Tracker | null>(null);
 
-    @State
-    readonly selected_project_tracker_template!: Tracker | null;
+const trackers_from_other_projects = computed(() => store.state.trackers_from_other_projects);
+const selected_project = computed(() => store.state.selected_project);
+const selected_project_tracker_template = computed(
+    () => store.state.selected_project_tracker_template,
+);
 
-    @Mutation
-    readonly setSelectedProjectTrackerTemplate!: (tracker: Tracker | null) => void;
+const available_projects = computed(() => {
+    const projects = trackers_from_other_projects;
+    return projects.value.sort((a: ProjectWithTrackers, b: ProjectWithTrackers) =>
+        a.name.localeCompare(b.name, undefined, { numeric: true }),
+    );
+});
 
-    @Mutation
-    readonly setSelectedProject!: (project: ProjectWithTrackers) => void;
-
-    selected_project_model: ProjectWithTrackers | null = null;
-    trackers_of_selected_project: Tracker[] = [];
-    selected_tracker_model: Tracker | null = null;
-
-    mounted() {
-        if (this.selected_project_tracker_template && this.selected_project) {
-            this.selected_project_model = this.selected_project;
-            this.selected_tracker_model = this.selected_project_tracker_template;
-            this.trackers_of_selected_project = this.selected_project.trackers;
-        }
-    }
-
-    get available_projects(): ProjectWithTrackers[] {
-        return this.trackers_from_other_projects.sort((a, b) =>
-            a.name.localeCompare(b.name, undefined, { numeric: true }),
-        );
-    }
-
-    setTrackers(): void {
-        if (this.selected_project_model === null) {
-            return;
-        }
-        this.setSelectedProject(this.selected_project_model);
-        this.setSelectedProjectTrackerTemplate(null);
-        this.trackers_of_selected_project = this.selected_project_model.trackers;
-        this.selected_tracker_model = null;
-    }
+function setTrackerTemplate(selected_tracker_model: Tracker | null): void {
+    store.commit("setSelectedProjectTrackerTemplate", selected_tracker_model);
 }
+
+const setTrackers = (): void => {
+    if (selected_project_model.value === null) {
+        return;
+    }
+    store.commit("setSelectedProject", selected_project_model.value);
+    store.commit("setSelectedProjectTrackerTemplate", null);
+    trackers_of_selected_project.value = selected_project_model.value.trackers;
+    selected_tracker_model.value = null;
+};
+
+onMounted(() => {
+    if (selected_project_tracker_template.value && selected_project.value) {
+        selected_project_model.value = selected_project.value;
+        selected_tracker_model.value = selected_project_tracker_template.value;
+        trackers_of_selected_project.value = selected_project.value.trackers;
+    }
+});
 </script>
