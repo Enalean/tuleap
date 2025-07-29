@@ -50,7 +50,7 @@ describe("rest-querier", () => {
             }
 
             expect(fetch_result.putJSON).toHaveBeenCalledWith(
-                uri`/api/v1/timetracking_management_widget/${widget_id}/query`,
+                uri`/api/v1/timetracking_management_widget/${widget_id}`,
                 {
                     start_date: start_date,
                     end_date: end_date,
@@ -71,7 +71,7 @@ describe("rest-querier", () => {
             }
 
             expect(fetch_result.putJSON).toHaveBeenCalledWith(
-                uri`/api/v1/timetracking_management_widget/${widget_id}/query`,
+                uri`/api/v1/timetracking_management_widget/${widget_id}`,
                 {
                     start_date: null,
                     end_date: null,

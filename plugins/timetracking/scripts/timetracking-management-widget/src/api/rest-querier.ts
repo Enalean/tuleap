@@ -37,14 +37,14 @@ export function putQuery(
     query.users_list.value.forEach((user: User) => formatted_user_list.push({ id: user.id }));
 
     if (query.predefined_time_period !== "") {
-        return putJSON(uri`/api/v1/timetracking_management_widget/${widget_id}/query`, {
+        return putJSON(uri`/api/v1/timetracking_management_widget/${widget_id}`, {
             start_date: null,
             end_date: null,
             predefined_time_period: query.predefined_time_period,
             users: formatted_user_list,
         });
     }
-    return putJSON(uri`/api/v1/timetracking_management_widget/${widget_id}/query`, {
+    return putJSON(uri`/api/v1/timetracking_management_widget/${widget_id}`, {
         start_date: formatDatetimeToISO(query.start_date),
         end_date: formatDatetimeToISO(query.end_date),
         predefined_time_period: null,
