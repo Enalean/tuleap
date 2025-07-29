@@ -46,7 +46,7 @@
                             v-for="item of folder_content"
                             v-bind:key="item.id"
                             v-bind:item="item"
-                            v-bind:is-quick-look-displayed="toggle_quick_look"
+                            v-bind:is_quick_look_displayed="toggle_quick_look"
                         />
                     </tbody>
                 </table>

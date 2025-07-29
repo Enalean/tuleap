@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import FolderContentRow from "./FolderContentRow.vue";
@@ -25,13 +25,11 @@ import { TYPE_FILE } from "../../constants";
 import emitter from "../../helpers/emitter";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 
-vi.mock("../../helpers/emitter");
-
-function getFolderContentRowInstance(props, data = {}): VueWrapper<FolderContentRow> {
+function getFolderContentRowInstance(props): VueWrapper<FolderContentRow> {
     return shallowMount(FolderContentRow, {
-        props: props,
-        data() {
-            return { ...data };
+        props: {
+            is_quick_look_displayed: false,
+            ...props,
         },
         global: {
             ...getGlobalTestOptions({
@@ -48,6 +46,8 @@ function getFolderContentRowInstance(props, data = {}): VueWrapper<FolderContent
 
 describe("FolderContentRow", () => {
     let item;
+    let toggle_quick_look_calls: Array<object>;
+
     beforeEach(() => {
         item = {
             id: 42,
@@ -58,16 +58,22 @@ describe("FolderContentRow", () => {
             type: TYPE_FILE,
             file_type: "text",
             last_update_date: "2021-06-23",
+            owner: {},
         };
 
-        emitter.emit.mockClear();
+        toggle_quick_look_calls = [];
+        emitter.on("toggle-quick-look", (event) => toggle_quick_look_calls.push(event));
+    });
+
+    afterEach(() => {
+        emitter.all.clear();
     });
 
     describe("Quick look and dropdown menu rendering", () => {
         it("Should render the quick look button and the dropdown menu when no upload action is in progress", () => {
             const wrapper = getFolderContentRowInstance({
                 item,
-                isQuickLookDisplayed: false,
+                is_quick_look_displayed: false,
             });
 
             expect(wrapper.find("[data-test=quick-look-button]").exists()).toBeTruthy();
@@ -79,7 +85,7 @@ describe("FolderContentRow", () => {
 
             const wrapper = getFolderContentRowInstance({
                 item,
-                isQuickLookDisplayed: false,
+                is_quick_look_displayed: false,
             });
 
             expect(wrapper.find("[data-test=quick-look-button]").exists()).toBeFalsy();
@@ -92,7 +98,7 @@ describe("FolderContentRow", () => {
 
             const wrapper = getFolderContentRowInstance({
                 item,
-                isQuickLookDisplayed: false,
+                is_quick_look_displayed: false,
             });
 
             expect(wrapper.find("[data-test=quick-look-button]").exists()).toBeFalsy();
@@ -105,7 +111,7 @@ describe("FolderContentRow", () => {
 
             const wrapper = getFolderContentRowInstance({
                 item,
-                isQuickLookDisplayed: false,
+                is_quick_look_displayed: false,
             });
 
             expect(wrapper.find("[data-test=quick-look-button]").exists()).toBeFalsy();
@@ -121,7 +127,7 @@ describe("FolderContentRow", () => {
 
                 const wrapper = getFolderContentRowInstance({
                     item,
-                    isQuickLookDisplayed: true,
+                    is_quick_look_displayed: true,
                 });
 
                 expect(
@@ -137,7 +143,7 @@ describe("FolderContentRow", () => {
 
                 const wrapper = getFolderContentRowInstance({
                     item,
-                    isQuickLookDisplayed: true,
+                    is_quick_look_displayed: true,
                 });
 
                 expect(
@@ -155,7 +161,7 @@ describe("FolderContentRow", () => {
 
                 const wrapper = getFolderContentRowInstance({
                     item,
-                    isQuickLookDisplayed: false,
+                    is_quick_look_displayed: false,
                 });
 
                 expect(
@@ -172,7 +178,7 @@ describe("FolderContentRow", () => {
 
             const wrapper = getFolderContentRowInstance({
                 item,
-                isQuickLookDisplayed: false,
+                is_quick_look_displayed: false,
             });
 
             expect(
@@ -188,7 +194,7 @@ describe("FolderContentRow", () => {
         it("Should render the user badge and the last update date only when the quick look pane is closed", () => {
             const wrapper = getFolderContentRowInstance({
                 item,
-                isQuickLookDisplayed: false,
+                is_quick_look_displayed: false,
             });
 
             expect(wrapper.find(".document-tree-cell-owner").exists()).toBeTruthy();
@@ -198,7 +204,7 @@ describe("FolderContentRow", () => {
         it("Should not render the user badge and the last update date when the quick look pane is open", () => {
             const wrapper = getFolderContentRowInstance({
                 item,
-                isQuickLookDisplayed: true,
+                is_quick_look_displayed: true,
             });
 
             expect(wrapper.find(".document-tree-cell-owner").exists()).toBeFalsy();
@@ -208,27 +214,24 @@ describe("FolderContentRow", () => {
 
     describe("test toggle-quick-look event emission", () => {
         it("Should emit toggle-quick-look event if no dropdown is displayed", () => {
-            const emitter_emit = vi.spyOn(emitter, "emit");
-
-            const wrapper = getFolderContentRowInstance({ item }, { is_dropdown_displayed: false });
+            const wrapper = getFolderContentRowInstance({ item });
+            emitter.emit("set-dropdown-shown", { is_dropdown_shown: false });
 
             wrapper.find("[data-test=document-folder-content-row]").trigger("click");
 
-            expect(emitter_emit).toHaveBeenCalledWith("toggle-quick-look", {
+            expect(toggle_quick_look_calls).toHaveLength(1);
+            expect(toggle_quick_look_calls[0]).toStrictEqual({
                 details: { item },
             });
         });
 
         it("Should not emit toggle-quick-look event if a dropdown is displayed", () => {
-            const emitter_emit = vi.spyOn(emitter, "emit");
-
-            const wrapper = getFolderContentRowInstance({ item }, { is_dropdown_displayed: true });
+            const wrapper = getFolderContentRowInstance({ item });
+            emitter.emit("set-dropdown-shown", { is_dropdown_shown: true });
 
             wrapper.find("[data-test=document-folder-content-row]").trigger("click");
 
-            expect(emitter_emit).not.toHaveBeenCalledWith("toggle-quick-look", {
-                details: { item },
-            });
+            expect(toggle_quick_look_calls).toHaveLength(0);
         });
     });
 });
