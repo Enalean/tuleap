@@ -68,8 +68,8 @@ final readonly class InvalidFieldChecker
             \Tracker_FormElement_Field_MultiSelectbox::class,
             \Tracker_FormElement_Field_Selectbox::class                   => $this->list_field_checker->checkFieldIsValidForComparison($comparison, $field),
             \Tracker_FormElement_Field_SubmittedBy::class,
-            \Tracker_FormElement_Field_LastModifiedBy::class        => $this->submitter_checker->checkFieldIsValidForComparison($comparison, $field),
-            \Tracker_FormElement_Field_OpenList::class => $this->checkOpenList($comparison, $field),
+            \Tracker_FormElement_Field_LastModifiedBy::class                => $this->submitter_checker->checkFieldIsValidForComparison($comparison, $field),
+            \Tracker_FormElement_Field_OpenList::class                      => $this->checkOpenList($comparison, $field),
             \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::class,
             \Tracker_FormElement_Field_PermissionsOnArtifact::class,
             \Tracker_FormElement_Field_ArtifactId::class,
@@ -77,8 +77,8 @@ final readonly class InvalidFieldChecker
             \Tracker_FormElement_Field_CrossReferences::class,
             \Tracker_FormElement_Field_Burndown::class,
             \Tracker_FormElement_Field_Computed::class,
-            \Tracker_FormElement_Field_Priority::class => throw new FieldIsNotSupportedAtAllException($field),
-            default => throw new ExternalFieldNotSupportedException()
+            \Tuleap\Tracker\FormElement\Field\Priority\PriorityField::class => throw new FieldIsNotSupportedAtAllException($field),
+            default                                                         => throw new ExternalFieldNotSupportedException()
         };
     }
 

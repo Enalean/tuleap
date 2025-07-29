@@ -26,12 +26,12 @@ use Override;
 use Tracker_Artifact_ChangesetValue_Numeric;
 use Tracker_FormElement_Field_ArtifactId;
 use Tracker_FormElement_Field_PerTrackerArtifactId;
-use Tracker_FormElement_Field_Priority;
 use Tuleap\Artidoc\Document\Field\ConfiguredField;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\NumericFieldWithValue;
 use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Dao\SearchArtifactGlobalRank;
+use Tuleap\Tracker\FormElement\Field\Priority\PriorityField;
 
 final readonly class NumericFieldWithValueBuilder implements BuildNumericFieldWithValue
 {
@@ -68,7 +68,7 @@ final readonly class NumericFieldWithValueBuilder implements BuildNumericFieldWi
             return Option::fromValue($artifact->getId());
         }
 
-        if ($configured_field->field instanceof Tracker_FormElement_Field_Priority) {
+        if ($configured_field->field instanceof PriorityField) {
             return Option::fromNullable($this->search_artifact_global_rank->getGlobalRank($artifact->getId()));
         }
 

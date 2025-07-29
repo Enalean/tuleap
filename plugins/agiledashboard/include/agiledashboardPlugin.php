@@ -149,6 +149,7 @@ use Tuleap\Tracker\CreateTrackerFromXMLEvent;
 use Tuleap\Tracker\Creation\JiraImporter\Import\JiraImporterExternalPluginsEvent;
 use Tuleap\Tracker\Events\CollectTrackerDependantServices;
 use Tuleap\Tracker\FormElement\Event\MessageFetcherAdditionalWarnings;
+use Tuleap\Tracker\FormElement\Field\Priority\PriorityField;
 use Tuleap\Tracker\Hierarchy\TrackerHierarchyUpdateEvent;
 use Tuleap\Tracker\Masschange\TrackerMasschangeGetExternalActionsEvent;
 use Tuleap\Tracker\Masschange\TrackerMasschangeProcessExternalActionsEvent;
@@ -231,7 +232,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
             $this->addHook(Tracker_Report::TRACKER_EVENT_REPORT_DISPLAY_ADDITIONAL_CRITERIA);
             $this->addHook(Tracker_Report::TRACKER_EVENT_REPORT_SAVE_ADDITIONAL_CRITERIA);
             $this->addHook(Tracker_Report::TRACKER_EVENT_REPORT_LOAD_ADDITIONAL_CRITERIA);
-            $this->addHook(Tracker_FormElement_Field_Priority::TRACKER_EVENT_FIELD_AUGMENT_DATA_FOR_REPORT);
+            $this->addHook(PriorityField::TRACKER_EVENT_FIELD_AUGMENT_DATA_FOR_REPORT);
             $this->addHook(Tracker::TRACKER_USAGE);
             $this->addHook(RegisterProjectCreationEvent::NAME);
             $this->addHook(TrackerFactory::TRACKER_EVENT_PROJECT_CREATION_TRACKERS_REQUIRED);
@@ -948,7 +949,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
     }
 
     /**
-     * @see Tracker_FormElement_Field_Priority::TRACKER_EVENT_FIELD_AUGMENT_DATA_FOR_REPORT
+     * @see PriorityField::TRACKER_EVENT_FIELD_AUGMENT_DATA_FOR_REPORT
      */
     public function tracker_event_field_augment_data_for_report($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
@@ -974,7 +975,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
 
     private function isFieldPriority(Tracker_FormElement_Field $field)
     {
-        return $field instanceof Tracker_FormElement_Field_Priority;
+        return $field instanceof PriorityField;
     }
 
     private function getSequenceIdManager()
