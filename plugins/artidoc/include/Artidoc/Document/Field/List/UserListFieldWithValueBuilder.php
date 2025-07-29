@@ -27,7 +27,7 @@ use Tracker_FormElement_Field_List_BindValue;
 use Tracker_FormElement_Field_List_OpenValue;
 use Tuleap\Artidoc\Document\Field\ConfiguredField;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserListFieldWithValue;
-use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserListValue;
+use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserValue;
 use Tuleap\User\Avatar\ProvideDefaultUserAvatarUrl;
 use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 use Tuleap\User\RetrieveUserById;
@@ -50,7 +50,7 @@ final readonly class UserListFieldWithValueBuilder implements BuildUserListField
             array_values(
                 array_map(
                     function (Tracker_FormElement_Field_List_BindValue|Tracker_FormElement_Field_List_OpenValue $value) {
-                        return new UserListValue(
+                        return new UserValue(
                             $value->getLabel(),
                             $this->getAvatarUrl($value),
                         );

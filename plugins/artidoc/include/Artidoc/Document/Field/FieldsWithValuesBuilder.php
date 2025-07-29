@@ -27,11 +27,14 @@ use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue_List;
 use Tracker_Artifact_ChangesetValue_Numeric;
 use Tracker_Artifact_ChangesetValue_String;
+use Tracker_FormElement_Field_LastModifiedBy;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_Numeric;
+use Tracker_FormElement_Field_SubmittedBy;
 use Tuleap\Artidoc\Document\Field\ArtifactLink\BuildArtifactLinkFieldWithValue;
 use Tuleap\Artidoc\Document\Field\List\BuildListFieldWithValue;
 use Tuleap\Artidoc\Document\Field\Numeric\BuildNumericFieldWithValue;
+use Tuleap\Artidoc\Document\Field\User\BuildUserFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StringFieldWithValue;
 use Tuleap\Tracker\Artifact\Changeset\ArtifactLink\ArtifactLinkChangesetValue;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
@@ -44,6 +47,7 @@ final readonly class FieldsWithValuesBuilder implements GetFieldsWithValues
         private BuildListFieldWithValue $build_list_field_with_value,
         private BuildArtifactLinkFieldWithValue $build_artlink_field_with_value,
         private BuildNumericFieldWithValue $build_numeric_field_with_value,
+        private BuildUserFieldWithValue $build_user_field_with_value,
     ) {
     }
 
@@ -62,16 +66,27 @@ final readonly class FieldsWithValuesBuilder implements GetFieldsWithValues
                     $configured_field->display_type,
                     $changeset_value?->getValue() ?? '',
                 );
+                continue;
+            }
+
+            if (
+                $configured_field->field instanceof Tracker_FormElement_Field_LastModifiedBy
+                || $configured_field->field instanceof Tracker_FormElement_Field_SubmittedBy
+            ) {
+                $fields[] = $this->build_user_field_with_value->buildUserFieldWithValue($configured_field, $changeset);
+                continue;
             }
 
             if ($configured_field->field instanceof Tracker_FormElement_Field_List) {
                 assert($changeset_value === null || $changeset_value instanceof Tracker_Artifact_ChangesetValue_List);
                 $fields[] = $this->build_list_field_with_value->buildListFieldWithValue($configured_field, $changeset_value);
+                continue;
             }
 
             if ($configured_field->field instanceof ArtifactLinkField) {
                 assert($changeset_value === null || $changeset_value instanceof ArtifactLinkChangesetValue);
                 $fields[] = $this->build_artlink_field_with_value->buildArtifactLinkFieldWithValue($configured_field, $changeset_value);
+                continue;
             }
 
             if ($configured_field->field instanceof Tracker_FormElement_Field_Numeric) {

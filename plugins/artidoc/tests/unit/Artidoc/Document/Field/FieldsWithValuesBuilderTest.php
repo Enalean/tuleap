@@ -39,13 +39,15 @@ use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\NumericFieldWith
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StaticListFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StaticListValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StringFieldWithValue;
+use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserGroupListValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserGroupsListFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserListFieldWithValue;
-use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserListValue;
+use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserValue;
 use Tuleap\Artidoc\Stubs\Document\Field\ArtifactLink\BuildArtifactLinkFieldWithValueStub;
 use Tuleap\Artidoc\Stubs\Document\Field\List\BuildListFieldWithValueStub;
 use Tuleap\Artidoc\Stubs\Document\Field\Numeric\BuildNumericFieldWithValueStub;
+use Tuleap\Artidoc\Stubs\Document\Field\User\BuildUserFieldWithValueStub;
 use Tuleap\Color\ColorName;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Option\Option;
@@ -62,6 +64,7 @@ use Tuleap\Tracker\Test\Builders\ChangesetValueListTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueStringTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ArtifactLinkFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\IntegerFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\LastUpdateByFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserBindBuilder;
@@ -93,7 +96,7 @@ final class FieldsWithValuesBuilderTest extends TestCase
     }
 
     /**
-     * @return list<StringFieldWithValue | UserGroupsListFieldWithValue | StaticListFieldWithValue | UserListFieldWithValue | ArtifactLinkFieldWithValue | NumericFieldWithValue>
+     * @return list<StringFieldWithValue | UserGroupsListFieldWithValue | StaticListFieldWithValue | UserListFieldWithValue | ArtifactLinkFieldWithValue | NumericFieldWithValue | UserFieldWithValue>
      */
     private function getFields(): array
     {
@@ -102,6 +105,7 @@ final class FieldsWithValuesBuilderTest extends TestCase
             BuildListFieldWithValueStub::withCallback($this->notCalledCallback(...)),
             BuildArtifactLinkFieldWithValueStub::withCallback($this->notCalledCallback(...)),
             BuildNumericFieldWithValueStub::withCallback($this->notCalledCallback(...)),
+            BuildUserFieldWithValueStub::withCallback($this->notCalledCallback(...)),
         );
         return $builder->getFieldsWithValues($this->changeset);
     }
@@ -202,6 +206,7 @@ final class FieldsWithValuesBuilderTest extends TestCase
             ),
             BuildArtifactLinkFieldWithValueStub::withCallback($this->notCalledCallback(...)),
             BuildNumericFieldWithValueStub::withCallback($this->notCalledCallback(...)),
+            BuildUserFieldWithValueStub::withCallback($this->notCalledCallback(...)),
         );
 
         self::assertEquals([$expected_field_with_value], $builder->getFieldsWithValues($this->changeset));
@@ -242,6 +247,7 @@ final class FieldsWithValuesBuilderTest extends TestCase
             ),
             BuildArtifactLinkFieldWithValueStub::withCallback($this->notCalledCallback(...)),
             BuildNumericFieldWithValueStub::withCallback($this->notCalledCallback(...)),
+            BuildUserFieldWithValueStub::withCallback($this->notCalledCallback(...)),
         );
 
         self::assertEquals([$expected_field_with_value], $builder->getFieldsWithValues($this->changeset));
@@ -257,8 +263,8 @@ final class FieldsWithValuesBuilderTest extends TestCase
             $user_list_field->getLabel(),
             DisplayType::BLOCK,
             [
-                new UserListValue('Bob', 'bob_avatar_url.png'),
-                new UserListValue('Alice', 'alice_avatar_url.png'),
+                new UserValue('Bob', 'bob_avatar_url.png'),
+                new UserValue('Alice', 'alice_avatar_url.png'),
             ]
         );
 
@@ -287,6 +293,7 @@ final class FieldsWithValuesBuilderTest extends TestCase
             ),
             BuildArtifactLinkFieldWithValueStub::withCallback($this->notCalledCallback(...)),
             BuildNumericFieldWithValueStub::withCallback($this->notCalledCallback(...)),
+            BuildUserFieldWithValueStub::withCallback($this->notCalledCallback(...)),
         );
 
         self::assertEquals([$expected_list_field_with_value], $builder->getFieldsWithValues($this->changeset));
@@ -332,6 +339,7 @@ final class FieldsWithValuesBuilderTest extends TestCase
                 },
             ),
             BuildNumericFieldWithValueStub::withCallback($this->notCalledCallback(...)),
+            BuildUserFieldWithValueStub::withCallback($this->notCalledCallback(...)),
         );
 
         self::assertEquals([$expected_link_field_with_value], $builder->getFieldsWithValues($this->changeset));
@@ -366,9 +374,37 @@ final class FieldsWithValuesBuilderTest extends TestCase
                     return $expected_int_field_with_value;
                 },
             ),
+            BuildUserFieldWithValueStub::withCallback($this->notCalledCallback(...)),
         );
 
         self::assertEquals([$expected_int_field_with_value], $builder->getFieldsWithValues($this->changeset));
+    }
+
+    public function testItBuildsUserFieldsWithValue(): void
+    {
+        $user_field = LastUpdateByFieldBuilder::aLastUpdateByField(123)->build();
+
+        $expected_user_field_with_value = new UserFieldWithValue(
+            $user_field->getLabel(),
+            DisplayType::BLOCK,
+            new UserValue('Bob', 'bob_avatar_url.png'),
+        );
+
+        $this->changeset->setFieldValue($user_field, null);
+
+        $builder = new FieldsWithValuesBuilder(
+            new ConfiguredFieldCollection([
+                self::TRACKER_ID => [
+                    new ConfiguredField($user_field, DisplayType::BLOCK),
+                ],
+            ]),
+            BuildListFieldWithValueStub::withCallback($this->notCalledCallback(...)),
+            BuildArtifactLinkFieldWithValueStub::withCallback($this->notCalledCallback(...)),
+            BuildNumericFieldWithValueStub::withCallback($this->notCalledCallback(...)),
+            BuildUserFieldWithValueStub::withCallback(static fn() => $expected_user_field_with_value),
+        );
+
+        self::assertEquals([$expected_user_field_with_value], $builder->getFieldsWithValues($this->changeset));
     }
 
     private static function notCalledCallback(): never

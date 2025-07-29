@@ -25,11 +25,13 @@ namespace Tuleap\Artidoc\Document\Field;
 use PFUser;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use Tracker_FormElement_Field_List;
+use Tracker_FormElement_Field_List_Bind_Null;
 use Tracker_FormElement_Field_Numeric;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldIsDescriptionSemanticFault;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldIsTitleSemanticFault;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldNotFoundFault;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldNotSupportedFault;
+use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
@@ -45,6 +47,7 @@ use Tuleap\Tracker\Test\Builders\Fields\ComputedFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ExternalFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\FloatFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\IntegerFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\LastUpdateByFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserGroupBindBuilder;
@@ -52,6 +55,7 @@ use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\PerTrackerArtifactIdFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\PriorityFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SubmittedByFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
 use Tuleap\Tracker\Test\Stub\Semantic\Description\RetrieveSemanticDescriptionFieldStub;
@@ -193,6 +197,57 @@ final class SuitableFieldRetrieverTest extends TestCase
                 ->withReadPermission($this->user, true)
                 ->build(),
         )->build()->getField();
+        $this->field_retriever = RetrieveUsedFieldsStub::withFields($list_field);
+
+        $result = $this->retrieve();
+        self::assertTrue(Result::isOk($result));
+        self::assertSame($list_field, $result->value);
+    }
+
+    public function testItDoesNotAllowListFieldWithNullBind(): void
+    {
+        $list_field = ListFieldBuilder::aListField(self::FIELD_ID)
+            ->inTracker($this->tracker)
+            ->withReadPermission($this->user, true)
+            ->build();
+        $list_field->setBind(new Tracker_FormElement_Field_List_Bind_Null(new DatabaseUUIDV7Factory(), $list_field));
+        $this->field_retriever = RetrieveUsedFieldsStub::withFields($list_field);
+
+        $result = $this->retrieve();
+        self::assertTrue(Result::isErr($result));
+    }
+
+    public function testItDoesNotAllowListFieldWithoutBind(): void
+    {
+        $list_field = $this->createMock(Tracker_FormElement_Field_List::class);
+        $list_field->method('getId')->willReturn(self::FIELD_ID);
+        $list_field->method('userCanRead')->with($this->user)->willReturn(true);
+        $list_field->method('getBind')->willReturn(null);
+        $this->field_retriever = RetrieveUsedFieldsStub::withFields($list_field);
+
+        $result = $this->retrieve();
+        self::assertTrue(Result::isErr($result));
+    }
+
+    public function testItAllowsLastUpdateByField(): void
+    {
+        $list_field            = LastUpdateByFieldBuilder::aLastUpdateByField(self::FIELD_ID)
+            ->inTracker($this->tracker)
+            ->withReadPermission($this->user, true)
+            ->build();
+        $this->field_retriever = RetrieveUsedFieldsStub::withFields($list_field);
+
+        $result = $this->retrieve();
+        self::assertTrue(Result::isOk($result));
+        self::assertSame($list_field, $result->value);
+    }
+
+    public function testItAllowsSubmittedByField(): void
+    {
+        $list_field            = SubmittedByFieldBuilder::aSubmittedByField(self::FIELD_ID)
+            ->inTracker($this->tracker)
+            ->withReadPermission($this->user, true)
+            ->build();
         $this->field_retriever = RetrieveUsedFieldsStub::withFields($list_field);
 
         $result = $this->retrieve();

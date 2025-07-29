@@ -59,6 +59,14 @@ final class ChangesetTestBuilder
         return $this;
     }
 
+    public function submittedByAnonymous(string $email): self
+    {
+        $this->submitted_by_id    = 0;
+        $this->submitted_by_email = $email;
+
+        return $this;
+    }
+
     /**
      * @param int $submission_timestamp UNIX Timestamp
      */

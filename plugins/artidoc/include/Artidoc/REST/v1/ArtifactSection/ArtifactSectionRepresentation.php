@@ -26,6 +26,7 @@ use Tuleap\Artidoc\REST\v1\ArtifactSection\Field\SectionArtifactLinkFieldReprese
 use Tuleap\Artidoc\REST\v1\ArtifactSection\Field\SectionNumericFieldRepresentation;
 use Tuleap\Artidoc\REST\v1\ArtifactSection\Field\SectionStaticListFieldRepresentation;
 use Tuleap\Artidoc\REST\v1\ArtifactSection\Field\SectionStringFieldRepresentation;
+use Tuleap\Artidoc\REST\v1\ArtifactSection\Field\SectionUserFieldRepresentation;
 use Tuleap\Artidoc\REST\v1\ArtifactSection\Field\SectionUserGroupsListFieldRepresentation;
 use Tuleap\Artidoc\REST\v1\ArtifactSection\Field\SectionUserListFieldRepresentation;
 use Tuleap\Artidoc\REST\v1\SectionRepresentation;
@@ -39,7 +40,7 @@ final readonly class ArtifactSectionRepresentation implements SectionRepresentat
     public string $type;
 
     /**
-     * @param list<SectionStringFieldRepresentation | SectionUserGroupsListFieldRepresentation | SectionStaticListFieldRepresentation | SectionUserListFieldRepresentation | SectionArtifactLinkFieldRepresentation | SectionNumericFieldRepresentation> $fields
+     * @param list<SectionStringFieldRepresentation | SectionUserGroupsListFieldRepresentation | SectionStaticListFieldRepresentation | SectionUserListFieldRepresentation | SectionArtifactLinkFieldRepresentation | SectionNumericFieldRepresentation | SectionUserFieldRepresentation> $fields
      */
     public function __construct(
         public string $id,

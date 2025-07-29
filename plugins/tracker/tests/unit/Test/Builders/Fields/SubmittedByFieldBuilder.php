@@ -27,9 +27,9 @@ use Tuleap\Tracker\Tracker;
 
 final class SubmittedByFieldBuilder
 {
-    private string $name                        = 'submitted_by';
-    private ?\PFUser $user_with_read_permission = null;
-    private bool $read_permission               = false;
+    use FieldBuilderWithPermissions;
+
+    private string $name = 'submitted_by';
     private Tracker $tracker;
 
     private function __construct(private readonly int $id)
@@ -54,13 +54,6 @@ final class SubmittedByFieldBuilder
         return $this;
     }
 
-    public function withReadPermission(\PFUser $user, bool $user_can_read): self
-    {
-        $this->user_with_read_permission = $user;
-        $this->read_permission           = $user_can_read;
-        return $this;
-    }
-
     public function build(): \Tracker_FormElement_Field_SubmittedBy
     {
         $field = new \Tracker_FormElement_Field_SubmittedBy(
@@ -77,9 +70,7 @@ final class SubmittedByFieldBuilder
             10,
             null
         );
-        if ($this->user_with_read_permission !== null) {
-            $field->setUserCanRead($this->user_with_read_permission, $this->read_permission);
-        }
+        $this->setPermissions($field);
         return $field;
     }
 }

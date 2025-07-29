@@ -51,6 +51,7 @@ use Tuleap\Artidoc\Document\Field\List\UserGroupListWithValueBuilder;
 use Tuleap\Artidoc\Document\Field\List\UserListFieldWithValueBuilder;
 use Tuleap\Artidoc\Document\Field\Numeric\NumericFieldWithValueBuilder;
 use Tuleap\Artidoc\Document\Field\SuitableFieldRetriever;
+use Tuleap\Artidoc\Document\Field\User\UserFieldWithValueBuilder;
 use Tuleap\Artidoc\Document\Tracker\NoSemanticDescriptionFault;
 use Tuleap\Artidoc\Document\Tracker\NoSemanticTitleFault;
 use Tuleap\Artidoc\Document\Tracker\SemanticTitleIsNotAStringFault;
@@ -119,6 +120,7 @@ use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
 use Tuleap\User\Avatar\AvatarHashDao;
 use Tuleap\User\Avatar\ComputeAvatarHash;
 use Tuleap\User\Avatar\UserAvatarUrlProvider;
+use UserHelper;
 use UserManager;
 
 final class ArtidocResource extends AuthenticatedResource
@@ -540,6 +542,7 @@ final class ArtidocResource extends AuthenticatedResource
         );
 
         $provide_user_avatar_url = new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash());
+        $user_manager            = UserManager::instance();
 
         return new ArtifactSectionRepresentationBuilder(
             new FileUploadDataProvider(
@@ -562,7 +565,7 @@ final class ArtidocResource extends AuthenticatedResource
                 $configured_field_collection_builder->buildFromArtidoc($artidoc, $user),
                 new ListFieldWithValueBuilder(
                     new UserListFieldWithValueBuilder(
-                        UserManager::instance(),
+                        $user_manager,
                         $provide_user_avatar_url,
                         $provide_user_avatar_url,
                     ),
@@ -576,6 +579,13 @@ final class ArtidocResource extends AuthenticatedResource
                     new TypePresenterFactory(new TypeDao(), new ArtifactLinksUsageDao()),
                 ),
                 new NumericFieldWithValueBuilder(new PriorityDao()),
+                new UserFieldWithValueBuilder(
+                    $user_manager,
+                    $user_manager,
+                    $provide_user_avatar_url,
+                    $provide_user_avatar_url,
+                    UserHelper::instance(),
+                ),
             )
         );
     }

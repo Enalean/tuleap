@@ -67,6 +67,7 @@ use Tuleap\Artidoc\Document\Field\List\UserGroupListWithValueBuilder;
 use Tuleap\Artidoc\Document\Field\List\UserListFieldWithValueBuilder;
 use Tuleap\Artidoc\Document\Field\Numeric\NumericFieldWithValueBuilder;
 use Tuleap\Artidoc\Document\Field\SuitableFieldRetriever;
+use Tuleap\Artidoc\Document\Field\User\UserFieldWithValueBuilder;
 use Tuleap\Artidoc\Domain\Document\RetrieveArtidocWithContext;
 use Tuleap\Artidoc\Domain\Document\Section\CannotUpdatePartiallyReadableDocumentFault;
 use Tuleap\Artidoc\Domain\Document\Section\CollectRequiredSectionInformation;
@@ -149,6 +150,7 @@ use Tuleap\Tracker\Workflow\WorkflowUpdateChecker;
 use Tuleap\User\Avatar\AvatarHashDao;
 use Tuleap\User\Avatar\ComputeAvatarHash;
 use Tuleap\User\Avatar\UserAvatarUrlProvider;
+use UserHelper;
 use UserManager;
 use WorkflowFactory;
 use WrapperLogger;
@@ -533,6 +535,7 @@ final class ArtidocSectionsResource extends AuthenticatedResource
             ),
         );
         $provide_user_avatar_url             = new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash());
+        $user_manager                        = UserManager::instance();
 
         return new ArtifactSectionRepresentationBuilder(
             $this->getFileUploadDataProvider(),
@@ -540,7 +543,7 @@ final class ArtidocSectionsResource extends AuthenticatedResource
                 $configured_field_collection_builder->buildFromSectionIdentifier($section_identifier, $user),
                 new ListFieldWithValueBuilder(
                     new UserListFieldWithValueBuilder(
-                        UserManager::instance(),
+                        $user_manager,
                         $provide_user_avatar_url,
                         $provide_user_avatar_url,
                     ),
@@ -554,6 +557,13 @@ final class ArtidocSectionsResource extends AuthenticatedResource
                     new TypePresenterFactory(new TypeDao(), new ArtifactLinksUsageDao()),
                 ),
                 new NumericFieldWithValueBuilder(new PriorityDao()),
+                new UserFieldWithValueBuilder(
+                    $user_manager,
+                    $user_manager,
+                    $provide_user_avatar_url,
+                    $provide_user_avatar_url,
+                    UserHelper::instance(),
+                ),
             )
         );
     }
