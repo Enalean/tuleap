@@ -19,17 +19,14 @@
 
 import { createModal } from "@tuleap/tlp-modal";
 import Vue from "vue";
-import { getPOFileFromLocale, initVueGettext } from "@tuleap/vue2-gettext-init";
+import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue2-gettext-init";
 import DOMPurify from "dompurify";
-import { sprintf } from "sprintf-js";
-import { escaper } from "@tuleap/html-escaper";
 import { gettext_provider } from "./helpers/gettext_provider.js";
 
 export async function setupModalButtons(addModalCallback, editModalCallback) {
     await initVueGettext(
         Vue,
-        (locale) =>
-            import(/* webpackChunkName: "services-po-" */ `../po/${getPOFileFromLocale(locale)}`),
+        (locale) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`),
     );
     setupAddButton(addModalCallback);
     setupEditButtons(editModalCallback);
@@ -96,11 +93,12 @@ function updateDeleteModalDescription(button) {
     modal_description.insertAdjacentHTML(
         "afterbegin",
         DOMPurify.sanitize(
-            sprintf(
+            gettext_provider.$gettextInterpolate(
                 gettext_provider.$gettext(
-                    "You are about to delete the <b>%s</b> service. Please, confirm your action",
-                ) /* javascript-format */,
-                escaper.html(button.dataset.serviceLabel),
+                    "You are about to delete the %{ service_name } service. Please, confirm your action",
+                ),
+                { service_name: `<b>${button.dataset.serviceLabel}</b>` },
+                true,
             ),
         ),
     );
