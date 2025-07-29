@@ -20,23 +20,26 @@
 import type { StructureFields } from "@tuleap/plugin-tracker-rest-api-types";
 import type { ListBindType } from "@tuleap/plugin-tracker-constants";
 import {
+    ARTIFACT_ID_FIELD,
+    ARTIFACT_ID_IN_TRACKER_FIELD,
+    ARTIFACT_LINK_FIELD,
     CHECKBOX_FIELD,
+    COMPUTED_FIELD,
+    DATE_FIELD as TRACKER_DATE_FIELD,
+    FLOAT_FIELD,
+    INT_FIELD,
+    LAST_UPDATE_DATE_FIELD,
+    LAST_UPDATED_BY_FIELD,
     LIST_BIND_STATIC,
     LIST_BIND_UGROUPS,
     LIST_BIND_USERS,
     MULTI_SELECTBOX_FIELD,
     OPEN_LIST_FIELD,
+    PRIORITY_FIELD,
     RADIO_BUTTON_FIELD,
     SELECTBOX_FIELD,
     STRING_FIELD as TRACKER_STRING_FIELD,
-    ARTIFACT_LINK_FIELD,
-    ARTIFACT_ID_FIELD,
-    ARTIFACT_ID_IN_TRACKER_FIELD,
-    FLOAT_FIELD,
-    INT_FIELD,
-    PRIORITY_FIELD,
-    COMPUTED_FIELD,
-    LAST_UPDATED_BY_FIELD,
+    SUBMISSION_DATE_FIELD,
     SUBMITTED_BY_FIELD,
 } from "@tuleap/plugin-tracker-constants";
 import type {
@@ -48,6 +51,7 @@ import {
     DISPLAY_TYPE_COLUMN,
 } from "@/sections/readonly-fields/AvailableReadonlyFields";
 import {
+    DATE_FIELD,
     LINKS_FIELD,
     NUMERIC_FIELD,
     STATIC_LIST_FIELD,
@@ -134,6 +138,18 @@ const buildConfiguredFieldIfSupported = (field: StructureFields): Option<Configu
             ...field_base,
             display_type: DISPLAY_TYPE_COLUMN,
             type: buildConfiguredListFieldType(field.bindings.type),
+        });
+    }
+
+    if (
+        field.type === TRACKER_DATE_FIELD ||
+        field.type === SUBMISSION_DATE_FIELD ||
+        field.type === LAST_UPDATE_DATE_FIELD
+    ) {
+        return Option.fromValue<ConfigurationField>({
+            ...field_base,
+            display_type: DISPLAY_TYPE_COLUMN,
+            type: DATE_FIELD,
         });
     }
 

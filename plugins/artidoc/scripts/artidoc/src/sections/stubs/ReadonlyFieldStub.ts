@@ -18,6 +18,7 @@
  */
 
 import type {
+    ReadonlyFieldDate,
     ReadonlyFieldLinkedArtifact,
     ReadonlyFieldLinks,
     ReadonlyFieldNumeric,
@@ -90,5 +91,16 @@ export const ReadonlyFieldStub = {
         label: "Readonly user field",
         value,
         display_type,
+    }),
+    dateField: (
+        value: string | null,
+        with_time: boolean,
+        display_type: ConfigurationFieldDisplayType,
+    ): ReadonlyFieldDate => ({
+        type: "date",
+        label: "Readonly date field",
+        display_type,
+        value,
+        with_time,
     }),
 };

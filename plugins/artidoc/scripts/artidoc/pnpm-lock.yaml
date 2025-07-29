@@ -8,6 +8,9 @@ dependencies:
   '@tuleap/core-constants':
     specifier: workspace:^
     version: link:../../../../lib/frontend/constants
+  '@tuleap/date-helper':
+    specifier: workspace:^
+    version: link:../../../../lib/frontend/date-helper
   '@tuleap/dom':
     specifier: workspace:^
     version: link:../../../../lib/frontend/dom
@@ -59,6 +62,9 @@ dependencies:
   '@tuleap/tlp-modal':
     specifier: workspace:^
     version: link:../../../../lib/frontend/tlp-modal
+  '@tuleap/tlp-relative-date':
+    specifier: workspace:^
+    version: link:../../../../lib/frontend/tlp-relative-date
   '@tuleap/tooltip':
     specifier: workspace:*
     version: link:../../../../lib/frontend/tooltip

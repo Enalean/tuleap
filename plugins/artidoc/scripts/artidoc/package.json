@@ -7,6 +7,7 @@
   "type": "module",
   "dependencies": {
     "@tuleap/core-constants": "workspace:^",
+    "@tuleap/date-helper": "workspace:^",
     "@tuleap/dom": "workspace:^",
     "@tuleap/drag-and-drop": "workspace:^",
     "@tuleap/fault": "workspace:*",
@@ -24,6 +25,7 @@
     "@tuleap/prose-mirror-editor-toolbar": "workspace:^",
     "@tuleap/tlp-dropdown": "workspace:*",
     "@tuleap/tlp-modal": "workspace:^",
+    "@tuleap/tlp-relative-date": "workspace:^",
     "@tuleap/tooltip": "workspace:*",
     "@tuleap/vue-strict-inject": "workspace:*",
     "@tuleap/vue3-gettext-init": "workspace:*",
