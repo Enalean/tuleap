@@ -83,19 +83,22 @@ final class AssignedToSelectBuilderTest extends CrossTrackerFieldTestCase
             ProjectUGroup::PROJECT_MEMBERS
         );
 
-        $release_artifact_empty_id      = $tracker_builder->buildArtifact($release_tracker->getId());
-        $release_artifact_with_alice_id = $tracker_builder->buildArtifact($release_tracker->getId());
-        $sprint_artifact_with_bob_id    = $tracker_builder->buildArtifact($sprint_tracker->getId());
+        $release_artifact_empty_id              = $tracker_builder->buildArtifact($release_tracker->getId());
+        $release_artifact_with_alice_id         = $tracker_builder->buildArtifact($release_tracker->getId());
+        $sprint_artifact_with_bob_and_alice_ids = $tracker_builder->buildArtifact($sprint_tracker->getId());
 
         $tracker_builder->buildLastChangeset($release_artifact_empty_id);
-        $release_artifact_with_alice_changeset = $tracker_builder->buildLastChangeset($release_artifact_with_alice_id);
-        $sprint_artifact_with_bob_changeset    = $tracker_builder->buildLastChangeset($sprint_artifact_with_bob_id);
+        $release_artifact_with_alice_changeset        = $tracker_builder->buildLastChangeset($release_artifact_with_alice_id);
+        $sprint_artifact_with_bob_and_alice_changeset = $tracker_builder->buildLastChangeset($sprint_artifact_with_bob_and_alice_ids);
 
         $helper                 = UserHelper::instance();
         $this->expected_results = [
             $release_artifact_empty_id      => [],
             $release_artifact_with_alice_id => [UserRepresentation::fromPFUser($alice, $helper)],
-            $sprint_artifact_with_bob_id    => [UserRepresentation::fromPFUser($bob, $helper)],
+            $sprint_artifact_with_bob_and_alice_ids => [
+                UserRepresentation::fromPFUser($bob, $helper),
+                UserRepresentation::fromPFUser($alice, $helper),
+            ],
         ];
         $tracker_builder->buildListValue(
             $release_artifact_with_alice_changeset,
@@ -103,9 +106,14 @@ final class AssignedToSelectBuilderTest extends CrossTrackerFieldTestCase
             (int) $alice->getId(),
         );
         $tracker_builder->buildListValue(
-            $sprint_artifact_with_bob_changeset,
+            $sprint_artifact_with_bob_and_alice_changeset,
             $sprint_assignee_field_id,
             (int) $bob->getId(),
+        );
+        $tracker_builder->buildListValue(
+            $sprint_artifact_with_bob_and_alice_changeset,
+            $sprint_assignee_field_id,
+            (int) $alice->getId(),
         );
     }
 
@@ -121,6 +129,7 @@ final class AssignedToSelectBuilderTest extends CrossTrackerFieldTestCase
 
         self::assertSame(3, $result->getTotalSize());
         self::assertCount(2, $result->selected);
+        self::assertCount(3, $result->artifacts);
         self::assertSame('@assigned_to', $result->selected[1]->name);
         self::assertSame('list_user', $result->selected[1]->type);
         $values = [];

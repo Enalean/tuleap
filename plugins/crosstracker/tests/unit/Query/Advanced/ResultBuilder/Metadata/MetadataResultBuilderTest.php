@@ -243,8 +243,7 @@ EOL
             InstantiateRetrievedQueryTrackersStub::withNoTrackers(),
             [
                 ['id' => 41, '@assigned_to' => 135],
-                ['id' => 42, '@assigned_to' => 135],
-                ['id' => 42, '@assigned_to' => 145],
+                ['id' => 42, '@assigned_to' => [135, 145]],
                 ['id' => 43, '@assigned_to' => null],
             ],
         );
