@@ -64,14 +64,12 @@ final class ArtifactDaoTest extends TestIntegrationTestCase
         $tracker_builder->buildLastChangeset($this->linked_artifact);
 
         $tracker_builder->buildArtifactLinkValue(
-            $project_id,
             $parent_changeset,
             $parent_link_field,
             $this->child_artifact,
             ArtifactLinkField::TYPE_IS_CHILD,
         );
         $tracker_builder->buildArtifactLinkValue(
-            $project_id,
             $parent_changeset,
             $parent_link_field,
             $this->linked_artifact,

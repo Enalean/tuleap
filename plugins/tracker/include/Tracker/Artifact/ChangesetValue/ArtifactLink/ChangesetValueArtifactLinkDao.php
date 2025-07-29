@@ -29,7 +29,7 @@ class ChangesetValueArtifactLinkDao extends DataAccessObject
     public function searchChangesetValues(int $field_id, int $changeset_id): array
     {
         return $this->getDB()->run(
-            'SELECT cv.changeset_id, cv.has_changed, val.*, a.tracker_id, a.last_changeset_id
+            'SELECT cv.changeset_id, cv.has_changed, val.artifact_id, val.nature, t.item_name as keyword, t.group_id, a.tracker_id, a.last_changeset_id
                         FROM tracker_changeset_value_artifactlink AS val
                              INNER JOIN tracker_artifact AS a ON(a.id = val.artifact_id)
                              INNER JOIN tracker AS t ON(t.id = a.tracker_id AND t.deletion_date IS NULL)

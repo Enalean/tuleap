@@ -75,7 +75,6 @@ final class ArtifactLinksTest extends CrossTrackerFieldTestCase
         $tracker_builder->buildLastChangeset($story_1);
 
         $tracker_builder->buildArtifactLinkValue(
-            $project_id,
             $epic_2_changeset,
             $link_field,
             $story_1,

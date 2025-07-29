@@ -681,7 +681,6 @@ final class TrackerDatabaseBuilder
     }
 
     public function buildArtifactLinkValue(
-        int $project_id,
         int $source_changeset_id,
         int $source_artifact_link_field_id,
         int $target_artifact_id,
@@ -695,8 +694,6 @@ final class TrackerDatabaseBuilder
                 'changeset_value_id' => $changeset_value_id,
                 'nature'             => $type,
                 'artifact_id'        => $target_artifact_id,
-                'keyword'            => 'release',
-                'group_id'           => $project_id,
             ]
         );
     }

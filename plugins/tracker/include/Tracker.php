@@ -1836,9 +1836,6 @@ class Tracker implements Tracker_Dispatchable_Interface
             //WARNING this replace existing reference(s) so that all old_item_name reference won't be extracted anymore
             $reference_manager->updateProjectReferenceShortName($this->group_id, $previous_shortname, $this->item_name);
 
-            $artifact_link_value_dao = new ArtifactLinkFieldValueDao();
-            $artifact_link_value_dao->updateItemName($this->group_id, $previous_shortname, $this->item_name);
-
             $dao = new TrackerDao();
             if ($dao->save($this)) {
                 $GLOBALS['Response']->addFeedback(Feedback::INFO, dgettext('tuleap-tracker', 'Tracker successfully updated.'));
