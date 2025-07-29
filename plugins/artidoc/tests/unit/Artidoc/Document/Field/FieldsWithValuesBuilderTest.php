@@ -35,6 +35,7 @@ use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\ArtifactLinkFiel
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\ArtifactLinkProject;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\ArtifactLinkStatusValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\ArtifactLinkValue;
+use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\FieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\NumericFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StaticListFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StaticListValue;
@@ -96,7 +97,7 @@ final class FieldsWithValuesBuilderTest extends TestCase
     }
 
     /**
-     * @return list<StringFieldWithValue | UserGroupsListFieldWithValue | StaticListFieldWithValue | UserListFieldWithValue | ArtifactLinkFieldWithValue | NumericFieldWithValue | UserFieldWithValue>
+     * @return list<FieldWithValue>
      */
     private function getFields(): array
     {

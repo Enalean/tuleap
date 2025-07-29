@@ -27,7 +27,7 @@ use Tuleap\Artidoc\Domain\Document\Section\Field\DisplayType;
 /**
  * @psalm-immutable
  */
-final readonly class ArtifactLinkFieldWithValue
+final readonly class ArtifactLinkFieldWithValue implements FieldWithValue
 {
     /**
      * @param list<ArtifactLinkValue> $values

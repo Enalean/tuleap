@@ -28,7 +28,7 @@ use Tuleap\Option\Option;
 /**
  * @psalm-immutable
  */
-final readonly class NumericFieldWithValue
+final readonly class NumericFieldWithValue implements FieldWithValue
 {
     /**
      * @param Option<int> | Option<float> $value

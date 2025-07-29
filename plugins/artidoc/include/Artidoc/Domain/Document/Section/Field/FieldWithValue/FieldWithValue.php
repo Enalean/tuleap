@@ -20,14 +20,8 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Artidoc\Document\Field;
+namespace Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue;
 
-use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\FieldWithValue;
-
-interface GetFieldsWithValues
+interface FieldWithValue
 {
-    /**
-     * @return list<FieldWithValue>
-     */
-    public function getFieldsWithValues(\Tracker_Artifact_Changeset $changeset): array;
 }

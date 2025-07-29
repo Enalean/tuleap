@@ -28,7 +28,7 @@ use Tuleap\Artidoc\Domain\Document\Section\Field\DisplayType;
 /**
  * @psalm-immutable
  */
-final readonly class StaticListFieldWithValue
+final readonly class StaticListFieldWithValue implements FieldWithValue
 {
     /**
      * @param list<StaticListValue> $values
