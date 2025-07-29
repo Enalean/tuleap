@@ -41,7 +41,7 @@ final class TimetrackingManagementWidgetResource extends AuthenticatedResource
     public const NAME = 'timetracking_management_widget';
 
     /**
-     * @url OPTIONS {id}/query
+     * @url OPTIONS {id}
      */
     public function allowQuery(int $id): void
     {
@@ -69,9 +69,9 @@ final class TimetrackingManagementWidgetResource extends AuthenticatedResource
     }
 
     /**
-     * Update a query
+     * Update a widget
      *
-     * Update the query of a given Timetracking Management widget.<br>
+     * Update the configuration of a given Timetracking Management widget.<br>
      *
      * <br>
      * With dates:
@@ -100,14 +100,14 @@ final class TimetrackingManagementWidgetResource extends AuthenticatedResource
      * </pre>
      *
      *
-     * @url PUT {id}/query
+     * @url PUT {id}
      * @status 200
      * @param int $id Id of the timetracking management widget
      * @param QueryPUTRepresentation $item The edited query
      *
      * @throws RestException
      */
-    protected function putQuery(int $id, QueryPUTRepresentation $item): QueryPUTResultRepresentation
+    protected function put(int $id, QueryPUTRepresentation $item): QueryPUTResultRepresentation
     {
         $this->checkAccess();
 
