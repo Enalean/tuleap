@@ -20,7 +20,7 @@
  */
 
 
-class FRSRelease
+class FRSRelease // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     public const PERM_READ = 'RELEASE_READ';
 
@@ -345,7 +345,7 @@ class FRSRelease
         return $this->release_files;
     }
 
-    public function userCanRead($user_id = 0)
+    public function userCanRead($user_id = PFUser::ANONYMOUS_USER_ID)
     {
         $release_factory = new FRSReleaseFactory();
 
@@ -385,7 +385,7 @@ class FRSRelease
      *
      * @return FRSPackageFactory
      */
-    public function _getFRSPackageFactory()
+    public function _getFRSPackageFactory() // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         return FRSPackageFactory::instance();
     }
@@ -395,7 +395,7 @@ class FRSRelease
      *
      * @return ProjectManager
      */
-    public function _getProjectManager()
+    public function _getProjectManager() // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         return ProjectManager::instance();
     }

@@ -29,7 +29,7 @@ use Tuleap\Date\DateHelper;
  *
  * Artifact.php - Main Artifact class
  */
-class Artifact
+class Artifact // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     public const FORMAT_TEXT = 0;
     public const FORMAT_HTML = 1;
@@ -1989,7 +1989,7 @@ class Artifact
      *      @param $my_user_id    if not specified, use the current user id..
      *      @return bool user_can_view.
      */
-    public function userCanView($my_user_id = 0)
+    public function userCanView($my_user_id = PFUser::ANONYMOUS_USER_ID)
     {
         if (! $my_user_id) {
             $u          = UserManager::instance()->getCurrentUser();
@@ -2702,7 +2702,7 @@ class Artifact
      *
      * @protected
      **/
-    public function _getFieldLabelAndValueForHTMLMail($group_id, $group_artifact_id, $field, $field_perm)
+    public function _getFieldLabelAndValueForHTMLMail($group_id, $group_artifact_id, $field, $field_perm) // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $html       = false;
         $read_only  = true;
@@ -3061,7 +3061,7 @@ class Artifact
         }
 
         $timezone = '';
-        if ($user->getId() != 0) {
+        if (! $user->isAnonymous()) {
             $timezone = ' (' . $user->getTimezone() . ')';
         }
 
@@ -3705,7 +3705,7 @@ class Artifact
 
     /** Update the last_update_date field in the Artifact table to 'now'
      */
-    public function update_last_update_date()
+    public function update_last_update_date() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $sql = 'UPDATE artifact SET last_update_date=' . time() .
             ' WHERE artifact_id=' . db_ei($this->getID());

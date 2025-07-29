@@ -39,7 +39,7 @@ interface ExtractAndSaveCrossReferences
         int|string $source_id,
         string $source_type,
         int|string $source_gid,
-        int|string $user_id = 0,
+        int|string $user_id = \PFUser::ANONYMOUS_USER_ID,
         ?string $source_key = null,
     ): true;
 }

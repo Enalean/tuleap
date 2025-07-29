@@ -27,7 +27,7 @@ use Tuleap\SVNCore\Event\UpdateProjectAccessFilesScheduler;
 * System Event classes
 *
 */
-class SystemEvent_MEMBERSHIP_DELETE extends SystemEvent
+class SystemEvent_MEMBERSHIP_DELETE extends SystemEvent // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /**
      * Verbalize the parameters so they are readable and much user friendly in
@@ -54,7 +54,7 @@ class SystemEvent_MEMBERSHIP_DELETE extends SystemEvent
         list($group_id,$user_id) = $this->getParametersAsArray();
 
         if ($project = $this->getProject($group_id)) {
-            if ($user_id == 0) {
+            if ($user_id == PFUser::ANONYMOUS_USER_ID) {
                 return $this->setErrorBadParam();
             }
 

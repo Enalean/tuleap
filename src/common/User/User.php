@@ -34,82 +34,83 @@ use Tuleap\User\ForgeUserGroupPermission\SiteAdministratorPermission;
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class PFUser implements PFO_User, IHaveAnSSHKey
 {
-    public const PREFERENCE_NAME_DISPLAY_USERS = 'username_display';
+    public const string PREFERENCE_NAME_DISPLAY_USERS = 'username_display';
     /**
      * The user is active
      */
-    public const STATUS_ACTIVE = 'A';
+    public const string STATUS_ACTIVE = 'A';
 
     /**
      * The user is restricted
      */
-    public const STATUS_RESTRICTED = 'R';
+    public const string STATUS_RESTRICTED = 'R';
 
     /**
      * The user is pending
      */
-    public const STATUS_PENDING = 'P';
+    public const string STATUS_PENDING = 'P';
 
     /**
      * The user is suspended
      */
-    public const STATUS_SUSPENDED = 'S';
+    public const string STATUS_SUSPENDED = 'S';
 
     /**
      * The user is deleted
      */
-    public const STATUS_DELETED = 'D';
+    public const string STATUS_DELETED = 'D';
 
     /**
      * Site admin validated the account as active
      */
-    public const STATUS_VALIDATED = 'V';
+    public const string STATUS_VALIDATED = 'V';
 
     /**
      * Site admin validated the account as restricted
      */
-    public const STATUS_VALIDATED_RESTRICTED = 'W';
+    public const string STATUS_VALIDATED_RESTRICTED = 'W';
 
-    public const PREFERENCE_DISPLAY_DENSITY = 'display_density';
-    public const DISPLAY_DENSITY_CONDENSED  = 'condensed';
+    public const string PREFERENCE_DISPLAY_DENSITY = 'display_density';
+    public const string DISPLAY_DENSITY_CONDENSED  = 'condensed';
 
     /**
      * Seperator for ssh key concatenation
      */
-    public const SSH_KEY_SEPARATOR = '###';
+    public const string SSH_KEY_SEPARATOR = '###';
 
     /**
      * Default avatar url
      */
-    public const DEFAULT_AVATAR_URL = '/themes/common/images/avatar_default.png';
+    public const string DEFAULT_AVATAR_URL = '/themes/common/images/avatar_default.png';
 
-    public const DEFAULT_CSV_SEPARATOR = 'comma';
+    public const string DEFAULT_CSV_SEPARATOR = 'comma';
 
-    public const DEFAULT_CSV_DATEFORMAT = 'month_day_year';
+    public const string DEFAULT_CSV_DATEFORMAT = 'month_day_year';
 
-    public const EDITION_DEFAULT_FORMAT = 'user_edition_default_format';
+    public const string EDITION_DEFAULT_FORMAT = 'user_edition_default_format';
 
-    public const ACCESSIBILITY_MODE = 'accessibility_mode';
+    public const string ACCESSIBILITY_MODE = 'accessibility_mode';
 
-    public const PREFERENCE_NAME_CSV_SEPARATOR          = 'user_csv_separator';
-    public const PREFERENCE_NAME_CSV_DATEFORMAT         = 'user_csv_dateformat';
-    public const PREFERENCE_NAME_EDITION_DEFAULT_FORMAT = 'user_edition_default_format';
+    public const string PREFERENCE_NAME_CSV_SEPARATOR          = 'user_csv_separator';
+    public const string PREFERENCE_NAME_CSV_DATEFORMAT         = 'user_csv_dateformat';
+    public const string PREFERENCE_NAME_EDITION_DEFAULT_FORMAT = 'user_edition_default_format';
 
-    public const PREFERENCE_CSV_COMMA     = 'comma';
-    public const PREFERENCE_CSV_SEMICOLON = 'semicolon';
-    public const PREFERENCE_CSV_TAB       = 'tab';
+    public const string PREFERENCE_CSV_COMMA     = 'comma';
+    public const string PREFERENCE_CSV_SEMICOLON = 'semicolon';
+    public const string PREFERENCE_CSV_TAB       = 'tab';
 
-    public const PREFERENCE_CSV_MONTH_DAY_YEAR = 'month_day_year';
-    public const PREFERENCE_CSV_DAY_MONTH_YEAR = 'day_month_year';
+    public const string PREFERENCE_CSV_MONTH_DAY_YEAR = 'month_day_year';
+    public const string PREFERENCE_CSV_DAY_MONTH_YEAR = 'day_month_year';
 
-    public const PREFERENCE_EDITION_TEXT       = 'text';
-    public const PREFERENCE_EDITION_HTML       = 'html';
-    public const PREFERENCE_EDITION_COMMONMARK = 'commonmark';
-    public const NONE_USER                     = 100;
+    public const string PREFERENCE_EDITION_TEXT       = 'text';
+    public const string PREFERENCE_EDITION_HTML       = 'html';
+    public const string PREFERENCE_EDITION_COMMONMARK = 'commonmark';
+    public const int    NONE_USER_ID                  = 100;
+    public const int    ANONYMOUS_USER_ID             = 0;
 
     /**
      * the id of the user
-     * = 0 if anonymous
+     * = self::ANONYMOUS_USER_ID if anonymous
      */
     protected $id;
 
@@ -216,7 +217,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
         $this->locale        = BaseLanguage::DEFAULT_LANG;
         $this->preferences   = [];
 
-        $this->user_id           = isset($row['user_id'])            ? $row['user_id']            : 0;
+        $this->user_id           = isset($row['user_id'])            ? $row['user_id']            : self::ANONYMOUS_USER_ID;
         $this->user_name         = isset($row['user_name'])          ? $row['user_name']          : null;
         $this->email             = isset($row['email'])              ? $row['email']              : null;
         $this->user_pw           = isset($row['password'])           ? $row['password']           : null;
@@ -416,14 +417,14 @@ class PFUser implements PFO_User, IHaveAnSSHKey
         $this->cache_ugroup_membership[$ugroup_id][$group_id][0] = $is_member;
     }
 
-    public function isNone()
+    public function isNone(): bool
     {
-        return $this->getId() == 100;
+        return $this->getId() == self::NONE_USER_ID;
     }
 
-    public function isAnonymous()
+    public function isAnonymous(): bool
     {
-        return $this->getId() == 0;
+        return $this->getId() == self::ANONYMOUS_USER_ID;
     }
 
     /**

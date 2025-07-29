@@ -61,7 +61,7 @@ final readonly class UserFieldWithValueBuilder implements BuildUserFieldWithValu
     {
         if ($configured_field->field instanceof Tracker_FormElement_Field_LastModifiedBy) {
             $user_id = (int) $changeset->getSubmittedBy();
-            if ($user_id === 0) {
+            if ($user_id === \PFUser::ANONYMOUS_USER_ID) {
                 $user_mail = $changeset->getEmail() ?? '';
                 return new UserValue(
                     $user_mail,
