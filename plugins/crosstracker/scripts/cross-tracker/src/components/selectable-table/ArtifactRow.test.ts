@@ -33,11 +33,11 @@ import type { ColumnName } from "../../domain/ColumnName";
 import { PRETTY_TITLE_COLUMN_NAME } from "../../domain/ColumnName";
 import type { RetrieveArtifactLinks } from "../../domain/RetrieveArtifactLinks";
 import { RETRIEVE_ARTIFACT_LINKS, WIDGET_ID } from "../../injection-symbols";
-import RowLoadAllButton from "../feedback/RowLoadAllButton.vue";
 import RowErrorMessage from "../feedback/RowErrorMessage.vue";
-import ArtifactLinkRows from "./ArtifactLinkRows.vue";
-import SelectableCell from "./SelectableCell.vue";
 import ArtifactRow from "./ArtifactRow.vue";
+import SelectableCell from "./SelectableCell.vue";
+import ArtifactLinkRows from "./ArtifactLinkRows.vue";
+import LoadAllButton from "../feedback/LoadAllButton.vue";
 
 vi.useFakeTimers();
 
@@ -211,7 +211,7 @@ describe("ArtifactRow", () => {
                 .vm.$emit("toggle-links", html_element, html_element);
             await vi.runOnlyPendingTimersAsync();
 
-            expect(wrapper.findComponent(RowLoadAllButton).exists()).toBe(false);
+            expect(wrapper.findComponent(LoadAllButton).exists()).toBe(false);
         });
 
         it.each([
@@ -235,17 +235,29 @@ describe("ArtifactRow", () => {
                     .vm.$emit("toggle-links", html_element, html_element);
                 await vi.runOnlyPendingTimersAsync();
 
-                expect(wrapper.findComponent(RowLoadAllButton).exists()).toBe(true);
+                expect(wrapper.findComponent(LoadAllButton).exists()).toBe(true);
             },
         );
 
         it.each([
-            ["forward", 59, 3],
-            ["reverse", 3, 62],
-            ["forward or reverse", 56, 72],
+            ["forward", MAXIMAL_LIMIT_OF_ARTIFACT_LINKS_FETCHED + 9, 3, 1, 0],
+            ["reverse", 3, MAXIMAL_LIMIT_OF_ARTIFACT_LINKS_FETCHED + 12, 0, 1],
+            [
+                "forward or reverse",
+                MAXIMAL_LIMIT_OF_ARTIFACT_LINKS_FETCHED + 6,
+                MAXIMAL_LIMIT_OF_ARTIFACT_LINKS_FETCHED + 22,
+                1,
+                1,
+            ],
         ])(
             "should fetch all forward and reverse links if load all button is clicked and the button should be hidden",
-            async (name, number_of_forward_links, number_of_reverse_links) => {
+            async (
+                name,
+                number_of_forward_links,
+                number_of_reverse_links,
+                number_of_expected_call_to_getAllForwardLinks,
+                number_of_expected_call_to_getAllReverseLinks,
+            ) => {
                 ancestors = [456, artifact_id];
                 level = 1;
                 artifact_links_table_retriever = RetrieveArtifactLinksStub.withTotalNumberOfLinks(
@@ -267,16 +279,20 @@ describe("ArtifactRow", () => {
                     .vm.$emit("toggle-links", html_element, html_element);
                 await vi.runOnlyPendingTimersAsync();
 
-                expect(wrapper.findComponent(RowLoadAllButton).exists()).toBe(true);
+                expect(wrapper.findComponent(LoadAllButton).exists()).toBe(true);
                 expect(getAllForwardLinks).toHaveBeenCalledTimes(0);
                 expect(getAllReverseLinks).toHaveBeenCalledTimes(0);
 
-                wrapper.findComponent(RowLoadAllButton).vm.$emit("click");
+                wrapper.findComponent(LoadAllButton).vm.$emit("load-all");
                 await vi.runOnlyPendingTimersAsync();
 
-                expect(wrapper.findComponent(RowLoadAllButton).exists()).toBe(false);
-                expect(getAllForwardLinks).toHaveBeenCalledTimes(1);
-                expect(getAllReverseLinks).toHaveBeenCalledTimes(1);
+                expect(wrapper.findComponent(LoadAllButton).exists()).toBe(false);
+                expect(getAllForwardLinks).toHaveBeenCalledTimes(
+                    number_of_expected_call_to_getAllForwardLinks,
+                );
+                expect(getAllReverseLinks).toHaveBeenCalledTimes(
+                    number_of_expected_call_to_getAllReverseLinks,
+                );
             },
         );
     });

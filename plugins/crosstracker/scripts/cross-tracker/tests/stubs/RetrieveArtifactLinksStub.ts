@@ -26,6 +26,7 @@ import type { ArtifactsTableWithTotal } from "../../src/domain/RetrieveArtifacts
 import { ArtifactsTableBuilder } from "../builders/ArtifactsTableBuilder";
 import { ArtifactRowBuilder } from "../builders/ArtifactRowBuilder";
 import { PRETTY_TITLE_COLUMN_NAME } from "../../src/domain/ColumnName";
+import { MAXIMAL_LIMIT_OF_ARTIFACT_LINKS_FETCHED } from "../../src/api/ArtifactLinksRetriever";
 
 const direct_parent_row = new ArtifactRowBuilder()
     .addCell(PRETTY_TITLE_COLUMN_NAME, {
@@ -55,9 +56,30 @@ export const RetrieveArtifactLinksStub = {
     ): RetrieveArtifactLinks {
         return {
             getForwardLinks: () =>
-                okAsync(new ArtifactsTableBuilder().buildWithTotal(total_number_of_forward_links)),
+                okAsync(
+                    new ArtifactsTableBuilder()
+                        .withTotalNumberOfRow(
+                            artifact_row,
+                            Math.min(
+                                MAXIMAL_LIMIT_OF_ARTIFACT_LINKS_FETCHED,
+                                total_number_of_forward_links,
+                            ),
+                        )
+                        .buildWithTotal(total_number_of_forward_links),
+                ),
             getReverseLinks: () =>
-                okAsync(new ArtifactsTableBuilder().buildWithTotal(total_number_of_reverse_links)),
+                okAsync(
+                    new ArtifactsTableBuilder()
+                        .withTotalNumberOfRow(direct_parent_row, 1)
+                        .withTotalNumberOfRow(
+                            artifact_row,
+                            Math.min(
+                                MAXIMAL_LIMIT_OF_ARTIFACT_LINKS_FETCHED,
+                                total_number_of_reverse_links - 1,
+                            ),
+                        )
+                        .buildWithTotal(total_number_of_reverse_links),
+                ),
             getAllForwardLinks: () =>
                 okAsync([
                     new ArtifactsTableBuilder()
