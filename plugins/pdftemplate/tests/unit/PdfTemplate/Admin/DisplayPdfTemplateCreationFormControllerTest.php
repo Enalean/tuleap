@@ -109,7 +109,7 @@ final class DisplayPdfTemplateCreationFormControllerTest extends TestCase
         $controller = new DisplayPdfTemplateCreationFormController(
             $admin_page_renderer,
             new UserCanManageTemplatesChecker(
-                ForgePermissionsRetrieverStub::withPermission(),
+                ForgePermissionsRetrieverStub::withPermission(new ManagePdfTemplates()),
             ),
             CSRFTokenProviderStub::withToken(CSRFSynchronizerTokenStub::buildSelf()),
             RetrieveAllImagesStub::withoutImages(),

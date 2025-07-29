@@ -131,7 +131,7 @@ final class DisplayPdfTemplateUpdateFormControllerTest extends TestCase
         $controller = new DisplayPdfTemplateUpdateFormController(
             $admin_page_renderer,
             new UserCanManageTemplatesChecker(
-                ForgePermissionsRetrieverStub::withPermission(),
+                ForgePermissionsRetrieverStub::withPermission(new ManagePdfTemplates()),
             ),
             new PdfTemplateIdentifierFactory(new DatabaseUUIDV7Factory()),
             RetrieveTemplateStub::withMatchingTemplate($template),

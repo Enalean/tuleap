@@ -70,7 +70,7 @@ final class RejectNonNonPdfTemplateManagerMiddlewareTest extends TestCase
         $middleware = new RejectNonNonPdfTemplateManagerMiddleware(
             ProvideCurrentUserStub::buildWithUser($user),
             new UserCanManageTemplatesChecker(
-                ForgePermissionsRetrieverStub::withPermission(),
+                ForgePermissionsRetrieverStub::withPermission(new ManagePdfTemplates()),
             ),
         );
 

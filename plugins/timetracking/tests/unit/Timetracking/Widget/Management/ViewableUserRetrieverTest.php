@@ -27,8 +27,11 @@ use Tuleap\NeverThrow\Result;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\RetrieveUserByIdStub;
+use Tuleap\Test\Stubs\User\ForgePermissionsRetrieverStub;
 use Tuleap\Timetracking\Tests\Stub\VerifyManagerCanSeeTimetrackingOfUserStub;
 use Tuleap\Timetracking\Widget\Management\ViewableUserRetriever;
+use Tuleap\Tracker\ForgeUserGroupPermission\TrackerAdminAllProjects;
+use Tuleap\User\ForgeUserGroupPermission\RESTReadOnlyAdmin\RestReadOnlyAdminPermission;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ViewableUserRetrieverTest extends TestCase
@@ -49,6 +52,7 @@ final class ViewableUserRetrieverTest extends TestCase
         $retriever = new ViewableUserRetriever(
             RetrieveUserByIdStub::withUser($alice),
             $perms_verifier,
+            ForgePermissionsRetrieverStub::withoutPermission(),
         );
 
         self::assertTrue(Result::isErr($retriever->getViewableUser($current_user, self::ALICE_ID)));
@@ -64,6 +68,7 @@ final class ViewableUserRetrieverTest extends TestCase
         $retriever = new ViewableUserRetriever(
             RetrieveUserByIdStub::withNoUser(),
             $perms_verifier,
+            ForgePermissionsRetrieverStub::withoutPermission(),
         );
 
         $result = $retriever->getViewableUser($current_user, (int) $current_user->getId());
@@ -93,6 +98,7 @@ final class ViewableUserRetrieverTest extends TestCase
         $retriever = new ViewableUserRetriever(
             RetrieveUserByIdStub::withUser($alice),
             $perms_verifier,
+            ForgePermissionsRetrieverStub::withoutPermission(),
         );
 
         self::assertTrue(Result::isErr($retriever->getViewableUser($current_user, self::ALICE_ID)));
@@ -117,6 +123,55 @@ final class ViewableUserRetrieverTest extends TestCase
         $retriever = new ViewableUserRetriever(
             RetrieveUserByIdStub::withUser($alice),
             $perms_verifier,
+            ForgePermissionsRetrieverStub::withoutPermission(),
+        );
+
+        self::assertTrue(Result::isOk($retriever->getViewableUser($current_user, self::ALICE_ID)));
+        self::assertFalse($perms_verifier->isCalled());
+    }
+
+    #[TestWith([\PFUser::STATUS_ACTIVE])]
+    #[TestWith([\PFUser::STATUS_RESTRICTED])]
+    public function testItReturnsAliveUserIfCurrentUserIsGlobalTrackerAdministrator(string $status): void
+    {
+        $current_user = UserTestBuilder::anActiveUser()
+            ->build();
+
+        $alice = UserTestBuilder::aUser()
+            ->withId(self::ALICE_ID)
+            ->withStatus($status)
+            ->build();
+
+        $perms_verifier = VerifyManagerCanSeeTimetrackingOfUserStub::allowed();
+
+        $retriever = new ViewableUserRetriever(
+            RetrieveUserByIdStub::withUser($alice),
+            $perms_verifier,
+            ForgePermissionsRetrieverStub::withPermission(new TrackerAdminAllProjects()),
+        );
+
+        self::assertTrue(Result::isOk($retriever->getViewableUser($current_user, self::ALICE_ID)));
+        self::assertFalse($perms_verifier->isCalled());
+    }
+
+    #[TestWith([\PFUser::STATUS_ACTIVE])]
+    #[TestWith([\PFUser::STATUS_RESTRICTED])]
+    public function testItReturnsAliveUserIfCurrentUserIsRestReadOnlyAdministrator(string $status): void
+    {
+        $current_user = UserTestBuilder::anActiveUser()
+            ->build();
+
+        $alice = UserTestBuilder::aUser()
+            ->withId(self::ALICE_ID)
+            ->withStatus($status)
+            ->build();
+
+        $perms_verifier = VerifyManagerCanSeeTimetrackingOfUserStub::allowed();
+
+        $retriever = new ViewableUserRetriever(
+            RetrieveUserByIdStub::withUser($alice),
+            $perms_verifier,
+            ForgePermissionsRetrieverStub::withPermission(new RestReadOnlyAdminPermission()),
         );
 
         self::assertTrue(Result::isOk($retriever->getViewableUser($current_user, self::ALICE_ID)));
@@ -140,6 +195,7 @@ final class ViewableUserRetrieverTest extends TestCase
         $retriever = new ViewableUserRetriever(
             RetrieveUserByIdStub::withUser($alice),
             $perms_verifier,
+            ForgePermissionsRetrieverStub::withoutPermission(),
         );
 
         self::assertTrue(Result::isOk($retriever->getViewableUser($current_user, self::ALICE_ID)));
@@ -163,6 +219,7 @@ final class ViewableUserRetrieverTest extends TestCase
         $retriever = new ViewableUserRetriever(
             RetrieveUserByIdStub::withUser($alice),
             $perms_verifier,
+            ForgePermissionsRetrieverStub::withoutPermission(),
         );
 
         self::assertTrue(Result::isErr($retriever->getViewableUser($current_user, self::ALICE_ID)));
