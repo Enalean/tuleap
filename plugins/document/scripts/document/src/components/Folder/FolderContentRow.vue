@@ -23,6 +23,7 @@
         v-bind:class="row_classes"
         v-bind:data-item-id="item.id"
         v-on:click="toggleQuickLookOnRow"
+        ref="table_row"
     >
         <td v-bind:colspan="colspan" v-bind:id="`document-folder-content-row-${item.id}`">
             <div
@@ -34,12 +35,57 @@
                 v-bind:id="`document-folder-content-row-div-${item.id}`"
                 data-test="document-folder-content-row"
             >
-                <component
-                    v-bind:is="cell_title_component_name"
+                <template v-if="isFile(item)">
+                    <file-uploading-cell-title
+                        v-if="item.is_uploading"
+                        v-bind:item="item"
+                        v-bind:style="item_indentation"
+                        v-bind:title="item.title"
+                    />
+                    <file-cell-title
+                        v-else
+                        v-bind:item="item"
+                        v-bind:style="item_indentation"
+                        v-bind:title="item.title"
+                    />
+                </template>
+                <embedded-cell-title
+                    v-else-if="isEmbedded(item)"
                     v-bind:item="item"
                     v-bind:style="item_indentation"
                     v-bind:title="item.title"
                 />
+                <folder-cell-title
+                    v-else-if="isFolder(item)"
+                    v-bind:item="item"
+                    v-bind:style="item_indentation"
+                    v-bind:title="item.title"
+                />
+                <link-cell-title
+                    v-else-if="isLink(item)"
+                    v-bind:item="item"
+                    v-bind:style="item_indentation"
+                    v-bind:title="item.title"
+                />
+                <wiki-cell-title
+                    v-else-if="isWiki(item)"
+                    v-bind:item="item"
+                    v-bind:style="item_indentation"
+                    v-bind:title="item.title"
+                />
+                <empty-document-cell-title
+                    v-else-if="isEmpty(item)"
+                    v-bind:item="item"
+                    v-bind:style="item_indentation"
+                    v-bind:title="item.title"
+                />
+                <other-document-cell-title
+                    v-else
+                    v-bind:item="item"
+                    v-bind:style="item_indentation"
+                    v-bind:title="item.title"
+                />
+
                 <div class="document-tree-item-toggle-quicklook-spacer"></div>
                 <div
                     class="tlp-dropdown tlp-table-cell-actions-button"
@@ -96,21 +142,12 @@
     </tr>
 </template>
 
-<script lang="ts">
-import { mapState } from "vuex";
-import {
-    TYPE_FILE,
-    TYPE_FOLDER,
-    TYPE_LINK,
-    TYPE_WIKI,
-    TYPE_EMBEDDED,
-    TYPE_EMPTY,
-} from "../../constants";
+<script setup lang="ts">
 import {
     hasNoUploadingContent,
+    isItemInTreeViewWithoutUpload,
     isItemUploadingInQuickLookMode,
     isItemUploadingInTreeView,
-    isItemInTreeViewWithoutUpload,
 } from "../../helpers/uploading-status-helper";
 import UserBadge from "../User/UserBadge.vue";
 import QuickLookButton from "./ActionsQuickLookButton/QuickLookButton.vue";
@@ -119,165 +156,108 @@ import DropDownButton from "./DropDown/DropDownButton.vue";
 import DocumentTitleLockInfo from "./LockInfo/DocumentTitleLockInfo.vue";
 import ApprovalBadge from "./ApprovalTables/ApprovalBadge.vue";
 import DropDownMenuTreeView from "./DropDown/DropDownMenuTreeView.vue";
-import { isFile, isFolder } from "../../helpers/type-check-helper";
+import {
+    isEmbedded,
+    isEmpty,
+    isFile,
+    isFolder,
+    isLink,
+    isWiki,
+} from "../../helpers/type-check-helper";
 import emitter from "../../helpers/emitter";
 import DocumentRelativeDate from "../Date/DocumentRelativeDate.vue";
-import { defineAsyncComponent } from "vue";
+import { computed, defineAsyncComponent, onMounted, ref } from "vue";
+import type { FolderContentItem, RootState } from "../../type";
+import { useState } from "vuex-composition-helpers";
 
-export default {
-    name: "FolderContentRow",
-    components: {
-        DocumentRelativeDate,
-        DropDownMenuTreeView,
-        ApprovalBadge,
-        DocumentTitleLockInfo,
-        QuickLookButton,
-        UserBadge,
-        UploadProgressBar,
-        DropDownButton,
-    },
-    props: {
-        item: Object,
-        isQuickLookDisplayed: Boolean,
-    },
-    data() {
-        return { is_dropdown_displayed: false };
-    },
-    computed: {
-        ...mapState(["folded_items_ids"]),
-        is_folded() {
-            return this.folded_items_ids.includes(this.item.id);
-        },
-        item_indentation() {
-            if (!this.item.level) {
-                return {};
-            }
+const FileUploadingCellTitle = defineAsyncComponent(
+    () => import("./ItemTitle/FileUploadingCellTitle.vue"),
+);
+const FileCellTitle = defineAsyncComponent(() => import("./ItemTitle/FileCellTitle.vue"));
+const EmbeddedCellTitle = defineAsyncComponent(() => import("./ItemTitle/EmbeddedCellTitle.vue"));
+const FolderCellTitle = defineAsyncComponent(() => import("./ItemTitle/FolderCellTitle.vue"));
+const LinkCellTitle = defineAsyncComponent(() => import("./ItemTitle/LinkCellTitle.vue"));
+const WikiCellTitle = defineAsyncComponent(() => import("./ItemTitle/WikiCellTitle.vue"));
+const EmptyDocumentCellTitle = defineAsyncComponent(
+    () => import("./ItemTitle/EmptyDocumentCellTitle.vue"),
+);
+const OtherDocumentCellTitle = defineAsyncComponent(
+    () => import("./ItemTitle/OtherDocumentCellTitle.vue"),
+);
 
-            const indentation_size = this.item.level * 23;
+const props = defineProps<{
+    item: FolderContentItem;
+    is_quick_look_displayed: boolean;
+}>();
 
-            return {
-                "padding-left": `${indentation_size}px`,
-            };
-        },
-        row_classes() {
-            return {
-                "document-tree-item-hidden": this.is_folded,
-                "document-tree-item-created": this.item.created,
-                "document-tree-item-updated": this.item.updated,
-                "document-tree-item-uploading": this.item.is_uploading,
-                "document-tree-item-folder": isFolder(this.item),
-                "document-tree-item-file": isFile(this.item),
-            };
-        },
-        cell_title_component_name() {
-            switch (this.item.type) {
-                case TYPE_FILE:
-                    if (this.item.is_uploading) {
-                        return defineAsyncComponent(
-                            () =>
-                                import(
-                                    /* webpackChunkName: "document-cell-title-file-uploading" */ `./ItemTitle/FileUploadingCellTitle.vue`
-                                ),
-                        );
-                    }
-                    return defineAsyncComponent(
-                        () =>
-                            import(
-                                /* webpackChunkName: "document-cell-title-file" */ `./ItemTitle/FileCellTitle.vue`
-                            ),
-                    );
-                case TYPE_EMBEDDED:
-                    return defineAsyncComponent(
-                        () =>
-                            import(
-                                /* webpackChunkName: "document-cell-title-embedded" */ `./ItemTitle/EmbeddedCellTitle.vue`
-                            ),
-                    );
-                case TYPE_FOLDER:
-                    return defineAsyncComponent(
-                        () =>
-                            import(
-                                /* webpackChunkName: "document-cell-title-folder" */ `./ItemTitle/FolderCellTitle.vue`
-                            ),
-                    );
-                case TYPE_LINK:
-                    return defineAsyncComponent(
-                        () =>
-                            import(
-                                /* webpackChunkName: "document-cell-title-link" */ `./ItemTitle/LinkCellTitle.vue`
-                            ),
-                    );
-                case TYPE_WIKI:
-                    return defineAsyncComponent(
-                        () =>
-                            import(
-                                /* webpackChunkName: "document-cell-title-wiki" */ `./ItemTitle/WikiCellTitle.vue`
-                            ),
-                    );
-                case TYPE_EMPTY:
-                    return defineAsyncComponent(
-                        () =>
-                            import(
-                                /* webpackChunkName: "document-cell-title-empty" */ `./ItemTitle/EmptyDocumentCellTitle.vue`
-                            ),
-                    );
-                default:
-                    return defineAsyncComponent(
-                        () =>
-                            import(
-                                /* webpackChunkName: "document-cell-title-other-document" */ `./ItemTitle/OtherDocumentCellTitle.vue`
-                            ),
-                    );
-            }
-        },
-        colspan() {
-            return this.item.is_uploading ? 4 : 1;
-        },
-        item_is_not_being_uploaded() {
-            return hasNoUploadingContent(this.item);
-        },
-        is_item_uploading_in_quicklook_mode() {
-            return isItemUploadingInQuickLookMode(this.item, this.isQuickLookDisplayed);
-        },
-        is_item_uploading_without_quick_look_mode() {
-            return isItemUploadingInTreeView(this.item, this.isQuickLookDisplayed);
-        },
-        is_not_uploading_and_is_not_in_quicklook() {
-            return isItemInTreeViewWithoutUpload(this.item, this.isQuickLookDisplayed);
-        },
-    },
-    mounted() {
-        emitter.on("set-dropdown-shown", this.setIsDropdownDisplayed);
-        if (!(this.item.created || this.item.is_uploading)) {
-            return;
-        }
+const is_dropdown_displayed = ref<boolean>(false);
+const table_row = ref<HTMLElement>();
 
-        const magic_number_in_px_to_detect_if_we_partially_show_the_item = 20;
-        const position_from_top =
-            this.$el.getBoundingClientRect().top +
-            magic_number_in_px_to_detect_if_we_partially_show_the_item;
-        const viewport_height = window.innerHeight || document.documentElement.clientHeight;
-        const is_under_the_fold = position_from_top > viewport_height;
+const { folded_items_ids } = useState<Pick<RootState, "folded_items_ids">>(["folded_items_ids"]);
 
-        if (is_under_the_fold) {
-            emitter.emit("item-has-been-created-under-the-fold", {
-                detail: { item: this.item },
-            });
-        }
-    },
-    methods: {
-        toggleQuickLookOnRow(event) {
-            if (
-                !this.is_dropdown_displayed &&
-                (event.target.id === `document-folder-content-row-${this.item.id}` ||
-                    event.target.id === `document-folder-content-row-div-${this.item.id}`)
-            ) {
-                emitter.emit("toggle-quick-look", { details: { item: this.item } });
-            }
-        },
-        setIsDropdownDisplayed(event) {
-            this.is_dropdown_displayed = event.is_dropdown_shown;
-        },
-    },
-};
+const is_folded = computed(() => folded_items_ids.value.includes(props.item.id));
+const item_indentation = computed(() => {
+    if (!props.item.level) {
+        return {};
+    }
+
+    const indentation_size = props.item.level * 23;
+
+    return {
+        "padding-left": `${indentation_size}px`,
+    };
+});
+const row_classes = computed(() => ({
+    "document-tree-item-hidden": is_folded.value,
+    "document-tree-item-created": props.item.created,
+    "document-tree-item-updated": props.item.updated,
+    "document-tree-item-uploading": props.item.is_uploading,
+    "document-tree-item-folder": isFolder(props.item),
+    "document-tree-item-file": isFile(props.item),
+}));
+const colspan = computed(() => (props.item.is_uploading ? 4 : 1));
+const item_is_not_being_uploaded = computed(() => hasNoUploadingContent(props.item));
+const is_item_uploading_in_quicklook_mode = computed(() =>
+    isItemUploadingInQuickLookMode(props.item, props.is_quick_look_displayed),
+);
+const is_item_uploading_without_quick_look_mode = computed(() =>
+    isItemUploadingInTreeView(props.item, props.is_quick_look_displayed),
+);
+const is_not_uploading_and_is_not_in_quicklook = computed(() =>
+    isItemInTreeViewWithoutUpload(props.item, props.is_quick_look_displayed),
+);
+
+onMounted(() => {
+    emitter.on("set-dropdown-shown", setIsDropdownDisplayed);
+    if (!(props.item.created || props.item.is_uploading)) {
+        return;
+    }
+
+    const magic_number_in_px_to_detect_if_we_partially_show_the_item = 20;
+    const position_from_top =
+        table_row.value.getBoundingClientRect().top +
+        magic_number_in_px_to_detect_if_we_partially_show_the_item;
+    const viewport_height = window.innerHeight || document.documentElement.clientHeight;
+    const is_under_the_fold = position_from_top > viewport_height;
+
+    if (is_under_the_fold) {
+        emitter.emit("item-has-been-created-under-the-fold", {
+            detail: { item: props.item },
+        });
+    }
+});
+
+function toggleQuickLookOnRow(event: MouseEvent): void {
+    if (
+        !is_dropdown_displayed.value &&
+        (event.target.id === `document-folder-content-row-${props.item.id}` ||
+            event.target.id === `document-folder-content-row-div-${props.item.id}`)
+    ) {
+        emitter.emit("toggle-quick-look", { details: { item: props.item } });
+    }
+}
+
+function setIsDropdownDisplayed(event: { is_dropdown_shown: boolean }): void {
+    is_dropdown_displayed.value = event.is_dropdown_shown;
+}
 </script>

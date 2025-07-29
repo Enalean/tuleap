@@ -45,20 +45,26 @@ export function isFile(
     return item.type === TYPE_FILE;
 }
 
-export function isEmpty(item: Item | Embedded | Empty | ItemFile | Link | Wiki): item is Empty {
+export function isEmpty(
+    item: Item | Embedded | Empty | ItemFile | Link | Wiki | FakeItem,
+): item is Empty {
     return item.type === TYPE_EMPTY;
 }
 
-export function isLink(item: Item | Embedded | Empty | ItemFile | Link | Wiki): item is Link {
+export function isLink(
+    item: Item | Embedded | Empty | ItemFile | Link | Wiki | FakeItem,
+): item is Link {
     return item.type === TYPE_LINK;
 }
 
-export function isWiki(item: Item | Embedded | Empty | ItemFile | Link | Wiki): item is Wiki {
+export function isWiki(
+    item: Item | Embedded | Empty | ItemFile | Link | Wiki | FakeItem,
+): item is Wiki {
     return item.type === TYPE_WIKI;
 }
 
 export function isEmbedded(
-    item: Item | Embedded | Empty | ItemFile | Link | Wiki,
+    item: Item | Embedded | Empty | ItemFile | Link | Wiki | FakeItem,
 ): item is Embedded {
     return item.type === TYPE_EMBEDDED;
 }
