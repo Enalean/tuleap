@@ -22,9 +22,10 @@ import { shallowMount } from "@vue/test-utils";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import { createTrackerCreationLocalVue } from "../../../../helpers/local-vue-for-tests";
 import FieldShortnameSlugified from "./FieldShortnameSlugified.vue";
+import type Vue from "vue";
 
 describe("FieldShortnameSlugified", () => {
-    async function getWrapper(): Promise<Wrapper<FieldShortnameSlugified>> {
+    async function getWrapper(): Promise<Wrapper<Vue>> {
         return shallowMount(FieldShortnameSlugified, {
             mocks: {
                 $store: createStoreMock({

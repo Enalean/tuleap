@@ -41,28 +41,21 @@
         />
     </div>
 </template>
-<script lang="ts">
-import Vue from "vue";
-import { State, Mutation } from "vuex-class";
-import { Component } from "vue-property-decorator";
+<script setup lang="ts">
+import { useMutations, useState } from "vuex-composition-helpers";
 import type { TrackerToBeCreatedMandatoryData } from "../../../../store/type";
 
-@Component({
-    components: {},
-})
-export default class FieldShortnameSlugified extends Vue {
-    @State
-    readonly tracker_to_be_created!: TrackerToBeCreatedMandatoryData;
+const { tracker_to_be_created } = useState<{
+    tracker_to_be_created: TrackerToBeCreatedMandatoryData;
+}>(["tracker_to_be_created"]);
 
-    @Mutation
-    readonly setSlugifyShortnameMode!: (is_active: boolean) => void;
+const { setSlugifyShortnameMode } = useMutations(["setSlugifyShortnameMode"]);
 
-    toggleManualMode(): void {
-        this.setSlugifyShortnameMode(false);
-    }
+const toggleManualMode = (): void => {
+    setSlugifyShortnameMode(false);
+};
 
-    isTrackerNameEmpty(): boolean {
-        return this.tracker_to_be_created.name.length === 0;
-    }
-}
+const isTrackerNameEmpty = (): boolean => {
+    return tracker_to_be_created.value.name.length === 0;
+};
 </script>
