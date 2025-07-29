@@ -41,6 +41,8 @@ import {
     INT_FIELD,
     PRIORITY_FIELD,
     COMPUTED_FIELD,
+    LAST_UPDATED_BY_FIELD,
+    SUBMITTED_BY_FIELD,
 } from "@tuleap/plugin-tracker-constants";
 import { ConfigurationFieldBuilder } from "@/sections/readonly-fields/ConfigurationFieldBuilder";
 
@@ -200,6 +202,18 @@ describe("getAvailableFields", () => {
         label: "Total remaining effort",
     } as StructureFields;
 
+    const submitted_by_field = {
+        field_id: 146,
+        type: SUBMITTED_BY_FIELD,
+        label: "Submitted by",
+    } as StructureFields;
+
+    const last_update_by_field = {
+        field_id: 147,
+        type: LAST_UPDATED_BY_FIELD,
+        label: "Last update by",
+    } as StructureFields;
+
     const all_fields: Readonly<StructureFields[]> = [
         string_field,
         summary_field,
@@ -229,6 +243,8 @@ describe("getAvailableFields", () => {
         int_field,
         priority_field,
         computed_field,
+        submitted_by_field,
+        last_update_by_field,
     ];
 
     const tracker_information = {
@@ -264,6 +280,8 @@ describe("getAvailableFields", () => {
                 ConfigurationFieldBuilder.fromSupportedTrackerField(int_field),
                 ConfigurationFieldBuilder.fromSupportedTrackerField(priority_field),
                 ConfigurationFieldBuilder.fromSupportedTrackerField(computed_field),
+                ConfigurationFieldBuilder.fromSupportedTrackerField(submitted_by_field),
+                ConfigurationFieldBuilder.fromSupportedTrackerField(last_update_by_field),
             ]);
         });
     });

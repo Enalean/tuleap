@@ -36,6 +36,8 @@ import {
     INT_FIELD,
     PRIORITY_FIELD,
     COMPUTED_FIELD,
+    LAST_UPDATED_BY_FIELD,
+    SUBMITTED_BY_FIELD,
 } from "@tuleap/plugin-tracker-constants";
 import type {
     ConfigurationField,
@@ -50,6 +52,7 @@ import {
     NUMERIC_FIELD,
     STATIC_LIST_FIELD,
     STRING_FIELD,
+    USER_FIELD,
     USER_GROUP_LIST_FIELD,
     USER_LIST_FIELD,
 } from "@/sections/readonly-fields/ReadonlyFields";
@@ -109,6 +112,14 @@ const buildConfiguredFieldIfSupported = (field: StructureFields): Option<Configu
             display_type: DISPLAY_TYPE_BLOCK,
             type: LINKS_FIELD,
             can_display_type_be_changed: false,
+        });
+    }
+
+    if (field.type === LAST_UPDATED_BY_FIELD || field.type === SUBMITTED_BY_FIELD) {
+        return Option.fromValue<ConfigurationField>({
+            ...field_base,
+            display_type: DISPLAY_TYPE_COLUMN,
+            type: USER_FIELD,
         });
     }
 

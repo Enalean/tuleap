@@ -29,6 +29,7 @@ import type {
     NUMERIC_FIELD,
     STATIC_LIST_FIELD,
     STRING_FIELD,
+    USER_FIELD,
     USER_GROUP_LIST_FIELD,
     USER_LIST_FIELD,
 } from "@/sections/readonly-fields/ReadonlyFields";
@@ -46,7 +47,8 @@ export type ConfigurationFieldType =
     | typeof USER_GROUP_LIST_FIELD
     | typeof STATIC_LIST_FIELD
     | typeof USER_LIST_FIELD
-    | typeof NUMERIC_FIELD;
+    | typeof NUMERIC_FIELD
+    | typeof USER_FIELD;
 
 export type ConfigurationField = {
     readonly type: ConfigurationFieldType;

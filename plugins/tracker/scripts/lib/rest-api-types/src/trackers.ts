@@ -35,6 +35,8 @@ import type {
     FloatFieldIdentifier,
     IntFieldIdentifier,
     PriorityFieldIdentifier,
+    SubmittedByFieldIdentifier,
+    LastUpdateByFieldIdentifier,
 } from "@tuleap/plugin-tracker-constants";
 import type { ProjectReference } from "@tuleap/core-rest-api-types";
 
@@ -103,6 +105,10 @@ export interface NumericFieldStructure extends BaseFieldStructure {
         | ComputedFieldIdentifier;
 }
 
+export interface UserFieldStructure extends BaseFieldStructure {
+    readonly type: SubmittedByFieldIdentifier | LastUpdateByFieldIdentifier;
+}
+
 export type StructureFields =
     | UnknownFieldStructure
     | ArtifactLinkFieldStructure
@@ -112,7 +118,8 @@ export type StructureFields =
     | OpenListFieldStructure
     | PermissionsOnArtifactFieldStructure
     | StringFieldStructure
-    | NumericFieldStructure;
+    | NumericFieldStructure
+    | UserFieldStructure;
 
 export interface StructureFormat {
     readonly id: number;
