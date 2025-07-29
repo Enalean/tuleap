@@ -25,6 +25,7 @@ namespace Tuleap\Artidoc\REST\v1\ArtifactSection;
 use PFUser;
 use Tuleap\Artidoc\Document\Field\GetFieldsWithValues;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\ArtifactLinkFieldWithValue;
+use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\DateFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\NumericFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StaticListFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StringFieldWithValue;
@@ -34,6 +35,7 @@ use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserListFieldWit
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
 use Tuleap\Artidoc\Domain\Document\Section\Level;
 use Tuleap\Artidoc\REST\v1\ArtifactSection\Field\SectionArtifactLinkFieldRepresentation;
+use Tuleap\Artidoc\REST\v1\ArtifactSection\Field\SectionDateFieldRepresentation;
 use Tuleap\Artidoc\REST\v1\ArtifactSection\Field\SectionNumericFieldRepresentation;
 use Tuleap\Artidoc\REST\v1\ArtifactSection\Field\SectionStaticListFieldRepresentation;
 use Tuleap\Artidoc\REST\v1\ArtifactSection\Field\SectionStringFieldRepresentation;
@@ -95,7 +97,7 @@ final readonly class ArtifactSectionRepresentationBuilder
     }
 
     /**
-     * @return list<SectionStringFieldRepresentation | SectionUserGroupsListFieldRepresentation | SectionStaticListFieldRepresentation | SectionUserListFieldRepresentation | SectionArtifactLinkFieldRepresentation | SectionNumericFieldRepresentation | SectionUserFieldRepresentation>
+     * @return list<SectionStringFieldRepresentation | SectionUserGroupsListFieldRepresentation | SectionStaticListFieldRepresentation | SectionUserListFieldRepresentation | SectionArtifactLinkFieldRepresentation | SectionNumericFieldRepresentation | SectionUserFieldRepresentation | SectionDateFieldRepresentation>
      */
     private function getFieldValues(RequiredArtifactInformation $artifact_information): array
     {
@@ -110,6 +112,7 @@ final readonly class ArtifactSectionRepresentationBuilder
                 ArtifactLinkFieldWithValue::class   => new SectionArtifactLinkFieldRepresentation($field),
                 NumericFieldWithValue::class        => new SectionNumericFieldRepresentation($field),
                 UserFieldWithValue::class           => new SectionUserFieldRepresentation($field),
+                DateFieldWithValue::class           => new SectionDateFieldRepresentation($field),
             };
         }
         return $representations;

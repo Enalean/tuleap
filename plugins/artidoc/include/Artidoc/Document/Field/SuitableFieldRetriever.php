@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Artidoc\Document\Field;
 
 use PFUser;
+use Tracker_FormElement_Field_Date;
 use Tracker_FormElement_Field_LastModifiedBy;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Bind_Null;
@@ -52,7 +53,7 @@ final readonly class SuitableFieldRetriever
     }
 
     /**
-     * @return Ok<StringField> | Ok<Tracker_FormElement_Field_List> | Ok<ArtifactLinkField> | Ok<Tracker_FormElement_Field_Numeric> | Err<Fault>
+     * @return Ok<StringField> | Ok<Tracker_FormElement_Field_List> | Ok<ArtifactLinkField> | Ok<Tracker_FormElement_Field_Numeric> | OK<Tracker_FormElement_Field_Date> | Err<Fault>
      */
     public function retrieveField(int $field_id, PFUser $user): Ok|Err
     {
@@ -67,6 +68,7 @@ final readonly class SuitableFieldRetriever
             $field instanceof Tracker_FormElement_Field_List    => $this->validateListField($field),
             $field instanceof ArtifactLinkField                 => Result::ok($field),
             $field instanceof Tracker_FormElement_Field_Numeric => Result::ok($field),
+            $field instanceof Tracker_FormElement_Field_Date    => Result::ok($field),
             default                                             => Result::err(FieldNotSupportedFault::build($field_id))
         };
     }

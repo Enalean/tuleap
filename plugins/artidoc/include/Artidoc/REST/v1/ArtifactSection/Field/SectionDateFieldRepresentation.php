@@ -22,14 +22,26 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\REST\v1\ArtifactSection\Field;
 
-enum FieldType: string
+use DateTimeImmutable;
+use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\DateFieldWithValue;
+
+/**
+ * @psalm-immutable
+ */
+final readonly class SectionDateFieldRepresentation
 {
-    case STRING           = 'string';
-    case USER_GROUPS_LIST = 'user_groups_list';
-    case STATIC_LIST      = 'static_list';
-    case USER_LIST        = 'user_list';
-    case ARTIFACT_LINK    = 'links';
-    case NUMERIC          = 'numeric';
-    case USER             = 'user';
-    case DATE             = 'date';
+    public string $type;
+    public string $label;
+    public string $display_type;
+    public ?string $value;
+    public bool $with_time;
+
+    public function __construct(DateFieldWithValue $field)
+    {
+        $this->type         = FieldType::DATE->value;
+        $this->label        = $field->label;
+        $this->display_type = $field->display_type->value;
+        $this->value        = $field->value->unwrapOr(null)?->format(DateTimeImmutable::ATOM);
+        $this->with_time    = $field->with_time;
+    }
 }

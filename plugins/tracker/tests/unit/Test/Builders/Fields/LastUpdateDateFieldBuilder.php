@@ -22,12 +22,16 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Test\Builders\Fields;
 
+use Tracker_FormElement_Field_LastUpdateDate;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Tracker;
 
 final class LastUpdateDateFieldBuilder
 {
+    use FieldBuilderWithPermissions;
+
     private string $name = 'last_update_date';
-    private \Tuleap\Tracker\Tracker $tracker;
+    private Tracker $tracker;
 
     private function __construct(private readonly int $id)
     {
@@ -45,9 +49,15 @@ final class LastUpdateDateFieldBuilder
         return $this;
     }
 
-    public function build(): \Tracker_FormElement_Field_LastUpdateDate
+    public function inTracker(Tracker $tracker): self
     {
-        $field = new \Tracker_FormElement_Field_LastUpdateDate(
+        $this->tracker = $tracker;
+        return $this;
+    }
+
+    public function build(): Tracker_FormElement_Field_LastUpdateDate
+    {
+        $field = new Tracker_FormElement_Field_LastUpdateDate(
             $this->id,
             $this->tracker->getId(),
             9,
@@ -61,6 +71,9 @@ final class LastUpdateDateFieldBuilder
             10,
             null
         );
+        $field->setTracker($this->tracker);
+
+        $this->setPermissions($field);
 
         return $field;
     }

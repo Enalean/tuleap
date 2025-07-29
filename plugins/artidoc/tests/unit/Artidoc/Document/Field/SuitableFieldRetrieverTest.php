@@ -24,6 +24,7 @@ namespace Tuleap\Artidoc\Document\Field;
 
 use PFUser;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use Tracker_FormElement_Field_Date;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Bind_Null;
 use Tracker_FormElement_Field_Numeric;
@@ -44,10 +45,12 @@ use Tuleap\Tracker\Semantic\Title\RetrieveSemanticTitleField;
 use Tuleap\Tracker\Test\Builders\Fields\ArtifactIdFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ArtifactLinkFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ComputedFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ExternalFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\FloatFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\IntegerFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\LastUpdateByFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\LastUpdateDateFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserGroupBindBuilder;
@@ -56,6 +59,7 @@ use Tuleap\Tracker\Test\Builders\Fields\PerTrackerArtifactIdFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\PriorityFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\SubmittedByFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SubmittedOnFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
 use Tuleap\Tracker\Test\Stub\Semantic\Description\RetrieveSemanticDescriptionFieldStub;
@@ -83,7 +87,7 @@ final class SuitableFieldRetrieverTest extends TestCase
     }
 
     /**
-     * @return Ok<StringField> | Ok<Tracker_FormElement_Field_List> | Ok<ArtifactLinkField> | OK<Tracker_FormElement_Field_Numeric> | Err<Fault>
+     * @return Ok<StringField> | Ok<Tracker_FormElement_Field_List> | Ok<ArtifactLinkField> | OK<Tracker_FormElement_Field_Numeric> | Ok<Tracker_FormElement_Field_Date> | Err<Fault>
      */
     private function retrieve(): Ok|Err
     {
@@ -344,5 +348,58 @@ final class SuitableFieldRetrieverTest extends TestCase
         $result = $this->retrieve();
         self::assertTrue(Result::isOk($result));
         self::assertSame($int_field, $result->value);
+    }
+
+    public function testItAllowsDateField(): void
+    {
+        $date_field            = DateFieldBuilder::aDateField(self::FIELD_ID)
+            ->inTracker($this->tracker)
+            ->withReadPermission($this->user, true)
+            ->build();
+        $this->field_retriever = RetrieveUsedFieldsStub::withFields($date_field);
+
+        $result = $this->retrieve();
+        self::assertTrue(Result::isOk($result));
+        self::assertSame($date_field, $result->value);
+    }
+
+    public function testItAllowsDateTimeField(): void
+    {
+        $date_field            = DateFieldBuilder::aDateField(self::FIELD_ID)
+            ->inTracker($this->tracker)
+            ->withTime()
+            ->withReadPermission($this->user, true)
+            ->build();
+        $this->field_retriever = RetrieveUsedFieldsStub::withFields($date_field);
+
+        $result = $this->retrieve();
+        self::assertTrue(Result::isOk($result));
+        self::assertSame($date_field, $result->value);
+    }
+
+    public function testItAllowsLastUpdateDateField(): void
+    {
+        $date_field            = LastUpdateDateFieldBuilder::aLastUpdateDateField(self::FIELD_ID)
+            ->inTracker($this->tracker)
+            ->withReadPermission($this->user, true)
+            ->build();
+        $this->field_retriever = RetrieveUsedFieldsStub::withFields($date_field);
+
+        $result = $this->retrieve();
+        self::assertTrue(Result::isOk($result));
+        self::assertSame($date_field, $result->value);
+    }
+
+    public function testItAllowsSubmittedOnField(): void
+    {
+        $date_field            = SubmittedOnFieldBuilder::aSubmittedOnField(self::FIELD_ID)
+            ->inTracker($this->tracker)
+            ->withReadPermission($this->user, true)
+            ->build();
+        $this->field_retriever = RetrieveUsedFieldsStub::withFields($date_field);
+
+        $result = $this->retrieve();
+        self::assertTrue(Result::isOk($result));
+        self::assertSame($date_field, $result->value);
     }
 }

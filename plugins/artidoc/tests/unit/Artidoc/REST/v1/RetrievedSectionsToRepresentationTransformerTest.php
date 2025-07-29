@@ -38,6 +38,7 @@ use Tuleap\Artidoc\REST\v1\ArtifactSection\ArtifactSectionRepresentation;
 use Tuleap\Artidoc\REST\v1\ArtifactSection\ArtifactSectionRepresentationBuilder;
 use Tuleap\Artidoc\REST\v1\ArtifactSection\RequiredArtifactInformationBuilder;
 use Tuleap\Artidoc\Stubs\Document\Field\ArtifactLink\BuildArtifactLinkFieldWithValueStub;
+use Tuleap\Artidoc\Stubs\Document\Field\Date\BuildDateFieldWithValueStub;
 use Tuleap\Artidoc\Stubs\Document\Field\List\BuildListFieldWithValueStub;
 use Tuleap\Artidoc\Stubs\Document\Field\Numeric\BuildNumericFieldWithValueStub;
 use Tuleap\Artidoc\Stubs\Document\Field\User\BuildUserFieldWithValueStub;
@@ -108,7 +109,8 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
                         BuildListFieldWithValueStub::withCallback($this->notCalledCallback(...)),
                         BuildArtifactLinkFieldWithValueStub::withCallback($this->notCalledCallback(...)),
                         BuildNumericFieldWithValueStub::withCallback($this->notCalledCallback(...)),
-                        BuildUserFieldWithValueStub::withCallback($this->notCalledCallback(...))
+                        BuildUserFieldWithValueStub::withCallback($this->notCalledCallback(...)),
+                        BuildDateFieldWithValueStub::withCallback($this->notCalledCallback(...)),
                     )
                 ),
             ),

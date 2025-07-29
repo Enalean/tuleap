@@ -44,6 +44,7 @@ use Tuleap\Artidoc\Document\DocumentServiceFromAllowedProjectRetriever;
 use Tuleap\Artidoc\Document\Field\ArtifactLink\ArtifactLinkFieldWithValueBuilder;
 use Tuleap\Artidoc\Document\Field\ConfiguredFieldCollectionBuilder;
 use Tuleap\Artidoc\Document\Field\ConfiguredFieldDao;
+use Tuleap\Artidoc\Document\Field\Date\DateFieldWithValueBuilder;
 use Tuleap\Artidoc\Document\Field\FieldsWithValuesBuilder;
 use Tuleap\Artidoc\Document\Field\List\ListFieldWithValueBuilder;
 use Tuleap\Artidoc\Document\Field\List\StaticListFieldWithValueBuilder;
@@ -586,6 +587,7 @@ final class ArtidocResource extends AuthenticatedResource
                     $provide_user_avatar_url,
                     UserHelper::instance(),
                 ),
+                new DateFieldWithValueBuilder($user),
             )
         );
     }

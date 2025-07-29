@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,16 +20,18 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Artidoc\REST\v1\ArtifactSection\Field;
+namespace Tuleap\Artidoc\Document\Field\Date;
 
-enum FieldType: string
+use Tracker_Artifact_Changeset;
+use Tracker_Artifact_ChangesetValue_Date;
+use Tuleap\Artidoc\Document\Field\ConfiguredField;
+use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\DateFieldWithValue;
+
+interface BuildDateFieldWithValue
 {
-    case STRING           = 'string';
-    case USER_GROUPS_LIST = 'user_groups_list';
-    case STATIC_LIST      = 'static_list';
-    case USER_LIST        = 'user_list';
-    case ARTIFACT_LINK    = 'links';
-    case NUMERIC          = 'numeric';
-    case USER             = 'user';
-    case DATE             = 'date';
+    public function buildDateFieldWithValue(
+        ConfiguredField $configured_field,
+        Tracker_Artifact_Changeset $changeset,
+        ?Tracker_Artifact_ChangesetValue_Date $changeset_value,
+    ): DateFieldWithValue;
 }
