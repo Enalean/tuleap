@@ -24,11 +24,12 @@
 
 use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\ArtifactId\ArtifactIdField;
 use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFullRepresentation;
 
-class Tracker_FormElement_Field_PerTrackerArtifactId extends Tracker_FormElement_Field_ArtifactId // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class Tracker_FormElement_Field_PerTrackerArtifactId extends ArtifactIdField // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public function getCriteriaFromWhere(Tracker_Report_Criteria $criteria): Option
     {

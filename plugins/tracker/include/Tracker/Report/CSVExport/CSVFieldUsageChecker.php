@@ -24,7 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Report\CSVExport;
 
 use Tracker_FormElement_Field;
-use Tracker_FormElement_Field_ArtifactId;
+use Tuleap\Tracker\FormElement\Field\ArtifactId\ArtifactIdField;
 use Tracker_FormElement_Field_Burndown;
 use Tracker_FormElement_Field_PerTrackerArtifactId;
 
@@ -35,7 +35,7 @@ class CSVFieldUsageChecker
         return $field->isUsed()
             && $field->userCanRead()
             && ! (
-                ($field instanceof Tracker_FormElement_Field_ArtifactId && ! $field instanceof Tracker_FormElement_Field_PerTrackerArtifactId)
+                ($field instanceof ArtifactIdField && ! $field instanceof Tracker_FormElement_Field_PerTrackerArtifactId)
                 || $field instanceof Tracker_FormElement_Field_Burndown
             );
     }

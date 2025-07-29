@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Artifact\ArtifactsDeletion;
 
 use Tracker_Artifact_ChangesetValue_File;
-use Tracker_FormElement_Field_ArtifactId;
+use Tuleap\Tracker\FormElement\Field\ArtifactId\ArtifactIdField;
 use Tracker_FormElement_Field_Burndown;
 use Tracker_FormElement_Field_Checkbox;
 use Tracker_FormElement_Field_Computed;
@@ -131,7 +131,7 @@ class ArtifactFilesDeletorVisitor implements Tracker_FormElement_FieldVisitor
     {
     }
 
-    public function visitArtifactId(Tracker_FormElement_Field_ArtifactId $field): void
+    public function visitArtifactId(ArtifactIdField $field): void
     {
     }
 

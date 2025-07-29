@@ -18,6 +18,7 @@
  */
 
 use Tuleap\JSONHeader;
+use Tuleap\Tracker\FormElement\Field\ArtifactId\ArtifactIdField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldAdmin;
 use Tuleap\Tracker\FormElement\Field\Float\FloatField;
@@ -137,7 +138,7 @@ class Tracker_FormElement_View_Admin_Visitor implements Tracker_FormElement_Visi
         $this->adminElement = new Tracker_FormElement_View_Admin_Field($element, $this->allUsedElements);
     }
 
-    public function visitArtifactId(Tracker_FormElement_Field_ArtifactId $element)
+    public function visitArtifactId(ArtifactIdField $element)
     {
         $this->element      = $element;
         $this->adminElement = new Tracker_FormElement_View_Admin_Field_ArtifactId($element, $this->allUsedElements);

@@ -19,17 +19,29 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\Tracker\FormElement\Field\ArtifactId;
+
+use Override;
+use PFUser;
+use Tracker_Artifact_Changeset;
+use Tracker_Artifact_ChangesetValue;
+use Tracker_FormElement_Field_ReadOnly;
+use Tracker_FormElement_FieldVisitor;
+use Tracker_FormElementFactory;
+use Tracker_Report;
+use Tracker_Report_Criteria;
 use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\Integer\IntegerField;
 use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
+use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFullRepresentation;
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
-class Tracker_FormElement_Field_ArtifactId extends IntegerField implements Tracker_FormElement_Field_ReadOnly
+class ArtifactIdField extends IntegerField implements Tracker_FormElement_Field_ReadOnly
 {
     public array $default_properties = [];
 
+    #[Override]
     public function getCriteriaFromWhere(Tracker_Report_Criteria $criteria): Option
     {
         $criteria_value = $this->getCriteriaValue($criteria);
@@ -45,11 +57,13 @@ class Tracker_FormElement_Field_ArtifactId extends IntegerField implements Track
         );
     }
 
+    #[Override]
     public function getQuerySelect(): string
     {
         return 'a.id AS ' . $this->getQuerySelectName();
     }
 
+    #[Override]
     public function getQueryFrom()
     {
         return '';
@@ -58,23 +72,26 @@ class Tracker_FormElement_Field_ArtifactId extends IntegerField implements Track
     /**
      * Get the "group by" statement to retrieve field values
      */
+    #[Override]
     public function getQueryGroupby(): string
     {
         return 'a.id';
     }
 
+    #[Override]
     public function getFullRESTValue(PFUser $user, Tracker_Artifact_Changeset $changeset)
     {
-        $artifact_field_value_full_representation = new Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFullRepresentation();
+        $artifact_field_value_full_representation = new ArtifactFieldValueFullRepresentation();
         $artifact_field_value_full_representation->build(
             $this->getId(),
             Tracker_FormElementFactory::instance()->getType($this),
             $this->getLabel(),
-            (int) $changeset->getArtifact()->getId()
+            $changeset->getArtifact()->getId(),
         );
         return $artifact_field_value_full_representation;
     }
 
+    #[Override]
     public function fetchChangesetValue(
         int $artifact_id,
         int $changeset_id,
@@ -92,6 +109,7 @@ class Tracker_FormElement_Field_ArtifactId extends IntegerField implements Track
     /**
      * @return array the available aggreagate functions for this field. empty array if none or irrelevant.
      */
+    #[Override]
     public function getAggregateFunctions()
     {
         return [];
@@ -101,6 +119,7 @@ class Tracker_FormElement_Field_ArtifactId extends IntegerField implements Track
      * Display the field as a Changeset value.
      * Used in CSV data export.
      */
+    #[Override]
     public function fetchCSVChangesetValue(int $artifact_id, int $changeset_id, mixed $value, ?Tracker_Report $report): string
     {
         return $value ?? '';
@@ -113,6 +132,7 @@ class Tracker_FormElement_Field_ArtifactId extends IntegerField implements Track
      * @param Tracker_Artifact_ChangesetValue $value            The actual value of the field
      * @param array                           $submitted_values The value already submitted by the user
      */
+    #[Override]
     protected function fetchArtifactValue(
         Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value,
@@ -129,6 +149,7 @@ class Tracker_FormElement_Field_ArtifactId extends IntegerField implements Track
      *
      * @return string
      */
+    #[Override]
     public function fetchArtifactValueReadOnly(Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
     {
         return '<a href="' . TRACKER_BASE_URL . '/?' . http_build_query(['aid' => (int) $artifact->id]) . '">#' . (int) $artifact->id . '</a>';
@@ -137,6 +158,7 @@ class Tracker_FormElement_Field_ArtifactId extends IntegerField implements Track
     /**
      * Fetch artifact value for email
      */
+    #[Override]
     public function fetchMailArtifactValue(
         Artifact $artifact,
         PFUser $user,
@@ -156,6 +178,7 @@ class Tracker_FormElement_Field_ArtifactId extends IntegerField implements Track
         return $output;
     }
 
+    #[Override]
     public function fetchArtifactValueWithEditionFormIfEditable(
         Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value,
@@ -168,6 +191,7 @@ class Tracker_FormElement_Field_ArtifactId extends IntegerField implements Track
      * Display the html field in the admin ui
      * @return string html
      */
+    #[Override]
     protected function fetchAdminFormElement()
     {
         $html  = '';
@@ -175,26 +199,31 @@ class Tracker_FormElement_Field_ArtifactId extends IntegerField implements Track
         return $html;
     }
 
+    #[Override]
     public static function getFactoryLabel()
     {
         return dgettext('tuleap-tracker', 'Artifact ID');
     }
 
+    #[Override]
     public static function getFactoryDescription()
     {
         return dgettext('tuleap-tracker', 'Display the id of the artifact');
     }
 
+    #[Override]
     public static function getFactoryIconUseIt()
     {
         return $GLOBALS['HTML']->getImagePath('ic/tracker-aid.png');
     }
 
+    #[Override]
     public static function getFactoryIconCreate()
     {
         return $GLOBALS['HTML']->getImagePath('ic/tracker-aid--plus.png');
     }
 
+    #[Override]
     protected function fetchTooltipValue(Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null): string
     {
         $html  = '';
@@ -207,6 +236,7 @@ class Tracker_FormElement_Field_ArtifactId extends IntegerField implements Track
      *
      * @return true if Tracler is ok
      */
+    #[Override]
     public function testImport()
     {
         return true;
@@ -220,6 +250,7 @@ class Tracker_FormElement_Field_ArtifactId extends IntegerField implements Track
      *
      * @return bool true if the value is considered ok
      */
+    #[Override]
     protected function validate(Artifact $artifact, $value)
     {
         //No need to validate artifact id (read only for all)
@@ -231,21 +262,24 @@ class Tracker_FormElement_Field_ArtifactId extends IntegerField implements Track
      *
      * @return string html
      */
+    #[Override]
     public function fetchSubmit(array $submitted_values)
     {
         return '';
     }
 
-     /**
+    /**
      * Fetch the element for the submit new artifact form
      *
      * @return string html
      */
+    #[Override]
     public function fetchSubmitMasschange()
     {
         return '';
     }
 
+    #[Override]
     public function accept(Tracker_FormElement_FieldVisitor $visitor)
     {
         return $visitor->visitArtifactId($this);

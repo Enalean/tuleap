@@ -22,6 +22,7 @@
 use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 use Tuleap\Tracker\Artifact\ChangesetValue\AddDefaultValuesToFieldsData;
 use Tuleap\Tracker\FormElement\Event\ImportExternalElement;
+use Tuleap\Tracker\FormElement\Field\ArtifactId\ArtifactIdField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\RetrieveAnArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\RetrieveUsedArtifactLinkFields;
@@ -111,7 +112,7 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
 
     protected $special_classnames     = [
         self::FIELD_LAST_UPDATE_DATE_TYPE => Tracker_FormElement_Field_LastUpdateDate::class,
-        self::FIELD_ARTIFACT_ID_TYPE => Tracker_FormElement_Field_ArtifactId::class,
+        self::FIELD_ARTIFACT_ID_TYPE => ArtifactIdField::class,
         self::FIELD_SUBMITTED_ON_TYPE => Tracker_FormElement_Field_SubmittedOn::class,
         self::FIELD_ARTIFACT_IN_TRACKER => Tracker_FormElement_Field_PerTrackerArtifactId::class,
         self::FIELD_SUBMITTED_BY_TYPE => Tracker_FormElement_Field_SubmittedBy::class,

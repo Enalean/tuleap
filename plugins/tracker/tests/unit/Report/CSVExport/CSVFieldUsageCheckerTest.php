@@ -67,7 +67,7 @@ final class CSVFieldUsageCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testArtifactIdIsNotExportedInCSV(): void
     {
-        $field = $this->createMock(\Tracker_FormElement_Field_ArtifactId::class);
+        $field = $this->createMock(\Tuleap\Tracker\FormElement\Field\ArtifactId\ArtifactIdField::class);
         $field->method('isUsed')->willReturn(true);
         $field->method('userCanRead')->willReturn(true);
         $this->assertFalse(CSVFieldUsageChecker::canFieldBeExportedToCSV($field));

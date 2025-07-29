@@ -22,7 +22,7 @@ namespace Tuleap\Tracker\Report;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use SimpleXMLElement;
-use Tracker_FormElement_Field_ArtifactId;
+use Tuleap\Tracker\FormElement\Field\ArtifactId\ArtifactIdField;
 use Tracker_Report_Renderer_Table;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 
@@ -33,11 +33,11 @@ final class TrackerReportRendererTableTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private array $matchings_ids;
 
-    private Tracker_FormElement_Field_ArtifactId&MockObject $form_elements_1;
+    private ArtifactIdField&MockObject $form_elements_1;
 
-    private Tracker_FormElement_Field_ArtifactId&MockObject $form_elements_2;
+    private ArtifactIdField&MockObject $form_elements_2;
 
-    private Tracker_FormElement_Field_ArtifactId&MockObject $form_elements_3;
+    private ArtifactIdField&MockObject $form_elements_3;
 
     private array $columns;
 
@@ -57,9 +57,9 @@ final class TrackerReportRendererTableTest extends \Tuleap\Test\PHPUnit\TestCase
             'last_changeset_id' => '98,99,100',
         ];
 
-        $this->form_elements_1 = $this->createMock(Tracker_FormElement_Field_ArtifactId::class);
-        $this->form_elements_2 = $this->createMock(Tracker_FormElement_Field_ArtifactId::class);
-        $this->form_elements_3 = $this->createMock(Tracker_FormElement_Field_ArtifactId::class);
+        $this->form_elements_1 = $this->createMock(ArtifactIdField::class);
+        $this->form_elements_2 = $this->createMock(ArtifactIdField::class);
+        $this->form_elements_3 = $this->createMock(ArtifactIdField::class);
 
         $this->form_elements_1->method('getId')->willReturn(101);
         $this->form_elements_2->method('getId')->willReturn(102);
