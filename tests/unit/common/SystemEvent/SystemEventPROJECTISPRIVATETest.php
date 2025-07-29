@@ -107,7 +107,7 @@ final class SystemEventPROJECTISPRIVATETest extends \Tuleap\Test\PHPUnit\TestCas
             $restricted_user_in_ugroup_only,
             self::callback(
                 function (PFUser $user) {
-                    return (int) $user->getId() === 0;
+                    return $user->isAnonymous();
                 }
             )
         );
@@ -159,7 +159,7 @@ final class SystemEventPROJECTISPRIVATETest extends \Tuleap\Test\PHPUnit\TestCas
             $restricted_user_in_ugroup_only,
             self::callback(
                 function (PFUser $user) {
-                    return (int) $user->getId() === 0;
+                    return $user->isAnonymous();
                 }
             )
         );

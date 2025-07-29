@@ -24,7 +24,7 @@ use Tuleap\Reference\CrossReferencesDao;
 require_once __DIR__ . '/../../www/project/admin/permissions.php';
 
 
-class ArtifactType
+class ArtifactType // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     /**
      * The Group object.
@@ -684,7 +684,7 @@ class ArtifactType
      *      @param $my_user_id    if not specified, use the current user id..
      *      @return bool user_can_view.
      */
-    public function userCanView($my_user_id = 0)
+    public function userCanView($my_user_id = PFUser::ANONYMOUS_USER_ID)
     {
         if (! $my_user_id) {
             // Super-user has all rights...
@@ -728,7 +728,7 @@ class ArtifactType
      *      @param $my_user_id    if not specified, use the current user id..
      *      @return bool
      */
-    public function userHasFullAccess($my_user_id = 0)
+    public function userHasFullAccess($my_user_id = PFUser::ANONYMOUS_USER_ID)
     {
         if (! $my_user_id) {
             // Super-user has all rights...
@@ -791,7 +791,7 @@ class ArtifactType
      *      @param $my_user_id    if not specified, use the current user id..
      *      @return bool user_can_submit.
      */
-    public function userCanSubmit($my_user_id = 0)
+    public function userCanSubmit($my_user_id = PFUser::ANONYMOUS_USER_ID)
     {
         if (! $my_user_id) {
             // Super-user has all rights...

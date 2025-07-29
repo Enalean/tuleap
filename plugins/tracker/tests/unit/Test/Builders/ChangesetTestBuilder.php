@@ -61,7 +61,7 @@ final class ChangesetTestBuilder
 
     public function submittedByAnonymous(string $email): self
     {
-        $this->submitted_by_id    = 0;
+        $this->submitted_by_id    = \PFUser::ANONYMOUS_USER_ID;
         $this->submitted_by_email = $email;
 
         return $this;

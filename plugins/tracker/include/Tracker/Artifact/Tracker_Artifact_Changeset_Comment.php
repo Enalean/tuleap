@@ -250,7 +250,7 @@ class Tracker_Artifact_Changeset_Comment
             return '';
         }
         $avatar   = $user->fetchHtmlAvatar();
-        $timezone = ($user->getId() != 0) ? ' (' . $user->getTimezone() . ')' : '';
+        $timezone = (! $user->isAnonymous()) ? ' (' . $user->getTimezone() . ')' : '';
 
         $html =
             '<tr valign="top">

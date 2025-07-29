@@ -2022,7 +2022,7 @@ class Tracker implements Tracker_Dispatchable_Interface
      *
      * @return bool true if the user can view the tracker.
      */
-    public function userCanView($user = 0)
+    public function userCanView($user = PFUser::ANONYMOUS_USER_ID)
     {
         $user_manager = $this->getUserManager();
 
@@ -2155,7 +2155,7 @@ class Tracker implements Tracker_Dispatchable_Interface
      *
      * @return bool True if the user is tracker admin, false otherwise
      */
-    public function userIsAdmin($user = 0)
+    public function userIsAdmin($user = PFUser::ANONYMOUS_USER_ID)
     {
         if (! $user instanceof PFUser) {
             $user_manager = UserManager::instance();

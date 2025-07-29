@@ -137,8 +137,8 @@ class UserManager implements ProvideCurrentUser, ProvideCurrentUserWithLoggedInI
     {
         if (! isset($this->_users[$user_id])) {
             if (is_numeric($user_id)) {
-                if ($user_id == 0) {
-                    $this->_users[$user_id] = $this->getUserInstanceFromRow(['user_id' => 0]);
+                if ($user_id == PFUser::ANONYMOUS_USER_ID) {
+                    $this->_users[$user_id] = $this->getUserInstanceFromRow(['user_id' => PFUser::ANONYMOUS_USER_ID]);
                 } else {
                     $u = $this->getUserByIdWithoutCache($user_id);
                     if ($u) {

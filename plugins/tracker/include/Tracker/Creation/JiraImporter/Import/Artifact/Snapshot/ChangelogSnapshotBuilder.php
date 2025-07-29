@@ -226,7 +226,7 @@ class ChangelogSnapshotBuilder
             ) {
                 $value = '';
                 if ($field_mapping->getBindType() === \Tracker_FormElement_Field_List_Bind_Users::TYPE) {
-                    $value = (string) \PFUser::NONE_USER;
+                    $value = (string) \PFUser::NONE_USER_ID;
                 }
                 $fields_snapshot[] = new FieldSnapshot(
                     $field_mapping,

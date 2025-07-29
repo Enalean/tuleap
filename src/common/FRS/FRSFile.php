@@ -21,7 +21,7 @@
 
 use Tuleap\FRS\FRSPermissionManager;
 
-class FRSFile
+class FRSFile // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     public const EVT_CREATE  = 301;
     public const EVT_UPDATE  = 302;
@@ -412,7 +412,7 @@ class FRSFile
 
     public $dao;
 
-    public function &_getFRSFileDao()
+    public function &_getFRSFileDao() // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         if (! $this->dao) {
             $this->dao = new FRSFileDao(CodendiDataAccess::instance());
@@ -496,9 +496,9 @@ class FRSFile
      * @param int $user_id the user that download the file (if 0, the current user will be taken)
      * @return bool true if there is no error, false otherwise
      */
-    public function LogDownload($user_id = 0)
+    public function LogDownload($user_id = PFUser::ANONYMOUS_USER_ID) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        if ($user_id == 0) {
+        if ($user_id == PFUser::ANONYMOUS_USER_ID) {
             $user_id = UserManager::instance()->getCurrentUser()->getId();
         }
         $time = $_SERVER['REQUEST_TIME'] - 3600;

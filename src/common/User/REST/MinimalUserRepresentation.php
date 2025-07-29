@@ -112,7 +112,7 @@ class MinimalUserRepresentation
             ($user->isAnonymous()) ? null : $user->getUserName(),
             ($user->isAnonymous()) ? null : $user->getLdapId(),
             $provide_user_avatar_url->getAvatarUrl($user),
-            (bool) $user->isAnonymous(),
+            $user->isAnonymous(),
             (bool) $user->hasAvatar(),
         );
     }

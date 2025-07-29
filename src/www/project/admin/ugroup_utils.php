@@ -258,10 +258,10 @@ function ugroup_user_is_member($user_id, $ugroup_id, $group_id, $atid = 0)
         return true;
     } elseif ($ugroup_id == $GLOBALS['UGROUP_AUTHENTICATED']) {
         // Registered user
-        return $user_id != 0;
+        return $user_id != PFUser::ANONYMOUS_USER_ID;
     } elseif ($ugroup_id == $GLOBALS['UGROUP_REGISTERED'] && ! ForgeConfig::areRestrictedUsersAllowed()) {
         // Registered user
-        return $user_id != 0;
+        return $user_id != PFUser::ANONYMOUS_USER_ID;
     } elseif ($ugroup_id == $GLOBALS['UGROUP_REGISTERED'] && ForgeConfig::areRestrictedUsersAllowed()) {
         if (! isset($_SERVER['REQUEST_URI'])) {
             $called_script_handles_restricted = false;
