@@ -18,15 +18,31 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\Tracker\FormElement\Field\Priority;
+
+use EventManager;
+use HTTPRequest;
+use Override;
+use PFUser;
+use Tracker_Artifact_Changeset;
+use Tracker_Artifact_ChangesetValue;
+use Tracker_CardDisplayPreferences;
+use Tracker_FormElement_Field_ReadOnly;
+use Tracker_FormElement_FieldVisitor;
+use Tracker_FormElementFactory;
+use Tracker_Report;
+use Tracker_Report_Criteria;
+use Tracker_ReportFactory;
+use Tuleap;
 use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\PriorityManager;
 use Tuleap\Tracker\FormElement\Field\Integer\IntegerField;
 use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
+use UserManager;
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
-class Tracker_FormElement_Field_Priority extends IntegerField implements Tracker_FormElement_Field_ReadOnly
+final class PriorityField extends IntegerField implements Tracker_FormElement_Field_ReadOnly
 {
     /**
      * Event emitted when a field data can be augmented by plugins
@@ -37,16 +53,18 @@ class Tracker_FormElement_Field_Priority extends IntegerField implements Tracker
      *   'artifact_id'            Int (IN)
      *   'field'                  Tracker_FormElement_Field (IN)
      */
-    public final const TRACKER_EVENT_FIELD_AUGMENT_DATA_FOR_REPORT = 'tracker_event_field_augment_data_for_report';
+    public final const string TRACKER_EVENT_FIELD_AUGMENT_DATA_FOR_REPORT = 'tracker_event_field_augment_data_for_report';
 
     /**
      * @psalm-mutation-free
      */
+    #[Override]
     public function getLabel($report = null)
     {
         return $this->label;
     }
 
+    #[Override]
     public function getCriteriaFromWhere(Tracker_Report_Criteria $criteria): Option
     {
         $criteria_value = $this->getCriteriaValue($criteria);
@@ -55,7 +73,7 @@ class Tracker_FormElement_Field_Priority extends IntegerField implements Tracker
         }
 
         return $this->buildMatchExpression('tracker_artifact_priority_rank.`rank`', $criteria_value)->mapOr(
-            static fn (ParametrizedSQLFragment $match) => Option::fromValue(
+            static fn(ParametrizedSQLFragment $match) => Option::fromValue(
                 new ParametrizedFromWhere(
                     'INNER JOIN tracker_artifact_priority_rank ON artifact.id = tracker_artifact_priority_rank.artifact_id',
                     $match->sql,
@@ -67,6 +85,7 @@ class Tracker_FormElement_Field_Priority extends IntegerField implements Tracker
         );
     }
 
+    #[Override]
     public function fetchChangesetValue(
         int $artifact_id,
         int $changeset_id,
@@ -88,6 +107,7 @@ class Tracker_FormElement_Field_Priority extends IntegerField implements Tracker
         return '<span class="non-displayable" title="' . dgettext('tuleap-tracker', 'The rank of an artifact only exists in the context of a milestone. You must filter by milestone to view artifact ranks.') . '">' . dgettext('tuleap-tracker', 'N/A') . '</span>';
     }
 
+    #[Override]
     public function fetchCSVChangesetValue(int $artifact_id, int $changeset_id, mixed $value, ?Tracker_Report $report): string
     {
         if (! $report) {
@@ -123,6 +143,7 @@ class Tracker_FormElement_Field_Priority extends IntegerField implements Tracker
      * Get the "select" statement to retrieve field values
      * @see getQueryFrom
      */
+    #[Override]
     public function getQuerySelect(): string
     {
         return "R_{$this->id}.rank AS " . $this->getQuerySelectName();
@@ -134,6 +155,7 @@ class Tracker_FormElement_Field_Priority extends IntegerField implements Tracker
      * which tables used to retrieve the last changeset of matching artifacts.
      * @return string
      */
+    #[Override]
     public function getQueryFrom()
     {
         return "INNER JOIN tracker_artifact_priority_rank AS R_{$this->id} ON a.id = R_{$this->id}.artifact_id ";
@@ -142,6 +164,7 @@ class Tracker_FormElement_Field_Priority extends IntegerField implements Tracker
     /**
      * @return array the available aggreagate functions for this field. empty array if none or irrelevant.
      */
+    #[Override]
     public function getAggregateFunctions()
     {
         return [];
@@ -150,10 +173,11 @@ class Tracker_FormElement_Field_Priority extends IntegerField implements Tracker
     /**
      * Fetch the html code to display the field value in artifact
      *
-     * @param Artifact                        $artifact         The artifact
-     * @param Tracker_Artifact_ChangesetValue $value            The actual value of the field
-     * @param array                           $submitted_values The value already submitted by the user
+     * @param Artifact $artifact The artifact
+     * @param Tracker_Artifact_ChangesetValue $value The actual value of the field
+     * @param array $submitted_values The value already submitted by the user
      */
+    #[Override]
     protected function fetchArtifactValue(
         Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value,
@@ -165,11 +189,12 @@ class Tracker_FormElement_Field_Priority extends IntegerField implements Tracker
     /**
      * Fetch the html code to display the field value in artifact in read only mode
      *
-     * @param Artifact                        $artifact The artifact
-     * @param Tracker_Artifact_ChangesetValue $value    The actual value of the field
+     * @param Artifact $artifact The artifact
+     * @param Tracker_Artifact_ChangesetValue $value The actual value of the field
      *
      * @return string
      */
+    #[Override]
     public function fetchArtifactValueReadOnly(Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
     {
         return '<span>' . $this->getArtifactRank($artifact->getID()) . '</span>';
@@ -183,6 +208,7 @@ class Tracker_FormElement_Field_Priority extends IntegerField implements Tracker
     /**
      * Fetch artifact value for email
      */
+    #[Override]
     public function fetchMailArtifactValue(
         Artifact $artifact,
         PFUser $user,
@@ -202,6 +228,7 @@ class Tracker_FormElement_Field_Priority extends IntegerField implements Tracker
         return $output;
     }
 
+    #[Override]
     public function fetchArtifactValueWithEditionFormIfEditable(
         Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value,
@@ -214,31 +241,37 @@ class Tracker_FormElement_Field_Priority extends IntegerField implements Tracker
      * Display the html field in the admin ui
      * @return string html
      */
+    #[Override]
     protected function fetchAdminFormElement()
     {
         return '<span>314116</span>';
     }
 
+    #[Override]
     public static function getFactoryLabel()
     {
         return dgettext('tuleap-tracker', 'Rank');
     }
 
+    #[Override]
     public static function getFactoryDescription()
     {
         return dgettext('tuleap-tracker', 'Rank');
     }
 
+    #[Override]
     public static function getFactoryIconUseIt()
     {
         return $GLOBALS['HTML']->getImagePath('ic/priority.png');
     }
 
+    #[Override]
     public static function getFactoryIconCreate()
     {
         return $GLOBALS['HTML']->getImagePath('ic/priority.png');
     }
 
+    #[Override]
     protected function fetchTooltipValue(Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null): string
     {
         return $this->getArtifactRank($artifact->getID());
@@ -248,10 +281,11 @@ class Tracker_FormElement_Field_Priority extends IntegerField implements Tracker
      * Validate a value
      *
      * @param Artifact $artifact The artifact
-     * @param mixed    $value    data coming from the request.
+     * @param mixed $value data coming from the request.
      *
      * @return bool true if the value is considered ok
      */
+    #[Override]
     protected function validate(Artifact $artifact, $value)
     {
         return true;
@@ -262,6 +296,7 @@ class Tracker_FormElement_Field_Priority extends IntegerField implements Tracker
      *
      * @return string html
      */
+    #[Override]
     public function fetchSubmit(array $submitted_values)
     {
         return '';
@@ -272,11 +307,13 @@ class Tracker_FormElement_Field_Priority extends IntegerField implements Tracker
      *
      * @return string html
      */
+    #[Override]
     public function fetchSubmitMasschange()
     {
         return '';
     }
 
+    #[Override]
     public function accept(Tracker_FormElement_FieldVisitor $visitor)
     {
         return $visitor->visitPriority($this);
@@ -288,11 +325,13 @@ class Tracker_FormElement_Field_Priority extends IntegerField implements Tracker
      *
      * @return mixed | null if no values
      */
+    #[Override]
     public function getRESTValue(PFUser $user, Tracker_Artifact_Changeset $changeset)
     {
         return $this->getFullRESTValue($user, $changeset);
     }
 
+    #[Override]
     public function getFullRESTValue(PFUser $user, Tracker_Artifact_Changeset $changeset)
     {
         $artifact_field_value_full_representation = new Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFullRepresentation();
@@ -313,12 +352,13 @@ class Tracker_FormElement_Field_Priority extends IntegerField implements Tracker
     /**
      * Validate a field
      *
-     * @param Artifact                        $artifact             The artifact to check
-     * @param mixed                           $submitted_value      The submitted value
+     * @param Artifact $artifact The artifact to check
+     * @param mixed $submitted_value The submitted value
      * @param Tracker_Artifact_ChangesetValue $last_changeset_value The last changeset value of the field (give null if no old value)
      *
      * @return bool true on success or false on failure
      */
+    #[Override]
     public function validateFieldWithPermissionsAndRequiredStatus(
         Artifact $artifact,
         $submitted_value,
@@ -342,6 +382,7 @@ class Tracker_FormElement_Field_Priority extends IntegerField implements Tracker
      *
      * @return string
      */
+    #[Override]
     public function fetchCardValue(Artifact $artifact, ?Tracker_CardDisplayPreferences $display_preferences = null)
     {
         //return $this->fetchTooltipValue($artifact, $artifact->getLastChangeset()->getValue($this));

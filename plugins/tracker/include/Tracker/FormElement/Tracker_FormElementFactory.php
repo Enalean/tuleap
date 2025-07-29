@@ -29,6 +29,7 @@ use Tuleap\Tracker\FormElement\Field\FieldDao;
 use Tuleap\Tracker\FormElement\Field\Float\FloatField;
 use Tuleap\Tracker\FormElement\Field\Integer\IntegerField;
 use Tuleap\Tracker\FormElement\Field\ListFields\RetrieveUsedListField;
+use Tuleap\Tracker\FormElement\Field\Priority\PriorityField;
 use Tuleap\Tracker\FormElement\Field\RetrieveFieldById;
 use Tuleap\Tracker\FormElement\Field\RetrieveUsedFields;
 use Tuleap\Tracker\FormElement\Field\Shareable\PropagatePropertiesDao;
@@ -118,7 +119,7 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
         self::FIELD_CROSS_REFERENCES => Tracker_FormElement_Field_CrossReferences::class,
         self::FIELD_BURNDOWN => Tracker_FormElement_Field_Burndown::class,
         self::FIELD_COMPUTED => Tracker_FormElement_Field_Computed::class,
-        self::FIELD_RANK => Tracker_FormElement_Field_Priority::class,
+        self::FIELD_RANK => PriorityField::class,
     ];
     protected $group_classnames       = [
         self::CONTAINER_FIELDSET_TYPE => Tracker_FormElement_Container_Fieldset::class,
