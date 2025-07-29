@@ -27,7 +27,7 @@ import { LazyboxVueStub } from "../../tests/stubs/LazyboxVueStub";
 import type { User } from "@tuleap/core-rest-api-types";
 import type { Query } from "../query/QueryRetriever";
 import { RetrieveQueryStub } from "../../tests/stubs/RetrieveQueryStub";
-import { RETRIEVE_QUERY, USER_LOCALE_KEY } from "../injection-symbols";
+import { RETRIEVE_QUERY, USER_LOCALE_KEY, WIDGET_ID } from "../injection-symbols";
 
 vi.mock("tlp", () => ({
     datePicker: (): { setDate(): void } => ({
@@ -57,6 +57,7 @@ const new_end_date = "2024-06-12";
 describe("Given a timetracking management widget query editor", () => {
     let users_list: User[] = [];
     let query_retriever: Query;
+    const widget_id = 49;
 
     function getWidgetQueryEditorInstance(): VueWrapper {
         query_retriever = RetrieveQueryStub.withDefaults(users_list);
@@ -71,6 +72,7 @@ describe("Given a timetracking management widget query editor", () => {
                 provide: {
                     [RETRIEVE_QUERY.valueOf()]: query_retriever,
                     [USER_LOCALE_KEY.valueOf()]: "en_US",
+                    [WIDGET_ID.valueOf()]: widget_id,
                 },
             },
         });

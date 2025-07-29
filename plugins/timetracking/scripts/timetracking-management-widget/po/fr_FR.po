@@ -24,9 +24,6 @@ msgstr "Aucun utilisateur sélectionné"
 msgid "Save query"
 msgstr "Enregistrer la requête"
 
-msgid "Search"
-msgstr "Rechercher"
-
 msgid "To"
 msgstr "Au"
 
