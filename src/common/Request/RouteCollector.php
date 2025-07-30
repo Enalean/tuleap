@@ -904,7 +904,7 @@ class RouteCollector
 
     public static function getGetServices(): DispatchableWithRequest
     {
-        $assets = new IncludeAssets(
+        $assets = new IncludeViteAssets(
             __DIR__ . '/../../scripts/project-services/frontend-assets',
             '/assets/core/project-services'
         );
@@ -912,8 +912,8 @@ class RouteCollector
             AdministrationLayoutHelper::buildSelf(),
             new ServicesPresenterBuilder(ServiceManager::instance(), EventManager::instance()),
             TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../templates/project/admin/services/'),
-            new JavascriptAsset($assets, 'project-admin-services.js'),
-            new JavascriptAsset($assets, 'site-admin-services.js'),
+            new JavascriptViteAsset($assets, 'src/index-project-admin.js'),
+            new JavascriptViteAsset($assets, 'src/index-site-admin.js'),
         );
     }
 

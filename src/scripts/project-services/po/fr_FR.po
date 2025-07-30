@@ -89,12 +89,12 @@ msgstr ""
 "Ce service ne peut pas être affiché dans une iframe parce que vous souhaitez "
 "l'ouvrir dans un nouvel onglet."
 
-#. javascript-format
 msgid ""
-"You are about to delete the <b>%s</b> service. Please, confirm your action"
+"You are about to delete the %{ service_name } service. Please, confirm your "
+"action"
 msgstr ""
-"Vous êtes sur le point de supprimer le service <b>%s</b>. Veuillez confirmer "
-"votre action"
+"Vous êtes sur le point de supprimer le service %{ service_name }. Veuillez "
+"confirmer votre action"
 
 msgid "my_service"
 msgstr "mon_service"

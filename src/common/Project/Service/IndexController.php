@@ -18,10 +18,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Project\Service;
 
 use CSRFSynchronizerToken;
 use HTTPRequest;
+use PFUser;
 use Project;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\JavascriptAssetGeneric;
@@ -30,16 +33,16 @@ use Tuleap\Project\Admin\Routing\LayoutHelper;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
 
-class IndexController implements DispatchableWithRequest, DispatchableWithBurningParrot
+final readonly class IndexController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {
-    private const CSRF_TOKEN = 'project_admin_services';
+    private const string CSRF_TOKEN = 'project_admin_services';
 
     public function __construct(
-        private readonly LayoutHelper $layout_helper,
-        private readonly ServicesPresenterBuilder $presenter_builder,
-        private readonly \TemplateRenderer $renderer,
-        private readonly JavascriptAssetGeneric $project_admin_assets,
-        private readonly JavascriptAssetGeneric $site_admin_assets,
+        private LayoutHelper $layout_helper,
+        private ServicesPresenterBuilder $presenter_builder,
+        private \TemplateRenderer $renderer,
+        private JavascriptAssetGeneric $project_admin_assets,
+        private JavascriptAssetGeneric $site_admin_assets,
     ) {
     }
 
@@ -51,23 +54,26 @@ class IndexController implements DispatchableWithRequest, DispatchableWithBurnin
     {
         $title = $GLOBALS['Language']->getText('project_admin_servicebar', 'edit_s_bar');
 
-        $callback = function (Project $project, \PFUser $current_user) use ($layout): void {
-            if ($current_user->isSuperUser()) {
-                $layout->addJavascriptAsset($this->site_admin_assets);
-            } else {
-                $layout->addJavascriptAsset($this->project_admin_assets);
-            }
-            $presenter = $this->presenter_builder->build($project, self::getCSRFTokenSynchronizer(), $current_user);
-            $this->renderer->renderToPage('services', $presenter);
-        };
+        $current_user = $request->getCurrentUser();
+        if ($current_user->isSuperUser()) {
+            $layout->addJavascriptAsset($this->site_admin_assets);
+        } else {
+            $layout->addJavascriptAsset($this->project_admin_assets);
+        }
 
         $this->layout_helper->renderInProjectAdministrationLayout(
             $request,
             $variables['project_id'],
             $title,
             NavigationPresenterBuilder::OTHERS_ENTRY_SHORTNAME,
-            $callback
+            $this->renderServices(...)
         );
+    }
+
+    private function renderServices(Project $project, PFUser $current_user): void
+    {
+        $presenter = $this->presenter_builder->build($project, self::getCSRFTokenSynchronizer(), $current_user);
+        $this->renderer->renderToPage('services', $presenter);
     }
 
     public static function getCSRFTokenSynchronizer(): CSRFSynchronizerToken

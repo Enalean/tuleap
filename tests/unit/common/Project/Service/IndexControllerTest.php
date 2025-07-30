@@ -38,7 +38,7 @@ final class IndexControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalLanguageMock;
 
-    private const PROJECT_ID = 102;
+    private const int PROJECT_ID = 102;
 
     private TemplateRendererStub $renderer;
     private \PFUser $user;
@@ -75,7 +75,7 @@ final class IndexControllerTest extends \Tuleap\Test\PHPUnit\TestCase
         $presenter         = $this->createStub(ServicesPresenter::class);
         $presenter_builder->method('build')->willReturn($presenter);
 
-        $request    = HTTPRequestBuilder::get()->build();
+        $request    = HTTPRequestBuilder::get()->withUser($this->user)->build();
         $controller = new IndexController(
             $helper,
             $presenter_builder,
