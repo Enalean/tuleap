@@ -28,7 +28,7 @@ use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\SelectedValuesCollection;
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerSelectedRepresentation;
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerSelectedType;
 
-final class TrackerNameResultBuilder
+final readonly class TrackerNameResultBuilder
 {
     public function getResult(array $select_results): SelectedValuesCollection
     {

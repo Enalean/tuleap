@@ -20,9 +20,10 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Metadata\Text;
+namespace Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Metadata\Semantic\Title;
 
 use LogicException;
+use PFUser;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Representations\TextResultRepresentation;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\SelectedValue;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\SelectedValuesCollection;
@@ -31,16 +32,19 @@ use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerSelectedType;
 use Tuleap\Tracker\Artifact\ChangesetValue\Text\TextValueInterpreter;
 use Tuleap\Tracker\Artifact\RetrieveArtifact;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
+use Tuleap\Tracker\Semantic\Title\RetrieveSemanticTitleField;
 
-final readonly class MetadataTextResultBuilder
+final readonly class TitleResultBuilder implements BuildResultTitle
 {
     public function __construct(
         private RetrieveArtifact $retrieve_artifact,
         private TextValueInterpreter $text_value_interpreter,
+        private RetrieveSemanticTitleField $semantic_retriever,
     ) {
     }
 
-    public function getResult(Metadata $metadata, array $select_results): SelectedValuesCollection
+    #[\Override]
+    public function getResult(Metadata $metadata, array $select_results, PFUser $user): SelectedValuesCollection
     {
         $values = [];
         $alias  = $metadata->getName();
@@ -54,7 +58,7 @@ final readonly class MetadataTextResultBuilder
             $format = $result[$alias . '_format'];
 
             if ($value === null) {
-                $values[$id] = new SelectedValue($metadata->getName(), new TextResultRepresentation(''));
+                $values[$id] = $this->getEmptyValue($metadata);
                 continue;
             }
 
@@ -63,13 +67,23 @@ final readonly class MetadataTextResultBuilder
                 throw new LogicException("Artifact #$id not found");
             }
 
-            $interpreted_value = $this->text_value_interpreter->interpretValueAccordingToFormat($format, $value, (int) $artifact->getTracker()->getGroupId());
-            $values[$id]       = new SelectedValue($metadata->getName(), new TextResultRepresentation($interpreted_value));
+            $field = $this->semantic_retriever->fromTracker($artifact->getTracker());
+            if ($field === null || ! $field->userCanRead($user)) {
+                $values[$id] = $this->getEmptyValue($metadata);
+            } else {
+                $interpreted_value = $this->text_value_interpreter->interpretValueAccordingToFormat($format, $value, (int) $artifact->getTracker()->getGroupId());
+                $values[$id]       = new SelectedValue($metadata->getName(), new TextResultRepresentation($interpreted_value));
+            }
         }
 
         return new SelectedValuesCollection(
             new CrossTrackerSelectedRepresentation($metadata->getName(), CrossTrackerSelectedType::TYPE_TEXT),
             $values,
         );
+    }
+
+    private function getEmptyValue(Metadata $metadata): SelectedValue
+    {
+        return new SelectedValue($metadata->getName(), new TextResultRepresentation(''));
     }
 }
