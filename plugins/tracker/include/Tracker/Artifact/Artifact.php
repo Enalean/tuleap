@@ -229,7 +229,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
      */
     private $hierarchy_factory;
 
-    private ?string $title;
+    private ?string $title      = null;
     private string $description = '';
 
     /**
