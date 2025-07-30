@@ -61,21 +61,25 @@ const getDataPieChartCampaign = computed((): DataPieChart[] => {
             key: "notrun",
             label: $gettext("Not run"),
             count: props.campaign.nb_of_notrun,
+            color: "tlp-dimmed-color",
         },
         {
             key: "passed",
             label: $gettext("Passed"),
             count: props.campaign.nb_of_passed,
+            color: "tlp-success-color",
         },
         {
             key: "failed",
             label: $gettext("Failed"),
             count: props.campaign.nb_of_failed,
+            color: "tlp-danger-color",
         },
         {
             key: "blocked",
             label: $gettext("Blocked"),
             count: props.campaign.nb_of_blocked,
+            color: "tlp-info-color",
         },
     ];
 });

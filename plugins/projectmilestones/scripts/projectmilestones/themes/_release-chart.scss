@@ -19,6 +19,7 @@
 
 @use "pkg:@tuleap/plugin-tracker-burndown-chart" as burndown-chart;
 @use "pkg:@tuleap/plugin-agiledashboard-burnup-chart";
+@use "pkg:@tuleap/pie-chart";
 
 $timeline-color: var(--tlp-main-color-lighter-90);
 
@@ -106,12 +107,7 @@ $timeline-color: var(--tlp-main-color-lighter-90);
 }
 
 .release-widget-pie-chart-ttm-slice-blocked {
-    > path {
-        fill: var(--tlp-info-color);
-    }
-
     > text {
-        fill: var(--tlp-info-color);
         text-shadow:
             var(--tlp-white-color) 1px 1px,
             var(--tlp-white-color) -1px 1px,
@@ -129,12 +125,7 @@ $timeline-color: var(--tlp-main-color-lighter-90);
 }
 
 .release-widget-pie-chart-ttm-slice-notrun {
-    > path {
-        fill: var(--tlp-dimmed-color);
-    }
-
     > text {
-        fill: var(--tlp-dimmed-color);
         text-shadow:
             var(--tlp-white-color) 1px 1px,
             var(--tlp-white-color) -1px 1px,
@@ -152,12 +143,7 @@ $timeline-color: var(--tlp-main-color-lighter-90);
 }
 
 .release-widget-pie-chart-ttm-slice-passed {
-    > path {
-        fill: var(--tlp-success-color);
-    }
-
     > text {
-        fill: var(--tlp-success-color);
         text-shadow:
             var(--tlp-white-color) 1px 1px,
             var(--tlp-white-color) -1px 1px,
@@ -175,12 +161,7 @@ $timeline-color: var(--tlp-main-color-lighter-90);
 }
 
 .release-widget-pie-chart-ttm-slice-failed {
-    > path {
-        fill: var(--tlp-danger-color);
-    }
-
     > text {
-        fill: var(--tlp-danger-color);
         text-shadow:
             var(--tlp-white-color) 1px 1px,
             var(--tlp-white-color) -1px 1px,
@@ -222,32 +203,6 @@ $timeline-color: var(--tlp-main-color-lighter-90);
 
 .release-widget-pie-chart-ttm {
     transform: translate(0, calc(-28px + var(--tlp-small-spacing)));
-}
-
-.release-widget-pie-chart-ttm-legend-color-span {
-    flex: 0 0 auto;
-    width: 10px;
-    height: 10px;
-    margin: 0 5px 0 0;
-    transition: transform ease-out 75ms;
-    border-radius: 50%;
-    opacity: 0.8;
-
-    &.release-widget-pie-chart-ttm-legend-color-passed {
-        background-color: var(--tlp-success-color);
-    }
-
-    &.release-widget-pie-chart-ttm-legend-color-blocked {
-        background-color: var(--tlp-info-color);
-    }
-
-    &.release-widget-pie-chart-ttm-legend-color-notrun {
-        background-color: var(--tlp-dimmed-color);
-    }
-
-    &.release-widget-pie-chart-ttm-legend-color-failed {
-        background-color: var(--tlp-danger-color);
-    }
 }
 
 .release-widget-pie-chart-ttm-legend-selected {

@@ -33,17 +33,19 @@ class DiskUsagePieMountPointPresenter
         $human_readable_remaining_space,
         $human_readable_usage,
     ) {
-        $this->disk_usage = json_encode([
+        $this->disk_usage = (string) json_encode([
             [
                 'count' => $used_proportion,
                 'key'   => 'used',
                 'label' => dgettext('tuleap-statistics', 'Used proportion'),
                 'value' => $human_readable_usage,
+                'color' => '',
             ], [
                 'count' => $remaining_space,
                 'key'   => 'remaining',
                 'label' => dgettext('tuleap-statistics', 'Remaining space'),
                 'value' => $human_readable_remaining_space,
+                'color' => '',
             ],
         ]);
     }

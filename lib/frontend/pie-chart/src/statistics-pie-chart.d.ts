@@ -21,6 +21,7 @@ export interface DataPieChart {
     key: string;
     label: string;
     count: number;
+    color: string;
 }
 
 export interface ChartPropsWithRadius {

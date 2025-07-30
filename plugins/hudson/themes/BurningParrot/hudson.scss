@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+@use "pkg:@tuleap/pie-chart";
+
 .widget-jenkins-job-icon {
     max-width: 10px;
     margin: 0 5px 0 0;
@@ -74,52 +76,10 @@
     font-weight: 600;
 }
 
-.test-results-pie-legend-color-success {
-    background-color: var(--tlp-success-color);
-}
-
-.test-results-pie-legend-color-skipped {
-    background-color: var(--tlp-warning-color);
-}
-
-.test-results-pie-legend-color-failed {
-    background-color: var(--tlp-danger-color);
-}
-
 .test-results-pie-slice-path {
     opacity: 0.8;
 }
 
 .test-results-pie-slice-text {
     font-weight: 600;
-}
-
-.test-results-pie-slice-success {
-    > path {
-        fill: var(--tlp-success-color);
-    }
-
-    > text {
-        fill: var(--tlp-success-color-darker-10);
-    }
-}
-
-.test-results-pie-slice-skipped {
-    > path {
-        fill: var(--tlp-warning-color);
-    }
-
-    > text {
-        fill: var(--tlp-warning-color-darker-10);
-    }
-}
-
-.test-results-pie-slice-failed {
-    > path {
-        fill: var(--tlp-danger-color);
-    }
-
-    > text {
-        fill: var(--tlp-danger-color-darker-10);
-    }
 }

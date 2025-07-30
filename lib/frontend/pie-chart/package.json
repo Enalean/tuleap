@@ -11,6 +11,7 @@
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
+      "sass": "./dist/pie-chart.css",
       "import": "./dist/pie-chart.js",
       "require": "./dist/pie-chart.umd.cjs"
     }
