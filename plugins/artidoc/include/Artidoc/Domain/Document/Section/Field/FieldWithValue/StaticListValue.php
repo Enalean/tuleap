@@ -23,15 +23,19 @@ declare(strict_types=1);
 namespace Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue;
 
 use Tuleap\Color\ColorName;
+use Tuleap\Option\Option;
 
 /**
  * @psalm-immutable
  */
 final readonly class StaticListValue
 {
+    /**
+     * @param Option<ColorName> $color
+     */
     public function __construct(
         public string $label,
-        public ?ColorName $tlp_color,
+        public Option $color,
     ) {
     }
 }

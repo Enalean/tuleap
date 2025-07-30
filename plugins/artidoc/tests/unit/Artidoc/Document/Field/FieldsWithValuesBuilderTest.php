@@ -199,8 +199,8 @@ final class FieldsWithValuesBuilderTest extends TestCase
             $this->field_collection,
             BuildListFieldWithValueStub::withCallback(
                 static function (ConfiguredField $configured_field) use ($expected_field_with_value): UserGroupsListFieldWithValue {
-                    assert($configured_field->field instanceof Tracker_FormElement_Field_List);
-                    assert($configured_field->field->getBind() instanceof Tracker_FormElement_Field_List_Bind_Ugroups);
+                    self::assertInstanceOf(Tracker_FormElement_Field_List::class, $configured_field->field);
+                    self::assertInstanceOf(Tracker_FormElement_Field_List_Bind_Ugroups::class, $configured_field->field->getBind());
 
                     return $expected_field_with_value;
                 },
@@ -233,15 +233,15 @@ final class FieldsWithValuesBuilderTest extends TestCase
         );
 
         $expected_field_with_value = new StaticListFieldWithValue('static list field', DisplayType::BLOCK, [
-            new StaticListValue('Something', null),
+            new StaticListValue('Something', Option::nothing(ColorName::class)),
         ]);
 
         $builder = new FieldsWithValuesBuilder(
             $this->field_collection,
             BuildListFieldWithValueStub::withCallback(
                 static function (ConfiguredField $configured_field) use ($expected_field_with_value): StaticListFieldWithValue {
-                    assert($configured_field->field instanceof Tracker_FormElement_Field_List);
-                    assert($configured_field->field->getBind() instanceof Tracker_FormElement_Field_List_Bind_Static);
+                    self::assertInstanceOf(Tracker_FormElement_Field_List::class, $configured_field->field);
+                    self::assertInstanceOf(Tracker_FormElement_Field_List_Bind_Static::class, $configured_field->field->getBind());
 
                     return $expected_field_with_value;
                 },
@@ -286,8 +286,8 @@ final class FieldsWithValuesBuilderTest extends TestCase
             ]),
             BuildListFieldWithValueStub::withCallback(
                 static function (ConfiguredField $configured_field) use ($expected_list_field_with_value): UserListFieldWithValue {
-                    assert($configured_field->field instanceof Tracker_FormElement_Field_List);
-                    assert($configured_field->field->getBind() instanceof Tracker_FormElement_Field_List_Bind_Users);
+                    self::assertInstanceOf(Tracker_FormElement_Field_List::class, $configured_field->field);
+                    self::assertInstanceOf(Tracker_FormElement_Field_List_Bind_Users::class, $configured_field->field->getBind());
 
                     return $expected_list_field_with_value;
                 }
@@ -335,7 +335,7 @@ final class FieldsWithValuesBuilderTest extends TestCase
             BuildListFieldWithValueStub::withCallback($this->notCalledCallback(...)),
             BuildArtifactLinkFieldWithValueStub::withCallback(
                 static function (ConfiguredField $configured_field) use ($expected_link_field_with_value): ArtifactLinkFieldWithValue {
-                    assert($configured_field->field instanceof ArtifactLinkField);
+                    self::assertInstanceOf(ArtifactLinkField::class, $configured_field->field);
                     return $expected_link_field_with_value;
                 },
             ),
