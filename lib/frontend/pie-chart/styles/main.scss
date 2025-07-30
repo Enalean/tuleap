@@ -1,0 +1,67 @@
+/**
+ * Copyright (c) Enalean, 2025 - Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.tlp-danger-color {
+    --tuleap-pie-chart-slice-color: var(--tlp-danger-color);
+    --tuleap-pie-chart-slice-text-color: var(--tlp-danger-color-darker-10);
+    --tuleap-pie-chart-legend-color: var(--tlp-danger-color);
+}
+
+.tlp-success-color {
+    --tuleap-pie-chart-slice-color: var(--tlp-success-color);
+    --tuleap-pie-chart-slice-text-color: var(--tlp-success-color-darker-10);
+    --tuleap-pie-chart-legend-color: var(--tlp-success-color);
+}
+
+.tlp-dimmed-color {
+    --tuleap-pie-chart-slice-color: var(--tlp-dimmed-color);
+    --tuleap-pie-chart-slice-text-color: var(--tlp-dimmed-color-darker-10);
+    --tuleap-pie-chart-legend-color: var(--tlp-dimmed-color);
+}
+
+.tlp-info-color {
+    --tuleap-pie-chart-slice-color: var(--tlp-info-color);
+    --tuleap-pie-chart-slice-text-color: var(--tlp-info-color-darker-10);
+    --tuleap-pie-chart-legend-color: var(--tlp-info-color);
+}
+
+.tlp-warning-color {
+    --tuleap-pie-chart-slice-color: var(--tlp-warning-color);
+    --tuleap-pie-chart-slice-text-color: var(--tlp-warning-color-darker-10);
+    --tuleap-pie-chart-legend-color: var(--tlp-warning-color);
+}
+
+.pie-chart-slice-path {
+    fill: var(--tuleap-pie-chart-slice-color, var(--primary-color));
+}
+
+.pie-chart-slice-text {
+    fill: var(--tuleap-pie-chart-slice-text-color, var(--text-color));
+}
+
+.pie-chart-span-legend-color {
+    flex: 0 0 auto;
+    width: 10px;
+    height: 10px;
+    margin: 0 5px 0 0;
+    transition: transform ease-out 75ms;
+    border-radius: 50%;
+    opacity: 0.8;
+    background-color: var(--tuleap-pie-chart-legend-color, var(--primary-color));
+}
