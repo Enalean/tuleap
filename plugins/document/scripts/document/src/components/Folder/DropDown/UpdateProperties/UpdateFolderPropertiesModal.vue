@@ -22,10 +22,14 @@
     <form
         class="tlp-modal"
         role="dialog"
-        v-bind:aria-labelled-by="aria_labelled_by"
+        aria-labelledby="document-update-folder-properties-modal"
         v-on:submit="updateProperties"
+        ref="form"
     >
-        <modal-header v-bind:modal-title="modal_title" v-bind:aria-labelled-by="aria_labelled_by" />
+        <modal-header
+            v-bind:modal-title="modal_title"
+            aria-labelled-by="document-update-folder-properties-modal"
+        />
         <modal-feedback />
         <div class="tlp-modal-body document-item-modal-body">
             <folder-global-property-for-update
@@ -39,16 +43,16 @@
         <modal-footer
             v-bind:is-loading="is_loading"
             v-bind:submit-button-label="$gettext('Update properties')"
-            v-bind:aria-labelled-by="aria_labelled_by"
+            aria-labelled-by="document-update-folder-properties-modal"
             v-bind:icon-submit-button-class="'fa-solid fa-pencil'"
             data-test="document-modal-submit-button-update-properties"
         />
     </form>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
+import type { Modal } from "@tuleap/tlp-modal";
 import { createModal } from "@tuleap/tlp-modal";
-import { mapState } from "vuex";
 import { sprintf } from "sprintf-js";
 import ModalHeader from "../../ModalCommon/ModalHeader.vue";
 import ModalFeedback from "../../ModalCommon/ModalFeedback.vue";
@@ -60,155 +64,161 @@ import {
     transformFolderPropertiesForRecursionAtUpdate,
 } from "../../../../helpers/properties-helpers/update-data-transformatter-helper";
 import { getCustomProperties } from "../../../../helpers/properties-helpers/custom-properties-helper";
+import type {
+    UpdateCustomEvent,
+    UpdateMultipleListValueEvent,
+    UpdatePropertyListEvent,
+    UpdateRecursionOptionEvent,
+} from "../../../../helpers/emitter";
 import emitter from "../../../../helpers/emitter";
+import type { Folder, Property, RootState } from "../../../../type";
+import { computed, onBeforeUnmount, onMounted, ref } from "vue";
+import { useNamespacedState, useState, useStore } from "vuex-composition-helpers";
+import type { ConfigurationState } from "../../../../store/configuration";
+import type { ErrorState } from "../../../../store/error/module";
+import { useGettext } from "vue3-gettext";
 
-export default {
-    name: "UpdateFolderPropertiesModal",
-    components: {
-        FolderGlobalPropertyForUpdate,
-        ModalFeedback,
-        ModalHeader,
-        ModalFooter,
-    },
-    props: {
-        item: Object,
-    },
-    data() {
-        return {
-            item_to_update: {},
-            is_loading: false,
-            modal: null,
-            recursion_option: "none",
-            properties_to_update: [],
-            formatted_item_properties: [],
-        };
-    },
-    computed: {
-        ...mapState(["current_folder"]),
-        ...mapState("configuration", ["project_id", "is_status_property_used"]),
-        ...mapState("error", ["has_modal_error"]),
-        submit_button_label() {
-            return this.$gettext("Update properties");
-        },
-        modal_title() {
-            return sprintf(this.$gettext('Edit "%s" properties'), this.item.title);
-        },
-        aria_labelled_by() {
-            return "document-update-folder-properties-modal";
-        },
-    },
-    beforeMount() {
-        this.item_to_update = transformFolderPropertiesForRecursionAtUpdate(
-            this.item,
-            this.is_status_property_used,
-        );
-    },
-    mounted() {
-        this.modal = createModal(this.$el);
+const { $gettext } = useGettext();
+const $store = useStore();
 
-        this.formatted_item_properties = getCustomProperties(this.item);
+const props = defineProps<{
+    item: Folder;
+}>();
 
-        transformCustomPropertiesForItemUpdate(this.formatted_item_properties);
+const { current_folder } = useState<Pick<RootState, "current_folder">>(["current_folder"]);
+const { is_status_property_used } = useNamespacedState<
+    Pick<ConfigurationState, "is_status_property_used">
+>("configuration", ["is_status_property_used"]);
+const { has_modal_error } = useNamespacedState<Pick<ErrorState, "has_modal_error">>("error", [
+    "has_modal_error",
+]);
 
-        this.show();
-    },
-    created() {
-        emitter.on("properties-recursion-list", this.setPropertiesListUpdate);
-        emitter.on("properties-recursion-option", this.setRecursionOption);
-        emitter.on("update-multiple-properties-list-value", this.updateMultiplePropertiesListValue);
-        if (this.is_status_property_used) {
-            emitter.on("update-status-property", this.updateStatusValue);
-            emitter.on("update-status-recursion", this.updateStatusRecursion);
-        }
-        emitter.on("update-title-property", this.updateTitleValue);
-        emitter.on("update-description-property", this.updateDescriptionValue);
-        emitter.on("update-custom-property", this.updateCustomProperty);
-    },
-    beforeUnmount() {
-        emitter.off("properties-recursion-list", this.setPropertiesListUpdate);
-        emitter.off("properties-recursion-option", this.setRecursionOption);
-        emitter.off(
-            "update-multiple-properties-list-value",
-            this.updateMultiplePropertiesListValue,
-        );
-        if (this.is_status_property_used) {
-            emitter.off("update-status-property", this.updateStatusValue);
-            emitter.off("update-status-recursion", this.updateStatusRecursion);
-        }
-        emitter.off("update-title-property", this.updateTitleValue);
-        emitter.off("update-description-property", this.updateDescriptionValue);
-        emitter.off("update-custom-property", this.updateCustomProperty);
-    },
-    methods: {
-        show() {
-            this.modal.show();
-        },
-        async updateProperties(event) {
-            event.preventDefault();
-            this.is_loading = true;
-            this.$store.commit("error/resetModalError");
-            this.item_to_update.properties = this.formatted_item_properties;
-            formatCustomPropertiesForFolderUpdate(
-                this.item_to_update,
-                this.properties_to_update,
-                this.recursion_option,
-            );
-            await this.$store.dispatch("properties/updateFolderProperties", {
-                item: this.item,
-                item_to_update: this.item_to_update,
-                current_folder: this.current_folder,
-                properties_to_update: this.properties_to_update,
-                recursion_option: this.recursion_option,
-            });
-            this.is_loading = false;
-            if (this.has_modal_error === false) {
-                this.modal.hide();
-            }
-        },
-        setPropertiesListUpdate(event) {
-            this.properties_to_update = event.detail.property_list;
-        },
-        setRecursionOption(event) {
-            this.recursion_option = event.recursion_option;
-            if (this.is_status_property_used) {
-                this.item_to_update.status.recursion = event.recursion_option;
-            }
-        },
-        updateMultiplePropertiesListValue(event) {
-            if (!this.formatted_item_properties) {
-                return;
-            }
-            const item_properties = this.formatted_item_properties.find(
-                (property) => property.short_name === event.detail.id,
-            );
-            item_properties.list_value = event.detail.value;
-        },
-        updateStatusValue(status) {
-            this.item_to_update.status.value = status;
-        },
-        updateStatusRecursion(must_use_recursion) {
-            let status_recursion = "none";
-            if (must_use_recursion) {
-                status_recursion = this.recursion_option;
-            }
+const item_to_update = ref<Folder>(
+    transformFolderPropertiesForRecursionAtUpdate(props.item, is_status_property_used.value),
+);
+const is_loading = ref<boolean>(false);
+const recursion_option = ref<string>("none");
+const properties_to_update = ref<string[]>([]);
+const formatted_item_properties = ref<Property[]>([]);
+const form = ref<HTMLFormElement>();
+let modal: Modal | null = null;
 
-            this.item_to_update.status.recursion = status_recursion;
-        },
-        updateTitleValue(title) {
-            this.item_to_update.title = title;
-        },
-        updateDescriptionValue(description) {
-            this.item_to_update.description = description;
-        },
-        updateCustomProperty(event) {
-            if (!this.formatted_item_properties) {
-                return;
-            }
-            const item_properties = this.formatted_item_properties.find(
-                (property) => property.short_name === event.property_short_name,
-            );
-            item_properties.value = event.value;
-        },
-    },
-};
+const modal_title = computed(() => sprintf($gettext('Edit "%s" properties'), props.item.title));
+
+onMounted(() => {
+    modal = createModal(form.value);
+
+    formatted_item_properties.value = getCustomProperties(props.item);
+
+    transformCustomPropertiesForItemUpdate(formatted_item_properties.value);
+
+    show();
+
+    emitter.on("properties-recursion-list", setPropertiesListUpdate);
+    emitter.on("properties-recursion-option", setRecursionOption);
+    emitter.on("update-multiple-properties-list-value", updateMultiplePropertiesListValue);
+    if (is_status_property_used.value) {
+        emitter.on("update-status-property", updateStatusValue);
+        emitter.on("update-status-recursion", updateStatusRecursion);
+    }
+    emitter.on("update-title-property", updateTitleValue);
+    emitter.on("update-description-property", updateDescriptionValue);
+    emitter.on("update-custom-property", updateCustomProperty);
+});
+
+onBeforeUnmount(() => {
+    emitter.off("properties-recursion-list", setPropertiesListUpdate);
+    emitter.off("properties-recursion-option", setRecursionOption);
+    emitter.off("update-multiple-properties-list-value", updateMultiplePropertiesListValue);
+    if (is_status_property_used.value) {
+        emitter.off("update-status-property", updateStatusValue);
+        emitter.off("update-status-recursion", updateStatusRecursion);
+    }
+    emitter.off("update-title-property", updateTitleValue);
+    emitter.off("update-description-property", updateDescriptionValue);
+    emitter.off("update-custom-property", updateCustomProperty);
+});
+
+function show(): void {
+    modal?.show();
+}
+
+async function updateProperties(event: SubmitEvent): Promise<void> {
+    event.preventDefault();
+    is_loading.value = true;
+    $store.commit("error/resetModalError");
+    item_to_update.value.properties = formatted_item_properties.value;
+    formatCustomPropertiesForFolderUpdate(
+        item_to_update.value,
+        properties_to_update.value,
+        recursion_option.value,
+    );
+    await $store.dispatch("properties/updateFolderProperties", {
+        item: props.item,
+        item_to_update: item_to_update.value,
+        current_folder: current_folder.value,
+        properties_to_update: properties_to_update.value,
+        recursion_option: recursion_option.value,
+    });
+    is_loading.value = false;
+    if (!has_modal_error.value) {
+        modal?.hide();
+    }
+}
+
+function setPropertiesListUpdate(event: UpdatePropertyListEvent): void {
+    properties_to_update.value = event.detail.property_list;
+}
+
+function setRecursionOption(event: UpdateRecursionOptionEvent): void {
+    recursion_option.value = event.recursion_option;
+    if (is_status_property_used.value) {
+        item_to_update.value.status.recursion = event.recursion_option;
+    }
+}
+
+function updateMultiplePropertiesListValue(event: UpdateMultipleListValueEvent): void {
+    if (!formatted_item_properties.value) {
+        return;
+    }
+    const item_properties = formatted_item_properties.value.find(
+        (property) => property.short_name === event.detail.id,
+    );
+    if (item_properties !== undefined) {
+        item_properties.list_value = event.detail.value;
+    }
+}
+
+function updateStatusValue(status: string): void {
+    item_to_update.value.status.value = status;
+}
+
+function updateStatusRecursion(must_use_recursion: boolean): void {
+    let status_recursion = "none";
+    if (must_use_recursion) {
+        status_recursion = recursion_option.value;
+    }
+
+    item_to_update.value.status.recursion = status_recursion;
+}
+
+function updateTitleValue(title: string): void {
+    item_to_update.value.title = title;
+}
+
+function updateDescriptionValue(description: string): void {
+    item_to_update.value.description = description;
+}
+
+function updateCustomProperty(event: UpdateCustomEvent): void {
+    if (!formatted_item_properties.value) {
+        return;
+    }
+    const item_properties = formatted_item_properties.value.find(
+        (property) => property.short_name === event.property_short_name,
+    );
+    if (item_properties !== undefined) {
+        item_properties.value = event.value;
+    }
+}
 </script>
