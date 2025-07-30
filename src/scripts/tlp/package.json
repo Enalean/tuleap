@@ -12,7 +12,6 @@
     "@tuleap/tlp-date-picker": "workspace:^",
     "@tuleap/tlp-dropdown": "workspace:*",
     "@tuleap/tlp-modal": "workspace:*",
-    "@tuleap/tlp-popovers": "workspace:*",
     "@tuleap/tlp-styles": "workspace:^",
     "@tuleap/tlp-swatch-colors": "workspace:^",
     "jquery": "^3.6.0",

@@ -18,6 +18,7 @@
  */
 
 @use "variables-common";
+@use "pkg:@tuleap/tlp-popovers";
 
 $nav-dropdown-content-border-radius: var(--tlp-large-radius);
 $dropdown-width: 250px;

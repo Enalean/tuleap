@@ -27,5 +27,4 @@ export const options = noop;
 export const put = noop;
 export const post = noop;
 export const select2 = noop;
-export const createPopover = noop;
 export const datePicker = noop;

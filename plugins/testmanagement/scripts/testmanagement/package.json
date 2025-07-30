@@ -19,6 +19,7 @@
     "@tuleap/project-background": "workspace:*",
     "@tuleap/tlp-dropdown": "workspace:*",
     "@tuleap/tlp-fetch": "workspace:*",
+    "@tuleap/tlp-popovers": "workspace:^",
     "@tuleap/tlp-swatch-colors": "workspace:*",
     "@tuleap/tooltip": "workspace:*",
     "@uirouter/angularjs": "^1.0.29",

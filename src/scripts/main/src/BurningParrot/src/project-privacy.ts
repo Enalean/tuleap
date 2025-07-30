@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { createPopover } from "tlp";
+import { createPopover } from "@tuleap/tlp-popovers";
 
 export function init(): void {
     handleBreadcrumbPrivacyPopover();

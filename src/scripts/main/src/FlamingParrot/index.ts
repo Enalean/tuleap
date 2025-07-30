@@ -23,7 +23,6 @@ import { initHeaderPosition } from "../tuleap/header-position";
 import { init as initNavbarPinned } from "../tuleap/navbar-pinned";
 import { init as initInviteBuddies } from "./invite-buddies";
 import { init as initNavbarDropdown } from "../navbar-dropdowns/navbar-dropdown";
-import { createPopover } from "@tuleap/tlp-popovers";
 
 import "./sidebar";
 import "./project-privacy.js";
@@ -41,5 +40,5 @@ document.addEventListener("DOMContentLoaded", () => {
     initHeaderPosition();
     initNavbarPinned();
     initInviteBuddies();
-    initNavbarDropdown(createPopover);
+    initNavbarDropdown();
 });
