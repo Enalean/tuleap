@@ -20,16 +20,25 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Artidoc\REST\v1\ArtifactSection\Field;
+namespace Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue;
 
-enum FieldType: string
+use DateTimeImmutable;
+use Tuleap\Artidoc\Domain\Document\Section\Field\DisplayType;
+use Tuleap\Option\Option;
+
+/**
+ * @psalm-immutable
+ */
+final readonly class DateFieldWithValue implements FieldWithValue
 {
-    case STRING           = 'string';
-    case USER_GROUPS_LIST = 'user_groups_list';
-    case STATIC_LIST      = 'static_list';
-    case USER_LIST        = 'user_list';
-    case ARTIFACT_LINK    = 'links';
-    case NUMERIC          = 'numeric';
-    case USER             = 'user';
-    case DATE             = 'date';
+    /**
+     * @param Option<DateTimeImmutable> $value
+     */
+    public function __construct(
+        public string $label,
+        public DisplayType $display_type,
+        public Option $value,
+        public bool $with_time,
+    ) {
+    }
 }

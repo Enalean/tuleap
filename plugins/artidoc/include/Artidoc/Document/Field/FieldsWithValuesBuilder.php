@@ -24,14 +24,17 @@ namespace Tuleap\Artidoc\Document\Field;
 
 use Override;
 use Tracker_Artifact_Changeset;
+use Tracker_Artifact_ChangesetValue_Date;
 use Tracker_Artifact_ChangesetValue_List;
 use Tracker_Artifact_ChangesetValue_Numeric;
 use Tracker_Artifact_ChangesetValue_String;
+use Tracker_FormElement_Field_Date;
 use Tracker_FormElement_Field_LastModifiedBy;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_Numeric;
 use Tracker_FormElement_Field_SubmittedBy;
 use Tuleap\Artidoc\Document\Field\ArtifactLink\BuildArtifactLinkFieldWithValue;
+use Tuleap\Artidoc\Document\Field\Date\BuildDateFieldWithValue;
 use Tuleap\Artidoc\Document\Field\List\BuildListFieldWithValue;
 use Tuleap\Artidoc\Document\Field\Numeric\BuildNumericFieldWithValue;
 use Tuleap\Artidoc\Document\Field\User\BuildUserFieldWithValue;
@@ -49,6 +52,7 @@ final readonly class FieldsWithValuesBuilder implements GetFieldsWithValues
         private BuildArtifactLinkFieldWithValue $build_artlink_field_with_value,
         private BuildNumericFieldWithValue $build_numeric_field_with_value,
         private BuildUserFieldWithValue $build_user_field_with_value,
+        private BuildDateFieldWithValue $build_date_field_with_value,
     ) {
     }
 
@@ -107,6 +111,11 @@ final readonly class FieldsWithValuesBuilder implements GetFieldsWithValues
         if ($configured_field->field instanceof Tracker_FormElement_Field_Numeric) {
             assert($changeset_value === null || $changeset_value instanceof Tracker_Artifact_ChangesetValue_Numeric);
             return [...$fields, $this->build_numeric_field_with_value->buildNumericFieldWithValue($configured_field, $changeset->getArtifact(), $changeset_value)];
+        }
+
+        if ($configured_field->field instanceof Tracker_FormElement_Field_Date) {
+            assert($changeset_value === null || $changeset_value instanceof Tracker_Artifact_ChangesetValue_Date);
+            return [...$fields, $this->build_date_field_with_value->buildDateFieldWithValue($configured_field, $changeset, $changeset_value)];
         }
 
         return $fields;

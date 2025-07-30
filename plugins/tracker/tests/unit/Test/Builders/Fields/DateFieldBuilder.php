@@ -27,18 +27,21 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class DateFieldBuilder
 {
+    use FieldBuilderWithPermissions;
+    use FieldBuilderWithSpecificProperties;
+
     private string $name  = 'date';
     private string $label = 'label';
     /** @var list<\PFUser> */
     private array $user_with_read_permissions = [];
     /** @var array<int, bool> */
     private array $read_permissions = [];
-    private bool $is_time_displayed = false;
     private \Tuleap\Tracker\Tracker $tracker;
 
     private function __construct(private readonly int $id)
     {
         $this->tracker = TrackerTestBuilder::aTracker()->withId(10)->build();
+        $this->withSpecificProperty('display_time', ['value' => false]);
     }
 
     public static function aDateField(int $id): self
@@ -58,18 +61,9 @@ final class DateFieldBuilder
         return $this;
     }
 
-    public function withReadPermission(\PFUser $user, bool $user_can_read): self
-    {
-        $this->user_with_read_permissions[]           = $user;
-        $this->read_permissions[(int) $user->getId()] = $user_can_read;
-
-        return $this;
-    }
-
     public function withTime(): self
     {
-        $this->is_time_displayed = true;
-        return $this;
+        return $this->withSpecificProperty('display_time', ['value' => true]);
     }
 
     public function inTracker(\Tuleap\Tracker\Tracker $tracker): self
@@ -97,12 +91,8 @@ final class DateFieldBuilder
 
         $date_element->setTracker($this->tracker);
 
-        $properties = ['display_time' => ['value' => $this->is_time_displayed]];
-        $date_element->setCacheSpecificProperties($properties);
-
-        foreach ($this->user_with_read_permissions as $user) {
-            $date_element->setUserCanRead($user, $this->read_permissions[(int) $user->getId()]);
-        }
+        $this->setSpecificProperties($date_element);
+        $this->setPermissions($date_element);
 
         return $date_element;
     }

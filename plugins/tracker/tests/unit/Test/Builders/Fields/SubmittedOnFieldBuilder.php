@@ -22,17 +22,20 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Test\Builders\Fields;
 
+use Tracker_FormElement_Field_SubmittedOn;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Tracker;
 
 final class SubmittedOnFieldBuilder
 {
+    use FieldBuilderWithPermissions;
+
     private string $name = 'submission_date';
     private Tracker $tracker;
 
     private function __construct(private readonly int $id)
     {
-        $this->tracker = TrackerTestBuilder::aTracker()->withId($id)->build();
+        $this->tracker = TrackerTestBuilder::aTracker()->withId(35)->build();
     }
 
     public static function aSubmittedOnField(int $id): self
@@ -52,9 +55,9 @@ final class SubmittedOnFieldBuilder
         return $this;
     }
 
-    public function build(): \Tracker_FormElement_Field_SubmittedOn
+    public function build(): Tracker_FormElement_Field_SubmittedOn
     {
-        $field = new \Tracker_FormElement_Field_SubmittedOn(
+        $field = new Tracker_FormElement_Field_SubmittedOn(
             $this->id,
             $this->tracker->getId(),
             17,
@@ -68,6 +71,9 @@ final class SubmittedOnFieldBuilder
             10,
             null
         );
+        $field->setTracker($this->tracker);
+
+        $this->setPermissions($field);
 
         return $field;
     }

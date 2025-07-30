@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Document\Field;
 
+use DateTimeImmutable;
 use Exception;
 use Override;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
@@ -36,6 +37,7 @@ use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\ArtifactLinkProj
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\ArtifactLinkStatusValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\ArtifactLinkValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\FieldWithValue;
+use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\DateFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\NumericFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StaticListFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StaticListValue;
@@ -46,6 +48,7 @@ use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserGroupsListFi
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserListFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserValue;
 use Tuleap\Artidoc\Stubs\Document\Field\ArtifactLink\BuildArtifactLinkFieldWithValueStub;
+use Tuleap\Artidoc\Stubs\Document\Field\Date\BuildDateFieldWithValueStub;
 use Tuleap\Artidoc\Stubs\Document\Field\List\BuildListFieldWithValueStub;
 use Tuleap\Artidoc\Stubs\Document\Field\Numeric\BuildNumericFieldWithValueStub;
 use Tuleap\Artidoc\Stubs\Document\Field\User\BuildUserFieldWithValueStub;
@@ -64,6 +67,7 @@ use Tuleap\Tracker\Test\Builders\ChangesetValueIntegerTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueListTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueStringTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ArtifactLinkFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\IntegerFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\LastUpdateByFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
@@ -107,6 +111,7 @@ final class FieldsWithValuesBuilderTest extends TestCase
             BuildArtifactLinkFieldWithValueStub::withCallback($this->notCalledCallback(...)),
             BuildNumericFieldWithValueStub::withCallback($this->notCalledCallback(...)),
             BuildUserFieldWithValueStub::withCallback($this->notCalledCallback(...)),
+            BuildDateFieldWithValueStub::withCallback($this->notCalledCallback(...)),
         );
         return $builder->getFieldsWithValues($this->changeset);
     }
@@ -208,6 +213,7 @@ final class FieldsWithValuesBuilderTest extends TestCase
             BuildArtifactLinkFieldWithValueStub::withCallback($this->notCalledCallback(...)),
             BuildNumericFieldWithValueStub::withCallback($this->notCalledCallback(...)),
             BuildUserFieldWithValueStub::withCallback($this->notCalledCallback(...)),
+            BuildDateFieldWithValueStub::withCallback($this->notCalledCallback(...)),
         );
 
         self::assertEquals([$expected_field_with_value], $builder->getFieldsWithValues($this->changeset));
@@ -249,6 +255,7 @@ final class FieldsWithValuesBuilderTest extends TestCase
             BuildArtifactLinkFieldWithValueStub::withCallback($this->notCalledCallback(...)),
             BuildNumericFieldWithValueStub::withCallback($this->notCalledCallback(...)),
             BuildUserFieldWithValueStub::withCallback($this->notCalledCallback(...)),
+            BuildDateFieldWithValueStub::withCallback($this->notCalledCallback(...)),
         );
 
         self::assertEquals([$expected_field_with_value], $builder->getFieldsWithValues($this->changeset));
@@ -295,6 +302,7 @@ final class FieldsWithValuesBuilderTest extends TestCase
             BuildArtifactLinkFieldWithValueStub::withCallback($this->notCalledCallback(...)),
             BuildNumericFieldWithValueStub::withCallback($this->notCalledCallback(...)),
             BuildUserFieldWithValueStub::withCallback($this->notCalledCallback(...)),
+            BuildDateFieldWithValueStub::withCallback($this->notCalledCallback(...)),
         );
 
         self::assertEquals([$expected_list_field_with_value], $builder->getFieldsWithValues($this->changeset));
@@ -341,6 +349,7 @@ final class FieldsWithValuesBuilderTest extends TestCase
             ),
             BuildNumericFieldWithValueStub::withCallback($this->notCalledCallback(...)),
             BuildUserFieldWithValueStub::withCallback($this->notCalledCallback(...)),
+            BuildDateFieldWithValueStub::withCallback($this->notCalledCallback(...)),
         );
 
         self::assertEquals([$expected_link_field_with_value], $builder->getFieldsWithValues($this->changeset));
@@ -376,6 +385,7 @@ final class FieldsWithValuesBuilderTest extends TestCase
                 },
             ),
             BuildUserFieldWithValueStub::withCallback($this->notCalledCallback(...)),
+            BuildDateFieldWithValueStub::withCallback($this->notCalledCallback(...)),
         );
 
         self::assertEquals([$expected_int_field_with_value], $builder->getFieldsWithValues($this->changeset));
@@ -403,9 +413,39 @@ final class FieldsWithValuesBuilderTest extends TestCase
             BuildArtifactLinkFieldWithValueStub::withCallback($this->notCalledCallback(...)),
             BuildNumericFieldWithValueStub::withCallback($this->notCalledCallback(...)),
             BuildUserFieldWithValueStub::withCallback(static fn() => $expected_user_field_with_value),
+            BuildDateFieldWithValueStub::withCallback($this->notCalledCallback(...)),
         );
 
         self::assertEquals([$expected_user_field_with_value], $builder->getFieldsWithValues($this->changeset));
+    }
+
+    public function testItBuildsDateFieldsWithValue(): void
+    {
+        $date_field = DateFieldBuilder::aDateField(123)->build();
+
+        $expected_date_field_with_value = new DateFieldWithValue(
+            $date_field->getLabel(),
+            DisplayType::BLOCK,
+            Option::fromValue(new DateTimeImmutable('2025-07-28T02:00:00+02:00')),
+            false,
+        );
+
+        $this->changeset->setFieldValue($date_field, null);
+
+        $builder = new FieldsWithValuesBuilder(
+            new ConfiguredFieldCollection([
+                self::TRACKER_ID => [
+                    new ConfiguredField($date_field, DisplayType::BLOCK),
+                ],
+            ]),
+            BuildListFieldWithValueStub::withCallback($this->notCalledCallback(...)),
+            BuildArtifactLinkFieldWithValueStub::withCallback($this->notCalledCallback(...)),
+            BuildNumericFieldWithValueStub::withCallback($this->notCalledCallback(...)),
+            BuildUserFieldWithValueStub::withCallback($this->notCalledCallback(...)),
+            BuildDateFieldWithValueStub::withCallback(static fn() => $expected_date_field_with_value),
+        );
+
+        self::assertEquals([$expected_date_field_with_value], $builder->getFieldsWithValues($this->changeset));
     }
 
     private static function notCalledCallback(): never
