@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Artidoc\REST\v1\ArtifactSection\Field;
 
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StaticListValue;
+use Tuleap\Color\ColorName;
 
 /**
  * @psalm-immutable
@@ -34,7 +35,8 @@ final readonly class StaticListValueRepresentation
 
     public function __construct(StaticListValue $value)
     {
-        $this->label     = $value->label;
-        $this->tlp_color = $value->tlp_color ? $value->tlp_color->value : '';
+        $this->label = $value->label;
+        /** @psalm-suppress ImpureMethodCall */
+        $this->tlp_color = $value->color->mapOr(static fn (ColorName $color) => $color->value, '');
     }
 }

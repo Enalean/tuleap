@@ -27,6 +27,7 @@ use Tuleap\Artidoc\Domain\Document\Section\Field\DisplayType;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StaticListFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StaticListValue;
 use Tuleap\Color\ColorName;
+use Tuleap\Option\Option;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
@@ -116,8 +117,8 @@ final class StaticListFieldWithValueBuilderTest extends TestCase
 
         self::assertEquals(
             new StaticListFieldWithValue('static list field with decorators', DisplayType::COLUMN, [
-                new StaticListValue('Red', ColorName::RED_WINE),
-                new StaticListValue('No color', null),
+                new StaticListValue('Red', Option::fromValue(ColorName::RED_WINE)),
+                new StaticListValue('No color', Option::nothing(ColorName::class)),
             ]),
             $this->getField(new ConfiguredField($list_field, DisplayType::COLUMN)),
         );
@@ -137,7 +138,7 @@ final class StaticListFieldWithValueBuilderTest extends TestCase
 
         self::assertEquals(
             new StaticListFieldWithValue('static open list field', DisplayType::COLUMN, [
-                new StaticListValue('Custom value', null),
+                new StaticListValue('Custom value', Option::nothing(ColorName::class)),
             ]),
             $this->getField(new ConfiguredField($open_list_field, DisplayType::COLUMN)),
         );

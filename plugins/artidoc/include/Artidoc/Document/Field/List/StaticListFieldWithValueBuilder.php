@@ -28,6 +28,7 @@ use Tuleap\Artidoc\Document\Field\ConfiguredField;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StaticListFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StaticListValue;
 use Tuleap\Color\ColorName;
+use Tuleap\Option\Option;
 
 final readonly class StaticListFieldWithValueBuilder implements BuildStaticListFieldWithValue
 {
@@ -44,10 +45,9 @@ final readonly class StaticListFieldWithValueBuilder implements BuildStaticListF
                     function (Tracker_FormElement_Field_List_BindValue|Tracker_FormElement_Field_List_OpenValue $value) use ($configured_field) {
                         $decorators = $configured_field->field->getDecorators();
 
-                        return new StaticListValue(
-                            $value->getLabel(),
-                            isset($decorators[$value->getId()]) ? ColorName::fromName($decorators[$value->getId()]->getCurrentColor()) : null,
-                        );
+                        $color = isset($decorators[$value->getId()]) ? ColorName::fromName($decorators[$value->getId()]->getCurrentColor()) : null;
+
+                        return new StaticListValue($value->getLabel(), Option::fromNullable($color));
                     },
                     $changeset_value?->getListValues() ?? [],
                 )
