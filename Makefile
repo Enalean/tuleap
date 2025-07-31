@@ -297,7 +297,7 @@ scan-vuln-deps:
 
 .PHONY:scan-secrets
 scan-secrets: ## Scan for committed secrets in the repository
-	trufflehog git --since-commit=56e5e8f1d3a37afd065d53f136be404de56ca276 file://"$(CURDIR)" --config="$(CURDIR)/tools/utils/trufflehog-config.yml" --filter-entropy=3.4 --fail
+	trufflehog git --since-commit=b574ac6719e69ecb39431939383dd521c278454c file://"$(CURDIR)" --config="$(CURDIR)/tools/utils/trufflehog-config.yml" --filter-entropy=3.4 --fail
 
 #
 # Dev setup
