@@ -32,6 +32,7 @@ final readonly class CrossTrackerSearchWidgetPresenter
     public string $dashboard_type;
     public string $title_attribute;
     public string $default_title;
+    public int $dashboard_id;
 
     public function __construct(
         int $widget_id,
@@ -40,6 +41,7 @@ final readonly class CrossTrackerSearchWidgetPresenter
         string $dashboard_type,
         string $title_attribute,
         string $default_title,
+        int $dashboard_id,
     ) {
         $this->widget_id = $widget_id;
 
@@ -51,5 +53,6 @@ final readonly class CrossTrackerSearchWidgetPresenter
         $this->dashboard_type         = $dashboard_type;
         $this->title_attribute        = $title_attribute;
         $this->default_title          = $default_title;
+        $this->dashboard_id           = $dashboard_id;
     }
 }

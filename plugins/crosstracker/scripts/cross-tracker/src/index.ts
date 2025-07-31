@@ -40,6 +40,7 @@ import {
     QUERY_UPDATER,
     WIDGET_CONTAINER,
     RETRIEVE_ARTIFACT_LINKS,
+    DASHBOARD_ID,
 } from "./injection-symbols";
 import { ArtifactsTableRetriever } from "./api/ArtifactsTableRetriever";
 import { ArtifactsTableBuilder } from "./api/ArtifactsTableBuilder";
@@ -107,6 +108,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             )
             .provide(RETRIEVE_ARTIFACT_LINKS, ArtifactLinksRetriever(artifacts_table_builder))
             .provide(WIDGET_ID, widget_data.widget_id)
+            .provide(DASHBOARD_ID, widget_data.dashboard_id)
             .provide(IS_USER_ADMIN, widget_data.is_widget_admin)
             .provide(DOCUMENTATION_BASE_URL, widget_data.documentation_base_url)
             .provide(GET_COLUMN_NAME, column_name_getter)

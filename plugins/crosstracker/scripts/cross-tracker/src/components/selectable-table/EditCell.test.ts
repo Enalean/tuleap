@@ -22,19 +22,38 @@ import EditCell from "./EditCell.vue";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-tests";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
+import { DASHBOARD_ID, DASHBOARD_TYPE } from "../../injection-symbols";
+import { PROJECT_DASHBOARD, USER_DASHBOARD } from "../../domain/DashboardType";
 
 describe(`EditCell`, () => {
-    const getWrapper = (uri: string, even: boolean): VueWrapper<InstanceType<typeof EditCell>> => {
+    const getWrapper = (
+        uri: string,
+        even: boolean,
+        dashboard_type: string,
+    ): VueWrapper<InstanceType<typeof EditCell>> => {
         return shallowMount(EditCell, {
-            global: { ...getGlobalTestOptions() },
+            global: {
+                ...getGlobalTestOptions(),
+                provide: {
+                    [DASHBOARD_TYPE.valueOf()]: dashboard_type,
+                    [DASHBOARD_ID.valueOf()]: 22,
+                },
+            },
             props: { uri, even },
         });
     };
 
-    it(`renders a link to artifact URI`, () => {
+    it(`renders a link to artifact URI who will redirect user on project dashboard at artifact update`, () => {
         const uri = "/plugins/tracker/?aid=77";
-        const wrapper = getWrapper(uri, false);
+        const wrapper = getWrapper(uri, false, PROJECT_DASHBOARD);
 
-        expect(wrapper.get("a").attributes("href")).toBe(uri);
+        expect(wrapper.get("a").attributes("href")).toBe(`${uri}&project-dashboard-id=22`);
+    });
+
+    it(`renders a link to artifact URI who will redirect user on user dashboard at artifact update`, () => {
+        const uri = "/plugins/tracker/?aid=77";
+        const wrapper = getWrapper(uri, false, USER_DASHBOARD);
+
+        expect(wrapper.get("a").attributes("href")).toBe(`${uri}&my-dashboard-id=22`);
     });
 });

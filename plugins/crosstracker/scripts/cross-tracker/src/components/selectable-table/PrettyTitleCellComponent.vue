@@ -58,7 +58,7 @@
                 ref="target-caret-element"
             ></i>
         </button>
-        <a v-bind:href="props.artifact_uri" class="link"
+        <a v-bind:href="artifact_url" class="link"
             ><span v-bind:class="getCrossRefBadgeClass(props.cell)"
                 >{{ props.cell.tracker_name }} #{{ props.cell.artifact_id }}</span
             >{{ props.cell.title }}</a
@@ -78,6 +78,12 @@ import {
 import type { ToggleLinks } from "../../helpers/ToggleLinksEmit";
 import CaretIndentation from "./CaretIndentation.vue";
 import ArtifactLinkArrow from "./ArtifactLinkArrow.vue";
+import { DASHBOARD_TYPE, DASHBOARD_ID } from "../../injection-symbols";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { PROJECT_DASHBOARD } from "../../domain/DashboardType";
+
+const dashboard_id = strictInject(DASHBOARD_ID);
+const dashboard_type = strictInject(DASHBOARD_TYPE);
 
 const { $gettext } = useGettext();
 
@@ -98,6 +104,14 @@ const cell_element = useTemplateRef<HTMLElement>("pretty-title-cell-element");
 const caret_element = useTemplateRef<HTMLElement>("target-caret-element");
 
 const emit = defineEmits<ToggleLinks>();
+
+const artifact_url = computed((): string => {
+    if (dashboard_type === PROJECT_DASHBOARD) {
+        return `${props.artifact_uri}&project-dashboard-id=${dashboard_id}`;
+    }
+
+    return `${props.artifact_uri}&my-dashboard-id=${dashboard_id}`;
+});
 
 function should_display_links(): boolean {
     if (props.level === 0) {
