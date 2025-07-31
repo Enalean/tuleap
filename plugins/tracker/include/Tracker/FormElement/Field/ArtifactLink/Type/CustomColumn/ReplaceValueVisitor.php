@@ -26,7 +26,7 @@ use Tracker_FormElement_Field;
 use Tuleap\Tracker\FormElement\Field\ArtifactId\ArtifactIdField;
 use Tracker_FormElement_Field_Burndown;
 use Tracker_FormElement_Field_Checkbox;
-use Tracker_FormElement_Field_Computed;
+use Tuleap\Tracker\FormElement\Field\Computed\ComputedField;
 use Tracker_FormElement_Field_CrossReferences;
 use Tracker_FormElement_Field_Date;
 use Tracker_FormElement_Field_File;
@@ -209,7 +209,7 @@ class ReplaceValueVisitor implements Tracker_FormElement_FieldVisitor
         throw new UnsupportedFieldException();
     }
 
-    public function visitComputed(Tracker_FormElement_Field_Computed $field)
+    public function visitComputed(ComputedField $field)
     {
         throw new UnsupportedFieldException();
     }

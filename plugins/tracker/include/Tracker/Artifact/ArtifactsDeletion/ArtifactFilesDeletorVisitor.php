@@ -26,7 +26,7 @@ use Tracker_Artifact_ChangesetValue_File;
 use Tuleap\Tracker\FormElement\Field\ArtifactId\ArtifactIdField;
 use Tracker_FormElement_Field_Burndown;
 use Tracker_FormElement_Field_Checkbox;
-use Tracker_FormElement_Field_Computed;
+use Tuleap\Tracker\FormElement\Field\Computed\ComputedField;
 use Tracker_FormElement_Field_CrossReferences;
 use Tracker_FormElement_Field_Date;
 use Tracker_FormElement_Field_File;
@@ -155,7 +155,7 @@ class ArtifactFilesDeletorVisitor implements Tracker_FormElement_FieldVisitor
     {
     }
 
-    public function visitComputed(Tracker_FormElement_Field_Computed $field): void
+    public function visitComputed(ComputedField $field): void
     {
     }
 

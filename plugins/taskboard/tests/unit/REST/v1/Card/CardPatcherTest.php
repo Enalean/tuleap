@@ -25,7 +25,7 @@ namespace Tuleap\Taskboard\REST\v1\Card;
 use Luracast\Restler\RestException;
 use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
-use Tracker_FormElement_Field_Computed;
+use Tuleap\Tracker\FormElement\Field\Computed\ComputedField;
 use Tracker_FormElement_Field_Numeric;
 use Tracker_FormElementFactory;
 use Tracker_NoChangeException;
@@ -117,7 +117,7 @@ final class CardPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItUpdatesTheArtifactWithFormattedValueForComputedField(): void
     {
-        $field = $this->createMock(Tracker_FormElement_Field_Computed::class);
+        $field = $this->createMock(ComputedField::class);
 
         $expected_value = ArtifactValuesRepresentationBuilder::aRepresentation(1001)->withManualValue(3.14)->build();
 

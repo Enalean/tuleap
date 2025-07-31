@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Artifact;
 
 use Tracker_Artifact_Changeset;
-use Tracker_FormElement_Field_Computed;
+use Tuleap\Tracker\FormElement\Field\Computed\ComputedField;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ComputedFieldBuilder;
@@ -32,7 +32,7 @@ use Tuleap\Tracker\Test\Builders\Fields\ComputedFieldBuilder;
 final class ChangesetValueComputedTest extends TestCase
 {
     private Tracker_Artifact_Changeset $changeset;
-    private Tracker_FormElement_Field_Computed $field;
+    private ComputedField $field;
 
     protected function setUp(): void
     {

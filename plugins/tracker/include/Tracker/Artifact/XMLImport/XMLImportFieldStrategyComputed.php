@@ -24,7 +24,7 @@ use PFUser;
 use SimpleXMLElement;
 use Tracker_Artifact_XMLImport_XMLImportFieldStrategy;
 use Tracker_FormElement_Field;
-use Tracker_FormElement_Field_Computed;
+use Tuleap\Tracker\FormElement\Field\Computed\ComputedField;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
 
@@ -40,10 +40,10 @@ class XMLImportFieldStrategyComputed implements Tracker_Artifact_XMLImport_XMLIm
         $computed_value = [];
 
         if (isset($field_change->manual_value)) {
-            $computed_value[Tracker_FormElement_Field_Computed::FIELD_VALUE_MANUAL] = (string) $field_change->manual_value;
+            $computed_value[ComputedField::FIELD_VALUE_MANUAL] = (string) $field_change->manual_value;
         }
         if (isset($field_change->is_autocomputed)) {
-            $computed_value[Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED] = (string) $field_change->is_autocomputed;
+            $computed_value[ComputedField::FIELD_VALUE_IS_AUTOCOMPUTED] = (string) $field_change->is_autocomputed;
         }
 
         return $computed_value;

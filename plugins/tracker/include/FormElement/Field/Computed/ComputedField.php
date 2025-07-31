@@ -18,13 +18,28 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\Tracker\FormElement\Field\Computed;
+
+use Codendi_HTMLPurifier;
+use Override;
+use PFUser;
+use Tracker_Artifact_Changeset;
+use Tracker_Artifact_ChangesetFactoryBuilder;
+use Tracker_Artifact_ChangesetValue;
+use Tracker_ArtifactFactory;
+use Tracker_CardDisplayPreferences;
+use Tracker_FormElement;
+use Tracker_FormElement_FieldVisitor;
+use Tracker_FormElement_InvalidFieldValueException;
+use Tracker_FormElementFactory;
+use Tracker_IDisplayTrackerLayout;
+use Tracker_Report;
+use Tracker_Report_Criteria;
 use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\ChangesetValueComputed;
 use Tuleap\Tracker\DAO\ComputedDao;
 use Tuleap\Tracker\FormElement\ComputedFieldCalculator;
-use Tuleap\Tracker\FormElement\Field\Computed\ComputedFieldDao;
-use Tuleap\Tracker\FormElement\Field\Computed\ComputedFieldDaoCache;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\Float\FloatField;
 use Tuleap\Tracker\FormElement\FieldCalculator;
@@ -32,12 +47,13 @@ use Tuleap\Tracker\FormElement\FieldSpecificProperties\ComputedFieldSpecificProp
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\SaveSpecificFieldProperties;
 use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldComputedValueFullRepresentation;
+use UserManager;
 
-class Tracker_FormElement_Field_Computed extends FloatField //phpcs:ignore
+class ComputedField extends FloatField
 {
-    private const DISPLAY_AUTOCOMPUTED_VALUE_MAX_PRECISION = 10;
-    public const FIELD_VALUE_IS_AUTOCOMPUTED               = 'is_autocomputed';
-    public const FIELD_VALUE_MANUAL                        = 'manual_value';
+    private const int DISPLAY_AUTOCOMPUTED_VALUE_MAX_PRECISION = 10;
+    public const string FIELD_VALUE_IS_AUTOCOMPUTED            = 'is_autocomputed';
+    public const string FIELD_VALUE_MANUAL                     = 'manual_value';
 
     public array $default_properties = [
         'target_field_name' => [
@@ -102,6 +118,7 @@ class Tracker_FormElement_Field_Computed extends FloatField //phpcs:ignore
         $this->cache_specific_properties = null;
     }
 
+    #[Override]
     public function isCSVImportable(): bool
     {
         return false;
@@ -110,6 +127,7 @@ class Tracker_FormElement_Field_Computed extends FloatField //phpcs:ignore
     /**
      * @return float|null if there are no data (/!\ it's on purpose, otherwise we can mean to distinguish if there is data but 0 vs no data at all, for the graph plot)
      */
+    #[Override]
     public function getComputedValue(
         PFUser $user,
         Artifact $artifact,
@@ -223,6 +241,7 @@ class Tracker_FormElement_Field_Computed extends FloatField //phpcs:ignore
         );
     }
 
+    #[Override]
     protected function getNoValueLabel()
     {
         return "<span class='empty_value auto-computed-label'>" . $this->getFieldEmptyMessage() . '</span>';
@@ -240,6 +259,7 @@ class Tracker_FormElement_Field_Computed extends FloatField //phpcs:ignore
         return ($computed_value !== null) ? $computed_value : $this->getFieldEmptyMessage();
     }
 
+    #[Override]
     protected function processUpdate(
         Tracker_IDisplayTrackerLayout $layout,
         $request,
@@ -276,6 +296,7 @@ class Tracker_FormElement_Field_Computed extends FloatField //phpcs:ignore
         );
     }
 
+    #[Override]
     public function afterCreate(array $form_element_data, $tracker_is_empty)
     {
         $form_element_data['specific_properties']['target_field_name'] = $this->name;
@@ -284,6 +305,7 @@ class Tracker_FormElement_Field_Computed extends FloatField //phpcs:ignore
         parent::afterCreate($form_element_data, $tracker_is_empty);
     }
 
+    #[Override]
     public function exportPropertiesToXML(&$root)
     {
         $default_value = $this->getDefaultValue();
@@ -305,6 +327,7 @@ class Tracker_FormElement_Field_Computed extends FloatField //phpcs:ignore
         return new FieldCalculator(new ComputedFieldCalculator(new ComputedFieldDao()));
     }
 
+    #[Override]
     public function validateValue($value)
     {
         if (! is_array($value)) {
@@ -317,7 +340,7 @@ class Tracker_FormElement_Field_Computed extends FloatField //phpcs:ignore
 
         if (
             isset($value[self::FIELD_VALUE_MANUAL]) && isset($value[self::FIELD_VALUE_IS_AUTOCOMPUTED]) &&
-                $value[self::FIELD_VALUE_IS_AUTOCOMPUTED]
+            $value[self::FIELD_VALUE_IS_AUTOCOMPUTED]
         ) {
             return $value[self::FIELD_VALUE_MANUAL] === '';
         }
@@ -333,15 +356,17 @@ class Tracker_FormElement_Field_Computed extends FloatField //phpcs:ignore
         return true;
     }
 
+    #[Override]
     public function fetchArtifactValueWithEditionFormIfEditable(
         Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value,
         array $submitted_values,
     ) {
         return $this->fetchArtifactValueReadOnly($artifact, $value) .
-            $this->getHiddenArtifactValueForEdition($artifact, $value, $submitted_values);
+               $this->getHiddenArtifactValueForEdition($artifact, $value, $submitted_values);
     }
 
+    #[Override]
     protected function getHiddenArtifactValueForEdition(
         Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value,
@@ -387,6 +412,7 @@ class Tracker_FormElement_Field_Computed extends FloatField //phpcs:ignore
         return $html;
     }
 
+    #[Override]
     protected function fetchArtifactValue(
         Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value,
@@ -428,6 +454,7 @@ class Tracker_FormElement_Field_Computed extends FloatField //phpcs:ignore
      *
      * @return string
      */
+    #[Override]
     public function fetchArtifactValueReadOnly(
         Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $changeset_value = null,
@@ -447,7 +474,7 @@ class Tracker_FormElement_Field_Computed extends FloatField //phpcs:ignore
         }
 
         $html_computed_complete_value = $html_computed_value . '<span class="auto-computed"> (' .
-            dgettext('tuleap-tracker', 'autocomputed') . ')</span>';
+                                        dgettext('tuleap-tracker', 'autocomputed') . ')</span>';
 
         if ($value === null) {
             $value = $html_computed_complete_value;
@@ -461,7 +488,7 @@ class Tracker_FormElement_Field_Computed extends FloatField //phpcs:ignore
         }
 
         $html = '<div class="auto-computed-label" data-test="computed-value">' . $value . '</div>' .
-            '<div class="back-to-autocompute">' . $html_computed_complete_value . '</div>';
+                '<div class="back-to-autocompute">' . $html_computed_complete_value . '</div>';
 
         return $html;
     }
@@ -469,6 +496,7 @@ class Tracker_FormElement_Field_Computed extends FloatField //phpcs:ignore
     /**
      * Fetch data to display the field value in mail
      */
+    #[Override]
     public function fetchMailArtifactValue(
         Artifact $artifact,
         PFUser $user,
@@ -485,6 +513,7 @@ class Tracker_FormElement_Field_Computed extends FloatField //phpcs:ignore
         return (string) ($computed_value ?? '-');
     }
 
+    #[Override]
     protected function fetchTooltipValue(Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null): string
     {
         $changeset      = $artifact->getLastChangesetWithFieldValue($this);
@@ -497,6 +526,7 @@ class Tracker_FormElement_Field_Computed extends FloatField //phpcs:ignore
         return (string) ($computed_value ?? '-');
     }
 
+    #[Override]
     public function fetchChangesetValue(
         int $artifact_id,
         int $changeset_id,
@@ -512,11 +542,13 @@ class Tracker_FormElement_Field_Computed extends FloatField //phpcs:ignore
         return (string) $this->getComputedValue($current_user, $changeset->getArtifact(), $changeset->getSubmittedOn());
     }
 
+    #[Override]
     public function getRESTValue(PFUser $user, Tracker_Artifact_Changeset $changeset)
     {
         return $this->getFullRESTValue($user, $changeset);
     }
 
+    #[Override]
     public function getFullRESTValue(PFUser $user, Tracker_Artifact_Changeset $changeset)
     {
         $computed_value = $this->getComputedValueWithNoStopOnManualValue($changeset->getArtifact());
@@ -548,6 +580,7 @@ class Tracker_FormElement_Field_Computed extends FloatField //phpcs:ignore
         return null;
     }
 
+    #[Override]
     public function getFieldDataFromRESTValue(array $value, ?Artifact $artifact = null)
     {
         if ($this->isAutocomputedDisabledAndNoManualValueProvided($value) || isset($value['value'])) {
@@ -566,13 +599,14 @@ class Tracker_FormElement_Field_Computed extends FloatField //phpcs:ignore
     private function isAutocomputedDisabledAndNoManualValueProvided(array $value)
     {
         return isset($value[self::FIELD_VALUE_IS_AUTOCOMPUTED]) && $value[self::FIELD_VALUE_IS_AUTOCOMPUTED] === false
-            && (! isset($value[self::FIELD_VALUE_MANUAL]) || $value[self::FIELD_VALUE_MANUAL] === null);
+               && (! isset($value[self::FIELD_VALUE_MANUAL]) || $value[self::FIELD_VALUE_MANUAL] === null);
     }
 
     /**
      * Display the html field in the admin ui
      * @return string html
      */
+    #[Override]
     public function fetchAdminFormElement()
     {
         $html = '<div class="input-append">';
@@ -591,21 +625,25 @@ class Tracker_FormElement_Field_Computed extends FloatField //phpcs:ignore
         return $html;
     }
 
+    #[Override]
     public static function getFactoryLabel()
     {
         return dgettext('tuleap-tracker', 'Computed value');
     }
 
+    #[Override]
     public static function getFactoryDescription()
     {
         return dgettext('tuleap-tracker', 'Compute value (sum of numerical field) from linked artifacts.<p><strong>Note</strong>: <ul><li>Calculation will not check linked artifacts permissions AND will only calculate the field values of linked artifacts that have the same field name.</li></ul>');
     }
 
+    #[Override]
     public static function getFactoryIconUseIt()
     {
         return $GLOBALS['HTML']->getImagePath('ic/sum.png');
     }
 
+    #[Override]
     public static function getFactoryIconCreate()
     {
         return $GLOBALS['HTML']->getImagePath('ic/sum.png');
@@ -616,64 +654,72 @@ class Tracker_FormElement_Field_Computed extends FloatField //phpcs:ignore
         return new ComputedFieldDao();
     }
 
-    #[\Override]
+    #[Override]
     protected function getDuplicateSpecificPropertiesDao(): ComputedFieldSpecificPropertiesDAO
     {
         return new ComputedFieldSpecificPropertiesDAO();
     }
 
-    #[\Override]
+    #[Override]
     protected function getDeleteSpecificPropertiesDao(): ComputedFieldSpecificPropertiesDAO
     {
         return new ComputedFieldSpecificPropertiesDAO();
     }
 
-    #[\Override]
+    #[Override]
     protected function getSearchSpecificPropertiesDao(): ComputedFieldSpecificPropertiesDAO
     {
         return new ComputedFieldSpecificPropertiesDAO();
     }
 
-    #[\Override]
+    #[Override]
     protected function getSaveSpecificPropertiesDao(): SaveSpecificFieldProperties
     {
         return new ComputedFieldSpecificPropertiesDAO();
     }
 
+    #[Override]
     public function getCriteriaFromWhere(Tracker_Report_Criteria $criteria): Option
     {
         return Option::nothing(ParametrizedFromWhere::class);
     }
 
+    #[Override]
     public function getQuerySelect(): string
     {
         return '';
     }
 
+    #[Override]
     public function getQueryFrom()
     {
         return '';
     }
 
+    #[Override]
     public function fetchCriteriaValue(Tracker_Report_Criteria $criteria): string
     {
         return '';
     }
 
+    #[Override]
     public function fetchRawValue(mixed $value): string
     {
         return '';
     }
 
+    #[Override]
     protected function getCriteriaDao()
     {
     }
 
+    #[Override]
     public function getAggregateFunctions()
     {
         return [];
     }
 
+    #[Override]
     public function fetchSubmitForOverlay(array $submitted_values)
     {
         return $this->buildFieldForSubmission(
@@ -687,6 +733,7 @@ class Tracker_FormElement_Field_Computed extends FloatField //phpcs:ignore
      *
      * @return string html
      */
+    #[Override]
     public function fetchSubmit(array $submitted_values)
     {
         return $this->buildFieldForSubmission(
@@ -716,7 +763,7 @@ class Tracker_FormElement_Field_Computed extends FloatField //phpcs:ignore
         $title = $purifier->purify(sprintf(dgettext('tuleap-tracker', 'Edit the field "%1$s"'), $this->getLabel()));
         $html .= '<button type="button" title="' . $title . '" class="tracker_formelement_edit ' . $submit_class . '">' . $purifier->purify($this->getLabel())  . $required . '</button>';
         $html .= '<label for="tracker_artifact_' . $this->id . '" title="' . $purifier->purify($this->description) .
-            '" class="tracker_formelement_label" data-test="field-label">' . $purifier->purify($this->getLabel())  . $required . '</label>';
+                 '" class="tracker_formelement_label" data-test="field-label">' . $purifier->purify($this->getLabel())  . $required . '</label>';
 
         $html .= '<div class="input-append" data-field-id="' . $this->getId() . '">';
 
@@ -744,6 +791,7 @@ class Tracker_FormElement_Field_Computed extends FloatField //phpcs:ignore
      *
      * @return mixed The default value for this field, or null if no default value defined
      */
+    #[Override]
     public function getDefaultValue()
     {
         $property = $this->getProperty('default_value');
@@ -757,6 +805,7 @@ class Tracker_FormElement_Field_Computed extends FloatField //phpcs:ignore
         ];
     }
 
+    #[Override]
     public function getDefaultRESTValue()
     {
         $property = $this->getProperty('default_value');
@@ -770,6 +819,7 @@ class Tracker_FormElement_Field_Computed extends FloatField //phpcs:ignore
         ];
     }
 
+    #[Override]
     public function fetchSubmitMasschange()
     {
         $purifier = Codendi_HTMLPurifier::instance();
@@ -783,7 +833,7 @@ class Tracker_FormElement_Field_Computed extends FloatField //phpcs:ignore
             $html .= '<div class="edition-mass-change">';
             $html .= '<label for="tracker_artifact_' . $purifier->purify($this->getId()) . '"
                         title="' . $purifier->purify($this->description) . '"  class="tracker_formelement_label">' .
-                        $purifier->purify($this->getLabel()) . $required . '</label>';
+                     $purifier->purify($this->getLabel()) . $required . '</label>';
             $html .= '<div class=" input-append">';
             $html .= $this->fetchSubmitValueMasschange();
             $html .= '</div>';
@@ -791,7 +841,7 @@ class Tracker_FormElement_Field_Computed extends FloatField //phpcs:ignore
 
             $html .= '<div class="display-mass-change display-mass-change-hidden">';
             $html .= '<button class="tracker_formelement_edit edit-mass-change-autocompute" type="button">' .
-                        $purifier->purify($this->getLabel()) . $required . '</button>';
+                     $purifier->purify($this->getLabel()) . $required . '</button>';
             $html .= '<span class="auto-computed">';
             $html .= $purifier->purify(ucfirst(dgettext('tuleap-tracker', 'autocomputed')));
             $html .= '</span>';
@@ -803,6 +853,7 @@ class Tracker_FormElement_Field_Computed extends FloatField //phpcs:ignore
         return $html;
     }
 
+    #[Override]
     protected function fetchSubmitValueMasschange(): string
     {
         $unchanged = dgettext('tuleap-tracker', 'Unchanged');
@@ -811,6 +862,7 @@ class Tracker_FormElement_Field_Computed extends FloatField //phpcs:ignore
         return $html;
     }
 
+    #[Override]
     public function fetchArtifactForOverlay(Artifact $artifact, array $submitted_values)
     {
         $purifier       = Codendi_HTMLPurifier::instance();
@@ -849,7 +901,7 @@ class Tracker_FormElement_Field_Computed extends FloatField //phpcs:ignore
 
             $html .= '<div class="tracker_artifact_field tracker_artifact_field-computed">';
             $html .= '<label for="tracker_artifact_' . $this->id . '" title="' . $purifier->purify($this->description) .
-                    '" class="tracker_formelement_label">' . $purifier->purify($this->getLabel()) . $required . '</label>';
+                     '" class="tracker_formelement_label">' . $purifier->purify($this->getLabel()) . $required . '</label>';
 
             $html .= '<span class="' . $class . '">' . $computed_value . $autocomputed_label . '</span></div>';
 
@@ -861,10 +913,10 @@ class Tracker_FormElement_Field_Computed extends FloatField //phpcs:ignore
         $title = $purifier->purify(sprintf(dgettext('tuleap-tracker', 'Edit the field "%1$s"'), $this->getLabel()));
         $html .= '<button type="button" title="' . $title . '" class="tracker_formelement_edit tracker-formelement-edit-for-modal">' . $purifier->purify($this->getLabel())  . $required . '</button>';
         $html .= '<label for="tracker_artifact_' . $this->id . '" title="' . $purifier->purify($this->description) .
-                '" class="tracker_formelement_label">' . $purifier->purify($this->getLabel()) . $required . '</label>';
+                 '" class="tracker_formelement_label">' . $purifier->purify($this->getLabel()) . $required . '</label>';
 
         $html .= '<span class="auto-computed auto-computed-for-modal">' . $computed_value . ' (' .
-        dgettext('tuleap-tracker', 'autocomputed') . ')</span>';
+                 dgettext('tuleap-tracker', 'autocomputed') . ')</span>';
 
         $html .= '<div class="input-append add-field auto-computed-for-modal-append" data-field-id="' . $this->getId() . '">';
         $html .= '<div>';
@@ -880,6 +932,7 @@ class Tracker_FormElement_Field_Computed extends FloatField //phpcs:ignore
         return $html;
     }
 
+    #[Override]
     protected function getValueDao()
     {
         return new ComputedDao();
@@ -899,6 +952,7 @@ class Tracker_FormElement_Field_Computed extends FloatField //phpcs:ignore
      *
      * @return string
      */
+    #[Override]
     public function fetchCard(Artifact $artifact, Tracker_CardDisplayPreferences $display_preferences)
     {
         $value                      = $this->fetchCardValue($artifact, $display_preferences);
@@ -924,30 +978,32 @@ class Tracker_FormElement_Field_Computed extends FloatField //phpcs:ignore
                     <td>' . $purifier->purify($this->getLabel()) . ':
                     </td>
                     <td class="autocomputed_override">' .
-                        $this->fetchComputedValueWithLabel($computed_value) .
-                        '<a href="#" ' . $data_field_id . '><i class="fas fa-redo fa-flip-horizontal"></i>' .
-                        dgettext('tuleap-tracker', 'Auto-compute')
-                        . '</a>' .
-                    '</td>
+                $this->fetchComputedValueWithLabel($computed_value) .
+                '<a href="#" ' . $data_field_id . '><i class="fas fa-redo fa-flip-horizontal"></i>' .
+                dgettext('tuleap-tracker', 'Auto-compute')
+                . '</a>' .
+                '</td>
                     <td class="valueOf_' . $purifier->purify($this->getName()) . '"' .
-                        $data_field_id .
-                        $data_field_type .
-                        $data_field_is_autocomputed .
-                        $data_field_old_value .
-                        $data_csrf_token_update .
-                    '>' .
-                        $value .
-                    '</td>
+                $data_field_id .
+                $data_field_type .
+                $data_field_is_autocomputed .
+                $data_field_old_value .
+                $data_csrf_token_update .
+                '>' .
+                $value .
+                '</td>
                 </tr>';
 
         return $html;
     }
 
+    #[Override]
     public function fetchRawValueFromChangeset(Tracker_Artifact_Changeset $changeset): string
     {
         return '';
     }
 
+    #[Override]
     public function getChangesetValue($changeset, $value_id, $has_changed)
     {
         $row = $this->getValueDao()->searchById($value_id, $this->id)->getRow();
@@ -980,11 +1036,13 @@ class Tracker_FormElement_Field_Computed extends FloatField //phpcs:ignore
     }
 
     /** For testing purpose */
+    #[Override]
     protected function getCurrentUser()
     {
         return UserManager::instance()->getCurrentUser();
     }
 
+    #[Override]
     protected function saveValue(
         $artifact,
         $changeset_value_id,
@@ -1029,6 +1087,7 @@ class Tracker_FormElement_Field_Computed extends FloatField //phpcs:ignore
     /**
      * @see Tracker_FormElement_Field::hasChanges()
      */
+    #[Override]
     public function hasChanges(Artifact $artifact, Tracker_Artifact_ChangesetValue $previous_changeset_value, $value)
     {
         if (
@@ -1056,20 +1115,24 @@ class Tracker_FormElement_Field_Computed extends FloatField //phpcs:ignore
         return (float) $previous_changeset_value->getNumeric() !== (float) $new_value;
     }
 
+    #[Override]
     public function getRESTAvailableValues()
     {
     }
 
+    #[Override]
     public function testImport()
     {
         return true;
     }
 
+    #[Override]
     protected function validate(Artifact $artifact, $value)
     {
         return $this->validateValue($value);
     }
 
+    #[Override]
     public function accept(Tracker_FormElement_FieldVisitor $visitor)
     {
         return $visitor->visitComputed($this);
@@ -1078,6 +1141,7 @@ class Tracker_FormElement_Field_Computed extends FloatField //phpcs:ignore
     /**
      * @return int | null if no value found
      */
+    #[Override]
     public function getCachedValue(PFUser $user, Artifact $artifact, $timestamp = null)
     {
         $dao   = ComputedFieldDaoCache::instance();
@@ -1089,16 +1153,19 @@ class Tracker_FormElement_Field_Computed extends FloatField //phpcs:ignore
         return $value;
     }
 
+    #[Override]
     public function canBeUsedAsReportCriterion()
     {
         return false;
     }
 
+    #[Override]
     public function canBeUsedToSortReport()
     {
         return false;
     }
 
+    #[Override]
     public function validateFieldWithPermissionsAndRequiredStatus(
         Artifact $artifact,
         $submitted_value,
@@ -1127,13 +1194,14 @@ class Tracker_FormElement_Field_Computed extends FloatField //phpcs:ignore
                 || ! $submitted_value[self::FIELD_VALUE_IS_AUTOCOMPUTED]
             ) {
                 return $this->isValidRegardingRequiredProperty($artifact, $submitted_value)
-                    && $this->validateField($artifact, $submitted_value);
+                       && $this->validateField($artifact, $submitted_value);
             }
         }
 
         return true;
     }
 
+    #[Override]
     public function isValidRegardingRequiredProperty(Artifact $artifact, $submitted_value)
     {
         if ($this->isAnEmptyArray($submitted_value)) {

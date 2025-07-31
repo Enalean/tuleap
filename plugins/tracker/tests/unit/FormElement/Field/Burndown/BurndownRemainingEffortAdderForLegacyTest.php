@@ -27,7 +27,7 @@ use PFUser;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tracker_Chart_Data_Burndown;
-use Tracker_FormElement_Field_Computed;
+use Tuleap\Tracker\FormElement\Field\Computed\ComputedField;
 use Tracker_UserWithReadAllPermission;
 use Tuleap\Date\DatePeriodWithOpenDays;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -63,7 +63,7 @@ final class BurndownRemainingEffortAdderForLegacyTest extends TestCase
         $artifact = ArtifactTestBuilder::anArtifact(3541)->build();
         $user     = UserTestBuilder::buildWithDefaults();
 
-        $computed_field = $this->createMock(Tracker_FormElement_Field_Computed::class);
+        $computed_field = $this->createMock(ComputedField::class);
 
         $this->field_retriever->expects($this->once())->method('getBurndownRemainingEffortField')
             ->with($artifact, $user)->willReturn($computed_field);
@@ -109,7 +109,7 @@ final class BurndownRemainingEffortAdderForLegacyTest extends TestCase
         $artifact = ArtifactTestBuilder::anArtifact(3542)->build();
         $user     = UserTestBuilder::buildWithDefaults();
 
-        $computed_field = $this->createMock(Tracker_FormElement_Field_Computed::class);
+        $computed_field = $this->createMock(ComputedField::class);
 
         $this->field_retriever->expects($this->once())->method('getBurndownRemainingEffortField')
             ->with($artifact, $user)->willReturn($computed_field);

@@ -20,6 +20,7 @@
 
 use Tuleap\Tracker\FormElement\Field\ArtifactId\ArtifactIdField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
+use Tuleap\Tracker\FormElement\Field\Computed\ComputedField;
 use Tuleap\Tracker\FormElement\Field\Float\FloatField;
 use Tuleap\Tracker\FormElement\Field\Integer\IntegerField;
 use Tuleap\Tracker\FormElement\Field\Priority\PriorityField;
@@ -162,7 +163,7 @@ class Tracker_XML_Updater_FieldChangeXMLUpdaterVisitor implements Tracker_FormEl
         return $this->unknown_updater;
     }
 
-    public function visitComputed(Tracker_FormElement_Field_Computed $field)
+    public function visitComputed(ComputedField $field)
     {
         return $this->computed_updater;
     }

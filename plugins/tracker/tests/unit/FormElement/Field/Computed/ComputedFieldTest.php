@@ -20,14 +20,13 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\FormElement;
+namespace Tuleap\Tracker\FormElement\Field\Computed;
 
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use PHPUnit\Framework\MockObject\MockObject;
 use SimpleXMLElement;
 use TestHelper;
 use Tracker_Artifact_Changeset_ValueDao;
-use Tracker_FormElement_Field_Computed;
 use Tracker_FormElement_InvalidFieldValueException;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\GlobalResponseMock;
@@ -35,7 +34,6 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\DAO\ComputedDao;
-use Tuleap\Tracker\FormElement\Field\Computed\ComputedFieldDao;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
@@ -45,7 +43,7 @@ use Tuleap\User\CurrentUserWithLoggedInInformation;
 use UserManager;
 
 #[DisableReturnValueGenerationForTestDoubles]
-final class Tracker_FormElement_Field_ComputedTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+final class ComputedFieldTest extends TestCase
 {
     use GlobalResponseMock;
     use GlobalLanguageMock;
@@ -73,7 +71,7 @@ final class Tracker_FormElement_Field_ComputedTest extends TestCase // phpcs:ign
     public function testItReturnsValueWhenCorrectlyFormatted(): void
     {
         $field = ComputedFieldBuilder::aComputedField(123)->build();
-        $value = [Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED => true];
+        $value = [ComputedField::FIELD_VALUE_IS_AUTOCOMPUTED => true];
 
         self::assertEquals($value, $field->getFieldDataFromRESTValue($value));
     }
@@ -82,7 +80,7 @@ final class Tracker_FormElement_Field_ComputedTest extends TestCase // phpcs:ign
     {
         $field = ComputedFieldBuilder::aComputedField(123)->build();
         $this->expectException(Tracker_FormElement_InvalidFieldValueException::class);
-        $value = [Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED => false];
+        $value = [ComputedField::FIELD_VALUE_IS_AUTOCOMPUTED => false];
         $field->getFieldDataFromRESTValue($value);
     }
 
@@ -91,8 +89,8 @@ final class Tracker_FormElement_Field_ComputedTest extends TestCase // phpcs:ign
         $field = ComputedFieldBuilder::aComputedField(123)->build();
         $this->expectException(Tracker_FormElement_InvalidFieldValueException::class);
         $value = [
-            Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED => false,
-            Tracker_FormElement_Field_Computed::FIELD_VALUE_MANUAL          => null,
+            ComputedField::FIELD_VALUE_IS_AUTOCOMPUTED => false,
+            ComputedField::FIELD_VALUE_MANUAL          => null,
         ];
         $field->getFieldDataFromRESTValue($value);
     }
@@ -112,7 +110,7 @@ final class Tracker_FormElement_Field_ComputedTest extends TestCase // phpcs:ign
         self::assertFalse($field->validateValue(1));
         self::assertFalse($field->validateValue(1.1));
         self::assertFalse($field->validateValue(true));
-        self::assertTrue($field->validateValue([Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED => true]));
+        self::assertTrue($field->validateValue([ComputedField::FIELD_VALUE_IS_AUTOCOMPUTED => true]));
     }
 
     public function testItExpectsAtLeastAValueOrAnAutocomputedInformation(): void
@@ -120,42 +118,42 @@ final class Tracker_FormElement_Field_ComputedTest extends TestCase // phpcs:ign
         $field = ComputedFieldBuilder::aComputedField(123)->build();
         self::assertFalse($field->validateValue([]));
         self::assertFalse($field->validateValue(['v1' => 1]));
-        self::assertFalse($field->validateValue([Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED]));
-        self::assertFalse($field->validateValue([Tracker_FormElement_Field_Computed::FIELD_VALUE_MANUAL]));
+        self::assertFalse($field->validateValue([ComputedField::FIELD_VALUE_IS_AUTOCOMPUTED]));
+        self::assertFalse($field->validateValue([ComputedField::FIELD_VALUE_MANUAL]));
         self::assertFalse($field->validateValue([
-            Tracker_FormElement_Field_Computed::FIELD_VALUE_MANUAL,
-            Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED,
+            ComputedField::FIELD_VALUE_MANUAL,
+            ComputedField::FIELD_VALUE_IS_AUTOCOMPUTED,
         ]));
-        self::assertTrue($field->validateValue([Tracker_FormElement_Field_Computed::FIELD_VALUE_MANUAL => 1]));
-        self::assertTrue($field->validateValue([Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED => true]));
+        self::assertTrue($field->validateValue([ComputedField::FIELD_VALUE_MANUAL => 1]));
+        self::assertTrue($field->validateValue([ComputedField::FIELD_VALUE_IS_AUTOCOMPUTED => true]));
     }
 
     public function testItExpectsAFloatOrAIntAsManualValue(): void
     {
         $field = ComputedFieldBuilder::aComputedField(123)->build();
-        self::assertFalse($field->validateValue([Tracker_FormElement_Field_Computed::FIELD_VALUE_MANUAL => 'String']));
-        self::assertTrue($field->validateValue([Tracker_FormElement_Field_Computed::FIELD_VALUE_MANUAL => 1.1]));
-        self::assertTrue($field->validateValue([Tracker_FormElement_Field_Computed::FIELD_VALUE_MANUAL => 0]));
+        self::assertFalse($field->validateValue([ComputedField::FIELD_VALUE_MANUAL => 'String']));
+        self::assertTrue($field->validateValue([ComputedField::FIELD_VALUE_MANUAL => 1.1]));
+        self::assertTrue($field->validateValue([ComputedField::FIELD_VALUE_MANUAL => 0]));
     }
 
     public function testItCanNotAcceptAManualValueWhenAutocomputedIsEnabled(): void
     {
         $field = ComputedFieldBuilder::aComputedField(123)->build();
         self::assertFalse($field->validateValue([
-            Tracker_FormElement_Field_Computed::FIELD_VALUE_MANUAL          => 1,
-            Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED => true,
+            ComputedField::FIELD_VALUE_MANUAL          => 1,
+            ComputedField::FIELD_VALUE_IS_AUTOCOMPUTED => true,
         ]));
         self::assertTrue($field->validateValue([
-            Tracker_FormElement_Field_Computed::FIELD_VALUE_MANUAL          => 1,
-            Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED => false,
+            ComputedField::FIELD_VALUE_MANUAL          => 1,
+            ComputedField::FIELD_VALUE_IS_AUTOCOMPUTED => false,
         ]));
         self::assertFalse($field->validateValue([
-            Tracker_FormElement_Field_Computed::FIELD_VALUE_MANUAL          => '',
-            Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED => false,
+            ComputedField::FIELD_VALUE_MANUAL          => '',
+            ComputedField::FIELD_VALUE_IS_AUTOCOMPUTED => false,
         ]));
         self::assertTrue($field->validateValue([
-            Tracker_FormElement_Field_Computed::FIELD_VALUE_MANUAL          => '',
-            Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED => true,
+            ComputedField::FIELD_VALUE_MANUAL          => '',
+            ComputedField::FIELD_VALUE_IS_AUTOCOMPUTED => true,
         ]));
     }
 
@@ -429,9 +427,9 @@ final class Tracker_FormElement_Field_ComputedTest extends TestCase // phpcs:ign
             ->build();
     }
 
-    private function getComputedFieldForManualComputationTests(ComputedFieldDao $dao, ComputedDao $value_dao): Tracker_FormElement_Field_Computed&MockObject
+    private function getComputedFieldForManualComputationTests(ComputedFieldDao $dao, ComputedDao $value_dao): ComputedField&MockObject
     {
-        $field = $this->createPartialMock(Tracker_FormElement_Field_Computed::class, [
+        $field = $this->createPartialMock(ComputedField::class, [
             'getDao', 'getId', 'getName', 'getValueDao', 'getStandardCalculationMode', 'getStopAtManualSetFieldMode',
         ]);
         $field->method('getDao')->willReturn($dao);
@@ -679,9 +677,9 @@ final class Tracker_FormElement_Field_ComputedTest extends TestCase // phpcs:ign
         );
     }
 
-    private function getComputedFieldForManualValueRetrievement(ComputedDao $value_dao): Tracker_FormElement_Field_Computed
+    private function getComputedFieldForManualValueRetrievement(ComputedDao $value_dao): ComputedField
     {
-        $field = $this->createPartialMock(Tracker_FormElement_Field_Computed::class, [
+        $field = $this->createPartialMock(ComputedField::class, [
             'getValueDao', 'getChangesetValueDao', 'userCanUpdate',
         ]);
         $field->method('getValueDao')->willReturn($value_dao);

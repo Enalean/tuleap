@@ -30,7 +30,7 @@ use Tracker_Artifact_ReadOnlyRenderer;
 use Tracker_Artifact_Redirect;
 use Tracker_Exception;
 use Tracker_FormElement_Field;
-use Tracker_FormElement_Field_Computed;
+use Tuleap\Tracker\FormElement\Field\Computed\ComputedField;
 use Tracker_FormElementFactory;
 use Tracker_IDisplayTrackerLayout;
 use Tuleap\Dashboard\Project\ProjectDashboard;
@@ -306,7 +306,7 @@ final readonly class UpdateArtifactAction
     ) {
         if (
             $artifact->getTracker()->hasFormElementWithNameAndType($remaining_effort_field->getName(), ['computed'])
-            && $remaining_effort_field instanceof Tracker_FormElement_Field_Computed
+            && $remaining_effort_field instanceof ComputedField
             && $remaining_effort_field->isArtifactValueAutocomputed($artifact)
         ) {
             $remaining_effort .= ' (' . dgettext('tuleap-tracker', 'autocomputed') . ')';

@@ -22,7 +22,7 @@ namespace Tuleap\Tracker\Artifact\XML\Exporter;
 
 use SimpleXMLElement;
 use Tracker_Artifact_ChangesetValue;
-use Tracker_FormElement_Field_Computed;
+use Tuleap\Tracker\FormElement\Field\Computed\ComputedField;
 use Tuleap\Tracker\Artifact\Artifact;
 
 class ChangesetValuesXMLExporter
@@ -141,6 +141,6 @@ class ChangesetValuesXMLExporter
     {
         $field = $changeset_value->getField();
 
-        return $field instanceof Tracker_FormElement_Field_Computed;
+        return $field instanceof ComputedField;
     }
 }

@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\XML\Updater\FieldChange;
 
-use Tracker_FormElement_Field_Computed;
+use Tuleap\Tracker\FormElement\Field\Computed\ComputedField;
 
 // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -48,7 +48,7 @@ final class FieldChangeComputedXMLUpdaterTest extends \Tuleap\Test\PHPUnit\TestC
     public function testItUpdatesWhenOnlyIsAutocomputedIsSet(): void
     {
         $submitted_value = [
-            Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED => '1',
+            ComputedField::FIELD_VALUE_IS_AUTOCOMPUTED => '1',
         ];
         $this->updater->update($this->field_change, $submitted_value);
 
@@ -59,8 +59,8 @@ final class FieldChangeComputedXMLUpdaterTest extends \Tuleap\Test\PHPUnit\TestC
     public function testItUpdatesWhenAutocomputedIsSetAndManualValueEmpty(): void
     {
         $submitted_value = [
-            Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED => '1',
-            Tracker_FormElement_Field_Computed::FIELD_VALUE_MANUAL          => '',
+            ComputedField::FIELD_VALUE_IS_AUTOCOMPUTED => '1',
+            ComputedField::FIELD_VALUE_MANUAL          => '',
         ];
         $this->updater->update($this->field_change, $submitted_value);
 
@@ -71,7 +71,7 @@ final class FieldChangeComputedXMLUpdaterTest extends \Tuleap\Test\PHPUnit\TestC
     public function testItUpdatesWhenOnlyAManualValueIsSet(): void
     {
         $submitted_value = [
-            Tracker_FormElement_Field_Computed::FIELD_VALUE_MANUAL => '1.5',
+            ComputedField::FIELD_VALUE_MANUAL => '1.5',
         ];
         $this->updater->update($this->field_change, $submitted_value);
 
@@ -82,8 +82,8 @@ final class FieldChangeComputedXMLUpdaterTest extends \Tuleap\Test\PHPUnit\TestC
     public function testItUpdatesWhenAManualValueIsSetAndIsAutocomputedDisabled(): void
     {
         $submitted_value = [
-            Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED => '0',
-            Tracker_FormElement_Field_Computed::FIELD_VALUE_MANUAL => '1.5',
+            ComputedField::FIELD_VALUE_IS_AUTOCOMPUTED => '0',
+            ComputedField::FIELD_VALUE_MANUAL          => '1.5',
         ];
         $this->updater->update($this->field_change, $submitted_value);
 
@@ -103,8 +103,8 @@ final class FieldChangeComputedXMLUpdaterTest extends \Tuleap\Test\PHPUnit\TestC
     public function testItUpdatesEverythingIfAManualValueIsSetAndIsAutocomputedIsEnabled(): void
     {
         $submitted_value = [
-            Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED => '1',
-            Tracker_FormElement_Field_Computed::FIELD_VALUE_MANUAL => '1.5',
+            ComputedField::FIELD_VALUE_IS_AUTOCOMPUTED => '1',
+            ComputedField::FIELD_VALUE_MANUAL          => '1.5',
         ];
         $this->updater->update($this->field_change, $submitted_value);
 
@@ -115,8 +115,8 @@ final class FieldChangeComputedXMLUpdaterTest extends \Tuleap\Test\PHPUnit\TestC
     public function testItUpdatesWhenOldValueIsManualAndValuesIsAutocomputed(): void
     {
         $submitted_value = [
-            Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED => '1',
-            Tracker_FormElement_Field_Computed::FIELD_VALUE_MANUAL => '',
+            ComputedField::FIELD_VALUE_IS_AUTOCOMPUTED => '1',
+            ComputedField::FIELD_VALUE_MANUAL          => '',
         ];
 
         $specific_field_change = new \SimpleXMLElement('<?xml version="1.0"?>

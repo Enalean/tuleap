@@ -26,7 +26,7 @@ use PFUser;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tracker_Chart_Data_Burndown;
-use Tracker_FormElement_Field_Computed;
+use Tuleap\Tracker\FormElement\Field\Computed\ComputedField;
 use Tuleap\Date\DatePeriodWithOpenDays;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -78,7 +78,7 @@ final class BurndownRemainingEffortAdderForRESTTest extends TestCase
 
         $burndown_data = new Tracker_Chart_Data_Burndown($date_period, $capacity);
 
-        $remaining_effort_field = $this->createMock(Tracker_FormElement_Field_Computed::class);
+        $remaining_effort_field = $this->createMock(ComputedField::class);
         $remaining_effort_field->method('getId')->willReturn(1);
         $this->field_retriever->method('getBurndownRemainingEffortField')->willReturn($remaining_effort_field);
 
@@ -95,7 +95,7 @@ final class BurndownRemainingEffortAdderForRESTTest extends TestCase
         $field_id               = 1;
         $duration               = 5;
         $old_start_date         = strtotime('-3 month');
-        $remaining_effort_field = $this->createMock(Tracker_FormElement_Field_Computed::class);
+        $remaining_effort_field = $this->createMock(ComputedField::class);
 
         $date_period   = DatePeriodWithOpenDays::buildFromDuration($old_start_date, 5);
         $burndown_data = new Tracker_Chart_Data_Burndown($date_period, $duration);
@@ -119,7 +119,7 @@ final class BurndownRemainingEffortAdderForRESTTest extends TestCase
         $field_id               = 1;
         $duration               = 5;
         $old_start_date         = strtotime('-3 month');
-        $remaining_effort_field = $this->createMock(Tracker_FormElement_Field_Computed::class);
+        $remaining_effort_field = $this->createMock(ComputedField::class);
 
         $date_period   = DatePeriodWithOpenDays::buildFromDuration($old_start_date, 5);
         $burndown_data = new Tracker_Chart_Data_Burndown($date_period, $duration);
@@ -184,7 +184,7 @@ final class BurndownRemainingEffortAdderForRESTTest extends TestCase
         $field_id               = 1;
         $duration               = 5;
         $recent_start_date      = strtotime('-3 days');
-        $remaining_effort_field = $this->createMock(Tracker_FormElement_Field_Computed::class);
+        $remaining_effort_field = $this->createMock(ComputedField::class);
 
         $date_period   = DatePeriodWithOpenDays::buildFromDuration($recent_start_date, 5);
         $burndown_data = new Tracker_Chart_Data_Burndown($date_period, $duration);

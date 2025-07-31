@@ -22,32 +22,32 @@ namespace Tuleap\Tracker\XML\Updater\FieldChange;
 
 use SimpleXMLElement;
 use Tracker_XML_Updater_FieldChange_FieldChangeXMLUpdater;
-use Tracker_FormElement_Field_Computed;
+use Tuleap\Tracker\FormElement\Field\Computed\ComputedField;
 
 class FieldChangeComputedXMLUpdater implements Tracker_XML_Updater_FieldChange_FieldChangeXMLUpdater
 {
     public function update(SimpleXMLElement $field_change_xml, $submitted_value)
     {
         if (
-            ! isset($submitted_value[Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED]) &&
-            ! isset($submitted_value[Tracker_FormElement_Field_Computed::FIELD_VALUE_MANUAL])
+            ! isset($submitted_value[ComputedField::FIELD_VALUE_IS_AUTOCOMPUTED]) &&
+            ! isset($submitted_value[ComputedField::FIELD_VALUE_MANUAL])
         ) {
             return;
         }
 
         if (
-            isset($submitted_value[Tracker_FormElement_Field_Computed::FIELD_VALUE_MANUAL]) &&
-                $submitted_value[Tracker_FormElement_Field_Computed::FIELD_VALUE_MANUAL] !== ''
+            isset($submitted_value[ComputedField::FIELD_VALUE_MANUAL]) &&
+            $submitted_value[ComputedField::FIELD_VALUE_MANUAL] !== ''
         ) {
-            $field_change_xml->manual_value = (float) $submitted_value[Tracker_FormElement_Field_Computed::FIELD_VALUE_MANUAL];
+            $field_change_xml->manual_value = (float) $submitted_value[ComputedField::FIELD_VALUE_MANUAL];
         } else {
             unset($field_change_xml->manual_value);
         }
 
         $field_change_xml->is_autocomputed = '0';
         if (
-            isset($submitted_value[Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED]) &&
-                $submitted_value[Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED] == 1
+            isset($submitted_value[ComputedField::FIELD_VALUE_IS_AUTOCOMPUTED]) &&
+            $submitted_value[ComputedField::FIELD_VALUE_IS_AUTOCOMPUTED] == 1
         ) {
             $field_change_xml->is_autocomputed = '1';
         }

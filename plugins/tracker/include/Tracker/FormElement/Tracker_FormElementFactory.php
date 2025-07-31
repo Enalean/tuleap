@@ -26,6 +26,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactId\ArtifactIdField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\RetrieveAnArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\RetrieveUsedArtifactLinkFields;
+use Tuleap\Tracker\FormElement\Field\Computed\ComputedField;
 use Tuleap\Tracker\FormElement\Field\FieldDao;
 use Tuleap\Tracker\FormElement\Field\Float\FloatField;
 use Tuleap\Tracker\FormElement\Field\Integer\IntegerField;
@@ -119,7 +120,7 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
         self::FIELD_LAST_MODIFIED_BY => Tracker_FormElement_Field_LastModifiedBy::class,
         self::FIELD_CROSS_REFERENCES => Tracker_FormElement_Field_CrossReferences::class,
         self::FIELD_BURNDOWN => Tracker_FormElement_Field_Burndown::class,
-        self::FIELD_COMPUTED => Tracker_FormElement_Field_Computed::class,
+        self::FIELD_COMPUTED => ComputedField::class,
         self::FIELD_RANK => PriorityField::class,
     ];
     protected $group_classnames       = [

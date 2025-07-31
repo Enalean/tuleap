@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Artifact\XMLImport;
 
 use SimpleXMLElement;
-use Tracker_FormElement_Field_Computed;
+use Tuleap\Tracker\FormElement\Field\Computed\ComputedField;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
@@ -44,7 +44,7 @@ final class XMLImportFieldStrategyComputedTest extends TestCase
         $strategy_computed = new XMLImportFieldStrategyComputed();
 
         $change_computed = $strategy_computed->getFieldData($field, $xml_change, $user, ArtifactTestBuilder::anArtifact(89)->build(), PostCreationContext::withNoConfig(false));
-        $expected_result = [Tracker_FormElement_Field_Computed::FIELD_VALUE_MANUAL => '0'];
+        $expected_result = [ComputedField::FIELD_VALUE_MANUAL => '0'];
 
         self::assertSame($expected_result, $change_computed);
     }
@@ -60,7 +60,7 @@ final class XMLImportFieldStrategyComputedTest extends TestCase
         $strategy_computed = new XMLImportFieldStrategyComputed();
 
         $change_computed = $strategy_computed->getFieldData($field, $xml_change, $user, ArtifactTestBuilder::anArtifact(89)->build(), PostCreationContext::withNoConfig(false));
-        $expected_result = [Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED => '1'];
+        $expected_result = [ComputedField::FIELD_VALUE_IS_AUTOCOMPUTED => '1'];
 
         self::assertSame($expected_result, $change_computed);
     }
@@ -78,8 +78,8 @@ final class XMLImportFieldStrategyComputedTest extends TestCase
 
         $change_computed = $strategy_computed->getFieldData($field, $xml_change, $user, ArtifactTestBuilder::anArtifact(89)->build(), PostCreationContext::withNoConfig(false));
         $expected_result = [
-            Tracker_FormElement_Field_Computed::FIELD_VALUE_MANUAL          => '',
-            Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED => '1',
+            ComputedField::FIELD_VALUE_MANUAL          => '',
+            ComputedField::FIELD_VALUE_IS_AUTOCOMPUTED => '1',
         ];
 
         self::assertSame($expected_result, $change_computed);

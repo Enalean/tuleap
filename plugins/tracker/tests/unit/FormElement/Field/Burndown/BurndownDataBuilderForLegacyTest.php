@@ -26,7 +26,7 @@ use ForgeConfig;
 use PFUser;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use Psr\Log\NullLogger;
-use Tracker_FormElement_Field_Computed;
+use Tuleap\Tracker\FormElement\Field\Computed\ComputedField;
 use Tuleap\Config\ConfigurationVariables;
 use Tuleap\Date\DatePeriodWithOpenDays;
 use Tuleap\ForgeConfigSandbox;
@@ -63,7 +63,7 @@ final class BurndownDataBuilderForLegacyTest extends TestCase
         $field_retriever = $this->createMock(ChartConfigurationFieldRetriever::class);
         $field_retriever->method('doesCapacityFieldExist')->willReturn(false);
 
-        $field = $this->createMock(Tracker_FormElement_Field_Computed::class);
+        $field = $this->createMock(ComputedField::class);
         $field_retriever->method('getBurndownRemainingEffortField')->willReturn($field);
         $field->method('getCachedValue')->willReturn(1);
 

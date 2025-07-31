@@ -21,6 +21,7 @@ use Tuleap\JSONHeader;
 use Tuleap\Tracker\FormElement\Field\ArtifactId\ArtifactIdField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldAdmin;
+use Tuleap\Tracker\FormElement\Field\Computed\ComputedField;
 use Tuleap\Tracker\FormElement\Field\Float\FloatField;
 use Tuleap\Tracker\FormElement\Field\Integer\IntegerField;
 use Tuleap\Tracker\FormElement\Field\Priority\PriorityField;
@@ -126,7 +127,7 @@ class Tracker_FormElement_View_Admin_Visitor implements Tracker_FormElement_Visi
         $this->visitField($field);
     }
 
-    public function visitComputed(Tracker_FormElement_Field_Computed $element)
+    public function visitComputed(ComputedField $element)
     {
         $this->element      = $element;
         $this->adminElement = new Computed($element, $this->allUsedElements);
