@@ -146,8 +146,8 @@ msgid ""
 "The channel handle is display in its URL<br>example: https://example.com/"
 "myGroup/channels/mychannel<br>handle: mychannel"
 msgstr ""
-"L'identifiant du canal est visible dans son URL<br>exemple: https://example."
-"com/monGroupe/channels/canal<br>identifiant : canal"
+"L'identifiant du canal est visible dans son URL<br>exemple: https://"
+"example.com/monGroupe/channels/canal<br>identifiant : canal"
 
 #, php-format
 msgid ""

@@ -311,8 +311,8 @@ msgid ""
 msgstr ""
 
 msgid ""
-"triggerFieldValue: value of current transition target (ie. "
-"%{ transition_id }) (string)"
+"triggerFieldValue: value of current transition target (ie. %"
+"{ transition_id }) (string)"
 msgstr ""
 
 msgid "userId: identifier of Tuleap user who made the transition (integer)"

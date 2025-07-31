@@ -143,8 +143,8 @@ msgid ""
 "code>%s)."
 msgstr ""
 "La fonction doit sortir (stdout) un jeu de données identique à celui utilisé "
-"par l'API REST pour mettre à jour un artifact (%sVoir <code>PUT /artifact/:"
-"id</code>%s)."
+"par l'API REST pour mettre à jour un artifact (%sVoir <code>PUT /"
+"artifact/:id</code>%s)."
 
 #, php-format
 msgid "The maximum file size for the function is %sMB."
