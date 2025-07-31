@@ -29,6 +29,7 @@ import type {
     SearchDate,
     ItemFile,
     Folder,
+    FolderContentItem,
 } from "../type";
 
 export interface DeleteItemEvent {
@@ -121,6 +122,8 @@ export type CreateItemEvent =
     | { item: Item; type: ItemType; from_alternative?: NewItemAlternative }
     | { item: Item; type: string; is_other: true };
 
+export type ItemHasBeenCreatedUnderTheFoldEvent = { detail: { item: FolderContentItem } };
+
 export type Events = {
     "update-status-property": string;
     "update-status-recursion": boolean;
@@ -167,6 +170,8 @@ export type Events = {
 
     "update-criteria": UpdateCriteriaEvent;
     "update-criteria-date": UpdateCriteriaDateEvent;
+
+    "item-has-been-created-under-the-fold": ItemHasBeenCreatedUnderTheFoldEvent;
 };
 
 export default mitt<Events>();
