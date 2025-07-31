@@ -9552,7 +9552,7 @@ packages:
       postcss-scss: 4.0.9(postcss@8.4.41)
       stylelint: 16.19.1(typescript@5.3.3)
       stylelint-config-recommended: 16.0.0(stylelint@16.19.1)
-      stylelint-scss: 6.12.0(stylelint@16.19.1)
+      stylelint-scss: 6.12.1(stylelint@16.19.1)
     dev: true
 
   /stylelint-config-recommended-vue@1.6.0(postcss-html@1.5.0)(stylelint@16.19.1):
@@ -9589,7 +9589,7 @@ packages:
       postcss: 8.4.41
       postcss-scss: 4.0.9(postcss@8.4.41)
       stylelint: 16.19.1(typescript@5.3.3)
-      stylelint-scss: 6.12.0(stylelint@16.19.1)
+      stylelint-scss: 6.12.1(stylelint@16.19.1)
     dev: true
 
   /stylelint-config-standard-scss@15.0.1(postcss@8.4.41)(stylelint@16.19.1):
@@ -9640,8 +9640,8 @@ packages:
       stylelint: 16.19.1(typescript@5.3.3)
     dev: true
 
-  /stylelint-scss@6.12.0(stylelint@16.19.1):
-    resolution: {integrity: sha512-U7CKhi1YNkM1pXUXl/GMUXi8xKdhl4Ayxdyceie1nZ1XNIdaUgMV6OArpooWcDzEggwgYD0HP/xIgVJo9a655w==}
+  /stylelint-scss@6.12.1(stylelint@16.19.1):
+    resolution: {integrity: sha512-UJUfBFIvXfly8WKIgmqfmkGKPilKB4L5j38JfsDd+OCg2GBdU0vGUV08Uw82tsRZzd4TbsUURVVNGeOhJVF7pA==}
     engines: {node: '>=18.12.0'}
     peerDependencies:
       stylelint: ^16.0.2
