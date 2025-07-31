@@ -1,5 +1,6 @@
+<?php
 /**
- * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,20 +18,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { User } from "@tuleap/core-rest-api-types";
-import type { ResultAsync } from "neverthrow";
-import type { Fault } from "@tuleap/fault";
-import { uri, getJSON } from "@tuleap/fetch-result";
-import type { FetchMatchingUsers } from "../UsersAutocompleter";
+declare(strict_types=1);
 
-export const fetchMatchingUsers: FetchMatchingUsers = (
-    query: string,
-): ResultAsync<User[], Fault> => {
-    return getJSON(uri`/api/v1/users`, {
-        params: {
-            query,
-            limit: 10,
-            offset: 0,
-        },
-    });
-};
+namespace Tuleap\Timetracking\Widget\Management;
+
+use Tuleap\Test\PHPUnit\TestCase;
+
+#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
+final class SqlUnionTest extends TestCase
+{
+    public function testSqlUnion(): void
+    {
+        $union = new SqlUnion(
+            new SqlQuery('a', 'b', 'c'),
+            new SqlQuery('d', 'e', 'f'),
+            new SqlQuery('e', 'g', 'h'),
+        );
+
+        self::assertSame('a UNION d UNION e', $union->sql);
+        self::assertSame(['b', 'c', 'e', 'f', 'g', 'h'], $union->parameters);
+    }
+}

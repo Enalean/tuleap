@@ -1,5 +1,6 @@
+<?php
 /**
- * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,20 +18,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { User } from "@tuleap/core-rest-api-types";
-import type { ResultAsync } from "neverthrow";
-import type { Fault } from "@tuleap/fault";
-import { uri, getJSON } from "@tuleap/fetch-result";
-import type { FetchMatchingUsers } from "../UsersAutocompleter";
+declare(strict_types=1);
 
-export const fetchMatchingUsers: FetchMatchingUsers = (
-    query: string,
-): ResultAsync<User[], Fault> => {
-    return getJSON(uri`/api/v1/users`, {
-        params: {
-            query,
-            limit: 10,
-            offset: 0,
-        },
-    });
-};
+namespace Tuleap\Timetracking\Widget\Management;
+
+/**
+ * @psalm-immutable
+ */
+final readonly class SqlQuery
+{
+    /**
+     * @var mixed[]
+     */
+    public array $parameters;
+
+    public function __construct(public string $sql, mixed ...$parameters)
+    {
+        $this->parameters = $parameters;
+    }
+}

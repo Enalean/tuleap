@@ -101,6 +101,8 @@ final class TimetrackingManagementWidgetResource extends AuthenticatedResource
      *
      *
      * @url PUT {id}
+     * @access protected
+     *
      * @status 200
      * @param int $id Id of the timetracking management widget
      * @param QueryPUTRepresentation $item The edited query

@@ -25,10 +25,10 @@ use ForgeConfig;
 
 class AuthenticatedResource implements iUseAuthentication
 {
-    public const ACCESS_LEVEL_NORMAL      = 0;
-    public const ACCESS_LEVEL_FORBID_ANON = 1;
+    public const int ACCESS_LEVEL_NORMAL      = 0;
+    public const int ACCESS_LEVEL_FORBID_ANON = 1;
 
-    public const REALM = 'Restricted Tuleap API';
+    public const string REALM = 'Restricted Tuleap API';
 
     protected $is_authenticated;
 

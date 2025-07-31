@@ -1,5 +1,6 @@
+<?php
 /**
- * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,20 +18,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { User } from "@tuleap/core-rest-api-types";
-import type { ResultAsync } from "neverthrow";
-import type { Fault } from "@tuleap/fault";
-import { uri, getJSON } from "@tuleap/fetch-result";
-import type { FetchMatchingUsers } from "../UsersAutocompleter";
+namespace Tuleap\Timetracking\Widget\Management;
 
-export const fetchMatchingUsers: FetchMatchingUsers = (
-    query: string,
-): ResultAsync<User[], Fault> => {
-    return getJSON(uri`/api/v1/users`, {
-        params: {
-            query,
-            limit: 10,
-            offset: 0,
-        },
-    });
-};
+use PFUser;
+
+interface ProvideViewableUsersForManager
+{
+    public function getPaginatedViewableUsersForManager(
+        PFUser $manager,
+        string $query,
+        int $offset,
+        int $limit,
+    ): \PaginatedUserCollection;
+}
