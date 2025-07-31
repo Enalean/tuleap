@@ -20,7 +20,7 @@
 namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder;
 
 use Tracker_FormElement_Field;
-use Tracker_FormElement_Field_ArtifactId;
+use Tuleap\Tracker\FormElement\Field\ArtifactId\ArtifactIdField;
 use Tracker_FormElement_Field_Burndown;
 use Tracker_FormElement_Field_Checkbox;
 use Tracker_FormElement_Field_Computed;
@@ -139,7 +139,7 @@ final class GreaterThanFieldComparisonVisitor implements Tracker_FormElement_Fie
         return null;
     }
 
-    public function visitArtifactId(Tracker_FormElement_Field_ArtifactId $field)
+    public function visitArtifactId(ArtifactIdField $field)
     {
         return null;
     }

@@ -24,7 +24,7 @@ namespace Tuleap\Artidoc\Document\Field\Numeric;
 
 use Override;
 use Tracker_Artifact_ChangesetValue_Numeric;
-use Tracker_FormElement_Field_ArtifactId;
+use Tuleap\Tracker\FormElement\Field\ArtifactId\ArtifactIdField;
 use Tracker_FormElement_Field_PerTrackerArtifactId;
 use Tuleap\Artidoc\Document\Field\ConfiguredField;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\NumericFieldWithValue;
@@ -64,7 +64,7 @@ final readonly class NumericFieldWithValueBuilder implements BuildNumericFieldWi
         if ($configured_field->field instanceof Tracker_FormElement_Field_PerTrackerArtifactId) {
             return Option::fromValue($artifact->getPerTrackerArtifactId());
         }
-        if ($configured_field->field instanceof Tracker_FormElement_Field_ArtifactId) {
+        if ($configured_field->field instanceof ArtifactIdField) {
             return Option::fromValue($artifact->getId());
         }
 

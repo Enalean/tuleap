@@ -72,7 +72,7 @@ final readonly class InvalidFieldChecker
             \Tracker_FormElement_Field_OpenList::class                      => $this->checkOpenList($comparison, $field),
             \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::class,
             \Tracker_FormElement_Field_PermissionsOnArtifact::class,
-            \Tracker_FormElement_Field_ArtifactId::class,
+            \Tuleap\Tracker\FormElement\Field\ArtifactId\ArtifactIdField::class,
             \Tracker_FormElement_Field_PerTrackerArtifactId::class,
             \Tracker_FormElement_Field_CrossReferences::class,
             \Tracker_FormElement_Field_Burndown::class,

@@ -23,7 +23,7 @@ namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\CustomColumn;
 use Codendi_HTMLPurifier;
 use Tracker_Artifact_Changeset;
 use Tracker_FormElement_Field;
-use Tracker_FormElement_Field_ArtifactId;
+use Tuleap\Tracker\FormElement\Field\ArtifactId\ArtifactIdField;
 use Tracker_FormElement_Field_Burndown;
 use Tracker_FormElement_Field_Checkbox;
 use Tracker_FormElement_Field_Computed;
@@ -136,7 +136,7 @@ class ReplaceValueVisitor implements Tracker_FormElement_FieldVisitor
         throw new UnsupportedFieldException();
     }
 
-    public function visitArtifactId(Tracker_FormElement_Field_ArtifactId $field)
+    public function visitArtifactId(ArtifactIdField $field)
     {
         return $this->changeset->getArtifact()->getId();
     }
