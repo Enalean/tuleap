@@ -25,6 +25,7 @@ export const SWITCH_QUERY_EVENT = "switch-query";
 export const INITIALIZED_WITH_QUERY_EVENT = "initialized-with-query";
 export const REFRESH_ARTIFACTS_EVENT = "refresh-artifacts";
 export const SEARCH_ARTIFACTS_EVENT = "search-artifact";
+export const SEARCH_ARTIFACTS_SUCCESS_EVENT = "search-artifact-success";
 export const CREATE_NEW_QUERY_EVENT = "create-new-query";
 export const EDIT_QUERY_EVENT = "edit-query";
 export const QUERY_EDITED_EVENT = "query-edited";
@@ -42,6 +43,7 @@ export type Events = {
     [INITIALIZED_WITH_QUERY_EVENT]: InitializedWithQueryEvent;
     [REFRESH_ARTIFACTS_EVENT]: RefreshArtifactsEvent;
     [SEARCH_ARTIFACTS_EVENT]: void;
+    [SEARCH_ARTIFACTS_SUCCESS_EVENT]: void;
     [CREATE_NEW_QUERY_EVENT]: void;
     [EDIT_QUERY_EVENT]: EditQueryEvent;
     [QUERY_EDITED_EVENT]: EditedQueryEvent;

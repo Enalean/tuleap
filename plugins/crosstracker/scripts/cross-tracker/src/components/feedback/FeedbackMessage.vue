@@ -35,6 +35,7 @@ import type { Fault } from "@tuleap/fault";
 import { onMounted, onUnmounted, ref } from "vue";
 import type { NotifyFaultEvent, NotifySuccessEvent } from "../../helpers/widget-events";
 import {
+    SEARCH_ARTIFACTS_SUCCESS_EVENT,
     SWITCH_QUERY_EVENT,
     CREATE_NEW_QUERY_EVENT,
     EDIT_QUERY_EVENT,
@@ -54,19 +55,21 @@ const current_success = ref<Option<string>>(Option.nothing());
 onMounted(() => {
     emitter.on(NOTIFY_FAULT_EVENT, handleFault);
     emitter.on(NOTIFY_SUCCESS_EVENT, handleSuccess);
-    emitter.on(CREATE_NEW_QUERY_EVENT, clearFeedback);
-    emitter.on(EDIT_QUERY_EVENT, clearFeedback);
-    emitter.on(STARTING_XLSX_EXPORT_EVENT, clearFeedback);
-    emitter.on(SWITCH_QUERY_EVENT, clearFeedback);
+    emitter.on(CREATE_NEW_QUERY_EVENT, resetFeedbackComponent);
+    emitter.on(EDIT_QUERY_EVENT, resetFeedbackComponent);
+    emitter.on(STARTING_XLSX_EXPORT_EVENT, resetFeedbackComponent);
+    emitter.on(SWITCH_QUERY_EVENT, resetFeedbackComponent);
+    emitter.on(SEARCH_ARTIFACTS_SUCCESS_EVENT, resetFeedbackComponent);
 });
 
 onUnmounted(() => {
     emitter.off(NOTIFY_FAULT_EVENT, handleFault);
     emitter.off(NOTIFY_SUCCESS_EVENT, handleSuccess);
-    emitter.off(CREATE_NEW_QUERY_EVENT, clearFeedback);
-    emitter.off(EDIT_QUERY_EVENT, clearFeedback);
-    emitter.off(STARTING_XLSX_EXPORT_EVENT, clearFeedback);
-    emitter.off(SWITCH_QUERY_EVENT, clearFeedback);
+    emitter.off(CREATE_NEW_QUERY_EVENT, resetFeedbackComponent);
+    emitter.off(EDIT_QUERY_EVENT, resetFeedbackComponent);
+    emitter.off(STARTING_XLSX_EXPORT_EVENT, resetFeedbackComponent);
+    emitter.off(SWITCH_QUERY_EVENT, resetFeedbackComponent);
+    emitter.off(SEARCH_ARTIFACTS_SUCCESS_EVENT, resetFeedbackComponent);
 });
 
 function handleFault(event: NotifyFaultEvent): void {
@@ -80,7 +83,7 @@ function handleSuccess(event: NotifySuccessEvent): void {
     current_success.value = Option.fromValue(event.message);
 }
 
-function clearFeedback(): void {
+function resetFeedbackComponent(): void {
     current_fault.value = Option.nothing();
     current_success.value = Option.nothing();
     tql_query.value = "";
