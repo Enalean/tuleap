@@ -90,11 +90,14 @@ class GateKeeper
         return '';
     }
 
-    private function getUrlBase($url)
+    private function getUrlBase($url): string
     {
         $parsed_url = parse_url($url);
-        $host       = isset($parsed_url['host']) ? idn_to_ascii($parsed_url['host'], IDNA_DEFAULT, INTL_IDNA_VARIANT_UTS46) : '';
-        $port       = isset($parsed_url['port']) ? ':' . $parsed_url['port'] : '';
+        $host       = $parsed_url['host'] ?? '';
+        if ($host !== '') {
+            $host = idn_to_ascii($host, IDNA_DEFAULT, INTL_IDNA_VARIANT_UTS46);
+        }
+        $port = isset($parsed_url['port']) ? ':' . $parsed_url['port'] : '';
 
         return "https://$host$port";
     }
