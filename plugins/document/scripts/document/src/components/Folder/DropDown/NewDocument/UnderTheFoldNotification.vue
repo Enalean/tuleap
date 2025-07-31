@@ -29,67 +29,62 @@
     </div>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import { isFolder } from "../../../../helpers/type-check-helper";
+import type { ItemHasBeenCreatedUnderTheFoldEvent } from "../../../../helpers/emitter";
 import emitter from "../../../../helpers/emitter";
+import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 
-export default {
-    data() {
-        return {
-            is_displayed: false,
-            is_folder: false,
-            is_fadeout: false,
-            is_fast_fadeout: false,
-            fadeout_timeout_id: null,
-            hidden_timeout_id: null,
-        };
-    },
-    computed: {
-        notification_class() {
-            return {
-                "document-notification-fadeout": this.is_fadeout,
-                "document-notification-fast-fadeout": this.is_fast_fadeout,
-            };
-        },
-    },
-    created() {
-        emitter.on("item-has-been-created-under-the-fold", this.show);
-    },
-    beforeUnmount() {
-        emitter.off("item-has-been-created-under-the-fold", this.show);
-    },
-    methods: {
-        show(event) {
-            this.is_folder = isFolder(event.detail.item);
+const is_displayed = ref<boolean>(false);
+const is_folder = ref<boolean>(false);
+const is_fadeout = ref<boolean>(false);
+const is_fast_fadeout = ref<boolean>(false);
+const fadeout_timeout_id = ref<number>();
+const hidden_timeout_id = ref<number>();
 
-            if (this.is_displayed) {
-                clearTimeout(this.fadeout_timeout_id);
-                clearTimeout(this.hidden_timeout_id);
-            } else {
-                window.addEventListener("scroll", this.scroll, { passive: true });
-            }
+const notification_class = computed(() => ({
+    "document-notification-fadeout": is_fadeout.value,
+    "document-notification-fast-fadeout": is_fast_fadeout.value,
+}));
 
-            this.is_displayed = true;
-            this.is_fadeout = false;
-            this.is_fast_fadeout = false;
-            this.fadeout_timeout_id = setTimeout(() => {
-                this.is_fadeout = true;
-            }, 2000);
-            this.hidden_timeout_id = setTimeout(() => {
-                this.is_displayed = false;
-            }, 3000);
-        },
-        scroll() {
-            window.removeEventListener("scroll", this.scroll, { passive: true });
-            clearTimeout(this.fadeout_timeout_id);
-            clearTimeout(this.hidden_timeout_id);
-            this.fadeout_timeout_id = setTimeout(() => {
-                this.is_fast_fadeout = true;
-            }, 0);
-            this.hidden_timeout_id = setTimeout(() => {
-                this.is_displayed = false;
-            }, 250);
-        },
-    },
-};
+onMounted(() => {
+    emitter.on("item-has-been-created-under-the-fold", show);
+});
+
+onBeforeUnmount(() => {
+    emitter.off("item-has-been-created-under-the-fold", show);
+});
+
+function show(event: ItemHasBeenCreatedUnderTheFoldEvent) {
+    is_folder.value = isFolder(event.detail.item);
+
+    if (is_displayed.value) {
+        clearTimeout(fadeout_timeout_id.value);
+        clearTimeout(hidden_timeout_id.value);
+    } else {
+        window.addEventListener("scroll", scroll, { passive: true });
+    }
+
+    is_displayed.value = true;
+    is_fadeout.value = false;
+    is_fast_fadeout.value = false;
+    fadeout_timeout_id.value = setTimeout(() => {
+        is_fadeout.value = true;
+    }, 2000);
+    hidden_timeout_id.value = setTimeout(() => {
+        is_displayed.value = false;
+    }, 3000);
+}
+
+function scroll() {
+    window.removeEventListener("scroll", scroll);
+    clearTimeout(fadeout_timeout_id.value);
+    clearTimeout(hidden_timeout_id.value);
+    fadeout_timeout_id.value = setTimeout(() => {
+        is_fast_fadeout.value = true;
+    }, 0);
+    hidden_timeout_id.value = setTimeout(() => {
+        is_displayed.value = false;
+    }, 250);
+}
 </script>
