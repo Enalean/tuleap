@@ -17,6 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import "../themes/style.scss";
+import "../styles/main.scss";
 export { StatisticsPieChart } from "./statistics-pie-chart";
 export type { ChartPropsWithRadius, DataPieChart } from "./statistics-pie-chart";
