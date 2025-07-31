@@ -27,7 +27,7 @@ use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
 use SimpleXMLElement;
 use Tracker_Artifact_Changeset;
-use Tracker_FormElement_Field_Computed;
+use Tuleap\Tracker\FormElement\Field\Computed\ComputedField;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\ChangesetValueComputed;
 
@@ -36,7 +36,7 @@ final class ChangesetValueComputedXMLExporterTest extends \Tuleap\Test\PHPUnit\T
 {
     private Artifact&MockObject $artifact;
 
-    private Tracker_FormElement_Field_Computed&MockObject $field;
+    private ComputedField&MockObject $field;
 
     private SimpleXMLElement $artifact_xml;
 
@@ -49,7 +49,7 @@ final class ChangesetValueComputedXMLExporterTest extends \Tuleap\Test\PHPUnit\T
     {
         parent::setUp();
         $this->artifact            = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $this->field               = $this->createMock(\Tracker_FormElement_Field_Computed::class);
+        $this->field               = $this->createMock(\Tuleap\Tracker\FormElement\Field\Computed\ComputedField::class);
         $this->artifact_xml        = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><artifact />');
         $this->changeset_value_xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><changeset />');
         $this->changeset           = $this->createMock(\Tracker_Artifact_Changeset::class);

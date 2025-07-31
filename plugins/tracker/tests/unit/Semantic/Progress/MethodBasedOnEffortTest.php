@@ -105,8 +105,8 @@ final class MethodBasedOnEffortTest extends \Tuleap\Test\PHPUnit\TestCase
         ?float $expected_progress_value,
         string $expected_error_message,
     ): void {
-        $computed_field_total_effort     = $this->createMock(\Tracker_FormElement_Field_Computed::class);
-        $computed_field_remaining_effort = $this->createMock(\Tracker_FormElement_Field_Computed::class);
+        $computed_field_total_effort     = $this->createMock(\Tuleap\Tracker\FormElement\Field\Computed\ComputedField::class);
+        $computed_field_remaining_effort = $this->createMock(\Tuleap\Tracker\FormElement\Field\Computed\ComputedField::class);
 
         $computed_field_total_effort
             ->expects($this->once())

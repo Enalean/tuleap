@@ -264,7 +264,7 @@ final class MoveChangesetXMLDuckTypingUpdaterTest extends TestCase
         $source_cc_field                   = $source_cc_field_bind->getField();
         $source_permissions_field          = $this->createStub(\Tracker_FormElement_Field_PermissionsOnArtifact::class);
         $source_permissions_field->method('getName')->willReturn('permissions');
-        $source_computed_field = $this->createStub(\Tracker_FormElement_Field_Computed::class);
+        $source_computed_field = $this->createStub(\Tuleap\Tracker\FormElement\Field\Computed\ComputedField::class);
         $source_computed_field->method('getName')->willReturn('computed');
 
         $source_open_list_static_field     = ListStaticBindBuilder::aStaticBind(
@@ -311,7 +311,7 @@ final class MoveChangesetXMLDuckTypingUpdaterTest extends TestCase
             ProjectUGroupTestBuilder::buildProjectMembers(),
             ProjectUGroupTestBuilder::aCustomUserGroup(102)->withName('crusty')->build(),
         ]);
-        $destination_computed_field = $this->createStub(\Tracker_FormElement_Field_Computed::class);
+        $destination_computed_field = $this->createStub(\Tuleap\Tracker\FormElement\Field\Computed\ComputedField::class);
         $destination_computed_field->method('getName')->willReturn('computed');
 
         $fields = DuckTypedMoveFieldCollection::fromFields(

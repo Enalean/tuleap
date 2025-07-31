@@ -22,7 +22,7 @@ namespace Tuleap\AgileDashboard\REST\v1\Scrum\BacklogItem;
 
 use AgileDashBoard_Semantic_InitialEffort;
 use PFUser;
-use Tracker_FormElement_Field_Computed;
+use Tuleap\Tracker\FormElement\Field\Computed\ComputedField;
 use Tracker_FormElement_Field_Selectbox;
 use Tuleap\AgileDashboard\Milestone\Backlog\BacklogItem;
 
@@ -47,7 +47,7 @@ class InitialEffortSemanticUpdater
             if ($rest_value) {
                 if (
                     $initial_effort_field instanceof Tracker_FormElement_Field_Selectbox ||
-                    $initial_effort_field instanceof Tracker_FormElement_Field_Computed
+                    $initial_effort_field instanceof ComputedField
                 ) {
                     $value = $initial_effort_field->getComputedValue($current_user, $artifact);
                 } else {

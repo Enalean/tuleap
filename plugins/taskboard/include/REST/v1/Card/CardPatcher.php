@@ -223,7 +223,7 @@ class CardPatcher
     ): array {
         $representation           = new ArtifactValuesRepresentation();
         $representation->field_id = (int) $remaining_effort_field->getId();
-        if ($remaining_effort_field instanceof \Tracker_FormElement_Field_Computed) {
+        if ($remaining_effort_field instanceof \Tuleap\Tracker\FormElement\Field\Computed\ComputedField) {
             $representation->manual_value    = $payload->remaining_effort;
             $representation->is_autocomputed = false;
         } else {

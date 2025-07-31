@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Test\Builders;
 
 use Tracker_Artifact_Changeset;
-use Tracker_FormElement_Field_Computed;
+use Tuleap\Tracker\FormElement\Field\Computed\ComputedField;
 use Tuleap\Tracker\Artifact\ChangesetValueComputed;
 
 final class ChangesetValueComputedTestBuilder
@@ -34,11 +34,11 @@ final class ChangesetValueComputedTestBuilder
     private function __construct(
         private readonly int $id,
         private readonly Tracker_Artifact_Changeset $changeset,
-        private readonly Tracker_FormElement_Field_Computed $field,
+        private readonly ComputedField $field,
     ) {
     }
 
-    public static function aValue(int $id, Tracker_Artifact_Changeset $changeset, Tracker_FormElement_Field_Computed $field): self
+    public static function aValue(int $id, Tracker_Artifact_Changeset $changeset, ComputedField $field): self
     {
         return new self($id, $changeset, $field);
     }

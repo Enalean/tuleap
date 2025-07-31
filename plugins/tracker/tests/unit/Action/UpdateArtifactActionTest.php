@@ -30,7 +30,7 @@ use PHPUnit\Framework\Attributes\After;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tracker_Artifact_Redirect;
-use Tracker_FormElement_Field_Computed;
+use Tuleap\Tracker\FormElement\Field\Computed\ComputedField;
 use Tracker_FormElementFactory;
 use Tracker_HierarchyFactory;
 use Tracker_IDisplayTrackerLayout;
@@ -78,8 +78,8 @@ final class UpdateArtifactActionTest extends TestCase
 
     private Artifact&MockObject $task;
     private Artifact&MockObject $user_story;
-    private Tracker_FormElement_Field_Computed&MockObject $computed_field;
-    private Tracker_FormElement_Field_Computed&MockObject $us_computed_field;
+    private ComputedField&MockObject $computed_field;
+    private ComputedField&MockObject $us_computed_field;
     private ?string $old_request_with = null;
     private Codendi_Request $request;
     private PFUser $user;
@@ -103,8 +103,8 @@ final class UpdateArtifactActionTest extends TestCase
         $this->user                = UserTestBuilder::buildWithDefaults();
         $this->formelement_factory = $this->createMock(Tracker_FormElementFactory::class);
         $this->hierarchy_factory   = $this->createMock(Tracker_HierarchyFactory::class);
-        $this->computed_field      = $this->createMock(Tracker_FormElement_Field_Computed::class);
-        $this->us_computed_field   = $this->createMock(Tracker_FormElement_Field_Computed::class);
+        $this->computed_field      = $this->createMock(ComputedField::class);
+        $this->us_computed_field   = $this->createMock(ComputedField::class);
         $this->user_story          = $this->createMock(Artifact::class);
         $tracker_user_story        = $this->createMock(Tracker::class);
         $tracker_user_story->method('getId')->willReturn($tracker_user_story_id);

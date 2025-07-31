@@ -26,7 +26,7 @@ use AgileDashBoard_Semantic_InitialEffort;
 use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tracker_Artifact_Changeset;
-use Tracker_FormElement_Field_Computed;
+use Tuleap\Tracker\FormElement\Field\Computed\ComputedField;
 use Tuleap\AgileDashboard\Milestone\Backlog\BacklogItem;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -140,7 +140,7 @@ final class InitialEffortSemanticUpdaterTest extends TestCase
 
     public function testItSetsTheInitialEffortInTheBacklogItemWhenInitialEffortFieldIsAComputedField(): void
     {
-        $initial_effort_field = $this->createMock(Tracker_FormElement_Field_Computed::class);
+        $initial_effort_field = $this->createMock(ComputedField::class);
         $initial_effort_field->expects($this->once())->method('userCanRead')->with($this->user)->willReturn(true);
         $initial_effort_field->expects($this->once())->method('getFullRESTValue')
             ->with($this->user, $this->last_changeset)
