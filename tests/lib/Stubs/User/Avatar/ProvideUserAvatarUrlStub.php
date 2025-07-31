@@ -24,6 +24,11 @@ namespace Tuleap\Test\Stubs\User\Avatar;
 
 final class ProvideUserAvatarUrlStub implements \Tuleap\User\Avatar\ProvideUserAvatarUrl
 {
+    /**
+     * @var array<int, string>
+     */
+    private array $avatars = [];
+
     private function __construct()
     {
     }
@@ -33,9 +38,15 @@ final class ProvideUserAvatarUrlStub implements \Tuleap\User\Avatar\ProvideUserA
         return new self();
     }
 
+    public function withUserAvatarUrl(\PFUser $user, string $avatar_url): self
+    {
+        $this->avatars[(int) $user->getId()] = $avatar_url;
+        return $this;
+    }
+
     #[\Override]
     public function getAvatarUrl(\PFUser $user): string
     {
-        return 'avatar.png';
+        return $this->avatars[(int) $user->getId()] ?? 'avatar.png';
     }
 }

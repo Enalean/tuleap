@@ -27,9 +27,8 @@ use Tuleap\Artidoc\Document\Field\ConfiguredField;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserGroupListValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserGroupsListFieldWithValue;
 
-final readonly class UserGroupListWithValueBuilder implements BuildUserGroupListWithValue
+final readonly class UserGroupListWithValueBuilder
 {
-    #[\Override]
     public function buildUserGroupsListFieldWithValue(ConfiguredField $configured_field, ?\Tracker_Artifact_ChangesetValue_List $changeset_value): UserGroupsListFieldWithValue
     {
         return new UserGroupsListFieldWithValue(

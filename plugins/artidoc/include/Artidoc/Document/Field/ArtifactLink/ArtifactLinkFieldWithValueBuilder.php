@@ -42,7 +42,7 @@ use Tuleap\Tracker\Semantic\Status\RetrieveSemanticStatus;
 use Tuleap\Tracker\Semantic\Title\RetrieveSemanticTitleField;
 use Tuleap\Tracker\Tracker;
 
-final readonly class ArtifactLinkFieldWithValueBuilder implements BuildArtifactLinkFieldWithValue
+final readonly class ArtifactLinkFieldWithValueBuilder
 {
     public function __construct(
         private PFUser $current_user,

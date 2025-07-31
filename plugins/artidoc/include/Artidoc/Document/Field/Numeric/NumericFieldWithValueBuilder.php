@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Document\Field\Numeric;
 
-use Override;
 use Tracker_Artifact_ChangesetValue_Numeric;
 use Tuleap\Tracker\FormElement\Field\ArtifactId\ArtifactIdField;
 use Tuleap\Tracker\FormElement\Field\PerTrackerArtifactId\PerTrackerArtifactIdField;
@@ -33,14 +32,13 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Dao\SearchArtifactGlobalRank;
 use Tuleap\Tracker\FormElement\Field\Priority\PriorityField;
 
-final readonly class NumericFieldWithValueBuilder implements BuildNumericFieldWithValue
+final readonly class NumericFieldWithValueBuilder
 {
     public function __construct(
         private SearchArtifactGlobalRank $search_artifact_global_rank,
     ) {
     }
 
-    #[Override]
     public function buildNumericFieldWithValue(
         ConfiguredField $configured_field,
         Artifact $artifact,

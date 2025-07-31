@@ -72,7 +72,9 @@ final class UserListFieldWithValueBuilderTest extends TestCase
 
         $builder = new UserListFieldWithValueBuilder(
             RetrieveUserByIdStub::withUsers($bob, $alice),
-            ProvideUserAvatarUrlStub::build(),
+            ProvideUserAvatarUrlStub::build()
+                ->withUserAvatarUrl($bob, 'bob_avatar.png')
+                ->withUserAvatarUrl($alice, 'alice_avatar.png'),
             ProvideDefaultUserAvatarUrlStub::build(),
         );
 
@@ -97,8 +99,8 @@ final class UserListFieldWithValueBuilderTest extends TestCase
                 $user_list_field->getLabel(),
                 DisplayType::BLOCK,
                 [
-                    new UserValue($bob->getUserName(), 'avatar.png'),
-                    new UserValue($alice->getUserName(), 'avatar.png'),
+                    new UserValue($bob->getUserName(), 'bob_avatar.png'),
+                    new UserValue($alice->getUserName(), 'alice_avatar.png'),
                 ]
             ),
             $builder->buildUserListFieldWithValue($configured_field, $changeset_value)

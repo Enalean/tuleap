@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Document\Field\List;
 
-use Tracker_Artifact_ChangesetValue_List;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use Tuleap\Artidoc\Document\Field\ConfiguredField;
 use Tuleap\Artidoc\Domain\Document\Section\Field\DisplayType;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StaticListFieldWithValue;
@@ -31,22 +31,52 @@ use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserGroupListVal
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserGroupsListFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserListFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserValue;
-use Tuleap\Artidoc\Stubs\Document\Field\List\BuildStaticListFieldWithValueStub;
-use Tuleap\Artidoc\Stubs\Document\Field\List\BuildUserGroupListFieldWithValueStub;
-use Tuleap\Artidoc\Stubs\Document\Field\List\BuildUserListFieldWithValueStub;
 use Tuleap\Color\ColorName;
 use Tuleap\Option\Option;
+use Tuleap\Test\Builders\ProjectUGroupTestBuilder;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\RetrieveUserByIdStub;
+use Tuleap\Test\Stubs\User\Avatar\ProvideDefaultUserAvatarUrlStub;
+use Tuleap\Test\Stubs\User\Avatar\ProvideUserAvatarUrlStub;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueListTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserGroupBindBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListUserGroupValueBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\List\ListUserValueBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\List\StaticBindDecoratorBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
+#[DisableReturnValueGenerationForTestDoubles]
 final class ListFieldWithValueBuilderTest extends TestCase
 {
+    private function getBuilder(): ListFieldWithValueBuilder
+    {
+        return new ListFieldWithValueBuilder(
+            new UserListFieldWithValueBuilder(
+                RetrieveUserByIdStub::withUsers(
+                    UserTestBuilder::anActiveUser()
+                        ->withId(121)
+                        ->withRealName('Bob')
+                        ->withUserName('bob')
+                        ->build(),
+                    UserTestBuilder::anActiveUser()
+                        ->withId(122)
+                        ->withRealName('Alice')
+                        ->withUserName('alice')
+                        ->build(),
+                ),
+                ProvideUserAvatarUrlStub::build(),
+                ProvideDefaultUserAvatarUrlStub::build(),
+            ),
+            new StaticListFieldWithValueBuilder(),
+            new UserGroupListWithValueBuilder(),
+        );
+    }
+
     public function testItBuildsUserListFields(): void
     {
         $user_list_field = ListUserBindBuilder::aUserBind(
@@ -57,36 +87,39 @@ final class ListFieldWithValueBuilderTest extends TestCase
             $user_list_field->getLabel(),
             DisplayType::BLOCK,
             [
-                new UserValue('Bob', 'bob_avatar_url.png'),
-                new UserValue('Alice', 'alice_avatar_url.png'),
+                new UserValue('Bob', 'avatar.png'),
+                new UserValue('Alice', 'avatar.png'),
             ]
         );
 
-        $builder = new ListFieldWithValueBuilder(
-            BuildUserListFieldWithValueStub::withCallback(static function (ConfiguredField $configured_field) use ($expected_list_field_with_value): UserListFieldWithValue {
-                assert($configured_field->field instanceof \Tracker_FormElement_Field_List);
-                assert($configured_field->field->getBind() instanceof \Tracker_FormElement_Field_List_Bind_Users);
+        $changeset_value = ChangesetValueListTestBuilder::aListOfValue(407, ChangesetTestBuilder::aChangeset(102)->build(), $user_list_field)
+            ->withValues([
+                ListUserValueBuilder::aUserWithId(121)->withDisplayedName('Bob')->build(),
+                ListUserValueBuilder::aUserWithId(122)->withDisplayedName('Alice')->build(),
+            ])
+            ->build();
 
-                return $expected_list_field_with_value;
-            }),
-            BuildStaticListFieldWithValueStub::withCallback(static fn () => throw new \Exception('BuildStaticListFieldWithValueStub was not expected to be called')),
-            BuildUserGroupListFieldWithValueStub::withCallback(static fn () => throw new \Exception('BuildUserGroupListFieldWithValueStub was not expected to be called')),
-        );
-
-        self::assertSame(
+        self::assertEquals(
             $expected_list_field_with_value,
-            $builder->buildListFieldWithValue(
+            $this->getBuilder()->buildListFieldWithValue(
                 new ConfiguredField($user_list_field, DisplayType::BLOCK),
-                $this->buildDummyChangesetForField($user_list_field),
+                $changeset_value,
             )
         );
     }
 
     public function testItBuildsStaticListFields(): void
     {
+        $red_value         = ListStaticValueBuilder::aStaticValue('Red')->withId(101)->build();
+        $blue_value        = ListStaticValueBuilder::aStaticValue('Blue')->withId(102)->build();
         $static_list_field = ListStaticBindBuilder::aStaticBind(
             ListFieldBuilder::aListField(123)->withLabel('static list field')->build()
-        )->build()->getField();
+        )
+            ->withBuildStaticValues([$red_value, $blue_value])
+            ->withDecorators([
+                StaticBindDecoratorBuilder::withColor(ColorName::FIESTA_RED)->withValueId($red_value->getId())->build(),
+                StaticBindDecoratorBuilder::withColor(ColorName::DEEP_BLUE)->withValueId($blue_value->getId())->build(),
+            ])->build()->getField();
 
         $expected_static_list_field_with_value = new StaticListFieldWithValue(
             $static_list_field->getLabel(),
@@ -97,22 +130,18 @@ final class ListFieldWithValueBuilderTest extends TestCase
             ]
         );
 
-        $builder = new ListFieldWithValueBuilder(
-            BuildUserListFieldWithValueStub::withCallback(static fn () => throw new \Exception('BuildUserListFieldWithValueStub was not expected to be called')),
-            BuildStaticListFieldWithValueStub::withCallback(static function (ConfiguredField $configured_field) use ($expected_static_list_field_with_value): StaticListFieldWithValue {
-                assert($configured_field->field instanceof \Tracker_FormElement_Field_List);
-                assert($configured_field->field->getBind() instanceof \Tracker_FormElement_Field_List_Bind_Static);
+        $changeset_value = ChangesetValueListTestBuilder::aListOfValue(407, ChangesetTestBuilder::aChangeset(102)->build(), $static_list_field)
+            ->withValues([
+                $red_value,
+                $blue_value,
+            ])
+            ->build();
 
-                return $expected_static_list_field_with_value;
-            }),
-            BuildUserGroupListFieldWithValueStub::withCallback(static fn () => throw new \Exception('BuildUserGroupListFieldWithValueStub was not expected to be called')),
-        );
-
-        self::assertSame(
+        self::assertEquals(
             $expected_static_list_field_with_value,
-            $builder->buildListFieldWithValue(
+            $this->getBuilder()->buildListFieldWithValue(
                 new ConfiguredField($static_list_field, DisplayType::BLOCK),
-                $this->buildDummyChangesetForField($static_list_field),
+                $changeset_value,
             )
         );
     }
@@ -132,28 +161,19 @@ final class ListFieldWithValueBuilderTest extends TestCase
             ]
         );
 
-        $builder = new ListFieldWithValueBuilder(
-            BuildUserListFieldWithValueStub::withCallback(static fn () => throw new \Exception('BuildUserListFieldWithValueStub was not expected to be called')),
-            BuildStaticListFieldWithValueStub::withCallback(static fn () => throw new \Exception('BuildStaticListFieldWithValueStub was not expected to be called')),
-            BuildUserGroupListFieldWithValueStub::withCallback(static function (ConfiguredField $configured_field) use ($expected_user_group_list_field_with_value): UserGroupsListFieldWithValue {
-                assert($configured_field->field instanceof \Tracker_FormElement_Field_List);
-                assert($configured_field->field->getBind() instanceof \Tracker_FormElement_Field_List_Bind_Ugroups);
+        $changeset_value = ChangesetValueListTestBuilder::aListOfValue(407, ChangesetTestBuilder::aChangeset(102)->build(), $user_group_list_field)
+            ->withValues([
+                ListUserGroupValueBuilder::aUserGroupValue(ProjectUGroupTestBuilder::aCustomUserGroup(919)->withName('NPCs')->build())->build(),
+                ListUserGroupValueBuilder::aUserGroupValue(ProjectUGroupTestBuilder::aCustomUserGroup(920)->withName('MVPs')->build())->build(),
+            ])
+            ->build();
 
-                return $expected_user_group_list_field_with_value;
-            }),
-        );
-
-        self::assertSame(
+        self::assertEquals(
             $expected_user_group_list_field_with_value,
-            $builder->buildListFieldWithValue(
+            $this->getBuilder()->buildListFieldWithValue(
                 new ConfiguredField($user_group_list_field, DisplayType::BLOCK),
-                $this->buildDummyChangesetForField($user_group_list_field),
+                $changeset_value,
             )
         );
-    }
-
-    private function buildDummyChangesetForField(\Tracker_FormElement_Field_List $list_field): Tracker_Artifact_ChangesetValue_List
-    {
-        return ChangesetValueListTestBuilder::aListOfValue(407, ChangesetTestBuilder::aChangeset(102)->build(), $list_field)->build();
     }
 }
