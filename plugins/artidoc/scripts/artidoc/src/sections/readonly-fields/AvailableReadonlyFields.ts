@@ -25,6 +25,7 @@ import type {
     TrackerResponseNoInstance,
 } from "@tuleap/plugin-tracker-rest-api-types";
 import type {
+    DATE_FIELD,
     LINKS_FIELD,
     NUMERIC_FIELD,
     STATIC_LIST_FIELD,
@@ -48,7 +49,8 @@ export type ConfigurationFieldType =
     | typeof STATIC_LIST_FIELD
     | typeof USER_LIST_FIELD
     | typeof NUMERIC_FIELD
-    | typeof USER_FIELD;
+    | typeof USER_FIELD
+    | typeof DATE_FIELD;
 
 export type ConfigurationField = {
     readonly type: ConfigurationFieldType;

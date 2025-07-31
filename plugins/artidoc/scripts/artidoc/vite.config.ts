@@ -39,6 +39,7 @@ export default vite.defineAppConfig(
                                 "artidoc-section",
                                 "artidoc-section-title",
                                 "artidoc-section-description",
+                                "tlp-relative-date",
                             ].includes(tag),
                     },
                 },

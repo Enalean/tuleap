@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { initVueGettext, getPOFileFromLocaleWithoutExtension } from "@tuleap/vue3-gettext-init";
+import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue3-gettext-init";
 import { createApp, ref } from "vue";
 import VueDOMPurifyHTML from "vue-dompurify-html";
 import { createGettext } from "vue3-gettext";
@@ -26,7 +26,7 @@ import { Option } from "@tuleap/option";
 import App from "./App.vue";
 
 import { SECTIONS_COLLECTION } from "@/sections/states/sections-collection-injection-key";
-import { CURRENT_LOCALE } from "@/locale-injection-key";
+import { buildUserPreferences, USER_PREFERENCES } from "@/user-preferences-injection-key";
 import { CAN_USER_EDIT_DOCUMENT } from "@/can-user-edit-document-injection-key";
 import { TITLE } from "@/title-injection-key";
 import { DOCUMENT_ID } from "@/document-id-injection-key";
@@ -37,8 +37,8 @@ import { TOOLBAR_BUS } from "@/toolbar-bus-injection-key";
 import { SECTIONS_STATES_COLLECTION } from "@/sections/states/sections-states-collection-injection-key";
 import { FILE_UPLOADS_COLLECTION } from "@/sections/attachments/sections-file-uploads-collection-injection-key";
 import {
-    PDF_TEMPLATES_COLLECTION,
     buildPdfTemplatesCollection,
+    PDF_TEMPLATES_COLLECTION,
 } from "@/pdf/pdf-templates-collection";
 import {
     OPEN_CONFIGURATION_MODAL_BUS,
@@ -54,7 +54,6 @@ import {
 } from "@/composables/useRemoveFreetextSectionModal";
 
 import { buildSectionsCollection } from "@/sections/SectionsCollection";
-import { userLocale } from "@/helpers/user-locale";
 import { preventPageLeave } from "@/helpers/on-before-unload";
 import { getFileUploadsCollection } from "@/sections/attachments/FileUploadsCollection";
 import { buildNotificationsCollection } from "@/sections/notifications/NotificationsCollection";
@@ -91,14 +90,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
     }
 
-    let user_locale = "en_US";
-
     const gettext = await initVueGettext(createGettext, (locale: string) => {
-        user_locale = locale;
         return import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`);
     });
-
-    const current_locale = userLocale(user_locale);
 
     const item_id = Number.parseInt(getAttributeOrThrow(vue_mount_point, "data-item-id"), 10);
 
@@ -148,7 +142,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         .provide(SECTIONS_STATES_COLLECTION, states_collection)
         .provide(FILE_UPLOADS_COLLECTION, file_uploads_collection)
         .provide(NOTIFICATION_COLLECTION, buildNotificationsCollection())
-        .provide(CURRENT_LOCALE, current_locale)
         .provide(CAN_USER_EDIT_DOCUMENT, can_user_edit_document)
         .provide(OPEN_CONFIGURATION_MODAL_BUS, useOpenConfigurationModalBusStore())
         .provide(OPEN_ADD_EXISTING_SECTION_MODAL_BUS, useOpenAddExistingSectionModalBus())
@@ -182,6 +175,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             Number.parseInt(getAttributeOrThrow(vue_mount_point, "data-project-id"), 10),
         )
         .provide(IS_LOADING_SECTIONS_FAILED, is_loading_failed)
+        .provide(USER_PREFERENCES, buildUserPreferences(document, vue_mount_point))
         .use(gettext)
         .use(VueDOMPurifyHTML)
         .mount(vue_mount_point);

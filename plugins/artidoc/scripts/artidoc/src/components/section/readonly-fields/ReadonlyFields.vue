@@ -48,6 +48,7 @@
                 v-if="readonly_field.type === NUMERIC_FIELD"
                 v-bind:field="readonly_field"
             />
+            <field-date v-if="readonly_field.type === DATE_FIELD" v-bind:field="readonly_field" />
         </div>
     </div>
 </template>
@@ -62,6 +63,7 @@ import {
     USER_GROUP_LIST_FIELD,
     USER_LIST_FIELD,
     USER_FIELD,
+    DATE_FIELD,
 } from "@/sections/readonly-fields/ReadonlyFields";
 import type { ReadonlyField } from "@/sections/readonly-fields/ReadonlyFields";
 import type { SectionBasedOnArtifact } from "@/helpers/artidoc-section.type";
@@ -71,6 +73,7 @@ import FieldUserList from "@/components/section/readonly-fields/FieldUserList.vu
 import FieldLinks from "@/components/section/readonly-fields/FieldLinks.vue";
 import FieldNumeric from "@/components/section/readonly-fields/FieldNumeric.vue";
 import { DISPLAY_TYPE_BLOCK } from "@/sections/readonly-fields/AvailableReadonlyFields";
+import FieldDate from "@/components/section/readonly-fields/FieldDate.vue";
 
 defineProps<{
     section: SectionBasedOnArtifact;

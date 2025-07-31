@@ -36,6 +36,8 @@ use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\Artidoc\Domain\Document\RetrieveArtidocWithContext;
 use Tuleap\Config\ConfigKeyString;
 use Tuleap\Config\FeatureFlagConfigKey;
+use Tuleap\Date\DateHelper;
+use Tuleap\Date\DefaultRelativeDatesDisplayPreferenceRetriever;
 use Tuleap\Docman\ServiceDocman;
 use Tuleap\Document\RecentlyVisited\RecordVisit;
 use Tuleap\Export\Pdf\Template\GetPdfTemplatesEvent;
@@ -132,6 +134,7 @@ final readonly class ArtidocController implements DispatchableWithRequest, Dispa
 
         $configured_tracker = $this->configured_tracker_retriever->getTracker($document_information->document);
         $configured_fields  = $configured_tracker ? $this->configured_fields_builder->buildFromArtidoc($document_information, $user)->getFields($configured_tracker) : [];
+        $date_preference    = $user->getPreference(DateHelper::PREFERENCE_NAME);
 
         \TemplateRendererFactory::build()
             ->getRenderer(__DIR__)
@@ -154,6 +157,7 @@ final readonly class ArtidocController implements DispatchableWithRequest, Dispa
                     $allowed_max_size,
                     $this->event_dispatcher->dispatch(new GetPdfTemplatesEvent($user))->getTemplates(),
                     \ForgeConfig::getFeatureFlag(self::FIELDS_FEATURE_FLAG) === '1',
+                    $date_preference !== false ? $date_preference : DefaultRelativeDatesDisplayPreferenceRetriever::retrieveDefaultValue(),
                 )
             );
         $service->displayFooter();
