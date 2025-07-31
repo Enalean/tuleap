@@ -6,6 +6,7 @@
   "private": true,
   "type": "module",
   "dependencies": {
+    "@tuleap/dom": "workspace:^",
     "@tuleap/list-picker": "workspace:*",
     "@tuleap/tlp-modal": "workspace:*",
     "@tuleap/vue2-gettext-init": "workspace:*",
