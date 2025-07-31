@@ -22,7 +22,7 @@ import type {
 } from "@/sections/readonly-fields/AvailableReadonlyFields";
 import type { ColorName } from "@tuleap/plugin-tracker-constants";
 
-export const STRING_FIELD = "string";
+export const TEXT_FIELD = "text";
 export const USER_GROUP_LIST_FIELD = "user_groups_list";
 export const STATIC_LIST_FIELD = "static_list";
 export const USER_LIST_FIELD = "user_list";
@@ -31,8 +31,8 @@ export const NUMERIC_FIELD = "numeric";
 export const USER_FIELD = "user";
 export const DATE_FIELD = "date";
 
-export type ReadonlyFieldString = Readonly<{
-    type: typeof STRING_FIELD;
+export type ReadonlyFieldText = Readonly<{
+    type: typeof TEXT_FIELD;
     label: string;
     value: string;
     display_type: ConfigurationFieldDisplayType;
@@ -126,7 +126,7 @@ export type ReadonlyFieldDate = Readonly<{
 }>;
 
 export type ReadonlyField =
-    | ReadonlyFieldString
+    | ReadonlyFieldText
     | ReadonlyFieldUserGroupsList
     | ReadonlyFieldStaticList
     | ReadonlyFieldUserList

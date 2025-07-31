@@ -31,6 +31,8 @@ use Tuleap\Artidoc\Domain\Document\Section\Field\DisplayType;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldDisplayTypeIsUnknownFault;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldDoesNotBelongToTrackerFault;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldNotFoundFault;
+use Tuleap\Artidoc\Domain\Document\Section\Field\LinkFieldMustBeDisplayedInBlockFault;
+use Tuleap\Artidoc\Domain\Document\Section\Field\TextFieldMustBeDisplayedInBlockFault;
 use Tuleap\Artidoc\Domain\Document\UserCannotWriteDocumentFault;
 use Tuleap\Artidoc\Stubs\Document\SaveConfigurationStub;
 use Tuleap\Artidoc\Stubs\Document\Tracker\CheckTrackerIsSuitableForDocumentStub;
@@ -42,6 +44,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\Fields\ArtifactLinkFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\TextFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveTrackerStub;
 use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
@@ -51,12 +54,12 @@ use Tuleap\Tracker\Test\Stub\Semantic\Title\RetrieveSemanticTitleFieldStub;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PUTConfigurationHandlerTest extends TestCase
 {
-    private const ARTIDOC_ID         = 1;
-    private const PROJECT_ID         = 101;
-    private const TRACKER_ID         = 1001;
-    private const ANOTHER_TRACKER_ID = 1002;
-    private const FIELD_1_ID         = 201;
-    private const FIELD_2_ID         = 202;
+    private const int ARTIDOC_ID         = 1;
+    private const int PROJECT_ID         = 101;
+    private const int TRACKER_ID         = 1001;
+    private const int ANOTHER_TRACKER_ID = 1002;
+    private const int FIELD_1_ID         = 201;
+    private const int FIELD_2_ID         = 202;
 
     private SaveConfigurationStub $saver;
     private \Tuleap\Tracker\Tracker $tracker;
@@ -307,5 +310,26 @@ final class PUTConfigurationHandlerTest extends TestCase
         $result = $this->handle();
 
         self::assertTrue(Result::isErr($result));
+        self::assertInstanceOf(LinkFieldMustBeDisplayedInBlockFault::class, $result->error);
+    }
+
+    public function testFaultWhenTextFieldInColumnDisplayType(): void
+    {
+        $this->input_fields    = [
+            new ConfiguredFieldRepresentation(self::FIELD_1_ID, 'column'),
+        ];
+        $this->field_retriever = RetrieveUsedFieldsStub::withFields(
+            TextFieldBuilder::aTextField(self::FIELD_1_ID)
+                ->withReadPermission($this->user, true)
+                ->inTracker($this->tracker)
+                ->build(),
+        );
+
+        $this->saver = SaveConfigurationStub::withCallback($this->assertNeverSaved(...));
+
+        $result = $this->handle();
+
+        self::assertTrue(Result::isErr($result));
+        self::assertInstanceOf(TextFieldMustBeDisplayedInBlockFault::class, $result->error);
     }
 }

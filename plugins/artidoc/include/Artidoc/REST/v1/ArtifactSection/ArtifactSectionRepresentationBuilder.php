@@ -28,7 +28,7 @@ use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\ArtifactLinkFiel
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\DateFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\NumericFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StaticListFieldWithValue;
-use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StringFieldWithValue;
+use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\TextFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserGroupsListFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserListFieldWithValue;
@@ -38,7 +38,7 @@ use Tuleap\Artidoc\REST\v1\ArtifactSection\Field\SectionArtifactLinkFieldReprese
 use Tuleap\Artidoc\REST\v1\ArtifactSection\Field\SectionDateFieldRepresentation;
 use Tuleap\Artidoc\REST\v1\ArtifactSection\Field\SectionNumericFieldRepresentation;
 use Tuleap\Artidoc\REST\v1\ArtifactSection\Field\SectionStaticListFieldRepresentation;
-use Tuleap\Artidoc\REST\v1\ArtifactSection\Field\SectionStringFieldRepresentation;
+use Tuleap\Artidoc\REST\v1\ArtifactSection\Field\SectionTextFieldRepresentation;
 use Tuleap\Artidoc\REST\v1\ArtifactSection\Field\SectionUserFieldRepresentation;
 use Tuleap\Artidoc\REST\v1\ArtifactSection\Field\SectionUserGroupsListFieldRepresentation;
 use Tuleap\Artidoc\REST\v1\ArtifactSection\Field\SectionUserListFieldRepresentation;
@@ -97,7 +97,7 @@ final readonly class ArtifactSectionRepresentationBuilder
     }
 
     /**
-     * @return list<SectionStringFieldRepresentation | SectionUserGroupsListFieldRepresentation | SectionStaticListFieldRepresentation | SectionUserListFieldRepresentation | SectionArtifactLinkFieldRepresentation | SectionNumericFieldRepresentation | SectionUserFieldRepresentation | SectionDateFieldRepresentation>
+     * @return list<SectionTextFieldRepresentation | SectionUserGroupsListFieldRepresentation | SectionStaticListFieldRepresentation | SectionUserListFieldRepresentation | SectionArtifactLinkFieldRepresentation | SectionNumericFieldRepresentation | SectionUserFieldRepresentation | SectionDateFieldRepresentation>
      */
     private function getFieldValues(RequiredArtifactInformation $artifact_information): array
     {
@@ -105,7 +105,7 @@ final readonly class ArtifactSectionRepresentationBuilder
         $representations = [];
         foreach ($fields as $field) {
             $representations[] = match ($field::class) {
-                StringFieldWithValue::class         => new SectionStringFieldRepresentation($field),
+                TextFieldWithValue::class           => new SectionTextFieldRepresentation($field),
                 UserGroupsListFieldWithValue::class => new SectionUserGroupsListFieldRepresentation($field),
                 StaticListFieldWithValue::class     => new SectionStaticListFieldRepresentation($field),
                 UserListFieldWithValue::class       => new SectionUserListFieldRepresentation($field),

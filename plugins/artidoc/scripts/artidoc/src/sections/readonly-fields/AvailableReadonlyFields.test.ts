@@ -22,11 +22,12 @@ import type { ConfigurationField } from "@/sections/readonly-fields/AvailableRea
 import {
     filterAlreadySelectedFields,
     getSupportedFields,
-    filterSemanticTitleBoundField,
+    filterSemanticsTitleDescriptionBoundField,
 } from "@/sections/readonly-fields/AvailableReadonlyFields";
 import type { StructureFields } from "@tuleap/plugin-tracker-rest-api-types";
 import {
     STRING_FIELD as TRACKER_STRING_FIELD,
+    TEXT_FIELD as TRACKER_TEXT_FIELD,
     SELECTBOX_FIELD,
     MULTI_SELECTBOX_FIELD,
     OPEN_LIST_FIELD,
@@ -48,6 +49,7 @@ import { ConfigurationFieldBuilder } from "@/sections/readonly-fields/Configurat
 
 describe("getAvailableFields", () => {
     const title_field_id = 599;
+    const description_field_id = 600;
 
     const string_field = {
         field_id: 123,
@@ -55,10 +57,22 @@ describe("getAvailableFields", () => {
         label: "String field",
     } as StructureFields;
 
+    const text_field = {
+        field_id: 124,
+        type: TRACKER_TEXT_FIELD,
+        label: "Text field",
+    } as StructureFields;
+
     const summary_field = {
         field_id: title_field_id,
         type: TRACKER_STRING_FIELD,
         label: "Summary",
+    } as StructureFields;
+
+    const description_field = {
+        field_id: description_field_id,
+        type: TRACKER_TEXT_FIELD,
+        label: "Description",
     } as StructureFields;
 
     const user_group_list_field = {
@@ -216,7 +230,9 @@ describe("getAvailableFields", () => {
 
     const all_fields: Readonly<StructureFields[]> = [
         string_field,
+        text_field,
         summary_field,
+        description_field,
         user_group_list_field,
         static_value_list_field,
         user_value_list_field,
@@ -249,7 +265,10 @@ describe("getAvailableFields", () => {
 
     const tracker_information = {
         fields: all_fields,
-        semantics: { title: { field_id: title_field_id } },
+        semantics: {
+            title: { field_id: title_field_id },
+            description: { field_id: description_field_id },
+        },
     };
 
     describe("getSupportedFields", () => {
@@ -258,7 +277,9 @@ describe("getAvailableFields", () => {
 
             expect(supported_fields).toStrictEqual([
                 ConfigurationFieldBuilder.fromSupportedTrackerField(string_field),
+                ConfigurationFieldBuilder.fromSupportedTrackerField(text_field),
                 ConfigurationFieldBuilder.fromSupportedTrackerField(summary_field),
+                ConfigurationFieldBuilder.fromSupportedTrackerField(description_field),
                 ConfigurationFieldBuilder.fromSupportedTrackerField(user_group_list_field),
                 ConfigurationFieldBuilder.fromSupportedTrackerField(static_value_list_field),
                 ConfigurationFieldBuilder.fromSupportedTrackerField(user_value_list_field),
@@ -286,14 +307,18 @@ describe("getAvailableFields", () => {
         });
     });
 
-    describe("filterSemanticTitleBoundField", () => {
-        it("should remove the semantics title of a ConfigurationFields collection", () => {
+    describe("filterSemanticsTitleDescriptionBoundField", () => {
+        it("should remove the semantics title and description of a ConfigurationFields collection", () => {
             const configuration_string_field =
                 ConfigurationFieldBuilder.fromSupportedTrackerField(string_field);
-            const available_fields = filterSemanticTitleBoundField(tracker_information, [
-                configuration_string_field,
-                ConfigurationFieldBuilder.fromSupportedTrackerField(summary_field),
-            ]);
+            const available_fields = filterSemanticsTitleDescriptionBoundField(
+                tracker_information,
+                [
+                    configuration_string_field,
+                    ConfigurationFieldBuilder.fromSupportedTrackerField(summary_field),
+                    ConfigurationFieldBuilder.fromSupportedTrackerField(description_field),
+                ],
+            );
 
             expect(available_fields).toStrictEqual([configuration_string_field]);
         });

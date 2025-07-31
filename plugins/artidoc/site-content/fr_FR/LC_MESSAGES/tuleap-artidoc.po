@@ -43,6 +43,9 @@ msgid "Parent folders are not displayed to not clutter the interface"
 msgstr ""
 "Les dossiers parents ne sont pas affichés pour ne pas encombrer l'interface"
 
+msgid "Text field must use 'block' display type."
+msgstr "Le champ texte doit utiliser l'affichage 'block'."
+
 msgid "The compared_to is not a valid section identifier."
 msgstr "Le paramètre compared_to n'est pas un identifiant de section valide."
 

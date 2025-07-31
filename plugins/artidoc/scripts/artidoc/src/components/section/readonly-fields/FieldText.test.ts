@@ -17,28 +17,29 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 import { createGettext } from "vue3-gettext";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import type { ReadonlyFieldString } from "@/sections/readonly-fields/ReadonlyFields";
-import FieldString from "@/components/section/readonly-fields/FieldString.vue";
+import type { ReadonlyFieldText } from "@/sections/readonly-fields/ReadonlyFields";
+import FieldText from "@/components/section/readonly-fields/FieldText.vue";
+import VueDOMPurifyHTML from "vue-dompurify-html";
 
-const field_string: ReadonlyFieldString = {
-    type: "string",
+const field_text: ReadonlyFieldText = {
+    type: "text",
     label: "String Field",
     display_type: "column",
     value: "The first field",
 };
 
-describe("FieldString", () => {
+describe("FieldText", () => {
     const getWrapper = (): VueWrapper => {
-        return shallowMount(FieldString, {
+        return shallowMount(FieldText, {
             props: {
-                field_string,
+                field_text,
             },
             global: {
-                plugins: [createGettext({ silent: true })],
+                plugins: [createGettext({ silent: true }), VueDOMPurifyHTML],
             },
         });
     };
@@ -47,13 +48,13 @@ describe("FieldString", () => {
         const wrapper = getWrapper();
         const label = wrapper.find("label");
         expect(label.exists()).toBe(true);
-        expect(label.text()).toStrictEqual(field_string.label);
+        expect(label.text()).toStrictEqual(field_text.label);
     });
 
     it("should display the string field value", () => {
         const wrapper = getWrapper();
         const paragraph = wrapper.find("p");
         expect(paragraph.exists()).toBe(true);
-        expect(paragraph.text()).toStrictEqual(field_string.value);
+        expect(paragraph.text()).toStrictEqual(field_text.value);
     });
 });

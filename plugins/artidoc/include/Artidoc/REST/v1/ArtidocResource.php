@@ -81,6 +81,7 @@ use Tuleap\Artidoc\Domain\Document\Section\Field\FieldIsTitleSemanticFault;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldNotFoundFault;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldNotSupportedFault;
 use Tuleap\Artidoc\Domain\Document\Section\Field\LinkFieldMustBeDisplayedInBlockFault;
+use Tuleap\Artidoc\Domain\Document\Section\Field\TextFieldMustBeDisplayedInBlockFault;
 use Tuleap\Artidoc\Domain\Document\Section\Freetext\Identifier\FreetextIdentifierFactory;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifierFactory;
 use Tuleap\Artidoc\Domain\Document\Section\PaginatedRetrievedSections;
@@ -397,6 +398,10 @@ final class ArtidocResource extends AuthenticatedResource
                         LinkFieldMustBeDisplayedInBlockFault::class => new I18NRestException(
                             400,
                             dgettext('tuleap-artidoc', "Artifact link field must use 'block' display type."),
+                        ),
+                        TextFieldMustBeDisplayedInBlockFault::class => new I18NRestException(
+                            400,
+                            dgettext('tuleap-artidoc', "Text field must use 'block' display type."),
                         ),
                         TrackerNotFoundFault::class => new I18NRestException(
                             400,

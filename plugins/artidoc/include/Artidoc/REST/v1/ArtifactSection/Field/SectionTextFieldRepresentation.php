@@ -22,21 +22,21 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\REST\v1\ArtifactSection\Field;
 
-use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StringFieldWithValue;
+use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\TextFieldWithValue;
 
 /**
  * @psalm-immutable
  */
-final readonly class SectionStringFieldRepresentation
+final readonly class SectionTextFieldRepresentation
 {
     public string $type;
     public string $label;
     public string $display_type;
     public string $value;
 
-    public function __construct(StringFieldWithValue $field)
+    public function __construct(TextFieldWithValue $field)
     {
-        $this->type         = FieldType::STRING->value;
+        $this->type         = FieldType::TEXT->value;
         $this->label        = $field->label;
         $this->display_type = $field->display_type->value;
         $this->value        = $field->value;

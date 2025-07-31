@@ -18,25 +18,26 @@
  */
 
 import type {
+    ArtifactIdFieldIdentifier,
+    ArtifactIdInTrackerFieldIdentifier,
     ColorName,
     ColumnIdentifier,
+    ComputedFieldIdentifier,
     CreatePermission,
     DateFieldIdentifier,
     FieldSetIdentifier,
+    FloatFieldIdentifier,
+    IntFieldIdentifier,
+    LastUpdateByFieldIdentifier,
     LastUpdateDateFieldIdentifier,
     PermissionFieldIdentifier,
+    PriorityFieldIdentifier,
     ReadPermission,
     StringFieldIdentifier,
     SubmissionDateFieldIdentifier,
-    UpdatePermission,
-    ArtifactIdFieldIdentifier,
-    ArtifactIdInTrackerFieldIdentifier,
-    ComputedFieldIdentifier,
-    FloatFieldIdentifier,
-    IntFieldIdentifier,
-    PriorityFieldIdentifier,
     SubmittedByFieldIdentifier,
-    LastUpdateByFieldIdentifier,
+    TextFieldIdentifier,
+    UpdatePermission,
 } from "@tuleap/plugin-tracker-constants";
 import type { ProjectReference } from "@tuleap/core-rest-api-types";
 
@@ -65,6 +66,10 @@ export interface UnknownFieldStructure extends BaseFieldStructure {
 
 interface StringFieldStructure extends BaseFieldStructure {
     readonly type: StringFieldIdentifier;
+}
+
+interface TextFieldStructure extends BaseFieldStructure {
+    readonly type: TextFieldIdentifier;
 }
 
 export interface CommonDateFieldStructure extends BaseFieldStructure {
@@ -118,6 +123,7 @@ export type StructureFields =
     | OpenListFieldStructure
     | PermissionsOnArtifactFieldStructure
     | StringFieldStructure
+    | TextFieldStructure
     | NumericFieldStructure
     | UserFieldStructure;
 
@@ -130,6 +136,9 @@ export type TrackerProjectRepresentation = ProjectReference;
 
 export type SemanticsRepresentation = {
     readonly title?: {
+        readonly field_id: number;
+    };
+    readonly description?: {
         readonly field_id: number;
     };
 };

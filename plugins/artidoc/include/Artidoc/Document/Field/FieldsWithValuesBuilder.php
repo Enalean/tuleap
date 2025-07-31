@@ -27,7 +27,7 @@ use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue_Date;
 use Tracker_Artifact_ChangesetValue_List;
 use Tracker_Artifact_ChangesetValue_Numeric;
-use Tracker_Artifact_ChangesetValue_String;
+use Tracker_Artifact_ChangesetValue_Text;
 use Tracker_FormElement_Field_Date;
 use Tracker_FormElement_Field_LastModifiedBy;
 use Tracker_FormElement_Field_List;
@@ -39,10 +39,10 @@ use Tuleap\Artidoc\Document\Field\List\ListFieldWithValueBuilder;
 use Tuleap\Artidoc\Document\Field\Numeric\NumericFieldWithValueBuilder;
 use Tuleap\Artidoc\Document\Field\User\UserFieldWithValueBuilder;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\FieldWithValue;
-use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StringFieldWithValue;
+use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\TextFieldWithValue;
 use Tuleap\Tracker\Artifact\Changeset\ArtifactLink\ArtifactLinkChangesetValue;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
-use Tuleap\Tracker\FormElement\Field\String\StringField;
+use Tuleap\Tracker\FormElement\Field\Text\TextField;
 
 final readonly class FieldsWithValuesBuilder implements GetFieldsWithValues
 {
@@ -80,10 +80,10 @@ final readonly class FieldsWithValuesBuilder implements GetFieldsWithValues
     ): array {
         $changeset_value = $changeset->getValue($configured_field->field);
 
-        if ($configured_field->field instanceof StringField) {
-            assert($changeset_value === null || $changeset_value instanceof Tracker_Artifact_ChangesetValue_String);
+        if ($configured_field->field instanceof TextField) {
+            assert($changeset_value === null || $changeset_value instanceof Tracker_Artifact_ChangesetValue_Text);
             return [...$fields,
-                new StringFieldWithValue(
+                new TextFieldWithValue(
                     $configured_field->field->getLabel(),
                     $configured_field->display_type,
                     $changeset_value?->getValue() ?? '',
