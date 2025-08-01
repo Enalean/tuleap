@@ -30,7 +30,7 @@ describe("FieldName", () => {
     async function getWrapper(
         can_display_slugify_mode: boolean,
         is_name_already_used = false,
-    ): Promise<Wrapper<FieldName>> {
+    ): Promise<Wrapper<Vue>> {
         return shallowMount(FieldName, {
             mocks: {
                 $store: createStoreMock({
@@ -59,7 +59,7 @@ describe("FieldName", () => {
         const input_element: HTMLInputElement = wrapper.get("[data-test=tracker-name-input]")
             .element as HTMLInputElement;
 
-        expect(input_element.value).toEqual(state.tracker_to_be_created.name);
+        expect(input_element.value).toStrictEqual(state.tracker_to_be_created.name);
     });
 
     it("has the class tracker-name-above-slugified-shortname when slugify mode is active", async () => {
