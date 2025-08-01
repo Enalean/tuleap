@@ -17,9 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { createPopover as createPopoverType } from "@tuleap/tlp-popovers";
+import { createPopover } from "@tuleap/tlp-popovers";
 
-export function init(createPopover: typeof createPopoverType): void {
+export function init(): void {
     const user_dropdown = document.getElementById("nav-dropdown-user");
     const user_content = document.getElementById("nav-dropdown-user-content");
     if (user_dropdown && user_content) {

@@ -19,7 +19,7 @@
 
 import "./execution-attachments.tpl.html";
 import { processUpload, abortFileUpload } from "./execution-attachments-uploader.js";
-import { createPopover } from "tlp";
+import { createPopover } from "@tuleap/tlp-popovers";
 import { buildFileInfo } from "./execution-attachments-files-adapter.js";
 
 export default {

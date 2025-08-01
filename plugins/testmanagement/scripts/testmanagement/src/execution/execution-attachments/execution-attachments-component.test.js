@@ -19,12 +19,15 @@
 
 import angular from "angular";
 import "angular-mocks";
+import * as tlp_popovers from "@tuleap/tlp-popovers";
 import execution_module from "../execution.js";
 import * as attachments_uploader from "./execution-attachments-uploader.js";
-import * as tlp from "tlp";
 
 jest.mock("./execution-attachments-uploader");
-jest.mock("tlp");
+
+function noop() {
+    // Do nothing
+}
 
 describe("execution-attachments-component", () => {
     let controller,
@@ -350,13 +353,15 @@ describe("execution-attachments-component", () => {
                 progress: 25,
                 upload_error_message: "",
             };
+            const createPopover = jest
+                .spyOn(tlp_popovers, "createPopover")
+                .mockReturnValue({ destroy: noop });
 
-            jest.spyOn(tlp, "createPopover");
             jest.spyOn(ExecutionService, "updateExecutionAttachment");
 
             controller.handleUploadError(uploading_file, new Error("Upload is fucked up"));
 
-            expect(tlp.createPopover).toHaveBeenCalled();
+            expect(createPopover).toHaveBeenCalled();
             expect(ExecutionService.updateExecutionAttachment).toHaveBeenCalledWith(
                 execution,
                 110,

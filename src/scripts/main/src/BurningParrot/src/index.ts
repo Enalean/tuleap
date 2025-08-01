@@ -17,7 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-import { createPopover } from "tlp";
 import { init as initNavbarDropdown } from "../../navbar-dropdowns/navbar-dropdown";
 import { initSidebarPosition } from "../../tuleap/sidebar-position";
 import { initMainPosition } from "../../tuleap/main-position";
@@ -44,7 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     initHeaderPosition();
     initNavbarPinned();
-    initNavbarDropdown(createPopover);
+    initNavbarDropdown();
     initSidebar();
     initHelpDropdown();
     initProjectPrivacy();

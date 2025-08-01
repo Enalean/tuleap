@@ -13,6 +13,7 @@
     "@tuleap/project-background": "workspace:*",
     "@tuleap/tlp-badge": "workspace:^",
     "@tuleap/tlp-dropdown": "workspace:*",
+    "@tuleap/tlp-popovers": "workspace:^",
     "@tuleap/tlp-swatch-colors": "workspace:*",
     "dragula": "^3.7.2"
   }
