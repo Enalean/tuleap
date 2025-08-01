@@ -196,11 +196,10 @@ final class InvalidOrderByBuilderTest extends TestCase
         self::assertNull($result);
     }
 
-    public function testItReturnsErrorIfFieldNotFound(): void
+    public function testItReturnsNothingWhenFieldIsNotFoundInAnyTracker(): void
     {
         $result = $this->checkOrderBy(new OrderBy(new Field('my_field'), OrderByDirection::ASCENDING));
-        self::assertNotNull($result);
-        self::assertSame('The field could not be found in any of the given trackers', $result->message);
+        self::assertNull($result);
     }
 
     public function testItReturnsErrorIfFieldIsMultipleValueList(): void

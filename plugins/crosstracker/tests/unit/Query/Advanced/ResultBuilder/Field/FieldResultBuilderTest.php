@@ -488,4 +488,36 @@ EOL
             63 => new SelectedValue(self::FIELD_NAME, new UserListRepresentation([])),
         ], $values);
     }
+
+    public function testItReturnsEmptyValuesForFieldNotKnownByAnyTracker(): void
+    {
+        $result = $this->getSelectedResult(
+            RetrieveUsedFieldsStub::withFields(
+                ListUserBindBuilder::aUserBind(
+                    ListFieldBuilder::aListField(self::FIRST_FIELD_ID)
+                        ->withName(self::FIELD_NAME)
+                        ->build()
+                )->build()->getField(),
+                ListUserBindBuilder::aUserBind(
+                    OpenListFieldBuilder::anOpenListField()
+                        ->withId(self::SECOND_FIELD_ID)
+                        ->withName(self::FIELD_NAME)
+                        ->build()
+                )->build()->getField(),
+            ),
+            RetrieveArtifactStub::withArtifacts(
+                ArtifactTestBuilder::anArtifact(61)->build(),
+            ),
+            [
+                [
+                    'id'                                => 61,
+                    "user_list_value_$this->field_hash" => 131,
+                    "user_list_open_$this->field_hash"  => null,
+                ],
+            ],
+        );
+
+        self::assertNull($result->selected);
+        self::assertEmpty($result->values);
+    }
 }

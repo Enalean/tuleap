@@ -52,7 +52,7 @@ final readonly class MetadataChecker
             return;
         }
 
-        $this->semantic_usage_checker->checkMetadataIsUsedByAllTrackers($metadata, $collector_parameters->getTrackers(), $collector_parameters->getUser());
+        $this->semantic_usage_checker->checkMetadataIsUsedByAllTrackers($metadata);
         $this->comparison_checker->checkComparisonIsValid($metadata, $comparison);
     }
 
@@ -68,7 +68,7 @@ final readonly class MetadataChecker
             return;
         }
 
-        $this->semantic_usage_checker->checkMetadataIsUsedByAllTrackers($metadata, $collector_parameters->trackers, $collector_parameters->user);
+        $this->semantic_usage_checker->checkMetadataIsUsedByAllTrackers($metadata);
     }
 
     /**
@@ -89,7 +89,7 @@ final readonly class MetadataChecker
             return;
         }
 
-        $this->semantic_usage_checker->checkMetadataIsUsedByAllTrackers($metadata, $parameters->trackers, $parameters->user);
+        $this->semantic_usage_checker->checkMetadataIsUsedByAllTrackers($metadata);
 
         if (
             ($metadata->getName() === AllowedMetadata::STATUS || $metadata->getName() === AllowedMetadata::ASSIGNED_TO)

@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\CrossTracker\Query\Advanced;
 
 use PFUser;
-use Tuleap\CrossTracker\Query\Advanced\DuckTypedField\FieldNotFoundInAnyTrackerFault;
 use Tuleap\CrossTracker\Query\Advanced\DuckTypedField\FieldTypeIsNotSupportedFault;
 use Tuleap\CrossTracker\Query\Advanced\QueryValidation\DuckTypedField\DuckTypedFieldChecker;
 use Tuleap\CrossTracker\Query\Advanced\QueryValidation\InvalidQueryException;
@@ -73,7 +72,7 @@ final readonly class InvalidSelectablesCollectorVisitor implements SelectableVis
                     // Do nothing
                 },
                 static function (Fault $fault) use ($field, $parameters) {
-                    if ($fault instanceof FieldTypeIsNotSupportedFault || $fault instanceof FieldNotFoundInAnyTrackerFault) {
+                    if ($fault instanceof FieldTypeIsNotSupportedFault) {
                         $parameters->invalid_selectables_collection->addNonExistentSelectable($field->getName());
                         return;
                     }

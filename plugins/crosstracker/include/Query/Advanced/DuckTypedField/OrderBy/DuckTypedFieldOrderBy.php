@@ -24,7 +24,7 @@ namespace Tuleap\CrossTracker\Query\Advanced\DuckTypedField\OrderBy;
 
 use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_List;
-use Tuleap\CrossTracker\Query\Advanced\DuckTypedField\FieldNotFoundInAnyTrackerFault;
+use Tuleap\CrossTracker\Query\Advanced\DuckTypedField\FieldTypeRetrieverWrapper;
 use Tuleap\CrossTracker\Query\Advanced\DuckTypedField\FieldTypesAreIncompatibleFault;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
@@ -59,7 +59,8 @@ final readonly class DuckTypedFieldOrderBy
         array $tracker_ids,
     ): Ok|Err {
         if (count($fields) === 0) {
-            return Result::err(FieldNotFoundInAnyTrackerFault::build());
+            return DuckTypedFieldTypeOrderBy::fromString(FieldTypeRetrieverWrapper::UNKNOWN_FIELD_TYPE)
+                ->map(fn (DuckTypedFieldTypeOrderBy $type) => new self($field_name, [], $type));
         }
         $field_identifiers = [];
         foreach ($fields as $field) {

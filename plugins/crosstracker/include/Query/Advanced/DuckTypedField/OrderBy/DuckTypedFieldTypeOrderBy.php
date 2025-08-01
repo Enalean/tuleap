@@ -39,6 +39,7 @@ enum DuckTypedFieldTypeOrderBy
     case STATIC_LIST;
     case UGROUP_LIST;
     case USER_LIST;
+    case UNKNOWN;
 
     /**
      * @return Ok<self>|Err<Fault>
@@ -55,6 +56,7 @@ enum DuckTypedFieldTypeOrderBy
             FieldTypeRetrieverWrapper::FIELD_STATIC_LIST_TYPE => Result::ok(self::STATIC_LIST),
             FieldTypeRetrieverWrapper::FIELD_UGROUP_LIST_TYPE => Result::ok(self::UGROUP_LIST),
             FieldTypeRetrieverWrapper::FIELD_USER_LIST_TYPE   => Result::ok(self::USER_LIST),
+            FieldTypeRetrieverWrapper::UNKNOWN_FIELD_TYPE   => Result::ok(self::UNKNOWN),
             default                                           => Result::err(FieldTypeIsNotSupportedFault::build())
         };
     }

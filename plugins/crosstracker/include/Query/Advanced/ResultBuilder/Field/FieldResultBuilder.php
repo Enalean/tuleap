@@ -84,6 +84,7 @@ final readonly class FieldResultBuilder
             DuckTypedFieldTypeSelect::STATIC_LIST => $this->static_list_builder->getResult($field, $select_results),
             DuckTypedFieldTypeSelect::UGROUP_LIST => $this->user_group_list_builder->getResult($field, $select_results),
             DuckTypedFieldTypeSelect::USER_LIST   => $this->user_list_builder->getResult($field, $select_results),
+            DuckTypedFieldTypeSelect::UNKNOWN => new SelectedValuesCollection(null, []),
         };
     }
 }

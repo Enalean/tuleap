@@ -22,231 +22,44 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Query\Advanced\QueryValidation\Metadata;
 
-use PFUser;
-use PHPUnit\Framework\MockObject\MockObject;
-use Tracker_FormElement_Field_SubmittedOn;
-use Tracker_FormElementFactory;
-use Tuleap\Test\Builders\UserTestBuilder;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
-use Tuleap\Tracker\Semantic\Contributor\TrackerSemanticContributorDao;
-use Tuleap\Tracker\Semantic\Status\StatusSemanticDAO;
-use Tuleap\Tracker\Test\Builders\Fields\IntegerFieldBuilder;
-use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
-use Tuleap\Tracker\Test\Stub\Semantic\Description\SearchTrackersWithoutDescriptionSemanticStub;
-use Tuleap\Tracker\Test\Stub\Semantic\Title\SearchTrackersWithoutTitleSemanticStub;
-use Tuleap\Tracker\Tracker;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
+#[DisableReturnValueGenerationForTestDoubles]
 final class MetadataUsageCheckerTest extends TestCase
 {
-    private const FIRST_TRACKER_ID  = 101;
-    private const SECOND_TRACKER_ID = 102;
-    private PFUser $user;
-    private Tracker_FormElementFactory&MockObject $form_element_factory;
-    private SearchTrackersWithoutTitleSemanticStub $title_verifier;
-    private SearchTrackersWithoutDescriptionSemanticStub $description_verifier;
-    private StatusSemanticDAO&MockObject $status_dao;
-    private TrackerSemanticContributorDao&MockObject $assigned_to;
-    private Tracker $tracker_101;
-    private Tracker $tracker_102;
-    private Tracker_FormElement_Field_SubmittedOn&MockObject $submitted_on_101;
-    private Tracker_FormElement_Field_SubmittedOn&MockObject $submitted_on_102;
-
-    #[\Override]
-    public function setUp(): void
+    public static function dataProviderSupportedMetadata(): array
     {
-        $this->tracker_101 = TrackerTestBuilder::aTracker()->withId(self::FIRST_TRACKER_ID)->build();
-        $this->tracker_102 = TrackerTestBuilder::aTracker()->withId(self::SECOND_TRACKER_ID)->build();
-
-        $this->submitted_on_101 = $this->createMock(Tracker_FormElement_Field_SubmittedOn::class);
-        $this->submitted_on_102 = $this->createMock(Tracker_FormElement_Field_SubmittedOn::class);
-
-        $this->form_element_factory = $this->createMock(Tracker_FormElementFactory::class);
-        $this->title_verifier       = SearchTrackersWithoutTitleSemanticStub::withAllTrackersHaveTitle();
-        $this->description_verifier = SearchTrackersWithoutDescriptionSemanticStub::withAllTrackersHaveDescription();
-        $this->status_dao           = $this->createMock(StatusSemanticDAO::class);
-        $this->assigned_to          = $this->createMock(TrackerSemanticContributorDao::class);
-
-        $this->user = UserTestBuilder::aUser()->build();
+         return [
+             ['title'],
+             ['description'],
+             ['assigned_to'],
+             ['status'],
+             ['submitted_on'],
+             ['last_update_date'],
+             ['submitted_by'],
+             ['last_update_by'],
+             ['id'],
+             ['project.name'],
+             ['tracker.name'],
+             ['pretty_title'],
+         ];
     }
 
-    private function checkMetadata(Metadata $metadata): void
-    {
-        $checker = new MetadataUsageChecker(
-            $this->form_element_factory,
-            $this->title_verifier,
-            $this->description_verifier,
-            $this->status_dao,
-            $this->assigned_to
-        );
-        $checker->checkMetadataIsUsedByAllTrackers($metadata, [$this->tracker_101, $this->tracker_102], $this->user);
-    }
-
-    public function testItShouldRaiseAnErrorIfThereIsNotSemanticTitleInTrackers(): void
-    {
-        $this->title_verifier = SearchTrackersWithoutTitleSemanticStub::withTrackersThatDoNotHaveTitle(
-            self::FIRST_TRACKER_ID,
-            self::SECOND_TRACKER_ID
-        );
-
-        $this->expectException(TitleIsMissingInAllTrackersException::class);
-
-        $this->checkMetadata(new Metadata('title'));
-    }
-
-    public function testItShouldRaiseNoErrorIfThereIsAtLeastOneSemanticTitleDefined(): void
+    #[DataProvider('dataProviderSupportedMetadata')]
+    public function testItShouldAcceptsKnownMetadata(string $metadata): void
     {
         $this->expectNotToPerformAssertions();
 
-        $this->title_verifier = SearchTrackersWithoutTitleSemanticStub::withTrackersThatDoNotHaveTitle(
-            self::SECOND_TRACKER_ID
-        );
-
-        $this->checkMetadata(new Metadata('title'));
+        new MetadataUsageChecker()->checkMetadataIsUsedByAllTrackers(new Metadata($metadata));
     }
 
-    public function testItShouldRaiseAnErrorIfThereIsNotSemanticDescriptionInTrackers(): void
+    public function testItShouldRaiseAnErrorIfMetadataIsUnknown(): void
     {
-        $this->description_verifier = SearchTrackersWithoutDescriptionSemanticStub::withTrackersThatDoNotHaveDescription(
-            self::FIRST_TRACKER_ID,
-            self::SECOND_TRACKER_ID
-        );
+        $this->expectException(\LogicException::class);
 
-        $this->expectException(DescriptionIsMissingInAllTrackersException::class);
-
-        $this->checkMetadata(new Metadata('description'));
-    }
-
-    public function testItShouldRaiseNoErrorIfThereIsAtLeastOneSemanticDescriptionDefined(): void
-    {
-        $this->expectNotToPerformAssertions();
-
-        $this->description_verifier = SearchTrackersWithoutDescriptionSemanticStub::withTrackersThatDoNotHaveDescription(
-            self::SECOND_TRACKER_ID
-        );
-
-        $this->checkMetadata(new Metadata('description'));
-    }
-
-    public function testItShouldRaiseAnErrorIfThereIsNotSemanticStatusInTrackers(): void
-    {
-        $this->status_dao->method('getNbOfTrackerWithoutSemanticStatusDefined')->willReturn(2);
-
-        $this->expectException(StatusIsMissingInAllTrackersException::class);
-
-        $this->checkMetadata(new Metadata('status'));
-    }
-
-    public function testItShouldRaiseNoErrorIfThereIsAtLeastOneSemanticStatusDefined(): void
-    {
-        $this->expectNotToPerformAssertions();
-
-        $this->status_dao->method('getNbOfTrackerWithoutSemanticStatusDefined')->willReturn(1);
-
-        $this->checkMetadata(new Metadata('status'));
-    }
-
-    public function testItShouldRaiseAnErrorIfThereIsNotSemanticContributorInTrackers(): void
-    {
-        $this->assigned_to->method('getNbOfTrackerWithoutSemanticContributorDefined')->willReturn(2);
-
-        $this->expectException(AssignedToIsMissingInAllTrackersException::class);
-
-        $this->checkMetadata(new Metadata('assigned_to'));
-    }
-
-    public function testItShouldRaiseNoErrorIfThereIsAtLeastOneSemanticContributorDefined(): void
-    {
-        $this->expectNotToPerformAssertions();
-
-        $this->assigned_to->method('getNbOfTrackerWithoutSemanticContributorDefined')->willReturn(1);
-
-        $this->checkMetadata(new Metadata('assigned_to'));
-    }
-
-    public function testItShouldRaiseNoErrorIfThereIsNoSubmittedOnFieldInTrackers(): void
-    {
-        $this->expectNotToPerformAssertions();
-        $this->submitted_on_101->method('userCanRead')->willReturn(false);
-        $fields_map = [
-            [$this->tracker_101, 'subon', true, [$this->submitted_on_101]],
-            [$this->tracker_102, 'subon', true, []],
-        ];
-        $this->form_element_factory->method('getFormElementsByType')->willReturnMap($fields_map);
-        $this->checkMetadata(new Metadata('submitted_on'));
-    }
-
-    public function testItShouldNotRaiseAnErrorIfThereIsAtLeastOneReadableSubmittedOnField(): void
-    {
-        $this->expectNotToPerformAssertions();
-
-        $this->submitted_on_101->method('userCanRead')->willReturn(false);
-        $this->submitted_on_102->method('userCanRead')->willReturn(true);
-        $fields_map = [
-            [$this->tracker_101, 'subon', true, [$this->submitted_on_101]],
-            [$this->tracker_102, 'subon', true, [$this->submitted_on_102]],
-        ];
-        $this->form_element_factory->method('getFormElementsByType')->willReturnMap($fields_map);
-
-        $this->checkMetadata(new Metadata('submitted_on'));
-    }
-
-    public function testItShouldNotRaiseAnErrorIfAllSubmittedOnFieldsAreReadable(): void
-    {
-        $this->expectNotToPerformAssertions();
-
-        $this->submitted_on_101->method('userCanRead')->willReturn(true);
-        $this->submitted_on_102->method('userCanRead')->willReturn(true);
-        $fields_map = [
-            [$this->tracker_101, 'subon', true, [$this->submitted_on_101]],
-            [$this->tracker_102, 'subon', true, [$this->submitted_on_102]],
-        ];
-        $this->form_element_factory->method('getFormElementsByType')->willReturnMap($fields_map);
-
-        $this->checkMetadata(new Metadata('submitted_on'));
-    }
-
-    public function testProjectNameIsAlwaysGood(): void
-    {
-        $this->expectNotToPerformAssertions();
-        $this->checkMetadata(new Metadata('project.name'));
-    }
-
-    public function testTrackerNameIsAlwaysGood(): void
-    {
-        $this->expectNotToPerformAssertions();
-        $this->checkMetadata(new Metadata('tracker.name'));
-    }
-
-    public function testItShouldRaiseAnErrorIfSemanticTitleIsNotDefinedForPrettyTitle(): void
-    {
-        $this->title_verifier = SearchTrackersWithoutTitleSemanticStub::withTrackersThatDoNotHaveTitle(
-            self::FIRST_TRACKER_ID,
-            self::SECOND_TRACKER_ID
-        );
-
-        $this->expectException(TitleIsMissingInAllTrackersException::class);
-
-        $this->checkMetadata(new Metadata('pretty_title'));
-    }
-
-    public function testItShouldNotRaiseAnErrorIfAllIsGoodForPrettyTitle(): void
-    {
-        $this->expectNotToPerformAssertions();
-
-        $fields_map = [
-            [$this->tracker_101, 'aid', true, [
-                IntegerFieldBuilder::anIntField(1)->withReadPermission($this->user, true)->build(),
-            ],
-            ],
-            [$this->tracker_102, 'aid', true, [
-                IntegerFieldBuilder::anIntField(2)->withReadPermission($this->user, true)->build(),
-            ],
-            ],
-        ];
-        $this->form_element_factory->method('getFormElementsByType')->willReturnMap($fields_map);
-
-        $this->checkMetadata(new Metadata('pretty_title'));
+        new MetadataUsageChecker()->checkMetadataIsUsedByAllTrackers(new Metadata('tttttitle'));
     }
 }

@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\CrossTracker\Query\Advanced\DuckTypedField\Select;
 
 use Tracker_FormElement_Field;
-use Tuleap\CrossTracker\Query\Advanced\DuckTypedField\FieldNotFoundInAnyTrackerFault;
+use Tuleap\CrossTracker\Query\Advanced\DuckTypedField\FieldTypeRetrieverWrapper;
 use Tuleap\CrossTracker\Query\Advanced\DuckTypedField\FieldTypesAreIncompatibleFault;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
@@ -58,8 +58,10 @@ final readonly class DuckTypedFieldSelect
         array $tracker_ids,
     ): Ok|Err {
         if (count($fields) === 0) {
-            return Result::err(FieldNotFoundInAnyTrackerFault::build());
+            return DuckTypedFieldTypeSelect::fromString(FieldTypeRetrieverWrapper::UNKNOWN_FIELD_TYPE)
+                ->map(fn (DuckTypedFieldTypeSelect $type) => new self($field_name, [], $type));
         }
+
         $field_identifiers = [];
         foreach ($fields as $field) {
             $field_identifiers[] = DuckTypedFieldTypeSelect::fromString($retrieve_field_type->getType($field))

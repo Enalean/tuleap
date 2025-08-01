@@ -32,10 +32,11 @@ use Tuleap\Tracker\FormElement\RetrieveFieldType;
 
 final readonly class FieldTypeRetrieverWrapper implements RetrieveFieldType
 {
-    public const FIELD_DATETIME_TYPE    = 'datetime';
-    public const FIELD_STATIC_LIST_TYPE = 'static_list';
-    public const FIELD_UGROUP_LIST_TYPE = 'ugroup_list';
-    public const FIELD_USER_LIST_TYPE   = 'user_list';
+    public const FIELD_DATETIME_TYPE       = 'datetime';
+    public const FIELD_STATIC_LIST_TYPE    = 'static_list';
+    public const FIELD_UGROUP_LIST_TYPE    = 'ugroup_list';
+    public const FIELD_USER_LIST_TYPE      = 'user_list';
+    public const string UNKNOWN_FIELD_TYPE = 'unknown';
 
     public function __construct(private RetrieveFieldType $wrapper)
     {

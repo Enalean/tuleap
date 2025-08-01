@@ -78,6 +78,7 @@ final readonly class FieldFromOrderBuilder
             DuckTypedFieldTypeOrderBy::STATIC_LIST => $this->static_list_builder->getFromOrder($field->field_ids, $direction),
             DuckTypedFieldTypeOrderBy::UGROUP_LIST => $this->ugroup_list_builder->getFromOrder($field->field_ids, $direction),
             DuckTypedFieldTypeOrderBy::USER_LIST   => $this->user_list_builder->getFromOrder($field->field_ids, $direction),
+            DuckTypedFieldTypeOrderBy::UNKNOWN   => new ParametrizedFromOrder('', [], ''),
         };
     }
 }
