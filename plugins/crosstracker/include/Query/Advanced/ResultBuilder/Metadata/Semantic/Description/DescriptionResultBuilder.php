@@ -20,40 +20,47 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Metadata\Special\PrettyTitle;
+namespace Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Metadata\Semantic\Description;
 
 use LogicException;
 use PFUser;
-use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Representations\PrettyTitleRepresentation;
+use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Representations\TextResultRepresentation;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\SelectedValue;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\SelectedValuesCollection;
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerSelectedRepresentation;
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerSelectedType;
+use Tuleap\Tracker\Artifact\ChangesetValue\Text\TextValueInterpreter;
 use Tuleap\Tracker\Artifact\RetrieveArtifact;
-use Tuleap\Tracker\Semantic\Title\RetrieveSemanticTitleField;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
+use Tuleap\Tracker\Semantic\Description\RetrieveSemanticDescriptionField;
 
-final readonly class PrettyTitleResultBuilder implements BuildResultPrettyTitle
+final readonly class DescriptionResultBuilder implements BuildResultDescription
 {
     public function __construct(
         private RetrieveArtifact $retrieve_artifact,
-        private RetrieveSemanticTitleField $semantic_retriever,
+        private TextValueInterpreter $text_value_interpreter,
+        private RetrieveSemanticDescriptionField $semantic_retriever,
     ) {
     }
 
     #[\Override]
-    public function getResult(array $select_results, PFUser $user): SelectedValuesCollection
+    public function getResult(Metadata $metadata, array $select_results, PFUser $user): SelectedValuesCollection
     {
         $values = [];
+        $alias  = $metadata->getName();
 
         foreach ($select_results as $result) {
-            $id = $result['id'];
+            $id = (int) $result['id'];
             if (isset($values[$id])) {
                 continue;
             }
+            $value  = $result[$alias];
+            $format = $result[$alias . '_format'];
 
-            $tracker_name  = $result['@pretty_title.tracker'];
-            $tracker_color = $result['@pretty_title.color'];
-            $title         = $result['@pretty_title'];
+            if ($value === null) {
+                $values[$id] = $this->getEmptyValue($metadata);
+                continue;
+            }
 
             $artifact = $this->retrieve_artifact->getArtifactById($id);
             if ($artifact === null) {
@@ -61,18 +68,22 @@ final readonly class PrettyTitleResultBuilder implements BuildResultPrettyTitle
             }
 
             $field = $this->semantic_retriever->fromTracker($artifact->getTracker());
-
-            if ($field === null) {
-                continue;
+            if ($field === null || ! $field->userCanRead($user)) {
+                $values[$id] = $this->getEmptyValue($metadata);
+            } else {
+                $interpreted_value = $this->text_value_interpreter->interpretValueAccordingToFormat($format, $value, (int) $artifact->getTracker()->getGroupId());
+                $values[$id]       = new SelectedValue($metadata->getName(), new TextResultRepresentation($interpreted_value));
             }
-
-            $title       = ! $field->userCanRead($user) ? '' : $title;
-            $values[$id] = new SelectedValue('@pretty_title', new PrettyTitleRepresentation($tracker_name, $tracker_color, $id, $title ?? ''));
         }
 
         return new SelectedValuesCollection(
-            new CrossTrackerSelectedRepresentation('@pretty_title', CrossTrackerSelectedType::TYPE_PRETTY_TITLE),
+            new CrossTrackerSelectedRepresentation($metadata->getName(), CrossTrackerSelectedType::TYPE_TEXT),
             $values,
         );
+    }
+
+    private function getEmptyValue(Metadata $metadata): SelectedValue
+    {
+        return new SelectedValue($metadata->getName(), new TextResultRepresentation(''));
     }
 }

@@ -22,67 +22,74 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Metadata;
 
-use Codendi_HTMLPurifier;
 use DateTime;
 use ForgeConfig;
 use LogicException;
 use PFUser;
+use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use Project;
 use Tuleap\Config\ConfigurationVariables;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Metadata\AlwaysThereField\ArtifactId\ArtifactIdResultBuilder;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Metadata\Date\MetadataDateResultBuilder;
-use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Metadata\Semantic\AssignedTo\AssignedToResultBuilder;
-use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Metadata\Semantic\Status\StatusResultBuilder;
-use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Metadata\Special\PrettyTitle\PrettyTitleResultBuilder;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Metadata\Special\ProjectName\ProjectNameResultBuilder;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Metadata\Special\TrackerName\TrackerNameResultBuilder;
-use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Metadata\Text\MetadataTextResultBuilder;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Metadata\User\MetadataUserResultBuilder;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Representations\ArtifactRepresentation;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Representations\DateResultRepresentation;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Representations\NumericResultRepresentation;
-use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Representations\PrettyTitleRepresentation;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Representations\ProjectRepresentation;
-use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Representations\StaticListRepresentation;
-use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Representations\StaticListValueRepresentation;
-use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Representations\TextResultRepresentation;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Representations\TrackerRepresentation;
-use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Representations\UserListRepresentation;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Representations\UserRepresentation;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\SelectedValue;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\SelectedValuesCollection;
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerSelectedRepresentation;
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerSelectedType;
+use Tuleap\CrossTracker\Tests\Stub\Query\Advanced\ResultBuilder\Metadata\Semantic\AssignedTo\BuildResultAssignedToStub;
+use Tuleap\CrossTracker\Tests\Stub\Query\Advanced\ResultBuilder\Metadata\Semantic\Description\BuildResultDescriptionStub;
+use Tuleap\CrossTracker\Tests\Stub\Query\Advanced\ResultBuilder\Metadata\Semantic\Status\BuildResultStatusStub;
+use Tuleap\CrossTracker\Tests\Stub\Query\Advanced\ResultBuilder\Metadata\Semantic\Title\BuildResultTitleStub;
+use Tuleap\CrossTracker\Tests\Stub\Query\Advanced\ResultBuilder\Metadata\Special\BuildResultPrettyTitleStub;
 use Tuleap\CrossTracker\Tests\Stub\Query\InstantiateRetrievedQueryTrackersStub;
 use Tuleap\ForgeConfigSandbox;
-use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\Project\Icons\EmojiCodepointConverter;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\RetrieveUserByIdStub;
-use Tuleap\Tracker\Artifact\ChangesetValue\Text\TextValueInterpreter;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveArtifactStub;
 use Tuleap\Tracker\Tracker;
-use UserHelper;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
+#[DisableReturnValueGenerationForTestDoubles]
 final class MetadataResultBuilderTest extends TestCase
 {
     use ForgeConfigSandbox;
 
     private Tracker $first_tracker;
     private Tracker $second_tracker;
+    private Project $project;
+
+    private BuildResultTitleStub $result_title;
+    private BuildResultDescriptionStub $result_description;
+    private BuildResultStatusStub $result_status;
+    private BuildResultAssignedToStub $result_assigned_to;
+    private BuildResultPrettyTitleStub $result_pretty_title;
 
     #[\Override]
     protected function setUp(): void
     {
         ForgeConfig::set(ConfigurationVariables::SERVER_TIMEZONE, 'Europe/Paris');
-        $project              = ProjectTestBuilder::aProject()->withId(154)->build();
-        $this->first_tracker  = TrackerTestBuilder::aTracker()->withId(38)->withProject($project)->build();
-        $this->second_tracker = TrackerTestBuilder::aTracker()->withId(4)->withProject($project)->build();
+        $this->project        = ProjectTestBuilder::aProject()->withId(154)->build();
+        $this->first_tracker  = TrackerTestBuilder::aTracker()->withId(38)->withProject($this->project)->build();
+        $this->second_tracker = TrackerTestBuilder::aTracker()->withId(4)->withProject($this->project)->build();
+
+        $this->result_title        = BuildResultTitleStub::withDefaultValues();
+        $this->result_description  = BuildResultDescriptionStub::withDefaultValues();
+        $this->result_status       = BuildResultStatusStub::withDefaultValues();
+        $this->result_assigned_to  = BuildResultAssignedToStub::withDefaultValues();
+        $this->result_pretty_title = BuildResultPrettyTitleStub::withDefaultValues();
     }
 
     private function getSelectedResult(
@@ -91,23 +98,22 @@ final class MetadataResultBuilderTest extends TestCase
         InstantiateRetrievedQueryTrackersStub $query_trackers_retriever,
         array $selected_result,
     ): SelectedValuesCollection {
-        $purifier               = Codendi_HTMLPurifier::instance();
-        $user_helper            = $this->createMock(UserHelper::class);
-        $user_retriever         = RetrieveUserByIdStub::withUsers(
+        $user_helper    = $this->createStub(\UserHelper::class);
+        $user_retriever = RetrieveUserByIdStub::withUsers(
             UserTestBuilder::aUser()->withId(135)->withUserName('jean')->withRealName('Jean Eude')->withAvatarUrl('https://example.com/jean')->build(),
             UserTestBuilder::aUser()->withId(145)->withUserName('alice')->withRealName('Alice')->withAvatarUrl('https://example.com/alice')->build(),
         );
-        $text_value_interpreter = new TextValueInterpreter($purifier, CommonMarkInterpreter::build($purifier));
-        $builder                = new MetadataResultBuilder(
-            new MetadataTextResultBuilder($artifact_retriever, $text_value_interpreter),
-            new StatusResultBuilder(),
-            new AssignedToResultBuilder($user_retriever, $user_helper),
+        $builder        = new MetadataResultBuilder(
+            $this->result_title,
+            $this->result_description,
+            $this->result_status,
+            $this->result_assigned_to,
             new MetadataDateResultBuilder(),
             new MetadataUserResultBuilder($user_retriever, $user_helper),
             new ArtifactIdResultBuilder(),
             new ProjectNameResultBuilder(),
             new TrackerNameResultBuilder(),
-            new PrettyTitleResultBuilder(),
+            $this->result_pretty_title,
             new ArtifactResultBuilder($artifact_retriever, $query_trackers_retriever),
         );
 
@@ -138,14 +144,10 @@ final class MetadataResultBuilderTest extends TestCase
             new Metadata('title'),
             RetrieveArtifactStub::withArtifacts(
                 ArtifactTestBuilder::anArtifact(11)->inTracker($this->first_tracker)->build(),
-                ArtifactTestBuilder::anArtifact(12)->inTracker($this->second_tracker)->build(),
-                ArtifactTestBuilder::anArtifact(13)->inTracker($this->second_tracker)->build(),
             ),
             InstantiateRetrievedQueryTrackersStub::withNoTrackers(),
             [
                 ['id' => 11, '@title' => 'My title', '@title_format' => 'text'],
-                ['id' => 12, '@title' => '**Title**', '@title_format' => 'commonmark'],
-                ['id' => 13, '@title' => null, '@title_format' => null],
             ],
         );
 
@@ -153,15 +155,11 @@ final class MetadataResultBuilderTest extends TestCase
             new CrossTrackerSelectedRepresentation('@title', CrossTrackerSelectedType::TYPE_TEXT),
             $result->selected,
         );
-        self::assertCount(3, $result->values);
-        self::assertEqualsCanonicalizing([
-            11 => new SelectedValue('@title', new TextResultRepresentation('My title')),
-            12 => new SelectedValue('@title', new TextResultRepresentation(<<<EOL
-<p><strong>Title</strong></p>\n
-EOL
-            )),
-            13 => new SelectedValue('@title', new TextResultRepresentation('')),
-        ], $result->values);
+        self::assertSame(1, $this->result_title->getCallCount());
+        self::assertSame(0, $this->result_description->getCallCount());
+        self::assertSame(0, $this->result_status->getCallCount());
+        self::assertSame(0, $this->result_assigned_to->getCallCount());
+        self::assertSame(0, $this->result_pretty_title->getCallCount());
     }
 
     public function testItReturnsValuesForDescriptionSemantic(): void
@@ -170,14 +168,10 @@ EOL
             new Metadata('description'),
             RetrieveArtifactStub::withArtifacts(
                 ArtifactTestBuilder::anArtifact(21)->inTracker($this->first_tracker)->build(),
-                ArtifactTestBuilder::anArtifact(22)->inTracker($this->second_tracker)->build(),
-                ArtifactTestBuilder::anArtifact(23)->inTracker($this->second_tracker)->build(),
             ),
             InstantiateRetrievedQueryTrackersStub::withNoTrackers(),
             [
                 ['id' => 21, '@description' => 'blablabla', '@description_format' => 'text'],
-                ['id' => 22, '@description' => "# Hello\n\nWorld!", '@description_format' => 'commonmark'],
-                ['id' => 23, '@description' => null, '@description_format' => null],
             ],
         );
 
@@ -185,16 +179,11 @@ EOL
             new CrossTrackerSelectedRepresentation('@description', CrossTrackerSelectedType::TYPE_TEXT),
             $result->selected,
         );
-        self::assertCount(3, $result->values);
-        self::assertEqualsCanonicalizing([
-            21 => new SelectedValue('@description', new TextResultRepresentation('blablabla')),
-            22 => new SelectedValue('@description', new TextResultRepresentation(<<<EOL
-<h1>Hello</h1>
-<p>World!</p>\n
-EOL
-            )),
-            23 => new SelectedValue('@description', new TextResultRepresentation('')),
-        ], $result->values);
+        self::assertSame(0, $this->result_title->getCallCount());
+        self::assertSame(1, $this->result_description->getCallCount());
+        self::assertSame(0, $this->result_status->getCallCount());
+        self::assertSame(0, $this->result_assigned_to->getCallCount());
+        self::assertSame(0, $this->result_pretty_title->getCallCount());
     }
 
     public function testItReturnsValuesStatusSemantic(): void
@@ -203,14 +192,10 @@ EOL
             new Metadata('status'),
             RetrieveArtifactStub::withArtifacts(
                 ArtifactTestBuilder::anArtifact(31)->inTracker($this->first_tracker)->build(),
-                ArtifactTestBuilder::anArtifact(32)->inTracker($this->first_tracker)->build(),
-                ArtifactTestBuilder::anArtifact(33)->inTracker($this->second_tracker)->build(),
             ),
             InstantiateRetrievedQueryTrackersStub::withNoTrackers(),
             [
                 ['id' => 31, '@status' => 'Open', '@status_color' => 'neon-green'],
-                ['id' => 32, '@status' => ['Closed', 'Also open'], '@status_color' => ['fiesta-red']],
-                ['id' => 33, '@status' => null, '@status_color' => null],
             ],
         );
 
@@ -218,17 +203,11 @@ EOL
             new CrossTrackerSelectedRepresentation('@status', CrossTrackerSelectedType::TYPE_STATIC_LIST),
             $result->selected,
         );
-        self::assertCount(3, $result->values);
-        self::assertEqualsCanonicalizing([
-            31 => new SelectedValue('@status', new StaticListRepresentation([
-                new StaticListValueRepresentation('Open', 'neon-green'),
-            ])),
-            32 => new SelectedValue('@status', new StaticListRepresentation([
-                new StaticListValueRepresentation('Closed', 'fiesta-red'),
-                new StaticListValueRepresentation('Also open', null),
-            ])),
-            33 => new SelectedValue('@status', new StaticListRepresentation([])),
-        ], $result->values);
+        self::assertSame(0, $this->result_title->getCallCount());
+        self::assertSame(0, $this->result_description->getCallCount());
+        self::assertSame(1, $this->result_status->getCallCount());
+        self::assertSame(0, $this->result_assigned_to->getCallCount());
+        self::assertSame(0, $this->result_pretty_title->getCallCount());
     }
 
     public function testItReturnsValuesForAssignedToSemantic(): void
@@ -237,14 +216,10 @@ EOL
             new Metadata('assigned_to'),
             RetrieveArtifactStub::withArtifacts(
                 ArtifactTestBuilder::anArtifact(41)->inTracker($this->first_tracker)->build(),
-                ArtifactTestBuilder::anArtifact(42)->inTracker($this->first_tracker)->build(),
-                ArtifactTestBuilder::anArtifact(43)->inTracker($this->second_tracker)->build(),
             ),
             InstantiateRetrievedQueryTrackersStub::withNoTrackers(),
             [
                 ['id' => 41, '@assigned_to' => 135],
-                ['id' => 42, '@assigned_to' => [135, 145]],
-                ['id' => 43, '@assigned_to' => null],
             ],
         );
 
@@ -252,17 +227,11 @@ EOL
             new CrossTrackerSelectedRepresentation('@assigned_to', CrossTrackerSelectedType::TYPE_USER_LIST),
             $result->selected,
         );
-        self::assertCount(3, $result->values);
-        self::assertEqualsCanonicalizing([
-            41 => new SelectedValue('@assigned_to', new UserListRepresentation([
-                new UserRepresentation('Jean Eude', 'https://example.com/jean', '/users/jean', false),
-            ])),
-            42 => new SelectedValue('@assigned_to', new UserListRepresentation([
-                new UserRepresentation('Jean Eude', 'https://example.com/jean', '/users/jean', false),
-                new UserRepresentation('Alice', 'https://example.com/alice', '/users/alice', false),
-            ])),
-            43 => new SelectedValue('@assigned_to', new UserListRepresentation([])),
-        ], $result->values);
+        self::assertSame(0, $this->result_title->getCallCount());
+        self::assertSame(0, $this->result_description->getCallCount());
+        self::assertSame(0, $this->result_status->getCallCount());
+        self::assertSame(1, $this->result_assigned_to->getCallCount());
+        self::assertSame(0, $this->result_pretty_title->getCallCount());
     }
 
     public function testItReturnsValuesForSubmittedOnAlwaysThereField(): void
@@ -291,6 +260,11 @@ EOL
             51 => new SelectedValue('@submitted_on', new DateResultRepresentation($first_date->format(DATE_ATOM), true)),
             52 => new SelectedValue('@submitted_on', new DateResultRepresentation($second_date->format(DATE_ATOM), true)),
         ], $result->values);
+        self::assertSame(0, $this->result_title->getCallCount());
+        self::assertSame(0, $this->result_description->getCallCount());
+        self::assertSame(0, $this->result_status->getCallCount());
+        self::assertSame(0, $this->result_assigned_to->getCallCount());
+        self::assertSame(0, $this->result_pretty_title->getCallCount());
     }
 
     public function testItReturnsValuesForLastUpdateDateAlwaysThereField(): void
@@ -319,6 +293,11 @@ EOL
             61 => new SelectedValue('@last_update_date', new DateResultRepresentation($first_date->format(DATE_ATOM), true)),
             62 => new SelectedValue('@last_update_date', new DateResultRepresentation($second_date->format(DATE_ATOM), true)),
         ], $result->values);
+        self::assertSame(0, $this->result_title->getCallCount());
+        self::assertSame(0, $this->result_description->getCallCount());
+        self::assertSame(0, $this->result_status->getCallCount());
+        self::assertSame(0, $this->result_assigned_to->getCallCount());
+        self::assertSame(0, $this->result_pretty_title->getCallCount());
     }
 
     public function testItReturnsValuesForSubmittedByAlwaysThereField(): void
@@ -345,6 +324,11 @@ EOL
             71 => new SelectedValue('@submitted_by', new UserRepresentation('Jean Eude', 'https://example.com/jean', '/users/jean', false)),
             72 => new SelectedValue('@submitted_by', new UserRepresentation('Alice', 'https://example.com/alice', '/users/alice', false)),
         ], $result->values);
+        self::assertSame(0, $this->result_title->getCallCount());
+        self::assertSame(0, $this->result_description->getCallCount());
+        self::assertSame(0, $this->result_status->getCallCount());
+        self::assertSame(0, $this->result_assigned_to->getCallCount());
+        self::assertSame(0, $this->result_pretty_title->getCallCount());
     }
 
     public function testItReturnsValuesForLastUpdateByAlwaysThereField(): void
@@ -371,6 +355,11 @@ EOL
             81 => new SelectedValue('@last_update_by', new UserRepresentation('Jean Eude', 'https://example.com/jean', '/users/jean', false)),
             82 => new SelectedValue('@last_update_by', new UserRepresentation('Alice', 'https://example.com/alice', '/users/alice', false)),
         ], $result->values);
+        self::assertSame(0, $this->result_title->getCallCount());
+        self::assertSame(0, $this->result_description->getCallCount());
+        self::assertSame(0, $this->result_status->getCallCount());
+        self::assertSame(0, $this->result_assigned_to->getCallCount());
+        self::assertSame(0, $this->result_pretty_title->getCallCount());
     }
 
     public function testItReturnsValuesForArtifactIdAlwaysThereField(): void
@@ -397,6 +386,11 @@ EOL
             91 => new SelectedValue('@id', new NumericResultRepresentation(91)),
             92 => new SelectedValue('@id', new NumericResultRepresentation(92)),
         ], $result->values);
+        self::assertSame(0, $this->result_title->getCallCount());
+        self::assertSame(0, $this->result_description->getCallCount());
+        self::assertSame(0, $this->result_status->getCallCount());
+        self::assertSame(0, $this->result_assigned_to->getCallCount());
+        self::assertSame(0, $this->result_pretty_title->getCallCount());
     }
 
     public function testItReturnsValuesForProjectName(): void
@@ -423,6 +417,11 @@ EOL
             101 => new SelectedValue('@project.name', new ProjectRepresentation('Project 101', '')),
             102 => new SelectedValue('@project.name', new ProjectRepresentation('Project with icon', '⚔️')),
         ], $result->values);
+        self::assertSame(0, $this->result_title->getCallCount());
+        self::assertSame(0, $this->result_description->getCallCount());
+        self::assertSame(0, $this->result_status->getCallCount());
+        self::assertSame(0, $this->result_assigned_to->getCallCount());
+        self::assertSame(0, $this->result_pretty_title->getCallCount());
     }
 
     public function testItReturnsValuesForTrackerName(): void
@@ -449,6 +448,12 @@ EOL
             111 => new SelectedValue('@tracker.name', new TrackerRepresentation('Tracker 38', 'neon-green')),
             112 => new SelectedValue('@tracker.name', new TrackerRepresentation('Tracker 4', 'deep-blue')),
         ], $result->values);
+
+        self::assertSame(0, $this->result_title->getCallCount());
+        self::assertSame(0, $this->result_description->getCallCount());
+        self::assertSame(0, $this->result_status->getCallCount());
+        self::assertSame(0, $this->result_assigned_to->getCallCount());
+        self::assertSame(0, $this->result_pretty_title->getCallCount());
     }
 
     public function testItReturnsValuesForPrettyTitle(): void
@@ -472,12 +477,12 @@ EOL
             new CrossTrackerSelectedRepresentation('@pretty_title', CrossTrackerSelectedType::TYPE_PRETTY_TITLE),
             $result->selected,
         );
-        self::assertCount(3, $result->values);
-        self::assertEqualsCanonicalizing([
-            121 => new SelectedValue('@pretty_title', new PrettyTitleRepresentation('tracker_38', 'inca-silver', 121, 'title 121')),
-            122 => new SelectedValue('@pretty_title', new PrettyTitleRepresentation('tracker_4', 'neon-green', 122, 'title 122')),
-            123 => new SelectedValue('@pretty_title', new PrettyTitleRepresentation('tracker_4', 'neon-green', 123, '')),
-        ], $result->values);
+
+        self::assertSame(0, $this->result_title->getCallCount());
+        self::assertSame(0, $this->result_description->getCallCount());
+        self::assertSame(0, $this->result_status->getCallCount());
+        self::assertSame(0, $this->result_assigned_to->getCallCount());
+        self::assertSame(1, $this->result_pretty_title->getCallCount());
     }
 
     public function testItReturnsValuesForArtifact(): void
@@ -508,6 +513,11 @@ EOL
             131 => new SelectedValue('@artifact', new ArtifactRepresentation(131, '/plugins/tracker/?aid=131', 0, 0)),
             132 => new SelectedValue('@artifact', new ArtifactRepresentation(132, '/plugins/tracker/?aid=132', 1, 0)),
         ], $result->values);
+        self::assertSame(0, $this->result_title->getCallCount());
+        self::assertSame(0, $this->result_description->getCallCount());
+        self::assertSame(0, $this->result_status->getCallCount());
+        self::assertSame(0, $this->result_assigned_to->getCallCount());
+        self::assertSame(0, $this->result_pretty_title->getCallCount());
     }
 
     public function testItReturnsFilteredValuesOfNumberOfForwardAndReverseLinks(): void
@@ -541,5 +551,10 @@ EOL
         self::assertEqualsCanonicalizing([
             132 => new SelectedValue('@artifact', new ArtifactRepresentation(132, '/plugins/tracker/?aid=132', 1, 1)),
         ], $result->values);
+        self::assertSame(0, $this->result_title->getCallCount());
+        self::assertSame(0, $this->result_description->getCallCount());
+        self::assertSame(0, $this->result_status->getCallCount());
+        self::assertSame(0, $this->result_assigned_to->getCallCount());
+        self::assertSame(0, $this->result_pretty_title->getCallCount());
     }
 }

@@ -29,7 +29,7 @@ use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerSelectedRepresentatio
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerSelectedType;
 use Tuleap\Project\Icons\EmojiCodepointConverter;
 
-final class ProjectNameResultBuilder
+final readonly class ProjectNameResultBuilder
 {
     public function getResult(array $select_results): SelectedValuesCollection
     {

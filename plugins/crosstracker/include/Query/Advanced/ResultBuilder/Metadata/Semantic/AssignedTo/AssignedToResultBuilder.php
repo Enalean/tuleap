@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Metadata\Semantic\AssignedTo;
 
 use LogicException;
+use PFUser;
 use Tracker_FormElement_Field_List_Bind;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Representations\UserListRepresentation;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Representations\UserRepresentation;
@@ -31,18 +32,22 @@ use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\SelectedValuesCollection;
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerSelectedRepresentation;
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerSelectedType;
 use Tuleap\Option\Option;
+use Tuleap\Tracker\Artifact\RetrieveArtifact;
+use Tuleap\Tracker\Semantic\Contributor\TrackerSemanticContributor;
 use Tuleap\User\RetrieveUserById;
 use UserHelper;
 
-final readonly class AssignedToResultBuilder
+final readonly class AssignedToResultBuilder implements BuildResultAssignedTo
 {
     public function __construct(
         private RetrieveUserById $user_retriever,
         private UserHelper $user_helper,
+        private RetrieveArtifact $retrieve_artifact,
     ) {
     }
 
-    public function getResult(array $select_results): SelectedValuesCollection
+    #[\Override]
+    public function getResult(array $select_results, PFUser $user): SelectedValuesCollection
     {
         $values = [];
         $alias  = '@assigned_to';
@@ -56,8 +61,12 @@ final readonly class AssignedToResultBuilder
             $value    = $result[$alias];
             $user_ids = is_array($value) ? $value : [$value];
 
+            if (! $this->isAssignedToAValidAllowedValue($id, $user)) {
+                continue;
+            }
+
             foreach ($user_ids as $user_id) {
-                if (! is_int($user_id) || $user_id === Tracker_FormElement_Field_List_Bind::NONE_VALUE) {
+                if (! is_int($user_id)) {
                     continue;
                 }
 
@@ -75,6 +84,21 @@ final readonly class AssignedToResultBuilder
         );
     }
 
+    private function isAssignedToAValidAllowedValue(int $artifact_id, PFUser $user): bool
+    {
+        $artifact = $this->retrieve_artifact->getArtifactById($artifact_id);
+        if ($artifact === null) {
+            throw new LogicException("Artifact #$artifact_id not found");
+        }
+
+        $semantic = TrackerSemanticContributor::load($artifact->getTracker());
+        if (! $semantic->getField() || ! $semantic->getField()->userCanRead($user)) {
+            return false;
+        }
+
+        return true;
+    }
+
     /**
      * @return Option<UserRepresentation>
      */
@@ -83,6 +107,7 @@ final readonly class AssignedToResultBuilder
         if ($user_id === Tracker_FormElement_Field_List_Bind::NONE_VALUE) {
             return Option::nothing(UserRepresentation::class);
         }
+
         $user = $this->user_retriever->getUserById($user_id);
         if ($user === null) {
             throw new LogicException("User $user_id not found");
