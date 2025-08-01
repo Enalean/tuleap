@@ -25,8 +25,12 @@
         data-test="document-new-folder-modal"
         aria-labelledby="document-new-folder-modal"
         v-on:submit="addFolder"
+        ref="form"
     >
-        <modal-header v-bind:modal-title="modal_title" v-bind:aria-labelled-by="aria_labelled_by" />
+        <modal-header
+            v-bind:modal-title="$gettext('New folder')"
+            aria-labelled-by="document-new-item-modal"
+        />
         <modal-feedback />
         <div class="tlp-modal-body document-item-modal-body" v-if="is_displayed">
             <folder-global-properties-for-create
@@ -44,16 +48,16 @@
         </div>
         <modal-footer
             v-bind:is-loading="is_loading"
-            v-bind:submit-button-label="submit_button_label"
-            v-bind:aria-labelled-by="aria_labelled_by"
+            v-bind:submit-button-label="$gettext('Create folder')"
+            aria-labelled-by="document-new-item-modal"
             v-bind:icon-submit-button-class="'fa-solid fa-plus'"
             data-test="document-modal-submit-button-create-folder"
         />
     </form>
 </template>
 
-<script lang="ts">
-import { mapState } from "vuex";
+<script setup lang="ts">
+import type { Modal } from "@tuleap/tlp-modal";
 import { createModal } from "@tuleap/tlp-modal";
 import { TYPE_FOLDER } from "../../../../constants";
 import ModalHeader from "../../ModalCommon/ModalHeader.vue";
@@ -67,165 +71,156 @@ import {
     transformCustomPropertiesForItemCreation,
     transformStatusPropertyForItemCreation,
 } from "../../../../helpers/properties-helpers/creation-data-transformatter-helper";
+import type { UpdateCustomEvent, UpdateMultipleListValueEvent } from "../../../../helpers/emitter";
 import emitter from "../../../../helpers/emitter";
 import { buildFakeItem } from "../../../../helpers/item-builder";
+import { onBeforeUnmount, onMounted, ref } from "vue";
+import { useNamespacedState, useState, useStore } from "vuex-composition-helpers";
+import type { Item, RootState } from "../../../../type";
+import type { ErrorState } from "../../../../store/error/module";
+import type { PermissionsState } from "../../../../store/permissions/permissions-default-state";
+import type { ConfigurationState } from "../../../../store/configuration";
 
-export default {
-    name: "NewFolderModal",
-    components: {
-        FolderGlobalPropertiesForCreate,
-        CreationModalPermissionsSection,
-        ModalFeedback,
-        ModalHeader,
-        ModalFooter,
-    },
-    data() {
-        return {
-            item: {},
-            is_loading: false,
-            is_displayed: false,
-            modal: null,
-            parent: {},
-            properties: null,
-        };
-    },
-    computed: {
-        ...mapState(["current_folder"]),
-        ...mapState("error", ["has_modal_error"]),
-        ...mapState("permissions", ["project_ugroups"]),
-        ...mapState("configuration", ["project_id", "is_status_property_used"]),
-        submit_button_label() {
-            return this.$gettext("Create folder");
-        },
-        modal_title() {
-            return this.$gettext("New folder");
-        },
-        aria_labelled_by() {
-            return "document-new-item-modal";
-        },
-    },
-    mounted() {
-        this.modal = createModal(this.$el);
-        emitter.on("show-new-folder-modal", this.show);
-        emitter.on("update-multiple-properties-list-value", this.updateMultiplePropertiesListValue);
-        this.modal.addEventListener("tlp-modal-hidden", this.reset);
-        emitter.on("update-status-property", this.updateStatusValue);
-        emitter.on("update-title-property", this.updateTitleValue);
-        emitter.on("update-description-property", this.updateDescriptionValue);
-        emitter.on("update-custom-property", this.updateCustomProperty);
-    },
-    beforeUnmount() {
-        emitter.off("show-new-folder-modal", this.show);
-        emitter.off(
-            "update-multiple-properties-list-value",
-            this.updateMultiplePropertiesListValue,
-        );
-        this.modal.removeEventListener("tlp-modal-hidden", this.reset);
-        emitter.off("update-status-property", this.updateStatusValue);
-        emitter.off("update-title-property", this.updateTitleValue);
-        emitter.off("update-description-property", this.updateDescriptionValue);
-        emitter.off("update-custom-property", this.updateCustomProperty);
-    },
-    methods: {
-        getDefaultItem() {
-            return {
-                title: "",
-                description: "",
-                type: TYPE_FOLDER,
-                permissions_for_groups: {
-                    can_read: [],
-                    can_write: [],
-                    can_manage: [],
-                },
-                properties: [],
-            };
-        },
-        async show(event) {
-            this.item = this.getDefaultItem();
-            this.parent = event.detail.parent;
-            this.addParentPropertiesToDefaultItem();
-            this.item.permissions_for_groups = JSON.parse(
-                JSON.stringify(this.parent.permissions_for_groups),
-            );
-            this.is_displayed = true;
-            this.modal.show();
-            try {
-                await this.$store.dispatch(
-                    "permissions/loadProjectUserGroupsIfNeeded",
-                    this.project_id,
-                );
-            } catch (e) {
-                await handleErrors(this.$store, e);
-                this.modal.hide();
-            }
-        },
-        reset() {
-            this.$store.commit("error/resetModalError");
-            this.is_displayed = false;
-            this.is_loading = false;
-        },
-        async addFolder(event) {
-            event.preventDefault();
-            this.is_loading = true;
-            this.$store.commit("error/resetModalError");
+const $store = useStore();
 
-            await this.$store.dispatch("createNewItem", [
-                this.item,
-                this.parent,
-                this.current_folder,
-                buildFakeItem(),
-            ]);
-            this.is_loading = false;
-            if (this.has_modal_error === false) {
-                this.modal.hide();
-            }
-        },
-        addParentPropertiesToDefaultItem() {
-            const parent_properties = getCustomProperties(this.parent);
+const item = ref({});
+const is_loading = ref(false);
+const is_displayed = ref(false);
+const parent = ref({});
+const form = ref<HTMLFormElement>();
+let modal: Modal | null = null;
 
-            const formatted_properties =
-                transformCustomPropertiesForItemCreation(parent_properties);
-            if (formatted_properties.length > 0) {
-                this.item.properties = formatted_properties;
-            }
+const { current_folder } = useState<Pick<RootState, "current_folder">>(["current_folder"]);
+const { has_modal_error } = useNamespacedState<Pick<ErrorState, "has_modal_error">>("error", [
+    "has_modal_error",
+]);
+const { project_ugroups } = useNamespacedState<Pick<PermissionsState, "project_ugroups">>(
+    "permissions",
+    ["project_ugroups"],
+);
+const { project_id, is_status_property_used } = useNamespacedState<
+    Pick<ConfigurationState, "project_id" | "is_status_property_used">
+>("configuration", ["project_id", "is_status_property_used"]);
 
-            transformStatusPropertyForItemCreation(
-                this.item,
-                this.parent,
-                this.is_status_property_used,
-            );
-        },
-        updateMultiplePropertiesListValue(event) {
-            if (!this.item.properties) {
-                return;
-            }
-            const item_properties = this.item.properties.find(
-                (property) => property.short_name === event.detail.id,
-            );
-            item_properties.list_value = event.detail.value;
-        },
-        updateStatusValue(status) {
-            this.item.status = status;
-        },
-        updateTitleValue(title) {
-            this.item.title = title;
-        },
-        updateDescriptionValue(description) {
-            this.item.description = description;
-        },
-        updateCustomProperty(event) {
-            if (!this.item.properties) {
-                return;
-            }
-            const item_properties = this.item.properties.find(
-                (property) => property.short_name === event.property_short_name,
-            );
+onMounted(() => {
+    modal = createModal(form.value);
+    emitter.on("show-new-folder-modal", show);
+    emitter.on("update-multiple-properties-list-value", updateMultiplePropertiesListValue);
+    modal.addEventListener("tlp-modal-hidden", reset);
+    emitter.on("update-status-property", updateStatusValue);
+    emitter.on("update-title-property", updateTitleValue);
+    emitter.on("update-description-property", updateDescriptionValue);
+    emitter.on("update-custom-property", updateCustomProperty);
+});
 
-            if (!item_properties) {
-                return;
-            }
-            item_properties.value = event.value;
+onBeforeUnmount(() => {
+    emitter.off("show-new-folder-modal", show);
+    emitter.off("update-multiple-properties-list-value", updateMultiplePropertiesListValue);
+    modal?.removeEventListener("tlp-modal-hidden", reset);
+    emitter.off("update-status-property", updateStatusValue);
+    emitter.off("update-title-property", updateTitleValue);
+    emitter.off("update-description-property", updateDescriptionValue);
+    emitter.off("update-custom-property", updateCustomProperty);
+});
+
+function getDefaultItem() {
+    return {
+        title: "",
+        description: "",
+        type: TYPE_FOLDER,
+        permissions_for_groups: {
+            can_read: [],
+            can_write: [],
+            can_manage: [],
         },
-    },
-};
+        properties: [],
+    };
+}
+
+async function show(event: { detail: { parent: Item } }): Promise<void> {
+    item.value = getDefaultItem();
+    parent.value = event.detail.parent;
+    addParentPropertiesToDefaultItem();
+    item.value.permissions_for_groups = JSON.parse(
+        JSON.stringify(parent.value.permissions_for_groups),
+    );
+    is_displayed.value = true;
+    modal?.show();
+    try {
+        await $store.dispatch("permissions/loadProjectUserGroupsIfNeeded", project_id.value);
+    } catch (err) {
+        await handleErrors($store, err);
+        modal?.hide();
+    }
+}
+
+function reset(): void {
+    $store.commit("error/resetModalError");
+    is_displayed.value = false;
+    is_loading.value = false;
+}
+
+async function addFolder(event: SubmitEvent): Promise<void> {
+    event.preventDefault();
+    is_loading.value = true;
+    $store.commit("error/resetModalError");
+
+    await $store.dispatch("createNewItem", [
+        item.value,
+        parent.value,
+        current_folder.value,
+        buildFakeItem(),
+    ]);
+    is_loading.value = false;
+    if (!has_modal_error.value) {
+        modal?.hide();
+    }
+}
+
+function addParentPropertiesToDefaultItem(): void {
+    const parent_properties = getCustomProperties(parent.value);
+
+    const formatted_properties = transformCustomPropertiesForItemCreation(parent_properties);
+    if (formatted_properties.length > 0) {
+        item.value.properties = formatted_properties;
+    }
+
+    transformStatusPropertyForItemCreation(item.value, parent.value, is_status_property_used.value);
+}
+
+function updateMultiplePropertiesListValue(event: UpdateMultipleListValueEvent): void {
+    if (!item.value.properties) {
+        return;
+    }
+    const item_properties = item.value.properties.find(
+        (property) => property.short_name === event.detail.id,
+    );
+    item_properties.list_value = event.detail.value;
+}
+
+function updateStatusValue(status: string): void {
+    item.value.status = status;
+}
+
+function updateTitleValue(title: string): void {
+    item.value.title = title;
+}
+
+function updateDescriptionValue(description: string): void {
+    item.value.description = description;
+}
+
+function updateCustomProperty(event: UpdateCustomEvent): void {
+    if (!item.value.properties) {
+        return;
+    }
+    const item_properties = item.value.properties.find(
+        (property) => property.short_name === event.property_short_name,
+    );
+
+    if (!item_properties) {
+        return;
+    }
+    item_properties.value = event.value;
+}
 </script>
