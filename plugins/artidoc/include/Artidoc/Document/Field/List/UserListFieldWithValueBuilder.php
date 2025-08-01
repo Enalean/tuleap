@@ -32,7 +32,7 @@ use Tuleap\User\Avatar\ProvideDefaultUserAvatarUrl;
 use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 use Tuleap\User\RetrieveUserById;
 
-final readonly class UserListFieldWithValueBuilder implements BuildUserListFieldWithValue
+final readonly class UserListFieldWithValueBuilder
 {
     public function __construct(
         private RetrieveUserById $retrieve_user_by_id,
@@ -41,7 +41,6 @@ final readonly class UserListFieldWithValueBuilder implements BuildUserListField
     ) {
     }
 
-    #[\Override]
     public function buildUserListFieldWithValue(ConfiguredField $configured_field, ?\Tracker_Artifact_ChangesetValue_List $changeset_value): UserListFieldWithValue
     {
         return new UserListFieldWithValue(

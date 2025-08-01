@@ -30,9 +30,8 @@ use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StaticListValue;
 use Tuleap\Color\ColorName;
 use Tuleap\Option\Option;
 
-final readonly class StaticListFieldWithValueBuilder implements BuildStaticListFieldWithValue
+final readonly class StaticListFieldWithValueBuilder
 {
-    #[\Override]
     public function buildStaticListFieldWithValue(ConfiguredField $configured_field, ?\Tracker_Artifact_ChangesetValue_List $changeset_value): StaticListFieldWithValue
     {
         assert($configured_field->field instanceof \Tracker_FormElement_Field_List);

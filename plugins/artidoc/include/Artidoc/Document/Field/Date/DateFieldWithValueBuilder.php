@@ -24,7 +24,6 @@ namespace Tuleap\Artidoc\Document\Field\Date;
 
 use DateTimeImmutable;
 use DateTimeZone;
-use Override;
 use PFUser;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue_Date;
@@ -36,14 +35,13 @@ use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\DateFieldWithVal
 use Tuleap\Option\Option;
 use Tuleap\TimezoneRetriever;
 
-final readonly class DateFieldWithValueBuilder implements BuildDateFieldWithValue
+final readonly class DateFieldWithValueBuilder
 {
     public function __construct(
         private PFUser $current_user,
     ) {
     }
 
-    #[Override]
     public function buildDateFieldWithValue(
         ConfiguredField $configured_field,
         Tracker_Artifact_Changeset $changeset,

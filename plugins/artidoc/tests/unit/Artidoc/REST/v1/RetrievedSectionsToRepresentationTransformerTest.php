@@ -28,8 +28,16 @@ use Tracker_Artifact_Changeset;
 use Tracker_FormElement_Field_File;
 use Tuleap\Artidoc\Adapter\Document\ArtidocDocument;
 use Tuleap\Artidoc\Adapter\Document\Section\RequiredSectionInformationCollector;
+use Tuleap\Artidoc\Document\Field\ArtifactLink\ArtifactLinkFieldWithValueBuilder;
 use Tuleap\Artidoc\Document\Field\ConfiguredFieldCollection;
+use Tuleap\Artidoc\Document\Field\Date\DateFieldWithValueBuilder;
 use Tuleap\Artidoc\Document\Field\FieldsWithValuesBuilder;
+use Tuleap\Artidoc\Document\Field\List\ListFieldWithValueBuilder;
+use Tuleap\Artidoc\Document\Field\List\StaticListFieldWithValueBuilder;
+use Tuleap\Artidoc\Document\Field\List\UserGroupListWithValueBuilder;
+use Tuleap\Artidoc\Document\Field\List\UserListFieldWithValueBuilder;
+use Tuleap\Artidoc\Document\Field\Numeric\NumericFieldWithValueBuilder;
+use Tuleap\Artidoc\Document\Field\User\UserFieldWithValueBuilder;
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\Artidoc\Domain\Document\Section\PaginatedRetrievedSections;
 use Tuleap\Artidoc\Domain\Document\Section\RetrievedSection;
@@ -37,11 +45,6 @@ use Tuleap\Artidoc\REST\v1\ArtifactSection\ArtifactSectionAttachmentsRepresentat
 use Tuleap\Artidoc\REST\v1\ArtifactSection\ArtifactSectionRepresentation;
 use Tuleap\Artidoc\REST\v1\ArtifactSection\ArtifactSectionRepresentationBuilder;
 use Tuleap\Artidoc\REST\v1\ArtifactSection\RequiredArtifactInformationBuilder;
-use Tuleap\Artidoc\Stubs\Document\Field\ArtifactLink\BuildArtifactLinkFieldWithValueStub;
-use Tuleap\Artidoc\Stubs\Document\Field\Date\BuildDateFieldWithValueStub;
-use Tuleap\Artidoc\Stubs\Document\Field\List\BuildListFieldWithValueStub;
-use Tuleap\Artidoc\Stubs\Document\Field\Numeric\BuildNumericFieldWithValueStub;
-use Tuleap\Artidoc\Stubs\Document\Field\User\BuildUserFieldWithValueStub;
 use Tuleap\Artidoc\Stubs\Document\FreetextIdentifierStub;
 use Tuleap\Artidoc\Stubs\Document\SectionIdentifierStub;
 use Tuleap\NeverThrow\Err;
@@ -51,6 +54,11 @@ use Tuleap\NeverThrow\Result;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\AnonymousUserTestProvider;
+use Tuleap\Test\Stubs\BuildDisplayNameStub;
+use Tuleap\Test\Stubs\RetrieveUserByIdStub;
+use Tuleap\Test\Stubs\User\Avatar\ProvideDefaultUserAvatarUrlStub;
+use Tuleap\Test\Stubs\User\Avatar\ProvideUserAvatarUrlStub;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\UploadDataAttributesForRichTextEditorBuilder;
 use Tuleap\Tracker\FormElement\Field\String\StringField;
@@ -63,9 +71,12 @@ use Tuleap\Tracker\Test\Builders\ChangesetValueTextTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\TextFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Test\Stub\Artifact\Dao\SearchArtifactGlobalRankStub;
 use Tuleap\Tracker\Test\Stub\Artifact\GetFileUploadDataStub;
+use Tuleap\Tracker\Test\Stub\FormElement\Field\ArtifactLink\Type\RetrieveTypeFromShortnameStub;
 use Tuleap\Tracker\Test\Stub\RetrieveArtifactStub;
 use Tuleap\Tracker\Test\Stub\Semantic\Description\RetrieveSemanticDescriptionFieldStub;
+use Tuleap\Tracker\Test\Stub\Semantic\Status\RetrieveSemanticStatusStub;
 use Tuleap\Tracker\Test\Stub\Semantic\Title\RetrieveSemanticTitleFieldStub;
 use Tuleap\Tracker\Tracker;
 
@@ -100,17 +111,39 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
     private function getRepresentation(
         array $sections,
     ): Ok|Err {
-        $transformer = new RetrievedSectionsToRepresentationTransformer(
+        $retrieve_user_by_id             = RetrieveUserByIdStub::withNoUser();
+        $provide_user_avatar_url         = ProvideUserAvatarUrlStub::build();
+        $provide_default_user_avatar_url = ProvideDefaultUserAvatarUrlStub::build();
+        $transformer                     = new RetrievedSectionsToRepresentationTransformer(
             new SectionRepresentationBuilder(
                 new ArtifactSectionRepresentationBuilder(
                     $this->file_upload_provider,
                     new FieldsWithValuesBuilder(
                         new ConfiguredFieldCollection([]),
-                        BuildListFieldWithValueStub::withCallback($this->notCalledCallback(...)),
-                        BuildArtifactLinkFieldWithValueStub::withCallback($this->notCalledCallback(...)),
-                        BuildNumericFieldWithValueStub::withCallback($this->notCalledCallback(...)),
-                        BuildUserFieldWithValueStub::withCallback($this->notCalledCallback(...)),
-                        BuildDateFieldWithValueStub::withCallback($this->notCalledCallback(...)),
+                        new ListFieldWithValueBuilder(
+                            new UserListFieldWithValueBuilder(
+                                $retrieve_user_by_id,
+                                $provide_user_avatar_url,
+                                $provide_default_user_avatar_url,
+                            ),
+                            new StaticListFieldWithValueBuilder(),
+                            new UserGroupListWithValueBuilder(),
+                        ),
+                        new ArtifactLinkFieldWithValueBuilder(
+                            $this->user,
+                            RetrieveSemanticTitleFieldStub::build(),
+                            RetrieveSemanticStatusStub::build(),
+                            RetrieveTypeFromShortnameStub::build(),
+                        ),
+                        new NumericFieldWithValueBuilder(SearchArtifactGlobalRankStub::build()),
+                        new UserFieldWithValueBuilder(
+                            $retrieve_user_by_id,
+                            new AnonymousUserTestProvider(),
+                            $provide_user_avatar_url,
+                            $provide_default_user_avatar_url,
+                            BuildDisplayNameStub::build(),
+                        ),
+                        new DateFieldWithValueBuilder($this->user),
                     )
                 ),
             ),

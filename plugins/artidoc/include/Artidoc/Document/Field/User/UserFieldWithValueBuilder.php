@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\Artidoc\Document\Field\User;
 
 use Exception;
-use Override;
 use Tracker_Artifact_Changeset;
 use Tracker_FormElement_Field_LastModifiedBy;
 use Tracker_FormElement_Field_SubmittedBy;
@@ -36,7 +35,7 @@ use Tuleap\User\BuildDisplayName;
 use Tuleap\User\ProvideAnonymousUser;
 use Tuleap\User\RetrieveUserById;
 
-final readonly class UserFieldWithValueBuilder implements BuildUserFieldWithValue
+final readonly class UserFieldWithValueBuilder
 {
     public function __construct(
         private RetrieveUserById $retrieve_user_by_id,
@@ -47,7 +46,6 @@ final readonly class UserFieldWithValueBuilder implements BuildUserFieldWithValu
     ) {
     }
 
-    #[Override]
     public function buildUserFieldWithValue(ConfiguredField $configured_field, Tracker_Artifact_Changeset $changeset): UserFieldWithValue
     {
         return new UserFieldWithValue(
