@@ -10,7 +10,6 @@
     "@tuleap/list-picker": "workspace:*",
     "@tuleap/tlp-modal": "workspace:*",
     "@tuleap/vue2-gettext-init": "workspace:*",
-    "dompurify": "^3.2.4",
     "vue": "^2.7.8"
   },
   "devDependencies": {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,12 +19,7 @@
 
 import { getAttributeOrThrow } from "@tuleap/dom";
 
-export function buildCreateModalCallback(vue_mount_point_id, RootComponent) {
-    const vue_mount_point = document.getElementById(vue_mount_point_id);
-
-    if (!vue_mount_point) {
-        throw Error(`Could not find Vue mount point ${vue_mount_point_id}`);
-    }
+export function gatherConfiguration(vue_mount_point) {
     const project_id = getAttributeOrThrow(vue_mount_point, "data-project-id");
     const minimal_rank = Number.parseInt(
         getAttributeOrThrow(vue_mount_point, "data-minimal-rank"),
@@ -34,15 +29,5 @@ export function buildCreateModalCallback(vue_mount_point_id, RootComponent) {
     const csrf_token_name = getAttributeOrThrow(vue_mount_point, "data-csrf-token-name");
     const allowed_icons = JSON.parse(getAttributeOrThrow(vue_mount_point, "data-allowed-icons"));
 
-    return () => {
-        return new RootComponent({
-            propsData: {
-                project_id,
-                minimal_rank,
-                csrf_token_name,
-                csrf_token,
-                allowed_icons,
-            },
-        }).$mount(vue_mount_point);
-    };
+    return { project_id, minimal_rank, csrf_token, csrf_token_name, allowed_icons };
 }
