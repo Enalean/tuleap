@@ -23,14 +23,17 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Report\CSVExport;
 
+use Override;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\IntegerFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\PerTrackerArtifactIdFieldBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CSVFieldUsageCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private \PFUser $user;
 
+    #[Override]
     protected function setUp(): void
     {
         $this->user = UserTestBuilder::buildWithDefaults();
@@ -40,6 +43,7 @@ final class CSVFieldUsageCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         \UserManager::setInstance($manager);
     }
 
+    #[Override]
     protected function tearDown(): void
     {
         \UserManager::clearInstance();
@@ -75,9 +79,7 @@ final class CSVFieldUsageCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testPerTrackerIdFieldIsExportedInCSV(): void
     {
-        $field = $this->createMock(\Tracker_FormElement_Field_PerTrackerArtifactId::class);
-        $field->method('isUsed')->willReturn(true);
-        $field->method('userCanRead')->willReturn(true);
+        $field = PerTrackerArtifactIdFieldBuilder::aPerTrackerArtifactIdField(1)->withReadPermission($this->user, true)->build();
         $this->assertTrue(CSVFieldUsageChecker::canFieldBeExportedToCSV($field));
     }
 }

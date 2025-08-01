@@ -73,7 +73,7 @@ final readonly class InvalidFieldChecker
             \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::class,
             \Tracker_FormElement_Field_PermissionsOnArtifact::class,
             \Tuleap\Tracker\FormElement\Field\ArtifactId\ArtifactIdField::class,
-            \Tracker_FormElement_Field_PerTrackerArtifactId::class,
+            \Tuleap\Tracker\FormElement\Field\PerTrackerArtifactId\PerTrackerArtifactIdField::class,
             \Tracker_FormElement_Field_CrossReferences::class,
             \Tracker_FormElement_Field_Burndown::class,
             \Tuleap\Tracker\FormElement\Field\Computed\ComputedField::class,
