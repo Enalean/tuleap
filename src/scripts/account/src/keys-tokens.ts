@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { datePicker } from "tlp";
+import { datePicker } from "@tuleap/tlp-date-picker";
 import "@tuleap/copy-to-clipboard";
 import { getAuthenticationResult, openTargetModalIdAfterAuthentication } from "@tuleap/webauthn";
 import { getAttributeOrThrow, selectOrThrow } from "@tuleap/dom";
