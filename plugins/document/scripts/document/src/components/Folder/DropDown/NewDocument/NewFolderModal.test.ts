@@ -32,8 +32,6 @@ vi.mock("tlp", () => {
 });
 
 describe("NewFolderModal", () => {
-    let factory;
-
     const load_projects_ugroups = vi.fn();
     const current_folder = {
         id: 42,
@@ -76,42 +74,37 @@ describe("NewFolderModal", () => {
         },
     };
 
-    beforeEach(() => {
-        factory = (item = {}): VueWrapper<NewFolderModal> => {
-            return shallowMount(NewFolderModal, {
-                data() {
-                    return {
-                        item,
-                    };
-                },
-                global: {
-                    ...getGlobalTestOptions({
-                        modules: {
-                            permissions: {
-                                state: {
-                                    project_ugroups: null,
-                                },
-                                namespaced: true,
-                                actions: {
-                                    loadProjectUserGroupsIfNeeded: load_projects_ugroups,
-                                },
+    function getWrapper(): VueWrapper<NewFolderModal> {
+        return shallowMount(NewFolderModal, {
+            global: {
+                ...getGlobalTestOptions({
+                    modules: {
+                        permissions: {
+                            state: {
+                                project_ugroups: null,
                             },
-                            configuration: {
-                                state: {
-                                    is_status_property_used: true,
-                                    has_loaded_properties: true,
-                                },
-                                namespaced: true,
+                            namespaced: true,
+                            actions: {
+                                loadProjectUserGroupsIfNeeded: load_projects_ugroups,
                             },
                         },
-                        state: {
-                            current_folder,
+                        configuration: {
+                            state: {
+                                is_status_property_used: true,
+                                has_loaded_properties: true,
+                            },
+                            namespaced: true,
                         },
-                    }),
-                },
-            });
-        };
+                    },
+                    state: {
+                        current_folder,
+                    },
+                }),
+            },
+        });
+    }
 
+    beforeEach(() => {
         vi.spyOn(tlp_modal, "createModal").mockReturnValue({
             addEventListener: () => {},
             show: () => {},
@@ -139,7 +132,8 @@ describe("NewFolderModal", () => {
             ],
         };
 
-        const wrapper = factory(item);
+        const wrapper = getWrapper();
+        wrapper.vm.item = item;
         expect(wrapper.vm.item.properties[0].value).toBe("");
         emitter.emit("update-custom-property", {
             property_short_name: "field_9",
@@ -149,7 +143,7 @@ describe("NewFolderModal", () => {
     });
 
     it("Does not load project properties, when they have already been loaded", async () => {
-        factory();
+        getWrapper();
 
         emitter.emit("show-new-document-modal", {
             detail: { parent: current_folder },
@@ -177,7 +171,7 @@ describe("NewFolderModal", () => {
             ],
         };
 
-        const wrapper = factory();
+        const wrapper = getWrapper();
 
         emitter.emit("show-new-folder-modal", {
             detail: { parent: current_folder },
@@ -187,14 +181,14 @@ describe("NewFolderModal", () => {
     });
 
     it("Updates status", () => {
-        const wrapper = factory();
+        const wrapper = getWrapper();
 
         emitter.emit("update-status-property", "draft");
         expect(wrapper.vm.item.status).toBe("draft");
     });
 
     it("Updates title", () => {
-        const wrapper = factory();
+        const wrapper = getWrapper();
 
         emitter.emit("update-title-property", "A folder");
         expect(wrapper.vm.item.title).toBe("A folder");
@@ -217,7 +211,8 @@ describe("NewFolderModal", () => {
             ],
         };
 
-        const wrapper = factory({ item });
+        const wrapper = getWrapper();
+        wrapper.vm.item = item;
 
         emitter.emit("update-description-property", "A description");
         expect(wrapper.vm.item.description).toBe("A description");
