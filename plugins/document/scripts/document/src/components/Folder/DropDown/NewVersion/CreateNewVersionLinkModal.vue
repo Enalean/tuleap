@@ -21,11 +21,15 @@
     <form
         class="tlp-modal"
         role="dialog"
-        v-bind:aria-labelled-by="aria_labelled_by"
+        aria-labelledby="document-new-item-version-modal"
         v-on:submit="createNewLinkVersion"
         data-test="document-new-item-version-modal"
+        ref="form"
     >
-        <modal-header v-bind:modal-title="modal_title" v-bind:aria-labelled-by="aria_labelled_by" />
+        <modal-header
+            v-bind:modal-title="modal_title"
+            aria-labelled-by="document-new-item-version-modal"
+        />
         <modal-feedback />
         <div class="tlp-modal-body">
             <item-update-properties
@@ -35,7 +39,7 @@
                 v-bind:is-open-after-dnd="false"
             >
                 <link-properties
-                    v-if="link_model && item.type === TYPE_LINK()"
+                    v-if="link_model && item.type === TYPE_LINK"
                     v-bind:value="item.link_properties.link_url"
                     key="link-props"
                 />
@@ -43,16 +47,16 @@
         </div>
         <modal-footer
             v-bind:is-loading="is_loading"
-            v-bind:submit-button-label="submit_button_label"
-            v-bind:aria-labelled-by="aria_labelled_by"
+            v-bind:submit-button-label="$gettext('Create new version')"
+            aria-labelled-by="document-new-item-version-modal"
             v-bind:icon-submit-button-class="'fa-solid fa-plus'"
             data-test="document-modal-submit-button-create-link-version"
         />
     </form>
 </template>
 
-<script lang="ts">
-import { mapState } from "vuex";
+<script setup lang="ts">
+import type { Modal } from "@tuleap/tlp-modal";
 import { createModal } from "@tuleap/tlp-modal";
 import { sprintf } from "sprintf-js";
 import ModalHeader from "../../ModalCommon/ModalHeader.vue";
@@ -62,120 +66,117 @@ import ItemUpdateProperties from "./PropertiesForUpdate/ItemUpdateProperties.vue
 import LinkProperties from "../PropertiesForCreateOrUpdate/LinkProperties.vue";
 import emitter from "../../../../helpers/emitter";
 import { TYPE_LINK } from "../../../../constants";
+import type { Link } from "../../../../type";
+import { computed, onBeforeUnmount, onMounted, ref } from "vue";
+import { useNamespacedState, useStore } from "vuex-composition-helpers";
+import type { ErrorState } from "../../../../store/error/module";
+import { useGettext } from "vue3-gettext";
 
-export default {
-    name: "CreateNewVersionLinkModal",
-    components: {
-        LinkProperties,
-        ItemUpdateProperties,
-        ModalFeedback,
-        ModalHeader,
-        ModalFooter,
-    },
-    props: {
-        item: Object,
-    },
-    data() {
-        return {
-            link_model: null,
-            version: {},
-            is_loading: false,
-            is_displayed: false,
-            modal: null,
-        };
-    },
-    computed: {
-        ...mapState("error", ["has_modal_error"]),
-        submit_button_label() {
-            return this.$gettext("Create new version");
-        },
-        modal_title() {
-            return sprintf(this.$gettext('New version for "%s"'), this.item.title);
-        },
-        aria_labelled_by() {
-            return "document-new-item-version-modal";
-        },
-    },
-    mounted() {
-        this.modal = createModal(this.$el);
-        this.registerEvents();
-        emitter.on("update-version-title", this.updateTitleValue);
-        emitter.on("update-changelog-property", this.updateChangelogValue);
-        emitter.on("update-lock", this.updateLock);
-        emitter.on("update-link-properties", this.updateLinkProperties);
-    },
-    beforeUnmount() {
-        emitter.off("update-version-title", this.updateTitleValue);
-        emitter.off("update-changelog-property", this.updateChangelogValue);
-        emitter.off("update-lock", this.updateLock);
-        emitter.off("update-link-properties", this.updateLinkProperties);
-    },
-    methods: {
-        TYPE_LINK() {
-            return TYPE_LINK;
-        },
-        setApprovalUpdateAction(value) {
-            this.approval_table_action = value;
-        },
-        registerEvents() {
-            this.modal.addEventListener("tlp-modal-hidden", this.reset);
+const { $gettext } = useGettext();
+const $store = useStore();
 
-            this.show();
-        },
-        show() {
-            this.version = {
-                title: "",
-                changelog: "",
-                is_file_locked: this.item.lock_info !== null,
-            };
+const props = defineProps<{
+    item: Link;
+}>();
 
-            this.link_model = this.item.link_properties;
+const link_model = ref<LinkProperties | null>(null);
+const version = ref({});
+const is_loading = ref<boolean>(false);
+const is_displayed = ref<boolean>(false);
+const approval_table_action = ref<string>();
+const form = ref<HTMLFormElement>();
+let modal: Modal | null = null;
 
-            this.is_displayed = true;
-            this.modal.show();
-        },
-        reset() {
-            this.$store.commit("error/resetModalError");
-            this.is_displayed = false;
-            this.is_loading = false;
-            this.link_model = null;
-        },
-        async createNewLinkVersion(event) {
-            event.preventDefault();
-            this.is_loading = true;
-            this.$store.commit("error/resetModalError");
+const { has_modal_error } = useNamespacedState<Pick<ErrorState, "has_modal_error">>("error", [
+    "has_modal_error",
+]);
 
-            await this.$store.dispatch("createNewLinkVersionFromModal", [
-                this.item,
-                this.link_model.link_url,
-                this.version.title,
-                this.version.changelog,
-                this.version.is_file_locked,
-                this.approval_table_action,
-            ]);
+const modal_title = computed(() => sprintf($gettext('New version for "%s"'), props.item.title));
 
-            this.is_loading = false;
-            if (this.has_modal_error === false) {
-                this.$store.dispatch("refreshLink", this.item);
-                this.link_model = null;
-                this.modal.hide();
-            }
-        },
-        updateTitleValue(title) {
-            this.version.title = title;
-        },
-        updateChangelogValue(changelog) {
-            this.version.changelog = changelog;
-        },
-        updateLock(is_locked) {
-            this.version.is_file_locked = is_locked;
-        },
-        updateLinkProperties(url) {
-            if (!this.item) {
-                return;
-            }
-            this.link_model.link_url = url;
-        },
-    },
-};
+onMounted(() => {
+    modal = createModal(form.value);
+    registerEvents();
+    emitter.on("update-version-title", updateTitleValue);
+    emitter.on("update-changelog-property", updateChangelogValue);
+    emitter.on("update-lock", updateLock);
+    emitter.on("update-link-properties", updateLinkProperties);
+});
+
+onBeforeUnmount(() => {
+    emitter.off("update-version-title", updateTitleValue);
+    emitter.off("update-changelog-property", updateChangelogValue);
+    emitter.off("update-lock", updateLock);
+    emitter.off("update-link-properties", updateLinkProperties);
+});
+
+function setApprovalUpdateAction(value: string): void {
+    approval_table_action.value = value;
+}
+
+function registerEvents(): void {
+    modal?.addEventListener("tlp-modal-hidden", reset);
+
+    show();
+}
+
+function show(): void {
+    version.value = {
+        title: "",
+        changelog: "",
+        is_file_locked: props.item.lock_info !== null,
+    };
+
+    link_model.value = props.item.link_properties;
+
+    is_displayed.value = true;
+    modal?.show();
+}
+
+function reset(): void {
+    $store.commit("error/resetModalError");
+    is_displayed.value = false;
+    is_loading.value = false;
+    link_model.value = null;
+}
+
+async function createNewLinkVersion(event: SubmitEvent): Promise<void> {
+    event.preventDefault();
+    is_loading.value = true;
+    $store.commit("error/resetModalError");
+
+    await $store.dispatch("createNewLinkVersionFromModal", [
+        props.item,
+        link_model.value.link_url,
+        version.value.title,
+        version.value.changelog,
+        version.value.is_file_locked,
+        approval_table_action.value,
+    ]);
+
+    is_loading.value = false;
+    if (!has_modal_error.value) {
+        await $store.dispatch("refreshLink", props.item);
+        link_model.value = null;
+        modal?.hide();
+    }
+}
+
+function updateTitleValue(title: string): void {
+    version.value.title = title;
+}
+
+function updateChangelogValue(changelog: string): void {
+    version.value.changelog = changelog;
+}
+
+function updateLock(is_locked: boolean): void {
+    version.value.is_file_locked = is_locked;
+}
+
+function updateLinkProperties(url: string): void {
+    if (!props.item) {
+        return;
+    }
+    link_model.value.link_url = url;
+}
 </script>
