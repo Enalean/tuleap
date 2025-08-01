@@ -23,6 +23,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\Computed\ComputedField;
 use Tuleap\Tracker\FormElement\Field\Float\FloatField;
 use Tuleap\Tracker\FormElement\Field\Integer\IntegerField;
+use Tuleap\Tracker\FormElement\Field\PerTrackerArtifactId\PerTrackerArtifactIdField;
 use Tuleap\Tracker\FormElement\Field\Priority\PriorityField;
 use Tuleap\Tracker\FormElement\Field\String\StringField;
 use Tuleap\Tracker\FormElement\Field\Text\TextField;
@@ -67,7 +68,7 @@ interface Tracker_FormElement_FieldVisitor // phpcs:ignore PSR1.Classes.ClassDec
 
     public function visitArtifactId(ArtifactIdField $field);
 
-    public function visitPerTrackerArtifactId(Tracker_FormElement_Field_PerTrackerArtifactId $field);
+    public function visitPerTrackerArtifactId(PerTrackerArtifactIdField $field);
 
     public function visitCrossReferences(Tracker_FormElement_Field_CrossReferences $field);
 

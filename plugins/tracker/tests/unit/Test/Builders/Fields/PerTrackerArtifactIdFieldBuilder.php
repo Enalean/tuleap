@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Test\Builders\Fields;
 
-use Tracker_FormElement_Field_PerTrackerArtifactId;
+use Tuleap\Tracker\FormElement\Field\PerTrackerArtifactId\PerTrackerArtifactIdField;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Tracker;
 
@@ -48,9 +48,9 @@ final class PerTrackerArtifactIdFieldBuilder
         return $this;
     }
 
-    public function build(): Tracker_FormElement_Field_PerTrackerArtifactId
+    public function build(): PerTrackerArtifactIdField
     {
-        $field = new Tracker_FormElement_Field_PerTrackerArtifactId(
+        $field = new PerTrackerArtifactIdField(
             $this->id,
             $this->tracker->getId(),
             15,
