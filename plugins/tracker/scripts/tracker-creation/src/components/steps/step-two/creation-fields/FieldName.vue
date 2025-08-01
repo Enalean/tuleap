@@ -49,28 +49,24 @@
         </p>
     </div>
 </template>
-<script lang="ts">
-import Vue from "vue";
-import { Getter, State } from "vuex-class";
-import { Component } from "vue-property-decorator";
-import type { TrackerToBeCreatedMandatoryData } from "../../../../store/type";
+<script setup lang="ts">
+import { useState, useStore, useGetters } from "vuex-composition-helpers";
+import type { State } from "../../../../store/type";
 
-@Component
-export default class FieldName extends Vue {
-    @State
-    readonly tracker_to_be_created!: TrackerToBeCreatedMandatoryData;
+const { tracker_to_be_created } = useState<Pick<State, "tracker_to_be_created">>([
+    "tracker_to_be_created",
+]);
+const { can_display_slugify_mode, is_name_already_used } = useGetters([
+    "can_display_slugify_mode",
+    "is_name_already_used",
+]);
 
-    setTrackerName(event: Event): void {
-        if (!(event.target instanceof HTMLInputElement)) {
-            return;
-        }
-        this.$store.commit("setTrackerName", event.target.value);
+const $store = useStore();
+
+function setTrackerName(event: Event): void {
+    if (!(event.target instanceof HTMLInputElement)) {
+        return;
     }
-
-    @Getter
-    readonly can_display_slugify_mode!: boolean;
-
-    @Getter
-    readonly is_name_already_used!: boolean;
+    $store.commit("setTrackerName", event.target.value);
 }
 </script>
