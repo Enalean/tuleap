@@ -31,7 +31,7 @@ describe("FieldShortname", () => {
         can_display_slugify_mode: boolean,
         is_shortname_valid = true,
         is_shortname_already_used = true,
-    ): Promise<Wrapper<FieldShortname>> {
+    ): Promise<Wrapper<Vue>> {
         return shallowMount(FieldShortname, {
             mocks: {
                 $store: createStoreMock({
