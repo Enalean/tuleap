@@ -34,7 +34,7 @@ final class IComputeTimeframesStub implements IComputeTimeframes
         private readonly DatePeriodWithOpenDays $date_period,
         private readonly ?\Tracker_FormElement_Field_Date $start,
         private readonly ?\Tracker_FormElement_Field_Date $end,
-        private readonly ?\Tracker_FormElement_Field_Numeric $duration,
+        private readonly ?\Tuleap\Tracker\FormElement\Field\NumericField $duration,
     ) {
     }
 
@@ -49,7 +49,7 @@ final class IComputeTimeframesStub implements IComputeTimeframes
     public static function fromStartAndDuration(
         DatePeriodWithOpenDays $date_period,
         \Tracker_FormElement_Field_Date $start,
-        \Tracker_FormElement_Field_Numeric $duration,
+        \Tuleap\Tracker\FormElement\Field\NumericField $duration,
     ): self {
         return new self($date_period, $start, null, $duration);
     }
@@ -79,7 +79,7 @@ final class IComputeTimeframesStub implements IComputeTimeframes
     }
 
     #[\Override]
-    public function getDurationField(): ?\Tracker_FormElement_Field_Numeric
+    public function getDurationField(): ?\Tuleap\Tracker\FormElement\Field\NumericField
     {
         return $this->duration;
     }

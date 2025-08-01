@@ -740,7 +740,7 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $start_date_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
         $start_date_field->method('userCanRead')->willReturn(true);
 
-        $duration_field = $this->createMock(\Tracker_FormElement_Field_Numeric::class);
+        $duration_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\NumericField::class);
         $duration_field->method('userCanRead')->willReturn(false);
 
         $this->semantic_timeframe_builder
@@ -819,7 +819,7 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $start_date_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
         $start_date_field->method('userCanRead')->willReturn(true);
 
-        $duration_field = $this->createMock(\Tracker_FormElement_Field_Numeric::class);
+        $duration_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\NumericField::class);
         $duration_field->method('userCanRead')->willReturn(true);
 
         $this->semantic_timeframe_builder

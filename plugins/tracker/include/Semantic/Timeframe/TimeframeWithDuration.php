@@ -40,13 +40,13 @@ class TimeframeWithDuration implements IComputeTimeframes
      */
     private $start_date_field;
     /**
-     * @var \Tracker_FormElement_Field_Numeric
+     * @var \Tuleap\Tracker\FormElement\Field\NumericField
      */
     private $duration_field;
 
     public function __construct(
         \Tracker_FormElement_Field_Date $start_date_field,
-        \Tracker_FormElement_Field_Numeric $duration_field,
+        \Tuleap\Tracker\FormElement\Field\NumericField $duration_field,
     ) {
         $this->start_date_field = $start_date_field;
         $this->duration_field   = $duration_field;
@@ -122,7 +122,7 @@ class TimeframeWithDuration implements IComputeTimeframes
         return $this->start_date_field;
     }
 
-    public function getDurationField(): \Tracker_FormElement_Field_Numeric
+    public function getDurationField(): \Tuleap\Tracker\FormElement\Field\NumericField
     {
         return $this->duration_field;
     }

@@ -92,7 +92,7 @@ class SemanticProgressFromXMLBuilder implements IBuildSemanticFromXML
             ! isset($xml->artifact_link_type);
     }
 
-    private function getFieldTargetedInXMLFieldAttributes(array $xml_mapping, ?SimpleXMLElement $xml_field_attributes): ?\Tracker_FormElement_Field_Numeric
+    private function getFieldTargetedInXMLFieldAttributes(array $xml_mapping, ?SimpleXMLElement $xml_field_attributes): ?\Tuleap\Tracker\FormElement\Field\NumericField
     {
         if ($xml_field_attributes === null || ! isset($xml_field_attributes['REF'])) {
             return null;

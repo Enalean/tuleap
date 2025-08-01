@@ -25,7 +25,6 @@ namespace Tuleap\Taskboard\REST\v1\Card;
 use Luracast\Restler\RestException;
 use PFUser;
 use Tracker_Exception;
-use Tracker_FormElement_Field_Numeric;
 use Tracker_FormElement_InvalidFieldException;
 use Tracker_FormElement_InvalidFieldValueException;
 use Tracker_FormElementFactory;
@@ -57,6 +56,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
+use Tuleap\Tracker\FormElement\Field\NumericField;
 use Tuleap\Tracker\REST\Artifact\ArtifactRestUpdateConditionsChecker;
 use Tuleap\Tracker\REST\Artifact\ArtifactUpdater;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkChangesetValueBuilder;
@@ -195,13 +195,13 @@ class CardPatcher
     private function getRemainingEffortField(
         Artifact $artifact,
         PFUser $user,
-    ): Tracker_FormElement_Field_Numeric {
+    ): NumericField {
         $remaining_effort_field = $this->form_element_factory->getNumericFieldByNameForUser(
             $artifact->getTracker(),
             $user,
             \Tuleap\Tracker\Tracker::REMAINING_EFFORT_FIELD_NAME
         );
-        if (! $remaining_effort_field instanceof Tracker_FormElement_Field_Numeric) {
+        if (! $remaining_effort_field instanceof NumericField) {
             throw new I18NRestException(
                 400,
                 dgettext('tuleap-taskboard', 'The artifact does not have a remaining effort numeric field')
@@ -219,7 +219,7 @@ class CardPatcher
      */
     private function getUpdateValues(
         CardPatchRepresentation $payload,
-        Tracker_FormElement_Field_Numeric $remaining_effort_field,
+        NumericField $remaining_effort_field,
     ): array {
         $representation           = new ArtifactValuesRepresentation();
         $representation->field_id = (int) $remaining_effort_field->getId();

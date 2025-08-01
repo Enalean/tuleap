@@ -588,7 +588,7 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $start_date_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
         $start_date_field->method('userCanRead')->willReturn(true);
 
-        $duration_field = $this->createMock(\Tracker_FormElement_Field_Numeric::class);
+        $duration_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\NumericField::class);
         $duration_field->method('userCanRead')->willReturn(false);
 
         $this->semantic_timeframe_builder
@@ -646,10 +646,10 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withReadPermission($this->user, true)
             ->build();
 
-        $total_effort_field = $this->createMock(\Tracker_FormElement_Field_Numeric::class);
+        $total_effort_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\NumericField::class);
         $total_effort_field->method('userCanRead')->willReturn(true);
 
-        $remaining_effort_field = $this->createMock(\Tracker_FormElement_Field_Numeric::class);
+        $remaining_effort_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\NumericField::class);
         $remaining_effort_field->method('userCanRead')->willReturn(true);
 
         $semantic_timeframe = new SemanticTimeframe($tracker, new TimeframeWithEndDate($start_date_field, $end_date_field));
@@ -790,9 +790,9 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withReadPermission($this->user, true)
             ->build();
 
-        $total_effort_field = $this->createMock(\Tracker_FormElement_Field_Numeric::class);
+        $total_effort_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\NumericField::class);
         $total_effort_field->method('userCanRead')->willReturn(true);
-        $remaining_effort_field = $this->createMock(\Tracker_FormElement_Field_Numeric::class);
+        $remaining_effort_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\NumericField::class);
         $remaining_effort_field->method('userCanRead')->willReturn(true);
 
         $semantic_timeframe = new SemanticTimeframe($tracker, new TimeframeWithEndDate($start_date_field, $end_date_field));
@@ -939,9 +939,9 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $end_date_field     = DateFieldBuilder::aDateField(2)
             ->withReadPermission($this->user, true)
             ->build();
-        $total_effort_field = $this->createMock(\Tracker_FormElement_Field_Numeric::class);
+        $total_effort_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\NumericField::class);
         $total_effort_field->method('userCanRead')->willReturn(true);
-        $remaining_effort_field = $this->createMock(\Tracker_FormElement_Field_Numeric::class);
+        $remaining_effort_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\NumericField::class);
         $remaining_effort_field->method('userCanRead')->willReturn(true);
 
         $semantic_timeframe = new SemanticTimeframe($tracker, new TimeframeWithEndDate($start_date_field, $end_date_field));
@@ -1183,7 +1183,7 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             );
     }
 
-    private function mockEffort(MockObject&\Tracker_FormElement_Field_Numeric $effort_field, array $values): void
+    private function mockEffort(MockObject&\Tuleap\Tracker\FormElement\Field\NumericField $effort_field, array $values): void
     {
         $effort_field
             ->method('getLastChangesetValue')
@@ -1207,7 +1207,7 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    private function getChangesetValueFloat(Artifact $artifact, \Tracker_FormElement_Field_Numeric $field, array $values): ?\Tracker_Artifact_ChangesetValue_Float
+    private function getChangesetValueFloat(Artifact $artifact, \Tuleap\Tracker\FormElement\Field\NumericField $field, array $values): ?\Tracker_Artifact_ChangesetValue_Float
     {
         if (! isset($values[$artifact->getId()])) {
             return null;

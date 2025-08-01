@@ -33,7 +33,7 @@ final class DurationFieldReferenceProxy implements DurationFieldReference
     {
     }
 
-    public static function fromTrackerField(\Tracker_FormElement_Field_Numeric $duration_field): self
+    public static function fromTrackerField(\Tuleap\Tracker\FormElement\Field\NumericField $duration_field): self
     {
         return new self($duration_field->getId(), $duration_field->getLabel());
     }

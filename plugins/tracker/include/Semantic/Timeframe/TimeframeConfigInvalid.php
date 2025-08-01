@@ -73,7 +73,7 @@ class TimeframeConfigInvalid implements IComputeTimeframes
         return null;
     }
 
-    public function getDurationField(): ?\Tracker_FormElement_Field_Numeric
+    public function getDurationField(): ?\Tuleap\Tracker\FormElement\Field\NumericField
     {
         return null;
     }

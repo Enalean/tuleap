@@ -23,19 +23,19 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Semantic\Progress;
 
-use Tracker_FormElement_Field_Numeric;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\NumericField;
 
 class MethodBasedOnEffort implements IComputeProgression
 {
     private const METHOD_NAME = 'effort-based';
 
     /**
-     * @var Tracker_FormElement_Field_Numeric
+     * @var NumericField
      */
     private $total_effort_field;
     /**
-     * @var Tracker_FormElement_Field_Numeric
+     * @var NumericField
      */
     private $remaining_effort_field;
     /**
@@ -45,8 +45,8 @@ class MethodBasedOnEffort implements IComputeProgression
 
     public function __construct(
         SemanticProgressDao $dao,
-        Tracker_FormElement_Field_Numeric $total_effort_field,
-        Tracker_FormElement_Field_Numeric $remaining_effort_field,
+        NumericField $total_effort_field,
+        NumericField $remaining_effort_field,
     ) {
         $this->dao                    = $dao;
         $this->total_effort_field     = $total_effort_field;
@@ -138,7 +138,7 @@ class MethodBasedOnEffort implements IComputeProgression
         return new ProgressionResult(1 - ($remaining_effort / $total_effort), '');
     }
 
-    private function getNumericFieldValue(\Tracker_FormElement_Field_Numeric $numeric_field, Artifact $artifact, \PFUser $user): ?float
+    private function getNumericFieldValue(\Tuleap\Tracker\FormElement\Field\NumericField $numeric_field, Artifact $artifact, \PFUser $user): ?float
     {
         if ($numeric_field instanceof \Tuleap\Tracker\FormElement\Field\Computed\ComputedField) {
             return $numeric_field->getComputedValue($user, $artifact) ?? 0.0;

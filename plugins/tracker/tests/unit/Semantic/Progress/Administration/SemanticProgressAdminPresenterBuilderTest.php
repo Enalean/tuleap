@@ -206,7 +206,7 @@ final class SemanticProgressAdminPresenterBuilderTest extends \Tuleap\Test\PHPUn
         $this->assertTrue($presenter->has_a_link_field);
     }
 
-    private function getNumericField(int $id, string $label): \Tracker_FormElement_Field_Numeric
+    private function getNumericField(int $id, string $label): \Tuleap\Tracker\FormElement\Field\NumericField
     {
         return IntegerFieldBuilder::anIntField($id)->withLabel($label)->build();
     }

@@ -31,7 +31,7 @@ use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\FloatFieldBuilder;
 
 #[DisableReturnValueGenerationForTestDoubles]
-final class Tracker_FormElement_Field_NumericTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+final class NumericFieldTest extends TestCase
 {
     public function testItDelegatesRetrievalOfTheOldValueToTheDaoWhenNoTimestampGiven(): void
     {

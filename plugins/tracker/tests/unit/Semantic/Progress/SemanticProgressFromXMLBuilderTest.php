@@ -53,8 +53,8 @@ final class SemanticProgressFromXMLBuilderTest extends \Tuleap\Test\PHPUnit\Test
             $xml,
             $all_semantics_xml,
             [
-                'F201' => $this->createMock(\Tracker_FormElement_Field_Numeric::class),
-                'F202' => $this->createMock(\Tracker_FormElement_Field_Numeric::class),
+                'F201' => $this->createMock(\Tuleap\Tracker\FormElement\Field\NumericField::class),
+                'F202' => $this->createMock(\Tuleap\Tracker\FormElement\Field\NumericField::class),
             ],
             TrackerTestBuilder::aTracker()->build(),
             []
@@ -86,8 +86,8 @@ final class SemanticProgressFromXMLBuilderTest extends \Tuleap\Test\PHPUnit\Test
             $xml,
             $all_semantics_xml,
             [
-                'F201' => $this->createMock(\Tracker_FormElement_Field_Numeric::class),
-                'F202' => $this->createMock(\Tracker_FormElement_Field_Numeric::class),
+                'F201' => $this->createMock(\Tuleap\Tracker\FormElement\Field\NumericField::class),
+                'F202' => $this->createMock(\Tuleap\Tracker\FormElement\Field\NumericField::class),
             ],
             TrackerTestBuilder::aTracker()->build(),
             []
@@ -113,8 +113,8 @@ final class SemanticProgressFromXMLBuilderTest extends \Tuleap\Test\PHPUnit\Test
             $xml,
             $all_semantics_xml,
             [
-                'F201' => $this->createMock(\Tracker_FormElement_Field_Numeric::class),
-                'F202' => $this->createMock(\Tracker_FormElement_Field_Numeric::class),
+                'F201' => $this->createMock(\Tuleap\Tracker\FormElement\Field\NumericField::class),
+                'F202' => $this->createMock(\Tuleap\Tracker\FormElement\Field\NumericField::class),
             ],
             TrackerTestBuilder::aTracker()->build(),
             []
@@ -140,7 +140,7 @@ final class SemanticProgressFromXMLBuilderTest extends \Tuleap\Test\PHPUnit\Test
             $xml,
             $all_semantics_xml,
             [
-                'F202' => $this->createMock(\Tracker_FormElement_Field_Numeric::class),
+                'F202' => $this->createMock(\Tuleap\Tracker\FormElement\Field\NumericField::class),
             ],
             TrackerTestBuilder::aTracker()->build(),
             []
@@ -166,7 +166,7 @@ final class SemanticProgressFromXMLBuilderTest extends \Tuleap\Test\PHPUnit\Test
             $xml,
             $all_semantics_xml,
             [
-                'F201' => $this->createMock(\Tracker_FormElement_Field_Numeric::class),
+                'F201' => $this->createMock(\Tuleap\Tracker\FormElement\Field\NumericField::class),
             ],
             TrackerTestBuilder::aTracker()->build(),
             []

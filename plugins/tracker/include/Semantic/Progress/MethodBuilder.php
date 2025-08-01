@@ -59,13 +59,13 @@ class MethodBuilder
             ['int', 'float', 'computed']
         );
 
-        if (! $total_effort_field instanceof \Tracker_FormElement_Field_Numeric) {
+        if (! $total_effort_field instanceof \Tuleap\Tracker\FormElement\Field\NumericField) {
             return new InvalidMethod(
                 dgettext('tuleap-tracker', 'Progress semantic is not properly configured: unable to find the total effort field.')
             );
         }
 
-        if (! $remaining_effort_field instanceof \Tracker_FormElement_Field_Numeric) {
+        if (! $remaining_effort_field instanceof \Tuleap\Tracker\FormElement\Field\NumericField) {
             return new InvalidMethod(
                 dgettext('tuleap-tracker', 'Progress semantic is not properly configured: unable to find the remaining effort field.')
             );

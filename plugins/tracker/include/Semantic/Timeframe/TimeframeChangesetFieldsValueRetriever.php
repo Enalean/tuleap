@@ -54,7 +54,7 @@ class TimeframeChangesetFieldsValueRetriever
      * @throws TimeframeFieldNotFoundException
      * @throws TimeframeFieldNoValueException
      */
-    public static function getDurationFieldValue(\Tracker_FormElement_Field_Numeric $duration_field, \PFUser $user, \Tracker_Artifact_Changeset $changeset): ?float
+    public static function getDurationFieldValue(\Tuleap\Tracker\FormElement\Field\NumericField $duration_field, \PFUser $user, \Tracker_Artifact_Changeset $changeset): ?float
     {
         if (! $user instanceof \Tracker_UserWithReadAllPermission && ! $duration_field->userCanRead($user)) {
             throw new TimeframeFieldNotFoundException();
