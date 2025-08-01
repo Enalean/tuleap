@@ -316,6 +316,11 @@ img {
     font-weight: bold;
 }
 
+tlp-relative-date {
+    display: block;
+    margin: var(--medium-spacing) 0 0 0;
+}
+
 .document-item-list {
     display: flex;
     flex-wrap: wrap;

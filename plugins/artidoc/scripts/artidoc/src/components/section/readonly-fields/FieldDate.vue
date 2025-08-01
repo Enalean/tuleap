@@ -22,15 +22,18 @@
     <tlp-relative-date
         v-if="field.value !== null"
         v-bind:date="field.value"
-        v-bind:absolute-date="formatter.format(field.value)"
+        v-bind:absolute-date="formatted_date"
         v-bind:placement="relative_date_placement"
         v-bind:preference="relative_date_preference"
         v-bind:locale="user_preferences.locale"
-    />
+    >
+        {{ formatted_date }}
+    </tlp-relative-date>
     <p v-else class="tlp-property-empty" data-test="empty-state">{{ $gettext("Empty") }}</p>
 </template>
 
 <script setup lang="ts">
+import { computed } from "vue";
 import { useGettext } from "vue3-gettext";
 import type { ReadonlyFieldDate } from "@/sections/readonly-fields/ReadonlyFields";
 import { strictInject } from "@tuleap/vue-strict-inject";
@@ -58,4 +61,5 @@ const relative_date_placement = relativeDatePlacement(
     user_preferences.relative_date_display,
     "right",
 );
+const formatted_date = computed((): string => formatter.format(props.field.value));
 </script>
