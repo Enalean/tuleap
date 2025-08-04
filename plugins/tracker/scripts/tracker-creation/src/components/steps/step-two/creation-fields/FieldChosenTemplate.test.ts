@@ -42,7 +42,7 @@ describe("FieldChosenTemplate", () => {
         project_of_selected_tracker_template: ProjectTemplate | null = null,
         is_created_from_default_template = false,
         is_created_from_jira = false,
-    ): Promise<Wrapper<FieldChosenTemplate>> {
+    ): Promise<Wrapper<Vue>> {
         return shallowMount(FieldChosenTemplate, {
             mocks: {
                 $store: createStoreMock({
