@@ -72,42 +72,34 @@
         </p>
     </div>
 </template>
-<script lang="ts">
-import Vue from "vue";
-import { Getter, State } from "vuex-class";
-import { Component } from "vue-property-decorator";
-import type { TrackerToBeCreatedMandatoryData } from "../../../../store/type";
-import FieldShortnameSlugified from "./FieldShortnameSlugified.vue";
+<script setup lang="ts">
+import { computed } from "vue";
+import { useState, useStore, useGetters } from "vuex-composition-helpers";
+import type { State } from "../../../../store/type";
 import { TRACKER_SHORTNAME_FORMAT } from "../../../../constants";
+import FieldShortnameSlugified from "./FieldShortnameSlugified.vue";
 
-@Component({
-    components: {
-        FieldShortnameSlugified,
-    },
-})
-export default class FieldShortname extends Vue {
-    @State
-    readonly tracker_to_be_created!: TrackerToBeCreatedMandatoryData;
+const { tracker_to_be_created } = useState<Pick<State, "tracker_to_be_created">>([
+    "tracker_to_be_created",
+]);
 
-    @Getter
-    readonly can_display_slugify_mode!: boolean;
+const { can_display_slugify_mode, is_shortname_valid, is_shortname_already_used } = useGetters([
+    "can_display_slugify_mode",
+    "is_shortname_valid",
+    "is_shortname_already_used",
+]);
 
-    setTrackerShortName(event: Event): void {
-        if (!(event.target instanceof HTMLInputElement)) {
-            return;
-        }
-        this.$store.commit("setTrackerShortName", event.target.value);
+const $store = useStore();
+
+const validation_pattern = computed((): string => {
+    let string_format = TRACKER_SHORTNAME_FORMAT.toString();
+    return string_format.substring(1, string_format.length - 1);
+});
+
+function setTrackerShortName(event: Event): void {
+    if (!(event.target instanceof HTMLInputElement)) {
+        return;
     }
-
-    @Getter
-    readonly is_shortname_valid!: boolean;
-
-    @Getter
-    readonly is_shortname_already_used!: boolean;
-
-    get validation_pattern(): string {
-        let string_format = TRACKER_SHORTNAME_FORMAT.toString();
-        return string_format.substring(1, string_format.length - 1);
-    }
+    $store.commit("setTrackerShortName", event.target.value);
 }
 </script>
