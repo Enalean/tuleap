@@ -2942,13 +2942,10 @@ msgstr ""
 msgid "Request body is not well formed"
 msgstr ""
 
-#, php-format
 msgid ""
-"Requested page currently loading. If it does not, try <a href=\"%1$s\">%1$s</"
-"a>."
+"Requested page currently loading. If it does not, try <a href=\"%s\">%s</a>"
 msgstr ""
-"Carregando Página solicitada. Se não funcionar, tente <a href=\"%1$s\">%1$s</"
-"a>."
+"Carregando Página solicitada. Se não funcionar, tente <a href=\"%s\">%s</a>."
 
 msgid "Resend invitation"
 msgstr "Reenviar convite"
