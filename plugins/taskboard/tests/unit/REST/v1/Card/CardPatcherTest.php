@@ -25,14 +25,14 @@ namespace Tuleap\Taskboard\REST\v1\Card;
 use Luracast\Restler\RestException;
 use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
-use Tuleap\Tracker\FormElement\Field\Computed\ComputedField;
-use Tracker_FormElement_Field_Numeric;
 use Tracker_FormElementFactory;
 use Tracker_NoChangeException;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\Computed\ComputedField;
 use Tuleap\Tracker\FormElement\Field\Float\FloatField;
 use Tuleap\Tracker\FormElement\Field\Integer\IntegerField;
+use Tuleap\Tracker\FormElement\Field\NumericField;
 use Tuleap\Tracker\REST\Artifact\ArtifactUpdater;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
@@ -148,7 +148,7 @@ final class CardPatcherTest extends \Tuleap\Test\PHPUnit\TestCase
     }
 
     private function assertUpdateIsCalledWithExpectedValue(
-        MockObject&Tracker_FormElement_Field_Numeric $field,
+        MockObject&NumericField $field,
         ArtifactValuesRepresentation $expected_value,
     ): void {
         $field->method('userCanUpdate')

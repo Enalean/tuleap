@@ -25,13 +25,13 @@ use Codendi_HTMLPurifier;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue;
 use Tracker_Artifact_ChangesetValue_Integer;
-use Tracker_FormElement_Field_Numeric;
 use Tracker_FormElement_FieldVisitor;
 use Tracker_Report;
 use Tracker_Report_Criteria;
 use Tracker_Report_Criteria_Int_ValueDao;
 use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\NumericField;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\IntegerFieldSpecificPropertiesDAO;
 use Tuleap\Tracker\Report\Criteria\CriteriaAlphaNumValueDAO;
 use Tuleap\Tracker\Report\Criteria\DeleteReportCriteriaValue;
@@ -39,7 +39,7 @@ use Tuleap\Tracker\Report\Query\ParametrizedFrom;
 use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
 
-class IntegerField extends Tracker_FormElement_Field_Numeric
+class IntegerField extends NumericField
 {
     #[\Override]
     public function getCriteriaFromWhere(Tracker_Report_Criteria $criteria): Option

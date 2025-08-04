@@ -27,10 +27,10 @@ use PFUser;
 use SimpleXMLElement;
 use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_Date;
-use Tracker_FormElement_Field_Numeric;
 use TrackerManager;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptViteAsset;
+use Tuleap\Tracker\FormElement\Field\NumericField;
 use Tuleap\Tracker\Notifications\Settings\CalendarEventConfigDao;
 use Tuleap\Tracker\Semantic\Timeframe\Administration\SemanticTimeframeAdministrationPresenterBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\Administration\SemanticTimeframeCurrentConfigurationPresenterBuilder;
@@ -169,7 +169,7 @@ class SemanticTimeframe extends TrackerSemantic
         return $this->timeframe->getStartDateField();
     }
 
-    public function getDurationField(): ?Tracker_FormElement_Field_Numeric
+    public function getDurationField(): ?NumericField
     {
         return $this->timeframe->getDurationField();
     }

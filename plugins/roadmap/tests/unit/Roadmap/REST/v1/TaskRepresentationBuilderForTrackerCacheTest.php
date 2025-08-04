@@ -151,7 +151,7 @@ final class TaskRepresentationBuilderForTrackerCacheTest extends \Tuleap\Test\PH
 
         $start_date = $this->createMock(\Tracker_FormElement_Field_Date::class);
         $start_date->method('userCanRead')->willReturn(true);
-        $duration = $this->createMock(\Tracker_FormElement_Field_Numeric::class);
+        $duration = $this->createMock(\Tuleap\Tracker\FormElement\Field\NumericField::class);
         $duration->method('userCanRead')->willReturn(false);
 
         $this->semantic_timeframe_builder->method('getSemantic')->willReturn(
@@ -176,7 +176,7 @@ final class TaskRepresentationBuilderForTrackerCacheTest extends \Tuleap\Test\PH
 
         $start_date = $this->createMock(\Tracker_FormElement_Field_Date::class);
         $start_date->method('userCanRead')->willReturn(true);
-        $duration = $this->createMock(\Tracker_FormElement_Field_Numeric::class);
+        $duration = $this->createMock(\Tuleap\Tracker\FormElement\Field\NumericField::class);
         $duration->method('userCanRead')->willReturn(true);
 
         $this->semantic_timeframe_builder->method('getSemantic')->willReturn(
@@ -207,7 +207,7 @@ final class TaskRepresentationBuilderForTrackerCacheTest extends \Tuleap\Test\PH
 
         $start_date = $this->createMock(\Tracker_FormElement_Field_Date::class);
         $start_date->method('userCanRead')->willReturn(true);
-        $duration = $this->createMock(\Tracker_FormElement_Field_Numeric::class);
+        $duration = $this->createMock(\Tuleap\Tracker\FormElement\Field\NumericField::class);
         $duration->method('userCanRead')->willReturn(true);
 
         $this->semantic_timeframe_builder

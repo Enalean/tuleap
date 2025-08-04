@@ -24,12 +24,12 @@ namespace Tuleap\Artidoc\Document\Field\Numeric;
 
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use Tracker_Artifact_ChangesetValue_Numeric;
-use Tracker_FormElement_Field_Numeric;
 use Tuleap\Artidoc\Document\Field\ConfiguredField;
 use Tuleap\Artidoc\Domain\Document\Section\Field\DisplayType;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\NumericFieldWithValue;
 use Tuleap\Option\Option;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\FormElement\Field\NumericField;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueComputedTestBuilder;
@@ -47,7 +47,7 @@ use Tuleap\Tracker\Test\Stub\Artifact\Dao\SearchArtifactGlobalRankStub;
 final class NumericFieldWithValueBuilderTest extends TestCase
 {
     private function buildNumericFieldWithValue(
-        Tracker_FormElement_Field_Numeric $field,
+        NumericField $field,
         ?Tracker_Artifact_ChangesetValue_Numeric $value,
     ): NumericFieldWithValue {
         $builder = new NumericFieldWithValueBuilder(SearchArtifactGlobalRankStub::build()->withArtifactRank(745, 1003));

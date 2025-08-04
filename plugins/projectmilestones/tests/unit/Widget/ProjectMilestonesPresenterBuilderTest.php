@@ -395,7 +395,7 @@ final class ProjectMilestonesPresenterBuilderTest extends \Tuleap\Test\PHPUnit\T
 
         $this->agileDashboard_milestone_backlog_item_collection->expects($this->once())->method('count')->willReturn(0);
 
-        $duration = $this->createMock(\Tracker_FormElement_Field_Numeric::class);
+        $duration = $this->createMock(\Tuleap\Tracker\FormElement\Field\NumericField::class);
         $duration->method('getLabel')->willReturn('duration');
         $this->semantic_timeframe->method('getDurationField')->willReturn($duration);
         $start = $this->createMock(\Tracker_FormElement_Field_Date::class);
@@ -712,7 +712,7 @@ final class ProjectMilestonesPresenterBuilderTest extends \Tuleap\Test\PHPUnit\T
 
     private function mockTimeframe(SemanticTimeframe&\PHPUnit\Framework\MockObject\MockObject $semantic_timeframe): void
     {
-        $duration = $this->createMock(\Tracker_FormElement_Field_Numeric::class);
+        $duration = $this->createMock(\Tuleap\Tracker\FormElement\Field\NumericField::class);
         $duration->method('getLabel')->willReturn('duration');
 
         $start = $this->createMock(\Tracker_FormElement_Field_Date::class);

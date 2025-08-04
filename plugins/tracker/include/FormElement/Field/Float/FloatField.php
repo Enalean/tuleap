@@ -26,7 +26,6 @@ use Override;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue;
 use Tracker_Artifact_ChangesetValue_Float;
-use Tracker_FormElement_Field_Numeric;
 use Tracker_FormElement_FieldVisitor;
 use Tracker_Report;
 use Tracker_Report_Criteria;
@@ -35,6 +34,7 @@ use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\FloatingPointNumber\ChangesChecker;
 use Tuleap\Tracker\FormElement\Field\FloatingPointNumber\FloatValueDao;
+use Tuleap\Tracker\FormElement\Field\NumericField;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\DeleteSpecificProperties;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\DuplicateSpecificProperties;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\FloatFieldSpecificPropertiesDAO;
@@ -46,7 +46,7 @@ use Tuleap\Tracker\Report\Query\ParametrizedFrom;
 use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
 
-class FloatField extends Tracker_FormElement_Field_Numeric
+class FloatField extends NumericField
 {
     public const int FLOAT_DECIMALS = 4;
 
@@ -123,7 +123,7 @@ class FloatField extends Tracker_FormElement_Field_Numeric
         return true;
     }
 
-    protected $pattern = '[+\-]?\d+(?:\.\d+)?(?:[eE][+\-]?\d+)?';
+    protected string $pattern = '[+\-]?\d+(?:\.\d+)?(?:[eE][+\-]?\d+)?';
 
     #[Override]
     protected function cast($value)

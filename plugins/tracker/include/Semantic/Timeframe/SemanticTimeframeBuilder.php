@@ -23,9 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Semantic\Timeframe;
 
 use Tracker_FormElement_Field_Date;
-use Tracker_FormElement_Field_Numeric;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\LinksRetriever;
+use Tuleap\Tracker\FormElement\Field\NumericField;
 use Tuleap\Tracker\Tracker;
 
 class SemanticTimeframeBuilder implements BuildSemanticTimeframe
@@ -104,7 +104,7 @@ class SemanticTimeframeBuilder implements BuildSemanticTimeframe
                 (int) $row['duration_field_id'],
                 ['int', 'float', 'computed']
             );
-            assert($duration_field instanceof Tracker_FormElement_Field_Numeric);
+            assert($duration_field instanceof NumericField);
 
             $timeframe                          = new SemanticTimeframe($tracker, new TimeframeWithDuration($start_date_field, $duration_field));
             $this->instances[$tracker->getId()] = $timeframe;

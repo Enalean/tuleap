@@ -34,7 +34,7 @@ class SemanticTimeframeCurrentConfigurationPresenterBuilderTest extends \Tuleap\
      */
     private $start_date_field;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\Tracker_FormElement_Field_Numeric
+     * @var \PHPUnit\Framework\MockObject\MockObject|\Tuleap\Tracker\FormElement\Field\NumericField
      */
     private $duration_field;
     /**
@@ -56,7 +56,7 @@ class SemanticTimeframeCurrentConfigurationPresenterBuilderTest extends \Tuleap\
     public function setUp(): void
     {
         $this->start_date_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
-        $this->duration_field   = $this->createMock(\Tracker_FormElement_Field_Numeric::class);
+        $this->duration_field   = $this->createMock(\Tuleap\Tracker\FormElement\Field\NumericField::class);
         $this->current_tracker  = $this->createMock(\Tuleap\Tracker\Tracker::class);
         $this->dao              = $this->createMock(SemanticTimeframeDao::class);
         $this->tracker_factory  = $this->createMock(\TrackerFactory::class);

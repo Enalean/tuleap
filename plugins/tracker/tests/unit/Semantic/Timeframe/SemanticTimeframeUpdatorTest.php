@@ -345,7 +345,7 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $start_date_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
         $end_date_field   = $this->createMock(\Tracker_FormElement_Field_Date::class);
-        $duration_field   = $this->createMock(\Tracker_FormElement_Field_Numeric::class);
+        $duration_field   = $this->createMock(\Tuleap\Tracker\FormElement\Field\NumericField::class);
 
         $start_date_field->method('getTrackerId')->willReturn($this->tracker_id);
         $end_date_field->method('getTrackerId')->willReturn($this->tracker_id);

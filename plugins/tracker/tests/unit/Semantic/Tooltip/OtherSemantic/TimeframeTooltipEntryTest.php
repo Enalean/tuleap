@@ -186,7 +186,7 @@ final class TimeframeTooltipEntryTest extends TestCase
     {
         $start = $this->createMock(\Tracker_FormElement_Field_Date::class);
         $start->method('userCanRead')->willReturn(true);
-        $duration = $this->createMock(\Tracker_FormElement_Field_Numeric::class);
+        $duration = $this->createMock(\Tuleap\Tracker\FormElement\Field\NumericField::class);
         $duration->method('userCanRead')->willReturn(false);
 
         $semantic_timeframe_builder = $this->createMock(SemanticTimeframeBuilder::class);

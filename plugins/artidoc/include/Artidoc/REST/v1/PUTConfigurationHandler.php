@@ -25,7 +25,6 @@ namespace Tuleap\Artidoc\REST\v1;
 use PFUser;
 use Tracker_FormElement_Field_Date;
 use Tracker_FormElement_Field_List;
-use Tracker_FormElement_Field_Numeric;
 use Tuleap\Artidoc\Document\Field\SuitableFieldRetriever;
 use Tuleap\Artidoc\Document\SaveConfiguration;
 use Tuleap\Artidoc\Document\Tracker\CheckTrackerIsSuitableForDocument;
@@ -44,6 +43,7 @@ use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\Text\TextField;
+use Tuleap\Tracker\FormElement\Field\NumericField;
 use Tuleap\Tracker\RetrieveTracker;
 use Tuleap\Tracker\Tracker;
 
@@ -136,7 +136,7 @@ final readonly class PUTConfigurationHandler
         }
 
         return $this->retrieve_suitable_field->retrieveField($input_field->field_id, $user)
-            ->andThen(function (TextField|Tracker_FormElement_Field_List|ArtifactLinkField|Tracker_FormElement_Field_Numeric|Tracker_FormElement_Field_Date $field) use ($display_type, $tracker) {
+            ->andThen(function (TextField|Tracker_FormElement_Field_List|ArtifactLinkField|NumericField|Tracker_FormElement_Field_Date $field) use ($display_type, $tracker) {
                 if ($field->getTrackerId() !== $tracker->getId()) {
                     return Result::err(
                         FieldDoesNotBelongToTrackerFault::build($field->getId(), $tracker->getId())

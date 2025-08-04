@@ -33,7 +33,7 @@ interface IComputeTimeframes
 
     public function getEndDateField(): ?\Tracker_FormElement_Field_Date;
 
-    public function getDurationField(): ?\Tracker_FormElement_Field_Numeric;
+    public function getDurationField(): ?\Tuleap\Tracker\FormElement\Field\NumericField;
 
     public function getTrackerFromWhichTimeframeIsImplied(): ?\Tuleap\Tracker\Tracker;
 
