@@ -24,7 +24,7 @@ namespace Tuleap\Artidoc\Document\Field\List;
 
 use Tracker_FormElement_Field_List_BindValue;
 use Tuleap\Artidoc\Document\Field\ConfiguredField;
-use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserGroupListValue;
+use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserGroupValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserGroupsListFieldWithValue;
 
 final readonly class UserGroupListWithValueBuilder
@@ -36,7 +36,7 @@ final readonly class UserGroupListWithValueBuilder
             $configured_field->display_type,
             array_values(
                 array_map(
-                    static fn(Tracker_FormElement_Field_List_BindValue $value) => new UserGroupListValue(
+                    static fn(Tracker_FormElement_Field_List_BindValue $value) => new UserGroupValue(
                         $value->getLabel()
                     ),
                     $changeset_value?->getListValues() ?? [],

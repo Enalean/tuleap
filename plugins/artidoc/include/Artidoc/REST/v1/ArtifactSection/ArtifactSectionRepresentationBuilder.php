@@ -27,6 +27,7 @@ use Tuleap\Artidoc\Document\Field\GetFieldsWithValues;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\ArtifactLinkFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\DateFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\NumericFieldWithValue;
+use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\PermissionsOnArtifactFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StaticListFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\TextFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserFieldWithValue;
@@ -37,6 +38,7 @@ use Tuleap\Artidoc\Domain\Document\Section\Level;
 use Tuleap\Artidoc\REST\v1\ArtifactSection\Field\SectionArtifactLinkFieldRepresentation;
 use Tuleap\Artidoc\REST\v1\ArtifactSection\Field\SectionDateFieldRepresentation;
 use Tuleap\Artidoc\REST\v1\ArtifactSection\Field\SectionNumericFieldRepresentation;
+use Tuleap\Artidoc\REST\v1\ArtifactSection\Field\SectionPermissionsOnArtifactFieldRepresentation;
 use Tuleap\Artidoc\REST\v1\ArtifactSection\Field\SectionStaticListFieldRepresentation;
 use Tuleap\Artidoc\REST\v1\ArtifactSection\Field\SectionTextFieldRepresentation;
 use Tuleap\Artidoc\REST\v1\ArtifactSection\Field\SectionUserFieldRepresentation;
@@ -62,7 +64,7 @@ final readonly class ArtifactSectionRepresentationBuilder
         PFUser $user,
     ): ArtifactSectionRepresentation {
         $can_user_edit_section = $artifact_information->title_field->userCanUpdate($user)
-            && $artifact_information->description_field->userCanUpdate($user);
+                                 && $artifact_information->description_field->userCanUpdate($user);
 
         $artifact = $artifact_information->last_changeset->getArtifact();
 
@@ -71,13 +73,13 @@ final readonly class ArtifactSectionRepresentationBuilder
         $attachments = null;
         if ($file_upload_data) {
             $rest = $file_upload_data->getField()->getRESTValue($user, $artifact_information->last_changeset)
-                ?? ArtifactFieldValueFileFullRepresentation::fromEmptyValues($file_upload_data->getField());
+                    ?? ArtifactFieldValueFileFullRepresentation::fromEmptyValues($file_upload_data->getField());
 
             $attachments = new ArtifactSectionAttachmentsRepresentation(
                 $file_upload_data->getUploadUrl(),
                 array_values(
                     array_map(
-                        static fn (FileInfoRepresentation $file_info_representation): int => $file_info_representation->id,
+                        static fn(FileInfoRepresentation $file_info_representation): int => $file_info_representation->id,
                         $rest->file_descriptions,
                     ),
                 ),
@@ -97,7 +99,7 @@ final readonly class ArtifactSectionRepresentationBuilder
     }
 
     /**
-     * @return list<SectionTextFieldRepresentation | SectionUserGroupsListFieldRepresentation | SectionStaticListFieldRepresentation | SectionUserListFieldRepresentation | SectionArtifactLinkFieldRepresentation | SectionNumericFieldRepresentation | SectionUserFieldRepresentation | SectionDateFieldRepresentation>
+     * @return list<SectionTextFieldRepresentation | SectionUserGroupsListFieldRepresentation | SectionStaticListFieldRepresentation | SectionUserListFieldRepresentation | SectionArtifactLinkFieldRepresentation | SectionNumericFieldRepresentation | SectionUserFieldRepresentation | SectionDateFieldRepresentation | SectionPermissionsOnArtifactFieldRepresentation>
      */
     private function getFieldValues(RequiredArtifactInformation $artifact_information): array
     {
@@ -105,14 +107,15 @@ final readonly class ArtifactSectionRepresentationBuilder
         $representations = [];
         foreach ($fields as $field) {
             $representations[] = match ($field::class) {
-                TextFieldWithValue::class           => new SectionTextFieldRepresentation($field),
-                UserGroupsListFieldWithValue::class => new SectionUserGroupsListFieldRepresentation($field),
-                StaticListFieldWithValue::class     => new SectionStaticListFieldRepresentation($field),
-                UserListFieldWithValue::class       => new SectionUserListFieldRepresentation($field),
-                ArtifactLinkFieldWithValue::class   => new SectionArtifactLinkFieldRepresentation($field),
-                NumericFieldWithValue::class        => new SectionNumericFieldRepresentation($field),
-                UserFieldWithValue::class           => new SectionUserFieldRepresentation($field),
-                DateFieldWithValue::class           => new SectionDateFieldRepresentation($field),
+                TextFieldWithValue::class                  => new SectionTextFieldRepresentation($field),
+                UserGroupsListFieldWithValue::class        => new SectionUserGroupsListFieldRepresentation($field),
+                StaticListFieldWithValue::class            => new SectionStaticListFieldRepresentation($field),
+                UserListFieldWithValue::class              => new SectionUserListFieldRepresentation($field),
+                ArtifactLinkFieldWithValue::class          => new SectionArtifactLinkFieldRepresentation($field),
+                NumericFieldWithValue::class               => new SectionNumericFieldRepresentation($field),
+                UserFieldWithValue::class                  => new SectionUserFieldRepresentation($field),
+                DateFieldWithValue::class                  => new SectionDateFieldRepresentation($field),
+                PermissionsOnArtifactFieldWithValue::class => new SectionPermissionsOnArtifactFieldRepresentation($field),
             };
         }
         return $representations;

@@ -27,15 +27,18 @@ use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue_Date;
 use Tracker_Artifact_ChangesetValue_List;
 use Tracker_Artifact_ChangesetValue_Numeric;
+use Tracker_Artifact_ChangesetValue_PermissionsOnArtifact;
 use Tracker_Artifact_ChangesetValue_Text;
 use Tracker_FormElement_Field_Date;
 use Tracker_FormElement_Field_LastModifiedBy;
 use Tracker_FormElement_Field_List;
+use Tracker_FormElement_Field_PermissionsOnArtifact;
 use Tracker_FormElement_Field_SubmittedBy;
 use Tuleap\Artidoc\Document\Field\ArtifactLink\ArtifactLinkFieldWithValueBuilder;
 use Tuleap\Artidoc\Document\Field\Date\DateFieldWithValueBuilder;
 use Tuleap\Artidoc\Document\Field\List\ListFieldWithValueBuilder;
 use Tuleap\Artidoc\Document\Field\Numeric\NumericFieldWithValueBuilder;
+use Tuleap\Artidoc\Document\Field\Permissions\PermissionsOnArtifactFieldWithValueBuilder;
 use Tuleap\Artidoc\Document\Field\User\UserFieldWithValueBuilder;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\FieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\TextFieldWithValue;
@@ -53,6 +56,7 @@ final readonly class FieldsWithValuesBuilder implements GetFieldsWithValues
         private NumericFieldWithValueBuilder $numeric_field_with_value_builder,
         private UserFieldWithValueBuilder $user_field_with_value_builder,
         private DateFieldWithValueBuilder $date_field_with_value_builder,
+        private PermissionsOnArtifactFieldWithValueBuilder $permissions_on_artifact_field_with_value_builder,
     ) {
     }
 
@@ -116,6 +120,11 @@ final readonly class FieldsWithValuesBuilder implements GetFieldsWithValues
         if ($configured_field->field instanceof Tracker_FormElement_Field_Date) {
             assert($changeset_value === null || $changeset_value instanceof Tracker_Artifact_ChangesetValue_Date);
             return [...$fields, $this->date_field_with_value_builder->buildDateFieldWithValue($configured_field, $changeset, $changeset_value)];
+        }
+
+        if ($configured_field->field instanceof Tracker_FormElement_Field_PermissionsOnArtifact) {
+            assert($changeset_value === null || $changeset_value instanceof Tracker_Artifact_ChangesetValue_PermissionsOnArtifact);
+            return [...$fields, $this->permissions_on_artifact_field_with_value_builder->buildPermissionsOnArtifactFieldWithValue($configured_field, $changeset_value)];
         }
 
         return $fields;

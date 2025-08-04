@@ -25,6 +25,7 @@ namespace Tuleap\Artidoc\Document\Field;
 use PFUser;
 use Tracker_FormElement_Field_Date;
 use Tracker_FormElement_Field_List;
+use Tracker_FormElement_Field_PermissionsOnArtifact;
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\Artidoc\Domain\Document\Section\Field\ArtifactSectionField;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
@@ -63,7 +64,7 @@ final readonly class ConfiguredFieldCollectionBuilder
         $fields = [];
         foreach ($stored_fields as $stored_field) {
             $this->field_retriever->retrieveField($stored_field->field_id, $user)
-                ->map(static function (TextField|Tracker_FormElement_Field_List|ArtifactLinkField|NumericField|Tracker_FormElement_Field_Date $field) use (&$fields, $stored_field) {
+                ->map(static function (TextField|Tracker_FormElement_Field_List|ArtifactLinkField|NumericField|Tracker_FormElement_Field_Date|Tracker_FormElement_Field_PermissionsOnArtifact $field) use (&$fields, $stored_field) {
                     if (! isset($fields[$field->tracker_id])) {
                         $fields[$field->tracker_id] = [];
                     }
