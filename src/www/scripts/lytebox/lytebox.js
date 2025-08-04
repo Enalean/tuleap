@@ -35,10 +35,10 @@ function LyteBox() {
 		this.navType			= 1;		// 1 = "Prev/Next" buttons on top left and left (default), 2 = "<< prev | next >>" links next to image number
 		this.autoResize			= true;		// controls whether or not images should be resized if larger than the browser window dimensions
 		this.doAnimations		= false;		// controls whether or not "animate" Lytebox, i.e. resize transition between images, fade in/out effects, etc.
-		
+
 		this.borderSize			= 12;		// if you adjust the padding in the CSS, you will need to update this variable -- otherwise, leave this alone...
 	/*** End Global Configuration ***/
-	
+
 	/*** Configure Slideshow Options ***/
 		this.slideInterval		= 4000;		// Change value (milliseconds) to increase/decrease the time between "slides" (10000 = 10 seconds)
 		this.showNavigation		= true;		// true to display Next/Prev buttons/text during slideshow, false to hide
@@ -49,7 +49,7 @@ function LyteBox() {
 		this.pauseOnNextClick	= false;	// true to pause the slideshow when the "Next" button is clicked
         this.pauseOnPrevClick 	= true;		// true to pause the slideshow when the "Prev" button is clicked
 	/*** End Slideshow Configuration ***/
-	
+
 	if(this.resizeSpeed > 10) { this.resizeSpeed = 10; }
 	if(this.resizeSpeed < 1) { resizeSpeed = 1; }
 	this.resizeDuration = (11 - this.resizeSpeed) * 0.15;
@@ -83,12 +83,12 @@ function LyteBox() {
 			this.ie = false;
 		/*@end
 	@*/
-	this.ie7 = (this.ie && window.XMLHttpRequest);	
+	this.ie7 = (this.ie && window.XMLHttpRequest);
 	this.initialize();
 }
 LyteBox.prototype.initialize = function() {
 	this.updateLyteboxItems();
-	var objBody = this.doc.getElementsByTagName("body").item(0);	
+	var objBody = this.doc.getElementsByTagName("body").item(0);
 	if (this.doc.getElementById('lbOverlay')) {
 		objBody.removeChild(this.doc.getElementById("lbOverlay"));
 		objBody.removeChild(this.doc.getElementById("lbMain"));
@@ -182,7 +182,7 @@ LyteBox.prototype.initialize = function() {
 		objPlay.style.display = 'none';
 		objBottomNav.appendChild(objPlay);
 };
-LyteBox.prototype.updateLyteboxItems = function() {	
+LyteBox.prototype.updateLyteboxItems = function() {
 	var anchors = (this.isFrame) ? window.parent.frames[window.name].document.getElementsByTagName('a') : document.getElementsByTagName('a');
 	for (var i = 0; i < anchors.length; i++) {
 		var anchor = anchors[i];
@@ -283,7 +283,7 @@ LyteBox.prototype.start = function(imageLink, doSlide, doFrame) {
 	}
 	this.doc.getElementById('lbClose').onclick = function() { myLytebox.end(); return false; }
 	this.doc.getElementById('lbPause').onclick = function() { myLytebox.togglePlayPause("lbPause", "lbPlay"); return false; }
-	this.doc.getElementById('lbPlay').onclick = function() { myLytebox.togglePlayPause("lbPlay", "lbPause"); return false; }	
+	this.doc.getElementById('lbPlay').onclick = function() { myLytebox.togglePlayPause("lbPlay", "lbPause"); return false; }
 	this.isSlideshow = doSlide;
 	this.isPaused = (this.slideNum != 0 ? true : false);
 	if (this.isSlideshow && this.showPlayPause && this.isPaused) {
@@ -357,14 +357,14 @@ LyteBox.prototype.changeContent = function(imageNum) {
 				var y = pagesize[3] - 150;
 				if (imageWidth > x) {
 					imageHeight = Math.round(imageHeight * (x / imageWidth));
-					imageWidth = x; 
-					if (imageHeight > y) { 
+					imageWidth = x;
+					if (imageHeight > y) {
 						imageWidth = Math.round(imageWidth * (y / imageHeight));
-						imageHeight = y; 
+						imageHeight = y;
 					}
-				} else if (imageHeight > y) { 
+				} else if (imageHeight > y) {
 					imageWidth = Math.round(imageWidth * (y / imageHeight));
-					imageHeight = y; 
+					imageHeight = y;
 					if (imageWidth > x) {
 						imageHeight = Math.round(imageHeight * (x / imageWidth));
 						imageWidth = x;
@@ -401,7 +401,7 @@ LyteBox.prototype.resizeContainer = function(imgWidth, imgHeight) {
 		this.wDone = true;
 	}
 	if ((hDiff == 0) && (wDiff == 0)) {
-		if (this.ie){ this.pause(250); } else { this.pause(100); } 
+		if (this.ie){ this.pause(250); } else { this.pause(100); }
 	}
 	this.doc.getElementById('lbPrev').style.height = imgHeight + "px";
 	this.doc.getElementById('lbNext').style.height = imgHeight + "px";
@@ -426,11 +426,11 @@ LyteBox.prototype.showContent = function() {
 		if (this.isSlideshow) {
 			if(this.activeSlide == (this.slideArray.length - 1)) {
 				if (this.autoEnd) {
-					this.slideshowIDArray[this.slideshowIDCount++] = setTimeout("myLytebox.end('slideshow')", this.slideInterval);
+					this.slideshowIDArray[this.slideshowIDCount++] = setTimeout(() => myLytebox.end('slideshow'), this.slideInterval);
 				}
 			} else {
 				if (!this.isPaused) {
-					this.slideshowIDArray[this.slideshowIDCount++] = setTimeout("myLytebox.changeContent("+(this.activeSlide+1)+")", this.slideInterval);
+					this.slideshowIDArray[this.slideshowIDCount++] = setTimeout(() => myLytebox.changeContent(this.activeSlide+1), this.slideInterval);
 				}
 			}
 			this.doc.getElementById('lbHoverNav').style.display = (this.showNavigation && this.navType == 1 ? '' : 'none');
@@ -457,7 +457,7 @@ LyteBox.prototype.showContent = function() {
 			this.doc.getElementById('lbIframe').src = this.frameArray[this.activeFrame][0];
 		} catch(e) { }
 	} else {
-		this.showContentTimerArray[this.showContentTimerCount++] = setTimeout("myLytebox.showContent()", 200);
+		this.showContentTimerArray[this.showContentTimerCount++] = setTimeout(() => myLytebox.showContent(), 200);
 	}
 };
 LyteBox.prototype.updateDetails = function() {
@@ -525,7 +525,7 @@ LyteBox.prototype.updateNav = function() {
 				}
 		} else {
 			this.doc.getElementById('lbNext2_Off').style.display = '';
-		}		
+		}
 	} else {
 		if(this.activeImage != 0) {
 			var object = (this.navType == 2 ? this.doc.getElementById('lbPrev2') : this.doc.getElementById('lbPrev'));
@@ -686,9 +686,9 @@ LyteBox.prototype.appear = function(id, opacity) {
 		this.doc.getElementById('lbOverlay').style.height = this.getPageSize()[1] + "px";
 	} else {
 		if (id == 'lbOverlay') {
-			this.overlayTimerArray[this.overlayTimerCount++] = setTimeout("myLytebox.appear('" + id + "', " + (opacity+20) + ")", 1);
+			this.overlayTimerArray[this.overlayTimerCount++] = setTimeout(() => myLytebox.appear(id, opacity+20), 1);
 		} else {
-			this.imageTimerArray[this.imageTimerCount++] = setTimeout("myLytebox.appear('" + id + "', " + (opacity+10) + ")", 1);
+			this.imageTimerArray[this.imageTimerCount++] = setTimeout(() => myLytebox.appear(id, opacity+10), 1);
 		}
 	}
 };
@@ -703,14 +703,14 @@ LyteBox.prototype.fade = function(id, opacity) {
 			object.display = 'none';
 		} catch(err) { }
 	} else if (id == 'lbOverlay') {
-		this.overlayTimerArray[this.overlayTimerCount++] = setTimeout("myLytebox.fade('" + id + "', " + (opacity-20) + ")", 1);
+		this.overlayTimerArray[this.overlayTimerCount++] = setTimeout(() => myLytebox.fade(id, opacity-20), 1);
 	} else {
-		this.timerIDArray[this.timerIDCount++] = setTimeout("myLytebox.fade('" + id + "', " + (opacity-10) + ")", 1);
+		this.timerIDArray[this.timerIDCount++] = setTimeout(() => myLytebox.fade(id, opacity-10), 1);
 	}
 };
 LyteBox.prototype.resizeW = function(id, curW, maxW, pixelrate, speed) {
 	if (!this.hDone) {
-		this.resizeWTimerArray[this.resizeWTimerCount++] = setTimeout("myLytebox.resizeW('" + id + "', " + curW + ", " + maxW + ", " + pixelrate + ")", 100);
+		this.resizeWTimerArray[this.resizeWTimerCount++] = setTimeout(() => myLytebox.resizeW(id, curW,maxW, pixelrate), 100);
 		return;
 	}
 	var object = this.doc.getElementById(id);
@@ -722,7 +722,7 @@ LyteBox.prototype.resizeW = function(id, curW, maxW, pixelrate, speed) {
 	} else if (newW > maxW) {
 		newW -= (newW - pixelrate <= maxW) ? (newW - maxW) : pixelrate;
 	}
-	this.resizeWTimerArray[this.resizeWTimerCount++] = setTimeout("myLytebox.resizeW('" + id + "', " + newW + ", " + maxW + ", " + pixelrate + ", " + (timer+0.02) + ")", timer+0.02);
+	this.resizeWTimerArray[this.resizeWTimerCount++] = setTimeout(() => myLytebox.resizeW(id, newW, maxW, pixelrate, timer+0.02), timer+0.02);
 	if (parseInt(object.style.width) == maxW) {
 		this.wDone = true;
 		for (var i = 0; i < this.resizeWTimerCount; i++) { window.clearTimeout(this.resizeWTimerArray[i]); }
@@ -738,7 +738,7 @@ LyteBox.prototype.resizeH = function(id, curH, maxH, pixelrate, speed) {
 	} else if (newH > maxH) {
 		newH -= (newH - pixelrate <= maxH) ? (newH - maxH) : pixelrate;
 	}
-	this.resizeHTimerArray[this.resizeHTimerCount++] = setTimeout("myLytebox.resizeH('" + id + "', " + newH + ", " + maxH + ", " + pixelrate + ", " + (timer+.02) + ")", timer+.02);
+	this.resizeHTimerArray[this.resizeHTimerCount++] = setTimeout(() => myLytebox.resizeH(id, newH, maxH, pixelrate, timer+.02), timer+.02);
 	if (parseInt(object.style.height) == maxH) {
 		this.hDone = true;
 		for (var i = 0; i < this.resizeHTimerCount; i++) { window.clearTimeout(this.resizeHTimerArray[i]); }
@@ -753,7 +753,7 @@ LyteBox.prototype.getPageScroll = function() {
 		return this.doc.body.scrollTop;
 	}
 };
-LyteBox.prototype.getPageSize = function() {	
+LyteBox.prototype.getPageSize = function() {
 	var xScroll, yScroll, windowWidth, windowHeight;
 	if (window.innerHeight && window.scrollMaxY) {
 		xScroll = this.doc.scrollWidth;
