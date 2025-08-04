@@ -18,19 +18,59 @@
  */
 
 import Vue from "vue";
+import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue2-gettext-init";
+import { selectOrThrow } from "@tuleap/dom";
 import BaseProjectAdminAddModal from "./components/BaseProjectAdminAddModal.vue";
 import BaseProjectAdminEditModal from "./components/BaseProjectAdminEditModal.vue";
-import { buildCreateModalCallback } from "./vue-modal-initializer.js";
-import { setupModalButtons } from "./modal-initializer.js";
+import { setupDeleteButtons } from "./setup-delete-buttons.js";
+import { gatherConfiguration } from "./gather-configuration.js";
 
-document.addEventListener("DOMContentLoaded", () => {
-    const add_mount_point = "service-add-modal";
-    const AddModalRootComponent = Vue.extend(BaseProjectAdminAddModal);
-    const addModalCallback = buildCreateModalCallback(add_mount_point, AddModalRootComponent);
+const ADD_BUTTON_SELECTOR = "#project-admin-services-add-button";
+const ADD_MOUNT_POINT_SELECTOR = "#service-add-modal";
+const EDIT_BUTTONS_SELECTOR = ".project-admin-services-edit-button";
+const EDIT_MOUNT_POINT_SELECTOR = "#service-edit-modal";
 
-    const edit_mount_point = "service-edit-modal";
-    const EditModalRootComponent = Vue.extend(BaseProjectAdminEditModal);
-    const editModalCallback = buildCreateModalCallback(edit_mount_point, EditModalRootComponent);
-
-    setupModalButtons(addModalCallback, editModalCallback);
+document.addEventListener("DOMContentLoaded", async () => {
+    await initVueGettext(
+        Vue,
+        (locale) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`),
+    );
+    setupCreateServiceModal();
+    setupEditServiceModals();
+    setupDeleteButtons();
 });
+
+function setupCreateServiceModal() {
+    const vue_mount_point = selectOrThrow(document, ADD_MOUNT_POINT_SELECTOR);
+
+    const configuration = gatherConfiguration(vue_mount_point);
+    const AddModalRootComponent = Vue.extend(BaseProjectAdminAddModal);
+    const vue_modal = new AddModalRootComponent({
+        propsData: configuration,
+    }).$mount(vue_mount_point);
+
+    const add_button = selectOrThrow(document, ADD_BUTTON_SELECTOR, HTMLButtonElement);
+    add_button.addEventListener("click", () => {
+        vue_modal.show();
+    });
+}
+
+function setupEditServiceModals() {
+    const vue_mount_point = selectOrThrow(document, EDIT_MOUNT_POINT_SELECTOR);
+
+    const configuration = gatherConfiguration(vue_mount_point);
+    const EditModalRootComponent = Vue.extend(BaseProjectAdminEditModal);
+    const vue_modal = new EditModalRootComponent({
+        propsData: configuration,
+    }).$mount(vue_mount_point);
+
+    const buttons = document.querySelectorAll(EDIT_BUTTONS_SELECTOR);
+    for (const edit_button of buttons) {
+        if (!edit_button.hasAttribute("data-service-json")) {
+            throw new Error(`Could not find service JSON for edit service button`);
+        }
+        edit_button.addEventListener("click", () => {
+            vue_modal.show(edit_button);
+        });
+    }
+}
