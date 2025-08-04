@@ -2997,13 +2997,11 @@ msgstr "Le corps de la requête est vide"
 msgid "Request body is not well formed"
 msgstr "Le corps de la requête n'est pas bien formé"
 
-#, php-format
 msgid ""
-"Requested page currently loading. If it does not, try <a href=\"%1$s\">%1$s</"
-"a>."
+"Requested page currently loading. If it does not, try <a href=\"%s\">%s</a>"
 msgstr ""
 "La page demandée est en cours de chargement. Si ce n’est pas le cas, essayez "
-"<a href=\"%1$s\">%1$s</a>."
+"<a href=\"%s\">%s</a>."
 
 msgid "Resend invitation"
 msgstr "Réenvoyer l'invitation"

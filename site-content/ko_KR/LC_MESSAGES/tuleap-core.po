@@ -2882,13 +2882,11 @@ msgstr "요청 본문이 비어 있습니다."
 msgid "Request body is not well formed"
 msgstr "요청 본문의 형식이 올바르지 않습니다."
 
-#, php-format
 msgid ""
-"Requested page currently loading. If it does not, try <a href=\"%1$s\">%1$s</"
-"a>."
+"Requested page currently loading. If it does not, try <a href=\"%s\">%s</a>"
 msgstr ""
-"요청한 페이지가 현재 로딩 중입니다. 로딩되지 않는 경우 <a "
-"href=\"%1$s\">%1$s</a>를 시도하십시오."
+"요청한 페이지가 현재 로딩 중입니다. 로딩되지 않는 경우 <a href=\"%s\">%s</a>"
+"를 시도하십시오."
 
 msgid "Resend invitation"
 msgstr "초대 재발송"
