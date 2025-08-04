@@ -24,7 +24,7 @@ export const ConfigurationFieldStub = {
         return {
             field_id: 123,
             label: "String Field",
-            type: "string",
+            type: "text",
             display_type: DISPLAY_TYPE_COLUMN,
             can_display_type_be_changed: true,
         };

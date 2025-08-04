@@ -27,7 +27,7 @@ use Tuleap\Artidoc\Domain\Document\Section\Field\DisplayType;
 /**
  * @psalm-immutable
  */
-final readonly class StringFieldWithValue implements FieldWithValue
+final readonly class TextFieldWithValue implements FieldWithValue
 {
     public function __construct(
         public string $label,

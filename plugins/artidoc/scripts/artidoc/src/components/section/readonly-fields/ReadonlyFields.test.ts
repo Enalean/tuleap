@@ -28,7 +28,7 @@ import {
     DISPLAY_TYPE_COLUMN,
 } from "@/sections/readonly-fields/AvailableReadonlyFields";
 import ReadonlyFields from "@/components/section/readonly-fields/ReadonlyFields.vue";
-import FieldString from "@/components/section/readonly-fields/FieldString.vue";
+import FieldText from "@/components/section/readonly-fields/FieldText.vue";
 import FieldUserGroupsList from "@/components/section/readonly-fields/FieldUserGroupsList.vue";
 import FieldStaticList from "@/components/section/readonly-fields/FieldStaticList.vue";
 import FieldUserList from "@/components/section/readonly-fields/FieldUserList.vue";
@@ -53,7 +53,7 @@ describe("ReadonlyFields", () => {
             ReadonlyFieldStub.string("The first field", DISPLAY_TYPE_COLUMN),
         ]);
 
-        expect(wrapper.findComponent(FieldString).exists()).toBe(true);
+        expect(wrapper.findComponent(FieldText).exists()).toBe(true);
         expect(wrapper.findAll(".tlp-property")[0].classes()).toStrictEqual(["tlp-property"]);
     });
 
@@ -62,7 +62,7 @@ describe("ReadonlyFields", () => {
             ReadonlyFieldStub.string("The first field", DISPLAY_TYPE_BLOCK),
         ]);
 
-        expect(wrapper.findComponent(FieldString).exists()).toBe(true);
+        expect(wrapper.findComponent(FieldText).exists()).toBe(true);
         expect(wrapper.findAll(".tlp-property")[0].classes()).toStrictEqual([
             "tlp-property",
             "display-field-in-block",
@@ -90,7 +90,7 @@ describe("ReadonlyFields", () => {
         const wrapper = getWrapper(fields);
 
         expect(wrapper.findAll("[data-test=readonly-field]")).toHaveLength(fields.length);
-        expect(wrapper.findComponent(FieldString).exists()).toBe(true);
+        expect(wrapper.findComponent(FieldText).exists()).toBe(true);
         expect(wrapper.findComponent(FieldUserGroupsList).exists()).toBe(true);
         expect(wrapper.findComponent(FieldStaticList).exists()).toBe(true);
         expect(wrapper.findAllComponents(FieldUserList)).toHaveLength(2);

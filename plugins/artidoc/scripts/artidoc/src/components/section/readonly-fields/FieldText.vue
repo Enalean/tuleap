@@ -19,18 +19,26 @@
   -->
 
 <template>
-    <label class="tlp-label document-label">{{ field_string.label }}</label>
-    <p v-if="field_string.value">{{ field_string.value }}</p>
+    <label class="tlp-label document-label">{{ field_text.label }}</label>
+    <p v-if="field_text.value" v-dompurify-html="field_text.value" ref="content"></p>
     <p v-else class="tlp-property-empty">{{ $gettext("Empty") }}</p>
 </template>
 
 <script setup lang="ts">
 import { useGettext } from "vue3-gettext";
-import type { ReadonlyFieldString } from "@/sections/readonly-fields/ReadonlyFields";
+import type { ReadonlyFieldText } from "@/sections/readonly-fields/ReadonlyFields";
+import { onMounted, ref } from "vue";
+import { loadTooltips } from "@tuleap/tooltip";
 
-const gettext_provider = useGettext();
-const { $gettext } = gettext_provider;
+const { $gettext } = useGettext();
+
 defineProps<{
-    field_string: ReadonlyFieldString;
+    field_text: ReadonlyFieldText;
 }>();
+
+const content = ref<HTMLElement>();
+
+onMounted(() => {
+    loadTooltips(content.value);
+});
 </script>

@@ -180,12 +180,12 @@ describe("rest-querier", () => {
             const field_1 = {
                 field_id: 599,
                 label: "Summary",
-                type: "string",
+                type: "text",
             } as ConfigurationField;
             const field_2 = {
                 field_id: 602,
                 label: "String Field",
-                type: "string",
+                type: "text",
             } as ConfigurationField;
             const semantics = { title: { field_id: 599 } };
 

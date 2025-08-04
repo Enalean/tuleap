@@ -40,7 +40,7 @@ use Tuleap\NeverThrow\Result;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
-use Tuleap\Tracker\FormElement\Field\String\StringField;
+use Tuleap\Tracker\FormElement\Field\Text\TextField;
 use Tuleap\Tracker\Semantic\Title\RetrieveSemanticTitleField;
 use Tuleap\Tracker\Test\Builders\Fields\ArtifactIdFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ArtifactLinkFieldBuilder;
@@ -60,6 +60,7 @@ use Tuleap\Tracker\Test\Builders\Fields\PriorityFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\SubmittedByFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\SubmittedOnFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\TextFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
 use Tuleap\Tracker\Test\Stub\Semantic\Description\RetrieveSemanticDescriptionFieldStub;
@@ -87,7 +88,7 @@ final class SuitableFieldRetrieverTest extends TestCase
     }
 
     /**
-     * @return Ok<StringField> | Ok<Tracker_FormElement_Field_List> | Ok<ArtifactLinkField> | OK<Tracker_FormElement_Field_Numeric> | Ok<Tracker_FormElement_Field_Date> | Err<Fault>
+     * @return Ok<TextField> | Ok<Tracker_FormElement_Field_List> | Ok<ArtifactLinkField> | OK<Tracker_FormElement_Field_Numeric> | Ok<Tracker_FormElement_Field_Date> | Err<Fault>
      */
     private function retrieve(): Ok|Err
     {
@@ -148,7 +149,7 @@ final class SuitableFieldRetrieverTest extends TestCase
         self::assertInstanceOf(FieldIsDescriptionSemanticFault::class, $result->error);
     }
 
-    public function testHappyPath(): void
+    public function testItAllowsStringField(): void
     {
         $string_field          = StringFieldBuilder::aStringField(self::FIELD_ID)
             ->inTracker($this->tracker)
@@ -159,6 +160,19 @@ final class SuitableFieldRetrieverTest extends TestCase
         $result = $this->retrieve();
         self::assertTrue(Result::isOk($result));
         self::assertSame($string_field, $result->value);
+    }
+
+    public function testItAllowsTextField(): void
+    {
+        $text_field            = TextFieldBuilder::aTextField(self::FIELD_ID)
+            ->inTracker($this->tracker)
+            ->withReadPermission($this->user, true)
+            ->build();
+        $this->field_retriever = RetrieveUsedFieldsStub::withFields($text_field);
+
+        $result = $this->retrieve();
+        self::assertTrue(Result::isOk($result));
+        self::assertSame($text_field, $result->value);
     }
 
     public function testItAllowsListFieldBoundToUserGroups(): void

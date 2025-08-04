@@ -39,7 +39,7 @@ use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\RetrieveUsedFields;
-use Tuleap\Tracker\FormElement\Field\String\StringField;
+use Tuleap\Tracker\FormElement\Field\Text\TextField;
 use Tuleap\Tracker\Semantic\Description\RetrieveSemanticDescriptionField;
 use Tuleap\Tracker\Semantic\Title\RetrieveSemanticTitleField;
 
@@ -53,7 +53,7 @@ final readonly class SuitableFieldRetriever
     }
 
     /**
-     * @return Ok<StringField> | Ok<Tracker_FormElement_Field_List> | Ok<ArtifactLinkField> | Ok<Tracker_FormElement_Field_Numeric> | OK<Tracker_FormElement_Field_Date> | Err<Fault>
+     * @return Ok<TextField> | Ok<Tracker_FormElement_Field_List> | Ok<ArtifactLinkField> | Ok<Tracker_FormElement_Field_Numeric> | OK<Tracker_FormElement_Field_Date> | Err<Fault>
      */
     public function retrieveField(int $field_id, PFUser $user): Ok|Err
     {
@@ -64,7 +64,7 @@ final readonly class SuitableFieldRetriever
         }
 
         return match (true) {
-            $field instanceof StringField                       => $this->validateStringField($field),
+            $field instanceof TextField                         => $this->validateTextField($field),
             $field instanceof Tracker_FormElement_Field_List    => $this->validateListField($field),
             $field instanceof ArtifactLinkField                 => Result::ok($field),
             $field instanceof Tracker_FormElement_Field_Numeric => Result::ok($field),
@@ -74,10 +74,10 @@ final readonly class SuitableFieldRetriever
     }
 
     /**
-     * @return Ok<StringField>|Err<Fault>
+     * @return Ok<TextField>|Err<Fault>
      */
-    private function validateStringField(
-        StringField $field,
+    private function validateTextField(
+        TextField $field,
     ): Ok|Err {
         $field_id = $field->getId();
         $tracker  = $field->getTracker();

@@ -27,6 +27,7 @@ use Override;
 use PFUser;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use Tracker_Artifact_Changeset;
+use Tracker_Artifact_ChangesetValue_Text;
 use Tracker_ArtifactLinkInfo;
 use Tuleap\Artidoc\Document\Field\ArtifactLink\ArtifactLinkFieldWithValueBuilder;
 use Tuleap\Artidoc\Document\Field\Date\DateFieldWithValueBuilder;
@@ -46,7 +47,7 @@ use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\FieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\NumericFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StaticListFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StaticListValue;
-use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StringFieldWithValue;
+use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\TextFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserGroupListValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserGroupsListFieldWithValue;
@@ -74,6 +75,7 @@ use Tuleap\Tracker\Test\Builders\ChangesetValueDateTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueIntegerTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueListTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueStringTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetValueTextTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ArtifactLinkFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\IntegerFieldBuilder;
@@ -86,6 +88,7 @@ use Tuleap\Tracker\Test\Builders\Fields\List\ListUserGroupValueBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserValueBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\TextFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\Artifact\Dao\SearchArtifactGlobalRankStub;
 use Tuleap\Tracker\Test\Stub\FormElement\Field\ArtifactLink\Type\RetrieveTypeFromShortnameStub;
@@ -182,7 +185,7 @@ final class FieldsWithValuesBuilderTest extends TestCase
         self::assertSame([], $this->getFields([]));
     }
 
-    public function testItBuildsStringFields(): void
+    public function testItBuildsStringAndTextFields(): void
     {
         $first_string_field  = StringFieldBuilder::aStringField(268)
             ->withLabel('naphthalol')
@@ -192,7 +195,7 @@ final class FieldsWithValuesBuilderTest extends TestCase
             ->withLabel('dictator')
             ->inTracker($this->tracker)
             ->build();
-        $third_string_field  = StringFieldBuilder::aStringField(274)
+        $text_field          = TextFieldBuilder::aTextField(274)
             ->withLabel('reframe')
             ->inTracker($this->tracker)
             ->build();
@@ -203,22 +206,25 @@ final class FieldsWithValuesBuilderTest extends TestCase
                 ->withValue('pleurogenic')
                 ->build()
         );
+        $this->changeset->setFieldValue($second_string_field, null);
         $this->changeset->setFieldValue(
-            $second_string_field,
-            ChangesetValueStringTestBuilder::aValue(364, $this->changeset, $second_string_field)
-                ->withValue('proficiently')
-                ->build()
+            $text_field,
+            ChangesetValueTextTestBuilder::aValue(949, $this->changeset, $text_field)
+                ->withValue('**Hello!**', Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT)
+                ->build(),
         );
-        $this->changeset->setFieldValue($third_string_field, null);
 
         self::assertEquals([
-            new StringFieldWithValue('naphthalol', DisplayType::COLUMN, 'pleurogenic'),
-            new StringFieldWithValue('dictator', DisplayType::BLOCK, 'proficiently'),
-            new StringFieldWithValue('reframe', DisplayType::BLOCK, ''),
+            new TextFieldWithValue('naphthalol', DisplayType::COLUMN, 'pleurogenic'),
+            new TextFieldWithValue('dictator', DisplayType::BLOCK, ''),
+            new TextFieldWithValue('reframe', DisplayType::BLOCK, <<<HTML
+                <p><strong>Hello!</strong></p>\n
+                HTML
+            ),
         ], $this->getFields([
             new ConfiguredField($first_string_field, DisplayType::COLUMN),
             new ConfiguredField($second_string_field, DisplayType::BLOCK),
-            new ConfiguredField($third_string_field, DisplayType::BLOCK),
+            new ConfiguredField($text_field, DisplayType::BLOCK),
         ]));
     }
 

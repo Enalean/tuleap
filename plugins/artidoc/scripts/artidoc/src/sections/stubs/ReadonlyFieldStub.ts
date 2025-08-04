@@ -24,7 +24,7 @@ import type {
     ReadonlyFieldNumeric,
     ReadonlyFieldStaticList,
     ReadonlyFieldStaticListValue,
-    ReadonlyFieldString,
+    ReadonlyFieldText,
     ReadonlyFieldUser,
     ReadonlyFieldUserGroupsList,
     ReadonlyFieldUserGroupsListValue,
@@ -35,8 +35,8 @@ import type { ConfigurationFieldDisplayType } from "@/sections/readonly-fields/A
 import { DISPLAY_TYPE_BLOCK } from "@/sections/readonly-fields/AvailableReadonlyFields";
 
 export const ReadonlyFieldStub = {
-    string: (value: string, display_type: ConfigurationFieldDisplayType): ReadonlyFieldString => ({
-        type: "string",
+    string: (value: string, display_type: ConfigurationFieldDisplayType): ReadonlyFieldText => ({
+        type: "text",
         label: `Readonly string field`,
         display_type,
         value,

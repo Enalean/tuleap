@@ -27,9 +27,9 @@
             v-bind:class="getFieldClasses(readonly_field)"
             data-test="readonly-field"
         >
-            <field-string
-                v-if="readonly_field.type === STRING_FIELD"
-                v-bind:field_string="readonly_field"
+            <field-text
+                v-if="readonly_field.type === TEXT_FIELD"
+                v-bind:field_text="readonly_field"
             />
             <field-user-groups-list
                 v-if="readonly_field.type === USER_GROUP_LIST_FIELD"
@@ -54,12 +54,11 @@
 </template>
 
 <script setup lang="ts">
-import FieldString from "@/components/section/readonly-fields/FieldString.vue";
 import {
     NUMERIC_FIELD,
     LINKS_FIELD,
     STATIC_LIST_FIELD,
-    STRING_FIELD,
+    TEXT_FIELD,
     USER_GROUP_LIST_FIELD,
     USER_LIST_FIELD,
     USER_FIELD,
@@ -67,6 +66,7 @@ import {
 } from "@/sections/readonly-fields/ReadonlyFields";
 import type { ReadonlyField } from "@/sections/readonly-fields/ReadonlyFields";
 import type { SectionBasedOnArtifact } from "@/helpers/artidoc-section.type";
+import FieldText from "@/components/section/readonly-fields/FieldText.vue";
 import FieldUserGroupsList from "@/components/section/readonly-fields/FieldUserGroupsList.vue";
 import FieldStaticList from "@/components/section/readonly-fields/FieldStaticList.vue";
 import FieldUserList from "@/components/section/readonly-fields/FieldUserList.vue";

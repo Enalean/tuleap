@@ -90,7 +90,7 @@ describe("SectionContainer", () => {
         artidoc_section = ArtifactSectionFactory.override({
             fields: [
                 {
-                    type: "string",
+                    type: "text",
                     label: "Label",
                     value: "Value",
                     display_type: "column",

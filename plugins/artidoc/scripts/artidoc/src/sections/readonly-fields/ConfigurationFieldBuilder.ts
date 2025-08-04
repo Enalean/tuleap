@@ -39,6 +39,7 @@ import {
     RADIO_BUTTON_FIELD,
     SELECTBOX_FIELD,
     STRING_FIELD as TRACKER_STRING_FIELD,
+    TEXT_FIELD as TRACKER_TEXT_FIELD,
     SUBMISSION_DATE_FIELD,
     SUBMITTED_BY_FIELD,
 } from "@tuleap/plugin-tracker-constants";
@@ -55,7 +56,7 @@ import {
     LINKS_FIELD,
     NUMERIC_FIELD,
     STATIC_LIST_FIELD,
-    STRING_FIELD,
+    TEXT_FIELD,
     USER_FIELD,
     USER_GROUP_LIST_FIELD,
     USER_LIST_FIELD,
@@ -98,7 +99,16 @@ const buildConfiguredFieldIfSupported = (field: StructureFields): Option<Configu
         return Option.fromValue<ConfigurationField>({
             ...field_base,
             display_type: DISPLAY_TYPE_COLUMN,
-            type: STRING_FIELD,
+            type: TEXT_FIELD,
+        });
+    }
+
+    if (field.type === TRACKER_TEXT_FIELD) {
+        return Option.fromValue<ConfigurationField>({
+            ...field_base,
+            display_type: DISPLAY_TYPE_BLOCK,
+            type: TEXT_FIELD,
+            can_display_type_be_changed: false,
         });
     }
 
