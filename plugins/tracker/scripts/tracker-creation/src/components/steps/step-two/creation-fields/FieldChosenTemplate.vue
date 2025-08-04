@@ -37,80 +37,71 @@
     </div>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import { State, Getter } from "vuex-class";
-import { Component } from "vue-property-decorator";
-import type {
-    TrackerToBeCreatedMandatoryData,
-    Tracker,
-    ProjectWithTrackers,
-    ProjectTemplate,
-    JiraImportData,
-} from "../../../../store/type";
+<script setup lang="ts">
+import { ref, onMounted } from "vue";
+import { useState, useGetters } from "vuex-composition-helpers";
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import type { State } from "../../../../store/type";
 
-@Component
-export default class FieldChosenTemplate extends Vue {
-    @State
-    readonly from_jira_data!: JiraImportData;
+const gettext_provider = useGettext();
 
-    @State
-    readonly tracker_to_be_created!: TrackerToBeCreatedMandatoryData;
+const { from_jira_data } = useState<Pick<State, "from_jira_data">>(["from_jira_data"]);
+const { tracker_to_be_created } = useState<Pick<State, "tracker_to_be_created">>([
+    "tracker_to_be_created",
+]);
+const { selected_tracker_template } = useState<Pick<State, "selected_tracker_template">>([
+    "selected_tracker_template",
+]);
+const { selected_project_tracker_template } = useState<
+    Pick<State, "selected_project_tracker_template">
+>(["selected_project_tracker_template"]);
+const { selected_project } = useState<Pick<State, "selected_project">>(["selected_project"]);
 
-    @State
-    readonly selected_tracker_template!: Tracker;
+const {
+    project_of_selected_tracker_template,
+    is_created_from_empty,
+    is_a_duplication,
+    is_a_xml_import,
+    is_created_from_default_template,
+    is_created_from_jira,
+    is_a_duplication_of_a_tracker_from_another_project,
+} = useGetters([
+    "project_of_selected_tracker_template",
+    "is_created_from_empty",
+    "is_a_duplication",
+    "is_a_xml_import",
+    "is_created_from_default_template",
+    "is_created_from_jira",
+    "is_a_duplication_of_a_tracker_from_another_project",
+]);
 
-    @State
-    readonly selected_project_tracker_template!: Tracker;
+const selected_template_name = ref("");
+const selected_template_project_name = ref("");
 
-    @State
-    readonly selected_project!: ProjectWithTrackers;
-
-    @Getter
-    readonly project_of_selected_tracker_template!: ProjectTemplate;
-
-    @Getter
-    readonly is_created_from_empty!: boolean;
-
-    @Getter
-    readonly is_a_duplication!: boolean;
-
-    @Getter
-    readonly is_a_xml_import!: boolean;
-
-    @Getter
-    readonly is_created_from_default_template!: boolean;
-
-    @Getter
-    readonly is_created_from_jira!: boolean;
-
-    @Getter
-    readonly is_a_duplication_of_a_tracker_from_another_project!: boolean;
-
-    selected_template_name = "";
-    selected_template_project_name = "";
-
-    mounted(): void {
-        if (this.is_created_from_default_template) {
-            this.selected_template_name = this.selected_tracker_template.name;
-        } else if (this.is_a_duplication) {
-            this.selected_template_name = this.selected_tracker_template.name;
-            this.selected_template_project_name =
-                this.project_of_selected_tracker_template.project_name;
-        } else if (this.is_created_from_empty) {
-            this.selected_template_name = this.$gettext("Empty");
-        } else if (this.is_a_xml_import) {
-            this.selected_template_name = this.tracker_to_be_created.name;
-        } else if (this.is_a_duplication_of_a_tracker_from_another_project) {
-            this.selected_template_name = this.selected_project_tracker_template.name;
-            this.selected_template_project_name = this.selected_project.name;
-        } else if (this.is_created_from_jira) {
-            if (!this.from_jira_data.tracker || !this.from_jira_data.project) {
-                throw new Error("Jira project or tracker not found in store!");
-            }
-            this.selected_template_name = this.from_jira_data.tracker.name;
-            this.selected_template_project_name = this.from_jira_data.project.label;
+onMounted((): void => {
+    if (is_created_from_default_template.value && selected_tracker_template.value) {
+        selected_template_name.value = selected_tracker_template.value.name;
+    } else if (is_a_duplication.value && selected_tracker_template.value) {
+        selected_template_name.value = selected_tracker_template.value.name;
+        selected_template_project_name.value =
+            project_of_selected_tracker_template.value.project_name;
+    } else if (is_created_from_empty.value) {
+        selected_template_name.value = gettext_provider.$gettext("Empty");
+    } else if (is_a_xml_import.value) {
+        selected_template_name.value = tracker_to_be_created.value.name;
+    } else if (
+        is_a_duplication_of_a_tracker_from_another_project.value &&
+        selected_project.value &&
+        selected_project_tracker_template.value
+    ) {
+        selected_template_name.value = selected_project_tracker_template.value.name;
+        selected_template_project_name.value = selected_project.value.name;
+    } else if (is_created_from_jira.value) {
+        if (!from_jira_data.value.tracker || !from_jira_data.value.project) {
+            throw new Error("Jira project or tracker not found in store!");
         }
+        selected_template_name.value = from_jira_data.value.tracker.name;
+        selected_template_project_name.value = from_jira_data.value.project.label;
     }
-}
+});
 </script>
