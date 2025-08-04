@@ -34,6 +34,7 @@ import FieldStaticList from "@/components/section/readonly-fields/FieldStaticLis
 import FieldUserList from "@/components/section/readonly-fields/FieldUserList.vue";
 import FieldLinks from "@/components/section/readonly-fields/FieldLinks.vue";
 import FieldNumeric from "@/components/section/readonly-fields/FieldNumeric.vue";
+import FieldDate from "@/components/section/readonly-fields/FieldDate.vue";
 
 describe("ReadonlyFields", () => {
     const getWrapper = (fields: ReadonlyField[]): VueWrapper => {
@@ -86,15 +87,18 @@ describe("ReadonlyFields", () => {
             ReadonlyFieldStub.linkField([]),
             ReadonlyFieldStub.numericField(42, DISPLAY_TYPE_COLUMN),
             ReadonlyFieldStub.userField(bob, DISPLAY_TYPE_COLUMN),
+            ReadonlyFieldStub.dateField("2025-07-28T09:07:52+02:00", false, DISPLAY_TYPE_COLUMN),
+            ReadonlyFieldStub.permissionsField([{ label: "Project Members" }], DISPLAY_TYPE_COLUMN),
         ];
         const wrapper = getWrapper(fields);
 
         expect(wrapper.findAll("[data-test=readonly-field]")).toHaveLength(fields.length);
         expect(wrapper.findComponent(FieldText).exists()).toBe(true);
-        expect(wrapper.findComponent(FieldUserGroupsList).exists()).toBe(true);
+        expect(wrapper.findAllComponents(FieldUserGroupsList)).toHaveLength(2);
         expect(wrapper.findComponent(FieldStaticList).exists()).toBe(true);
         expect(wrapper.findAllComponents(FieldUserList)).toHaveLength(2);
         expect(wrapper.findComponent(FieldLinks).exists()).toBe(true);
         expect(wrapper.findComponent(FieldNumeric).exists()).toBe(true);
+        expect(wrapper.findComponent(FieldDate).exists()).toBe(true);
     });
 });

@@ -35,13 +35,14 @@ import {
     LIST_BIND_USERS,
     MULTI_SELECTBOX_FIELD,
     OPEN_LIST_FIELD,
+    PERMISSION_FIELD as TRACKER_PERMISSIONS_FIELD,
     PRIORITY_FIELD,
     RADIO_BUTTON_FIELD,
     SELECTBOX_FIELD,
     STRING_FIELD as TRACKER_STRING_FIELD,
-    TEXT_FIELD as TRACKER_TEXT_FIELD,
     SUBMISSION_DATE_FIELD,
     SUBMITTED_BY_FIELD,
+    TEXT_FIELD as TRACKER_TEXT_FIELD,
 } from "@tuleap/plugin-tracker-constants";
 import type {
     ConfigurationField,
@@ -55,6 +56,7 @@ import {
     DATE_FIELD,
     LINKS_FIELD,
     NUMERIC_FIELD,
+    PERMISSIONS_FIELD,
     STATIC_LIST_FIELD,
     TEXT_FIELD,
     USER_FIELD,
@@ -160,6 +162,14 @@ const buildConfiguredFieldIfSupported = (field: StructureFields): Option<Configu
             ...field_base,
             display_type: DISPLAY_TYPE_COLUMN,
             type: DATE_FIELD,
+        });
+    }
+
+    if (field.type === TRACKER_PERMISSIONS_FIELD) {
+        return Option.fromValue<ConfigurationField>({
+            ...field_base,
+            display_type: DISPLAY_TYPE_COLUMN,
+            type: PERMISSIONS_FIELD,
         });
     }
 
