@@ -102,7 +102,7 @@ def runPsalmTaintAnalysis(String configPath, String root='.') {
         dir ('sources') {
             sh """
             mkdir -p ../results/psalm/
-            scl enable php84 "php -d opcache.preload="" src/vendor/bin/psalm --taint-analysis --memory-limit=5120M --threads=1 --config='${configPath}' --no-cache --root='${root}' --report=../results/psalm/checkstyle.xml"
+            scl enable php84 "php -d opcache.preload="" src/vendor/bin/psalm --taint-analysis --memory-limit=6144M --threads=1 --config='${configPath}' --no-cache --root='${root}' --report=../results/psalm/checkstyle.xml"
             """
         }
     }
