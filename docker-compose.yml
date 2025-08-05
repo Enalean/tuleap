@@ -122,10 +122,10 @@ services:
       - db80-data:/var/lib/mysql
 
   redis:
-    image: redis:6.2.7@sha256:a93c14584715ec5bd9d2648d58c3b27f89416242bee0bc9e5fb2edc1a4cbec1d
+    image: valkey/valkey:8.0.4-alpine@sha256:1e35be5b62d56106e4d8a0051d694713511652f690b9b4037f0528138a74ee85
     volumes:
       - redis-data:/data
-    command: redis-server --appendonly yes --auto-aof-rewrite-percentage 20 --auto-aof-rewrite-min-size 200kb
+    command: valkey-server --appendonly yes --auto-aof-rewrite-percentage 20 --auto-aof-rewrite-min-size 200kb
 
   prometheus:
     image: prom/prometheus:v2.3.0
