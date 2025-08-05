@@ -48,12 +48,6 @@ describe("CrossTracker search", function () {
                     artifact_status: "In Progress",
                     title_field_name: TITLE_FIELD_NAME,
                 });
-                cy.createArtifact({
-                    tracker_id,
-                    artifact_title: "bug Art B",
-                    artifact_status: "In Progress",
-                    title_field_name: TITLE_FIELD_NAME,
-                }).as("artifact_b_id");
             });
             cy.getTrackerIdFromREST(project_id, "task").then((tracker_id) => {
                 const TITLE_FIELD_NAME = "title";
@@ -75,66 +69,6 @@ describe("CrossTracker search", function () {
                     artifact_status: "Todo",
                     title_field_name: TITLE_FIELD_NAME,
                 });
-                cy.createArtifactWithFields({
-                    tracker_id,
-                    fields: [
-                        {
-                            shortname: TITLE_FIELD_NAME,
-                            value: `kanban Art C`,
-                        },
-                        {
-                            shortname: "links",
-                            all_links: [
-                                {
-                                    id: this.artifact_b_id,
-                                    type: "_is_child",
-                                    direction: "reverse",
-                                },
-                            ],
-                        },
-                    ],
-                }).as("bug_child_id");
-            });
-            cy.getTrackerIdFromREST(project_id, "story").then((tracker_id) => {
-                const TITLE_FIELD_NAME = "i_want_to";
-                cy.createArtifactWithFields({
-                    tracker_id,
-                    fields: [
-                        {
-                            shortname: TITLE_FIELD_NAME,
-                            value: `User Story Art A`,
-                        },
-                        {
-                            shortname: "links",
-                            all_links: [
-                                {
-                                    id: this.artifact_b_id,
-                                    type: "_is_child",
-                                    direction: "reverse",
-                                },
-                            ],
-                        },
-                    ],
-                });
-                cy.createArtifactWithFields({
-                    tracker_id,
-                    fields: [
-                        {
-                            shortname: TITLE_FIELD_NAME,
-                            value: `User Story Art D`,
-                        },
-                        {
-                            shortname: "links",
-                            all_links: [
-                                {
-                                    id: this.artifact_b_id,
-                                    type: "_is_child",
-                                    direction: "forward",
-                                },
-                            ],
-                        },
-                    ],
-                });
             });
         });
     });
@@ -147,7 +81,7 @@ describe("CrossTracker search", function () {
         cy.projectMemberSession();
         cy.visit("/my/");
 
-        createNewWidget(now);
+        cy.createNewXTSWidget(now);
 
         cy.intercept("/api/v1/crosstracker_query/content*").as("getQueryContent");
 
@@ -191,7 +125,7 @@ describe("CrossTracker search", function () {
         cy.projectMemberSession();
         cy.visit("/my/");
 
-        createNewWidget(now);
+        cy.createNewXTSWidget(now);
 
         cy.intercept("/api/v1/crosstracker_query/content*").as("getQueryContent");
 
@@ -224,7 +158,7 @@ describe("CrossTracker search", function () {
         cy.projectMemberSession();
         cy.visit("/my/");
 
-        createNewWidget(now);
+        cy.createNewXTSWidget(now);
 
         cy.intercept("/api/v1/crosstracker_query/content*").as("getQueryContent");
 
@@ -295,7 +229,7 @@ describe("CrossTracker search", function () {
         cy.projectMemberSession();
         cy.visit("/my/");
 
-        createNewWidget(now);
+        cy.createNewXTSWidget(now);
 
         cy.get("[data-test=cross-tracker-search-widget]")
             .invoke("attr", "data-widget-json-data")
@@ -342,84 +276,10 @@ describe("CrossTracker search", function () {
         cy.get("[data-test=choose-query-button]").click();
         cy.get("[data-test=query]").should("have.length", 2);
     });
-
-    it("Test filter out parent from reverse links", function () {
-        cy.projectMemberSession();
-        cy.visit("/my/");
-
-        createNewWidget(now);
-
-        cy.get("[data-test=cross-tracker-search-widget]")
-            .invoke("attr", "data-widget-json-data")
-            .then((widget_data) => {
-                if (widget_data === undefined) {
-                    throw new Error("The widget has not been created");
-                }
-                const widget_id = JSON.parse(widget_data).widget_id;
-                cy.postFromTuleapApi<void>("/api/crosstracker_query", {
-                    widget_id: widget_id,
-                    tql_query: `SELECT @id, @pretty_title FROM @project.name = '${project_name}' AND @tracker.name = 'story' WHERE @title = 'User Story Art A'`,
-                    title: "query A",
-                    description: "",
-                    is_default: true,
-                });
-            });
-        cy.reload();
-
-        cy.intercept("GET", "/api/v1/crosstracker_widget/*/forward_links*").as("getForwardLinks");
-        cy.intercept("GET", "/api/v1/crosstracker_widget/*/reverse_links*").as("getReverseLinks");
-
-        cy.get("[data-test=artifact-row]").should("have.length", 1);
-
-        cy.get("[data-test=pretty-title-links-button]").click();
-
-        cy.wait(["@getForwardLinks", "@getReverseLinks"]);
-
-        cy.get("[data-test=artifact-row]").should("have.length", 2);
-        cy.get("[data-test=artifact-row]")
-            .eq(0)
-            .within(() => {
-                cy.contains("Art A");
-            });
-        cy.getContains("[data-test=artifact-row]", "Art A").within(() => {
-            cy.get("[data-test=pretty-title-caret]").should("have.class", "fa-caret-down");
-        });
-
-        cy.getContains("[data-test=artifact-row]", "Art B").within(() => {
-            cy.get("[data-test=pretty-title-caret]").should("have.class", "fa-caret-right");
-            cy.get("[data-test=pretty-title-links-button]").click();
-            cy.wait(["@getForwardLinks", "@getReverseLinks"]);
-        });
-
-        cy.get("[data-test=artifact-row]").should("have.length", 4);
-
-        cy.get("[data-test=artifact-row]")
-            .eq(2)
-            .within(() => {
-                cy.contains("Art C");
-            });
-
-        cy.get("[data-test=artifact-row]")
-            .eq(3)
-            .within(() => {
-                cy.contains("Art D");
-            });
-    });
 });
 
 function updateSearchQuery(search_query: string): void {
     cy.get("[data-test=cross-tracker-search-widget] [data-test=expert-query]")
         .find("[role=textbox][contenteditable=true]")
         .invoke("text", search_query);
-}
-
-function createNewWidget(now: number): void {
-    cy.get("[data-test=dashboard-add-button]").click();
-    cy.get("[data-test=dashboard-add-input-name]").type(`tab-${now}`);
-    cy.get("[data-test=dashboard-add-button-submit]").click();
-
-    cy.get("[data-test=dashboard-configuration-button]").click();
-    cy.get("[data-test=dashboard-add-widget-button]").click();
-    cy.get("[data-test=crosstrackersearch]").click();
-    cy.get("[data-test=dashboard-add-widget-button-submit]").click();
 }
