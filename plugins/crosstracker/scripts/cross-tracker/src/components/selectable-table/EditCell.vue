@@ -19,19 +19,34 @@
 
 <template>
     <span class="cell" data-test="edit-cell"
-        ><a v-bind:href="uri" v-bind:title="$gettext('Edit')" class="link"
+        ><a v-bind:href="artifact_url" v-bind:title="$gettext('Edit')" class="link"
             ><i class="fa-solid fa-fw fa-edit" role="img"></i></a
     ></span>
 </template>
 
 <script setup lang="ts">
 import { useGettext } from "vue3-gettext";
+import { computed } from "vue";
+import { PROJECT_DASHBOARD } from "../../domain/DashboardType";
+import { DASHBOARD_ID, DASHBOARD_TYPE } from "../../injection-symbols";
+import { strictInject } from "@tuleap/vue-strict-inject";
 
 const { $gettext } = useGettext();
 
-defineProps<{
+const props = defineProps<{
     uri: string;
 }>();
+
+const dashboard_id = strictInject(DASHBOARD_ID);
+const dashboard_type = strictInject(DASHBOARD_TYPE);
+
+const artifact_url = computed((): string => {
+    if (dashboard_type === PROJECT_DASHBOARD) {
+        return `${props.uri}&project-dashboard-id=${dashboard_id}`;
+    }
+
+    return `${props.uri}&my-dashboard-id=${dashboard_id}`;
+});
 </script>
 
 <style scoped lang="scss">

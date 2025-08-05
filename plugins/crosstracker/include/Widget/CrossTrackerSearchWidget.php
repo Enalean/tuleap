@@ -81,6 +81,7 @@ class CrossTrackerSearchWidget extends Widget
                     $row['dashboard_type'],
                     $this->getTitleAttributeValue(),
                     $this->getTitle(),
+                    $row['dashboard_id']
                 )),
             ]
         );

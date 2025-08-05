@@ -27,6 +27,8 @@ import { getGlobalTestOptions } from "../../helpers/global-options-for-tests";
 import PrettyTitleCellComponent from "./PrettyTitleCellComponent.vue";
 import CaretIndentation from "./CaretIndentation.vue";
 import ArtifactLinkArrow from "./ArtifactLinkArrow.vue";
+import { DASHBOARD_ID, DASHBOARD_TYPE } from "../../injection-symbols";
+import { PROJECT_DASHBOARD, USER_DASHBOARD } from "../../domain/DashboardType";
 
 describe("PrettyTitleCellComponent", () => {
     let artifact_uri: string;
@@ -37,6 +39,7 @@ describe("PrettyTitleCellComponent", () => {
     let direction: ArtifactLinkDirection | undefined;
     let reverse_links_count: number | undefined;
     let level: number;
+    let dashboard_type: string;
 
     beforeEach(() => {
         artifact_uri = "/plugins/tracker/?aid=286";
@@ -47,12 +50,17 @@ describe("PrettyTitleCellComponent", () => {
         parent_caret = undefined;
         direction = undefined;
         reverse_links_count = undefined;
+        dashboard_type = PROJECT_DASHBOARD;
     });
 
     const getWrapper = (): VueWrapper<InstanceType<typeof PrettyTitleCellComponent>> => {
         return shallowMount(PrettyTitleCellComponent, {
             global: {
                 ...getGlobalTestOptions(),
+                provide: {
+                    [DASHBOARD_TYPE.valueOf()]: dashboard_type,
+                    [DASHBOARD_ID.valueOf()]: 22,
+                },
             },
             props: {
                 cell: {
@@ -75,11 +83,19 @@ describe("PrettyTitleCellComponent", () => {
         });
     };
 
-    it("when the cell is a pretty title, it renders a link to artifact URI", () => {
+    it("when the cell is a pretty title, it renders a link to artifact URI and redirect user to project dashboard", () => {
         artifact_uri = "/plugins/tracker/?aid=76";
         const wrapper = getWrapper();
 
-        expect(wrapper.get("a").attributes("href")).toBe(artifact_uri);
+        expect(wrapper.get("a").attributes("href")).toBe(`${artifact_uri}&project-dashboard-id=22`);
+    });
+
+    it("when the cell is a pretty title, it renders a link to artifact URI and redirect user to user dashboard", () => {
+        dashboard_type = USER_DASHBOARD;
+        artifact_uri = "/plugins/tracker/?aid=76";
+        const wrapper = getWrapper();
+
+        expect(wrapper.get("a").attributes("href")).toBe(`${artifact_uri}&my-dashboard-id=22`);
     });
 
     describe("Button", () => {
