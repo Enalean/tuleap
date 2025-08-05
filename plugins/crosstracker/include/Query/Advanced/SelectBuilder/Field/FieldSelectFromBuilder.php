@@ -96,6 +96,7 @@ final readonly class FieldSelectFromBuilder
             DuckTypedFieldTypeSelect::STATIC_LIST => $this->static_list_builder->getSelectFrom($field),
             DuckTypedFieldTypeSelect::UGROUP_LIST => $this->user_group_list_builder->getSelectFrom($field),
             DuckTypedFieldTypeSelect::USER_LIST => $this->user_list_builder->getSelectFrom($field),
+            DuckTypedFieldTypeSelect::UNKNOWN => new ParametrizedSelectFrom('', '', []),
         };
     }
 }

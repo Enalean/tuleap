@@ -22,14 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Query\Advanced\QueryValidation\Metadata;
 
-use PFUser;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
-use Tuleap\Tracker\Tracker;
 
 interface CheckMetadataUsage
 {
     /**
-     * @param Tracker[] $trackers
      * @throws DescriptionIsMissingInAllTrackersException
      * @throws StatusIsMissingInAllTrackersException
      * @throws SubmittedOnIsMissingInAllTrackersException
@@ -42,7 +39,5 @@ interface CheckMetadataUsage
      */
     public function checkMetadataIsUsedByAllTrackers(
         Metadata $metadata,
-        array $trackers,
-        PFUser $user,
     ): void;
 }

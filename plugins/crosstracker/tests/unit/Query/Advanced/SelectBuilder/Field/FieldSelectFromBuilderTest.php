@@ -255,4 +255,27 @@ final class FieldSelectFromBuilderTest extends TestCase
         self::assertNotEmpty($select_from->getFrom());
         self::assertNotEmpty($select_from->getFromParameters());
     }
+
+    public function testItReturnsAnEmptySQLStateForFieldWhoIsNotKnownByAnyTracker(): void
+    {
+        $fields_retriever = RetrieveUsedFieldsStub::withFields(
+            ListUserBindBuilder::aUserBind(
+                ListFieldBuilder::aListField(self::FIRST_FIELD_ID)
+                    ->withName(self::FIELD_NAME)
+                    ->withReadPermission($this->user, true)
+                    ->build()
+            )->build()->getField(),
+            ListUserBindBuilder::aUserBind(
+                ListFieldBuilder::aListField(self::SECOND_FIELD_ID)
+                    ->withName(self::FIELD_NAME)
+                    ->withReadPermission($this->user, true)
+                    ->build()
+            )->build()->getField(),
+        );
+
+        $select_from = $this->getSelectFrom($fields_retriever);
+        self::assertEmpty($select_from->getSelect());
+        self::assertEmpty($select_from->getFrom());
+        self::assertEmpty($select_from->getFromParameters());
+    }
 }

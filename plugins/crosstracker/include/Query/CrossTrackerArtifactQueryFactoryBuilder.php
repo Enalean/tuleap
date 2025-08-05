@@ -130,15 +130,11 @@ use Tuleap\Tracker\Report\Query\Advanced\UgroupLabelConverter;
 use Tuleap\Tracker\Report\TrackerReportConfig;
 use Tuleap\Tracker\Report\TrackerReportConfigDao;
 use Tuleap\Tracker\Semantic\Contributor\ContributorFieldRetriever;
-use Tuleap\Tracker\Semantic\Contributor\TrackerSemanticContributorDao;
 use Tuleap\Tracker\Semantic\Contributor\TrackerSemanticContributorFactory;
 use Tuleap\Tracker\Semantic\Description\CachedSemanticDescriptionFieldRetriever;
-use Tuleap\Tracker\Semantic\Description\DescriptionSemanticDAO;
 use Tuleap\Tracker\Semantic\Status\CachedSemanticStatusFieldRetriever;
 use Tuleap\Tracker\Semantic\Status\CachedSemanticStatusRetriever;
-use Tuleap\Tracker\Semantic\Status\StatusSemanticDAO;
 use Tuleap\Tracker\Semantic\Title\CachedSemanticTitleFieldRetriever;
-use Tuleap\Tracker\Semantic\Title\TitleSemanticDAO;
 use UGroupManager;
 use UserHelper;
 use UserManager;
@@ -197,13 +193,7 @@ final class CrossTrackerArtifactQueryFactoryBuilder
     public function getMetadataChecker(): MetadataChecker
     {
         return new MetadataChecker(
-            new MetadataUsageChecker(
-                Tracker_FormElementFactory::instance(),
-                new TitleSemanticDAO(),
-                new DescriptionSemanticDAO(),
-                new StatusSemanticDAO(),
-                new TrackerSemanticContributorDao(),
-            ),
+            new MetadataUsageChecker(),
             new InvalidMetadataChecker(
                 new TextSemanticChecker(),
                 new StatusChecker(),

@@ -62,11 +62,10 @@ final readonly class PrettyTitleResultBuilder implements BuildResultPrettyTitle
 
             $field = $this->semantic_retriever->fromTracker($artifact->getTracker());
 
-            if ($field === null) {
-                continue;
+            if ($field !== null) {
+                $title = ! $field->userCanRead($user) ? '' : $title;
             }
 
-            $title       = ! $field->userCanRead($user) ? '' : $title;
             $values[$id] = new SelectedValue('@pretty_title', new PrettyTitleRepresentation($tracker_name, $tracker_color, $id, $title ?? ''));
         }
 

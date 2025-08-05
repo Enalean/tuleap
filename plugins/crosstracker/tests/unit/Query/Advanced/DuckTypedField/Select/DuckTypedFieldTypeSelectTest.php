@@ -79,6 +79,12 @@ final class DuckTypedFieldTypeSelectTest extends TestCase
         self::assertSame(DuckTypedFieldTypeSelect::UGROUP_LIST, $result->unwrapOr(null));
     }
 
+    public function testUnknowFieldInTrackersDoesNotGenerateAnError(): void
+    {
+        $result = DuckTypedFieldTypeSelect::fromString(FieldTypeRetrieverWrapper::UNKNOWN_FIELD_TYPE);
+        self::assertSame(DuckTypedFieldTypeSelect::UNKNOWN, $result->unwrapOr(null));
+    }
+
     public static function generateTypes(): iterable
     {
         yield [Tracker_FormElementFactory::FIELD_COMPUTED];

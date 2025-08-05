@@ -81,23 +81,22 @@ final class PrettyTitleResultBuilderTest extends TestCase
         );
     }
 
-    public function testItDoesNothingWhenArtifactDoesNotHaveTitleSemanticSet(): void
+    public function testItReturnsAnEmptyValueWhenArtifactDoesNotHaveTitleSemanticSet(): void
     {
         $pretty_title_builder = new PrettyTitleResultBuilder(
             RetrieveArtifactStub::withArtifacts($this->artifact),
             RetrieveSemanticTitleFieldStub::build()->withoutTitleField($this->field),
         );
 
-        $select_results = [
-            ['id' => $this->artifact->getId(), '@pretty_title.tracker' => 'tracker_38', '@pretty_title.color' => 'inca-silver', '@pretty_title' => 'title 121', '@pretty_title.format' => 'text'],
-        ];
+        $select_result = ['id' => $this->artifact->getId(), '@pretty_title.tracker' => 'tracker_38', '@pretty_title.color' => 'inca-silver', '@pretty_title' => '', '@pretty_title.format' => 'text'];
 
         $result = $pretty_title_builder->getResult(
-            $select_results,
+            [$select_result],
             $this->user
         );
 
-        self::assertEmpty($result->values);
+        $expected = new SelectedValue('@pretty_title', new PrettyTitleRepresentation($select_result['@pretty_title.tracker'], $select_result['@pretty_title.color'], $this->artifact->getId(), ''));
+        self::assertEqualsCanonicalizing($expected, $result->values[$this->artifact->getId()]);
     }
 
     public function testItBuildsAnEmptyTitleWhenUserCanNotReadTitleField(): void

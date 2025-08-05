@@ -79,6 +79,12 @@ final class DuckTypedFieldTypeOrderByTest extends TestCase
         self::assertSame(DuckTypedFieldTypeOrderBy::UGROUP_LIST, $result->unwrapOr(null));
     }
 
+    public function testItDoesNotThrowErrorForFieldNotFoundInANyTrackers(): void
+    {
+        $result = DuckTypedFieldTypeOrderBy::fromString(FieldTypeRetrieverWrapper::UNKNOWN_FIELD_TYPE);
+        self::assertSame(DuckTypedFieldTypeOrderBy::UNKNOWN, $result->unwrapOr(null));
+    }
+
     public static function generateTypes(): iterable
     {
         yield [Tracker_FormElementFactory::FIELD_COMPUTED];

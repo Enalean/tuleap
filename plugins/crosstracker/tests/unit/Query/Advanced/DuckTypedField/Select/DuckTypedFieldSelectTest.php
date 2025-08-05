@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Query\Advanced\DuckTypedField\Select;
 
-use Tuleap\CrossTracker\Query\Advanced\DuckTypedField\FieldNotFoundInAnyTrackerFault;
 use Tuleap\CrossTracker\Query\Advanced\DuckTypedField\FieldTypeIsNotSupportedFault;
 use Tuleap\CrossTracker\Query\Advanced\DuckTypedField\FieldTypeRetrieverWrapper;
 use Tuleap\CrossTracker\Query\Advanced\DuckTypedField\FieldTypesAreIncompatibleFault;
@@ -94,14 +93,18 @@ final class DuckTypedFieldSelectTest extends TestCase
         self::assertSame([self::INT_FIELD_ID, self::FLOAT_FIELD_ID], $field->field_ids);
     }
 
-    public function testItReturnsErrWhenFieldIsNotFoundInAnyTracker(): void
+    public function testItReturnsUnknownWhenFieldIsNotFoundInAnyTracker(): void
     {
         $this->fields = [];
 
         $result = $this->build();
 
-        self::assertTrue(Result::isErr($result));
-        self::assertInstanceOf(FieldNotFoundInAnyTrackerFault::class, $result->error);
+        self::assertTrue(Result::isOk($result));
+        $field = $result->value;
+        self::assertInstanceOf(DuckTypedFieldSelect::class, $field);
+        self::assertSame(self::FIELD_NAME, $field->name);
+        self::assertSame(DuckTypedFieldTypeSelect::UNKNOWN, $field->type);
+        self::assertSame([], $field->field_ids);
     }
 
     public function testItReturnsErrWhenFirstTypeIsNotSupported(): void

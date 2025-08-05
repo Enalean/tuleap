@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Tests\Stub\Query\Advanced\QueryValidation\Metadata;
 
-use PFUser;
 use Tuleap\CrossTracker\Query\Advanced\QueryValidation\Metadata\CheckMetadataUsage;
 use Tuleap\CrossTracker\Query\Advanced\QueryValidation\Metadata\TitleIsMissingInAllTrackersException;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
@@ -44,7 +43,7 @@ final readonly class MetadataCheckerStub implements CheckMetadataUsage
     }
 
     #[\Override]
-    public function checkMetadataIsUsedByAllTrackers(Metadata $metadata, array $trackers, PFUser $user): void
+    public function checkMetadataIsUsedByAllTrackers(Metadata $metadata): void
     {
         if (! $this->is_valid) {
             throw new TitleIsMissingInAllTrackersException();
