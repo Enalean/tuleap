@@ -50,6 +50,7 @@ export default {
             required: true,
         },
     },
+    emits: ["input"],
     computed: {
         placeholder() {
             return this.$gettext("my_service");

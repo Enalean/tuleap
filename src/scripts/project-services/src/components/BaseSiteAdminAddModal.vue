@@ -19,7 +19,7 @@
 
 <template>
     <add-modal v-bind:form_url="form_url" ref="modal" v-on:reset-modal="resetModal">
-        <template slot="content">
+        <template v-slot:content>
             <input type="hidden" v-bind:name="csrf_token_name" v-bind:value="csrf_token" />
             <sidebar-previewer
                 v-bind:label="preview_label"
@@ -32,13 +32,13 @@
                 v-bind:service="service"
                 v-bind:allowed_icons="allowed_icons"
             >
-                <template slot="is_active">
+                <template v-slot:is_active>
                     <service-is-active
                         id="project-service-add-modal-active"
                         v-bind:value="service.is_active"
                     />
                 </template>
-                <template slot="shortname" v-if="is_default_template">
+                <template v-slot:shortname v-if="is_default_template">
                     <service-shortname
                         id="project-service-add-modal-shortname"
                         v-bind:value="service.short_name"
@@ -71,6 +71,9 @@ export default {
     computed: {
         is_default_template() {
             return this.project_id === ADMIN_PROJECT_ID;
+        },
+        preview_label() {
+            return this.service.label === "" ? this.$gettext("Preview") : this.service.label;
         },
     },
 };

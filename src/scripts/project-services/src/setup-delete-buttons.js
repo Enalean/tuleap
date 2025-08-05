@@ -18,14 +18,13 @@
  */
 
 import { openModalAndReplacePlaceholders } from "@tuleap/tlp-modal";
-import { gettext_provider } from "./helpers/gettext_provider.js";
 
 const DELETE_BUTTONS_SELECTOR = ".project-admin-services-delete-button";
 const DELETE_MODAL_ID = "project-admin-services-delete-modal";
 const DELETE_MODAL_HIDDEN_INPUT_ID = "project-admin-services-delete-modal-service-id";
 const DELETE_MODAL_DESCRIPTION_ID = "project-admin-services-delete-modal-description";
 
-export function setupDeleteButtons() {
+export function setupDeleteButtons(gettext_provider) {
     openModalAndReplacePlaceholders({
         document,
         buttons_selector: DELETE_BUTTONS_SELECTOR,
@@ -39,10 +38,8 @@ export function setupDeleteButtons() {
         paragraph_replacement: {
             paragraph_id: DELETE_MODAL_DESCRIPTION_ID,
             paragraphReplaceCallback(clicked_button) {
-                return gettext_provider.$gettextInterpolate(
-                    gettext_provider.$gettext(
-                        `You are about to delete the %{ service_name } service. Please, confirm your action`,
-                    ),
+                return gettext_provider.$gettext(
+                    `You are about to delete the %{ service_name } service. Please, confirm your action`,
                     { service_name: `${clicked_button.dataset.serviceLabel}` },
                 );
             },

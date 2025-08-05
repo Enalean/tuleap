@@ -49,6 +49,7 @@ export default {
             required: true,
         },
     },
+    emits: ["input"],
     computed: {
         label_placeholder() {
             return this.$gettext("My service");

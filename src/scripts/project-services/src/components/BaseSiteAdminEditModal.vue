@@ -19,7 +19,7 @@
 
 <template>
     <edit-modal v-bind:form_url="form_url" ref="modal" v-on:reset-modal="resetModal">
-        <template slot="content">
+        <template v-slot:content>
             <input type="hidden" v-bind:name="csrf_token_name" v-bind:value="csrf_token" />
             <sidebar-previewer
                 v-bind:label="service.label"
@@ -33,7 +33,7 @@
                 v-bind:service="service"
                 v-bind:allowed_icons="allowed_icons"
             >
-                <template slot="is_active">
+                <template v-slot:is_active>
                     <service-is-active
                         id="project-service-edit-modal-active"
                         v-bind:value="service.is_active"

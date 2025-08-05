@@ -26,7 +26,7 @@
                 name="is_in_new_tab"
                 value="1"
                 v-bind:checked="value"
-                v-on="listeners"
+                v-on:change="onEditNewTab"
             />
             {{ $gettext("Open in a new tab") }}
         </label>
@@ -43,6 +43,15 @@ export default {
         value: {
             type: Boolean,
             required: true,
+        },
+    },
+    emits: ["input"],
+    methods: {
+        onEditNewTab($event) {
+            if (!($event.target instanceof HTMLInputElement)) {
+                return;
+            }
+            this.$emit("input", $event.target.checked);
         },
     },
 };
