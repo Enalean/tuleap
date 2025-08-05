@@ -135,6 +135,151 @@ body {
     --flamingo-pink-text: #b7438a;
 }
 
+.tlp-swatch-inca-silver {
+    --primary-color: var(--inca-silver-primary);
+    --secondary-color: var(--inca-silver-secondary);
+    --border-color: var(--inca-silver-border);
+    --text-color: var(--inca-silver-text);
+}
+.tlp-swatch-chrome-silver {
+    --primary-color: var(--chrome-silver-primary);
+    --secondary-color: var(--chrome-silver-secondary);
+    --border-color: var(--chrome-silver-border);
+    --text-color: var(--chrome-silver-text);
+}
+.tlp-swatch-firemist-silver {
+    --primary-color: var(--firemist-silver-primary);
+    --secondary-color: var(--firemist-silver-secondary);
+    --border-color: var(--firemist-silver-border);
+    --text-color: var(--firemist-silver-text);
+}
+.tlp-swatch-red-wine {
+    --primary-color: var(--red-wine-primary);
+    --secondary-color: var(--red-wine-secondary);
+    --border-color: var(--red-wine-border);
+    --text-color: var(--red-wine-text);
+}
+.tlp-swatch-fiesta-red {
+    --primary-color: var(--fiesta-red-primary);
+    --secondary-color: var(--fiesta-red-secondary);
+    --border-color: var(--fiesta-red-border);
+    --text-color: var(--fiesta-red-text);
+}
+.tlp-swatch-coral-pink {
+    --primary-color: var(--coral-pink-primary);
+    --secondary-color: var(--coral-pink-secondary);
+    --border-color: var(--coral-pink-border);
+    --text-color: var(--coral-pink-text);
+}
+.tlp-swatch-teddy-brown {
+    --primary-color: var(--teddy-brown-primary);
+    --secondary-color: var(--teddy-brown-secondary);
+    --border-color: var(--teddy-brown-border);
+    --text-color: var(--teddy-brown-text);
+}
+.tlp-swatch-clockwork-orange {
+    --primary-color: var(--clockwork-orange-primary);
+    --secondary-color: var(--clockwork-orange-secondary);
+    --border-color: var(--clockwork-orange-border);
+    --text-color: var(--clockwork-orange-text);
+}
+.tlp-swatch-graffiti-yellow {
+    --primary-color: var(--graffiti-yellow-primary);
+    --secondary-color: var(--graffiti-yellow-secondary);
+    --border-color: var(--graffiti-yellow-border);
+    --text-color: var(--graffiti-yellow-text);
+}
+.tlp-swatch-army-green {
+    --primary-color: var(--army-green-primary);
+    --secondary-color: var(--army-green-secondary);
+    --border-color: var(--army-green-border);
+    --text-color: var(--army-green-text);
+}
+.tlp-swatch-neon-green {
+    --primary-color: var(--neon-green-primary);
+    --secondary-color: var(--neon-green-secondary);
+    --border-color: var(--neon-green-border);
+    --text-color: var(--neon-green-text);
+}
+.tlp-swatch-acid-green {
+    --primary-color: var(--acid-green-primary);
+    --secondary-color: var(--acid-green-secondary);
+    --border-color: var(--acid-green-border);
+    --text-color: var(--acid-green-text);
+}
+.tlp-swatch-sherwood-green {
+    --primary-color: var(--sherwood-green-primary);
+    --secondary-color: var(--sherwood-green-secondary);
+    --border-color: var(--sherwood-green-border);
+    --text-color: var(--sherwood-green-text);
+}
+.tlp-swatch-ocean-turquoise {
+    --primary-color: var(--ocean-turquoise-primary);
+    --secondary-color: var(--ocean-turquoise-secondary);
+    --border-color: var(--ocean-turquoise-border);
+    --text-color: var(--ocean-turquoise-text);
+}
+.tlp-swatch-surf-green {
+    --primary-color: var(--surf-green-primary);
+    --secondary-color: var(--surf-green-secondary);
+    --border-color: var(--surf-green-border);
+    --text-color: var(--surf-green-text);
+}
+.tlp-swatch-deep-blue {
+    --primary-color: var(--deep-blue-primary);
+    --secondary-color: var(--deep-blue-secondary);
+    --border-color: var(--deep-blue-border);
+    --text-color: var(--deep-blue-text);
+}
+.tlp-swatch-lake-placid-blue {
+    --primary-color: var(--lake-placid-blue-primary);
+    --secondary-color: var(--lake-placid-blue-secondary);
+    --border-color: var(--lake-placid-blue-border);
+    --text-color: var(--lake-placid-blue-text);
+}
+.tlp-swatch-daphne-blue {
+    --primary-color: var(--daphne-blue-primary);
+    --secondary-color: var(--daphne-blue-secondary);
+    --border-color: var(--daphne-blue-border);
+    --text-color: var(--daphne-blue-text);
+}
+.tlp-swatch-plum-crazy {
+    --primary-color: var(--plum-crazy-primary);
+    --secondary-color: var(--plum-crazy-secondary);
+    --border-color: var(--plum-crazy-border);
+    --text-color: var(--plum-crazy-text);
+}
+.tlp-swatch-ultra-violet {
+    --primary-color: var(--ultra-violet-primary);
+    --secondary-color: var(--ultra-violet-secondary);
+    --border-color: var(--ultra-violet-border);
+    --text-color: var(--ultra-violet-text);
+}
+.tlp-swatch-lilac-purple {
+    --primary-color: var(--lilac-purple-primary);
+    --secondary-color: var(--lilac-purple-secondary);
+    --border-color: var(--lilac-purple-border);
+    --text-color: var(--lilac-purple-text);
+}
+.tlp-swatch-panther-pink {
+    --primary-color: var(--panther-pink-primary);
+    --secondary-color: var(--panther-pink-secondary);
+    --border-color: var(--panther-pink-border);
+    --text-color: var(--panther-pink-text);
+}
+.tlp-swatch-peggy-pink {
+    --primary-color: var(--peggy-pink-primary);
+    --secondary-color: var(--peggy-pink-secondary);
+    --border-color: var(--peggy-pink-border);
+    --text-color: var(--peggy-pink-text);
+}
+.tlp-swatch-flamingo-pink {
+    --primary-color: var(--flamingo-pink-primary);
+    --secondary-color: var(--flamingo-pink-secondary);
+    --border-color: var(--flamingo-pink-border);
+    --text-color: var(--flamingo-pink-text);
+}
+
 /* Cover page */
 .document-title {
     font-size: 20pt;
@@ -355,102 +500,7 @@ tlp-relative-date {
     width: 8px;
     height: 8px;
     border-radius: 50%;
-
-    &.tlp-swatch-inca-silver {
-        background-color: var(--inca-silver-primary);
-    }
-
-    &.tlp-swatch-chrome-silver {
-        background-color: var(--chrome-silver-primary);
-    }
-
-    &.tlp-swatch-firemist-silver {
-        background-color: var(--firemist-silver-primary);
-    }
-
-    &.tlp-swatch-red-wine {
-        background-color: var(--red-wine-primary);
-    }
-
-    &.tlp-swatch-fiesta-red {
-        background-color: var(--fiesta-red-primary);
-    }
-
-    &.tlp-swatch-coral-pink {
-        background-color: var(--coral-pink-primary);
-    }
-
-    &.tlp-swatch-teddy-brown {
-        background-color: var(--teddy-brown-primary);
-    }
-
-    &.tlp-swatch-clockwork-orange {
-        background-color: var(--clockwork-orange-primary);
-    }
-
-    &.tlp-swatch-graffiti-yellow {
-        background-color: var(--graffiti-yellow-primary);
-    }
-
-    &.tlp-swatch-army-green {
-        background-color: var(--army-green-primary);
-    }
-
-    &.tlp-swatch-neon-green {
-        background-color: var(--neon-green-primary);
-    }
-
-    &.tlp-swatch-acid-green {
-        background-color: var(--acid-green-primary);
-    }
-
-    &.tlp-swatch-sherwood-green {
-        background-color: var(--sherwood-green-primary);
-    }
-
-    &.tlp-swatch-ocean-turquoise {
-        background-color: var(--ocean-turquoise-primary);
-    }
-
-    &.tlp-swatch-surf-green {
-        background-color: var(--surf-green-primary);
-    }
-
-    &.tlp-swatch-deep-blue {
-        background-color: var(--deep-blue-primary);
-    }
-
-    &.tlp-swatch-lake-placid-blue {
-        background-color: var(--lake-placid-blue-primary);
-    }
-
-    &.tlp-swatch-daphne-blue {
-        background-color: var(--daphne-blue-primary);
-    }
-
-    &.tlp-swatch-plum-crazy {
-        background-color: var(--plum-crazy-primary);
-    }
-
-    &.tlp-swatch-ultra-violet {
-        background-color: var(--ultra-violet-primary);
-    }
-
-    &.tlp-swatch-lilac-purple {
-        background-color: var(--lilac-purple-primary);
-    }
-
-    &.tlp-swatch-panther-pink {
-        background-color: var(--panther-pink-primary);
-    }
-
-    &.tlp-swatch-peggy-pink {
-        background-color: var(--peggy-pink-primary);
-    }
-
-    &.tlp-swatch-flamingo-pink {
-        background-color: var(--flamingo-pink-primary);
-    }
+    background-color: var(--primary-color);
 }
 
 .document-badge-outline, .document-cross-ref-badge {
@@ -460,231 +510,13 @@ tlp-relative-date {
     font-weight: 600;
     line-height: .75rem;
     white-space: nowrap;
-
-    &.tlp-swatch-inca-silver {
-        background-color: var(--inca-silver-secondary);
-        color: var(--inca-silver-text);
-    }
-
-    &.tlp-swatch-chrome-silver {
-        background-color: var(--chrome-silver-secondary);
-        color: var(--chrome-silver-text);
-    }
-
-    &.tlp-swatch-firemist-silver {
-        background-color: var(--firemist-silver-secondary);
-        color: var(--firemist-silver-text);
-    }
-
-    &.tlp-swatch-red-wine {
-        background-color: var(--red-wine-secondary);
-        color: var(--red-wine-text);
-    }
-
-    &.tlp-swatch-fiesta-red {
-        background-color: var(--fiesta-red-secondary);
-        color: var(--fiesta-red-text);
-    }
-
-    &.tlp-swatch-coral-pink {
-        background-color: var(--coral-pink-secondary);
-        color: var(--coral-pink-text);
-    }
-
-    &.tlp-swatch-teddy-brown {
-        background-color: var(--teddy-brown-secondary);
-        color: var(--teddy-brown-text);
-    }
-
-    &.tlp-swatch-clockwork-orange {
-        background-color: var(--clockwork-orange-secondary);
-        color: var(--clockwork-orange-text);
-    }
-
-    &.tlp-swatch-graffiti-yellow {
-        background-color: var(--graffiti-yellow-secondary);
-        color: var(--graffiti-yellow-text);
-    }
-
-    &.tlp-swatch-army-green {
-        background-color: var(--army-green-secondary);
-        color: var(--army-green-text);
-    }
-
-    &.tlp-swatch-neon-green {
-        background-color: var(--neon-green-secondary);
-        color: var(--neon-green-text);
-    }
-
-    &.tlp-swatch-acid-green {
-        background-color: var(--acid-green-secondary);
-        color: var(--acid-green-text);
-    }
-
-    &.tlp-swatch-sherwood-green {
-        background-color: var(--sherwood-green-secondary);
-        color: var(--sherwood-green-text);
-    }
-
-    &.tlp-swatch-ocean-turquoise {
-        background-color: var(--ocean-turquoise-secondary);
-        color: var(--ocean-turquoise-text);
-    }
-
-    &.tlp-swatch-surf-green {
-        background-color: var(--surf-green-secondary);
-        color: var(--surf-green-text);
-    }
-
-    &.tlp-swatch-deep-blue {
-        background-color: var(--deep-blue-secondary);
-        color: var(--deep-blue-text);
-    }
-
-    &.tlp-swatch-lake-placid-blue {
-        background-color: var(--lake-placid-blue-secondary);
-        color: var(--lake-placid-blue-text);
-    }
-
-    &.tlp-swatch-daphne-blue {
-        background-color: var(--daphne-blue-secondary);
-        color: var(--daphne-blue-text);
-    }
-
-    &.tlp-swatch-plum-crazy {
-        background-color: var(--plum-crazy-secondary);
-        color: var(--plum-crazy-text);
-    }
-
-    &.tlp-swatch-ultra-violet {
-        background-color: var(--ultra-violet-secondary);
-        color: var(--ultra-violet-text);
-    }
-
-    &.tlp-swatch-lilac-purple {
-        background-color: var(--lilac-purple-secondary);
-        color: var(--lilac-purple-text);
-    }
-
-    &.tlp-swatch-panther-pink {
-        background-color: var(--panther-pink-secondary);
-        color: var(--panther-pink-text);
-    }
-
-    &.tlp-swatch-peggy-pink {
-        background-color: var(--peggy-pink-secondary);
-        color: var(--peggy-pink-text);
-    }
-
-    &.tlp-swatch-flamingo-pink {
-        background-color: var(--flamingo-pink-secondary);
-        color: var(--flamingo-pink-text);
-    }
-
-    &.tlp-swatch-secondary {
-        background-color: var(--secondary-background-color);
-        color: var(--dimmed-color-darker-10);
-    }
+    background-color: var(--secondary-color);
+    color: var(--text-color);
 }
 
 .document-cross-ref-badge {
     border-radius: 15px;
-
-    &.tlp-swatch-inca-silver {
-        border: 1px solid var(--inca-silver-border);
-    }
-
-    &.tlp-swatch-chrome-silver {
-        border: 1px solid var(--chrome-silver-border);
-    }
-
-    &.tlp-swatch-firemist-silver {
-        border: 1px solid var(--firemist-silver-border);
-    }
-
-    &.tlp-swatch-red-wine {
-        border: 1px solid var(--red-wine-border);
-    }
-
-    &.tlp-swatch-fiesta-red {
-        border: 1px solid var(--fiesta-red-border);
-    }
-
-    &.tlp-swatch-coral-pink {
-        border: 1px solid var(--coral-pink-border);
-    }
-
-    &.tlp-swatch-teddy-brown {
-        border: 1px solid var(--teddy-brown-border);
-    }
-
-    &.tlp-swatch-clockwork-orange {
-        border: 1px solid var(--clockwork-orange-border);
-    }
-
-    &.tlp-swatch-graffiti-yellow {
-        border: 1px solid var(--graffiti-yellow-border);
-    }
-
-    &.tlp-swatch-army-green {
-        border: 1px solid var(--army-green-border);
-    }
-
-    &.tlp-swatch-neon-green {
-        border: 1px solid var(--neon-green-border);
-    }
-
-    &.tlp-swatch-acid-green {
-        border: 1px solid var(--acid-green-border);
-    }
-
-    &.tlp-swatch-sherwood-green {
-        border: 1px solid var(--sherwood-green-border);
-    }
-
-    &.tlp-swatch-ocean-turquoise {
-        border: 1px solid var(--ocean-turquoise-border);
-    }
-
-    &.tlp-swatch-surf-green {
-        border: 1px solid var(--surf-green-border);
-    }
-
-    &.tlp-swatch-deep-blue {
-        border: 1px solid var(--deep-blue-border);
-    }
-
-    &.tlp-swatch-lake-placid-blue {
-        border: 1px solid var(--lake-placid-blue-border);
-    }
-
-    &.tlp-swatch-daphne-blue {
-        border: 1px solid var(--daphne-blue-border);
-    }
-
-    &.tlp-swatch-plum-crazy {
-        border: 1px solid var(--plum-crazy-border);
-    }
-
-    &.tlp-swatch-ultra-violet {
-        border: 1px solid var(--ultra-violet-border);
-    }
-
-    &.tlp-swatch-lilac-purple {
-        border: 1px solid var(--lilac-purple-border);
-    }
-
-    &.tlp-swatch-panther-pink {
-        border: 1px solid var(--panther-pink-border);
-    }
-
-    &.tlp-swatch-peggy-pink {
-        border: 1px solid var(--peggy-pink-border);
-    }
-
-    &.tlp-swatch-flamingo-pink {
-        border: 1px solid var(--flamingo-pink-border);
-    }
+    border: 1px solid var(--border-color);
 }
 
 .document-badge-outline {
