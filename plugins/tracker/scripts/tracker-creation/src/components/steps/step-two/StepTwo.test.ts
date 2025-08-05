@@ -33,7 +33,7 @@ describe("StepTwo", () => {
         is_a_duplication_of_a_tracker_from_another_project = false,
         is_created_from_default_template = false,
         is_created_from_jira = false,
-    ): Promise<Wrapper<StepTwo>> {
+    ): Promise<Wrapper<Vue>> {
         return mount(StepTwo, {
             mocks: {
                 $store: createStoreMock({
@@ -66,7 +66,7 @@ describe("StepTwo", () => {
     }
 
     describe("Tracker duplication", () => {
-        let wrapper: Wrapper<StepTwo>;
+        let wrapper: Wrapper<Vue>;
 
         beforeEach(async () => {
             wrapper = await getWrapper({} as State, true);
@@ -104,7 +104,7 @@ describe("StepTwo", () => {
     });
 
     describe("Tracker from another project duplication", () => {
-        let wrapper: Wrapper<StepTwo>;
+        let wrapper: Wrapper<Vue>;
 
         beforeEach(async () => {
             wrapper = await getWrapper({} as State, false, false, false, true);
@@ -128,7 +128,7 @@ describe("StepTwo", () => {
     });
 
     describe("XML import", () => {
-        let wrapper: Wrapper<StepTwo>;
+        let wrapper: Wrapper<Vue>;
 
         beforeEach(async () => {
             const file_input = document.implementation.createHTMLDocument().createElement("input");
@@ -158,7 +158,7 @@ describe("StepTwo", () => {
     });
 
     describe("Create from empty", () => {
-        let wrapper: Wrapper<StepTwo>;
+        let wrapper: Wrapper<Vue>;
 
         beforeEach(async () => {
             const file_input = document.implementation.createHTMLDocument().createElement("input");
@@ -192,7 +192,7 @@ describe("StepTwo", () => {
     });
 
     describe("Create from jira", () => {
-        let wrapper: Wrapper<StepTwo>;
+        let wrapper: Wrapper<Vue>;
 
         beforeEach(async () => {
             wrapper = await getWrapper({} as State, false, false, false, false, false, true);
