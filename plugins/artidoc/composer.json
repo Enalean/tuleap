@@ -2,12 +2,12 @@
   "name": "tuleap/plugin-artidoc",
   "autoload": {
     "psr-4": {
-      "Tuleap\\Artidoc\\": "include/Artidoc"
+      "Tuleap\\Artidoc\\": "include"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "Tuleap\\Artidoc\\": ["tests/unit/Artidoc", "tests/integration/Artidoc", "tests/rest/Artidoc"]
+      "Tuleap\\Artidoc\\": ["tests/unit", "tests/integration", "tests/rest"]
     }
   }
 }

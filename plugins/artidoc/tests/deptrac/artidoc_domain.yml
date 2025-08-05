@@ -5,7 +5,7 @@ deptrac:
     - name: Domain
       collectors:
         - type: directory
-          value: plugins/artidoc/include/Artidoc/Domain/.*
+          value: plugins/artidoc/include/Domain/.*
     - name: CoreLibraries
       collectors:
         - type: classLike

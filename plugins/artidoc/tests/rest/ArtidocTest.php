@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc;
 
-require_once __DIR__ . '/../../../../docman/vendor/autoload.php';
+require_once __DIR__ . '/../../../docman/vendor/autoload.php';
 
 use Psl\Json;
 use REST_TestDataBuilder;
@@ -37,6 +37,7 @@ final class ArtidocTest extends DocmanTestExecutionHelper
     private string $project_members_identifier;
     private string $project_admins_identifier;
 
+    #[\Override]
     public function setUp(): void
     {
         parent::setUp();
