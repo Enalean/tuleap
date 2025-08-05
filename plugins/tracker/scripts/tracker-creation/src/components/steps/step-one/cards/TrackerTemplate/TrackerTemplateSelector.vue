@@ -34,7 +34,7 @@
                 {{ $gettext("Choose a tracker...") }}
             </option>
             <optgroup
-                v-for="(project, index) in project_templates"
+                v-for="(project, index) in store.state.project_templates"
                 v-bind:label="project.project_name"
                 v-bind:key="index"
             >
@@ -50,29 +50,19 @@
         </select>
     </div>
 </template>
-<script lang="ts">
-import Vue from "vue";
-import { State, Mutation } from "vuex-class";
-import { Component } from "vue-property-decorator";
-import type { ProjectTemplate, Tracker } from "../../../../../store/type";
+<script setup lang="ts">
+import { ref, onMounted } from "vue";
+import { useMutations, useStore } from "vuex-composition-helpers";
 
-@Component
-export default class TrackerTemplateSelector extends Vue {
-    @State
-    readonly project_templates!: ProjectTemplate[];
+const { setSelectedTrackerTemplate } = useMutations(["setSelectedTrackerTemplate"]);
 
-    @State
-    readonly selected_tracker_template!: Tracker | null;
+const store = useStore();
 
-    @Mutation
-    readonly setSelectedTrackerTemplate!: (tracker_id: string) => void;
+const model = ref("");
 
-    model = "";
-
-    mounted(): void {
-        if (this.selected_tracker_template) {
-            this.model = this.selected_tracker_template.id;
-        }
+onMounted(() => {
+    if (store.state.selected_tracker_template) {
+        model.value = store.state.selected_tracker_template.id;
     }
-}
+});
 </script>
