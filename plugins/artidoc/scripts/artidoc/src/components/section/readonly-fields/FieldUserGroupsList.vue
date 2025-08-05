@@ -34,12 +34,15 @@
 
 <script setup lang="ts">
 import { useGettext } from "vue3-gettext";
-import type { ReadonlyFieldUserGroupsList } from "@/sections/readonly-fields/ReadonlyFields";
+import type {
+    ReadonlyFieldPermissions,
+    ReadonlyFieldUserGroupsList,
+} from "@/sections/readonly-fields/ReadonlyFields";
 
 const gettext_provider = useGettext();
 const { $gettext } = gettext_provider;
 defineProps<{
-    user_groups_list_field: ReadonlyFieldUserGroupsList;
+    user_groups_list_field: ReadonlyFieldUserGroupsList | ReadonlyFieldPermissions;
 }>();
 </script>
 

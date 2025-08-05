@@ -22,6 +22,7 @@ import type {
     ReadonlyFieldLinkedArtifact,
     ReadonlyFieldLinks,
     ReadonlyFieldNumeric,
+    ReadonlyFieldPermissions,
     ReadonlyFieldStaticList,
     ReadonlyFieldStaticListValue,
     ReadonlyFieldText,
@@ -102,5 +103,14 @@ export const ReadonlyFieldStub = {
         display_type,
         value,
         with_time,
+    }),
+    permissionsField: (
+        value: ReadonlyFieldUserGroupsListValue[],
+        display_type: ConfigurationFieldDisplayType,
+    ): ReadonlyFieldPermissions => ({
+        type: "permissions",
+        label: `Readonly permissions on artifact field`,
+        value,
+        display_type,
     }),
 };

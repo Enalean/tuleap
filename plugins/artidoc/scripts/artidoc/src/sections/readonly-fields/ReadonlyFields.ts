@@ -30,6 +30,7 @@ export const LINKS_FIELD = "links";
 export const NUMERIC_FIELD = "numeric";
 export const USER_FIELD = "user";
 export const DATE_FIELD = "date";
+export const PERMISSIONS_FIELD = "permissions";
 
 export type ReadonlyFieldText = Readonly<{
     type: typeof TEXT_FIELD;
@@ -125,6 +126,13 @@ export type ReadonlyFieldDate = Readonly<{
     with_time: boolean;
 }>;
 
+export type ReadonlyFieldPermissions = Readonly<{
+    type: typeof PERMISSIONS_FIELD;
+    label: string;
+    display_type: ConfigurationFieldDisplayType;
+    value: ReadonlyFieldUserGroupsListValue[];
+}>;
+
 export type ReadonlyField =
     | ReadonlyFieldText
     | ReadonlyFieldUserGroupsList
@@ -133,4 +141,5 @@ export type ReadonlyField =
     | ReadonlyFieldLinks
     | ReadonlyFieldNumeric
     | ReadonlyFieldUser
-    | ReadonlyFieldDate;
+    | ReadonlyFieldDate
+    | ReadonlyFieldPermissions;

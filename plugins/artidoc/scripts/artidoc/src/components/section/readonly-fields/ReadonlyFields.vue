@@ -32,7 +32,10 @@
                 v-bind:field_text="readonly_field"
             />
             <field-user-groups-list
-                v-if="readonly_field.type === USER_GROUP_LIST_FIELD"
+                v-if="
+                    readonly_field.type === USER_GROUP_LIST_FIELD ||
+                    readonly_field.type === PERMISSIONS_FIELD
+                "
                 v-bind:user_groups_list_field="readonly_field"
             />
             <field-static-list
@@ -54,17 +57,18 @@
 </template>
 
 <script setup lang="ts">
+import type { ReadonlyField } from "@/sections/readonly-fields/ReadonlyFields";
 import {
-    NUMERIC_FIELD,
+    DATE_FIELD,
     LINKS_FIELD,
+    NUMERIC_FIELD,
+    PERMISSIONS_FIELD,
     STATIC_LIST_FIELD,
     TEXT_FIELD,
+    USER_FIELD,
     USER_GROUP_LIST_FIELD,
     USER_LIST_FIELD,
-    USER_FIELD,
-    DATE_FIELD,
 } from "@/sections/readonly-fields/ReadonlyFields";
-import type { ReadonlyField } from "@/sections/readonly-fields/ReadonlyFields";
 import type { SectionBasedOnArtifact } from "@/helpers/artidoc-section.type";
 import FieldText from "@/components/section/readonly-fields/FieldText.vue";
 import FieldUserGroupsList from "@/components/section/readonly-fields/FieldUserGroupsList.vue";

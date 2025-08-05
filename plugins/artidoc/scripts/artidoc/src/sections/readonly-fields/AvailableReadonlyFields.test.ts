@@ -17,33 +17,37 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 import type { ConfigurationField } from "@/sections/readonly-fields/AvailableReadonlyFields";
 import {
     filterAlreadySelectedFields,
-    getSupportedFields,
     filterSemanticsTitleDescriptionBoundField,
+    getSupportedFields,
 } from "@/sections/readonly-fields/AvailableReadonlyFields";
 import type { StructureFields } from "@tuleap/plugin-tracker-rest-api-types";
 import {
-    STRING_FIELD as TRACKER_STRING_FIELD,
-    TEXT_FIELD as TRACKER_TEXT_FIELD,
-    SELECTBOX_FIELD,
-    MULTI_SELECTBOX_FIELD,
-    OPEN_LIST_FIELD,
-    CONTAINER_COLUMN,
-    LIST_BIND_UGROUPS,
-    LIST_BIND_STATIC,
-    LIST_BIND_USERS,
-    CHECKBOX_FIELD,
     ARTIFACT_ID_FIELD,
     ARTIFACT_ID_IN_TRACKER_FIELD,
+    CHECKBOX_FIELD,
+    COMPUTED_FIELD,
+    CONTAINER_COLUMN,
+    DATE_FIELD,
     FLOAT_FIELD,
     INT_FIELD,
-    PRIORITY_FIELD,
-    COMPUTED_FIELD,
+    LAST_UPDATE_DATE_FIELD,
     LAST_UPDATED_BY_FIELD,
+    LIST_BIND_STATIC,
+    LIST_BIND_UGROUPS,
+    LIST_BIND_USERS,
+    MULTI_SELECTBOX_FIELD,
+    OPEN_LIST_FIELD,
+    PERMISSION_FIELD as TRACKER_PERMISSION_FIELD,
+    PRIORITY_FIELD,
+    SELECTBOX_FIELD,
+    STRING_FIELD as TRACKER_STRING_FIELD,
+    SUBMISSION_DATE_FIELD,
     SUBMITTED_BY_FIELD,
+    TEXT_FIELD as TRACKER_TEXT_FIELD,
 } from "@tuleap/plugin-tracker-constants";
 import { ConfigurationFieldBuilder } from "@/sections/readonly-fields/ConfigurationFieldBuilder";
 
@@ -228,6 +232,30 @@ describe("getAvailableFields", () => {
         label: "Last update by",
     } as StructureFields;
 
+    const date_field = {
+        field_id: 148,
+        type: DATE_FIELD,
+        label: "Date",
+    } as StructureFields;
+
+    const submitted_on_field = {
+        field_id: 149,
+        type: SUBMISSION_DATE_FIELD,
+        label: "Submitted on",
+    } as StructureFields;
+
+    const last_update_date_field = {
+        field_id: 150,
+        type: LAST_UPDATE_DATE_FIELD,
+        label: "Last update date",
+    } as StructureFields;
+
+    const permissions_field = {
+        field_id: 151,
+        type: TRACKER_PERMISSION_FIELD,
+        label: "Permissions field",
+    } as StructureFields;
+
     const all_fields: Readonly<StructureFields[]> = [
         string_field,
         text_field,
@@ -261,6 +289,10 @@ describe("getAvailableFields", () => {
         computed_field,
         submitted_by_field,
         last_update_by_field,
+        date_field,
+        submitted_on_field,
+        last_update_date_field,
+        permissions_field,
     ];
 
     const tracker_information = {
@@ -303,6 +335,10 @@ describe("getAvailableFields", () => {
                 ConfigurationFieldBuilder.fromSupportedTrackerField(computed_field),
                 ConfigurationFieldBuilder.fromSupportedTrackerField(submitted_by_field),
                 ConfigurationFieldBuilder.fromSupportedTrackerField(last_update_by_field),
+                ConfigurationFieldBuilder.fromSupportedTrackerField(date_field),
+                ConfigurationFieldBuilder.fromSupportedTrackerField(submitted_on_field),
+                ConfigurationFieldBuilder.fromSupportedTrackerField(last_update_date_field),
+                ConfigurationFieldBuilder.fromSupportedTrackerField(permissions_field),
             ]);
         });
     });

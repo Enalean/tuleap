@@ -28,6 +28,7 @@ import type {
     DATE_FIELD,
     LINKS_FIELD,
     NUMERIC_FIELD,
+    PERMISSIONS_FIELD,
     STATIC_LIST_FIELD,
     TEXT_FIELD,
     USER_FIELD,
@@ -50,7 +51,8 @@ export type ConfigurationFieldType =
     | typeof USER_LIST_FIELD
     | typeof NUMERIC_FIELD
     | typeof USER_FIELD
-    | typeof DATE_FIELD;
+    | typeof DATE_FIELD
+    | typeof PERMISSIONS_FIELD;
 
 export type ConfigurationField = {
     readonly type: ConfigurationFieldType;
