@@ -20,7 +20,8 @@
 <template>
     <div
         class="tlp-form-element card-content card-tracker-template-selector"
-        v-bind:class="{ 'tlp-form-element-error': has_xml_file_error }"
+        v-bind:class="{ 'tlp-form-element-error': hasXMLError() }"
+        ref="file_wrapper"
     >
         <label class="tlp-label card-title" for="tracker-creation-xml-file-selector">
             {{ $gettext("Tracker XML file") }}
@@ -34,54 +35,53 @@
             name="tracker-xml-file"
             accept="text/xml"
             data-test="tracker-creation-xml-file-selector"
-            v-on:change="setTrackerToBeCreatedFromXml"
+            v-on:change="handleFileChange"
         />
-        <p v-if="has_xml_file_error" class="tlp-text-danger tracker-creation-xml-file-error">
+        <p v-if="hasXMLError()" class="tlp-text-danger tracker-creation-xml-file-error">
             {{ $gettext("The provided file is not a valid XML file") }}
             <i class="far fa-frown"></i>
         </p>
     </div>
 </template>
-<script lang="ts">
-import Vue from "vue";
-import { Mutation, State } from "vuex-class";
-import { Component } from "vue-property-decorator";
+<script setup lang="ts">
+import { ref, onMounted } from "vue";
+import { useStore } from "vuex-composition-helpers";
 
-@Component
-export default class TrackerXmlFileSelector extends Vue {
-    @State
-    readonly selected_xml_file_input!: HTMLInputElement | null;
+const file_wrapper = ref<HTMLElement | null>(null);
+const file_input = ref<HTMLInputElement | null>(null);
+const should_render_fresh_input = ref(true);
 
-    @State
-    readonly has_xml_file_error!: boolean;
+const store = useStore();
 
-    @Mutation
-    readonly setSelectedTrackerXmlFileInput!: (list: HTMLInputElement) => void;
+const handleFileChange = (): void => {
+    store.commit("setTrackerToBeCreatedFromXml");
+};
 
-    @Mutation
-    readonly setTrackerToBeCreatedFromXml!: () => void;
-
-    should_render_fresh_input = true;
-
-    mounted(): void {
-        if (this.selected_xml_file_input === null) {
-            this.initXmlFileInput();
-
-            return;
-        }
-
-        this.should_render_fresh_input = false;
-        this.$el.insertBefore(this.selected_xml_file_input, this.$el.children[1]);
-    }
-
-    initXmlFileInput(): void {
-        const input = this.$refs.file_input;
-
-        if (!(input instanceof HTMLInputElement)) {
-            return;
-        }
-
-        this.setSelectedTrackerXmlFileInput(input);
-    }
+function hasXMLError(): boolean {
+    return store.state.has_xml_file_error;
 }
+
+function initXmlFileInput(): void {
+    if (!(file_input.value instanceof HTMLInputElement)) {
+        return;
+    }
+
+    store.commit("setSelectedTrackerXmlFileInput", file_input.value);
+}
+
+onMounted(() => {
+    if (store.state.selected_xml_file_input === null) {
+        initXmlFileInput();
+        return;
+    }
+
+    should_render_fresh_input.value = false;
+
+    if (file_wrapper.value && file_wrapper.value.children[1]) {
+        file_wrapper.value.insertBefore(
+            store.state.selected_xml_file_input,
+            file_wrapper.value.children[1],
+        );
+    }
+});
 </script>
