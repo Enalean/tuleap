@@ -26,11 +26,11 @@ use Tracker_Artifact_Changeset;
 use Tracker_Artifact_PaginatedArtifacts;
 use Tracker_ArtifactFactory;
 use Tracker_FormElement_Field;
-use Tracker_FormElement_Field_Alphanum;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
+use Tuleap\Tracker\FormElement\Field\AlphaNumericField;
 use Tuleap\Tracker\REST\Artifact\Changeset\ChangesetRepresentation;
 use Tuleap\Tracker\REST\Artifact\Changeset\ChangesetRepresentationBuilder;
 use Tuleap\Tracker\REST\Artifact\Changeset\ChangesetRepresentationCollection;
@@ -119,7 +119,7 @@ class ArtifactRepresentationBuilder
         $values    = [];
 
         foreach ($this->formelement_factory->getUsedFieldsForREST($artifact->getTracker()) as $field) {
-            if (! $field->userCanRead($user) || ! $field instanceof Tracker_FormElement_Field_Alphanum) {
+            if (! $field->userCanRead($user) || ! $field instanceof AlphaNumericField) {
                 continue;
             }
             $field_value               = $field->getRESTValue($user, $changeset);

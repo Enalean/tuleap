@@ -32,7 +32,6 @@ use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue;
 use Tracker_Artifact_ChangesetValue_Text;
 use Tracker_ArtifactFactory;
-use Tracker_FormElement_Field_Alphanum;
 use Tracker_FormElement_FieldVisitor;
 use Tracker_FormElementFactory;
 use Tracker_Report;
@@ -51,6 +50,7 @@ use Tuleap\Tracker\Artifact\FileUploadDataProvider;
 use Tuleap\Tracker\Artifact\RichTextareaConfiguration;
 use Tuleap\Tracker\Artifact\RichTextareaProvider;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
+use Tuleap\Tracker\FormElement\Field\AlphaNumericField;
 use Tuleap\Tracker\FormElement\FieldContentIndexer;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\DeleteSpecificProperties;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\DuplicateSpecificProperties;
@@ -65,7 +65,7 @@ use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
 use Tuleap\Tracker\Semantic\Title\CachedSemanticTitleFieldRetriever;
 use UserManager;
 
-class TextField extends Tracker_FormElement_Field_Alphanum
+class TextField extends AlphaNumericField
 {
     public array $default_properties = [
         'rows'          => [
