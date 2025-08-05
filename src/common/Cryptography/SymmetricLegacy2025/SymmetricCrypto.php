@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Cryptography\Symmetric;
+namespace Tuleap\Cryptography\SymmetricLegacy2025;
 
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Cryptography\Exception\InvalidCiphertextException;

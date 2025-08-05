@@ -22,8 +22,8 @@ namespace Tuleap\Bugzilla\Reference;
 
 use ReferenceManager;
 use Tuleap\Cryptography\ConcealedString;
-use Tuleap\Cryptography\Symmetric\EncryptionKey;
-use Tuleap\Cryptography\Symmetric\SymmetricCrypto;
+use Tuleap\Cryptography\SymmetricLegacy2025\EncryptionKey;
+use Tuleap\Cryptography\SymmetricLegacy2025\SymmetricCrypto;
 use Tuleap\Reference\ReferenceValidator;
 use Valid_HTTPURI;
 

@@ -24,7 +24,7 @@ namespace Tuleap\Gitlab\Repository\Webhook;
 use Psr\Log\LoggerInterface;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Cryptography\KeyFactory;
-use Tuleap\Cryptography\Symmetric\SymmetricCrypto;
+use Tuleap\Cryptography\SymmetricLegacy2025\SymmetricCrypto;
 use Tuleap\Gitlab\API\ClientWrapper;
 use Tuleap\Gitlab\API\Credentials;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;

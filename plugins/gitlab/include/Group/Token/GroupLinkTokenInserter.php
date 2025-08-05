@@ -24,7 +24,7 @@ namespace Tuleap\Gitlab\Group\Token;
 
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Cryptography\KeyFactory;
-use Tuleap\Cryptography\Symmetric\SymmetricCrypto;
+use Tuleap\Cryptography\SymmetricLegacy2025\SymmetricCrypto;
 use Tuleap\Gitlab\Group\GroupLink;
 
 final class GroupLinkTokenInserter implements InsertGroupLinkToken

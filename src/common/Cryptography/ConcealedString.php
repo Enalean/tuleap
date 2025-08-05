@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Cryptography;
 
-use Tuleap\Cryptography\Symmetric\SymmetricCrypto;
+use Tuleap\Cryptography\SymmetricLegacy2025\SymmetricCrypto;
 
 /**
  * @psalm-immutable

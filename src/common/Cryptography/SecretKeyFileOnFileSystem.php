@@ -25,7 +25,7 @@ namespace Tuleap\Cryptography;
 
 use Psr\Log\LoggerInterface;
 use Tuleap\Cryptography\Exception\CannotPerformIOOperationException;
-use Tuleap\Cryptography\Symmetric\EncryptionKey;
+use Tuleap\Cryptography\SymmetricLegacy2025\EncryptionKey;
 
 final class SecretKeyFileOnFileSystem implements SecretKeyFile
 {

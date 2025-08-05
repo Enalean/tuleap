@@ -27,7 +27,7 @@ use Psr\Log\LoggerInterface;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Cryptography\Exception\CannotPerformIOOperationException;
 use Tuleap\Cryptography\KeyFactory;
-use Tuleap\Cryptography\Symmetric\SymmetricCrypto;
+use Tuleap\Cryptography\SymmetricLegacy2025\SymmetricCrypto;
 use Tuleap\Tracker\Creation\TrackerCreationHasFailedException;
 
 class AsyncJiraScheduler

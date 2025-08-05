@@ -25,7 +25,7 @@ namespace Tuleap\Gitlab\Test\Stubs;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Cryptography\KeyFactory;
-use Tuleap\Cryptography\Symmetric\SymmetricCrypto;
+use Tuleap\Cryptography\SymmetricLegacy2025\SymmetricCrypto;
 use Tuleap\Gitlab\Group\Token\GetTokenByGroupLinkId;
 
 final class GetTokenByGroupLinkIdStub implements GetTokenByGroupLinkId

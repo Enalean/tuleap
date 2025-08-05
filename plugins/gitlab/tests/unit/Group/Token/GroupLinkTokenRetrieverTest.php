@@ -25,7 +25,7 @@ namespace Tuleap\Gitlab\Group\Token;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Cryptography\KeyFactory;
-use Tuleap\Cryptography\Symmetric\EncryptionKey;
+use Tuleap\Cryptography\SymmetricLegacy2025\EncryptionKey;
 use Tuleap\Gitlab\Test\Builder\GroupLinkBuilder;
 use Tuleap\Gitlab\Test\Stubs\GetTokenByGroupLinkIdStub;
 use Tuleap\Test\PHPUnit\TestCase;

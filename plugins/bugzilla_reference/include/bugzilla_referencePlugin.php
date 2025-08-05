@@ -140,7 +140,7 @@ class bugzilla_referencePlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassD
     }
 
     /**
-     * @return \Tuleap\Cryptography\Symmetric\EncryptionKey
+     * @return \Tuleap\Cryptography\SymmetricLegacy2025\EncryptionKey
      */
     private function getEncryptionKey()
     {

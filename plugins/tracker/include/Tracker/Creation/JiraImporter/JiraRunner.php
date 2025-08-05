@@ -28,7 +28,7 @@ use Tracker_Exception;
 use Tuleap\Cryptography\Exception\CannotPerformIOOperationException;
 use Tuleap\Cryptography\Exception\InvalidCiphertextException;
 use Tuleap\Cryptography\KeyFactory;
-use Tuleap\Cryptography\Symmetric\SymmetricCrypto;
+use Tuleap\Cryptography\SymmetricLegacy2025\SymmetricCrypto;
 use Tuleap\Queue\QueueFactory;
 use Tuleap\Queue\Worker;
 use Tuleap\Tracker\Creation\JiraImporter\Import\ImportNotifier\JiraErrorImportNotifier;
