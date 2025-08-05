@@ -65,12 +65,10 @@ class BurndownCacheGenerationChecker
         DatePeriodWithOpenDays $date_period,
         $capacity,
     ): bool {
-        $start = $this->getDatePeriodStartDateAtMidnight($date_period);
-
-        $this->logger->debug('Start date after updating timezone: ' . $start->getTimestamp());
+        $this->logger->debug('Burndown start date: ' . (string) $date_period->getStartDate());
 
         $date_period_with_start_date_from_midnight = DatePeriodWithOpenDays::buildFromDuration(
-            $start->getTimestamp(),
+            $date_period->getStartDate(),
             $date_period->getDuration()
         );
 
@@ -116,20 +114,5 @@ class BurndownCacheGenerationChecker
         }
 
         return true;
-    }
-
-    private function getDatePeriodStartDateAtMidnight(DatePeriodWithOpenDays $date_period): DateTime
-    {
-        $start_date = $date_period->getStartDate();
-
-        if ($start_date === null) {
-            $start_date = $_SERVER['REQUEST_TIME'];
-        }
-
-        $start = new DateTime();
-        $start->setTimestamp($start_date);
-        $start->setTime(0, 0, 0);
-
-        return $start;
     }
 }
