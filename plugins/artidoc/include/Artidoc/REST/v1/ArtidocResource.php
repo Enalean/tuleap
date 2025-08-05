@@ -51,6 +51,7 @@ use Tuleap\Artidoc\Document\Field\List\StaticListFieldWithValueBuilder;
 use Tuleap\Artidoc\Document\Field\List\UserGroupListWithValueBuilder;
 use Tuleap\Artidoc\Document\Field\List\UserListFieldWithValueBuilder;
 use Tuleap\Artidoc\Document\Field\Numeric\NumericFieldWithValueBuilder;
+use Tuleap\Artidoc\Document\Field\Permissions\PermissionsOnArtifactFieldWithValueBuilder;
 use Tuleap\Artidoc\Document\Field\SuitableFieldRetriever;
 use Tuleap\Artidoc\Document\Field\User\UserFieldWithValueBuilder;
 use Tuleap\Artidoc\Document\Tracker\NoSemanticDescriptionFault;
@@ -593,6 +594,7 @@ final class ArtidocResource extends AuthenticatedResource
                     UserHelper::instance(),
                 ),
                 new DateFieldWithValueBuilder($user),
+                new PermissionsOnArtifactFieldWithValueBuilder(),
             )
         );
     }

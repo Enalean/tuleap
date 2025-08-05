@@ -24,7 +24,7 @@ namespace Tuleap\Artidoc\Document\Field\List;
 
 use Tuleap\Artidoc\Document\Field\ConfiguredField;
 use Tuleap\Artidoc\Domain\Document\Section\Field\DisplayType;
-use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserGroupListValue;
+use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserGroupValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserGroupsListFieldWithValue;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -128,8 +128,8 @@ final class UserGroupListWithValueBuilderTest extends TestCase
 
         self::assertEquals(
             new UserGroupsListFieldWithValue('trionychoidean', DisplayType::COLUMN, [
-                new UserGroupListValue('Project Members'),
-                new UserGroupListValue('Reviewers'),
+                new UserGroupValue('Project Members'),
+                new UserGroupValue('Reviewers'),
             ]),
             $this->getField(new ConfiguredField($list_field, DisplayType::COLUMN))
         );

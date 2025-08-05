@@ -26,6 +26,7 @@ use DateTimeImmutable;
 use Override;
 use PFUser;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use ProjectUGroup;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue_Text;
 use Tracker_ArtifactLinkInfo;
@@ -36,6 +37,7 @@ use Tuleap\Artidoc\Document\Field\List\StaticListFieldWithValueBuilder;
 use Tuleap\Artidoc\Document\Field\List\UserGroupListWithValueBuilder;
 use Tuleap\Artidoc\Document\Field\List\UserListFieldWithValueBuilder;
 use Tuleap\Artidoc\Document\Field\Numeric\NumericFieldWithValueBuilder;
+use Tuleap\Artidoc\Document\Field\Permissions\PermissionsOnArtifactFieldWithValueBuilder;
 use Tuleap\Artidoc\Document\Field\User\UserFieldWithValueBuilder;
 use Tuleap\Artidoc\Domain\Document\Section\Field\DisplayType;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\ArtifactLinkFieldWithValue;
@@ -45,12 +47,13 @@ use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\ArtifactLinkValu
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\DateFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\FieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\NumericFieldWithValue;
+use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\PermissionsOnArtifactFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StaticListFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StaticListValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\TextFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserFieldWithValue;
-use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserGroupListValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserGroupsListFieldWithValue;
+use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserGroupValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserListFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserValue;
 use Tuleap\Color\ColorName;
@@ -74,6 +77,7 @@ use Tuleap\Tracker\Test\Builders\ChangesetValueArtifactLinkTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueDateTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueIntegerTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueListTestBuilder;
+use Tuleap\Tracker\Test\Builders\ChangesetValuePermissionsOnArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueStringTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueTextTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ArtifactLinkFieldBuilder;
@@ -87,6 +91,7 @@ use Tuleap\Tracker\Test\Builders\Fields\List\ListUserGroupBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserGroupValueBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserValueBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\PermissionsOnArtifactFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\TextFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -95,6 +100,7 @@ use Tuleap\Tracker\Test\Stub\FormElement\Field\ArtifactLink\Type\RetrieveTypeFro
 use Tuleap\Tracker\Test\Stub\Semantic\Status\RetrieveSemanticStatusStub;
 use Tuleap\Tracker\Test\Stub\Semantic\Title\RetrieveSemanticTitleFieldStub;
 use Tuleap\Tracker\Tracker;
+use Tuleap\User\UserGroup\NameTranslator;
 
 #[DisableReturnValueGenerationForTestDoubles]
 final class FieldsWithValuesBuilderTest extends TestCase
@@ -176,6 +182,7 @@ final class FieldsWithValuesBuilderTest extends TestCase
                 BuildDisplayNameStub::build(),
             ),
             new DateFieldWithValueBuilder($this->current_user),
+            new PermissionsOnArtifactFieldWithValueBuilder(),
         );
         return $builder->getFieldsWithValues($this->changeset);
     }
@@ -257,8 +264,8 @@ final class FieldsWithValuesBuilderTest extends TestCase
         );
 
         $expected_field_with_value = new UserGroupsListFieldWithValue('trionychoidean', DisplayType::COLUMN, [
-            new UserGroupListValue('Project Members'),
-            new UserGroupListValue('Reviewers'),
+            new UserGroupValue('Project Members'),
+            new UserGroupValue('Reviewers'),
         ]);
 
         self::assertEquals([$expected_field_with_value], $this->getFields([
@@ -415,6 +422,30 @@ final class FieldsWithValuesBuilderTest extends TestCase
 
         self::assertEquals([$expected_date_field_with_value], $this->getFields([
             new ConfiguredField($date_field, DisplayType::BLOCK),
+        ]));
+    }
+
+    public function testItBuildsPermissionsOnArtifactFieldWithValue(): void
+    {
+        $permissions_field = PermissionsOnArtifactFieldBuilder::aPermissionsOnArtifactField(123)->build();
+
+        $expected_date_field_with_value = new PermissionsOnArtifactFieldWithValue(
+            $permissions_field->getLabel(),
+            DisplayType::BLOCK,
+            [new UserGroupValue('Project Members')],
+        );
+
+        $this->changeset->setFieldValue(
+            $permissions_field,
+            ChangesetValuePermissionsOnArtifactTestBuilder::aListOfPermissions(54, $this->changeset, $permissions_field)
+                ->withAllowedUserGroups([
+                    ProjectUGroup::PROJECT_MEMBERS => NameTranslator::PROJECT_MEMBERS,
+                ])
+                ->build(),
+        );
+
+        self::assertEquals([$expected_date_field_with_value], $this->getFields([
+            new ConfiguredField($permissions_field, DisplayType::BLOCK),
         ]));
     }
 }

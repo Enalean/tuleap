@@ -37,6 +37,7 @@ use Tuleap\Artidoc\Document\Field\List\StaticListFieldWithValueBuilder;
 use Tuleap\Artidoc\Document\Field\List\UserGroupListWithValueBuilder;
 use Tuleap\Artidoc\Document\Field\List\UserListFieldWithValueBuilder;
 use Tuleap\Artidoc\Document\Field\Numeric\NumericFieldWithValueBuilder;
+use Tuleap\Artidoc\Document\Field\Permissions\PermissionsOnArtifactFieldWithValueBuilder;
 use Tuleap\Artidoc\Document\Field\User\UserFieldWithValueBuilder;
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\Artidoc\Domain\Document\Section\PaginatedRetrievedSections;
@@ -144,6 +145,7 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
                             BuildDisplayNameStub::build(),
                         ),
                         new DateFieldWithValueBuilder($this->user),
+                        new PermissionsOnArtifactFieldWithValueBuilder(),
                     )
                 ),
             ),

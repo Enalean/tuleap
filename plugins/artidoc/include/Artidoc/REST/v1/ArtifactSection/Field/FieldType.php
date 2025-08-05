@@ -32,4 +32,5 @@ enum FieldType: string
     case NUMERIC          = 'numeric';
     case USER             = 'user';
     case DATE             = 'date';
+    case PERMISSIONS      = 'permissions';
 }

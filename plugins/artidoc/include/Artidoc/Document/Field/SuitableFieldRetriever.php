@@ -27,6 +27,7 @@ use Tracker_FormElement_Field_Date;
 use Tracker_FormElement_Field_LastModifiedBy;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Bind_Null;
+use Tracker_FormElement_Field_PermissionsOnArtifact;
 use Tracker_FormElement_Field_SubmittedBy;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldIsDescriptionSemanticFault;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldIsTitleSemanticFault;
@@ -53,7 +54,7 @@ final readonly class SuitableFieldRetriever
     }
 
     /**
-     * @return Ok<TextField> | Ok<Tracker_FormElement_Field_List> | Ok<ArtifactLinkField> | Ok<NumericField> | OK<Tracker_FormElement_Field_Date> | Err<Fault>
+     * @return Ok<TextField> | Ok<Tracker_FormElement_Field_List> | Ok<ArtifactLinkField> | Ok<NumericField> | OK<Tracker_FormElement_Field_Date> | Ok<Tracker_FormElement_Field_PermissionsOnArtifact> | Err<Fault>
      */
     public function retrieveField(int $field_id, PFUser $user): Ok|Err
     {
@@ -64,12 +65,13 @@ final readonly class SuitableFieldRetriever
         }
 
         return match (true) {
-            $field instanceof TextField                      => $this->validateTextField($field),
-            $field instanceof Tracker_FormElement_Field_List => $this->validateListField($field),
-            $field instanceof ArtifactLinkField              => Result::ok($field),
-            $field instanceof NumericField                   => Result::ok($field),
-            $field instanceof Tracker_FormElement_Field_Date => Result::ok($field),
-            default                                          => Result::err(FieldNotSupportedFault::build($field_id))
+            $field instanceof TextField                                       => $this->validateTextField($field),
+            $field instanceof Tracker_FormElement_Field_List                  => $this->validateListField($field),
+            $field instanceof ArtifactLinkField                               => Result::ok($field),
+            $field instanceof NumericField                                    => Result::ok($field),
+            $field instanceof Tracker_FormElement_Field_Date                  => Result::ok($field),
+            $field instanceof Tracker_FormElement_Field_PermissionsOnArtifact => Result::ok($field),
+            default                                                           => Result::err(FieldNotSupportedFault::build($field_id))
         };
     }
 

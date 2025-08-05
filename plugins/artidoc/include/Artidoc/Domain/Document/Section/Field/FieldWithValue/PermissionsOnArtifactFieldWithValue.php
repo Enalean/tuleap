@@ -22,12 +22,20 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue;
 
+use Tuleap\Artidoc\Domain\Document\Section\Field\DisplayType;
+
 /**
  * @psalm-immutable
  */
-final readonly class UserGroupListValue
+final readonly class PermissionsOnArtifactFieldWithValue implements FieldWithValue
 {
-    public function __construct(public string $label)
-    {
+    /**
+     * @param list<UserGroupValue> $user_groups
+     */
+    public function __construct(
+        public string $label,
+        public DisplayType $display_type,
+        public array $user_groups,
+    ) {
     }
 }

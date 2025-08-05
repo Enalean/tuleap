@@ -27,7 +27,7 @@ use Tuleap\Artidoc\Document\Field\ConfiguredField;
 use Tuleap\Artidoc\Domain\Document\Section\Field\DisplayType;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StaticListFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StaticListValue;
-use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserGroupListValue;
+use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserGroupValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserGroupsListFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserListFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserValue;
@@ -156,8 +156,8 @@ final class ListFieldWithValueBuilderTest extends TestCase
             $user_group_list_field->getLabel(),
             DisplayType::BLOCK,
             [
-                new UserGroupListValue('NPCs'),
-                new UserGroupListValue('MVPs'),
+                new UserGroupValue('NPCs'),
+                new UserGroupValue('MVPs'),
             ]
         );
 

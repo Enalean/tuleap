@@ -20,18 +20,14 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Artidoc\REST\v1\ArtifactSection\Field;
-
-use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserGroupListValue;
+namespace Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue;
 
 /**
  * @psalm-immutable
  */
-final readonly class UserGroupListValueRepresentation
+final readonly class UserGroupValue
 {
-    public string $label;
-    public function __construct(UserGroupListValue $value)
+    public function __construct(public string $label)
     {
-        $this->label = $value->label;
     }
 }

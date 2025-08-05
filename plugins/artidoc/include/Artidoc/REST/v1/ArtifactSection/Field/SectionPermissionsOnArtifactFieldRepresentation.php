@@ -22,13 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\REST\v1\ArtifactSection\Field;
 
+use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\PermissionsOnArtifactFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserGroupValue;
-use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserGroupsListFieldWithValue;
 
 /**
  * @psalm-immutable
  */
-final readonly class SectionUserGroupsListFieldRepresentation
+final readonly class SectionPermissionsOnArtifactFieldRepresentation
 {
     public string $type;
     public string $label;
@@ -38,14 +38,14 @@ final readonly class SectionUserGroupsListFieldRepresentation
      */
     public array $value;
 
-    public function __construct(UserGroupsListFieldWithValue $field)
+    public function __construct(PermissionsOnArtifactFieldWithValue $field)
     {
-        $this->type         = FieldType::USER_GROUPS_LIST->value;
+        $this->type         = FieldType::PERMISSIONS->value;
         $this->label        = $field->label;
         $this->display_type = $field->display_type->value;
         $this->value        = array_map(
-            fn(UserGroupValue $user_group) => new UserGroupValueRepresentation($user_group),
-            $field->user_groups
+            static fn(UserGroupValue $user_group) => new UserGroupValueRepresentation($user_group),
+            $field->user_groups,
         );
     }
 }
