@@ -19,10 +19,10 @@
 
 <template>
     <step-layout previous_step_name="step-1">
-        <template v-slot:step_info>
+        <template #step_info>
             <step-two-info />
         </template>
-        <template v-slot:interactive_content>
+        <template #interactive_content>
             <form
                 ref="tracker_creation_form"
                 method="post"
@@ -44,10 +44,9 @@
         </template>
     </step-layout>
 </template>
-<script lang="ts">
-import Vue from "vue";
-import { Mutation, State, Getter } from "vuex-class";
-import { Component, Watch, Ref } from "vue-property-decorator";
+<script setup lang="ts">
+import { ref, watch, onMounted, onBeforeUnmount, computed } from "vue";
+import { useState, useStore, useGetters, useMutations } from "vuex-composition-helpers";
 import StepLayout from "../layout/StepLayout.vue";
 import StepTwoInfo from "./StepTwoInfo.vue";
 import FieldChosenTemplate from "./creation-fields/FieldChosenTemplate.vue";
@@ -59,127 +58,112 @@ import FieldCsrfToken from "./creation-fields/FieldCSRFToken.vue";
 import FieldTrackerEmpty from "./creation-fields/FieldTrackerEmpty.vue";
 import FieldTrackerColor from "./creation-fields/FieldTrackerColor.vue";
 import FieldFromJira from "./creation-fields/FieldFromJira.vue";
+import type { State } from "../../../store/type";
 
-@Component({
-    components: {
-        FieldFromJira,
-        FieldTrackerEmpty,
-        StepLayout,
-        StepTwoInfo,
-        FieldName,
-        FieldShortname,
-        FieldDescription,
-        FieldTrackerTemplateId,
-        FieldCsrfToken,
-        FieldChosenTemplate,
-        FieldTrackerColor,
+const { has_form_been_submitted } = useState<Pick<State, "has_form_been_submitted">>([
+    "has_form_been_submitted",
+]);
+
+const {
+    is_created_from_empty,
+    is_a_duplication,
+    is_a_xml_import,
+    is_created_from_default_template,
+    is_created_from_jira,
+    is_a_duplication_of_a_tracker_from_another_project,
+} = useGetters([
+    "is_created_from_empty",
+    "is_a_duplication",
+    "is_a_xml_import",
+    "is_created_from_default_template",
+    "is_created_from_jira",
+    "is_a_duplication_of_a_tracker_from_another_project",
+]);
+
+const {
+    initTrackerNameWithTheSelectedTemplateName,
+    initTrackerNameWithTheSelectedProjectTrackerTemplateName,
+    cancelCreationFormSubmition,
+    reinitTrackerToBeCreatedData,
+} = useMutations([
+    "initTrackerNameWithTheSelectedTemplateName",
+    "initTrackerNameWithTheSelectedProjectTrackerTemplateName",
+    "cancelCreationFormSubmition",
+    "reinitTrackerToBeCreatedData",
+]);
+
+const store = useStore();
+
+const tracker_creation_form = ref<HTMLFormElement>();
+
+watch(
+    has_form_been_submitted,
+    () => {
+        submitTheForm(has_form_been_submitted.value);
     },
-})
-export default class StepTwo extends Vue {
-    @State
-    readonly has_form_been_submitted!: boolean;
+    { deep: true },
+);
 
-    @Getter
-    readonly is_created_from_empty!: boolean;
-
-    @Getter
-    readonly is_a_duplication!: boolean;
-
-    @Getter
-    readonly is_a_xml_import!: boolean;
-
-    @Getter
-    readonly is_created_from_default_template!: boolean;
-
-    @Getter
-    readonly is_created_from_jira!: boolean;
-
-    @Getter
-    readonly is_a_duplication_of_a_tracker_from_another_project!: boolean;
-
-    @Mutation
-    readonly initTrackerNameWithTheSelectedTemplateName!: () => void;
-
-    @Mutation
-    readonly initTrackerNameWithTheSelectedProjectTrackerTemplateName!: () => void;
-
-    @Mutation
-    readonly cancelCreationFormSubmition!: () => void;
-
-    @Mutation
-    readonly reinitTrackerToBeCreatedData!: () => void;
-
-    @State
-    readonly selected_xml_file_input!: HTMLInputElement;
-
-    @Ref("tracker_creation_form")
-    readonly creation_form!: HTMLFormElement;
-
-    @Watch("has_form_been_submitted", { deep: true })
-    submitTheForm(current_value: boolean): void {
-        if (current_value === true && this.creation_form.checkValidity()) {
-            this.creation_form.submit();
-        } else {
-            this.cancelCreationFormSubmition();
-            this.creation_form.reportValidity();
-        }
-    }
-
-    mounted(): void {
-        if (this.is_created_from_default_template) {
-            this.initTrackerNameWithTheSelectedTemplateName();
-        } else if (this.is_a_duplication) {
-            this.initTrackerNameWithTheSelectedTemplateName();
-        } else if (this.is_created_from_empty) {
-            this.reinitTrackerToBeCreatedData();
-        } else if (this.is_a_xml_import) {
-            const form = this.$refs.tracker_creation_form;
-
-            if (!(form instanceof Element)) {
-                return;
-            }
-
-            form.appendChild(this.selected_xml_file_input);
-        } else if (this.is_a_duplication_of_a_tracker_from_another_project) {
-            this.initTrackerNameWithTheSelectedProjectTrackerTemplateName();
-        }
-
-        window.addEventListener("beforeunload", this.beforeUnload);
-
-        const previous_error = document.getElementById("feedback");
-        if (previous_error instanceof HTMLElement) {
-            const parent = previous_error.parentNode;
-            if (parent instanceof HTMLElement) {
-                parent.removeChild(previous_error);
-            }
-        }
-    }
-
-    beforeDestroy(): void {
-        window.removeEventListener("beforeunload", this.beforeUnload);
-    }
-
-    beforeUnload(event: Event): void {
-        if (!this.has_form_been_submitted) {
-            event.preventDefault();
-            event.returnValue = false;
-        }
-    }
-
-    get form_enctype(): string {
-        if (this.is_a_xml_import) {
-            return "multipart/form-data";
-        }
-
-        return "application/x-www-form-urlencoded";
-    }
-
-    get should_tracker_template_id_be_displayed(): boolean {
-        return (
-            this.is_created_from_default_template ||
-            this.is_a_duplication ||
-            this.is_a_duplication_of_a_tracker_from_another_project
-        );
+function submitTheForm(current_value: boolean): void {
+    if (current_value && tracker_creation_form.value?.checkValidity()) {
+        tracker_creation_form.value.submit();
+    } else {
+        cancelCreationFormSubmition();
+        tracker_creation_form.value?.reportValidity();
     }
 }
+
+onMounted(() => {
+    if (is_created_from_default_template.value) {
+        initTrackerNameWithTheSelectedTemplateName();
+    } else if (is_a_duplication.value) {
+        initTrackerNameWithTheSelectedTemplateName();
+    } else if (is_created_from_empty.value) {
+        reinitTrackerToBeCreatedData();
+    } else if (is_a_xml_import.value) {
+        if (!(tracker_creation_form.value instanceof Element)) {
+            return;
+        }
+
+        tracker_creation_form.value.appendChild(store.state.selected_xml_file_input);
+    } else if (is_a_duplication_of_a_tracker_from_another_project.value) {
+        initTrackerNameWithTheSelectedProjectTrackerTemplateName();
+    }
+
+    window.addEventListener("beforeunload", beforeUnload);
+
+    const previous_error = document.getElementById("feedback");
+    if (previous_error instanceof HTMLElement) {
+        const parent = previous_error.parentNode;
+        if (parent instanceof HTMLElement) {
+            parent.removeChild(previous_error);
+        }
+    }
+});
+
+onBeforeUnmount(() => {
+    window.removeEventListener("beforeunload", beforeUnload);
+});
+
+function beforeUnload(event: Event): void {
+    if (!has_form_been_submitted.value) {
+        event.preventDefault();
+    }
+}
+
+const form_enctype = computed((): string => {
+    if (is_a_xml_import.value) {
+        return "multipart/form-data";
+    }
+
+    return "application/x-www-form-urlencoded";
+});
+
+const should_tracker_template_id_be_displayed = computed((): boolean => {
+    return (
+        is_created_from_default_template.value ||
+        is_a_duplication.value ||
+        is_a_duplication_of_a_tracker_from_another_project.value
+    );
+});
 </script>
