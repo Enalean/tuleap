@@ -21,17 +21,21 @@ import TrackerXmlFileSelector from "./TrackerXmlFileSelector.vue";
 import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import { createTrackerCreationLocalVue } from "../../../../../helpers/local-vue-for-tests";
-import type { State } from "../../../../../store/type";
 import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
+import type Vue from "vue";
 
 describe("TrackerXmlFileSelector", () => {
     async function getWrapper(
-        state: State = {} as State,
-    ): Promise<Wrapper<TrackerXmlFileSelector>> {
+        selected_xml_file_input: HTMLInputElement | null,
+        has_xml_file_error: boolean,
+    ): Promise<Wrapper<Vue>> {
         const wrapper = shallowMount(TrackerXmlFileSelector, {
             mocks: {
                 $store: createStoreMock({
-                    state,
+                    state: {
+                        has_xml_file_error,
+                        selected_xml_file_input,
+                    },
                 }),
             },
             localVue: await createTrackerCreationLocalVue(),
@@ -43,9 +47,7 @@ describe("TrackerXmlFileSelector", () => {
     }
 
     it("renders a fresh input[type=file] when no selection has been made before", async () => {
-        const wrapper = await getWrapper({
-            selected_xml_file_input: null,
-        } as State);
+        const wrapper = await getWrapper(null, false);
 
         const file_input = wrapper.find("[data-test=tracker-creation-xml-file-selector]");
 
@@ -65,11 +67,7 @@ describe("TrackerXmlFileSelector", () => {
         file_input.setAttribute("type", "file");
         file_input.setAttribute("data-test", "injected-file-input");
 
-        const state: State = {
-            selected_xml_file_input: file_input,
-        } as State;
-
-        const wrapper = await getWrapper(state);
+        const wrapper = await getWrapper(file_input, false);
 
         expect(wrapper.find("[data-test=tracker-creation-xml-file-selector]").exists()).toBe(false);
         expect(wrapper.find("[data-test=injected-file-input]").exists()).toBe(true);
@@ -82,12 +80,7 @@ describe("TrackerXmlFileSelector", () => {
         file_input.setAttribute("type", "file");
         file_input.setAttribute("data-test", "injected-file-input");
 
-        const state: State = {
-            selected_xml_file_input: file_input,
-            has_xml_file_error: true,
-        } as State;
-
-        const wrapper = await getWrapper(state);
+        const wrapper = await getWrapper(file_input, true);
 
         expect(wrapper.find("[data-test=tracker-creation-xml-file-selector]").exists()).toBe(false);
         expect(wrapper.find("[data-test=injected-file-input]").exists()).toBe(true);
