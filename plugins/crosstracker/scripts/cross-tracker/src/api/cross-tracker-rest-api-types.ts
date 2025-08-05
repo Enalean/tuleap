@@ -61,6 +61,7 @@ export const PROJECT_SELECTABLE_TYPE = "project";
 export const TRACKER_SELECTABLE_TYPE = "tracker";
 export const PRETTY_TITLE_SELECTABLE_TYPE = "pretty_title";
 export const ARTIFACT_SELECTABLE_TYPE = "artifact";
+export const LINK_TYPE_SELECTABLE_TYPE = "link_type";
 
 type UnsupportedSelectableRepresentation = Record<string, unknown>;
 
@@ -123,6 +124,10 @@ export type ArtifactSelectableRepresentation = {
     readonly number_of_reverse_link: number;
 };
 
+export type LinkTypeSelectableRepresentation = {
+    readonly value: string;
+};
+
 export type SelectableRepresentation =
     | DateSelectableRepresentation
     | NumericSelectableRepresentation
@@ -135,6 +140,7 @@ export type SelectableRepresentation =
     | TrackerSelectableRepresentation
     | PrettyTitleSelectableRepresentation
     | ArtifactSelectableRepresentation
+    | LinkTypeSelectableRepresentation
     | UnsupportedSelectableRepresentation;
 
 export type ArtifactRepresentation = Record<string, SelectableRepresentation>;
@@ -191,6 +197,10 @@ export interface ArtifactSelectable extends BaseSelectable {
     readonly type: typeof ARTIFACT_SELECTABLE_TYPE;
 }
 
+export interface LinkTypeSelectable extends BaseSelectable {
+    readonly type: typeof LINK_TYPE_SELECTABLE_TYPE;
+}
+
 export type Selectable =
     | DateSelectable
     | NumericSelectable
@@ -203,6 +213,7 @@ export type Selectable =
     | TrackerSelectable
     | PrettyTitleSelectable
     | ArtifactSelectable
+    | LinkTypeSelectable
     | UnsupportedSelectable;
 
 export type SelectableQueryContentRepresentation = {

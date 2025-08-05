@@ -25,6 +25,7 @@ import {
     DESCRIPTION_COLUMN_NAME,
     LAST_UPDATE_BY_COLUMN_NAME,
     LAST_UPDATE_DATE_COLUMN_NAME,
+    LINK_TYPE_COLUMN_NAME,
     PRETTY_TITLE_COLUMN_NAME,
     PROJECT_COLUMN_NAME,
     STATUS_COLUMN_NAME,
@@ -51,6 +52,7 @@ describe("ColumnNameGetter.ts", () => {
         [TRACKER_COLUMN_NAME, "Tracker"],
         [PRETTY_TITLE_COLUMN_NAME, "Artifact"],
         [ARTIFACT_COLUMN_NAME, ""],
+        [LINK_TYPE_COLUMN_NAME, "Link type"],
     ])(`returns the real column name of %s`, (column_name, expected_final_name) => {
         const result = ColumnNameGetter(
             createVueGettextProviderPassThrough(),

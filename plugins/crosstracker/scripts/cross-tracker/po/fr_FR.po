@@ -132,6 +132,9 @@ msgstr "Mis à jour par"
 msgid "Last update date"
 msgstr "Mis à jour le"
 
+msgid "Link type"
+msgstr "Type de lien"
+
 msgid "Load all"
 msgstr "Charger tout"
 

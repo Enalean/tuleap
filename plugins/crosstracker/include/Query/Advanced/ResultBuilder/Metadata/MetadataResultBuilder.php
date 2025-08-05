@@ -31,6 +31,7 @@ use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Metadata\Semantic\AssignedT
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Metadata\Semantic\Description\BuildResultDescription;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Metadata\Semantic\Status\BuildResultStatus;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Metadata\Semantic\Title\BuildResultTitle;
+use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Metadata\Special\LinkType\ForwardLinkTypeResultBuilder;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Metadata\Special\PrettyTitle\BuildResultPrettyTitle;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Metadata\Special\ProjectName\ProjectNameResultBuilder;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Metadata\Special\TrackerName\TrackerNameResultBuilder;
@@ -51,6 +52,7 @@ final readonly class MetadataResultBuilder
         private ProjectNameResultBuilder $project_name_builder,
         private TrackerNameResultBuilder $tracker_name_builder,
         private BuildResultPrettyTitle $pretty_title_builder,
+        private ForwardLinkTypeResultBuilder $link_type_builder,
         private ArtifactResultBuilder $artifact_builder,
     ) {
     }
@@ -78,6 +80,7 @@ final readonly class MetadataResultBuilder
             AllowedMetadata::PROJECT_NAME     => $this->project_name_builder->getResult($select_results),
             AllowedMetadata::TRACKER_NAME     => $this->tracker_name_builder->getResult($select_results),
             AllowedMetadata::PRETTY_TITLE     => $this->pretty_title_builder->getResult($select_results, $user),
+            AllowedMetadata::LINK_TYPE        => $this->link_type_builder->getResult(),
 
             '@artifact'                       => $this->artifact_builder->getResult($select_results, $user),
             default                           => throw new LogicException("Unknown metadata type: {$metadata->getName()}"),

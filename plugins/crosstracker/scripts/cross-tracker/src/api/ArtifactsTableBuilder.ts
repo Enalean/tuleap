@@ -40,6 +40,7 @@ import type {
     UserSelectableRepresentation,
 } from "./cross-tracker-rest-api-types";
 import {
+    LINK_TYPE_SELECTABLE_TYPE,
     ARTIFACT_SELECTABLE_TYPE,
     DATE_SELECTABLE_TYPE,
     NUMERIC_SELECTABLE_TYPE,
@@ -270,6 +271,11 @@ function buildCell(selectable: Selectable, artifact: ArtifactRepresentation): Re
             return ok({
                 type: PRETTY_TITLE_CELL,
                 ...artifact_value,
+            });
+        case LINK_TYPE_SELECTABLE_TYPE:
+            return ok({
+                type: TEXT_CELL,
+                value: "",
             });
         default:
             return err(Fault.fromMessage(`Selectable type is not supported`));

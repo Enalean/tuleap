@@ -1,6 +1,6 @@
 <?php
-/**
- * Copyright (c) Enalean, 2024-Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2025 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,20 +20,18 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\CrossTracker\REST\v1\Representation;
+namespace Tuleap\CrossTracker\Query\Advanced\SelectBuilder\Metadata\Special\LinkType;
 
-enum CrossTrackerSelectedType: string
+use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\IProvideParametrizedSelectAndFromSQLFragments;
+use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\ParametrizedSelectFrom;
+
+/**
+ * @psalm-immutable
+ */
+final readonly class ForwardLinkTypeSelectFromBuilder
 {
-    case TYPE_DATE            = 'date';
-    case TYPE_TEXT            = 'text';
-    case TYPE_NUMERIC         = 'numeric';
-    case TYPE_STATIC_LIST     = 'list_static';
-    case TYPE_USER_GROUP_LIST = 'list_user_group';
-    case TYPE_USER_LIST       = 'list_user';
-    case TYPE_USER            = 'user';
-    case TYPE_PROJECT         = 'project';
-    case TYPE_TRACKER         = 'tracker';
-    case TYPE_PRETTY_TITLE    = 'pretty_title';
-    case TYPE_ARTIFACT        = 'artifact';
-    case LINK_TYPE            = 'link_type';
+    public function getSelectFrom(): IProvideParametrizedSelectAndFromSQLFragments
+    {
+        return new ParametrizedSelectFrom('', '', []);
+    }
 }
