@@ -63,7 +63,7 @@ final readonly class ArtidocController implements DispatchableWithRequest, Dispa
     EOF
     )]
     #[ConfigKeyString('0')]
-    public const FIELDS_FEATURE_FLAG = 'enable_artidoc_fields';
+    public const string FIELDS_FEATURE_FLAG = 'enable_artidoc_fields';
 
     public function __construct(
         private RetrieveArtidocWithContext $retrieve_artidoc,
@@ -80,6 +80,7 @@ final readonly class ArtidocController implements DispatchableWithRequest, Dispa
     ) {
     }
 
+    #[\Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         ServiceInstrumentation::increment('artidoc');
@@ -99,7 +100,7 @@ final readonly class ArtidocController implements DispatchableWithRequest, Dispa
         $layout->addJavascriptAsset(
             new JavascriptViteAsset(
                 new IncludeViteAssets(
-                    __DIR__ . '/../../scripts/artidoc/frontend-assets',
+                    __DIR__ . '/../scripts/artidoc/frontend-assets',
                     '/assets/artidoc/artidoc'
                 ),
                 'src/index.ts'
