@@ -18,6 +18,7 @@
  */
 
 import formatRelativeDate from "./relative-date-formatter";
+import { Firefox1502814Fixer } from "./Firefox1502814Fixer";
 
 export type FirstDateShown = "absolute" | "relative";
 export type OtherDatePlacement = "top" | "right" | "tooltip";
@@ -25,11 +26,7 @@ export type OtherDatePlacement = "top" | "right" | "tooltip";
 const allowed_placements = ["top", "right", "tooltip"];
 const allowed_preferences = ["absolute", "relative"];
 
-export class RelativeDateElement extends HTMLElement {
-    constructor() {
-        super();
-    }
-
+export class RelativeDateElement extends Firefox1502814Fixer {
     static get observedAttributes(): string[] {
         return ["absolute-date", "date", "placement", "locale", "preference"];
     }
