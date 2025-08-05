@@ -25,7 +25,6 @@ use Codendi_HTMLPurifier;
 use Override;
 use PFUser;
 use Tracker_Artifact_ChangesetValue;
-use Tracker_FormElement_Field_Alphanum;
 use Tracker_FormElement_IComputeValues;
 use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -33,7 +32,7 @@ use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
 use Tuleap\Tracker\Semantic\Timeframe\ArtifactTimeframeHelper;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 
-abstract class NumericField extends Tracker_FormElement_Field_Alphanum implements Tracker_FormElement_IComputeValues
+abstract class NumericField extends AlphaNumericField implements Tracker_FormElement_IComputeValues
 {
     public array $default_properties = [
         'maxchars'      => [

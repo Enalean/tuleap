@@ -18,6 +18,14 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\Tracker\FormElement\Field;
+
+use Codendi_HTMLPurifier;
+use Override;
+use Tracker_Artifact_Changeset;
+use Tracker_Artifact_ChangesetValue;
+use Tracker_FormElement_Field;
+use Tracker_Report_Criteria;
 use Tuleap\Option\Option;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
@@ -25,8 +33,7 @@ use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
 /**
  * Base class for alphanumeric fields (Int, Float, String, Text)
  */
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-abstract class Tracker_FormElement_Field_Alphanum extends Tracker_FormElement_Field
+abstract class AlphaNumericField extends Tracker_FormElement_Field
 {
     /**
      * @return Option<ParametrizedSQLFragment>
@@ -53,6 +60,7 @@ abstract class Tracker_FormElement_Field_Alphanum extends Tracker_FormElement_Fi
         return $expr;
     }
 
+    #[Override]
     public function fetchCriteriaValue(Tracker_Report_Criteria $criteria): string
     {
         $html = '<input data-test="alphanum-report-criteria" type="text" name="criteria[' . $this->id . ']" id="tracker_report_criteria_' . $this->id . '" value="';
@@ -72,6 +80,7 @@ abstract class Tracker_FormElement_Field_Alphanum extends Tracker_FormElement_Fi
     /**
      * Get the "group by" statement to retrieve field values
      */
+    #[Override]
     public function getQueryGroupby(): string
     {
         if (! $this->isUsed()) {
@@ -84,11 +93,13 @@ abstract class Tracker_FormElement_Field_Alphanum extends Tracker_FormElement_Fi
     /**
      * Fetch the value
      */
+    #[Override]
     public function fetchRawValue(mixed $value): string
     {
         return $value;
     }
 
+    #[Override]
     public function fetchRawValueFromChangeset(Tracker_Artifact_Changeset $changeset): string
     {
         $value = '';
@@ -100,6 +111,7 @@ abstract class Tracker_FormElement_Field_Alphanum extends Tracker_FormElement_Fi
         return $value;
     }
 
+    #[Override]
     protected function saveValue(
         $artifact,
         $changeset_value_id,
@@ -116,6 +128,7 @@ abstract class Tracker_FormElement_Field_Alphanum extends Tracker_FormElement_Fi
      *
      * @return mixed The values or null if there are no specific available values
      */
+    #[Override]
     public function getRESTAvailableValues()
     {
         return null;
