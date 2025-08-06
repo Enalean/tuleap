@@ -59,7 +59,7 @@ onMounted(() => {
     emitter.on(EDIT_QUERY_EVENT, resetFeedbackComponent);
     emitter.on(STARTING_XLSX_EXPORT_EVENT, resetFeedbackComponent);
     emitter.on(SWITCH_QUERY_EVENT, resetFeedbackComponent);
-    emitter.on(SEARCH_ARTIFACTS_SUCCESS_EVENT, resetFeedbackComponent);
+    emitter.on(SEARCH_ARTIFACTS_SUCCESS_EVENT, clearFault);
 });
 
 onUnmounted(() => {
@@ -69,7 +69,7 @@ onUnmounted(() => {
     emitter.off(EDIT_QUERY_EVENT, resetFeedbackComponent);
     emitter.off(STARTING_XLSX_EXPORT_EVENT, resetFeedbackComponent);
     emitter.off(SWITCH_QUERY_EVENT, resetFeedbackComponent);
-    emitter.off(SEARCH_ARTIFACTS_SUCCESS_EVENT, resetFeedbackComponent);
+    emitter.off(SEARCH_ARTIFACTS_SUCCESS_EVENT, clearFault);
 });
 
 function handleFault(event: NotifyFaultEvent): void {
@@ -83,9 +83,17 @@ function handleSuccess(event: NotifySuccessEvent): void {
     current_success.value = Option.fromValue(event.message);
 }
 
-function resetFeedbackComponent(): void {
+function clearFault(): void {
     current_fault.value = Option.nothing();
+}
+
+function clearSuccess(): void {
     current_success.value = Option.nothing();
+}
+
+function resetFeedbackComponent(): void {
+    clearFault();
+    clearSuccess();
     tql_query.value = "";
 }
 </script>
