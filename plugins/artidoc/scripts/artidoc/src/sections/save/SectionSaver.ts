@@ -19,8 +19,8 @@
 
 import type { ArtidocSection } from "@/helpers/artidoc-section.type";
 import type { ResultAsync } from "neverthrow";
-import { errAsync, okAsync } from "neverthrow";
-import { Fault } from "@tuleap/fault";
+import { okAsync } from "neverthrow";
+import type { Fault } from "@tuleap/fault";
 import type { FileIdentifier } from "@tuleap/file-upload";
 import {
     isPendingSection,
@@ -30,7 +30,7 @@ import {
     isPendingFreetextSection,
 } from "@/helpers/artidoc-section.type";
 import { createSection, getSection, putSection } from "@/helpers/rest-querier";
-import { getSectionInItsLatestVersion } from "@/helpers/get-section-in-its-latest-version";
+import { checkSectionConcurrentEdition } from "@/helpers/CheckSectionConcurrentEdition";
 import type { ManageSectionAttachmentFiles } from "@/sections/attachments/SectionAttachmentFilesManager";
 import type { ReplacePendingSections } from "@/sections/insert/PendingSectionsReplacer";
 import type { UpdateSections } from "@/sections/update/SectionsUpdater";
@@ -41,8 +41,8 @@ import type { ReactiveStoredArtidocSection } from "@/sections/SectionsCollection
 import type { CloseSectionEditor } from "@/sections/editors/SectionEditorCloser";
 
 export type SaveSection = {
-    forceSave: () => void;
-    save: () => void;
+    forceSave(): void;
+    save(): void;
 };
 
 export const getSectionSaver = (
@@ -77,10 +77,7 @@ export const getSectionSaver = (
     }
 
     function forceSave(): void {
-        if (
-            !section_state.is_save_allowed.value ||
-            (!isArtifactSection(section.value) && !isFreetextSection(section.value))
-        ) {
+        if (!section_state.is_save_allowed.value) {
             return;
         }
 
@@ -96,7 +93,7 @@ export const getSectionSaver = (
             getAttachementsForSave(section, edited_description.value),
             section.value.level,
         )
-            .andThen(() => getLatestVersionOfCurrentSection())
+            .andThen(getLatestVersionOfCurrentSection)
             .match(
                 (artidoc_section: ArtidocSection) => {
                     if (isArtifactSection(artidoc_section) || isFreetextSection(artidoc_section)) {
@@ -114,7 +111,7 @@ export const getSectionSaver = (
             );
     }
 
-    const save = (): void => {
+    function save(): void {
         if (!section_state.is_save_allowed.value) {
             return;
         }
@@ -142,7 +139,7 @@ export const getSectionSaver = (
                 section_state.is_being_saved.value = false;
             },
         );
-    };
+    }
 
     function saveSection(): ResultAsync<ArtidocSection, Fault> {
         const { edited_title, edited_description } = section_state;
@@ -171,23 +168,17 @@ export const getSectionSaver = (
             );
         }
 
-        return getSectionInItsLatestVersion(section.value)
-            .andThen(() => {
-                if (!isArtifactSection(section.value) && !isFreetextSection(section.value)) {
-                    return errAsync(
-                        Fault.fromMessage("Save of new section is not implemented yet"),
-                    );
-                }
-
-                return putSection(
+        return checkSectionConcurrentEdition(section.value)
+            .andThen(() =>
+                putSection(
                     section.value.id,
                     edited_title.value,
                     edited_description.value,
                     getAttachementsForSave(section, edited_description.value),
                     section.value.level,
-                );
-            })
-            .andThen(() => getLatestVersionOfCurrentSection());
+                ),
+            )
+            .andThen(getLatestVersionOfCurrentSection);
     }
 
     return {

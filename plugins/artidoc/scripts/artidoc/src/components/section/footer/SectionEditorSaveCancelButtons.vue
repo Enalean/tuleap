@@ -25,26 +25,28 @@
         <button
             v-on:click="close_section_editor.closeAndCancelEditor"
             type="button"
+            v-bind:disabled="is_being_saved"
             class="tlp-button-primary tlp-button-outline tlp-button-large"
             data-test="cancel-button"
         >
             <i class="fa-solid fa-xmark tlp-button-icon" aria-hidden="true"></i>
-            <span>{{ $gettext("Cancel") }}</span>
+            {{ $gettext("Cancel") }}
         </button>
         <button
-            v-on:click="save_section.save"
-            v-bind:disabled="!is_save_allowed"
             type="button"
+            v-on:click="save_section.save"
+            v-bind:disabled="!is_save_allowed || is_being_saved"
             class="tlp-button-primary tlp-button-large"
             data-test="save-button"
         >
-            <i class="fa-solid fa-floppy-disk tlp-button-icon" aria-hidden="true"></i>
-            <span>{{ $gettext("Save") }}</span>
+            <i v-bind:class="save_classes" aria-hidden="true"></i>
+            {{ $gettext("Save") }}
         </button>
     </div>
 </template>
 
 <script setup lang="ts">
+import { computed } from "vue";
 import { useGettext } from "vue3-gettext";
 import type { SectionState } from "@/sections/states/SectionStateBuilder";
 import type { CloseSectionEditor } from "@/sections/editors/SectionEditorCloser";
@@ -57,8 +59,14 @@ const props = defineProps<{
 }>();
 
 const { $gettext } = useGettext();
-const { is_section_in_edit_mode, has_title_level_been_changed, is_save_allowed } =
+const { is_section_in_edit_mode, has_title_level_been_changed, is_save_allowed, is_being_saved } =
     props.section_state;
+
+const save_classes = computed(() =>
+    is_being_saved.value
+        ? "fa-solid fa-spin fa-circle-notch tlp-button-icon"
+        : "fa-solid fa-floppy-disk tlp-button-icon",
+);
 </script>
 
 <style lang="scss" scoped>

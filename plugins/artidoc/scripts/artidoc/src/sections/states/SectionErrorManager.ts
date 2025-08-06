@@ -19,7 +19,7 @@
 
 import type { Fault } from "@tuleap/fault";
 import type { SectionState } from "@/sections/states/SectionStateBuilder";
-import { isOutdatedSectionFault } from "@/helpers/get-section-in-its-latest-version";
+import { isOutdatedSectionFault } from "@/helpers/CheckSectionConcurrentEdition";
 
 export type ManageErrorState = {
     handleError(fault: Fault): void;

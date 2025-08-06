@@ -128,16 +128,6 @@ function addTemporaryFlag(flag: Ref<boolean>): void {
 }
 
 watch(
-    () => section_state.is_being_saved.value,
-    () => {
-        if (!section_state.is_being_saved.value) {
-            return;
-        }
-        addTemporaryFlag(section_state.is_being_saved);
-    },
-);
-
-watch(
     () => section_state.is_just_saved.value,
     () => {
         if (!section_state.is_just_saved.value) {
