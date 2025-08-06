@@ -23,6 +23,7 @@ import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { State } from "../../../../store/type";
 import FieldTrackerColor from "./FieldTrackerColor.vue";
 import { createTrackerCreationLocalVue } from "../../../../helpers/local-vue-for-tests";
+import type Vue from "vue";
 
 const mocked_jquery = {
     select2: jest.fn(),
@@ -37,7 +38,7 @@ jest.mock("jquery", () => {
 });
 
 describe("FieldTrackerColor", () => {
-    async function getWrapper(tracker_to_be_created = {}): Promise<Wrapper<FieldTrackerColor>> {
+    async function getWrapper(tracker_to_be_created = {}): Promise<Wrapper<Vue>> {
         return shallowMount(FieldTrackerColor, {
             mocks: {
                 $store: createStoreMock({

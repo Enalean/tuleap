@@ -25,7 +25,7 @@
             <i class="fa fa-asterisk"></i>
         </label>
         <select
-            ref="color-selector"
+            ref="color_selector"
             class="tlp-select tracker-color-selector"
             id="tracker-creation-field-color"
             name="tracker-color"
@@ -35,88 +35,82 @@
         ></select>
     </div>
 </template>
-<script lang="ts">
-import Vue from "vue";
-import { Component, Ref, Watch } from "vue-property-decorator";
-import { State } from "vuex-class";
+
+<script setup lang="ts">
+import { ref, onMounted, onBeforeUnmount, watch } from "vue";
+import { useStore } from "vuex-composition-helpers";
 import mustache from "mustache";
 import DOMPurify from "dompurify";
 import $ from "jquery";
 import type { DataFormat, GroupedDataFormat, LoadingData, Select2Plugin } from "tlp";
 import { select2 } from "tlp";
-import type { TrackerToBeCreatedMandatoryData, DataForColorPicker } from "../../../../store/type";
+import type { DataForColorPicker } from "../../../../store/type";
 
-@Component
-export default class FieldTrackerColor extends Vue {
-    @State
-    readonly tracker_to_be_created!: TrackerToBeCreatedMandatoryData;
+const store = useStore();
+const color_selector = ref<HTMLSelectElement | null>(null);
+const select2_color = ref<Select2Plugin | null>(null);
 
-    @State
-    readonly default_tracker_color!: string;
+const formatOptionColor = (result: DataFormat | GroupedDataFormat | LoadingData): string => {
+    if (!result.id) {
+        return "";
+    }
+    return mustache.render("<span class={{ id }}></span>", result);
+};
 
-    @State
-    readonly color_picker_data!: DataForColorPicker[];
+const hasTrackerAValidColor = (): boolean => {
+    return (
+        store.state.color_picker_data.findIndex(
+            (data: DataForColorPicker) => store.state.tracker_to_be_created.color === data.id,
+        ) !== -1
+    );
+};
 
-    @Ref("color-selector")
-    readonly color_selector!: HTMLSelectElement;
+const selectColor = (): void => {
+    if (!color_selector.value) {
+        return;
+    }
 
-    @Watch("tracker_to_be_created", { deep: true })
-    updateSelectedColor(
-        old_value: TrackerToBeCreatedMandatoryData,
-        new_value: TrackerToBeCreatedMandatoryData,
-    ): void {
-        if (old_value.color !== new_value.color) {
-            this.selectColor();
+    if (hasTrackerAValidColor()) {
+        $(color_selector.value).val(store.state.tracker_to_be_created.color);
+    } else {
+        $(color_selector.value).val(store.state.default_tracker_color);
+    }
+
+    $(color_selector.value).trigger("change");
+};
+
+watch(
+    () => store.state.tracker_to_be_created,
+    (newValue, oldValue) => {
+        if (oldValue.color !== newValue.color) {
+            selectColor();
         }
+    },
+    { deep: true },
+);
+
+onMounted(() => {
+    if (!color_selector.value) {
+        return;
     }
 
-    private select2_color: Select2Plugin | null = null;
+    select2_color.value = select2(color_selector.value, {
+        data: store.state.color_picker_data,
+        containerCssClass: "tracker-color-container",
+        dropdownCssClass: "tracker-color-results",
+        minimumResultsForSearch: Infinity,
+        dropdownAutoWidth: true,
+        escapeMarkup: DOMPurify.sanitize,
+        templateResult: formatOptionColor,
+        templateSelection: formatOptionColor,
+    });
 
-    mounted() {
-        this.select2_color = select2(this.color_selector, {
-            data: this.color_picker_data,
-            containerCssClass: "tracker-color-container",
-            dropdownCssClass: "tracker-color-results",
-            minimumResultsForSearch: Infinity,
-            dropdownAutoWidth: true,
-            escapeMarkup: DOMPurify.sanitize,
-            templateResult: this.formatOptionColor,
-            templateSelection: this.formatOptionColor,
-        });
+    selectColor();
+});
 
-        this.selectColor();
+onBeforeUnmount(() => {
+    if (select2_color.value !== null && color_selector.value) {
+        $(color_selector.value).off().select2("destroy");
     }
-
-    destroyed(): void {
-        if (this.select2_color !== null) {
-            $(this.color_selector).off().select2("destroy");
-        }
-    }
-
-    formatOptionColor(result: DataFormat | GroupedDataFormat | LoadingData): string {
-        if (!result.id) {
-            return "";
-        }
-
-        return mustache.render("<span class={{ id }}></span>", result);
-    }
-
-    hasTrackerAValidColor(): boolean {
-        return (
-            this.color_picker_data.findIndex(
-                (data: DataForColorPicker) => this.tracker_to_be_created.color === data.id,
-            ) !== -1
-        );
-    }
-
-    selectColor(): void {
-        if (this.hasTrackerAValidColor()) {
-            $(this.color_selector).val(this.tracker_to_be_created.color);
-        } else {
-            $(this.color_selector).val(this.default_tracker_color);
-        }
-
-        $(this.color_selector).trigger("change");
-    }
-}
+});
 </script>
