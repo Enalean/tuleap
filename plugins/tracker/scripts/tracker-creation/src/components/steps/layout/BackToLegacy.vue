@@ -23,18 +23,13 @@
         {{ $gettext("I want to migrate a tracker v3") }}
     </a>
 </template>
-<script lang="ts">
-import Vue from "vue";
-import { Component } from "vue-property-decorator";
-import { State } from "vuex-class";
+<script setup lang="ts">
+import { computed } from "vue";
+import { useState } from "vuex-composition-helpers";
 
-@Component
-export default class BackToLegacy extends Vue {
-    @State
-    readonly project_id!: number;
+const { project_id } = useState(["project_id"]);
 
-    get url() {
-        return `/plugins/tracker/?group_id=${encodeURIComponent(this.project_id)}&func=create`;
-    }
-}
+const url = computed(() => {
+    return `/plugins/tracker/?group_id=${encodeURIComponent(project_id.value)}&func=create`;
+});
 </script>
