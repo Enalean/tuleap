@@ -12,6 +12,7 @@
     {{# kanban_presenter }}
         <div class="widget-kanban"
              ng-controller="MainCtrl"
+             ng-csp="no-unsafe-eval"
         >
             <div class="kanban-init-data" ng-non-bindable
                  data-user-id="{{ user_id }}"
