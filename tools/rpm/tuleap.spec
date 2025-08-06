@@ -512,7 +512,7 @@ Provides: tuleap-plugin-tracker-cce
 %package plugin-artidoc
 Summary: Artifacts as Documents plugin
 Group: Development/Tools
-Requires: %{name} = %{tuleap_version}-%{tuleap_release}%{?dist}, tuleap-plugin-tracker, tuleap-plugin-document
+Requires: %{name} = %{tuleap_version}-%{tuleap_release}%{?dist}, tuleap-plugin-tracker, tuleap-plugin-document, tuleap-plugin-testmanagement
 %description plugin-artidoc
 %{summary}.
 
