@@ -26,7 +26,7 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\ProjectUGroupTestBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class RoleAssignmentsUpdateTest extends \Tuleap\Test\PHPUnit\TestCase
+final class RoleAssignmentsUpdateTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItThrowsWhenAssignedRolesDoNotBelongToGivenProject(): void
     {
