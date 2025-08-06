@@ -73,7 +73,7 @@ class TestStatusAccordingToStepsStatusChangesBuilderTest extends \Tuleap\Test\PH
     public function testNoChangesWhenNoStepsStatusChange()
     {
         $steps_defined_in_test = [
-            $this->createMock(Step::class),
+            new Step(1, '', '', null, '', 1),
         ];
 
         $changes = [];

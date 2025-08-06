@@ -29,6 +29,7 @@ use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\DateFieldWithVal
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\NumericFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\PermissionsOnArtifactFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StaticListFieldWithValue;
+use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StepsDefinitionFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\TextFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserGroupsListFieldWithValue;
@@ -40,6 +41,7 @@ use Tuleap\Artidoc\REST\v1\ArtifactSection\Field\SectionDateFieldRepresentation;
 use Tuleap\Artidoc\REST\v1\ArtifactSection\Field\SectionNumericFieldRepresentation;
 use Tuleap\Artidoc\REST\v1\ArtifactSection\Field\SectionPermissionsOnArtifactFieldRepresentation;
 use Tuleap\Artidoc\REST\v1\ArtifactSection\Field\SectionStaticListFieldRepresentation;
+use Tuleap\Artidoc\REST\v1\ArtifactSection\Field\SectionStepsDefinitionFieldRepresentation;
 use Tuleap\Artidoc\REST\v1\ArtifactSection\Field\SectionTextFieldRepresentation;
 use Tuleap\Artidoc\REST\v1\ArtifactSection\Field\SectionUserFieldRepresentation;
 use Tuleap\Artidoc\REST\v1\ArtifactSection\Field\SectionUserGroupsListFieldRepresentation;
@@ -99,7 +101,7 @@ final readonly class ArtifactSectionRepresentationBuilder
     }
 
     /**
-     * @return list<SectionTextFieldRepresentation | SectionUserGroupsListFieldRepresentation | SectionStaticListFieldRepresentation | SectionUserListFieldRepresentation | SectionArtifactLinkFieldRepresentation | SectionNumericFieldRepresentation | SectionUserFieldRepresentation | SectionDateFieldRepresentation | SectionPermissionsOnArtifactFieldRepresentation>
+     * @return list<SectionTextFieldRepresentation | SectionUserGroupsListFieldRepresentation | SectionStaticListFieldRepresentation | SectionUserListFieldRepresentation | SectionArtifactLinkFieldRepresentation | SectionNumericFieldRepresentation | SectionUserFieldRepresentation | SectionDateFieldRepresentation | SectionPermissionsOnArtifactFieldRepresentation | SectionStepsDefinitionFieldRepresentation>
      */
     private function getFieldValues(RequiredArtifactInformation $artifact_information): array
     {
@@ -116,6 +118,7 @@ final readonly class ArtifactSectionRepresentationBuilder
                 UserFieldWithValue::class                  => new SectionUserFieldRepresentation($field),
                 DateFieldWithValue::class                  => new SectionDateFieldRepresentation($field),
                 PermissionsOnArtifactFieldWithValue::class => new SectionPermissionsOnArtifactFieldRepresentation($field),
+                StepsDefinitionFieldWithValue::class       => new SectionStepsDefinitionFieldRepresentation($field),
             };
         }
         return $representations;

@@ -18,87 +18,56 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\TestManagement\Step;
 
-class Step
+/**
+ * @psalm-immutable
+ */
+final readonly class Step
 {
-    /** @var int */
-    private $id;
-    /** @var string */
-    private $description;
-    /** @var string */
-    private $description_format;
-    /** @var string|null */
-    private $expected_results;
-    /** @var string */
-    private $expected_results_format;
-    /** @var int */
-    private $rank;
-
     public function __construct(
-        int $id,
-        string $description,
-        string $description_format,
-        ?string $expected_results,
-        string $expected_results_format,
-        int $rank,
+        private int $id,
+        private string $description,
+        private string $description_format,
+        private ?string $expected_results,
+        private string $expected_results_format,
+        private int $rank,
     ) {
-        $this->id                      = $id;
-        $this->description             = $description;
-        $this->description_format      = $description_format;
-        $this->rank                    = $rank;
-        $this->expected_results        = $expected_results;
-        $this->expected_results_format = $expected_results_format;
     }
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * @return string
-     */
-    public function getDescription()
+    public function getDescription(): string
     {
         return $this->description;
     }
 
-    /**
-     * @return string
-     */
-    public function getDescriptionFormat()
+    public function getDescriptionFormat(): string
     {
         return $this->description_format;
     }
 
-    /**
-     * @return string|null
-     */
-    public function getExpectedResults()
+    public function getExpectedResults(): ?string
     {
         return $this->expected_results;
     }
 
-    /**
-     * @return string
-     */
-    public function getExpectedResultsFormat()
+    public function getExpectedResultsFormat(): string
     {
         return $this->expected_results_format;
     }
 
-    /**
-     * @return int
-     */
-    public function getRank()
+    public function getRank(): int
     {
         return $this->rank;
     }
 
+    #[\Override]
     public function __toString(): string
     {
         return json_encode(

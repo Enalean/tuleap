@@ -182,6 +182,7 @@ deptrac:
     Artidoc:
       - Core
       - Document
+      - TestManagement
       - Tracker
     Baseline:
       - Core

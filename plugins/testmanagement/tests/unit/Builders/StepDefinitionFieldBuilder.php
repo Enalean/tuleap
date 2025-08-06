@@ -23,14 +23,37 @@ declare(strict_types=1);
 namespace Tuleap\TestManagement\Test\Builders;
 
 use Tuleap\TestManagement\Step\Definition\Field\StepDefinition;
+use Tuleap\Tracker\Test\Builders\Fields\FieldBuilderWithPermissions;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Tracker;
 
 final class StepDefinitionFieldBuilder
 {
-    public static function aStepDefinitionField(): StepDefinition
+    use FieldBuilderWithPermissions;
+
+    private Tracker $tracker;
+
+    private function __construct(private readonly int $id)
     {
-        return new StepDefinition(
-            1,
-            102,
+        $this->tracker = TrackerTestBuilder::aTracker()->withId(10)->build();
+    }
+
+    public static function aStepDefinitionField(int $id): self
+    {
+        return new self($id);
+    }
+
+    public function inTracker(Tracker $tracker): self
+    {
+        $this->tracker = $tracker;
+        return $this;
+    }
+
+    public function build(): StepDefinition
+    {
+        $field = new StepDefinition(
+            $this->id,
+            $this->tracker->getId(),
             0,
             'steps_def',
             'Steps definition',
@@ -42,5 +65,10 @@ final class StepDefinitionFieldBuilder
             10,
             null
         );
+        $field->setTracker($this->tracker);
+
+        $this->setPermissions($field);
+
+        return $field;
     }
 }

@@ -46,7 +46,7 @@ final class TrackerArtifactXMLImportXMLImportFieldStrategyStepsTest extends \Tul
         $xml = new SimpleXMLElement($xml_data);
 
         $import_strategy = new TrackerArtifactXMLImportXMLImportFieldStrategySteps();
-        $field           = StepDefinitionFieldBuilder::aStepDefinitionField();
+        $field           = StepDefinitionFieldBuilder::aStepDefinitionField(1)->build();
         $user            = UserTestBuilder::buildWithDefaults();
         $artifact        = ArtifactTestBuilder::anArtifact(101)->build();
 

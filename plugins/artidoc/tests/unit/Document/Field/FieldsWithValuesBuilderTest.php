@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Document\Field;
 
+use Codendi_HTMLPurifier;
 use DateTimeImmutable;
 use Override;
 use PFUser;
@@ -38,6 +39,7 @@ use Tuleap\Artidoc\Document\Field\List\UserGroupListWithValueBuilder;
 use Tuleap\Artidoc\Document\Field\List\UserListFieldWithValueBuilder;
 use Tuleap\Artidoc\Document\Field\Numeric\NumericFieldWithValueBuilder;
 use Tuleap\Artidoc\Document\Field\Permissions\PermissionsOnArtifactFieldWithValueBuilder;
+use Tuleap\Artidoc\Document\Field\StepDefinition\StepsDefinitionFieldWithValueBuilder;
 use Tuleap\Artidoc\Document\Field\User\UserFieldWithValueBuilder;
 use Tuleap\Artidoc\Domain\Document\Section\Field\DisplayType;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\ArtifactLinkFieldWithValue;
@@ -50,6 +52,8 @@ use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\NumericFieldWith
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\PermissionsOnArtifactFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StaticListFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StaticListValue;
+use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StepsDefinitionFieldWithValue;
+use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StepValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\TextFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserGroupsListFieldWithValue;
@@ -58,6 +62,7 @@ use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserListFieldWit
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserValue;
 use Tuleap\Color\ColorName;
 use Tuleap\GlobalLanguageMock;
+use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\Option\Option;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\ProjectUGroupTestBuilder;
@@ -68,6 +73,10 @@ use Tuleap\Test\Stubs\BuildDisplayNameStub;
 use Tuleap\Test\Stubs\RetrieveUserByIdStub;
 use Tuleap\Test\Stubs\User\Avatar\ProvideDefaultUserAvatarUrlStub;
 use Tuleap\Test\Stubs\User\Avatar\ProvideUserAvatarUrlStub;
+use Tuleap\TestManagement\Step\Step;
+use Tuleap\TestManagement\Test\Builders\ChangesetValueStepDefinitionTestBuilder;
+use Tuleap\TestManagement\Test\Builders\StepDefinitionFieldBuilder;
+use Tuleap\Tracker\Artifact\ChangesetValue\Text\TextValueInterpreter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeIsChildPresenter;
 use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
@@ -155,6 +164,7 @@ final class FieldsWithValuesBuilderTest extends TestCase
             ->withUserAvatarUrl($alice, 'alice_avatar.png');
         $provide_default_user_avatar_url = ProvideDefaultUserAvatarUrlStub::build();
         $retrieve_user_by_id             = RetrieveUserByIdStub::withUsers($bob, $alice);
+        $purifier                        = Codendi_HTMLPurifier::instance();
         $builder                         = new FieldsWithValuesBuilder(
             new ConfiguredFieldCollection([self::TRACKER_ID => $fields]),
             new ListFieldWithValueBuilder(
@@ -183,6 +193,7 @@ final class FieldsWithValuesBuilderTest extends TestCase
             ),
             new DateFieldWithValueBuilder($this->current_user),
             new PermissionsOnArtifactFieldWithValueBuilder(),
+            new StepsDefinitionFieldWithValueBuilder(new TextValueInterpreter($purifier, CommonMarkInterpreter::build($purifier))),
         );
         return $builder->getFieldsWithValues($this->changeset);
     }
@@ -429,7 +440,7 @@ final class FieldsWithValuesBuilderTest extends TestCase
     {
         $permissions_field = PermissionsOnArtifactFieldBuilder::aPermissionsOnArtifactField(123)->build();
 
-        $expected_date_field_with_value = new PermissionsOnArtifactFieldWithValue(
+        $expected_permissions_field_with_value = new PermissionsOnArtifactFieldWithValue(
             $permissions_field->getLabel(),
             DisplayType::BLOCK,
             [new UserGroupValue('Project Members')],
@@ -444,8 +455,46 @@ final class FieldsWithValuesBuilderTest extends TestCase
                 ->build(),
         );
 
-        self::assertEquals([$expected_date_field_with_value], $this->getFields([
+        self::assertEquals([$expected_permissions_field_with_value], $this->getFields([
             new ConfiguredField($permissions_field, DisplayType::BLOCK),
+        ]));
+    }
+
+    public function testItBuildsStepDefinitionFieldWithValue(): void
+    {
+        $step_definition_field = StepDefinitionFieldBuilder::aStepDefinitionField(123)
+            ->inTracker($this->tracker)
+            ->build();
+
+        $expected_step_definition_field_with_value = new StepsDefinitionFieldWithValue(
+            $step_definition_field->getLabel(),
+            DisplayType::BLOCK,
+            [
+                new StepValue(
+                    'Some description',
+                    Option::nothing(\Psl\Type\string()),
+                ),
+            ],
+        );
+
+        $this->changeset->setFieldValue(
+            $step_definition_field,
+            ChangesetValueStepDefinitionTestBuilder::aValue(54, $this->changeset, $step_definition_field)
+                ->withSteps([
+                    new Step(
+                        12,
+                        'Some description',
+                        Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT,
+                        null,
+                        Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT,
+                        1,
+                    ),
+                ])
+                ->build(),
+        );
+
+        self::assertEquals([$expected_step_definition_field_with_value], $this->getFields([
+            new ConfiguredField($step_definition_field, DisplayType::BLOCK),
         ]));
     }
 }

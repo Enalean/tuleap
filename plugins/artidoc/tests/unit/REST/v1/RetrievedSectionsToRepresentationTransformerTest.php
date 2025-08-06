@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\REST\v1;
 
+use Codendi_HTMLPurifier;
 use PFUser;
 use PHPUnit\Framework\Attributes\TestWith;
 use Tracker_Artifact_Changeset;
@@ -38,6 +39,7 @@ use Tuleap\Artidoc\Document\Field\List\UserGroupListWithValueBuilder;
 use Tuleap\Artidoc\Document\Field\List\UserListFieldWithValueBuilder;
 use Tuleap\Artidoc\Document\Field\Numeric\NumericFieldWithValueBuilder;
 use Tuleap\Artidoc\Document\Field\Permissions\PermissionsOnArtifactFieldWithValueBuilder;
+use Tuleap\Artidoc\Document\Field\StepDefinition\StepsDefinitionFieldWithValueBuilder;
 use Tuleap\Artidoc\Document\Field\User\UserFieldWithValueBuilder;
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\Artidoc\Domain\Document\Section\PaginatedRetrievedSections;
@@ -48,6 +50,7 @@ use Tuleap\Artidoc\REST\v1\ArtifactSection\ArtifactSectionRepresentationBuilder;
 use Tuleap\Artidoc\REST\v1\ArtifactSection\RequiredArtifactInformationBuilder;
 use Tuleap\Artidoc\Stubs\Document\FreetextIdentifierStub;
 use Tuleap\Artidoc\Stubs\Document\SectionIdentifierStub;
+use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
@@ -61,6 +64,7 @@ use Tuleap\Test\Stubs\RetrieveUserByIdStub;
 use Tuleap\Test\Stubs\User\Avatar\ProvideDefaultUserAvatarUrlStub;
 use Tuleap\Test\Stubs\User\Avatar\ProvideUserAvatarUrlStub;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Artifact\ChangesetValue\Text\TextValueInterpreter;
 use Tuleap\Tracker\Artifact\UploadDataAttributesForRichTextEditorBuilder;
 use Tuleap\Tracker\FormElement\Field\String\StringField;
 use Tuleap\Tracker\FormElement\Field\Text\TextField;
@@ -115,6 +119,7 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
         $retrieve_user_by_id             = RetrieveUserByIdStub::withNoUser();
         $provide_user_avatar_url         = ProvideUserAvatarUrlStub::build();
         $provide_default_user_avatar_url = ProvideDefaultUserAvatarUrlStub::build();
+        $purifier                        = Codendi_HTMLPurifier::instance();
         $transformer                     = new RetrievedSectionsToRepresentationTransformer(
             new SectionRepresentationBuilder(
                 new ArtifactSectionRepresentationBuilder(
@@ -146,6 +151,7 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
                         ),
                         new DateFieldWithValueBuilder($this->user),
                         new PermissionsOnArtifactFieldWithValueBuilder(),
+                        new StepsDefinitionFieldWithValueBuilder(new TextValueInterpreter($purifier, CommonMarkInterpreter::build($purifier))),
                     )
                 ),
             ),

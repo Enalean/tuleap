@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\REST\v1;
 
+use Codendi_HTMLPurifier;
 use DateTimeImmutable;
 use Docman_ItemFactory;
 use Docman_PermissionsManager;
@@ -52,6 +53,7 @@ use Tuleap\Artidoc\Document\Field\List\UserGroupListWithValueBuilder;
 use Tuleap\Artidoc\Document\Field\List\UserListFieldWithValueBuilder;
 use Tuleap\Artidoc\Document\Field\Numeric\NumericFieldWithValueBuilder;
 use Tuleap\Artidoc\Document\Field\Permissions\PermissionsOnArtifactFieldWithValueBuilder;
+use Tuleap\Artidoc\Document\Field\StepDefinition\StepsDefinitionFieldWithValueBuilder;
 use Tuleap\Artidoc\Document\Field\SuitableFieldRetriever;
 use Tuleap\Artidoc\Document\Field\User\UserFieldWithValueBuilder;
 use Tuleap\Artidoc\Document\Tracker\NoSemanticDescriptionFault;
@@ -82,6 +84,7 @@ use Tuleap\Artidoc\Domain\Document\Section\Field\FieldIsTitleSemanticFault;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldNotFoundFault;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldNotSupportedFault;
 use Tuleap\Artidoc\Domain\Document\Section\Field\LinkFieldMustBeDisplayedInBlockFault;
+use Tuleap\Artidoc\Domain\Document\Section\Field\StepDefinitionFieldMustBeDisplayedInBlockFault;
 use Tuleap\Artidoc\Domain\Document\Section\Field\TextFieldMustBeDisplayedInBlockFault;
 use Tuleap\Artidoc\Domain\Document\Section\Freetext\Identifier\FreetextIdentifierFactory;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifierFactory;
@@ -101,11 +104,13 @@ use Tuleap\Docman\REST\v1\MoveItem\BeforeMoveVisitor;
 use Tuleap\Docman\REST\v1\MoveItem\DocmanItemMover;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadDAO;
 use Tuleap\Docman\Upload\Document\DocumentOngoingUploadRetriever;
+use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
+use Tuleap\Tracker\Artifact\ChangesetValue\Text\TextValueInterpreter;
 use Tuleap\Tracker\Artifact\Dao\PriorityDao;
 use Tuleap\Tracker\Artifact\FileUploadDataProvider;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
@@ -404,6 +409,10 @@ final class ArtidocResource extends AuthenticatedResource
                             400,
                             dgettext('tuleap-artidoc', "Text field must use 'block' display type."),
                         ),
+                        StepDefinitionFieldMustBeDisplayedInBlockFault::class => new I18NRestException(
+                            400,
+                            dgettext('tuleap-artidoc', "Step definition field must use 'block' display type."),
+                        ),
                         TrackerNotFoundFault::class => new I18NRestException(
                             400,
                             dgettext('tuleap-artidoc', "Given tracker cannot be found or you don't have access to it.")
@@ -550,6 +559,7 @@ final class ArtidocResource extends AuthenticatedResource
 
         $provide_user_avatar_url = new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash());
         $user_manager            = UserManager::instance();
+        $purifier                = Codendi_HTMLPurifier::instance();
 
         return new ArtifactSectionRepresentationBuilder(
             new FileUploadDataProvider(
@@ -595,6 +605,7 @@ final class ArtidocResource extends AuthenticatedResource
                 ),
                 new DateFieldWithValueBuilder($user),
                 new PermissionsOnArtifactFieldWithValueBuilder(),
+                new StepsDefinitionFieldWithValueBuilder(new TextValueInterpreter($purifier, CommonMarkInterpreter::build($purifier))),
             )
         );
     }

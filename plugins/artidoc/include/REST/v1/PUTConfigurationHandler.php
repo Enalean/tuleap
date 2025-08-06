@@ -37,11 +37,13 @@ use Tuleap\Artidoc\Domain\Document\Section\Field\DisplayType;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldDisplayTypeIsUnknownFault;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldDoesNotBelongToTrackerFault;
 use Tuleap\Artidoc\Domain\Document\Section\Field\LinkFieldMustBeDisplayedInBlockFault;
+use Tuleap\Artidoc\Domain\Document\Section\Field\StepDefinitionFieldMustBeDisplayedInBlockFault;
 use Tuleap\Artidoc\Domain\Document\Section\Field\TextFieldMustBeDisplayedInBlockFault;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
+use Tuleap\TestManagement\Step\Definition\Field\StepDefinition;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\Text\TextField;
 use Tuleap\Tracker\FormElement\Field\NumericField;
@@ -137,7 +139,7 @@ final readonly class PUTConfigurationHandler
         }
 
         return $this->retrieve_suitable_field->retrieveField($input_field->field_id, $user)
-            ->andThen(function (TextField|Tracker_FormElement_Field_List|ArtifactLinkField|NumericField|Tracker_FormElement_Field_Date|Tracker_FormElement_Field_PermissionsOnArtifact $field) use ($display_type, $tracker) {
+            ->andThen(function (TextField|Tracker_FormElement_Field_List|ArtifactLinkField|NumericField|Tracker_FormElement_Field_Date|Tracker_FormElement_Field_PermissionsOnArtifact|StepDefinition $field) use ($display_type, $tracker) {
                 if ($field->getTrackerId() !== $tracker->getId()) {
                     return Result::err(
                         FieldDoesNotBelongToTrackerFault::build($field->getId(), $tracker->getId())
@@ -150,6 +152,10 @@ final readonly class PUTConfigurationHandler
 
                 if ($field::class === TextField::class && $display_type !== DisplayType::BLOCK) {
                     return Result::err(TextFieldMustBeDisplayedInBlockFault::build());
+                }
+
+                if ($field instanceof StepDefinition && $display_type !== DisplayType::BLOCK) {
+                    return Result::err(StepDefinitionFieldMustBeDisplayedInBlockFault::build());
                 }
 
                 return Result::ok(new ArtifactSectionField($field->getId(), $display_type));
