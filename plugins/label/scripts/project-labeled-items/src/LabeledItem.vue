@@ -22,11 +22,10 @@
         <div class="labeled-item-content" v-dompurify-html="item.title"></div>
     </a>
 </template>
-<script>
-export default {
-    name: "LabeledItem",
-    props: {
-        item: Object,
-    },
-};
+<script setup lang="ts">
+import type { Item } from "./type";
+
+defineProps<{
+    item: Item;
+}>();
 </script>
