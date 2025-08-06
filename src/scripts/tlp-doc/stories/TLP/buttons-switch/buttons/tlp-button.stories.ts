@@ -59,25 +59,20 @@ function getClasses(args: ButtonProps): string {
     return classes.join(" ");
 }
 
-function getIconLeft(args: ButtonProps): TemplateResult {
-    if (args.with_icon_on_left) {
-        return html`<i class="fa-solid fa-comments tlp-button-icon" aria-hidden="true"></i> `;
-    }
-    return html``;
-}
-
-function getIconRight(args: ButtonProps): TemplateResult {
-    if (args.with_icon_on_right) {
-        return html` <i class="fa-solid fa-comments tlp-button-icon-right" aria-hidden="true"></i>`;
-    }
-    return html``;
+function getOptionalIcon(has_icon: boolean): TemplateResult {
+    return has_icon
+        ? html`<i class="fa-solid fa-comments tlp-button-icon" aria-hidden="true"></i> `
+        : html``;
 }
 
 function getContent(args: ButtonProps): TemplateResult {
     if (args.ellipsis_button) {
         return html`<i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i>`;
     }
-    return html`${getIconLeft(args)}${args.label}${getIconRight(args)}`;
+    const left_icon = getOptionalIcon(args.with_icon_on_left);
+    const right_icon = getOptionalIcon(args.with_icon_on_right);
+
+    return html`${left_icon}${args.label}${right_icon}`;
 }
 
 function getButton(args: ButtonProps): TemplateResult {
@@ -192,7 +187,7 @@ const meta: Meta<ButtonProps> = {
             name: "With icon on right",
             description: "Add an icon to the right, with the appropriate class",
             table: {
-                type: { summary: ".tlp-button-icon-right" },
+                type: { summary: ".tlp-button-icon" },
             },
             if: { arg: "element", neq: "input" },
         },

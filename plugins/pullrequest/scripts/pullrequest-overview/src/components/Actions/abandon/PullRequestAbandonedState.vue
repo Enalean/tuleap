@@ -51,7 +51,7 @@
                 {{ $gettext("Reopen") }}
                 <i
                     v-if="is_reopening_in_progress"
-                    class="fa-solid fa-circle-notch fa-spin tlp-button-icon-right"
+                    class="fa-solid fa-circle-notch fa-spin tlp-button-icon"
                     aria-hidden="true"
                 ></i>
             </button>

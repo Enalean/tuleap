@@ -47,7 +47,7 @@
             >
                 {{ $gettext("Next") }}
                 <i
-                    class="fa tlp-button-icon-right"
+                    class="fa tlp-button-icon"
                     v-bind:class="{
                         'fa-long-arrow-right ': !is_parsing_a_xml_file,
                         'fa-circle-o-notch fa-spin': is_parsing_a_xml_file,
@@ -67,7 +67,7 @@
             >
                 {{ $gettext("Create my tracker") }}
                 <i
-                    class="tlp-button-icon-right fa"
+                    class="tlp-button-icon fa"
                     v-bind:class="{
                         'fa-circle-o-notch fa-spin': has_form_been_submitted,
                         'fa-arrow-circle-o-right': !has_form_been_submitted,

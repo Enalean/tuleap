@@ -28,11 +28,7 @@
         >
             <i class="fa-solid fa-repeat tlp-button-icon" aria-hidden="true"></i>
             {{ $gettext("Convert to…") }}
-            <i
-                class="fa-solid fa-caret-down tlp-button-icon-right"
-                aria-hidden="true"
-                ref="anchor"
-            ></i>
+            <i class="fa-solid fa-caret-down tlp-button-icon" aria-hidden="true" ref="anchor"></i>
         </button>
 
         <new-version-empty-menu-options

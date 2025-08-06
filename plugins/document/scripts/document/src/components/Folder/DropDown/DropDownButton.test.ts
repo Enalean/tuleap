@@ -62,7 +62,7 @@ describe("DropDownButton", () => {
         expect(document.addEventListener).toHaveBeenCalledTimes(1);
 
         expect(wrapper.find(".tlp-append").exists()).toBeTruthy();
-        expect(wrapper.find(".tlp-button-icon-right").exists()).toBeFalsy();
+        expect(wrapper.find(".tlp-button-icon").exists()).toBeFalsy();
         expect(wrapper.find(".fa-ellipsis").exists()).toBeFalsy();
     });
 

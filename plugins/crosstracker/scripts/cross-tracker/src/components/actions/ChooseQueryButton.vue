@@ -26,7 +26,7 @@
             data-test="choose-query-button"
         >
             {{ $gettext("Choose another query") }}
-            <i class="fa-solid fa-caret-down tlp-button-icon-right" aria-hidden="true"></i>
+            <i class="fa-solid fa-caret-down tlp-button-icon" aria-hidden="true"></i>
         </button>
         <div class="tlp-dropdown-menu dropdown-menu-filter" role="menu" ref="dropdown_menu">
             <choose-query-menu

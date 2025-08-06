@@ -11,7 +11,7 @@ exports[`QuickLookLink > renders quick look for link document 1`] = `
     Open link 
     <i
       aria-hidden="true"
-      class="fa-solid fa-right-long tlp-button-icon-right"
+      class="fa-solid fa-right-long tlp-button-icon"
     />
   </button>
   <drop-down-quick-look-stub

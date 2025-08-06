@@ -41,7 +41,7 @@
                 >
                     {{ $gettext("Start my project")
                     }}<i
-                        class="tlp-button-icon-right"
+                        class="tlp-button-icon"
                         v-bind:class="get_icon"
                         data-test="project-submission-icon"
                         aria-hidden="true"

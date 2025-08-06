@@ -40,7 +40,7 @@
             data-test="should-display-connexion"
         >
             <span>{{ $gettext("Connect") }}</span>
-            <i class="fa tlp-button-icon-right" v-bind:class="icon_class"></i>
+            <i class="fa tlp-button-icon" v-bind:class="icon_class"></i>
         </button>
         <tracker-from-jira-project v-else-if="project_list" v-bind:project_list="project_list" />
     </form>

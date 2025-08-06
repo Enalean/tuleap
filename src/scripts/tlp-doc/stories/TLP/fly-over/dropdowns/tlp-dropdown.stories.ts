@@ -127,7 +127,7 @@ function getBaseTemplate(args: DropdownProps): TemplateResult {
     <button type="button" id="dropdown-example" class="tlp-button-primary">
         <i class="fa-solid fa-plus tlp-button-icon" aria-hidden="true"></i>
         Add item
-        <i class="fa-solid fa-caret-down tlp-button-icon-right" aria-hidden="true"></i>
+        <i class="fa-solid fa-caret-down tlp-button-icon" aria-hidden="true"></i>
     </button>
     <div class=${getMenuClasses(args)} id="dropdown-menu-example" role="menu">
         ${ dropdown_items }
@@ -140,7 +140,7 @@ function getTemplateWithSubMenu(): TemplateResult {
     return html`
 <button type="button" id="dropdown-example" class="tlp-button-primary tlp-button-outline">
     Using options and submenu
-    <i class="fa-solid fa-caret-down tlp-button-icon-right" aria-hidden="true"></i>
+    <i class="fa-solid fa-caret-down tlp-button-icon" aria-hidden="true"></i>
 </button>
 <!-- Dropdown menu, anywhere in the page -->
 <div>
@@ -184,7 +184,7 @@ function getTemplateWithTabs(): TemplateResult {
 <div class="tlp-dropdown">
     <button type="button" id="dropdown-example" class="tlp-button-primary">
         with tabs
-        <i class="fa-solid fa-caret-down tlp-button-icon-right" aria-hidden="true"></i>
+        <i class="fa-solid fa-caret-down tlp-button-icon" aria-hidden="true"></i>
     </button>
     <div class="tlp-dropdown-menu tlp-dropdown-with-tabs-on-top" id="dropdown-menu-example" role="menu">
         <nav class="tlp-tabs">
@@ -207,7 +207,7 @@ function getTemplateWithFilter(): TemplateResult {
 <div class="tlp-dropdown">
     <button type="button" id="dropdown-example" class="tlp-button-primary">
         with filter
-        <i class="fa-solid fa-caret-down tlp-button-icon-right" aria-hidden="true"></i>
+        <i class="fa-solid fa-caret-down tlp-button-icon" aria-hidden="true"></i>
     </button>
     <div class="tlp-dropdown-menu dropdown-menu-example-filter" id="dropdown-menu-example" role="menu">
         <div class="tlp-dropdown-menu-actions">
