@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Cryptography;
 
 use Tuleap\Cryptography\Exception\CannotPerformIOOperationException;
-use Tuleap\Cryptography\Symmetric\EncryptionKey;
+use Tuleap\Cryptography\SymmetricLegacy2025\EncryptionKey;
 
 class KeyFactory
 {

@@ -25,8 +25,8 @@ namespace Tuleap\HudsonGit\Git\Administration\XML;
 use Project;
 use Psr\Log\LoggerInterface;
 use SimpleXMLElement;
-use Tuleap\Cryptography\Symmetric\EncryptionKey;
-use Tuleap\Cryptography\Symmetric\SymmetricCrypto;
+use Tuleap\Cryptography\SymmetricLegacy2025\EncryptionKey;
+use Tuleap\Cryptography\SymmetricLegacy2025\SymmetricCrypto;
 use Tuleap\HudsonGit\Git\Administration\JenkinsServerFactory;
 
 class XMLExporter

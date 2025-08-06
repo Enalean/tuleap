@@ -25,8 +25,8 @@ namespace Tuleap\Gitlab\Repository\Token;
 use Tuleap\Cryptography\KeyFactory;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Cryptography\ConcealedString;
-use Tuleap\Cryptography\Symmetric\SymmetricCrypto;
-use Tuleap\Cryptography\Symmetric\EncryptionKey;
+use Tuleap\Cryptography\SymmetricLegacy2025\SymmetricCrypto;
+use Tuleap\Cryptography\SymmetricLegacy2025\EncryptionKey;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class IntegrationApiTokenInserterTest extends \Tuleap\Test\PHPUnit\TestCase

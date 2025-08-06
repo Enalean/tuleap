@@ -24,7 +24,7 @@ namespace Tuleap\HudsonGit\Git\Administration;
 
 use Project;
 use Tuleap\Cryptography\ConcealedString;
-use Tuleap\Cryptography\Symmetric\EncryptionKey;
+use Tuleap\Cryptography\SymmetricLegacy2025\EncryptionKey;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Valid_HTTPURI;
 

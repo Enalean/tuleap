@@ -25,7 +25,7 @@ namespace Tuleap\User\Account;
 
 use SVN_TokenHandler;
 use Tuleap\Cryptography\KeyFactory;
-use Tuleap\Cryptography\Symmetric\SymmetricCrypto;
+use Tuleap\Cryptography\SymmetricLegacy2025\SymmetricCrypto;
 
 final class SVNTokensPresenterBuilder
 {

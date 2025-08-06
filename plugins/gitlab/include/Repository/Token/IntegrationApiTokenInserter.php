@@ -23,7 +23,7 @@ namespace Tuleap\Gitlab\Repository\Token;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Gitlab\Repository\GitlabRepositoryIntegration;
 use Tuleap\Cryptography\KeyFactory;
-use Tuleap\Cryptography\Symmetric\SymmetricCrypto;
+use Tuleap\Cryptography\SymmetricLegacy2025\SymmetricCrypto;
 
 class IntegrationApiTokenInserter
 {

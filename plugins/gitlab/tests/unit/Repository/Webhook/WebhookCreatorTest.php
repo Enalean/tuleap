@@ -25,7 +25,7 @@ namespace Tuleap\Gitlab\Repository\Webhook;
 use ColinODell\PsrTestLogger\TestLogger;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Cryptography\KeyFactory;
-use Tuleap\Cryptography\Symmetric\EncryptionKey;
+use Tuleap\Cryptography\SymmetricLegacy2025\EncryptionKey;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Gitlab\API\ClientWrapper;
 use Tuleap\Gitlab\API\GitlabRequestException;

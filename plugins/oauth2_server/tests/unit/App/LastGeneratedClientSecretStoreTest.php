@@ -25,7 +25,7 @@ namespace Tuleap\OAuth2Server\App;
 use Tuleap\Authentication\SplitToken\PrefixedSplitTokenSerializer;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 use Tuleap\Cryptography\ConcealedString;
-use Tuleap\Cryptography\Symmetric\EncryptionKey;
+use Tuleap\Cryptography\SymmetricLegacy2025\EncryptionKey;
 use Tuleap\OAuth2ServerCore\App\PrefixOAuth2ClientSecret;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]

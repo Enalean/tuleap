@@ -140,7 +140,7 @@ Secrets stored in the database are expected to be:
   * passwords and user provided secrets must be hashed using a key derivation function designed for this use case, use
     [`StandardPasswordHandler::computeHashPassword()`](../src/common/User/Password/StandardPasswordHandler.php)
   * for randomly generated keys like personal access keys use the ["split token" pattern](../src/common/Authentication/SplitToken/)
-* encrypted using [`SymmetricCrypto::encrypt()`](../src/common/Cryptography/Symmetric/SymmetricCrypto.php) if accessing
+* encrypted using [`SymmetricCrypto::encrypt()`](../src/common/Cryptography/SymmetricLegacy2024/SymmetricCrypto.php) if accessing
   the plaintext value is required
 
 #### While processing a request

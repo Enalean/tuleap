@@ -25,8 +25,8 @@ namespace Tuleap\User\AccessKey;
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenFormatter;
 use Tuleap\Cryptography\ConcealedString;
-use Tuleap\Cryptography\Symmetric\EncryptionKey;
-use Tuleap\Cryptography\Symmetric\SymmetricCrypto;
+use Tuleap\Cryptography\SymmetricLegacy2025\EncryptionKey;
+use Tuleap\Cryptography\SymmetricLegacy2025\SymmetricCrypto;
 
 class LastAccessKeyIdentifierStore
 {

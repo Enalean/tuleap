@@ -24,8 +24,8 @@ namespace Tuleap\HudsonGit\Git\Administration;
 
 use Project;
 use Tuleap\Cryptography\ConcealedString;
-use Tuleap\Cryptography\Symmetric\EncryptionKey;
-use Tuleap\Cryptography\Symmetric\SymmetricCrypto;
+use Tuleap\Cryptography\SymmetricLegacy2025\EncryptionKey;
+use Tuleap\Cryptography\SymmetricLegacy2025\SymmetricCrypto;
 use Valid_HTTPURI;
 
 class JenkinsServerAdder

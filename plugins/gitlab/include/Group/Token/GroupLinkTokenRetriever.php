@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Gitlab\Group\Token;
 
 use Tuleap\Cryptography\KeyFactory;
-use Tuleap\Cryptography\Symmetric\SymmetricCrypto;
+use Tuleap\Cryptography\SymmetricLegacy2025\SymmetricCrypto;
 use Tuleap\Gitlab\Group\GroupLink;
 
 final class GroupLinkTokenRetriever
