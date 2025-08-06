@@ -36,25 +36,19 @@
         </label>
     </div>
 </template>
-<script lang="ts">
-import Vue from "vue";
-import { State, Mutation } from "vuex-class";
-import { Component, Prop } from "vue-property-decorator";
+<script setup lang="ts">
+import { computed } from "vue";
+import { useState, useMutations } from "vuex-composition-helpers";
 import type { CreationOptions } from "../../../../store/type";
 
-@Component
-export default class TrackerBaseCard extends Vue {
-    @State
-    readonly active_option!: CreationOptions | string;
+const props = defineProps<{
+    optionName: string | CreationOptions;
+}>();
 
-    @Mutation
-    readonly setActiveOption!: (option: CreationOptions | string) => void;
+const { active_option } = useState(["active_option"]);
+const { setActiveOption } = useMutations(["setActiveOption"]);
 
-    @Prop({ required: true })
-    readonly optionName!: CreationOptions | string;
-
-    get is_option_active(): boolean {
-        return this.active_option === this.optionName;
-    }
-}
+const is_option_active = computed((): boolean => {
+    return active_option.value === props.optionName;
+});
 </script>
