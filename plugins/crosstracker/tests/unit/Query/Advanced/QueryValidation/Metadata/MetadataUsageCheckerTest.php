@@ -45,6 +45,7 @@ final class MetadataUsageCheckerTest extends TestCase
              ['project.name'],
              ['tracker.name'],
              ['pretty_title'],
+             ['link_type'],
          ];
     }
 

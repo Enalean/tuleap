@@ -21,6 +21,7 @@ import { describe, expect, it } from "vitest";
 import {
     ARTIFACT_SELECTABLE_TYPE,
     DATE_SELECTABLE_TYPE,
+    LINK_TYPE_SELECTABLE_TYPE,
     NUMERIC_SELECTABLE_TYPE,
     PRETTY_TITLE_SELECTABLE_TYPE,
     PROJECT_SELECTABLE_TYPE,
@@ -47,6 +48,7 @@ import {
 import {
     ARTIFACT_COLUMN_NAME,
     ASSIGNED_TO_COLUMN_NAME,
+    LINK_TYPE_COLUMN_NAME,
     PRETTY_TITLE_COLUMN_NAME,
     PROJECT_COLUMN_NAME,
     STATUS_COLUMN_NAME,
@@ -582,6 +584,19 @@ describe(`ArtifactsTableBuilder`, () => {
             expect(title_second_row.color).toBe(second_title.color);
             expect(title_second_row.artifact_id).toBe(second_title.artifact_id);
             expect(title_second_row.title).toBe(second_title.title);
+        });
+
+        it(`builds a table with "link_type" selectables`, () => {
+            const link_type_column = LINK_TYPE_COLUMN_NAME;
+
+            const table = ArtifactsTableBuilder().mapQueryContentToArtifactsTable(
+                SelectableQueryContentRepresentationStub.build(
+                    [{ type: LINK_TYPE_SELECTABLE_TYPE, name: link_type_column }],
+                    [ArtifactRepresentationStub.build({ [link_type_column]: { name: "" } })],
+                ),
+            );
+
+            expect(table.columns.has(link_type_column)).toBe(true);
         });
 
         it(`given a query content representation with an unsupported selectable type,

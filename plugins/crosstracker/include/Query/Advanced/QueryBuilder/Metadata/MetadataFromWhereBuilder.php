@@ -33,6 +33,7 @@ use Tuleap\CrossTracker\Query\Advanced\QueryBuilder\Metadata\Semantic\AssignedTo
 use Tuleap\CrossTracker\Query\Advanced\QueryBuilder\Metadata\Semantic\Description\DescriptionFromWhereBuilder;
 use Tuleap\CrossTracker\Query\Advanced\QueryBuilder\Metadata\Semantic\Status\StatusFromWhereBuilder;
 use Tuleap\CrossTracker\Query\Advanced\QueryBuilder\Metadata\Semantic\Title\TitleFromWhereBuilder;
+use Tuleap\CrossTracker\Query\Advanced\QueryBuilder\Metadata\Special\ForwardLinkTypeFromWhereBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 use Tuleap\Tracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
@@ -54,6 +55,7 @@ final readonly class MetadataFromWhereBuilder
         private DateFromWhereBuilder $date_builder,
         private UsersFromWhereBuilder $users_builder,
         private ArtifactIdFromWhereBuilder $artifact_id_builder,
+        private ForwardLinkTypeFromWhereBuilder $forward_link_type_builder,
         private Tracker_FormElementFactory $form_element_factory,
     ) {
     }
@@ -105,6 +107,12 @@ final readonly class MetadataFromWhereBuilder
                 $this->filterTrackersOnReadableField($trackers, Tracker_FormElementFactory::FIELD_ARTIFACT_ID_TYPE, $user),
                 $user,
                 self::ARTIFACT_ID_ALIAS,
+            )),
+            AllowedMetadata::LINK_TYPE => $this->forward_link_type_builder->getFromWhere(new MetadataValueWrapperParameters(
+                $comparison,
+                $this->filterTrackersOnReadableField($trackers, Tracker_FormElementFactory::FIELD_ARTIFACT_LINKS, $user),
+                $user,
+                '',
             )),
             default                           => throw new LogicException("Unknown metadata type: {$metadata->getName()}"),
         };

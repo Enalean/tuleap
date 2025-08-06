@@ -23,11 +23,13 @@ declare(strict_types=1);
 namespace Tuleap\CrossTracker\Query\Advanced\SelectBuilder\Metadata;
 
 use LogicException;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\IProvideParametrizedSelectAndFromSQLFragments;
 use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\Metadata\Semantic\AssignedTo\AssignedToSelectFromBuilder;
 use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\Metadata\Semantic\Description\DescriptionSelectFromBuilder;
 use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\Metadata\Semantic\Status\StatusSelectFromBuilder;
 use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\Metadata\Semantic\Title\TitleSelectFromBuilder;
+use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\Metadata\Special\LinkType\ForwardLinkTypeSelectFromBuilder;
 use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\Metadata\Special\PrettyTitle\PrettyTitleSelectFromBuilder;
 use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\Metadata\Special\ProjectName\ProjectNameSelectFromBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -45,6 +47,7 @@ final class MetadataSelectFromBuilderTest extends TestCase
             new AssignedToSelectFromBuilder(),
             new ProjectNameSelectFromBuilder(),
             new PrettyTitleSelectFromBuilder(),
+            new ForwardLinkTypeSelectFromBuilder(),
         );
 
         return $builder->getSelectFrom($metadata);
@@ -56,81 +59,34 @@ final class MetadataSelectFromBuilderTest extends TestCase
         $this->getSelectFrom(new Metadata('not-existing'));
     }
 
-    public function testItReturnsSQLForTitleSemantic(): void
+    #[DataProvider('metadataForSelectAndFromStatement')]
+    public function testItReturnsSQLForSelectAndFromSemantic(string $metadata_name): void
     {
-        $result = $this->getSelectFrom(new Metadata('title'));
+        $result = $this->getSelectFrom(new Metadata($metadata_name));
         self::assertNotEmpty($result->getSelect());
         self::assertNotEmpty($result->getFrom());
     }
 
-    public function testItReturnsSQLForDescriptionSemantic(): void
+    #[DataProvider('metadataForSelectStatement')]
+    public function testItReturnsSQLForSelectOnlySemantic(string $metadata_name): void
     {
-        $result = $this->getSelectFrom(new Metadata('description'));
-        self::assertNotEmpty($result->getSelect());
-        self::assertNotEmpty($result->getFrom());
-    }
-
-    public function testItReturnsSQLForStatusSemantic(): void
-    {
-        $result = $this->getSelectFrom(new Metadata('status'));
-        self::assertNotEmpty($result->getSelect());
-        self::assertNotEmpty($result->getFrom());
-    }
-
-    public function testItReturnsSQLForAssignedToSemantic(): void
-    {
-        $result = $this->getSelectFrom(new Metadata('assigned_to'));
-        self::assertNotEmpty($result->getSelect());
-        self::assertNotEmpty($result->getFrom());
-    }
-
-    public function testItReturnsSQLForSubmittedOnAlwaysThereField(): void
-    {
-        $result = $this->getSelectFrom(new Metadata('submitted_on'));
+        $result = $this->getSelectFrom(new Metadata($metadata_name));
         self::assertNotEmpty($result->getSelect());
     }
 
-    public function testItReturnsSQLForLastUpdateDateAlwaysThereField(): void
+    public function testItReturnsSEmptyForLinkType(): void
     {
-        $result = $this->getSelectFrom(new Metadata('last_update_date'));
-        self::assertNotEmpty($result->getSelect());
+        $result = $this->getSelectFrom(new Metadata('link_type'));
+        self::assertEmpty($result->getSelect());
     }
 
-    public function testItReturnsSQLForSubmittedByAlwaysThereField(): void
+    public static function metadataForSelectStatement(): array
     {
-        $result = $this->getSelectFrom(new Metadata('submitted_by'));
-        self::assertNotEmpty($result->getSelect());
+        return ['submitted_on' => ['submitted_on'], 'last_update_date' => ['last_update_date'], 'submitted_by' => ['submitted_by'], 'last_update_by' => ['last_update_by'], 'id' => ['id'], 'tracker.name' => ['tracker.name']];
     }
 
-    public function testItReturnsSQLForLastUpdateByAlwaysThereField(): void
+    public static function metadataForSelectAndFromStatement(): array
     {
-        $result = $this->getSelectFrom(new Metadata('last_update_by'));
-        self::assertNotEmpty($result->getSelect());
-    }
-
-    public function testItReturnsSQLForArtifactIdAlwaysThereField(): void
-    {
-        $result = $this->getSelectFrom(new Metadata('id'));
-        self::assertNotEmpty($result->getSelect());
-    }
-
-    public function testItReturnsSQLForProjectName(): void
-    {
-        $result = $this->getSelectFrom(new Metadata('project.name'));
-        self::assertNotEmpty($result->getSelect());
-        self::assertNotEmpty($result->getFrom());
-    }
-
-    public function testItReturnsSQLForTrackerName(): void
-    {
-        $result = $this->getSelectFrom(new Metadata('tracker.name'));
-        self::assertNotEmpty($result->getSelect());
-    }
-
-    public function testItReturnsSQLForPrettyTitle(): void
-    {
-        $result = $this->getSelectFrom(new Metadata('pretty_title'));
-        self::assertNotEmpty($result->getSelect());
-        self::assertNotEmpty($result->getFrom());
+        return ['title' => ['title'], 'description' => ['description'], 'status' => ['status'], 'assigned_to' => ['assigned_to'], 'project.name' => ['project.name'], 'pretty_title' => ['pretty_title']];
     }
 }

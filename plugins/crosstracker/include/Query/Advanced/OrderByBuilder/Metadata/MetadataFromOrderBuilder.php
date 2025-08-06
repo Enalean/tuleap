@@ -69,6 +69,7 @@ final readonly class MetadataFromOrderBuilder
             AllowedMetadata::SUBMITTED_ON     => new ParametrizedFromOrder('', [], 'artifact.submitted_on ' . $order),
             AllowedMetadata::LAST_UPDATE_DATE => new ParametrizedFromOrder('', [], 'changeset.submitted_on ' . $order),
             AllowedMetadata::ID               => new ParametrizedFromOrder('', [], 'artifact.id ' . $order),
+            AllowedMetadata::LINK_TYPE        => new ParametrizedFromOrder('', [], ''),
             default                           => throw new LogicException("Unknown metadata type: {$metadata->getName()}"),
         };
     }

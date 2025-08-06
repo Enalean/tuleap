@@ -24,20 +24,21 @@ use Tracker_FormElementFactory;
 
 final class AllowedMetadata
 {
-    public const TITLE            = '@title';
-    public const DESCRIPTION      = '@description';
-    public const STATUS           = '@status';
-    public const SUBMITTED_ON     = '@submitted_on';
-    public const LAST_UPDATE_DATE = '@last_update_date';
-    public const SUBMITTED_BY     = '@submitted_by';
-    public const LAST_UPDATE_BY   = '@last_update_by';
-    public const ASSIGNED_TO      = '@assigned_to';
-    public const ID               = '@id';
-    public const PROJECT_NAME     = '@project.name';
-    public const TRACKER_NAME     = '@tracker.name';
-    public const PRETTY_TITLE     = '@pretty_title';
+    public const string TITLE            = '@title';
+    public const string DESCRIPTION      = '@description';
+    public const string STATUS           = '@status';
+    public const string SUBMITTED_ON     = '@submitted_on';
+    public const string LAST_UPDATE_DATE = '@last_update_date';
+    public const string SUBMITTED_BY     = '@submitted_by';
+    public const string LAST_UPDATE_BY   = '@last_update_by';
+    public const string ASSIGNED_TO      = '@assigned_to';
+    public const string ID               = '@id';
+    public const string PROJECT_NAME     = '@project.name';
+    public const string TRACKER_NAME     = '@tracker.name';
+    public const string PRETTY_TITLE     = '@pretty_title';
+    public const string LINK_TYPE        = '@link_type';
 
-    public const SEARCHABLE_NAMES = [
+    public const array SEARCHABLE_NAMES = [
         self::TITLE,
         self::DESCRIPTION,
         self::STATUS,
@@ -49,7 +50,7 @@ final class AllowedMetadata
         self::ID,
     ];
 
-    public const SELECTABLE_NAMES = [
+    public const array SELECTABLE_NAMES = [
         self::TITLE,
         self::DESCRIPTION,
         self::STATUS,
@@ -62,9 +63,10 @@ final class AllowedMetadata
         self::PROJECT_NAME,
         self::TRACKER_NAME,
         self::PRETTY_TITLE,
+        self::LINK_TYPE,
     ];
 
-    public const SORTABLE_NAMES = [
+    public const array SORTABLE_NAMES = [
         self::TITLE,
         self::DESCRIPTION,
         self::STATUS,
@@ -76,7 +78,7 @@ final class AllowedMetadata
         self::ID,
     ];
 
-    public const FIELD_WITH_NO_CHANGESET = [
+    public const array FIELD_WITH_NO_CHANGESET = [
         Tracker_FormElementFactory::FIELD_SUBMITTED_ON_TYPE     => self::SUBMITTED_ON,
         Tracker_FormElementFactory::FIELD_LAST_UPDATE_DATE_TYPE => self::LAST_UPDATE_DATE,
         Tracker_FormElementFactory::FIELD_SUBMITTED_BY_TYPE     => self::SUBMITTED_BY,

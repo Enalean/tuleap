@@ -30,7 +30,7 @@ final class MetadataUsageChecker implements CheckMetadataUsage
         Metadata $metadata,
     ): void {
         match ($metadata->getName()) {
-            AllowedMetadata::TITLE, AllowedMetadata::PROJECT_NAME, AllowedMetadata::TRACKER_NAME, AllowedMetadata::ID, AllowedMetadata::LAST_UPDATE_BY, AllowedMetadata::SUBMITTED_BY, AllowedMetadata::LAST_UPDATE_DATE, AllowedMetadata::SUBMITTED_ON, AllowedMetadata::ASSIGNED_TO, AllowedMetadata::STATUS, AllowedMetadata::DESCRIPTION, AllowedMetadata::PRETTY_TITLE => null,
+            AllowedMetadata::TITLE, AllowedMetadata::PROJECT_NAME, AllowedMetadata::TRACKER_NAME, AllowedMetadata::ID, AllowedMetadata::LAST_UPDATE_BY, AllowedMetadata::SUBMITTED_BY, AllowedMetadata::LAST_UPDATE_DATE, AllowedMetadata::SUBMITTED_ON, AllowedMetadata::ASSIGNED_TO, AllowedMetadata::STATUS, AllowedMetadata::DESCRIPTION, AllowedMetadata::PRETTY_TITLE, AllowedMetadata::LINK_TYPE => null,
             default                           => throw new LogicException("Unknown metadata type: {$metadata->getName()}"),
         };
     }

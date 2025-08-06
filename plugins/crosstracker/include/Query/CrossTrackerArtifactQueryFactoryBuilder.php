@@ -52,6 +52,7 @@ use Tuleap\CrossTracker\Query\Advanced\QueryBuilder\ArtifactLink\ForwardLinkFrom
 use Tuleap\CrossTracker\Query\Advanced\QueryBuilder\ArtifactLink\ReverseLinkFromWhereBuilder;
 use Tuleap\CrossTracker\Query\Advanced\QueryBuilder\CrossTrackerTQLQueryDao;
 use Tuleap\CrossTracker\Query\Advanced\QueryBuilder\FromWhereSearchableVisitor;
+use Tuleap\CrossTracker\Query\Advanced\QueryBuilder\Metadata\Special\ForwardLinkTypeFromWhereBuilder;
 use Tuleap\CrossTracker\Query\Advanced\QueryBuilderVisitor;
 use Tuleap\CrossTracker\Query\Advanced\QueryValidation\DuckTypedField\DuckTypedFieldChecker;
 use Tuleap\CrossTracker\Query\Advanced\QueryValidation\Metadata\ArtifactIdMetadataChecker;
@@ -78,6 +79,7 @@ use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Metadata\Semantic\AssignedT
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Metadata\Semantic\Description\DescriptionResultBuilder;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Metadata\Semantic\Status\StatusResultBuilder;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Metadata\Semantic\Title\TitleResultBuilder;
+use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Metadata\Special\LinkType\ForwardLinkTypeResultBuilder;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Metadata\Special\PrettyTitle\PrettyTitleResultBuilder;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Metadata\Special\ProjectName\ProjectNameResultBuilder;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Metadata\Special\TrackerName\TrackerNameResultBuilder;
@@ -95,6 +97,7 @@ use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\Metadata\Semantic\AssignedT
 use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\Metadata\Semantic\Description\DescriptionSelectFromBuilder;
 use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\Metadata\Semantic\Status\StatusSelectFromBuilder;
 use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\Metadata\Semantic\Title\TitleSelectFromBuilder;
+use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\Metadata\Special\LinkType\ForwardLinkTypeSelectFromBuilder;
 use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\Metadata\Special\PrettyTitle\PrettyTitleSelectFromBuilder;
 use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\Metadata\Special\ProjectName\ProjectNameSelectFromBuilder;
 use Tuleap\CrossTracker\Query\Advanced\SelectBuilderVisitor;
@@ -292,6 +295,7 @@ final class CrossTrackerArtifactQueryFactoryBuilder
                 new \Tuleap\CrossTracker\Query\Advanced\QueryBuilder\Metadata\AlwaysThereField\Date\DateFromWhereBuilder($date_time_value_rounder),
                 new \Tuleap\CrossTracker\Query\Advanced\QueryBuilder\Metadata\AlwaysThereField\Users\UsersFromWhereBuilder(UserManager::instance()),
                 new \Tuleap\CrossTracker\Query\Advanced\QueryBuilder\Metadata\AlwaysThereField\ArtifactId\ArtifactIdFromWhereBuilder(),
+                new ForwardLinkTypeFromWhereBuilder(),
                 $form_element_factory,
             ),
         );
@@ -323,6 +327,7 @@ final class CrossTrackerArtifactQueryFactoryBuilder
                 new AssignedToSelectFromBuilder(),
                 new ProjectNameSelectFromBuilder(),
                 new PrettyTitleSelectFromBuilder(),
+                new ForwardLinkTypeSelectFromBuilder()
             ),
         );
         $purifier                  = Codendi_HTMLPurifier::instance();
@@ -355,6 +360,7 @@ final class CrossTrackerArtifactQueryFactoryBuilder
                 new ProjectNameResultBuilder(),
                 new TrackerNameResultBuilder(),
                 new PrettyTitleResultBuilder($tracker_artifact_factory, $semantic_title_retriever),
+                new ForwardLinkTypeResultBuilder(),
                 new ArtifactResultBuilder(
                     $tracker_artifact_factory,
                     new TrackersListAllowedByPlugins(

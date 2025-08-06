@@ -30,6 +30,7 @@ import {
     DESCRIPTION_COLUMN_NAME,
     LAST_UPDATE_BY_COLUMN_NAME,
     LAST_UPDATE_DATE_COLUMN_NAME,
+    LINK_TYPE_COLUMN_NAME,
     PRETTY_TITLE_COLUMN_NAME,
     PROJECT_COLUMN_NAME,
     STATUS_COLUMN_NAME,
@@ -80,6 +81,9 @@ export const ColumnNameGetter = (gettext_provider: VueGettextProvider): GetColum
             }
             if (name === ARTIFACT_COLUMN_NAME) {
                 return "";
+            }
+            if (name === LINK_TYPE_COLUMN_NAME) {
+                return gettext_provider.$gettext("Link type");
             }
             return name;
         },

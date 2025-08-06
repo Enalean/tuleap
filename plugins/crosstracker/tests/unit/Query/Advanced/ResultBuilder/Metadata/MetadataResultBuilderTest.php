@@ -31,6 +31,7 @@ use Project;
 use Tuleap\Config\ConfigurationVariables;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Metadata\AlwaysThereField\ArtifactId\ArtifactIdResultBuilder;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Metadata\Date\MetadataDateResultBuilder;
+use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Metadata\Special\LinkType\ForwardLinkTypeResultBuilder;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Metadata\Special\ProjectName\ProjectNameResultBuilder;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Metadata\Special\TrackerName\TrackerNameResultBuilder;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Metadata\User\MetadataUserResultBuilder;
@@ -114,6 +115,7 @@ final class MetadataResultBuilderTest extends TestCase
             new ProjectNameResultBuilder(),
             new TrackerNameResultBuilder(),
             $this->result_pretty_title,
+            new ForwardLinkTypeResultBuilder(),
             new ArtifactResultBuilder($artifact_retriever, $query_trackers_retriever),
         );
 
@@ -551,6 +553,26 @@ final class MetadataResultBuilderTest extends TestCase
         self::assertEqualsCanonicalizing([
             132 => new SelectedValue('@artifact', new ArtifactRepresentation(132, '/plugins/tracker/?aid=132', 1, 1)),
         ], $result->values);
+        self::assertSame(0, $this->result_title->getCallCount());
+        self::assertSame(0, $this->result_description->getCallCount());
+        self::assertSame(0, $this->result_status->getCallCount());
+        self::assertSame(0, $this->result_assigned_to->getCallCount());
+        self::assertSame(0, $this->result_pretty_title->getCallCount());
+    }
+
+    public function testItReturnsValuesForLinkType(): void
+    {
+        $result = $this->getSelectedResult(
+            new Metadata('link_type'),
+            RetrieveArtifactStub::withNoArtifact(),
+            InstantiateRetrievedQueryTrackersStub::withNoTrackers(),
+            []
+        );
+
+        self::assertEquals(
+            new CrossTrackerSelectedRepresentation('@link_type', CrossTrackerSelectedType::LINK_TYPE),
+            $result->selected,
+        );
         self::assertSame(0, $this->result_title->getCallCount());
         self::assertSame(0, $this->result_description->getCallCount());
         self::assertSame(0, $this->result_status->getCallCount());

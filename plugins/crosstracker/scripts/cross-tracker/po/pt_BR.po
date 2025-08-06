@@ -121,6 +121,9 @@ msgstr ""
 msgid "Last update date"
 msgstr ""
 
+msgid "Link type"
+msgstr ""
+
 msgid "Load all"
 msgstr ""
 
