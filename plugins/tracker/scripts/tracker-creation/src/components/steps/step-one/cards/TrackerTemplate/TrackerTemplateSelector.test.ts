@@ -25,9 +25,7 @@ import { createTrackerCreationLocalVue } from "../../../../../helpers/local-vue-
 import TrackerTemplateSelector from "./TrackerTemplateSelector.vue";
 
 describe("TrackerTemplateSelector", () => {
-    async function getWrapper(
-        state: State = {} as State,
-    ): Promise<Wrapper<TrackerTemplateSelector>> {
+    async function getWrapper(state: State = {} as State): Promise<Wrapper<Vue>> {
         return shallowMount(TrackerTemplateSelector, {
             mocks: {
                 $store: createStoreMock({
@@ -79,6 +77,6 @@ describe("TrackerTemplateSelector", () => {
         const selectbox: HTMLInputElement = wrapper.get("[data-test=template-selector]")
             .element as HTMLInputElement;
 
-        expect(selectbox.value).toEqual(story_tracker.id);
+        expect(selectbox.value).toStrictEqual(story_tracker.id);
     });
 });
