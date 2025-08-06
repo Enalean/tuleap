@@ -33,7 +33,6 @@ use Tuleap\CrossTracker\Query\Advanced\QueryValidation\Metadata\StatusChecker;
 use Tuleap\CrossTracker\Query\Advanced\QueryValidation\Metadata\SubmissionDateChecker;
 use Tuleap\CrossTracker\Query\Advanced\QueryValidation\Metadata\TextSemanticChecker;
 use Tuleap\CrossTracker\Query\CrossTrackerArtifactQueryFactory;
-use Tuleap\CrossTracker\Tests\Stub\Query\Advanced\QueryValidation\Metadata\MetadataCheckerStub;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\LegacyTabTranslationsSupport;
@@ -118,7 +117,6 @@ final class InvalidSelectablesCollectionBuilderTest extends TestCase
                     RetrieveUserPermissionOnFieldsStub::build(),
                 )
             ), new MetadataChecker(
-                MetadataCheckerStub::withValidMetadata(),
                 new InvalidMetadataChecker(
                     new TextSemanticChecker(),
                     new StatusChecker(),

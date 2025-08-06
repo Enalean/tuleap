@@ -30,7 +30,6 @@ use Tuleap\CrossTracker\Query\Advanced\QueryValidation\Metadata\MetadataChecker;
 use Tuleap\CrossTracker\Query\Advanced\QueryValidation\Metadata\StatusChecker;
 use Tuleap\CrossTracker\Query\Advanced\QueryValidation\Metadata\SubmissionDateChecker;
 use Tuleap\CrossTracker\Query\Advanced\QueryValidation\Metadata\TextSemanticChecker;
-use Tuleap\CrossTracker\Tests\Stub\Query\Advanced\QueryValidation\Metadata\MetadataCheckerStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\LegacyTabTranslationsSupport;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -108,7 +107,6 @@ final class InvalidTermCollectorVisitorTest extends TestCase
 
     private const FIELD_NAME        = 'a_field';
     private const CURRENT_USER_NAME = 'alice';
-    private MetadataCheckerStub $metadata_checker;
     private InvalidSearchablesCollection $invalid_searchable_collection;
     private Comparison $comparison;
     private ?Logical $parsed_query;
@@ -127,7 +125,6 @@ final class InvalidTermCollectorVisitorTest extends TestCase
             ->withId(443)
             ->build();
 
-        $this->metadata_checker = MetadataCheckerStub::withValidMetadata();
         $this->fields_retriever = RetrieveUsedFieldsStub::withFields(
             IntegerFieldBuilder::anIntField(628)
                 ->withName(self::FIELD_NAME)
@@ -167,12 +164,11 @@ final class InvalidTermCollectorVisitorTest extends TestCase
         $collector = new InvalidTermCollectorVisitor(
             new InvalidSearchableCollectorVisitor(
                 new MetadataChecker(
-                    $this->metadata_checker,
                     new InvalidMetadataChecker(
                         new TextSemanticChecker(),
                         new StatusChecker(),
                         new AssignedToChecker($user_retriever),
-                        new \Tuleap\CrossTracker\Query\Advanced\QueryValidation\Metadata\ArtifactSubmitterChecker(
+                        new QueryValidation\Metadata\ArtifactSubmitterChecker(
                             $user_retriever
                         ),
                         new SubmissionDateChecker(),
@@ -663,15 +659,6 @@ final class InvalidTermCollectorVisitorTest extends TestCase
         self::assertNotEmpty($this->invalid_searchable_collection->getNonexistentSearchables());
     }
 
-    public function testItAddsMetadataThatDoesNotExistInAllTrackersToCollection(): void
-    {
-        $this->comparison       = new EqualComparison(new Metadata('title'), new SimpleValueWrapper('romeo'));
-        $this->metadata_checker = MetadataCheckerStub::withInvalidMetadata();
-
-        $this->check();
-        self::assertTrue($this->invalid_searchable_collection->hasInvalidSearchable());
-    }
-
     public static function generateInvalidTitleComparisons(): iterable
     {
         yield from self::generateInvalidTextComparisons(new Metadata('title'));
@@ -680,8 +667,7 @@ final class InvalidTermCollectorVisitorTest extends TestCase
     #[\PHPUnit\Framework\Attributes\DataProvider('generateInvalidTitleComparisons')]
     public function testItRejectsInvalidTitleComparisons(Comparison $comparison): void
     {
-        $this->metadata_checker = MetadataCheckerStub::withValidMetadata();
-        $this->comparison       = $comparison;
+        $this->comparison = $comparison;
 
         $this->check();
         self::assertNotEmpty($this->invalid_searchable_collection->getInvalidSearchableErrors());
@@ -695,8 +681,7 @@ final class InvalidTermCollectorVisitorTest extends TestCase
     #[\PHPUnit\Framework\Attributes\DataProvider('generateInvalidDescriptionComparisons')]
     public function testItRejectsInvalidDescriptionComparisons(Comparison $comparison): void
     {
-        $this->metadata_checker = MetadataCheckerStub::withValidMetadata();
-        $this->comparison       = $comparison;
+        $this->comparison = $comparison;
 
         $this->check();
         self::assertNotEmpty($this->invalid_searchable_collection->getInvalidSearchableErrors());
@@ -721,8 +706,7 @@ final class InvalidTermCollectorVisitorTest extends TestCase
     #[\PHPUnit\Framework\Attributes\DataProvider('generateInvalidStatusComparisons')]
     public function testItRejectsInvalidStatusComparisons(Comparison $comparison): void
     {
-        $this->metadata_checker = MetadataCheckerStub::withValidMetadata();
-        $this->comparison       = $comparison;
+        $this->comparison = $comparison;
 
         $this->check();
         self::assertNotEmpty($this->invalid_searchable_collection->getInvalidSearchableErrors());
@@ -740,8 +724,7 @@ final class InvalidTermCollectorVisitorTest extends TestCase
     #[\PHPUnit\Framework\Attributes\DataProvider('generateInvalidAssignedToComparisons')]
     public function testItRejectsInvalidAssignedToComparisons(Comparison $comparison): void
     {
-        $this->metadata_checker = MetadataCheckerStub::withValidMetadata();
-        $this->comparison       = $comparison;
+        $this->comparison = $comparison;
 
         $this->check();
         self::assertNotEmpty($this->invalid_searchable_collection->getInvalidSearchableErrors());
@@ -758,8 +741,7 @@ final class InvalidTermCollectorVisitorTest extends TestCase
     #[\PHPUnit\Framework\Attributes\DataProvider('generateInvalidSubmittedOnComparisons')]
     public function testItRejectsInvalidSubmittedOnComparisons(Comparison $comparison): void
     {
-        $this->metadata_checker = MetadataCheckerStub::withValidMetadata();
-        $this->comparison       = $comparison;
+        $this->comparison = $comparison;
 
         $this->check();
         self::assertNotEmpty($this->invalid_searchable_collection->getInvalidSearchableErrors());
@@ -776,8 +758,7 @@ final class InvalidTermCollectorVisitorTest extends TestCase
     #[\PHPUnit\Framework\Attributes\DataProvider('generateInvalidLastUpdateDateComparison')]
     public function testItRejectsInvalidLastUpdateDateComparisons(Comparison $comparison): void
     {
-        $this->metadata_checker = MetadataCheckerStub::withValidMetadata();
-        $this->comparison       = $comparison;
+        $this->comparison = $comparison;
 
         $this->check();
         self::assertNotEmpty($this->invalid_searchable_collection->getInvalidSearchableErrors());
@@ -795,8 +776,7 @@ final class InvalidTermCollectorVisitorTest extends TestCase
     #[\PHPUnit\Framework\Attributes\DataProvider('generateInvalidSubmittedByComparisons')]
     public function testItRejectsInvalidSubmittedByComparisons(Comparison $comparison): void
     {
-        $this->metadata_checker = MetadataCheckerStub::withValidMetadata();
-        $this->comparison       = $comparison;
+        $this->comparison = $comparison;
 
         $this->check();
         self::assertNotEmpty($this->invalid_searchable_collection->getInvalidSearchableErrors());
@@ -814,8 +794,7 @@ final class InvalidTermCollectorVisitorTest extends TestCase
     #[\PHPUnit\Framework\Attributes\DataProvider('generateInvalidLastUpdateByComparisons')]
     public function testItRejectsInvalidLastUpdateByComparisons(Comparison $comparison): void
     {
-        $this->metadata_checker = MetadataCheckerStub::withValidMetadata();
-        $this->comparison       = $comparison;
+        $this->comparison = $comparison;
 
         $this->check();
         self::assertNotEmpty($this->invalid_searchable_collection->getInvalidSearchableErrors());
@@ -833,8 +812,7 @@ final class InvalidTermCollectorVisitorTest extends TestCase
     #[\PHPUnit\Framework\Attributes\DataProvider('generateMetadataThatCannotBeComparedToMyself')]
     public function testItRejectsInvalidMetadataComparisonsToMyself(Metadata $metadata): void
     {
-        $this->metadata_checker = MetadataCheckerStub::withValidMetadata();
-        $this->comparison       = new EqualComparison(
+        $this->comparison = new EqualComparison(
             $metadata,
             new CurrentUserValueWrapper(ProvideCurrentUserStub::buildWithUser($this->user))
         );
@@ -920,8 +898,7 @@ final class InvalidTermCollectorVisitorTest extends TestCase
     #[\PHPUnit\Framework\Attributes\DataProvider('generateNestedMetadata')]
     public function testItAddsInvalidMetadataInNestedExpressions(Logical $parsed_query): void
     {
-        $this->metadata_checker = MetadataCheckerStub::withValidMetadata();
-        $this->parsed_query     = $parsed_query;
+        $this->parsed_query = $parsed_query;
 
         $this->check();
         self::assertNotEmpty($this->invalid_searchable_collection->getInvalidSearchableErrors());

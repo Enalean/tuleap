@@ -33,7 +33,6 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidOrderBy;
 final readonly class MetadataChecker
 {
     public function __construct(
-        private CheckMetadataUsage $semantic_usage_checker,
         private InvalidMetadataChecker $comparison_checker,
         private InvalidOrderByListChecker $order_by_list_checker,
     ) {
@@ -52,23 +51,16 @@ final readonly class MetadataChecker
             return;
         }
 
-        $this->semantic_usage_checker->checkMetadataIsUsedByAllTrackers($metadata);
         $this->comparison_checker->checkComparisonIsValid($metadata, $comparison);
     }
 
-    /**
-     * @throws InvalidQueryException
-     */
     public function checkMetadataIsValidForSelect(
         Metadata $metadata,
         InvalidSelectableCollectorParameters $collector_parameters,
     ): void {
         if (! in_array($metadata->getName(), AllowedMetadata::SELECTABLE_NAMES, true)) {
             $collector_parameters->invalid_selectables_collection->addNonExistentSelectable($metadata->getName());
-            return;
         }
-
-        $this->semantic_usage_checker->checkMetadataIsUsedByAllTrackers($metadata);
     }
 
     /**
@@ -88,8 +80,6 @@ final readonly class MetadataChecker
             ));
             return;
         }
-
-        $this->semantic_usage_checker->checkMetadataIsUsedByAllTrackers($metadata);
 
         if (
             ($metadata->getName() === AllowedMetadata::STATUS || $metadata->getName() === AllowedMetadata::ASSIGNED_TO)
