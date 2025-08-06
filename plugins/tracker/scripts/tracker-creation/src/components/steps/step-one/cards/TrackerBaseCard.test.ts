@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,9 +23,10 @@ import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { State } from "../../../../store/type";
 import { NONE_YET, TRACKER_TEMPLATE } from "../../../../store/type";
 import TrackerBaseCard from "./TrackerBaseCard.vue";
+import type Vue from "vue";
 
 describe("TrackerBaseCard", () => {
-    function getWrapper(state: State = {} as State): Wrapper<TrackerBaseCard> {
+    function getWrapper(state: State = {} as State): Wrapper<Vue> {
         return shallowMount(TrackerBaseCard, {
             propsData: {
                 optionName: TRACKER_TEMPLATE,
@@ -43,7 +44,7 @@ describe("TrackerBaseCard", () => {
             active_option: NONE_YET,
         } as State;
 
-        const wrapper: Wrapper<TrackerBaseCard> = getWrapper(state);
+        const wrapper = getWrapper(state);
 
         wrapper.find("[data-test=selected-option-tracker_template]").setChecked(true);
 
