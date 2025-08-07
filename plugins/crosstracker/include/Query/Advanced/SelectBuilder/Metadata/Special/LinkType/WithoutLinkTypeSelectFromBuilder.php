@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (c) Enalean, 2025 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -20,24 +20,20 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Metadata\Special\LinkType;
+namespace Tuleap\CrossTracker\Query\Advanced\SelectBuilder\Metadata\Special\LinkType;
 
-use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\SelectedValuesCollection;
-use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerSelectedRepresentation;
-use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerSelectedType;
+use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\IProvideParametrizedSelectAndFromSQLFragments;
+use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\ParametrizedSelectFrom;
+use Tuleap\Option\Option;
 
 /**
  * @psalm-immutable
  */
-final class ForwardLinkTypeResultBuilder
+final readonly class WithoutLinkTypeSelectFromBuilder implements BuildLinkTypeSelectFrom
 {
-    public function getResult(): SelectedValuesCollection
+    #[\Override]
+    public function getSelectFrom(Option $target_artifact_id_for_reverse_links): IProvideParametrizedSelectAndFromSQLFragments
     {
-        $values = [];
-
-        return new SelectedValuesCollection(
-            new CrossTrackerSelectedRepresentation('@link_type', CrossTrackerSelectedType::LINK_TYPE),
-            $values,
-        );
+        return new ParametrizedSelectFrom('', '', []);
     }
 }

@@ -24,11 +24,11 @@ namespace Tuleap\CrossTracker\REST\v1;
 
 use Psr\Http\Message\ResponseInterface;
 use REST_TestDataBuilder;
-use RestBase;
+use Tuleap\CrossTracker\TestBase;
 use function Psl\Json\decode;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class CrossTrackerWidgetTest extends RestBase
+final class CrossTrackerWidgetTest extends TestBase
 {
     private const UUID_PATTERN = '/^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/';
 
@@ -41,7 +41,7 @@ final class CrossTrackerWidgetTest extends RestBase
 
     public function testGetId(): void
     {
-        $response = $this->getResponse($this->request_factory->createRequest('GET', 'crosstracker_widget/1'));
+        $response = $this->getResponse($this->request_factory->createRequest('GET', 'crosstracker_widget/2'));
         self::assertSame(200, $response->getStatusCode());
         $this->assertGetIdWidget($response);
     }
@@ -49,7 +49,7 @@ final class CrossTrackerWidgetTest extends RestBase
     public function testGetIdForReadOnlyUser(): void
     {
         $response = $this->getResponse(
-            $this->request_factory->createRequest('GET', 'crosstracker_widget/1'),
+            $this->request_factory->createRequest('GET', 'crosstracker_widget/2'),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
@@ -79,14 +79,14 @@ final class CrossTrackerWidgetTest extends RestBase
 
     public function testYouCantAccessPersonalWidgetOfAnOtherUser(): void
     {
-        $response = $this->getResponseForNonProjectMember($this->request_factory->createRequest('GET', 'crosstracker_widget/2'));
+        $response = $this->getResponseForNonProjectMember($this->request_factory->createRequest('GET', 'crosstracker_widget/3'));
 
         self::assertEquals(404, $response->getStatusCode());
     }
 
     public function testYouCantAccessProjectWidgetOfProjectYouCantSee(): void
     {
-        $response = $this->getResponseForNonProjectMember($this->request_factory->createRequest('GET', 'crosstracker_widget/3'));
+        $response = $this->getResponseForNonProjectMember($this->request_factory->createRequest('GET', 'crosstracker_widget/' . self::WIDGET_ID));
 
         self::assertEquals(404, $response->getStatusCode());
     }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2024-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,25 +18,5 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
-
-namespace Tuleap\CrossTracker\Query\Advanced\SelectBuilder;
-
-use PFUser;
-use Tuleap\Option\Option;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\VisitorParameters;
-use Tuleap\Tracker\Tracker;
-
-final readonly class SelectBuilderVisitorParameters implements VisitorParameters
-{
-    /**
-     * @param Tracker[] $trackers
-     * @param Option<int> $target_artifact_id_for_reverse_links
-     */
-    public function __construct(
-        public array $trackers,
-        public PFUser $user,
-        public Option $target_artifact_id_for_reverse_links,
-    ) {
-    }
-}
+require_once __DIR__ . '/TestBase.php';
+require_once __DIR__ . '/CrossTrackerDataBuilder.php';

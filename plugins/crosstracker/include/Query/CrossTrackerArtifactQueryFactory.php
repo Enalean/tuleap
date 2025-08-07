@@ -48,6 +48,7 @@ use Tuleap\CrossTracker\Query\Advanced\ResultBuilderVisitor;
 use Tuleap\CrossTracker\Query\Advanced\SelectBuilderVisitor;
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerQueryContentRepresentation;
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerSelectedRepresentation;
+use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\RetrieveArtifact;
 use Tuleap\Tracker\Permission\ArtifactPermissionType;
@@ -151,6 +152,7 @@ final readonly class CrossTrackerArtifactQueryFactory
             $additional_from_where,
             $limit,
             $offset,
+            Option::nothing(\Psl\Type\int())
         );
     }
 
@@ -189,6 +191,7 @@ final readonly class CrossTrackerArtifactQueryFactory
             ),
             $limit,
             $offset,
+            Option::nothing(\Psl\Type\int())
         );
     }
 
@@ -227,10 +230,12 @@ final readonly class CrossTrackerArtifactQueryFactory
             ),
             $limit,
             $offset,
+            Option::fromValue($target_artifact_id)
         );
     }
 
     /**
+     * @param Option<int> $target_artifact_id_for_reverse_links
      * @throws FromIsInvalidException
      * @throws LimitSizeIsExceededException
      * @throws MissingFromException
@@ -250,6 +255,7 @@ final readonly class CrossTrackerArtifactQueryFactory
         IProvideParametrizedFromAndWhereSQLFragments $additional_from_where,
         int $limit,
         int $offset,
+        Option $target_artifact_id_for_reverse_links,
     ): CrossTrackerQueryContentRepresentation {
         $trackers = $this->trackers_permissions->retrieveUserPermissionOnTrackers(
             $current_user,
@@ -274,11 +280,12 @@ final readonly class CrossTrackerArtifactQueryFactory
             $this->instrumentation->updateOrderByUsage();
         }
 
-        return $this->retrieveQueryContentRepresentation($query, $trackers, $current_user, $additional_from_where, $limit, $offset);
+        return $this->retrieveQueryContentRepresentation($query, $trackers, $current_user, $additional_from_where, $limit, $offset, $target_artifact_id_for_reverse_links);
     }
 
     /**
      * @param Tracker[] $trackers
+     * @param Option<int> $target_artifact_id_for_reverse_links
      */
     private function retrieveQueryContentRepresentation(
         ParsedCrossTrackerQuery $query,
@@ -287,6 +294,7 @@ final readonly class CrossTrackerArtifactQueryFactory
         IProvideParametrizedFromAndWhereSQLFragments $additional_from_where,
         int $limit,
         int $offset,
+        Option $target_artifact_id_for_reverse_links,
     ): CrossTrackerQueryContentRepresentation {
         $additional_from_order = $this->order_builder->buildFromOrder($query->parsed_query->getOrderBy(), $trackers, $current_user);
         $tracker_ids           = $this->getTrackersId($trackers);
@@ -316,7 +324,7 @@ final readonly class CrossTrackerArtifactQueryFactory
         );
 
         $this->instrumentation->updateSelectCount(count($query->parsed_query->getSelect()));
-        $select_from_fragments = $this->select_builder->buildSelectFrom($query->parsed_query->getSelect(), $trackers, $current_user);
+        $select_from_fragments = $this->select_builder->buildSelectFrom($query->parsed_query->getSelect(), $trackers, $current_user, $target_artifact_id_for_reverse_links);
         $select_results        = $this->expert_query_dao->searchArtifactsColumnsMatchingIds(
             $select_from_fragments,
             $additional_from_order,

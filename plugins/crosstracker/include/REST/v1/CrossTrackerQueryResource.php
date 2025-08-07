@@ -28,6 +28,7 @@ use Luracast\Restler\RestException;
 use PFUser;
 use ProjectManager;
 use Tuleap\CrossTracker\Query\Advanced\ExpertQueryIsEmptyException;
+use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\Metadata\Special\LinkType\WithoutLinkTypeSelectFromBuilder;
 use Tuleap\CrossTracker\Query\CrossTrackerArtifactQueryFactoryBuilder;
 use Tuleap\CrossTracker\Query\CrossTrackerQuery;
 use Tuleap\CrossTracker\Query\CrossTrackerQueryDao;
@@ -133,7 +134,7 @@ final class CrossTrackerQueryResource extends AuthenticatedResource
             );
 
             $artifacts = $this->factory_builder->getInstrumentation()->updateQueryDuration(
-                fn(): CrossTrackerQueryContentRepresentation => $this->factory_builder->getArtifactFactory()->getArtifactsMatchingQuery(
+                fn(): CrossTrackerQueryContentRepresentation => $this->factory_builder->getArtifactFactory(new WithoutLinkTypeSelectFromBuilder())->getArtifactsMatchingQuery(
                     CrossTrackerQueryFactory::fromTqlQueryAndWidgetId($query_representation->tql_query, $query_representation->widget_id),
                     $current_user,
                     $limit,
@@ -194,7 +195,7 @@ final class CrossTrackerQueryResource extends AuthenticatedResource
             $query        = $this->getQuery($id, $current_user);
 
             $artifacts = $this->factory_builder->getInstrumentation()->updateQueryDuration(
-                fn() => $this->factory_builder->getArtifactFactory()->getArtifactsMatchingQuery($query, $current_user, $limit, $offset)
+                fn() => $this->factory_builder->getArtifactFactory(new WithoutLinkTypeSelectFromBuilder())->getArtifactsMatchingQuery($query, $current_user, $limit, $offset)
             );
 
             assert($artifacts instanceof CrossTrackerQueryContentRepresentation);
