@@ -19,11 +19,14 @@
  */
 declare(strict_types=1);
 
+use Tuleap\Plugin\ListeningToEventName;
 
+require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 final class graphsPlugin extends Plugin
 {
+    public const RENDERER_TYPE = 'plugin_graphs';
     public function __construct(?int $id)
     {
         parent::__construct($id);
@@ -56,5 +59,11 @@ final class graphsPlugin extends Plugin
     public function getServiceShortname(): string
     {
         return 'plugin_graphs';
+    }
+
+    #[ListeningToEventName('tracker_report_renderer_types')]
+    public function trackerReportRendererTypes(array &$params): void
+    {
+        $params['types'][self::RENDERER_TYPE] = dgettext('tuleap-tracker', 'Graph(s)');
     }
 }
