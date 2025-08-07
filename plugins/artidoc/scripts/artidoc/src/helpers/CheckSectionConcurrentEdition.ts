@@ -39,7 +39,7 @@ export function isOutdatedSectionFault(fault: Fault): fault is OutdatedSectionFa
     return "isOutdatedSectionFault" in fault && fault.isOutdatedSectionFault() === true;
 }
 
-export function getSectionInItsLatestVersion(
+export function checkSectionConcurrentEdition(
     old_section: ArtidocSection,
 ): ResultAsync<ArtidocSection, Fault> {
     return getSection(old_section.id).andThen(

@@ -24,11 +24,11 @@ import ArtifactSectionFactory from "@/helpers/artifact-section.factory";
 import FreetextSectionFactory from "@/helpers/freetext-section.factory";
 import {
     isOutdatedSectionFault,
-    getSectionInItsLatestVersion,
-} from "@/helpers/get-section-in-its-latest-version";
+    checkSectionConcurrentEdition,
+} from "@/helpers/CheckSectionConcurrentEdition";
 import { Fault } from "@tuleap/fault";
 
-describe("get-section-in-its-latest-version", () => {
+describe("CheckSectionConcurrentEdition", () => {
     it.each([
         ["artifact", ArtifactSectionFactory.create()],
         ["freetext", FreetextSectionFactory.create()],
@@ -37,7 +37,7 @@ describe("get-section-in-its-latest-version", () => {
         async (name, section) => {
             vi.spyOn(rest, "getSection").mockReturnValue(okAsync(section));
 
-            const result = await getSectionInItsLatestVersion(section);
+            const result = await checkSectionConcurrentEdition(section);
 
             expect(result.isOk()).toBe(true);
         },
@@ -56,7 +56,7 @@ describe("get-section-in-its-latest-version", () => {
                 }),
             );
 
-            const result = await getSectionInItsLatestVersion({
+            const result = await checkSectionConcurrentEdition({
                 ...section,
                 title: "Original title",
             });
@@ -79,7 +79,7 @@ describe("get-section-in-its-latest-version", () => {
             }),
         );
 
-        const result = await getSectionInItsLatestVersion({
+        const result = await checkSectionConcurrentEdition({
             ...section,
             description: "Original description",
         });
@@ -100,7 +100,7 @@ describe("get-section-in-its-latest-version", () => {
             }),
         );
 
-        const result = await getSectionInItsLatestVersion({
+        const result = await checkSectionConcurrentEdition({
             ...section,
             description: "Original description",
         });
@@ -119,7 +119,7 @@ describe("get-section-in-its-latest-version", () => {
         const err = Fault.fromMessage("Not found");
         vi.spyOn(rest, "getSection").mockReturnValue(errAsync(err));
 
-        const result = await getSectionInItsLatestVersion(section);
+        const result = await checkSectionConcurrentEdition(section);
 
         expect(result.isErr()).toBe(true);
         result.match(

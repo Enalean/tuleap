@@ -20,7 +20,7 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import type { ManageErrorState } from "@/sections/states/SectionErrorManager";
 import type { SectionState } from "@/sections/states/SectionStateBuilder";
-import { OutdatedSectionFault } from "@/helpers/get-section-in-its-latest-version";
+import { OutdatedSectionFault } from "@/helpers/CheckSectionConcurrentEdition";
 import { TuleapAPIFaultStub } from "@/helpers/stubs/TuleapAPIFaultStub";
 import { SectionStateStub } from "@/sections/stubs/SectionStateStub";
 import { getSectionErrorManager } from "@/sections/states/SectionErrorManager";
