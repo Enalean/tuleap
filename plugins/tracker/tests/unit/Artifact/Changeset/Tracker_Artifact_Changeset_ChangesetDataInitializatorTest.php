@@ -22,6 +22,7 @@
 use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\Test\Builders\Fields\SubmittedOnFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Tracker;
 
@@ -210,11 +211,9 @@ final class Tracker_Artifact_Changeset_ChangesetDataInitializatorTest extends Te
 
     public function testItAppendsSubmittedBy(): void
     {
-        $field = $this->createMock(Tracker_FormElement_Field_SubmittedOn::class);
-        $field->method('getId')->willReturn(12);
         $this->formelement_factory->method('getAllFormElementsForTracker')
             ->with($this->tracker)
-            ->willReturn([$field]);
+            ->willReturn([SubmittedOnFieldBuilder::aSubmittedOnField(12)->build()]);
 
         $this->artifact->method('getLastChangeset')->willReturn($this->createMock(Tracker_Artifact_Changeset_Null::class));
         $this->artifact->method('getSubmittedOn')->willReturn(12346789);
@@ -227,11 +226,9 @@ final class Tracker_Artifact_Changeset_ChangesetDataInitializatorTest extends Te
 
     public function testItNoReturnLastFieldChangesIfNoChangesets(): void
     {
-        $field = $this->createMock(Tracker_FormElement_Field_SubmittedOn::class);
-        $field->method('getId')->willReturn(12);
         $this->formelement_factory->method('getAllFormElementsForTracker')
             ->with($this->tracker)
-            ->willReturn([$field]);
+            ->willReturn([SubmittedOnFieldBuilder::aSubmittedOnField(12)->build()]);
 
         $this->artifact->method('getLastChangeset')->willReturn(null);
         $this->artifact->method('getSubmittedOn')->willReturn(12346789);

@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Test\Builders\Fields;
 
-use Tracker_FormElement_Field_SubmittedOn;
+use Tuleap\Tracker\FormElement\Field\SubmittedOn\SubmittedOnField;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Tracker;
 
@@ -55,9 +55,9 @@ final class SubmittedOnFieldBuilder
         return $this;
     }
 
-    public function build(): Tracker_FormElement_Field_SubmittedOn
+    public function build(): SubmittedOnField
     {
-        $field = new Tracker_FormElement_Field_SubmittedOn(
+        $field = new SubmittedOnField(
             $this->id,
             $this->tracker->getId(),
             17,
