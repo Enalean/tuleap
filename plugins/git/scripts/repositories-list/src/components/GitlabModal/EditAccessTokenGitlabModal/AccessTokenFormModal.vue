@@ -89,7 +89,7 @@
                     aria-hidden="true"
                 ></i>
                 {{ $gettext("Check new token validity") }}
-                <i class="fas tlp-button-icon-right fa-long-arrow-alt-right" aria-hidden="true"></i>
+                <i class="fas tlp-button-icon fa-long-arrow-alt-right" aria-hidden="true"></i>
             </button>
         </div>
     </form>

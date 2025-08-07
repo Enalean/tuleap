@@ -72,10 +72,7 @@
                 v-on:click="saveReviewers"
             >
                 {{ $gettext("Save changes") }}
-                <i
-                    v-if="is_saving"
-                    class="tlp-button-icon-right fa-solid fa-circle-notch fa-spin"
-                ></i>
+                <i v-if="is_saving" class="tlp-button-icon fa-solid fa-circle-notch fa-spin"></i>
             </button>
         </div>
     </div>

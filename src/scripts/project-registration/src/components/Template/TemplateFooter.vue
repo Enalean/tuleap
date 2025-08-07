@@ -35,7 +35,7 @@
             >
                 {{ $gettext("Next")
                 }}<i
-                    class="fa-solid fa-long-arrow-alt-right tlp-button-icon-right"
+                    class="fa-solid fa-long-arrow-alt-right tlp-button-icon"
                     aria-hidden="true"
                 ></i>
             </button>

@@ -29,7 +29,7 @@
             v-bind:id="button_id"
         >
             <i class="fa-solid fa-ellipsis"></i>
-            <i class="fa-solid fa-caret-down tlp-button-icon-right"></i>
+            <i class="fa-solid fa-caret-down tlp-button-icon"></i>
         </button>
         <div
             class="tlp-dropdown-menu document-dropdown-menu"

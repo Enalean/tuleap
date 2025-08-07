@@ -31,7 +31,7 @@ exports[`RoadmapEmptyStateSection Given user display widget, Then a good link to
       >
         Start planning 
         <i
-          class="tlp-button-icon-right fas fa-long-arrow-alt-right"
+          class="tlp-button-icon fas fa-long-arrow-alt-right"
           data-test="display-arrow"
         />
       </button>

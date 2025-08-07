@@ -25,7 +25,7 @@
             v-bind:to="{ name: 'item', params: { folder_id: item.parent_id, item_id: item.id } }"
         >
             {{ $gettext("Open") }}
-            <i class="fa-solid fa-right-long tlp-button-icon-right" aria-hidden="true"></i>
+            <i class="fa-solid fa-right-long tlp-button-icon" aria-hidden="true"></i>
         </router-link>
         <drop-down-quick-look v-bind:item="item" />
     </div>

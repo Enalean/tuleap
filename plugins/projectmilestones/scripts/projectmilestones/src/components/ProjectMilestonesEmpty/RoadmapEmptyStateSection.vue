@@ -31,7 +31,7 @@
                 <button type="button" class="tlp-button-primary" data-test="start-planning-button">
                     {{ $gettext("Start planning") }}
                     <i
-                        class="tlp-button-icon-right fas fa-long-arrow-alt-right"
+                        class="tlp-button-icon fas fa-long-arrow-alt-right"
                         data-test="display-arrow"
                     ></i>
                 </button>

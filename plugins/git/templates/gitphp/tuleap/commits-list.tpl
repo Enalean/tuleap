@@ -136,7 +136,7 @@
                         class="commit-more-actions tlp-button-primary tlp-button-small tlp-button-outline"
                 >
                     <i class="fa-solid fa-ellipsis tlp-button-icon" aria-hidden="true"></i>
-                    <i class="fa-solid fa-caret-down tlp-button-icon-right" aria-hidden="true"></i>
+                    <i class="fa-solid fa-caret-down tlp-button-icon" aria-hidden="true"></i>
                 </button>
                 <div class="tlp-dropdown-menu" role="menu">
                     {if isset($mark) && $mark}

@@ -116,7 +116,7 @@
                             >
                                 {{ $gettext("Configure selected group") }}
                                 <i
-                                    class="fa-solid fa-arrow-right tlp-button-icon-right"
+                                    class="fa-solid fa-arrow-right tlp-button-icon"
                                     aria-hidden="true"
                                 ></i>
                             </button>

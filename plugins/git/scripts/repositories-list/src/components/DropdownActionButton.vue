@@ -24,7 +24,7 @@
     >
         <button class="tlp-button-primary" ref="dropdownButton" type="button">
             {{ $gettext("New repository") }}
-            <i class="fas fa-caret-down tlp-button-icon-right" aria-hidden="true"></i>
+            <i class="fas fa-caret-down tlp-button-icon" aria-hidden="true"></i>
         </button>
         <div class="tlp-dropdown-menu" role="menu">
             <button

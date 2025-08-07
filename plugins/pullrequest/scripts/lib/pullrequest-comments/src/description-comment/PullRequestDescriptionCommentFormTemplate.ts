@@ -65,7 +65,7 @@ export const getDescriptionCommentFormTemplate = (
                     ${host.edition_form_presenter.is_being_submitted &&
                     html`
                         <i
-                            class="fa-solid fa-circle-notch fa-spin tlp-button-icon-right"
+                            class="fa-solid fa-circle-notch fa-spin tlp-button-icon"
                             aria-hidden="true"
                             data-test="reply-being-saved-spinner"
                         ></i>

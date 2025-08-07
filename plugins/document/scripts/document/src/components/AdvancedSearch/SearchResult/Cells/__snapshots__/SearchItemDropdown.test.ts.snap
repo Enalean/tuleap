@@ -21,7 +21,7 @@ exports[`SearchItemDropdown > should render the dropdown with the menu detached 
               class="fa-solid fa-ellipsis"
             />
             <i
-              class="fa-solid fa-caret-down tlp-button-icon-right"
+              class="fa-solid fa-caret-down tlp-button-icon"
             />
           </button>
         </div>

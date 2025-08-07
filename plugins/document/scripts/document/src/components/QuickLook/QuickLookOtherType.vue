@@ -27,7 +27,7 @@
             data-test="document-quick-look-document-cta-open"
         >
             {{ $gettext("Open") }}
-            <i class="fa-solid fa-right-long tlp-button-icon-right" aria-hidden="true"></i>
+            <i class="fa-solid fa-right-long tlp-button-icon" aria-hidden="true"></i>
         </a>
         <drop-down-quick-look v-bind:item="item" />
     </div>

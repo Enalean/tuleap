@@ -29,11 +29,7 @@
         >
             <i class="fa-solid fa-plus tlp-button-icon" aria-hidden="true"></i>
             {{ $gettext("New") }}
-            <i
-                class="fa-solid fa-caret-down tlp-button-icon-right"
-                aria-hidden="true"
-                ref="anchor"
-            ></i>
+            <i class="fa-solid fa-caret-down tlp-button-icon" aria-hidden="true" ref="anchor"></i>
         </button>
 
         <new-item-menu-options

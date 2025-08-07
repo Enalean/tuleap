@@ -48,7 +48,7 @@ export const getEditionForm = (
             ${host.presenter.is_being_submitted &&
             html`
                 <i
-                    class="fa-solid fa-circle-notch fa-spin tlp-button-icon-right"
+                    class="fa-solid fa-circle-notch fa-spin tlp-button-icon"
                     aria-hidden="true"
                     data-test="edited-comment-being-saved-spinner"
                 ></i>

@@ -66,7 +66,7 @@ describe("ProjectInformationFooter", () => {
         const wrapper = getWrapper();
 
         expect(wrapper.get("[data-test=project-submission-icon]").classes()).toStrictEqual([
-            "tlp-button-icon-right",
+            "tlp-button-icon",
             "fa-solid",
             "fa-spin",
             "fa-circle-notch",
@@ -78,7 +78,7 @@ describe("ProjectInformationFooter", () => {
         const wrapper = getWrapper();
 
         expect(wrapper.get("[data-test=project-submission-icon]").classes()).toStrictEqual([
-            "tlp-button-icon-right",
+            "tlp-button-icon",
             "fa-regular",
             "fa-circle-right",
         ]);

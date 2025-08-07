@@ -28,7 +28,7 @@
         >
             <i class="tlp-button-icon fa-solid fa-circle-arrow-down"></i>
             {{ $gettext("Checkout") }}
-            <i class="tlp-button-icon-right fa-solid fa-caret-down"></i>
+            <i class="tlp-button-icon fa-solid fa-caret-down"></i>
         </button>
 
         <div class="tlp-dropdown-menu pull-request-checkout-dropdown" role="menu">

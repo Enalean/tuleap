@@ -105,7 +105,7 @@
                             >
                                 {{ $gettext("Fetch GitLab groups") }}
                                 <i
-                                    class="tlp-button-icon-right"
+                                    class="tlp-button-icon"
                                     v-bind:class="{
                                         'fa-solid fa-arrow-right': !is_fetching_groups,
                                         'fa-solid fa-spin fa-circle-notch': is_fetching_groups,
