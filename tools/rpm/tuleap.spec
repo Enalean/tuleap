@@ -527,6 +527,17 @@ Requires: %{name} = %{tuleap_version}-%{tuleap_release}%{?dist}
 
 %if %{with experimental}
 
+%package plugin-graphs
+Summary: Graphs for tuleap
+Group: Development/Tools
+Requires: %{name} = %{tuleap_version}-%{tuleap_release}%{?dist}
+%description plugin-graphs
+Provides some graph features.
+
+%files plugin-graphs
+%defattr(-,root,root,-)
+%{APP_DIR}/plugins/graphs
+
 %endif
 
 #
@@ -576,6 +587,7 @@ done
 # Remove old scripts: not used and add unneeded perl depedencies to the package
 %{__rm} -f $RPM_BUILD_ROOT/%{APP_DIR}/src/utils/DocmanUploader.pl
 %{__rm} -f $RPM_BUILD_ROOT/%{APP_DIR}/src/utils/DocmanLegacyDownloader.pl
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/graphs
 # No need of template
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/template
 

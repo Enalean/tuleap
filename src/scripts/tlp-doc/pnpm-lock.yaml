@@ -32,6 +32,12 @@ dependencies:
   '@tuleap/option':
     specifier: workspace:^
     version: link:../../../lib/frontend/option
+  '@tuleap/pie-chart':
+    specifier: workspace:^
+    version: link:../../../lib/frontend/pie-chart
+  '@tuleap/plugin-graphs':
+    specifier: workspace:^
+    version: link:../../../plugins/graphs/scripts/graphs
   '@tuleap/plugin-tracker-artifact-common':
     specifier: workspace:^
     version: link:../../../plugins/tracker/scripts/lib/artifact-common
