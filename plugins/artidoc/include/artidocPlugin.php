@@ -104,6 +104,7 @@ use Tuleap\Upload\NextGen\FileUploadController;
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../../docman/include/docmanPlugin.php';
 require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
+require_once __DIR__ . '/../../testmanagement/include/testmanagementPlugin.php';
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class ArtidocPlugin extends Plugin implements PluginWithConfigKeys
