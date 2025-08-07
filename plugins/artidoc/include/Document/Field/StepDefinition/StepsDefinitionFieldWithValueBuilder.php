@@ -26,7 +26,7 @@ use Tuleap\Artidoc\Document\Field\ConfiguredField;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StepsDefinitionFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StepValue;
 use Tuleap\Option\Option;
-use Tuleap\TestManagement\Step\Definition\Field\StepDefinitionChangesetValue;
+use Tuleap\TestManagement\Step\Definition\Field\StepsDefinitionChangesetValue;
 use Tuleap\TestManagement\Step\Step;
 use Tuleap\Tracker\Artifact\ChangesetValue\Text\TextValueInterpreter;
 
@@ -39,7 +39,7 @@ final readonly class StepsDefinitionFieldWithValueBuilder
 
     public function buildStepsDefinitionFieldWithValue(
         ConfiguredField $configured_field,
-        ?StepDefinitionChangesetValue $changeset_value,
+        ?StepsDefinitionChangesetValue $changeset_value,
     ): StepsDefinitionFieldWithValue {
         return new StepsDefinitionFieldWithValue(
             $configured_field->field->getLabel(),
@@ -51,7 +51,7 @@ final readonly class StepsDefinitionFieldWithValueBuilder
     /**
      * @return list<StepValue>
      */
-    private function buildStepsValues(?StepDefinitionChangesetValue $changeset_value, int $project_id): array
+    private function buildStepsValues(?StepsDefinitionChangesetValue $changeset_value, int $project_id): array
     {
         if ($changeset_value === null) {
             return [];

@@ -67,8 +67,8 @@ use Tuleap\TestManagement\Heartbeat\LatestHeartbeatsCollector;
 use Tuleap\TestManagement\LegacyRoutingController;
 use Tuleap\TestManagement\Move\TTMMovableFieldsCollector;
 use Tuleap\TestManagement\REST\ResourcesInjector;
-use Tuleap\TestManagement\Step\Definition\Field\StepDefinition;
-use Tuleap\TestManagement\Step\Definition\Field\StepDefinitionChangesetValue;
+use Tuleap\TestManagement\Step\Definition\Field\StepsDefinition;
+use Tuleap\TestManagement\Step\Definition\Field\StepsDefinitionChangesetValue;
 use Tuleap\TestManagement\Step\Definition\Field\StepDefinitionSubmittedValuesTransformator;
 use Tuleap\TestManagement\Step\Execution\Field\StepExecution;
 use Tuleap\TestManagement\TestManagementPluginInfo;
@@ -171,8 +171,8 @@ class testmanagementPlugin extends Plugin implements PluginWithService, \Tuleap\
     #[\Tuleap\Plugin\ListeningToEventName(Tracker_FormElementFactory::GET_CLASSNAMES)]
     public function trackerFormelementGetClassnames(array $params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName
     {
-        $params['fields'][StepDefinition::TYPE] = StepDefinition::class;
-        $params['fields'][StepExecution::TYPE]  = StepExecution::class;
+        $params['fields'][StepsDefinition::TYPE] = StepsDefinition::class;
+        $params['fields'][StepExecution::TYPE]   = StepExecution::class;
     }
 
     public function isUsedByProject(Project $project): bool
@@ -638,7 +638,7 @@ class testmanagementPlugin extends Plugin implements PluginWithService, \Tuleap\
     {
         $xml        = $validate_external_fields->getXml();
         $attributes = $xml->attributes();
-        if ($attributes && isset($attributes['type']) && (string) $attributes['type'] === StepDefinition::TYPE) {
+        if ($attributes && isset($attributes['type']) && (string) $attributes['type'] === StepsDefinition::TYPE) {
             $validator = $this->getImportXmlFromTracker();
             $validator->validateChangesetXMLImport($xml);
         }
@@ -647,14 +647,14 @@ class testmanagementPlugin extends Plugin implements PluginWithService, \Tuleap\
     #[\Tuleap\Plugin\ListeningToEventClass]
     public function getExternalStrategies(ExternalStrategiesGetter $event): void
     {
-        $event->addStrategies(StepDefinition::TYPE, new TrackerArtifactXMLImportXMLImportFieldStrategySteps());
+        $event->addStrategies(StepsDefinition::TYPE, new TrackerArtifactXMLImportXMLImportFieldStrategySteps());
     }
 
     #[\Tuleap\Plugin\ListeningToEventClass]
     public function getExternalExporter(GetExternalExporter $get_external_exporter): void
     {
         $changeset_value = $get_external_exporter->getChangesetValue();
-        if ($changeset_value instanceof StepDefinitionChangesetValue) {
+        if ($changeset_value instanceof StepsDefinitionChangesetValue) {
             $get_external_exporter->addExporter(
                 $this->getTrackerXMLExporterChangesetValueStepDefinitionXMLExporter()
             );
@@ -683,7 +683,7 @@ class testmanagementPlugin extends Plugin implements PluginWithService, \Tuleap\
     {
         $project = $event->getTracker()->getProject();
         if (! $project->usesService($this->getServiceShortname())) {
-            $event->removeByType(StepDefinition::TYPE);
+            $event->removeByType(StepsDefinition::TYPE);
             $event->removeByType(StepExecution::TYPE);
         }
     }
@@ -861,7 +861,7 @@ class testmanagementPlugin extends Plugin implements PluginWithService, \Tuleap\
     {
         $used_step_definition_fields = Tracker_FormElementFactory::instance()->getUsedFormElementsByType(
             $tracker,
-            StepDefinition::TYPE
+            StepsDefinition::TYPE
         );
 
         return ! empty($used_step_definition_fields);
@@ -951,7 +951,7 @@ class testmanagementPlugin extends Plugin implements PluginWithService, \Tuleap\
 
     private function isStepField(?SimpleXMLElement $attributes): bool
     {
-        return $attributes && isset($attributes['type']) && ((string) $attributes['type'] === StepDefinition::TYPE || (string) $attributes['type'] === StepExecution::TYPE);
+        return $attributes && isset($attributes['type']) && ((string) $attributes['type'] === StepsDefinition::TYPE || (string) $attributes['type'] === StepExecution::TYPE);
     }
 
     #[\Tuleap\Plugin\ListeningToEventClass]
@@ -980,7 +980,7 @@ class testmanagementPlugin extends Plugin implements PluginWithService, \Tuleap\
     public function fieldChangeExternalFieldXMLUpdateEvent(FieldChangeExternalFieldXMLUpdateEvent $event): void
     {
         $xml_element = $event->getFieldChangeXML();
-        if ((string) $xml_element['type'] !== StepDefinition::TYPE) {
+        if ((string) $xml_element['type'] !== StepsDefinition::TYPE) {
             return;
         }
 

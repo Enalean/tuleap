@@ -24,7 +24,7 @@ namespace Tuleap\TestManagement\XML;
 
 use SimpleXMLElement;
 use Tracker_Artifact_ChangesetValue;
-use Tuleap\TestManagement\Step\Definition\Field\StepDefinition;
+use Tuleap\TestManagement\Step\Definition\Field\StepsDefinition;
 use Tuleap\TestManagement\Step\Step;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use XML_SimpleXMLCDATAFactory;
@@ -65,7 +65,7 @@ final class TrackerXMLExporterChangesetValueStepDefinitionXMLExporterTest extend
 
         $values = [$step1, $step2];
 
-        $field = $this->createMock(StepDefinition::class);
+        $field = $this->createMock(StepsDefinition::class);
         $field->expects($this->once())->method('getName')->willReturn('steps');
 
         $changeset_value = $this->createMock(Tracker_Artifact_ChangesetValue::class);
@@ -94,7 +94,7 @@ final class TrackerXMLExporterChangesetValueStepDefinitionXMLExporterTest extend
 
         $values = [];
 
-        $field = $this->createMock(StepDefinition::class);
+        $field = $this->createMock(StepsDefinition::class);
         $field->expects($this->never())->method('getName');
 
         $changeset_value = $this->createMock(Tracker_Artifact_ChangesetValue::class);

@@ -45,7 +45,7 @@ class StepDefinitionSubmittedValuesTransformator
         }
 
         $steps = [];
-        $rank  = StepDefinition::START_RANK;
+        $rank  = StepsDefinition::START_RANK;
         foreach ($submitted_values['description'] as $key => $description) {
             $description = trim($description);
             if (! $description) {

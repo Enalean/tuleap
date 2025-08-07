@@ -63,8 +63,8 @@ msgstr ""
 "TestManagement, mais cependant utilise le champ \"Exécution d'étapes\": vous "
 "devriez supprimer ce champ."
 
-msgid "Definition of a step"
-msgstr "Définition d'une étape"
+msgid "Definition of steps"
+msgstr "Définition des étapes"
 
 msgid ""
 "Direct edition of steps results is not allowed. Please use TestManagement "
@@ -86,7 +86,7 @@ msgid ""
 "Go in the Test Management administration to set manually the trackers or let "
 "us do it for you."
 msgstr ""
-"Rendez-vous dans l’administration de Test Management ou laissez-nous nous en "
+"Rendez-vous dans l'administration de Test Management ou laissez-nous nous en "
 "occuper pour vous."
 
 msgid "Go to administration"
@@ -118,11 +118,11 @@ msgstr ""
 msgid "Start TestManagement"
 msgstr "Démarrer TestManagement"
 
-msgid "Step definition"
-msgstr "Définition d'étapes"
-
 msgid "Step execution"
 msgstr "Exécution d'étapes"
+
+msgid "Steps definition"
+msgstr "Définition d'étapes"
 
 msgid "Submit"
 msgstr "Valider"

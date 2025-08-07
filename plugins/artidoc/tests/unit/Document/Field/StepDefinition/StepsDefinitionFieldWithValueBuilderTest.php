@@ -33,11 +33,11 @@ use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\Option\Option;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\TestManagement\Step\Definition\Field\StepDefinition;
-use Tuleap\TestManagement\Step\Definition\Field\StepDefinitionChangesetValue;
+use Tuleap\TestManagement\Step\Definition\Field\StepsDefinition;
+use Tuleap\TestManagement\Step\Definition\Field\StepsDefinitionChangesetValue;
 use Tuleap\TestManagement\Step\Step;
-use Tuleap\TestManagement\Test\Builders\ChangesetValueStepDefinitionTestBuilder;
-use Tuleap\TestManagement\Test\Builders\StepDefinitionFieldBuilder;
+use Tuleap\TestManagement\Test\Builders\ChangesetValueStepsDefinitionTestBuilder;
+use Tuleap\TestManagement\Test\Builders\StepsDefinitionFieldBuilder;
 use Tuleap\Tracker\Artifact\ChangesetValue\Text\TextValueInterpreter;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -45,17 +45,17 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 #[DisableReturnValueGenerationForTestDoubles]
 final class StepsDefinitionFieldWithValueBuilderTest extends TestCase
 {
-    private StepDefinition $field;
+    private StepsDefinition $field;
 
     #[\Override]
     protected function setUp(): void
     {
-        $this->field = StepDefinitionFieldBuilder::aStepDefinitionField(653)
+        $this->field = StepsDefinitionFieldBuilder::aStepsDefinitionField(653)
             ->inTracker(TrackerTestBuilder::aTracker()->withProject(ProjectTestBuilder::aProject()->build())->build())
             ->build();
     }
 
-    private function buildStepDefinitionFieldWithValue(?StepDefinitionChangesetValue $value): StepsDefinitionFieldWithValue
+    private function buildStepDefinitionFieldWithValue(?StepsDefinitionChangesetValue $value): StepsDefinitionFieldWithValue
     {
         $purifier = Codendi_HTMLPurifier::instance();
         $builder  = new StepsDefinitionFieldWithValueBuilder(new TextValueInterpreter($purifier, CommonMarkInterpreter::build($purifier)));
@@ -84,7 +84,7 @@ final class StepsDefinitionFieldWithValueBuilderTest extends TestCase
                 [],
             ),
             $this->buildStepDefinitionFieldWithValue(
-                ChangesetValueStepDefinitionTestBuilder::aValue(1, ChangesetTestBuilder::aChangeset(85)->build(), $this->field)
+                ChangesetValueStepsDefinitionTestBuilder::aValue(1, ChangesetTestBuilder::aChangeset(85)->build(), $this->field)
                     ->withSteps([])
                     ->build(),
             ),
@@ -109,7 +109,7 @@ final class StepsDefinitionFieldWithValueBuilderTest extends TestCase
                 ],
             ),
             $this->buildStepDefinitionFieldWithValue(
-                ChangesetValueStepDefinitionTestBuilder::aValue(1, ChangesetTestBuilder::aChangeset(85)->build(), $this->field)
+                ChangesetValueStepsDefinitionTestBuilder::aValue(1, ChangesetTestBuilder::aChangeset(85)->build(), $this->field)
                     ->withSteps([
                         new Step(
                             54,
@@ -149,7 +149,7 @@ final class StepsDefinitionFieldWithValueBuilderTest extends TestCase
                 ],
             ),
             $this->buildStepDefinitionFieldWithValue(
-                ChangesetValueStepDefinitionTestBuilder::aValue(1, ChangesetTestBuilder::aChangeset(85)->build(), $this->field)
+                ChangesetValueStepsDefinitionTestBuilder::aValue(1, ChangesetTestBuilder::aChangeset(85)->build(), $this->field)
                     ->withSteps([
                         new Step(
                             54,

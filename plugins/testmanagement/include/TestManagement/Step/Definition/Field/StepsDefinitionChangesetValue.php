@@ -29,7 +29,7 @@ use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\TestManagement\REST\v1\DefinitionRepresentations\StepDefinitionRepresentations\StepDefinitionRepresentationBuilder;
 use Tuleap\TestManagement\Step\Step;
 
-class StepDefinitionChangesetValue extends Tracker_Artifact_ChangesetValue
+class StepsDefinitionChangesetValue extends Tracker_Artifact_ChangesetValue
 {
     /**
      * @var Step[]
@@ -46,7 +46,7 @@ class StepDefinitionChangesetValue extends Tracker_Artifact_ChangesetValue
     public function __construct(
         $id,
         Tracker_Artifact_Changeset $changeset,
-        StepDefinition $field,
+        StepsDefinition $field,
         $has_changed,
         array $steps,
     ) {

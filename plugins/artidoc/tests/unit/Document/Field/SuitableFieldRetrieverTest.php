@@ -39,8 +39,8 @@ use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\TestManagement\Step\Definition\Field\StepDefinition;
-use Tuleap\TestManagement\Test\Builders\StepDefinitionFieldBuilder;
+use Tuleap\TestManagement\Step\Definition\Field\StepsDefinition;
+use Tuleap\TestManagement\Test\Builders\StepsDefinitionFieldBuilder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\NumericField;
 use Tuleap\Tracker\FormElement\Field\Text\TextField;
@@ -92,7 +92,7 @@ final class SuitableFieldRetrieverTest extends TestCase
     }
 
     /**
-     * @return Ok<TextField> | Ok<Tracker_FormElement_Field_List> | Ok<ArtifactLinkField> | OK<NumericField> | Ok<Tracker_FormElement_Field_Date> | OK<Tracker_FormElement_Field_PermissionsOnArtifact> | Ok<StepDefinition> | Err<Fault>
+     * @return Ok<TextField> | Ok<Tracker_FormElement_Field_List> | Ok<ArtifactLinkField> | OK<NumericField> | Ok<Tracker_FormElement_Field_Date> | OK<Tracker_FormElement_Field_PermissionsOnArtifact> | Ok<StepsDefinition> | Err<Fault>
      */
     private function retrieve(): Ok|Err
     {
@@ -436,7 +436,7 @@ final class SuitableFieldRetrieverTest extends TestCase
 
     public function testItAllowsStepDefinitionField(): void
     {
-        $step_definition_field = StepDefinitionFieldBuilder::aStepDefinitionField(self::FIELD_ID)
+        $step_definition_field = StepsDefinitionFieldBuilder::aStepsDefinitionField(self::FIELD_ID)
             ->inTracker($this->tracker)
             ->withReadPermission($this->user, true)
             ->build();

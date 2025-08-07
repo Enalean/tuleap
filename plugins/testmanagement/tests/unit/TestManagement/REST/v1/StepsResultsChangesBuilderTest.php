@@ -26,8 +26,8 @@ use Tracker_Artifact_Changeset;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElementFactory;
 use Tuleap\TestManagement\Campaign\Execution\ExecutionDao;
-use Tuleap\TestManagement\Step\Definition\Field\StepDefinition;
-use Tuleap\TestManagement\Step\Definition\Field\StepDefinitionChangesetValue;
+use Tuleap\TestManagement\Step\Definition\Field\StepsDefinition;
+use Tuleap\TestManagement\Step\Definition\Field\StepsDefinitionChangesetValue;
 use Tuleap\TestManagement\Step\Execution\Field\StepExecution;
 use Tuleap\TestManagement\Step\Execution\Field\StepExecutionChangesetValue;
 use Tuleap\TestManagement\Step\Execution\StepResult;
@@ -67,9 +67,9 @@ final class StepsResultsChangesBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->execution_field      = $this->createMock(StepExecution::class);
         $this->execution_field->method('getId')->willReturn(147);
         $this->execution_status_field     = $this->createMock(Tracker_FormElement_Field_List::class);
-        $this->definition_field           = $this->createMock(StepDefinition::class);
+        $this->definition_field           = $this->createMock(StepsDefinition::class);
         $this->definition_changeset       = $this->createMock(Tracker_Artifact_Changeset::class);
-        $this->definition_changeset_value = $this->createMock(StepDefinitionChangesetValue::class);
+        $this->definition_changeset_value = $this->createMock(StepsDefinitionChangesetValue::class);
         $this->test_status_builder        = $this->createMock(TestStatusAccordingToStepsStatusChangesBuilder::class);
         $this->builder                    = new StepsResultsChangesBuilder(
             $this->form_element_factory,

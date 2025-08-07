@@ -31,7 +31,7 @@ use Tuleap\Markdown\ContentInterpretor;
 use Tuleap\TestManagement\REST\v1\DefinitionRepresentations\StepDefinitionRepresentations\StepDefinitionFormatNotFoundException;
 use Tuleap\TestManagement\REST\v1\DefinitionRepresentations\StepDefinitionRepresentations\StepDefinitionRepresentation;
 use Tuleap\TestManagement\REST\v1\DefinitionRepresentations\StepDefinitionRepresentations\StepDefinitionRepresentationBuilder;
-use Tuleap\TestManagement\Step\Definition\Field\StepDefinitionChangesetValue;
+use Tuleap\TestManagement\Step\Definition\Field\StepsDefinitionChangesetValue;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\REST\Artifact\ArtifactRepresentation;
 
@@ -131,7 +131,7 @@ final class DefinitionCommonmarkRepresentation extends MinimalDefinitionRepresen
             $changeset,
             self::FIELD_STEPS
         );
-        \assert($value instanceof StepDefinitionChangesetValue || $value === null);
+        \assert($value instanceof StepsDefinitionChangesetValue || $value === null);
         if (! $value) {
             return;
         }

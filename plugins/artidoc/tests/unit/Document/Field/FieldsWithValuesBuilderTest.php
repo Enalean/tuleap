@@ -74,8 +74,8 @@ use Tuleap\Test\Stubs\RetrieveUserByIdStub;
 use Tuleap\Test\Stubs\User\Avatar\ProvideDefaultUserAvatarUrlStub;
 use Tuleap\Test\Stubs\User\Avatar\ProvideUserAvatarUrlStub;
 use Tuleap\TestManagement\Step\Step;
-use Tuleap\TestManagement\Test\Builders\ChangesetValueStepDefinitionTestBuilder;
-use Tuleap\TestManagement\Test\Builders\StepDefinitionFieldBuilder;
+use Tuleap\TestManagement\Test\Builders\ChangesetValueStepsDefinitionTestBuilder;
+use Tuleap\TestManagement\Test\Builders\StepsDefinitionFieldBuilder;
 use Tuleap\Tracker\Artifact\ChangesetValue\Text\TextValueInterpreter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeIsChildPresenter;
@@ -462,7 +462,7 @@ final class FieldsWithValuesBuilderTest extends TestCase
 
     public function testItBuildsStepDefinitionFieldWithValue(): void
     {
-        $step_definition_field = StepDefinitionFieldBuilder::aStepDefinitionField(123)
+        $step_definition_field = StepsDefinitionFieldBuilder::aStepsDefinitionField(123)
             ->inTracker($this->tracker)
             ->build();
 
@@ -479,7 +479,7 @@ final class FieldsWithValuesBuilderTest extends TestCase
 
         $this->changeset->setFieldValue(
             $step_definition_field,
-            ChangesetValueStepDefinitionTestBuilder::aValue(54, $this->changeset, $step_definition_field)
+            ChangesetValueStepsDefinitionTestBuilder::aValue(54, $this->changeset, $step_definition_field)
                 ->withSteps([
                     new Step(
                         12,

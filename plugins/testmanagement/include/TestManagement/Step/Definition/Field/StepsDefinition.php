@@ -24,6 +24,7 @@ use Codendi_HTMLPurifier;
 use EventManager;
 use LogicException;
 use Luracast\Restler\RestException;
+use Override;
 use PFUser;
 use ReferenceManager;
 use TemplateRendererFactory;
@@ -52,44 +53,51 @@ use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
 use Tuleap\Tracker\FormElement\XML\XMLFormElement;
 use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 
-class StepDefinition extends Tracker_FormElement_Field implements TrackerFormElementExternalField
+class StepsDefinition extends Tracker_FormElement_Field implements TrackerFormElementExternalField
 {
-    public const START_RANK = 1;
-    public const TYPE       = 'ttmstepdef';
+    public const int START_RANK = 1;
+    public const string TYPE    = 'ttmstepdef';
 
     /**
      * @return mixed
      */
+    #[Override]
     public function accept(Tracker_FormElement_FieldVisitor $visitor)
     {
         return $visitor->visitExternalField($this);
     }
 
+    #[Override]
     public static function getFactoryLabel()
     {
-        return dgettext('tuleap-testmanagement', 'Step definition');
+        return dgettext('tuleap-testmanagement', 'Steps definition');
     }
 
+    #[Override]
     public static function getFactoryDescription()
     {
-        return dgettext('tuleap-testmanagement', 'Definition of a step');
+        return dgettext('tuleap-testmanagement', 'Definition of steps');
     }
 
+    #[Override]
     public static function getFactoryIconUseIt()
     {
         return TESTMANAGEMENT_BASE_URL . '/images/ic/tick-white.png';
     }
 
+    #[Override]
     public static function getFactoryIconCreate()
     {
         return TESTMANAGEMENT_BASE_URL . '/images/ic/tick-white--plus.png';
     }
 
+    #[Override]
     public static function getFactoryUniqueField()
     {
         return true;
     }
 
+    #[Override]
     protected function fetchAdminFormElement()
     {
         return '<textarea></textarea>';
@@ -98,6 +106,7 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
     /**
      * @return null
      */
+    #[Override]
     public function getRESTAvailableValues()
     {
         return null;
@@ -106,6 +115,7 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
     /**
      * @return false
      */
+    #[Override]
     public function canBeUsedAsReportCriterion()
     {
         return false;
@@ -114,31 +124,37 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
     /**
      * @return false
      */
+    #[Override]
     public function canBeUsedAsReportColumn()
     {
         return false;
     }
 
+    #[Override]
     public function fetchCriteriaValue(Tracker_Report_Criteria $criteria): string
     {
         return '';
     }
 
+    #[Override]
     public function fetchRawValue(mixed $value): string
     {
         return '';
     }
 
+    #[Override]
     public function getCriteriaFromWhere(Tracker_Report_Criteria $criteria): Option
     {
         return Option::nothing(ParametrizedFromWhere::class);
     }
 
+    #[Override]
     public function getQueryFrom(): string
     {
         return '';
     }
 
+    #[Override]
     public function getQuerySelect(): string
     {
         return '';
@@ -147,11 +163,13 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
     /**
      * @return null
      */
+    #[Override]
     protected function getCriteriaDao()
     {
         return null;
     }
 
+    #[Override]
     protected function fetchArtifactValue(
         Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value = null,
@@ -180,6 +198,7 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
         return Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT;
     }
 
+    #[Override]
     public function fetchArtifactValueWithEditionFormIfEditable(
         Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value,
@@ -189,6 +208,7 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
             $this->getHiddenArtifactValueForEdition($artifact, $value, $submitted_values);
     }
 
+    #[Override]
     public function fetchArtifactValueReadOnly(
         Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value = null,
@@ -207,6 +227,7 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
         );
     }
 
+    #[Override]
     protected function fetchSubmitValue(array $submitted_values): string
     {
         $submitted_values = $submitted_values ?: [];
@@ -216,11 +237,13 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
         return $this->renderStepEditionToString(null, $steps);
     }
 
+    #[Override]
     protected function fetchSubmitValueMasschange(): string
     {
         return '';
     }
 
+    #[Override]
     protected function fetchTooltipValue(
         Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value = null,
@@ -228,21 +251,25 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
         return '';
     }
 
+    #[Override]
     public function fetchAddCardFields(array $used_fields, string $prefix = ''): string
     {
         return '';
     }
 
+    #[Override]
     public function canBeDisplayedInTooltip(): bool
     {
         return false;
     }
 
+    #[Override]
     protected function getValueDao(): StepDefinitionChangesetValueDao
     {
         return new StepDefinitionChangesetValueDao();
     }
 
+    #[Override]
     public function fetchRawValueFromChangeset(Tracker_Artifact_Changeset $changeset): string
     {
         return '';
@@ -251,6 +278,7 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
     /**
      * @throws RestException
      */
+    #[Override]
     public function getFieldDataFromRESTValue(array $value, ?Artifact $artifact = null)
     {
         if (! isset($value['value'])) {
@@ -268,6 +296,7 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
     /**
      * @throws RestException
      */
+    #[Override]
     public function getFieldDataFromRESTValueByField(array $value, ?Artifact $artifact = null)
     {
         return $this->getFieldDataFromRESTValue($value, $artifact);
@@ -278,6 +307,7 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
         return isset($artifact);
     }
 
+    #[Override]
     protected function validate(Artifact $artifact, $value)
     {
         if ($this->doesUserWantToRemoveAllSteps($value)) {
@@ -319,6 +349,7 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
         return isset($value['no_steps']) && $value['no_steps'];
     }
 
+    #[Override]
     public function hasChanges(
         Artifact $artifact,
         Tracker_Artifact_ChangesetValue $old_value,
@@ -370,6 +401,7 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
             array_diff($existing_steps, $submitted_steps) !== [];
     }
 
+    #[Override]
     protected function saveValue(
         $artifact,
         $changeset_value_id,
@@ -389,9 +421,10 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
         return $res;
     }
 
+    #[Override]
     public function addChangesetValueToSearchIndex(ItemToIndexQueue $index_queue, Tracker_Artifact_ChangesetValue $changeset_value): void
     {
-        assert($changeset_value instanceof StepDefinitionChangesetValue);
+        assert($changeset_value instanceof StepsDefinitionChangesetValue);
         $this->addRawValueToSearchIndex(
             $index_queue,
             $changeset_value->getChangeset()->getArtifact(),
@@ -465,13 +498,15 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
         );
     }
 
-    public function getChangesetValue($changeset, $value_id, $has_changed): StepDefinitionChangesetValue
+    #[Override]
+    public function getChangesetValue($changeset, $value_id, $has_changed): StepsDefinitionChangesetValue
     {
         $steps = $this->getValueDao()->searchById($value_id);
 
-        return new StepDefinitionChangesetValue($value_id, $changeset, $this, $has_changed, $steps);
+        return new StepsDefinitionChangesetValue($value_id, $changeset, $this, $has_changed, $steps);
     }
 
+    #[Override]
     public function fetchChangesetValue(
         int $artifact_id,
         int $changeset_id,
@@ -482,6 +517,7 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
         return '';
     }
 
+    #[Override]
     public function isCSVImportable(): bool
     {
         return false;
@@ -490,6 +526,7 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
     /**
      * @return ViewAdmin
      */
+    #[Override]
     public function getFormAdminVisitor(Tracker_FormElement_Field $element, array $used_element)
     {
         return new ViewAdmin($element, $used_element);
@@ -610,6 +647,7 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
         return $steps;
     }
 
+    #[Override]
     protected function getXMLInternalRepresentation(): XMLFormElement
     {
         return new XMLStepDefinition(
@@ -618,6 +656,7 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
         );
     }
 
+    #[Override]
     public function isAlwaysInEditMode(): bool
     {
         return false;
