@@ -19,8 +19,9 @@
  */
 
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\SubmittedOn\SubmittedOnField;
 
-class Tracker_Artifact_Changeset_ChangesetDataInitializator
+class Tracker_Artifact_Changeset_ChangesetDataInitializator // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public function __construct(private Tracker_FormElementFactory $formelement_factory)
     {
@@ -58,7 +59,7 @@ class Tracker_Artifact_Changeset_ChangesetDataInitializator
             if ($field instanceof Tracker_FormElement_Field_LastUpdateDate) {
                  $tracker_data[$field->getId()] = date('Y-m-d');
             }
-            if ($field instanceof Tracker_FormElement_Field_SubmittedOn) {
+            if ($field instanceof SubmittedOnField) {
                  $tracker_data[$field->getId()] = $artifact->getSubmittedOn();
             }
             if (

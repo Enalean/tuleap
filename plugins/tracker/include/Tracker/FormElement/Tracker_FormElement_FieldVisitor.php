@@ -26,6 +26,7 @@ use Tuleap\Tracker\FormElement\Field\Integer\IntegerField;
 use Tuleap\Tracker\FormElement\Field\PerTrackerArtifactId\PerTrackerArtifactIdField;
 use Tuleap\Tracker\FormElement\Field\Priority\PriorityField;
 use Tuleap\Tracker\FormElement\Field\String\StringField;
+use Tuleap\Tracker\FormElement\Field\SubmittedOn\SubmittedOnField;
 use Tuleap\Tracker\FormElement\Field\Text\TextField;
 use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
 
@@ -76,7 +77,7 @@ interface Tracker_FormElement_FieldVisitor // phpcs:ignore PSR1.Classes.ClassDec
 
     public function visitLastUpdateDate(Tracker_FormElement_Field_LastUpdateDate $field);
 
-    public function visitSubmittedOn(Tracker_FormElement_Field_SubmittedOn $field);
+    public function visitSubmittedOn(SubmittedOnField $field);
 
     public function visitComputed(ComputedField $field);
 

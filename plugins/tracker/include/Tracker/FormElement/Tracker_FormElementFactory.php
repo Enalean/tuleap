@@ -37,6 +37,7 @@ use Tuleap\Tracker\FormElement\Field\RetrieveFieldById;
 use Tuleap\Tracker\FormElement\Field\RetrieveUsedFields;
 use Tuleap\Tracker\FormElement\Field\Shareable\PropagatePropertiesDao;
 use Tuleap\Tracker\FormElement\Field\String\StringField;
+use Tuleap\Tracker\FormElement\Field\SubmittedOn\SubmittedOnField;
 use Tuleap\Tracker\FormElement\Field\Text\TextField;
 use Tuleap\Tracker\FormElement\FieldNameFormatter;
 use Tuleap\Tracker\FormElement\FormElementDeletedEvent;
@@ -115,7 +116,7 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
     protected $special_classnames     = [
         self::FIELD_LAST_UPDATE_DATE_TYPE => Tracker_FormElement_Field_LastUpdateDate::class,
         self::FIELD_ARTIFACT_ID_TYPE => ArtifactIdField::class,
-        self::FIELD_SUBMITTED_ON_TYPE => Tracker_FormElement_Field_SubmittedOn::class,
+        self::FIELD_SUBMITTED_ON_TYPE => SubmittedOnField::class,
         self::FIELD_ARTIFACT_IN_TRACKER => PerTrackerArtifactIdField::class,
         self::FIELD_SUBMITTED_BY_TYPE => Tracker_FormElement_Field_SubmittedBy::class,
         self::FIELD_LAST_MODIFIED_BY => Tracker_FormElement_Field_LastModifiedBy::class,

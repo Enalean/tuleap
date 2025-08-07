@@ -29,11 +29,11 @@ use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue_Date;
 use Tracker_FormElement_Field_Date;
 use Tracker_FormElement_Field_LastUpdateDate;
-use Tracker_FormElement_Field_SubmittedOn;
 use Tuleap\Artidoc\Document\Field\ConfiguredField;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\DateFieldWithValue;
 use Tuleap\Option\Option;
 use Tuleap\TimezoneRetriever;
+use Tuleap\Tracker\FormElement\Field\SubmittedOn\SubmittedOnField;
 
 final readonly class DateFieldWithValueBuilder
 {
@@ -66,7 +66,7 @@ final readonly class DateFieldWithValueBuilder
     ): Option {
         if ($configured_field->field instanceof Tracker_FormElement_Field_LastUpdateDate) {
             $timestamp = (int) $changeset->getSubmittedOn();
-        } elseif ($configured_field->field instanceof Tracker_FormElement_Field_SubmittedOn) {
+        } elseif ($configured_field->field instanceof SubmittedOnField) {
             $timestamp = $changeset->getArtifact()->getSubmittedOn();
         } else {
             $timestamp = $changeset_value?->getTimestamp();
