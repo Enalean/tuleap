@@ -24,7 +24,7 @@ require_once __DIR__ . '/../../../../bootstrap.php';
 
 use PHPUnit_Framework_MockObject_MockObject;
 use Tuleap\TestManagement\REST\v1\Execution\StepsResultsFilter;
-use Tuleap\TestManagement\Step\Definition\Field\StepDefinitionChangesetValue;
+use Tuleap\TestManagement\Step\Definition\Field\StepsDefinitionChangesetValue;
 use Tuleap\TestManagement\Step\Execution\Field\StepExecutionChangesetValue;
 use Tuleap\TestManagement\Step\Execution\StepResult;
 use Tuleap\TestManagement\Step\Step;
@@ -46,7 +46,7 @@ class StepsResultsFilterTest extends \Tuleap\Test\PHPUnit\TestCase
         parent::setUp();
 
         $this->filter           = new StepsResultsFilter();
-        $this->definition_value = $this->createMock(StepDefinitionChangesetValue::class);
+        $this->definition_value = $this->createMock(StepsDefinitionChangesetValue::class);
         $this->execution_value  = $this->createMock(StepExecutionChangesetValue::class);
     }
 

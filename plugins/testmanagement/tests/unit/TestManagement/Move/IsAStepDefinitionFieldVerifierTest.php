@@ -20,7 +20,7 @@
 
 namespace Tuleap\TestManagement\Move;
 
-use Tuleap\TestManagement\Test\Builders\StepDefinitionFieldBuilder;
+use Tuleap\TestManagement\Test\Builders\StepsDefinitionFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -30,7 +30,7 @@ class IsAStepDefinitionFieldVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         self::assertTrue(
             IsAStepDefinitionFieldVerifier::isAStepDefinitionField(
-                StepDefinitionFieldBuilder::aStepDefinitionField(1)->build(),
+                StepsDefinitionFieldBuilder::aStepsDefinitionField(1)->build(),
             )
         );
     }

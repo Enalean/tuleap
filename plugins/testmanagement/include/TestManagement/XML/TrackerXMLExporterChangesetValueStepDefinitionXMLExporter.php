@@ -25,7 +25,7 @@ namespace Tuleap\TestManagement\XML;
 
 use SimpleXMLElement;
 use Tracker_Artifact_ChangesetValue;
-use Tuleap\TestManagement\Step\Definition\Field\StepDefinition;
+use Tuleap\TestManagement\Step\Definition\Field\StepsDefinition;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue\ChangesetValueXMLExporter;
 
@@ -37,7 +37,7 @@ class TrackerXMLExporterChangesetValueStepDefinitionXMLExporter extends Changese
 
     protected function getFieldChangeType(): string
     {
-        return StepDefinition::TYPE;
+        return StepsDefinition::TYPE;
     }
 
     public function export(

@@ -42,7 +42,7 @@ msgid ""
 "field from the tracker."
 msgstr ""
 
-msgid "Definition of a step"
+msgid "Definition of steps"
 msgstr ""
 
 msgid ""
@@ -91,10 +91,10 @@ msgstr ""
 msgid "Start TestManagement"
 msgstr ""
 
-msgid "Step definition"
+msgid "Step execution"
 msgstr ""
 
-msgid "Step execution"
+msgid "Steps definition"
 msgstr ""
 
 msgid "Submit"

@@ -634,7 +634,6 @@
             <file name="plugins/testmanagement/tests/unit/TestManagement/REST/v1/TestStatusAccordingToStepsStatusChangesBuilderTest.php"/>
             <file name="plugins/testmanagement/tests/unit/TestManagement/Step/Definition/Field/StepDefinitionDataConverterTest.php"/>
             <file name="plugins/testmanagement/tests/unit/TestManagement/Step/Definition/Field/StepDefinitionSubmittedValuesTransformatorTest.php"/>
-            <file name="plugins/testmanagement/tests/unit/TestManagement/Step/Definition/Field/StepDefinitionTest.php"/>
             <file name="plugins/testmanagement/tests/unit/TestManagement/Step/Definition/Field/XML/XMLStepDefinitionTest.php"/>
             <file name="plugins/testmanagement/tests/unit/TestManagement/Step/StepCheckerTest.php"/>
             <file name="plugins/testmanagement/tests/unit/TestManagement/TestmanagementTrackersConfiguratorTest.php"/>

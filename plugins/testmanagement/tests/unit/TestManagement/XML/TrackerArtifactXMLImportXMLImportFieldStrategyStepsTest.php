@@ -22,7 +22,7 @@ namespace Tuleap\TestManagement\XML;
 
 use SimpleXMLElement;
 use Tuleap\Test\Builders\UserTestBuilder;
-use Tuleap\TestManagement\Test\Builders\StepDefinitionFieldBuilder;
+use Tuleap\TestManagement\Test\Builders\StepsDefinitionFieldBuilder;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
@@ -46,7 +46,7 @@ final class TrackerArtifactXMLImportXMLImportFieldStrategyStepsTest extends \Tul
         $xml = new SimpleXMLElement($xml_data);
 
         $import_strategy = new TrackerArtifactXMLImportXMLImportFieldStrategySteps();
-        $field           = StepDefinitionFieldBuilder::aStepDefinitionField(1)->build();
+        $field           = StepsDefinitionFieldBuilder::aStepsDefinitionField(1)->build();
         $user            = UserTestBuilder::buildWithDefaults();
         $artifact        = ArtifactTestBuilder::anArtifact(101)->build();
 

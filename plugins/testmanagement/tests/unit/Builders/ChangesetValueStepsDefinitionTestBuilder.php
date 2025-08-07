@@ -23,11 +23,11 @@ declare(strict_types=1);
 namespace Tuleap\TestManagement\Test\Builders;
 
 use Tracker_Artifact_Changeset;
-use Tuleap\TestManagement\Step\Definition\Field\StepDefinition;
-use Tuleap\TestManagement\Step\Definition\Field\StepDefinitionChangesetValue;
+use Tuleap\TestManagement\Step\Definition\Field\StepsDefinition;
+use Tuleap\TestManagement\Step\Definition\Field\StepsDefinitionChangesetValue;
 use Tuleap\TestManagement\Step\Step;
 
-final class ChangesetValueStepDefinitionTestBuilder
+final class ChangesetValueStepsDefinitionTestBuilder
 {
     /**
      * @var list<Step>
@@ -37,11 +37,11 @@ final class ChangesetValueStepDefinitionTestBuilder
     private function __construct(
         private readonly int $id,
         private readonly Tracker_Artifact_Changeset $changeset,
-        private readonly StepDefinition $field,
+        private readonly StepsDefinition $field,
     ) {
     }
 
-    public static function aValue(int $id, Tracker_Artifact_Changeset $changeset, StepDefinition $field): self
+    public static function aValue(int $id, Tracker_Artifact_Changeset $changeset, StepsDefinition $field): self
     {
         return new self($id, $changeset, $field);
     }
@@ -55,9 +55,9 @@ final class ChangesetValueStepDefinitionTestBuilder
         return $this;
     }
 
-    public function build(): StepDefinitionChangesetValue
+    public function build(): StepsDefinitionChangesetValue
     {
-        return new StepDefinitionChangesetValue(
+        return new StepsDefinitionChangesetValue(
             $this->id,
             $this->changeset,
             $this->field,

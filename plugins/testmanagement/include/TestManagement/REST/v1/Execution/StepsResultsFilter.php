@@ -20,7 +20,7 @@
 
 namespace Tuleap\TestManagement\REST\v1\Execution;
 
-use Tuleap\TestManagement\Step\Definition\Field\StepDefinitionChangesetValue;
+use Tuleap\TestManagement\Step\Definition\Field\StepsDefinitionChangesetValue;
 use Tuleap\TestManagement\Step\Execution\Field\StepExecutionChangesetValue;
 use Tuleap\TestManagement\Step\Execution\StepResult;
 use Tuleap\TestManagement\Step\Step;
@@ -31,7 +31,7 @@ class StepsResultsFilter
      * @return StepResult[]
      */
     public function filterStepResultsNotInDefinition(
-        StepDefinitionChangesetValue $definition_changeset_value,
+        StepsDefinitionChangesetValue $definition_changeset_value,
         StepExecutionChangesetValue $execution_changeset_value,
     ) {
         $definition_value    = $definition_changeset_value->getValue();

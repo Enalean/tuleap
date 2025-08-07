@@ -21,7 +21,7 @@
 namespace Tuleap\TestManagement\XML;
 
 use SimpleXMLElement;
-use Tuleap\TestManagement\Step\Definition\Field\StepDefinition;
+use Tuleap\TestManagement\Step\Definition\Field\StepsDefinition;
 use Tuleap\TestManagement\Step\Execution\Field\StepExecution;
 use XML_RNGValidator;
 
@@ -130,7 +130,7 @@ final class ImportXMLFromTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
              </externalField>'
         );
 
-        $step_def = new StepDefinition(
+        $step_def = new StepsDefinition(
             0,
             0,
             0,

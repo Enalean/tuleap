@@ -29,13 +29,14 @@ use Tuleap\TestManagement\Step\Step;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class StepDefinitionTest extends \Tuleap\Test\PHPUnit\TestCase
+final class StepsDefinitionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private StepDefinition $field;
+    private StepsDefinition $field;
 
+    #[\Override]
     protected function setUp(): void
     {
-        $this->field = new StepDefinition(102, 111, 101, 'step_def', 'Steps', '', true, 'S', true, false, 1);
+        $this->field = new StepsDefinition(102, 111, 101, 'step_def', 'Steps', '', true, 'S', true, false, 1);
     }
 
     public function testHasChangesReturnsFalseIfNewValuesIsNull(): void
@@ -43,7 +44,7 @@ final class StepDefinitionTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertFalse(
             $this->field->hasChanges(
                 ArtifactTestBuilder::anArtifact(1)->build(),
-                new StepDefinitionChangesetValue(
+                new StepsDefinitionChangesetValue(
                     1,
                     $this->createStub(Tracker_Artifact_Changeset::class),
                     $this->field,
@@ -60,7 +61,7 @@ final class StepDefinitionTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertTrue(
             $this->field->hasChanges(
                 ArtifactTestBuilder::anArtifact(1)->build(),
-                new StepDefinitionChangesetValue(
+                new StepsDefinitionChangesetValue(
                     1,
                     $this->createStub(Tracker_Artifact_Changeset::class),
                     $this->field,
@@ -88,7 +89,7 @@ final class StepDefinitionTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertTrue(
             $this->field->hasChanges(
                 ArtifactTestBuilder::anArtifact(1)->build(),
-                new StepDefinitionChangesetValue(
+                new StepsDefinitionChangesetValue(
                     1,
                     $this->createStub(Tracker_Artifact_Changeset::class),
                     $this->field,
@@ -130,7 +131,7 @@ final class StepDefinitionTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertFalse(
             $this->field->hasChanges(
                 ArtifactTestBuilder::anArtifact(1)->build(),
-                new StepDefinitionChangesetValue(
+                new StepsDefinitionChangesetValue(
                     1,
                     $this->createStub(Tracker_Artifact_Changeset::class),
                     $this->field,

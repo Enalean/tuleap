@@ -43,8 +43,8 @@ use Tuleap\Artidoc\Document\Field\StepDefinition\StepsDefinitionFieldWithValueBu
 use Tuleap\Artidoc\Document\Field\User\UserFieldWithValueBuilder;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\FieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\TextFieldWithValue;
-use Tuleap\TestManagement\Step\Definition\Field\StepDefinition;
-use Tuleap\TestManagement\Step\Definition\Field\StepDefinitionChangesetValue;
+use Tuleap\TestManagement\Step\Definition\Field\StepsDefinition;
+use Tuleap\TestManagement\Step\Definition\Field\StepsDefinitionChangesetValue;
 use Tuleap\Tracker\Artifact\Changeset\ArtifactLink\ArtifactLinkChangesetValue;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\Text\TextField;
@@ -131,8 +131,8 @@ final readonly class FieldsWithValuesBuilder implements GetFieldsWithValues
             return [...$fields, $this->permissions_on_artifact_field_with_value_builder->buildPermissionsOnArtifactFieldWithValue($configured_field, $changeset_value)];
         }
 
-        if ($configured_field->field instanceof StepDefinition) {
-            assert($changeset_value === null || $changeset_value instanceof StepDefinitionChangesetValue);
+        if ($configured_field->field instanceof StepsDefinition) {
+            assert($changeset_value === null || $changeset_value instanceof StepsDefinitionChangesetValue);
             return [...$fields, $this->step_definition_field_with_value_builder->buildStepsDefinitionFieldWithValue($configured_field, $changeset_value)];
         }
 

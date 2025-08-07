@@ -24,7 +24,7 @@ namespace Tuleap\TestManagement\XML;
 
 use SimpleXMLElement;
 use Tracker_FormElement_Field;
-use Tuleap\TestManagement\Step\Definition\Field\StepDefinition;
+use Tuleap\TestManagement\Step\Definition\Field\StepsDefinition;
 use Tuleap\TestManagement\Step\Execution\Field\StepExecution;
 use XML_RNGValidator;
 
@@ -81,12 +81,12 @@ class ImportXMLFromTracker
     }
 
     /**
-     * @return StepDefinition|StepExecution|null
+     * @return StepsDefinition|StepExecution|null
      */
     private function createStepFormElement(array $row): ?Tracker_FormElement_Field
     {
         switch ($row['type']) {
-            case StepDefinition::TYPE:
+            case StepsDefinition::TYPE:
                 return $this->createStepDefinition($row);
             case StepExecution::TYPE:
                 return $this->createStepExecution($row);
@@ -94,9 +94,9 @@ class ImportXMLFromTracker
         return null;
     }
 
-    private function createStepDefinition(array $row): StepDefinition
+    private function createStepDefinition(array $row): StepsDefinition
     {
-        return new StepDefinition(
+        return new StepsDefinition(
             $row['id'],
             $row['tracker_id'],
             $row['parent_id'],

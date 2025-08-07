@@ -23,14 +23,14 @@ declare(strict_types=1);
 
 namespace Tuleap\TestManagement\Step\Definition\Field\XML;
 
-use Tuleap\TestManagement\Step\Definition\Field\StepDefinition;
+use Tuleap\TestManagement\Step\Definition\Field\StepsDefinition;
 use Tuleap\Tracker\FormElement\Field\XML\XMLField;
 
 final class XMLStepDefinition extends XMLField
 {
     public static function getType(): string
     {
-        return StepDefinition::TYPE;
+        return StepsDefinition::TYPE;
     }
 
     protected function getXMLTagName(): string
