@@ -40,66 +40,40 @@
         <slot name="permission-information"></slot>
     </div>
 </template>
-<script lang="ts">
+<script setup lang="ts">
 import emitter from "../../../helpers/emitter";
-import { CAN_READ, CAN_WRITE, CAN_MANAGE } from "../../../constants";
+import type { CAN_MANAGE, CAN_READ, CAN_WRITE } from "../../../constants";
+import type { Permission, UserGroup } from "../../../type";
+import { ref, watch } from "vue";
 
-function getSelectedUGroupsIDs(selected_ugroups) {
+const props = defineProps<{
+    label: string;
+    project_ugroups: Array<UserGroup>;
+    selected_ugroups: Array<Permission>;
+    identifier: CAN_READ | CAN_WRITE | CAN_MANAGE;
+}>();
+
+function getSelectedUGroupsIDs(selected_ugroups: Array<Permission>): string[] {
     if (!selected_ugroups) {
         return [];
     }
     return selected_ugroups.map((ugroup) => ugroup.id);
 }
 
-export default {
-    name: "PermissionsSelector",
-    model: {
-        prop: "selected_ugroups",
+const selected_ugroup_ids = ref<string[]>(getSelectedUGroupsIDs(props.selected_ugroups));
+const selector_id = "document-permission-" + props.label;
+
+watch(
+    () => props.selected_ugroups,
+    (value) => {
+        selected_ugroup_ids.value = getSelectedUGroupsIDs(value);
     },
-    props: {
-        label: {
-            type: String,
-            required: true,
-        },
-        project_ugroups: {
-            type: Array,
-            required: true,
-        },
-        selected_ugroups: {
-            type: Array,
-            required: true,
-        },
-        identifier: {
-            type: String,
-            required: true,
-            validator(value) {
-                // The value must match one of these strings
-                return [CAN_READ, CAN_WRITE, CAN_MANAGE].includes(value);
-            },
-        },
-    },
-    data() {
-        return {
-            selected_ugroup_ids: getSelectedUGroupsIDs(this.selected_ugroups),
-        };
-    },
-    computed: {
-        selector_id() {
-            return "document-permission-" + this.label;
-        },
-    },
-    watch: {
-        selected_ugroups: function (value) {
-            this.selected_ugroup_ids = getSelectedUGroupsIDs(value);
-        },
-    },
-    methods: {
-        updateSelectedUGroups() {
-            emitter.emit("update-permissions", {
-                label: this.identifier,
-                value: this.selected_ugroup_ids.map((ugroup_id) => ({ id: ugroup_id })),
-            });
-        },
-    },
-};
+);
+
+function updateSelectedUGroups() {
+    emitter.emit("update-permissions", {
+        label: props.identifier,
+        value: selected_ugroup_ids.value.map((ugroup_id) => ({ id: ugroup_id })),
+    });
+}
 </script>
