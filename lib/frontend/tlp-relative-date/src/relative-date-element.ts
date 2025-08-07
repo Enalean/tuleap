@@ -20,11 +20,19 @@
 import formatRelativeDate from "./relative-date-formatter";
 import { Firefox1502814Fixer } from "./Firefox1502814Fixer";
 
-export type FirstDateShown = "absolute" | "relative";
-export type OtherDatePlacement = "top" | "right" | "tooltip";
+export const SHOW_ABSOLUTE_DATE = "absolute";
+export const SHOW_RELATIVE_DATE = "relative";
+export type FirstDateShown = typeof SHOW_ABSOLUTE_DATE | typeof SHOW_RELATIVE_DATE;
+export const OTHER_PLACEMENT_TOP = "top";
+export const OTHER_PLACEMENT_RIGHT = "right";
+export const OTHER_PLACEMENT_TOOLTIP = "tooltip";
+export type OtherDatePlacement =
+    | typeof OTHER_PLACEMENT_TOP
+    | typeof OTHER_PLACEMENT_RIGHT
+    | typeof OTHER_PLACEMENT_TOOLTIP;
 
-const allowed_placements = ["top", "right", "tooltip"];
-const allowed_preferences = ["absolute", "relative"];
+const allowed_placements = [OTHER_PLACEMENT_TOP, OTHER_PLACEMENT_RIGHT, OTHER_PLACEMENT_TOOLTIP];
+const allowed_preferences = [SHOW_ABSOLUTE_DATE, SHOW_RELATIVE_DATE];
 
 export class RelativeDateElement extends Firefox1502814Fixer {
     static get observedAttributes(): string[] {
@@ -62,7 +70,7 @@ export class RelativeDateElement extends Firefox1502814Fixer {
 
         const date = new Date(this.date);
 
-        if (this.preference === "absolute") {
+        if (this.preference === SHOW_ABSOLUTE_DATE) {
             this.textContent = this.absolute_date;
             this.setTitle(formatRelativeDate(this.locale, date, new Date()));
         } else {
@@ -123,9 +131,9 @@ export class RelativeDateElement extends Firefox1502814Fixer {
     }
 
     private setClassNameAccordingToPlacement(): void {
-        if (this.placement === "right") {
+        if (this.placement === OTHER_PLACEMENT_RIGHT) {
             this.classList.add("tlp-date-on-right");
-        } else if (this.placement === "top") {
+        } else if (this.placement === OTHER_PLACEMENT_TOP) {
             this.classList.add("tlp-date-on-top");
         } else {
             this.classList.remove("tlp-date-on-right", "tlp-date-on-top");

@@ -4,13 +4,12 @@
   "homepage": "https://tuleap.org",
   "license": "GPL-2.0-or-later",
   "private": true,
-  "version": "0.0.0",
   "type": "module",
-  "module": "dist/tlp-relative-date.js",
-  "main": "dist/tlp-relative-date.umd.cjs",
-  "types": "dist/index.d.ts",
+  "main": "./dist/tlp-relative-date.umd.cjs",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "import": "./dist/tlp-relative-date.js",
       "require": "./dist/tlp-relative-date.umd.cjs"
     }
