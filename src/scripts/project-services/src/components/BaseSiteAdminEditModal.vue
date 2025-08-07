@@ -54,7 +54,6 @@ import EditModal from "./EditModal.vue";
 import ServiceIsActive from "./Service/ServiceIsActive.vue";
 import SidebarPreviewer from "./SidebarPreviewer.vue";
 import EditableSystemService from "./Service/EditableSystemService.vue";
-import { edit_modal_mixin } from "./edit-modal-mixin.js";
 
 export default {
     name: "BaseSiteAdminEditModal",
@@ -65,7 +64,6 @@ export default {
         ServiceIsActive,
         SidebarPreviewer,
     },
-    mixins: [edit_modal_mixin],
     props: {
         minimal_rank: {
             type: Number,
@@ -82,6 +80,47 @@ export default {
         allowed_icons: {
             type: Object,
             required: true,
+        },
+        project_id: {
+            type: String,
+            required: true,
+        },
+    },
+    data() {
+        return {
+            is_shown: false,
+            service: this.resetService(),
+        };
+    },
+    computed: {
+        form_url() {
+            return `/project/${encodeURIComponent(this.project_id)}/admin/services/edit`;
+        },
+    },
+    methods: {
+        show(button) {
+            this.is_shown = true;
+            this.service = JSON.parse(button.dataset.serviceJson);
+            this.$refs.modal.show();
+        },
+        resetModal() {
+            this.is_shown = false;
+            this.service = this.resetService();
+        },
+        resetService() {
+            return {
+                id: null,
+                icon_name: "",
+                label: "",
+                link: "",
+                description: "",
+                is_active: true,
+                is_used: true,
+                is_in_iframe: false,
+                is_in_new_tab: false,
+                rank: this.minimal_rank,
+                is_project_scope: true,
+            };
         },
     },
 };
