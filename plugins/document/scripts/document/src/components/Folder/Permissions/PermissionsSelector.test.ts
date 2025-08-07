@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 
@@ -27,15 +27,11 @@ import { CAN_WRITE } from "../../../constants";
 
 vi.mock("../../../helpers/emitter");
 describe("PermissionsSelector", () => {
-    let factory;
-
-    beforeEach(() => {
-        factory = (props = {}): VueWrapper<PermissionsSelector> => {
-            return shallowMount(PermissionsSelector, {
-                props: { ...props },
-            });
-        };
-    });
+    const factory = (props = {}): VueWrapper<PermissionsSelector> => {
+        return shallowMount(PermissionsSelector, {
+            props: { ...props },
+        });
+    };
 
     it("Display the list of selected user groups", () => {
         const permission_label = "My permission label";
@@ -55,7 +51,7 @@ describe("PermissionsSelector", () => {
         expect(wrapper.text()).toContain(permission_label);
         const all_options = wrapper.get("select").findAll("option");
         expect(all_options).toHaveLength(4);
-        expect(wrapper.vm.$data.selected_ugroup_ids).toHaveLength(2);
+        expect(wrapper.vm.selected_ugroup_ids).toHaveLength(2);
     });
 
     it("Select new user groups", () => {
@@ -71,6 +67,7 @@ describe("PermissionsSelector", () => {
 
         wrapper.get("select").setValue(ugroup_1.id);
 
+        expect(wrapper.vm.selected_ugroup_ids).toHaveLength(1);
         expect(emitter.emit).toHaveBeenCalledWith("update-permissions", {
             label: CAN_WRITE,
             value: [{ id: "177" }],
@@ -95,6 +92,6 @@ describe("PermissionsSelector", () => {
         });
 
         wrapper.get("select").findAll("option");
-        expect(wrapper.vm.$data.selected_ugroup_ids).toHaveLength(1);
+        expect(wrapper.vm.selected_ugroup_ids).toHaveLength(1);
     });
 });
