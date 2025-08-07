@@ -26,13 +26,14 @@
             class="user-list-item document-list-item-inline document-list-item-with-avatar"
             data-test="user-list-item"
         >
-            <div class="tlp-avatar-mini document-avatar-mini">
+            <span class="tlp-avatar-mini document-avatar-mini">
                 <img
                     loading="lazy"
                     v-bind:src="user.avatar_url"
                     data-test="user-list-item-avatar"
+                    v-bind:alt="$gettext('User avatar')"
                 />
-            </div>
+            </span>
             {{ user.display_name }}
         </span>
     </p>
@@ -40,12 +41,13 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from "vue";
 import { useGettext } from "vue3-gettext";
 import type {
     ReadonlyFieldUser,
     ReadonlyFieldUserList,
+    ReadonlyFieldUserListValue,
 } from "@/sections/readonly-fields/ReadonlyFields";
-import { USER_FIELD } from "@/sections/readonly-fields/ReadonlyFields";
 
 const gettext_provider = useGettext();
 const { $gettext } = gettext_provider;
@@ -54,10 +56,9 @@ const props = defineProps<{
     user_list_field: ReadonlyFieldUserList | ReadonlyFieldUser;
 }>();
 
-const users_list =
-    props.user_list_field.type === USER_FIELD
-        ? [props.user_list_field.value]
-        : props.user_list_field.value;
+const users_list = computed((): ReadonlyArray<ReadonlyFieldUserListValue> => {
+    return Array.of<ReadonlyFieldUserListValue>().concat(props.user_list_field.value);
+});
 </script>
 
 <style scoped lang="scss">
