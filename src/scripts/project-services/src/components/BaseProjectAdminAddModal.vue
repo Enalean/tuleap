@@ -39,13 +39,30 @@
 import AddModal from "./AddModal.vue";
 import SidebarPreviewer from "./SidebarPreviewer.vue";
 import InCreationCustomService from "./Service/InCreationCustomService.vue";
-import { service_modal_mixin } from "./service-modal-mixin.js";
 import { add_modal_mixin } from "./add-modal-mixin.js";
 
 export default {
     name: "BaseProjectAdminAddModal",
     components: { AddModal, SidebarPreviewer, InCreationCustomService },
-    mixins: [service_modal_mixin, add_modal_mixin],
+    mixins: [add_modal_mixin],
+    props: {
+        minimal_rank: {
+            type: Number,
+            required: true,
+        },
+        csrf_token: {
+            type: String,
+            required: true,
+        },
+        csrf_token_name: {
+            type: String,
+            required: true,
+        },
+        allowed_icons: {
+            type: Object,
+            required: true,
+        },
+    },
     computed: {
         preview_label() {
             return this.service.label === "" ? this.$gettext("Preview") : this.service.label;

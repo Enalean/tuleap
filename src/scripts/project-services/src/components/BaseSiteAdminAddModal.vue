@@ -54,7 +54,6 @@ import SidebarPreviewer from "./SidebarPreviewer.vue";
 import InCreationCustomService from "./Service/InCreationCustomService.vue";
 import ServiceIsActive from "./Service/ServiceIsActive.vue";
 import ServiceShortname from "./Service/ServiceShortname.vue";
-import { service_modal_mixin } from "./service-modal-mixin.js";
 import { add_modal_mixin } from "./add-modal-mixin.js";
 import { ADMIN_PROJECT_ID } from "../constants.js";
 
@@ -67,7 +66,25 @@ export default {
         ServiceIsActive,
         ServiceShortname,
     },
-    mixins: [service_modal_mixin, add_modal_mixin],
+    mixins: [add_modal_mixin],
+    props: {
+        minimal_rank: {
+            type: Number,
+            required: true,
+        },
+        csrf_token: {
+            type: String,
+            required: true,
+        },
+        csrf_token_name: {
+            type: String,
+            required: true,
+        },
+        allowed_icons: {
+            type: Object,
+            required: true,
+        },
+    },
     computed: {
         is_default_template() {
             return this.project_id === ADMIN_PROJECT_ID;
