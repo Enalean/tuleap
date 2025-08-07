@@ -54,7 +54,6 @@ import SidebarPreviewer from "./SidebarPreviewer.vue";
 import InCreationCustomService from "./Service/InCreationCustomService.vue";
 import ServiceIsActive from "./Service/ServiceIsActive.vue";
 import ServiceShortname from "./Service/ServiceShortname.vue";
-import { add_modal_mixin } from "./add-modal-mixin.js";
 import { ADMIN_PROJECT_ID } from "../constants.js";
 
 export default {
@@ -66,7 +65,6 @@ export default {
         ServiceIsActive,
         ServiceShortname,
     },
-    mixins: [add_modal_mixin],
     props: {
         minimal_rank: {
             type: Number,
@@ -84,6 +82,10 @@ export default {
             type: Object,
             required: true,
         },
+        project_id: {
+            type: String,
+            required: true,
+        },
     },
     computed: {
         is_default_template() {
@@ -91,6 +93,40 @@ export default {
         },
         preview_label() {
             return this.service.label === "" ? this.$gettext("Preview") : this.service.label;
+        },
+        form_url() {
+            return `/project/${encodeURIComponent(this.project_id)}/admin/services/add`;
+        },
+    },
+    data() {
+        return {
+            is_shown: false,
+            service: this.resetService(),
+        };
+    },
+    methods: {
+        show() {
+            this.is_shown = true;
+            this.$refs.modal.show();
+        },
+        resetModal() {
+            this.is_shown = false;
+            this.service = this.resetService();
+        },
+        resetService() {
+            return {
+                id: null,
+                icon_name: "fa-angle-double-right",
+                label: "",
+                link: "",
+                description: "",
+                short_name: "",
+                is_active: true,
+                is_used: true,
+                is_in_new_tab: false,
+                rank: this.minimal_rank,
+                is_disabled_reason: "",
+            };
         },
     },
 };
