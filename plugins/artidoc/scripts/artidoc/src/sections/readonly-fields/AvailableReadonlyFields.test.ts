@@ -18,13 +18,16 @@
  */
 
 import { describe, expect, it } from "vitest";
-import type { ConfigurationField } from "@/sections/readonly-fields/AvailableReadonlyFields";
+import type {
+    ArtidocStructureFields,
+    ConfigurationField,
+} from "@/sections/readonly-fields/AvailableReadonlyFields";
 import {
+    TTM_STEPS_DEFINITION_FIELD,
     filterAlreadySelectedFields,
     filterSemanticsTitleDescriptionBoundField,
     getSupportedFields,
 } from "@/sections/readonly-fields/AvailableReadonlyFields";
-import type { StructureFields } from "@tuleap/plugin-tracker-rest-api-types";
 import {
     ARTIFACT_ID_FIELD,
     ARTIFACT_ID_IN_TRACKER_FIELD,
@@ -59,204 +62,210 @@ describe("getAvailableFields", () => {
         field_id: 123,
         type: TRACKER_STRING_FIELD,
         label: "String field",
-    } as StructureFields;
+    } as ArtidocStructureFields;
 
     const text_field = {
         field_id: 124,
         type: TRACKER_TEXT_FIELD,
         label: "Text field",
-    } as StructureFields;
+    } as ArtidocStructureFields;
 
     const summary_field = {
         field_id: title_field_id,
         type: TRACKER_STRING_FIELD,
         label: "Summary",
-    } as StructureFields;
+    } as ArtidocStructureFields;
 
     const description_field = {
         field_id: description_field_id,
         type: TRACKER_TEXT_FIELD,
         label: "Description",
-    } as StructureFields;
+    } as ArtidocStructureFields;
 
     const user_group_list_field = {
         field_id: 125,
         type: SELECTBOX_FIELD,
         label: "User group",
         bindings: { type: LIST_BIND_UGROUPS },
-    } as StructureFields;
+    } as ArtidocStructureFields;
 
     const static_value_list_field = {
         field_id: 126,
         type: SELECTBOX_FIELD,
         label: "Static value",
         bindings: { type: LIST_BIND_STATIC },
-    } as StructureFields;
+    } as ArtidocStructureFields;
 
     const user_value_list_field = {
         field_id: 127,
         type: SELECTBOX_FIELD,
         label: "Assignee",
         bindings: { type: LIST_BIND_USERS },
-    } as StructureFields;
+    } as ArtidocStructureFields;
 
     const multi_user_groups_list_field = {
         field_id: 128,
         type: MULTI_SELECTBOX_FIELD,
         label: "User groups",
         bindings: { type: LIST_BIND_UGROUPS },
-    } as StructureFields;
+    } as ArtidocStructureFields;
 
     const user_groups_open_list_field = {
         field_id: 129,
         type: OPEN_LIST_FIELD,
         label: "Open user groups",
         bindings: { type: LIST_BIND_UGROUPS },
-    } as StructureFields;
+    } as ArtidocStructureFields;
 
     const user_groups_checkbox_field = {
         field_id: 130,
         type: CHECKBOX_FIELD,
         label: "Checkbox user groups",
         bindings: { type: LIST_BIND_UGROUPS },
-    } as unknown as StructureFields;
+    } as unknown as ArtidocStructureFields;
 
     const user_groups_radio_button_field = {
         field_id: 130,
         type: CHECKBOX_FIELD,
         label: "Radio user groups",
         bindings: { type: LIST_BIND_UGROUPS },
-    } as unknown as StructureFields;
+    } as unknown as ArtidocStructureFields;
 
     const multi_static_list_field = {
         field_id: 128,
         type: MULTI_SELECTBOX_FIELD,
         label: "Statics",
         bindings: { type: LIST_BIND_STATIC },
-    } as StructureFields;
+    } as ArtidocStructureFields;
 
     const static_open_list_field = {
         field_id: 129,
         type: OPEN_LIST_FIELD,
         label: "Open static",
         bindings: { type: LIST_BIND_STATIC },
-    } as StructureFields;
+    } as ArtidocStructureFields;
 
     const static_checkbox_field = {
         field_id: 130,
         type: CHECKBOX_FIELD,
         label: "Checkbox static",
         bindings: { type: LIST_BIND_STATIC },
-    } as unknown as StructureFields;
+    } as unknown as ArtidocStructureFields;
 
     const static_radio_button_field = {
         field_id: 130,
         type: CHECKBOX_FIELD,
         label: "Radio static",
         bindings: { type: LIST_BIND_STATIC },
-    } as unknown as StructureFields;
+    } as unknown as ArtidocStructureFields;
 
     const multi_user_list_field = {
         field_id: 128,
         type: MULTI_SELECTBOX_FIELD,
         label: "Users",
         bindings: { type: LIST_BIND_USERS },
-    } as StructureFields;
+    } as ArtidocStructureFields;
 
     const user_open_list_field = {
         field_id: 129,
         type: OPEN_LIST_FIELD,
         label: "Open user",
         bindings: { type: LIST_BIND_USERS },
-    } as StructureFields;
+    } as ArtidocStructureFields;
 
     const user_checkbox_field = {
         field_id: 130,
         type: CHECKBOX_FIELD,
         label: "Checkbox user",
         bindings: { type: LIST_BIND_USERS },
-    } as unknown as StructureFields;
+    } as unknown as ArtidocStructureFields;
 
     const user_radio_button_field = {
         field_id: 130,
         type: CHECKBOX_FIELD,
         label: "Radio user",
         bindings: { type: LIST_BIND_USERS },
-    } as unknown as StructureFields;
+    } as unknown as ArtidocStructureFields;
 
     const artifact_id_field = {
         field_id: 140,
         type: ARTIFACT_ID_FIELD,
         label: "Artifact id",
-    } as StructureFields;
+    } as ArtidocStructureFields;
 
     const per_tracker_id_field = {
         field_id: 141,
         type: ARTIFACT_ID_IN_TRACKER_FIELD,
         label: "Per tracker id",
-    } as StructureFields;
+    } as ArtidocStructureFields;
 
     const float_field = {
         field_id: 142,
         type: FLOAT_FIELD,
         label: "Float",
-    } as StructureFields;
+    } as ArtidocStructureFields;
 
     const int_field = {
         field_id: 143,
         type: INT_FIELD,
         label: "Integer",
-    } as StructureFields;
+    } as ArtidocStructureFields;
 
     const priority_field = {
         field_id: 144,
         type: PRIORITY_FIELD,
         label: "Rank",
-    } as StructureFields;
+    } as ArtidocStructureFields;
 
     const computed_field = {
         field_id: 145,
         type: COMPUTED_FIELD,
         label: "Total remaining effort",
-    } as StructureFields;
+    } as ArtidocStructureFields;
 
     const submitted_by_field = {
         field_id: 146,
         type: SUBMITTED_BY_FIELD,
         label: "Submitted by",
-    } as StructureFields;
+    } as ArtidocStructureFields;
 
     const last_update_by_field = {
         field_id: 147,
         type: LAST_UPDATED_BY_FIELD,
         label: "Last update by",
-    } as StructureFields;
+    } as ArtidocStructureFields;
 
     const date_field = {
         field_id: 148,
         type: DATE_FIELD,
         label: "Date",
-    } as StructureFields;
+    } as ArtidocStructureFields;
 
     const submitted_on_field = {
         field_id: 149,
         type: SUBMISSION_DATE_FIELD,
         label: "Submitted on",
-    } as StructureFields;
+    } as ArtidocStructureFields;
 
     const last_update_date_field = {
         field_id: 150,
         type: LAST_UPDATE_DATE_FIELD,
         label: "Last update date",
-    } as StructureFields;
+    } as ArtidocStructureFields;
 
     const permissions_field = {
         field_id: 151,
         type: TRACKER_PERMISSION_FIELD,
         label: "Permissions field",
-    } as StructureFields;
+    } as ArtidocStructureFields;
 
-    const all_fields: Readonly<StructureFields[]> = [
+    const steps_definition_field = {
+        field_id: 152,
+        type: TTM_STEPS_DEFINITION_FIELD,
+        label: "Steps definition",
+    } as ArtidocStructureFields;
+
+    const all_fields: Readonly<ArtidocStructureFields[]> = [
         string_field,
         text_field,
         summary_field,
@@ -280,7 +289,7 @@ describe("getAvailableFields", () => {
             field_id: 591,
             label: "Access information left column",
             type: CONTAINER_COLUMN,
-        } as StructureFields,
+        } as ArtidocStructureFields,
         artifact_id_field,
         per_tracker_id_field,
         float_field,
@@ -293,6 +302,7 @@ describe("getAvailableFields", () => {
         submitted_on_field,
         last_update_date_field,
         permissions_field,
+        steps_definition_field,
     ];
 
     const tracker_information = {
@@ -339,6 +349,7 @@ describe("getAvailableFields", () => {
                 ConfigurationFieldBuilder.fromSupportedTrackerField(submitted_on_field),
                 ConfigurationFieldBuilder.fromSupportedTrackerField(last_update_date_field),
                 ConfigurationFieldBuilder.fromSupportedTrackerField(permissions_field),
+                ConfigurationFieldBuilder.fromSupportedTrackerField(steps_definition_field),
             ]);
         });
     });
