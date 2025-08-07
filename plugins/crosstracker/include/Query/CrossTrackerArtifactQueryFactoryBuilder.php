@@ -59,7 +59,6 @@ use Tuleap\CrossTracker\Query\Advanced\QueryValidation\Metadata\ArtifactIdMetada
 use Tuleap\CrossTracker\Query\Advanced\QueryValidation\Metadata\AssignedToChecker;
 use Tuleap\CrossTracker\Query\Advanced\QueryValidation\Metadata\InvalidMetadataChecker;
 use Tuleap\CrossTracker\Query\Advanced\QueryValidation\Metadata\MetadataChecker;
-use Tuleap\CrossTracker\Query\Advanced\QueryValidation\Metadata\MetadataUsageChecker;
 use Tuleap\CrossTracker\Query\Advanced\QueryValidation\Metadata\StatusChecker;
 use Tuleap\CrossTracker\Query\Advanced\QueryValidation\Metadata\SubmissionDateChecker;
 use Tuleap\CrossTracker\Query\Advanced\QueryValidation\Metadata\TextSemanticChecker;
@@ -196,7 +195,6 @@ final class CrossTrackerArtifactQueryFactoryBuilder
     public function getMetadataChecker(): MetadataChecker
     {
         return new MetadataChecker(
-            new MetadataUsageChecker(),
             new InvalidMetadataChecker(
                 new TextSemanticChecker(),
                 new StatusChecker(),

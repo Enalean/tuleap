@@ -28,13 +28,11 @@ use Tuleap\CrossTracker\Query\Advanced\QueryValidation\DuckTypedField\DuckTypedF
 use Tuleap\CrossTracker\Query\Advanced\QueryValidation\Metadata\ArtifactIdMetadataChecker;
 use Tuleap\CrossTracker\Query\Advanced\QueryValidation\Metadata\ArtifactSubmitterChecker;
 use Tuleap\CrossTracker\Query\Advanced\QueryValidation\Metadata\AssignedToChecker;
-use Tuleap\CrossTracker\Query\Advanced\QueryValidation\Metadata\CheckMetadataUsage;
 use Tuleap\CrossTracker\Query\Advanced\QueryValidation\Metadata\InvalidMetadataChecker;
 use Tuleap\CrossTracker\Query\Advanced\QueryValidation\Metadata\MetadataChecker;
 use Tuleap\CrossTracker\Query\Advanced\QueryValidation\Metadata\StatusChecker;
 use Tuleap\CrossTracker\Query\Advanced\QueryValidation\Metadata\SubmissionDateChecker;
 use Tuleap\CrossTracker\Query\Advanced\QueryValidation\Metadata\TextSemanticChecker;
-use Tuleap\CrossTracker\Tests\Stub\Query\Advanced\QueryValidation\Metadata\MetadataCheckerStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\LegacyTabTranslationsSupport;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -74,7 +72,6 @@ final class InvalidOrderByBuilderTest extends TestCase
 {
     use LegacyTabTranslationsSupport;
 
-    private CheckMetadataUsage $metadata_checker;
     /**
      * @var Tracker[]
      */
@@ -85,7 +82,6 @@ final class InvalidOrderByBuilderTest extends TestCase
     #[\Override]
     protected function setUp(): void
     {
-        $this->metadata_checker       = MetadataCheckerStub::withValidMetadata();
         $this->used_field_retriever   = RetrieveUsedFieldsStub::withNoFields();
         $this->status_field_retriever = RetrieveSemanticStatusFieldStub::build();
     }
@@ -137,7 +133,6 @@ final class InvalidOrderByBuilderTest extends TestCase
                 )
             ),
             new MetadataChecker(
-                $this->metadata_checker,
                 new InvalidMetadataChecker(
                     new TextSemanticChecker(),
                     new StatusChecker(),
@@ -162,17 +157,6 @@ final class InvalidOrderByBuilderTest extends TestCase
         $result = $this->checkOrderBy(new OrderBy(new Metadata('blabla'), OrderByDirection::ASCENDING));
         self::assertNotNull($result);
         self::assertSame('Sorting artifacts by @blabla is not allowed. Please refine your query or check the configuration of the trackers.', $result->message);
-    }
-
-    public function testItReturnsErrorIfSortOnSemanticNotDefined(): void
-    {
-        $this->metadata_checker = MetadataCheckerStub::withInvalidMetadata();
-        $result                 = $this->checkOrderBy(new OrderBy(new Metadata('title'), OrderByDirection::ASCENDING));
-        self::assertNotNull($result);
-        self::assertSame(
-            'All trackers involved in the query do not have the semantic title defined. Please refine your query or check the configuration of the trackers.',
-            $result->message,
-        );
     }
 
     public function testItReturnsErrorIfSemanticListWithMultipleValues(): void
