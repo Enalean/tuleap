@@ -16,8 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+import type { MockInstance } from "vitest";
 import { describe, it, beforeEach, expect, vi } from "vitest";
-import { shallowMount } from "@vue/test-utils";
+import { shallowMount, type VueWrapper } from "@vue/test-utils";
 import * as rest_querier from "./rest-querier.js";
 import { mockFetchError } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 import LabeledItemsList from "./LabeledItemsList.vue";
@@ -27,9 +28,9 @@ import { getGlobalTestOptions } from "./helpers/global-options-for-tests.js";
 vi.useFakeTimers();
 
 describe("LabeledItemsList", () => {
-    let getLabeledItems;
+    let getLabeledItems: MockInstance;
 
-    const getWrapper = async (labels_ids) => {
+    const getWrapper = async (labels_ids: number[]): Promise<VueWrapper> => {
         const wrapper = shallowMount(LabeledItemsList, {
             global: {
                 ...getGlobalTestOptions(),
@@ -105,7 +106,7 @@ describe("LabeledItemsList", () => {
             [false, "won't be displayed"],
         ])(
             "When has_more in the payload is %s, then the load-more button %s",
-            async (has_more_items_to_load) => {
+            async (has_more_items_to_load: boolean) => {
                 getLabeledItems.mockReturnValue(
                     Promise.resolve({
                         labeled_items: [{ title: "test 1" }],
