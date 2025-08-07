@@ -52,7 +52,10 @@
 </template>
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
+import { useGettext } from "vue3-gettext";
 import { useMutations, useStore } from "vuex-composition-helpers";
+
+const { $gettext } = useGettext();
 
 const { setSelectedTrackerTemplate } = useMutations(["setSelectedTrackerTemplate"]);
 

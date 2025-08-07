@@ -18,14 +18,24 @@
  */
 
 import type { State } from "../../../store/type";
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { mount } from "@vue/test-utils";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import StepTwo from "./StepTwo.vue";
-import { createTrackerCreationLocalVue } from "../../../helpers/local-vue-for-tests";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-tests";
+
+function noop(): void {
+    //Do nothing
+}
 
 describe("StepTwo", () => {
-    async function getWrapper(
+    let mock_init_tracker_name: jest.Mock, mock_init_with_project: jest.Mock;
+
+    beforeEach(() => {
+        mock_init_tracker_name = jest.fn();
+        mock_init_with_project = jest.fn();
+    });
+
+    function getWrapper(
         state: State = {} as State,
         is_a_duplication = false,
         is_a_xml_import = false,
@@ -33,56 +43,52 @@ describe("StepTwo", () => {
         is_a_duplication_of_a_tracker_from_another_project = false,
         is_created_from_default_template = false,
         is_created_from_jira = false,
-    ): Promise<Wrapper<Vue>> {
+    ): VueWrapper {
         return mount(StepTwo, {
-            mocks: {
-                $store: createStoreMock({
+            shallow: true,
+            global: {
+                ...getGlobalTestOptions({
                     state,
                     getters: {
-                        is_a_duplication,
-                        is_a_xml_import,
-                        is_created_from_empty,
-                        is_a_duplication_of_a_tracker_from_another_project,
-                        is_ready_to_submit: true,
-                        is_created_from_default_template,
-                        is_created_from_jira,
+                        is_a_duplication: () => is_a_duplication,
+                        is_a_xml_import: () => is_a_xml_import,
+                        is_created_from_empty: () => is_created_from_empty,
+                        is_a_duplication_of_a_tracker_from_another_project: () =>
+                            is_a_duplication_of_a_tracker_from_another_project,
+                        is_created_from_default_template: () => is_created_from_default_template,
+                        is_created_from_jira: () => is_created_from_jira,
+                        is_ready_to_submit: () => true,
+                    },
+                    mutations: {
+                        initTrackerNameWithTheSelectedTemplateName: mock_init_tracker_name,
+                        initTrackerNameWithTheSelectedProjectTrackerTemplateName:
+                            mock_init_with_project,
+                        reinitTrackerToBeCreatedData: noop,
                     },
                 }),
-            },
-            localVue: await createTrackerCreationLocalVue(),
-            stubs: {
-                "field-chosen-template": true,
-                "field-csrf-token": true,
-                "field-name": true,
-                "field-shortname": true,
-                "field-description": true,
-                "field-tracker-template-id": true,
-                "router-link": true,
-                "field-tracker-empty": true,
-                "field-tracker-color": true,
-                "field-from-jira": true,
+                stubs: {
+                    StepLayout: false,
+                },
             },
         });
     }
 
     describe("Tracker duplication", () => {
-        let wrapper: Wrapper<Vue>;
-
-        beforeEach(async () => {
-            wrapper = await getWrapper({} as State, true);
-        });
-
         it("auto-fills the tracker name with the name of the selected tracker", () => {
-            expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
-                "initTrackerNameWithTheSelectedTemplateName",
-            );
+            getWrapper({} as State, true);
+
+            expect(mock_init_tracker_name).toHaveBeenCalled();
         });
 
         it("renders a field-tracker-template-id", () => {
+            const wrapper = getWrapper({} as State, true);
+
             expect(wrapper.find("field-tracker-template-id-stub").exists()).toBe(true);
         });
 
         it("Sets the right encoding type for the form", () => {
+            const wrapper = getWrapper({} as State, true);
+
             expect(wrapper.get("#tracker-creation-form").attributes("enctype")).toBe(
                 "application/x-www-form-urlencoded",
             );
@@ -90,37 +96,30 @@ describe("StepTwo", () => {
     });
 
     describe("From default template", () => {
-        it("auto-fills the tracker name with the name of the selected tracker", async () => {
-            const wrapper = await getWrapper({} as State, false, false, false, false, true);
-            expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
-                "initTrackerNameWithTheSelectedTemplateName",
-            );
+        it("auto-fills the tracker name with the name of the selected tracker", () => {
+            getWrapper({} as State, false, false, false, false, true);
+            expect(mock_init_tracker_name).toHaveBeenCalled();
         });
 
-        it("renders a field-tracker-template-id", async () => {
-            const wrapper = await getWrapper({} as State, false, false, false, false, true);
+        it("renders a field-tracker-template-id", () => {
+            const wrapper = getWrapper({} as State, false, false, false, false, true);
             expect(wrapper.find("field-tracker-template-id-stub").exists()).toBe(true);
         });
     });
 
     describe("Tracker from another project duplication", () => {
-        let wrapper: Wrapper<Vue>;
-
-        beforeEach(async () => {
-            wrapper = await getWrapper({} as State, false, false, false, true);
-        });
-
         it("auto-fills the tracker name with the name of the selected tracker", () => {
-            expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
-                "initTrackerNameWithTheSelectedProjectTrackerTemplateName",
-            );
+            getWrapper({} as State, false, false, false, true);
+            expect(mock_init_with_project).toHaveBeenCalled();
         });
 
         it("renders a field-tracker-template-id", () => {
+            const wrapper = getWrapper({} as State, false, false, false, true);
             expect(wrapper.find("field-tracker-template-id-stub").exists()).toBe(true);
         });
 
         it("Sets the right encoding type for the form", () => {
+            const wrapper = getWrapper({} as State, false, false, false, true);
             expect(wrapper.get("#tracker-creation-form").attributes("enctype")).toBe(
                 "application/x-www-form-urlencoded",
             );
@@ -128,9 +127,9 @@ describe("StepTwo", () => {
     });
 
     describe("XML import", () => {
-        let wrapper: Wrapper<Vue>;
+        let wrapper: VueWrapper;
 
-        beforeEach(async () => {
+        beforeEach(() => {
             const file_input = document.implementation.createHTMLDocument().createElement("input");
             file_input.setAttribute("data-test", "injected-file-input");
 
@@ -142,7 +141,7 @@ describe("StepTwo", () => {
                 selected_xml_file_input: file_input,
             } as State;
 
-            wrapper = await getWrapper(state, false, true);
+            wrapper = getWrapper(state, false, true);
         });
 
         it("appends the file input filled during step 1 to the form", () => {
@@ -158,13 +157,13 @@ describe("StepTwo", () => {
     });
 
     describe("Create from empty", () => {
-        let wrapper: Wrapper<Vue>;
+        let wrapper: VueWrapper;
 
-        beforeEach(async () => {
+        beforeEach(() => {
             const file_input = document.implementation.createHTMLDocument().createElement("input");
             file_input.setAttribute("data-test", "injected-file-input");
 
-            wrapper = await getWrapper(
+            wrapper = getWrapper(
                 {
                     tracker_to_be_created: {
                         name: "Kanban in the trees",
@@ -192,25 +191,18 @@ describe("StepTwo", () => {
     });
 
     describe("Create from jira", () => {
-        let wrapper: Wrapper<Vue>;
-
-        beforeEach(async () => {
-            wrapper = await getWrapper({} as State, false, false, false, false, false, true);
-        });
-
         it("appends the hidden input", () => {
+            const wrapper = getWrapper({} as State, false, false, false, false, false, true);
             expect(wrapper.find("field-from-jira-stub").exists()).toBe(true);
         });
     });
 
     describe("Remove error", () => {
-        beforeEach(() => {
+        it("Global HTML no longer have a feedback error", () => {
             const error = document.implementation.createHTMLDocument().createElement("div");
             error.setAttribute("id", "feedback");
-        });
 
-        it("Global HTML no longer have a feedback error", async () => {
-            await getWrapper({} as State, true);
+            getWrapper({} as State, true);
             expect(document.getElementById("feedback")).toBeNull();
         });
     });

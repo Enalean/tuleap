@@ -50,8 +50,11 @@
     </div>
 </template>
 <script setup lang="ts">
+import { useGettext } from "vue3-gettext";
 import { useState, useStore, useGetters } from "vuex-composition-helpers";
 import type { State } from "../../../../store/type";
+
+const { $gettext } = useGettext();
 
 const { tracker_to_be_created } = useState<Pick<State, "tracker_to_be_created">>([
     "tracker_to_be_created",

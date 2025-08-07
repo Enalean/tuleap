@@ -75,9 +75,12 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { useState, useStore, useGetters } from "vuex-composition-helpers";
+import { useGettext } from "vue3-gettext";
 import type { State } from "../../../../store/type";
 import { TRACKER_SHORTNAME_FORMAT } from "../../../../constants";
 import FieldShortnameSlugified from "./FieldShortnameSlugified.vue";
+
+const { $gettext } = useGettext();
 
 const { tracker_to_be_created } = useState<Pick<State, "tracker_to_be_created">>([
     "tracker_to_be_created",

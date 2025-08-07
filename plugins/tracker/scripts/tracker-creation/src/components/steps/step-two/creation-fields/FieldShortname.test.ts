@@ -18,36 +18,16 @@
  */
 
 import type { State } from "../../../../store/type";
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import { createTrackerCreationLocalVue } from "../../../../helpers/local-vue-for-tests";
+import { getGlobalTestOptions } from "../../../../helpers/global-options-for-tests";
 import FieldShortname from "./FieldShortname.vue";
 
 describe("FieldShortname", () => {
-    let state: State;
-
-    async function getWrapper(
-        can_display_slugify_mode: boolean,
-        is_shortname_valid = true,
-        is_shortname_already_used = true,
-    ): Promise<Wrapper<Vue>> {
-        return shallowMount(FieldShortname, {
-            mocks: {
-                $store: createStoreMock({
-                    state,
-                    getters: {
-                        can_display_slugify_mode,
-                        is_shortname_valid,
-                        is_shortname_already_used,
-                    },
-                }),
-            },
-            localVue: await createTrackerCreationLocalVue(),
-        });
-    }
+    let state: State, mock_set_tracker_short_name: jest.Mock;
 
     beforeEach(() => {
+        mock_set_tracker_short_name = jest.fn();
         state = {
             tracker_to_be_created: {
                 name: "Kanban in the trees",
@@ -56,50 +36,73 @@ describe("FieldShortname", () => {
         } as State;
     });
 
-    it("The input is rendered", async () => {
-        const wrapper = await getWrapper(false);
-        const shortname_input = wrapper.get("[data-test=tracker-shortname-input]");
+    function getWrapper(
+        can_display_slugify_mode: boolean,
+        is_shortname_valid = true,
+        is_shortname_already_used = true,
+    ): VueWrapper {
+        return shallowMount(FieldShortname, {
+            global: {
+                ...getGlobalTestOptions({
+                    state,
+                    getters: {
+                        can_display_slugify_mode: () => can_display_slugify_mode,
+                        is_shortname_valid: () => is_shortname_valid,
+                        is_shortname_already_used: () => is_shortname_already_used,
+                    },
+                    mutations: {
+                        setTrackerShortName: mock_set_tracker_short_name,
+                    },
+                }),
+            },
+        });
+    }
+
+    it("The input is rendered", () => {
+        const wrapper = getWrapper(false);
+        const shortname_input = wrapper.find("[data-test=tracker-shortname-input]");
 
         expect(shortname_input.exists()).toBe(true);
     });
 
-    it("is initialized with the tracker shortname from the store", async () => {
-        const wrapper = await getWrapper(false);
-        const shortname_input = wrapper.get("[data-test=tracker-shortname-input]");
-        const input_element: HTMLInputElement = shortname_input.element as HTMLInputElement;
+    it("is initialized with the tracker shortname from the store", () => {
+        const wrapper = getWrapper(false);
+        const input_element = wrapper.get<HTMLInputElement>(
+            "[data-test=tracker-shortname-input]",
+        ).element;
 
-        expect(input_element.value).toEqual(state.tracker_to_be_created.shortname);
+        expect(input_element.value).toBe(state.tracker_to_be_created.shortname);
     });
 
-    it("sets the tracker shortname with the entered value on the keyup event", async () => {
-        const wrapper = await getWrapper(false);
-        const shortname_input = wrapper.get("[data-test=tracker-shortname-input]");
+    it("sets the tracker shortname with the entered value on the keyup event", () => {
+        const wrapper = getWrapper(false);
+        const shortname_input = wrapper.get<HTMLInputElement>(
+            "[data-test=tracker-shortname-input]",
+        );
 
         shortname_input.trigger("keyup");
 
-        const input_element: HTMLInputElement = shortname_input.element as HTMLInputElement;
-
-        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
-            "setTrackerShortName",
-            input_element.value,
+        expect(mock_set_tracker_short_name).toHaveBeenCalledWith(
+            expect.anything(),
+            shortname_input.element.value,
         );
     });
 
-    it("If the slugify mode is active, then it displays the slugified mode", async () => {
-        const wrapper = await getWrapper(true, true, false);
+    it("If the slugify mode is active, then it displays the slugified mode", () => {
+        const wrapper = getWrapper(true, true, false);
 
         expect(wrapper.find("field-shortname-slugified-stub").exists()).toBe(true);
     });
 
-    it("Enters the error mode when the shortname does not respect the expected format", async () => {
-        const wrapper = await getWrapper(false, false);
+    it("Enters the error mode when the shortname does not respect the expected format", () => {
+        const wrapper = getWrapper(false, false);
 
         expect(wrapper.find("[data-test=shortname-error]").exists()).toBe(true);
         expect(wrapper.classes("tlp-form-element-error")).toBe(true);
     });
 
-    it("Enters the error mode when the chosen name already exist", async () => {
-        const wrapper = await getWrapper(false, false, true);
+    it("Enters the error mode when the chosen name already exist", () => {
+        const wrapper = getWrapper(false, false, true);
 
         expect(wrapper.classes()).toContain("tlp-form-element-error");
         expect(wrapper.find("[data-test=shortname-taken-error]").exists()).toBe(true);

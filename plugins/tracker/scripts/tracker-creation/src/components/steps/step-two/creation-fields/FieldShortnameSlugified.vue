@@ -42,8 +42,11 @@
     </div>
 </template>
 <script setup lang="ts">
+import { useGettext } from "vue3-gettext";
 import { useMutations, useState } from "vuex-composition-helpers";
 import type { TrackerToBeCreatedMandatoryData } from "../../../../store/type";
+
+const { $gettext } = useGettext();
 
 const { tracker_to_be_created } = useState<{
     tracker_to_be_created: TrackerToBeCreatedMandatoryData;

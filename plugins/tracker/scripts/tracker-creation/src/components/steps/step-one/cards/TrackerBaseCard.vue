@@ -29,8 +29,8 @@
                 type="radio"
                 class="tracker-creation-template-card-radio-button"
                 name="selected-option"
-                v-bind:data-test="`selected-option-${optionName}`"
-                v-on:change="setActiveOption(optionName)"
+                v-bind:data-test="`selected-option-${option_name}`"
+                v-on:change="setActiveOption(option_name)"
             />
             <slot name="content" v-bind:is-option-active="is_option_active"></slot>
         </label>
@@ -42,13 +42,13 @@ import { useState, useMutations } from "vuex-composition-helpers";
 import type { CreationOptions } from "../../../../store/type";
 
 const props = defineProps<{
-    optionName: string | CreationOptions;
+    option_name: string | CreationOptions;
 }>();
 
 const { active_option } = useState(["active_option"]);
 const { setActiveOption } = useMutations(["setActiveOption"]);
 
 const is_option_active = computed((): boolean => {
-    return active_option.value === props.optionName;
+    return active_option.value === props.option_name;
 });
 </script>

@@ -16,22 +16,24 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import Vue from "vue";
-import VueRouter from "vue-router";
+
+import type { Router } from "vue-router";
+import { createRouter, createWebHistory } from "vue-router";
 import StepOne from "../components/steps/step-one/StepOne.vue";
 import StepTwo from "../components/steps/step-two/StepTwo.vue";
 
-Vue.use(VueRouter);
-
-export function createRouter(project_unix_name: string): VueRouter {
+export function createInitializedRouter(project_unix_name: string): Router {
     const STEP_1_NAME = "step-1";
     const STEP_2_NAME = "step-2";
     const base = `/plugins/tracker/${project_unix_name}`;
 
-    const router = new VueRouter({
-        base,
-        mode: "history",
+    const router = createRouter({
+        history: createWebHistory(base),
         routes: [
+            {
+                path: "/",
+                component: StepOne,
+            },
             {
                 path: "/new",
                 name: STEP_1_NAME,

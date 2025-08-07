@@ -33,5 +33,8 @@
         </div>
     </div>
 </template>
+<script setup lang="ts">
+import { useGettext } from "vue3-gettext";
 
-<script setup lang="ts"></script>
+const { $gettext } = useGettext();
+</script>

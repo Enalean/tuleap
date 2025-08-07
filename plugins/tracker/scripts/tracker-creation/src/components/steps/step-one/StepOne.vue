@@ -19,11 +19,11 @@
 
 <template>
     <step-layout next_step_name="step-2">
-        <template #step_info>
+        <template v-slot:step_info>
             <step-one-info />
         </template>
 
-        <template #interactive_content v-if="store.state.project_templates.length > 0">
+        <template v-slot:interactive_content v-if="store.state.project_templates.length > 0">
             <h3 data-test="platform-template-name">
                 {{ title_company_name }}
             </h3>
@@ -32,12 +32,12 @@
             </div>
         </template>
 
-        <template #interactive_content_default>
+        <template v-slot:interactive_content_default>
             <h3>{{ default_templates_title }}</h3>
             <default-template-section />
         </template>
 
-        <template #interactive_content_advanced>
+        <template v-slot:interactive_content_advanced>
             <h3>{{ advanced_users_title }}</h3>
             <div class="tracker-creation-starting-point-options">
                 <tracker-from-another-project-card />
@@ -50,6 +50,7 @@
 </template>
 <script setup lang="ts">
 import { computed, onMounted } from "vue";
+import { useGettext } from "vue3-gettext";
 import TrackerTemplateCard from "./cards/TrackerTemplate/TrackerTemplateCard.vue";
 import TrackerXmlFileCard from "./cards/TrackerXmlFile/TrackerXmlFileCard.vue";
 import StepLayout from "../layout/StepLayout.vue";
@@ -59,12 +60,11 @@ import TrackerFromAnotherProjectCard from "./cards/TrackerFromAnotherProject/Tra
 import DefaultTemplateSection from "./cards/DefaultTemplate/DefaultTemplateSection.vue";
 import TrackerFromJiraCard from "./cards/FromJira/TrackerFromJiraCard.vue";
 import { useState, useStore } from "vuex-composition-helpers";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
 
 const { company_name } = useState(["company_name"]);
 const store = useStore();
 
-const { interpolate, $gettext, $ngettext } = useGettext();
+const { $gettext, $ngettext } = useGettext();
 
 onMounted(() => {
     store.commit("setSlugifyShortnameMode", true);
@@ -73,7 +73,7 @@ onMounted(() => {
 const title_company_name = computed(() => {
     return company_name.value === "Tuleap"
         ? $gettext("Custom templates")
-        : interpolate($gettext("%{ company_name } templates"), {
+        : $gettext("%{ company_name } templates", {
               company_name: company_name.value,
           });
 });

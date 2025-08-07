@@ -26,7 +26,9 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { useState } from "vuex-composition-helpers";
+import { useGettext } from "vue3-gettext";
 
+const { $gettext } = useGettext();
 const { project_id } = useState(["project_id"]);
 
 const url = computed(() => {

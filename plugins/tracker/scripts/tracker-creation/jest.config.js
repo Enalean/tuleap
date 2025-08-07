@@ -28,13 +28,13 @@ const jest_base_config = defineJestConfiguration();
 export default {
     ...jest_base_config,
     displayName: "tracker/tracker-creation",
+    transform: {
+        ...jest_base_config.transform,
+        "^.+\\.vue$": "@vue/vue3-jest",
+    },
     moduleNameMapper: {
         ...jest_base_config.moduleNameMapper,
         "^jquery$": "<rootDir>/node_modules/jquery/dist/jquery.js",
         "^vue$": path.resolve(__dirname, "./node_modules/vue/"),
-    },
-    transform: {
-        ...jest_base_config.transform,
-        "^.+\\.vue$": "unplugin-vue2-script-setup/jest",
     },
 };

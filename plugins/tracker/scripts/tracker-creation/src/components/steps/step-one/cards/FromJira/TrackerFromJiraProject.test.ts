@@ -19,8 +19,8 @@
  */
 
 import TrackerFromJiraProject from "./TrackerFromJiraProject.vue";
-import { createTrackerCreationLocalVue } from "../../../../../helpers/local-vue-for-tests";
-import type { Wrapper } from "@vue/test-utils";
+import { getGlobalTestOptions } from "../../../../../helpers/global-options-for-tests";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import type {
     Credentials,
@@ -29,12 +29,38 @@ import type {
     State,
     TrackerList,
 } from "../../../../../store/type";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
+
+function noop(): void {
+    //Do nothing
+}
 
 describe("TrackerFromJiraProject", () => {
-    let state: State;
-    let wrapper: Wrapper<Vue>;
-    beforeEach(async () => {
+    let state: State, mock_get_jira_tracker_list: jest.Mock;
+
+    function getWrapper(): VueWrapper<InstanceType<typeof TrackerFromJiraProject>> {
+        return shallowMount(TrackerFromJiraProject, {
+            global: {
+                ...getGlobalTestOptions({
+                    state,
+                    mutations: {
+                        setTrackerList: noop,
+                        setProject: noop,
+                    },
+                    actions: { getJiraTrackerList: mock_get_jira_tracker_list },
+                }),
+            },
+            props: {
+                project_list: [
+                    { id: "TO", label: "toto" } as ProjectList,
+                    { id: "TU", label: "tutu" } as ProjectList,
+                ],
+            },
+        });
+    }
+
+    beforeEach(() => {
+        mock_get_jira_tracker_list = jest.fn();
+
         const tracker_list: TrackerList[] = [];
         state = {
             from_jira_data: {
@@ -48,31 +74,18 @@ describe("TrackerFromJiraProject", () => {
                 tracker: null,
             },
         } as State;
-
-        wrapper = shallowMount(TrackerFromJiraProject, {
-            localVue: await createTrackerCreationLocalVue(),
-            mocks: {
-                $store: createStoreMock({
-                    state,
-                }),
-            },
-            propsData: {
-                project_list: [
-                    { id: "TO", label: "toto" } as ProjectList,
-                    { id: "TU", label: "tutu" } as ProjectList,
-                ],
-            },
-        });
     });
 
     it("load the project list", () => {
+        const wrapper = getWrapper();
+
         const value = "TO";
 
-        (wrapper.find("[data-test=project-TO]").element as HTMLOptionElement).selected = true;
+        wrapper.get<HTMLOptionElement>("[data-test=project-TO]").element.selected = true;
 
         wrapper.get("[data-test=project-list]").trigger("change");
 
-        expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith("getJiraTrackerList", {
+        expect(mock_get_jira_tracker_list).toHaveBeenCalledWith(expect.anything(), {
             credentials: state.from_jira_data.credentials,
             project_key: value,
         });
@@ -80,62 +93,49 @@ describe("TrackerFromJiraProject", () => {
     });
 
     it("display the error message", async () => {
-        await wrapper.setData({ error_message: "Oh snap!" });
+        const wrapper = getWrapper();
+
+        wrapper.vm.error_message = "Oh snap!";
+        await wrapper.vm.$nextTick();
 
         expect(wrapper.find("[data-test=jira-fail-load-trackers]").exists()).toBe(true);
     });
-});
 
-describe("TrackerFromJiraProject reload state", () => {
-    let state: State;
-    let wrapper: Wrapper<Vue>;
-    beforeEach(async () => {
-        const project_one: ProjectList = { id: "TO", label: "Toto" };
-        const project_two: ProjectList = { id: "TU", label: "Tutu" };
+    describe("TrackerFromJiraProject reload state", () => {
+        beforeEach(() => {
+            const project_one: ProjectList = { id: "TO", label: "Toto" };
+            const project_two: ProjectList = { id: "TU", label: "Tutu" };
 
-        const tracker_one: TrackerList = { id: "Tr", name: "Tracker 1" };
-        const tracker_two: TrackerList = { id: "Tra", name: "Tracker 2" };
+            const tracker_one: TrackerList = { id: "Tr", name: "Tracker 1" };
+            const tracker_two: TrackerList = { id: "Tra", name: "Tracker 2" };
 
-        state = {
-            from_jira_data: {
-                credentials: {
-                    server_url: "https://example.com",
-                    user_email: "user-email@example.com",
-                    token: "azerty1234",
-                } as Credentials,
-                project_list: [project_one, project_two] as ProjectList[],
-                tracker_list: [tracker_one, tracker_two] as TrackerList[],
-                project: project_two as ProjectList,
-                tracker: tracker_two as TrackerList,
-            } as JiraImportData,
-        } as State;
-
-        wrapper = shallowMount(TrackerFromJiraProject, {
-            localVue: await createTrackerCreationLocalVue(),
-            mocks: {
-                $store: createStoreMock({
-                    state,
-                }),
-            },
-            propsData: {
-                project_list: [
-                    { id: "TO", label: "toto" } as ProjectList,
-                    { id: "TU", label: "tutu" } as ProjectList,
-                ],
-            },
+            state = {
+                from_jira_data: {
+                    credentials: {
+                        server_url: "https://example.com",
+                        user_email: "user-email@example.com",
+                        token: "azerty1234",
+                    } as Credentials,
+                    project_list: [project_one, project_two] as ProjectList[],
+                    tracker_list: [tracker_one, tracker_two] as TrackerList[],
+                    project: project_two as ProjectList,
+                    tracker: tracker_two as TrackerList,
+                } as JiraImportData,
+            } as State;
         });
-    });
-    it("does not load twice the data", () => {
-        const selected_project = (
-            wrapper.find("[data-test=project-list]").element as HTMLSelectElement
-        ).value;
-        expect(selected_project).toBe(JSON.stringify({ id: "TU", label: "tutu" }));
 
-        const selected_tracker = (
-            wrapper.find("[data-test=tracker-name]").element as HTMLSelectElement
-        ).value;
-        expect(selected_tracker).toBe(JSON.stringify({ id: "Tra", name: "Tracker 2" }));
+        it("does not load twice the data", () => {
+            const wrapper = getWrapper();
 
-        expect(wrapper.vm.$store.dispatch).not.toHaveBeenCalled();
+            const selected_project = wrapper.find<HTMLSelectElement>("[data-test=project-list]")
+                .element.value;
+            expect(selected_project).toBe(JSON.stringify({ id: "TU", label: "tutu" }));
+
+            const selected_tracker = wrapper.find<HTMLSelectElement>("[data-test=tracker-name]")
+                .element.value;
+            expect(selected_tracker).toBe(JSON.stringify({ id: "Tra", name: "Tracker 2" }));
+
+            expect(mock_get_jira_tracker_list).not.toHaveBeenCalled();
+        });
     });
 });

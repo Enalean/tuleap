@@ -8,25 +8,21 @@ exports[`FieldFromJira Displays a card for bug tracker 1`] = `
     type="hidden"
     value="https://example.com"
   />
-   
   <input
     name="jira_user"
     type="hidden"
     value="user-email@example.com"
   />
-   
   <input
     name="jira_token"
     type="hidden"
     value="azerty1234"
   />
-   
   <input
     name="jira_project"
     type="hidden"
-    value="{"id":"AB","label":"A beautifull porject"}"
+    value="{"id":"AB","label":"A beautiful project"}"
   />
-   
   <input
     name="jira_tracker_name"
     type="hidden"

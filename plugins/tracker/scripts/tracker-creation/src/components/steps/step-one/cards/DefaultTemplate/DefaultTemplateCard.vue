@@ -19,8 +19,8 @@
   -->
 
 <template>
-    <tracker-base-card v-bind:option-name="tracker.id">
-        <template #content>
+    <tracker-base-card v-bind:option_name="tracker.id">
+        <template v-slot:content>
             <div class="card-glyph">
                 <svg-bug v-if="props.tracker.id === 'default-bug'" />
                 <svg-activity v-else-if="props.tracker.id === 'default-activity'" />

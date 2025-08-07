@@ -39,7 +39,7 @@
             v-if="should_display_connection"
             data-test="should-display-connexion"
         >
-            <span>{{ $gettext("Connect") }}</span>
+            {{ $gettext("Connect") }}
             <i class="fa tlp-button-icon" v-bind:class="icon_class"></i>
         </button>
         <tracker-from-jira-project v-else-if="project_list" v-bind:project_list="project_list" />
@@ -48,12 +48,14 @@
 
 <script setup lang="ts">
 import { ref, computed, onBeforeMount } from "vue";
+import { useGettext } from "vue3-gettext";
 import type { Credentials, ProjectList } from "../../../../../store/type";
 import TrackerFromJiraProject from "./TrackerFromJiraProject.vue";
 import TrackerFromJiraServer from "./TrackerFromJiraServer.vue";
 import { FetchWrapperError } from "@tuleap/tlp-fetch";
 import { useActions, useMutations, useState } from "vuex-composition-helpers";
 
+const { $gettext } = useGettext();
 const { from_jira_data } = useState(["from_jira_data"]);
 const { setJiraCredentials, setProjectList } = useMutations([
     "setJiraCredentials",
@@ -124,4 +126,6 @@ const should_be_disabled = computed((): boolean => {
         is_loading.value
     );
 });
+
+defineExpose({ credentials, error_message });
 </script>

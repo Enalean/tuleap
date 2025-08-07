@@ -19,10 +19,10 @@
 
 <template>
     <step-layout previous_step_name="step-1">
-        <template #step_info>
+        <template v-slot:step_info>
             <step-two-info />
         </template>
-        <template #interactive_content>
+        <template v-slot:interactive_content>
             <form
                 ref="tracker_creation_form"
                 method="post"

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
  *
- *  This file is a part of Tuleap.
+ * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,21 +15,26 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import TrackerFromJira from "./TrackerFromJira.vue";
-import { createTrackerCreationLocalVue } from "../../../../../helpers/local-vue-for-tests";
+import { getGlobalTestOptions } from "../../../../../helpers/global-options-for-tests";
 import type { Credentials, JiraImportData, State } from "../../../../../store/type";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import type Vue from "vue";
+
+function noop(): void {
+    //Do nothing
+}
 
 describe("TrackerFromJira", () => {
-    let wrapper: Wrapper<Vue>;
+    let mock_get_jira_project_list: jest.Mock;
 
-    beforeEach(async () => {
+    beforeEach(() => {
+        mock_get_jira_project_list = jest.fn();
+    });
+
+    function getWrapper(): VueWrapper<InstanceType<typeof TrackerFromJira>> {
         const state = {
             from_jira_data: {
                 credentials: {
@@ -40,15 +45,21 @@ describe("TrackerFromJira", () => {
             } as JiraImportData,
         } as State;
 
-        wrapper = shallowMount(TrackerFromJira, {
-            localVue: await createTrackerCreationLocalVue(),
-            mocks: {
-                $store: createStoreMock({
+        return shallowMount(TrackerFromJira, {
+            global: {
+                ...getGlobalTestOptions({
                     state,
+                    mutations: {
+                        setJiraCredentials: noop,
+                        setProjectList: noop,
+                    },
+                    actions: {
+                        getJiraProjectList: mock_get_jira_project_list,
+                    },
                 }),
             },
         });
-    });
+    }
 
     it("load the project list", async () => {
         const credentials = {
@@ -57,11 +68,13 @@ describe("TrackerFromJira", () => {
             token: "azerty1234",
         } as Credentials;
 
-        await wrapper.setData({ credentials });
+        const wrapper = getWrapper();
 
-        await wrapper.trigger("submit");
+        wrapper.vm.credentials = credentials;
+        wrapper.trigger("submit");
 
-        expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith("getJiraProjectList", credentials);
+        expect(mock_get_jira_project_list).toHaveBeenCalledWith(expect.anything(), credentials);
+        await wrapper.vm.$nextTick();
         expect(wrapper.find("[data-test=should-display-connexion]").exists()).toBe(true);
         expect(wrapper.find("[data-test=jira-fail-load-project]").exists()).toBe(false);
 
@@ -69,7 +82,10 @@ describe("TrackerFromJira", () => {
     });
 
     it("display the error message", async () => {
-        await wrapper.setData({ error_message: "Oh snap!" });
+        const wrapper = getWrapper();
+
+        wrapper.vm.error_message = "Oh snap!";
+        await wrapper.vm.$nextTick();
 
         expect(wrapper.find("[data-test=jira-fail-load-project]").exists()).toBe(true);
     });

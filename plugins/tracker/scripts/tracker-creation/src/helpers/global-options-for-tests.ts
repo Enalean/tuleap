@@ -17,20 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vuex from "vuex";
-import { createLocalVue } from "@vue/test-utils";
-import { initVueGettext } from "@tuleap/vue2-gettext-init";
-import type { Vue } from "vue/types/vue";
-import VueRouter from "vue-router";
+import type { MountingOptions } from "@vue/test-utils";
+import { createGettext } from "vue3-gettext";
+import type { StoreOptions } from "vuex";
+import { createStore } from "vuex";
+import type { State } from "../store/type";
 
-export async function createTrackerCreationLocalVue(): Promise<typeof Vue> {
-    const local_vue = createLocalVue();
-    await initVueGettext(local_vue, () => {
-        throw new Error("Fallback to default");
-    });
-
-    local_vue.use(Vuex);
-    local_vue.use(VueRouter);
-
-    return local_vue;
+export function getGlobalTestOptions(
+    store_options: StoreOptions<State>,
+): MountingOptions<unknown>["global"] {
+    return {
+        plugins: [createGettext({ silent: true }), createStore(store_options)],
+    };
 }

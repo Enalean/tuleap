@@ -18,10 +18,9 @@
  */
 
 import FieldChosenTemplate from "./FieldChosenTemplate.vue";
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import { createTrackerCreationLocalVue } from "../../../../helpers/local-vue-for-tests";
+import { getGlobalTestOptions } from "../../../../helpers/global-options-for-tests";
 import type {
     JiraImportData,
     ProjectList,
@@ -33,7 +32,7 @@ import type {
 describe("FieldChosenTemplate", () => {
     let state: State;
 
-    async function getWrapper(
+    function getWrapper(
         state: State,
         is_a_duplication = false,
         is_a_xml_import = false,
@@ -42,23 +41,24 @@ describe("FieldChosenTemplate", () => {
         project_of_selected_tracker_template: ProjectTemplate | null = null,
         is_created_from_default_template = false,
         is_created_from_jira = false,
-    ): Promise<Wrapper<Vue>> {
+    ): VueWrapper {
         return shallowMount(FieldChosenTemplate, {
-            mocks: {
-                $store: createStoreMock({
+            global: {
+                ...getGlobalTestOptions({
                     state,
                     getters: {
-                        is_created_from_empty,
-                        is_a_duplication,
-                        is_a_xml_import,
-                        is_a_duplication_of_a_tracker_from_another_project,
-                        project_of_selected_tracker_template,
-                        is_created_from_default_template,
-                        is_created_from_jira,
+                        is_created_from_empty: () => is_created_from_empty,
+                        is_a_duplication: () => is_a_duplication,
+                        is_a_xml_import: () => is_a_xml_import,
+                        is_a_duplication_of_a_tracker_from_another_project: () =>
+                            is_a_duplication_of_a_tracker_from_another_project,
+                        project_of_selected_tracker_template: () =>
+                            project_of_selected_tracker_template,
+                        is_created_from_default_template: () => is_created_from_default_template,
+                        is_created_from_jira: () => is_created_from_jira,
                     },
                 }),
             },
-            localVue: await createTrackerCreationLocalVue(),
         });
     }
 
@@ -100,17 +100,20 @@ describe("FieldChosenTemplate", () => {
                 },
             } as State;
 
-            const wrapper = await getWrapper(state, false, false, false, false, null, true);
+            const wrapper = getWrapper(state, false, false, false, false, null, true);
+
+            await wrapper.vm.$nextTick();
             expect(wrapper.find("[data-test=project-of-chosen-template]").exists()).toBe(false);
             expect(wrapper.get("[data-test=chosen-template]").text()).toBe("Bugs");
         });
 
         it("is a tracker duplication", async () => {
-            const wrapper = await getWrapper(state, true, false, false, false, {
+            const wrapper = getWrapper(state, true, false, false, false, {
                 project_name: "Default Site Template",
                 tracker_list: [],
             });
 
+            await wrapper.vm.$nextTick();
             expect(wrapper.get("[data-test=project-of-chosen-template]").text()).toBe(
                 "Default Site Template",
             );
@@ -121,7 +124,7 @@ describe("FieldChosenTemplate", () => {
         });
 
         it("is a xml export", async () => {
-            const wrapper = await getWrapper(
+            const wrapper = getWrapper(
                 {
                     tracker_to_be_created: {
                         name: "Tracker XML structure",
@@ -132,20 +135,23 @@ describe("FieldChosenTemplate", () => {
                 true,
             );
 
+            await wrapper.vm.$nextTick();
             expect(wrapper.find("[data-test=project-of-chosen-template]").exists()).toBe(false);
             expect(wrapper.get("[data-test=chosen-template]").text()).toBe("Tracker XML structure");
         });
 
         it("is created from empty", async () => {
-            const wrapper = await getWrapper(state, false, false, true);
+            const wrapper = getWrapper(state, false, false, true);
 
+            await wrapper.vm.$nextTick();
             expect(wrapper.find("[data-test=project-of-chosen-template]").exists()).toBe(false);
             expect(wrapper.get("[data-test=chosen-template]").text()).toBe("Empty");
         });
 
         it("is an import from jira", async () => {
-            const wrapper = await getWrapper(state, false, false, false, false, null, false, true);
+            const wrapper = getWrapper(state, false, false, false, false, null, false, true);
 
+            await wrapper.vm.$nextTick();
             expect(wrapper.get("[data-test=project-of-chosen-template]").text()).toBe(
                 "My chosen project",
             );
@@ -153,8 +159,9 @@ describe("FieldChosenTemplate", () => {
         });
 
         it("is a duplication of a tracker from another project", async () => {
-            const wrapper = await getWrapper(state, false, false, false, true);
+            const wrapper = getWrapper(state, false, false, false, true);
 
+            await wrapper.vm.$nextTick();
             expect(wrapper.get("[data-test=project-of-chosen-template]").text()).toBe(
                 "Another project",
             );

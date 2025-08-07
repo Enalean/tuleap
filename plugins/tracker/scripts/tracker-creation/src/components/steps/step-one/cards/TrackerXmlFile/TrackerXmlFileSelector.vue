@@ -45,7 +45,10 @@
 </template>
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
+import { useGettext } from "vue3-gettext";
 import { useStore } from "vuex-composition-helpers";
+
+const { $gettext } = useGettext();
 
 const file_wrapper = ref<HTMLElement | null>(null);
 const file_input = ref<HTMLInputElement | null>(null);

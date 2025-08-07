@@ -32,17 +32,17 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { useState } from "vuex-composition-helpers";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 import type { TrackerToBeCreatedMandatoryData } from "../../../../store/type";
 
-const { $gettext, interpolate } = useGettext();
+const { $gettext } = useGettext();
 const { tracker_to_be_created } = useState<{
     tracker_to_be_created: TrackerToBeCreatedMandatoryData;
 }>(["tracker_to_be_created"]);
 
 const placeholder = computed(() =>
-    interpolate(
-        $gettext("My %{ tracker_name } tracker description..."),
+    $gettext(
+        "My %{ tracker_name } tracker description...",
         { tracker_name: tracker_to_be_created.value.name },
         true,
     ),

@@ -78,9 +78,11 @@
 </template>
 <script setup lang="ts">
 import { ref, computed, onMounted } from "vue";
+import { useGettext } from "vue3-gettext";
 import type { ProjectWithTrackers, Tracker } from "../../../../../store/type";
 import { useStore } from "vuex-composition-helpers";
 
+const { $gettext } = useGettext();
 const store = useStore();
 
 const selected_project_model = ref<ProjectWithTrackers | null>(null);

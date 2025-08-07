@@ -26,12 +26,6 @@
             "po": "scripts/tracker-admin/po"
         }
     },
-    "gettext-vue": {
-        "tracker-creation": {
-            "src": "scripts/tracker-creation/src",
-            "po": "scripts/tracker-creation/po"
-        }
-    },
     "gettext-vue3": {
         "colorpicker": {
             "src": "scripts/lib/colorpicker/src",
@@ -48,6 +42,10 @@
         "timeframe-admin": {
             "src": "scripts/semantics-timeframe/src",
             "po": "scripts/semantics-timeframe/po"
+        },
+        "tracker-creation": {
+            "src": "scripts/tracker-creation/src",
+            "po": "scripts/tracker-creation/po"
         },
         "workflow-transitions": {
             "src": "scripts/workflow-transitions/src",
