@@ -20,18 +20,21 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Artidoc\REST\v1\ArtifactSection\Field;
+namespace Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue;
 
-enum FieldType: string
+use Tuleap\Option\Option;
+
+/**
+ * @psalm-immutable
+ */
+final readonly class StepValue
 {
-    case TEXT             = 'text';
-    case USER_GROUPS_LIST = 'user_groups_list';
-    case STATIC_LIST      = 'static_list';
-    case USER_LIST        = 'user_list';
-    case ARTIFACT_LINK    = 'links';
-    case NUMERIC          = 'numeric';
-    case USER             = 'user';
-    case DATE             = 'date';
-    case PERMISSIONS      = 'permissions';
-    case STEPS_DEFINITION = 'steps_definition';
+    /**
+     * @param Option<string> $expected_results
+     */
+    public function __construct(
+        public string $description,
+        public Option $expected_results,
+    ) {
+    }
 }

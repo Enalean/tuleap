@@ -37,6 +37,7 @@ use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
+use Tuleap\TestManagement\Step\Definition\Field\StepDefinition;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\NumericField;
 use Tuleap\Tracker\FormElement\Field\RetrieveUsedFields;
@@ -54,7 +55,7 @@ final readonly class SuitableFieldRetriever
     }
 
     /**
-     * @return Ok<TextField> | Ok<Tracker_FormElement_Field_List> | Ok<ArtifactLinkField> | Ok<NumericField> | OK<Tracker_FormElement_Field_Date> | Ok<Tracker_FormElement_Field_PermissionsOnArtifact> | Err<Fault>
+     * @return Ok<TextField> | Ok<Tracker_FormElement_Field_List> | Ok<ArtifactLinkField> | Ok<NumericField> | OK<Tracker_FormElement_Field_Date> | Ok<Tracker_FormElement_Field_PermissionsOnArtifact> | Ok<StepDefinition> | Err<Fault>
      */
     public function retrieveField(int $field_id, PFUser $user): Ok|Err
     {
@@ -71,6 +72,7 @@ final readonly class SuitableFieldRetriever
             $field instanceof NumericField                                    => Result::ok($field),
             $field instanceof Tracker_FormElement_Field_Date                  => Result::ok($field),
             $field instanceof Tracker_FormElement_Field_PermissionsOnArtifact => Result::ok($field),
+            $field instanceof StepDefinition                                  => Result::ok($field),
             default                                                           => Result::err(FieldNotSupportedFault::build($field_id))
         };
     }

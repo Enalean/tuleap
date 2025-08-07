@@ -22,7 +22,6 @@ namespace Tuleap\TestManagement\REST\v1;
 
 use Luracast\Restler\RestException;
 use PFUser;
-use PHPUnit\Framework\MockObject\MockObject;
 use Tracker_Artifact_Changeset;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElementFactory;
@@ -102,8 +101,8 @@ final class StepsResultsChangesBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->execution_artifact->method('getValue')->willReturn(null);
 
-        $step1 = $this->getStep(1);
-        $step2 = $this->getStep(2);
+        $step1 = new Step(1, '', '', null, '', 1);
+        $step2 = new Step(2, '', '', null, '', 1);
         $this->definition_changeset_value->method('getValue')->willReturn([$step1, $step2]);
 
         $submitted_steps_results = [
@@ -141,8 +140,8 @@ final class StepsResultsChangesBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
         $this->definition_artifact->method('getValue')->willReturnMap($value_map);
 
-        $step1 = $this->getStep(1);
-        $step2 = $this->getStep(2);
+        $step1 = new Step(1, '', '', null, '', 1);
+        $step2 = new Step(2, '', '', null, '', 1);
         $this->definition_changeset_value->method('getValue')->willReturn([$step1, $step2]);
 
         $this->execution_artifact->method('getValue')->willReturn(null);
@@ -175,8 +174,8 @@ final class StepsResultsChangesBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
         $this->definition_artifact->method('getValue')->willReturnMap($value_map);
 
-        $step1 = $this->getStep(1);
-        $step2 = $this->getStep(2);
+        $step1 = new Step(1, '', '', null, '', 1);
+        $step2 = new Step(2, '', '', null, '', 1);
         $this->definition_changeset_value->method('getValue')->willReturn([$step1, $step2]);
 
         $this->execution_artifact->method('getValue')->willReturn(null);
@@ -216,8 +215,8 @@ final class StepsResultsChangesBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
         $this->definition_artifact->method('getValue')->willReturnMap($value_map);
 
-        $step1 = $this->getStep(1);
-        $step2 = $this->getStep(2);
+        $step1 = new Step(1, '', '', null, '', 1);
+        $step2 = new Step(2, '', '', null, '', 1);
         $this->definition_changeset_value->method('getValue')->willReturn([$step1, $step2]);
 
         $submitted_steps_results = [
@@ -288,8 +287,8 @@ final class StepsResultsChangesBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             [$this->definition_field, $this->definition_changeset, $this->definition_changeset_value],
         ];
         $this->definition_artifact->method('getValue')->willReturnMap($value_map);
-        $step1 = $this->getStep(1);
-        $step2 = $this->getStep(2);
+        $step1 = new Step(1, '', '', null, '', 1);
+        $step2 = new Step(2, '', '', null, '', 1);
         $this->definition_changeset_value->method('getValue')->willReturn([$step1, $step2]);
 
         $this->execution_artifact->method('getValue')->willReturn(null);
@@ -315,8 +314,8 @@ final class StepsResultsChangesBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             [$this->definition_field, $this->definition_changeset, $this->definition_changeset_value],
         ];
         $this->definition_artifact->method('getValue')->willReturnMap($value_map);
-        $step1 = $this->getStep(1);
-        $step2 = $this->getStep(2);
+        $step1 = new Step(1, '', '', null, '', 1);
+        $step2 = new Step(2, '', '', null, '', 1);
         $this->definition_changeset_value->method('getValue')->willReturn([$step1, $step2]);
 
         $this->execution_artifact->method('getValue')->willReturn(null);
@@ -399,17 +398,6 @@ final class StepsResultsChangesBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $step_result->status  = $status;
 
         return $step_result;
-    }
-
-    /**
-     * @param $id
-     */
-    private function getStep($id): Step&MockObject
-    {
-        $step = $this->createMock(Step::class);
-        $step->method('getId')->willReturn($id);
-
-        return $step;
     }
 
     /**

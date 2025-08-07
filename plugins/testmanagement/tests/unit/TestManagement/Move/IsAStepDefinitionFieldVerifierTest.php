@@ -30,7 +30,7 @@ class IsAStepDefinitionFieldVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         self::assertTrue(
             IsAStepDefinitionFieldVerifier::isAStepDefinitionField(
-                StepDefinitionFieldBuilder::aStepDefinitionField(),
+                StepDefinitionFieldBuilder::aStepDefinitionField(1)->build(),
             )
         );
     }

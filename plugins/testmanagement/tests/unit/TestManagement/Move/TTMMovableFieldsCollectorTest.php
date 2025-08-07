@@ -33,8 +33,8 @@ final class TTMMovableFieldsCollectorTest extends TestCase
     public function testItMarksFieldAsFullyMigrateableWhenItIsAStepDefinitionField(): void
     {
         $event = new CollectMovableExternalFieldEvent(
-            StepDefinitionFieldBuilder::aStepDefinitionField(),
-            StepDefinitionFieldBuilder::aStepDefinitionField(),
+            StepDefinitionFieldBuilder::aStepDefinitionField(1)->build(),
+            StepDefinitionFieldBuilder::aStepDefinitionField(2)->build(),
         );
 
         TTMMovableFieldsCollector::collectMovableFields($event);

@@ -27,6 +27,7 @@ use Tuleap\Artidoc\REST\v1\ArtifactSection\Field\SectionDateFieldRepresentation;
 use Tuleap\Artidoc\REST\v1\ArtifactSection\Field\SectionNumericFieldRepresentation;
 use Tuleap\Artidoc\REST\v1\ArtifactSection\Field\SectionPermissionsOnArtifactFieldRepresentation;
 use Tuleap\Artidoc\REST\v1\ArtifactSection\Field\SectionStaticListFieldRepresentation;
+use Tuleap\Artidoc\REST\v1\ArtifactSection\Field\SectionStepsDefinitionFieldRepresentation;
 use Tuleap\Artidoc\REST\v1\ArtifactSection\Field\SectionTextFieldRepresentation;
 use Tuleap\Artidoc\REST\v1\ArtifactSection\Field\SectionUserFieldRepresentation;
 use Tuleap\Artidoc\REST\v1\ArtifactSection\Field\SectionUserGroupsListFieldRepresentation;
@@ -42,7 +43,7 @@ final readonly class ArtifactSectionRepresentation implements SectionRepresentat
     public string $type;
 
     /**
-     * @param list<SectionTextFieldRepresentation | SectionUserGroupsListFieldRepresentation | SectionStaticListFieldRepresentation | SectionUserListFieldRepresentation | SectionArtifactLinkFieldRepresentation | SectionNumericFieldRepresentation | SectionUserFieldRepresentation | SectionDateFieldRepresentation | SectionPermissionsOnArtifactFieldRepresentation> $fields
+     * @param list<SectionTextFieldRepresentation | SectionUserGroupsListFieldRepresentation | SectionStaticListFieldRepresentation | SectionUserListFieldRepresentation | SectionArtifactLinkFieldRepresentation | SectionNumericFieldRepresentation | SectionUserFieldRepresentation | SectionDateFieldRepresentation | SectionPermissionsOnArtifactFieldRepresentation | SectionStepsDefinitionFieldRepresentation> $fields
      */
     public function __construct(
         public string $id,

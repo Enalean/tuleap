@@ -39,9 +39,12 @@ use Tuleap\Artidoc\Document\Field\Date\DateFieldWithValueBuilder;
 use Tuleap\Artidoc\Document\Field\List\ListFieldWithValueBuilder;
 use Tuleap\Artidoc\Document\Field\Numeric\NumericFieldWithValueBuilder;
 use Tuleap\Artidoc\Document\Field\Permissions\PermissionsOnArtifactFieldWithValueBuilder;
+use Tuleap\Artidoc\Document\Field\StepDefinition\StepsDefinitionFieldWithValueBuilder;
 use Tuleap\Artidoc\Document\Field\User\UserFieldWithValueBuilder;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\FieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\TextFieldWithValue;
+use Tuleap\TestManagement\Step\Definition\Field\StepDefinition;
+use Tuleap\TestManagement\Step\Definition\Field\StepDefinitionChangesetValue;
 use Tuleap\Tracker\Artifact\Changeset\ArtifactLink\ArtifactLinkChangesetValue;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\Text\TextField;
@@ -57,6 +60,7 @@ final readonly class FieldsWithValuesBuilder implements GetFieldsWithValues
         private UserFieldWithValueBuilder $user_field_with_value_builder,
         private DateFieldWithValueBuilder $date_field_with_value_builder,
         private PermissionsOnArtifactFieldWithValueBuilder $permissions_on_artifact_field_with_value_builder,
+        private StepsDefinitionFieldWithValueBuilder $step_definition_field_with_value_builder,
     ) {
     }
 
@@ -125,6 +129,11 @@ final readonly class FieldsWithValuesBuilder implements GetFieldsWithValues
         if ($configured_field->field instanceof Tracker_FormElement_Field_PermissionsOnArtifact) {
             assert($changeset_value === null || $changeset_value instanceof Tracker_Artifact_ChangesetValue_PermissionsOnArtifact);
             return [...$fields, $this->permissions_on_artifact_field_with_value_builder->buildPermissionsOnArtifactFieldWithValue($configured_field, $changeset_value)];
+        }
+
+        if ($configured_field->field instanceof StepDefinition) {
+            assert($changeset_value === null || $changeset_value instanceof StepDefinitionChangesetValue);
+            return [...$fields, $this->step_definition_field_with_value_builder->buildStepsDefinitionFieldWithValue($configured_field, $changeset_value)];
         }
 
         return $fields;
