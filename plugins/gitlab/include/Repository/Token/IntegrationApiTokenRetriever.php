@@ -52,7 +52,7 @@ class IntegrationApiTokenRetriever
         return IntegrationApiToken::buildAlreadyKnownToken(
             SymmetricCrypto::decrypt(
                 $row['token'],
-                $this->key_factory->getEncryptionKey()
+                $this->key_factory->getLegacy2025EncryptionKey()
             ),
             $row['is_email_already_send_for_invalid_token'],
         );

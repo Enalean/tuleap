@@ -119,6 +119,6 @@ class AccessKeyCreator
 
         assert(! empty($access_key_scopes));
         $this->notifier->notifyCreation($user, $description, $access_key_scopes);
-        $this->last_access_key_identifier_store->storeLastGeneratedAccessKeyIdentifier($access_key);
+        $this->last_access_key_identifier_store->storeLastGeneratedAccessKeyIdentifier($access_key, $user);
     }
 }

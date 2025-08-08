@@ -96,7 +96,7 @@ class WebhookCreator
         $this->dao->storeWebhook(
             $gitlab_repository_integration->getId(),
             $webhook_id,
-            SymmetricCrypto::encrypt($secret, $this->key_factory->getEncryptionKey())
+            SymmetricCrypto::encrypt($secret, $this->key_factory->getLegacy2025EncryptionKey())
         );
     }
 

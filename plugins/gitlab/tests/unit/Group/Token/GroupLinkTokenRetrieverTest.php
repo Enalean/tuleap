@@ -62,7 +62,7 @@ final class GroupLinkTokenRetrieverTest extends TestCase
         $this->get_token_by_group_id = GetTokenByGroupLinkIdStub::withStoredToken(self::STORED_TOKEN, $this->key_factory);
 
         $encryption_key = new EncryptionKey(new ConcealedString(str_repeat('a', 32)));
-        $this->key_factory->expects($this->atLeastOnce())->method('getEncryptionKey')->willReturn($encryption_key);
+        $this->key_factory->expects($this->atLeastOnce())->method('getLegacy2025EncryptionKey')->willReturn($encryption_key);
 
         $result = $this->retrieveGroupLinkToken();
 

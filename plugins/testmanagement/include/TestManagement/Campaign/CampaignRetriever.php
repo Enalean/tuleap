@@ -95,6 +95,6 @@ class CampaignRetriever
             return new ConcealedString('');
         }
 
-        return SymmetricCrypto::decrypt($encrypted_job_token, $this->key_factory->getEncryptionKey());
+        return SymmetricCrypto::decrypt($encrypted_job_token, $this->key_factory->getLegacy2025EncryptionKey());
     }
 }

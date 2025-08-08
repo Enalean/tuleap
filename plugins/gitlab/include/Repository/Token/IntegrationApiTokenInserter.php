@@ -46,7 +46,7 @@ class IntegrationApiTokenInserter
     {
         $encrypted_secret = SymmetricCrypto::encrypt(
             $token,
-            $this->key_factory->getEncryptionKey()
+            $this->key_factory->getLegacy2025EncryptionKey()
         );
 
         $this->dao->storeToken(

@@ -151,10 +151,12 @@ class AccessKeyResource extends AuthenticatedResource
             throw new RestException(400, 'No valid access key scope identifier has been given');
         }
 
+        $last_access_key = $last_access_key_identifier_store->getLastGeneratedAccessKeyIdentifier($current_user);
+        if ($last_access_key === null) {
+            throw new \LogicException('Access key should be generated and put into the store');
+        }
         $representation = new UserAccessKeyCreationRepresentation();
-        $representation->build(
-            $last_access_key_identifier_store->getLastGeneratedAccessKeyIdentifier()
-        );
+        $representation->build($last_access_key);
 
         return $representation;
     }

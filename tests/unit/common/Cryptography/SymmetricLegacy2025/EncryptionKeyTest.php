@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Cryptography\Symmetric;
+namespace Tuleap\Cryptography\SymmetricLegacy2025;
 
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Cryptography\Exception\InvalidKeyException;
@@ -30,9 +30,9 @@ final class EncryptionKeyTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testEncryptionKeyConstruction(): void
     {
-        $key = new EncryptionKey(new ConcealedString(str_repeat('a', SODIUM_CRYPTO_AEAD_XCHACHA20POLY1305_IETF_KEYBYTES)));
+        $key = new EncryptionKey(new ConcealedString(str_repeat('a', SODIUM_CRYPTO_SECRETBOX_KEYBYTES)));
 
-        self::assertEquals(SODIUM_CRYPTO_AEAD_XCHACHA20POLY1305_IETF_KEYBYTES, mb_strlen($key->getRawKeyMaterial()));
+        $this->assertEquals(SODIUM_CRYPTO_SECRETBOX_KEYBYTES, mb_strlen($key->getRawKeyMaterial()));
     }
 
     public function testEncryptionKeyIsNotConstructedWhenTheKeyMaterialIsWronglySized(): void

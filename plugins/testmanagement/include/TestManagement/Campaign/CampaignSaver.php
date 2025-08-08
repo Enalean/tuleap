@@ -52,6 +52,6 @@ class CampaignSaver
 
     private function getEncryptedToken(ConcealedString $token): string
     {
-        return SymmetricCrypto::encrypt($token, $this->key_factory->getEncryptionKey());
+        return SymmetricCrypto::encrypt($token, $this->key_factory->getLegacy2025EncryptionKey());
     }
 }

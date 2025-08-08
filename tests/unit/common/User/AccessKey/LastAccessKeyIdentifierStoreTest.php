@@ -25,7 +25,8 @@ namespace Tuleap\User\AccessKey;
 use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenFormatter;
 use Tuleap\Cryptography\ConcealedString;
-use Tuleap\Cryptography\SymmetricLegacy2025\EncryptionKey;
+use Tuleap\Cryptography\Symmetric\EncryptionKey;
+use Tuleap\Test\Builders\UserTestBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class LastAccessKeyIdentifierStoreTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -40,7 +41,7 @@ final class LastAccessKeyIdentifierStoreTest extends \Tuleap\Test\PHPUnit\TestCa
     protected function setUp(): void
     {
         $this->encryption_key = new EncryptionKey(
-            new ConcealedString(str_repeat('a', SODIUM_CRYPTO_SECRETBOX_KEYBYTES))
+            new ConcealedString(str_repeat('a', SODIUM_CRYPTO_AEAD_XCHACHA20POLY1305_IETF_KEYBYTES))
         );
 
         $this->access_key_formatter = $this->createMock(SplitTokenFormatter::class);
@@ -53,9 +54,11 @@ final class LastAccessKeyIdentifierStoreTest extends \Tuleap\Test\PHPUnit\TestCa
 
         $this->access_key_formatter->method('getIdentifier')->willReturn(new ConcealedString('identifier_value'));
 
-        $last_access_key_store->storeLastGeneratedAccessKeyIdentifier($this->createMock(SplitToken::class));
+        $user = UserTestBuilder::aUser()->build();
+
+        $last_access_key_store->storeLastGeneratedAccessKeyIdentifier($this->createMock(SplitToken::class), $user);
         self::assertCount(1, $storage);
-        $identifier = $last_access_key_store->getLastGeneratedAccessKeyIdentifier();
+        $identifier = $last_access_key_store->getLastGeneratedAccessKeyIdentifier($user);
         self::assertSame('identifier_value', $identifier->getString());
         self::assertCount(0, $storage);
     }
@@ -72,12 +75,14 @@ final class LastAccessKeyIdentifierStoreTest extends \Tuleap\Test\PHPUnit\TestCa
             [$access_key2, new ConcealedString('identifier_value2')],
         ]);
 
-        $last_access_key_store->storeLastGeneratedAccessKeyIdentifier($access_key1);
+        $user = UserTestBuilder::aUser()->build();
+
+        $last_access_key_store->storeLastGeneratedAccessKeyIdentifier($access_key1, $user);
         self::assertCount(1, $storage);
-        $last_access_key_store->storeLastGeneratedAccessKeyIdentifier($access_key2);
+        $last_access_key_store->storeLastGeneratedAccessKeyIdentifier($access_key2, $user);
         self::assertCount(1, $storage);
 
-        $identifier = $last_access_key_store->getLastGeneratedAccessKeyIdentifier();
+        $identifier = $last_access_key_store->getLastGeneratedAccessKeyIdentifier($user);
         self::assertSame('identifier_value2', $identifier->getString());
     }
 
@@ -86,6 +91,6 @@ final class LastAccessKeyIdentifierStoreTest extends \Tuleap\Test\PHPUnit\TestCa
         $storage               = [];
         $last_access_key_store = new LastAccessKeyIdentifierStore($this->access_key_formatter, $this->encryption_key, $storage);
 
-        self::assertNull($last_access_key_store->getLastGeneratedAccessKeyIdentifier());
+        self::assertNull($last_access_key_store->getLastGeneratedAccessKeyIdentifier(UserTestBuilder::aUser()->build()));
     }
 }

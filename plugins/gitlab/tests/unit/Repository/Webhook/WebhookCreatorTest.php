@@ -108,7 +108,7 @@ final class WebhookCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $encryption_key = new EncryptionKey(new ConcealedString(str_repeat('a', SODIUM_CRYPTO_SECRETBOX_KEYBYTES)));
         $this->key_factory
             ->expects($this->once())
-            ->method('getEncryptionKey')
+            ->method('getLegacy2025EncryptionKey')
             ->willReturn($encryption_key);
 
         $this->gitlab_api_client
@@ -180,7 +180,7 @@ final class WebhookCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $encryption_key = new EncryptionKey(new ConcealedString(str_repeat('a', SODIUM_CRYPTO_SECRETBOX_KEYBYTES)));
         $this->key_factory
             ->expects($this->once())
-            ->method('getEncryptionKey')
+            ->method('getLegacy2025EncryptionKey')
             ->willReturn($encryption_key);
 
         $this->gitlab_api_client
@@ -258,7 +258,7 @@ final class WebhookCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $encryption_key = new EncryptionKey(new ConcealedString(str_repeat('a', SODIUM_CRYPTO_SECRETBOX_KEYBYTES)));
         $this->key_factory
             ->expects($this->once())
-            ->method('getEncryptionKey')
+            ->method('getLegacy2025EncryptionKey')
             ->willReturn($encryption_key);
 
         $this->gitlab_api_client

@@ -28,7 +28,7 @@ use Tuleap\Authentication\Scope\AggregateAuthenticationScopeBuilder;
 use Tuleap\Authentication\SplitToken\PrefixedSplitTokenSerializer;
 use Tuleap\Authentication\SplitToken\SplitTokenFormatter;
 use Tuleap\Cryptography\KeyFactory;
-use Tuleap\Cryptography\SymmetricLegacy2025\EncryptionKey;
+use Tuleap\Cryptography\Symmetric\EncryptionKey;
 use Tuleap\Date\DateHelper;
 use Tuleap\User\AccessKey\AccessKeyDAO;
 use Tuleap\User\AccessKey\AccessKeyMetadataPresenter;
@@ -118,7 +118,7 @@ class AccessKeyPresenterBuilder
         return new AccessKeyPresenter(
             $access_key_scope_presenters,
             $access_key_presenters,
-            $last_access_key_identifier_store->getLastGeneratedAccessKeyIdentifier(),
+            $last_access_key_identifier_store->getLastGeneratedAccessKeyIdentifier($user),
             DateHelper::distanceOfTimeInWords(0, ForgeConfig::get('last_access_resolution'))
         );
     }

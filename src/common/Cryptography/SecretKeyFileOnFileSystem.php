@@ -56,7 +56,7 @@ final class SecretKeyFileOnFileSystem implements SecretKeyFile
      */
     private function generateEncryptionKey(): EncryptionKey
     {
-        $raw_encryption_key = \random_bytes(SODIUM_CRYPTO_SECRETBOX_KEYBYTES);
+        $raw_encryption_key = \sodium_crypto_aead_xchacha20poly1305_ietf_keygen();
         $key_data           = new ConcealedString($raw_encryption_key);
         \sodium_memzero($raw_encryption_key);
 

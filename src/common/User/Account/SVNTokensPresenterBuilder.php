@@ -48,7 +48,7 @@ final class SVNTokensPresenterBuilder
     {
         $last_svn_token = null;
         if (isset($storage['last_svn_token'])) {
-            $last_svn_token = SymmetricCrypto::decrypt($storage['last_svn_token'], $this->key_factory->getEncryptionKey());
+            $last_svn_token = SymmetricCrypto::decrypt($storage['last_svn_token'], $this->key_factory->getLegacy2025EncryptionKey());
             sodium_memzero($storage['last_svn_token']);
             unset($storage['last_svn_token']);
         }

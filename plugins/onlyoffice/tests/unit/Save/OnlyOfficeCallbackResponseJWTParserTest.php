@@ -63,7 +63,7 @@ final class OnlyOfficeCallbackResponseJWTParserTest extends TestCase
         $root = vfsStream::setup()->url();
         mkdir($root . '/conf/');
         \ForgeConfig::set('sys_custom_dir', $root);
-        $secret_key                      = (new KeyFactory())->getEncryptionKey();
+        $secret_key                      = (new KeyFactory())->getLegacy2025EncryptionKey();
         $this->encrypted_secret_server_1 = base64_encode(
             SymmetricCrypto::encrypt(
                 new ConcealedString(str_repeat('A', 32)),

@@ -139,9 +139,11 @@ Secrets stored in the database are expected to be:
 * hashed in an appropriate manner when the need is only to compare it against another value
   * passwords and user provided secrets must be hashed using a key derivation function designed for this use case, use
     [`StandardPasswordHandler::computeHashPassword()`](../src/common/User/Password/StandardPasswordHandler.php)
-  * for randomly generated keys like personal access keys use the ["split token" pattern](../src/common/Authentication/SplitToken/)
-* encrypted using [`SymmetricCrypto::encrypt()`](../src/common/Cryptography/SymmetricLegacy2024/SymmetricCrypto.php) if accessing
-  the plaintext value is required
+  * for randomly generated keys like personal access keys, use the ["split token" pattern](../src/common/Authentication/SplitToken/)
+* encrypted using [`SymmetricCrypto::encrypt()`](../src/common/Cryptography/Symmetric/SymmetricCrypto.php) if accessing
+  the plaintext value is required. The [`EncryptionAdditionalData`](../src/common/Cryptography/Symmetric/EncryptionAdditionalData.php)
+  must be unique to the value, i.e. it should not match a value in another DB table or in another row or column of the
+  same DB table.
 
 #### While processing a request
 
@@ -160,7 +162,7 @@ Secrets stored in the database are expected to be:
 
 ### When?
 
-Issue can be encountered when doing cryptographic operations such as encrypting, signing or hashing data.
+Issues can be encountered when doing cryptographic operations such as encrypting, signing or hashing data.
 
 ### What is this?
 

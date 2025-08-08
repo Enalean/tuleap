@@ -140,7 +140,7 @@ class bugzilla_referencePlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassD
     private function getEncryptionKey(): \Tuleap\Cryptography\SymmetricLegacy2025\EncryptionKey
     {
         $key_factory = new \Tuleap\Cryptography\KeyFactory();
-        return $key_factory->getEncryptionKey();
+        return $key_factory->getLegacy2025EncryptionKey();
     }
 
     /** @see \Event::POST_REFERENCE_EXTRACTED */

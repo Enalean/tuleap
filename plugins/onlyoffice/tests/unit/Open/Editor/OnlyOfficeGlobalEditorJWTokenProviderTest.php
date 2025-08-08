@@ -70,7 +70,7 @@ final class OnlyOfficeGlobalEditorJWTokenProviderTest extends TestCase
                 new UUIDTestContext(),
                 'https://example.com',
                 new ConcealedString(
-                    base64_encode(SymmetricCrypto::encrypt(new ConcealedString($secret), (new KeyFactory())->getEncryptionKey()))
+                    base64_encode(SymmetricCrypto::encrypt(new ConcealedString($secret), (new KeyFactory())->getLegacy2025EncryptionKey()))
                 )
             )
         );

@@ -24,20 +24,18 @@ namespace Tuleap\Cryptography\Symmetric;
 
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Cryptography\Exception\InvalidKeyException;
+use Tuleap\Cryptography\Key;
 
-#[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class EncryptionKeyTest extends \Tuleap\Test\PHPUnit\TestCase
+final class EncryptionKey extends Key
 {
-    public function testEncryptionKeyConstruction(): void
+    public function __construct(ConcealedString $key_data)
     {
-        $key = new EncryptionKey(new ConcealedString(str_repeat('a', SODIUM_CRYPTO_AEAD_XCHACHA20POLY1305_IETF_KEYBYTES)));
-
-        self::assertEquals(SODIUM_CRYPTO_AEAD_XCHACHA20POLY1305_IETF_KEYBYTES, mb_strlen($key->getRawKeyMaterial()));
-    }
-
-    public function testEncryptionKeyIsNotConstructedWhenTheKeyMaterialIsWronglySized(): void
-    {
-        $this->expectException(InvalidKeyException::class);
-        new EncryptionKey(new ConcealedString('wrongly_sized_key_material'));
+        $raw_key_data        = $key_data->getString();
+        $raw_key_data_length = \mb_strlen($raw_key_data, '8bit');
+        \sodium_memzero($raw_key_data);
+        if ($raw_key_data_length !== SODIUM_CRYPTO_AEAD_XCHACHA20POLY1305_IETF_KEYBYTES) {
+            throw new InvalidKeyException('Encryption key must be SODIUM_CRYPTO_AEAD_XCHACHA20POLY1305_IETF_KEYBYTES long');
+        }
+        parent::__construct($key_data);
     }
 }

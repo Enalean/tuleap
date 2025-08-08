@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Cryptography;
 
-use Tuleap\Cryptography\SymmetricLegacy2025\SymmetricCrypto;
+use Tuleap\Cryptography\Symmetric\SymmetricCrypto;
 
 /**
  * @psalm-immutable
@@ -81,9 +81,9 @@ final class ConcealedString implements \Stringable
     public function __destruct()
     {
         /**
-         * While is indeed correct about this, it is only an issue if a developer manually call __destruct() (please don't)
-         * In the expected object lifecycle this method will only called when the object will not be reused
-         * again so mutability is not a problem.
+         * While is indeed correct about this, it is only an issue if a developer manually calls __destruct() (please don't).
+         * In the expected object lifecycle, this method will be only called when the object is not going to be reused
+         * again, so mutability is not a problem.
          * @psalm-suppress ImpureFunctionCall
          * @psalm-suppress InaccessibleProperty
          */
