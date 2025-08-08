@@ -18,23 +18,19 @@
  *
  */
 
-import { beforeEach, describe, expect, it } from "vitest";
+import { describe, expect, it } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import CreationModalPermissionsSection from "./CreationModalPermissionsSection.vue";
 import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
 
 describe("CreationModalPermissionsSection", () => {
-    let factory;
-
-    beforeEach(() => {
-        factory = (props): VueWrapper<CreationModalPermissionsSection> => {
-            return shallowMount(CreationModalPermissionsSection, {
-                props: { ...props },
-                global: { ...getGlobalTestOptions({}) },
-            });
-        };
-    });
+    const factory = (props): VueWrapper<CreationModalPermissionsSection> => {
+        return shallowMount(CreationModalPermissionsSection, {
+            props: { ...props },
+            global: { ...getGlobalTestOptions({}) },
+        });
+    };
 
     it("Show a spinner when the project ugroups are not yet loaded", () => {
         const wrapper = factory({

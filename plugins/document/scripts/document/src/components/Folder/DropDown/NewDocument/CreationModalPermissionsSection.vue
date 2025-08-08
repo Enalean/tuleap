@@ -39,23 +39,12 @@
         />
     </div>
 </template>
-<script lang="ts">
+<script setup lang="ts">
 import PermissionsForGroupsSelector from "../../Permissions/PermissionsForGroupsSelector.vue";
+import type { Permissions, UserGroup } from "../../../../type";
 
-export default {
-    name: "CreationModalPermissionsSection",
-    components: {
-        PermissionsForGroupsSelector,
-    },
-    props: {
-        project_ugroups: {
-            validator: (prop) => Array.isArray(prop) || prop === null,
-            required: true,
-        },
-        value: {
-            type: Object,
-            required: true,
-        },
-    },
-};
+defineProps<{
+    project_ugroups: Array<UserGroup> | null;
+    value: Permissions;
+}>();
 </script>
