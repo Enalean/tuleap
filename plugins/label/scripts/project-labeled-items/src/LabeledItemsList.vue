@@ -57,78 +57,72 @@
         </div>
     </div>
 </template>
-<script>
+<script setup lang="ts">
+import { computed, onMounted, ref } from "vue";
+
 import LabeledItem from "./LabeledItem.vue";
 import { getLabeledItems } from "./rest-querier.js";
+import type { Item } from "./type";
+const props = defineProps<{
+    labelsId: string;
+    projectId: string;
+}>();
 
-export default {
-    name: "LabeledItemsList",
-    components: { LabeledItem },
-    props: {
-        labelsId: {
-            type: String,
-            default: "",
-        },
-        projectId: {
-            type: String,
-            default: "",
-        },
-    },
-    data() {
-        return {
-            items: [],
-            loading: true,
-            error: false,
-            are_there_items_user_cannot_see: false,
-            offset: 0,
-            limit: 50,
-            has_more_items: false,
-            is_loading_more: false,
-        };
-    },
-    computed: {
-        labels_id() {
-            return JSON.parse(this.labelsId);
-        },
-        empty() {
-            return this.items.length === 0;
-        },
-    },
-    mounted() {
-        this.loadLabeledItems();
-    },
-    methods: {
-        async loadLabeledItems() {
-            if (this.labels_id.length === 0) {
-                this.error = true;
-                this.loading = false;
-                return;
-            }
+const items = ref<Array<Item>>([]);
+const loading = ref(true);
+const error = ref(false);
+const are_there_items_user_cannot_see = ref(false);
+const current_offset = ref(0);
+const limit = ref(50);
+const has_more_items = ref(false);
+const is_loading_more = ref(false);
 
-            try {
-                const { labeled_items, are_there_items_user_cannot_see, has_more, offset } =
-                    await getLabeledItems(this.projectId, this.labels_id, this.offset, this.limit);
+const labels_id = computed(() => {
+    return JSON.parse(props.labelsId);
+});
 
-                this.offset = offset;
-                this.has_more_items = has_more;
-                this.items = this.items.concat(labeled_items);
+const empty = computed((): boolean => {
+    return items.value.length === 0;
+});
 
-                this.are_there_items_user_cannot_see = are_there_items_user_cannot_see;
-            } catch (e) {
-                const { error } = await e.response.json();
-                this.error = error.code + " " + error.message;
-            } finally {
-                this.loading = false;
-            }
-        },
-        async loadMore() {
-            this.is_loading_more = true;
+onMounted(() => {
+    loadLabeledItems();
+});
 
-            this.offset += this.limit;
-            await this.loadLabeledItems();
+async function loadLabeledItems(): Promise<void> {
+    if (labels_id.value.length === 0) {
+        error.value = true;
+        loading.value = false;
+        return;
+    }
 
-            this.is_loading_more = false;
-        },
-    },
-};
+    try {
+        const { labeled_items, are_there_items_user_cannot_see_response, has_more, offset } =
+            await getLabeledItems(
+                props.projectId,
+                labels_id.value,
+                current_offset.value,
+                limit.value,
+            );
+
+        current_offset.value = offset;
+        has_more_items.value = has_more;
+        items.value = items.value.concat(labeled_items);
+
+        are_there_items_user_cannot_see.value = are_there_items_user_cannot_see_response;
+    } catch (e) {
+        error.value = true;
+    } finally {
+        loading.value = false;
+    }
+}
+
+async function loadMore(): Promise<void> {
+    is_loading_more.value = true;
+
+    current_offset.value += limit.value;
+    await loadLabeledItems();
+
+    is_loading_more.value = false;
+}
 </script>
