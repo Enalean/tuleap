@@ -25,6 +25,8 @@ import type {
     ReadonlyFieldPermissions,
     ReadonlyFieldStaticList,
     ReadonlyFieldStaticListValue,
+    ReadonlyFieldStepsDefinition,
+    ReadonlyFieldStepValue,
     ReadonlyFieldText,
     ReadonlyFieldUser,
     ReadonlyFieldUserGroupsList,
@@ -112,5 +114,11 @@ export const ReadonlyFieldStub = {
         label: `Readonly permissions on artifact field`,
         value,
         display_type,
+    }),
+    stepsDefinitionField: (value: ReadonlyFieldStepValue[]): ReadonlyFieldStepsDefinition => ({
+        type: "steps_definition",
+        label: "Steps definition",
+        display_type: DISPLAY_TYPE_BLOCK,
+        value,
     }),
 };

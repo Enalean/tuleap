@@ -52,6 +52,10 @@
                 v-bind:field="readonly_field"
             />
             <field-date v-if="readonly_field.type === DATE_FIELD" v-bind:field="readonly_field" />
+            <field-steps-definition
+                v-if="readonly_field.type === STEPS_DEFINITION_FIELD"
+                v-bind:field="readonly_field"
+            />
         </div>
     </div>
 </template>
@@ -64,6 +68,7 @@ import {
     NUMERIC_FIELD,
     PERMISSIONS_FIELD,
     STATIC_LIST_FIELD,
+    STEPS_DEFINITION_FIELD,
     TEXT_FIELD,
     USER_FIELD,
     USER_GROUP_LIST_FIELD,
@@ -78,6 +83,7 @@ import FieldLinks from "@/components/section/readonly-fields/FieldLinks.vue";
 import FieldNumeric from "@/components/section/readonly-fields/FieldNumeric.vue";
 import { DISPLAY_TYPE_BLOCK } from "@/sections/readonly-fields/AvailableReadonlyFields";
 import FieldDate from "@/components/section/readonly-fields/FieldDate.vue";
+import FieldStepsDefinition from "@/components/section/readonly-fields/FieldStepsDefinition.vue";
 
 defineProps<{
     section: SectionBasedOnArtifact;

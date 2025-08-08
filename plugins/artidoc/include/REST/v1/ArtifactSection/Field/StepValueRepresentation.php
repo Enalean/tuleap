@@ -30,11 +30,11 @@ use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StepValue;
 final readonly class StepValueRepresentation
 {
     public string $description;
-    public ?string $expected_results;
+    public string $expected_results;
 
     public function __construct(StepValue $value)
     {
         $this->description      = $value->description;
-        $this->expected_results = $value->expected_results->unwrapOr(null);
+        $this->expected_results = $value->expected_results->unwrapOr('');
     }
 }

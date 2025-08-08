@@ -134,6 +134,18 @@ export type ReadonlyFieldPermissions = Readonly<{
     value: ReadonlyFieldUserGroupsListValue[];
 }>;
 
+export type ReadonlyFieldStepValue = Readonly<{
+    description: string;
+    expected_results: string;
+}>;
+
+export type ReadonlyFieldStepsDefinition = Readonly<{
+    type: typeof STEPS_DEFINITION_FIELD;
+    label: string;
+    display_type: ConfigurationFieldDisplayType;
+    value: ReadonlyFieldStepValue[];
+}>;
+
 export type ReadonlyField =
     | ReadonlyFieldText
     | ReadonlyFieldUserGroupsList
@@ -143,4 +155,5 @@ export type ReadonlyField =
     | ReadonlyFieldNumeric
     | ReadonlyFieldUser
     | ReadonlyFieldDate
-    | ReadonlyFieldPermissions;
+    | ReadonlyFieldPermissions
+    | ReadonlyFieldStepsDefinition;
