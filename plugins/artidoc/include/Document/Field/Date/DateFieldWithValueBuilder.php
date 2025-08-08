@@ -28,12 +28,12 @@ use PFUser;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue_Date;
 use Tracker_FormElement_Field_Date;
-use Tracker_FormElement_Field_LastUpdateDate;
 use Tuleap\Artidoc\Document\Field\ConfiguredField;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\DateFieldWithValue;
 use Tuleap\Option\Option;
 use Tuleap\TimezoneRetriever;
 use Tuleap\Tracker\FormElement\Field\SubmittedOn\SubmittedOnField;
+use Tuleap\Tracker\FormElement\Field\LastUpdateDate\LastUpdateDateField;
 
 final readonly class DateFieldWithValueBuilder
 {
@@ -64,7 +64,7 @@ final readonly class DateFieldWithValueBuilder
         Tracker_Artifact_Changeset $changeset,
         ?Tracker_Artifact_ChangesetValue_Date $changeset_value,
     ): Option {
-        if ($configured_field->field instanceof Tracker_FormElement_Field_LastUpdateDate) {
+        if ($configured_field->field instanceof LastUpdateDateField) {
             $timestamp = (int) $changeset->getSubmittedOn();
         } elseif ($configured_field->field instanceof SubmittedOnField) {
             $timestamp = $changeset->getArtifact()->getSubmittedOn();

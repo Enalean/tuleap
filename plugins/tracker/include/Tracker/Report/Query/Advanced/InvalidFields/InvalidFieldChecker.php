@@ -60,7 +60,7 @@ final readonly class InvalidFieldChecker
             \Tuleap\Tracker\FormElement\Field\String\StringField::class,
             \Tuleap\Tracker\FormElement\Field\Text\TextField::class               => $this->text_field_checker->checkFieldIsValidForComparison($comparison, $field),
             \Tracker_FormElement_Field_Date::class,
-            \Tracker_FormElement_Field_LastUpdateDate::class,
+            \Tuleap\Tracker\FormElement\Field\LastUpdateDate\LastUpdateDateField::class,
             \Tuleap\Tracker\FormElement\Field\SubmittedOn\SubmittedOnField::class => $this->date_field_checker->checkFieldIsValidForComparison($comparison, $field),
             \Tracker_FormElement_Field_File::class                                => $this->file_field_checker->checkFieldIsValidForComparison($comparison, $field),
             \Tracker_FormElement_Field_Radiobutton::class,
@@ -78,7 +78,7 @@ final readonly class InvalidFieldChecker
             \Tracker_FormElement_Field_Burndown::class,
             \Tuleap\Tracker\FormElement\Field\Computed\ComputedField::class,
             \Tuleap\Tracker\FormElement\Field\Priority\PriorityField::class       => throw new FieldIsNotSupportedAtAllException($field),
-            default                                                         => throw new ExternalFieldNotSupportedException()
+            default                                                               => throw new ExternalFieldNotSupportedException()
         };
     }
 
