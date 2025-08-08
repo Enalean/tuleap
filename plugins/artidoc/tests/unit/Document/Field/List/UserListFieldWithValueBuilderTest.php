@@ -86,10 +86,7 @@ final class UserListFieldWithValueBuilderTest extends TestCase
             ])->build()
         );
 
-        $configured_field =  new ConfiguredField(
-            $user_list_field,
-            DisplayType::BLOCK,
-        );
+        $configured_field =  new ConfiguredField($user_list_field, DisplayType::BLOCK);
 
         $changeset_value = $this->changeset->getValue($user_list_field);
         assert($changeset_value instanceof \Tracker_Artifact_ChangesetValue_List);
@@ -126,10 +123,7 @@ final class UserListFieldWithValueBuilderTest extends TestCase
             ])->build()
         );
 
-        $configured_field =  new ConfiguredField(
-            $user_list_field,
-            DisplayType::BLOCK,
-        );
+        $configured_field =  new ConfiguredField($user_list_field, DisplayType::BLOCK);
 
         $changeset_value = $this->changeset->getValue($user_list_field);
         assert($changeset_value instanceof \Tracker_Artifact_ChangesetValue_List);
@@ -152,10 +146,7 @@ final class UserListFieldWithValueBuilderTest extends TestCase
             ProvideDefaultUserAvatarUrlStub::build(),
         );
 
-        $configured_field =  new ConfiguredField(
-            $user_list_field,
-            DisplayType::BLOCK,
-        );
+        $configured_field =  new ConfiguredField($user_list_field, DisplayType::BLOCK);
 
         self::assertEquals(
             new UserListFieldWithValue($user_list_field->getLabel(), DisplayType::BLOCK, []),
@@ -186,10 +177,7 @@ final class UserListFieldWithValueBuilderTest extends TestCase
             ])->build()
         );
 
-        $configured_field =  new ConfiguredField(
-            $user_list_field,
-            DisplayType::BLOCK,
-        );
+        $configured_field =  new ConfiguredField($user_list_field, DisplayType::BLOCK);
 
         $changeset_value = $this->changeset->getValue($user_list_field);
         assert($changeset_value instanceof \Tracker_Artifact_ChangesetValue_List);

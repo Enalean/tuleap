@@ -17,7 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { StructureFields } from "@tuleap/plugin-tracker-rest-api-types";
 import type { ListBindType } from "@tuleap/plugin-tracker-constants";
 import {
     ARTIFACT_ID_FIELD,
@@ -45,10 +44,12 @@ import {
     TEXT_FIELD as TRACKER_TEXT_FIELD,
 } from "@tuleap/plugin-tracker-constants";
 import type {
+    ArtidocStructureFields,
     ConfigurationField,
     ConfigurationFieldType,
 } from "@/sections/readonly-fields/AvailableReadonlyFields";
 import {
+    TTM_STEPS_DEFINITION_FIELD,
     DISPLAY_TYPE_BLOCK,
     DISPLAY_TYPE_COLUMN,
 } from "@/sections/readonly-fields/AvailableReadonlyFields";
@@ -58,6 +59,7 @@ import {
     NUMERIC_FIELD,
     PERMISSIONS_FIELD,
     STATIC_LIST_FIELD,
+    STEPS_DEFINITION_FIELD,
     TEXT_FIELD,
     USER_FIELD,
     USER_GROUP_LIST_FIELD,
@@ -78,7 +80,7 @@ const buildConfiguredListFieldType = (list_bind_type: ListBindType): Configurati
     throw new Error(`Unknown list bind type ${list_bind_type}`);
 };
 
-const isNumericField = (field: StructureFields): boolean => {
+const isNumericField = (field: ArtidocStructureFields): boolean => {
     const numeric_types: string[] = [
         ARTIFACT_ID_FIELD,
         ARTIFACT_ID_IN_TRACKER_FIELD,
@@ -90,7 +92,9 @@ const isNumericField = (field: StructureFields): boolean => {
     return numeric_types.includes(field.type);
 };
 
-const buildConfiguredFieldIfSupported = (field: StructureFields): Option<ConfigurationField> => {
+const buildConfiguredFieldIfSupported = (
+    field: ArtidocStructureFields,
+): Option<ConfigurationField> => {
     const field_base = {
         field_id: field.field_id,
         label: field.label,
@@ -173,13 +177,22 @@ const buildConfiguredFieldIfSupported = (field: StructureFields): Option<Configu
         });
     }
 
+    if (field.type === TTM_STEPS_DEFINITION_FIELD) {
+        return Option.fromValue<ConfigurationField>({
+            ...field_base,
+            display_type: DISPLAY_TYPE_BLOCK,
+            type: STEPS_DEFINITION_FIELD,
+            can_display_type_be_changed: false,
+        });
+    }
+
     return Option.nothing();
 };
 
 export const ConfigurationFieldBuilder = {
-    fromTrackerField: (field: StructureFields): Option<ConfigurationField> =>
+    fromTrackerField: (field: ArtidocStructureFields): Option<ConfigurationField> =>
         buildConfiguredFieldIfSupported(field),
-    fromSupportedTrackerField: (field: StructureFields): ConfigurationField => {
+    fromSupportedTrackerField: (field: ArtidocStructureFields): ConfigurationField => {
         const configured_field = buildConfiguredFieldIfSupported(field).unwrapOr(null);
         if (!configured_field) {
             throw Error(`Field with type ${field.type} is not supported`);

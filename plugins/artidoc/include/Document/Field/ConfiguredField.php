@@ -33,9 +33,17 @@ use Tuleap\Tracker\FormElement\Field\Text\TextField;
 
 final readonly class ConfiguredField
 {
+    public bool $can_display_type_be_changed;
+
     public function __construct(
         public TextField|Tracker_FormElement_Field_List|ArtifactLinkField|NumericField|Tracker_FormElement_Field_Date|Tracker_FormElement_Field_PermissionsOnArtifact|StepsDefinition $field,
         public DisplayType $display_type,
     ) {
+        $this->can_display_type_be_changed = match ($this->field::class) {
+            ArtifactLinkField::class,
+            TextField::class,
+            StepsDefinition::class => true,
+            default                => false,
+        };
     }
 }

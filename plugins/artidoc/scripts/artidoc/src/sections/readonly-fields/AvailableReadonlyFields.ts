@@ -21,6 +21,7 @@ import type { ResultAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
 import { getTracker } from "@/helpers/rest-querier";
 import type {
+    BaseFieldStructure,
     StructureFields,
     TrackerResponseNoInstance,
 } from "@tuleap/plugin-tracker-rest-api-types";
@@ -30,6 +31,7 @@ import type {
     NUMERIC_FIELD,
     PERMISSIONS_FIELD,
     STATIC_LIST_FIELD,
+    STEPS_DEFINITION_FIELD,
     TEXT_FIELD,
     USER_FIELD,
     USER_GROUP_LIST_FIELD,
@@ -37,7 +39,18 @@ import type {
 } from "@/sections/readonly-fields/ReadonlyFields";
 import { ConfigurationFieldBuilder } from "@/sections/readonly-fields/ConfigurationFieldBuilder";
 
-export type TrackerForFields = Pick<TrackerResponseNoInstance, "fields" | "semantics">;
+export type StepsDefinitionFieldIdentifier = "ttmstepdef";
+export const TTM_STEPS_DEFINITION_FIELD: StepsDefinitionFieldIdentifier = "ttmstepdef";
+
+export interface StepDefinitionFieldStructure extends BaseFieldStructure {
+    readonly type: StepsDefinitionFieldIdentifier;
+}
+
+export type ArtidocStructureFields = StructureFields | StepDefinitionFieldStructure;
+
+export interface TrackerForFields extends Pick<TrackerResponseNoInstance, "semantics"> {
+    readonly fields: ReadonlyArray<ArtidocStructureFields>;
+}
 
 export const DISPLAY_TYPE_COLUMN = "column";
 export const DISPLAY_TYPE_BLOCK = "block";
@@ -52,7 +65,8 @@ export type ConfigurationFieldType =
     | typeof NUMERIC_FIELD
     | typeof USER_FIELD
     | typeof DATE_FIELD
-    | typeof PERMISSIONS_FIELD;
+    | typeof PERMISSIONS_FIELD
+    | typeof STEPS_DEFINITION_FIELD;
 
 export type ConfigurationField = {
     readonly type: ConfigurationFieldType;
@@ -77,7 +91,7 @@ export const getAvailableFields = (
 };
 
 export function getSupportedFields(
-    all_fields: ReadonlyArray<StructureFields>,
+    all_fields: ReadonlyArray<ArtidocStructureFields>,
 ): ConfigurationField[] {
     const supported_fields: ConfigurationField[] = [];
     all_fields.forEach((field) => {

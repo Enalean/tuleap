@@ -31,6 +31,7 @@ export const NUMERIC_FIELD = "numeric";
 export const USER_FIELD = "user";
 export const DATE_FIELD = "date";
 export const PERMISSIONS_FIELD = "permissions";
+export const STEPS_DEFINITION_FIELD = "steps_definition";
 
 export type ReadonlyFieldText = Readonly<{
     type: typeof TEXT_FIELD;
