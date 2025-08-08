@@ -27,7 +27,7 @@ describe(`InEditionCustomService`, () => {
     beforeEach(() => {
         props = {
             minimal_rank: 10,
-            service: {
+            service_prop: {
                 id: 101,
                 icon_name: "",
                 label: "",
@@ -53,7 +53,7 @@ describe(`InEditionCustomService`, () => {
 
     describe(`When the service is already open in an iframe`, () => {
         it(`will show the switch input`, () => {
-            props.service.is_in_iframe = true;
+            props.service_prop.is_in_iframe = true;
             const wrapper = createWrapper();
 
             const iframe_switch = wrapper.find("[data-test=iframe-switch]");
@@ -61,12 +61,16 @@ describe(`InEditionCustomService`, () => {
         });
 
         it(`when I switch off "Open in iframe", it will show a deprecation warning`, async () => {
-            props.service.is_in_iframe = true;
+            props.service_prop.is_in_iframe = true;
             const wrapper = createWrapper();
 
             wrapper.get("[data-test=iframe-switch]").setChecked(false);
-            const updated_service = { ...props.service, is_in_iframe: false };
-            const new_props = { minimal_rank: 10, service: updated_service, allowed_icons: {} };
+            const updated_service = { ...props.service_prop, is_in_iframe: false };
+            const new_props = {
+                minimal_rank: 10,
+                service_prop: updated_service,
+                allowed_icons: {},
+            };
             await wrapper.setProps(new_props);
 
             const deprecation_message = wrapper.find("[data-test=iframe-deprecation-warning]");
@@ -75,7 +79,7 @@ describe(`InEditionCustomService`, () => {
 
         it(`when I also check "Is in new tab",
             it will disable "is in iframe" and show a warning`, async () => {
-            props.service.is_in_iframe = true;
+            props.service_prop.is_in_iframe = true;
             const wrapper = createWrapper();
 
             wrapper.vm.onNewTabChange(true);
@@ -87,7 +91,7 @@ describe(`InEditionCustomService`, () => {
 
         it(`When the warning is shown and I uncheck "Is in new tab",
             it will hide the warning`, async () => {
-            props.service.is_in_iframe = true;
+            props.service_prop.is_in_iframe = true;
             const wrapper = createWrapper();
 
             wrapper.vm.onNewTabChange(true);

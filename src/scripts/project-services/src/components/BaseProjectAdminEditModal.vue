@@ -30,7 +30,7 @@
             <in-edition-custom-service
                 v-if="service.is_project_scope && is_shown"
                 v-bind:minimal_rank="minimal_rank"
-                v-bind:service="service"
+                v-bind:service_prop="service"
                 v-bind:allowed_icons="allowed_icons"
             />
             <read-only-system-service

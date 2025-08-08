@@ -66,7 +66,6 @@ import ServiceDescription from "./ServiceDescription.vue";
 import ServiceIsUsed from "./ServiceIsUsed.vue";
 import ServiceRank from "./ServiceRank.vue";
 import HiddenServiceIsActive from "./HiddenServiceIsActive.vue";
-import { service_mixin } from "./service-mixin.js";
 
 export default {
     name: "InCreationCustomService",
@@ -80,12 +79,24 @@ export default {
         ServiceLabel,
         IconSelector,
     },
-    mixins: [service_mixin],
     props: {
         allowed_icons: {
             type: Object,
             required: true,
         },
+        minimal_rank: {
+            type: Number,
+            required: true,
+        },
+        service_prop: {
+            type: Object,
+            required: true,
+        },
+    },
+    data() {
+        return {
+            service: this.service_prop,
+        };
     },
     methods: {
         onEditServiceLabel(new_label) {
