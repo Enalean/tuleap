@@ -54,7 +54,6 @@ import EditModal from "./EditModal.vue";
 import ServiceIsActive from "./Service/ServiceIsActive.vue";
 import SidebarPreviewer from "./SidebarPreviewer.vue";
 import EditableSystemService from "./Service/EditableSystemService.vue";
-import { service_modal_mixin } from "./service-modal-mixin.js";
 import { edit_modal_mixin } from "./edit-modal-mixin.js";
 
 export default {
@@ -66,6 +65,24 @@ export default {
         ServiceIsActive,
         SidebarPreviewer,
     },
-    mixins: [service_modal_mixin, edit_modal_mixin],
+    mixins: [edit_modal_mixin],
+    props: {
+        minimal_rank: {
+            type: Number,
+            required: true,
+        },
+        csrf_token: {
+            type: String,
+            required: true,
+        },
+        csrf_token_name: {
+            type: String,
+            required: true,
+        },
+        allowed_icons: {
+            type: Object,
+            required: true,
+        },
+    },
 };
 </script>
