@@ -49,6 +49,7 @@ be added.
 * Jihyun Park
 * Clément Gayot
 * Antoine Sauzeau
+* Jacques Fiadehoundji
 
 ### Previous contributors (no longer active committers)
 
