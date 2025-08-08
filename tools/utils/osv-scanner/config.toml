@@ -133,3 +133,8 @@ ignoreUntil = 2025-09-10
 id = "GO-2025-3751" # CVE-2025-4673
 reason = "No impact in our situation, we never set Proxy-Authorization or Proxy-Authenticate headers."
 ignoreUntil = 2025-09-10
+
+[[IgnoredVulns]]
+id = "GO-2025-3849" # CVE-2025-47907
+reason = "No impact in our situation, we do not rely on database/sql."
+ignoreUntil = 2025-09-10
