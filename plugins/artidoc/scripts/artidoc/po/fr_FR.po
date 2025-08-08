@@ -369,6 +369,9 @@ msgstr "Sélection du tracker"
 msgid "Unable to reorder the sections"
 msgstr "Impossible de réorganiser les sections"
 
+msgid "User avatar"
+msgstr "Avatar de l'utilisateur"
+
 msgid ""
 "You can now select your fields or go back to the document and create new "
 "sections, they will be stored as artifacts in the selected tracker."

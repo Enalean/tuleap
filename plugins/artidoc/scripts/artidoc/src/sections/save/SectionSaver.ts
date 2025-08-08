@@ -96,9 +96,7 @@ export const getSectionSaver = (
             .andThen(getLatestVersionOfCurrentSection)
             .match(
                 (artidoc_section: ArtidocSection) => {
-                    if (isArtifactSection(artidoc_section) || isFreetextSection(artidoc_section)) {
-                        update_sections.updateSection(artidoc_section);
-                    }
+                    update_sections.updateSection(artidoc_section);
                     section_state.initial_level.value = section.value.level;
                     close_section_editor.closeEditor();
                     section_state.is_being_saved.value = false;
@@ -123,10 +121,7 @@ export const getSectionSaver = (
             (artidoc_section: ArtidocSection) => {
                 if (isPendingSection(section.value)) {
                     replace_pending_sections.replacePendingSection(section.value, artidoc_section);
-                } else if (
-                    isArtifactSection(artidoc_section) ||
-                    isFreetextSection(artidoc_section)
-                ) {
+                } else {
                     update_sections.updateSection(artidoc_section);
                 }
                 section_state.initial_level.value = section.value.level;
