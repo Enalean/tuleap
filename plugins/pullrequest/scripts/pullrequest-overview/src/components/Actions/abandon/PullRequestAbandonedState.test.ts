@@ -119,18 +119,14 @@ describe("PullRequestAbandonedState", () => {
         expect(wrapper.find("[data-test=pull-request-reopen-button]").exists()).toBe(false);
     });
 
-    it.each([
-        [PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN as RelativeDatesDisplayPreference, "Abandoned"],
-        [PREFERENCE_RELATIVE_FIRST_ABSOLUTE_TOOLTIP as RelativeDatesDisplayPreference, "Abandoned"],
-        [
-            PREFERENCE_ABSOLUTE_FIRST_RELATIVE_SHOWN as RelativeDatesDisplayPreference,
-            "Abandoned on",
-        ],
-        [
-            PREFERENCE_ABSOLUTE_FIRST_RELATIVE_TOOLTIP as RelativeDatesDisplayPreference,
-            "Abandoned on",
-        ],
-    ])(
+    function* generateDateDisplayCases(): Generator<[RelativeDatesDisplayPreference, string]> {
+        yield [PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN, "Abandoned"];
+        yield [PREFERENCE_RELATIVE_FIRST_ABSOLUTE_TOOLTIP, "Abandoned"];
+        yield [PREFERENCE_ABSOLUTE_FIRST_RELATIVE_SHOWN, "Abandoned on"];
+        yield [PREFERENCE_ABSOLUTE_FIRST_RELATIVE_TOOLTIP, "Abandoned on"];
+    }
+
+    it.each([...generateDateDisplayCases()])(
         "When the relative date preference is %s, Then it should be prefixed by %s",
         (preference, prefix) => {
             const wrapper = getWrapper(

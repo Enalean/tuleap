@@ -20,6 +20,7 @@
 import { describe, expect, it } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { mount } from "@vue/test-utils";
+import type { BuildStatus } from "@tuleap/plugin-pullrequest-constants";
 import PullRequestCIStatus from "./PullRequestCIStatus.vue";
 import { getGlobalTestOptions } from "../../../tests/helpers/global-options-for-tests";
 import type { PullRequest } from "@tuleap/plugin-pullrequest-rest-api-types";
@@ -96,38 +97,39 @@ describe("PullRequestCIStatus", () => {
         },
     );
 
-    it.each([
-        [PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN, BUILD_STATUS_PENDING, `Pending since`],
-        [PREFERENCE_ABSOLUTE_FIRST_RELATIVE_SHOWN, BUILD_STATUS_PENDING, `Pending since`],
-        [PREFERENCE_RELATIVE_FIRST_ABSOLUTE_TOOLTIP, BUILD_STATUS_PENDING, `Pending since`],
-        [PREFERENCE_ABSOLUTE_FIRST_RELATIVE_TOOLTIP, BUILD_STATUS_PENDING, `Pending since`],
+    function* generateDateDisplayCases(): Generator<
+        [RelativeDatesDisplayPreference, BuildStatus, string]
+    > {
+        yield [PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN, BUILD_STATUS_PENDING, `Pending since`];
+        yield [PREFERENCE_ABSOLUTE_FIRST_RELATIVE_SHOWN, BUILD_STATUS_PENDING, `Pending since`];
+        yield [PREFERENCE_RELATIVE_FIRST_ABSOLUTE_TOOLTIP, BUILD_STATUS_PENDING, `Pending since`];
+        yield [PREFERENCE_ABSOLUTE_FIRST_RELATIVE_TOOLTIP, BUILD_STATUS_PENDING, `Pending since`];
 
-        [PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN, BUILD_STATUS_SUCCESS, `Success`],
-        [PREFERENCE_ABSOLUTE_FIRST_RELATIVE_SHOWN, BUILD_STATUS_SUCCESS, `Success on`],
-        [PREFERENCE_RELATIVE_FIRST_ABSOLUTE_TOOLTIP, BUILD_STATUS_SUCCESS, `Success`],
-        [PREFERENCE_ABSOLUTE_FIRST_RELATIVE_TOOLTIP, BUILD_STATUS_SUCCESS, `Success on`],
+        yield [PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN, BUILD_STATUS_SUCCESS, `Success`];
+        yield [PREFERENCE_ABSOLUTE_FIRST_RELATIVE_SHOWN, BUILD_STATUS_SUCCESS, `Success on`];
+        yield [PREFERENCE_RELATIVE_FIRST_ABSOLUTE_TOOLTIP, BUILD_STATUS_SUCCESS, `Success`];
+        yield [PREFERENCE_ABSOLUTE_FIRST_RELATIVE_TOOLTIP, BUILD_STATUS_SUCCESS, `Success on`];
 
-        [PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN, BUILD_STATUS_FAILED, `Failure`],
-        [PREFERENCE_ABSOLUTE_FIRST_RELATIVE_SHOWN, BUILD_STATUS_FAILED, `Failure on`],
-        [PREFERENCE_RELATIVE_FIRST_ABSOLUTE_TOOLTIP, BUILD_STATUS_FAILED, `Failure`],
-        [PREFERENCE_ABSOLUTE_FIRST_RELATIVE_TOOLTIP, BUILD_STATUS_FAILED, `Failure on`],
+        yield [PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN, BUILD_STATUS_FAILED, `Failure`];
+        yield [PREFERENCE_ABSOLUTE_FIRST_RELATIVE_SHOWN, BUILD_STATUS_FAILED, `Failure on`];
+        yield [PREFERENCE_RELATIVE_FIRST_ABSOLUTE_TOOLTIP, BUILD_STATUS_FAILED, `Failure`];
+        yield [PREFERENCE_ABSOLUTE_FIRST_RELATIVE_TOOLTIP, BUILD_STATUS_FAILED, `Failure on`];
 
-        [PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN, BUILD_STATUS_UNKNOWN, `Unknown`],
-        [PREFERENCE_ABSOLUTE_FIRST_RELATIVE_SHOWN, BUILD_STATUS_UNKNOWN, `Unknown`],
-        [PREFERENCE_RELATIVE_FIRST_ABSOLUTE_TOOLTIP, BUILD_STATUS_UNKNOWN, `Unknown`],
-        [PREFERENCE_ABSOLUTE_FIRST_RELATIVE_TOOLTIP, BUILD_STATUS_UNKNOWN, `Unknown`],
-    ])(
+        yield [PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN, BUILD_STATUS_UNKNOWN, `Unknown`];
+        yield [PREFERENCE_ABSOLUTE_FIRST_RELATIVE_SHOWN, BUILD_STATUS_UNKNOWN, `Unknown`];
+        yield [PREFERENCE_RELATIVE_FIRST_ABSOLUTE_TOOLTIP, BUILD_STATUS_UNKNOWN, `Unknown`];
+        yield [PREFERENCE_ABSOLUTE_FIRST_RELATIVE_TOOLTIP, BUILD_STATUS_UNKNOWN, `Unknown`];
+    }
+
+    it.each([...generateDateDisplayCases()])(
         `When the date display preference is %s
         And the status is %s
         Then it should display %s`,
         (date_display_preference, ci_status, expected_badge_text) => {
-            const wrapper = getWrapper(
-                date_display_preference as RelativeDatesDisplayPreference,
-                {
-                    last_build_status: ci_status,
-                    last_build_date: "2023-02-20T10:00:00Z",
-                } as PullRequest,
-            );
+            const wrapper = getWrapper(date_display_preference, {
+                last_build_status: ci_status,
+                last_build_date: "2023-02-20T10:00:00Z",
+            } as PullRequest);
             expect(wrapper.find("[data-test=pullrequest-ci-badge-status-name]").text()).toContain(
                 expected_badge_text,
             );

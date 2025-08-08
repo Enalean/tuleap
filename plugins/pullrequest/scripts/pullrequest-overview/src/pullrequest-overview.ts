@@ -22,7 +22,7 @@ import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue
 import { createGettext } from "vue3-gettext";
 import { getAttributeOrThrow } from "@tuleap/dom";
 import { getLocaleOrThrow, getTimezoneOrThrow } from "@tuleap/date-helper";
-import type { RelativeDatesDisplayPreference } from "@tuleap/tlp-relative-date";
+import { getRelativeDateUserPreferenceOrThrow } from "@tuleap/tlp-relative-date";
 import { createOverviewRouter } from "./router/router";
 import { buildBaseUrl } from "./router/base-url-builders";
 import VueDOMPurifyHTML from "vue-dompurify-html";
@@ -57,11 +57,7 @@ export async function init(mount_point: HTMLElement): Promise<void> {
         .provide(CURRENT_USER_AVATAR_URL, getAttributeOrThrow(mount_point, "data-user-avatar-url"))
         .provide(
             USER_RELATIVE_DATE_DISPLAY_PREFERENCE_KEY,
-            // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- Assume that the backend does not send any string
-            getAttributeOrThrow(
-                mount_point,
-                "data-relative-date-display",
-            ) as RelativeDatesDisplayPreference,
+            getRelativeDateUserPreferenceOrThrow(mount_point, "data-relative-date-display"),
         )
         .provide(
             ARE_MERGE_COMMITS_ALLOWED_IN_REPOSITORY,

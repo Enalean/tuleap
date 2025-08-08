@@ -28,12 +28,14 @@ import type { RelativeDatesDisplayPreference } from "@tuleap/tlp-relative-date";
 import { isPreferenceAbsoluteDateFirst } from "./relative-dates-preference-helper";
 
 describe("relative-dates-preference-helper", () => {
-    it.each([
-        [true, PREFERENCE_ABSOLUTE_FIRST_RELATIVE_TOOLTIP as RelativeDatesDisplayPreference],
-        [true, PREFERENCE_ABSOLUTE_FIRST_RELATIVE_SHOWN as RelativeDatesDisplayPreference],
-        [false, PREFERENCE_RELATIVE_FIRST_ABSOLUTE_TOOLTIP as RelativeDatesDisplayPreference],
-        [false, PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN as RelativeDatesDisplayPreference],
-    ])(
+    function* generateCases(): Generator<[boolean, RelativeDatesDisplayPreference]> {
+        yield [true, PREFERENCE_ABSOLUTE_FIRST_RELATIVE_TOOLTIP];
+        yield [true, PREFERENCE_ABSOLUTE_FIRST_RELATIVE_SHOWN];
+        yield [false, PREFERENCE_RELATIVE_FIRST_ABSOLUTE_TOOLTIP];
+        yield [false, PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN];
+    }
+
+    it.each([...generateCases()])(
         "isPreferenceAbsoluteDateFirst() should return %s when the preference is %s",
         (expected_result, preference) => {
             expect(isPreferenceAbsoluteDateFirst(preference)).toStrictEqual(expected_result);

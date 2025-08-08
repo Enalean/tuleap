@@ -93,12 +93,14 @@ describe("PullRequestAlreadyMergedState", () => {
         ).toStrictEqual(status_info.status_date);
     });
 
-    it.each([
-        [PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN as RelativeDatesDisplayPreference, "Merged"],
-        [PREFERENCE_RELATIVE_FIRST_ABSOLUTE_TOOLTIP as RelativeDatesDisplayPreference, "Merged"],
-        [PREFERENCE_ABSOLUTE_FIRST_RELATIVE_SHOWN as RelativeDatesDisplayPreference, "Merged on"],
-        [PREFERENCE_ABSOLUTE_FIRST_RELATIVE_TOOLTIP as RelativeDatesDisplayPreference, "Merged on"],
-    ])(
+    function* generateDateDisplayCases(): Generator<[RelativeDatesDisplayPreference, string]> {
+        yield [PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN, "Merged"];
+        yield [PREFERENCE_RELATIVE_FIRST_ABSOLUTE_TOOLTIP, "Merged"];
+        yield [PREFERENCE_ABSOLUTE_FIRST_RELATIVE_SHOWN, "Merged on"];
+        yield [PREFERENCE_ABSOLUTE_FIRST_RELATIVE_TOOLTIP, "Merged on"];
+    }
+
+    it.each([...generateDateDisplayCases()])(
         "When the relative date preference is %s, Then it should be prefixed by %s",
         (preference, prefix) => {
             const wrapper = getWrapper(

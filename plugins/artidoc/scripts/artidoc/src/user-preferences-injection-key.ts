@@ -18,10 +18,10 @@
  */
 
 import type { StrictInjectionKey } from "@tuleap/vue-strict-inject";
-import type { RelativeDatesDisplayPreference } from "@tuleap/tlp-relative-date";
 import type { LocaleString } from "@tuleap/date-helper";
 import { getLocaleOrThrow, getTimezoneOrThrow } from "@tuleap/date-helper";
-import { getAttributeOrThrow } from "@tuleap/dom";
+import type { RelativeDatesDisplayPreference } from "@tuleap/tlp-relative-date";
+import { getRelativeDateUserPreferenceOrThrow } from "@tuleap/tlp-relative-date";
 
 export interface UserPreferences {
     readonly locale: LocaleString;
@@ -35,10 +35,9 @@ export function buildUserPreferences(doc: Document, mount_point: HTMLElement): U
     return {
         locale: getLocaleOrThrow(doc),
         timezone: getTimezoneOrThrow(doc),
-        // eslint-disable-next-line @typescript-eslint/consistent-type-assertions -- Assume that the backend does not send any string
-        relative_date_display: getAttributeOrThrow(
+        relative_date_display: getRelativeDateUserPreferenceOrThrow(
             mount_point,
             "data-relative-date-display",
-        ) as RelativeDatesDisplayPreference,
+        ),
     };
 }

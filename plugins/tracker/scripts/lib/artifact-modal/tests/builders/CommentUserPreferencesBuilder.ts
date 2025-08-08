@@ -17,11 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { TEXT_FORMAT_COMMONMARK } from "@tuleap/plugin-tracker-constants";
 import type { TextFieldFormat } from "@tuleap/plugin-tracker-constants";
+import { TEXT_FORMAT_COMMONMARK } from "@tuleap/plugin-tracker-constants";
 import type { RelativeDatesDisplayPreference } from "@tuleap/tlp-relative-date";
+import { PREFERENCE_RELATIVE_FIRST_ABSOLUTE_TOOLTIP } from "@tuleap/tlp-relative-date";
 import type { CommentUserPreferences } from "../../src/domain/comments/CommentUserPreferences";
-import type { LocaleString, DateTimeFormat } from "@tuleap/core-constants";
+import type { DateTimeFormat, LocaleString } from "@tuleap/core-constants";
 import { en_US_DATE_TIME_FORMAT, en_US_LOCALE } from "@tuleap/core-constants";
 
 export class CommentUserPreferencesBuilder {
@@ -30,7 +31,8 @@ export class CommentUserPreferencesBuilder {
     #text_format: TextFieldFormat = TEXT_FORMAT_COMMONMARK;
     #date_time_format: DateTimeFormat = en_US_DATE_TIME_FORMAT;
     #locale: LocaleString = en_US_LOCALE;
-    #relative_dates_display: RelativeDatesDisplayPreference = "relative_first-absolute_tooltip";
+    #relative_dates_display: RelativeDatesDisplayPreference =
+        PREFERENCE_RELATIVE_FIRST_ABSOLUTE_TOOLTIP;
     #are_mentions_effective = true;
 
     private constructor() {

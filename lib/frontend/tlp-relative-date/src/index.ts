@@ -21,7 +21,17 @@ import { RelativeDateElement } from "./relative-date-element";
 
 export { RelativeDateElement } from "./relative-date-element";
 export type { FirstDateShown, OtherDatePlacement } from "./relative-date-element";
-export * from "./relative-date-helper";
+export type { RelativeDatesDisplayPreference } from "./relative-date-helper";
+export {
+    PREFERENCE_ABSOLUTE_FIRST_RELATIVE_SHOWN,
+    PREFERENCE_ABSOLUTE_FIRST_RELATIVE_TOOLTIP,
+    PREFERENCE_CHOICES,
+    PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN,
+    PREFERENCE_RELATIVE_FIRST_ABSOLUTE_TOOLTIP,
+    getRelativeDateUserPreferenceOrThrow,
+    relativeDatePlacement,
+    relativeDatePreference,
+} from "./relative-date-helper";
 
 if (!window.customElements.get("tlp-relative-date")) {
     window.customElements.define("tlp-relative-date", RelativeDateElement);
