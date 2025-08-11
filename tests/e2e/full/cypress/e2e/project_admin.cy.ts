@@ -126,6 +126,7 @@ describe("Project admin", function () {
         private_project_name: string,
         project_visibility: string,
         project_acces_log: string,
+        service_site_admin: string,
         now: number;
 
     before(() => {
@@ -134,6 +135,7 @@ describe("Project admin", function () {
         private_project_name = "private-admin-" + now;
         project_visibility = `visibility-${now}`;
         project_acces_log = `access-${now}`;
+        service_site_admin = `service-${now}`;
         cy.projectAdministratorSession();
         cy.createNewPublicProject(project_acces_log, "agile_alm").as("access_project_id");
     });
@@ -163,6 +165,40 @@ describe("Project admin", function () {
 
             cy.log("Check administrator can enable a service");
             cy.enableService(public_project_name, "svn");
+        });
+
+        it("site admin can enable services for projects templates", function () {
+            cy.siteAdministratorSession();
+            createNewPublicProject(service_site_admin);
+
+            cy.log("Check site administrator can enable a service");
+            cy.enableService(service_site_admin, "agiledashboard");
+
+            cy.log("Check that services are available or not at project inheritance");
+            cy.get("[data-test=new-button]").click();
+            cy.get("[data-test=create-new-item]").last().click();
+            cy.get("[data-test=project-registration-advanced-templates-tab]").click();
+            cy.getContains("[data-test=project-registration-card-label]", "From another project")
+                .closest("[data-test=project-registration-card-label]")
+                .click();
+            cy.get("[data-test=from-another-project]").select(service_site_admin);
+            cy.get("[data-test=project-registration-next-button]").click();
+            cy.get("[data-test=new-project-name]").type(`duplicated-${now}`);
+            cy.get("[data-test=approve_tos]").click();
+            cy.get("[data-test=project-registration-next-button]").click();
+            cy.get("[data-test=start-working]").click({
+                timeout: 20000,
+            });
+
+            cy.log("Backlog is available");
+            cy.get("[data-test=project-sidebar-tool]", { includeShadowDom: true })
+                .contains("[data-test=project-sidebar-tool]", "Backlog", { includeShadowDom: true })
+                .contains("Backlog");
+
+            cy.log("SVN is not available");
+            cy.get("[data-test=project-sidebar-tool]", { includeShadowDom: true })
+                .contains("[data-test=project-sidebar-tool]", "SVN", { includeShadowDom: true })
+                .should("not.exist");
         });
 
         it("should be able to add users to a public project", function () {
