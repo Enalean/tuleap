@@ -440,9 +440,6 @@ class ProjectManager implements ProjectRename, UpdateProjectStatus, ProjectBySta
 
             $this->project_history_dao->groupAddHistory('approved', 'x', $project->getId());
 
-            $em = $this->getEventManager();
-            $em->processEvent('approve_pending_project', ['group_id' => $project->getId()]);
-
             $this->launchWebhooksProjectCreated($project);
 
             return true;

@@ -119,11 +119,6 @@ final readonly class ConfigurationVariablesLocalIncDist
     #[ConfigKeyString('/var/lib/tuleap/ftp/pub')]
     public const FTP_ANON_DIR_PREFIX = 'ftp_anon_dir_prefix';
 
-    #[ConfigKey('Path for intermediate dumps')]
-    #[ConfigCannotBeModifiedYet]
-    #[ConfigKeyString('/var/lib/tuleap/dumps')]
-    public const DUMP_DIR = 'dump_dir';
-
     #[ConfigKey('Log dir')]
     #[ConfigCannotBeModifiedYet]
     #[ConfigKeyString('/var/log/tuleap')]

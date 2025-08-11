@@ -1151,7 +1151,7 @@ CREATE TABLE IF NOT EXISTS cross_references (
 #
 # Table structure for System Events
 #
-# type        : one of "PROJECT_CREATE", "PROJECT_DELETE", etc.
+# type        : one of "PROJECT_DELETE", etc.
 # parameters  : event parameters (group_id, etc.) depending on event type
 # priority    : event priority from 3 (high prio) to 1 (low prio)
 # status      : event status: 'NEW' = nothing done yet, 'RUNNING' = event is being processed,
