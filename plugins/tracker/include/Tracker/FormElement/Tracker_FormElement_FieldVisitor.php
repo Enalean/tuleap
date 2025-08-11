@@ -21,6 +21,7 @@
 use Tuleap\Tracker\FormElement\Field\ArtifactId\ArtifactIdField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\Computed\ComputedField;
+use Tuleap\Tracker\FormElement\Field\Date\DateField;
 use Tuleap\Tracker\FormElement\Field\Float\FloatField;
 use Tuleap\Tracker\FormElement\Field\Integer\IntegerField;
 use Tuleap\Tracker\FormElement\Field\LastUpdateDate\LastUpdateDateField;
@@ -40,7 +41,7 @@ interface Tracker_FormElement_FieldVisitor // phpcs:ignore PSR1.Classes.ClassDec
 {
     public function visitArtifactLink(ArtifactLinkField $field);
 
-    public function visitDate(Tracker_FormElement_Field_Date $field);
+    public function visitDate(DateField $field);
 
     public function visitFile(Tracker_FormElement_Field_File $field);
 

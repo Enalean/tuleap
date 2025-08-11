@@ -26,7 +26,6 @@ use DateTimeImmutable;
 use DateTimeZone;
 use LogicException;
 use PFUser;
-use Tracker_FormElement_Field_Date;
 use Tuleap\CrossTracker\Query\Advanced\DuckTypedField\Select\DuckTypedFieldSelect;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Representations\DateResultRepresentation;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\SelectedValue;
@@ -36,6 +35,7 @@ use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerSelectedRepresentatio
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerSelectedType;
 use Tuleap\TimezoneRetriever;
 use Tuleap\Tracker\Artifact\RetrieveArtifact;
+use Tuleap\Tracker\FormElement\Field\Date\DateField;
 use Tuleap\Tracker\FormElement\Field\RetrieveUsedFields;
 
 final readonly class DateResultBuilder
@@ -72,7 +72,7 @@ final readonly class DateResultBuilder
                 throw new LogicException("Artifact #$id not found");
             }
             $tracker_field = $this->retrieve_used_fields->getUsedFieldByName($artifact->getTrackerId(), $field->name);
-            if (! ($tracker_field instanceof Tracker_FormElement_Field_Date)) {
+            if (! ($tracker_field instanceof DateField)) {
                 throw new LogicException("Field $field->name not found in tracker {$artifact->getTrackerId()}");
             }
             $values[$id] = new SelectedValue($field->name, new DateResultRepresentation($value, $tracker_field->isTimeDisplayed()));

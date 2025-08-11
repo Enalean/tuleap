@@ -19,12 +19,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\FormElement\Field\Date\DateField;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueDateFullRepresentation;
 
 /**
  * Manage values in changeset for date fields
  */
-class Tracker_Artifact_ChangesetValue_Date extends Tracker_Artifact_ChangesetValue
+class Tracker_Artifact_ChangesetValue_Date extends Tracker_Artifact_ChangesetValue // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /**
      * @var int
@@ -91,7 +92,7 @@ class Tracker_Artifact_ChangesetValue_Date extends Tracker_Artifact_ChangesetVal
             $date = date('c', $this->getTimestamp() ?? 0);
         }
 
-        assert($this->field instanceof Tracker_FormElement_Field_Date);
+        assert($this->field instanceof DateField);
 
         return ArtifactFieldValueDateFullRepresentation::fromDatetimeInfo(
             $this->field->getId(),

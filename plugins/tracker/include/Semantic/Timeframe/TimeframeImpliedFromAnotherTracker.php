@@ -62,12 +62,12 @@ class TimeframeImpliedFromAnotherTracker implements IComputeTimeframes
         );
     }
 
-    public function getStartDateField(): ?\Tracker_FormElement_Field_Date
+    public function getStartDateField(): ?\Tuleap\Tracker\FormElement\Field\Date\DateField
     {
         return null;
     }
 
-    public function getEndDateField(): ?\Tracker_FormElement_Field_Date
+    public function getEndDateField(): ?\Tuleap\Tracker\FormElement\Field\Date\DateField
     {
         return null;
     }

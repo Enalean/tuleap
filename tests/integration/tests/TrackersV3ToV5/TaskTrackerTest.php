@@ -31,7 +31,6 @@ use Tracker_DateReminder_Role_Submitter;
 use Tracker_DateReminderFactory;
 use Tracker_DateReminderRenderer;
 use Tracker_FormElement;
-use Tracker_FormElement_Field_Date;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Tracker_FormElementFactory;
@@ -44,6 +43,7 @@ use Tuleap\Disposable\Dispose;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\Helpers\CodendiLogSwitcher;
 use Tuleap\Tracker\DateReminder\DateReminderDao;
+use Tuleap\Tracker\FormElement\Field\Date\DateField;
 use Tuleap\Tracker\FormElement\Field\String\StringField;
 use Tuleap\Tracker\FormElement\Field\Text\TextField;
 use Tuleap\Tracker\Semantic\TrackerSemanticFactory;
@@ -264,7 +264,7 @@ final class TaskTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
     private function checkItHasADateFieldStartDate(): void
     {
         $field = $this->form_element_factory->getFormElementByName($this->task_tracker->getId(), 'start_date');
-        self::assertInstanceOf(Tracker_FormElement_Field_Date::class, $field);
+        self::assertInstanceOf(DateField::class, $field);
         self::assertSame('start_date', $field->getName());
         self::assertSame('Start Date', $field->getLabel());
         self::assertFalse($field->isRequired());

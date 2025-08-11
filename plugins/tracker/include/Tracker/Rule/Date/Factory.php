@@ -18,13 +18,14 @@
   * along with Tuleap. If not, see <http://www.gnu.org/licenses/
   */
 
+use Tuleap\Tracker\FormElement\Field\Date\DateField;
 use Tuleap\Tracker\Tracker;
 
 /**
  * Factory of rules
  * Base class to create, retrieve, update or delete rules
  */
-class Tracker_Rule_Date_Factory
+class Tracker_Rule_Date_Factory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /**
      *
@@ -41,14 +42,13 @@ class Tracker_Rule_Date_Factory
         $this->element_factory = $element_factory;
     }
 
-    /** @return array of Tracker_FormElement_Field_Date */
-    public function getUsedDateFields(Tracker $tracker)
+    /** @return DateField[] */
+    public function getUsedDateFields(Tracker $tracker): array
     {
         return $this->element_factory->getUsedDateFields($tracker);
     }
 
-    /** @return Tracker_FormElement_Field_Date|null */
-    public function getUsedDateFieldById(Tracker $tracker, $field_id)
+    public function getUsedDateFieldById(Tracker $tracker, $field_id): ?DateField
     {
         return $this->element_factory->getUsedDateFieldById($tracker, $field_id);
     }

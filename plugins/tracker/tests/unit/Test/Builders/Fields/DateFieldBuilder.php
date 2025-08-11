@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Test\Builders\Fields;
 
-use Tracker_FormElement_Field_Date;
+use Tuleap\Tracker\FormElement\Field\Date\DateField;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 final class DateFieldBuilder
@@ -32,10 +32,6 @@ final class DateFieldBuilder
 
     private string $name  = 'date';
     private string $label = 'label';
-    /** @var list<\PFUser> */
-    private array $user_with_read_permissions = [];
-    /** @var array<int, bool> */
-    private array $read_permissions = [];
     private \Tuleap\Tracker\Tracker $tracker;
 
     private function __construct(private readonly int $id)
@@ -72,9 +68,9 @@ final class DateFieldBuilder
         return $this;
     }
 
-    public function build(): Tracker_FormElement_Field_Date
+    public function build(): DateField
     {
-        $date_element = new Tracker_FormElement_Field_Date(
+        $date_element = new DateField(
             $this->id,
             $this->tracker->getId(),
             15,

@@ -22,17 +22,16 @@ namespace Tuleap\Tracker;
 
 use Tracker_DateReminder;
 use Tracker_DateReminderManager;
-use Tracker_FormElement_Field_Date;
+use Tuleap\Tracker\FormElement\Field\Date\DateField;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
-//phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class Tracker_DateReminderManagerTest extends \Tuleap\Test\PHPUnit\TestCase
+class Tracker_DateReminderManagerTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
     private const TRACKER_ID = 158;
 
     /**
-     * @var Tracker_FormElement_Field_Date&\PHPUnit\Framework\MockObject\MockObject
+     * @var DateField&\PHPUnit\Framework\MockObject\MockObject
      */
     private $field;
     /**
@@ -47,7 +46,7 @@ class Tracker_DateReminderManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function setUp(): void
     {
-        $this->field    = $this->createMock(Tracker_FormElement_Field_Date::class);
+        $this->field    = $this->createMock(DateField::class);
         $this->reminder = $this->createMock(Tracker_DateReminder::class);
         $this->reminder->method('getField')->willReturn($this->field);
 

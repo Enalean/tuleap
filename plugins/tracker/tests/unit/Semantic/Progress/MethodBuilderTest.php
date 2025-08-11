@@ -77,7 +77,7 @@ final class MethodBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('getUsedFieldByIdAndType')
             ->willReturnCallback(
                 fn (Tracker $tracker, int $field_id, mixed $type) => match ($field_id) {
-                    1001 => $this->createMock(\Tracker_FormElement_Field_Date::class),
+                    1001 => $this->createMock(\Tuleap\Tracker\FormElement\Field\Date\DateField::class),
                     1002 => $this->createMock(\Tuleap\Tracker\FormElement\Field\NumericField::class),
                 }
             );
@@ -101,7 +101,7 @@ final class MethodBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->willReturnCallback(
                 fn (Tracker $tracker, int $field_id, mixed $type) => match ($field_id) {
                     1001 => $this->createMock(\Tuleap\Tracker\FormElement\Field\NumericField::class),
-                    1002 => $this->createMock(\Tracker_FormElement_Field_Date::class),
+                    1002 => $this->createMock(\Tuleap\Tracker\FormElement\Field\Date\DateField::class),
                 }
             );
 

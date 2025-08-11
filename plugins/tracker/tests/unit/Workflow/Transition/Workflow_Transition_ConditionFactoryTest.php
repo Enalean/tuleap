@@ -100,7 +100,7 @@ final class Workflow_Transition_ConditionFactoryTest extends \Tuleap\Test\PHPUni
 
     public function testItDelegatesToFieldNotEmptyFactory(): void
     {
-        $field = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $field = $this->createMock(\Tuleap\Tracker\FormElement\Field\Date\DateField::class);
         $this->fieldnotempty_factory->expects($this->once())->method('isFieldUsedInConditions')->with($field)->willReturn(true);
         $this->assertTrue($this->condition_factory->isFieldUsedInConditions($field));
     }

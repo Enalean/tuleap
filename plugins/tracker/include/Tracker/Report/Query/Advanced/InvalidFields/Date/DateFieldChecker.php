@@ -37,7 +37,7 @@ final readonly class DateFieldChecker
      * @throws DateToStringComparisonException
      * @throws FieldIsNotSupportedForComparisonException
      */
-    public function checkFieldIsValidForComparison(Comparison $comparison, \Tracker_FormElement_Field_Date $field): void
+    public function checkFieldIsValidForComparison(Comparison $comparison, \Tuleap\Tracker\FormElement\Field\Date\DateField $field): void
     {
         match ($comparison->getType()) {
             ComparisonType::Equal,
@@ -59,7 +59,7 @@ final readonly class DateFieldChecker
      */
     private function checkDateValueIsValid(
         Comparison $comparison,
-        \Tracker_FormElement_Field_Date $field,
+        \Tuleap\Tracker\FormElement\Field\Date\DateField $field,
         bool $is_empty_string_a_problem,
     ): void {
         $format           = ($field->isTimeDisplayed()) ? DateFormat::DATETIME : DateFormat::DATE;

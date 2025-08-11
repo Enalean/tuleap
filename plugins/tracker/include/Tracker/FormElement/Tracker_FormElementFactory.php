@@ -27,6 +27,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\RetrieveAnArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\RetrieveUsedArtifactLinkFields;
 use Tuleap\Tracker\FormElement\Field\Computed\ComputedField;
+use Tuleap\Tracker\FormElement\Field\Date\DateField;
 use Tuleap\Tracker\FormElement\Field\FieldDao;
 use Tuleap\Tracker\FormElement\Field\Float\FloatField;
 use Tuleap\Tracker\FormElement\Field\Integer\IntegerField;
@@ -101,7 +102,7 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
         self::FIELD_STRING_TYPE           => StringField::class,
         self::FIELD_TEXT_TYPE             => TextField::class,
         self::FIELD_FLOAT_TYPE            => FloatField::class,
-        self::FIELD_DATE_TYPE => Tracker_FormElement_Field_Date::class,
+        self::FIELD_DATE_TYPE => DateField::class,
         self::FIELD_SELECT_BOX_TYPE => Tracker_FormElement_Field_Selectbox::class,
         self::FIELD_RADIO_BUTTON_TYPE => Tracker_FormElement_Field_Radiobutton::class,
         self::FIELD_MULTI_SELECT_BOX_TYPE => Tracker_FormElement_Field_MultiSelectbox::class,
@@ -645,12 +646,12 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
     /**
      * @param int     $field_id
      *
-     * @return Tracker_FormElement_Field_Date|null
+     * @return DateField|null
      */
     public function getUsedDateFieldById(Tracker $tracker, $field_id)
     {
         $date_field = $this->getUsedFieldByIdAndType($tracker, $field_id, ['date', 'subon', 'lud']);
-        assert($date_field === null || $date_field instanceof Tracker_FormElement_Field_Date);
+        assert($date_field === null || $date_field instanceof DateField);
 
         return $date_field;
     }

@@ -29,7 +29,6 @@ use Tracker_Artifact_ChangesetValue_List;
 use Tracker_Artifact_ChangesetValue_Numeric;
 use Tracker_Artifact_ChangesetValue_PermissionsOnArtifact;
 use Tracker_Artifact_ChangesetValue_Text;
-use Tracker_FormElement_Field_Date;
 use Tracker_FormElement_Field_LastModifiedBy;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_PermissionsOnArtifact;
@@ -47,8 +46,9 @@ use Tuleap\TestManagement\Step\Definition\Field\StepsDefinition;
 use Tuleap\TestManagement\Step\Definition\Field\StepsDefinitionChangesetValue;
 use Tuleap\Tracker\Artifact\Changeset\ArtifactLink\ArtifactLinkChangesetValue;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
-use Tuleap\Tracker\FormElement\Field\Text\TextField;
+use Tuleap\Tracker\FormElement\Field\Date\DateField;
 use Tuleap\Tracker\FormElement\Field\NumericField;
+use Tuleap\Tracker\FormElement\Field\Text\TextField;
 
 final readonly class FieldsWithValuesBuilder implements GetFieldsWithValues
 {
@@ -121,7 +121,7 @@ final readonly class FieldsWithValuesBuilder implements GetFieldsWithValues
             return [...$fields, $this->numeric_field_with_value_builder->buildNumericFieldWithValue($configured_field, $changeset->getArtifact(), $changeset_value)];
         }
 
-        if ($configured_field->field instanceof Tracker_FormElement_Field_Date) {
+        if ($configured_field->field instanceof DateField) {
             assert($changeset_value === null || $changeset_value instanceof Tracker_Artifact_ChangesetValue_Date);
             return [...$fields, $this->date_field_with_value_builder->buildDateFieldWithValue($configured_field, $changeset, $changeset_value)];
         }

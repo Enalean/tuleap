@@ -28,7 +28,7 @@ class TimeframeChangesetFieldsValueRetriever
      * @throws TimeframeFieldNotFoundException
      * @throws TimeframeFieldNoValueException
      */
-    public static function getTimestamp(\Tracker_FormElement_Field_Date $date_field, \PFUser $user, \Tracker_Artifact_Changeset $changeset): int
+    public static function getTimestamp(\Tuleap\Tracker\FormElement\Field\Date\DateField $date_field, \PFUser $user, \Tracker_Artifact_Changeset $changeset): int
     {
         if (! $user instanceof \Tracker_UserWithReadAllPermission && ! $date_field->userCanRead($user)) {
             throw new TimeframeFieldNotFoundException();

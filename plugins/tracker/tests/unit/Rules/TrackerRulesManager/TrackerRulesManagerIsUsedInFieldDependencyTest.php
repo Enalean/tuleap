@@ -24,7 +24,6 @@ namespace Tuleap\Tracker\Rule;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\NullLogger;
-use Tracker_FormElement_Field_Date;
 use Tracker_FormElement_Field_Selectbox;
 use Tracker_FormElementFactory;
 use Tracker_Rule_Date;
@@ -35,6 +34,7 @@ use Tracker_RuleFactory;
 use Tracker_RulesManager;
 use TrackerFactory;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\FormElement\Field\Date\DateField;
 use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -49,7 +49,7 @@ final class TrackerRulesManagerIsUsedInFieldDependencyTest extends TestCase
 
     private Tracker_FormElement_Field_Selectbox $a_field_not_used_in_rules;
 
-    private Tracker_FormElement_Field_Date $source_field_date;
+    private DateField $source_field_date;
 
     public function setUp(): void
     {

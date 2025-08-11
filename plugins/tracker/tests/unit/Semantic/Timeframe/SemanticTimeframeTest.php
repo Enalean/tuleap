@@ -66,7 +66,7 @@ class SemanticTimeframeTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testisTimeframeNotConfiguredNorImpliedReturnsFalseWhenTimeframeWithDuration(): void
     {
-        $start_date_field   = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $start_date_field   = $this->createMock(\Tuleap\Tracker\FormElement\Field\Date\DateField::class);
         $duration_field     = $this->createMock(\Tuleap\Tracker\FormElement\Field\NumericField::class);
         $semantic_timeframe = new SemanticTimeframe(
             TrackerTestBuilder::aTracker()->build(),
@@ -81,8 +81,8 @@ class SemanticTimeframeTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testisTimeframeNotConfiguredNorImpliedReturnsFalseWhenTimeframeWithEndDate(): void
     {
-        $start_date_field   = $this->createMock(\Tracker_FormElement_Field_Date::class);
-        $end_date_field     = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $start_date_field   = $this->createMock(\Tuleap\Tracker\FormElement\Field\Date\DateField::class);
+        $end_date_field     = $this->createMock(\Tuleap\Tracker\FormElement\Field\Date\DateField::class);
         $semantic_timeframe = new SemanticTimeframe(
             TrackerTestBuilder::aTracker()->build(),
             new TimeframeWithEndDate(

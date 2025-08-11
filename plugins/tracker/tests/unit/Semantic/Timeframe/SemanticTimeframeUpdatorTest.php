@@ -174,7 +174,7 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
             'duration-field-id'   => $duration_field_id,
         ]);
 
-        $start_date_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $start_date_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\Date\DateField::class);
         $duration_field   = $this->createMock(\Tuleap\Tracker\FormElement\Field\Integer\IntegerField::class);
 
         $start_date_field->method('getTrackerId')->willReturn($this->tracker_id);
@@ -220,8 +220,8 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
             'end-date-field-id'   => $end_date_field_id,
         ]);
 
-        $start_date_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
-        $end_date_field   = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $start_date_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\Date\DateField::class);
+        $end_date_field   = $this->createMock(\Tuleap\Tracker\FormElement\Field\Date\DateField::class);
 
         $start_date_field->method('getTrackerId')->willReturn($this->tracker_id);
         $end_date_field->method('getTrackerId')->willReturn($this->tracker_id);
@@ -343,8 +343,8 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
             'end-date-field-id'   => $end_date_field_id,
         ]);
 
-        $start_date_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
-        $end_date_field   = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $start_date_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\Date\DateField::class);
+        $end_date_field   = $this->createMock(\Tuleap\Tracker\FormElement\Field\Date\DateField::class);
         $duration_field   = $this->createMock(\Tuleap\Tracker\FormElement\Field\NumericField::class);
 
         $start_date_field->method('getTrackerId')->willReturn($this->tracker_id);

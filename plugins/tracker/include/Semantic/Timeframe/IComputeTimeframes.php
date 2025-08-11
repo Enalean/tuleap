@@ -29,9 +29,9 @@ interface IComputeTimeframes
 
     public function getConfigDescription(): string;
 
-    public function getStartDateField(): ?\Tracker_FormElement_Field_Date;
+    public function getStartDateField(): ?\Tuleap\Tracker\FormElement\Field\Date\DateField;
 
-    public function getEndDateField(): ?\Tracker_FormElement_Field_Date;
+    public function getEndDateField(): ?\Tuleap\Tracker\FormElement\Field\Date\DateField;
 
     public function getDurationField(): ?\Tuleap\Tracker\FormElement\Field\NumericField;
 

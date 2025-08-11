@@ -23,7 +23,6 @@ namespace Tuleap\Tracker\REST;
 use PFUser;
 use Tracker_FormElement;
 use Tracker_FormElement_Container_Fieldset;
-use Tracker_FormElement_Field_Date;
 use Tracker_FormElement_Field_File;
 use Tracker_FormElement_Field_OpenList;
 use Tracker_FormElementFactory;
@@ -33,6 +32,7 @@ use Tracker_REST_FormElementRepresentation;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Container\Fieldset\HiddenFieldsetChecker;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\IRetrieveAllUsableTypesInProject;
+use Tuleap\Tracker\FormElement\Field\Date\DateField;
 use Tuleap\Tracker\REST\FormElement\FieldFileRepresentation;
 use Tuleap\Tracker\REST\FormElement\LinksFieldRepresentation;
 use Tuleap\Tracker\REST\FormElement\PermissionsForGroupsBuilder;
@@ -106,7 +106,7 @@ class FormElementRepresentationsBuilder
                     $this->getPermissionsForFormElement($form_element, $artifact, $user),
                     $this->permissions_for_groups_builder->getPermissionsForGroups($form_element, $artifact, $user)
                 );
-            } elseif ($form_element instanceof Tracker_FormElement_Field_Date) {
+            } elseif ($form_element instanceof DateField) {
                 $form_element_representation = Tracker_REST_FormElement_FieldDateRepresentation::build(
                     $form_element,
                     $this->form_element_factory->getType($form_element),

@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Tracker\FormElement\Field\Date\DateField;
 use Tuleap\Tracker\FormElement\Field\Float\FloatField;
 use Tuleap\Tracker\FormElement\Field\Integer\IntegerField;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
@@ -144,7 +145,7 @@ final class Transition_PostAction_FieldFactoryTest extends \Tuleap\Test\PHPUnit\
         $this->element_factory
             ->method('getFormElementById')
             ->with($this->field_id)
-            ->willReturn(new Tracker_FormElement_Field_Date(null, null, null, null, null, null, null, null, null, null, null));
+            ->willReturn(new DateField(null, null, null, null, null, null, null, null, null, null, null));
 
         $post_action_rows = [
             'id'         => $this->post_action_id,
@@ -291,7 +292,7 @@ final class Transition_PostAction_FieldFactoryTest extends \Tuleap\Test\PHPUnit\
         $transition = $this->createMock(Transition::class);
         $transition->method('getId')->willReturn(123);
 
-        $field_date = $this->createMock(Tracker_FormElement_Field_Date::class);
+        $field_date = $this->createMock(DateField::class);
         $field_date->method('getId')->willReturn(456);
 
         $post_action = new Transition_PostAction_Field_Date(

@@ -30,7 +30,7 @@ use Tuleap\Tracker\Semantic\Timeframe\TimeframeWithDuration;
 class SemanticTimeframeCurrentConfigurationPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\Tracker_FormElement_Field_Date
+     * @var \PHPUnit\Framework\MockObject\MockObject|\Tuleap\Tracker\FormElement\Field\Date\DateField
      */
     private $start_date_field;
     /**
@@ -55,7 +55,7 @@ class SemanticTimeframeCurrentConfigurationPresenterBuilderTest extends \Tuleap\
 
     public function setUp(): void
     {
-        $this->start_date_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $this->start_date_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\Date\DateField::class);
         $this->duration_field   = $this->createMock(\Tuleap\Tracker\FormElement\Field\NumericField::class);
         $this->current_tracker  = $this->createMock(\Tuleap\Tracker\Tracker::class);
         $this->dao              = $this->createMock(SemanticTimeframeDao::class);

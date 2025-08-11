@@ -33,7 +33,7 @@ final class EndDateFieldReferenceProxy implements EndDateFieldReference
     {
     }
 
-    public static function fromTrackerField(\Tracker_FormElement_Field_Date $end_date_field): self
+    public static function fromTrackerField(\Tuleap\Tracker\FormElement\Field\Date\DateField $end_date_field): self
     {
         return new self($end_date_field->getId(), $end_date_field->getLabel());
     }

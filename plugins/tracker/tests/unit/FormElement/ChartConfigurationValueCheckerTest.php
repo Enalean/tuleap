@@ -29,11 +29,11 @@ use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue_Date;
 use Tracker_Artifact_ChangesetValue_Integer;
 use Tracker_FormElement_Chart_Field_Exception;
-use Tracker_FormElement_Field_Date;
 use Tuleap\Date\DatePeriodWithOpenDays;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\Date\DateField;
 use Tuleap\Tracker\FormElement\Field\Integer\IntegerField;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
@@ -55,12 +55,12 @@ final class ChartConfigurationValueCheckerTest extends TestCase
     private Tracker_Artifact_ChangesetValue_Date&MockObject $start_date_changeset;
     private PFUser $user;
     private Artifact $artifact;
-    private Tracker_FormElement_Field_Date $start_date_field;
+    private DateField $start_date_field;
     private ChartConfigurationFieldRetriever&MockObject $configuration_field_retriever;
     private ChartConfigurationValueRetriever&MockObject $configuration_value_retriever;
     private ChartConfigurationValueChecker $chart_configuration_value_checker;
     private Tracker $tracker;
-    private Tracker_FormElement_Field_Date $end_date_field;
+    private DateField $end_date_field;
     private Tracker_Artifact_ChangesetValue_Date $end_date_changeset;
 
     protected function setUp(): void

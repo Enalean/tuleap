@@ -27,7 +27,6 @@ use ArtifactType;
 use ProjectManager;
 use ProjectUGroup;
 use Tracker_FormElement;
-use Tracker_FormElement_Field_Date;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Tracker_FormElementFactory;
@@ -39,6 +38,7 @@ use Tuleap\DB\DBFactory;
 use Tuleap\Disposable\Dispose;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\Helpers\CodendiLogSwitcher;
+use Tuleap\Tracker\FormElement\Field\Date\DateField;
 use Tuleap\Tracker\FormElement\Field\String\StringField;
 use Tuleap\Tracker\FormElement\Field\Text\TextField;
 use Tuleap\Tracker\Semantic\TrackerSemanticFactory;
@@ -254,7 +254,7 @@ final class DefectTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
     private function checkItHasAnUnusedDateFieldCloseDate(): void
     {
         $field = $this->form_element_factory->getFormElementByName($this->defect_tracker->getId(), 'close_date');
-        self::assertInstanceOf(Tracker_FormElement_Field_Date::class, $field);
+        self::assertInstanceOf(DateField::class, $field);
         self::assertSame('close_date', $field->getName());
         self::assertSame('Close Date', $field->getLabel());
         self::assertFalse($field->isRequired());

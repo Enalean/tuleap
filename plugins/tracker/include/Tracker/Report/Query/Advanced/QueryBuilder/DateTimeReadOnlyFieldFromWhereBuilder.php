@@ -62,7 +62,7 @@ final class DateTimeReadOnlyFieldFromWhereBuilder implements FieldFromWhereBuild
 
     public function visitCurrentDateTimeValueWrapper(CurrentDateTimeValueWrapper $value_wrapper, $parameters)
     {
-        if (! ($parameters->field instanceof \Tracker_FormElement_Field_Date)) {
+        if (! ($parameters->field instanceof \Tuleap\Tracker\FormElement\Field\Date\DateField)) {
             throw new \Exception('Field is not a date');
         }
 

@@ -21,6 +21,7 @@
 declare(strict_types=1);
 
 use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Tracker\FormElement\Field\Date\DateField;
 use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Tracker;
@@ -41,8 +42,8 @@ final class Tracker_Rule_Date_FactoryTest extends \Tuleap\Test\PHPUnit\TestCase 
 
     private Tracker $tracker;
 
-    private Tracker_FormElement_Field_Date $source_field;
-    private Tracker_FormElement_Field_Date $target_field;
+    private DateField $source_field;
+    private DateField $target_field;
 
     protected function setUp(): void
     {

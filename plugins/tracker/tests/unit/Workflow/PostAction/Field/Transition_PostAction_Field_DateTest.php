@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Tracker\FormElement\Field\Date\DateField;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class Transition_PostAction_Field_DateTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
@@ -31,7 +32,7 @@ final class Transition_PostAction_Field_DateTest extends \Tuleap\Test\PHPUnit\Te
 
     private Tracker_FormElementFactory&MockObject $factory;
 
-    private Tracker_FormElement_Field_Date&MockObject $field;
+    private DateField&MockObject $field;
 
     private PFUser $current_user;
 
@@ -41,7 +42,7 @@ final class Transition_PostAction_Field_DateTest extends \Tuleap\Test\PHPUnit\Te
 
         $this->current_user = UserTestBuilder::buildWithDefaults();
 
-        $this->field = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $this->field = $this->createMock(\Tuleap\Tracker\FormElement\Field\Date\DateField::class);
         $this->field->method('getId')->willReturn(102);
         $this->field->method('getLabel')->willReturn('Close Date');
         $this->field->method('userCanRead')->with($this->current_user)->willReturn(true);
@@ -141,7 +142,7 @@ final class Transition_PostAction_Field_DateTest extends \Tuleap\Test\PHPUnit\Te
 
     public function testBeforeShouldNOTDisplayFeedback(): void
     {
-        $field = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $field = $this->createMock(\Tuleap\Tracker\FormElement\Field\Date\DateField::class);
         $field->method('getId')->willReturn(102);
         $field->method('getLabel')->willReturn('Close Date');
         $field->method('userCanRead')->with($this->current_user)->willReturn(false);

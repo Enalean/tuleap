@@ -22,6 +22,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactId\ArtifactIdField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldAdmin;
 use Tuleap\Tracker\FormElement\Field\Computed\ComputedField;
+use Tuleap\Tracker\FormElement\Field\Date\DateField;
 use Tuleap\Tracker\FormElement\Field\Float\FloatField;
 use Tuleap\Tracker\FormElement\Field\Integer\IntegerField;
 use Tuleap\Tracker\FormElement\Field\LastUpdateDate\LastUpdateDateField;
@@ -95,7 +96,7 @@ class Tracker_FormElement_View_Admin_Visitor implements Tracker_FormElement_Visi
         );
     }
 
-    public function visitDate(Tracker_FormElement_Field_Date $field)
+    public function visitDate(DateField $field)
     {
         $this->visitField($field);
     }

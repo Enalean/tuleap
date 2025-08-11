@@ -77,8 +77,8 @@ final class SemanticTimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 'implied_from_tracker_id' => null,
             ]);
 
-        $start_date_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
-        $end_date_field   = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $start_date_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\Date\DateField::class);
+        $end_date_field   = $this->createMock(\Tuleap\Tracker\FormElement\Field\Date\DateField::class);
 
         $this->form_element_factory
             ->expects($this->exactly(2))
@@ -108,7 +108,7 @@ final class SemanticTimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 'implied_from_tracker_id' => null,
             ]);
 
-        $start_date_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $start_date_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\Date\DateField::class);
         $duration_field   = $this->createMock(\Tuleap\Tracker\FormElement\Field\NumericField::class);
 
         $this->form_element_factory
@@ -143,7 +143,7 @@ final class SemanticTimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 'implied_from_tracker_id' => null,
             ]);
 
-        $start_date_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $start_date_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\Date\DateField::class);
 
         $this->form_element_factory
             ->expects($this->once())
@@ -220,7 +220,7 @@ final class SemanticTimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 $implied_from_tracker
             );
 
-        $start_date_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $start_date_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\Date\DateField::class);
         $duration_field   = $this->createMock(\Tuleap\Tracker\FormElement\Field\NumericField::class);
 
         $this->form_element_factory
@@ -353,7 +353,7 @@ final class SemanticTimeframeBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 $epic_tracker_id => $epic_tracker,
             });
 
-        $start_date_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $start_date_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\Date\DateField::class);
         $duration_field   = $this->createMock(\Tuleap\Tracker\FormElement\Field\NumericField::class);
 
         $this->form_element_factory

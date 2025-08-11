@@ -59,7 +59,7 @@ final readonly class InvalidFieldChecker
             \Tuleap\Tracker\FormElement\Field\Integer\IntegerField::class         => $this->int_field_checker->checkFieldIsValidForComparison($comparison, $field),
             \Tuleap\Tracker\FormElement\Field\String\StringField::class,
             \Tuleap\Tracker\FormElement\Field\Text\TextField::class               => $this->text_field_checker->checkFieldIsValidForComparison($comparison, $field),
-            \Tracker_FormElement_Field_Date::class,
+            \Tuleap\Tracker\FormElement\Field\Date\DateField::class,
             \Tuleap\Tracker\FormElement\Field\LastUpdateDate\LastUpdateDateField::class,
             \Tuleap\Tracker\FormElement\Field\SubmittedOn\SubmittedOnField::class => $this->date_field_checker->checkFieldIsValidForComparison($comparison, $field),
             \Tracker_FormElement_Field_File::class                                => $this->file_field_checker->checkFieldIsValidForComparison($comparison, $field),

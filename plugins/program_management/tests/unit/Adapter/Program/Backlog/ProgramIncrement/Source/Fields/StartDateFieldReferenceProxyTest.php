@@ -35,9 +35,9 @@ final class StartDateFieldReferenceProxyTest extends \Tuleap\Test\PHPUnit\TestCa
         self::assertSame(self::FIELD_LABEL, $field->getLabel());
     }
 
-    private function getDateField(): \Tracker_FormElement_Field_Date
+    private function getDateField(): \Tuleap\Tracker\FormElement\Field\Date\DateField
     {
-        return new \Tracker_FormElement_Field_Date(
+        return new \Tuleap\Tracker\FormElement\Field\Date\DateField(
             self::FIELD_ID,
             10,
             1,

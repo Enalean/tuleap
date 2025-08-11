@@ -45,8 +45,8 @@ final class EventDatesRetrieverTest extends TestCase
 {
     private readonly Tracker_Artifact_Changeset $changeset;
     private readonly PFUser $recipient;
-    private \Tracker_FormElement_Field_Date $start_field;
-    private \Tracker_FormElement_Field_Date $end_field;
+    private \Tuleap\Tracker\FormElement\Field\Date\DateField $start_field;
+    private \Tuleap\Tracker\FormElement\Field\Date\DateField $end_field;
     private NullLogger $logger;
 
     protected function setUp(): void

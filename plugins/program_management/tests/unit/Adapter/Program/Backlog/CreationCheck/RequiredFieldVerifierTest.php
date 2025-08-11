@@ -122,7 +122,7 @@ final class RequiredFieldVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
         $other_tracker_with_no_required_field->method('getId')->willReturn(2);
         $other_tracker_with_no_required_field->method('getName')->willReturn('Tracker 2');
         $other_tracker_with_no_required_field->method('getGroupId')->willReturn(101);
-        $other_non_required_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $other_non_required_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\Date\DateField::class);
         $other_non_required_field->method('isRequired')->willReturn(false);
         $other_tracker_with_no_required_field->method('getFormElementFields')->willReturn(
             [$other_non_required_field]

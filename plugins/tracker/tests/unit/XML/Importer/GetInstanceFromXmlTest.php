@@ -298,7 +298,7 @@ final class GetInstanceFromXmlTest extends TestCase
             }
         );
 
-        $field = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $field = $this->createMock(\Tuleap\Tracker\FormElement\Field\Date\DateField::class);
         $this->form_element_factory->method('getInstanceFromXML')->willReturn($field);
 
         $field->expects($this->once())->method('setCachePermission')->with(4, 'PLUGIN_TRACKER_FIELD_UPDATE');

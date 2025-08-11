@@ -26,10 +26,10 @@ use Codendi_Request;
 use PFUser;
 use SimpleXMLElement;
 use Tracker_FormElement_Field;
-use Tracker_FormElement_Field_Date;
 use TrackerManager;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptViteAsset;
+use Tuleap\Tracker\FormElement\Field\Date\DateField;
 use Tuleap\Tracker\FormElement\Field\NumericField;
 use Tuleap\Tracker\Notifications\Settings\CalendarEventConfigDao;
 use Tuleap\Tracker\Semantic\Timeframe\Administration\SemanticTimeframeAdministrationPresenterBuilder;
@@ -164,7 +164,7 @@ class SemanticTimeframe extends TrackerSemantic
         return $this->timeframe->save($this->tracker, new SemanticTimeframeDao());
     }
 
-    public function getStartDateField(): ?Tracker_FormElement_Field_Date
+    public function getStartDateField(): ?DateField
     {
         return $this->timeframe->getStartDateField();
     }
@@ -174,7 +174,7 @@ class SemanticTimeframe extends TrackerSemantic
         return $this->timeframe->getDurationField();
     }
 
-    public function getEndDateField(): ?Tracker_FormElement_Field_Date
+    public function getEndDateField(): ?DateField
     {
         return $this->timeframe->getEndDateField();
     }

@@ -354,10 +354,10 @@ final class ProjectMilestonesPresenterBuilderTest extends \Tuleap\Test\PHPUnit\T
         $this->agileDashboard_milestone_backlog_item_collection->expects($this->once())->method('count')->willReturn(0);
 
         $this->semantic_timeframe->method('getDurationField')->willReturn(null);
-        $start = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $start = $this->createMock(\Tuleap\Tracker\FormElement\Field\Date\DateField::class);
         $start->method('getLabel')->willReturn('start');
         $this->semantic_timeframe->method('getStartDateField')->willReturn($start);
-        $end = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $end = $this->createMock(\Tuleap\Tracker\FormElement\Field\Date\DateField::class);
         $end->method('getLabel')->willReturn('end');
         $this->semantic_timeframe->method('getEndDateField')->willReturn($end);
 
@@ -398,7 +398,7 @@ final class ProjectMilestonesPresenterBuilderTest extends \Tuleap\Test\PHPUnit\T
         $duration = $this->createMock(\Tuleap\Tracker\FormElement\Field\NumericField::class);
         $duration->method('getLabel')->willReturn('duration');
         $this->semantic_timeframe->method('getDurationField')->willReturn($duration);
-        $start = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $start = $this->createMock(\Tuleap\Tracker\FormElement\Field\Date\DateField::class);
         $start->method('getLabel')->willReturn('start');
         $this->semantic_timeframe->method('getStartDateField')->willReturn($start);
         $this->semantic_timeframe->method('getEndDateField')->willReturn(null);
@@ -438,7 +438,7 @@ final class ProjectMilestonesPresenterBuilderTest extends \Tuleap\Test\PHPUnit\T
         $this->agileDashboard_milestone_backlog_item_collection->expects($this->once())->method('count')->willReturn(0);
 
         $this->semantic_timeframe->method('getDurationField')->willReturn(null);
-        $start = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $start = $this->createMock(\Tuleap\Tracker\FormElement\Field\Date\DateField::class);
         $start->method('getLabel')->willReturn('start');
         $this->semantic_timeframe->method('getStartDateField')->willReturn($start);
         $this->semantic_timeframe->method('getEndDateField')->willReturn(null);
@@ -715,10 +715,10 @@ final class ProjectMilestonesPresenterBuilderTest extends \Tuleap\Test\PHPUnit\T
         $duration = $this->createMock(\Tuleap\Tracker\FormElement\Field\NumericField::class);
         $duration->method('getLabel')->willReturn('duration');
 
-        $start = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $start = $this->createMock(\Tuleap\Tracker\FormElement\Field\Date\DateField::class);
         $start->method('getLabel')->willReturn('start');
 
-        $end = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $end = $this->createMock(\Tuleap\Tracker\FormElement\Field\Date\DateField::class);
         $end->method('getLabel')->willReturn('end');
 
         $semantic_timeframe->method('getDurationField')->willReturn($duration);

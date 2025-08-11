@@ -124,9 +124,9 @@ final class TimeframeTooltipEntryTest extends TestCase
 
     public function testNoTimeframeWhenUserCannotReadStartField(): void
     {
-        $start = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $start = $this->createMock(\Tuleap\Tracker\FormElement\Field\Date\DateField::class);
         $start->method('userCanRead')->willReturn(false);
-        $end = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $end = $this->createMock(\Tuleap\Tracker\FormElement\Field\Date\DateField::class);
         $end->method('userCanRead')->willReturn(true);
 
         $semantic_timeframe_builder = $this->createMock(SemanticTimeframeBuilder::class);
@@ -154,9 +154,9 @@ final class TimeframeTooltipEntryTest extends TestCase
 
     public function testNoTimeframeWhenUserCannotReadEndField(): void
     {
-        $start = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $start = $this->createMock(\Tuleap\Tracker\FormElement\Field\Date\DateField::class);
         $start->method('userCanRead')->willReturn(true);
-        $end = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $end = $this->createMock(\Tuleap\Tracker\FormElement\Field\Date\DateField::class);
         $end->method('userCanRead')->willReturn(false);
 
         $semantic_timeframe_builder = $this->createMock(SemanticTimeframeBuilder::class);
@@ -184,7 +184,7 @@ final class TimeframeTooltipEntryTest extends TestCase
 
     public function testNoTimeframeWhenUserCannotReadDurationField(): void
     {
-        $start = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $start = $this->createMock(\Tuleap\Tracker\FormElement\Field\Date\DateField::class);
         $start->method('userCanRead')->willReturn(true);
         $duration = $this->createMock(\Tuleap\Tracker\FormElement\Field\NumericField::class);
         $duration->method('userCanRead')->willReturn(false);

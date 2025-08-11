@@ -35,11 +35,11 @@ final class TimeframeWithEndDateTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private TimeframeWithEndDate $timeframe;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\Tracker_FormElement_Field_Date
+     * @var \PHPUnit\Framework\MockObject\MockObject|\Tuleap\Tracker\FormElement\Field\Date\DateField
      */
     private $start_date_field;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\Tracker_FormElement_Field_Date
+     * @var \PHPUnit\Framework\MockObject\MockObject|\Tuleap\Tracker\FormElement\Field\Date\DateField
      */
     private $end_date_field;
     private \PFUser $user;
@@ -446,9 +446,9 @@ final class TimeframeWithEndDateTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertEquals($display_start && $display_end, $this->timeframe->isTimeDisplayedForEvent());
     }
 
-    private function getMockedDateField(int $field_id): \Tracker_FormElement_Field_Date
+    private function getMockedDateField(int $field_id): \Tuleap\Tracker\FormElement\Field\Date\DateField
     {
-        $mock = $this->getMockBuilder(\Tracker_FormElement_Field_Date::class)
+        $mock = $this->getMockBuilder(\Tuleap\Tracker\FormElement\Field\Date\DateField::class)
             ->disableOriginalConstructor()
             ->getMock();
 
