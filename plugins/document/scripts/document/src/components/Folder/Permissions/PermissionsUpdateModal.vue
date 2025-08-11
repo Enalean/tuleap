@@ -24,8 +24,12 @@
         aria-labelledby="document-update-permissions-modal"
         enctype="multipart/form-data"
         v-on:submit.prevent="updatePermissions"
+        ref="form"
     >
-        <modal-header v-bind:modal-title="modal_title" v-bind:aria-labelled-by="aria_labelled_by" />
+        <modal-header
+            v-bind:modal-title="modal_title"
+            aria-labelled-by="document-update-permissions-modal"
+        />
         <modal-feedback />
         <div class="tlp-modal-body document-item-modal-body">
             <div v-if="project_ugroups === null" class="document-permissions-modal-loading-state">
@@ -48,15 +52,15 @@
         </div>
         <modal-footer
             v-bind:is-loading="!can_be_submitted"
-            v-bind:submit-button-label="submit_button_label"
-            v-bind:aria-labelled-by="aria_labelled_by"
+            v-bind:submit-button-label="$gettext('Update permissions')"
+            aria-labelled-by="document-update-permissions-modal"
             v-bind:icon-submit-button-class="'fa-solid fa-pencil'"
             data-test="document-modal-submit-update-permissions"
         />
     </form>
 </template>
-<script lang="ts">
-import { mapState } from "vuex";
+<script setup lang="ts">
+import type { Modal } from "@tuleap/tlp-modal";
 import { createModal } from "@tuleap/tlp-modal";
 import { sprintf } from "sprintf-js";
 import ModalHeader from "../ModalCommon/ModalHeader.vue";
@@ -65,131 +69,133 @@ import ModalFooter from "../ModalCommon/ModalFooter.vue";
 import PermissionsForGroupsSelector from "./PermissionsForGroupsSelector.vue";
 import { handleErrors } from "../../../store/actions-helpers/handle-errors";
 import PermissionsUpdateFolderSubItems from "./PermissionsUpdateFolderSubItems.vue";
+import type {
+    UpdateApplyPermissionsOnChildren,
+    UpdatePermissionsEvent,
+} from "../../../helpers/emitter";
 import emitter from "../../../helpers/emitter";
 import { CAN_MANAGE, CAN_READ, CAN_WRITE } from "../../../constants";
+import type { Item } from "../../../type";
+import { computed, onBeforeMount, onBeforeUnmount, onMounted, ref, watch } from "vue";
+import { useNamespacedState, useStore } from "vuex-composition-helpers";
+import type { ConfigurationState } from "../../../store/configuration";
+import type { ErrorState } from "../../../store/error/module";
+import type { PermissionsState } from "../../../store/permissions/permissions-default-state";
+import { useGettext } from "vue3-gettext";
 
-export default {
-    name: "PermissionsUpdateModal",
-    components: {
-        ModalHeader,
-        ModalFeedback,
-        ModalFooter,
-        PermissionsForGroupsSelector,
-        PermissionsUpdateFolderSubItems,
-    },
-    props: {
-        item: Object,
-    },
-    data: () => {
-        return {
-            modal: null,
-            aria_labelled_by: "document-update-permissions-modal",
-            is_submitting_new_permissions: false,
-            updated_permissions: {
-                apply_permissions_on_children: false,
-                can_read: [],
-                can_write: [],
-                can_manage: [],
-            },
-        };
-    },
-    computed: {
-        ...mapState("configuration", ["project_id"]),
-        ...mapState("error", ["has_modal_error"]),
-        ...mapState("permissions", ["project_ugroups"]),
-        modal_title() {
-            return sprintf(this.$gettext('Edit "%s" permissions'), this.item.title);
-        },
-        submit_button_label() {
-            return this.$gettext("Update permissions");
-        },
-        can_be_submitted() {
-            return this.project_ugroups !== null && this.is_submitting_new_permissions === false;
-        },
-    },
-    watch: {
-        item: function () {
-            this.setPermissionsToUpdateFromItem();
-        },
-    },
-    beforeMount() {
-        this.setPermissionsToUpdateFromItem();
-    },
-    mounted() {
-        this.modal = createModal(this.$el);
-        emitter.on("show-update-permissions-modal", this.show);
-        emitter.on("update-permissions", this.updateUGroup);
-        emitter.on("update-apply-permissions-on-children", this.setApplyPermissionsOnChildren);
-        this.modal.addEventListener("tlp-modal-hidden", this.reset);
-        this.show();
-    },
-    beforeUnmount() {
-        emitter.off("show-update-permissions-modal", this.show);
-        emitter.off("update-permissions", this.updateUGroup);
-        this.modal.removeEventListener("tlp-modal-hidden", this.reset);
-    },
-    methods: {
-        setPermissionsToUpdateFromItem() {
-            if (!this.item.permissions_for_groups) {
-                return;
-            }
-            this.updated_permissions = {
-                apply_permissions_on_children: false,
-                can_read: JSON.parse(JSON.stringify(this.item.permissions_for_groups.can_read)),
-                can_write: JSON.parse(JSON.stringify(this.item.permissions_for_groups.can_write)),
-                can_manage: JSON.parse(JSON.stringify(this.item.permissions_for_groups.can_manage)),
-            };
-        },
-        async show() {
-            this.modal.show();
-            try {
-                await this.$store.dispatch(
-                    "permissions/loadProjectUserGroupsIfNeeded",
-                    this.project_id,
-                );
-            } catch (e) {
-                await handleErrors(this.$store, e);
-                this.modal.hide();
-            }
-        },
-        reset() {
-            this.setPermissionsToUpdateFromItem();
-            this.$store.commit("error/resetModalError");
-        },
-        async updatePermissions() {
-            this.is_submitting_new_permissions = true;
-            this.$store.commit("error/resetModalError");
-            await this.$store.dispatch("permissions/updatePermissions", {
-                item: this.item,
-                updated_permissions: this.updated_permissions,
-            });
-            this.is_submitting_new_permissions = false;
-            if (this.has_modal_error === false) {
-                this.modal.hide();
-            }
-        },
+const { $gettext } = useGettext();
+const $store = useStore();
 
-        updateUGroup(event) {
-            switch (event.label) {
-                case CAN_READ:
-                    this.updated_permissions.can_read = event.value;
-                    break;
-                case CAN_WRITE:
-                    this.updated_permissions.can_write = event.value;
-                    break;
-                case CAN_MANAGE:
-                    this.updated_permissions.can_manage = event.value;
-                    break;
-                default:
-            }
-        },
+const props = defineProps<{
+    item: Item;
+}>();
 
-        setApplyPermissionsOnChildren(event) {
-            this.updated_permissions = {
-                ...this.updated_permissions,
-                apply_permissions_on_children: event.do_permissions_apply_on_children,
-            };
-        },
-    },
-};
+const is_submitting_new_permissions = ref(false);
+const updated_permissions = ref({
+    apply_permissions_on_children: false,
+    can_read: [],
+    can_write: [],
+    can_manage: [],
+});
+const form = ref<HTMLFormElement>();
+let modal: Modal | null = null;
+
+const { project_id } = useNamespacedState<Pick<ConfigurationState, "project_id">>("configuration", [
+    "project_id",
+]);
+const { has_modal_error } = useNamespacedState<Pick<ErrorState, "has_modal_error">>("error", [
+    "has_modal_error",
+]);
+const { project_ugroups } = useNamespacedState<Pick<PermissionsState, "project_ugroups">>(
+    "permissions",
+    ["project_ugroups"],
+);
+
+const modal_title = computed(() => sprintf($gettext('Edit "%s" permissions'), props.item.title));
+const can_be_submitted = computed(
+    () => project_ugroups.value !== null && is_submitting_new_permissions.value === false,
+);
+
+watch(() => props.item, setPermissionsToUpdateFromItem);
+
+onBeforeMount(() => {
+    setPermissionsToUpdateFromItem();
+});
+
+onMounted(() => {
+    modal = createModal(form.value);
+    emitter.on("show-update-permissions-modal", show);
+    emitter.on("update-permissions", updateUGroup);
+    emitter.on("update-apply-permissions-on-children", setApplyPermissionsOnChildren);
+    modal.addEventListener("tlp-modal-hidden", reset);
+    show();
+});
+
+onBeforeUnmount(() => {
+    emitter.off("show-update-permissions-modal", show);
+    emitter.off("update-permissions", updateUGroup);
+    modal?.removeEventListener("tlp-modal-hidden", reset);
+});
+
+function setPermissionsToUpdateFromItem(): void {
+    if (!props.item.permissions_for_groups) {
+        return;
+    }
+    updated_permissions.value = {
+        apply_permissions_on_children: false,
+        can_read: JSON.parse(JSON.stringify(props.item.permissions_for_groups.can_read)),
+        can_write: JSON.parse(JSON.stringify(props.item.permissions_for_groups.can_write)),
+        can_manage: JSON.parse(JSON.stringify(props.item.permissions_for_groups.can_manage)),
+    };
+}
+
+async function show(): Promise<void> {
+    modal?.show();
+    try {
+        await $store.dispatch("permissions/loadProjectUserGroupsIfNeeded", project_id.value);
+    } catch (err) {
+        await handleErrors($store, err);
+        modal?.hide();
+    }
+}
+
+function reset(): void {
+    setPermissionsToUpdateFromItem();
+    $store.commit("error/resetModalError");
+}
+
+async function updatePermissions(): Promise<void> {
+    is_submitting_new_permissions.value = true;
+    $store.commit("error/resetModalError");
+    await $store.dispatch("permissions/updatePermissions", {
+        item: props.item,
+        updated_permissions: updated_permissions.value,
+    });
+    is_submitting_new_permissions.value = false;
+    if (!has_modal_error.value) {
+        modal?.hide();
+    }
+}
+
+function updateUGroup(event: UpdatePermissionsEvent): void {
+    switch (event.label) {
+        case CAN_READ:
+            updated_permissions.value.can_read = event.value;
+            break;
+        case CAN_WRITE:
+            updated_permissions.value.can_write = event.value;
+            break;
+        case CAN_MANAGE:
+            updated_permissions.value.can_manage = event.value;
+            break;
+        default:
+    }
+}
+
+function setApplyPermissionsOnChildren(event: UpdateApplyPermissionsOnChildren): void {
+    updated_permissions.value = {
+        ...updated_permissions.value,
+        apply_permissions_on_children: event.do_permissions_apply_on_children,
+    };
+}
 </script>
