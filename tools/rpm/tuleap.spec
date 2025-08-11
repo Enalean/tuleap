@@ -530,13 +530,10 @@ Requires: %{name} = %{tuleap_version}-%{tuleap_release}%{?dist}
 %package plugin-graphs
 Summary: Graphs for tuleap
 Group: Development/Tools
-Requires: %{name} = %{tuleap_version}-%{tuleap_release}%{?dist}
+Requires: %{name} = %{tuleap_version}-%{tuleap_release}%{?dist}, tuleap-plugin-tracker
 %description plugin-graphs
-Provides some graph features.
+%{summary}.
 
-%files plugin-graphs
-%defattr(-,root,root,-)
-%{APP_DIR}/plugins/graphs
 
 %endif
 
@@ -587,7 +584,6 @@ done
 # Remove old scripts: not used and add unneeded perl depedencies to the package
 %{__rm} -f $RPM_BUILD_ROOT/%{APP_DIR}/src/utils/DocmanUploader.pl
 %{__rm} -f $RPM_BUILD_ROOT/%{APP_DIR}/src/utils/DocmanLegacyDownloader.pl
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/graphs
 # No need of template
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/template
 
@@ -623,6 +619,7 @@ done
 
 %if %{with experimental}
 %else
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/graphs
 %endif
 
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/themes/BurningParrot/composer.json
@@ -1457,6 +1454,10 @@ fi
 %endif
 
 %if %{with experimental}
+
+%files plugin-graphs
+%defattr(-,root,root,-)
+%{APP_DIR}/plugins/graphs
 
 %endif
 
