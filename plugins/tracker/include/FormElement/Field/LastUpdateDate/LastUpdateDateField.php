@@ -19,16 +19,32 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+namespace Tuleap\Tracker\FormElement\Field\LastUpdateDate;
+
+use Override;
+use PFUser;
+use Tracker_Artifact_Changeset;
+use Tracker_Artifact_ChangesetDao;
+use Tracker_Artifact_ChangesetValue;
+use Tracker_Artifact_ChangesetValue_Date;
+use Tracker_ArtifactFactory;
+use Tracker_FormElement_DateFormatter;
+use Tracker_FormElement_Field_Date;
+use Tracker_FormElement_Field_ReadOnly;
+use Tracker_FormElement_FieldVisitor;
+use Tracker_FormElementFactory;
+use Tracker_Report_Criteria;
 use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
+use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFullRepresentation;
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field_Date implements Tracker_FormElement_Field_ReadOnly
+final class LastUpdateDateField extends Tracker_FormElement_Field_Date implements Tracker_FormElement_Field_ReadOnly
 {
     public array $default_properties = [];
 
+    #[Override]
     public function getCriteriaFromWhere(Tracker_Report_Criteria $criteria): Option
     {
         $criteria_value = $this->getCriteriaValue($criteria);
@@ -55,12 +71,14 @@ class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field
         );
     }
 
+    #[Override]
     public function getQuerySelect(): string
     {
         //Last update date is stored in the changeset (the date of the changeset)
         return 'c.submitted_on AS ' . $this->getQuerySelectName();
     }
 
+    #[Override]
     public function getQueryFrom()
     {
         //Last update date is stored in the changeset (the date of the changeset)
@@ -70,42 +88,50 @@ class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field
     /**
      * Get the "group by" statement to retrieve field values
      */
+    #[Override]
     public function getQueryGroupby(): string
     {
         //Last update date is stored in the changeset (the date of the changeset)
         return 'c.submitted_on';
     }
 
+    #[Override]
     public function fetchRawValueFromChangeset(Tracker_Artifact_Changeset $changeset): string
     {
         return $this->formatDate($changeset->getSubmittedOn());
     }
 
+    #[Override]
     protected function getValueDao()
     {
         return null;
     }
 
+    #[Override]
     public static function getFactoryLabel()
     {
         return dgettext('tuleap-tracker', 'Last Update Date');
     }
 
+    #[Override]
     public static function getFactoryDescription()
     {
         return dgettext('tuleap-tracker', 'Display the last update date of the artifact');
     }
 
+    #[Override]
     public static function getFactoryIconUseIt()
     {
         return $GLOBALS['HTML']->getImagePath('calendar/cal.png');
     }
 
+    #[Override]
     public static function getFactoryIconCreate()
     {
         return $GLOBALS['HTML']->getImagePath('calendar/cal--plus.png');
     }
 
+    #[Override]
     protected function saveValue(
         $artifact,
         $changeset_value_id,
@@ -119,12 +145,13 @@ class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field
     /**
      * Keep the value
      *
-     * @param Artifact                        $artifact                The artifact
-     * @param int                             $changeset_value_id      The id of the changeset_value
+     * @param Artifact $artifact The artifact
+     * @param int $changeset_value_id The id of the changeset_value
      * @param Tracker_Artifact_ChangesetValue $previous_changesetvalue The data previously stored in the db
      *
      * @return int or array of int
      */
+    #[Override]
     protected function keepValue($artifact, $changeset_value_id, Tracker_Artifact_ChangesetValue $previous_changesetvalue)
     {
         //The field is ReadOnly
@@ -134,12 +161,13 @@ class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field
     /**
      * Get the value of this field
      *
-     * @param Tracker_Artifact_Changeset $changeset   The changeset (needed in only few cases like 'lud' field)
-     * @param int                        $value_id    The id of the value
+     * @param Tracker_Artifact_Changeset $changeset The changeset (needed in only few cases like 'lud' field)
+     * @param int $value_id The id of the value
      * @param bool $has_changed If the changeset value has changed from the rpevious one
      *
      * @return Tracker_Artifact_ChangesetValue or null if not found
      */
+    #[Override]
     public function getChangesetValue($changeset, $value_id, $has_changed)
     {
         $changeset_value = new Tracker_Artifact_ChangesetValue_Date($value_id, $changeset, $this, $has_changed, $changeset->getSubmittedOn());
@@ -149,6 +177,7 @@ class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field
     /**
      * @see Tracker_FormElement_Field::hasChanges()
      */
+    #[Override]
     public function hasChanges(Artifact $artifact, Tracker_Artifact_ChangesetValue $old_value, $new_value)
     {
         //The last update date is never updated
@@ -158,10 +187,11 @@ class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field
     /**
      * Fetch the html code to display the field value in artifact
      *
-     * @param Artifact                        $artifact         The artifact
-     * @param Tracker_Artifact_ChangesetValue $value            The actual value of the field
-     * @param array                           $submitted_values The value already submitted by the user
+     * @param Artifact $artifact The artifact
+     * @param Tracker_Artifact_ChangesetValue $value The actual value of the field
+     * @param array $submitted_values The value already submitted by the user
      */
+    #[Override]
     protected function fetchArtifactValue(
         Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value,
@@ -173,13 +203,14 @@ class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field
     /**
      * Fetch the html code to display the field value in artifact in read only mode
      *
-     * @param Artifact                $artifact The artifact
-     * @param Tracker_Artifact_ChangesetValue $value    The actual value of the field
+     * @param Artifact $artifact The artifact
+     * @param Tracker_Artifact_ChangesetValue $value The actual value of the field
      *
      * @return string
-     *@todo Pass the changeset to not necessarily retrieve the last update date from the *last* chagneset (audit)
+     * @todo Pass the changeset to not necessarily retrieve the last update date from the *last* chagneset (audit)
      *
      */
+    #[Override]
     public function fetchArtifactValueReadOnly(Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
     {
         $html = '';
@@ -196,6 +227,7 @@ class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field
         return $html;
     }
 
+    #[Override]
     public function fetchArtifactValueWithEditionFormIfEditable(
         Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value = null,
@@ -207,6 +239,7 @@ class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field
     /**
      * Fetch data to display the field value in mail
      */
+    #[Override]
     public function fetchMailArtifactValue(
         Artifact $artifact,
         PFUser $user,
@@ -233,6 +266,7 @@ class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field
         return $output;
     }
 
+    #[Override]
     protected function fetchTooltipValue(Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null): string
     {
         if (! $value) {
@@ -245,11 +279,12 @@ class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field
         return parent::fetchTooltipValue($artifact, $value);
     }
 
-     /**
+    /**
      * Validate a field
      *
-     * @param mixed  $submitted_value      The submitted value
+     * @param mixed $submitted_value The submitted value
      */
+    #[Override]
     public function validateFieldWithPermissionsAndRequiredStatus(
         Artifact $artifact,
         $submitted_value,
@@ -273,22 +308,25 @@ class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field
      * Say if the value is valid. If not valid set the internal has_error to true.
      *
      * @param Artifact $artifact The artifact
-     * @param mixed    $value    data coming from the request. May be string or array.
+     * @param mixed $value data coming from the request. May be string or array.
      *
      * @return bool true if the value is considered ok
      */
+    #[Override]
     public function isValid(Artifact $artifact, $value)
     {
         // this field is always valid as it is not filled by users.
         return true;
     }
 
+    #[Override]
     public function fetchSubmit(array $submitted_values)
     {
         // We do not display the field in the artifact submit form
         return '';
     }
 
+    #[Override]
     public function fetchSubmitMasschange()
     {
         return '';
@@ -299,6 +337,7 @@ class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field
      *
      * @return string html
      */
+    #[Override]
     protected function fetchAdminFormElement()
     {
         $html  = '';
@@ -309,6 +348,7 @@ class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field
         return $html;
     }
 
+    #[Override]
     public function afterCreate(array $form_element_data, $tracker_is_empty)
     {
     }
@@ -320,6 +360,7 @@ class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field
      *
      * @return string|false
      */
+    #[Override]
     public function getLastValue(Artifact $artifact)
     {
         return date(Tracker_FormElement_DateFormatter::DATE_FORMAT, (int) $artifact->getLastChangeset()->getSubmittedOn());
@@ -328,11 +369,12 @@ class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field
     /**
      * Get artifacts that responds to some criteria
      *
-     * @param date    $date      The date criteria
+     * @param date $date The date criteria
      * @param int $trackerId The Tracker Id
      *
      * @return Array
      */
+    #[Override]
     public function getArtifactsByCriterias($date, $trackerId = null)
     {
         $artifacts = [];
@@ -347,19 +389,22 @@ class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field
         return $artifacts;
     }
 
+    #[Override]
     public function accept(Tracker_FormElement_FieldVisitor $visitor)
     {
         return $visitor->visitLastUpdateDate($this);
     }
 
+    #[Override]
     public function isTimeDisplayed()
     {
         return true;
     }
 
+    #[Override]
     public function getFullRESTValue(PFUser $user, Tracker_Artifact_Changeset $changeset)
     {
-        $artifact_field_value_full_representation = new Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFullRepresentation();
+        $artifact_field_value_full_representation = new ArtifactFieldValueFullRepresentation();
         $artifact_field_value_full_representation->build(
             $this->getId(),
             Tracker_FormElementFactory::instance()->getType($this),

@@ -28,7 +28,6 @@ use Tracker_FormElement_Field_CrossReferences;
 use Tracker_FormElement_Field_Date;
 use Tracker_FormElement_Field_File;
 use Tracker_FormElement_Field_LastModifiedBy;
-use Tracker_FormElement_Field_LastUpdateDate;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_MultiSelectbox;
 use Tracker_FormElement_Field_OpenList;
@@ -42,6 +41,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\Computed\ComputedField;
 use Tuleap\Tracker\FormElement\Field\Float\FloatField;
 use Tuleap\Tracker\FormElement\Field\Integer\IntegerField;
+use Tuleap\Tracker\FormElement\Field\LastUpdateDate\LastUpdateDateField;
 use Tuleap\Tracker\FormElement\Field\PerTrackerArtifactId\PerTrackerArtifactIdField;
 use Tuleap\Tracker\FormElement\Field\Priority\PriorityField;
 use Tuleap\Tracker\FormElement\Field\String\StringField;
@@ -220,7 +220,7 @@ final class NotEqualFieldComparisonVisitor implements
         return null;
     }
 
-    public function visitLastUpdateDate(Tracker_FormElement_Field_LastUpdateDate $field)
+    public function visitLastUpdateDate(LastUpdateDateField $field)
     {
         return new DateTimeReadOnlyFieldFromWhereBuilder(
             new FromWhereComparisonFieldReadOnlyBuilder(),

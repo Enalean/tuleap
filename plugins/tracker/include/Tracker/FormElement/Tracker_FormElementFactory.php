@@ -30,6 +30,7 @@ use Tuleap\Tracker\FormElement\Field\Computed\ComputedField;
 use Tuleap\Tracker\FormElement\Field\FieldDao;
 use Tuleap\Tracker\FormElement\Field\Float\FloatField;
 use Tuleap\Tracker\FormElement\Field\Integer\IntegerField;
+use Tuleap\Tracker\FormElement\Field\LastUpdateDate\LastUpdateDateField;
 use Tuleap\Tracker\FormElement\Field\ListFields\RetrieveUsedListField;
 use Tuleap\Tracker\FormElement\Field\PerTrackerArtifactId\PerTrackerArtifactIdField;
 use Tuleap\Tracker\FormElement\Field\Priority\PriorityField;
@@ -114,7 +115,7 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
     ];
 
     protected $special_classnames     = [
-        self::FIELD_LAST_UPDATE_DATE_TYPE => Tracker_FormElement_Field_LastUpdateDate::class,
+        self::FIELD_LAST_UPDATE_DATE_TYPE => LastUpdateDateField::class,
         self::FIELD_ARTIFACT_ID_TYPE => ArtifactIdField::class,
         self::FIELD_SUBMITTED_ON_TYPE => SubmittedOnField::class,
         self::FIELD_ARTIFACT_IN_TRACKER => PerTrackerArtifactIdField::class,

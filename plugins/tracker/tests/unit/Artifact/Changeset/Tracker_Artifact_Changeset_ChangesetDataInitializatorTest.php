@@ -23,6 +23,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\Fields\SubmittedOnFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\LastUpdateDateFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Tracker;
 
@@ -241,11 +242,9 @@ final class Tracker_Artifact_Changeset_ChangesetDataInitializatorTest extends Te
 
     public function testItAppendsLastUpdateDateAtCurrentTime(): void
     {
-        $field = $this->createMock(Tracker_FormElement_Field_LastUpdateDate::class);
-        $field->method('getId')->willReturn(55);
         $this->formelement_factory->method('getAllFormElementsForTracker')
             ->with($this->tracker)
-            ->willReturn([$field]);
+            ->willReturn([LastUpdateDateFieldBuilder::aLastUpdateDateField(55)->build()]);
 
         $date = $_SERVER['REQUEST_TIME'];
         $this->artifact->method('getLastChangeset')->willReturn(new Tracker_Artifact_Changeset_Null());
