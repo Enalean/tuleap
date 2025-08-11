@@ -29,7 +29,7 @@ final class BearerTokenHeaderParserTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     #[DataProvider('dataProviderValidHeaderLines')]
     #[DataProvider('dataProviderInvalidHeaderLinesLookingLikeABearerToken')]
-    public function testDetectsHeaderLinesThatMayContainABearerToken(string $header_line): void
+    public function testDetectsHeaderLinesThatMayContainABearerToken(string $header_line, string $unused_data_provider_value = ''): void
     {
         $this->assertTrue((new BearerTokenHeaderParser())->doesHeaderLineContainsBearerTokenInformation($header_line));
     }

@@ -929,7 +929,6 @@ final class ArtifactXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase // php
     public function testItDoesntGetBlockedWhenThereIsNoDataStatusFieldValueList(): void
     {
         $this->logger->method('warning');
-        $this->expectNotToPerformAssertions();
         $this->exportTrackerDataFromFixture('artifact_with_no_value_list_for_status_field');
     }
 

@@ -24,15 +24,19 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Permission\Fields\ByGroup;
 
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\MockObject\MockObject;
 use TemplateRenderer;
 use TrackerFactory;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
+use Tuleap\Test\Builders\LayoutInspector;
 use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Test\Builders\TestLayout;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Test\Stubs\TemplateRendererStub;
 use Tuleap\Tracker\Permission\Fields\ByField\ByFieldController;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
@@ -40,7 +44,7 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 final class PermissionsOnFieldsTest extends TestCase
 {
     /**
-     * @param class-string $controller_class_name
+     * @param class-string<ByFieldController|ByGroupController> $controller_class_name
      */
     #[DataProvider('controllerProvider')]
     public function testAdminCanDisplay(string $controller_class_name): void
@@ -58,8 +62,8 @@ final class PermissionsOnFieldsTest extends TestCase
         $tracker_factory = $this->createMock(TrackerFactory::class);
         $tracker_factory->method('getTrackerById')->willReturn($tracker);
 
-        $renderer = $this->createMock(TemplateRenderer::class);
-        $layout   = $this->createMock(BaseLayout::class);
+        $renderer = new TemplateRendererStub();
+        $layout   = new TestLayout(new LayoutInspector());
 
         $controller = $this->getController($controller_class_name, $tracker_factory, $renderer);
 
@@ -69,7 +73,7 @@ final class PermissionsOnFieldsTest extends TestCase
     }
 
     /**
-     * @param class-string $controller_class_name
+     * @param class-string<ByFieldController|ByGroupController> $controller_class_name
      */
     #[DataProvider('controllerProvider')]
     public function testNonAdminGetsBlocked(string $controller_class_name): void
@@ -98,7 +102,7 @@ final class PermissionsOnFieldsTest extends TestCase
     }
 
     /**
-     * @param class-string $controller_class_name
+     * @param class-string<ByFieldController|ByGroupController> $controller_class_name
      */
     #[DataProvider('controllerProvider')]
     public function testTrackerWasDeleted(string $controller_class_name): void
@@ -128,7 +132,7 @@ final class PermissionsOnFieldsTest extends TestCase
     }
 
     /**
-     * @param class-string $controller_class_name
+     * @param class-string<ByFieldController|ByGroupController> $controller_class_name
      */
     #[DataProvider('controllerProvider')]
     public function testTrackerWasNotFound(string $controller_class_name): void
@@ -150,14 +154,14 @@ final class PermissionsOnFieldsTest extends TestCase
     }
 
     /**
-     * @param class-string $controller_class_name
-     * @return ByFieldController&\PHPUnit\Framework\MockObject\MockObject|ByGroupController&\PHPUnit\Framework\MockObject\MockObject
+     * @param class-string<ByFieldController|ByGroupController> $controller_class_name
+     * @return MockObject&ByFieldController|MockObject&ByGroupController
      */
     private function getController(
         string $controller_class_name,
         TrackerFactory $tracker_factory,
         TemplateRenderer $renderer,
-    ) {
+    ): MockObject {
         return $this->getMockBuilder($controller_class_name)
             ->setConstructorArgs([$tracker_factory, $renderer])
             ->onlyMethods(['display'])
@@ -165,7 +169,7 @@ final class PermissionsOnFieldsTest extends TestCase
     }
 
     /**
-     * @return class-string[][]
+     * @return class-string<ByFieldController|ByGroupController>[][]
      */
     public static function controllerProvider(): array
     {

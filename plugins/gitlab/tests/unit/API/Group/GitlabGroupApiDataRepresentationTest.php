@@ -31,14 +31,12 @@ use Tuleap\Test\PHPUnit\TestCase;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class GitlabGroupApiDataRepresentationTest extends TestCase
 {
-    /**
-     * @testWith [{"name": "my_group", "full_path": "https://gitlab.example.com/path/full", "web_url": "https://gitlab.example.com/webur", "avatar_url": "https://gitlab.example.com/avatar"}]
-     *           [{"id": 10, "full_path": "https://gitlab.example.com/path/full", "web_url": "https://gitlab.example.com/webur", "avatar_url": "https://gitlab.example.com/avatar"}]
-     *           [{"id": 10, "name": "my_group", "web_url": "https://gitlab.example.com/webur", "avatar_url": "https://gitlab.example.com/avatar"}]
-     *           [{"id": 10, "name": "my_group", "full_path": "https://gitlab.example.com/path/full", "avatar_url": "https://gitlab.example.com/avatar"}]
-     *           [{"id": 10, "name": "my_group", "full_path": "https://gitlab.example.com/path/full", "web_url": "https://gitlab.example.com/webur"}]
-     *           [{"id": 10, "web_url": "https://gitlab.example.com/webur", "avatar_url": "https://gitlab.example.com/avatar"}]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith([['name' => 'my_group', 'full_path' => 'https://gitlab.example.com/path/full', 'web_url' => 'https://gitlab.example.com/webur', 'avatar_url' => 'https://gitlab.example.com/avatar']])]
+    #[\PHPUnit\Framework\Attributes\TestWith([['id' => 10, 'full_path' => 'https://gitlab.example.com/path/full', 'web_url' => 'https://gitlab.example.com/webur', 'avatar_url' => 'https://gitlab.example.com/avatar']])]
+    #[\PHPUnit\Framework\Attributes\TestWith([['id' => 10, 'name' => 'my_group', 'web_url' => 'https://gitlab.example.com/webur', 'avatar_url' => 'https://gitlab.example.com/avatar']])]
+    #[\PHPUnit\Framework\Attributes\TestWith([['id' => 10, 'name' => 'my_group', 'full_path' => 'https://gitlab.example.com/path/full', 'avatar_url' => 'https://gitlab.example.com/avatar']])]
+    #[\PHPUnit\Framework\Attributes\TestWith([['id' => 10, 'name' => 'my_group', 'full_path' => 'https://gitlab.example.com/path/full', 'web_url' => 'https://gitlab.example.com/webur']])]
+    #[\PHPUnit\Framework\Attributes\TestWith([['id' => 10, 'web_url' => 'https://gitlab.example.com/webur', 'avatar_url' => 'https://gitlab.example.com/avatar']])]
     public function testItThrowsExceptionIfMandatoryKeyIsMissing(array $group_data): void
     {
         self::expectException(GitlabResponseAPIException::class);
@@ -47,13 +45,11 @@ final class GitlabGroupApiDataRepresentationTest extends TestCase
         GitlabGroupApiDataRepresentation::buildGitlabGroupFromApi($group_data);
     }
 
-    /**
-     * @testWith [{"id": "10", "name": "my_group", "full_path": "https://gitlab.example.com/path/full", "web_url": "https://gitlab.example.com/webur", "avatar_url": "https://gitlab.example.com/avatar"}]
-     *           [{"id": 10, "name": 10, "full_path": "https://gitlab.example.com/path/full", "web_url": "https://gitlab.example.com/webur", "avatar_url": "https://gitlab.example.com/avatar"}]
-     *           [{"id": 10, "name": "my_group", "full_path": 12, "web_url": "https://gitlab.example.com/webur", "avatar_url": "https://gitlab.example.com/avatar"}]
-     *           [{"id": 10, "name": "my_group", "full_path": "https://gitlab.example.com/path/full", "web_url": 15, "avatar_url": "https://gitlab.example.com/avatar"}]
-     *           [{"id": 10, "name": "my_group", "full_path": "https://gitlab.example.com/path/full", "web_url": "https://gitlab.example.com/webur", "avatar_url": 20}]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith([['id' => '10', 'name' => 'my_group', 'full_path' => 'https://gitlab.example.com/path/full', 'web_url' => 'https://gitlab.example.com/webur', 'avatar_url' => 'https://gitlab.example.com/avatar']])]
+    #[\PHPUnit\Framework\Attributes\TestWith([['id' => 10, 'name' => 10, 'full_path' => 'https://gitlab.example.com/path/full', 'web_url' => 'https://gitlab.example.com/webur', 'avatar_url' => 'https://gitlab.example.com/avatar']])]
+    #[\PHPUnit\Framework\Attributes\TestWith([['id' => 10, 'name' => 'my_group', 'full_path' => 12, 'web_url' => 'https://gitlab.example.com/webur', 'avatar_url' => 'https://gitlab.example.com/avatar']])]
+    #[\PHPUnit\Framework\Attributes\TestWith([['id' => 10, 'name' => 'my_group', 'full_path' => 'https://gitlab.example.com/path/full', 'web_url' => 15, 'avatar_url' => 'https://gitlab.example.com/avatar']])]
+    #[\PHPUnit\Framework\Attributes\TestWith([['id' => 10, 'name' => 'my_group', 'full_path' => 'https://gitlab.example.com/path/full', 'web_url' => 'https://gitlab.example.com/webur', 'avatar_url' => 20]])]
     public function testItThrowsExceptionIfMandatoryKeyHasNotTheRightType(array $group_data): void
     {
         self::expectException(GitlabResponseAPIException::class);

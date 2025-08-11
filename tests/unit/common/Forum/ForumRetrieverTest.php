@@ -55,11 +55,9 @@ final class ForumRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertNull($retriever->getForumUserCanView(1, $project, $user));
     }
 
-    /**
-     * @testWith [false, 1]
-     *           [true, 0]
-     *           [true, 1]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith([false, 1])]
+    #[\PHPUnit\Framework\Attributes\TestWith([true, 0])]
+    #[\PHPUnit\Framework\Attributes\TestWith([true, 1])]
     public function testItReturnsTheForumInOtherCases(bool $is_member, int $is_public): void
     {
         $project = ProjectTestBuilder::aProject()->withId(101)->build();

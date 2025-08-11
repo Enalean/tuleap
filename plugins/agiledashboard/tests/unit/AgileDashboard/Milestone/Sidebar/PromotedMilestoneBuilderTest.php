@@ -142,11 +142,9 @@ final class PromotedMilestoneBuilderTest extends TestCase
         self::assertTrue($this->getBuilder()->build($this->artifact, $this->user, $this->project)->isNothing());
     }
 
-    /**
-     * @testWith [true, false]
-     *           [false, true]
-     *           [true, true]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith([true, false])]
+    #[\PHPUnit\Framework\Attributes\TestWith([false, true])]
+    #[\PHPUnit\Framework\Attributes\TestWith([true, true])]
     public function testItReturnsNothingOptionWhenStartDateOrEndDateAreZero(bool $start_date_zero, bool $end_date_zero): void
     {
         $this->timeframe_builder->method('getSemantic')->willReturn(

@@ -67,10 +67,8 @@ final class ClientWrapperTest extends TestCase
         $this->wrapper = new ClientWrapper($this->factory, $this->stream_factory, $this->client_factory);
     }
 
-    /**
-     * @testWith [200, "OK"]
-     *           [204, "No Content"]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith([200, 'OK'])]
+    #[\PHPUnit\Framework\Attributes\TestWith([204, 'No Content'])]
     public function testDeleteUrl(int $status_code, string $reason): void
     {
         $credentials = CredentialsTestBuilder::get()->build();
@@ -113,12 +111,10 @@ final class ClientWrapperTest extends TestCase
         $this->wrapper->deleteUrl($credentials, '/url');
     }
 
-    /**
-     * @testWith [100, "informal"]
-     *           [300, "redirection"]
-     *           [400, "client"]
-     *           [500, "server"]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith([100, 'informal'])]
+    #[\PHPUnit\Framework\Attributes\TestWith([300, 'redirection'])]
+    #[\PHPUnit\Framework\Attributes\TestWith([400, 'client'])]
+    #[\PHPUnit\Framework\Attributes\TestWith([500, 'server'])]
     public function testDeleteUrlThrowsExceptionIfStatusCodeIsNotSuccess(int $status_code, string $reason): void
     {
         $credentials = CredentialsTestBuilder::get()->build();

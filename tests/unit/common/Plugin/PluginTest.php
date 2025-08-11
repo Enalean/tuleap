@@ -430,7 +430,6 @@ final class PluginTest extends \Tuleap\Test\PHPUnit\TestCase
             #[\Override]
             public function getHooksAndCallbacks()
             {
-                $this->addHook(\Tuleap\Config\GetConfigKeys::NAME);
                 return parent::getHooksAndCallbacks();
             }
 

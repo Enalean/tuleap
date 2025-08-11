@@ -42,9 +42,9 @@ final class NewOAuth2AppTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    public static function dataProviderInvalidData(): array
+    public static function dataProviderInvalidData(): \Generator
     {
-        return [
+        yield from [
             'Throws when App name is empty'               => ['', 'https://example.com/redirect'],
             'Throws when Redirect URI is empty'           => ['Jenkins', ''],
             'Throws when Redirect URI is not HTTPS'       => ['Jenkins', 'http://insecure.example.com'],

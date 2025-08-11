@@ -164,15 +164,13 @@ final class Tracker_FormElement_Field_SelectboxTest extends TestCase // phpcs:ig
         $field->getFieldDataFromRESTValueByField($value);
     }
 
-    /**
-     * @testWith [100]
-     *  ["100"]
-     *  [""]
-     *  [null]
-     *  [100]
-     *  [["100"]]
-     *  [[100]]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith([100])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['100'])]
+    #[\PHPUnit\Framework\Attributes\TestWith([''])]
+    #[\PHPUnit\Framework\Attributes\TestWith([null])]
+    #[\PHPUnit\Framework\Attributes\TestWith([100])]
+    #[\PHPUnit\Framework\Attributes\TestWith([['100']])]
+    #[\PHPUnit\Framework\Attributes\TestWith([[100]])]
     public function testItIsInvalidWhenIsRequiredAndEmpty($value): void
     {
         $artifact = $this->createStub(Artifact::class);

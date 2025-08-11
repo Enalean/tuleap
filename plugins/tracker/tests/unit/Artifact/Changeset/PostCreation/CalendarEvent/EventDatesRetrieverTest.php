@@ -129,13 +129,11 @@ final class EventDatesRetrieverTest extends TestCase
         );
     }
 
-    /**
-     * @testWith [null, 123,  "No start date, we cannot build calendar event"]
-     *           [0,    123,  "No start date, we cannot build calendar event"]
-     *           [123,  null, "No end date, we cannot build calendar event"]
-     *           [123,  0,    "No end date, we cannot build calendar event"]
-     *           [123,  120,  "End date < start date, we cannot build calendar event"]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith([null, 123, 'No start date, we cannot build calendar event'])]
+    #[\PHPUnit\Framework\Attributes\TestWith([0, 123, 'No start date, we cannot build calendar event'])]
+    #[\PHPUnit\Framework\Attributes\TestWith([123, null, 'No end date, we cannot build calendar event'])]
+    #[\PHPUnit\Framework\Attributes\TestWith([123, 0, 'No end date, we cannot build calendar event'])]
+    #[\PHPUnit\Framework\Attributes\TestWith([123, 120, 'End date < start date, we cannot build calendar event'])]
     public function testErrorWhenDatesAreConsideredInvalid(?int $start, ?int $end, string $expected_message): void
     {
         $builder = new EventDatesRetriever(
@@ -217,16 +215,14 @@ final class EventDatesRetrieverTest extends TestCase
         );
     }
 
-    /**
-     * @testWith [false, false, false, "end"]
-     *           [false, false, true, "start"]
-     *           [false, true, false, "end"]
-     *           [false, true, true, "end"]
-     *           [true, false, false, "start"]
-     *           [true, false, true, "start"]
-     *           [true, true, false, "start"]
-     *           [true, true, true, "start"]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith([false, false, false, 'end'])]
+    #[\PHPUnit\Framework\Attributes\TestWith([false, false, true, 'start'])]
+    #[\PHPUnit\Framework\Attributes\TestWith([false, true, false, 'end'])]
+    #[\PHPUnit\Framework\Attributes\TestWith([false, true, true, 'end'])]
+    #[\PHPUnit\Framework\Attributes\TestWith([true, false, false, 'start'])]
+    #[\PHPUnit\Framework\Attributes\TestWith([true, false, true, 'start'])]
+    #[\PHPUnit\Framework\Attributes\TestWith([true, true, false, 'start'])]
+    #[\PHPUnit\Framework\Attributes\TestWith([true, true, true, 'start'])]
     public function testItReturnsErrWhenDateFieldIsZeroAndCheckPerms(bool $start_date, bool $can_read, bool $check_permissions, string $error_message): void
     {
         $builder = new EventDatesRetriever(

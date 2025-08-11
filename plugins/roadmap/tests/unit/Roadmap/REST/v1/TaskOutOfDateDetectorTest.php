@@ -362,11 +362,9 @@ final class TaskOutOfDateDetectorTest extends TestCase
         );
     }
 
-    /**
-     * @testWith ["2020-01-15", true]
-     *           ["2021-01-15", false]
-     *           ["2023-01-15", false]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith(['2020-01-15', true])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['2021-01-15', false])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['2023-01-15', false])]
     public function testItReturnsTrueForArtifactsThatAreClosedWhoseEndDateIsLaterThanOneYearAgo(
         string $end_string_date,
         bool $expected_out_of_date,

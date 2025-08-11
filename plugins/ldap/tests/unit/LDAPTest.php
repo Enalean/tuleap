@@ -27,10 +27,8 @@ use ColinODell\PsrTestLogger\TestLogger;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class LDAPTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @testWith ["ldaps://ldap1.example.com,ldaps://ldap2.example.com"]
-     *           ["ldaps://ldap1.example.com;ldaps://ldap2.example.com"]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith(['ldaps://ldap1.example.com,ldaps://ldap2.example.com'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['ldaps://ldap1.example.com;ldaps://ldap2.example.com'])]
     public function testCanTryToFailOverMultipleServersToConnect(string $sys_ldap_server): void
     {
         $logger = new TestLogger();

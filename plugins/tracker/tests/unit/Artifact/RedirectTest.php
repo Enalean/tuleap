@@ -27,11 +27,9 @@ use Tracker_Artifact_Redirect;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RedirectTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @testWith ["/base/url"]
-     *           ["/base/url/"]
-     *           ["/base/url//"]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith(['/base/url'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['/base/url/'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['/base/url//'])]
     public function testRedirectURLCanBeBuilt(string $base_url): void
     {
         $redirect                   = new Tracker_Artifact_Redirect();

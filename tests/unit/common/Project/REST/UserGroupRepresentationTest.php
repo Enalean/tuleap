@@ -27,23 +27,19 @@ use Exception;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UserGroupRepresentationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @testWith ["102_3"]
-     *           ["102_11"]
-     *           ["101"]
-     *           ["2"]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith(['102_3'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['102_11'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['101'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['2'])]
     public function testValidRESTUserGroupIdentifierAreNotRejected(string $identifier): void
     {
         $this->expectNotToPerformAssertions();
         UserGroupRepresentation::checkRESTIdIsAppropriate($identifier);
     }
 
-    /**
-     * @testWith [""]
-     *           ["45"]
-     *           ["102_2"]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith([''])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['45'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['102_2'])]
     public function testNotValidRESTUserGroupIdentifierAreRejected(string $invalid_identifier): void
     {
         $this->expectException(Exception::class);

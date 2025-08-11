@@ -49,8 +49,6 @@ final class HardcodedMetdataObsolescenceDateCheckerTest extends TestCase
             ->willReturn('1');
 
         $checker->checkObsolescenceDateUsageForDocument('2019-06-04');
-
-        self::expectNotToPerformAssertions();
     }
 
     public function testCheckObsolescenceDateUsageIsOkWhenMetadataUsageIsNotUsedAndTheDateIs0(): void
@@ -75,8 +73,6 @@ final class HardcodedMetdataObsolescenceDateCheckerTest extends TestCase
             ->willReturn('1');
 
         $checker->checkObsolescenceDateUsageForDocument('2019-06-04');
-
-        self::expectNotToPerformAssertions();
     }
 
     public function testCheckObsolescenceDateUsageIsOkIfTheMetadataIsUsedAndObsolescenceDateIs0(): void

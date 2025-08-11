@@ -37,13 +37,11 @@ class PermissionsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $duplication_mapping = DuplicationUserGroupMapping::fromSameProjectWithMapping($ugroup_mapping);
 
         $dao = $this->createMock(PermissionsDao::class);
-        $dao->method('duplicatePermissions')->with($source, $target, $permission_types, $duplication_mapping);
+        $dao->expects($this->atLeastOnce())->method('duplicatePermissions')->with($source, $target, $permission_types, $duplication_mapping);
 
         $permissionsManager = new PermissionsManager($dao);
 
         $permissionsManager->duplicatePermissions($source, $target, $permission_types, $duplication_mapping);
-
-        $this->expectNotToPerformAssertions();
     }
 
     public function testDuplicateSameProjectShouldNotHaveUgroupMapping(): void
@@ -53,12 +51,10 @@ class PermissionsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $permission_types = ['STUFF_READ'];
 
         $dao = $this->createMock(PermissionsDao::class);
-        $dao->method('duplicatePermissions')->with($source, $target, $permission_types, DuplicationUserGroupMapping::fromSameProjectWithoutMapping());
+        $dao->expects($this->atLeastOnce())->method('duplicatePermissions')->with($source, $target, $permission_types, DuplicationUserGroupMapping::fromSameProjectWithoutMapping());
 
         $permissionsManager = new PermissionsManager($dao);
         $permissionsManager->duplicateWithStatic($source, $target, $permission_types);
-
-        $this->expectNotToPerformAssertions();
     }
 
     public function testDuplicateNewProjectShouldHaveUgroupMapping(): void
@@ -71,12 +67,10 @@ class PermissionsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         ];
 
         $dao = $this->createMock(PermissionsDao::class);
-        $dao->method('duplicatePermissions')->with($source, $target, $permission_types, DuplicationUserGroupMapping::fromNewProjectWithMapping($ugroup_mapping));
+        $dao->expects($this->atLeastOnce())->method('duplicatePermissions')->with($source, $target, $permission_types, DuplicationUserGroupMapping::fromNewProjectWithMapping($ugroup_mapping));
 
         $permissionsManager = new PermissionsManager($dao);
         $permissionsManager->duplicateWithStaticMapping($source, $target, $permission_types, $ugroup_mapping);
-
-        $this->expectNotToPerformAssertions();
     }
 
     public function testDuplicateOtherProjectShouldNotHaveUgroupMapping(): void
@@ -86,12 +80,10 @@ class PermissionsManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $permission_types = ['STUFF_READ'];
 
         $dao = $this->createMock(PermissionsDao::class);
-        $dao->method('duplicatePermissions')->with($source, $target, $permission_types, DuplicationUserGroupMapping::fromAnotherProjectWithoutMapping());
+        $dao->expects($this->atLeastOnce())->method('duplicatePermissions')->with($source, $target, $permission_types, DuplicationUserGroupMapping::fromAnotherProjectWithoutMapping());
 
         $permissionsManager = new PermissionsManager($dao);
 
         $permissionsManager->duplicateWithoutStatic($source, $target, $permission_types);
-
-        $this->expectNotToPerformAssertions();
     }
 }

@@ -417,10 +417,8 @@ class SemanticTimeframeUpdatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $updator->reset($sprint_tracker);
     }
 
-    /**
-     * @testWith [null]
-     *           [[]]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith([null])]
+    #[\PHPUnit\Framework\Attributes\TestWith([[]])]
     public function testItResetsTheTimeframeSemanticOfAGivenTracker(?array $implied_semantics): void
     {
         $sprint_tracker_id = 106;

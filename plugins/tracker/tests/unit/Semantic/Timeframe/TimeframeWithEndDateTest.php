@@ -57,11 +57,9 @@ final class TimeframeWithEndDateTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    /**
-     * @testWith [1001, true]
-     *           [1002, false]
-     *           [1003, true]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith([1001, true])]
+    #[\PHPUnit\Framework\Attributes\TestWith([1002, false])]
+    #[\PHPUnit\Framework\Attributes\TestWith([1003, true])]
     public function testItReturnsTrueWhenFieldIsUsed(int $field_id, bool $is_used): void
     {
         $field = $this->getMockedDateField($field_id);
@@ -120,10 +118,8 @@ final class TimeframeWithEndDateTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals('F102', (string) $root->semantic->end_date_field['REF']);
     }
 
-    /**
-     * @testWith [false, false]
-     *           [true, false]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith([false, false])]
+    #[\PHPUnit\Framework\Attributes\TestWith([true, false])]
     public function testItDoesNotExportToRESTWhenUserCanReadFields(bool $can_read_start_date, bool $can_read_end_date): void
     {
         $this->start_date_field->expects($this->any())->method('userCanRead')->willReturn($can_read_start_date);
@@ -438,12 +434,10 @@ final class TimeframeWithEndDateTest extends \Tuleap\Test\PHPUnit\TestCase
         ));
     }
 
-    /**
-     * @testWith [false, false]
-     *           [false, true]
-     *           [true, false]
-     *           [true, true]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith([false, false])]
+    #[\PHPUnit\Framework\Attributes\TestWith([false, true])]
+    #[\PHPUnit\Framework\Attributes\TestWith([true, false])]
+    #[\PHPUnit\Framework\Attributes\TestWith([true, true])]
     public function testIsTimeDisplayedIsCorrelatedToStartAndEndField(bool $display_start, bool $display_end): void
     {
         $this->start_date_field->expects($this->once())->method('isTimeDisplayed')->willReturn($display_start);

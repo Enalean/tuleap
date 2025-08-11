@@ -28,33 +28,27 @@ use Tuleap\Test\PHPUnit\TestCase;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class ExportOptionsTest extends TestCase
 {
-    /**
-     * @testWith ["", false]
-     *           ["all", true]
-     *           ["structure", false]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith(['', false])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['all', true])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['structure', false])]
     public function testShouldExportAllData(string $mode, bool $expected): void
     {
         $options = new ExportOptions($mode, false, []);
         self::assertEquals($expected, $options->shouldExportAllData());
     }
 
-    /**
-     * @testWith ["", false]
-     *           ["all", false]
-     *           ["structure", true]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith(['', false])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['all', false])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['structure', true])]
     public function testShouldExportStructureOnly(string $mode, bool $expected): void
     {
         $options = new ExportOptions($mode, false, []);
         self::assertEquals($expected, $options->shouldExportStructureOnly());
     }
 
-    /**
-     * @testWith [{}, null]
-     *           [{"whatever": 10}, null]
-     *           [{"tracker_id": 10}, 10]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith([[], null])]
+    #[\PHPUnit\Framework\Attributes\TestWith([['whatever' => 10], null])]
+    #[\PHPUnit\Framework\Attributes\TestWith([['tracker_id' => 10], 10])]
     public function testGetExtraOption(array $extra_options, ?int $expected): void
     {
         $options = new ExportOptions('', false, $extra_options);

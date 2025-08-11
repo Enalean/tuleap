@@ -27,11 +27,9 @@ use Tuleap\Test\PHPUnit\TestCase;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ForbidWritersSettingsTest extends TestCase
 {
-    /**
-     * @testWith [null, true]
-     *           [{"forbid_writers_to_update": false}, true]
-     *           [{"forbid_writers_to_update": true}, false]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith([null, true])]
+    #[\PHPUnit\Framework\Attributes\TestWith([['forbid_writers_to_update' => false], true])]
+    #[\PHPUnit\Framework\Attributes\TestWith([['forbid_writers_to_update' => true], false])]
     public function testAreWritersAllowedToUpdateProperties(?array $settings, bool $expected): void
     {
         $dao = new class ($settings) implements ForbidWritersDAOSettings {
@@ -51,11 +49,9 @@ final class ForbidWritersSettingsTest extends TestCase
         );
     }
 
-    /**
-     * @testWith [null, true]
-     *           [{"forbid_writers_to_delete": false}, true]
-     *           [{"forbid_writers_to_delete": true}, false]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith([null, true])]
+    #[\PHPUnit\Framework\Attributes\TestWith([['forbid_writers_to_delete' => false], true])]
+    #[\PHPUnit\Framework\Attributes\TestWith([['forbid_writers_to_delete' => true], false])]
     public function testAreWritersAllowedToDelete(?array $settings, bool $expected): void
     {
         $dao = new class ($settings) implements ForbidWritersDAOSettings {

@@ -51,15 +51,13 @@ final class BinaryFileResponseBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertEquals('no-cache', $response->getHeaderLine('Pragma'));
     }
 
-    /**
-     * @testWith ["archive.zip", "attachment; filename=\"archive.zip\""]
-     *           ["bépo.zip", "attachment; filename=\"bpo.zip\"; filename*=UTF-8''b%C3%A9po.zip"]
-     *           ["playa-🌴.zip", "attachment; filename=\"playa-.zip\"; filename*=UTF-8''playa-%F0%9F%8C%B4.zip"]
-     *           ["per%cent.zip", "attachment; filename=\"per%cent.zip\""]
-     *           ["sl/ash.zip", "attachment; filename=\"sl-ash.zip\""]
-     *           ["back\\slash.zip", "attachment; filename=\"back-slash.zip\""]
-     *           ["qu\"o”te.zip", "attachment; filename=\"qu\\\"ote.zip\"; filename*=UTF-8''qu%22o%E2%80%9Dte.zip"]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith(['archive.zip', 'attachment; filename="archive.zip"'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['bépo.zip', "attachment; filename=\"bpo.zip\"; filename*=UTF-8''b%C3%A9po.zip"])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['playa-🌴.zip', "attachment; filename=\"playa-.zip\"; filename*=UTF-8''playa-%F0%9F%8C%B4.zip"])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['per%cent.zip', 'attachment; filename="per%cent.zip"'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['sl/ash.zip', 'attachment; filename="sl-ash.zip"'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['back\slash.zip', 'attachment; filename="back-slash.zip"'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['qu"o”te.zip', "attachment; filename=\"qu\\\"ote.zip\"; filename*=UTF-8''qu%22o%E2%80%9Dte.zip"])]
     public function testFilenameIsSentInBothISO88691AndUTF8(string $name, string $expected): void
     {
         $builder = new BinaryFileResponseBuilder(HTTPFactoryBuilder::responseFactory(), HTTPFactoryBuilder::streamFactory());
@@ -104,12 +102,10 @@ final class BinaryFileResponseBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertEquals('no-cache', $response->getHeaderLine('Pragma'));
     }
 
-    /**
-     * @testWith [4, "bytes=0-", "bytes 0-3/4", "4"]
-     *           [4, "bytes=1-", "bytes 1-3/4", "3"]
-     *           [4, "bytes=0-0", "bytes 0-0/4", "1"]
-     *           [4, "bytes=2-3", "bytes 2-3/4", "2"]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith([4, 'bytes=0-', 'bytes 0-3/4', '4'])]
+    #[\PHPUnit\Framework\Attributes\TestWith([4, 'bytes=1-', 'bytes 1-3/4', '3'])]
+    #[\PHPUnit\Framework\Attributes\TestWith([4, 'bytes=0-0', 'bytes 0-0/4', '1'])]
+    #[\PHPUnit\Framework\Attributes\TestWith([4, 'bytes=2-3', 'bytes 2-3/4', '2'])]
     public function testPartialFileResponse(
         int $total_content_size,
         string $range_header,
@@ -132,11 +128,9 @@ final class BinaryFileResponseBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertEquals($expected_content_length_header, $response->getHeaderLine('Content-Length'));
     }
 
-    /**
-     * @testWith ["xxxxxx=0-"]
-     *           ["bytes=0-999999999999"]
-     *           ["bytes=-0"]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith(['xxxxxx=0-'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['bytes=0-999999999999'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['bytes=-0'])]
     public function testPartialFileResponseWithUnsupportedRangeHeader(string $range_header): void
     {
         $builder = new BinaryFileResponseBuilder(HTTPFactoryBuilder::responseFactory(), HTTPFactoryBuilder::streamFactory());

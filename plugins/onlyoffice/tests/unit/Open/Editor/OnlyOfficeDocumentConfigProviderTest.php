@@ -42,10 +42,8 @@ final class OnlyOfficeDocumentConfigProviderTest extends TestCase
 {
     use ForgeConfigSandbox;
 
-    /**
-     * @testWith [true]
-     *           [false]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith([true])]
+    #[\PHPUnit\Framework\Attributes\TestWith([false])]
     public function testProvidesDocumentConfig(bool $can_be_edited): void
     {
         \ForgeConfig::set('sys_default_domain', 'example.com');

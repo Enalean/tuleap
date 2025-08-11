@@ -44,15 +44,13 @@ final class MethodBasedOnEffortTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->artifact = ArtifactTestBuilder::anArtifact(101)->build();
     }
 
-    /**
-     * @testWith [8, 5.25, 0.34375, ""]
-     *           [8, 8, 0, ""]
-     *           [8, 0, 1, ""]
-     *           [0, 0, null, "There is no total effort."]
-     *           [8, -2, null, "Remaining effort cannot be negative."]
-     *           [-2, 3, null, "Total effort cannot be negative."]
-     *           [8, 10, null, "Remaining effort cannot be greater than total effort."]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith([8, 5.25, 0.34375, ''])]
+    #[\PHPUnit\Framework\Attributes\TestWith([8, 8, 0, ''])]
+    #[\PHPUnit\Framework\Attributes\TestWith([8, 0, 1, ''])]
+    #[\PHPUnit\Framework\Attributes\TestWith([0, 0, null, 'There is no total effort.'])]
+    #[\PHPUnit\Framework\Attributes\TestWith([8, -2, null, 'Remaining effort cannot be negative.'])]
+    #[\PHPUnit\Framework\Attributes\TestWith([-2, 3, null, 'Total effort cannot be negative.'])]
+    #[\PHPUnit\Framework\Attributes\TestWith([8, 10, null, 'Remaining effort cannot be greater than total effort.'])]
     public function testItComputesTheProgressWithFloatAndIntFields(
         int $total_effort,
         float $remaining_effort,
@@ -90,15 +88,13 @@ final class MethodBasedOnEffortTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals($expected_error_message, $progression_result->getErrorMessage());
     }
 
-    /**
-     * @testWith [8, 5.25, 0.34375, ""]
-     *           [8, 8, 0, ""]
-     *           [8, 0, 1, ""]
-     *           [0, 0, null, "There is no total effort."]
-     *           [8, -2, null, "Remaining effort cannot be negative."]
-     *           [-2, 3, null, "Total effort cannot be negative."]
-     *           [8, 10, null, "Remaining effort cannot be greater than total effort."]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith([8, 5.25, 0.34375, ''])]
+    #[\PHPUnit\Framework\Attributes\TestWith([8, 8, 0, ''])]
+    #[\PHPUnit\Framework\Attributes\TestWith([8, 0, 1, ''])]
+    #[\PHPUnit\Framework\Attributes\TestWith([0, 0, null, 'There is no total effort.'])]
+    #[\PHPUnit\Framework\Attributes\TestWith([8, -2, null, 'Remaining effort cannot be negative.'])]
+    #[\PHPUnit\Framework\Attributes\TestWith([-2, 3, null, 'Total effort cannot be negative.'])]
+    #[\PHPUnit\Framework\Attributes\TestWith([8, 10, null, 'Remaining effort cannot be greater than total effort.'])]
     public function testItComputesProgressWithComputedFields(
         ?float $total_effort,
         ?float $remaining_effort,

@@ -46,8 +46,6 @@ final class SetFloatValueValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testValidateDoesNotThrowWhenValid(): void
     {
-        $this->expectNotToPerformAssertions();
-
         $float_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\Float\FloatField::class);
         $float_field
             ->method('getId')

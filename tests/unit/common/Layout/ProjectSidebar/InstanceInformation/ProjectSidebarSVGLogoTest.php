@@ -69,6 +69,7 @@ final class ProjectSidebarSVGLogoTest extends TestCase
             }
         );
 
+        self::assertNotNull($representation);
         self::assertNotEmpty($representation->normal);
         self::assertNotEmpty($representation->small);
     }

@@ -25,13 +25,11 @@ namespace Tuleap\PullRequest\REST\v1;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PullRequestStatusTypeConverterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @testWith [1, "update"]
-     *           [2, "rebase"]
-     *           [3, "merge"]
-     *           [4, "abandon"]
-     *           [5, "reopen"]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith([1, 'update'])]
+    #[\PHPUnit\Framework\Attributes\TestWith([2, 'rebase'])]
+    #[\PHPUnit\Framework\Attributes\TestWith([3, 'merge'])]
+    #[\PHPUnit\Framework\Attributes\TestWith([4, 'abandon'])]
+    #[\PHPUnit\Framework\Attributes\TestWith([5, 'reopen'])]
     public function testItConvertsIntStatusToStringStatus(int $status_int, string $expected_string_status): void
     {
         $status = PullRequestStatusTypeConverter::fromIntStatusToStringStatus($status_int);

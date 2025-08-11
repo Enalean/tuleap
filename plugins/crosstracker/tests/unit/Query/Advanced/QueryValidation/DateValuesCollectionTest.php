@@ -103,6 +103,7 @@ final class DateValuesCollectionTest extends TestCase
     #[\PHPUnit\Framework\Attributes\DataProvider('generateBetweenValuesIncludingCurrentDateTime')]
     public function testItRejectsBetweenValuesIncludingCurrentDateTimeWhenForbidden(
         BetweenValueWrapper $wrapper,
+        string $unused_data_provider_value,
     ): void {
         $result = DateValuesCollection::fromValueWrapper($wrapper, false);
         self::assertTrue(Result::isErr($result));

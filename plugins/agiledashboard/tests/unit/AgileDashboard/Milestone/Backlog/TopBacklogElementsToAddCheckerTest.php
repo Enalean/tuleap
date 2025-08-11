@@ -84,8 +84,6 @@ final class TopBacklogElementsToAddCheckerTest extends TestCase
             $this->user,
             $added_artifact_ids
         );
-
-        self::expectNotToPerformAssertions();
     }
 
     public function testItThrowsAnExceptionIfNoRootPlanning(): void

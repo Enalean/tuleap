@@ -138,14 +138,12 @@ class ListOfSearchCriterionPresenterBuilderTest extends TestCase
         self::assertEquals('filename', $criteria[2]->name);
     }
 
-    /**
-     * @testWith ["title"]
-     *           ["description"]
-     *           ["owner"]
-     *           ["create_date"]
-     *           ["update_date"]
-     *           ["obsolescence_date"]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith(['title'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['description'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['owner'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['create_date'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['update_date'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['obsolescence_date'])]
     public function testItShouldReturnCriteriaBasedOnSupportedMetadata(string $metadata_name): void
     {
         $metadata = new \Docman_Metadata();

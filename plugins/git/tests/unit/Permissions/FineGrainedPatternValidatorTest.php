@@ -20,18 +20,13 @@
 
 namespace Tuleap\Git\Permissions;
 
-
-require_once __DIR__ . '/../../bootstrap.php';
-
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class FineGrainedPatternValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @testWith ["*"]
-     *           ["master"]
-     *           ["master/*"]
-     *           ["master/dev"]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith(['*'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['master'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['master/*'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['master/dev'])]
     public function testValidPatterns(string $pattern): void
     {
         $validator = new FineGrainedPatternValidator();
@@ -39,23 +34,21 @@ class FineGrainedPatternValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertTrue($validator->isPatternValid($pattern));
     }
 
-    /**
-     * @testWith ["/*"]
-     *           ["master*"]
-     *           ["master/*\/*"]
-     *           ["master/dev*"]
-     *           ["master*\/dev"]
-     *           [""]
-     *           ["master*[dev"]
-     *           ["master dev"]
-     *           ["master?dev"]
-     *           ["master\n"]
-     *           ["master\r"]
-     *           ["master\n\r"]
-     *           ["master\ndev"]
-     *           ["\n"]
-     *           ["\f"]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith(['/*'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['master*'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['master/*/*'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['master/dev*'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['master*/dev'])]
+    #[\PHPUnit\Framework\Attributes\TestWith([''])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['master*[dev'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['master dev'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['master?dev'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(["master\n"])]
+    #[\PHPUnit\Framework\Attributes\TestWith(["master\r"])]
+    #[\PHPUnit\Framework\Attributes\TestWith(["master\n\r"])]
+    #[\PHPUnit\Framework\Attributes\TestWith(["master\ndev"])]
+    #[\PHPUnit\Framework\Attributes\TestWith(["\n"])]
+    #[\PHPUnit\Framework\Attributes\TestWith(["\f"])]
     public function testInvalidPatterns(string $pattern): void
     {
         $validator = new FineGrainedPatternValidator();

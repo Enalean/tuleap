@@ -35,13 +35,13 @@ class OAuth2AppTest extends \Tuleap\Test\PHPUnit\TestCase
     public static function dataProviderInvalidData(): array
     {
         return [
-            'Throws when App ID is empty'                 => ['', 'Jenkins', 'https://example.com/redirect'],
-            'Throws when App ID is not numeric'           => ['a', 'Jenkins', 'https://example.com/redirect'],
-            'Throws when App name is empty'               => ['75', '', 'https://example.com/redirect'],
-            'Throws when Redirect URI is empty'           => ['75', 'Jenkins', ''],
-            'Throws when Redirect URI is not HTTPS'       => ['75', 'Jenkins', 'http://insecure.example.com'],
-            'Throws when Redirect URI is not localhost'   => ['75', 'Jenkins', 'http://localhost.example.com'],
-            'Throws when Redirect URI contains an anchor' => ['75', 'Jenkins', 'https://example.com/redirect#fragment'],
+            'Throws when App ID is empty'                 => ['', 'Jenkins'],
+            'Throws when App ID is not numeric'           => ['a', 'Jenkins'],
+            'Throws when App name is empty'               => ['75', ''],
+            'Throws when Redirect URI is empty'           => ['75', 'Jenkins'],
+            'Throws when Redirect URI is not HTTPS'       => ['75', 'Jenkins'],
+            'Throws when Redirect URI is not localhost'   => ['75', 'Jenkins'],
+            'Throws when Redirect URI contains an anchor' => ['75', 'Jenkins'],
         ];
     }
 

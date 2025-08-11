@@ -165,10 +165,8 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->retriever->getIterations(self::ROADMAP_ID, 1, 0, 10);
     }
 
-    /**
-     * @testWith [1]
-     *           [2]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith([1])]
+    #[\PHPUnit\Framework\Attributes\TestWith([2])]
     public function test400IfNoIterationTrackerConfigured(int $level): void
     {
         $this->mockRoadmapConfig(
@@ -203,10 +201,8 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->retriever->getIterations(self::ROADMAP_ID, $level, 0, 10);
     }
 
-    /**
-     * @testWith [1]
-     *           [2]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith([1])]
+    #[\PHPUnit\Framework\Attributes\TestWith([2])]
     public function test400IfIterationTrackerCannotBeRetrieved(int $level): void
     {
         $this->mockRoadmapConfig(
@@ -247,10 +243,8 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->retriever->getIterations(self::ROADMAP_ID, $level, 0, 10);
     }
 
-    /**
-     * @testWith [1]
-     *           [2]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith([1])]
+    #[\PHPUnit\Framework\Attributes\TestWith([2])]
     public function test400IfIterationTrackerIsDeleted(int $level): void
     {
         $this->mockRoadmapConfig(
@@ -295,10 +289,8 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->retriever->getIterations(self::ROADMAP_ID, $level, 0, 10);
     }
 
-    /**
-     * @testWith [1]
-     *           [2]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith([1])]
+    #[\PHPUnit\Framework\Attributes\TestWith([2])]
     public function test400IfIterationTrackerCannotBeReadByUser(int $level): void
     {
         $this->mockRoadmapConfig(
@@ -347,10 +339,8 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->retriever->getIterations(self::ROADMAP_ID, $level, 0, 10);
     }
 
-    /**
-     * @testWith [1]
-     *           [2]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith([1])]
+    #[\PHPUnit\Framework\Attributes\TestWith([2])]
     public function test400IfIterationTrackerDoesNotHaveTitleField(int $level): void
     {
         $this->mockRoadmapConfig(
@@ -402,10 +392,8 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->retriever->getIterations(self::ROADMAP_ID, $level, 0, 10);
     }
 
-    /**
-     * @testWith [1]
-     *           [2]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith([1])]
+    #[\PHPUnit\Framework\Attributes\TestWith([2])]
     public function test400IfTitleFieldIsNotReadable(int $level): void
     {
         $this->mockRoadmapConfig(
@@ -461,10 +449,8 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->retriever->getIterations(self::ROADMAP_ID, $level, 0, 10);
     }
 
-    /**
-     * @testWith [1]
-     *           [2]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith([1])]
+    #[\PHPUnit\Framework\Attributes\TestWith([2])]
     public function test400IfTimeframeIsNotDefined(int $level): void
     {
         $this->mockRoadmapConfig(
@@ -526,10 +512,8 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->retriever->getIterations(self::ROADMAP_ID, $level, 0, 10);
     }
 
-    /**
-     * @testWith [1]
-     *           [2]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith([1])]
+    #[\PHPUnit\Framework\Attributes\TestWith([2])]
     public function test400IfStartDateIsNotReadable(int $level): void
     {
         $this->mockRoadmapConfig(
@@ -605,10 +589,8 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->retriever->getIterations(self::ROADMAP_ID, $level, 0, 10);
     }
 
-    /**
-     * @testWith [1]
-     *           [2]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith([1])]
+    #[\PHPUnit\Framework\Attributes\TestWith([2])]
     public function test400IfEndDateIsNotReadable(int $level): void
     {
         $this->mockRoadmapConfig(
@@ -684,10 +666,8 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->retriever->getIterations(self::ROADMAP_ID, $level, 0, 10);
     }
 
-    /**
-     * @testWith [1]
-     *           [2]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith([1])]
+    #[\PHPUnit\Framework\Attributes\TestWith([2])]
     public function test400IfDurationIsNotReadable(int $level): void
     {
         $this->mockRoadmapConfig(
@@ -763,10 +743,8 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->retriever->getIterations(self::ROADMAP_ID, $level, 0, 10);
     }
 
-    /**
-     * @testWith [1]
-     *           [2]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith([1])]
+    #[\PHPUnit\Framework\Attributes\TestWith([2])]
     public function testItSkipsArtifactsThatAreNotReadable(int $level): void
     {
         $this->mockRoadmapConfig(
@@ -852,10 +830,8 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertEquals([], $collection->getRepresentations());
     }
 
-    /**
-     * @testWith [1]
-     *           [2]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith([1])]
+    #[\PHPUnit\Framework\Attributes\TestWith([2])]
     public function testItSkipsArtifactsThatDoNotHaveStartDate(int $level): void
     {
         $this->mockRoadmapConfig(
@@ -939,10 +915,8 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertEquals([], $collection->getRepresentations());
     }
 
-    /**
-     * @testWith [1]
-     *           [2]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith([1])]
+    #[\PHPUnit\Framework\Attributes\TestWith([2])]
     public function testItSkipsArtifactsThatDoNotHaveEndDate(int $level): void
     {
         $this->mockRoadmapConfig(
@@ -1035,10 +1009,8 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertEquals([], $collection->getRepresentations());
     }
 
-    /**
-     * @testWith [1]
-     *           [2]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith([1])]
+    #[\PHPUnit\Framework\Attributes\TestWith([2])]
     public function testItSkipsArtifactsThatDoNotHaveATitle(int $level): void
     {
         $this->mockRoadmapConfig(
@@ -1131,10 +1103,8 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertEquals([], $collection->getRepresentations());
     }
 
-    /**
-     * @testWith [1]
-     *           [2]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith([1])]
+    #[\PHPUnit\Framework\Attributes\TestWith([2])]
     public function testItSkipsArtifactsThatHaveEndDateLesserThanStartDate(int $level): void
     {
         $this->mockRoadmapConfig(
@@ -1228,10 +1198,8 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertEquals([], $collection->getRepresentations());
     }
 
-    /**
-     * @testWith [1]
-     *           [2]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith([1])]
+    #[\PHPUnit\Framework\Attributes\TestWith([2])]
     public function testItReturnsPaginatedListOfIterationRepresentation(int $level): void
     {
         $this->mockRoadmapConfig(

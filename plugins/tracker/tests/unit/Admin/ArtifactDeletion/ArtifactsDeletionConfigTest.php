@@ -36,10 +36,8 @@ final class ArtifactsDeletionConfigTest extends TestCase
         $this->config = new ArtifactsDeletionConfig($this->dao);
     }
 
-    /**
-     * @testWith [0]
-     *           [10]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith([0])]
+    #[\PHPUnit\Framework\Attributes\TestWith([10])]
     public function testItRetrievesDeletionLimitAndCachesIt(int $limit): void
     {
         $this->dao->expects($this->once())->method('searchDeletableArtifactsLimit')

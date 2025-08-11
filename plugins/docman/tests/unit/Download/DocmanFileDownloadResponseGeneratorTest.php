@@ -89,10 +89,8 @@ final class DocmanFileDownloadResponseGeneratorTest extends TestCase
         self::assertFalse($visit->isSaved());
     }
 
-    /**
-     * @testWith [null]
-     *           [1]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith([null])]
+    #[\PHPUnit\Framework\Attributes\TestWith([1])]
     public function testFileCanNotBeDownloadedIfTheVersionCannotBeFound(?int $version_id): void
     {
         $visit = RecordVisitStub::build();

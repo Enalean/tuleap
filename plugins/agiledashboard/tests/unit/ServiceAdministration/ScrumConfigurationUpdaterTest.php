@@ -120,10 +120,8 @@ final class ScrumConfigurationUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    /**
-     * @testWith [false]
-     *           [true]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith([false])]
+    #[\PHPUnit\Framework\Attributes\TestWith([true])]
     public function testItDoesNotUpdateSidebarConfigWhenNotPartOfTheRequest(
         bool $existing_config,
     ): void {
@@ -151,12 +149,10 @@ final class ScrumConfigurationUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    /**
-     * @testWith ["0", false]
-     *           ["0", true]
-     *           ["1", false]
-     *           ["1", true]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith(['0', false])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['0', true])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['1', false])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['1', true])]
     public function testItUpdatesSidebarConfigAccordinglyToRequest(
         string $submitted_value,
         bool $existing_config,

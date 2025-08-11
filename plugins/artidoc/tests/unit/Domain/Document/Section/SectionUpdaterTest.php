@@ -98,10 +98,8 @@ final class SectionUpdaterTest extends TestCase
         self::assertTrue($update_artifact->isCalled());
     }
 
-    /**
-     * @testWith [""]
-     *           [" "]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith([''])]
+    #[\PHPUnit\Framework\Attributes\TestWith([' '])]
     public function testFaultWhenTitleIsEmpty(string $empty): void
     {
         $update_freetext = UpdateFreetextContentStub::build();

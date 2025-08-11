@@ -46,11 +46,9 @@ final class XMLProjectImportUserCreatorProjectOwnerCleanerTest extends \Tuleap\T
         $ugroup->method('getProject')->willReturn($project);
         $ugroup->method('getMembers')->willReturn([$creator, $other_admin_1, $other_admin_2]);
 
-        $updater->method('updateProjectOwner')->with($project, $other_admin_1);
+        $updater->expects($this->atLeastOnce())->method('updateProjectOwner')->with($project, $other_admin_1);
 
         $cleaner->updateProjectOwnership($this->createEvent($creator, $ugroup));
-
-        self::expectNotToPerformAssertions();
     }
 
     public function testNothingIsDoneWhenTheUGroupIsCorruptedAndCannotFindTheProjec(): void
