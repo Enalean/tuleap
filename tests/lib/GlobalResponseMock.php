@@ -31,11 +31,13 @@ trait GlobalResponseMock
     #[Before]
     protected function mockResponse(): void
     {
-        $GLOBALS['Response'] = $this->getMockBuilder(BaseLayout::class)
-            ->disableOriginalConstructor()
-            ->disableOriginalClone()
-            ->enableAutoReturnValueGeneration()
-            ->getMock();
+         $response = $this->getMockBuilder(BaseLayout::class)
+             ->disableOriginalConstructor()
+             ->disableOriginalClone()
+             ->enableAutoReturnValueGeneration()
+             ->getMock();
+         $response->method('getCSPNonce')->willReturn('');
+         $GLOBALS['Response'] = $response;
     }
 
     #[After]
