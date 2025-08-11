@@ -558,3 +558,50 @@ tlp-relative-date {
     color: var(--dimmed-color);
     font-size: 0.65rem;
 }
+
+.document-steps {
+    display: flex;
+    flex-direction: column;
+    gap: var(--small-spacing);
+}
+
+.document-step {
+    display: flex;
+    align-items: flex-start;
+    font-size: 14px;
+    line-height: 20px;
+    gap: var(--small-spacing);
+}
+
+.document-step-rank {
+    padding: 0 6px;
+    border: 1px solid var(--main-color);
+    border-radius: 10px;
+    color: var(--main-color);
+}
+
+.document-step-definition {
+    display: flex;
+    flex-direction: column;
+}
+
+.document-step-description,
+.document-step-expected {
+    > p:first-child {
+        margin-top: unset;
+    }
+
+    > p:last-child {
+        margin-bottom: unset;
+    }
+}
+
+.document-step-results {
+    display: flex;
+    align-items: baseline;
+    gap: 5px;
+}
+
+.document-step-arrow {
+    flex-shrink: 0;
+}

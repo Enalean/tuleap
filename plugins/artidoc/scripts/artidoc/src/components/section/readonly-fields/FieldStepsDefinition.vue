@@ -19,22 +19,30 @@
 
 <template>
     <label class="tlp-label document-label">{{ field.label }}</label>
-    <div class="steps">
-        <div v-for="(step, rank) in field.value" v-bind:key="rank" class="step" data-test="step">
-            <span class="step-rank">{{ rank + 1 }}</span>
-            <div class="step-definition">
-                <p
+    <div class="steps document-steps">
+        <div
+            v-for="(step, rank) in field.value"
+            v-bind:key="rank"
+            class="step document-step"
+            data-test="step"
+        >
+            <span class="step-rank document-step-rank">{{ rank + 1 }}</span>
+            <div class="step-definition document-step-definition">
+                <div
                     v-dompurify-html="step.description"
-                    class="step-description"
+                    class="step-description document-step-description"
                     data-test="step-description"
-                ></p>
+                ></div>
                 <section
                     v-if="step.expected_results !== ''"
-                    class="step-results"
+                    class="step-results document-step-results"
                     data-test="step-results"
                 >
                     <step-definition-arrow />
-                    <p v-dompurify-html="step.expected_results"></p>
+                    <div
+                        class="document-step-expected"
+                        v-dompurify-html="step.expected_results"
+                    ></div>
                 </section>
             </div>
         </div>
