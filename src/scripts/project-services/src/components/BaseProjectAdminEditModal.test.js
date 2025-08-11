@@ -22,6 +22,7 @@ import BaseProjectAdminEditModal from "./BaseProjectAdminEditModal.vue";
 import InEditionCustomService from "./Service/InEditionCustomService.vue";
 import ReadOnlySystemService from "./Service/ReadOnlySystemService.vue";
 import { getGlobalTestOptions } from "../support/global-options-for-tests.js";
+import { PROJECT_ID } from "../injection-symbols.js";
 
 function createFakeButton(service) {
     return {
@@ -35,7 +36,6 @@ describe(`BaseProjectAdminEdit`, () => {
     let props;
     beforeEach(() => {
         props = {
-            project_id: "101",
             minimal_rank: 10,
             csrf_token: "csrf",
             csrf_token_name: "challenge",
@@ -54,6 +54,9 @@ describe(`BaseProjectAdminEdit`, () => {
                             show: jest.fn(),
                         },
                     },
+                },
+                provide: {
+                    [PROJECT_ID.valueOf()]: 101,
                 },
             },
             props,

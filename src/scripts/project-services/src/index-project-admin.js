@@ -25,6 +25,7 @@ import BaseProjectAdminAddModal from "./components/BaseProjectAdminAddModal.vue"
 import BaseProjectAdminEditModal from "./components/BaseProjectAdminEditModal.vue";
 import { setupDeleteButtons } from "./setup-delete-buttons.js";
 import { gatherConfiguration } from "./gather-configuration.js";
+import { PROJECT_ID } from "./injection-symbols.js";
 
 const ADD_BUTTON_SELECTOR = "#project-admin-services-add-button";
 const ADD_MOUNT_POINT_SELECTOR = "#service-add-modal";
@@ -47,6 +48,7 @@ function setupCreateServiceModal(gettext_plugin) {
     const configuration = gatherConfiguration(vue_mount_point);
     const add_modal = createApp(BaseProjectAdminAddModal, configuration)
         .use(gettext_plugin)
+        .provide(PROJECT_ID, configuration.project_id)
         .mount(vue_mount_point);
 
     const add_button = selectOrThrow(document, ADD_BUTTON_SELECTOR, HTMLButtonElement);
@@ -61,6 +63,7 @@ function setupEditServiceModals(gettext_plugin) {
     const configuration = gatherConfiguration(vue_mount_point);
     const edit_modal = createApp(BaseProjectAdminEditModal, configuration)
         .use(gettext_plugin)
+        .provide(PROJECT_ID, configuration.project_id)
         .mount(vue_mount_point);
 
     const buttons = document.querySelectorAll(EDIT_BUTTONS_SELECTOR);

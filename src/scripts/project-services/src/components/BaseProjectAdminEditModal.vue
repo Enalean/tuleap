@@ -42,6 +42,8 @@
     </edit-modal>
 </template>
 <script>
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { PROJECT_ID } from "../injection-symbols.js";
 import InEditionCustomService from "./Service/InEditionCustomService.vue";
 import SidebarPreviewer from "./SidebarPreviewer.vue";
 import EditModal from "./EditModal.vue";
@@ -67,10 +69,10 @@ export default {
             type: Object,
             required: true,
         },
-        project_id: {
-            type: String,
-            required: true,
-        },
+    },
+    setup() {
+        const project_id = strictInject(PROJECT_ID);
+        return { project_id };
     },
     data() {
         return {
