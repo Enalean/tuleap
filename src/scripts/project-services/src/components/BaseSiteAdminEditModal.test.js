@@ -18,7 +18,7 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import { PROJECT_ID } from "../injection-symbols.js";
+import { MINIMAL_RANK, PROJECT_ID } from "../injection-symbols.js";
 import BaseSiteAdminEditModal from "./BaseSiteAdminEditModal.vue";
 import InEditionCustomService from "./Service/InEditionCustomService.vue";
 import EditableSystemService from "./Service/EditableSystemService.vue";
@@ -36,7 +36,6 @@ describe(`BaseSiteAdminEditModal`, () => {
     let props;
     beforeEach(() => {
         props = {
-            minimal_rank: 10,
             csrf_token: "csrf",
             csrf_token_name: "challenge",
             allowed_icons: {},
@@ -57,6 +56,7 @@ describe(`BaseSiteAdminEditModal`, () => {
                 },
                 provide: {
                     [PROJECT_ID.valueOf()]: 101,
+                    [MINIMAL_RANK.valueOf()]: 10,
                 },
             },
             props,

@@ -29,13 +29,11 @@
             />
             <in-edition-custom-service
                 v-if="service.is_project_scope && is_shown"
-                v-bind:minimal_rank="minimal_rank"
                 v-bind:service_prop="service"
                 v-bind:allowed_icons="allowed_icons"
             />
             <read-only-system-service
                 v-if="!service.is_project_scope && is_shown"
-                v-bind:minimal_rank="minimal_rank"
                 v-bind:service="service"
             />
         </template>
@@ -43,7 +41,7 @@
 </template>
 <script>
 import { strictInject } from "@tuleap/vue-strict-inject";
-import { PROJECT_ID } from "../injection-symbols.js";
+import { MINIMAL_RANK, PROJECT_ID } from "../injection-symbols.js";
 import InEditionCustomService from "./Service/InEditionCustomService.vue";
 import SidebarPreviewer from "./SidebarPreviewer.vue";
 import EditModal from "./EditModal.vue";
@@ -53,10 +51,6 @@ export default {
     name: "BaseProjectAdminEditModal",
     components: { ReadOnlySystemService, EditModal, InEditionCustomService, SidebarPreviewer },
     props: {
-        minimal_rank: {
-            type: Number,
-            required: true,
-        },
         csrf_token: {
             type: String,
             required: true,
@@ -72,7 +66,8 @@ export default {
     },
     setup() {
         const project_id = strictInject(PROJECT_ID);
-        return { project_id };
+        const minimal_rank = strictInject(MINIMAL_RANK);
+        return { project_id, minimal_rank };
     },
     data() {
         return {

@@ -38,6 +38,9 @@
     </div>
 </template>
 <script>
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { MINIMAL_RANK } from "../../injection-symbols.js";
+
 export default {
     name: "ServiceRank",
     props: {
@@ -49,10 +52,10 @@ export default {
             type: Number,
             required: true,
         },
-        minimal_rank: {
-            type: Number,
-            required: true,
-        },
+    },
+    setup() {
+        const minimal_rank = strictInject(MINIMAL_RANK);
+        return { minimal_rank };
     },
 };
 </script>
