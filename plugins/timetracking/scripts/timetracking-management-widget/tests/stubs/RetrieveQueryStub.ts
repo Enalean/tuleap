@@ -25,7 +25,6 @@ let start_date: string = new Date().toISOString().split("T")[0];
 let end_date: string = new Date().toISOString().split("T")[0];
 let predefined_time_period: PredefinedTimePeriod | "" = "";
 let users_list: User[] = [];
-const has_the_query_been_modified = ref(false);
 
 export const injected_query: Query = {
     getQuery: (): TimetrackingManagementQuery => {
@@ -47,7 +46,6 @@ export const injected_query: Query = {
         predefined_time_period = period;
         users_list = users;
     },
-    has_the_query_been_modified,
     saveQuery: (): void => {},
     no_more_viewable_users: ref([]),
 };
@@ -68,7 +66,6 @@ export const RetrieveQueryStub = {
             predefined_time_period = period;
             users_list = users;
         },
-        has_the_query_been_modified,
         saveQuery: (): void => {},
         no_more_viewable_users: ref([]),
     }),

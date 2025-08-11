@@ -26,7 +26,6 @@ import TimetrackingManagementWidget from "./TimetrackingManagementWidget.vue";
 import { RETRIEVE_QUERY } from "../injection-symbols";
 import type { Query } from "../query/QueryRetriever";
 import { RetrieveQueryStub } from "../../tests/stubs/RetrieveQueryStub";
-import WidgetQuerySaveRequest from "./WidgetQuerySaveRequest.vue";
 
 describe("Given a Timetracking Management Widget", () => {
     let query_retriever: Query;
@@ -63,16 +62,5 @@ describe("Given a Timetracking Management Widget", () => {
 
         expect(wrapper.findComponent(WidgetQueryDisplayer).exists()).toBeTruthy();
         expect(wrapper.findComponent(WidgetQueryEditor).exists()).toBeFalsy();
-    });
-
-    it("When the query is not being edited and the query has been modified, then the query save request should be displayed", async () => {
-        const wrapper = getTimetrackingManagementWidgetInstance();
-
-        await wrapper.findComponent(WidgetQueryDisplayer).trigger("click");
-        await wrapper.findComponent(WidgetQueryEditor).vm.$emit("closeEditMode");
-
-        expect(wrapper.findComponent(WidgetQueryEditor).exists()).toBeFalsy();
-        expect(wrapper.findComponent(WidgetQueryDisplayer).exists()).toBeTruthy();
-        expect(wrapper.findComponent(WidgetQuerySaveRequest).exists()).toBeTruthy();
     });
 });

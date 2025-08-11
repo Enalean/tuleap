@@ -83,9 +83,9 @@
             class="tlp-button-primary"
             data-test="search-button"
             type="button"
-            v-on:click="setDatesAndCloseEditMode"
+            v-on:click="save"
         >
-            {{ $gettext("Search") }}
+            {{ $gettext("Save query") }}
         </button>
     </div>
 </template>
@@ -105,7 +105,7 @@ import type {
 } from "@tuleap/plugin-timetracking-predefined-time-periods";
 import { formatDatetimeToYearMonthDay } from "@tuleap/plugin-timetracking-time-formatters";
 import { strictInject } from "@tuleap/vue-strict-inject";
-import { RETRIEVE_QUERY, USER_LOCALE_KEY } from "../injection-symbols";
+import { RETRIEVE_QUERY, USER_LOCALE_KEY, WIDGET_ID } from "../injection-symbols";
 import type { User } from "@tuleap/core-rest-api-types";
 import { initUsersAutocompleter } from "@tuleap/lazybox-users-autocomplete";
 import type { ResultAsync } from "neverthrow";
@@ -117,6 +117,7 @@ const { $gettext } = useGettext();
 const user_locale = strictInject(USER_LOCALE_KEY);
 
 const query = strictInject(RETRIEVE_QUERY);
+const widget_id = strictInject(WIDGET_ID);
 
 const start_date_input: Ref<HTMLInputElement | undefined> = ref();
 const end_date_input: Ref<HTMLInputElement | undefined> = ref();
@@ -176,7 +177,7 @@ onBeforeUnmount((): void => {
     end_date_picker.destroy();
 });
 
-const setDatesAndCloseEditMode = (): void => {
+const save = (): void => {
     if (start_date_input.value?.value && end_date_input.value?.value) {
         query.setQuery(
             start_date_input.value?.value,
@@ -185,7 +186,7 @@ const setDatesAndCloseEditMode = (): void => {
             currently_selected_users.value,
         );
     }
-    query.has_the_query_been_modified.value = true;
+    query.saveQuery(widget_id);
     emit("closeEditMode");
 };
 
