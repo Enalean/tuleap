@@ -61,6 +61,9 @@ nix-shell --pure -I nixpkgs="$clean_tuleap_sources/tools/utils/nix/pinned-nixpkg
 if [ "$OS" == "el9" ]; then
     INSTALL_IMAGE=tuleap-installrpms:el9
     docker build --target interactive --tag $INSTALL_IMAGE -f "$SRC_DIR/tools/docker/install-rpms/rockylinux9.dockerfile" "$SRC_DIR/tools/docker/install-rpms/"
+elif [ "$OS" == "el10" ]; then
+    INSTALL_IMAGE=tuleap-installrpms:el10
+    docker build --target interactive --tag $INSTALL_IMAGE -f "$SRC_DIR/tools/docker/install-rpms/rockylinux10.dockerfile" "$SRC_DIR/tools/docker/install-rpms/"
 else
     >&2 echo "OS environment variable does not have a valid value"
     exit 1

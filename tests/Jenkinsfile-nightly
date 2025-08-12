@@ -74,6 +74,8 @@ pipeline {
                 }
             }
         }
+
+        stage('Build and run el10') { steps { script { actions.runBuildAndRun('el10') } } }
     }
     post {
         always {

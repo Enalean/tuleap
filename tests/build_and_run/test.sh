@@ -26,6 +26,9 @@ trap cleanup EXIT
 if [ "$OS" == "el9" ]; then
     INSTALL_IMAGE=tuleap-installrpms:el9-ci
     docker build --target ci --tag $INSTALL_IMAGE -f "$WORKSPACE/sources/tools/docker/install-rpms/rockylinux9.dockerfile" "$WORKSPACE/sources/tools/docker/install-rpms/"
+elif [ "$OS" == "el10" ]; then
+    INSTALL_IMAGE=tuleap-installrpms:el10-ci
+    docker build --target ci --tag $INSTALL_IMAGE -f "$WORKSPACE/sources/tools/docker/install-rpms/rockylinux10.dockerfile" "$WORKSPACE/sources/tools/docker/install-rpms/"
 else
     >&2 echo "OS environment variable does not have a valid value"
     exit 1

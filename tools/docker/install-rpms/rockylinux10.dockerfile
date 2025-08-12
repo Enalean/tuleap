@@ -1,8 +1,8 @@
-FROM rockylinux/rockylinux:9.6@sha256:7620071ad66949c3aef9fd313151f0cfee46b75485990c3b03710624f5e1b7b3 AS tuleap-installrpms-base
-# To test RHEL9:
-#FROM registry.access.redhat.com/ubi9 AS tuleap-installrpms-base
+FROM rockylinux/rockylinux:10.0@sha256:02564b26a5d147fcdbd1058abd9b358008f5608b382dcb288cfc718d627256cb AS tuleap-installrpms-base
+# To test RHEL10:
+#FROM registry.access.redhat.com/ubi10 AS tuleap-installrpms-base
 # To test AlmaLinux
-#FROM almalinux:9
+#FROM almalinux:10
 
 ENV container=docker
 
@@ -18,12 +18,12 @@ RUN rm -f /lib/systemd/system/multi-user.target.wants/*;\
     dnf install -y --setopt install_weak_deps=false --nodocs \
         openssh-server \
         createrepo \
-        mysql-server \
-        rocky-release-security \
+        mysql8.4-server \
+        # rocky-release-security Not yet available \
         epel-release \
-        https://rpms.remirepo.net/enterprise/remi-release-9.rpm && \
+        https://rpms.remirepo.net/enterprise/remi-release-10.rpm && \
     dnf install -y dnf-plugins-core && \
-    dnf config-manager --enable security-common && \
+    # dnf config-manager --enable security-common && \
     dnf clean all && \
     rm -rf /var/cache/yum
 

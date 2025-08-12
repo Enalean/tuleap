@@ -50,12 +50,13 @@ AutoReqProv: no
 
 # Php and web related stuff
 Requires: php84-php-common
-Requires: php84-php, php84-php-mysql, php84-php-xml, php84-php-mbstring, php84-php-gd
+Requires: php84-php, php84-php-cli, php84-php-mysql, php84-php-xml, php84-php-mbstring, php84-php-gd
 Requires: php84-php-intl, php84-php-process, php84-php-opcache, php84-php-fpm, php84-php-pecl-redis5, php84-php-sodium
 Requires: php84-php-pecl-zip
 Requires: php84-php-ffi
 Requires: glibc-locale-source
 
+Requires: openssl
 Requires: sudo, openssh
 Requires: perl(File::Copy)
 Requires: highlight, nginx, logrotate
