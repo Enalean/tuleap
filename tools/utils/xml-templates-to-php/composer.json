@@ -1,7 +1,6 @@
 {
   "require": {
-    "nikic/php-parser": "^4.2",
-    "composer/xdebug-handler": "^2.0",
+    "nikic/php-parser": "^5.6",
     "symfony/console": "^7.2"
   },
   "autoload": {

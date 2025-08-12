@@ -35,13 +35,12 @@ use Tuleap\Tools\Xml2Php\Project\ProjectConvertor;
 
 class ConvertProjectCommand extends Command
 {
-    protected static $defaultName = 'convert-project';
-
-    private const SRC = 'src';
+    private const string SRC = 'src';
 
     protected function configure(): void
     {
         $this
+            ->setName('convert-project')
             ->setDescription('Convert project XML structure to PHP code')
             ->setDefinition(
                 new InputDefinition([
