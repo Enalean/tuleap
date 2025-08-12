@@ -20,7 +20,7 @@
 <template>
     <add-modal v-bind:form_url="form_url" ref="modal" v-on:reset-modal="resetModal">
         <template v-slot:content>
-            <input type="hidden" v-bind:name="csrf_token_name" v-bind:value="csrf_token" />
+            <input type="hidden" v-bind:name="csrf_token.name" v-bind:value="csrf_token.value" />
             <sidebar-previewer
                 v-bind:label="preview_label"
                 v-bind:icon_name="service.icon_name"
@@ -49,7 +49,7 @@
 </template>
 <script>
 import { strictInject } from "@tuleap/vue-strict-inject";
-import { MINIMAL_RANK, PROJECT_ID } from "../injection-symbols.js";
+import { CSRF_TOKEN, MINIMAL_RANK, PROJECT_ID } from "../injection-symbols.js";
 import AddModal from "./AddModal.vue";
 import SidebarPreviewer from "./SidebarPreviewer.vue";
 import InCreationCustomService from "./Service/InCreationCustomService.vue";
@@ -67,14 +67,6 @@ export default {
         ServiceShortname,
     },
     props: {
-        csrf_token: {
-            type: String,
-            required: true,
-        },
-        csrf_token_name: {
-            type: String,
-            required: true,
-        },
         allowed_icons: {
             type: Object,
             required: true,
@@ -83,7 +75,8 @@ export default {
     setup() {
         const project_id = strictInject(PROJECT_ID);
         const minimal_rank = strictInject(MINIMAL_RANK);
-        return { project_id, minimal_rank };
+        const csrf_token = strictInject(CSRF_TOKEN);
+        return { project_id, minimal_rank, csrf_token };
     },
     data() {
         return {

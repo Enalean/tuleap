@@ -19,3 +19,4 @@
 
 export const PROJECT_ID = Symbol("project_id");
 export const MINIMAL_RANK = Symbol("minimal_rank");
+export const CSRF_TOKEN = Symbol("csrf_token");

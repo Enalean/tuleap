@@ -25,7 +25,7 @@ import BaseProjectAdminAddModal from "./components/BaseProjectAdminAddModal.vue"
 import BaseProjectAdminEditModal from "./components/BaseProjectAdminEditModal.vue";
 import { setupDeleteButtons } from "./setup-delete-buttons.js";
 import { gatherConfiguration } from "./gather-configuration.js";
-import { MINIMAL_RANK, PROJECT_ID } from "./injection-symbols.js";
+import { CSRF_TOKEN, MINIMAL_RANK, PROJECT_ID } from "./injection-symbols.js";
 
 const ADD_BUTTON_SELECTOR = "#project-admin-services-add-button";
 const ADD_MOUNT_POINT_SELECTOR = "#service-add-modal";
@@ -50,6 +50,10 @@ function setupCreateServiceModal(gettext_plugin) {
         .use(gettext_plugin)
         .provide(PROJECT_ID, configuration.project_id)
         .provide(MINIMAL_RANK, configuration.minimal_rank)
+        .provide(CSRF_TOKEN, {
+            value: configuration.csrf_token,
+            name: configuration.csrf_token_name,
+        })
         .mount(vue_mount_point);
 
     const add_button = selectOrThrow(document, ADD_BUTTON_SELECTOR, HTMLButtonElement);
@@ -66,6 +70,10 @@ function setupEditServiceModals(gettext_plugin) {
         .use(gettext_plugin)
         .provide(PROJECT_ID, configuration.project_id)
         .provide(MINIMAL_RANK, configuration.minimal_rank)
+        .provide(CSRF_TOKEN, {
+            value: configuration.csrf_token,
+            name: configuration.csrf_token_name,
+        })
         .mount(vue_mount_point);
 
     const buttons = document.querySelectorAll(EDIT_BUTTONS_SELECTOR);
