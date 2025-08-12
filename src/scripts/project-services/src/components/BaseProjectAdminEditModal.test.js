@@ -33,13 +33,6 @@ function createFakeButton(service) {
 }
 
 describe(`BaseProjectAdminEdit`, () => {
-    let props;
-    beforeEach(() => {
-        props = {
-            allowed_icons: {},
-        };
-    });
-
     function createWrapper() {
         return shallowMount(BaseProjectAdminEditModal, {
             global: {
@@ -58,7 +51,6 @@ describe(`BaseProjectAdminEdit`, () => {
                     [CSRF_TOKEN.valueOf()]: { value: "csrf", name: "challenge" },
                 },
             },
-            props,
         });
     }
 

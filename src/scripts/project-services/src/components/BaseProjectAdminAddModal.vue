@@ -25,12 +25,8 @@
                 v-bind:label="preview_label"
                 v-bind:icon_name="service.icon_name"
                 v-bind:is_in_new_tab="service.is_in_new_tab"
-                v-bind:allowed_icons="allowed_icons"
             />
-            <in-creation-custom-service
-                v-bind:service_prop="service"
-                v-bind:allowed_icons="allowed_icons"
-            />
+            <in-creation-custom-service v-bind:service_prop="service" />
         </template>
     </add-modal>
 </template>
@@ -44,12 +40,6 @@ import InCreationCustomService from "./Service/InCreationCustomService.vue";
 export default {
     name: "BaseProjectAdminAddModal",
     components: { AddModal, SidebarPreviewer, InCreationCustomService },
-    props: {
-        allowed_icons: {
-            type: Object,
-            required: true,
-        },
-    },
     setup() {
         const project_id = strictInject(PROJECT_ID);
         const minimal_rank = strictInject(MINIMAL_RANK);

@@ -25,12 +25,8 @@
                 v-bind:label="preview_label"
                 v-bind:icon_name="service.icon_name"
                 v-bind:is_in_new_tab="service.is_in_new_tab"
-                v-bind:allowed_icons="allowed_icons"
             />
-            <in-creation-custom-service
-                v-bind:service_prop="service"
-                v-bind:allowed_icons="allowed_icons"
-            >
+            <in-creation-custom-service v-bind:service_prop="service">
                 <template v-slot:is_active>
                     <service-is-active
                         id="project-service-add-modal-active"
@@ -65,12 +61,6 @@ export default {
         InCreationCustomService,
         ServiceIsActive,
         ServiceShortname,
-    },
-    props: {
-        allowed_icons: {
-            type: Object,
-            required: true,
-        },
     },
     setup() {
         const project_id = strictInject(PROJECT_ID);

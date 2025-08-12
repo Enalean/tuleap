@@ -25,12 +25,10 @@
                 v-bind:label="service.label"
                 v-bind:icon_name="service.icon_name"
                 v-bind:is_in_new_tab="service.is_in_new_tab"
-                v-bind:allowed_icons="allowed_icons"
             />
             <in-edition-custom-service
                 v-if="service.is_project_scope && is_shown"
                 v-bind:service_prop="service"
-                v-bind:allowed_icons="allowed_icons"
             >
                 <template v-slot:is_active>
                     <service-is-active
@@ -63,12 +61,6 @@ export default {
         InEditionCustomService,
         ServiceIsActive,
         SidebarPreviewer,
-    },
-    props: {
-        allowed_icons: {
-            type: Object,
-            required: true,
-        },
     },
     setup() {
         const project_id = strictInject(PROJECT_ID);
