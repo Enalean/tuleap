@@ -35,14 +35,13 @@ use Tuleap\Tools\Xml2Php\Tracker\TrackerConvertor;
 
 class ConvertTrackerCommand extends Command
 {
-    protected static $defaultName = 'convert-tracker';
-
-    private const SRC = 'src';
-    private const ID  = 'tracker-id';
+    private const string SRC = 'src';
+    private const string ID  = 'tracker-id';
 
     protected function configure(): void
     {
         $this
+            ->setName('convert-tracker')
             ->setDescription('Convert tracker XML structure to PHP code')
             ->setDefinition(
                 new InputDefinition([
