@@ -27,12 +27,10 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TaskboardUsageTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @testWith [false, true, true]
-     *           ["cardwall", true, false]
-     *           ["taskboard", false, true]
-     *           ["anything", false, false]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith([false, true, true])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['cardwall', true, false])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['taskboard', false, true])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['anything', false, false])]
     public function testIsAllowed(string|false $board_type, bool $expected_is_cardwall_allowed, bool $expected_is_taskboard_allowed): void
     {
         $project = ProjectTestBuilder::aProject()->withId(101)->build();

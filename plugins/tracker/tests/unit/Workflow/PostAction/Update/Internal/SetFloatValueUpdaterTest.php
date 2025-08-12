@@ -54,7 +54,7 @@ final class SetFloatValueUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testUpdateAddsNewSetFloatValueActions(): void
     {
         $workflow = $this->createMock(Workflow::class);
-        $workflow->method('getTracker')->willReturn(TrackerTestBuilder::aTracker()->build());
+        $workflow->method('getTracker')->willReturn($this->tracker);
         $transition = $this->createMock(Transition::class);
         $transition->method('getId')->willReturn(1);
         $transition->method('getWorkflow')->willReturn($workflow);
@@ -77,7 +77,7 @@ final class SetFloatValueUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testUpdateDeletesAndRecreatesSetFloatValueActionsWhichAlreadyExists(): void
     {
         $workflow = $this->createMock(Workflow::class);
-        $workflow->method('getTracker')->willReturn(TrackerTestBuilder::aTracker()->build());
+        $workflow->method('getTracker')->willReturn($this->tracker);
         $transition = $this->createMock(Transition::class);
         $transition->method('getId')->willReturn(1);
         $transition->method('getWorkflow')->willReturn($workflow);
@@ -103,7 +103,7 @@ final class SetFloatValueUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testUpdateDeletesRemovedSetFloatValueActions(): void
     {
         $workflow = $this->createMock(Workflow::class);
-        $workflow->method('getTracker')->willReturn(TrackerTestBuilder::aTracker()->build());
+        $workflow->method('getTracker')->willReturn($this->tracker);
         $transition = $this->createMock(Transition::class);
         $transition->method('getId')->willReturn(1);
         $transition->method('getWorkflow')->willReturn($workflow);

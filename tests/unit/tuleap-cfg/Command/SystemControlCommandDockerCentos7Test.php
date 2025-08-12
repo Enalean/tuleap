@@ -126,11 +126,8 @@ class SystemControlCommandDockerCentos7Test extends \Tuleap\Test\PHPUnit\TestCas
         self::assertEquals(1, $this->command_tester->getStatusCode());
     }
 
-    /**
-     *
-     * @testWith [ "mask" ]
-     *           [ "is-active"]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith(['mask'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['is-active'])]
     public function testDoingNothingWithActions(string $action): void
     {
         $this->command_tester->execute(['action' => $action, 'targets' => ['tuleap']], ['capture_stderr_separately' => true]);

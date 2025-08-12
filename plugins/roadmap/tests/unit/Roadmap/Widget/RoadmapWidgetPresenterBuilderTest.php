@@ -103,10 +103,8 @@ final class RoadmapWidgetPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestC
         self::assertTrue($presenter->should_load_lvl2_iterations);
     }
 
-    /**
-     * @testWith [42, null]
-     *           [null, 42]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith([42, null])]
+    #[\PHPUnit\Framework\Attributes\TestWith([null, 42])]
     public function testItWillNotLoadIterationsIfTrackerDoesNotExists(
         ?int $lvl1_iteration_tracker_id,
         ?int $lvl2_iteration_tracker_id,
@@ -130,10 +128,8 @@ final class RoadmapWidgetPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestC
         self::assertFalse($presenter->should_load_lvl2_iterations);
     }
 
-    /**
-     * @testWith [42, null]
-     *           [null, 42]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith([42, null])]
+    #[\PHPUnit\Framework\Attributes\TestWith([null, 42])]
     public function testItWillNotLoadIterationsIfTrackerIsNotActive(
         ?int $lvl1_iteration_tracker_id,
         ?int $lvl2_iteration_tracker_id,
@@ -160,10 +156,8 @@ final class RoadmapWidgetPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestC
         self::assertFalse($presenter->should_load_lvl2_iterations);
     }
 
-    /**
-     * @testWith [42, null]
-     *           [null, 42]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith([42, null])]
+    #[\PHPUnit\Framework\Attributes\TestWith([null, 42])]
     public function testItWillNotLoadIterationsIfTrackerIsNotReadable(
         ?int $lvl1_iteration_tracker_id,
         ?int $lvl2_iteration_tracker_id,

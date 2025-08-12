@@ -84,10 +84,8 @@ final class JenkinsClientTest extends \Tuleap\Test\PHPUnit\TestCase
         $jenkins_client->launchJobBuild('https://some.url.example.com/job/my_job');
     }
 
-    /**
-     * @testWith [200]
-     *           [201]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith([200])]
+    #[\PHPUnit\Framework\Attributes\TestWith([201])]
     public function testLaunchJobSetsCorrectOptions(int $http_response_status_code): void
     {
         $http_client    = new Client();

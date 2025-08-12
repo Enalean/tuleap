@@ -116,10 +116,8 @@ final class ListOfCustomPropertyRepresentationBuilderTest extends TestCase
         self::assertEquals('', $custom_properties['field_2']->value);
     }
 
-    /**
-     * @testWith [null]
-     *           [0]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith([null])]
+    #[\PHPUnit\Framework\Attributes\TestWith([0])]
     public function testDateIsNullWhenNotSet(?int $timestamp): void
     {
         $metadata_date = new \Docman_Metadata();

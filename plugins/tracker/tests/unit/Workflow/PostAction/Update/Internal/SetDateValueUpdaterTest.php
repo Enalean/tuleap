@@ -51,7 +51,7 @@ final class SetDateValueUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testUpdateAddsNewSetDateValueActions(): void
     {
         $workflow = $this->createMock(Workflow::class);
-        $workflow->method('getTracker')->willReturn(TrackerTestBuilder::aTracker()->build());
+        $workflow->method('getTracker')->willReturn($this->tracker);
         $transition = $this->createMock(Transition::class);
         $transition->method('getId')->willReturn(1);
         $transition->method('getWorkflow')->willReturn($workflow);
@@ -74,7 +74,7 @@ final class SetDateValueUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testUpdateDeletesAndCreatesSetDateValueActionsWhichAlreadyExists(): void
     {
         $workflow = $this->createMock(Workflow::class);
-        $workflow->method('getTracker')->willReturn(TrackerTestBuilder::aTracker()->build());
+        $workflow->method('getTracker')->willReturn($this->tracker);
         $transition = $this->createMock(Transition::class);
         $transition->method('getId')->willReturn(1);
         $transition->method('getWorkflow')->willReturn($workflow);
@@ -101,7 +101,7 @@ final class SetDateValueUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testUpdateDeletesRemovedSetDateValueActions(): void
     {
         $workflow = $this->createMock(Workflow::class);
-        $workflow->method('getTracker')->willReturn(TrackerTestBuilder::aTracker()->build());
+        $workflow->method('getTracker')->willReturn($this->tracker);
         $transition = $this->createMock(Transition::class);
         $transition->method('getId')->willReturn(1);
         $transition->method('getWorkflow')->willReturn($workflow);

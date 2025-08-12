@@ -36,12 +36,10 @@ class IdForXMLImportExportConvertorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals(123, IdForXMLImportExportConvertor::convertXMLIdToFileInfoId('fileinfo_123'));
     }
 
-    /**
-     * @testWith [""]
-     *           ["invalid_prefix_123"]
-     *           ["fileinfo_"]
-     *           ["fileinfo_string"]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith([''])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['invalid_prefix_123'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['fileinfo_'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['fileinfo_string'])]
     public function testInvalidXMLIds(string $id): void
     {
         $this->expectException(\InvalidArgumentException::class);

@@ -38,12 +38,10 @@ final class ReferenceIsReadOnlyCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->checker       = new ReferenceIsReadOnlyChecker($this->event_manager);
     }
 
-    /**
-     * @testWith ["P", 105, "", false]
-     *           ["S", 105, "", true]
-     *           ["S", 100, "", false]
-     *           ["P", 105, "tracker", true]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith(['P', 105, '', false])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['S', 105, '', true])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['S', 100, '', false])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['P', 105, 'tracker', true])]
     public function testCheckThatReferencesCanBeEdited($scope, $project_id, $service_short_name, $expected_result): void
     {
         $reference = new \Reference(

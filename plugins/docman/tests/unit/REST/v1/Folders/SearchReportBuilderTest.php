@@ -171,14 +171,12 @@ final class SearchReportBuilderTest extends TestCase
         $this->search_report_builder->buildReport($folder, $search, $this->custom_properties);
     }
 
-    /**
-     * @testWith ["folder", 1]
-     *           ["file", 2]
-     *           ["link", 3]
-     *           ["embedded", 4]
-     *           ["wiki", 5]
-     *           ["empty", 6]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith(['folder', 1])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['file', 2])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['link', 3])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['embedded', 4])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['wiki', 5])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['empty', 6])]
     public function testItBuildsAReportWithATypeSearchFilter(string $submitted_type_value, int $expected_internal_value): void
     {
         $folder = new \Docman_Folder(['item_id' => 1, 'group_id' => 101]);
@@ -246,12 +244,10 @@ final class SearchReportBuilderTest extends TestCase
         self::assertSame('lorem', $second_filter->value);
     }
 
-    /**
-     * @testWith ["none", 100]
-     *           ["draft", 101]
-     *           ["approved", 102]
-     *           ["rejected", 103]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith(['none', 100])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['draft', 101])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['approved', 102])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['rejected', 103])]
     public function testItBuildsAReportWithAStatusSearchFilter(string $submitted_status_value, int $expected_internal_value): void
     {
         $folder = new \Docman_Folder(['item_id' => 1, 'group_id' => 101]);
@@ -306,11 +302,9 @@ final class SearchReportBuilderTest extends TestCase
         self::assertSame('jdoe', $second_filter->value);
     }
 
-    /**
-     * @testWith [">", 1]
-     *           ["=", 0]
-     *           ["<", -1]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith(['>', 1])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['=', 0])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['<', -1])]
     public function testItBuildsAReportWithAnUpdateDateSearchFilter(string $symbol_operator, int $expected_numeric_operator): void
     {
         $folder = new \Docman_Folder(['item_id' => 1, 'group_id' => 101]);
@@ -327,11 +321,9 @@ final class SearchReportBuilderTest extends TestCase
         self::assertSame($expected_numeric_operator, $second_filter->operator);
     }
 
-    /**
-     * @testWith [">", 1]
-     *           ["=", 0]
-     *           ["<", -1]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith(['>', 1])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['=', 0])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['<', -1])]
     public function testItBuildsAReportWithACreateDateSearchFilter(string $symbol_operator, int $expected_numeric_operator): void
     {
         $folder = new \Docman_Folder(['item_id' => 1, 'group_id' => 101]);
@@ -348,11 +340,9 @@ final class SearchReportBuilderTest extends TestCase
         self::assertSame($expected_numeric_operator, $second_filter->operator);
     }
 
-    /**
-     * @testWith [">", 1]
-     *           ["=", 0]
-     *           ["<", -1]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith(['>', 1])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['=', 0])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['<', -1])]
     public function testItBuildsAReportWithAnObsolescenceDateSearchFilter(string $symbol_operator, int $expected_numeric_operator): void
     {
         $folder = new \Docman_Folder(['item_id' => 1, 'group_id' => 101]);
@@ -412,11 +402,9 @@ final class SearchReportBuilderTest extends TestCase
         self::assertSame('lorem', $second_filter->value);
     }
 
-    /**
-     * @testWith [">", 1]
-     *           ["=", 0]
-     *           ["<", -1]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith(['>', 1])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['=', 0])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['<', -1])]
     public function testItBuildsAReportWithACustomDateSearchFilter(string $symbol_operator, int $expected_numeric_operator): void
     {
         $folder = new \Docman_Folder(['item_id' => 1, 'group_id' => 101]);

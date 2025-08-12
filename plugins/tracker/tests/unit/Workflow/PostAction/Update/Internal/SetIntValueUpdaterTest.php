@@ -52,7 +52,7 @@ final class SetIntValueUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testUpdateAddsNewSetIntValueActions(): void
     {
         $workflow = $this->createMock(Workflow::class);
-        $workflow->method('getTracker')->willReturn(TrackerTestBuilder::aTracker()->build());
+        $workflow->method('getTracker')->willReturn($this->tracker);
         $transition = $this->createMock(Transition::class);
         $transition->method('getId')->willReturn(1);
         $transition->method('getWorkflow')->willReturn($workflow);
@@ -78,7 +78,7 @@ final class SetIntValueUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testUpdateDeleteAndRecreatesSetIntValueActionsWhichAlreadyExists(): void
     {
         $workflow = $this->createMock(Workflow::class);
-        $workflow->method('getTracker')->willReturn(TrackerTestBuilder::aTracker()->build());
+        $workflow->method('getTracker')->willReturn($this->tracker);
         $transition = $this->createMock(Transition::class);
         $transition->method('getId')->willReturn(1);
         $transition->method('getWorkflow')->willReturn($workflow);
@@ -104,7 +104,7 @@ final class SetIntValueUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testUpdateDeletesRemovedSetIntValueActions(): void
     {
         $workflow = $this->createMock(Workflow::class);
-        $workflow->method('getTracker')->willReturn(TrackerTestBuilder::aTracker()->build());
+        $workflow->method('getTracker')->willReturn($this->tracker);
         $transition = $this->createMock(Transition::class);
         $transition->method('getId')->willReturn(1);
         $transition->method('getWorkflow')->willReturn($workflow);

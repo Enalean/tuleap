@@ -350,8 +350,6 @@ class ProjectAccessCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             })
         );
 
-        $this->expectNotToPerformAssertions();
-
         $this->checker->checkUserCanAccessProject($user, $project);
     }
 

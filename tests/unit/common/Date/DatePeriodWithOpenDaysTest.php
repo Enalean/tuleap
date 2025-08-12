@@ -32,7 +32,7 @@ class DatePeriodWithOpenDaysTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private int $week_day_timestamp;
     private int $following_week_day_timestamp;
-    private string $request_time;
+    private int $request_time;
 
     #[\Override]
     protected function setUp(): void

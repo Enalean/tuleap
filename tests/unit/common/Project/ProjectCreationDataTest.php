@@ -139,12 +139,10 @@ final class ProjectCreationDataTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertEquals(Project::ACCESS_PRIVATE, $project_data->getAccess());
     }
 
-    /**
-     * @testWith [true, true, "unrestricted"]
-     *           [true, false, "public"]
-     *           [false, true, "private"]
-     *           [false, false, "private-wo-restr"]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith([true, true, 'unrestricted'])]
+    #[\PHPUnit\Framework\Attributes\TestWith([true, false, 'public'])]
+    #[\PHPUnit\Framework\Attributes\TestWith([false, true, 'private'])]
+    #[\PHPUnit\Framework\Attributes\TestWith([false, false, 'private-wo-restr'])]
     public function testItCreatesAProjectWithRestrictedVisibilityFromWebPayload(
         bool $is_public,
         bool $allow_restricted,

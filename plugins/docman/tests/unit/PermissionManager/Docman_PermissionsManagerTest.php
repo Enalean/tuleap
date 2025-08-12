@@ -72,12 +72,10 @@ final class Docman_PermissionsManagerTest extends TestCase // phpcs:ignore Squiz
         \ForgeConfig::set(Docman_PermissionsManager::PLUGIN_OPTION_DELETE, false);
     }
 
-    /**
-     * @testWith [false, false]
-     *           [true, false]
-     *           [false, true]
-     *           [true, true]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith([false, false])]
+    #[\PHPUnit\Framework\Attributes\TestWith([true, false])]
+    #[\PHPUnit\Framework\Attributes\TestWith([false, true])]
+    #[\PHPUnit\Framework\Attributes\TestWith([true, true])]
     public function testSuperUserHasAllAccess(bool $forbid_writers_to_update, bool $forbid_writers_to_delete): void
     {
         $this->project_access_checker->method('checkUserCanAccessProject');
@@ -108,12 +106,10 @@ final class Docman_PermissionsManagerTest extends TestCase // phpcs:ignore Squiz
         self::assertFalse($this->permissions_manager->userCanManage($this->user, '2112231976'));
     }
 
-    /**
-     * @testWith [false, false]
-     *           [true, false]
-     *           [false, true]
-     *           [true, true]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith([false, false])]
+    #[\PHPUnit\Framework\Attributes\TestWith([true, false])]
+    #[\PHPUnit\Framework\Attributes\TestWith([false, true])]
+    #[\PHPUnit\Framework\Attributes\TestWith([true, true])]
     public function testDocmanAdminHasAllAccess(bool $forbid_writers_to_update, bool $forbid_writers_to_delete): void
     {
         $this->project_access_checker->method('checkUserCanAccessProject');
@@ -137,12 +133,10 @@ final class Docman_PermissionsManagerTest extends TestCase // phpcs:ignore Squiz
         self::assertTrue($this->permissions_manager->userCanUpdateItemProperties($user, new Docman_Item(['item_id' => 123])));
     }
 
-    /**
-     * @testWith [false, false]
-     *           [true, false]
-     *           [false, true]
-     *           [true, true]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith([false, false])]
+    #[\PHPUnit\Framework\Attributes\TestWith([true, false])]
+    #[\PHPUnit\Framework\Attributes\TestWith([false, true])]
+    #[\PHPUnit\Framework\Attributes\TestWith([true, true])]
     public function testManageRightGivesReadAndWriteRights(
         bool $forbid_writers_to_update,
         bool $forbid_writers_to_delete,
@@ -222,12 +216,10 @@ final class Docman_PermissionsManagerTest extends TestCase // phpcs:ignore Squiz
         self::assertFalse($this->permissions_manager->userCanRead($user, 123));
     }
 
-    /**
-     * @testWith [false, false]
-     *           [true, false]
-     *           [false, true]
-     *           [true, true]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith([false, false])]
+    #[\PHPUnit\Framework\Attributes\TestWith([true, false])]
+    #[\PHPUnit\Framework\Attributes\TestWith([false, true])]
+    #[\PHPUnit\Framework\Attributes\TestWith([true, true])]
     public function testReadRight(bool $forbid_writers_to_update, bool $forbid_writers_to_delete): void
     {
         $this->project_access_checker->method('checkUserCanAccessProject');
@@ -923,10 +915,8 @@ final class Docman_PermissionsManagerTest extends TestCase // phpcs:ignore Squiz
         self::assertEquals($userArray, $this->permissions_manager->getProjectAdminUsers($this->project));
     }
 
-    /**
-     * @testWith [false, false]
-     *           [true, true]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith([false, false])]
+    #[\PHPUnit\Framework\Attributes\TestWith([true, true])]
     public function testWriterCanUpdateItemProperties(bool $forbid_writers_to_update, bool $expected): void
     {
         $this->project_access_checker->method('checkUserCanAccessProject');

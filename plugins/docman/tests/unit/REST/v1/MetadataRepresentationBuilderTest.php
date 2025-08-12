@@ -144,10 +144,8 @@ final class MetadataRepresentationBuilderTest extends TestCase
         self::assertEquals([$expected_representation], $representation);
     }
 
-    /**
-     * @testWith [0]
-     *           ["0"]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith([0])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['0'])]
     public function testMetadataWithDatePropertyButWithoutActualValueIsCorrectlyBuilt($value): void
     {
         $item = new Docman_Item();

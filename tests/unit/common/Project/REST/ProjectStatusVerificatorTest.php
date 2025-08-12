@@ -87,7 +87,6 @@ final class ProjectStatusVerificatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testSiteAdminUsersCanAccessASuspendedProject(): void
     {
-        self::expectNotToPerformAssertions();
         $project = ProjectTestBuilder::aProject()->build();
 
         $user = UserTestBuilder::buildWithDefaults();

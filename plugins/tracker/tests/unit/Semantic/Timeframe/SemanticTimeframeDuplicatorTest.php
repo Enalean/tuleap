@@ -142,16 +142,13 @@ final class SemanticTimeframeDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCas
         );
     }
 
-    /**
-     * @testWith
-     *           [null, null, null, 50]
-     *           [101, 103, 104, 50]
-     *           [101, null, null, 50]
-     *           [101, 103, null, 50]
-     *           [101, null, 104, 50]
-     *           [null, null, 104, 50]
-     *           [null, 103, null, 50]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith([null, null, null, 50])]
+    #[\PHPUnit\Framework\Attributes\TestWith([101, 103, 104, 50])]
+    #[\PHPUnit\Framework\Attributes\TestWith([101, null, null, 50])]
+    #[\PHPUnit\Framework\Attributes\TestWith([101, 103, null, 50])]
+    #[\PHPUnit\Framework\Attributes\TestWith([101, null, 104, 50])]
+    #[\PHPUnit\Framework\Attributes\TestWith([null, null, 104, 50])]
+    #[\PHPUnit\Framework\Attributes\TestWith([null, 103, null, 50])]
     public function testItDuplicatesAllTheThingsWithImpliedFromTrackerIdFromSameProjectEvenWhenOtherFieldsAreRetrieved(
         ?int $from_start_date_field_id,
         ?int $from_duration_field_id,
@@ -185,16 +182,13 @@ final class SemanticTimeframeDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCas
         );
     }
 
-    /**
-     * @testWith
-     *           [null, null, null, 50]
-     *           [101, 103, 104, 50]
-     *           [101, null, null, 50]
-     *           [101, 103, null, 50]
-     *           [101, null, 104, 50]
-     *           [null, null, 104, 50]
-     *           [null, 103, null, 50]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith([null, null, null, 50])]
+    #[\PHPUnit\Framework\Attributes\TestWith([101, 103, 104, 50])]
+    #[\PHPUnit\Framework\Attributes\TestWith([101, null, null, 50])]
+    #[\PHPUnit\Framework\Attributes\TestWith([101, 103, null, 50])]
+    #[\PHPUnit\Framework\Attributes\TestWith([101, null, 104, 50])]
+    #[\PHPUnit\Framework\Attributes\TestWith([null, null, 104, 50])]
+    #[\PHPUnit\Framework\Attributes\TestWith([null, 103, null, 50])]
     public function testItDuplicatesAllTheThingsWithImpliedFromTrackerIdWhenDuplicatingWholeProjectEvenWhenOtherFieldsAreRetrieved(
         ?int $from_start_date_field_id,
         ?int $from_duration_field_id,

@@ -26,21 +26,17 @@ namespace Tuleap\Git;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class BinaryDetectorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @testWith ["Tuleap"]
-     *           ["<?xml version=\"1.1\"?><_/>"]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith(['Tuleap'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['<?xml version="1.1"?><_/>'])]
     public function testTextDataIsNotRecognizedAsBinary(string $text): void
     {
         $this->assertFalse(BinaryDetector::isBinary($text));
     }
 
-    /**
-     * @testWith ["jpeg"]
-     *           ["png"]
-     *           ["tar"]
-     *           ["zip"]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith(['jpeg'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['png'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['tar'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['zip'])]
     public function testBinaryContentIsRecognizedAsBinary(string $fixture_name): void
     {
         $this->assertTrue(BinaryDetector::isBinary(file_get_contents(__DIR__ . '/_fixtures/' . $fixture_name)));

@@ -28,10 +28,8 @@ use Tuleap\Test\PHPUnit\TestCase;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProgramManagementXMLConfigParserTest extends TestCase
 {
-    /**
-     * @testWith ["__fixtures/none", false]
-     *           ["__fixtures/valid_xml", true]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith(['__fixtures/none', false])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['__fixtures/valid_xml', true])]
     public function testIsThereAConfigToImport(string $xml_dir, bool $is_there_a_config): void
     {
         $extractor = new ProgramManagementXMLConfigParser();

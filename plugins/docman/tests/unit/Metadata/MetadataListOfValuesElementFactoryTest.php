@@ -174,7 +174,6 @@ final class MetadataListOfValuesElementFactoryTest extends \Tuleap\Test\PHPUnit\
         ];
     }
 
-    #[\PHPUnit\Framework\Attributes\DataProvider('dataProviderDocmanStatus')]
     public function testItReturnsNoneStatusIfTheExpectedStatusIDIsZero(): void
     {
         $metadata_list_of_values_element_factory = new Docman_MetadataListOfValuesElementFactory();

@@ -104,10 +104,8 @@ final class MethodBasedOnLinksCountTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals(null, $progression_result->getValue());
     }
 
-    /**
-     * @testWith [true, 0]
-     *           [false, 1]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith([true, 0])]
+    #[\PHPUnit\Framework\Attributes\TestWith([false, 1])]
     public function testItConsidersAnArtifactWithoutArtifactLinkValueAsHavingNoLinks(bool $is_artifact_open, float $expected_progress_value): void
     {
         $artifact = $this->createMock(Artifact::class);
@@ -126,10 +124,8 @@ final class MethodBasedOnLinksCountTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals($expected_progress_value, $progression_result->getValue());
     }
 
-    /**
-     * @testWith [true, 0]
-     *           [false, 1]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith([true, 0])]
+    #[\PHPUnit\Framework\Attributes\TestWith([false, 1])]
     public function testItComputesWhenItHasNoLinksOfGivenType(bool $is_artifact_open, float $expected_progress_value): void
     {
         $last_artifact_changeset = $this->createMock(\Tuleap\Tracker\Artifact\Changeset\ArtifactLink\ArtifactLinkChangesetValue::class);

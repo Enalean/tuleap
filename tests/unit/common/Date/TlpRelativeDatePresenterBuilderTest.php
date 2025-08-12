@@ -42,12 +42,10 @@ class TlpRelativeDatePresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             });
     }
 
-    /**
-     * @testWith ["relative_first-absolute_shown", "top", "relative"]
-     *           ["absolute_first-relative_shown", "top", "absolute"]
-     *           ["relative_first-absolute_tooltip", "tooltip", "relative"]
-     *           ["absolute_first-relative_tooltip", "tooltip", "absolute"]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith(['relative_first-absolute_shown', 'top', 'relative'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['absolute_first-relative_shown', 'top', 'absolute'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['relative_first-absolute_tooltip', 'tooltip', 'relative'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['absolute_first-relative_tooltip', 'tooltip', 'absolute'])]
     public function testBlockContext(
         string $preference_value,
         string $expected_placement,
@@ -69,12 +67,10 @@ class TlpRelativeDatePresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertEquals('fr_FR', $presenter->locale);
     }
 
-    /**
-     * @testWith ["relative_first-absolute_shown", "right", "relative"]
-     *           ["absolute_first-relative_shown", "right", "absolute"]
-     *           ["relative_first-absolute_tooltip", "tooltip", "relative"]
-     *           ["absolute_first-relative_tooltip", "tooltip", "absolute"]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith(['relative_first-absolute_shown', 'right', 'relative'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['absolute_first-relative_shown', 'right', 'absolute'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['relative_first-absolute_tooltip', 'tooltip', 'relative'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['absolute_first-relative_tooltip', 'tooltip', 'absolute'])]
     public function testInlineContext(
         string $preference_value,
         string $expected_placement,
@@ -96,12 +92,10 @@ class TlpRelativeDatePresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertEquals('fr_FR', $presenter->locale);
     }
 
-    /**
-     * @testWith ["relative_first-absolute_shown", "right", "relative"]
-     *           ["absolute_first-relative_shown", "right", "absolute"]
-     *           ["relative_first-absolute_tooltip", "tooltip", "relative"]
-     *           ["absolute_first-relative_tooltip", "tooltip", "absolute"]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith(['relative_first-absolute_shown', 'right', 'relative'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['absolute_first-relative_shown', 'right', 'absolute'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['relative_first-absolute_tooltip', 'tooltip', 'relative'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['absolute_first-relative_tooltip', 'tooltip', 'absolute'])]
     public function testInlineContextWithoutTime(
         string $preference_value,
         string $expected_placement,

@@ -62,10 +62,8 @@ final class ProjectRegistrationBaseCheckerTest extends TestCase
         );
     }
 
-    /**
-     * @testWith [true, true]
-     *           [false, false]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith([true, true])]
+    #[\PHPUnit\Framework\Attributes\TestWith([false, false])]
     public function testItCollectsAllDataErrors(bool $project_is_public, bool $project_allow_restricted): void
     {
         ForgeConfig::set('enable_not_mandatory_description', 0);

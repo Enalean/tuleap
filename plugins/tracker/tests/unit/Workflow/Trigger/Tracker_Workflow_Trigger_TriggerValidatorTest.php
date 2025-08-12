@@ -148,7 +148,6 @@ final class Tracker_Workflow_Trigger_TriggerValidatorTest extends \Tuleap\Test\P
 
     public function testItRaisesNoExceptionIfDataIsGood(): void
     {
-        $this->expectNotToPerformAssertions();
         $json                         = new stdClass();
         $json->target                 = new stdClass();
         $json->target->field_id       = 34;

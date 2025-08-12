@@ -45,10 +45,8 @@ final class LanguageDetectorForPrismJSTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->assertEquals('cmake', $detector->getLanguage('a.cmake.in'));
     }
 
-    /**
-     * @testWith ["a.php"]
-     *           ["a.foo.php"]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith(['a.php'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['a.foo.php'])]
     public function testFallBackToTheExtensionIfNothingMatchesSomethingKnow(string $filename): void
     {
         $detector = new LanguageDetectorForPrismJS();

@@ -29,10 +29,8 @@ use Tuleap\Http\HTTPFactoryBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class JenkinsCSRFCrumbRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @testWith ["https://example.com"]
-     *           ["https://example.com/"]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith(['https://example.com'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['https://example.com/'])]
     public function testRetrievalCSRFHeader(string $test_url): void
     {
         $csrf_crumb_header = 'Jenkins-Crumb:eb62a7b696ef05275be811c0608cbbcb';

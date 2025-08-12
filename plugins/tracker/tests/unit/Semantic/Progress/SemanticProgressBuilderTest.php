@@ -137,13 +137,11 @@ final class SemanticProgressBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    /**
-     * @testWith [null, 1002, "_fixed_in"]
-     *           [1001, null, "_fixed_in"]
-     *           [null, null, null]
-     *           [null, 1002, null]
-     *           [1001, null, null]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith([null, 1002, '_fixed_in'])]
+    #[\PHPUnit\Framework\Attributes\TestWith([1001, null, '_fixed_in'])]
+    #[\PHPUnit\Framework\Attributes\TestWith([null, null, null])]
+    #[\PHPUnit\Framework\Attributes\TestWith([null, 1002, null])]
+    #[\PHPUnit\Framework\Attributes\TestWith([1001, null, null])]
     public function testItReturnsAnInvalidSemantic(
         ?int $total_effort_field_id,
         ?int $remaining_effort_field_id,

@@ -27,9 +27,9 @@ use Tuleap\Test\PHPUnit\TestCase;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class RequestTimeTest extends TestCase
 {
-    private const REQUEST_TIMESTAMP = 1234567890;
+    private const int REQUEST_TIMESTAMP = 1234567890;
 
-    private mixed $request_time;
+    private int $request_time;
 
     #[\Override]
     protected function setUp(): void
@@ -54,7 +54,7 @@ final class RequestTimeTest extends TestCase
 
     public function testItReturnsTheCurrentTimeIfServerSuperGlobalIsNotSet(): void
     {
-        unset($_SERVER['REQUEST_TIME']);
+        $_SERVER['REQUEST_TIME'] = null;
 
         self::assertGreaterThan(
             self::REQUEST_TIMESTAMP,

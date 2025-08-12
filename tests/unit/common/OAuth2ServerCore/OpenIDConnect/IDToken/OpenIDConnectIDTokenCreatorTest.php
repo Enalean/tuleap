@@ -74,10 +74,8 @@ final class OpenIDConnectIDTokenCreatorTest extends \Tuleap\Test\PHPUnit\TestCas
         );
     }
 
-    /**
-     * @testWith ["nonce"]
-     *           [null]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith(['nonce'])]
+    #[\PHPUnit\Framework\Attributes\TestWith([null])]
     public function testCanIssueIDToken(?string $nonce): void
     {
         \ForgeConfig::set('sys_default_domain', 'tuleap.example.com');

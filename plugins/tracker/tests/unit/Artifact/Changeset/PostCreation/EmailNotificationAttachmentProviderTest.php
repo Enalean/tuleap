@@ -48,10 +48,8 @@ final class EmailNotificationAttachmentProviderTest extends TestCase
         $this->logger    = new TestLogger();
     }
 
-    /**
-     * @testWith [false]
-     *           [true]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith([false])]
+    #[\PHPUnit\Framework\Attributes\TestWith([true])]
     public function testNoAttachmentsWhenTrackerIsNotConfiguredTo(bool $should_check_permissions): void
     {
         $provider = new EmailNotificationAttachmentProvider(
@@ -68,10 +66,8 @@ final class EmailNotificationAttachmentProviderTest extends TestCase
         self::assertFalse($this->logger->hasDebugRecords());
     }
 
-    /**
-     * @testWith [false]
-     *           [true]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith([false])]
+    #[\PHPUnit\Framework\Attributes\TestWith([true])]
     public function testNoAttachmentsWhenRetrievalOfSummaryIsInError(bool $should_check_permissions): void
     {
         $provider = new EmailNotificationAttachmentProvider(
@@ -91,10 +87,8 @@ final class EmailNotificationAttachmentProviderTest extends TestCase
         );
     }
 
-    /**
-     * @testWith [false]
-     *           [true]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith([false])]
+    #[\PHPUnit\Framework\Attributes\TestWith([true])]
     public function testNoAttachmentsWhenRetrievalOfDatesIsInError(bool $should_check_permissions): void
     {
         $provider = new EmailNotificationAttachmentProvider(
@@ -114,10 +108,8 @@ final class EmailNotificationAttachmentProviderTest extends TestCase
         );
     }
 
-    /**
-     * @testWith [false]
-     *           [true]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith([false])]
+    #[\PHPUnit\Framework\Attributes\TestWith([true])]
     public function testAttachmentWhenEverythingIsAwesome(bool $should_check_permissions): void
     {
         $provider = new EmailNotificationAttachmentProvider(
@@ -139,10 +131,8 @@ final class EmailNotificationAttachmentProviderTest extends TestCase
         );
     }
 
-    /**
-     * @testWith [false]
-     *           [true]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith([false])]
+    #[\PHPUnit\Framework\Attributes\TestWith([true])]
     public function testAttachmentContainsAnEventSummary(bool $should_check_permissions): void
     {
         $provider = new EmailNotificationAttachmentProvider(
@@ -159,10 +149,8 @@ final class EmailNotificationAttachmentProviderTest extends TestCase
         self::assertStringContainsString('SUMMARY:Christmas Party', $attachements[0]->content);
     }
 
-    /**
-     * @testWith [false]
-     *           [true]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith([false])]
+    #[\PHPUnit\Framework\Attributes\TestWith([true])]
     public function testAttachmentContainsAnEventStartAndEndDateIgnoringTimezoneForNow(bool $should_check_permissions): void
     {
         $provider = new EmailNotificationAttachmentProvider(
@@ -183,10 +171,8 @@ final class EmailNotificationAttachmentProviderTest extends TestCase
         self::assertStringMatchesFormat("{$begining_of_file}DTEND;{$timezone}VALUE=DATE:20111222{$end_of_file}", $attachements[0]->content);
     }
 
-    /**
-     * @testWith [false]
-     *           [true]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith([false])]
+    #[\PHPUnit\Framework\Attributes\TestWith([true])]
     public function testAttachmentDoesNotContainMethodRequestBecauseYesMaybeNoActionsWillSendAnEmailToTheNoreplyOrganizerWhichCanEndUpInErrorInSomeEnvironment(bool $should_check_permissions): void
     {
         $provider = new EmailNotificationAttachmentProvider(
@@ -203,10 +189,8 @@ final class EmailNotificationAttachmentProviderTest extends TestCase
         self::assertStringNotContainsString('METHOD:REQUEST', $attachements[0]->content);
     }
 
-    /**
-     * @testWith [false]
-     *           [true]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith([false])]
+    #[\PHPUnit\Framework\Attributes\TestWith([true])]
     public function testAttachmentsMethodCancelWhenStartDateAndEndDateAreZero(bool $should_check_permissions): void
     {
         $provider = new EmailNotificationAttachmentProvider(
@@ -223,10 +207,8 @@ final class EmailNotificationAttachmentProviderTest extends TestCase
         self::assertStringContainsString('METHOD:CANCEL', $attachments[0]->content);
     }
 
-    /**
-     * @testWith [false]
-     *           [true]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith([false])]
+    #[\PHPUnit\Framework\Attributes\TestWith([true])]
     public function testAttachmentsContainsAnOrganizer(bool $should_check_permissions): void
     {
         $provider = new EmailNotificationAttachmentProvider(

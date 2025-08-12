@@ -121,21 +121,19 @@ final class WebhookTuleapReferencesParserTest extends \Tuleap\Test\PHPUnit\TestC
         self::assertEmpty($references);
     }
 
-    /**
-     * @testWith [""]
-     *           [" "]
-     *           [","]
-     *           ["."]
-     *           ["|"]
-     *           ["["]
-     *           ["]"]
-     *           ["("]
-     *           [")"]
-     *           ["{"]
-     *           ["}"]
-     *           ["'"]
-     *           ["\""]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith([''])]
+    #[\PHPUnit\Framework\Attributes\TestWith([' '])]
+    #[\PHPUnit\Framework\Attributes\TestWith([','])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['.'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['|'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['['])]
+    #[\PHPUnit\Framework\Attributes\TestWith([']'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['('])]
+    #[\PHPUnit\Framework\Attributes\TestWith([')'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['{'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['}'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(["'"])]
+    #[\PHPUnit\Framework\Attributes\TestWith([''])]
     public function testItAcceptsALimitedListOfCharactersForReferenceBoundary(string $char): void
     {
         $references_collection = $this->parser->extractCollectionOfTuleapReferences($char . 'TULEAP-123');
@@ -146,17 +144,15 @@ final class WebhookTuleapReferencesParserTest extends \Tuleap\Test\PHPUnit\TestC
         self::assertNull($references[0]->getClosingKeyword());
     }
 
-    /**
-     * @testWith ["#"]
-     *           ["-"]
-     *           ["_"]
-     *           ["é"]
-     *           ["è"]
-     *           ["à"]
-     *           ["e"]
-     *           ["&"]
-     *           ["語"]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith(['#'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['-'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['_'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['é'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['è'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['à'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['e'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['&'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['語'])]
     public function testItRejectsInvalidReferenceBoundary(string $char): void
     {
         $references_collection = $this->parser->extractCollectionOfTuleapReferences($char . 'TULEAP-123');
@@ -195,19 +191,17 @@ final class WebhookTuleapReferencesParserTest extends \Tuleap\Test\PHPUnit\TestC
         ];
     }
 
-    /**
-     * @testWith [","]
-     *           ["."]
-     *           ["|"]
-     *           ["["]
-     *           ["]"]
-     *           ["("]
-     *           [")"]
-     *           ["{"]
-     *           ["}"]
-     *           ["'"]
-     *           ["\""]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith([','])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['.'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['|'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['['])]
+    #[\PHPUnit\Framework\Attributes\TestWith([']'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['('])]
+    #[\PHPUnit\Framework\Attributes\TestWith([')'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['{'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['}'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(["'"])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['"'])]
     public function testItRetrievesEachTheTuleapReferenceAndTheCloseKeywordResolvesIfTheCloseKeywordIsGiven(string $accepted_boundary): void
     {
         $references_collection = $this->parser->extractCollectionOfTuleapReferences(
@@ -261,19 +255,17 @@ final class WebhookTuleapReferencesParserTest extends \Tuleap\Test\PHPUnit\TestC
         ];
     }
 
-    /**
-     * @testWith [","]
-     *           ["."]
-     *           ["|"]
-     *           ["["]
-     *           ["]"]
-     *           ["("]
-     *           [")"]
-     *           ["{"]
-     *           ["}"]
-     *           ["'"]
-     *           ["\""]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith([','])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['.'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['|'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['['])]
+    #[\PHPUnit\Framework\Attributes\TestWith([']'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['('])]
+    #[\PHPUnit\Framework\Attributes\TestWith([')'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['{'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['}'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(["'"])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['"'])]
     public function testItRetrievesEachTheTuleapReferenceAndTheCloseKeywordClosesIfTheCloseKeywordIsGiven(string $accepted_boundary): void
     {
         $references_collection = $this->parser->extractCollectionOfTuleapReferences(
@@ -327,19 +319,17 @@ final class WebhookTuleapReferencesParserTest extends \Tuleap\Test\PHPUnit\TestC
         ];
     }
 
-    /**
-     * @testWith [","]
-     *           ["."]
-     *           ["|"]
-     *           ["["]
-     *           ["]"]
-     *           ["("]
-     *           [")"]
-     *           ["{"]
-     *           ["}"]
-     *           ["'"]
-     *           ["\""]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith([','])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['.'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['|'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['['])]
+    #[\PHPUnit\Framework\Attributes\TestWith([']'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['('])]
+    #[\PHPUnit\Framework\Attributes\TestWith([')'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['{'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['}'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(["'"])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['"'])]
     public function testItRetrievesEachTheTuleapReferenceAndTheCloseKeywordFixesIfTheCloseKeywordIsGiven(string $accepted_boundary): void
     {
         $references_collection = $this->parser->extractCollectionOfTuleapReferences(
@@ -393,19 +383,17 @@ final class WebhookTuleapReferencesParserTest extends \Tuleap\Test\PHPUnit\TestC
         ];
     }
 
-    /**
-     * @testWith [","]
-     *           ["."]
-     *           ["|"]
-     *           ["["]
-     *           ["]"]
-     *           ["("]
-     *           [")"]
-     *           ["{"]
-     *           ["}"]
-     *           ["'"]
-     *           ["\""]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith([','])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['.'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['|'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['['])]
+    #[\PHPUnit\Framework\Attributes\TestWith([']'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['('])]
+    #[\PHPUnit\Framework\Attributes\TestWith([')'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['{'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['}'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(["'"])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['"'])]
     public function testItRetrievesEachTuleapReferenceAndTheCloseKeywordImplementsIfTheCloseKeywordIsGiven(
         string $accepted_boundary,
     ): void {

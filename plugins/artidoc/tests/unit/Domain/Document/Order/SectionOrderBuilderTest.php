@@ -123,10 +123,8 @@ final class SectionOrderBuilderTest extends TestCase
         self::assertInstanceOf(CannotMoveSectionRelativelyToItselfFault::class, $result->error);
     }
 
-    /**
-     * @testWith ["after"]
-     *           ["before"]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith(['after'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['before'])]
     public function testHappyPath(string $direction): void
     {
         $result = $this->getBuilder()->build(

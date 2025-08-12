@@ -70,10 +70,8 @@ final class ReferenceDescriptionTranslationTest extends TestCase
         self::assertEquals($expected_translation, $reference_description_translation->getTranslatedDescription());
     }
 
-    /**
-     * @testWith ["plugin_aaaaa:notfound_desc_key"]
-     *           ["project_ref_notfound_desc_key"]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith(['plugin_aaaaa:notfound_desc_key'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['project_ref_notfound_desc_key'])]
     public function testDescriptionLookingLikeInternalDescriptionButNotExistingIsNotTranslated(string $raw_description): void
     {
         $reference = $this->createMock(Reference::class);

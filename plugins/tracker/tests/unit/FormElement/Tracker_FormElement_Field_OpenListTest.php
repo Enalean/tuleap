@@ -332,12 +332,10 @@ final class Tracker_FormElement_Field_OpenListTest extends TestCase //phpcs:igno
         self::assertFalse($field->isValidRegardingRequiredProperty($artifact, 'bdummy,otext'));
     }
 
-    /**
-     * @testWith ["b102"]
-     *           ["o102"]
-     *           ["!new value"]
-     *           ["!0"]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith(['b102'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['o102'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['!new value'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['!0'])]
     public function testWhenFieldIsRequiredItAcceptsRegularValue(string $value): void
     {
         $artifact = $this->createMock(Artifact::class);

@@ -93,7 +93,7 @@ final class PackTest extends TestCase
     }
 
     #[\PHPUnit\Framework\Attributes\DataProvider('objectReferenceProvider')]
-    public function testContainsObject($object_reference, $expected, $pack_index_path): void
+    public function testContainsObject(string $object_reference, bool $expected, string $pack_index_path): void
     {
         $this->pack_index_file->withContent(file_get_contents($pack_index_path));
 
@@ -101,7 +101,7 @@ final class PackTest extends TestCase
         self::assertSame($expected, $pack->ContainsObject($object_reference));
     }
 
-    public static function objectReferenceProvider(): array
+    public static function objectReferenceProvider(): \Generator
     {
         $reference_tests = [
             ['60bcae14911e8f4ec8949936ce5f3f4162abca0a', true],
@@ -112,19 +112,15 @@ final class PackTest extends TestCase
             ['invalid_reference_format', false],
         ];
 
-        $full_reference_tests = [];
         foreach ($reference_tests as $reference_test) {
             foreach (self::ALL_PACK_INDEX_PATHS as $pack_index_path) {
-                $reference_test[]       = $pack_index_path;
-                $full_reference_tests[] = $reference_test;
+                yield [...$reference_test, $pack_index_path];
             }
         }
-
-        return $full_reference_tests;
     }
 
     #[\PHPUnit\Framework\Attributes\DataProvider('objectProvider')]
-    public function testGetObject($object_reference, $sha256_expected_content, $expected_type, $pack_index_path): void
+    public function testGetObject(string $object_reference, ?string $sha256_expected_content, ?int $expected_type, string $pack_index_path): void
     {
         $this->pack_index_file->withContent(file_get_contents($pack_index_path));
 
@@ -139,7 +135,7 @@ final class PackTest extends TestCase
         self::assertSame($type, $expected_type);
     }
 
-    public static function objectProvider(): array
+    public static function objectProvider(): \Generator
     {
         $object_tests = [
             ['60bcae14911e8f4ec8949936ce5f3f4162abca0a', 'db098907ae9b166cb9c8078858ba284024649c971c37fb89c21d112d416264d2', Pack::OBJ_COMMIT],
@@ -149,15 +145,11 @@ final class PackTest extends TestCase
             ['invalid_reference_format', null, null],
         ];
 
-        $full_object_tests = [];
         foreach ($object_tests as $object_test) {
             foreach (self::ALL_PACK_INDEX_PATHS as $pack_index_path) {
-                $object_test[]       = $pack_index_path;
-                $full_object_tests[] = $object_test;
+                yield [...$object_test, $pack_index_path];
             }
         }
-
-        return $full_object_tests;
     }
 
     public function testGetObjectRejectsPackWithInvalidSignature(): void

@@ -20,8 +20,6 @@
 
 namespace Tuleap\Label\Widget;
 
-require_once __DIR__ . '/bootstrap.php';
-
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class ProjectLabelRequestDataValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 {
@@ -109,7 +107,5 @@ class ProjectLabelRequestDataValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->request->method('validArray')->willReturn(true);
 
         $this->validator->validateDataFromRequest($this->request, $projects_labels);
-
-        $this->expectNotToPerformAssertions();
     }
 }

@@ -65,11 +65,9 @@ final class AgileDashboardPromotedMilestonesRetrieverTest extends TestCase
         self::assertEmpty($retriever->getSidebarPromotedMilestones(UserTestBuilder::buildWithDefaults(), 'whatever'));
     }
 
-    /**
-     * @testWith ["whatever", false, false]
-     *           ["milestone-5", true, false]
-     *           ["milestone-6", true, true]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith(['whatever', false, false])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['milestone-5', true, false])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['milestone-6', true, true])]
     public function testItBuildsPromotedMilestones(
         string $active_promoted_item_id,
         bool $should_milestone_be_active,

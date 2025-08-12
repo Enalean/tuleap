@@ -200,13 +200,10 @@ final class SystemControlCommandTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertEquals("`foo` is not a valid action\n", $this->command_tester->getErrorOutput());
     }
 
-    /**
-     *
-     * @testWith [ "mask" ]
-     *           [ "enable" ]
-     *           [ "is-active"]
-     *           [ "is-enabled" ]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith(['mask'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['enable'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['is-active'])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['is-enabled'])]
     public function testCommandDoesntOutputAnything(string $action): void
     {
         $this->process->method('run');

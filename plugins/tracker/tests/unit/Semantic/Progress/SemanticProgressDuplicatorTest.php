@@ -54,11 +54,9 @@ final class SemanticProgressDuplicatorTest extends \Tuleap\Test\PHPUnit\TestCase
         ]);
     }
 
-    /**
-     * @testWith [101, null, null]
-     *           [null, 102, null]
-     *           [null, null, null]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith([101, null, null])]
+    #[\PHPUnit\Framework\Attributes\TestWith([null, 102, null])]
+    #[\PHPUnit\Framework\Attributes\TestWith([null, null, null])]
     public function testItDoesNotDuplicateWhenConfigIsMessedUp(
         ?int $total_effort_field_id,
         ?int $remaining_effort_field_id,

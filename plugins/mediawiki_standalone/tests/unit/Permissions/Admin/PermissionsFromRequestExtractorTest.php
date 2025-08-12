@@ -28,10 +28,8 @@ use Tuleap\Test\PHPUnit\TestCase;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class PermissionsFromRequestExtractorTest extends TestCase
 {
-    /**
-     * @testWith [{"readers": ["102", "103"], "writers": ["103"], "admins": ["104"]}, ["102", "103"], ["103"], ["104"]]
-     *           [{"keys_not_found": []}, [], [], []]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith([['readers' => ['102', '103'], 'writers' => ['103'], 'admins' => ['104']], ['102', '103'], ['103'], ['104']])]
+    #[\PHPUnit\Framework\Attributes\TestWith([['keys_not_found' => []], [], [], []])]
     public function testExtractPermissionsFromRequest(
         array $params,
         array $expected_readers_ugroup_ids,
@@ -47,12 +45,10 @@ class PermissionsFromRequestExtractorTest extends TestCase
         self::assertEquals($expected_admins_ugroup_ids, $permissions->admins);
     }
 
-    /**
-     * @testWith [{"readers": "123"}]
-     *           [{"readers": [], "writers": "123"}]
-     *           [{"readers": [], "writers": [], "admins": "123"}]
-     *           ["invalid body"]
-     */
+    #[\PHPUnit\Framework\Attributes\TestWith([['readers' => '123']])]
+    #[\PHPUnit\Framework\Attributes\TestWith([['readers' => [], 'writers' => '123']])]
+    #[\PHPUnit\Framework\Attributes\TestWith([['readers' => [], 'writers' => [], 'admins' => '123']])]
+    #[\PHPUnit\Framework\Attributes\TestWith(['invalid body'])]
     public function testInvalidRequest(mixed $params): void
     {
         $request = (new NullServerRequest())->withParsedBody($params);

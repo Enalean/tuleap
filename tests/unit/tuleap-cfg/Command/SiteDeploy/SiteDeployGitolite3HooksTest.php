@@ -34,7 +34,7 @@ final class SiteDeployGitolite3HooksTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use TemporaryTestDirectory;
 
-    private \PHPUnit\Framework\MockObject\MockObject&ProcessFactory $process_factory;
+    private \PHPUnit\Framework\MockObject\Stub&ProcessFactory $process_factory;
     private string $gitolite_base_dir;
 
     #[\Override]
