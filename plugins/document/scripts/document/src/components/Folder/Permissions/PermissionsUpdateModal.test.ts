@@ -25,51 +25,50 @@ import * as tlp_modal from "@tuleap/tlp-modal";
 import * as handle_errors from "../../../store/actions-helpers/handle-errors";
 import emitter from "../../../helpers/emitter";
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
+import { CAN_MANAGE, CAN_READ, CAN_WRITE } from "../../../constants";
 
 vi.useFakeTimers();
 
 describe("PermissionsUpdateModal", () => {
-    let factory;
     let load_project_ugroups = vi.fn().mockImplementation(() => {
         return { id: "102_3", label: "Project members" };
     });
     const update_permissions = vi.fn().mockImplementation(() => {
         return { id: "102_3", label: "Project members" };
     });
+    const factory = (props = {}, ugroups = null): VueWrapper<PermissionsUpdateModal> => {
+        return shallowMount(PermissionsUpdateModal, {
+            props: { ...props },
+            global: {
+                ...getGlobalTestOptions({
+                    modules: {
+                        permissions: {
+                            namespaced: true,
+                            state: { project_ugroups: ugroups },
+                            actions: {
+                                loadProjectUserGroupsIfNeeded: load_project_ugroups,
+                                updatePermissions: update_permissions,
+                            },
+                        },
+                        configuration: {
+                            namespaced: true,
+                            state: {},
+                        },
+                        error: {
+                            namespaced: true,
+                            mutations: {
+                                resetModalError: vi.fn(),
+                            },
+                        },
+                    },
+                }),
+            },
+        });
+    };
 
     beforeEach(() => {
         load_project_ugroups.mockReset();
         update_permissions.mockReset();
-
-        factory = (props = {}, ugroups): VueWrapper<PermissionsUpdateModal> => {
-            return shallowMount(PermissionsUpdateModal, {
-                props: { ...props },
-                global: {
-                    ...getGlobalTestOptions({
-                        modules: {
-                            permissions: {
-                                namespaced: true,
-                                state: { project_ugroups: ugroups },
-                                actions: {
-                                    loadProjectUserGroupsIfNeeded: load_project_ugroups,
-                                    updatePermissions: update_permissions,
-                                },
-                            },
-                            configuration: {
-                                namespaced: true,
-                                state: {},
-                            },
-                            error: {
-                                namespaced: true,
-                                mutations: {
-                                    resetModalError: vi.fn(),
-                                },
-                            },
-                        },
-                    }),
-                },
-            });
-        };
 
         let hideFunction = null;
         vi.spyOn(tlp_modal, "createModal").mockReturnValue({
@@ -227,13 +226,17 @@ describe("PermissionsUpdateModal", () => {
 
         const wrapper = factory({ item });
 
-        wrapper.setData({
-            updated_permissions: {
-                apply_permissions_on_children: true,
-                can_read: ["102_3"],
-                can_write: ["102_3", "138"],
-                can_manage: ["102_4"],
-            },
+        emitter.emit("update-permissions", {
+            label: CAN_READ,
+            value: [{ id: "102_3" }],
+        });
+        emitter.emit("update-permissions", {
+            label: CAN_WRITE,
+            value: [{ id: "102_3" }, { id: "138" }],
+        });
+        emitter.emit("update-permissions", {
+            label: CAN_MANAGE,
+            value: [{ id: "102_4" }],
         });
         wrapper.vm.modal.hide();
 
@@ -258,13 +261,6 @@ describe("PermissionsUpdateModal", () => {
         };
 
         const wrapper = factory({ item });
-
-        wrapper.setData({
-            updated_permissions: {
-                ...item.permissions_for_groups,
-                apply_permissions_on_children: false,
-            },
-        });
 
         emitter.emit("update-apply-permissions-on-children", {
             do_permissions_apply_on_children: true,
