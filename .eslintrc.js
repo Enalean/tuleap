@@ -93,6 +93,7 @@ module.exports = {
         "vue/prop-name-casing": ["error", "snake_case"],
         "vue/v-bind-style": ["error", "longform"],
         "vue/v-on-style": ["error", "longform"],
+        "vue/v-slot-style": ["error", "longform"],
         // Priority C: Recommended
         "vue/attributes-order": "off",
         // Uncategorized

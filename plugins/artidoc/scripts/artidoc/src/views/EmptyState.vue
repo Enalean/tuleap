@@ -22,7 +22,7 @@
         v-bind:title="$gettext('This document is empty')"
         v-bind:message="$gettext('You can read this document, it\'s just empty for now')"
     >
-        <template #state-image>
+        <template v-slot:state-image>
             <tumbleweed />
         </template>
     </state-message-with-image>
