@@ -18,78 +18,74 @@
  */
 
 import StepOne from "./StepOne.vue";
-import type { Wrapper } from "@vue/test-utils";
-import { shallowMount } from "@vue/test-utils";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
+import type { VueWrapper } from "@vue/test-utils";
+import { mount } from "@vue/test-utils";
 import type { ProjectTemplate, State, Tracker } from "../../../store/type";
-import { createTrackerCreationLocalVue } from "../../../helpers/local-vue-for-tests";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-tests";
 
 describe("StepOne", () => {
-    it("resets the slugify mode when it is mounted", async () => {
-        const wrapper: Wrapper<Vue> = shallowMount(StepOne, {
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        default_templates: [] as Tracker[],
-                        project_templates: [] as ProjectTemplate[],
-                    } as State,
-                }),
-            },
-            localVue: await createTrackerCreationLocalVue(),
-        });
-
-        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("setSlugifyShortnameMode", true);
+    let mock_set_slugify_shortname_mode: jest.Mock,
+        company_name: string,
+        project_templates: ProjectTemplate[];
+    beforeEach(() => {
+        mock_set_slugify_shortname_mode = jest.fn();
+        company_name = "";
+        project_templates = [];
     });
 
-    it(`displays the company name if the platform name is not Tuleap`, async () => {
-        const wrapper = shallowMount(StepOne, {
-            mocks: {
-                $store: createStoreMock({
+    function getWrapper(): VueWrapper {
+        const default_templates: Tracker[] = [];
+
+        return mount(StepOne, {
+            shallow: true,
+            global: {
+                ...getGlobalTestOptions({
                     state: {
-                        default_templates: [] as Tracker[],
-                        project_templates: [{} as ProjectTemplate],
-                        company_name: "Nichya company",
+                        default_templates,
+                        project_templates,
+                        company_name,
                     } as State,
+                    mutations: {
+                        setSlugifyShortnameMode: mock_set_slugify_shortname_mode,
+                    },
                 }),
+                stubs: {
+                    StepLayout: false,
+                },
             },
-            localVue: await createTrackerCreationLocalVue(),
         });
+    }
+
+    it("resets the slugify mode when it is mounted", () => {
+        getWrapper();
+
+        expect(mock_set_slugify_shortname_mode).toHaveBeenCalledWith(expect.anything(), true);
+    });
+
+    it(`displays the company name if the platform name is not Tuleap`, () => {
+        project_templates = [{ project_name: "Trionychoideachid", tracker_list: [] }];
+        company_name = "Nichya company";
+        const wrapper = getWrapper();
 
         expect(wrapper.get("[data-test=platform-template-name]").text()).toBe(
             "Nichya company templates",
         );
     });
 
-    it(`displays 'Custom templates' if the platform name is Tuleap`, async () => {
-        const wrapper = shallowMount(StepOne, {
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        default_templates: [] as Tracker[],
-                        project_templates: [{} as ProjectTemplate],
-                        company_name: "Tuleap",
-                    } as State,
-                }),
-            },
-            localVue: await createTrackerCreationLocalVue(),
-        });
+    it(`displays 'Custom templates' if the platform name is Tuleap`, () => {
+        project_templates = [{ project_name: "moment", tracker_list: [] }];
+        company_name = "Tuleap";
+
+        const wrapper = getWrapper();
 
         expect(wrapper.get("[data-test=platform-template-name]").text()).toBe("Custom templates");
     });
 
-    it(`Does not display custom template block if there is no project_templates`, async () => {
-        const wrapper = shallowMount(StepOne, {
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        default_templates: [] as Tracker[],
-                        project_templates: [] as ProjectTemplate[],
-                        company_name: "Tuleap",
-                    } as State,
-                }),
-            },
-            localVue: await createTrackerCreationLocalVue(),
-        });
+    it(`Does not display custom template block if there is no project_templates`, () => {
+        project_templates = [];
+        company_name = "Tuleap";
+
+        const wrapper = getWrapper();
 
         expect(wrapper.find("[data-test=platform-template-name]").exists()).toBe(false);
     });

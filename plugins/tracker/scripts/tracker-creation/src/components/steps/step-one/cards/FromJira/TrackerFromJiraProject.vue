@@ -89,9 +89,12 @@
 </template>
 <script setup lang="ts">
 import { ref } from "vue";
+import { useGettext } from "vue3-gettext";
 import { FetchWrapperError } from "@tuleap/tlp-fetch";
 import type { ProjectList } from "../../../../../store/type";
 import { useState, useMutations, useActions } from "vuex-composition-helpers";
+
+const { $gettext } = useGettext();
 
 defineProps<{
     project_list: ProjectList[];
@@ -156,4 +159,6 @@ function selectTracker(event: Event): void {
     setTrackerName(tracker.name);
     setTracker(tracker);
 }
+
+defineExpose({ error_message });
 </script>

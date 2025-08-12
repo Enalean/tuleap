@@ -74,7 +74,7 @@
 
 <script setup lang="ts">
 import type { Credentials } from "../../../../../store/type";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 
 const { $gettext } = useGettext();
 

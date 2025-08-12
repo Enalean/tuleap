@@ -40,10 +40,10 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import { useState, useGetters } from "vuex-composition-helpers";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 import type { State } from "../../../../store/type";
 
-const gettext_provider = useGettext();
+const { $gettext } = useGettext();
 
 const { from_jira_data } = useState<Pick<State, "from_jira_data">>(["from_jira_data"]);
 const { tracker_to_be_created } = useState<Pick<State, "tracker_to_be_created">>([
@@ -86,7 +86,7 @@ onMounted((): void => {
         selected_template_project_name.value =
             project_of_selected_tracker_template.value.project_name;
     } else if (is_created_from_empty.value) {
-        selected_template_name.value = gettext_provider.$gettext("Empty");
+        selected_template_name.value = $gettext("Empty");
     } else if (is_a_xml_import.value) {
         selected_template_name.value = tracker_to_be_created.value.name;
     } else if (

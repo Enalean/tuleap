@@ -17,10 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vue from "vue";
-import Vuex from "vuex";
+import { createApp } from "vue";
+import { createGettext } from "vue3-gettext";
+import { initVueGettext, getPOFileFromLocaleWithoutExtension } from "@tuleap/vue3-gettext-init";
 import App from "./components/App.vue";
-import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue2-gettext-init";
 import { createStore } from "./store";
 import type {
     CSRFToken,
@@ -32,7 +32,7 @@ import type {
     Tracker,
 } from "./store/type";
 import { NONE_YET } from "./store/type";
-import { createRouter } from "./router";
+import { createInitializedRouter } from "./router/index";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const vue_mount_point = document.getElementById("tracker-creation-app");
@@ -40,13 +40,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
     }
 
-    await initVueGettext(
-        Vue,
-        (locale: string) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`),
+    const gettext_plugin = await initVueGettext(
+        createGettext,
+        (locale) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`),
     );
 
-    const AppComponent = Vue.extend(App);
-    Vue.use(Vuex);
+    const app = createApp(App).use(gettext_plugin);
 
     const csrf_token: CSRFToken | null =
         typeof vue_mount_point.dataset.csrfToken !== "undefined"
@@ -141,8 +140,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         project_unix_name,
     };
 
-    new AppComponent({
-        store: createStore(initial_state),
-        router: createRouter(project_unix_name),
-    }).$mount(vue_mount_point);
+    app.use(createStore(initial_state))
+        .use(createInitializedRouter(project_unix_name))
+        .mount(vue_mount_point);
 });

@@ -18,26 +18,34 @@
  */
 
 import type { ProjectWithTrackers, State, Tracker } from "../../../../../store/type";
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import { createTrackerCreationLocalVue } from "../../../../../helpers/local-vue-for-tests";
+import { getGlobalTestOptions } from "../../../../../helpers/global-options-for-tests";
 import TrackerFromAnotherProjectSelector from "./TrackerFromAnotherProjectSelector.vue";
-import type Vue from "vue";
 
-describe("TrackerFromAnotherProject", () => {
-    async function getWrapper(state: State = {} as State): Promise<Wrapper<Vue>> {
+describe("TrackerFromAnotherProjectSelector", () => {
+    let mock_set_selected_project: jest.Mock, mock_set_selected_project_tracker_template: jest.Mock;
+    beforeEach(() => {
+        mock_set_selected_project = jest.fn();
+        mock_set_selected_project_tracker_template = jest.fn();
+    });
+
+    function getWrapper(state: State = {} as State): VueWrapper {
         return shallowMount(TrackerFromAnotherProjectSelector, {
-            mocks: {
-                $store: createStoreMock({
+            global: {
+                ...getGlobalTestOptions({
                     state,
+                    mutations: {
+                        setSelectedProject: mock_set_selected_project,
+                        setSelectedProjectTrackerTemplate:
+                            mock_set_selected_project_tracker_template,
+                    },
                 }),
             },
-            localVue: await createTrackerCreationLocalVue(),
         });
     }
 
-    it("should sort the projects alphabetically to ease projects parsing", async () => {
+    it("should sort the projects alphabetically to ease projects parsing", () => {
         const ttm = {
             id: "101",
             name: "TTM",
@@ -50,15 +58,16 @@ describe("TrackerFromAnotherProject", () => {
             trackers: [],
         } as ProjectWithTrackers;
 
-        const wrapper = await getWrapper({
+        const wrapper = getWrapper({
             selected_project_tracker_template: null,
             selected_project: null,
             trackers_from_other_projects: [ttm, scrum],
         } as State);
 
         const project_select_options = wrapper.get("[data-test=project-select]").findAll("option");
-        expect(project_select_options.at(1).text()).toBe("Scrum");
-        expect(project_select_options.at(2).text()).toBe("TTM");
+        expect(project_select_options).toHaveLength(3);
+        expect(project_select_options.at(1)?.text()).toBe("Scrum");
+        expect(project_select_options.at(2)?.text()).toBe("TTM");
     });
 
     it("fills the tracker select options with the trackers of the selected project", async () => {
@@ -76,7 +85,7 @@ describe("TrackerFromAnotherProject", () => {
             ],
         };
 
-        const wrapper = await getWrapper({
+        const wrapper = getWrapper({
             selected_project_tracker_template: null,
             selected_project: null,
             trackers_from_other_projects: [
@@ -94,20 +103,17 @@ describe("TrackerFromAnotherProject", () => {
 
         const project_select = wrapper.get("[data-test=project-select]");
 
-        await project_select.findAll("option").at(1).setSelected();
+        await project_select.findAll("option").at(1)?.setValue(true);
 
         const tracker_select = wrapper.get("[data-test=project-tracker-select]");
         const tracker_option_names = tracker_select
             .findAll("option")
-            .wrappers.map((wrapper) => wrapper.text());
+            .map((wrapper) => wrapper.text());
 
-        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
-            "setSelectedProject",
-            helpdesk_project,
-        );
+        expect(mock_set_selected_project).toHaveBeenCalledWith(expect.anything(), helpdesk_project);
 
-        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
-            "setSelectedProjectTrackerTemplate",
+        expect(mock_set_selected_project_tracker_template).toHaveBeenCalledWith(
+            expect.anything(),
             null,
         );
 
@@ -128,7 +134,7 @@ describe("TrackerFromAnotherProject", () => {
             trackers: [sla_tracker, bugs_tracker],
         };
 
-        const wrapper = await getWrapper({
+        const wrapper = getWrapper({
             selected_project_tracker_template: bugs_tracker,
             selected_project: helpdesk_project,
             trackers_from_other_projects: [
@@ -143,13 +149,14 @@ describe("TrackerFromAnotherProject", () => {
                 },
             ],
         } as State);
+        await wrapper.vm.$nextTick();
 
         const tracker_select = wrapper.get("[data-test=project-tracker-select]");
 
-        await tracker_select.findAll("option").at(1).setSelected();
+        await tracker_select.findAll("option").at(1)?.setValue(true);
 
-        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
-            "setSelectedProjectTrackerTemplate",
+        expect(mock_set_selected_project_tracker_template).toHaveBeenCalledWith(
+            expect.anything(),
             sla_tracker,
         );
     });

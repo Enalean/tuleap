@@ -27,47 +27,45 @@ import type {
     State,
     TrackerList,
 } from "../../../../store/type";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
+import { getGlobalTestOptions } from "../../../../helpers/global-options-for-tests";
 
 describe("FieldFromJira", () => {
     it("Displays a card for bug tracker", () => {
+        const credentials: Credentials = {
+            server_url: "https://example.com",
+            user_email: "user-email@example.com",
+            token: "azerty1234",
+        };
+        const project: ProjectList = { id: "AB", label: "A beautiful project" };
+        const tracker: TrackerList = { id: "bug", name: "Bugs" };
         const wrapper = shallowMount(FieldFromJira, {
-            mocks: {
-                $store: createStoreMock({
+            global: {
+                ...getGlobalTestOptions({
                     state: {
                         from_jira_data: {
-                            credentials: {
-                                server_url: "https://example.com",
-                                user_email: "user-email@example.com",
-                                token: "azerty1234",
-                            } as Credentials,
-                            project: {
-                                id: "AB",
-                                label: "A beautifull porject",
-                            } as ProjectList,
-                            tracker: {
-                                id: "bug",
-                                name: "Bugs",
-                            } as TrackerList,
-                        } as JiraImportData,
+                            credentials,
+                            project,
+                            tracker,
+                        },
                     } as State,
                     getters: {
-                        is_created_from_jira: true,
+                        is_created_from_jira: () => true,
                     },
                 }),
             },
         });
         expect(wrapper.element).toMatchSnapshot();
     });
+
     it("Displays nothing if not created from jira", () => {
         const wrapper = shallowMount(FieldFromJira, {
-            mocks: {
-                $store: createStoreMock({
+            global: {
+                ...getGlobalTestOptions({
                     state: {
                         from_jira_data: {} as JiraImportData,
                     } as State,
                     getters: {
-                        is_created_from_jira: false,
+                        is_created_from_jira: () => false,
                     },
                 }),
             },

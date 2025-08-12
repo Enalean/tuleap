@@ -18,26 +18,33 @@
  */
 
 import type { State } from "../../../../../store/type";
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import { createTrackerCreationLocalVue } from "../../../../../helpers/local-vue-for-tests";
+import { getGlobalTestOptions } from "../../../../../helpers/global-options-for-tests";
 import TrackerTemplateSelector from "./TrackerTemplateSelector.vue";
 
 describe("TrackerTemplateSelector", () => {
-    async function getWrapper(state: State = {} as State): Promise<Wrapper<Vue>> {
+    let mock_set_selected_tracker_template: jest.Mock;
+
+    beforeEach(() => {
+        mock_set_selected_tracker_template = jest.fn();
+    });
+
+    function getWrapper(state: State = {} as State): VueWrapper {
         return shallowMount(TrackerTemplateSelector, {
-            mocks: {
-                $store: createStoreMock({
+            global: {
+                ...getGlobalTestOptions({
                     state,
+                    mutations: {
+                        setSelectedTrackerTemplate: mock_set_selected_tracker_template,
+                    },
                 }),
             },
-            localVue: await createTrackerCreationLocalVue(),
         });
     }
 
-    it("Stores the selected template tracker id each time the user selects a template", async () => {
-        const wrapper = await getWrapper({
+    it("Stores the selected template tracker id each time the user selects a template", () => {
+        const wrapper = getWrapper({
             project_templates: [
                 {
                     project_name: "Scrum template",
@@ -51,16 +58,16 @@ describe("TrackerTemplateSelector", () => {
         } as State);
 
         wrapper.get("[data-test=template-selector]").setValue("10");
-        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("setSelectedTrackerTemplate", "10");
+        expect(mock_set_selected_tracker_template).toHaveBeenCalledWith(expect.anything(), "10");
 
         wrapper.get("[data-test=template-selector]").setValue("11");
-        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("setSelectedTrackerTemplate", "11");
+        expect(mock_set_selected_tracker_template).toHaveBeenCalledWith(expect.anything(), "11");
     });
 
     it(`pre-selects the current selected template if any,
         so it keeps showing the selected template when user goes back to step 1`, async () => {
         const story_tracker = { id: "11", name: "Stories" };
-        const wrapper = await getWrapper({
+        const wrapper = getWrapper({
             project_templates: [
                 {
                     project_name: "Scrum template",
@@ -74,8 +81,8 @@ describe("TrackerTemplateSelector", () => {
             selected_tracker_template: story_tracker,
         } as State);
 
-        const selectbox: HTMLInputElement = wrapper.get("[data-test=template-selector]")
-            .element as HTMLInputElement;
+        const selectbox = wrapper.get<HTMLInputElement>("[data-test=template-selector]").element;
+        await wrapper.vm.$nextTick();
 
         expect(selectbox.value).toStrictEqual(story_tracker.id);
     });

@@ -30,5 +30,8 @@
     </div>
 </template>
 <script setup lang="ts">
+import { useGettext } from "vue3-gettext";
 import StepLabel from "../layout/StepLabel.vue";
+
+const { $gettext } = useGettext();
 </script>

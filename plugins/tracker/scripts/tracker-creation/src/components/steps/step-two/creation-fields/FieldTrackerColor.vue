@@ -44,7 +44,10 @@ import DOMPurify from "dompurify";
 import $ from "jquery";
 import type { DataFormat, GroupedDataFormat, LoadingData, Select2Plugin } from "tlp";
 import { select2 } from "tlp";
+import { useGettext } from "vue3-gettext";
 import type { DataForColorPicker } from "../../../../store/type";
+
+const { $gettext } = useGettext();
 
 const store = useStore();
 const color_selector = ref<HTMLSelectElement | null>(null);

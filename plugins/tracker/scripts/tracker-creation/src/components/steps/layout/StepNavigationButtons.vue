@@ -78,9 +78,13 @@
     </div>
 </template>
 <script setup lang="ts">
-import BackToLegacy from "./BackToLegacy.vue";
+import { useGettext } from "vue3-gettext";
 import { useState, useGetters, useMutations } from "vuex-composition-helpers";
-import { useRouter } from "../../../helpers/use-router";
+import BackToLegacy from "./BackToLegacy.vue";
+import { useRouter } from "vue-router";
+
+const { $gettext } = useGettext();
+
 const props = defineProps<{
     next_step_name?: string | undefined;
     previous_step_name?: string | undefined;
