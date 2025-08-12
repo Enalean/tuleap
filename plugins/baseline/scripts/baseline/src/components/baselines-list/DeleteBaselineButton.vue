@@ -27,7 +27,7 @@
         v-bind:disabled="is_disabled"
         v-bind:title="title"
     >
-        <span v-translate>Delete</span>
+        {{ $gettext("Delete") }}
     </action-button>
 </template>
 

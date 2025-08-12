@@ -24,7 +24,7 @@
         class="tlp-button-danger"
         v-if="is_admin"
     >
-        <span v-translate>Delete</span>
+        {{ $gettext("Delete") }}
     </action-button>
 </template>
 

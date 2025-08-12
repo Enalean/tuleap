@@ -22,9 +22,9 @@
     <h2>
         Baseline #{{ baseline.id }} - {{ baseline.name }}
         <span class="baseline-label-author tlp-text-muted">
-            <span v-translate>Created by</span>
+            {{ $gettext("Created by") }}
             <user-badge v-bind:user="author" class="baseline-label-author-badge" />
-            <span v-translate>on</span>
+            {{ $gettext("on") }}
             {{ humanized_snapshot_date }}
         </span>
     </h2>

@@ -17,12 +17,15 @@
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<template functional>
+<template>
     <div class="baseline-content-artifact-depth-reached-message" data-test-type="depth-is-reached">
         <div class="tlp-alert-warning">
-            <translate>
-                Linked artifacts are skipped because depth limit has been reached.
-            </translate>
+            {{ $gettext("Linked artifacts are skipped because depth limit has been reached.") }}
         </div>
     </div>
 </template>
+<script setup lang="ts">
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+
+const { $gettext } = useGettext();
+</script>

@@ -15,6 +15,7 @@
     "@tuleap/tlp-swatch-colors": "workspace:*",
     "@tuleap/vue-breadcrumb-privacy": "workspace:*",
     "@tuleap/vue2-dompurify-html": "workspace:*",
+    "@tuleap/vue2-gettext-composition-helper": "workspace:^",
     "@tuleap/vue2-gettext-init": "workspace:^",
     "@tuleap/vuex-store-wrapper-jest": "workspace:*",
     "moment": "^2.29.4",

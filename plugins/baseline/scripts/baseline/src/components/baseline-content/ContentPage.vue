@@ -25,7 +25,7 @@
             class="tlp-alert-danger tlp-framed-vertically"
             data-test-type="error-message"
         >
-            <translate>Cannot fetch baseline</translate>
+            {{ $gettext("Cannot fetch baseline") }}
         </div>
 
         <content-layout v-else-if="is_loading">

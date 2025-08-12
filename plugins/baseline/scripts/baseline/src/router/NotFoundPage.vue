@@ -19,7 +19,7 @@
   -->
 
 <template>
-    <p v-translate>Page not found</p>
+    <p>{{ $gettext("Page not found") }}</p>
 </template>
 
 <script>

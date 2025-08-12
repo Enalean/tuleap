@@ -18,9 +18,14 @@
   -
   -->
 
-<template functional>
+<template>
     <div class="tlp-form-element">
-        <label class="tlp-label" v-translate>Hidden trackers</label>
+        <label class="tlp-label">{{ $gettext("Hidden trackers") }}</label>
         <span class="tlp-skeleton-text"></span>
     </div>
 </template>
+<script setup lang="ts">
+import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+
+const { $gettext } = useGettext();
+</script>

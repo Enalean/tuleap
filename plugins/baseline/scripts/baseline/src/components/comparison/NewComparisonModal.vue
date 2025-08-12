@@ -20,12 +20,12 @@
 <template>
     <form v-on:submit.prevent="openComparison()">
         <div class="tlp-modal-body">
-            <p v-translate>Please choose two baselines to compare</p>
+            <p>{{ $gettext("Please choose two baselines to compare") }}</p>
 
             <div class="new-comparison-modal-body">
                 <div class="tlp-form-element new-comparison-modal-body-form-element">
                     <label class="tlp-label" for="base_baseline">
-                        <translate>Reference…</translate>
+                        {{ $gettext("Reference…") }}
                         <i class="fa fa-asterisk"></i>
                     </label>
                     <select
@@ -37,7 +37,9 @@
                         required
                         data-test-type="date-baseline-select"
                     >
-                        <option value="" selected disabled v-translate>Choose a baseline…</option>
+                        <option value="" selected disabled>
+                            {{ $gettext("Choose a baseline…") }}
+                        </option>
                         <option
                             v-for="baseline in baselines"
                             v-bind:key="baseline.id"
@@ -50,16 +52,15 @@
 
                 <div class="tlp-form-element new-comparison-modal-body-form-element">
                     <label class="tlp-label" for="baseline_to_compare">
-                        <translate>… compared to</translate>
+                        {{ $gettext("… compared to") }}
                         <i class="fa fa-asterisk"></i>
                     </label>
                     <span
                         v-if="baselines_to_compare !== null && baselines_to_compare.length === 0"
                         class="baseline-empty-information-message"
                         data-test-type="no-baseline-to-compare-message"
-                        v-translate
                     >
-                        No other baseline available on same artifact.
+                        {{ $gettext("No other baseline available on same artifact.") }}
                     </span>
                     <select
                         v-else
@@ -76,19 +77,11 @@
                             selected
                             disabled
                             key="choose-reference"
-                            v-translate
                         >
-                            Choose a reference baseline…
+                            {{ $gettext("Choose a reference baseline…") }}
                         </option>
-                        <option
-                            v-else
-                            value=""
-                            selected
-                            disabled
-                            key="choose-compare-to"
-                            v-translate
-                        >
-                            Choose a baseline to compare…
+                        <option v-else value="" selected disabled key="choose-compare-to">
+                            {{ $gettext("Choose a baseline to compare…") }}
                         </option>
                         <option
                             v-for="baseline in baselines_to_compare"
@@ -109,7 +102,7 @@
                 data-dismiss="modal"
                 key="cancel"
             >
-                <translate>Cancel</translate>
+                {{ $gettext("Cancel") }}
             </button>
             <button
                 v-bind:disabled="!is_form_valid"
@@ -119,7 +112,7 @@
                 data-test-action="submit"
                 key="submit"
             >
-                <translate>Show comparison</translate>
+                {{ $gettext("Show comparison") }}
             </button>
         </div>
     </form>

@@ -31,7 +31,7 @@
             <p>
                 <slot></slot>
                 <br />
-                <span v-translate>Please confirm your action.</span>
+                {{ $gettext("Please confirm your action.") }}
             </p>
         </div>
 
@@ -41,9 +41,8 @@
                 data-dismiss="modal"
                 type="button"
                 v-bind:disabled="is_deleting"
-                v-translate
             >
-                Cancel
+                {{ $gettext("Cancel") }}
             </button>
             <button
                 class="tlp-button-danger tlp-modal-action"

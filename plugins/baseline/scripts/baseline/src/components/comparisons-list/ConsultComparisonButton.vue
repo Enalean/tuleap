@@ -20,7 +20,7 @@
 
 <template>
     <action-button icon="eye" v-on:click="showComparison()">
-        <span v-translate>Consult</span>
+        {{ $gettext("Consult") }}
     </action-button>
 </template>
 <script>
