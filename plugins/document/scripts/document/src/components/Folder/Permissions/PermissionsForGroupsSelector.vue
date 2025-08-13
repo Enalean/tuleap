@@ -26,7 +26,7 @@
             v-bind:key="'permissions-selector-can_read'"
             v-bind:identifier="CAN_READ"
         >
-            <template #permission-information>
+            <template v-slot:permission-information>
                 <p class="tlp-text-info">
                     <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
                     {{
@@ -44,7 +44,7 @@
             v-bind:key="'permissions-selector-can_write'"
             v-bind:identifier="CAN_WRITE"
         >
-            <template #permission-information>
+            <template v-slot:permission-information>
                 <p class="tlp-text-info">
                     <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
                     {{

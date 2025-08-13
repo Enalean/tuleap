@@ -22,7 +22,7 @@
         v-bind:title="$gettext('You don\'t have access to this document')"
         v-bind:message="$gettext('You can’t see nor edit this document')"
     >
-        <template #state-image>
+        <template v-slot:state-image>
             <restricted-document-illustration />
         </template>
     </state-message-with-image>

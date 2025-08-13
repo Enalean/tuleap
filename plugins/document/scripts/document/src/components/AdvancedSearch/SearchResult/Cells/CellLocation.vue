@@ -24,7 +24,7 @@
             <router-link
                 v-bind:to="getSearchFolderRoute(parent_item)"
                 custom
-                v-slot="{ navigate, href }"
+                v-slot:default="{ navigate, href }"
             >
                 <a v-bind:href="href" v-on:click="navigate">{{ parent_item.title }}</a>
             </router-link>
