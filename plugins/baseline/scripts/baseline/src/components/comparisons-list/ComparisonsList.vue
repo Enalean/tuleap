@@ -22,10 +22,10 @@
     <table class="tlp-table comparisons-table">
         <thead>
             <tr>
-                <th class="tlp-table-cell-numeric" v-translate>Id</th>
-                <th class="comparisons-table-column" v-translate>Milestone</th>
-                <th class="comparisons-table-column" v-translate>Reference</th>
-                <th class="comparisons-table-column" v-translate>Compared to</th>
+                <th class="tlp-table-cell-numeric">{{ $gettext("Id") }}</th>
+                <th class="comparisons-table-column">{{ $gettext("Milestone") }}</th>
+                <th class="comparisons-table-column">{{ $gettext("Reference") }}</th>
+                <th class="comparisons-table-column">{{ $gettext("Compared to") }}</th>
                 <th></th>
             </tr>
         </thead>
@@ -50,9 +50,8 @@
                     class="tlp-table-cell-empty"
                     key="no-comparison"
                     data-test-type="empty-comparison"
-                    v-translate
                 >
-                    No comparison available
+                    {{ $gettext("No comparison available") }}
                 </td>
             </tr>
         </tbody>

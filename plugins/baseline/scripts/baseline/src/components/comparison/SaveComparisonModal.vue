@@ -21,12 +21,12 @@
     <form v-on:submit.prevent="saveComparison()">
         <div class="tlp-modal-body">
             <div v-if="is_saving_failed" class="tlp-alert-danger" data-test-type="error-message">
-                <translate>Cannot save comparison</translate>
+                {{ $gettext("Cannot save comparison") }}
             </div>
 
             <div class="tlp-form-element">
                 <label class="tlp-label" for="name">
-                    <translate>Name</translate>
+                    {{ $gettext("Name") }}
                 </label>
                 <input
                     id="name"
@@ -40,7 +40,7 @@
 
             <div class="tlp-form-element">
                 <label class="tlp-label" for="comment">
-                    <translate>Comment</translate>
+                    {{ $gettext("Comment") }}
                 </label>
                 <textarea
                     id="comment"
@@ -61,7 +61,7 @@
                 data-dismiss="modal"
                 v-bind:disabled="is_saving"
             >
-                <translate>Cancel</translate>
+                {{ $gettext("Cancel") }}
             </button>
             <button
                 type="submit"
@@ -74,7 +74,7 @@
                     class="tlp-button-icon fa fa-fw fa-spinner fa-spin"
                 ></i>
                 <i v-else class="fa fa-fw fa-save tlp-button-icon"></i>
-                <translate>Save comparison</translate>
+                {{ $gettext("Save comparison") }}
             </button>
         </div>
     </form>

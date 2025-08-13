@@ -21,7 +21,7 @@
 <template>
     <div>
         <div v-if="is_loading_failed" class="tlp-alert-danger">
-            <translate>Cannot fetch baseline artifacts</translate>
+            {{ $gettext("Cannot fetch baseline artifacts") }}
         </div>
 
         <comparison-page-skeleton v-else-if="is_loading" />

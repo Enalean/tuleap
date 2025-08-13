@@ -24,7 +24,7 @@
             class="baseline-empty-information-message"
             data-test-type="empty-artifact-message"
         >
-            <translate>No artifacts</translate>
+            {{ $gettext("No artifacts") }}
         </div>
 
         <div
@@ -32,7 +32,7 @@
             class="baseline-empty-information-message"
             data-test-type="all-artifacts-filtered-message"
         >
-            <translate>All artifacts are hidden</translate>
+            {{ $gettext("All artifacts are hidden") }}
         </div>
 
         <artifacts-list v-bind:artifacts="filtered_artifacts" />

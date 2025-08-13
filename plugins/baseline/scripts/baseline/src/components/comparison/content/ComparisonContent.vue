@@ -30,15 +30,14 @@
             class="baseline-empty-information-message"
             data-test-type="all-artifacts-filtered-message"
         >
-            <translate>All artifacts are hidden</translate>
+            {{ $gettext("All artifacts are hidden") }}
         </div>
         <span
             v-else
             class="baseline-empty-information-message"
             data-test-type="no-comparison-available-message"
-            v-translate
         >
-            No artifact to compare
+            {{ $gettext("No artifact to compare") }}
         </span>
     </div>
 </template>

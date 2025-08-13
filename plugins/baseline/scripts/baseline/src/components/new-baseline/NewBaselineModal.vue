@@ -21,15 +21,15 @@
     <form v-on:submit.prevent="saveBaseline()">
         <div class="tlp-modal-body">
             <div class="tlp-alert-danger" data-test-type="error-message" v-if="is_loading_failed">
-                <translate>Cannot fetch milestones</translate>
+                {{ $gettext("Cannot fetch milestones") }}
             </div>
             <div class="tlp-alert-danger" data-test-type="error-message" v-if="is_creating_failed">
-                <translate>Cannot create baseline</translate>
+                {{ $gettext("Cannot create baseline") }}
             </div>
 
             <div class="tlp-form-element" data-test-type="input-error-message">
                 <label class="tlp-label" for="name">
-                    <translate>Name</translate>
+                    {{ $gettext("Name") }}
                     <i class="fa fa-asterisk"></i>
                 </label>
                 <input
@@ -45,7 +45,7 @@
 
             <div class="tlp-form-element">
                 <label class="tlp-label baseline-modal-milestone-label">
-                    <translate>Milestone</translate>
+                    {{ $gettext("Milestone") }}
                     <i class="fa fa-asterisk"></i>
                     <span
                         class="tlp-tooltip tlp-tooltip-right"
@@ -60,7 +60,7 @@
                     data-test-type="information_message"
                     v-else-if="is_loading_failed"
                 >
-                    <translate>Cannot fetch milestones</translate>
+                    {{ $gettext("Cannot fetch milestones") }}
                 </span>
                 <milestones-select
                     v-else-if="available_milestones !== null"
@@ -71,7 +71,7 @@
 
             <div class="tlp-form-element">
                 <label for="snapshot_date" class="tlp-label">
-                    <translate>Snapshot date</translate>
+                    {{ $gettext("Snapshot date") }}
                     <span
                         class="tlp-tooltip tlp-tooltip-right"
                         v-bind:data-tlp-tooltip="snapshot_date_tooltip"
@@ -103,7 +103,7 @@
                 data-test-action="cancel"
                 v-bind:disabled="is_creating"
             >
-                <translate>Cancel</translate>
+                {{ $gettext("Cancel") }}
             </button>
             <button
                 type="submit"
@@ -117,7 +117,7 @@
                     v-if="is_creating"
                 ></i>
                 <i class="fa fa-fw fa-save tlp-button-icon" v-else></i>
-                <translate>Create baseline</translate>
+                {{ $gettext("Create baseline") }}
             </button>
         </div>
     </form>

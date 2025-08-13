@@ -29,7 +29,7 @@
                 data-test-action="save-comparison"
             >
                 <i class="fa fa-save tlp-button-icon"></i>
-                <translate>Save</translate>
+                {{ $gettext("Save") }}
             </button>
         </div>
     </h2>

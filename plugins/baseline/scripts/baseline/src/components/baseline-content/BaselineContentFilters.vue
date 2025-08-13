@@ -20,7 +20,7 @@
 
 <template>
     <div class="tlp-form-element">
-        <label class="tlp-label" for="hidden-trackers" v-translate>Hidden trackers</label>
+        <label class="tlp-label" for="hidden-trackers">{{ $gettext("Hidden trackers") }}</label>
         <trackers-multi-select
             id="hidden-trackers"
             v-bind:trackers="all_trackers"
