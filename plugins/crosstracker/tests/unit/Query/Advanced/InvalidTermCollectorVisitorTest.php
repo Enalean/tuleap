@@ -89,7 +89,8 @@ use Tuleap\Tracker\Test\Builders\Fields\FloatFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\IntegerFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserGroupBindBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\MultiSelectboxFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\OpenListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\RadioButtonFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
@@ -475,16 +476,15 @@ final class InvalidTermCollectorVisitorTest extends TestCase
     {
         $this->fields_retriever = RetrieveUsedFieldsStub::withFields(
             ListStaticBindBuilder::aStaticBind(
-                ListFieldBuilder::aListField(334)
+                SelectboxFieldBuilder::aSelectboxField(334)
                     ->withName(self::FIELD_NAME)
                     ->inTracker($this->first_tracker)
                     ->withReadPermission($this->user, true)
                     ->build()
             )->build()->getField(),
             ListStaticBindBuilder::aStaticBind(
-                ListFieldBuilder::aListField(789)
+                MultiSelectboxFieldBuilder::aMultiSelectboxField(789)
                     ->withName(self::FIELD_NAME)
-                    ->withMultipleValues()
                     ->inTracker($this->second_tracker)
                     ->withReadPermission($this->user, true)
                     ->build()
@@ -598,7 +598,7 @@ final class InvalidTermCollectorVisitorTest extends TestCase
             $user,
         ];
 
-        $list_field = ListFieldBuilder::aListField(637)
+        $list_field = SelectboxFieldBuilder::aSelectboxField(637)
             ->withName(self::FIELD_NAME)
             ->inTracker($tracker)
             ->withReadPermission($user, true)

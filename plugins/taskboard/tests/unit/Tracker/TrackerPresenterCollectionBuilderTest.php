@@ -24,13 +24,13 @@ namespace Tuleap\Taskboard\Tracker;
 
 use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
-use Tracker_FormElement_Field_Selectbox;
 use Tuleap\AgileDashboard\Test\Builders\PlanningBuilder;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle\FreestyleMappedFieldRetriever;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle\SearchMappedFieldStub;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\MappedFieldRetriever;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Tracker\FormElement\Field\List\SelectboxField;
 use Tuleap\Tracker\Semantic\Contributor\TrackerSemanticContributor;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ArtifactLinkFieldBuilder;
@@ -266,8 +266,8 @@ final class TrackerPresenterCollectionBuilderTest extends \Tuleap\Test\PHPUnit\T
         int $field_id,
         PFUser $user,
         bool $can_user_update,
-    ): MockObject&Tracker_FormElement_Field_Selectbox {
-        $sb_field = $this->createMock(Tracker_FormElement_Field_Selectbox::class);
+    ): MockObject&SelectboxField {
+        $sb_field = $this->createMock(SelectboxField::class);
         $sb_field->method('getId')->willReturn($field_id);
         $sb_field->expects($this->once())
             ->method('userCanUpdate')
@@ -310,7 +310,7 @@ final class TrackerPresenterCollectionBuilderTest extends \Tuleap\Test\PHPUnit\T
         TaskboardTracker $taskboard_tracker,
         bool $is_semantic_set,
         bool $can_user_update,
-        string $classname = \Tracker_FormElement_Field_Selectbox::class,
+        string $classname = \Tuleap\Tracker\FormElement\Field\List\SelectboxField::class,
     ): void {
         $semantic_contributor = $this->createMock(TrackerSemanticContributor::class);
         TrackerSemanticContributor::setInstance($semantic_contributor, $taskboard_tracker->getTracker());

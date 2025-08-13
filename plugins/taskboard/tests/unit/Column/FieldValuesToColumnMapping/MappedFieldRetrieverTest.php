@@ -27,7 +27,7 @@ use Tuleap\Option\Option;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle\FreestyleMappedFieldRetriever;
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle\SearchMappedFieldStub;
 use Tuleap\Taskboard\Tracker\TaskboardTracker;
-use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\FormElement\Field\ListFields\RetrieveUsedListFieldStub;
 
@@ -56,7 +56,7 @@ final class MappedFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    /** @return Option<\Tracker_FormElement_Field_Selectbox> */
+    /** @return Option<\Tuleap\Tracker\FormElement\Field\List\SelectboxField> */
     private function getField(): Option
     {
         $retriever = new MappedFieldRetriever(
@@ -69,7 +69,7 @@ final class MappedFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItReturnsFreestyleMappedField(): void
     {
         $this->search_mapped_field  = SearchMappedFieldStub::withMappedField($this->taskboard_tracker, 747);
-        $field                      = ListFieldBuilder::aListField(747)->build();
+        $field                      = SelectboxFieldBuilder::aSelectboxField(747)->build();
         $this->form_element_factory = RetrieveUsedListFieldStub::withField($field);
 
         self::assertSame($field, $this->getField()->unwrapOr(null));
@@ -77,7 +77,7 @@ final class MappedFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsStatusSemanticWhenNoFreestyleMapping(): void
     {
-        $field = ListFieldBuilder::aListField(133)->build();
+        $field = SelectboxFieldBuilder::aSelectboxField(133)->build();
         $this->status_retriever->expects($this->once())
             ->method('getField')
             ->with($this->user_stories_tracker)

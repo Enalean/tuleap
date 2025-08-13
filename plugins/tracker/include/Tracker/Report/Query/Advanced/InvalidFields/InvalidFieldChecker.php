@@ -66,7 +66,7 @@ final readonly class InvalidFieldChecker
             \Tracker_FormElement_Field_Radiobutton::class,
             \Tracker_FormElement_Field_Checkbox::class,
             \Tracker_FormElement_Field_MultiSelectbox::class,
-            \Tracker_FormElement_Field_Selectbox::class                           => $this->list_field_checker->checkFieldIsValidForComparison($comparison, $field),
+            \Tuleap\Tracker\FormElement\Field\List\SelectboxField::class          => $this->list_field_checker->checkFieldIsValidForComparison($comparison, $field),
             \Tracker_FormElement_Field_SubmittedBy::class,
             \Tracker_FormElement_Field_LastModifiedBy::class                      => $this->submitter_checker->checkFieldIsValidForComparison($comparison, $field),
             \Tracker_FormElement_Field_OpenList::class                            => $this->checkOpenList($comparison, $field),

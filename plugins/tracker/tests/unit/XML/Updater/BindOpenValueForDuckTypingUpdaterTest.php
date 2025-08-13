@@ -24,7 +24,7 @@ namespace Tuleap\Tracker\XML\Updater;
 
 use SimpleXMLElement;
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveMatchingValueByDuckTypingStub;
 use Tuleap\Tracker\Tracker\XML\Updater\BindOpenValueForDuckTypingUpdater;
 use XML_SimpleXMLCDATAFactory;
@@ -32,13 +32,13 @@ use XML_SimpleXMLCDATAFactory;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class BindOpenValueForDuckTypingUpdaterTest extends TestCase
 {
-    private \Tracker_FormElement_Field_Selectbox $source_field;
-    private \Tracker_FormElement_Field_Selectbox&\PHPUnit\Framework\MockObject\MockObject $target_field;
+    private \Tuleap\Tracker\FormElement\Field\List\SelectboxField $source_field;
+    private \Tuleap\Tracker\FormElement\Field\List\SelectboxField&\PHPUnit\Framework\MockObject\MockObject $target_field;
 
     protected function setUp(): void
     {
-        $this->source_field = ListFieldBuilder::aListField(1)->build();
-        $this->target_field = $this->createMock(\Tracker_FormElement_Field_Selectbox::class);
+        $this->source_field = SelectboxFieldBuilder::aSelectboxField(1)->build();
+        $this->target_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\List\SelectboxField::class);
     }
 
     public function testItBindsOpenValueWithUserWrittenValues(): void
@@ -81,7 +81,7 @@ final class BindOpenValueForDuckTypingUpdaterTest extends TestCase
         $field_value_matcher = RetrieveMatchingValueByDuckTypingStub::withoutAnyMatchingValue();
         $updater             = new BindOpenValueForDuckTypingUpdater($field_value_matcher, new MoveChangesetXMLUpdater(), new XML_SimpleXMLCDATAFactory());
 
-        $this->target_field = $this->createMock(\Tracker_FormElement_Field_Selectbox::class);
+        $this->target_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\List\SelectboxField::class);
         $this->target_field->method('getDefaultValue')->willReturn('b309');
         $updater->updateOpenValueForDuckTypingMove($changeset_xml, $this->source_field, $this->target_field, 0);
         self::assertSame('309', (string) $changeset_xml->field_change[0]->value);

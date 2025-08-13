@@ -30,7 +30,7 @@ use Tuleap\TestManagement\LabelFieldNotFoundException;
 use Tuleap\Tracker\Semantic\Status\StatusValueRetriever;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveSemanticStatusFieldStub;
@@ -89,7 +89,7 @@ final class CampaignArtifactUpdateFieldValuesBuilderTest extends \Tuleap\Test\PH
         $tracker = TrackerTestBuilder::aTracker()->build();
         $user    = UserTestBuilder::aUser()->build();
 
-        $this->status_field_retriever->withField(ListFieldBuilder::aListField(98)->inTracker($tracker)->build());
+        $this->status_field_retriever->withField(SelectboxFieldBuilder::aSelectboxField(98)->inTracker($tracker)->build());
 
         $this->status_value_retriever
             ->expects($this->once())
@@ -121,7 +121,7 @@ final class CampaignArtifactUpdateFieldValuesBuilderTest extends \Tuleap\Test\PH
         $tracker = TrackerTestBuilder::aTracker()->build();
         $user    = UserTestBuilder::aUser()->build();
 
-        $this->status_field_retriever->withField(ListFieldBuilder::aListField(98)->inTracker($tracker)->build());
+        $this->status_field_retriever->withField(SelectboxFieldBuilder::aSelectboxField(98)->inTracker($tracker)->build());
 
         $this->status_value_retriever
             ->expects($this->once())

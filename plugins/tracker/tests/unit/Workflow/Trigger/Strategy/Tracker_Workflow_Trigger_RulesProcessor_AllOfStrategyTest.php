@@ -23,6 +23,7 @@ declare(strict_types=1);
 use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Color\ColorName;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\List\SelectboxField;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
@@ -33,8 +34,8 @@ use Tuleap\Tracker\Workflow\Trigger\Siblings\SiblingsRetriever;
 final class Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategyTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     private Artifact $artifact;
-    private Tracker_FormElement_Field_Selectbox $trigger_field_task;
-    private Tracker_FormElement_Field_Selectbox $trigger_field_bug;
+    private SelectboxField $trigger_field_task;
+    private SelectboxField $trigger_field_bug;
     private Tracker_FormElement_Field_List_Bind_StaticValue $trigger_value_task;
     private Tracker_FormElement_Field_List_Bind_StaticValue $trigger_value_bug;
     private Tracker $task_tracker;
@@ -144,9 +145,9 @@ final class Tracker_Workflow_Trigger_RulesProcessor_AllOfStrategyTest extends \T
         );
     }
 
-    private function buildSelectBoxField(int $id, Tracker $tracker): Tracker_FormElement_Field_Selectbox
+    private function buildSelectBoxField(int $id, Tracker $tracker): SelectboxField
     {
-        $field = new Tracker_FormElement_Field_Selectbox(
+        $field = new SelectboxField(
             $id,
             $tracker->getId(),
             0,

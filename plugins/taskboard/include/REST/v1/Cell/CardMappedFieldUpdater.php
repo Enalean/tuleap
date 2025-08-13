@@ -26,7 +26,6 @@ use Cardwall_Column;
 use Luracast\Restler\RestException;
 use PFUser;
 use Tracker_Exception;
-use Tracker_FormElement_Field_Selectbox;
 use Tracker_FormElement_InvalidFieldException;
 use Tracker_FormElement_InvalidFieldValueException;
 use Tracker_NoChangeException;
@@ -39,6 +38,7 @@ use Tuleap\Taskboard\Column\InvalidColumnException;
 use Tuleap\Taskboard\Column\MilestoneTrackerRetriever;
 use Tuleap\Taskboard\Tracker\TaskboardTracker;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\List\SelectboxField;
 use Tuleap\Tracker\REST\Artifact\ArtifactUpdater;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 use Tuleap\Tracker\Tracker;
@@ -148,9 +148,9 @@ class CardMappedFieldUpdater
         TaskboardTracker $taskboard_tracker,
         Cardwall_Column $column,
         PFUser $current_user,
-    ): Tracker_FormElement_Field_Selectbox {
+    ): SelectboxField {
         return $this->mapped_field_retriever->getField($taskboard_tracker)
-            ->match(function ($mapped_field) use ($current_user): \Tracker_FormElement_Field_Selectbox {
+            ->match(function ($mapped_field) use ($current_user): \Tuleap\Tracker\FormElement\Field\List\SelectboxField {
                 if (! $mapped_field->userCanUpdate($current_user)) {
                     throw new I18NRestException(
                         403,
@@ -178,7 +178,7 @@ class CardMappedFieldUpdater
      * @throws I18NRestException
      */
     private function getFirstMappedValue(
-        Tracker_FormElement_Field_Selectbox $mapped_field,
+        SelectboxField $mapped_field,
         Artifact $artifact_to_add,
         TaskboardTracker $taskboard_tracker,
         Cardwall_Column $column,

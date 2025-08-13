@@ -25,7 +25,6 @@ namespace Tuleap\Taskboard\REST\v1\Cell;
 use Luracast\Restler\RestException;
 use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
-use Tracker_FormElement_Field_Selectbox;
 use Tuleap\Cardwall\OnTop\Config\ColumnCollection;
 use Tuleap\Cardwall\OnTop\Config\ColumnFactory;
 use Tuleap\Cardwall\Test\Builders\ColumnTestBuilder;
@@ -45,6 +44,7 @@ use Tuleap\Taskboard\Column\MilestoneTrackerRetriever;
 use Tuleap\Taskboard\Tracker\TaskboardTracker;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\List\SelectboxField;
 use Tuleap\Tracker\REST\Artifact\ArtifactUpdater;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
@@ -74,7 +74,7 @@ final class CardMappedFieldUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
     private Artifact $swimlane_artifact;
     private Artifact $artifact_to_add;
     private PFUser $current_user;
-    private Tracker_FormElement_Field_Selectbox&MockObject $mapped_list_field;
+    private SelectboxField&MockObject $mapped_list_field;
     private FirstPossibleValueInListRetriever&MockObject $first_possible_value_retriever;
     private TaskboardTracker $taskboard_tracker;
     private \Cardwall_Column $done_column;
@@ -83,7 +83,7 @@ final class CardMappedFieldUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
     #[\Override]
     protected function setUp(): void
     {
-        $this->mapped_list_field = $this->createMock(Tracker_FormElement_Field_Selectbox::class);
+        $this->mapped_list_field = $this->createMock(SelectboxField::class);
         $this->mapped_list_field->method('getId')->willReturn(self::MAPPED_FIELD_ID);
 
         $this->column_factory = $this->createMock(ColumnFactory::class);

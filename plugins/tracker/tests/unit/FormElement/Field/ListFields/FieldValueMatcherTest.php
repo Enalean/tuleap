@@ -32,7 +32,7 @@ use Tracker_FormElement_Field_List_BindValue;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use User\XML\Import\IFindUserFromXMLReference;
 
 #[DisableReturnValueGenerationForTestDoubles]
@@ -49,8 +49,8 @@ final class FieldValueMatcherTest extends TestCase
 
     public function setUp(): void
     {
-        $this->source_field           = ListFieldBuilder::aListField(154)->build();
-        $this->destination_field      = ListFieldBuilder::aListField(155)->build();
+        $this->source_field           = SelectboxFieldBuilder::aSelectboxField(154)->build();
+        $this->destination_field      = SelectboxFieldBuilder::aSelectboxField(155)->build();
         $this->source_field_bind      = $this->createMock(Tracker_FormElement_Field_List_Bind_Static::class);
         $this->destination_field_bind = $this->createMock(Tracker_FormElement_Field_List_Bind_Static::class);
 

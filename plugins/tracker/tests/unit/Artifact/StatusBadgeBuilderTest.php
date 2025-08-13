@@ -52,7 +52,7 @@ final class StatusBadgeBuilderTest extends TestCase
 
     public function testEmptyArrayWhenSemanticStatusFieldIsNotReadableByUser(): void
     {
-        $field = $this->createMock(\Tracker_FormElement_Field_Selectbox::class);
+        $field = $this->createMock(\Tuleap\Tracker\FormElement\Field\List\SelectboxField::class);
         $field->method('userCanRead')->willReturn(false);
 
         $semantic_status = $this->createMock(\Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus::class);
@@ -76,7 +76,7 @@ final class StatusBadgeBuilderTest extends TestCase
 
     public function testEmptyArrayWhenSemanticStatusIsDefinedOnUsers(): void
     {
-        $field = $this->createMock(\Tracker_FormElement_Field_Selectbox::class);
+        $field = $this->createMock(\Tuleap\Tracker\FormElement\Field\List\SelectboxField::class);
         $field->method('userCanRead')->willReturn(true);
 
         $semantic_status = $this->createMock(\Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus::class);
@@ -101,7 +101,7 @@ final class StatusBadgeBuilderTest extends TestCase
 
     public function testEmptyArrayWhenArtifactHasNoValueForTheField(): void
     {
-        $field = $this->createMock(\Tracker_FormElement_Field_Selectbox::class);
+        $field = $this->createMock(\Tuleap\Tracker\FormElement\Field\List\SelectboxField::class);
         $field->method('userCanRead')->willReturn(true);
         $field->method('getId')->willReturn(1100);
         $field->method('getDecorators')->willReturn([]);
@@ -136,7 +136,7 @@ final class StatusBadgeBuilderTest extends TestCase
 
     public function testBuildBadgeForEachStatusValue(): void
     {
-        $field = $this->createMock(\Tracker_FormElement_Field_Selectbox::class);
+        $field = $this->createMock(\Tuleap\Tracker\FormElement\Field\List\SelectboxField::class);
         $field->method('userCanRead')->willReturn(true);
         $field->method('getId')->willReturn(1100);
         $field->method('getDecorators')->willReturn([]);
@@ -185,7 +185,7 @@ final class StatusBadgeBuilderTest extends TestCase
 
     public function testBuildBadgeWithTLPColorForEachStatusValue(): void
     {
-        $field = $this->createMock(\Tracker_FormElement_Field_Selectbox::class);
+        $field = $this->createMock(\Tuleap\Tracker\FormElement\Field\List\SelectboxField::class);
         $field->method('userCanRead')->willReturn(true);
         $field->method('getId')->willReturn(1100);
         $field->method('getDecorators')->willReturn([

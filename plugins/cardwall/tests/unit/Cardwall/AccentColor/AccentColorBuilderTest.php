@@ -62,7 +62,7 @@ class AccentColorBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->artifact = $this->createMock(Artifact::class);
         $this->artifact->method('getTracker')->willReturn($tracker);
         $this->current_user         = $this->createMock(PFUser::class);
-        $this->selectbox            = $this->createMock(\Tracker_FormElement_Field_Selectbox::class);
+        $this->selectbox            = $this->createMock(\Tuleap\Tracker\FormElement\Field\List\SelectboxField::class);
         $this->accent_color_builder = new AccentColorBuilder($this->form_element_factory, $this->decorator_retriever);
     }
 

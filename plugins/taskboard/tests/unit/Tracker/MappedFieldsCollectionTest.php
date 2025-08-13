@@ -29,7 +29,7 @@ final class MappedFieldsCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testItReturnsTheMappedFieldForTracker(): void
     {
-        $field = $this->createMock(\Tracker_FormElement_Field_Selectbox::class);
+        $field = $this->createMock(\Tuleap\Tracker\FormElement\Field\List\SelectboxField::class);
 
         $collection = new MappedFieldsCollection();
         $tracker    = TrackerTestBuilder::aTracker()->withId(12)->build();
@@ -43,7 +43,7 @@ final class MappedFieldsCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
         $collection      = new MappedFieldsCollection();
         $tracker         = TrackerTestBuilder::aTracker()->withId(12)->build();
         $another_tracker = TrackerTestBuilder::aTracker()->withId(42)->build();
-        $collection->put($tracker, $this->createMock(\Tracker_FormElement_Field_Selectbox::class));
+        $collection->put($tracker, $this->createMock(\Tuleap\Tracker\FormElement\Field\List\SelectboxField::class));
 
         $this->expectException(\OutOfBoundsException::class);
 
@@ -55,7 +55,7 @@ final class MappedFieldsCollectionTest extends \Tuleap\Test\PHPUnit\TestCase
         $collection      = new MappedFieldsCollection();
         $tracker         = TrackerTestBuilder::aTracker()->withId(12)->build();
         $another_tracker = TrackerTestBuilder::aTracker()->withId(42)->build();
-        $collection->put($tracker, $this->createMock(\Tracker_FormElement_Field_Selectbox::class));
+        $collection->put($tracker, $this->createMock(\Tuleap\Tracker\FormElement\Field\List\SelectboxField::class));
 
         self::assertTrue($collection->hasKey($tracker));
         self::assertFalse($collection->hasKey($another_tracker));

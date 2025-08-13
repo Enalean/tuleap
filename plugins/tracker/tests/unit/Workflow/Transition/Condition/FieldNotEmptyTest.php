@@ -23,6 +23,7 @@ declare(strict_types=1);
 use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\List\SelectboxField;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 
@@ -34,8 +35,8 @@ final class FieldNotEmptyTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ign
     private Workflow_Transition_Condition_FieldNotEmpty $condition;
     private string $empty_data     = '';
     private string $not_empty_data = 'coin';
-    private Tracker_FormElement_Field_Selectbox $field;
-    private Tracker_FormElement_Field_Selectbox $field_bis;
+    private SelectboxField $field;
+    private SelectboxField $field_bis;
     private Workflow_Transition_Condition_FieldNotEmpty_Dao&MockObject $dao;
     private Transition $transition;
     private Artifact $artifact;
@@ -70,9 +71,9 @@ final class FieldNotEmptyTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ign
         $this->current_user   = UserTestBuilder::buildWithDefaults();
     }
 
-    private function createFieldWithId(Tracker_FormElementFactory&MockObject $factory, int $id): Tracker_FormElement_Field_Selectbox
+    private function createFieldWithId(Tracker_FormElementFactory&MockObject $factory, int $id): SelectboxField
     {
-        $field = $this->createMock(\Tracker_FormElement_Field_Selectbox::class);
+        $field = $this->createMock(\Tuleap\Tracker\FormElement\Field\List\SelectboxField::class);
         $field->method('getId')->willReturn($id);
         $field->method('getName')->willReturn('field');
         $field->method('getLabel')->willReturn('Field');

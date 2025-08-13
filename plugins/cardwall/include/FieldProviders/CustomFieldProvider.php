@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\FormElement\Field\List\SelectboxField;
 use Tuleap\Tracker\Tracker;
 
 /**
@@ -25,20 +26,20 @@ use Tuleap\Tracker\Tracker;
  *
  * @see Cardwall_FieldProviders_IProvideFieldGivenAnArtifact
  */
-class Cardwall_FieldProviders_CustomFieldRetriever implements Cardwall_FieldProviders_IProvideFieldGivenAnArtifact
+class Cardwall_FieldProviders_CustomFieldRetriever implements Cardwall_FieldProviders_IProvideFieldGivenAnArtifact // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /**
-     * @var Tracker_FormElement_Field_Selectbox
+     * @var SelectboxField
      */
     private $field;
 
-    public function __construct(Tracker_FormElement_Field_Selectbox $field)
+    public function __construct(SelectboxField $field)
     {
         $this->field = $field;
     }
 
     /**
-     * @return Tracker_FormElement_Field_Selectbox | null
+     * @return SelectboxField | null
      */
     public function getField(Tracker $tracker)
     {

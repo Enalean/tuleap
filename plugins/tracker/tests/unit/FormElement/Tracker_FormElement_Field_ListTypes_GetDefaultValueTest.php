@@ -29,7 +29,8 @@ use Tracker_FormElement_Field_List_Bind;
 use Tracker_FormElement_Field_List_Bind_Static;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\Fields\CheckboxFieldBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\MultiSelectboxFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\OpenListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\RadioButtonFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\SubmittedByFieldBuilder;
@@ -48,7 +49,7 @@ final class Tracker_FormElement_Field_ListTypes_GetDefaultValueTest extends Test
     {
         $this->bind->method('getDefaultValues')->willReturn([300 => 0]);
 
-        $field = ListFieldBuilder::aListField(456)->build();
+        $field = SelectboxFieldBuilder::aSelectboxField(456)->build();
         $field->setBind($this->bind);
 
         self::assertEquals(300, $field->getDefaultValue());
@@ -58,7 +59,7 @@ final class Tracker_FormElement_Field_ListTypes_GetDefaultValueTest extends Test
     {
         $this->bind->method('getDefaultValues')->willReturn([300 => 0, 200 => 4]);
 
-        $field = ListFieldBuilder::aListField(456)->build();
+        $field = SelectboxFieldBuilder::aSelectboxField(456)->build();
         $field->setBind($this->bind);
 
         self::assertEquals(Tracker_FormElement_Field_List_Bind::NONE_VALUE, $field->getDefaultValue());
@@ -68,7 +69,7 @@ final class Tracker_FormElement_Field_ListTypes_GetDefaultValueTest extends Test
     {
         $this->bind->method('getDefaultValues')->willReturn([]);
 
-        $field = ListFieldBuilder::aListField(456)->build();
+        $field = SelectboxFieldBuilder::aSelectboxField(456)->build();
         $field->setBind($this->bind);
 
         self::assertEquals(Tracker_FormElement_Field_List_Bind::NONE_VALUE, $field->getDefaultValue());
@@ -78,7 +79,7 @@ final class Tracker_FormElement_Field_ListTypes_GetDefaultValueTest extends Test
     {
         $this->bind->method('getDefaultValues')->willReturn([300 => 0]);
 
-        $field = ListFieldBuilder::aListField(789)->withMultipleValues()->build();
+        $field = MultiSelectboxFieldBuilder::aMultiSelectboxField(789)->build();
         $field->setBind($this->bind);
 
         self::assertEquals([300], $field->getDefaultValue());
@@ -88,7 +89,7 @@ final class Tracker_FormElement_Field_ListTypes_GetDefaultValueTest extends Test
     {
         $this->bind->method('getDefaultValues')->willReturn([300 => 0, 200 => 4]);
 
-        $field = ListFieldBuilder::aListField(789)->withMultipleValues()->build();
+        $field = MultiSelectboxFieldBuilder::aMultiSelectboxField(789)->build();
         $field->setBind($this->bind);
 
         self::assertEquals([300, 200], $field->getDefaultValue());
@@ -98,7 +99,7 @@ final class Tracker_FormElement_Field_ListTypes_GetDefaultValueTest extends Test
     {
         $this->bind->method('getDefaultValues')->willReturn([]);
 
-        $field = ListFieldBuilder::aListField(789)->withMultipleValues()->build();
+        $field = MultiSelectboxFieldBuilder::aMultiSelectboxField(789)->build();
         $field->setBind($this->bind);
 
         self::assertEquals([Tracker_FormElement_Field_List_Bind::NONE_VALUE], $field->getDefaultValue());

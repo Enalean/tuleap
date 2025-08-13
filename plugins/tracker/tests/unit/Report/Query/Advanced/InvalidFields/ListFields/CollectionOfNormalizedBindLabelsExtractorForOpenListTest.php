@@ -30,7 +30,7 @@ use Tuleap\Tracker\Report\Query\Advanced\ListFieldBindValueNormalizer;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserGroupBindBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Tuleap\Tracker\Test\Stub\FormElement\Field\ListFields\Bind\BindVisitorStub;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -59,7 +59,7 @@ final class CollectionOfNormalizedBindLabelsExtractorForOpenListTest extends Tes
 
         $results = $this->extractor->extractCollectionOfNormalizedLabels(
             ListStaticBindBuilder::aStaticBind(
-                ListFieldBuilder::aListField(1)->build()
+                SelectboxFieldBuilder::aSelectboxField(1)->build()
             )->build()->getField()
         );
 
@@ -74,7 +74,7 @@ final class CollectionOfNormalizedBindLabelsExtractorForOpenListTest extends Tes
 
         $results = $this->extractor->extractCollectionOfNormalizedLabels(
             ListUserBindBuilder::aUserBind(
-                ListFieldBuilder::aListField(1)->build()
+                SelectboxFieldBuilder::aSelectboxField(1)->build()
             )->build()->getField()
         );
 
@@ -85,7 +85,7 @@ final class CollectionOfNormalizedBindLabelsExtractorForOpenListTest extends Tes
     {
         $results = $this->extractor->extractCollectionOfNormalizedLabels(
             ListUserGroupBindBuilder::aUserGroupBind(
-                ListFieldBuilder::aListField(1)->build()
+                SelectboxFieldBuilder::aSelectboxField(1)->build()
             )->build()->getField()
         );
 

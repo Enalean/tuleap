@@ -24,10 +24,11 @@ declare(strict_types=1);
 use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Tracker\FormElement\Field\List\SelectboxField;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueListTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Tuleap\Tracker\Workflow\Transition\TransitionRetriever;
 use Tuleap\Tracker\Workflow\WorkflowBackendLogger;
 
@@ -42,7 +43,7 @@ final class WorkflowTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore P
     private int $open_value_id  = 801;
     private int $close_value_id = 802;
     private Tracker_Workflow_Trigger_RulesManager&MockObject $trigger_rules_manager;
-    private Tracker_FormElement_Field_Selectbox $status_field;
+    private SelectboxField $status_field;
     private PFUser $current_user;
     private Workflow&MockObject $workflow;
     private Workflow&MockObject $unused_workflow;
@@ -67,7 +68,7 @@ final class WorkflowTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore P
             }
         };
 
-        $this->status_field = ListFieldBuilder::aListField(103)->build();
+        $this->status_field = SelectboxFieldBuilder::aSelectboxField(103)->build();
 
         $this->open_value = ListStaticValueBuilder::aStaticValue('open')->withId($this->open_value_id)->build();
 

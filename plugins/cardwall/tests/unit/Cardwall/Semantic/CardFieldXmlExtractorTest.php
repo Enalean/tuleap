@@ -27,7 +27,7 @@ namespace Tuleap\Cardwall\Semantic;
 
 use SimpleXMLElement;
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CardFieldXmlExtractorTest extends TestCase
@@ -59,8 +59,8 @@ final class CardFieldXmlExtractorTest extends TestCase
             LIBXML_NONET
         );
 
-        $status   = ListFieldBuilder::aListField(101)->withLabel('status')->build();
-        $severity = ListFieldBuilder::aListField(102)->withLabel('severity')->build();
+        $status   = SelectboxFieldBuilder::aSelectboxField(101)->withLabel('status')->build();
+        $severity = SelectboxFieldBuilder::aSelectboxField(102)->withLabel('severity')->build();
 
         $mapping                = [
             'F13' => $status,

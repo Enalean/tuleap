@@ -25,6 +25,7 @@ use Tuleap\Tracker\FormElement\Field\Date\DateField;
 use Tuleap\Tracker\FormElement\Field\Float\FloatField;
 use Tuleap\Tracker\FormElement\Field\Integer\IntegerField;
 use Tuleap\Tracker\FormElement\Field\LastUpdateDate\LastUpdateDateField;
+use Tuleap\Tracker\FormElement\Field\List\SelectboxField;
 use Tuleap\Tracker\FormElement\Field\PerTrackerArtifactId\PerTrackerArtifactIdField;
 use Tuleap\Tracker\FormElement\Field\Priority\PriorityField;
 use Tuleap\Tracker\FormElement\Field\String\StringField;
@@ -63,7 +64,7 @@ interface Tracker_FormElement_FieldVisitor // phpcs:ignore PSR1.Classes.ClassDec
 
     public function visitMultiSelectbox(Tracker_FormElement_Field_MultiSelectbox $field);
 
-    public function visitSelectbox(Tracker_FormElement_Field_Selectbox $field);
+    public function visitSelectbox(SelectboxField $field);
 
     public function visitSubmittedBy(Tracker_FormElement_Field_SubmittedBy $field);
 

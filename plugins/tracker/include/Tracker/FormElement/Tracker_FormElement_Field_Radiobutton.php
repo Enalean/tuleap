@@ -20,8 +20,9 @@
  */
 
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\List\SelectboxField;
 
-class Tracker_FormElement_Field_Radiobutton extends Tracker_FormElement_Field_Selectbox
+class Tracker_FormElement_Field_Radiobutton extends SelectboxField // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     protected function fetchFieldContainerStart(string $id, string $name, string $data_target_fields_ids): string
     {

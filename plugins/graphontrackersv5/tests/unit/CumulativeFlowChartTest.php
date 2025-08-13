@@ -24,10 +24,10 @@
 
 namespace Tuleap\GraphOnTrackersV5;
 
-use Tracker_FormElement_Field_Selectbox;
 use Tracker_Report_Criteria;
 use Tuleap\GraphOnTrackersV5\DataAccess\GraphOnTrackersV5_Chart_CumulativeFlow;
 use Tuleap\GraphOnTrackersV5\DataTransformation\GraphOnTrackersV5_CumulativeFlow_DataBuilder;
+use Tuleap\Tracker\FormElement\Field\List\SelectboxField;
 
 require_once __DIR__ . '/bootstrap.php';
 
@@ -111,7 +111,7 @@ final class CumulativeFlowChartTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testColumnsAreFilterWithReportCriteria(): void
     {
         $criterion       = $this->createMock(Tracker_Report_Criteria::class);
-        $criterion_field = $this->createMock(Tracker_FormElement_Field_Selectbox::class);
+        $criterion_field = $this->createMock(SelectboxField::class);
 
         $criterion_field->method('getId')->willReturn('201');
         $criterion_field->method('getCriteriaValue')->with($criterion)->willReturn([
@@ -194,7 +194,7 @@ final class CumulativeFlowChartTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testColumnsAreNotFilterWithReportCriteriaDefinedOnAny(): void
     {
         $criterion       = $this->createMock(Tracker_Report_Criteria::class);
-        $criterion_field = $this->createMock(Tracker_FormElement_Field_Selectbox::class);
+        $criterion_field = $this->createMock(SelectboxField::class);
 
         $criterion_field->method('getId')->willReturn('201');
         $criterion_field->method('getCriteriaValue')->with($criterion)->willReturn('');

@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Tracker\FormElement\Field\List\SelectboxField;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsFactory;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsetsFactory;
 
@@ -226,7 +227,7 @@ final class Transition_PostActionFactoryTest extends \Tuleap\Test\PHPUnit\TestCa
 
     public function testItChecksFieldIsUsedInEachTypeOfPostAction(): void
     {
-        $field = $this->createMock(Tracker_FormElement_Field_Selectbox::class);
+        $field = $this->createMock(SelectboxField::class);
         $this->cibuild_factory->expects($this->once())->method('isFieldUsedInPostActions')->with($field)->willReturn(false);
         $this->field_factory->expects($this->once())->method('isFieldUsedInPostActions')->with($field)->willReturn(false);
         $this->frozen_fields_factory->method('isFieldUsedInPostActions');
@@ -239,7 +240,7 @@ final class Transition_PostActionFactoryTest extends \Tuleap\Test\PHPUnit\TestCa
 
     public function testItReturnsTrueIfAtLeastOneOfTheSubFactoryReturnsTrue(): void
     {
-        $field = $this->createMock(Tracker_FormElement_Field_Selectbox::class);
+        $field = $this->createMock(SelectboxField::class);
 
         $this->field_factory->method('isFieldUsedInPostActions')->with($field)->willReturn(true);
 

@@ -31,7 +31,7 @@ use Tracker_Rule_List_Dao;
 use Tracker_Rule_List_Factory;
 use Tracker_RuleDao;
 use Tracker_RuleFactory;
-use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Tracker;
 
@@ -56,11 +56,11 @@ final class Tracker_RuleFactoryTest extends \Tuleap\Test\PHPUnit\TestCase //phpc
 XML;
         $this->xml     = new SimpleXMLElement($this->xmlstr);
         $this->tracker = TrackerTestBuilder::aTracker()->withId(888)->build();
-        $this->f1      = ListFieldBuilder::aListField(102)->build();
-        $this->f2      = ListFieldBuilder::aListField(103)->build();
-        $this->f3      = ListFieldBuilder::aListField(104)->build();
-        $this->f4      = ListFieldBuilder::aListField(105)->build();
-        $this->f5      = ListFieldBuilder::aListField(106)->build();
+        $this->f1      = SelectboxFieldBuilder::aSelectboxField(102)->build();
+        $this->f2      = SelectboxFieldBuilder::aSelectboxField(103)->build();
+        $this->f3      = SelectboxFieldBuilder::aSelectboxField(104)->build();
+        $this->f4      = SelectboxFieldBuilder::aSelectboxField(105)->build();
+        $this->f5      = SelectboxFieldBuilder::aSelectboxField(106)->build();
     }
 
     public function testImportListRules()

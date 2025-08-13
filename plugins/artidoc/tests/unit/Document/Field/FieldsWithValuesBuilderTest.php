@@ -99,7 +99,8 @@ use Tuleap\Tracker\Test\Builders\Fields\List\ListUserBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserGroupBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserGroupValueBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserValueBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\MultiSelectboxFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\PermissionsOnArtifactFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\TextFieldBuilder;
@@ -251,8 +252,7 @@ final class FieldsWithValuesBuilderTest extends TestCase
         $user_group_list_value1 = ProjectUGroupTestBuilder::buildProjectMembers();
         $user_group_list_value2 = ProjectUGroupTestBuilder::aCustomUserGroup(919)->withName('Reviewers')->build();
         $user_group_list_field  = ListUserGroupBindBuilder::aUserGroupBind(
-            ListFieldBuilder::aListField(480)
-                ->withMultipleValues()
+            MultiSelectboxFieldBuilder::aMultiSelectboxField(480)
                 ->withLabel('trionychoidean')
                 ->inTracker($this->tracker)
                 ->build()
@@ -287,7 +287,7 @@ final class FieldsWithValuesBuilderTest extends TestCase
     public function testItBuildsStaticListFieldWithValues(): void
     {
         $static_list_field = ListStaticBindBuilder::aStaticBind(
-            ListFieldBuilder::aListField(123)->inTracker($this->tracker)->withLabel('static list field')->build(),
+            SelectboxFieldBuilder::aSelectboxField(123)->inTracker($this->tracker)->withLabel('static list field')->build(),
         )->withBuildStaticValues([
             ListStaticValueBuilder::aStaticValue('Something')->build(),
         ])->build()->getField();
@@ -311,7 +311,7 @@ final class FieldsWithValuesBuilderTest extends TestCase
     public function testItBuildsUserListFieldsWithValue(): void
     {
         $user_list_field = ListUserBindBuilder::aUserBind(
-            ListFieldBuilder::aListField(123)->withLabel('user list field')->build()
+            SelectboxFieldBuilder::aSelectboxField(123)->withLabel('user list field')->build()
         )->build()->getField();
 
         $expected_list_field_with_value = new UserListFieldWithValue(

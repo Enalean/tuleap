@@ -31,6 +31,7 @@ use Tracker_FormElement_Field_List_Bind_Static;
 use Tuleap\Tracker\Artifact\XML\Exporter\FieldChange\FieldChangeListBuilder;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\DB\DatabaseUUIDV7Factory;
+use Tuleap\Tracker\Test\Builders\Fields\MultiSelectboxFieldBuilder;
 use XML_SimpleXMLCDATAFactory;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -67,8 +68,7 @@ final class ChangesetValueListXMLExporterTest extends \Tuleap\Test\PHPUnit\TestC
             null
         );
 
-        $this->field = \Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder::aListField(1001)
-            ->withMultipleValues()
+        $this->field = MultiSelectboxFieldBuilder::aMultiSelectboxField(1001)
             ->withName('status')
             ->build();
 

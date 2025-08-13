@@ -219,9 +219,9 @@ final class SelectOptionsBuilderTest extends TestCase
         self::assertEquals('Priority', $root->optgroups[1]->options[1]->label);
     }
 
-    private function aSelectBoxField(int $id, string $label, bool $readable): \Tracker_FormElement_Field_Selectbox
+    private function aSelectBoxField(int $id, string $label, bool $readable): \Tuleap\Tracker\FormElement\Field\List\SelectboxField
     {
-        $sb = $this->createMock(\Tracker_FormElement_Field_Selectbox::class);
+        $sb = $this->createMock(\Tuleap\Tracker\FormElement\Field\List\SelectboxField::class);
         $sb->method('userCanRead')->willReturn($readable);
         $sb->method('getLabel')->willReturn($label);
         $sb->method('getId')->willReturn($id);

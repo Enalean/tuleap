@@ -38,7 +38,7 @@ use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\OpenListValueBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\StaticBindDecoratorBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\OpenListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Tracker;
@@ -62,7 +62,7 @@ final class StaticListFieldWithValueBuilderTest extends TestCase
     public function testItReturnsEmptyValuesWhenNoneIsSelected(): void
     {
         $list_field = ListStaticBindBuilder::aStaticBind(
-            ListFieldBuilder::aListField(123)->inTracker($this->tracker)->withLabel('static list field')->build(),
+            SelectboxFieldBuilder::aSelectboxField(123)->inTracker($this->tracker)->withLabel('static list field')->build(),
         )->withBuildStaticValues([
             ListStaticValueBuilder::aStaticValue('Something')->build(),
         ])->build()->getField();
@@ -81,7 +81,7 @@ final class StaticListFieldWithValueBuilderTest extends TestCase
     public function testItReturnsEmptyValuesWhenNoChangesetValue(): void
     {
         $list_field = ListStaticBindBuilder::aStaticBind(
-            ListFieldBuilder::aListField(123)->inTracker($this->tracker)->withLabel('static list field')->build(),
+            SelectboxFieldBuilder::aSelectboxField(123)->inTracker($this->tracker)->withLabel('static list field')->build(),
         )->build()->getField();
 
         $this->changeset->setFieldValue($list_field, null);
@@ -98,7 +98,7 @@ final class StaticListFieldWithValueBuilderTest extends TestCase
         $list_field_value_no_color = ListStaticValueBuilder::aStaticValue('No color')->withId(10004)->build();
 
         $list_field = ListStaticBindBuilder::aStaticBind(
-            ListFieldBuilder::aListField(124)->inTracker($this->tracker)->withLabel('static list field with decorators')->build(),
+            SelectboxFieldBuilder::aSelectboxField(124)->inTracker($this->tracker)->withLabel('static list field with decorators')->build(),
         )->withBuildStaticValues([
             $list_field_value_red,
             $list_field_value_no_color,

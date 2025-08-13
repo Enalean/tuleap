@@ -22,31 +22,31 @@ declare(strict_types=1);
 
 namespace Tuleap\Taskboard\Tracker;
 
-use Tracker_FormElement_Field_Selectbox;
+use Tuleap\Tracker\FormElement\Field\List\SelectboxField;
 use Tuleap\Tracker\Tracker;
 
 class MappedFieldsCollection
 {
     /**
-     * @psalm-var array<int, Tracker_FormElement_Field_Selectbox>
+     * @psalm-var array<int, SelectboxField>
      */
     private $mapped_fields;
 
     /**
-     * @psalm-param array<int, Tracker_FormElement_Field_Selectbox> $mapped_fields
-     * @param Tracker_FormElement_Field_Selectbox[] $mapped_fields
+     * @psalm-param array<int, SelectboxField> $mapped_fields
+     * @param SelectboxField[] $mapped_fields
      */
     public function __construct(array $mapped_fields = [])
     {
         $this->mapped_fields = $mapped_fields;
     }
 
-    public function put(Tracker $tracker, Tracker_FormElement_Field_Selectbox $field): void
+    public function put(Tracker $tracker, SelectboxField $field): void
     {
         $this->mapped_fields[$tracker->getId()] = $field;
     }
 
-    public function get(Tracker $tracker): Tracker_FormElement_Field_Selectbox
+    public function get(Tracker $tracker): SelectboxField
     {
         $tracker_id = $tracker->getId();
         if (! $this->hasKey($tracker)) {

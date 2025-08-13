@@ -40,7 +40,7 @@ use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\FloatFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\IntegerFieldBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\TextFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
@@ -73,7 +73,7 @@ final class QueryBuilderVisitorTest extends \Tuleap\Test\PHPUnit\TestCase
                 ->inTracker($tracker)
                 ->withName('date')
                 ->build(),
-            ListFieldBuilder::aListField(6)
+            SelectboxFieldBuilder::aSelectboxField(6)
                 ->inTracker($tracker)
                 ->withName('sb')
                 ->build(),

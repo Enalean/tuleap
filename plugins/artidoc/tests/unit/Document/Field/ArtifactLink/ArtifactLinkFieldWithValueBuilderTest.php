@@ -54,7 +54,7 @@ use Tuleap\Tracker\Test\Builders\Fields\ArtifactLinkFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\StaticBindDecoratorBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\FormElement\Field\ArtifactLink\Type\RetrieveTypeFromShortnameStub;
@@ -92,7 +92,7 @@ final class ArtifactLinkFieldWithValueBuilderTest extends TestCase
         $title_field  = StringFieldBuilder::aStringField(854)->inTracker($tracker)->build();
         $open_value   = ListStaticValueBuilder::aStaticValue('Open')->withId(12)->build();
         $closed_value = ListStaticValueBuilder::aStaticValue('Closed')->withId(13)->build();
-        $status_field = ListStaticBindBuilder::aStaticBind(ListFieldBuilder::aListField(855)->inTracker($tracker)->build())
+        $status_field = ListStaticBindBuilder::aStaticBind(SelectboxFieldBuilder::aSelectboxField(855)->inTracker($tracker)->build())
             ->withBuildStaticValues([$open_value, $closed_value])
             ->withDecorators([
                 StaticBindDecoratorBuilder::withColor(ColorName::NEON_GREEN)->withValueId($open_value->getId())->build(),

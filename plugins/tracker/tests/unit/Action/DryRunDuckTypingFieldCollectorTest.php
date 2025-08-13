@@ -31,7 +31,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ExternalFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\IntegerFieldBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveUsedFieldsStub;
@@ -63,8 +63,8 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
     private \PFUser $user;
     /** @var list<\Tracker_FormElement_Field> */
     private array $all_fields;
-    private \Tracker_FormElement_Field_Selectbox|\Tracker_FormElement_Field_MultiSelectbox $source_list_field;
-    private \Tracker_FormElement_Field_Selectbox|\Tracker_FormElement_Field_MultiSelectbox $destination_list_field;
+    private \Tuleap\Tracker\FormElement\Field\List\SelectboxField|\Tracker_FormElement_Field_MultiSelectbox $source_list_field;
+    private \Tuleap\Tracker\FormElement\Field\List\SelectboxField|\Tracker_FormElement_Field_MultiSelectbox $destination_list_field;
     private EventDispatcherStub $event_dispatcher;
     private VerifyFieldCanBeEasilyMigratedStub $verify_easily_migrated;
     private VerifyIsStaticListFieldStub $verify_static_list;
@@ -92,11 +92,11 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
 
         $this->all_fields = [];
 
-        $this->source_list_field      = ListFieldBuilder::aListField(101)
+        $this->source_list_field      = SelectboxFieldBuilder::aSelectboxField(101)
             ->withName('field_name')
             ->inTracker($this->source_tracker)
             ->build();
-        $this->destination_list_field = ListFieldBuilder::aListField(102)
+        $this->destination_list_field = SelectboxFieldBuilder::aSelectboxField(102)
             ->withName('field_name')
             ->inTracker($this->destination_tracker)
             ->build();
@@ -438,7 +438,7 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
 
         $this->all_fields = [
             $source_permissions_field,
-            ListFieldBuilder::aListField(1)
+            SelectboxFieldBuilder::aSelectboxField(1)
                 ->withName('permissions')
                 ->inTracker($this->destination_tracker)
                 ->build(),
@@ -542,7 +542,7 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
         $source_open_list_field->method('getTrackerId')->willReturn(self::SOURCE_TRACKER_ID);
         $this->all_fields = [
             $source_open_list_field,
-            ListFieldBuilder::aListField(1)
+            SelectboxFieldBuilder::aSelectboxField(1)
                 ->withName('open_list')
                 ->inTracker($this->destination_tracker)
                 ->build(),

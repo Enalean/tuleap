@@ -34,7 +34,7 @@ use Transition_PostAction_Field_Date;
 use TransitionFactory;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
@@ -76,8 +76,8 @@ final class WorkflowFactoryImportTest extends \Tuleap\Test\PHPUnit\TestCase
         $static_value_02 = ListStaticValueBuilder::aStaticValue('value 2')->withId(802)->build();
 
         $mapping = [
-            'F1'     => ListFieldBuilder::aListField(110)->build(),
-            'F32'    => ListFieldBuilder::aListField(111)->build(),
+            'F1'     => SelectboxFieldBuilder::aSelectboxField(110)->build(),
+            'F32'    => SelectboxFieldBuilder::aSelectboxField(111)->build(),
             'F32-V0' => $static_value_01,
             'F32-V1' => $static_value_02,
         ];
@@ -149,8 +149,8 @@ final class WorkflowFactoryImportTest extends \Tuleap\Test\PHPUnit\TestCase
         $static_value_02 = ListStaticValueBuilder::aStaticValue('value 2')->withId(802)->build();
 
         $mapping = [
-            'F1'     => ListFieldBuilder::aListField(110)->build(),
-            'F32'    => ListFieldBuilder::aListField(111)->build(),
+            'F1'     => SelectboxFieldBuilder::aSelectboxField(110)->build(),
+            'F32'    => SelectboxFieldBuilder::aSelectboxField(111)->build(),
             'F32-V0' => $static_value_01,
             'F32-V1' => $static_value_02,
         ];
@@ -221,7 +221,7 @@ final class WorkflowFactoryImportTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $mapping  = [
-            'F32' => ListFieldBuilder::aListField(32)->build(),
+            'F32' => SelectboxFieldBuilder::aSelectboxField(32)->build(),
         ];
         $workflow = $workflow_factory->getSimpleInstanceFromXML($xml, $mapping, new \NullTracker(), $this->project);
 

@@ -31,12 +31,12 @@ use Cardwall_OnTop_Config_TrackerMappingStatus;
 use Cardwall_OnTop_Config_ValueMappingFactory;
 use PHPUnit\Framework\MockObject\MockObject;
 use TestHelper;
-use Tracker_FormElement_Field_Selectbox;
 use Tracker_FormElementFactory;
 use TrackerFactory;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\FormElement\Field\List\SelectboxField;
+use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveSemanticStatusFieldStub;
 use Tuleap\Tracker\Tracker;
@@ -44,10 +44,10 @@ use Tuleap\Tracker\Tracker;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class Cardwall_OnTop_Config_TrackerMappingFactoryTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    private Tracker_FormElement_Field_Selectbox $field_122;
-    private Tracker_FormElement_Field_Selectbox $field_123;
-    private Tracker_FormElement_Field_Selectbox $field_124;
-    private Tracker_FormElement_Field_Selectbox $status_field;
+    private SelectboxField $field_122;
+    private SelectboxField $field_123;
+    private SelectboxField $field_124;
+    private SelectboxField $status_field;
     private Tracker $tracker;
     private Tracker $tracker_10;
     private Tracker $tracker_20;
@@ -58,11 +58,11 @@ final class Cardwall_OnTop_Config_TrackerMappingFactoryTest extends TestCase // 
 
     protected function setUp(): void
     {
-        $this->field_122    = ListFieldBuilder::aListField(122)->build();
-        $this->field_123    = ListFieldBuilder::aListField(123)->build();
-        $this->field_124    = ListFieldBuilder::aListField(124)->build();
+        $this->field_122    = SelectboxFieldBuilder::aSelectboxField(122)->build();
+        $this->field_123    = SelectboxFieldBuilder::aSelectboxField(123)->build();
+        $this->field_124    = SelectboxFieldBuilder::aSelectboxField(124)->build();
         $this->tracker_10   = TrackerTestBuilder::aTracker()->withId(10)->build();
-        $this->status_field = ListFieldBuilder::aListField(125)->inTracker($this->tracker_10)->build();
+        $this->status_field = SelectboxFieldBuilder::aSelectboxField(125)->inTracker($this->tracker_10)->build();
 
         $group_id         = 234;
         $project          = ProjectTestBuilder::aProject()->withId($group_id)->build();

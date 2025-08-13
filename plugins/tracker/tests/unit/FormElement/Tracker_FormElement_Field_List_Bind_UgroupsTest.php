@@ -33,7 +33,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDefaultValueDao;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindUgroupsValueDao;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserGroupValueBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use UGroupManager;
 use UserXMLExporter;
 
@@ -54,7 +54,7 @@ final class Tracker_FormElement_Field_List_Bind_UgroupsTest extends TestCase //p
         $this->ugroup_manager    = $this->createMock(UGroupManager::class);
         $this->value_dao         = $this->createMock(BindUgroupsValueDao::class);
         $this->default_value_dao = $this->createMock(BindDefaultValueDao::class);
-        $this->field             = ListFieldBuilder::aListField(10)->build();
+        $this->field             = SelectboxFieldBuilder::aSelectboxField(10)->build();
         $uuid_factory            = new DatabaseUUIDV7Factory();
 
         $integrators_ugroup_id          = 103;

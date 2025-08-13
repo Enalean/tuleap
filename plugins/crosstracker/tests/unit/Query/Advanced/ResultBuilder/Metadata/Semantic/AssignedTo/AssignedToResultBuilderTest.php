@@ -30,7 +30,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\RetrieveUserByIdStub;
 use Tuleap\Tracker\Semantic\Contributor\TrackerSemanticContributor;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveArtifactStub;
 
@@ -43,7 +43,7 @@ final class AssignedToResultBuilderTest extends TestCase
     private \Tuleap\Tracker\Artifact\Artifact $artifact;
     private RetrieveArtifactStub $retrieve_artifact;
     private TrackerSemanticContributor&\PHPUnit\Framework\MockObject\MockObject $semantic_contributor;
-    private \Tracker_FormElement_Field_Selectbox|\Tracker_FormElement_Field_MultiSelectbox $assigned_to_field;
+    private \Tuleap\Tracker\FormElement\Field\List\SelectboxField|\Tracker_FormElement_Field_MultiSelectbox $assigned_to_field;
 
     #[\Override]
     protected function setUp(): void
@@ -156,7 +156,7 @@ final class AssignedToResultBuilderTest extends TestCase
     private function setSemanticContributorWithUserCanRead(bool $user_can_read): void
     {
         TrackerSemanticContributor::setInstance($this->semantic_contributor, $this->artifact->getTracker());
-        $this->assigned_to_field = ListFieldBuilder::aListField(12)->withReadPermission($this->user, $user_can_read)->build();
+        $this->assigned_to_field = SelectboxFieldBuilder::aSelectboxField(12)->withReadPermission($this->user, $user_can_read)->build();
         $this->semantic_contributor->method('getField')->willReturn($this->assigned_to_field);
     }
 }

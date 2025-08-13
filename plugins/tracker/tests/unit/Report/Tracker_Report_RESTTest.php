@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\Tracker\FormElement\Field\List\SelectboxField;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Tracker;
 
@@ -110,8 +111,8 @@ final class Tracker_Report_RESTTest extends \Tuleap\Test\PHPUnit\TestCase //phpc
 
     public function testItTransformsBasicCriteriaToTheCorrectFormat(): void
     {
-        $field_1 = $this->createStub(Tracker_FormElement_Field_Selectbox::class);
-        $field_2 = $this->createStub(Tracker_FormElement_Field_Selectbox::class);
+        $field_1 = $this->createStub(SelectboxField::class);
+        $field_2 = $this->createStub(SelectboxField::class);
 
         $field_1->method('userCanRead')->willReturn(true);
         $field_1->method('getId')->willReturn(1);
@@ -148,7 +149,7 @@ final class Tracker_Report_RESTTest extends \Tuleap\Test\PHPUnit\TestCase //phpc
 
     public function testItThrowExceptionIfGivenFormelementsDontExist(): void
     {
-        $field_1 = $this->createStub(Tracker_FormElement_Field_Selectbox::class);
+        $field_1 = $this->createStub(SelectboxField::class);
 
         $query = new ArrayObject(
             [

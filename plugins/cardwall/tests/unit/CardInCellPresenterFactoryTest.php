@@ -34,7 +34,7 @@ use Cardwall_MappingCollection;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\MultiSelectboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -48,7 +48,7 @@ final class CardInCellPresenterFactoryTest extends TestCase
     {
         $tracker        = TrackerTestBuilder::aTracker()->build();
         $this->field_id = 77777;
-        $field          = ListFieldBuilder::aListField($this->field_id)->withMultipleValues()->build();
+        $field          = MultiSelectboxFieldBuilder::aMultiSelectboxField($this->field_id)->build();
         $artifact       = ArtifactTestBuilder::anArtifact(145)->inTracker($tracker)->build();
 
         $this->card_presenter = $this->createMock(Cardwall_CardPresenter::class);

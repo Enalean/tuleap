@@ -35,9 +35,9 @@ final class StatusFieldReferenceProxyTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertSame(self::FIELD_LABEL, $field->getLabel());
     }
 
-    private function getSelectboxField(): \Tracker_FormElement_Field_Selectbox
+    private function getSelectboxField(): \Tuleap\Tracker\FormElement\Field\List\SelectboxField
     {
-        return new \Tracker_FormElement_Field_Selectbox(
+        return new \Tuleap\Tracker\FormElement\Field\List\SelectboxField(
             self::FIELD_ID,
             35,
             1,

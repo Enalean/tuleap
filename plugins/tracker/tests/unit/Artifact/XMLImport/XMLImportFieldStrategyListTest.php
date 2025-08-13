@@ -35,7 +35,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Tuleap\Tracker\Test\Stub\TrackerXmlFieldsMappingStub;
 use User\XML\Import\IFindUserFromXMLReference;
 
@@ -67,7 +67,7 @@ final class XMLImportFieldStrategyListTest extends TestCase
 
     public function testGetFieldDataStaticValueGetNewValueID(): void
     {
-        $field        = ListFieldBuilder::aListField(485)->build();
+        $field        = SelectboxFieldBuilder::aSelectboxField(485)->build();
         $field_change = new SimpleXMLElement(
             '<?xml version="1.0"?>
                   <field_change field_name="status" type="list" bind="static">
@@ -87,7 +87,7 @@ final class XMLImportFieldStrategyListTest extends TestCase
 
     public function testGetFieldDataStaticValueGetNewValueIDWhenXMLHasSpaces(): void
     {
-        $field        = ListFieldBuilder::aListField(485)->build();
+        $field        = SelectboxFieldBuilder::aSelectboxField(485)->build();
         $field_change = new SimpleXMLElement(
             '<?xml version="1.0"?>
                   <field_change field_name="status" type="list" bind="static">
@@ -109,7 +109,7 @@ final class XMLImportFieldStrategyListTest extends TestCase
 
     public function testGetFieldDataStaticValueGetNewValueIDThatIsString(): void
     {
-        $field        = ListFieldBuilder::aListField(485)->build();
+        $field        = SelectboxFieldBuilder::aSelectboxField(485)->build();
         $field_change = new SimpleXMLElement(
             '<?xml version="1.0"?>
                   <field_change field_name="status" type="list" bind="static">
@@ -124,7 +124,7 @@ final class XMLImportFieldStrategyListTest extends TestCase
 
     public function testGetFieldDataStaticValueSearchValueByLabel(): void
     {
-        $field = ListFieldBuilder::aListField(12)->build();
+        $field = SelectboxFieldBuilder::aSelectboxField(12)->build();
 
         $field_change = new SimpleXMLElement(
             '<?xml version="1.0"?>
@@ -140,7 +140,7 @@ final class XMLImportFieldStrategyListTest extends TestCase
 
     public function testGetFieldDataStaticValueSearchValueByLabelWithoutResultReturnNull(): void
     {
-        $field = ListFieldBuilder::aListField(12)->build();
+        $field = SelectboxFieldBuilder::aSelectboxField(12)->build();
 
         $field_change = new SimpleXMLElement(
             '<?xml version="1.0"?>
@@ -158,7 +158,7 @@ final class XMLImportFieldStrategyListTest extends TestCase
 
     public function testGetFieldDataStaticValueWithoutFormatSearchValueByLabelReturnNull(): void
     {
-        $field = ListFieldBuilder::aListField(12)->build();
+        $field = SelectboxFieldBuilder::aSelectboxField(12)->build();
 
         $field_change = new SimpleXMLElement(
             '<?xml version="1.0"?>
@@ -176,7 +176,7 @@ final class XMLImportFieldStrategyListTest extends TestCase
 
     public function testGetFieldDataStaticWithEmptyValueReturnNull(): void
     {
-        $field = ListFieldBuilder::aListField(12)->build();
+        $field = SelectboxFieldBuilder::aSelectboxField(12)->build();
 
         $field_change = new SimpleXMLElement(
             '<?xml version="1.0"?>
@@ -194,7 +194,7 @@ final class XMLImportFieldStrategyListTest extends TestCase
 
     public function testGetFieldDataUgroupListValueGetNewValueID(): void
     {
-        $field        = ListFieldBuilder::aListField(485)->build();
+        $field        = SelectboxFieldBuilder::aSelectboxField(485)->build();
         $field_change = new SimpleXMLElement(
             '<?xml version="1.0"?>
                   <field_change field_name="status" type="list" bind="ugroups">
@@ -209,7 +209,7 @@ final class XMLImportFieldStrategyListTest extends TestCase
 
     public function testGetFieldDataUgroupListValueWithWrongFormatReturnNull(): void
     {
-        $field        = ListFieldBuilder::aListField(485)->build();
+        $field        = SelectboxFieldBuilder::aSelectboxField(485)->build();
         $field_change = new SimpleXMLElement(
             '<?xml version="1.0"?>
                   <field_change field_name="status" type="list" bind="ugroups">
@@ -225,7 +225,7 @@ final class XMLImportFieldStrategyListTest extends TestCase
 
     public function testGetFieldDataUgroupListValueWithoutFormatReturnNull(): void
     {
-        $field        = ListFieldBuilder::aListField(485)->build();
+        $field        = SelectboxFieldBuilder::aSelectboxField(485)->build();
         $field_change = new SimpleXMLElement(
             '<?xml version="1.0"?>
                   <field_change field_name="status" type="list" bind="ugroups">
@@ -241,7 +241,7 @@ final class XMLImportFieldStrategyListTest extends TestCase
 
     public function testGetFieldDataUgroupListWithEmptyValueReturnNull(): void
     {
-        $field = ListFieldBuilder::aListField(12)->build();
+        $field = SelectboxFieldBuilder::aSelectboxField(12)->build();
 
         $field_change = new SimpleXMLElement(
             '<?xml version="1.0"?>
@@ -259,7 +259,7 @@ final class XMLImportFieldStrategyListTest extends TestCase
     {
         $user = UserTestBuilder::buildWithId(104);
 
-        $field = ListFieldBuilder::aListField(485)->build();
+        $field = SelectboxFieldBuilder::aSelectboxField(485)->build();
 
         $field_change = new SimpleXMLElement(
             '<?xml version="1.0"?>
@@ -276,7 +276,7 @@ final class XMLImportFieldStrategyListTest extends TestCase
 
     public function testGetFieldDataUserListWithEmptyValueReturnNull(): void
     {
-        $field = ListFieldBuilder::aListField(485)->build();
+        $field = SelectboxFieldBuilder::aSelectboxField(485)->build();
 
         $field_change = new SimpleXMLElement(
             '<?xml version="1.0"?>

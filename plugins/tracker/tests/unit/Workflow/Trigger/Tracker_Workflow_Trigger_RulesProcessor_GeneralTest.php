@@ -26,6 +26,7 @@ use Psr\Log\LogLevel;
 use Psr\Log\NullLogger;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\Comment\CommentFormatIdentifier;
+use Tuleap\Tracker\FormElement\Field\List\SelectboxField;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Workflow\Trigger\Siblings\SiblingsRetriever;
@@ -40,7 +41,7 @@ final class Tracker_Workflow_Trigger_RulesProcessor_GeneralTest extends \Tuleap\
     private int $target_field_id;
     private int $target_value_id;
     private Tracker_Workflow_Trigger_TriggerRule $rule;
-    private Tracker_FormElement_Field_Selectbox&MockObject $target_field;
+    private SelectboxField&MockObject $target_field;
     private Tracker_FormElement_Field_List_BindValue&MockObject $target_value;
 
     protected function setUp(): void
@@ -62,7 +63,7 @@ final class Tracker_Workflow_Trigger_RulesProcessor_GeneralTest extends \Tuleap\
             ])->getMock();
 
         $this->target_field_id = 569;
-        $this->target_field    = $this->createMock(Tracker_FormElement_Field_Selectbox::class);
+        $this->target_field    = $this->createMock(SelectboxField::class);
         $this->target_field->method('getId')->willReturn($this->target_field_id);
         $this->target_field->method('getTracker')->willReturn($task_tracker);
         $this->target_value_id = 7;

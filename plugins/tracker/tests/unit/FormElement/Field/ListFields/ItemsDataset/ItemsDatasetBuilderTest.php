@@ -25,14 +25,14 @@ namespace Tuleap\Tracker\FormElement\Field\ListFields\ItemsDataset;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use Tracker_FormElement_Field_List_Value;
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 
 #[DisableReturnValueGenerationForTestDoubles]
 final class ItemsDatasetBuilderTest extends TestCase
 {
     public function testItBuildsDataAttributesForFieldListValue(): void
     {
-        $field            = ListFieldBuilder::aListField(452)->build();
+        $field            = SelectboxFieldBuilder::aSelectboxField(452)->build();
         $field_list_value = $this->createMock(Tracker_FormElement_Field_List_Value::class);
         $field_list_value->method('getDataset')->willReturn([
             'data-user-id'    => 102,
@@ -49,7 +49,7 @@ final class ItemsDatasetBuilderTest extends TestCase
 
     public function testItReturnsAnEmptyStringWhenThereIsNoDataToBind(): void
     {
-        $field            = ListFieldBuilder::aListField(452)->build();
+        $field            = SelectboxFieldBuilder::aSelectboxField(452)->build();
         $field_list_value = $this->createMock(Tracker_FormElement_Field_List_Value::class);
         $field_list_value->method('getDataset')->willReturn([]);
 

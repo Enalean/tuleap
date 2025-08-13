@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Semantic\Contributor;
 
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -38,7 +38,7 @@ final class ContributorFieldRetrieverTest extends TestCase
     public function testItRetrieveFieldGivenByFactory(): void
     {
         $tracker = TrackerTestBuilder::aTracker()->build();
-        $field   = ListFieldBuilder::aListField(103)->build();
+        $field   = SelectboxFieldBuilder::aSelectboxField(103)->build();
         TrackerSemanticContributor::setInstance(
             new TrackerSemanticContributor($tracker, $field),
             $tracker,

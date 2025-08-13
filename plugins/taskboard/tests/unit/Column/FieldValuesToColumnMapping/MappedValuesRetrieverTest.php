@@ -30,7 +30,7 @@ use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle\SearchMappedFie
 use Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle\VerifyMappingExistsStub;
 use Tuleap\Taskboard\Tracker\TaskboardTracker;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -100,7 +100,7 @@ final class MappedValuesRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItReturnsNothingWhenStatusHasNoVisibleValues(): void
     {
         $status_field = ListStaticBindBuilder::aStaticBind(
-            ListFieldBuilder::aListField(225)->build()
+            SelectboxFieldBuilder::aSelectboxField(225)->build()
         )->withStaticValues([])->build()->getField();
         $this->status_retriever->expects($this->once())
             ->method('getField')
@@ -113,7 +113,7 @@ final class MappedValuesRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItReturnsTheStatusValueWithTheSameLabelAsTheGivenColumn(): void
     {
         $status_field = ListStaticBindBuilder::aStaticBind(
-            ListFieldBuilder::aListField(975)->thatIsRequired()->build()
+            SelectboxFieldBuilder::aSelectboxField(975)->thatIsRequired()->build()
         )->withStaticValues([564 => 'Todo', 756 => self::ON_GOING_COLUMN_LABEL])->build()->getField();
         $this->status_retriever->expects($this->once())
             ->method('getField')

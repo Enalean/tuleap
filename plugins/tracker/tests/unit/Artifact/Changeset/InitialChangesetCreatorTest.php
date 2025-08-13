@@ -30,7 +30,6 @@ use Tracker_Artifact_Changeset_InitialChangesetFieldsValidator;
 use Tracker_Artifact_Changeset_Null;
 use Tracker_Artifact_ChangesetFactory;
 use Tracker_Artifact_Exception_CannotCreateNewChangeset;
-use Tracker_FormElement_Field_Selectbox;
 use Tracker_FormElementFactory;
 use Tracker_Workflow_Transition_InvalidConditionForTransitionException;
 use Transition;
@@ -42,6 +41,7 @@ use Tuleap\Tracker\Artifact\ChangesetValue\InitialChangesetValueSaver;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerNoXMLImportLoggedConfig;
 use Tuleap\Tracker\Changeset\Validation\NullChangesetValidationContext;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
+use Tuleap\Tracker\FormElement\Field\List\SelectboxField;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveWorkflowStub;
@@ -54,7 +54,7 @@ final class InitialChangesetCreatorTest extends TestCase
     use GlobalResponseMock;
 
     private MockObject&ArtifactChangesetSaver $changeset_saver;
-    private MockObject&Tracker_FormElement_Field_Selectbox $field;
+    private MockObject&SelectboxField $field;
     private array $fields_data = [];
     private MockObject&Tracker_FormElementFactory $factory;
     private InitialChangesetValueSaver $creator;
@@ -70,7 +70,7 @@ final class InitialChangesetCreatorTest extends TestCase
         $this->workflow->method('getId')->willReturn(10);
         $this->changeset_saver = $this->createMock(ArtifactChangesetSaver::class);
 
-        $this->field = $this->createMock(Tracker_FormElement_Field_Selectbox::class);
+        $this->field = $this->createMock(SelectboxField::class);
         $this->field->method('getId')->willReturn(123);
         $this->field->method('isSubmitable')->willReturn(true);
     }

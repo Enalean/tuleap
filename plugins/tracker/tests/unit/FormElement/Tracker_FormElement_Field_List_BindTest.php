@@ -34,7 +34,7 @@ use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDefaultValueDao;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserValueBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\OpenListFieldBuilder;
 
 #[DisableReturnValueGenerationForTestDoubles]
@@ -48,7 +48,7 @@ final class Tracker_FormElement_Field_List_BindTest extends TestCase //phpcs:ign
     protected function setUp(): void
     {
         $decorator   = new Tracker_FormElement_Field_List_BindDecorator(101, 1, 0, 0, 0, 'inca-silver');
-        $this->field = ListFieldBuilder::aListField(42)->build();
+        $this->field = SelectboxFieldBuilder::aSelectboxField(42)->build();
         $this->bind  = $this->getMockBuilder(Tracker_FormElement_Field_List_Bind_Static::class)
             ->setConstructorArgs([new DatabaseUUIDV7Factory(), $this->field, '', [], [], $decorator])
             ->onlyMethods(['getAllValues', 'getAllVisibleValues'])

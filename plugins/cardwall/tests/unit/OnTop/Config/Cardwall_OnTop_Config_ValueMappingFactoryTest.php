@@ -32,7 +32,7 @@ use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveSemanticStatusFieldStub;
 use Tuleap\Tracker\Tracker;
@@ -54,14 +54,14 @@ final class Cardwall_OnTop_Config_ValueMappingFactoryTest extends TestCase // ph
         $element_factory  = $this->createMock(Tracker_FormElementFactory::class);
         $dao              = $this->createMock(Cardwall_OnTop_ColumnMappingFieldValueDao::class);
         $this->field_123  = ListStaticBindBuilder::aStaticBind(
-            ListFieldBuilder::aListField(123)->build()
+            SelectboxFieldBuilder::aSelectboxField(123)->build()
         )->build()->getField();
         $this->field_124  = ListStaticBindBuilder::aStaticBind(
-            ListFieldBuilder::aListField(124)->build()
+            SelectboxFieldBuilder::aSelectboxField(124)->build()
         )->withStaticValues([1001 => 'value_1001', 1002 => 'value_1002'])->build()->getField();
         $this->tracker_10 = TrackerTestBuilder::aTracker()->withId(10)->build();
         $status_field     = ListStaticBindBuilder::aStaticBind(
-            ListFieldBuilder::aListField(125)->thatIsRequired()->inTracker($this->tracker_10)->build()
+            SelectboxFieldBuilder::aSelectboxField(125)->thatIsRequired()->inTracker($this->tracker_10)->build()
         )->withStaticValues([
             1000 => 'value_1000',
             1001 => 'Todo',
@@ -139,7 +139,7 @@ final class Cardwall_OnTop_Config_ValueMappingFactoryTest extends TestCase // ph
         $factory                = new Cardwall_OnTop_Config_ValueMappingFactory($element_factory, $dao, $status_field_retriever);
 
         $field_124 = ListStaticBindBuilder::aStaticBind(
-            ListFieldBuilder::aListField(124)->build()
+            SelectboxFieldBuilder::aSelectboxField(124)->build()
         )->withStaticValues([])->build()->getField();
         $matcher   = $this->exactly(2);
 

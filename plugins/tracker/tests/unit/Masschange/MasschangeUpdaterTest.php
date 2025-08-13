@@ -39,7 +39,7 @@ use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueListTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Tuleap\Tracker\Test\Stub\CreateNewChangesetStub;
 use Tuleap\Tracker\Test\Stub\FormElement\Field\ListFields\RetrieveUsedListFieldStub;
 use Tuleap\Tracker\Test\Stub\RetrieveArtifactStub;
@@ -225,17 +225,17 @@ final class MasschangeUpdaterTest extends TestCase
         $rule_2->method('getSourceFieldId')->willReturn(3202);
         $rule_2->method('getTargetFieldId')->willReturn(3203);
 
-        $list_field_3201   = ListFieldBuilder::aListField(3201)->build();
+        $list_field_3201   = SelectboxFieldBuilder::aSelectboxField(3201)->build();
         $source_bind_rule1 = ListStaticBindBuilder::aStaticBind(
             $list_field_3201
         )->withStaticValues([321 => 'Open', 322 => 'Closed'])->build();
 
-        $list_field_3202                   = ListFieldBuilder::aListField(3202)->build();
+        $list_field_3202                   = SelectboxFieldBuilder::aSelectboxField(3202)->build();
         $source_and_target_bind_both_rules = ListStaticBindBuilder::aStaticBind(
             $list_field_3202
         )->withStaticValues([261 => 'Open', 262 => 'Closed'])->build();
 
-        $list_field_3203   = ListFieldBuilder::aListField(3203)->build();
+        $list_field_3203   = SelectboxFieldBuilder::aSelectboxField(3203)->build();
         $target_bind_rule2 = ListStaticBindBuilder::aStaticBind(
             $list_field_3203
         )->withStaticValues([333 => 'Code Yellow', 334 => 'Code Green'])->build();

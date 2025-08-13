@@ -108,7 +108,7 @@ final class BoardPresenterTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $title_field = new TitleFieldPresenter($text_field);
 
-        $selectbox_field = $this->createMock(\Tracker_FormElement_Field_Selectbox::class);
+        $selectbox_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\List\SelectboxField::class);
         $selectbox_field->method('getId')->willReturn(124);
         $selectbox_field->method('isMultiple')->willReturn(false);
 

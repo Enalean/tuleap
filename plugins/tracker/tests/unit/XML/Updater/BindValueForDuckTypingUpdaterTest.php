@@ -28,7 +28,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\ProvideAndRetrieveUserStub;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserBindBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveMatchingValueByDuckTypingStub;
 use Tuleap\Tracker\Tracker\XML\Updater\BindValueForDuckTypingUpdater;
 use XML_SimpleXMLCDATAFactory;
@@ -36,13 +36,13 @@ use XML_SimpleXMLCDATAFactory;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class BindValueForDuckTypingUpdaterTest extends TestCase
 {
-    private \Tracker_FormElement_Field_Selectbox $source_field;
-    private \Tracker_FormElement_Field_Selectbox $target_field;
+    private \Tuleap\Tracker\FormElement\Field\List\SelectboxField $source_field;
+    private \Tuleap\Tracker\FormElement\Field\List\SelectboxField $target_field;
 
     protected function setUp(): void
     {
-        $this->source_field = ListFieldBuilder::aListField(1)->build();
-        $this->target_field = ListFieldBuilder::aListField(1)->build();
+        $this->source_field = SelectboxFieldBuilder::aSelectboxField(1)->build();
+        $this->target_field = SelectboxFieldBuilder::aSelectboxField(1)->build();
     }
 
     public function testItDoesNotSetBindValueWhenXmlValueIsZero(): void

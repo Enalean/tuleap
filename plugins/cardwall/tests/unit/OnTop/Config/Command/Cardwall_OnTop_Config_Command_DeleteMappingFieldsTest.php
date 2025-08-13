@@ -32,7 +32,7 @@ use LogicException;
 use PHPUnit\Framework\MockObject\MockObject;
 use TrackerFactory;
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -62,7 +62,7 @@ final class Cardwall_OnTop_Config_Command_DeleteMappingFieldsTest extends TestCa
         $existing_mappings = [
             13 => new Cardwall_OnTop_Config_TrackerMappingNoField($bug_tracker, []),
             42 => new Cardwall_OnTop_Config_TrackerMappingNoField($task_tracker, []),
-            69 => new Cardwall_OnTop_Config_TrackerMappingFreestyle($story_tracker, [], [], ListFieldBuilder::aListField(186)->build()),
+            69 => new Cardwall_OnTop_Config_TrackerMappingFreestyle($story_tracker, [], [], SelectboxFieldBuilder::aSelectboxField(186)->build()),
         ];
         $this->dao         = $this->createMock(Cardwall_OnTop_ColumnMappingFieldDao::class);
         $this->value_dao   = $this->createMock(Cardwall_OnTop_ColumnMappingFieldValueDao::class);

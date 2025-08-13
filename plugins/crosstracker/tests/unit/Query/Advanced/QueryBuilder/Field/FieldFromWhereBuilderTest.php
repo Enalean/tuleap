@@ -42,7 +42,7 @@ use Tuleap\Tracker\Test\Builders\Fields\IntegerFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserGroupBindBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveFieldTypeStub;
@@ -180,14 +180,14 @@ final class FieldFromWhereBuilderTest extends TestCase
     {
         $fields_retriever = RetrieveUsedFieldsStub::withFields(
             ListStaticBindBuilder::aStaticBind(
-                ListFieldBuilder::aListField(746)
+                SelectboxFieldBuilder::aSelectboxField(746)
                     ->withName(self::FIELD_NAME)
                     ->inTracker($this->first_tracker)
                     ->withReadPermission($this->user, true)
                     ->build()
             )->build()->getField(),
             ListStaticBindBuilder::aStaticBind(
-                ListFieldBuilder::aListField(466)
+                SelectboxFieldBuilder::aSelectboxField(466)
                     ->withName(self::FIELD_NAME)
                     ->inTracker($this->second_tracker)
                     ->withReadPermission($this->user, true)
@@ -203,14 +203,14 @@ final class FieldFromWhereBuilderTest extends TestCase
     {
         $fields_retriever = RetrieveUsedFieldsStub::withFields(
             ListUserGroupBindBuilder::aUserGroupBind(
-                ListFieldBuilder::aListField(457)
+                SelectboxFieldBuilder::aSelectboxField(457)
                     ->withName(self::FIELD_NAME)
                     ->inTracker($this->first_tracker)
                     ->withReadPermission($this->user, true)
                     ->build()
             )->build()->getField(),
             ListUserGroupBindBuilder::aUserGroupBind(
-                ListFieldBuilder::aListField(624)
+                SelectboxFieldBuilder::aSelectboxField(624)
                     ->withName(self::FIELD_NAME)
                     ->inTracker($this->second_tracker)
                     ->withReadPermission($this->user, true)
@@ -226,14 +226,14 @@ final class FieldFromWhereBuilderTest extends TestCase
     {
         $fields_retriever = RetrieveUsedFieldsStub::withFields(
             ListUserBindBuilder::aUserBind(
-                ListFieldBuilder::aListField(832)
+                SelectboxFieldBuilder::aSelectboxField(832)
                     ->withName(self::FIELD_NAME)
                     ->inTracker($this->first_tracker)
                     ->withReadPermission($this->user, true)
                     ->build()
             )->build()->getField(),
             ListUserBindBuilder::aUserBind(
-                ListFieldBuilder::aListField(156)
+                SelectboxFieldBuilder::aSelectboxField(156)
                     ->withName(self::FIELD_NAME)
                     ->inTracker($this->second_tracker)
                     ->withReadPermission($this->user, true)

@@ -24,11 +24,11 @@ namespace Tuleap\Tracker\Rule;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Bind_Static;
-use Tracker_FormElement_Field_Selectbox;
 use Tracker_FormElementFactory;
 use Tracker_Rule_Date_Factory;
 use Tracker_Rule_List;
 use Tuleap\GlobalResponseMock;
+use Tuleap\Tracker\FormElement\Field\List\SelectboxField;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Tracker;
 
@@ -119,7 +119,7 @@ final class TrackerRulesListValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->list_rules = [$rule_1, $rule_2, $rule_3, $rule_4, $rule_5, $rule_6, $rule_7];
 
-        $field_1 = $this->createMock(Tracker_FormElement_Field_Selectbox::class);
+        $field_1 = $this->createMock(SelectboxField::class);
         $field_1->method('getBind')->willReturn($this->bind);
         $field_1->method('getID')->willReturn('101');
         $field_1->method('getLabel')->willReturn('f_1');
@@ -127,7 +127,7 @@ final class TrackerRulesListValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $field_1->method('setHasErrors')->with(true);
         $field_1->method('getTracker')->willReturn($this->tracker);
 
-        $field_2 = $this->createMock(Tracker_FormElement_Field_Selectbox::class);
+        $field_2 = $this->createMock(SelectboxField::class);
         $field_2->method('getBind')->willReturn($this->bind_2);
         $field_2->method('getID')->willReturn('102');
         $field_2->method('getLabel')->willReturn('f_2');
@@ -135,14 +135,14 @@ final class TrackerRulesListValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $field_2->method('setHasErrors')->with(true);
         $field_2->method('getTracker')->willReturn($this->tracker);
 
-        $field_3 = $this->createMock(Tracker_FormElement_Field_Selectbox::class);
+        $field_3 = $this->createMock(SelectboxField::class);
         $field_3->method('getBind')->willReturn($this->bind_3);
         $field_3->method('getID')->willReturn('103');
         $field_3->method('getLabel')->willReturn('f_3');
         $field_3->method('getAllValues')->willReturn(null);
         $field_3->method('setHasErrors')->with(true);
 
-        $field_4 = $this->createMock(Tracker_FormElement_Field_Selectbox::class);
+        $field_4 = $this->createMock(SelectboxField::class);
         $field_4->method('getBind')->willReturn($this->bind_4);
         $field_4->method('getID')->willReturn('104');
         $field_4->method('getLabel')->willReturn('f_4');

@@ -32,6 +32,7 @@ use Tuleap\Tracker\FormElement\Field\FieldDao;
 use Tuleap\Tracker\FormElement\Field\Float\FloatField;
 use Tuleap\Tracker\FormElement\Field\Integer\IntegerField;
 use Tuleap\Tracker\FormElement\Field\LastUpdateDate\LastUpdateDateField;
+use Tuleap\Tracker\FormElement\Field\List\SelectboxField;
 use Tuleap\Tracker\FormElement\Field\ListFields\RetrieveUsedListField;
 use Tuleap\Tracker\FormElement\Field\PerTrackerArtifactId\PerTrackerArtifactIdField;
 use Tuleap\Tracker\FormElement\Field\Priority\PriorityField;
@@ -103,7 +104,7 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
         self::FIELD_TEXT_TYPE             => TextField::class,
         self::FIELD_FLOAT_TYPE            => FloatField::class,
         self::FIELD_DATE_TYPE => DateField::class,
-        self::FIELD_SELECT_BOX_TYPE => Tracker_FormElement_Field_Selectbox::class,
+        self::FIELD_SELECT_BOX_TYPE => SelectboxField::class,
         self::FIELD_RADIO_BUTTON_TYPE => Tracker_FormElement_Field_Radiobutton::class,
         self::FIELD_MULTI_SELECT_BOX_TYPE => Tracker_FormElement_Field_MultiSelectbox::class,
         self::FIELD_FILE_TYPE => Tracker_FormElement_Field_File::class,
@@ -415,12 +416,12 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
      * @param int    $tracker_id
      * @param string $field_name
      *
-     * @return Tracker_FormElement_Field_Selectbox | null
+     * @return SelectboxField | null
      */
     public function getSelectboxFieldByNameForUser($tracker_id, $field_name, PFUser $user)
     {
         $field = $this->getUsedFieldByNameForUser($tracker_id, $field_name, $user);
-        if ($field && $field instanceof Tracker_FormElement_Field_Selectbox) {
+        if ($field && $field instanceof SelectboxField) {
             return $field;
         }
         return null;
@@ -752,7 +753,7 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
 
     /**
      *
-     * @return array<Tracker_FormElement_Field_Selectbox|Tracker_FormElement_Field_Checkbox|Tracker_FormElement_Field_MultiSelectbox|Tracker_FormElement_Field_Radiobutton>
+     * @return array<SelectboxField|Tracker_FormElement_Field_Checkbox|Tracker_FormElement_Field_MultiSelectbox|Tracker_FormElement_Field_Radiobutton>
      */
     public function searchUsedUserClosedListFields(Tracker $tracker): array
     {
@@ -760,7 +761,7 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
         foreach ($this->getDao()->searchUsedUserClosedListFieldsByTrackerId($tracker->getId()) as $row) {
             $list = $this->getCachedInstanceFromRow($row);
             assert(
-                $list instanceof Tracker_FormElement_Field_Selectbox
+                $list instanceof SelectboxField
                 || $list instanceof Tracker_FormElement_Field_Checkbox
                 || $list instanceof Tracker_FormElement_Field_MultiSelectbox
                 || $list instanceof Tracker_FormElement_Field_Radiobutton
@@ -793,14 +794,14 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
     public function getUsedListFieldById(
         \Tuleap\Tracker\Tracker $tracker,
         int $field_id,
-    ): \Tracker_FormElement_Field_Selectbox|\Tracker_FormElement_Field_OpenList|null {
+    ): \Tuleap\Tracker\FormElement\Field\List\SelectboxField|\Tracker_FormElement_Field_OpenList|null {
         $field = $this->getUsedFieldByIdAndType(
             $tracker,
             $field_id,
             [self::FIELD_SELECT_BOX_TYPE, self::FIELD_MULTI_SELECT_BOX_TYPE, self::FIELD_OPEN_LIST_TYPE, self::FIELD_CHECKBOX_TYPE, self::FIELD_RADIO_BUTTON_TYPE]
         );
         assert(
-            $field === null || $field instanceof \Tracker_FormElement_Field_Selectbox || $field instanceof \Tracker_FormElement_Field_OpenList
+            $field === null || $field instanceof \Tuleap\Tracker\FormElement\Field\List\SelectboxField || $field instanceof \Tracker_FormElement_Field_OpenList
         );
         return $field;
     }

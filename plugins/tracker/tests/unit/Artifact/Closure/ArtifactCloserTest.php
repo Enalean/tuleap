@@ -46,7 +46,7 @@ use Tuleap\Tracker\Semantic\Status\StatusValueRetriever;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\BadSemanticCommentInCommonMarkFormatStub;
 use Tuleap\Tracker\Test\Stub\CreateCommentOnlyChangesetStub;
@@ -91,7 +91,7 @@ final class ArtifactCloserTest extends TestCase
 
         $tracker      = TrackerTestBuilder::aTracker()->build();
         $status_field = ListStaticBindBuilder::aStaticBind(
-            ListFieldBuilder::aListField(self::STATUS_FIELD_ID)->inTracker($tracker)->build(),
+            SelectboxFieldBuilder::aSelectboxField(self::STATUS_FIELD_ID)->inTracker($tracker)->build(),
         )->withBuildStaticValues([$this->closed_value, $this->done_value])
             ->build()
             ->getField();

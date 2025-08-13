@@ -30,7 +30,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\Workflow\FirstPossibleValueInListRetriever;
 use Tuleap\Tracker\Workflow\NoPossibleValueException;
@@ -234,7 +234,7 @@ final class StatusValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private function mockSemanticStatusNotDefinedWithFieldNonReadable(): void
     {
-        $field = ListFieldBuilder::aListField(1001)->withReadPermission($this->user, false)->build();
+        $field = SelectboxFieldBuilder::aSelectboxField(1001)->withReadPermission($this->user, false)->build();
 
         $this->semantic_status_factory
             ->expects($this->once())
@@ -252,7 +252,7 @@ final class StatusValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     private function mockSemanticStatusDefinedWithAllValuesAsOpen(): void
     {
         $field = ListStaticBindBuilder::aStaticBind(
-            ListFieldBuilder::aListField(1001)
+            SelectboxFieldBuilder::aSelectboxField(1001)
                     ->withReadPermission($this->user, true)
                     ->build()
         )->withStaticValues([
@@ -276,7 +276,7 @@ final class StatusValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     private function mockSemanticStatusDefinedWithAllValuesClosed(): void
     {
         $field = ListStaticBindBuilder::aStaticBind(
-            ListFieldBuilder::aListField(1001)
+            SelectboxFieldBuilder::aSelectboxField(1001)
                 ->withReadPermission($this->user, true)
                 ->build()
         )->withStaticValues([
@@ -301,7 +301,7 @@ final class StatusValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     private function mockSemanticStatusDefinedWithClosedValueHidden(): void
     {
         $field = ListStaticBindBuilder::aStaticBind(
-            ListFieldBuilder::aListField(1001)
+            SelectboxFieldBuilder::aSelectboxField(1001)
                 ->withReadPermission($this->user, true)
                 ->build()
         )->withStaticValues(
@@ -331,7 +331,7 @@ final class StatusValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     private function mockSemanticStatusDefinedWithOpenValueHidden(): void
     {
         $field = ListStaticBindBuilder::aStaticBind(
-            ListFieldBuilder::aListField(1001)
+            SelectboxFieldBuilder::aSelectboxField(1001)
                 ->withReadPermission($this->user, true)
                 ->build()
         )->withStaticValues(
@@ -361,7 +361,7 @@ final class StatusValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     private function mockSemanticStatusDefinedWithClosedValue(): void
     {
         $field = ListStaticBindBuilder::aStaticBind(
-            ListFieldBuilder::aListField(1001)
+            SelectboxFieldBuilder::aSelectboxField(1001)
                 ->withReadPermission($this->user, true)
                 ->build()
         )->withStaticValues(
@@ -388,7 +388,7 @@ final class StatusValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     private function mockSemanticStatusDefinedWithOpenValue(): void
     {
         $field = ListStaticBindBuilder::aStaticBind(
-            ListFieldBuilder::aListField(1001)
+            SelectboxFieldBuilder::aSelectboxField(1001)
                 ->withReadPermission($this->user, true)
                 ->build()
         )->withStaticValues(

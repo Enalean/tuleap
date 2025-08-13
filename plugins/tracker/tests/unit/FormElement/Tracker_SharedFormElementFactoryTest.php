@@ -29,14 +29,14 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Project;
 use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_List_BindFactory;
-use Tracker_FormElement_Field_Selectbox;
 use Tracker_FormElementFactory;
 use Tracker_SharedFormElementFactory;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\FormElement\Field\List\SelectboxField;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserBindBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\SharedFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Tracker;
@@ -96,7 +96,7 @@ final class Tracker_SharedFormElementFactoryTest extends TestCase // phpcs:ignor
         $shared_factory->createFormElement($this->tracker, $formElement_data, $user, false, false);
     }
 
-    private function givenASelectBoxField(int $id, ?Tracker_FormElement_Field $original_field): Tracker_FormElement_Field_Selectbox
+    private function givenASelectBoxField(int $id, ?Tracker_FormElement_Field $original_field): SelectboxField
     {
         if ($original_field !== null) {
             $field = SharedFieldBuilder::aSharedField($id, $original_field)
@@ -105,7 +105,7 @@ final class Tracker_SharedFormElementFactoryTest extends TestCase // phpcs:ignor
                 ->inTracker($this->tracker)
                 ->build();
         } else {
-            $field = ListFieldBuilder::aListField($id)
+            $field = SelectboxFieldBuilder::aSelectboxField($id)
                 ->withLabel('Label')
                 ->thatIsRequired()
                 ->inTracker($this->tracker)
@@ -278,10 +278,10 @@ final class Tracker_SharedFormElementFactoryTest extends TestCase // phpcs:ignor
         $shared_factory->createFormElement($this->tracker, ['field_id' => $field->getId()], $user, false, false);
     }
 
-    private function givenASelectBoxBoundToUsers(): Tracker_FormElement_Field_Selectbox
+    private function givenASelectBoxBoundToUsers(): SelectboxField
     {
-        $field = ListUserBindBuilder::aUserBind(ListFieldBuilder::aListField(654)->inTracker($this->tracker)->build())->build()->getField();
-        self::assertInstanceOf(Tracker_FormElement_Field_Selectbox::class, $field);
+        $field = ListUserBindBuilder::aUserBind(SelectboxFieldBuilder::aSelectboxField(654)->inTracker($this->tracker)->build())->build()->getField();
+        self::assertInstanceOf(SelectboxField::class, $field);
         return $field;
     }
 

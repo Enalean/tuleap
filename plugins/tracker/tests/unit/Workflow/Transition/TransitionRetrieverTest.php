@@ -24,8 +24,8 @@ namespace Tuleap\Tracker\Workflow\Transition;
 
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue_List;
-use Tracker_FormElement_Field_Selectbox;
 use Transition;
+use Tuleap\Tracker\FormElement\Field\List\SelectboxField;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 use Workflow;
 
@@ -59,7 +59,7 @@ final class TransitionRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $previous_changeset = null;
 
-        $workflow_field = $this->createMock(Tracker_FormElement_Field_Selectbox::class);
+        $workflow_field = $this->createMock(SelectboxField::class);
         $workflow       = $this->createPartialMock(Workflow::class, ['getField', 'getFieldId', 'getTransitions']);
 
         $workflow->expects($this->once())->method('getField')
@@ -96,7 +96,7 @@ final class TransitionRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $previous_changeset = null;
 
-        $workflow_field = $this->createMock(Tracker_FormElement_Field_Selectbox::class);
+        $workflow_field = $this->createMock(SelectboxField::class);
         $workflow       = $this->createPartialMock(Workflow::class, ['getField', 'getFieldId', 'getTransitions']);
 
         $workflow->expects($this->once())->method('getField')
@@ -133,7 +133,7 @@ final class TransitionRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             '98' => '59',
         ];
 
-        $workflow_field = $this->createMock(Tracker_FormElement_Field_Selectbox::class);
+        $workflow_field = $this->createMock(SelectboxField::class);
         $workflow       = $this->createPartialMock(Workflow::class, ['getField', 'getFieldId', 'getTransitions']);
 
         $workflow->expects($this->once())->method('getField')
@@ -167,7 +167,7 @@ final class TransitionRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $fields_data = [];
 
-        $workflow_field = $this->createMock(Tracker_FormElement_Field_Selectbox::class);
+        $workflow_field = $this->createMock(SelectboxField::class);
         $workflow       = $this->createPartialMock(Workflow::class, ['getField', 'getFieldId', 'getTransitions']);
 
         $workflow->expects($this->once())->method('getField')

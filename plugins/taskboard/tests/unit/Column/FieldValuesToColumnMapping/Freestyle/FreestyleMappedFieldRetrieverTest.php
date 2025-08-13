@@ -24,7 +24,8 @@ namespace Tuleap\Taskboard\Column\FieldValuesToColumnMapping\Freestyle;
 
 use Tuleap\Option\Option;
 use Tuleap\Taskboard\Tracker\TaskboardTracker;
-use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\MultiSelectboxFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\OpenListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\FormElement\Field\ListFields\RetrieveUsedListFieldStub;
@@ -47,7 +48,7 @@ final class FreestyleMappedFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestC
         );
     }
 
-    /** @return Option<\Tracker_FormElement_Field_Selectbox> */
+    /** @return Option<\Tuleap\Tracker\FormElement\Field\List\SelectboxField> */
     private function getMappedField(): Option
     {
         $retriever = new FreestyleMappedFieldRetriever($this->search_mapped_field, $this->form_element_factory);
@@ -72,7 +73,7 @@ final class FreestyleMappedFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestC
     public function testGetMappedFieldReturnsMappedSelectbox(): void
     {
         $this->search_mapped_field  = SearchMappedFieldStub::withMappedField($this->taskboard_tracker, 123);
-        $field                      = ListFieldBuilder::aListField(123)->build();
+        $field                      = SelectboxFieldBuilder::aSelectboxField(123)->build();
         $this->form_element_factory = RetrieveUsedListFieldStub::withField($field);
 
         self::assertSame($field, $this->getMappedField()->unwrapOr(null));
@@ -81,7 +82,7 @@ final class FreestyleMappedFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestC
     public function testGetMappedFieldReturnsMappedMultiSelectbox(): void
     {
         $this->search_mapped_field  = SearchMappedFieldStub::withMappedField($this->taskboard_tracker, 123);
-        $field                      = ListFieldBuilder::aListField(123)->withMultipleValues()->build();
+        $field                      = MultiSelectboxFieldBuilder::aMultiSelectboxField(123)->build();
         $this->form_element_factory = RetrieveUsedListFieldStub::withField($field);
 
         self::assertSame($field, $this->getMappedField()->unwrapOr(null));

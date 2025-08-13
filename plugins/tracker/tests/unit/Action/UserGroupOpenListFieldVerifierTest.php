@@ -22,7 +22,7 @@ namespace Tuleap\Tracker\Action;
 
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserGroupBindBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\OpenListFieldBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -32,7 +32,7 @@ final class UserGroupOpenListFieldVerifierTest extends \Tuleap\Test\PHPUnit\Test
     {
         self::assertFalse(
             (new UserGroupOpenListFieldVerifier())->isUserGroupOpenListField(
-                ListFieldBuilder::aListField(1)->build()
+                SelectboxFieldBuilder::aSelectboxField(1)->build()
             )
         );
     }

@@ -30,7 +30,8 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 use Tuleap\Tracker\Semantic\Contributor\ContributorFieldRetriever;
 use Tuleap\Tracker\Semantic\Contributor\TrackerSemanticContributorFactory;
 use Tuleap\Tracker\Test\Builders\Fields\CheckboxFieldBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\MultiSelectboxFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\OpenListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\RadioButtonFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -74,7 +75,7 @@ final class InvalidOrderByListCheckerTest extends TestCase
             true,
         ];
         yield 'It allows selectbox' => [
-            ListFieldBuilder::aListField(101)->inTracker($tracker)->build(),
+            SelectboxFieldBuilder::aSelectboxField(101)->inTracker($tracker)->build(),
             $tracker,
             true,
         ];
@@ -84,7 +85,7 @@ final class InvalidOrderByListCheckerTest extends TestCase
             false,
         ];
         yield 'It rejects multi-selectbox' => [
-            ListFieldBuilder::aListField(101)->withMultipleValues()->inTracker($tracker)->build(),
+            MultiSelectboxFieldBuilder::aMultiSelectboxField(101)->inTracker($tracker)->build(),
             $tracker,
             false,
         ];

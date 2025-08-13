@@ -27,7 +27,6 @@ use Tracker_FormElement_Field_CrossReferences;
 use Tracker_FormElement_Field_MultiSelectbox;
 use Tracker_FormElement_Field_OpenList;
 use Tracker_FormElement_Field_PermissionsOnArtifact;
-use Tracker_FormElement_Field_Selectbox;
 use Tracker_FormElement_Field_SubmittedBy;
 use Tracker_FormElement_StaticField_LineBreak;
 use Tracker_FormElement_StaticField_RichText;
@@ -50,6 +49,7 @@ use Tracker_FormElement_View_Admin_Visitor;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\FormElement\Field\ArtifactId\ArtifactIdField;
 use Tuleap\Tracker\FormElement\Field\LastUpdateDate\LastUpdateDateField;
+use Tuleap\Tracker\FormElement\Field\List\SelectboxField;
 use Tuleap\Tracker\FormElement\Field\String\StringField;
 use Tuleap\Tracker\FormElement\Field\SubmittedOn\SubmittedOnField;
 
@@ -91,7 +91,7 @@ final class AdminVisitorTest extends TestCase
     public function testVisitSelectbox(): void
     {
         $visitor     = new Tracker_FormElement_View_Admin_Visitor([]);
-        $formElement = new Tracker_FormElement_Field_Selectbox(null, null, null, null, null, null, null, null, null, null, null, null);
+        $formElement = new SelectboxField(null, null, null, null, null, null, null, null, null, null, null, null);
         $formElement->accept($visitor);
         self::assertInstanceOf(Tracker_FormElement_View_Admin_Field_Selectbox::class, $visitor->getAdmin());
     }

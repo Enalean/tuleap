@@ -26,7 +26,7 @@ use Tuleap\Artidoc\Adapter\Document\ArtidocDocument;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\TextFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -47,7 +47,7 @@ final class SuitableTrackerForDocumentCheckerTest extends TestCase
 
         $title       = StringFieldBuilder::aStringField(1001)->inTracker($tracker)->thatIsRequired()->build();
         $description = TextFieldBuilder::aTextField(1002)->inTracker($tracker)->build();
-        $status      = ListFieldBuilder::aListField(1003)->inTracker($tracker)->build();
+        $status      = SelectboxFieldBuilder::aSelectboxField(1003)->inTracker($tracker)->build();
 
         $checker = new SuitableTrackerForDocumentChecker(
             RetrieveUsedFieldsStub::withFields($title, $description, $status),
@@ -74,7 +74,7 @@ final class SuitableTrackerForDocumentCheckerTest extends TestCase
 
         $title       = StringFieldBuilder::aStringField(1001)->inTracker($tracker)->thatIsRequired()->build();
         $description = TextFieldBuilder::aTextField(1002)->inTracker($tracker)->build();
-        $status      = ListFieldBuilder::aListField(1003)->inTracker($tracker)->build();
+        $status      = SelectboxFieldBuilder::aSelectboxField(1003)->inTracker($tracker)->build();
 
         $checker = new SuitableTrackerForDocumentChecker(
             RetrieveUsedFieldsStub::withFields($title, $description, $status),
@@ -101,7 +101,7 @@ final class SuitableTrackerForDocumentCheckerTest extends TestCase
 
         $title       = StringFieldBuilder::aStringField(1001)->inTracker($tracker)->thatIsRequired()->build();
         $description = TextFieldBuilder::aTextField(1002)->inTracker($tracker)->build();
-        $status      = ListFieldBuilder::aListField(1003)->inTracker($tracker)->build();
+        $status      = SelectboxFieldBuilder::aSelectboxField(1003)->inTracker($tracker)->build();
 
         $checker = new SuitableTrackerForDocumentChecker(
             RetrieveUsedFieldsStub::withFields($title, $description, $status),
@@ -128,7 +128,7 @@ final class SuitableTrackerForDocumentCheckerTest extends TestCase
 
         $title       = StringFieldBuilder::aStringField(1001)->inTracker($tracker)->thatIsRequired()->build();
         $description = TextFieldBuilder::aTextField(1002)->inTracker($tracker)->build();
-        $status      = ListFieldBuilder::aListField(1003)->inTracker($tracker)->build();
+        $status      = SelectboxFieldBuilder::aSelectboxField(1003)->inTracker($tracker)->build();
 
         $checker = new SuitableTrackerForDocumentChecker(
             RetrieveUsedFieldsStub::withFields($title, $description, $status),
@@ -159,7 +159,7 @@ final class SuitableTrackerForDocumentCheckerTest extends TestCase
 
         $title       = StringFieldBuilder::aStringField(1001)->inTracker($tracker)->thatIsRequired()->build();
         $description = TextFieldBuilder::aTextField(1002)->inTracker($tracker)->build();
-        $status      = ListFieldBuilder::aListField(1003)->inTracker($tracker)->build();
+        $status      = SelectboxFieldBuilder::aSelectboxField(1003)->inTracker($tracker)->build();
 
         $checker = new SuitableTrackerForDocumentChecker(
             RetrieveUsedFieldsStub::withFields($title, $description, $status),
@@ -186,7 +186,7 @@ final class SuitableTrackerForDocumentCheckerTest extends TestCase
 
         $title       = StringFieldBuilder::aStringField(1001)->inTracker($tracker)->thatIsRequired()->build();
         $description = TextFieldBuilder::aTextField(1002)->inTracker($tracker)->build();
-        $status      = ListFieldBuilder::aListField(1003)->inTracker($tracker)->thatIsRequired()->build();
+        $status      = SelectboxFieldBuilder::aSelectboxField(1003)->inTracker($tracker)->thatIsRequired()->build();
 
         $checker = new SuitableTrackerForDocumentChecker(
             RetrieveUsedFieldsStub::withFields($title, $description, $status),
@@ -213,7 +213,7 @@ final class SuitableTrackerForDocumentCheckerTest extends TestCase
 
         $title       = StringFieldBuilder::aStringField(1001)->inTracker($tracker)->thatIsRequired()->build();
         $description = TextFieldBuilder::aTextField(1002)->inTracker($tracker)->build();
-        $status      = ListFieldBuilder::aListField(1003)->inTracker($tracker)->build();
+        $status      = SelectboxFieldBuilder::aSelectboxField(1003)->inTracker($tracker)->build();
 
         $checker = new SuitableTrackerForDocumentChecker(
             RetrieveUsedFieldsStub::withFields($title, $description, $status),

@@ -31,7 +31,7 @@ use Tuleap\Test\Builders\ProjectUGroupTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserGroupValueBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\OpenListFieldBuilder;
 
 #[DisableReturnValueGenerationForTestDoubles]
@@ -52,7 +52,7 @@ final class TrackerXmlFieldsMapping_FromAnotherPlatformTest extends TestCase //p
         $static_value_05 = $this->getBindValueWithId(24080);
         $static_value_06 = $this->getBindValueWithId(24081);
 
-        $list_field = ListFieldBuilder::aListField(101)->build();
+        $list_field = SelectboxFieldBuilder::aSelectboxField(101)->build();
 
         $xml_static_mapping = [
             'F21840' => $list_field,

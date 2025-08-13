@@ -57,7 +57,8 @@ use Tuleap\Tracker\Test\Builders\Fields\LastUpdateDateFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserGroupBindBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\MultiSelectboxFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\PermissionsOnArtifactFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\PerTrackerArtifactIdFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\PriorityFieldBuilder;
@@ -182,8 +183,7 @@ final class SuitableFieldRetrieverTest extends TestCase
     public function testItAllowsListFieldBoundToUserGroups(): void
     {
         $list_field            = ListUserGroupBindBuilder::aUserGroupBind(
-            ListFieldBuilder::aListField(self::FIELD_ID)
-                ->withMultipleValues()
+            MultiSelectboxFieldBuilder::aMultiSelectboxField(self::FIELD_ID)
                 ->inTracker($this->tracker)
                 ->withReadPermission($this->user, true)
                 ->build(),
@@ -198,8 +198,7 @@ final class SuitableFieldRetrieverTest extends TestCase
     public function testItAllowsListFieldBoundToStaticValues(): void
     {
         $list_field            = ListStaticBindBuilder::aStaticBind(
-            ListFieldBuilder::aListField(self::FIELD_ID)
-                ->withMultipleValues()
+            MultiSelectboxFieldBuilder::aMultiSelectboxField(self::FIELD_ID)
                 ->inTracker($this->tracker)
                 ->withReadPermission($this->user, true)
                 ->build(),
@@ -214,7 +213,7 @@ final class SuitableFieldRetrieverTest extends TestCase
     public function testItAllowsListFieldBoundToUsers(): void
     {
         $list_field            = ListUserBindBuilder::aUserBind(
-            ListFieldBuilder::aListField(self::FIELD_ID)
+            SelectboxFieldBuilder::aSelectboxField(self::FIELD_ID)
                 ->inTracker($this->tracker)
                 ->withReadPermission($this->user, true)
                 ->build(),
@@ -228,7 +227,7 @@ final class SuitableFieldRetrieverTest extends TestCase
 
     public function testItDoesNotAllowListFieldWithNullBind(): void
     {
-        $list_field = ListFieldBuilder::aListField(self::FIELD_ID)
+        $list_field = SelectboxFieldBuilder::aSelectboxField(self::FIELD_ID)
             ->inTracker($this->tracker)
             ->withReadPermission($this->user, true)
             ->build();

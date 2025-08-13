@@ -24,10 +24,10 @@ namespace Tuleap\Tracker\Rule;
 
 use PHPUnit\Framework\MockObject\Stub;
 use Tracker_Artifact_ChangesetValue;
-use Tracker_FormElement_Field_Selectbox;
 use Tracker_FormElementFactory;
 use Tracker_Rule_List;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\List\SelectboxField;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\BindValueIdCollectionStub;
 
@@ -45,9 +45,9 @@ final class FirstValidValueAccordingToDependenciesRetrieverTest extends \Tuleap\
     private Tracker_Rule_List $rule_2;
     private Tracker_Rule_List $rule_3;
     private Tracker_Rule_List $rule_4;
-    private Tracker_FormElement_Field_Selectbox|Stub $field_changed;
-    private Tracker_FormElement_Field_Selectbox|Stub $field_not_changed_1;
-    private Tracker_FormElement_Field_Selectbox|Stub $field_not_changed_2;
+    private SelectboxField|Stub $field_changed;
+    private SelectboxField|Stub $field_not_changed_1;
+    private SelectboxField|Stub $field_not_changed_2;
     private array $rules;
     private FirstValidValueAccordingToDependenciesRetriever $first_valid_value_according_to_dependencies_retriever;
     private BindValueIdCollectionStub $value_collection;
@@ -130,9 +130,9 @@ final class FirstValidValueAccordingToDependenciesRetrieverTest extends \Tuleap\
 
     private function setUpFields(): void
     {
-        $this->field_changed       = $this->createStub(Tracker_FormElement_Field_Selectbox::class);
-        $this->field_not_changed_1 = $this->createStub(Tracker_FormElement_Field_Selectbox::class);
-        $this->field_not_changed_2 = $this->createStub(Tracker_FormElement_Field_Selectbox::class);
+        $this->field_changed       = $this->createStub(SelectboxField::class);
+        $this->field_not_changed_1 = $this->createStub(SelectboxField::class);
+        $this->field_not_changed_2 = $this->createStub(SelectboxField::class);
 
         $this->field_changed->method('getId')->willReturn(201);
     }

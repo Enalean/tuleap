@@ -28,13 +28,13 @@ use SimpleXMLElement;
 use Tracker_FormElement_Container_Column;
 use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_List_Bind_StaticValue;
-use Tracker_FormElement_Field_Selectbox;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\FormElement\Field\List\SelectboxField;
 use Tuleap\Tracker\FormElement\Field\Text\TextField;
 use Tuleap\Tracker\Test\Builders\Fields\ColumnContainerBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\TextFieldBuilder;
 
 #[DisableReturnValueGenerationForTestDoubles]
@@ -50,7 +50,7 @@ final class TrackerXMLFieldMappingFromExistingTrackerTest extends TestCase
     private Tracker_FormElement_Field_List_Bind_StaticValue $bind_value_4;
     private Tracker_FormElement_Field_List_Bind_StaticValue $bind_value_5;
     private Tracker_FormElement_Field_List_Bind_StaticValue $bind_value_6;
-    private Tracker_FormElement_Field_Selectbox $select_box;
+    private SelectboxField $select_box;
     private Tracker_FormElement_Container_Column $column_1;
     private Tracker_FormElement_Container_Column $column_2;
     private Tracker_FormElement_Container_Column $column_3;
@@ -78,7 +78,7 @@ final class TrackerXMLFieldMappingFromExistingTrackerTest extends TestCase
         $this->bind_value_5 = ListStaticValueBuilder::aStaticValue('Functional review')->withId(5)->build();
         $this->bind_value_6 = ListStaticValueBuilder::aStaticValue('Code review')->withId(6)->build();
 
-        $list_field = ListStaticBindBuilder::aStaticBind(ListFieldBuilder::aListField(65)->withName('stepE')->build())
+        $list_field = ListStaticBindBuilder::aStaticBind(SelectboxFieldBuilder::aSelectboxField(65)->withName('stepE')->build())
             ->withBuildStaticValues([
                 $this->bind_value_1,
                 $this->bind_value_2,
@@ -87,7 +87,7 @@ final class TrackerXMLFieldMappingFromExistingTrackerTest extends TestCase
                 $this->bind_value_5,
                 $this->bind_value_6,
             ])->build()->getField();
-        self::assertInstanceOf(Tracker_FormElement_Field_Selectbox::class, $list_field);
+        self::assertInstanceOf(SelectboxField::class, $list_field);
         $this->select_box = $list_field;
         $this->fields[]   = $this->select_box;
 
@@ -133,7 +133,7 @@ final class TrackerXMLFieldMappingFromExistingTrackerTest extends TestCase
         $this->buildAColumn('stuffC');
         $this->buildAColumn('stuffD');
 
-        $select_box     = ListStaticBindBuilder::aStaticBind(ListFieldBuilder::aListField(74)->withName('stuffE')->build())
+        $select_box     = ListStaticBindBuilder::aStaticBind(SelectboxFieldBuilder::aSelectboxField(74)->withName('stuffE')->build())
             ->withBuildStaticValues([
                 $this->bind_value_1,
                 $this->bind_value_2,
@@ -165,7 +165,7 @@ final class TrackerXMLFieldMappingFromExistingTrackerTest extends TestCase
         $this->buildAColumn('stuffC');
         $this->buildAColumn('stuffD');
 
-        $select_box     = ListStaticBindBuilder::aStaticBind(ListFieldBuilder::aListField(74)->withName('stuffE')->build())
+        $select_box     = ListStaticBindBuilder::aStaticBind(SelectboxFieldBuilder::aSelectboxField(74)->withName('stuffE')->build())
             ->withBuildStaticValues([
                 $this->bind_value_1,
                 $this->bind_value_2,

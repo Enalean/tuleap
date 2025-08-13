@@ -22,7 +22,7 @@ namespace Tuleap\Tracker\Action;
 
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserGroupBindBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -45,7 +45,7 @@ class IsUserGroupListFieldVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItReturnsFalseWhenTheFieldIsNotBoundToUserGroups(): void
     {
         $user_bind = ListUserBindBuilder::aUserBind(
-            ListFieldBuilder::aListField(1)->withName('assigned_to')->build()
+            SelectboxFieldBuilder::aSelectboxField(1)->withName('assigned_to')->build()
         )->build();
 
         self::assertFalse($this->verifier->isUserGroupListField($user_bind->getField()));
@@ -54,7 +54,7 @@ class IsUserGroupListFieldVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItReturnsTrueWhenTheFieldIsBoundToUserGroups(): void
     {
         $user_group_bind = ListUserGroupBindBuilder::aUserGroupBind(
-            ListFieldBuilder::aListField(1)->withName('cc')->build()
+            SelectboxFieldBuilder::aSelectboxField(1)->withName('cc')->build()
         )->build();
 
         self::assertTrue($this->verifier->isUserGroupListField($user_group_bind->getField()));
