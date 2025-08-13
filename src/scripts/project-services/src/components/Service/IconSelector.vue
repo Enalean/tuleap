@@ -29,66 +29,71 @@
             name="icon_name"
             required
             ref="select"
-            v-on:change="$emit('input', $event.target.value)"
+            v-on:change="onChangeEmit"
         >
             <option
                 v-for="(icon_info, icon_id) in allowed_icons"
                 v-bind:key="icon_id"
                 v-bind:value="icon_id"
-                v-bind:selected="value === icon_id"
+                v-bind:selected="icon_name === icon_id"
             >
                 {{ icon_info.description }}
             </option>
         </select>
     </div>
 </template>
-<script>
+<script setup lang="ts">
+import { onBeforeUnmount, onMounted, ref } from "vue";
+import { useGettext } from "vue3-gettext";
+import type { ListPicker } from "@tuleap/list-picker";
 import { createListPicker } from "@tuleap/list-picker";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { ALLOWED_ICONS } from "../../injection-symbols";
 
-export default {
-    name: "IconSelector",
-    props: {
-        id: {
-            type: String,
-            required: true,
-        },
-        value: {
-            type: String,
-            required: true,
-        },
-    },
-    setup() {
-        const allowed_icons = strictInject(ALLOWED_ICONS);
-        return { allowed_icons };
-    },
-    emits: ["input"],
-    data() {
-        return {
-            selector: null,
-        };
-    },
-    mounted() {
-        this.selector = createListPicker(this.$refs.select, {
-            is_filterable: true,
-            placeholder: this.$gettext("Choose an icon"),
-            items_template_formatter: (html_processor, value_id) => {
-                const icon_info = this.allowed_icons[value_id];
+const { $gettext } = useGettext();
+const allowed_icons = strictInject(ALLOWED_ICONS);
 
-                const template = html_processor`
+defineProps<{
+    id: string;
+    icon_name: string;
+}>();
+
+const emit = defineEmits<{
+    (e: "input", value: string): void;
+}>();
+
+const selector = ref<ListPicker | null>(null);
+const select = ref<HTMLSelectElement>();
+
+onMounted(() => {
+    if (!(select.value instanceof HTMLSelectElement)) {
+        return;
+    }
+
+    selector.value = createListPicker(select.value, {
+        is_filterable: true,
+        placeholder: $gettext("Choose an icon"),
+        items_template_formatter: (html_processor, value_id) => {
+            const icon_info = allowed_icons[value_id];
+
+            return html_processor`
                     <i aria-hidden="true" class="project-admin-services-modal-icon-item fa-fw ${icon_info["fa-icon"]}"></i>
                     <span>${icon_info.description}</span>
                 `;
-                return template;
-            },
-            locale: document.body.dataset.userLocale ?? "en_US",
-        });
-    },
-    beforeUnmount() {
-        if (this.selector !== null) {
-            this.selector.destroy();
-        }
-    },
-};
+        },
+        locale: document.body.dataset.userLocale ?? "en_US",
+    });
+});
+
+onBeforeUnmount(() => {
+    selector.value?.destroy();
+});
+
+function onChangeEmit($event: Event): void {
+    if (!($event.target instanceof HTMLSelectElement)) {
+        return;
+    }
+
+    emit("input", $event.target.value);
+}
 </script>
