@@ -21,6 +21,7 @@ import { createApp } from "vue";
 import App from "./components/App.vue";
 import { getPOFileFromLocale, initVueGettext } from "@tuleap/vue3-gettext-init";
 import { createGettext } from "vue3-gettext";
+import { createInitializedStore } from "./store/index.js";
 
 document.addEventListener("DOMContentLoaded", () => {
     const is_anonymous = document.body.dataset.userId === "0";
@@ -64,6 +65,8 @@ const initButton = async (container) => {
         user_can_see_parent_repository,
     });
 
+    const store = createInitializedStore();
+    app.use(store);
     app.use(gettext);
     app.mount(mount_point);
 };
