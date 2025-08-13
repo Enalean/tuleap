@@ -18,7 +18,7 @@
  */
 
 import VueDOMPurifyHTML from "vue-dompurify-html";
-import { createStore } from "./store/index.js";
+import { createInitializedStore } from "./store/index.js";
 import StepDefinitionField from "./StepDefinitionField.vue";
 import { setProjectId } from "./helpers/shared-properties.js";
 import { createApp } from "vue";
@@ -27,7 +27,7 @@ import { createGettext } from "vue3-gettext";
 
 document.addEventListener("DOMContentLoaded", async () => {
     for (const mount_point of document.querySelectorAll(".ttm-definition-step-mount-point")) {
-        const store = createStore();
+        const store = createInitializedStore();
         const initial_steps = JSON.parse(mount_point.dataset.steps);
 
         createApp(StepDefinitionField, {

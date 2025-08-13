@@ -25,10 +25,9 @@
             v-bind:name="'artifact[' + field_id + '][no_steps]'"
             value="1"
         />
-        <template v-for="(step, index) in steps">
+        <template v-for="(step, index) in steps" v-bind:key="'add-button-' + step.uuid">
             <div
                 class="ttm-definition-step-draggable"
-                v-bind:key="'add-button-' + step.uuid"
                 v-bind:draggable="is_dragging"
                 v-on:dragstart.self="onDragStart($event, step, index)"
                 v-on:dragover.prevent="onDragOver(step)"
