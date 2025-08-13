@@ -44,8 +44,8 @@ export const setUserPreferenciesForFolder = async (
     context: ActionContext<PreferenciesState, RootState>,
     payload: UserPreferenciesFolderSetPayload,
 ): Promise<void> => {
-    const user_id = parseInt(context.rootState.configuration.user_id, 10);
-    const project_id = parseInt(context.rootState.configuration.project_id, 10);
+    const user_id = context.rootState.configuration.user_id;
+    const project_id = context.rootState.configuration.project_id;
     if (user_id === 0) {
         return;
     }
@@ -67,8 +67,8 @@ export const displayEmbeddedInNarrowMode = async (
     item: Item,
 ): Promise<void> => {
     try {
-        const user_id = parseInt(context.rootState.configuration.user_id, 10);
-        const project_id = parseInt(context.rootState.configuration.project_id, 10);
+        const user_id = context.rootState.configuration.user_id;
+        const project_id = context.rootState.configuration.project_id;
         await setNarrowModeForEmbeddedDisplay(user_id, project_id, item.id);
         context.commit("shouldDisplayEmbeddedInLargeMode", false);
     } catch (exception) {
@@ -81,8 +81,8 @@ export const displayEmbeddedInLargeMode = async (
     item: Item,
 ): Promise<void> => {
     try {
-        const user_id = parseInt(context.rootState.configuration.user_id, 10);
-        const project_id = parseInt(context.rootState.configuration.project_id, 10);
+        const user_id = context.rootState.configuration.user_id;
+        const project_id = context.rootState.configuration.project_id;
         await removeUserPreferenceForEmbeddedDisplay(user_id, project_id, item.id);
         context.commit("shouldDisplayEmbeddedInLargeMode", true);
     } catch (exception) {
@@ -95,8 +95,8 @@ export const getEmbeddedFileDisplayPreference = async (
     item: Item,
 ): Promise<"narrow" | false | null> => {
     try {
-        const user_id = parseInt(context.rootState.configuration.user_id, 10);
-        const project_id = parseInt(context.rootState.configuration.project_id, 10);
+        const user_id = context.rootState.configuration.user_id;
+        const project_id = context.rootState.configuration.project_id;
         return getPreferenceForEmbeddedDisplay(user_id, project_id, item.id);
     } catch (exception) {
         await context.dispatch("error/handleErrors", exception);

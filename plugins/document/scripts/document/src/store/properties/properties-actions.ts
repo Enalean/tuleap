@@ -57,7 +57,7 @@ export const loadProjectProperties = async (
 ): Promise<void> => {
     try {
         const project_properties = await getProjectProperties(
-            parseInt(context.rootState.configuration.project_id, 10),
+            context.rootState.configuration.project_id,
         );
 
         context.commit("saveProjectProperties", project_properties);
@@ -140,7 +140,7 @@ export const updateProperties = async (
                 item_to_update.title,
                 item_to_update.description,
                 item_to_update.owner.id,
-                item_to_update.status,
+                typeof item_to_update.status === "string" ? item_to_update.status : null,
                 obsolescence_date,
                 custom_properties,
             );

@@ -17,8 +17,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { MockInstance } from "vitest";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { Embedded, Empty, Folder, Item, ItemFile, Link, State, Wiki } from "../type";
+import type {
+    Embedded,
+    Empty,
+    Folder,
+    Item,
+    ItemFile,
+    Link,
+    RootState,
+    State,
+    Wiki,
+} from "../type";
 import {
     CLIPBOARD_OPERATION_COPY,
     CLIPBOARD_OPERATION_CUT,
@@ -38,14 +49,15 @@ import type { Store } from "vuex";
 import type { Ref } from "vue";
 import { ref } from "vue";
 
-const mocked_store = { dispatch: vi.fn() };
+const noop = (): void => {};
+const mocked_store = { dispatch: vi.fn() } as unknown as Store<RootState>;
 vi.mock("../store", () => ({ store: { dispatch: vi.fn() } as unknown as Store<State> }));
 vi.mock("@vueuse/core", () => ({
     useLocalStorage: (_: string, value: unknown): Ref<unknown> => ref(value),
 }));
 
 describe("Clipboard Store", () => {
-    let emit: vi.SpyInstance;
+    let emit: MockInstance;
     const copied_item_id = 852;
     const moved_item_id = 852;
 
@@ -85,7 +97,7 @@ describe("Clipboard Store", () => {
             store.$patch({
                 item_type: "unknown_type",
             });
-            const empty_clipboard_mock = vi.spyOn(store, "emptyClipboard").mockImplementation();
+            const empty_clipboard_mock = vi.spyOn(store, "emptyClipboard").mockImplementation(noop);
 
             await store.pasteItem({} as PastePayload);
             expect(empty_clipboard_mock).toHaveBeenCalled();
@@ -126,7 +138,7 @@ describe("Clipboard Store", () => {
                 operation_type: CLIPBOARD_OPERATION_COPY,
             });
 
-            const empty_clipboard_mock = vi.spyOn(store, "emptyClipboard").mockImplementation();
+            const empty_clipboard_mock = vi.spyOn(store, "emptyClipboard").mockImplementation(noop);
 
             const current_folder = { id: 147 } as Folder;
             const destination_folder = { id: 147 } as Folder;
@@ -219,7 +231,7 @@ describe("Clipboard Store", () => {
                 operation_type: CLIPBOARD_OPERATION_CUT,
             });
 
-            const empty_clipboard_mock = vi.spyOn(store, "emptyClipboard").mockImplementation();
+            const empty_clipboard_mock = vi.spyOn(store, "emptyClipboard").mockImplementation(noop);
 
             const current_folder = { id: 147 } as Folder;
             const destination_folder = { id: 147 } as Folder;
