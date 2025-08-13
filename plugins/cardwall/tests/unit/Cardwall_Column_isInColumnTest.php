@@ -29,11 +29,11 @@ use Cardwall_OnTop_Config_TrackerMappingFactory;
 use Cardwall_OnTop_Dao;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tracker_Artifact_Changeset_Null;
-use Tracker_FormElement_Field_MultiSelectbox;
-use Tuleap\Cardwall\OnTop\Config\ColumnFactory;
 use Tuleap\Cardwall\OnTop\Config\ColumnCollection;
+use Tuleap\Cardwall\OnTop\Config\ColumnFactory;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\List\MultiSelectboxField;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
@@ -41,7 +41,7 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 final class Cardwall_Column_isInColumnTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
     private Artifact $artifact;
-    private Tracker_FormElement_Field_MultiSelectbox&MockObject $field;
+    private MultiSelectboxField&MockObject $field;
     private Cardwall_FieldProviders_IProvideFieldGivenAnArtifact&MockObject $field_provider;
     private Cardwall_OnTop_Config $config;
 
@@ -53,7 +53,7 @@ final class Cardwall_Column_isInColumnTest extends TestCase // phpcs:ignore Squi
             ->withChangesets(new Tracker_Artifact_Changeset_Null())
             ->build();
 
-        $this->field          = $this->createMock(Tracker_FormElement_Field_MultiSelectbox::class);
+        $this->field          = $this->createMock(MultiSelectboxField::class);
         $this->field_provider = $this->createMock(Cardwall_FieldProviders_IProvideFieldGivenAnArtifact::class);
         $this->field_provider->method('getField')->with($tracker)->willReturn($this->field);
         $dao                     = $this->createMock(Cardwall_OnTop_Dao::class);

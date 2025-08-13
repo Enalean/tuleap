@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\FormElement;
+namespace Tuleap\Tracker\FormElement\Field\List;
 
 use PermissionsManager;
 use PFUser;
@@ -28,7 +28,6 @@ use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Bind;
-use Tracker_FormElement_Field_MultiSelectbox;
 use Tracker_FormElement_InvalidFieldValueException;
 use Tracker_FormElement_RESTValueByField_NotImplementedException;
 use TrackerFactory;
@@ -39,17 +38,18 @@ use Tuleap\User\CurrentUserWithLoggedInInformation;
 use UserManager;
 
 #[DisableReturnValueGenerationForTestDoubles]
-final class Tracker_FormElement_Field_MultiSelectboxTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+final class MultiSelectboxFieldTest extends TestCase
 {
-    private Tracker_FormElement_Field_MultiSelectbox $field;
+    private MultiSelectboxField $field;
     private PermissionsManager&MockObject $permission_manager;
 
+    #[\Override]
     protected function setUp(): void
     {
-        $this->field = new Tracker_FormElement_Field_MultiSelectbox(
+        $this->field = new MultiSelectboxField(
             1,
             101,
-            null,
+            1,
             'field_msb',
             'Field MSB',
             '',
@@ -76,6 +76,7 @@ final class Tracker_FormElement_Field_MultiSelectboxTest extends TestCase // php
         $tracker_factory->method('getTrackerById')->willReturn($tracker);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         UserManager::clearInstance();
@@ -175,10 +176,10 @@ final class Tracker_FormElement_Field_MultiSelectboxTest extends TestCase // php
             'request_method_called' => 'submit-artifact',
         ];
 
-        $mandatory_field = new Tracker_FormElement_Field_MultiSelectbox(
+        $mandatory_field = new MultiSelectboxField(
             1,
             101,
-            null,
+            1,
             'field_msb',
             'Field MSB',
             '',
@@ -264,7 +265,7 @@ final class Tracker_FormElement_Field_MultiSelectboxTest extends TestCase // php
     {
         $bind = $this->createMock(Tracker_FormElement_Field_List_Bind::class);
         $this->field->setBind($bind);
-        $bind->method('getFieldDataFromRESTValue')->willReturnCallback(static fn($value) => match ($value) {
+        $bind->method('getFieldDataFromRESTValue')->willReturnCallback(static fn(string $value) => match ($value) {
             '103_3' => 3,
             '112'   => 112,
         });

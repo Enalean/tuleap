@@ -28,7 +28,6 @@ use Tracker_FormElement_Field_CrossReferences;
 use Tracker_FormElement_Field_File;
 use Tracker_FormElement_Field_LastModifiedBy;
 use Tracker_FormElement_Field_List;
-use Tracker_FormElement_Field_MultiSelectbox;
 use Tracker_FormElement_Field_OpenList;
 use Tracker_FormElement_Field_PermissionsOnArtifact;
 use Tracker_FormElement_Field_Radiobutton;
@@ -42,6 +41,7 @@ use Tuleap\Tracker\FormElement\Field\Float\FloatField;
 use Tuleap\Tracker\FormElement\Field\Integer\IntegerField;
 use Tuleap\Tracker\FormElement\Field\LastUpdateDate\LastUpdateDateField;
 use Tuleap\Tracker\FormElement\Field\List\SelectboxField;
+use Tuleap\Tracker\FormElement\Field\List\MultiSelectboxField;
 use Tuleap\Tracker\FormElement\Field\PerTrackerArtifactId\PerTrackerArtifactIdField;
 use Tuleap\Tracker\FormElement\Field\Priority\PriorityField;
 use Tuleap\Tracker\FormElement\Field\String\StringField;
@@ -138,7 +138,7 @@ final class NotEqualFieldComparisonVisitor implements
         return $this->visitList($field);
     }
 
-    public function visitMultiSelectbox(Tracker_FormElement_Field_MultiSelectbox $field)
+    public function visitMultiSelectbox(MultiSelectboxField $field)
     {
         return $this->visitList($field);
     }

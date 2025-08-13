@@ -35,7 +35,6 @@ use TestHelper;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_XMLImport;
 use Tracker_Artifact_XMLImport_XMLImportZipArchive;
-use Tracker_FormElement_Field_MultiSelectbox;
 use Tracker_FormElement_Field_OpenList;
 use Tracker_FormElement_Field_PermissionsOnArtifact;
 use Tracker_FormElementFactory;
@@ -61,6 +60,7 @@ use Tuleap\Tracker\Artifact\XMLImport\TrackerImportConfig;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerXmlImportConfig;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
+use Tuleap\Tracker\FormElement\Field\List\MultiSelectboxField;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
 use Tuleap\Tracker\FormElement\Field\String\StringField;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
@@ -1932,7 +1932,7 @@ final class Tracker_Artifact_XMLImportTest extends TestCase // phpcs:ignore Squi
 
     public function testItCreatesArtifactWithAllMultiSelectboxValue(): void
     {
-        $static_multi_selectbox_field = $this->createMock(Tracker_FormElement_Field_MultiSelectbox::class);
+        $static_multi_selectbox_field = $this->createMock(MultiSelectboxField::class);
         $static_multi_selectbox_field->method('getId')->willReturn(456);
         $static_multi_selectbox_field->method('validateField')->willReturn(true);
         $static_multi_selectbox_field->method('setTracker');
@@ -1998,7 +1998,7 @@ final class Tracker_Artifact_XMLImportTest extends TestCase // phpcs:ignore Squi
 
     public function testItCreatesArtifactWithAllUserMultiSelectboxValue(): void
     {
-        $user_multi_selectbox_field = $this->createMock(Tracker_FormElement_Field_MultiSelectbox::class);
+        $user_multi_selectbox_field = $this->createMock(MultiSelectboxField::class);
         $user_multi_selectbox_field->method('getId')->willReturn(456);
         $user_multi_selectbox_field->method('validateField')->willReturn(true);
         $user_multi_selectbox_field->method('setTracker');
