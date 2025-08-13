@@ -17,6 +17,7 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { MockInstance } from "vitest";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import * as rest_querier from "../../api/preferencies-rest-querier";
 import {
@@ -30,8 +31,8 @@ import type { PreferenciesState } from "./preferencies-default-state";
 import type { ActionContext } from "vuex";
 
 describe("setUserPreferenciesForFolder", () => {
-    let patchUserPreferenciesForFolderInProject: vi.SpyInstance;
-    let deleteUserPreferenciesForFolderInProject: vi.SpyInstance;
+    let patchUserPreferenciesForFolderInProject: MockInstance;
+    let deleteUserPreferenciesForFolderInProject: MockInstance;
 
     beforeEach(() => {
         patchUserPreferenciesForFolderInProject = vi

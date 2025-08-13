@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { MockInstance } from "vitest";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { mockFetchError } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 import {
@@ -53,7 +54,7 @@ import emitter from "../../helpers/emitter";
 vi.mock("../../helpers/emitter");
 
 describe("Properties actions", () => {
-    let context: ActionContext<PropertiesState, RootState>, getProjectProperties: vi.SpyInstance;
+    let context: ActionContext<PropertiesState, RootState>, getProjectProperties: MockInstance;
 
     beforeEach(() => {
         context = {
@@ -100,7 +101,7 @@ describe("Properties actions", () => {
     });
 
     describe("replacePropertiesWithUpdatesOnes", () => {
-        let context: ActionContext<PropertiesState, RootState>, getItem: vi.SpyInstance;
+        let context: ActionContext<PropertiesState, RootState>, getItem: MockInstance;
 
         beforeEach(() => {
             context = {
