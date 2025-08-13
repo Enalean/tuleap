@@ -23,6 +23,7 @@ import type { InputRule } from "prosemirror-inputrules";
 import type { NodeType, Schema, MarkType } from "prosemirror-model";
 import { automagicLinksInputRule } from "../automagic-links";
 import { markInputRule } from "../../helpers/MarkInputRule";
+import { emojisInputRule } from "../emojis";
 
 function codeBlockRule(nodeType: NodeType): InputRule {
     return textblockTypeInputRule(/^```$/, nodeType);
@@ -83,6 +84,7 @@ export function buildInputRules(schema: Schema): Plugin {
             inlineCodeRule(schema.marks.code),
             italicRule(schema.marks.em),
             automagicLinksInputRule(),
+            emojisInputRule(),
         ],
     });
 }
