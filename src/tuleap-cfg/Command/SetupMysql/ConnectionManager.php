@@ -43,7 +43,8 @@ class ConnectionManager implements ConnectionManagerInterface
         'ONLY_FULL_GROUP_BY' => true,
     ];
 
-    private const SUPPORTED_MYSQL_VERSION_PREFIX = '8.0.';
+    private const string SUPPORTED_MYSQL80_VERSION_PREFIX = '8.0.';
+    private const string SUPPORTED_MYSQL84_VERSION_PREFIX = '8.4.';
 
     public function getDBWithoutDBName(
         SymfonyStyle $io,
@@ -139,9 +140,9 @@ class ConnectionManager implements ConnectionManagerInterface
     private function checkVersion(DBWrapperInterface $db): Ok|Err
     {
         $mysql_version = $db->row('SHOW VARIABLES LIKE \'version\'')['Value'];
-        if (! str_starts_with($mysql_version, self::SUPPORTED_MYSQL_VERSION_PREFIX)) {
+        if (! str_starts_with($mysql_version, self::SUPPORTED_MYSQL80_VERSION_PREFIX) && ! str_starts_with($mysql_version, self::SUPPORTED_MYSQL84_VERSION_PREFIX)) {
             $mysql_version_comment = $db->row('SHOW VARIABLES LIKE \'version_comment\'')['Value'] ?? '';
-            return Result::err(Fault::fromMessage(sprintf('Tuleap only support MySQL 8.0.x. Found: version %s - %s', $mysql_version_comment, $mysql_version)));
+            return Result::err(Fault::fromMessage(sprintf('Tuleap only support MySQL 8.0.x and 8.4.x. Found: version %s - %s', $mysql_version_comment, $mysql_version)));
         }
         return Result::ok(null);
     }
