@@ -49,6 +49,9 @@ msgstr ""
 msgid "The timeframe of an artifact will be"
 msgstr ""
 
+msgid "Tracker"
+msgstr ""
+
 msgid ""
 "You can't find the tracker you are looking for? Make sure it has an artifact "
 "link field, and that its semantic is not inherited from another tracker."

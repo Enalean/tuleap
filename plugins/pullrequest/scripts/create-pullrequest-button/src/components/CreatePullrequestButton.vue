@@ -26,7 +26,7 @@
         data-test="create-pull-request"
     >
         <i class="fas fa-code-branch fa-rotate-270 tlp-button-icon"></i>
-        <translate>Create pull request</translate>
+        {{ $gettext("Create pull request") }}
     </button>
 </template>
 

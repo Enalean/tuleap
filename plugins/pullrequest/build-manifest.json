@@ -1,11 +1,5 @@
 {
     "name": "pullrequest",
-    "gettext-vue": {
-        "create-pullrequest-button": {
-            "src": "scripts/create-pullrequest-button/src",
-            "po": "scripts/create-pullrequest-button/po"
-        }
-    },
     "gettext-angularjs": {
         "pullrequest": {
             "src": "scripts/pullrequests-app/src/app",
@@ -20,6 +14,10 @@
         "tuleap-pullrequest-homepage": {
             "src": "scripts/pullrequest-homepage/src",
             "po": "scripts/pullrequest-homepage/po"
+        },
+        "create-pullrequest-button": {
+            "src": "scripts/create-pullrequest-button/src",
+            "po": "scripts/create-pullrequest-button/po"
         }
     },
     "gettext-ts": {

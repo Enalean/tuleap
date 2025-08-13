@@ -21,7 +21,7 @@
     <div class="tlp-modal tlp-modal-danger" role="dialog">
         <div class="tlp-modal-header">
             <h1 class="tlp-modal-title">
-                <translate>Oops</translate>
+                {{ $gettext("Oops") }}
             </h1>
             <button class="tlp-modal-close" type="button" data-dismiss="modal" aria-label="Close">
                 <i class="fas fa-times tlp-modal-close-icon" aria-hidden="true"></i>
@@ -29,15 +29,18 @@
         </div>
         <div class="tlp-modal-body">
             <p>
-                <translate>
-                    An error occurred while retrieving needed information to create a pull request.
-                </translate>
+                {{
+                    $gettext(
+                        "An error occurred while retrieving needed information to create a pull request.",
+                    )
+                }}
             </p>
             <p>
-                <translate>
-                    Refresh the page and try again; if the error persists, contact your
-                    administrator.
-                </translate>
+                {{
+                    $gettext(
+                        "Refresh the page and try again; if the error persists, contact your administrator.",
+                    )
+                }}
             </p>
         </div>
         <div class="tlp-modal-footer tlp-modal-footer-large">
@@ -46,7 +49,7 @@
                 class="tlp-button-danger tlp-button-outline tlp-modal-action"
                 data-dismiss="modal"
             >
-                <translate>Close</translate>
+                {{ $gettext("Close") }}
             </button>
         </div>
     </div>
