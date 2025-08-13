@@ -55,6 +55,7 @@
 import { DATE_FIELD_VALUE } from "../../../constants/workflow-constants.js";
 export default {
     name: "DateInput",
+    emits: ["change"],
     props: {
         input_value: {
             type: String,
