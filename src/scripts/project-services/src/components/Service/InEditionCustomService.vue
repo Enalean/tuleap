@@ -110,7 +110,6 @@ import ServiceDescription from "./ServiceDescription.vue";
 import ServiceIsUsed from "./ServiceIsUsed.vue";
 import ServiceRank from "./ServiceRank.vue";
 import HiddenServiceIsActive from "./HiddenServiceIsActive.vue";
-import { service_mixin } from "./service-mixin.js";
 
 export default {
     name: "InEditionCustomService",
@@ -125,16 +124,24 @@ export default {
         ServiceLabel,
         IconSelector,
     },
-    mixins: [service_mixin],
     props: {
         allowed_icons: {
+            type: Object,
+            required: true,
+        },
+        minimal_rank: {
+            type: Number,
+            required: true,
+        },
+        service_prop: {
             type: Object,
             required: true,
         },
     },
     data() {
         return {
-            has_used_iframe: this.service.is_in_iframe,
+            service: this.service_prop,
+            has_used_iframe: this.service_prop.is_in_iframe,
             is_new_tab_warning_shown: false,
             is_iframe_deprecation_warning_shown: false,
         };

@@ -62,7 +62,6 @@ import HiddenServiceShortname from "./HiddenServiceShortname.vue";
 import HiddenServiceIsActive from "./HiddenServiceIsActive.vue";
 import ReadOnlyServiceRank from "./ReadOnlyServiceRank.vue";
 import ReadOnlyServiceIcon from "./ReadOnlyServiceIcon.vue";
-import { service_mixin } from "./service-mixin.js";
 import { ADMIN_SERVICE_SHORTNAME, SUMMARY_SERVICE_SHORTNAME } from "../../constants.js";
 
 export default {
@@ -77,7 +76,16 @@ export default {
         ReadOnlyServiceRank,
         ReadOnlyServiceIcon,
     },
-    mixins: [service_mixin],
+    props: {
+        minimal_rank: {
+            type: Number,
+            required: true,
+        },
+        service: {
+            type: Object,
+            required: true,
+        },
+    },
     computed: {
         is_summary_service() {
             return this.service.short_name === SUMMARY_SERVICE_SHORTNAME;

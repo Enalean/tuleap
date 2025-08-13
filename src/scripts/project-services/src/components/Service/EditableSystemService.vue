@@ -66,7 +66,6 @@ import ServiceLink from "./ServiceLink.vue";
 import ServiceDescription from "./ServiceDescription.vue";
 import ReadOnlyServiceRank from "./ReadOnlyServiceRank.vue";
 import ReadOnlyServiceIcon from "./ReadOnlyServiceIcon.vue";
-import { service_mixin } from "./service-mixin.js";
 import { ADMIN_SERVICE_SHORTNAME, SUMMARY_SERVICE_SHORTNAME } from "../../constants.js";
 
 export default {
@@ -83,11 +82,20 @@ export default {
         ServiceDescription,
         ReadOnlyServiceIcon,
     },
-    mixins: [service_mixin],
-    methods: {
-        onEditServiceLabel(new_label) {
-            this.service.label = new_label;
+    props: {
+        minimal_rank: {
+            type: Number,
+            required: true,
         },
+        service_prop: {
+            type: Object,
+            required: true,
+        },
+    },
+    data() {
+        return {
+            service: this.service_prop,
+        };
     },
     computed: {
         is_summary_service() {
@@ -95,6 +103,11 @@ export default {
         },
         can_update_is_used() {
             return this.service.short_name !== ADMIN_SERVICE_SHORTNAME || !this.service.is_used;
+        },
+    },
+    methods: {
+        onEditServiceLabel(new_label) {
+            this.service.label = new_label;
         },
     },
 };
