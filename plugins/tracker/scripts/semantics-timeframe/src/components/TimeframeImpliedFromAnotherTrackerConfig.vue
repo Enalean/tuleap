@@ -21,7 +21,7 @@
     <div id="timeframe-admin-section-implied-from-another-tracker">
         <div v-if="can_semantic_be_implied" class="tlp-form-element">
             <label class="tlp-label" for="timeframe-tracker-selector">
-                <translate>Tracker</translate>
+                {{ $gettext("Tracker") }}
                 <i class="fa-solid fa-asterisk" aria-hidden="true"></i>
             </label>
             <select
