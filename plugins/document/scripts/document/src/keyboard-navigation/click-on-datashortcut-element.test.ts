@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { MockInstance } from "vitest";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { clickOnDatashortcutElement } from "./click-on-datashortcut-element";
 import * as getter_focused_row from "./get-focused-row";
@@ -34,9 +35,9 @@ describe("callNavigationShortcut", () => {
     const datashortcut_attribute = "datashortcut";
     const datashortcut_selector = `[${datashortcut_attribute}]`;
 
-    let focusHeaderButton: vi.SpyInstance;
-    let clickHeaderButton: vi.SpyInstance;
-    let clickRowButton: vi.SpyInstance;
+    let focusHeaderButton: MockInstance;
+    let clickHeaderButton: MockInstance;
+    let clickRowButton: MockInstance;
 
     beforeEach(() => {
         doc = document.implementation.createHTMLDocument();

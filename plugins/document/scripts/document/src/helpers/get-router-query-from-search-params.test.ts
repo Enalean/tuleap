@@ -21,7 +21,7 @@ import { describe, expect, it } from "vitest";
 import { getRouterQueryFromSearchParams } from "./get-router-query-from-search-params";
 import { buildAdvancedSearchParams } from "./build-advanced-search-params";
 import type { AdvancedSearchParams } from "../type";
-import type { Dictionary } from "vue-router/types/router";
+import type { LocationQuery } from "vue-router";
 
 describe("getRouterQueryFromSearchParams", () => {
     it("should omit empty params to not clutter the query url", () => {
@@ -47,7 +47,7 @@ describe("getRouterQueryFromSearchParams", () => {
         expect(getRouterQueryFromSearchParams(query_params)).toStrictEqual({});
     });
 
-    it.each<[Partial<AdvancedSearchParams>, Dictionary<string>]>([
+    it.each<[Partial<AdvancedSearchParams>, LocationQuery]>([
         [{ global_search: "lorem" }, { q: "lorem" }],
         [{ type: "folder" }, { type: "folder" }],
         [{ id: "123" }, { id: "123" }],

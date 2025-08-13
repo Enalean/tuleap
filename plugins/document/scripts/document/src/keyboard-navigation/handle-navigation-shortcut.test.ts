@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { MockInstance } from "vitest";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { Direction } from "../type";
 import { BOTTOM, NEXT, PREVIOUS, TOP } from "../type";
@@ -37,7 +38,7 @@ describe("callNavigationShortcut", () => {
     let row: HTMLTableRowElement;
     let row_link: HTMLAnchorElement;
 
-    let focus: vi.SpyInstance;
+    let focus: MockInstance;
 
     beforeEach(() => {
         doc = document.implementation.createHTMLDocument();
