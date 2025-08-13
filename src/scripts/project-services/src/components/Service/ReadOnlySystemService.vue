@@ -57,7 +57,7 @@ import HiddenServiceShortname from "./HiddenServiceShortname.vue";
 import HiddenServiceIsActive from "./HiddenServiceIsActive.vue";
 import ReadOnlyServiceRank from "./ReadOnlyServiceRank.vue";
 import ReadOnlyServiceIcon from "./ReadOnlyServiceIcon.vue";
-import { ADMIN_SERVICE_SHORTNAME, SUMMARY_SERVICE_SHORTNAME } from "../../constants.js";
+import { ADMIN_SERVICE_SHORTNAME, SUMMARY_SERVICE_SHORTNAME } from "../../constants";
 
 export default {
     name: "ReadOnlySystemService",

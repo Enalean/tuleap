@@ -17,7 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export const PROJECT_ID = Symbol("project_id");
-export const MINIMAL_RANK = Symbol("minimal_rank");
-export const CSRF_TOKEN = Symbol("csrf_token");
-export const ALLOWED_ICONS = Symbol("allowed_icons");
+import type { StrictInjectionKey } from "@tuleap/vue-strict-inject";
+import type { AllowedIcons, CsrfToken } from "./type";
+
+export const PROJECT_ID: StrictInjectionKey<string> = Symbol("project_id");
+export const MINIMAL_RANK: StrictInjectionKey<number> = Symbol("minimal_rank");
+export const CSRF_TOKEN: StrictInjectionKey<CsrfToken> = Symbol("csrf_token");
+export const ALLOWED_ICONS: StrictInjectionKey<AllowedIcons> = Symbol("allowed_icons");

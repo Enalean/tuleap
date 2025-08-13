@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) Enalean, 2025 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,10 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { createGettext } from "vue3-gettext";
+export type CsrfToken = {
+    value: string;
+    name: string;
+};
 
-export function getGlobalTestOptions() {
-    return {
-        plugins: [createGettext({ silent: true })],
-    };
-}
+type IconInfo = {
+    description: string;
+    "fa-icon": string;
+};
+
+export type AllowedIcons = Record<string, IconInfo>;

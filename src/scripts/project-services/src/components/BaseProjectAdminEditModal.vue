@@ -39,7 +39,7 @@
 </template>
 <script>
 import { strictInject } from "@tuleap/vue-strict-inject";
-import { CSRF_TOKEN, MINIMAL_RANK, PROJECT_ID } from "../injection-symbols.js";
+import { CSRF_TOKEN, MINIMAL_RANK, PROJECT_ID } from "../injection-symbols";
 import InEditionCustomService from "./Service/InEditionCustomService.vue";
 import SidebarPreviewer from "./SidebarPreviewer.vue";
 import EditModal from "./EditModal.vue";

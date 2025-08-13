@@ -25,7 +25,7 @@ import BaseProjectAdminAddModal from "./components/BaseProjectAdminAddModal.vue"
 import BaseProjectAdminEditModal from "./components/BaseProjectAdminEditModal.vue";
 import { setupDeleteButtons } from "./setup-delete-buttons.js";
 import { gatherConfiguration } from "./gather-configuration.js";
-import { ALLOWED_ICONS, CSRF_TOKEN, MINIMAL_RANK, PROJECT_ID } from "./injection-symbols.js";
+import { ALLOWED_ICONS, CSRF_TOKEN, MINIMAL_RANK, PROJECT_ID } from "./injection-symbols";
 
 const ADD_BUTTON_SELECTOR = "#project-admin-services-add-button";
 const ADD_MOUNT_POINT_SELECTOR = "#service-add-modal";

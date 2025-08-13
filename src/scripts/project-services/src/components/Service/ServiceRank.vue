@@ -39,7 +39,7 @@
 </template>
 <script>
 import { strictInject } from "@tuleap/vue-strict-inject";
-import { MINIMAL_RANK } from "../../injection-symbols.js";
+import { MINIMAL_RANK } from "../../injection-symbols";
 
 export default {
     name: "ServiceRank",

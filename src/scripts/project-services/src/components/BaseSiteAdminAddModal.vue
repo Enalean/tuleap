@@ -45,13 +45,13 @@
 </template>
 <script>
 import { strictInject } from "@tuleap/vue-strict-inject";
-import { CSRF_TOKEN, MINIMAL_RANK, PROJECT_ID } from "../injection-symbols.js";
+import { CSRF_TOKEN, MINIMAL_RANK, PROJECT_ID } from "../injection-symbols";
 import AddModal from "./AddModal.vue";
 import SidebarPreviewer from "./SidebarPreviewer.vue";
 import InCreationCustomService from "./Service/InCreationCustomService.vue";
 import ServiceIsActive from "./Service/ServiceIsActive.vue";
 import ServiceShortname from "./Service/ServiceShortname.vue";
-import { ADMIN_PROJECT_ID } from "../constants.js";
+import { ADMIN_PROJECT_ID } from "../constants";
 
 export default {
     name: "BaseSiteAdminAddModal",

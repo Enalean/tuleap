@@ -41,7 +41,7 @@
 </template>
 <script>
 import { strictInject } from "@tuleap/vue-strict-inject";
-import { ALLOWED_ICONS } from "../injection-symbols.js";
+import { ALLOWED_ICONS } from "../injection-symbols";
 
 export default {
     name: "SidebarPreviewer",
