@@ -17,19 +17,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vue from "vue";
-import Vuex from "vuex";
-import VueDOMPurifyHTML from "@tuleap/vue2-dompurify-html";
+import { createApp } from "vue";
+import { createGettext } from "vue3-gettext";
+import VueDOMPurifyHTML from "vue-dompurify-html";
 import App from "./components/App.vue";
-import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue2-gettext-init";
+import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue3-gettext-init";
 import { parseNatureLabels } from "./helpers/nature-labels-from-mountpoint";
-import { createStore } from "./store";
+import { createInitializedStore } from "./store";
 import type { RootState } from "./store/type";
 import { toBCP47 } from "./helpers/locale-for-intl";
-import type { VueGettextProvider } from "./helpers/vue-gettext-provider";
 import type { TimeScale } from "./type";
 import { Settings } from "luxon";
 import "./style/widget-roadmap.scss";
+import type { VueGettextProvider } from "./helpers/vue-gettext-provider";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const timezone = document.body.dataset.userTimezone;
@@ -42,18 +42,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
     }
 
-    await initVueGettext(
-        Vue,
-        (locale: string) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`),
-    );
-    Vue.use(Vuex);
-    // @ts-expect-error Vue 2.7.8 and 2.7.16 types do not play well together
-    Vue.use(VueDOMPurifyHTML);
-
-    //eslint-disable-next-line @typescript-eslint/ban-ts-comment -- Temporary while we migrate to Vue 3
-    //@ts-ignore
-    const AppComponent = Vue.extend(App);
-
     for (const vue_mount_point of all_vue_mount_points) {
         if (!(vue_mount_point instanceof HTMLElement)) {
             continue;
@@ -64,9 +52,14 @@ document.addEventListener("DOMContentLoaded", async () => {
             continue;
         }
 
+        const gettext_plugin = await initVueGettext(
+            createGettext,
+            (locale) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`),
+        );
+
         const gettext_provider: VueGettextProvider = {
-            $gettext: Vue.prototype.$gettext,
-            $gettextInterpolate: Vue.prototype.$gettextInterpolate,
+            $gettext: gettext_plugin.$gettext,
+            $gettextInterpolate: gettext_plugin.interpolate,
         };
         const visible_natures = await parseNatureLabels(vue_mount_point, gettext_provider);
 
@@ -92,12 +85,13 @@ document.addEventListener("DOMContentLoaded", async () => {
             return "month";
         })(vue_mount_point.dataset.defaultTimescale);
 
-        new AppComponent({
-            store: createStore(initial_root_state, default_timescale),
-            propsData: {
-                roadmap_id,
-                visible_natures,
-            },
-        }).$mount(vue_mount_point);
+        createApp(App, {
+            roadmap_id,
+            visible_natures,
+        })
+            .use(VueDOMPurifyHTML)
+            .use(gettext_plugin)
+            .use(createInitializedStore(initial_root_state, default_timescale))
+            .mount(vue_mount_point);
     }
 });

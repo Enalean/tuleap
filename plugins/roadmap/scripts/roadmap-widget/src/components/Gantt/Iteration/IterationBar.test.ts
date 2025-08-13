@@ -19,10 +19,10 @@
 
 import { DateTime } from "luxon";
 import { shallowMount } from "@vue/test-utils";
-import type { Wrapper } from "@vue/test-utils";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
+import type { VueWrapper } from "@vue/test-utils";
 import { TimePeriodMonth } from "../../../helpers/time-period-month";
-import type { Iteration, Row } from "../../../type";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-tests";
+import type { Iteration, IterationLevel, Row } from "../../../type";
 import type { TimeperiodState } from "../../../store/timeperiod/type";
 import type { IterationsState } from "../../../store/iterations/type";
 import type { TasksState } from "../../../store/tasks/type";
@@ -31,16 +31,16 @@ import IterationBar from "./IterationBar.vue";
 
 describe("IterationBar", () => {
     describe("should adjust the height of the iteration according to the number of visible rows so that we have borders of the iteration that take all the height", () => {
-        let level: number, iterations: IterationsState;
+        let level: IterationLevel, iterations: IterationsState;
 
         beforeEach(() => {
             level = 2;
             iterations = {} as IterationsState;
         });
 
-        function getWrapper(): Wrapper<Vue> {
+        function getWrapper(): VueWrapper {
             return shallowMount(IterationBar, {
-                propsData: {
+                props: {
                     iteration: {
                         start: DateTime.fromISO("2020-01-10T13:42:08+02:00"),
                         end: DateTime.fromISO("2020-01-20T13:42:08+02:00"),
@@ -48,24 +48,35 @@ describe("IterationBar", () => {
                     } as Iteration,
                     level,
                 },
-                mocks: {
-                    $store: createStoreMock({
+                global: {
+                    ...getGlobalTestOptions({
                         state: {
-                            timeperiod: {} as TimeperiodState,
-                            iterations,
-                            tasks: {} as TasksState,
+                            timeperiod_state: {} as TimeperiodState,
+                            iterations: iterations,
+                            tasks_state: {} as TasksState,
                         } as RootState,
-                        getters: {
-                            "timeperiod/time_period": new TimePeriodMonth(
-                                DateTime.fromISO("2020-01-01T13:42:08+02:00"),
-                                DateTime.fromISO("2020-01-30T13:42:08+02:00"),
-                                "en-US",
-                            ),
-                            "tasks/rows": [
-                                { is_shown: true } as Row,
-                                { is_shown: false } as Row,
-                                { is_shown: true } as Row,
-                            ],
+                        modules: {
+                            timeperiod: {
+                                getters: {
+                                    time_period: () =>
+                                        new TimePeriodMonth(
+                                            DateTime.fromISO("2020-01-01T13:42:08+02:00"),
+                                            DateTime.fromISO("2020-01-30T13:42:08+02:00"),
+                                            "en-US",
+                                        ),
+                                },
+                                namespaced: true,
+                            },
+                            tasks: {
+                                getters: {
+                                    rows: () => [
+                                        { is_shown: true } as Row,
+                                        { is_shown: false } as Row,
+                                        { is_shown: true } as Row,
+                                    ],
+                                },
+                                namespaced: true,
+                            },
                         },
                     }),
                 },

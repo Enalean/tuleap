@@ -77,7 +77,7 @@ const props = defineProps<{
     popover_element_id: string;
 }>();
 
-const doesTextFitsIn = (width: number) =>
+const doesTextFitsIn = (width: number): boolean =>
     width > Styles.TEXT_PERCENTAGE_IN_PROGRESS_BAR_THRESOLD_IN_PX;
 
 const is_task_valid = computed(() => doesTaskHaveEndDateGreaterOrEqualToStartDate(props.task));

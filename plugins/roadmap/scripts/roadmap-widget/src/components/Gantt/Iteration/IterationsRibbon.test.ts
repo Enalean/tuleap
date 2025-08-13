@@ -17,20 +17,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { DateTime } from "luxon";
 import { shallowMount } from "@vue/test-utils";
-import IterationsRibbon from "./IterationsRibbon.vue";
 import type { Iteration } from "../../../type";
-import IterationBar from "./IterationBar.vue";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { TimeperiodState } from "../../../store/timeperiod/type";
 import type { RootState } from "../../../store/type";
 import { TimePeriodMonth } from "../../../helpers/time-period-month";
-import { DateTime } from "luxon";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-tests";
+import IterationsRibbon from "./IterationsRibbon.vue";
+import IterationBar from "./IterationBar.vue";
 
 describe("IterationsRibbon", () => {
     it("should display all iterations", () => {
         const wrapper = shallowMount(IterationsRibbon, {
-            propsData: {
+            props: {
                 nb_additional_units: 0,
                 level: 1,
                 iterations: [
@@ -39,17 +39,22 @@ describe("IterationsRibbon", () => {
                     { id: 3 } as Iteration,
                 ],
             },
-            mocks: {
-                $store: createStoreMock({
+            global: {
+                ...getGlobalTestOptions({
                     state: {
-                        timeperiod: {} as TimeperiodState,
+                        timeperiod_state: {} as TimeperiodState,
                     } as RootState,
-                    getters: {
-                        "timeperiod/time_period": new TimePeriodMonth(
-                            DateTime.fromISO("2020-01-01T13:42:08+02:00"),
-                            DateTime.fromISO("2020-01-30T13:42:08+02:00"),
-                            "en-US",
-                        ),
+                    modules: {
+                        timeperiod: {
+                            getters: {
+                                time_period: () =>
+                                    new TimePeriodMonth(
+                                        DateTime.fromISO("2020-01-01T13:42:08+02:00"),
+                                        DateTime.fromISO("2020-01-30T13:42:08+02:00"),
+                                        "en-US",
+                                    ),
+                            },
+                        },
                     },
                 }),
             },

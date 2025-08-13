@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { createRoadmapLocalVue } from "../helpers/local-vue-for-test";
-import type { Wrapper } from "@vue/test-utils";
+import { getGlobalTestOptions } from "../helpers/global-options-for-tests";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import App from "./App.vue";
 import NoDataToShowEmptyState from "./NoDataToShowEmptyState.vue";
@@ -27,34 +27,35 @@ import GanttBoard from "./Gantt/GanttBoard.vue";
 import type { Task } from "../type";
 import LoadingState from "./LoadingState.vue";
 import type { RootState } from "../store/type";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { TasksState } from "../store/tasks/type";
 import { DateTime } from "luxon";
 
 describe("App", () => {
-    async function mountComponent(
+    function mountComponent(
         tasks: TasksState = {} as TasksState,
         root: RootState = {} as RootState,
-    ): Promise<Wrapper<Vue>> {
+    ): VueWrapper {
         return shallowMount(App, {
-            propsData: {
+            props: {
                 roadmap_id: 123,
-                visible_natures: [],
+                visible_natures: new Map(),
             },
-            localVue: await createRoadmapLocalVue(),
-            mocks: {
-                $store: createStoreMock({
+            global: {
+                ...getGlobalTestOptions({
                     state: {
                         ...root,
-                        tasks,
+                        tasks_state: tasks,
                     } as RootState,
+                    actions: {
+                        loadRoadmap: jest.fn(),
+                    },
                 }),
             },
         });
     }
 
-    it("Displays a loading state", async () => {
-        const wrapper = await mountComponent(
+    it("Displays a loading state", () => {
+        const wrapper = mountComponent(
             {
                 tasks: [],
             },
@@ -72,8 +73,8 @@ describe("App", () => {
         expect(wrapper.findComponent(LoadingState).exists()).toBe(true);
     });
 
-    it("Displays an empty state", async () => {
-        const wrapper = await mountComponent(
+    it("Displays an empty state", () => {
+        const wrapper = mountComponent(
             {
                 tasks: [],
             },
@@ -91,8 +92,8 @@ describe("App", () => {
         expect(wrapper.findComponent(LoadingState).exists()).toBe(false);
     });
 
-    it("Displays an error state with a message", async () => {
-        const wrapper = await mountComponent(
+    it("Displays an error state with a message", () => {
+        const wrapper = mountComponent(
             {
                 tasks: [],
             },
@@ -113,8 +114,8 @@ describe("App", () => {
         expect(error_state.props("message")).toBe("Missing timeframe");
     });
 
-    it("Displays an error state with a message even if there is no error message", async () => {
-        const wrapper = await mountComponent(
+    it("Displays an error state with a message even if there is no error message", () => {
+        const wrapper = mountComponent(
             {
                 tasks: [],
             },
@@ -135,8 +136,8 @@ describe("App", () => {
         expect(error_state.props("message")).toBe("");
     });
 
-    it("Displays a gantt board with tasks", async () => {
-        const wrapper = await mountComponent(
+    it("Displays a gantt board with tasks", () => {
+        const wrapper = mountComponent(
             {
                 tasks: [
                     {

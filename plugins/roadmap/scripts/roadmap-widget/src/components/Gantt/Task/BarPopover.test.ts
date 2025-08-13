@@ -19,14 +19,15 @@
 
 import { DateTime } from "luxon";
 import { shallowMount } from "@vue/test-utils";
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import type { UseMutationObserverReturn } from "@vueuse/core";
 import * as vueuse from "@vueuse/core";
 import * as tooltip from "@tuleap/tooltip";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import { createRoadmapLocalVue } from "../../../helpers/local-vue-for-test";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-tests";
 import type { Task } from "../../../type";
+import type { RootState } from "../../../store/type";
 import BarPopover from "./BarPopover.vue";
+import { buildVueDompurifyHTMLDirective } from "vue-dompurify-html";
 
 jest.mock("@vueuse/core");
 jest.mock("@tuleap/tooltip", () => ({
@@ -42,10 +43,19 @@ describe("BarPopover", () => {
         is_milestone = false;
     });
 
-    async function getWrapper(): Promise<Wrapper<Vue>> {
+    function getWrapper(): VueWrapper {
         return shallowMount(BarPopover, {
-            localVue: await createRoadmapLocalVue(),
-            propsData: {
+            global: {
+                ...getGlobalTestOptions({
+                    state: {
+                        locale_bcp47: "en-US",
+                    } as RootState,
+                }),
+            },
+            directives: {
+                "dompurify-html": buildVueDompurifyHTMLDirective(),
+            },
+            props: {
                 task: {
                     xref: "art #123",
                     title: "Create button",
@@ -57,27 +67,20 @@ describe("BarPopover", () => {
                     time_period_error_message: "",
                 } as Task,
             },
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        locale_bcp47: "en-US",
-                    },
-                }),
-            },
         });
     }
 
-    it("should display the title of the task", async () => {
-        const wrapper = await getWrapper();
+    it("should display the title of the task", () => {
+        const wrapper = getWrapper();
 
         expect(wrapper.classes()).not.toContain("roadmap-gantt-task-milestone-popover");
         expect(wrapper.text()).toContain("art #123");
         expect(wrapper.text()).toContain("Create button");
     });
 
-    it("should add special appearance for a milestone", async () => {
+    it("should add special appearance for a milestone", () => {
         is_milestone = true;
-        const wrapper = await getWrapper();
+        const wrapper = getWrapper();
 
         expect(wrapper.classes()).toContain("roadmap-gantt-task-milestone-popover");
     });
@@ -104,7 +107,7 @@ describe("BarPopover", () => {
             body_as_html: "the retrieved body",
         });
 
-        const wrapper = await getWrapper();
+        const wrapper = getWrapper();
 
         expect(wrapper.text()).not.toContain("the retrieved body");
 

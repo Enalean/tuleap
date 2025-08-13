@@ -18,18 +18,16 @@
  *
  */
 
-import type { Vue } from "vue/types/vue";
-import { createLocalVue } from "@vue/test-utils";
-import { initVueGettext } from "@tuleap/vue2-gettext-init";
-import VueDOMPurifyHTML from "@tuleap/vue2-dompurify-html";
+import type { MountingOptions } from "@vue/test-utils";
+import { createGettext } from "vue3-gettext";
+import type { StoreOptions } from "vuex";
+import { createStore } from "vuex";
+import type { RootState } from "../store/type";
 
-export async function createRoadmapLocalVue(): Promise<typeof Vue> {
-    const local_vue = createLocalVue();
-    await initVueGettext(local_vue, () => {
-        throw new Error("Fallback to default");
-    });
-    // @ts-expect-error Vue 2.7.8 and 2.7.16 types do not play well together
-    local_vue.use(VueDOMPurifyHTML);
-
-    return local_vue;
+export function getGlobalTestOptions(
+    store_options: StoreOptions<RootState>,
+): MountingOptions<unknown>["global"] {
+    return {
+        plugins: [createGettext({ silent: true }), createStore(store_options)],
+    };
 }

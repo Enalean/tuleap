@@ -20,7 +20,7 @@
 import type { TimePeriod } from "../type";
 import type { VueGettextProvider } from "./vue-gettext-provider";
 import { getBeginningOfPeriod, getEndOfPeriod } from "./begin-end-of-period";
-import type { DateTime } from "luxon";
+import { DateTime } from "luxon";
 
 export class TimePeriodWeek implements TimePeriod {
     readonly weeks: DateTime[];
@@ -53,7 +53,7 @@ export class TimePeriodWeek implements TimePeriod {
         return this.gettext_provider.$gettextInterpolate(
             this.gettext_provider.$gettext("Week %{ week } of %{ year }"),
             {
-                week: unit.weekNumber,
+                week: DateTime.fromObject(unit.toObject()).weekNumber,
                 year: unit.year,
             },
         );
@@ -63,7 +63,7 @@ export class TimePeriodWeek implements TimePeriod {
         return this.gettext_provider.$gettextInterpolate(
             this.gettext_provider.$gettext("W%{ week }"),
             {
-                week: unit.weekNumber,
+                week: DateTime.fromObject(unit.toObject()).weekNumber,
             },
         );
     }

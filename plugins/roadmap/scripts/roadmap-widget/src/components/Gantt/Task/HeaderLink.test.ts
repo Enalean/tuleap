@@ -24,7 +24,7 @@ import HeaderLink from "./HeaderLink.vue";
 describe("HeaderLink", () => {
     it("should display the project label and icon if needed", async () => {
         const wrapper = shallowMount(HeaderLink, {
-            propsData: {
+            props: {
                 task: {
                     xref: "art #123",
                     title: "Tomate salade oignon",

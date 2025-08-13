@@ -57,7 +57,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { useNamespacedGetters } from "vuex-composition-helpers";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 import { getUniqueId } from "../../helpers/uniq-id-generator";
 import type { NaturesLabels } from "../../type";
 

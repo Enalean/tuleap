@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { mount } from "@vue/test-utils";
-import type { Wrapper } from "@vue/test-utils";
+import { shallowMount } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import type { Task } from "../../../type";
 import TaskBarMilestone from "./TaskBarMilestone.vue";
 import TaskBarProgress from "./TaskBarProgress.vue";
@@ -31,9 +31,9 @@ describe("TaskBar", () => {
         is_milestone = false;
     });
 
-    function getWrapper(): Wrapper<Vue> {
-        return mount(TaskBar, {
-            propsData: {
+    function getWrapper(): VueWrapper {
+        return shallowMount(TaskBar, {
+            props: {
                 task: {
                     is_milestone,
                     progress_error_message: "",

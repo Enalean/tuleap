@@ -18,11 +18,10 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import type { Wrapper } from "@vue/test-utils";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import type { Task, TaskDimension } from "../../../type";
+import type { VueWrapper } from "@vue/test-utils";
+import type { EmptySubtasksRow, ErrorRow, Task, TaskDimension } from "../../../type";
 import { TaskDimensionMap } from "../../../type";
-import { createRoadmapLocalVue } from "../../../helpers/local-vue-for-test";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-tests";
 import type { TasksState } from "../../../store/tasks/type";
 import type { RootState } from "../../../store/type";
 import SubtaskMessage from "./SubtaskMessage.vue";
@@ -31,36 +30,43 @@ describe("SubtaskMessage", () => {
     let task: Task,
         dimensions_map: TaskDimensionMap,
         nb_iterations_ribbons: number,
-        is_empty: boolean;
+        retrieveSpy: jest.Mock;
 
     beforeEach(() => {
+        retrieveSpy = jest.fn();
         task = { id: 123 } as Task;
         dimensions_map = new TaskDimensionMap();
         nb_iterations_ribbons = 2;
-        is_empty = false;
     });
 
-    async function getWrapper(): Promise<Wrapper<Vue>> {
+    function getWrapper(): VueWrapper {
         dimensions_map.set(task, { index: 4 } as TaskDimension);
 
         return shallowMount(SubtaskMessage, {
-            localVue: await createRoadmapLocalVue(),
-            propsData: {
-                row: { for_task: task, is_empty },
+            global: {
+                ...getGlobalTestOptions({
+                    state: {
+                        tasks_state: {} as TasksState,
+                    } as RootState,
+                    modules: {
+                        tasks: {
+                            mutations: {
+                                removeSubtasksDisplayForTask: () => retrieveSpy(task),
+                            },
+                            namespaced: true,
+                        },
+                    },
+                }),
+            },
+            props: {
+                row: { for_task: task, is_empty: true } as ErrorRow | EmptySubtasksRow,
                 nb_iterations_ribbons,
                 dimensions_map,
             },
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        tasks: {} as TasksState,
-                    } as RootState,
-                }),
-            },
         });
     }
-    it("should position itself by taking account the size of pin head + year + month + iterations ribbons + tasks above us + 1px for the border", async () => {
-        const wrapper = await getWrapper();
+    it("should position itself by taking account the size of pin head + year + month + iterations ribbons + tasks above us + 1px for the border", () => {
+        const wrapper = getWrapper();
 
         expect((wrapper.element as HTMLElement).style.top).toBe("322px");
     });
@@ -68,15 +74,11 @@ describe("SubtaskMessage", () => {
     describe("empty subtasks", () => {
         it("should display a confirmation button", async () => {
             nb_iterations_ribbons = 0;
-            is_empty = true;
-            const wrapper = await getWrapper();
+            const wrapper = getWrapper();
 
             const button = wrapper.find("[data-test=button]");
             await button.trigger("click");
-            expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
-                "tasks/removeSubtasksDisplayForTask",
-                task,
-            );
+            expect(retrieveSpy).toHaveBeenCalledWith(task);
         });
     });
 });

@@ -18,10 +18,9 @@
  */
 
 import { DateTime, Settings } from "luxon";
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import { createRoadmapLocalVue } from "../../../helpers/local-vue-for-test";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-tests";
 import { TimePeriodMonth } from "../../../helpers/time-period-month";
 import type { RootState } from "../../../store/type";
 import type { TimeperiodState } from "../../../store/timeperiod/type";
@@ -44,21 +43,25 @@ describe("TimePeriodHeader", () => {
         );
     });
 
-    async function getWrapper(): Promise<Wrapper<Vue>> {
+    function getWrapper(): VueWrapper {
         return shallowMount(TimePeriodHeader, {
-            localVue: await createRoadmapLocalVue(),
-            propsData: {
-                nb_additional_units,
-            },
-            mocks: {
-                $store: createStoreMock({
+            global: {
+                ...getGlobalTestOptions({
                     state: {
-                        timeperiod: {} as TimeperiodState,
+                        timeperiod_state: {} as TimeperiodState,
                     } as RootState,
-                    getters: {
-                        "timeperiod/time_period": time_period,
+                    modules: {
+                        timeperiod: {
+                            getters: {
+                                time_period: () => time_period,
+                            },
+                            namespaced: true,
+                        },
                     },
                 }),
+            },
+            props: {
+                nb_additional_units,
             },
         });
     }
@@ -66,10 +69,10 @@ describe("TimePeriodHeader", () => {
     it("should display years and units", async () => {
         const wrapper = await getWrapper();
 
-        expect(wrapper.findComponent(TimePeriodYears).props().years).toEqual(
+        expect(wrapper.findComponent(TimePeriodYears).props().years).toStrictEqual(
             new NbUnitsPerYear([[2020, 5]]),
         );
-        expect(wrapper.findComponent(TimePeriodUnits).props().time_units).toEqual([
+        expect(wrapper.findComponent(TimePeriodUnits).props().time_units).toStrictEqual([
             DateTime.fromISO("2020-03-01T00:00:00.000Z"),
             DateTime.fromISO("2020-04-01T00:00:00.000Z"),
             DateTime.fromISO("2020-05-01T00:00:00.000Z"),
@@ -87,7 +90,7 @@ describe("TimePeriodHeader", () => {
         );
         const wrapper = await getWrapper();
 
-        expect(wrapper.findComponent(TimePeriodYears).props().years).toEqual(
+        expect(wrapper.findComponent(TimePeriodYears).props().years).toStrictEqual(
             new NbUnitsPerYear([
                 [2019, 1],
                 [2020, 12],

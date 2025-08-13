@@ -17,16 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import { createRoadmapLocalVue } from "../../helpers/local-vue-for-test";
+import { getGlobalTestOptions } from "../../helpers/global-options-for-tests";
 import { NaturesLabels } from "../../type";
 import type { TasksState } from "../../store/tasks/type";
 import type { RootState } from "../../store/type";
 import DependencyNatureControl from "./DependencyNatureControl.vue";
 
-function isSelected(wrapper: Wrapper<Vue>, nature: string): boolean {
+function isSelected(wrapper: VueWrapper, nature: string): boolean {
     const option = wrapper.find(`[data-test=option-${nature}]`).element;
     if (!(option instanceof HTMLOptionElement)) {
         throw Error("Enable to find option for nature " + nature);
@@ -47,42 +46,46 @@ describe("DependencyNatureControl", () => {
         has_at_least_one_row_shown = true;
     });
 
-    async function getWrapper(): Promise<Wrapper<Vue>> {
+    function getWrapper(): VueWrapper {
         return shallowMount(DependencyNatureControl, {
-            localVue: await createRoadmapLocalVue(),
-            propsData: {
-                value,
-                available_natures,
-            },
-            mocks: {
-                $store: createStoreMock({
+            global: {
+                ...getGlobalTestOptions({
                     state: {
-                        tasks: {} as TasksState,
+                        tasks_state: {} as TasksState,
                     } as RootState,
-                    getters: {
-                        "tasks/has_at_least_one_row_shown": has_at_least_one_row_shown,
+                    modules: {
+                        tasks: {
+                            getters: {
+                                has_at_least_one_row_shown: () => has_at_least_one_row_shown,
+                            },
+                            namespaced: true,
+                        },
                     },
                 }),
+            },
+            props: {
+                value,
+                available_natures,
             },
         });
     }
 
-    it("should display a selectbox with available natures", async () => {
+    it("should display a selectbox with available natures", () => {
         value = "depends_on";
 
-        const wrapper = await getWrapper();
+        const wrapper = getWrapper();
 
         expect(isSelected(wrapper, "none")).toBe(false);
         expect(isSelected(wrapper, "")).toBe(false);
         expect(isSelected(wrapper, "depends_on")).toBe(true);
     });
 
-    it("should emit input event when the value is changed", async () => {
-        const wrapper = await getWrapper();
+    it("should emit input event when the value is changed", () => {
+        const wrapper = getWrapper();
 
-        wrapper.find(`[data-test=option-depends_on]`).setSelected();
-        wrapper.find(`[data-test=option-]`).setSelected();
-        wrapper.find(`[data-test=option-none]`).setSelected();
+        wrapper.find(`[data-test=option-depends_on]`).setValue();
+        wrapper.find(`[data-test=option-]`).setValue();
+        wrapper.find(`[data-test=option-none]`).setValue();
 
         const input_event = wrapper.emitted("input");
         if (!input_event) {
@@ -94,10 +97,10 @@ describe("DependencyNatureControl", () => {
         expect(input_event[2][0]).toBeNull();
     });
 
-    it("should mark the selectbox as disabled when there is no link", async () => {
+    it("should mark the selectbox as disabled when there is no link", () => {
         available_natures = new NaturesLabels([]);
 
-        const wrapper = await getWrapper();
+        const wrapper = getWrapper();
 
         const select = wrapper.find("[data-test=select-links]").element;
         if (!(select instanceof HTMLSelectElement)) {
@@ -106,10 +109,10 @@ describe("DependencyNatureControl", () => {
         expect(select.disabled).toBe(true);
     });
 
-    it("should mark the selectbox as disabled when there is no rows", async () => {
+    it("should mark the selectbox as disabled when there is no rows", () => {
         has_at_least_one_row_shown = false;
 
-        const wrapper = await getWrapper();
+        const wrapper = getWrapper();
 
         const select = wrapper.find("[data-test=select-links]").element;
         if (!(select instanceof HTMLSelectElement)) {

@@ -25,7 +25,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { useState, useNamespacedGetters } from "vuex-composition-helpers";
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 import { getLeftForDate } from "../../helpers/left-position";
 
 const { interpolate, $gettext } = useGettext();

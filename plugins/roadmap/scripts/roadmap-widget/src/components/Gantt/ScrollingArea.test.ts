@@ -17,19 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import { DateTime } from "luxon";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import ScrollingArea from "./ScrollingArea.vue";
 import { TimePeriodMonth } from "../../helpers/time-period-month";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { RootState } from "../../store/type";
 import type { TimeperiodState } from "../../store/timeperiod/type";
-import { DateTime } from "luxon";
+import { getGlobalTestOptions } from "../../helpers/global-options-for-tests";
+import ScrollingArea from "./ScrollingArea.vue";
 
 jest.useFakeTimers();
-
-type ScrollingAreaExposed = { empty_pixel: HTMLElement };
-
 describe("ScrollingArea", () => {
     const windowIntersectionObserver = window.IntersectionObserver;
     const elementScrollTo = (Element.prototype.scrollTo = (): void => {
@@ -41,23 +38,27 @@ describe("ScrollingArea", () => {
         Element.prototype.scrollTo = elementScrollTo;
     });
 
-    function aScrollingArea(): Wrapper<Vue & ScrollingAreaExposed> {
+    function aScrollingArea(): VueWrapper<InstanceType<typeof ScrollingArea>> {
         return shallowMount(ScrollingArea, {
-            propsData: {
+            props: {
                 now: DateTime.now(),
                 timescale: "month",
             },
-            mocks: {
-                $store: createStoreMock({
+            global: {
+                ...getGlobalTestOptions({
                     state: {
-                        timeperiod: {} as TimeperiodState,
+                        timeperiod_state: {} as TimeperiodState,
                     } as RootState,
-                    getters: {
-                        "timeperiod/time_period": new TimePeriodMonth(
-                            DateTime.fromISO("2020-03-31T22:00:00.000Z"),
-                            DateTime.fromISO("2020-04-30T22:00:00.000Z"),
-                            "en-US",
-                        ),
+                    modules: {
+                        timeperiod: {
+                            state: {
+                                time_period: new TimePeriodMonth(
+                                    DateTime.fromISO("2020-03-31T22:00:00.000Z"),
+                                    DateTime.fromISO("2020-04-30T22:00:00.000Z"),
+                                    "en-US",
+                                ),
+                            },
+                        },
                     },
                 }),
             },
@@ -138,7 +139,7 @@ describe("ScrollingArea", () => {
         await observerCallback([{ isIntersecting: false, target: wrapper.vm.empty_pixel }]);
 
         const events = wrapper.emitted();
-        expect(events).toEqual({ is_scrolling: [[true]] });
+        expect(events).toStrictEqual({ is_scrolling: [[true]] });
     });
 
     it("emits is_scrolling = false if pixel is intersecting with the scrolling area", async () => {
@@ -157,6 +158,6 @@ describe("ScrollingArea", () => {
         await observerCallback([{ isIntersecting: true, target: wrapper.vm.empty_pixel }]);
 
         const events = wrapper.emitted();
-        expect(events).toEqual({ is_scrolling: [[false]] });
+        expect(events).toStrictEqual({ is_scrolling: [[false]] });
     });
 });

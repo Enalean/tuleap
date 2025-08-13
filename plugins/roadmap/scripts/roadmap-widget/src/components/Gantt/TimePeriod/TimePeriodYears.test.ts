@@ -24,7 +24,7 @@ import { NbUnitsPerYear } from "../../../type";
 describe("TimePeriodYears", () => {
     it("should display each year spanning on n units", () => {
         const wrapper = shallowMount(TimePeriodYears, {
-            propsData: {
+            props: {
                 years: new NbUnitsPerYear([
                     [2020, 1],
                     [2021, 12],
@@ -34,17 +34,11 @@ describe("TimePeriodYears", () => {
         });
 
         expect(wrapper).toMatchInlineSnapshot(`
-            <div class="roadmap-gantt-timeperiod">
-              <div class="roadmap-gantt-timeperiod-year roadmap-gantt-timeperiod-year-span-1">
-                2020
-              </div>
-              <div class="roadmap-gantt-timeperiod-year roadmap-gantt-timeperiod-year-span-12">
-                2021
-              </div>
-              <div class="roadmap-gantt-timeperiod-year roadmap-gantt-timeperiod-year-span-6">
-                2022
-              </div>
-            </div>
-        `);
+<div class="roadmap-gantt-timeperiod">
+  <div class="roadmap-gantt-timeperiod-year roadmap-gantt-timeperiod-year-span-1">2020</div>
+  <div class="roadmap-gantt-timeperiod-year roadmap-gantt-timeperiod-year-span-12">2021</div>
+  <div class="roadmap-gantt-timeperiod-year roadmap-gantt-timeperiod-year-span-6">2022</div>
+</div>
+`);
     });
 });

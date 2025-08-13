@@ -231,7 +231,7 @@ onBeforeUnmount(() => {
     observer.value?.disconnect();
 });
 
-watch(rows.value, () => {
+watch(rows, () => {
     observeTimeperiod();
 });
 

@@ -35,10 +35,10 @@
 
 <script setup lang="ts">
 import { onMounted } from "vue";
-import NoDataToShowEmptyState from "./NoDataToShowEmptyState.vue";
+import type { NaturesLabels } from "../type";
 import SomethingWentWrongEmptyState from "./SomethingWentWrongEmptyState.vue";
 import GanttBoard from "./Gantt/GanttBoard.vue";
-import type { NaturesLabels } from "../type";
+import NoDataToShowEmptyState from "./NoDataToShowEmptyState.vue";
 import LoadingState from "./LoadingState.vue";
 import { useActions, useState } from "vuex-composition-helpers";
 

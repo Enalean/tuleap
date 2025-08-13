@@ -18,8 +18,8 @@
  */
 
 import { DateTime } from "luxon";
-import type { Wrapper } from "@vue/test-utils";
-import { mount } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
+import { shallowMount } from "@vue/test-utils";
 import type { Task } from "../../../type";
 import TaskBarProgress from "./TaskBarProgress.vue";
 
@@ -30,7 +30,7 @@ describe("TaskBarProgress", () => {
         start: DateTime | null,
         is_milestone: boolean,
         width: number,
-        percentage: string | null,
+        percentage: string,
         is_text_displayed_inside_progress_bar: boolean,
         is_text_displayed_outside_progress_bar: boolean,
         is_text_displayed_outside_bar: boolean,
@@ -52,7 +52,7 @@ describe("TaskBarProgress", () => {
         is_error_sign_displayed_inside_bar = false;
     });
 
-    function getWrapper(): Wrapper<Vue> {
+    function getWrapper(): VueWrapper {
         task = {
             color_name: "acid-green",
             progress,
@@ -62,8 +62,8 @@ describe("TaskBarProgress", () => {
             is_milestone,
         } as Task;
 
-        return mount(TaskBarProgress, {
-            propsData: {
+        return shallowMount(TaskBarProgress, {
+            props: {
                 left: 42,
                 width,
                 task,
