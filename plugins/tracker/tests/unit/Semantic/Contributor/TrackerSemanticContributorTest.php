@@ -22,7 +22,7 @@
 namespace Tuleap\Tracker\Semantic\Contributor;
 
 use SimpleXMLElement;
-use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -36,7 +36,7 @@ final class TrackerSemanticContributorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->semantic = new TrackerSemanticContributor(
             TrackerTestBuilder::aTracker()->build(),
-            ListFieldBuilder::aListField(102)->build(),
+            SelectboxFieldBuilder::aSelectboxField(102)->build(),
         );
     }
 

@@ -35,7 +35,7 @@ use Tuleap\Tracker\Test\Builders\Fields\ExternalFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\FloatFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\IntegerFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\MultiSelectboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\OpenListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -179,9 +179,8 @@ final class DuckTypedFieldOrderByTest extends TestCase
                     ->build()
             )->build()->getField(),
             ListStaticBindBuilder::aStaticBind(
-                ListFieldBuilder::aListField(92)
+                MultiSelectboxFieldBuilder::aMultiSelectboxField(92)
                     ->withName(self::FIELD_NAME)
-                    ->withMultipleValues()
                     ->inTracker($this->second_tracker)
                     ->build()
             )->build()->getField(),

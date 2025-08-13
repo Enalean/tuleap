@@ -39,7 +39,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\User\XML\Import\IFindUserFromXMLReferenceStub;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use UGroupManager;
 
@@ -69,7 +69,7 @@ final class Tracker_FormElement_Field_List_BindFactoryTest extends TestCase //ph
 
         $mapping = [];
 
-        $field  = ListFieldBuilder::aListField(456)->build();
+        $field  = SelectboxFieldBuilder::aSelectboxField(456)->build();
         $value1 = ListStaticValueBuilder::aStaticValue('Open')->build();
         $value2 = ListStaticValueBuilder::aStaticValue('Closed')->build();
         $value3 = ListStaticValueBuilder::aStaticValue('On going')->build();
@@ -132,7 +132,7 @@ final class Tracker_FormElement_Field_List_BindFactoryTest extends TestCase //ph
 
         $mapping = [];
 
-        $field = ListFieldBuilder::aListField(456)->build();
+        $field = SelectboxFieldBuilder::aSelectboxField(456)->build();
         $bind  = $this->createPartialMock(Tracker_FormElement_Field_List_BindFactory::class, ['getInstanceFromRow']);
         $bind->method('getInstanceFromRow')->willReturn([
             [
@@ -191,7 +191,7 @@ final class Tracker_FormElement_Field_List_BindFactoryTest extends TestCase //ph
         $mapping = [];
 
         $tracker = TrackerTestBuilder::aTracker()->withProject($project)->build();
-        $field   = ListFieldBuilder::aListField(456)->inTracker($tracker)->build();
+        $field   = SelectboxFieldBuilder::aSelectboxField(456)->inTracker($tracker)->build();
 
         $bind = $bind_factory->getInstanceFromXML(
             $xml,
@@ -273,7 +273,7 @@ final class Tracker_FormElement_Field_List_BindFactoryTest extends TestCase //ph
         $bind_factory = new Tracker_FormElement_Field_List_BindFactory(new DatabaseUUIDV7Factory(), $ugroup_manager);
 
         $tracker = TrackerTestBuilder::aTracker()->withProject($project)->build();
-        $field   = ListFieldBuilder::aListField(456)->inTracker($tracker)->build();
+        $field   = SelectboxFieldBuilder::aSelectboxField(456)->inTracker($tracker)->build();
         $mapping = [];
 
         return $bind_factory->getInstanceFromXML(

@@ -20,12 +20,13 @@
  */
 
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\List\SelectboxField;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\DeleteSpecificProperties;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\MultiSelectboxFieldSpecificPropertiesDAO;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\SaveSpecificFieldProperties;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\SearchSpecificProperties;
 
-class Tracker_FormElement_Field_MultiSelectbox extends Tracker_FormElement_Field_Selectbox // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class Tracker_FormElement_Field_MultiSelectbox extends SelectboxField // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public array $default_properties = [
         'size' => [

@@ -25,11 +25,11 @@ namespace Tuleap\Tracker\Workflow;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub;
 use Tracker_Artifact_ChangesetValue;
-use Tracker_FormElement_Field_Selectbox;
 use Transition;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\List\SelectboxField;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\BindValueIdCollectionStub;
@@ -44,7 +44,7 @@ final class ValidValuesAccordingToTransitionsRetrieverTest extends TestCase
     private const THIRD_VALUE_ID                  = 103;
     private const ORIGINAL_FIELD_CHANGED_VALUE_ID = 108;
 
-    private Tracker_FormElement_Field_Selectbox&MockObject $field_changed;
+    private SelectboxField&MockObject $field_changed;
     private Artifact|Stub $artifact;
     private Stub|Workflow $workflow;
     private BindValueIdCollectionStub $values_collection;
@@ -63,7 +63,7 @@ final class ValidValuesAccordingToTransitionsRetrieverTest extends TestCase
     {
         $this->user = UserTestBuilder::anActiveUser()->withId(114)->build();
 
-        $this->field_changed = $this->createMock(Tracker_FormElement_Field_Selectbox::class);
+        $this->field_changed = $this->createMock(SelectboxField::class);
         $this->field_changed->method('getId')->willReturn(201);
 
         $this->artifact = $this->createStub(Artifact::class);

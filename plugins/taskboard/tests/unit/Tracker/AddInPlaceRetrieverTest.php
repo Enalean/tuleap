@@ -37,7 +37,7 @@ final class AddInPlaceRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     private const int SEMANTIC_TITLE_FIELD_ID = 1533;
 
     private MockObject&\Tracker_FormElementFactory $form_element_factory;
-    private \Tracker_FormElement_Field_Selectbox&MockObject $mapped_field;
+    private \Tuleap\Tracker\FormElement\Field\List\SelectboxField&MockObject $mapped_field;
     private RetrieveSemanticTitleFieldStub $title_field_retriever;
     private \PFUser $user;
     private MockObject&Tracker $card_tracker;
@@ -51,7 +51,7 @@ final class AddInPlaceRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->card_tracker->method('getId')->willReturn(135);
 
         $this->form_element_factory  = $this->createMock(\Tracker_FormElementFactory::class);
-        $this->mapped_field          = $this->createMock(\Tracker_FormElement_Field_Selectbox::class);
+        $this->mapped_field          = $this->createMock(\Tuleap\Tracker\FormElement\Field\List\SelectboxField::class);
         $this->title_field_retriever = RetrieveSemanticTitleFieldStub::build();
 
         $this->mapped_field->method('getId')->willReturn(1001);

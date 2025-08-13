@@ -42,7 +42,7 @@ use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueListTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\FormElement\Field\ListFields\RetrieveUsedListFieldStub;
 
@@ -58,7 +58,7 @@ final class CardColumnFinderTest extends TestCase
     private const MAPPED_FIELD_ID         = 1311;
     private ColumnFactory&Stub $column_factory;
     private \PFUser $user;
-    private \Tracker_FormElement_Field_Selectbox $mapped_list_field;
+    private \Tuleap\Tracker\FormElement\Field\List\SelectboxField $mapped_list_field;
     private \Tracker_FormElement_Field_List_Bind_Static $list_bind;
     private \Cardwall_Column $todo_column;
     private \Cardwall_Column $ongoing_column;
@@ -68,7 +68,7 @@ final class CardColumnFinderTest extends TestCase
     protected function setUp(): void
     {
         $this->user              = UserTestBuilder::buildWithDefaults();
-        $this->mapped_list_field = ListFieldBuilder::aListField(self::MAPPED_FIELD_ID)
+        $this->mapped_list_field = SelectboxFieldBuilder::aSelectboxField(self::MAPPED_FIELD_ID)
             ->withReadPermission($this->user, true)
             ->build();
         $this->list_bind         = ListStaticBindBuilder::aStaticBind($this->mapped_list_field)

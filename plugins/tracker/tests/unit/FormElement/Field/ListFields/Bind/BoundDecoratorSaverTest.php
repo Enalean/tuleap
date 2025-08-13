@@ -26,7 +26,7 @@ use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tracker_FormElement_Field_List;
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 
 #[DisableReturnValueGenerationForTestDoubles]
 final class BoundDecoratorSaverTest extends TestCase
@@ -42,7 +42,7 @@ final class BoundDecoratorSaverTest extends TestCase
         $this->bind_decorator_dao    = $this->createMock(BindDecoratorDao::class);
         $this->bound_decorator_saver = new BoundDecoratorSaver($this->bind_decorator_dao);
 
-        $this->field = ListFieldBuilder::aListField(self::FIELD_ID)->build();
+        $this->field = SelectboxFieldBuilder::aSelectboxField(self::FIELD_ID)->build();
     }
 
     public function testItHasSpecificSaveForLegacyColor(): void

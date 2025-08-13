@@ -23,7 +23,7 @@ namespace Tuleap\Tracker;
 
 use SimpleXMLElement;
 use Tracker_FormElement;
-use Tracker_FormElement_Field_Selectbox;
+use Tuleap\Tracker\FormElement\Field\List\SelectboxField;
 
 class TrackerXMLFieldMappingFromExistingTracker
 {
@@ -80,12 +80,12 @@ class TrackerXMLFieldMappingFromExistingTracker
         $form_element_id                            = (string) $form_element_xml->attributes()['ID'];
         $this->xml_fields_mapping[$form_element_id] = $form_element_existing;
 
-        if ($form_element_existing instanceof Tracker_FormElement_Field_Selectbox && isset($form_element_xml->bind)) {
+        if ($form_element_existing instanceof SelectboxField && isset($form_element_xml->bind)) {
             $this->addBindInFieldMapping($form_element_xml, $form_element_existing);
         }
     }
 
-    private function addBindInFieldMapping(SimpleXMLElement $form_element_xml, Tracker_FormElement_Field_Selectbox $form_element_existing)
+    private function addBindInFieldMapping(SimpleXMLElement $form_element_xml, SelectboxField $form_element_existing)
     {
         $items = [];
         if (isset($form_element_xml->bind->items->item)) {

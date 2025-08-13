@@ -25,7 +25,7 @@ use Tuleap\Tracker\Tracker;
 /**
  * Manage configuration of a cardwall on top of a tracker
  */
-class Cardwall_OnTop_ConfigEmpty implements Cardwall_OnTop_IConfig
+class Cardwall_OnTop_ConfigEmpty implements Cardwall_OnTop_IConfig // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public function getTracker()
     {
@@ -102,7 +102,7 @@ class Cardwall_OnTop_ConfigEmpty implements Cardwall_OnTop_IConfig
      * Get the column/field/value mappings by duck typing the colums labels
      * with the values of the given fields
      *
-     * @param array $fields array of Tracker_FormElement_Field_Selectbox
+     * @param Tracker_FormElement_Field_List[] $fields
      *
      * @return Cardwall_MappingCollection
      */

@@ -33,7 +33,7 @@ use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueListTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\FormElement\Field\ListFields\RetrieveUsedListFieldStub;
 
@@ -56,7 +56,7 @@ final class ArtifactMappedFieldValueRetrieverTest extends \Tuleap\Test\PHPUnit\T
 
         $this->user            = UserTestBuilder::aUser()->build();
         $this->field_retriever = RetrieveUsedListFieldStub::withField(
-            ListFieldBuilder::aListField(self::FIELD_ID)->withReadPermission($this->user, true)->build(),
+            SelectboxFieldBuilder::aSelectboxField(self::FIELD_ID)->withReadPermission($this->user, true)->build(),
         );
         $this->status_provider = $this->createStub(\Cardwall_FieldProviders_SemanticStatusFieldRetriever::class);
     }
@@ -90,7 +90,7 @@ final class ArtifactMappedFieldValueRetrieverTest extends \Tuleap\Test\PHPUnit\T
     public function testItReturnsNothingWhenUserCannotReadMappedField(): void
     {
         $this->field_retriever = RetrieveUsedListFieldStub::withField(
-            ListFieldBuilder::aListField(self::FIELD_ID)->withReadPermission($this->user, false)->build(),
+            SelectboxFieldBuilder::aSelectboxField(self::FIELD_ID)->withReadPermission($this->user, false)->build(),
         );
 
         self::assertTrue($this->getValue()->isNothing());
@@ -105,7 +105,7 @@ final class ArtifactMappedFieldValueRetrieverTest extends \Tuleap\Test\PHPUnit\T
 
     public function testItReturnsNothingWhenValueIsNotListValue(): void
     {
-        $mapped_field          = ListFieldBuilder::aListField(self::FIELD_ID)->withReadPermission($this->user, true)->build();
+        $mapped_field          = SelectboxFieldBuilder::aSelectboxField(self::FIELD_ID)->withReadPermission($this->user, true)->build();
         $this->field_retriever = RetrieveUsedListFieldStub::withField($mapped_field);
 
         $last_changeset            = ChangesetTestBuilder::aChangeset(677)->build();
@@ -120,7 +120,7 @@ final class ArtifactMappedFieldValueRetrieverTest extends \Tuleap\Test\PHPUnit\T
 
     public function testItReturnsNothingWhenValueIsEmpty(): void
     {
-        $mapped_field          = ListFieldBuilder::aListField(self::FIELD_ID)->withReadPermission($this->user, true)->build();
+        $mapped_field          = SelectboxFieldBuilder::aSelectboxField(self::FIELD_ID)->withReadPermission($this->user, true)->build();
         $this->field_retriever = RetrieveUsedListFieldStub::withField($mapped_field);
 
         $last_changeset            = ChangesetTestBuilder::aChangeset(677)->build();
@@ -137,7 +137,7 @@ final class ArtifactMappedFieldValueRetrieverTest extends \Tuleap\Test\PHPUnit\T
 
     public function testItReturnsFirstValueOfMappedField(): void
     {
-        $mapped_field          = ListFieldBuilder::aListField(self::FIELD_ID)->withReadPermission($this->user, true)->build();
+        $mapped_field          = SelectboxFieldBuilder::aSelectboxField(self::FIELD_ID)->withReadPermission($this->user, true)->build();
         $list_bind             = ListStaticBindBuilder::aStaticBind($mapped_field)
             ->withStaticValues([9074 => 'On Going', 9086 => 'Blocked'])
             ->build();

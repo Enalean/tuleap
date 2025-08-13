@@ -26,6 +26,7 @@ use Tuleap\Layout\CssAssetCollection;
 use Tuleap\Layout\CssViteAsset;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Project\MappingRegistry;
+use Tuleap\Tracker\FormElement\Field\List\SelectboxField;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
 use Tuleap\Tracker\Report\Widget\WidgetAdditionalButtonPresenter;
 
@@ -38,7 +39,7 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
     /** @var Cardwall_OnTop_Config */
     private $config;
 
-    /** @var Tracker_FormElement_Field_Selectbox  */
+    /** @var SelectboxField  */
     private $field;
 
     /** @var Tracker_Report_Session */
@@ -53,7 +54,7 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
      * @param string $name           the name of the renderer
      * @param string $description    the description of the renderer
      * @param int    $rank           the rank
-     * @param Tracker_FormElement_Field_Selectbox    $field       the field
+     * @param SelectboxField    $field       the field
      */
     public function __construct(
         Plugin $plugin,
@@ -63,7 +64,7 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
         $name,
         $description,
         $rank,
-        ?Tracker_FormElement_Field_Selectbox $field = null,
+        ?SelectboxField $field = null,
     ) {
         parent::__construct($id, $report, $name, $description, $rank);
         $this->plugin = $plugin;
@@ -72,7 +73,7 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
     }
 
     /**
-     * @return Tracker_FormElement_Field_Selectbox
+     * @return SelectboxField
      */
     public function getField()
     {

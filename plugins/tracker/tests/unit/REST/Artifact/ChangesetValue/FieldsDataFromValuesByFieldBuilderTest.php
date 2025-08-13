@@ -27,7 +27,7 @@ use Tuleap\Tracker\FormElement\Field\RetrieveUsedFields;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkInitialChangesetValueBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\FloatFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\IntegerFieldBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\MultiSelectboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\TextFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -157,9 +157,8 @@ final class FieldsDataFromValuesByFieldBuilderTest extends \Tuleap\Test\PHPUnit\
 
     public function testItThrowsAnExceptionIfFieldIsNotAlphaNumeric(): void
     {
-        $msb_field = ListFieldBuilder::aListField(484)
+        $msb_field = MultiSelectboxFieldBuilder::aMultiSelectboxField(484)
             ->withName('msb')
-            ->withMultipleValues()
             ->inTracker($this->tracker)
             ->build();
 

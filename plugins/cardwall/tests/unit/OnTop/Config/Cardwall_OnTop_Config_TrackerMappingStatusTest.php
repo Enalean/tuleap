@@ -27,7 +27,7 @@ use Cardwall_OnTop_Config_TrackerMappingStatus;
 use Cardwall_OnTop_Config_ValueMapping;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -61,14 +61,14 @@ final class Cardwall_OnTop_Config_TrackerMappingStatusTest extends TestCase // p
     public function testItReturnsAnEmptyLabelWhenThereIsNoValueMapping(): void
     {
         $value_mappings = [];
-        $mapping        = new Cardwall_OnTop_Config_TrackerMappingStatus(TrackerTestBuilder::aTracker()->build(), [], $value_mappings, ListFieldBuilder::aListField(875)->build());
+        $mapping        = new Cardwall_OnTop_Config_TrackerMappingStatus(TrackerTestBuilder::aTracker()->build(), [], $value_mappings, SelectboxFieldBuilder::aSelectboxField(875)->build());
         $column         = new Cardwall_Column(0, 'whatever', 'white');
         self::assertEquals('', $mapping->getSelectedValueLabel($column));
     }
 
     public function testItReturnsAnEmptyLabelWhenThereIsNoMappingForTheGivenColumn(): void
     {
-        $mapping                 = new Cardwall_OnTop_Config_TrackerMappingStatus(TrackerTestBuilder::aTracker()->build(), [], $this->value_mappings, ListFieldBuilder::aListField(875)->build());
+        $mapping                 = new Cardwall_OnTop_Config_TrackerMappingStatus(TrackerTestBuilder::aTracker()->build(), [], $this->value_mappings, SelectboxFieldBuilder::aSelectboxField(875)->build());
         $column_which_match      = new Cardwall_Column(11, 'Ongoing', 'white');
         $column_which_dont_match = new Cardwall_Column(13, 'Ship It', 'white');
         self::assertEquals('In Progress', $mapping->getSelectedValueLabel($column_which_match));
@@ -78,7 +78,7 @@ final class Cardwall_OnTop_Config_TrackerMappingStatusTest extends TestCase // p
 
     public function testItIsMappedToAColumnWhenTheStatusValueMatchColumnMapping(): void
     {
-        $mapping = new Cardwall_OnTop_Config_TrackerMappingStatus(TrackerTestBuilder::aTracker()->build(), [], $this->value_mappings, ListFieldBuilder::aListField(875)->build());
+        $mapping = new Cardwall_OnTop_Config_TrackerMappingStatus(TrackerTestBuilder::aTracker()->build(), [], $this->value_mappings, SelectboxFieldBuilder::aSelectboxField(875)->build());
 
         $column = new Cardwall_Column(11, 'Ongoing', '');
 
@@ -90,7 +90,7 @@ final class Cardwall_OnTop_Config_TrackerMappingStatusTest extends TestCase // p
 
     public function testItIsMappedToAColumnWhenStatusIsNullAndNoneIsMappedToColumn(): void
     {
-        $mapping = new Cardwall_OnTop_Config_TrackerMappingStatus(TrackerTestBuilder::aTracker()->build(), [], $this->value_mappings, ListFieldBuilder::aListField(875)->build());
+        $mapping = new Cardwall_OnTop_Config_TrackerMappingStatus(TrackerTestBuilder::aTracker()->build(), [], $this->value_mappings, SelectboxFieldBuilder::aSelectboxField(875)->build());
 
         $column = new Cardwall_Column(10, 'Todo', '');
 
@@ -101,7 +101,7 @@ final class Cardwall_OnTop_Config_TrackerMappingStatusTest extends TestCase // p
 
     public function testItDoesntMapOnNoneIfItsNotExplicitlyConfigured(): void
     {
-        $mapping = new Cardwall_OnTop_Config_TrackerMappingStatus(TrackerTestBuilder::aTracker()->build(), [], $this->value_mappings, ListFieldBuilder::aListField(875)->build());
+        $mapping = new Cardwall_OnTop_Config_TrackerMappingStatus(TrackerTestBuilder::aTracker()->build(), [], $this->value_mappings, SelectboxFieldBuilder::aSelectboxField(875)->build());
 
         $column = new Cardwall_Column(100, 'None', '');
 

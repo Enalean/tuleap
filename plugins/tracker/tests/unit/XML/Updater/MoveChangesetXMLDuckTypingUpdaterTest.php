@@ -43,7 +43,8 @@ use Tuleap\Tracker\Test\Builders\Fields\FloatFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserGroupBindBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\MultiSelectboxFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\OpenListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\TextFieldBuilder;
@@ -156,8 +157,7 @@ final class MoveChangesetXMLDuckTypingUpdaterTest extends TestCase
         $destination_cc_field_id = 26;
 
         $source_cc_field_bind = ListUserGroupBindBuilder::aUserGroupBind(
-            ListFieldBuilder::aListField($source_cc_field_id)
-                ->withMultipleValues()
+            MultiSelectboxFieldBuilder::aMultiSelectboxField($source_cc_field_id)
                 ->withName('cc')
                 ->build()
         )->withUserGroups([
@@ -167,8 +167,7 @@ final class MoveChangesetXMLDuckTypingUpdaterTest extends TestCase
         ])->build();
 
         $destination_cc_field_bind = ListUserGroupBindBuilder::aUserGroupBind(
-            ListFieldBuilder::aListField($destination_cc_field_id)
-                ->withMultipleValues()
+            MultiSelectboxFieldBuilder::aMultiSelectboxField($destination_cc_field_id)
                 ->withName('cc')
                 ->build()
         )->withUserGroups([
@@ -177,7 +176,7 @@ final class MoveChangesetXMLDuckTypingUpdaterTest extends TestCase
         ])->build();
 
         $source_status_field_bind = ListStaticBindBuilder::aStaticBind(
-            ListFieldBuilder::aListField($source_status_field_id)->withName('status')->build()
+            SelectboxFieldBuilder::aSelectboxField($source_status_field_id)->withName('status')->build()
         )->withStaticValues([
             105 => 'New',
             106 => 'In Progress',
@@ -185,7 +184,7 @@ final class MoveChangesetXMLDuckTypingUpdaterTest extends TestCase
         ])->build();
 
         $destination_status_field_bind = ListStaticBindBuilder::aStaticBind(
-            ListFieldBuilder::aListField($destination_status_field_id)->withName('status')->build()
+            SelectboxFieldBuilder::aSelectboxField($destination_status_field_id)->withName('status')->build()
         )->withStaticValues([
             205 => 'Todo',
             206 => 'In Progress',
@@ -193,7 +192,7 @@ final class MoveChangesetXMLDuckTypingUpdaterTest extends TestCase
         ])->build();
 
         $source_severity_field_bind = ListStaticBindBuilder::aStaticBind(
-            ListFieldBuilder::aListField($source_severity_field_id)->withName('severity')->build()
+            SelectboxFieldBuilder::aSelectboxField($source_severity_field_id)->withName('severity')->build()
         )->withStaticValues([
             113 => 'Low Impact',
             114 => 'Major Impact',
@@ -201,7 +200,7 @@ final class MoveChangesetXMLDuckTypingUpdaterTest extends TestCase
         ])->build();
 
         $destination_severity_field_bind = ListStaticBindBuilder::aStaticBind(
-            ListFieldBuilder::aListField($destination_severity_field_id)->withName('severity')->build()
+            SelectboxFieldBuilder::aSelectboxField($destination_severity_field_id)->withName('severity')->build()
         )->withStaticValues([
             213 => 'Low Impact',
             214 => 'Major Impact',
@@ -209,8 +208,7 @@ final class MoveChangesetXMLDuckTypingUpdaterTest extends TestCase
         ])->build();
 
         $source_static_multiple_list_field_bind = ListStaticBindBuilder::aStaticBind(
-            ListFieldBuilder::aListField($source_multiple_list_field_id)
-                ->withMultipleValues()
+            MultiSelectboxFieldBuilder::aMultiSelectboxField($source_multiple_list_field_id)
                 ->withName('multiple')
                 ->build()
         )->withStaticValues([
@@ -220,8 +218,7 @@ final class MoveChangesetXMLDuckTypingUpdaterTest extends TestCase
         ])->build();
 
         $destination_static_multiple_list_field_bind = ListStaticBindBuilder::aStaticBind(
-            ListFieldBuilder::aListField($destination_multiple_list_field_id)
-                ->withMultipleValues()
+            MultiSelectboxFieldBuilder::aMultiSelectboxField($destination_multiple_list_field_id)
                 ->withName('multiple')
                 ->build()
         )->withStaticValues([
@@ -232,8 +229,7 @@ final class MoveChangesetXMLDuckTypingUpdaterTest extends TestCase
 
         $jolasti                       = UserTestBuilder::anActiveUser()->withId(104)->withUserName("Joe l'asticot")->build();
         $source_assigned_to_field_bind = ListUserBindBuilder::aUserBind(
-            ListFieldBuilder::aListField($source_assigned_to_field_id)
-                ->withMultipleValues()
+            MultiSelectboxFieldBuilder::aMultiSelectboxField($source_assigned_to_field_id)
                 ->withName('assigned_to')
                 ->build()
         )->withUsers([
@@ -242,8 +238,7 @@ final class MoveChangesetXMLDuckTypingUpdaterTest extends TestCase
         ])->build();
 
         $destination_assigned_to_field_bind = ListUserBindBuilder::aUserBind(
-            ListFieldBuilder::aListField($destination_assigned_to_field_id)
-                ->withMultipleValues()
+            MultiSelectboxFieldBuilder::aMultiSelectboxField($destination_assigned_to_field_id)
                 ->withName('assigned_to')
                 ->build()
         )->withUsers([

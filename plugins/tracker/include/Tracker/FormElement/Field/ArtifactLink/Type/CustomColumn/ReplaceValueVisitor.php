@@ -32,7 +32,6 @@ use Tracker_FormElement_Field_MultiSelectbox;
 use Tracker_FormElement_Field_OpenList;
 use Tracker_FormElement_Field_PermissionsOnArtifact;
 use Tracker_FormElement_Field_Radiobutton;
-use Tracker_FormElement_Field_Selectbox;
 use Tracker_FormElement_Field_SubmittedBy;
 use Tracker_FormElement_FieldVisitor;
 use Tuleap\Tracker\FormElement\Field\ArtifactId\ArtifactIdField;
@@ -42,6 +41,7 @@ use Tuleap\Tracker\FormElement\Field\Date\DateField;
 use Tuleap\Tracker\FormElement\Field\Float\FloatField;
 use Tuleap\Tracker\FormElement\Field\Integer\IntegerField;
 use Tuleap\Tracker\FormElement\Field\LastUpdateDate\LastUpdateDateField;
+use Tuleap\Tracker\FormElement\Field\List\SelectboxField;
 use Tuleap\Tracker\FormElement\Field\PerTrackerArtifactId\PerTrackerArtifactIdField;
 use Tuleap\Tracker\FormElement\Field\Priority\PriorityField;
 use Tuleap\Tracker\FormElement\Field\String\StringField;
@@ -176,7 +176,7 @@ class ReplaceValueVisitor implements Tracker_FormElement_FieldVisitor
         throw new UnsupportedFieldException();
     }
 
-    public function visitSelectbox(Tracker_FormElement_Field_Selectbox $field)
+    public function visitSelectbox(SelectboxField $field)
     {
         $changeset_value = $this->changeset->getValue($field);
         if (! $changeset_value) {

@@ -35,7 +35,7 @@ use Tuleap\Taskboard\Tracker\TrackerCollection;
 use Tuleap\Taskboard\Tracker\TrackerCollectionRetriever;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\FormElement\Field\ListFields\RetrieveUsedListFieldStub;
 
@@ -116,7 +116,7 @@ final class TrackerMappingPresenterBuilderTest extends \Tuleap\Test\PHPUnit\Test
             ->with($this->milestone)
             ->willReturn(new TrackerCollection([$taskboard_tracker]));
         $this->field_retriever     = RetrieveUsedListFieldStub::withField(
-            ListFieldBuilder::aListField(self::FIRST_MAPPED_FIELD_ID)->build()
+            SelectboxFieldBuilder::aSelectboxField(self::FIRST_MAPPED_FIELD_ID)->build()
         );
         $this->search_mapped_field = SearchMappedFieldStub::withMappedField(
             $taskboard_tracker,
@@ -143,7 +143,7 @@ final class TrackerMappingPresenterBuilderTest extends \Tuleap\Test\PHPUnit\Test
             ->with($this->milestone)
             ->willReturn(new TrackerCollection([$taskboard_tracker]));
         $this->field_retriever     = RetrieveUsedListFieldStub::withField(
-            ListFieldBuilder::aListField(self::FIRST_MAPPED_FIELD_ID)->build()
+            SelectboxFieldBuilder::aSelectboxField(self::FIRST_MAPPED_FIELD_ID)->build()
         );
         $this->search_mapped_field = SearchMappedFieldStub::withMappedField(
             $taskboard_tracker,
@@ -184,8 +184,8 @@ final class TrackerMappingPresenterBuilderTest extends \Tuleap\Test\PHPUnit\Test
             [$second_taskboard_tracker, self::SECOND_MAPPED_FIELD_ID]
         );
         $this->field_retriever     = RetrieveUsedListFieldStub::withFields(
-            ListFieldBuilder::aListField(self::FIRST_MAPPED_FIELD_ID)->build(),
-            ListFieldBuilder::aListField(self::SECOND_MAPPED_FIELD_ID)->build()
+            SelectboxFieldBuilder::aSelectboxField(self::FIRST_MAPPED_FIELD_ID)->build(),
+            SelectboxFieldBuilder::aSelectboxField(self::SECOND_MAPPED_FIELD_ID)->build()
         );
         $this->search_values       = SearchMappedFieldValuesForColumnStub::withMappings(
             [$first_taskboard_tracker, $this->ongoing_column, [1674]],

@@ -84,7 +84,8 @@ use Tuleap\Tracker\Test\Builders\Fields\LastUpdateByFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\LastUpdateDateFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserGroupBindBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\MultiSelectboxFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\OpenListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\RadioButtonFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
@@ -486,7 +487,7 @@ final class InvalidTermCollectorVisitorTest extends \Tuleap\Test\PHPUnit\TestCas
         $this->formelement_factory->method('getUsedFormElementFieldByNameForUser')
             ->willReturn(
                 ListStaticBindBuilder::aStaticBind(
-                    ListFieldBuilder::aListField(957)->withName(self::FIELD_NAME)->build()
+                    SelectboxFieldBuilder::aSelectboxField(957)->withName(self::FIELD_NAME)->build()
                 )->build()->getField()
             );
         $this->comparison = $comparison;
@@ -501,7 +502,7 @@ final class InvalidTermCollectorVisitorTest extends \Tuleap\Test\PHPUnit\TestCas
         $this->formelement_factory->method('getUsedFormElementFieldByNameForUser')
             ->willReturn(
                 ListStaticBindBuilder::aStaticBind(
-                    ListFieldBuilder::aListField(957)->withMultipleValues()->withName(self::FIELD_NAME)->build()
+                    MultiSelectboxFieldBuilder::aMultiSelectboxField(957)->withName(self::FIELD_NAME)->build()
                 )->build()->getField()
             );
         $this->comparison = $comparison;
@@ -598,7 +599,7 @@ final class InvalidTermCollectorVisitorTest extends \Tuleap\Test\PHPUnit\TestCas
         ];
         yield 'file' => [FileFieldBuilder::aFileField(272)->withName(self::FIELD_NAME)->build()];
 
-        $list_field = ListFieldBuilder::aListField(175)->withName(self::FIELD_NAME)->build();
+        $list_field = SelectboxFieldBuilder::aSelectboxField(175)->withName(self::FIELD_NAME)->build();
 
         yield 'static list' => [ListStaticBindBuilder::aStaticBind($list_field)->build()->getField()];
         yield 'user group list' => [ListUserGroupBindBuilder::aUserGroupBind($list_field)->build()->getField()];

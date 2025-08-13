@@ -25,6 +25,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\List\SelectboxField;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Tracker;
@@ -50,13 +51,13 @@ final class Tracker_Workflow_Trigger_RulesManagerTest extends \Tuleap\Test\PHPUn
     private Tracker&MockObject $tracker;
     private int $target_field_id;
     private Tracker_FormElement_Field_List_Bind_StaticValue $target_field_value;
-    private Tracker_FormElement_Field_Selectbox&MockObject $target_field;
+    private SelectboxField&MockObject $target_field;
     private int $trigger_field_id_1;
     private Tracker_FormElement_Field_List_Bind_StaticValue $trigger_field_value_1;
-    private Tracker_FormElement_Field_Selectbox&MockObject $trigger_field_1;
+    private SelectboxField&MockObject $trigger_field_1;
     private SimpleXMLElement $xml;
-    private Tracker_FormElement_Field_Selectbox $field_1685;
-    private Tracker_FormElement_Field_Selectbox $field_1741;
+    private SelectboxField $field_1685;
+    private SelectboxField $field_1741;
     private Tracker_FormElement_Field_List_Bind_StaticValue $value_2118;
     private Tracker_FormElement_Field_List_Bind_StaticValue $value_2060;
     private Tracker_FormElement_Field_List_Bind_StaticValue $value_2061;
@@ -123,13 +124,13 @@ final class Tracker_Workflow_Trigger_RulesManagerTest extends \Tuleap\Test\PHPUn
             ->getMock();
 
         $template_tracker = TrackerTestBuilder::aTracker()->withId(101)->build();
-        $new_field_01     = $this->createMock(Tracker_FormElement_Field_Selectbox::class);
+        $new_field_01     = $this->createMock(SelectboxField::class);
         $new_field_01->method('getId')->willReturn(502);
         $new_field_01->method('getTracker')->willReturn($template_tracker);
-        $new_field_02 = $this->createMock(Tracker_FormElement_Field_Selectbox::class);
+        $new_field_02 = $this->createMock(SelectboxField::class);
         $new_field_02->method('getId')->willReturn(503);
         $new_field_02->method('getTracker')->willReturn($template_tracker);
-        $new_field_03 = $this->createMock(Tracker_FormElement_Field_Selectbox::class);
+        $new_field_03 = $this->createMock(SelectboxField::class);
         $new_field_03->method('getId')->willReturn(501);
         $new_field_03->method('getTracker')->willReturn($template_tracker);
 
@@ -235,9 +236,9 @@ final class Tracker_Workflow_Trigger_RulesManagerTest extends \Tuleap\Test\PHPUn
         return ListStaticValueBuilder::aStaticValue('label')->withId($id)->build();
     }
 
-    private function buildSelectBoxField(int $id): Tracker_FormElement_Field_Selectbox
+    private function buildSelectBoxField(int $id): SelectboxField
     {
-        return new Tracker_FormElement_Field_Selectbox($id, 1, 0, 'name', 'label', 'desc', true, 'S', false, false, 0);
+        return new SelectboxField($id, 1, 0, 'name', 'label', 'desc', true, 'S', false, false, 0);
     }
 
     public function testItAddsTargetFieldAndCondition(): void
@@ -287,7 +288,7 @@ final class Tracker_Workflow_Trigger_RulesManagerTest extends \Tuleap\Test\PHPUn
 
         $this->target_field_id    = 12;
         $this->target_field_value = $this->buildStaticValue($this->target_value_id);
-        $this->target_field       = $this->createMock(Tracker_FormElement_Field_Selectbox::class);
+        $this->target_field       = $this->createMock(SelectboxField::class);
         $this->target_field->method('getId')->willReturn($this->target_field_id);
         $this->target_field->method('getTracker')->willReturn($this->tracker);
         $this->target_field->method('getAllValues')->willReturn([
@@ -299,7 +300,7 @@ final class Tracker_Workflow_Trigger_RulesManagerTest extends \Tuleap\Test\PHPUn
         $this->trigger_field_id_1    = 369;
         $this->trigger_value_id_1    = 852;
         $this->trigger_field_value_1 = $this->buildStaticValue($this->trigger_value_id_1);
-        $this->trigger_field_1       = $this->createMock(Tracker_FormElement_Field_Selectbox::class);
+        $this->trigger_field_1       = $this->createMock(SelectboxField::class);
         $this->trigger_field_1->method('getId')->willReturn($this->trigger_field_id_1);
         $this->trigger_field_1->method('getAllValues')->willReturn([
             $this->trigger_field_value_1,
@@ -668,7 +669,7 @@ final class Tracker_Workflow_Trigger_RulesManagerTest extends \Tuleap\Test\PHPUn
 
     public function testItReturnsFalseWhenNoTrackerIsFound(): void
     {
-        $field   = $this->createMock(Tracker_FormElement_Field_Selectbox::class);
+        $field   = $this->createMock(SelectboxField::class);
         $tracker = TrackerTestBuilder::aTracker()->build();
         $field->method('getTracker')->willReturn($tracker);
 
@@ -680,7 +681,7 @@ final class Tracker_Workflow_Trigger_RulesManagerTest extends \Tuleap\Test\PHPUn
 
     public function testItReturnsFalseWhenNoTriggeredFieldIsFound(): void
     {
-        $field   = $this->createMock(Tracker_FormElement_Field_Selectbox::class);
+        $field   = $this->createMock(SelectboxField::class);
         $tracker = TrackerTestBuilder::aTracker()->build();
         $field->method('getTracker')->willReturn($tracker);
         $field->method('getId')->willReturn(1);
@@ -690,7 +691,7 @@ final class Tracker_Workflow_Trigger_RulesManagerTest extends \Tuleap\Test\PHPUn
                 $tracker,
                 new ArrayIterator(
                     [
-                        new Tracker_FormElement_Field_Selectbox(
+                        new SelectboxField(
                             1,
                             1,
                             0,
@@ -714,7 +715,7 @@ final class Tracker_Workflow_Trigger_RulesManagerTest extends \Tuleap\Test\PHPUn
 
     public function testItReturnsTrueWhenFieldIsUsedInTrigger(): void
     {
-        $field   = $this->createMock(Tracker_FormElement_Field_Selectbox::class);
+        $field   = $this->createMock(SelectboxField::class);
         $tracker = TrackerTestBuilder::aTracker()->build();
         $field->method('getTracker')->willReturn($tracker);
         $field->method('getId')->willReturn(1);
@@ -724,7 +725,7 @@ final class Tracker_Workflow_Trigger_RulesManagerTest extends \Tuleap\Test\PHPUn
                 $tracker,
                 new ArrayIterator(
                     [
-                        new Tracker_FormElement_Field_Selectbox(
+                        new SelectboxField(
                             1,
                             1,
                             0,

@@ -58,7 +58,8 @@ use Tuleap\Tracker\Report\Query\Advanced\UgroupLabelConverter;
 use Tuleap\Tracker\Semantic\Contributor\ContributorFieldRetriever;
 use Tuleap\Tracker\Semantic\Contributor\TrackerSemanticContributorFactory;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\MultiSelectboxFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\Permission\RetrieveUserPermissionOnFieldsStub;
 use Tuleap\Tracker\Test\Stub\RetrieveFieldTypeStub;
@@ -163,8 +164,7 @@ final class InvalidOrderByBuilderTest extends TestCase
     {
         $tracker = TrackerTestBuilder::aTracker()->withId(646)->build();
         $this->status_field_retriever->withField(
-            ListFieldBuilder::aListField(102)
-                ->withMultipleValues()
+            MultiSelectboxFieldBuilder::aMultiSelectboxField(102)
                 ->inTracker($tracker)
                 ->build()
         );
@@ -192,10 +192,9 @@ final class InvalidOrderByBuilderTest extends TestCase
         $this->trackers             = [$tracker];
         $this->used_field_retriever = RetrieveUsedFieldsStub::withFields(
             ListStaticBindBuilder::aStaticBind(
-                ListFieldBuilder::aListField(102)
+                MultiSelectboxFieldBuilder::aMultiSelectboxField(102)
                     ->inTracker($tracker)
                     ->withName('my_field')
-                    ->withMultipleValues()
                     ->build()
             )->build()->getField()
         );
@@ -210,7 +209,7 @@ final class InvalidOrderByBuilderTest extends TestCase
         $this->trackers             = [$tracker];
         $this->used_field_retriever = RetrieveUsedFieldsStub::withFields(
             ListStaticBindBuilder::aStaticBind(
-                ListFieldBuilder::aListField(102)
+                SelectboxFieldBuilder::aSelectboxField(102)
                     ->inTracker($tracker)
                     ->withName('my_field')
                     ->build()

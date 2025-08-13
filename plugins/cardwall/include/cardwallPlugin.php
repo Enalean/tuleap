@@ -48,6 +48,7 @@ use Tuleap\Tracker\Artifact\XML\Exporter\TrackerEventExportFullXML;
 use Tuleap\Tracker\Artifact\XML\Exporter\TrackerEventExportStructureXML;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Semantic\ExternalSemanticsExportEvent;
 use Tuleap\Tracker\Events\AllowedFieldTypeChangesRetriever;
+use Tuleap\Tracker\FormElement\Field\List\SelectboxField;
 use Tuleap\Tracker\Report\Renderer\ImportRendererFromXmlEvent;
 use Tuleap\Tracker\Semantic\CollectionOfFieldsDuplicator;
 use Tuleap\Tracker\Semantic\Status\CachedSemanticStatusFieldRetriever;
@@ -259,7 +260,7 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
     private function getFieldForCardwallFromId($id)
     {
         $field = Tracker_FormElementFactory::instance()->getFormElementById($id);
-        if ($field && $field->userCanRead() && $field instanceof Tracker_FormElement_Field_Selectbox) {
+        if ($field && $field->userCanRead() && $field instanceof SelectboxField) {
             return $field;
         }
         return null;

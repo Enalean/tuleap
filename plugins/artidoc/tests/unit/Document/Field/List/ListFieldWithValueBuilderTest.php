@@ -48,7 +48,7 @@ use Tuleap\Tracker\Test\Builders\Fields\List\ListUserGroupBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserGroupValueBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserValueBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\StaticBindDecoratorBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 
 #[DisableReturnValueGenerationForTestDoubles]
 final class ListFieldWithValueBuilderTest extends TestCase
@@ -80,7 +80,7 @@ final class ListFieldWithValueBuilderTest extends TestCase
     public function testItBuildsUserListFields(): void
     {
         $user_list_field = ListUserBindBuilder::aUserBind(
-            ListFieldBuilder::aListField(123)->withLabel('user list field')->build()
+            SelectboxFieldBuilder::aSelectboxField(123)->withLabel('user list field')->build()
         )->build()->getField();
 
         $expected_list_field_with_value = new UserListFieldWithValue(
@@ -113,7 +113,7 @@ final class ListFieldWithValueBuilderTest extends TestCase
         $red_value         = ListStaticValueBuilder::aStaticValue('Red')->withId(101)->build();
         $blue_value        = ListStaticValueBuilder::aStaticValue('Blue')->withId(102)->build();
         $static_list_field = ListStaticBindBuilder::aStaticBind(
-            ListFieldBuilder::aListField(123)->withLabel('static list field')->build()
+            SelectboxFieldBuilder::aSelectboxField(123)->withLabel('static list field')->build()
         )
             ->withBuildStaticValues([$red_value, $blue_value])
             ->withDecorators([
@@ -149,7 +149,7 @@ final class ListFieldWithValueBuilderTest extends TestCase
     public function testItBuildsUserGroupsListFields(): void
     {
         $user_group_list_field = ListUserGroupBindBuilder::aUserGroupBind(
-            ListFieldBuilder::aListField(123)->withLabel('user group list field')->build()
+            SelectboxFieldBuilder::aSelectboxField(123)->withLabel('user group list field')->build()
         )->build()->getField();
 
         $expected_user_group_list_field_with_value = new UserGroupsListFieldWithValue(

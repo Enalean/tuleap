@@ -34,12 +34,12 @@ use Cardwall_OnTop_Config_TrackerMapping;
 use Cardwall_SingleCard;
 use Cardwall_UserPreferences_UserPreferencesDisplayUser;
 use Tracker_Artifact_Changeset_Null;
-use Tracker_FormElement_Field_Selectbox;
 use Tuleap\GlobalResponseMock;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\FormElement\Field\Float\FloatField;
+use Tuleap\Tracker\FormElement\Field\List\SelectboxField;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Tracker;
 
@@ -64,8 +64,8 @@ final class Cardwall_CardControllerTest extends TestCase // phpcs:ignore Squiz.C
         $card_fields = $this->createMock(Cardwall_CardFields::class);
 
         $field1 = $this->createMock(FloatField::class);
-        $field2 = $this->createMock(Tracker_FormElement_Field_Selectbox::class);
-        $field3 = $this->createMock(Tracker_FormElement_Field_Selectbox::class);
+        $field2 = $this->createMock(SelectboxField::class);
+        $field3 = $this->createMock(SelectboxField::class);
 
         $field1->method('getJsonValue')->willReturn(5.1);
         $field2->method('getJsonValue')->willReturn([101, 201]);

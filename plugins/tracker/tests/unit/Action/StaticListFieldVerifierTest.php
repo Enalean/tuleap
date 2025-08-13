@@ -26,7 +26,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserBindBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -49,7 +49,7 @@ final class StaticListFieldVerifierTest extends TestCase
     public function testItReturnsFalseWhenTheFieldIsBoundToUsers(): void
     {
         $user_bind = ListUserBindBuilder::aUserBind(
-            ListFieldBuilder::aListField(761)->build()
+            SelectboxFieldBuilder::aSelectboxField(761)->build()
         )->withUsers([
             UserTestBuilder::anActiveUser()->build(),
         ])->build();
@@ -60,7 +60,7 @@ final class StaticListFieldVerifierTest extends TestCase
     public function testItReturnsTrueWhenTheFieldIsBoundToStaticValues(): void
     {
         $static_bind = ListStaticBindBuilder::aStaticBind(
-            ListFieldBuilder::aListField(977)->build()
+            SelectboxFieldBuilder::aSelectboxField(977)->build()
         )->withStaticValues([
             1 => 'Open',
             2 => 'Closed',

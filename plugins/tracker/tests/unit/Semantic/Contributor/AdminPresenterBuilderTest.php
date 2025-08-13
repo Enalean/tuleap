@@ -111,7 +111,7 @@ final class AdminPresenterBuilderTest extends TestCase
 
     private function getFieldWithIdAndLabel(int $id, $label): \Tracker_FormElement_Field_List
     {
-        return new \Tracker_FormElement_Field_Selectbox(
+        return new \Tuleap\Tracker\FormElement\Field\List\SelectboxField(
             $id,
             $this->tracker->getId(),
             1,

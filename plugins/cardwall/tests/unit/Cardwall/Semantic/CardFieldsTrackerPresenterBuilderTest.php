@@ -28,7 +28,7 @@ use Tracker_FormElementFactory;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserBindBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
@@ -52,7 +52,7 @@ final class CardFieldsTrackerPresenterBuilderTest extends TestCase
     public function testItAddsTheFieldInPresentersWhenNoColorIsChosen(): void
     {
         $field = ListStaticBindBuilder::aStaticBind(
-            ListFieldBuilder::aListField(100)->withLabel('selectbox')->build()
+            SelectboxFieldBuilder::aSelectboxField(100)->withLabel('selectbox')->build()
         )
             ->withDecorators([new Tracker_FormElement_Field_List_BindDecorator(100, 1, null, null, null, null)])
             ->build()
@@ -92,7 +92,7 @@ final class CardFieldsTrackerPresenterBuilderTest extends TestCase
     public function testItDoesNotAddSelectboxFieldsWhenTheyAreNonStatic(): void
     {
         $field = ListUserBindBuilder::aUserBind(
-            ListFieldBuilder::aListField(100)->withLabel('selectbox')->build()
+            SelectboxFieldBuilder::aSelectboxField(100)->withLabel('selectbox')->build()
         )->build()->getField();
 
         $this->form_element_factory->method('getType')->willReturn('sb');
@@ -113,7 +113,7 @@ final class CardFieldsTrackerPresenterBuilderTest extends TestCase
     public function testItAddsTheFieldInPresentersWhenTheColorIsATlpColor(): void
     {
         $field = ListStaticBindBuilder::aStaticBind(
-            ListFieldBuilder::aListField(101)->withLabel('selectbox')->build()
+            SelectboxFieldBuilder::aSelectboxField(101)->withLabel('selectbox')->build()
         )
             ->withDecorators([new Tracker_FormElement_Field_List_BindDecorator(101, 2, null, null, null, 'fiesta-red')])
             ->build()
@@ -139,7 +139,7 @@ final class CardFieldsTrackerPresenterBuilderTest extends TestCase
     public function testItDoesNotAddTheFieldInPresentersWhenTheColorIsALegacyColor(): void
     {
         $field = ListStaticBindBuilder::aStaticBind(
-            ListFieldBuilder::aListField(103)->withLabel('selectbox')->build()
+            SelectboxFieldBuilder::aSelectboxField(103)->withLabel('selectbox')->build()
         )
             ->withDecorators([new Tracker_FormElement_Field_List_BindDecorator(103, 2, 255, 255, 255, null)])
             ->build()

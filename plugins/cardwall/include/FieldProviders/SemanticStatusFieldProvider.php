@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\FormElement\Field\List\SelectboxField;
 use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatusFactory;
 use Tuleap\Tracker\Tracker;
 
@@ -29,13 +30,13 @@ class Cardwall_FieldProviders_SemanticStatusFieldRetriever implements Cardwall_F
     /**
      * Retrieves the semantic status field of the given artifact
      *
-     * @return Tracker_FormElement_Field_Selectbox | null
+     * @return SelectboxField | null
      */
     public function getField(Tracker $tracker)
     {
         $field = TrackerSemanticStatusFactory::instance()->getByTracker($tracker)->getField();
         assert(
-            $field instanceof Tracker_FormElement_Field_Selectbox ||
+            $field instanceof SelectboxField ||
             $field === null
         );
 

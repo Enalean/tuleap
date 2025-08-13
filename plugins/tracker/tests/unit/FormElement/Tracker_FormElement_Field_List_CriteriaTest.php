@@ -32,7 +32,7 @@ use Tuleap\Tracker\FormElement\Field\XMLCriteriaValueCache;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserBindBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\ReportTestBuilder;
 
 #[DisableReturnValueGenerationForTestDoubles]
@@ -43,7 +43,7 @@ final class Tracker_FormElement_Field_List_CriteriaTest extends TestCase // phpc
 
     public function setUp(): void
     {
-        $this->field    = ListFieldBuilder::aListField(456)->build();
+        $this->field    = SelectboxFieldBuilder::aSelectboxField(456)->build();
         $this->criteria = $this->createMock(Tracker_Report_Criteria::class);
     }
 

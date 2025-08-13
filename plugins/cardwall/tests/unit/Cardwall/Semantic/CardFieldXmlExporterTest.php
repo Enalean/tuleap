@@ -26,7 +26,7 @@ use Cardwall_Semantic_CardFields;
 use PHPUnit\Framework\MockObject\MockObject;
 use SimpleXMLElement;
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Tracker;
 
@@ -53,8 +53,8 @@ final class CardFieldXmlExporterTest extends TestCase
             'F103' => 14,
         ];
 
-        $severity_field = ListFieldBuilder::aListField(13)->build();
-        $status_field   = ListFieldBuilder::aListField(14)->build();
+        $severity_field = SelectboxFieldBuilder::aSelectboxField(13)->build();
+        $status_field   = SelectboxFieldBuilder::aSelectboxField(14)->build();
 
         $fields = [$severity_field, $status_field];
 

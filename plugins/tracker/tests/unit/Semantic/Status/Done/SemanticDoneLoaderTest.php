@@ -80,7 +80,7 @@ final class SemanticDoneLoaderTest extends \Tuleap\Test\PHPUnit\TestCase
             4 => $delivered_value,
         });
 
-        $status_field = $this->createMock(\Tracker_FormElement_Field_Selectbox::class);
+        $status_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\List\SelectboxField::class);
         $status_field->method('getBind')->willReturn($bind);
 
         $this->semantic_status->method('getField')->willReturn($status_field);
@@ -112,7 +112,7 @@ final class SemanticDoneLoaderTest extends \Tuleap\Test\PHPUnit\TestCase
             4 => $delivered_value,
         });
 
-        $status_field = $this->createMock(\Tracker_FormElement_Field_Selectbox::class);
+        $status_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\List\SelectboxField::class);
         $status_field->method('getBind')->willReturn($bind);
 
         $this->semantic_status->method('getField')->willReturn($status_field);
@@ -136,7 +136,7 @@ final class SemanticDoneLoaderTest extends \Tuleap\Test\PHPUnit\TestCase
             4 => throw new Tracker_FormElement_InvalidFieldValueException(),
         });
 
-        $status_field = $this->createMock(\Tracker_FormElement_Field_Selectbox::class);
+        $status_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\List\SelectboxField::class);
         $status_field->method('getBind')->willReturn($bind);
 
         $this->semantic_status->method('getField')->willReturn($status_field);

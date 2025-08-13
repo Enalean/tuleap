@@ -32,7 +32,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\RetrieveArtifact;
 use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveArtifactStub;
 use Tuleap\Tracker\Test\Stub\Semantic\Status\RetrieveSemanticStatusStub;
@@ -58,7 +58,7 @@ final class StatusResultBuilderTest extends TestCase
 
         $this->status_semantic = $this->createMock(TrackerSemanticStatus::class);
         $this->status_semantic->method('getTracker')->willReturn($this->artifact->getTracker());
-        $field = ListFieldBuilder::aListField(456)->withReadPermission($this->user, true)->build();
+        $field = SelectboxFieldBuilder::aSelectboxField(456)->withReadPermission($this->user, true)->build();
         $this->status_semantic->method('getField')->willReturn($field);
         $this->semantic_status_retriever = RetrieveSemanticStatusStub::build();
     }
@@ -91,7 +91,7 @@ final class StatusResultBuilderTest extends TestCase
     {
         $select_results = [['id' => $this->artifact->getId(), '@status' => 'Open', '@status_color' => 'neon-green']];
 
-        $field = ListFieldBuilder::aListField(457)
+        $field = SelectboxFieldBuilder::aSelectboxField(457)
             ->withReadPermission($this->user, false)
             ->inTracker($this->artifact->getTracker())
             ->build();

@@ -24,7 +24,7 @@ namespace Tuleap\Tracker\Semantic\Status;
 
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\Semantic\Status\RetrieveSemanticStatusStub;
 
@@ -34,7 +34,7 @@ final class CachedSemanticStatusRetrieverTest extends TestCase
     public function testItUsesCacheToLimitDBQueriesToRetrieveStatusSemantic(): void
     {
         $tracker   = TrackerTestBuilder::aTracker()->withId(12)->build();
-        $field     = ListFieldBuilder::aListField(1002)->inTracker($tracker)->build();
+        $field     = SelectboxFieldBuilder::aSelectboxField(1002)->inTracker($tracker)->build();
         $semantic  = new TrackerSemanticStatus($tracker, $field, [12, 15]);
         $retriever = RetrieveSemanticStatusStub::build()->withSemanticStatus($semantic);
 

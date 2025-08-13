@@ -23,7 +23,7 @@ namespace Tuleap\Tracker\Semantic\Status;
 
 use SimpleXMLElement;
 use Tracker_FormElement_Field_List;
-use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Tracker;
 
@@ -36,7 +36,7 @@ final class TrackerSemanticStatusTest extends \Tuleap\Test\PHPUnit\TestCase
     public function setUp(): void
     {
         $this->tracker = TrackerTestBuilder::aTracker()->build();
-        $this->field   = ListFieldBuilder::aListField(103)->build();
+        $this->field   = SelectboxFieldBuilder::aSelectboxField(103)->build();
     }
 
     public function testExport(): void

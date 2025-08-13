@@ -40,7 +40,7 @@ final readonly class ArtifactMappedFieldValueRetriever
     ): Option {
         $taskboard_tracker = new TaskboardTracker($milestone_tracker, $artifact->getTracker());
         return $this->mapped_field_retriever->getField($taskboard_tracker)
-            ->andThen(function (\Tracker_FormElement_Field_Selectbox $mapped_field) use ($artifact, $user) {
+            ->andThen(function (\Tuleap\Tracker\FormElement\Field\List\SelectboxField $mapped_field) use ($artifact, $user) {
                 if (! $mapped_field->userCanRead($user)) {
                     return Option::nothing(\Tracker_FormElement_Field_List_BindValue::class);
                 }

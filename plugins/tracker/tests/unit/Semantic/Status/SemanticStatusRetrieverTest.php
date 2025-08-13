@@ -24,7 +24,7 @@ namespace Tuleap\Tracker\Semantic\Status;
 
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveSemanticStatusFieldStub;
 use Tuleap\Tracker\Test\Stub\Semantic\Status\SearchStatusOpenValuesStub;
@@ -49,7 +49,7 @@ final class SemanticStatusRetrieverTest extends TestCase
     public function testItReturnsSemanticWithOpenValues(): void
     {
         $tracker     = TrackerTestBuilder::aTracker()->build();
-        $field       = ListFieldBuilder::aListField(854)->inTracker($tracker)->build();
+        $field       = SelectboxFieldBuilder::aSelectboxField(854)->inTracker($tracker)->build();
         $open_values = [12, 15, 16];
 
         $retriever = new SemanticStatusRetriever(

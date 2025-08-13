@@ -21,7 +21,7 @@
 
 namespace Tuleap\Tracker\Semantic\Status;
 
-use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -37,9 +37,9 @@ final class TrackerSemanticStatusFactoryTest extends \Tuleap\Test\PHPUnit\TestCa
 
         $tracker = TrackerTestBuilder::aTracker()->build();
 
-        $f1 = ListFieldBuilder::aListField(111)->build();
-        $f2 = ListFieldBuilder::aListField(112)->build();
-        $f3 = ListFieldBuilder::aListField(113)->build();
+        $f1 = SelectboxFieldBuilder::aSelectboxField(111)->build();
+        $f2 = SelectboxFieldBuilder::aSelectboxField(112)->build();
+        $f3 = SelectboxFieldBuilder::aSelectboxField(113)->build();
 
         $mapping         = [
             'F9'  => $f1,

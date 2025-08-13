@@ -24,7 +24,6 @@ namespace Tuleap\Tracker\Rule;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\NullLogger;
-use Tracker_FormElement_Field_Selectbox;
 use Tracker_FormElementFactory;
 use Tracker_Rule_Date;
 use Tracker_Rule_Date_Factory;
@@ -35,8 +34,9 @@ use Tracker_RulesManager;
 use TrackerFactory;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\FormElement\Field\Date\DateField;
+use Tuleap\Tracker\FormElement\Field\List\SelectboxField;
 use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 
@@ -45,9 +45,9 @@ final class TrackerRulesManagerIsUsedInFieldDependencyTest extends TestCase
 {
     private Tracker_RulesManager&MockObject $tracker_rules_manager;
 
-    private Tracker_FormElement_Field_Selectbox $source_field_list;
+    private SelectboxField $source_field_list;
 
-    private Tracker_FormElement_Field_Selectbox $a_field_not_used_in_rules;
+    private SelectboxField $a_field_not_used_in_rules;
 
     private DateField $source_field_date;
 
@@ -75,9 +75,9 @@ final class TrackerRulesManagerIsUsedInFieldDependencyTest extends TestCase
                 $this->createMock(Tracker_RuleFactory::class),
             ])->getMock();
 
-        $this->a_field_not_used_in_rules = ListFieldBuilder::aListField(14)->build();
-        $this->source_field_list         = ListFieldBuilder::aListField(12)->build();
-        $target_field_list               = ListFieldBuilder::aListField(13)->build();
+        $this->a_field_not_used_in_rules = SelectboxFieldBuilder::aSelectboxField(14)->build();
+        $this->source_field_list         = SelectboxFieldBuilder::aSelectboxField(12)->build();
+        $target_field_list               = SelectboxFieldBuilder::aSelectboxField(13)->build();
         $this->source_field_date         = DateFieldBuilder::aDateField(15)->build();
         $target_field_date               = DateFieldBuilder::aDateField(16)->build();
 

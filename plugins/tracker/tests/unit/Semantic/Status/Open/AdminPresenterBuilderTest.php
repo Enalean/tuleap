@@ -102,7 +102,7 @@ final class AdminPresenterBuilderTest extends TestCase
 
     public function testItBuildsAListOfOpenValuesWhenStatusFieldIsDefined(): void
     {
-        $status_field = $this->createMock(\Tracker_FormElement_Field_Selectbox::class);
+        $status_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\List\SelectboxField::class);
         $status_field->method('getId')->willReturn(2);
         $status_field->method('getLabel')->willReturn('field B');
         $open_value = ListStaticValueBuilder::aStaticValue('open')->withId(1)->build();
@@ -137,9 +137,9 @@ final class AdminPresenterBuilderTest extends TestCase
         );
     }
 
-    private function getFieldWithIdAndLabel(int $id, $label): \Tracker_FormElement_Field_Selectbox
+    private function getFieldWithIdAndLabel(int $id, $label): \Tuleap\Tracker\FormElement\Field\List\SelectboxField
     {
-        return new \Tracker_FormElement_Field_Selectbox(
+        return new \Tuleap\Tracker\FormElement\Field\List\SelectboxField(
             $id,
             $this->tracker->getId(),
             1,

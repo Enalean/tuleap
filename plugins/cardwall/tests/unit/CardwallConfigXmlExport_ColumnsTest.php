@@ -34,7 +34,7 @@ use TrackerFactory;
 use Tuleap\Cardwall\OnTop\Config\ColumnCollection;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use XML_RNGValidator;
 
@@ -100,7 +100,7 @@ final class CardwallConfigXmlExport_ColumnsTest extends TestCase // phpcs:ignore
         ]));
 
         $tracker = TrackerTestBuilder::aTracker()->withId(200)->build();
-        $field   = ListFieldBuilder::aListField(201)->build();
+        $field   = SelectboxFieldBuilder::aSelectboxField(201)->build();
 
         $value_mapping = $this->createMock(Cardwall_OnTop_Config_ValueMapping::class);
         $value_mapping->method('getXMLValueId')->willReturn('0195f58f-8e6f-719c-8bb7-e36ae3e11872');

@@ -57,7 +57,7 @@ final class FrozenFieldsValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('getId')
             ->willReturn(2);
 
-        $selectbox_field = $this->createMock(\Tracker_FormElement_Field_Selectbox::class);
+        $selectbox_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\List\SelectboxField::class);
         $selectbox_field
             ->method('getId')
             ->willReturn(3);
@@ -120,7 +120,7 @@ final class FrozenFieldsValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('getId')
             ->willReturn(1);
 
-        $selectbox_field = $this->createMock(\Tracker_FormElement_Field_Selectbox::class);
+        $selectbox_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\List\SelectboxField::class);
         $selectbox_field
             ->method('getId')
             ->willReturn(2);
@@ -153,7 +153,7 @@ final class FrozenFieldsValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testValidateThrowsAnExceptionWhenFieldIdIsTheFieldUsedToDefineToWorkflow(): void
     {
-        $selectbox_field = $this->createMock(\Tracker_FormElement_Field_Selectbox::class);
+        $selectbox_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\List\SelectboxField::class);
         $selectbox_field
             ->method('getId')
             ->willReturn(1);
@@ -191,12 +191,12 @@ final class FrozenFieldsValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testValidateThrowsAnExceptionWhenFieldIdIsUsedInFieldDependencies(): void
     {
-        $selectbox_field_01 = $this->createMock(\Tracker_FormElement_Field_Selectbox::class);
+        $selectbox_field_01 = $this->createMock(\Tuleap\Tracker\FormElement\Field\List\SelectboxField::class);
         $selectbox_field_01
             ->method('getId')
             ->willReturn(1);
 
-        $selectbox_field_02 = $this->createMock(\Tracker_FormElement_Field_Selectbox::class);
+        $selectbox_field_02 = $this->createMock(\Tuleap\Tracker\FormElement\Field\List\SelectboxField::class);
         $selectbox_field_02
             ->method('getId')
             ->willReturn(2);

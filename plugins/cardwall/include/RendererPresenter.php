@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\FormElement\Field\List\SelectboxField;
 use Tuleap\Tracker\Report\Widget\WidgetAdditionalButtonPresenter;
 
 /**
@@ -26,7 +27,7 @@ use Tuleap\Tracker\Report\Widget\WidgetAdditionalButtonPresenter;
 class Cardwall_RendererPresenter extends Cardwall_BoardPresenter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /**
-     * @var Tracker_FormElement_Field_Selectbox
+     * @var SelectboxField
      */
     public $field;
 
@@ -55,7 +56,7 @@ class Cardwall_RendererPresenter extends Cardwall_BoardPresenter //phpcs:ignore 
     /**
      * @param Cardwall_Board                      $board The board
      * @param string                              $redirect_parameter the redirect paramter to add to various url
-     * @param Tracker_FormElement_Field_Selectbox $field form to choose the column. false if no form (in widget) (thus no typehinting)
+     * @param SelectboxField $field form to choose the column. false if no form (in widget) (thus no typehinting)
      * @param $form
      */
     public function __construct(

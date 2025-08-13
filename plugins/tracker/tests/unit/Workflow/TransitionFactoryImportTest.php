@@ -37,7 +37,7 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Workflow;
 use Workflow_Transition_ConditionFactory;
 use Workflow_Transition_ConditionsCollection;
@@ -77,7 +77,7 @@ final class TransitionFactoryImportTest extends TestCase
 
         $this->project = ProjectTestBuilder::aProject()->build();
 
-        $field = ListFieldBuilder::aListField(101)->build();
+        $field = SelectboxFieldBuilder::aSelectboxField(101)->build();
 
         $from_value        = ListStaticValueBuilder::aStaticValue('Todo')->build();
         $this->to_value    = ListStaticValueBuilder::aStaticValue('Done')->build();

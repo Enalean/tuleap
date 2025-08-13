@@ -28,7 +28,7 @@ use Tracker_Artifact_Changeset;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class StatusValueForChangesetProviderTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -55,7 +55,7 @@ final class StatusValueForChangesetProviderTest extends \Tuleap\Test\PHPUnit\Tes
 
     public function testReturnsNullIfUserCannotReadStatus()
     {
-        $field = ListFieldBuilder::aListField(1001)->withReadPermission($this->user, false)->build();
+        $field = SelectboxFieldBuilder::aSelectboxField(1001)->withReadPermission($this->user, false)->build();
         $this->provider->method('loadSemanticField')->willReturn($field);
 
         $this->assertNull($this->provider->getStatusValueForChangeset($this->changeset, $this->user));
@@ -63,7 +63,7 @@ final class StatusValueForChangesetProviderTest extends \Tuleap\Test\PHPUnit\Tes
 
     public function testReturnsNullIfNoChangesetValue()
     {
-        $field = ListFieldBuilder::aListField(1001)->withReadPermission($this->user, true)->build();
+        $field = SelectboxFieldBuilder::aSelectboxField(1001)->withReadPermission($this->user, true)->build();
         $this->provider->method('loadSemanticField')->willReturn($field);
 
         $this->changeset->setFieldValue($field, null);
@@ -73,7 +73,7 @@ final class StatusValueForChangesetProviderTest extends \Tuleap\Test\PHPUnit\Tes
 
     public function testReturnsNullIfNoValueForField()
     {
-        $field = ListFieldBuilder::aListField(1001)->withReadPermission($this->user, true)->build();
+        $field = SelectboxFieldBuilder::aSelectboxField(1001)->withReadPermission($this->user, true)->build();
         $this->provider->method('loadSemanticField')->willReturn($field);
 
         $value = $this->createMock(\Tracker_Artifact_ChangesetValue_List::class);
@@ -86,7 +86,7 @@ final class StatusValueForChangesetProviderTest extends \Tuleap\Test\PHPUnit\Tes
 
     public function testReturnsTheFirstValue()
     {
-        $field = ListFieldBuilder::aListField(1001)->withReadPermission($this->user, true)->build();
+        $field = SelectboxFieldBuilder::aSelectboxField(1001)->withReadPermission($this->user, true)->build();
         $this->provider->method('loadSemanticField')->willReturn($field);
 
         $value = $this->createMock(\Tracker_Artifact_ChangesetValue_List::class);

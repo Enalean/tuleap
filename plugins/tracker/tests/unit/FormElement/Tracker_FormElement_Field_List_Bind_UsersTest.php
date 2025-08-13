@@ -32,7 +32,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Import\Spotter;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserValueBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use UserManager;
 
 #[DisableReturnValueGenerationForTestDoubles]
@@ -75,7 +75,7 @@ final class Tracker_FormElement_Field_List_Bind_UsersTest extends TestCase //php
             ListUserValueBuilder::aUserWithId(831)->withUserName('u2')->build(),
         ]);
 
-        $field          = ListFieldBuilder::aListField(123)->build();
+        $field          = SelectboxFieldBuilder::aSelectboxField(123)->build();
         $value_function = 'project_members';
         $default_values = $decorators = '';
 
@@ -132,7 +132,7 @@ final class Tracker_FormElement_Field_List_Bind_UsersTest extends TestCase //php
 
     public function testRetrievingDefaultRESTValuesDoesNotHitTheDBWhenNoDefaultValuesIsSet(): void
     {
-        $list_field     = ListFieldBuilder::aListField(123)->build();
+        $list_field     = SelectboxFieldBuilder::aSelectboxField(123)->build();
         $default_values = [];
 
         $bind_users = new Tracker_FormElement_Field_List_Bind_Users(new DatabaseUUIDV7Factory(), $list_field, '', $default_values, []);

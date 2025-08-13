@@ -25,6 +25,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Tracker\FormElement\Field\Date\DateField;
 use Tuleap\Tracker\FormElement\Field\Float\FloatField;
 use Tuleap\Tracker\FormElement\Field\Integer\IntegerField;
+use Tuleap\Tracker\FormElement\Field\List\SelectboxField;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -174,11 +175,11 @@ final class Transition_PostAction_FieldFactoryTest extends \Tuleap\Test\PHPUnit\
 
     public function testItDelegatesDuplicationToTheCorrespondingDao(): void
     {
-        $select_box1 = $this->createMock(Tracker_FormElement_Field_Selectbox::class);
+        $select_box1 = $this->createMock(SelectboxField::class);
         $select_box1->method('getId')->willReturn(2065);
-        $select_box2 = $this->createMock(Tracker_FormElement_Field_Selectbox::class);
+        $select_box2 = $this->createMock(SelectboxField::class);
         $select_box2->method('getId')->willReturn(2066);
-        $select_box3 = $this->createMock(Tracker_FormElement_Field_Selectbox::class);
+        $select_box3 = $this->createMock(SelectboxField::class);
         $select_box3->method('getId')->willReturn(2067);
         $this->element_factory->method('getFormElementById')->willReturnCallback(static fn (int $id) => match ($id) {
             $select_box1->getId() => $select_box1,

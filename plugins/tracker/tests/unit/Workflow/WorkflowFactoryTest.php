@@ -22,7 +22,7 @@
 declare(strict_types=1);
 
 use PHPUnit\Framework\MockObject\MockObject;
-use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
@@ -47,9 +47,9 @@ final class WorkflowFactoryTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:i
         parent::setUp();
         $tracker = TrackerTestBuilder::aTracker()->build();
 
-        $this->field_status     = ListFieldBuilder::aListField(1001)->inTracker($tracker)->build();
-        $this->field_start_date = ListFieldBuilder::aListField(1002)->inTracker($tracker)->build();
-        $this->field_close_date = ListFieldBuilder::aListField(1003)->inTracker($tracker)->build();
+        $this->field_status     = SelectboxFieldBuilder::aSelectboxField(1001)->inTracker($tracker)->build();
+        $this->field_start_date = SelectboxFieldBuilder::aSelectboxField(1002)->inTracker($tracker)->build();
+        $this->field_close_date = SelectboxFieldBuilder::aSelectboxField(1003)->inTracker($tracker)->build();
 
         $workflow = $this->createMock(\Workflow::class);
         $workflow->method('getFieldId')->willReturn($this->field_status->getId());

@@ -35,7 +35,8 @@ use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueListTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserGroupBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserGroupValueBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\MultiSelectboxFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -59,7 +60,7 @@ final class UserGroupListWithValueBuilderTest extends TestCase
     public function testItBuildsEmptyValuesWhenNoneIsSelected(): void
     {
         $empty_list_field = ListUserGroupBindBuilder::aUserGroupBind(
-            ListFieldBuilder::aListField(843)
+            SelectboxFieldBuilder::aSelectboxField(843)
                 ->withLabel('presearch')
                 ->inTracker($this->tracker)
                 ->build()
@@ -83,7 +84,7 @@ final class UserGroupListWithValueBuilderTest extends TestCase
     public function testItBuildsEmptyValuesWhenNoChangesetValue(): void
     {
         $empty_list_field = ListUserGroupBindBuilder::aUserGroupBind(
-            ListFieldBuilder::aListField(843)
+            SelectboxFieldBuilder::aSelectboxField(843)
                 ->withLabel('presearch')
                 ->inTracker($this->tracker)
                 ->build()
@@ -104,8 +105,7 @@ final class UserGroupListWithValueBuilderTest extends TestCase
         $list_value1 = ProjectUGroupTestBuilder::buildProjectMembers();
         $list_value2 = ProjectUGroupTestBuilder::aCustomUserGroup(919)->withName('Reviewers')->build();
         $list_field  = ListUserGroupBindBuilder::aUserGroupBind(
-            ListFieldBuilder::aListField(480)
-                ->withMultipleValues()
+            MultiSelectboxFieldBuilder::aMultiSelectboxField(480)
                 ->withLabel('trionychoidean')
                 ->inTracker($this->tracker)
                 ->build()

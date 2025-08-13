@@ -39,7 +39,7 @@ use Tuleap\Tracker\Test\Builders\ChangesetValueOpenListBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserValueBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\OpenListValueBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Tracker;
 
@@ -65,7 +65,7 @@ final class UserListFieldWithValueBuilderTest extends TestCase
         $alice = UserTestBuilder::aUser()->withUserName('Alice')->withId(103)->build();
 
         $user_list_field = ListUserBindBuilder::aUserBind(
-            ListFieldBuilder::aListField(123)->inTracker($this->tracker)->withLabel('user list field')->build(),
+            SelectboxFieldBuilder::aSelectboxField(123)->inTracker($this->tracker)->withLabel('user list field')->build(),
         )->withUsers([$bob, $alice])
             ->build()
             ->getField();
@@ -107,7 +107,7 @@ final class UserListFieldWithValueBuilderTest extends TestCase
     public function testItReturnsEmptyValuesWhenNoneValueIsSelected(): void
     {
         $user_list_field = ListUserBindBuilder::aUserBind(
-            ListFieldBuilder::aListField(123)->inTracker($this->tracker)->withLabel('Empty user list field')->build(),
+            SelectboxFieldBuilder::aSelectboxField(123)->inTracker($this->tracker)->withLabel('Empty user list field')->build(),
         )->build()->getField();
 
         $builder = new UserListFieldWithValueBuilder(
@@ -137,7 +137,7 @@ final class UserListFieldWithValueBuilderTest extends TestCase
     public function testItReturnsEmptyValuesWhenNoChangesetValue(): void
     {
         $user_list_field = ListUserBindBuilder::aUserBind(
-            ListFieldBuilder::aListField(123)->inTracker($this->tracker)->withLabel('Empty user list field')->build(),
+            SelectboxFieldBuilder::aSelectboxField(123)->inTracker($this->tracker)->withLabel('Empty user list field')->build(),
         )->build()->getField();
 
         $builder = new UserListFieldWithValueBuilder(
@@ -159,7 +159,7 @@ final class UserListFieldWithValueBuilderTest extends TestCase
         $bob = UserTestBuilder::aUser()->withUserName('Bob')->withId(102)->build();
 
         $user_list_field = ListUserBindBuilder::aUserBind(
-            ListFieldBuilder::aListField(123)->inTracker($this->tracker)->withLabel('user list field')->build(),
+            SelectboxFieldBuilder::aSelectboxField(123)->inTracker($this->tracker)->withLabel('user list field')->build(),
         )->withUsers([$bob])
             ->build()
             ->getField();

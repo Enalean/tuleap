@@ -64,7 +64,7 @@ use Tuleap\Tracker\Test\Builders\Fields\ExternalFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\FloatFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\IntegerFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\SubmittedByFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\SubmittedOnFieldBuilder;
@@ -299,7 +299,7 @@ final class DuckTypedFieldCheckerTest extends TestCase
     {
         $this->fields_retriever = RetrieveUsedFieldsStub::withFields(
             ListStaticBindBuilder::aStaticBind(
-                ListFieldBuilder::aListField(586)
+                SelectboxFieldBuilder::aSelectboxField(586)
                     ->withName(self::FIELD_NAME)
                     ->inTracker($this->first_tracker)
                     ->withReadPermission($this->user, true)
@@ -309,7 +309,7 @@ final class DuckTypedFieldCheckerTest extends TestCase
                 1 => 'b',
             ])->build()->getField(),
             ListStaticBindBuilder::aStaticBind(
-                ListFieldBuilder::aListField(489)
+                SelectboxFieldBuilder::aSelectboxField(489)
                     ->withName(self::FIELD_NAME)
                     ->inTracker($this->second_tracker)
                     ->withReadPermission($this->user, true)
@@ -331,7 +331,7 @@ final class DuckTypedFieldCheckerTest extends TestCase
     {
         $this->fields_retriever = RetrieveUsedFieldsStub::withFields(
             ListStaticBindBuilder::aStaticBind(
-                ListFieldBuilder::aListField(586)
+                SelectboxFieldBuilder::aSelectboxField(586)
                     ->withName(self::FIELD_NAME)
                     ->inTracker($this->first_tracker)
                     ->withReadPermission($this->user, true)
@@ -341,7 +341,7 @@ final class DuckTypedFieldCheckerTest extends TestCase
                 1 => 'b',
             ])->build()->getField(),
             ListStaticBindBuilder::aStaticBind(
-                ListFieldBuilder::aListField(489)
+                SelectboxFieldBuilder::aSelectboxField(489)
                     ->withName(self::FIELD_NAME)
                     ->inTracker($this->second_tracker)
                     ->withReadPermission($this->user, true)
@@ -365,7 +365,7 @@ final class DuckTypedFieldCheckerTest extends TestCase
     {
         $this->fields_retriever = RetrieveUsedFieldsStub::withFields(
             ListStaticBindBuilder::aStaticBind(
-                ListFieldBuilder::aListField(586)
+                SelectboxFieldBuilder::aSelectboxField(586)
                     ->withName(self::FIELD_NAME)
                     ->inTracker($this->first_tracker)
                     ->withReadPermission($this->user, true)
@@ -374,7 +374,7 @@ final class DuckTypedFieldCheckerTest extends TestCase
                 0 => 'Todo',
             ])->build()->getField(),
             ListStaticBindBuilder::aStaticBind(
-                ListFieldBuilder::aListField(489)
+                SelectboxFieldBuilder::aSelectboxField(489)
                     ->withName(self::FIELD_NAME)
                     ->inTracker($this->second_tracker)
                     ->withReadPermission($this->user, true)

@@ -28,7 +28,7 @@ use Tracker_FormElementFactory;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class FormattedChangesetValueForListFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -46,7 +46,7 @@ class FormattedChangesetValueForListFieldRetrieverTest extends \Tuleap\Test\PHPU
 
     public function testGetFormattedChangesetValueForFieldList(): void
     {
-        $field = ListStaticBindBuilder::aStaticBind(ListFieldBuilder::aListField(112)->build())
+        $field = ListStaticBindBuilder::aStaticBind(SelectboxFieldBuilder::aSelectboxField(112)->build())
             ->withStaticValues([110 => 'notrun', 111 => 'pass'])
             ->build()
             ->getField();
@@ -68,7 +68,7 @@ class FormattedChangesetValueForListFieldRetrieverTest extends \Tuleap\Test\PHPU
 
     public function testExceptionWhenPassedValueIsNotPartOfFieldValue(): void
     {
-        $field = ListStaticBindBuilder::aStaticBind(ListFieldBuilder::aListField(112)->build())
+        $field = ListStaticBindBuilder::aStaticBind(SelectboxFieldBuilder::aSelectboxField(112)->build())
             ->withStaticValues([110 => 'notrun', 111 => 'pass'])
             ->build()
             ->getField();

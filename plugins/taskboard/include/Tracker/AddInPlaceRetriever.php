@@ -77,7 +77,7 @@ class AddInPlaceRetriever
     private function areTitleAndMappedFieldTheOnlyRequiredField(
         \Tuleap\Tracker\Tracker $tracker,
         \Tracker_FormElement_Field $field_title,
-        \Tracker_FormElement_Field_Selectbox $mapped_field,
+        \Tuleap\Tracker\FormElement\Field\List\SelectboxField $mapped_field,
     ): bool {
         $title_field_id  = $field_title->getId();
         $mapped_field_id = $mapped_field->getId();

@@ -39,7 +39,7 @@ use Tuleap\Test\Builders\TestLayout;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\CSRF\CSRFSessionKeyStorageStub;
 use Tuleap\Test\Stubs\CSRF\CSRFSigningKeyStorageStub;
-use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Tracker;
 
@@ -65,7 +65,7 @@ final class TrackerFormElementTest extends TestCase
     {
         $project  = ProjectTestBuilder::aProject()->build();
         $tracker  = TrackerTestBuilder::aTracker()->withId(888)->withProject($project)->build();
-        $original = ListFieldBuilder::aListField(687)->inTracker($tracker)->build();
+        $original = SelectboxFieldBuilder::aSelectboxField(687)->inTracker($tracker)->build();
 
         $element = $this->givenAFormElementWithIdAndOriginalField(null, $original);
 

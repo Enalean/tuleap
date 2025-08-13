@@ -24,9 +24,9 @@ namespace Tuleap\TestManagement\Campaign;
 
 use CSRFSynchronizerToken;
 use PHPUnit\Framework\MockObject\MockObject;
-use Tracker_FormElement_Field_Selectbox;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\List\SelectboxField;
 use Tuleap\Tracker\Semantic\Status\SemanticStatusNotDefinedException;
 use Tuleap\Tracker\Semantic\Status\StatusValueRetriever;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
@@ -50,7 +50,7 @@ final class StatusUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $user       = UserTestBuilder::anActiveUser()->build();
         $csrf_token = $this->createMock(CSRFSynchronizerToken::class);
 
-        $status_field = $this->createMock(Tracker_FormElement_Field_Selectbox::class);
+        $status_field = $this->createMock(SelectboxField::class);
         $status_field
             ->expects($this->once())
             ->method('getId')
@@ -105,7 +105,7 @@ final class StatusUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $user       = UserTestBuilder::anActiveUser()->build();
         $csrf_token = $this->createMock(CSRFSynchronizerToken::class);
 
-        $status_field = $this->createMock(Tracker_FormElement_Field_Selectbox::class);
+        $status_field = $this->createMock(SelectboxField::class);
         $status_field
             ->expects($this->once())
             ->method('getId')

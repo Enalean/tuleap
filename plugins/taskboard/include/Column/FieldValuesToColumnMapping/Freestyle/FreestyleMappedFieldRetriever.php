@@ -35,17 +35,17 @@ final readonly class FreestyleMappedFieldRetriever
     }
 
     /**
-     * @return Option<\Tracker_FormElement_Field_Selectbox>
+     * @return Option<\Tuleap\Tracker\FormElement\Field\List\SelectboxField>
      */
     public function getMappedField(TaskboardTracker $taskboard_tracker): Option
     {
         return $this->search_mapped_field->searchMappedField($taskboard_tracker)
             ->andThen(function (int $field_id) use ($taskboard_tracker) {
                 $field = $this->form_element_factory->getUsedListFieldById($taskboard_tracker->getTracker(), $field_id);
-                if ($field instanceof \Tracker_FormElement_Field_Selectbox) {
+                if ($field instanceof \Tuleap\Tracker\FormElement\Field\List\SelectboxField) {
                     return Option::fromValue($field);
                 }
-                return Option::nothing(\Tracker_FormElement_Field_Selectbox::class);
+                return Option::nothing(\Tuleap\Tracker\FormElement\Field\List\SelectboxField::class);
             });
     }
 }

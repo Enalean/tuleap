@@ -40,7 +40,7 @@ final readonly class MappedFieldRetriever
      * - The field chosen by the user to represent columns in the TaskBoard
      *
      * Since this field can be a list field of any type, we cannot name it precisely.
-     * @return Option<\Tracker_FormElement_Field_Selectbox>
+     * @return Option<\Tuleap\Tracker\FormElement\Field\List\SelectboxField>
      */
     public function getField(TaskboardTracker $taskboard_tracker): Option
     {

@@ -25,7 +25,7 @@ use Tuleap\Tracker\Tracker;
 /**
  * Provide a link between a Tracker_Artifact and a Tracker_FormElement_Field
  */
-interface Cardwall_OnTop_IConfig
+interface Cardwall_OnTop_IConfig // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public function getTracker();
 
@@ -53,6 +53,9 @@ interface Cardwall_OnTop_IConfig
         Cardwall_Column $column,
     );
 
+    /**
+     * @param Tracker_FormElement_Field_List[] $fields
+     */
     public function getCardwallMappings(array $fields, ColumnCollection $cardwall_columns);
 
     public function fillMappingsWithOnTopMappings(

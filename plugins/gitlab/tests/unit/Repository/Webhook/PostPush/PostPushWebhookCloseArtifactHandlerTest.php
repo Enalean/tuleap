@@ -52,7 +52,7 @@ use Tuleap\Tracker\Semantic\Status\StatusValueRetriever;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\CreateCommentOnlyChangesetStub;
 use Tuleap\Tracker\Test\Stub\CreateNewChangesetStub;
@@ -121,7 +121,7 @@ final class PostPushWebhookCloseArtifactHandlerTest extends TestCase
         $this->project = ProjectTestBuilder::aProject()->withId(self::PROJECT_ID)->build();
         $tracker       = TrackerTestBuilder::aTracker()->withProject($this->project)->build();
         $field         = ListStaticBindBuilder::aStaticBind(
-            ListFieldBuilder::aListField(945)->inTracker($tracker)->build()
+            SelectboxFieldBuilder::aSelectboxField(945)->inTracker($tracker)->build()
         )->withBuildStaticValues([
             ListStaticValueBuilder::aStaticValue('Done')->withId(self::DONE_BIND_VALUE_ID)->build(),
         ])->build()

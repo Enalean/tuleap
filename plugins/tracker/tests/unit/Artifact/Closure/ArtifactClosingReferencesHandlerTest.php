@@ -39,7 +39,7 @@ use Tuleap\Tracker\Semantic\Status\StatusValueRetriever;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\CreateCommentOnlyChangesetStub;
 use Tuleap\Tracker\Test\Stub\CreateNewChangesetStub;
@@ -279,7 +279,7 @@ final class ArtifactClosingReferencesHandlerTest extends \Tuleap\Test\PHPUnit\Te
         $done_value = ListStaticValueBuilder::aStaticValue('Closed')->build();
 
         $status_field = ListStaticBindBuilder::aStaticBind(
-            ListFieldBuilder::aListField(718)->inTracker($this->bug_tracker)->build()
+            SelectboxFieldBuilder::aSelectboxField(718)->inTracker($this->bug_tracker)->build()
         )->withBuildStaticValues([$done_value])
             ->build()
             ->getField();
@@ -376,12 +376,12 @@ final class ArtifactClosingReferencesHandlerTest extends \Tuleap\Test\PHPUnit\Te
         $second_done_value = ListStaticValueBuilder::aStaticValue('Done')->build();
 
         $first_status_field  = ListStaticBindBuilder::aStaticBind(
-            ListFieldBuilder::aListField(564)->inTracker($this->bug_tracker)->build(),
+            SelectboxFieldBuilder::aSelectboxField(564)->inTracker($this->bug_tracker)->build(),
         )->withBuildStaticValues([$first_done_value])
             ->build()
             ->getField();
         $second_status_field = ListStaticBindBuilder::aStaticBind(
-            ListFieldBuilder::aListField(618)->inTracker($this->story_tracker)->build(),
+            SelectboxFieldBuilder::aSelectboxField(618)->inTracker($this->story_tracker)->build(),
         )->withBuildStaticValues([$second_done_value])
             ->build()
             ->getField();

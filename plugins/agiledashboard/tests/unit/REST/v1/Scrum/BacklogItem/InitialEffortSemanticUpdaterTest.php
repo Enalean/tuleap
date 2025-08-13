@@ -40,7 +40,7 @@ use Tuleap\Tracker\Test\Builders\Fields\FloatFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\IntegerFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class InitialEffortSemanticUpdaterTest extends TestCase
@@ -113,7 +113,7 @@ final class InitialEffortSemanticUpdaterTest extends TestCase
     public function testItSetsTheInitialEffortInTheBacklogItemWhenInitialEffortFieldIsASelectbox(): void
     {
         $initial_effort_field = ListStaticBindBuilder::aStaticBind(
-            ListFieldBuilder::aListField(1)
+            SelectboxFieldBuilder::aSelectboxField(1)
                 ->withName('Initial effort')
                 ->withReadPermission($this->user, true)
                 ->build()

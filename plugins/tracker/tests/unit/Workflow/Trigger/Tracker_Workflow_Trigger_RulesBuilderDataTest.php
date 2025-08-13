@@ -50,7 +50,7 @@ final class Tracker_Workflow_Trigger_RulesBuilderDataTest extends \Tuleap\Test\P
     public function testItHasATargetFieldOfTheTrackerOnWhichRulesWillApply(): void
     {
         $field_id     = 269;
-        $target_field = $this->createMock(\Tracker_FormElement_Field_Selectbox::class);
+        $target_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\List\SelectboxField::class);
         $target_field->method('getId')->willReturn($field_id);
         $rules_builder_data = new Tracker_Workflow_Trigger_RulesBuilderData(new ArrayIterator([$target_field]), []);
 
@@ -82,7 +82,7 @@ final class Tracker_Workflow_Trigger_RulesBuilderDataTest extends \Tuleap\Test\P
     public function testItHasATriggerTrackerWithAField(): void
     {
         $field_id = 693;
-        $field    = $this->createMock(\Tracker_FormElement_Field_Selectbox::class);
+        $field    = $this->createMock(\Tuleap\Tracker\FormElement\Field\List\SelectboxField::class);
         $field->method('getId')->willReturn($field_id);
         $field->expects($this->once())->method('fetchFormattedForJson')->willReturn('whatever');
 

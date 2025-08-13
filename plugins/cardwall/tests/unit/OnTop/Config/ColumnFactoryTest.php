@@ -27,7 +27,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use TestHelper;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Tracker;
 
@@ -125,7 +125,7 @@ final class ColumnFactoryTest extends TestCase
     {
         $filter = [123, 234];
         $field  = ListStaticBindBuilder::aStaticBind(
-            ListFieldBuilder::aListField(692)->build()
+            SelectboxFieldBuilder::aSelectboxField(692)->build()
         )->build()->getField();
 
         $this->expectNotToPerformAssertions();

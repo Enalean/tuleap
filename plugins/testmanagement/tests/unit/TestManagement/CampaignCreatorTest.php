@@ -33,7 +33,7 @@ use Tuleap\Tracker\REST\Artifact\ArtifactCreator;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ArtifactLinkFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveTrackerStub;
@@ -81,7 +81,7 @@ final class CampaignCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('getUsedFieldByNameForUser')
             ->willReturnCallback(fn (int $tracker_id, string $field_name, PFUser $user): \Tracker_FormElement_Field => match ($field_name) {
                 CampaignRepresentation::FIELD_NAME => StringFieldBuilder::aStringField(1001)->build(),
-                CampaignRepresentation::FIELD_STATUS => ListStaticBindBuilder::aStaticBind(ListFieldBuilder::aListField(1002)->build())->build()->getField(),
+                CampaignRepresentation::FIELD_STATUS => ListStaticBindBuilder::aStaticBind(SelectboxFieldBuilder::aSelectboxField(1002)->build())->build()->getField(),
                 CampaignRepresentation::FIELD_ARTIFACT_LINKS => ArtifactLinkFieldBuilder::anArtifactLinkField(1003)->build(),
             });
 

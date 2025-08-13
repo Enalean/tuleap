@@ -71,7 +71,7 @@ use Tuleap\Tracker\Test\Builders\Fields\IntegerFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserGroupBindBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\OpenListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\TextFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -302,7 +302,7 @@ EOL
         $result = $this->getSelectedResult(
             RetrieveUsedFieldsStub::withFields(
                 ListStaticBindBuilder::aStaticBind(
-                    ListFieldBuilder::aListField(self::FIRST_FIELD_ID)
+                    SelectboxFieldBuilder::aSelectboxField(self::FIRST_FIELD_ID)
                         ->withName(self::FIELD_NAME)
                         ->inTracker($this->first_tracker)
                         ->build()
@@ -372,7 +372,7 @@ EOL
         $result = $this->getSelectedResult(
             RetrieveUsedFieldsStub::withFields(
                 ListUserGroupBindBuilder::aUserGroupBind(
-                    ListFieldBuilder::aListField(self::FIRST_FIELD_ID)
+                    SelectboxFieldBuilder::aSelectboxField(self::FIRST_FIELD_ID)
                         ->withName(self::FIELD_NAME)
                         ->inTracker($this->first_tracker)
                         ->build()
@@ -433,7 +433,7 @@ EOL
         $result = $this->getSelectedResult(
             RetrieveUsedFieldsStub::withFields(
                 ListUserBindBuilder::aUserBind(
-                    ListFieldBuilder::aListField(self::FIRST_FIELD_ID)
+                    SelectboxFieldBuilder::aSelectboxField(self::FIRST_FIELD_ID)
                         ->withName(self::FIELD_NAME)
                         ->inTracker($this->first_tracker)
                         ->build()
@@ -494,7 +494,7 @@ EOL
         $result = $this->getSelectedResult(
             RetrieveUsedFieldsStub::withFields(
                 ListUserBindBuilder::aUserBind(
-                    ListFieldBuilder::aListField(self::FIRST_FIELD_ID)
+                    SelectboxFieldBuilder::aSelectboxField(self::FIRST_FIELD_ID)
                         ->withName(self::FIELD_NAME)
                         ->build()
                 )->build()->getField(),

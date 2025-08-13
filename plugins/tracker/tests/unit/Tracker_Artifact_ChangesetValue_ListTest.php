@@ -31,7 +31,7 @@ use Tracker_FormElement_Field_List_BindValue;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 
 #[DisableReturnValueGenerationForTestDoubles]
 final class Tracker_Artifact_ChangesetValue_ListTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
@@ -42,7 +42,7 @@ final class Tracker_Artifact_ChangesetValue_ListTest extends TestCase // phpcs:i
     protected function setUp(): void
     {
         $this->changeset = ChangesetTestBuilder::aChangeset(12)->build();
-        $this->field     = ListFieldBuilder::aListField(852)->build();
+        $this->field     = SelectboxFieldBuilder::aSelectboxField(852)->build();
     }
 
     public function testNoDiff(): void

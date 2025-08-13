@@ -30,7 +30,7 @@ use Tuleap\Tracker\Test\Builders\Fields\IntegerFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserGroupBindBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\ListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\TextFieldBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveFieldTypeStub;
@@ -55,7 +55,7 @@ final class FieldTypeRetrieverWrapperTest extends TestCase
 
         self::assertSame(FieldTypeRetrieverWrapper::FIELD_STATIC_LIST_TYPE, $retriever->getType(
             ListStaticBindBuilder::aStaticBind(
-                ListFieldBuilder::aListField(125)->build()
+                SelectboxFieldBuilder::aSelectboxField(125)->build()
             )->build()->getField()
         ));
     }
@@ -66,7 +66,7 @@ final class FieldTypeRetrieverWrapperTest extends TestCase
 
         self::assertSame(FieldTypeRetrieverWrapper::FIELD_UGROUP_LIST_TYPE, $retriever->getType(
             ListUserGroupBindBuilder::aUserGroupBind(
-                ListFieldBuilder::aListField(563)->build()
+                SelectboxFieldBuilder::aSelectboxField(563)->build()
             )->build()->getField()
         ));
     }
@@ -77,7 +77,7 @@ final class FieldTypeRetrieverWrapperTest extends TestCase
 
         self::assertSame(FieldTypeRetrieverWrapper::FIELD_USER_LIST_TYPE, $retriever->getType(
             ListUserBindBuilder::aUserBind(
-                ListFieldBuilder::aListField(832)->build()
+                SelectboxFieldBuilder::aSelectboxField(832)->build()
             )->build()->getField()
         ));
     }
