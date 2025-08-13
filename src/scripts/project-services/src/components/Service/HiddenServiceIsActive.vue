@@ -18,16 +18,10 @@
   -->
 
 <template>
-    <input type="hidden" name="is_active" v-bind:value="value ? '1' : '0'" />
+    <input type="hidden" name="is_active" v-bind:value="is_active ? '1' : '0'" />
 </template>
-<script>
-export default {
-    name: "HiddenServiceIsActive",
-    props: {
-        value: {
-            type: Boolean,
-            required: true,
-        },
-    },
-};
+<script setup lang="ts">
+defineProps<{
+    is_active: boolean;
+}>();
 </script>
