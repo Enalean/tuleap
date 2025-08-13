@@ -19,7 +19,7 @@
 
 <template>
     <action-button
-        icon="trash-o"
+        icon="trash"
         v-on:click="showConfirmation()"
         class="tlp-button-danger"
         v-if="is_admin"
