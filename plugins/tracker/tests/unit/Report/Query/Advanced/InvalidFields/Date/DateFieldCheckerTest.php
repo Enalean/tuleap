@@ -35,7 +35,7 @@ final class DateFieldCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private const FIELD_NAME = 'date_field';
     private Comparison $comparison;
-    private \Tracker_FormElement_Field_Date $field;
+    private \Tuleap\Tracker\FormElement\Field\Date\DateField $field;
 
     #[\Override]
     protected function setUp(): void

@@ -18,12 +18,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\FormElement\Field\Date\DateField;
 use Tuleap\Tracker\REST\FormElement\PermissionsForGroupsRepresentation;
 
 /**
  * @psalm-immutable
  */
-class Tracker_REST_FormElement_FieldDateRepresentation extends Tracker_REST_FormElementRepresentation
+class Tracker_REST_FormElement_FieldDateRepresentation extends Tracker_REST_FormElementRepresentation // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /**
      * @var bool
@@ -46,7 +47,7 @@ class Tracker_REST_FormElement_FieldDateRepresentation extends Tracker_REST_Form
         ?PermissionsForGroupsRepresentation $permissions_for_groups,
     ): Tracker_REST_FormElementRepresentation {
         $representation = parent::build($form_element, $type, $permissions, $permissions_for_groups);
-        if (! $form_element instanceof Tracker_FormElement_Field_Date) {
+        if (! $form_element instanceof DateField) {
             return $representation;
         }
 

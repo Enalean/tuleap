@@ -38,7 +38,7 @@ final class DateValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
      */
     private $form_element_factory;
     private \Tracker_Artifact_Changeset $changeset;
-    private \Tracker_FormElement_Field_Date $date_field;
+    private \Tuleap\Tracker\FormElement\Field\Date\DateField $date_field;
     private StartDateFieldReferenceStub $start_date;
     private EndDateFieldReferenceStub $end_date;
 
@@ -48,7 +48,7 @@ final class DateValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->form_element_factory = $this->createStub(\Tracker_FormElementFactory::class);
         $this->changeset            = ChangesetTestBuilder::aChangeset(8298)->build();
 
-        $this->date_field = new \Tracker_FormElement_Field_Date(
+        $this->date_field = new \Tuleap\Tracker\FormElement\Field\Date\DateField(
             self::FIELD_ID,
             39,
             1000,

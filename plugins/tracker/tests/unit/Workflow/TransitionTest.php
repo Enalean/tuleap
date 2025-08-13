@@ -42,7 +42,7 @@ final class TransitionTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore
         PermissionsManager::setInstance($this->createMock(\PermissionsManager::class));
 
         $this->transition       = new Transition($this->id, $this->workflow_id, $this->from, $this->to);
-        $this->field            = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $this->field            = $this->createMock(\Tuleap\Tracker\FormElement\Field\Date\DateField::class);
         $this->date_post_action = $this->createMock(\Transition_PostAction_Field_Date::class);
         $this->date_post_action->method('bypassPermissions')->willReturn(true);
         $this->current_user = $this->createMock(\PFUser::class);

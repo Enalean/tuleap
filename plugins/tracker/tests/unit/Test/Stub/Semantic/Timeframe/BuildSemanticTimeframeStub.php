@@ -38,8 +38,8 @@ final class BuildSemanticTimeframeStub implements BuildSemanticTimeframe
 
     public static function withTimeframeSemanticBasedOnEndDate(
         Tracker $tracker,
-        \Tracker_FormElement_Field_Date $start_field,
-        \Tracker_FormElement_Field_Date $end_field,
+        \Tuleap\Tracker\FormElement\Field\Date\DateField $start_field,
+        \Tuleap\Tracker\FormElement\Field\Date\DateField $end_field,
     ): self {
         return self::withTimeframeCalculator($tracker, new TimeframeWithEndDate($start_field, $end_field));
     }

@@ -55,8 +55,8 @@ final class PromotedMilestoneBuilderTest extends TestCase
     private \Tuleap\Tracker\Artifact\Artifact $artifact;
     private \Tuleap\Tracker\FormElement\Field\String\StringField $title_field;
     private SemanticTimeframeBuilder|\PHPUnit\Framework\MockObject\MockObject $timeframe_builder;
-    private \Tracker_FormElement_Field_Date $start_field;
-    private \Tracker_FormElement_Field_Date $end_field;
+    private \Tuleap\Tracker\FormElement\Field\Date\DateField $start_field;
+    private \Tuleap\Tracker\FormElement\Field\Date\DateField $end_field;
     private \Tracker_Artifact_Changeset $changeset;
     private PlanningFactory|\PHPUnit\Framework\MockObject\MockObject $planning_factory;
     private RetrieveSemanticTitleField $retrieve_semantic_title_field;

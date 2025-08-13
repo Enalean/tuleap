@@ -67,12 +67,12 @@ final class TrackerRulesDateValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testValidateDateRulesReturnsFalseAndFeedbackWhenADateIsnotValid(): void
     {
-        $source_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $source_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\Date\DateField::class);
         $source_field->method('getID')->willReturn(123);
         $source_field->method('getLabel')->willReturn('aaaaa');
         $tracker = TrackerTestBuilder::aTracker()->withId(1)->build();
         $source_field->method('getTracker')->willReturn($tracker);
-        $target_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $target_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\Date\DateField::class);
         $target_field->method('getID')->willReturn(789);
         $target_field->method('getLabel')->willReturn('bbbbb');
 
@@ -109,11 +109,11 @@ final class TrackerRulesDateValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testValidateDateRulesReturnsFalseAndFeedbackDuringCSVImportWhenADateIsValidButNotInFieldList(): void
     {
-        $source_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $source_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\Date\DateField::class);
         $source_field->method('getID')->willReturn(123);
         $source_field->method('getLabel')->willReturn('aaaaa');
 
-        $target_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $target_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\Date\DateField::class);
         $target_field->method('getID')->willReturn(789);
         $target_field->method('getLabel')->willReturn('bbbbb');
         $comparator =  Tracker_Rule_Date::COMPARATOR_GREATER_THAN;

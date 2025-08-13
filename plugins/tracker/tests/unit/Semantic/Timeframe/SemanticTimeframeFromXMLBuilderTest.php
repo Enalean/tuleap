@@ -71,7 +71,7 @@ final class SemanticTimeframeFromXMLBuilderTest extends \Tuleap\Test\PHPUnit\Tes
             $xml,
             $all_semantics_xml,
             [
-                'F201' => $this->getMockedField(\Tracker_FormElement_Field_Date::class),
+                'F201' => $this->getMockedField(\Tuleap\Tracker\FormElement\Field\Date\DateField::class),
                 'F202' => $this->getMockedField(\Tuleap\Tracker\FormElement\Field\Integer\IntegerField::class),
             ],
             $this->getMockedTracker(),
@@ -103,8 +103,8 @@ final class SemanticTimeframeFromXMLBuilderTest extends \Tuleap\Test\PHPUnit\Tes
             $xml,
             $all_semantics_xml,
             [
-                'F201' => $this->getMockedField(\Tracker_FormElement_Field_Date::class),
-                'F202' => $this->getMockedField(\Tracker_FormElement_Field_Date::class),
+                'F201' => $this->getMockedField(\Tuleap\Tracker\FormElement\Field\Date\DateField::class),
+                'F202' => $this->getMockedField(\Tuleap\Tracker\FormElement\Field\Date\DateField::class),
             ],
             $this->getMockedTracker(),
             self::TRACKER_MAPPING
@@ -405,12 +405,12 @@ final class SemanticTimeframeFromXMLBuilderTest extends \Tuleap\Test\PHPUnit\Tes
             [
                 'xml' => $xml_with_end_date,
                 'mapping' => [
-                    'F202' => new \Tracker_FormElement_Field_Date(202, 113, 2, 'name', 'label', 'description', true, '', false, [], 1),
+                    'F202' => new \Tuleap\Tracker\FormElement\Field\Date\DateField(202, 113, 2, 'name', 'label', 'description', true, '', false, [], 1),
                 ],
             ], [
                 'xml' => $xml_with_end_date,
                 'mapping' => [
-                    'F201' => new \Tracker_FormElement_Field_Date(201, 113, 2, 'name', 'label', 'description', true, '', false, [], 1),
+                    'F201' => new \Tuleap\Tracker\FormElement\Field\Date\DateField(201, 113, 2, 'name', 'label', 'description', true, '', false, [], 1),
                 ],
             ], [
                 'xml' => $xml_with_duration,
@@ -420,7 +420,7 @@ final class SemanticTimeframeFromXMLBuilderTest extends \Tuleap\Test\PHPUnit\Tes
             ], [
                 'xml' => $xml_with_duration,
                 'mapping' => [
-                    'F201' => new \Tracker_FormElement_Field_Date(201, 113, 2, 'name', 'label', 'description', true, '', false, [], 1),
+                    'F201' => new \Tuleap\Tracker\FormElement\Field\Date\DateField(201, 113, 2, 'name', 'label', 'description', true, '', false, [], 1),
                 ],
             ],
         ];

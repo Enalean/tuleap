@@ -33,7 +33,7 @@ final class StartDateFieldReferenceProxy implements StartDateFieldReference
     {
     }
 
-    public static function fromTrackerField(\Tracker_FormElement_Field_Date $start_date): self
+    public static function fromTrackerField(\Tuleap\Tracker\FormElement\Field\Date\DateField $start_date): self
     {
         return new self($start_date->getId(), $start_date->getLabel());
     }

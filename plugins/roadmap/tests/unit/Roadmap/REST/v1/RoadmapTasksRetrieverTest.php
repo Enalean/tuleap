@@ -465,10 +465,10 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $tracker->method('userCanView')->willReturn(true);
         $tracker->method('getTitleField')->willReturn($title_field);
 
-        $start_date_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $start_date_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\Date\DateField::class);
         $start_date_field->method('userCanRead')->willReturn(false);
 
-        $end_date_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $end_date_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\Date\DateField::class);
         $end_date_field->method('userCanRead')->willReturn(true);
 
         $this->semantic_timeframe_builder
@@ -525,10 +525,10 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $tracker->method('userCanView')->willReturn(true);
         $tracker->method('getTitleField')->willReturn($title_field);
 
-        $start_date_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $start_date_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\Date\DateField::class);
         $start_date_field->method('userCanRead')->willReturn(true);
 
-        $end_date_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $end_date_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\Date\DateField::class);
         $end_date_field->method('userCanRead')->willReturn(false);
 
         $this->semantic_timeframe_builder
@@ -585,7 +585,7 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $tracker->method('userCanView')->willReturn(true);
         $tracker->method('getTitleField')->willReturn($title_field);
 
-        $start_date_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $start_date_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\Date\DateField::class);
         $start_date_field->method('userCanRead')->willReturn(true);
 
         $duration_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\NumericField::class);
@@ -1174,7 +1174,7 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         );
     }
 
-    private function mockDate(MockObject&\Tracker_FormElement_Field_Date $date_field, array $values): void
+    private function mockDate(MockObject&\Tuleap\Tracker\FormElement\Field\Date\DateField $date_field, array $values): void
     {
         $date_field
             ->method('getLastChangesetValue')
@@ -1192,7 +1192,7 @@ final class RoadmapTasksRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             );
     }
 
-    private function getChangesetValueDate(Artifact $artifact, \Tracker_FormElement_Field_Date $field, array $values): ?\Tracker_Artifact_ChangesetValue_Date
+    private function getChangesetValueDate(Artifact $artifact, \Tuleap\Tracker\FormElement\Field\Date\DateField $field, array $values): ?\Tracker_Artifact_ChangesetValue_Date
     {
         if (! isset($values[$artifact->getId()])) {
             return null;

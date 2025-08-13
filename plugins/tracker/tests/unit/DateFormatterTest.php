@@ -21,13 +21,14 @@
 declare(strict_types=1);
 
 use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Tracker\FormElement\Field\Date\DateField;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class Tracker_FormElement_DateFormatterTest extends \Tuleap\Test\PHPUnit\TestCase  // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     use \Tuleap\GlobalResponseMock;
 
-    private Tracker_FormElement_Field_Date&MockObject $field;
+    private DateField&MockObject $field;
 
     private Tracker_FormElement_DateFormatter $date_formatter;
 
@@ -35,7 +36,7 @@ final class Tracker_FormElement_DateFormatterTest extends \Tuleap\Test\PHPUnit\T
     {
         parent::setUp();
 
-        $this->field          = $this->createMock(Tracker_FormElement_Field_Date::class);
+        $this->field          = $this->createMock(DateField::class);
         $this->date_formatter = new Tracker_FormElement_DateFormatter($this->field);
     }
 

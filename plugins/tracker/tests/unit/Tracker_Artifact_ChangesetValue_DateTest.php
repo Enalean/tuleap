@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 use Tuleap\GlobalLanguageMock;
+use Tuleap\Tracker\FormElement\Field\Date\DateField;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
 
@@ -31,7 +32,7 @@ final class Tracker_Artifact_ChangesetValue_DateTest extends \Tuleap\Test\PHPUni
     use GlobalLanguageMock;
 
     private Tracker_Artifact_Changeset $changeset;
-    private Tracker_FormElement_Field_Date $field;
+    private DateField $field;
 
     protected function setUp(): void
     {

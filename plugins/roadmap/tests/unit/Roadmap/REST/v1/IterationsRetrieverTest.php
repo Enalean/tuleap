@@ -563,10 +563,10 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('getTitleField')
             ->willReturn($title_field);
 
-        $start_date_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $start_date_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\Date\DateField::class);
         $start_date_field->method('userCanRead')->willReturn(false);
 
-        $end_date_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $end_date_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\Date\DateField::class);
         $end_date_field->method('userCanRead')->willReturn(true);
 
         $this->semantic_timeframe_builder
@@ -640,10 +640,10 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('getTitleField')
             ->willReturn($title_field);
 
-        $start_date_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $start_date_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\Date\DateField::class);
         $start_date_field->method('userCanRead')->willReturn(true);
 
-        $end_date_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $end_date_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\Date\DateField::class);
         $end_date_field->method('userCanRead')->willReturn(false);
 
         $this->semantic_timeframe_builder
@@ -717,7 +717,7 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('getTitleField')
             ->willReturn($title_field);
 
-        $start_date_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $start_date_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\Date\DateField::class);
         $start_date_field->method('userCanRead')->willReturn(true);
 
         $duration_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\NumericField::class);
@@ -794,7 +794,7 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('getTitleField')
             ->willReturn($title_field);
 
-        $start_date_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $start_date_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\Date\DateField::class);
         $start_date_field->method('userCanRead')->willReturn(true);
 
         $duration_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\NumericField::class);
@@ -881,10 +881,10 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('getTitleField')
             ->willReturn($title_field);
 
-        $start_date_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $start_date_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\Date\DateField::class);
         $start_date_field->method('userCanRead')->willReturn(true);
 
-        $end_date_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $end_date_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\Date\DateField::class);
         $end_date_field->method('userCanRead')->willReturn(true);
 
         $this->semantic_timeframe_builder
@@ -966,10 +966,10 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('getTitleField')
             ->willReturn($title_field);
 
-        $start_date_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $start_date_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\Date\DateField::class);
         $start_date_field->method('userCanRead')->willReturn(true);
 
-        $end_date_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $end_date_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\Date\DateField::class);
         $end_date_field->method('userCanRead')->willReturn(true);
 
         $this->semantic_timeframe_builder
@@ -1060,10 +1060,10 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('getTitleField')
             ->willReturn($title_field);
 
-        $start_date_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $start_date_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\Date\DateField::class);
         $start_date_field->method('userCanRead')->willReturn(true);
 
-        $end_date_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $end_date_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\Date\DateField::class);
         $end_date_field->method('userCanRead')->willReturn(true);
 
         $this->semantic_timeframe_builder
@@ -1154,10 +1154,10 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('getTitleField')
             ->willReturn($title_field);
 
-        $start_date_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $start_date_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\Date\DateField::class);
         $start_date_field->method('userCanRead')->willReturn(true);
 
-        $end_date_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $end_date_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\Date\DateField::class);
         $end_date_field->method('userCanRead')->willReturn(true);
 
         $this->semantic_timeframe_builder
@@ -1249,10 +1249,10 @@ final class IterationsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ->method('getTitleField')
             ->willReturn($title_field);
 
-        $start_date_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $start_date_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\Date\DateField::class);
         $start_date_field->method('userCanRead')->willReturn(true);
 
-        $end_date_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $end_date_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\Date\DateField::class);
         $end_date_field->method('userCanRead')->willReturn(true);
 
         $this->semantic_timeframe_builder

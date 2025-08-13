@@ -27,11 +27,11 @@ use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\NullLogger;
 use Tracker_FormElement_Chart_Field_Exception;
-use Tracker_FormElement_Field_Date;
 use Tracker_FormElementFactory;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\Date\DateField;
 use Tuleap\Tracker\FormElement\Field\Integer\IntegerField;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
@@ -54,7 +54,7 @@ final class ChartConfigurationFieldRetrieverTest extends TestCase
     private IntegerField $field_capacity;
     private IntegerField $field_remaining_effort;
     private SemanticTimeframeBuilder&MockObject $semantic_timeframe_builder;
-    private Tracker_FormElement_Field_Date $field_start_date;
+    private DateField $field_start_date;
 
     protected function setUp(): void
     {

@@ -20,15 +20,16 @@
  */
 
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\Date\DateField;
 
 class Tracker_FormElement_DateFormatter // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public const DATE_FORMAT = 'Y-m-d';
 
-    /** @var Tracker_FormElement_Field_Date */
+    /** @var DateField */
     protected $field;
 
-    public function __construct(Tracker_FormElement_Field_Date $field)
+    public function __construct(DateField $field)
     {
         $this->field = $field;
     }

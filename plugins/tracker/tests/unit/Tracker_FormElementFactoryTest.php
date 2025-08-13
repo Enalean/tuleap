@@ -26,6 +26,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\Stubs\CSRF\CSRFSessionKeyStorageStub;
 use Tuleap\Test\Stubs\CSRF\CSRFSigningKeyStorageStub;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
+use Tuleap\Tracker\FormElement\Field\Date\DateField;
 use Tuleap\Tracker\FormElement\Field\FieldDao;
 use Tuleap\Tracker\FormElement\Field\Text\TextField;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -154,7 +155,7 @@ final class Tracker_FormElementFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testGetFieldById(): void
     {
-        $date     = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $date     = $this->createMock(\Tuleap\Tracker\FormElement\Field\Date\DateField::class);
         $fieldset = $this->createMock(\Tracker_FormElement_Container_Fieldset::class);
 
         $this->factory->method('getFormElementById')->willReturnCallback(
@@ -230,7 +231,7 @@ final class Tracker_FormElementFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $found_fields = [];
         foreach ($result as $field) {
-            if ($field instanceof Tracker_FormElement_Field_Date) {
+            if ($field instanceof DateField) {
                 $found_fields['date'] = true;
                 $this->assertEquals(666, $field->getId());
             }

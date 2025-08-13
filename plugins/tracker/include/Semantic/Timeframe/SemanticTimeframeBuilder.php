@@ -22,9 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Semantic\Timeframe;
 
-use Tracker_FormElement_Field_Date;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\LinksRetriever;
+use Tuleap\Tracker\FormElement\Field\Date\DateField;
 use Tuleap\Tracker\FormElement\Field\NumericField;
 use Tuleap\Tracker\Tracker;
 
@@ -116,7 +116,7 @@ class SemanticTimeframeBuilder implements BuildSemanticTimeframe
                 $tracker,
                 (int) $row['end_date_field_id']
             );
-            assert($end_date_field instanceof Tracker_FormElement_Field_Date);
+            assert($end_date_field instanceof DateField);
 
             $timeframe                          = new SemanticTimeframe($tracker, new TimeframeWithEndDate($start_date_field, $end_date_field));
             $this->instances[$tracker->getId()] = $timeframe;

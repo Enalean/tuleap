@@ -32,23 +32,23 @@ final class IComputeTimeframesStub implements IComputeTimeframes
 {
     private function __construct(
         private readonly DatePeriodWithOpenDays $date_period,
-        private readonly ?\Tracker_FormElement_Field_Date $start,
-        private readonly ?\Tracker_FormElement_Field_Date $end,
+        private readonly ?\Tuleap\Tracker\FormElement\Field\Date\DateField $start,
+        private readonly ?\Tuleap\Tracker\FormElement\Field\Date\DateField $end,
         private readonly ?\Tuleap\Tracker\FormElement\Field\NumericField $duration,
     ) {
     }
 
     public static function fromStartAndEndDates(
         DatePeriodWithOpenDays $date_period,
-        \Tracker_FormElement_Field_Date $start,
-        \Tracker_FormElement_Field_Date $end,
+        \Tuleap\Tracker\FormElement\Field\Date\DateField $start,
+        \Tuleap\Tracker\FormElement\Field\Date\DateField $end,
     ): self {
         return new self($date_period, $start, $end, null);
     }
 
     public static function fromStartAndDuration(
         DatePeriodWithOpenDays $date_period,
-        \Tracker_FormElement_Field_Date $start,
+        \Tuleap\Tracker\FormElement\Field\Date\DateField $start,
         \Tuleap\Tracker\FormElement\Field\NumericField $duration,
     ): self {
         return new self($date_period, $start, null, $duration);
@@ -67,13 +67,13 @@ final class IComputeTimeframesStub implements IComputeTimeframes
     }
 
     #[\Override]
-    public function getStartDateField(): ?\Tracker_FormElement_Field_Date
+    public function getStartDateField(): ?\Tuleap\Tracker\FormElement\Field\Date\DateField
     {
         return $this->start;
     }
 
     #[\Override]
-    public function getEndDateField(): ?\Tracker_FormElement_Field_Date
+    public function getEndDateField(): ?\Tuleap\Tracker\FormElement\Field\Date\DateField
     {
         return $this->end;
     }

@@ -48,11 +48,11 @@ final class SetDateValueValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $this->expectNotToPerformAssertions();
 
-        $date_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $date_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\Date\DateField::class);
         $date_field
             ->method('getId')
             ->willReturn(1);
-        $other_date_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $other_date_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\Date\DateField::class);
         $other_date_field
             ->method('getId')
             ->willReturn(2);
@@ -89,7 +89,7 @@ final class SetDateValueValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testValidateThrowsWhenFieldIdDoesNotMatchADateField(): void
     {
-        $date_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $date_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\Date\DateField::class);
         $date_field
             ->method('getId')
             ->willReturn(1);

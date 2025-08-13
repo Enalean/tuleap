@@ -36,7 +36,7 @@ final class TimeframeWithDurationTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     private TimeframeWithDuration $timeframe;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\Tracker_FormElement_Field_Date
+     * @var \PHPUnit\Framework\MockObject\MockObject|\Tuleap\Tracker\FormElement\Field\Date\DateField
      */
     private $start_date_field;
     /**
@@ -433,9 +433,9 @@ final class TimeframeWithDurationTest extends \Tuleap\Test\PHPUnit\TestCase
         self::assertEquals($display_time, $this->timeframe->isTimeDisplayedForEvent());
     }
 
-    private function getMockedDateField(int $field_id): \Tracker_FormElement_Field_Date
+    private function getMockedDateField(int $field_id): \Tuleap\Tracker\FormElement\Field\Date\DateField
     {
-        $mock = $this->getMockBuilder(\Tracker_FormElement_Field_Date::class)
+        $mock = $this->getMockBuilder(\Tuleap\Tracker\FormElement\Field\Date\DateField::class)
             ->disableOriginalConstructor()
             ->getMock();
 

@@ -26,7 +26,6 @@ use Tracker_Artifact_ChangesetValue_File;
 use Tracker_FormElement_Field_Burndown;
 use Tracker_FormElement_Field_Checkbox;
 use Tracker_FormElement_Field_CrossReferences;
-use Tracker_FormElement_Field_Date;
 use Tracker_FormElement_Field_File;
 use Tracker_FormElement_Field_LastModifiedBy;
 use Tracker_FormElement_Field_MultiSelectbox;
@@ -40,6 +39,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\ArtifactId\ArtifactIdField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\Computed\ComputedField;
+use Tuleap\Tracker\FormElement\Field\Date\DateField;
 use Tuleap\Tracker\FormElement\Field\Float\FloatField;
 use Tuleap\Tracker\FormElement\Field\Integer\IntegerField;
 use Tuleap\Tracker\FormElement\Field\LastUpdateDate\LastUpdateDateField;
@@ -66,7 +66,7 @@ class ArtifactFilesDeletorVisitor implements Tracker_FormElement_FieldVisitor
     {
     }
 
-    public function visitDate(Tracker_FormElement_Field_Date $field): void
+    public function visitDate(DateField $field): void
     {
     }
 

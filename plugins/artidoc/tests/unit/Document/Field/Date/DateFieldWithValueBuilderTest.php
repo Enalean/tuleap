@@ -27,13 +27,13 @@ use Override;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue_Date;
-use Tracker_FormElement_Field_Date;
 use Tuleap\Artidoc\Document\Field\ConfiguredField;
 use Tuleap\Artidoc\Domain\Document\Section\Field\DisplayType;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\DateFieldWithValue;
 use Tuleap\Option\Option;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\FormElement\Field\Date\DateField;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueDateTestBuilder;
@@ -59,7 +59,7 @@ final class DateFieldWithValueBuilderTest extends TestCase
     }
 
     private function buildDateFieldWithValue(
-        Tracker_FormElement_Field_Date $field,
+        DateField $field,
         Tracker_Artifact_Changeset $changeset,
         ?Tracker_Artifact_ChangesetValue_Date $value,
     ): DateFieldWithValue {

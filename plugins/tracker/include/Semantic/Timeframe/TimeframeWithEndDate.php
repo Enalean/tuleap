@@ -31,17 +31,17 @@ class TimeframeWithEndDate implements IComputeTimeframes
     private const NAME = 'timeframe-with-end-date';
 
     /**
-     * @var \Tracker_FormElement_Field_Date
+     * @var \Tuleap\Tracker\FormElement\Field\Date\DateField
      */
     private $start_date_field;
     /**
-     * @var \Tracker_FormElement_Field_Date
+     * @var \Tuleap\Tracker\FormElement\Field\Date\DateField
      */
     private $end_date_field;
 
     public function __construct(
-        \Tracker_FormElement_Field_Date $start_date_field,
-        \Tracker_FormElement_Field_Date $end_date_field,
+        \Tuleap\Tracker\FormElement\Field\Date\DateField $start_date_field,
+        \Tuleap\Tracker\FormElement\Field\Date\DateField $end_date_field,
     ) {
         $this->start_date_field = $start_date_field;
         $this->end_date_field   = $end_date_field;
@@ -117,12 +117,12 @@ class TimeframeWithEndDate implements IComputeTimeframes
         );
     }
 
-    public function getStartDateField(): ?\Tracker_FormElement_Field_Date
+    public function getStartDateField(): ?\Tuleap\Tracker\FormElement\Field\Date\DateField
     {
         return $this->start_date_field;
     }
 
-    public function getEndDateField(): \Tracker_FormElement_Field_Date
+    public function getEndDateField(): \Tuleap\Tracker\FormElement\Field\Date\DateField
     {
         return $this->end_date_field;
     }

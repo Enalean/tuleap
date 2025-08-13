@@ -32,11 +32,11 @@ use Tracker_Artifact_Changeset_CommentDao;
 use Tracker_Artifact_Changeset_ValueDao;
 use Tracker_Artifact_ChangesetDao;
 use Tracker_Artifact_ChangesetValue_Date;
-use Tracker_FormElement_Field_Date;
 use Tracker_FormElementFactory;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\Date\DateField;
 use Tuleap\Tracker\FormElement\Field\Float\FloatField;
 use Tuleap\Tracker\FormElement\Field\Text\TextField;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
@@ -183,7 +183,7 @@ final class Tracker_Artifact_ChangesetTest extends TestCase //phpcs:ignore Squiz
 
     public function testGetValue(): void
     {
-        $field = $this->createMock(Tracker_FormElement_Field_Date::class);
+        $field = $this->createMock(DateField::class);
         $value = $this->createMock(Tracker_Artifact_ChangesetValue_Date::class);
 
         $this->dao->expects($this->once())->method('searchByFieldId')->willReturn(['changeset_id' => 1, 'field_id' => 2, 'id' => 3, 'has_changed' => 0]);
@@ -198,7 +198,7 @@ final class Tracker_Artifact_ChangesetTest extends TestCase //phpcs:ignore Squiz
 
     public function testGetChangesetValuesHasChanged(): void
     {
-        $field   = $this->createMock(Tracker_FormElement_Field_Date::class);
+        $field   = $this->createMock(DateField::class);
         $value   = $this->createMock(Tracker_Artifact_ChangesetValue_Date::class);
         $factory = $this->createMock(Tracker_FormElementFactory::class);
 
@@ -223,10 +223,10 @@ final class Tracker_Artifact_ChangesetTest extends TestCase //phpcs:ignore Squiz
 
     public function testDiffToPrevious(): void
     {
-        $field1             = $this->createMock(Tracker_FormElement_Field_Date::class);
+        $field1             = $this->createMock(DateField::class);
         $value1_previous    = $this->createMock(Tracker_Artifact_ChangesetValue_Date::class);
         $value1_current     = $this->createMock(Tracker_Artifact_ChangesetValue_Date::class);
-        $field2             = $this->createMock(Tracker_FormElement_Field_Date::class);
+        $field2             = $this->createMock(DateField::class);
         $value2_previous    = $this->createMock(Tracker_Artifact_ChangesetValue_Date::class);
         $value2_current     = $this->createMock(Tracker_Artifact_ChangesetValue_Date::class);
         $factory            = $this->createMock(Tracker_FormElementFactory::class);
@@ -282,7 +282,7 @@ final class Tracker_Artifact_ChangesetTest extends TestCase //phpcs:ignore Squiz
 - Quelle est la couleur <b> du <i> cheval blanc d'Henri IV?
 + Quelle est la couleur <b> du <i> <s> cheval blanc d'Henri IV?";
         $format = 'text';
-        $field  = $this->createMock(Tracker_FormElement_Field_Date::class);
+        $field  = $this->createMock(DateField::class);
         $field->method('getLabel')->willReturn('Summary');
 
         $changeset = new Tracker_Artifact_Changeset(1, ArtifactTestBuilder::anArtifact(45)->build(), null, null, null);

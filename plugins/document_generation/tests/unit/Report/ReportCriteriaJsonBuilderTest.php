@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\DocumentGeneration\Report;
 
 use ProjectUGroup;
-use Tracker_FormElement_Field_Date;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Bind_Static;
 use Tracker_FormElement_Field_List_Bind_Ugroups;
@@ -38,6 +37,7 @@ use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\FormElement\Field\Date\DateField;
 use Tuleap\Tracker\FormElement\Field\String\StringField;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserGroupValueBuilder;
@@ -193,7 +193,7 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
 
     private function buildAdvancedDateCriterion(Tracker_Report $report): Tracker_Report_Criteria
     {
-        $date_field = $this->createMock(Tracker_FormElement_Field_Date::class);
+        $date_field = $this->createMock(DateField::class);
 
         $criterion_date = new Tracker_Report_Criteria(
             2,
@@ -475,7 +475,7 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
 
     private function buildNotSetDateCriterion(Tracker_Report $report): Tracker_Report_Criteria
     {
-        $date_field = $this->createMock(Tracker_FormElement_Field_Date::class);
+        $date_field = $this->createMock(DateField::class);
 
         $criterion_date = new Tracker_Report_Criteria(
             9,

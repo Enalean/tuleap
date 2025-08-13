@@ -129,7 +129,7 @@ final class TimeframeImpliedFromAnotherTrackerTest extends \Tuleap\Test\PHPUnit\
 
     public function testFieldIsNotUsedWhenItIsNotAnArtLinkField(): void
     {
-        $a_field = $this->createMock(\Tracker_FormElement_Field_Date::class);
+        $a_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\Date\DateField::class);
 
         self::assertFalse($this->timeframe->isFieldUsed($a_field));
     }

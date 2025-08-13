@@ -19,8 +19,9 @@
  */
 
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\FormElement\Field\SubmittedOn\SubmittedOnField;
+use Tuleap\Tracker\FormElement\Field\Date\DateField;
 use Tuleap\Tracker\FormElement\Field\LastUpdateDate\LastUpdateDateField;
+use Tuleap\Tracker\FormElement\Field\SubmittedOn\SubmittedOnField;
 
 class Tracker_Artifact_Changeset_ChangesetDataInitializator // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
@@ -64,8 +65,8 @@ class Tracker_Artifact_Changeset_ChangesetDataInitializator // phpcs:ignore PSR1
                  $tracker_data[$field->getId()] = $artifact->getSubmittedOn();
             }
             if (
-                $field instanceof Tracker_FormElement_Field_Date &&
-                    ! array_key_exists($field->getId(), $tracker_data)
+                $field instanceof DateField &&
+                ! array_key_exists($field->getId(), $tracker_data)
             ) {
                 //user doesn't have access to field
                 $tracker_data[$field->getId()] = $field->getDefaultValue();
