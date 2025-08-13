@@ -35,30 +35,20 @@ describe("TimePeriodUnits", () => {
         const time_units = [...time_period.units, ...time_period.additionalUnits(2)];
 
         const wrapper = shallowMount(TimePeriodUnits, {
-            propsData: {
+            props: {
                 time_period,
                 time_units,
             },
         });
 
         expect(wrapper).toMatchInlineSnapshot(`
-            <div class="roadmap-gantt-timeperiod">
-              <div title="March 2020" class="roadmap-gantt-timeperiod-unit">
-                Mar
-              </div>
-              <div title="April 2020" class="roadmap-gantt-timeperiod-unit">
-                Apr
-              </div>
-              <div title="May 2020" class="roadmap-gantt-timeperiod-unit">
-                May
-              </div>
-              <div title="June 2020" class="roadmap-gantt-timeperiod-unit">
-                Jun
-              </div>
-              <div title="July 2020" class="roadmap-gantt-timeperiod-unit">
-                Jul
-              </div>
-            </div>
-        `);
+<div class="roadmap-gantt-timeperiod">
+  <div class="roadmap-gantt-timeperiod-unit" title="March 2020">Mar</div>
+  <div class="roadmap-gantt-timeperiod-unit" title="April 2020">Apr</div>
+  <div class="roadmap-gantt-timeperiod-unit" title="May 2020">May</div>
+  <div class="roadmap-gantt-timeperiod-unit" title="June 2020">Jun</div>
+  <div class="roadmap-gantt-timeperiod-unit" title="July 2020">Jul</div>
+</div>
+`);
     });
 });

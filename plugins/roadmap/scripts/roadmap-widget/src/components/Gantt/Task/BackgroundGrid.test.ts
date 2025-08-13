@@ -27,7 +27,7 @@ Settings.defaultZone = "UTC";
 describe("BackgroundGrid", () => {
     it("Display the grid to help user distinguish months", () => {
         const wrapper = shallowMount(BackgroundGrid, {
-            propsData: {
+            props: {
                 time_period: new TimePeriodMonth(
                     DateTime.fromISO("2020-03-31T22:00:00.000Z"),
                     DateTime.fromISO("2020-04-30T22:00:00.000Z"),

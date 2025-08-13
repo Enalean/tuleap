@@ -24,7 +24,7 @@ import type { Task } from "../../../type";
 describe("TaskBarMilestone", () => {
     it("should display a svg diamond at given position", () => {
         const wrapper = shallowMount(TaskBarMilestone, {
-            propsData: {
+            props: {
                 task: {
                     color_name: "fiesta-red",
                     progress: 0,

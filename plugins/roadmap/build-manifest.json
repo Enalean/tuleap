@@ -1,12 +1,10 @@
 {
     "name": "roadmap",
-    "gettext-vue": {
+    "gettext-vue3": {
         "roadmap-widget": {
             "src": "scripts/roadmap-widget/src",
             "po": "scripts/roadmap-widget/po"
-        }
-    },
-    "gettext-vue3": {
+        },
         "configure-widget": {
             "src": "scripts/configure-widget/src",
             "po": "scripts/configure-widget/po"

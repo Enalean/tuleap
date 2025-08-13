@@ -23,7 +23,7 @@
         <path
             class="roadmap-gantt-task-dependency-line"
             v-bind:class="line_class"
-            v-bind:d="arrow_path"
+            v-bind:d="path"
             data-test="path"
         />
     </svg>
@@ -127,7 +127,7 @@ const height_with_gap = computed((): number => {
     return height_without_gap.value + 2 * gap;
 });
 
-const arrow_path = computed((): string => {
+const path = computed((): string => {
     const height = height_with_gap.value;
     const width = width_with_gap.value;
 

@@ -19,17 +19,21 @@
 
 import { DateTime } from "luxon";
 import { shallowMount } from "@vue/test-utils";
-import type { Wrapper } from "@vue/test-utils";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
+import type { VueWrapper } from "@vue/test-utils";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-tests";
 import type { TasksState } from "../../../store/tasks/type";
+import type { RootState } from "../../../store/type";
 import type { Task } from "../../../type";
 import HeaderInvalidIcon from "../Task/HeaderInvalidIcon.vue";
 import HeaderLink from "./HeaderLink.vue";
 import TaskHeader from "./TaskHeader.vue";
-import { createRoadmapLocalVue } from "../../../helpers/local-vue-for-test";
 
 describe("TaskHeader", () => {
     let task: Task, does_at_least_one_task_have_subtasks: boolean;
+    let retrieveSpy: jest.Mock;
+    beforeEach(() => {
+        retrieveSpy = jest.fn();
+    });
 
     beforeEach(() => {
         task = {
@@ -39,28 +43,38 @@ describe("TaskHeader", () => {
         does_at_least_one_task_have_subtasks = false;
     });
 
-    async function getWrapper(): Promise<Wrapper<Vue>> {
+    function getWrapper(): VueWrapper {
         return shallowMount(TaskHeader, {
-            propsData: {
+            props: {
                 task,
                 popover_element_id: "id",
             },
-            localVue: await createRoadmapLocalVue(),
-            mocks: {
-                $store: createStoreMock({
+            global: {
+                ...getGlobalTestOptions({
                     state: {
-                        tasks: {} as TasksState,
-                    },
-                    getters: {
-                        "tasks/does_at_least_one_task_have_subtasks":
-                            does_at_least_one_task_have_subtasks,
+                        tasks_state: {} as TasksState,
+                    } as RootState,
+                    modules: {
+                        tasks: {
+                            getters: {
+                                does_at_least_one_task_have_subtasks: () =>
+                                    does_at_least_one_task_have_subtasks,
+                            },
+                            actions: {
+                                toggleSubtasks: () => retrieveSpy(task),
+                            },
+                            mutations: {
+                                removeSubtasksDisplayForTask: jest.fn(),
+                            },
+                            namespaced: true,
+                        },
                     },
                 }),
             },
         });
     }
 
-    it("Displays link to the task", async () => {
+    it("Displays link to the task", () => {
         task = {
             id: 123,
             title: "Do this",
@@ -76,60 +90,60 @@ describe("TaskHeader", () => {
             has_subtasks: false,
         } as Task;
 
-        const wrapper = await getWrapper();
+        const wrapper = getWrapper();
 
         expect(wrapper.findComponent(HeaderLink).exists()).toBeTruthy();
     });
 
-    it("should display a warning icon if task has end date < start date", async () => {
+    it("should display a warning icon if task has end date < start date", () => {
         task = {
             id: 123,
             start: DateTime.fromISO("2020-04-14T22:00:00.000Z"),
             end: DateTime.fromISO("2020-04-10T22:00:00.000Z"),
         } as Task;
 
-        const wrapper = await getWrapper();
+        const wrapper = getWrapper();
 
         expect(wrapper.findComponent(HeaderInvalidIcon).exists()).toBe(true);
     });
 
-    it("does not need to display the project for parent tasks", async () => {
+    it("does not need to display the project for parent tasks", () => {
         task = {
             id: 123,
             has_subtasks: true,
         } as Task;
         does_at_least_one_task_have_subtasks = true;
 
-        const wrapper = await getWrapper();
+        const wrapper = getWrapper();
 
         expect(wrapper.findComponent(HeaderLink).props("should_display_project")).toBe(false);
     });
 
-    it("should indicates that the task has subtasks", async () => {
+    it("should indicates that the task has subtasks", () => {
         task = {
             id: 123,
             has_subtasks: true,
         } as Task;
         does_at_least_one_task_have_subtasks = true;
 
-        const wrapper = await getWrapper();
+        const wrapper = getWrapper();
 
         expect(wrapper.find("[data-test=caret]").exists()).toBeTruthy();
         expect(wrapper.classes()).toContain("roadmap-gantt-task-header-with-subtasks");
     });
 
     it(`should display the caret container if at least one task in the Gantt chart has subtasks,
-        so that text header is nicely aligned across tasks`, async () => {
+        so that text header is nicely aligned across tasks`, () => {
         does_at_least_one_task_have_subtasks = true;
 
-        const wrapper = await getWrapper();
+        const wrapper = getWrapper();
 
         expect(wrapper.find("[data-test=caret-container]").exists()).toBeTruthy();
     });
 
     it(`should not display the caret container if no task in the Gantt chart has subtasks,
-        so that text header does not have useless extra padding`, async () => {
-        const wrapper = await getWrapper();
+        so that text header does not have useless extra padding`, () => {
+        const wrapper = getWrapper();
 
         expect(wrapper.find("[data-test=caret-container]").exists()).toBeFalsy();
     });
@@ -141,20 +155,17 @@ describe("TaskHeader", () => {
                 has_subtasks: true,
             } as Task;
 
-            const wrapper = await getWrapper();
+            const wrapper = getWrapper();
             await wrapper.trigger("click");
 
-            expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith("tasks/toggleSubtasks", task);
+            expect(retrieveSpy).toHaveBeenCalledWith(task);
         });
 
         it("should not toggle the subtasks if there is no subtasks", async () => {
-            const wrapper = await getWrapper();
+            const wrapper = getWrapper();
             await wrapper.trigger("click");
 
-            expect(wrapper.vm.$store.dispatch).not.toHaveBeenCalledWith(
-                "tasks/toggleSubtasks",
-                task,
-            );
+            expect(retrieveSpy).not.toHaveBeenCalledWith(task);
         });
     });
 });

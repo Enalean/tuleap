@@ -37,7 +37,7 @@ export interface State {
 }
 
 export interface RootState extends State {
-    readonly tasks: TasksState;
+    readonly tasks_state: TasksState;
     readonly iterations: IterationsState;
-    readonly timeperiod: TimeperiodState;
+    readonly timeperiod_state: TimeperiodState;
 }

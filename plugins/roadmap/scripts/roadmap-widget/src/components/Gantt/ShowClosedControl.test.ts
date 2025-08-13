@@ -17,43 +17,41 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import { createRoadmapLocalVue } from "../../helpers/local-vue-for-test";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
+import type { VueWrapper } from "@vue/test-utils";
+import { getGlobalTestOptions } from "../../helpers/global-options-for-tests";
 import type { RootState } from "../../store/type";
 import ShowClosedControl from "./ShowClosedControl.vue";
 
 describe("ShowClosedControl", () => {
-    let show_closed_elements: boolean;
-    async function getWrapper(): Promise<Wrapper<Vue>> {
+    let retrieveSpy: jest.Mock, show_closed_elements: boolean;
+
+    beforeEach(() => {
+        retrieveSpy = jest.fn();
+    });
+
+    function getWrapper(): VueWrapper {
         return shallowMount(ShowClosedControl, {
-            localVue: await createRoadmapLocalVue(),
-            mocks: {
-                $store: createStoreMock({
+            global: {
+                ...getGlobalTestOptions({
                     state: {
                         show_closed_elements: show_closed_elements,
                     } as RootState,
+                    mutations: {
+                        toggleClosedElements: () => retrieveSpy(show_closed_elements),
+                    },
                 }),
             },
         });
     }
 
-    it("should mutate the store when the user decides to show/hide the closed elements", async () => {
+    it("should mutate the store when the user decides to show/hide the closed elements", () => {
         show_closed_elements = false;
-        const wrapper = await getWrapper();
-        await wrapper.find("[data-test=input]").setChecked();
-        expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
-            "toggleClosedElements",
-            show_closed_elements,
-        );
+        getWrapper().find("[data-test=input]").setValue();
+        expect(retrieveSpy).toHaveBeenCalledWith(show_closed_elements);
 
         show_closed_elements = true;
-        const wrapper2 = await getWrapper();
-        await wrapper2.find("[data-test=input]").setChecked();
-        expect(wrapper2.vm.$store.commit).toHaveBeenCalledWith(
-            "toggleClosedElements",
-            show_closed_elements,
-        );
+        getWrapper().find("[data-test=input]").setValue();
+        expect(retrieveSpy).toHaveBeenCalledWith(show_closed_elements);
     });
 });

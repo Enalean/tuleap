@@ -19,7 +19,7 @@
 
 import { DateTime } from "luxon";
 import { shallowMount } from "@vue/test-utils";
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import type { Project, SubtaskRow, Task } from "../../../type";
 import HeaderInvalidIcon from "../Task/HeaderInvalidIcon.vue";
 import HeaderLink from "../Task/HeaderLink.vue";
@@ -32,9 +32,9 @@ describe("SubtaskHeader", () => {
         subtask = { project: { id: 124 } as Project } as Task;
     });
 
-    function getWrapper(): Wrapper<Vue> {
+    function getWrapper(): VueWrapper {
         return shallowMount(SubtaskHeader, {
-            propsData: {
+            props: {
                 row: {
                     parent: { project: { id: 123 } as Project } as Task,
                     subtask,

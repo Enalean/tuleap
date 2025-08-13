@@ -18,9 +18,8 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import type { Wrapper } from "@vue/test-utils";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import { createRoadmapLocalVue } from "../../../helpers/local-vue-for-test";
+import type { VueWrapper } from "@vue/test-utils";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-tests";
 import type { TasksState } from "../../../store/tasks/type";
 import type { RootState } from "../../../store/type";
 import TimePeriodControl from "./TimePeriodControl.vue";
@@ -32,30 +31,34 @@ describe("TimePeriodControl", () => {
         has_at_least_one_row_shown = true;
     });
 
-    async function getWrapper(): Promise<Wrapper<Vue>> {
+    function getWrapper(): VueWrapper {
         return shallowMount(TimePeriodControl, {
-            propsData: {
+            props: {
                 value: "month",
             },
-            localVue: await createRoadmapLocalVue(),
-            mocks: {
-                $store: createStoreMock({
+            global: {
+                ...getGlobalTestOptions({
                     state: {
-                        tasks: {} as TasksState,
+                        tasks_state: {} as TasksState,
                     } as RootState,
-                    getters: {
-                        "tasks/has_at_least_one_row_shown": has_at_least_one_row_shown,
+                    modules: {
+                        tasks: {
+                            getters: {
+                                has_at_least_one_row_shown: () => has_at_least_one_row_shown,
+                            },
+                            namespaced: true,
+                        },
                     },
                 }),
             },
         });
     }
-    it("Emits input event when the value is changed", async () => {
-        const wrapper = await getWrapper();
+    it("Emits input event when the value is changed", () => {
+        const wrapper = getWrapper();
 
-        wrapper.find(`[data-test=quarter]`).setSelected();
-        wrapper.find(`[data-test=month]`).setSelected();
-        wrapper.find(`[data-test=week]`).setSelected();
+        wrapper.find("[data-test=select-timescale]").setValue("quarter");
+        wrapper.find("[data-test=select-timescale]").setValue("month");
+        wrapper.find("[data-test=select-timescale]").setValue("week");
 
         const input_event = wrapper.emitted("input");
         if (!input_event) {
@@ -67,9 +70,9 @@ describe("TimePeriodControl", () => {
         expect(input_event[2][0]).toBe("week");
     });
 
-    it("should mark the selectbox as disabled if there is no rows", async () => {
+    it("should mark the selectbox as disabled if there is no rows", () => {
         has_at_least_one_row_shown = false;
-        const wrapper = await getWrapper();
+        const wrapper = getWrapper();
 
         const select = wrapper.find("[data-test=select-timescale]").element;
         if (!(select instanceof HTMLSelectElement)) {

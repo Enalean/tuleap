@@ -17,12 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import path from "node:path";
-import { fileURLToPath } from "node:url";
 import { defineJestConfiguration } from "@tuleap/build-system-configurator";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 const configuration = defineJestConfiguration();
 
@@ -31,11 +26,7 @@ export default {
     displayName: "roadmap",
     transform: {
         ...configuration.transform,
-        "^.+\\.vue$": "unplugin-vue2-script-setup/jest",
-    },
-    moduleNameMapper: {
-        ...configuration.moduleNameMapper,
-        "^vue$": path.resolve(__dirname, "./node_modules/vue/"),
+        "^.+\\.vue$": "@vue/vue3-jest",
     },
     testEnvironment: "./src/FixJSDOMEnvironment.ts",
 };

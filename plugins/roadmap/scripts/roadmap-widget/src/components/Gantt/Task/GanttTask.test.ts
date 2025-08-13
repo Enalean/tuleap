@@ -17,21 +17,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import { DateTime, Settings } from "luxon";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import GanttTask from "./GanttTask.vue";
 import type { Task } from "../../../type";
-import BackgroundGrid from "./BackgroundGrid.vue";
-import TaskBar from "./TaskBar.vue";
+import { TasksByNature, TasksDependencies } from "../../../type";
 import { Styles } from "../../../helpers/styles";
 import { TimePeriodMonth } from "../../../helpers/time-period-month";
-import { TasksByNature, TasksDependencies } from "../../../type";
-import DependencyArrow from "./DependencyArrow.vue";
 import { getDimensionsMap } from "../../../helpers/tasks-dimensions";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
+import { getGlobalTestOptions } from "../../../helpers/global-options-for-tests";
 import type { TimeperiodState } from "../../../store/timeperiod/type";
 import type { RootState } from "../../../store/type";
-import { DateTime, Settings } from "luxon";
+import TaskBar from "./TaskBar.vue";
+import GanttTask from "./GanttTask.vue";
+import BackgroundGrid from "./BackgroundGrid.vue";
+import DependencyArrow from "./DependencyArrow.vue";
 
 Settings.defaultZone = "UTC";
 
@@ -41,7 +41,7 @@ describe("GanttTask", () => {
         tasks_by_nature: TasksByNature | null = null,
         dependencies_nature_to_display: string | null = null,
         show_closed_elements: boolean | null = false,
-    ): Wrapper<Vue> {
+    ): VueWrapper {
         const defaults: Task = {
             id: 123,
             title: "Do this",
@@ -69,24 +69,28 @@ describe("GanttTask", () => {
         }
 
         return shallowMount(GanttTask, {
-            propsData: {
+            global: {
+                ...getGlobalTestOptions({
+                    state: {
+                        timeperiod_state: {} as TimeperiodState,
+                        show_closed_elements: show_closed_elements,
+                    } as RootState,
+                    modules: {
+                        timeperiod: {
+                            state: {
+                                time_period,
+                            },
+                        },
+                    },
+                }),
+            },
+            props: {
                 task: my_task,
                 nb_additional_units: 2,
                 dimensions_map: getDimensionsMap([{ task: my_task, is_shown: true }], time_period),
                 dependencies,
                 dependencies_nature_to_display,
                 popover_element_id: "roadmap-gantt-bar-popover-1-123",
-            },
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        timeperiod: {} as TimeperiodState,
-                        show_closed_elements: show_closed_elements,
-                    } as RootState,
-                    getters: {
-                        "timeperiod/time_period": time_period,
-                    },
-                }),
             },
         });
     }
@@ -171,7 +175,7 @@ describe("GanttTask", () => {
             expect(arrows).toHaveLength(expected_displayed_dependencies.length);
 
             expected_displayed_dependencies.forEach((expected, index): void => {
-                expect(arrows.at(index).props("dependency")).toBe(expected);
+                expect(arrows.at(index)?.props("dependency")).toStrictEqual(expected);
             });
         });
     });
@@ -227,8 +231,8 @@ describe("GanttTask", () => {
         const arrows = wrapper.findAllComponents(DependencyArrow);
         expect(arrows).toHaveLength(2);
 
-        expect(arrows.at(0).props("dependency")).toStrictEqual(dep_1);
-        expect(arrows.at(1).props("dependency")).toStrictEqual(dep_2);
+        expect(arrows.at(0)?.props("dependency")).toStrictEqual(dep_1);
+        expect(arrows.at(1)?.props("dependency")).toStrictEqual(dep_2);
     });
 
     describe("percentage", () => {

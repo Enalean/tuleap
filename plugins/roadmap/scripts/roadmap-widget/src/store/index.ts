@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { StoreOptions } from "vuex";
-import { Store } from "vuex";
+import type { StoreOptions, Store } from "vuex";
+import { createStore } from "vuex";
 import type { RootState } from "./type";
 import { createTaskModule } from "./tasks";
 import { createIterationsModule } from "./iterations";
@@ -28,7 +28,7 @@ import * as mutations from "./root-mutations";
 import type { TimeScale } from "../type";
 import { DateTime } from "luxon";
 
-export function createStore(
+export function createInitializedStore(
     initial_root_state: RootState,
     default_timescale: TimeScale,
 ): Store<RootState> {
@@ -53,5 +53,5 @@ export function createStore(
         },
     };
 
-    return new Store(store_options);
+    return createStore(store_options);
 }
