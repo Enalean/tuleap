@@ -33,7 +33,7 @@ dependencies:
     specifier: ^3.6.1
     version: 3.7.1
   vue:
-    specifier: ^3.3.4
+    specifier: ^3.5.18
     version: 3.5.18
   vue-dompurify-html:
     specifier: ^5.0.0
@@ -59,8 +59,8 @@ devDependencies:
     specifier: workspace:*
     version: link:../../../../lib/frontend/vuex-store-wrapper-jest
   '@types/luxon':
-    specifier: ^3.4.2
-    version: 3.4.2
+    specifier: ^3.7.1
+    version: 3.7.1
   '@vitejs/plugin-vue':
     specifier: ^4.2.3
     version: 4.6.2(vue@3.5.18)
@@ -70,6 +70,9 @@ devDependencies:
   jest-environment-jsdom:
     specifier: ^29.7.0
     version: 29.7.0
+  vue-demi:
+    specifier: 0.14.10
+    version: 0.14.10(vue@3.5.18)
 
 packages:
 
@@ -233,8 +236,8 @@ packages:
       parse5: 7.1.2
     dev: true
 
-  /@types/luxon@3.4.2:
-    resolution: {integrity: sha512-TifLZlFudklWlMBfhubvgqTXRzLDI5pCbGa4P8a3wPyUQSW+1xQ5eDsreP9DWHX3tjq1ke96uYG/nwundroWcA==}
+  /@types/luxon@3.7.1:
+    resolution: {integrity: sha512-H3iskjFIAn5SlJU7OuxUmTEpebK6TKB8rxZShDslBMZJ5u9S//KM1sbdAisiSrqwLQncVjnpi2OK2J51h+4lsg==}
     dev: true
 
   /@types/minimatch@6.0.0:
@@ -386,7 +389,7 @@ packages:
       '@vueuse/metadata': 8.9.4
       '@vueuse/shared': 8.9.4(vue@3.5.18)
       vue: 3.5.18
-      vue-demi: 0.14.1(vue@3.5.18)
+      vue-demi: 0.14.10(vue@3.5.18)
     dev: false
 
   /@vueuse/metadata@8.9.4:
@@ -405,7 +408,7 @@ packages:
         optional: true
     dependencies:
       vue: 3.5.18
-      vue-demi: 0.14.1(vue@3.5.18)
+      vue-demi: 0.14.10(vue@3.5.18)
     dev: false
 
   /abab@2.0.6:
@@ -1534,8 +1537,8 @@ packages:
     resolution: {integrity: sha512-YbGqHZ5/eW4SnkPNR44mKVc6ZKQoRs/Rux1sxC6rdwXb4qpbOSYfDr9DsTHolOTGmIKgM9j141mZbBeg05R1pw==}
     dev: true
 
-  /vue-demi@0.14.1(vue@3.5.18):
-    resolution: {integrity: sha512-rt+yuCtXvscYot9SQQj3WKZJVSriPNqVkpVBNEHPzSgBv7QIYzsS410VqVgvx8f9AAPgjg+XPKvmV3vOqqkJQQ==}
+  /vue-demi@0.14.10(vue@3.5.18):
+    resolution: {integrity: sha512-nMZBOwuzabUO0nLgIcc6rycZEebF6eeUfaiQx9+WSk8e29IbLvPU9feI6tqW4kTo3hvoYAJkMh8n8D0fuISphg==}
     engines: {node: '>=12'}
     hasBin: true
     requiresBuild: true
@@ -1547,7 +1550,6 @@ packages:
         optional: true
     dependencies:
       vue: 3.5.18
-    dev: false
 
   /vue-dompurify-html@5.3.0(vue@3.5.18):
     resolution: {integrity: sha512-HJQGBHbfSPcb6Mu97McdKbX7TqRHZa6Ji8OCpCNyuHca5QvQZ8IiuwghFPSO8OkSQfqXPNPKFMZdCOrnGGmOSQ==}

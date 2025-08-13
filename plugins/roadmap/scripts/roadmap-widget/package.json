@@ -15,7 +15,7 @@
     "@tuleap/vue3-gettext-init": "workspace:^",
     "@vueuse/core": "^8.7.3",
     "luxon": "^3.6.1",
-    "vue": "^3.3.4",
+    "vue": "^3.5.18",
     "vue-dompurify-html": "^5.0.0",
     "vue3-gettext": "^2.4.0",
     "vuex": "^4.1.0",
@@ -25,10 +25,11 @@
     "@tuleap/build-system-configurator": "workspace:*",
     "@tuleap/po-gettext-plugin": "workspace:^",
     "@tuleap/vuex-store-wrapper-jest": "workspace:*",
-    "@types/luxon": "^3.4.2",
+    "@types/luxon": "^3.7.1",
     "@vitejs/plugin-vue": "^4.2.3",
     "@vue/test-utils": "^2.4.6",
-    "jest-environment-jsdom": "^29.7.0"
+    "jest-environment-jsdom": "^29.7.0",
+    "vue-demi": "0.14.10"
   },
   "scripts": {
     "build": "vite build",
