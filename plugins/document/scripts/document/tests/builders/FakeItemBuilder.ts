@@ -51,7 +51,7 @@ export class FakeItemBuilder {
 
     public build(): FakeItem {
         return {
-            approval_table: undefined,
+            approval_table: null,
             file_type: this.file_type,
             has_approval_table: false,
             id: this.id,
@@ -59,13 +59,11 @@ export class FakeItemBuilder {
             is_uploading: true,
             is_uploading_in_collapsed_folder: false,
             is_uploading_new_version: false,
-            last_update_date: undefined,
             parent_id: this.parent_id,
-            progress: undefined,
+            progress: null,
             title: this.title,
             type: this.type,
-            upload_error: undefined,
-            uploader: undefined,
+            upload_error: null,
         };
     }
 }

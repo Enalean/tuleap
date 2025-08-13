@@ -16,22 +16,21 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import type { Route } from "vue-router";
+import type { RouteLocationNormalized, Router } from "vue-router";
 import { getCurrentInstance } from "vue";
-import type VueRouter from "vue-router";
 
-export function useRoute(): Route {
+export function useRoute(): RouteLocationNormalized {
     const instance = getCurrentInstance();
-    if (!instance) {
+    if (instance === null || instance.proxy === null) {
         throw Error("useRoute must be called in setup script");
     }
 
     return instance.proxy.$route;
 }
 
-export function useRouter(): VueRouter {
+export function useRouter(): Router {
     const instance = getCurrentInstance();
-    if (!instance) {
+    if (instance === null || instance.proxy === null) {
         throw Error("useRouter must be called in setup script");
     }
 

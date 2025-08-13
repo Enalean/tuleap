@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import type { Route } from "vue-router/types/router";
+import type { RouteLocationNormalizedLoaded } from "vue-router";
 import { AllowedSearchDateOperator } from "../type";
 import type {
     AdditionalFieldNumber,
@@ -30,7 +30,7 @@ import type {
 import { isAdditionalFieldNumber } from "../helpers/additional-custom-properties";
 
 export function getSearchPropsFromRoute(
-    route: Route,
+    route: RouteLocationNormalizedLoaded,
     root_id: number,
     criteria: SearchCriteria,
 ): {
@@ -63,7 +63,7 @@ export function getSearchPropsFromRoute(
 }
 
 function getCustomProperties(
-    route: Route,
+    route: RouteLocationNormalizedLoaded,
     criteria: SearchCriteria,
 ): Record<AdditionalFieldNumber, string | SearchDate | null> {
     const additional: Record<AdditionalFieldNumber, string | SearchDate | null> = {};
@@ -88,7 +88,7 @@ function getCustomProperties(
     return additional;
 }
 
-function getSort(route: Route): SortParams | null {
+function getSort(route: RouteLocationNormalizedLoaded): SortParams | null {
     const additional: SortParams | null = null;
 
     if (!route.query.sort) {
@@ -137,21 +137,21 @@ function isSearchCriterionList(criterion: SearchCriterion): criterion is SearchC
     return criterion.type === "list";
 }
 
-function getUpdateDate(route: Route): SearchDate | null {
+function getUpdateDate(route: RouteLocationNormalizedLoaded): SearchDate | null {
     const date = String(route.query.update_date || "");
     const operator = String(route.query.update_date_op || "");
 
     return getSearchDate(date, operator);
 }
 
-function getCreateDate(route: Route): SearchDate | null {
+function getCreateDate(route: RouteLocationNormalizedLoaded): SearchDate | null {
     const date = String(route.query.create_date || "");
     const operator = String(route.query.create_date_op || "");
 
     return getSearchDate(date, operator);
 }
 
-function getObsolescenceDate(route: Route): SearchDate | null {
+function getObsolescenceDate(route: RouteLocationNormalizedLoaded): SearchDate | null {
     const date = String(route.query.obsolescence_date || "");
     const operator = String(route.query.obsolescence_date_op || "");
 

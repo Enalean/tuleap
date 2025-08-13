@@ -17,11 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 import type { AdvancedSearchParams, SearchDate } from "../type";
-import type { Dictionary } from "vue-router/types/router";
+import type { LocationQuery } from "vue-router";
 import { isAdditionalFieldNumber } from "./additional-custom-properties";
 
-export function getRouterQueryFromSearchParams(params: AdvancedSearchParams): Dictionary<string> {
-    const query: Dictionary<string> = {};
+export function getRouterQueryFromSearchParams(params: AdvancedSearchParams): LocationQuery {
+    const query: LocationQuery = {};
     if (params.global_search.length > 0) {
         query.q = params.global_search;
     }
@@ -65,8 +65,8 @@ export function getRouterQueryFromSearchParams(params: AdvancedSearchParams): Di
     };
 }
 
-function getAdditionalRouteQuery(params: AdvancedSearchParams): Dictionary<string> {
-    const additional: Dictionary<string> = {};
+function getAdditionalRouteQuery(params: AdvancedSearchParams): LocationQuery {
+    const additional: LocationQuery = {};
 
     for (const key of Object.keys(params)) {
         if (!isAdditionalFieldNumber(key)) {
