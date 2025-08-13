@@ -42,7 +42,7 @@ export default [
         resolve: {
             extensions: [".ts", ".js", ".vue"],
             alias: {
-                vue: path.resolve(__dirname, "node_modules", "@vue", "compat"),
+                vue: path.resolve(__dirname, "node_modules", "vue"),
             },
         },
         module: {
