@@ -52,7 +52,9 @@
         />
     </div>
 </template>
-<script>
+<script setup lang="ts">
+import { ref } from "vue";
+import type { Service } from "../../type";
 import ServiceOpenInNewTab from "./ServiceOpenInNewTab.vue";
 import IconSelector from "./IconSelector.vue";
 import ServiceLabel from "./ServiceLabel.vue";
@@ -62,39 +64,21 @@ import ServiceIsUsed from "./ServiceIsUsed.vue";
 import ServiceRank from "./ServiceRank.vue";
 import HiddenServiceIsActive from "./HiddenServiceIsActive.vue";
 
-export default {
-    name: "InCreationCustomService",
-    components: {
-        ServiceOpenInNewTab,
-        HiddenServiceIsActive,
-        ServiceRank,
-        ServiceIsUsed,
-        ServiceDescription,
-        ServiceLink,
-        ServiceLabel,
-        IconSelector,
-    },
-    props: {
-        service_prop: {
-            type: Object,
-            required: true,
-        },
-    },
-    data() {
-        return {
-            service: this.service_prop,
-        };
-    },
-    methods: {
-        onEditServiceLabel(new_label) {
-            this.service.label = new_label;
-        },
-        onEditIcon(new_icon) {
-            this.service.icon_name = new_icon;
-        },
-        onNewTabChange(new_tab) {
-            this.service.is_in_new_tab = new_tab;
-        },
-    },
-};
+const props = defineProps<{
+    service_prop: Service;
+}>();
+
+const service = ref(props.service_prop);
+
+function onEditServiceLabel(new_label: string) {
+    service.value.label = new_label;
+}
+
+function onEditIcon(new_icon: string) {
+    service.value.icon_name = new_icon;
+}
+
+function onNewTabChange(new_tab: boolean) {
+    service.value.is_in_new_tab = new_tab;
+}
 </script>
