@@ -28,3 +28,19 @@ type IconInfo = {
 };
 
 export type AllowedIcons = Record<string, IconInfo>;
+
+export type Service = {
+    id: number | null;
+    icon_name: string;
+    label: string;
+    short_name: string;
+    link: string;
+    description: string;
+    is_active: boolean;
+    is_used: boolean;
+    is_in_iframe: boolean;
+    is_in_new_tab: boolean;
+    rank: number;
+    is_project_scope: boolean;
+    is_disabled_reason: boolean;
+};
