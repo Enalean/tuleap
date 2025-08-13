@@ -49,6 +49,8 @@
     </add-modal>
 </template>
 <script>
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { PROJECT_ID } from "../injection-symbols.js";
 import AddModal from "./AddModal.vue";
 import SidebarPreviewer from "./SidebarPreviewer.vue";
 import InCreationCustomService from "./Service/InCreationCustomService.vue";
@@ -82,10 +84,16 @@ export default {
             type: Object,
             required: true,
         },
-        project_id: {
-            type: String,
-            required: true,
-        },
+    },
+    setup() {
+        const project_id = strictInject(PROJECT_ID);
+        return { project_id };
+    },
+    data() {
+        return {
+            is_shown: false,
+            service: this.resetService(),
+        };
     },
     computed: {
         is_default_template() {
@@ -97,12 +105,6 @@ export default {
         form_url() {
             return `/project/${encodeURIComponent(this.project_id)}/admin/services/add`;
         },
-    },
-    data() {
-        return {
-            is_shown: false,
-            service: this.resetService(),
-        };
     },
     methods: {
         show() {
