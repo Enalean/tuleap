@@ -51,6 +51,12 @@ msgstr "Éditer un lien"
 msgid "Image source"
 msgstr "Source de l'image"
 
+msgid "Insert emoji"
+msgstr "Insérer une émoticône"
+
+msgid "Insert new emoji"
+msgstr "Insérer une nouvelle émoticône"
+
 msgid "Insert new image"
 msgstr "Insérer une nouvelle image"
 
@@ -77,6 +83,9 @@ msgstr "Supprimer le lien"
 
 msgid "Save"
 msgstr "Sauvegarder"
+
+msgid "Search..."
+msgstr "Rechercher..."
 
 msgid "Small heading"
 msgstr "Petit titre"

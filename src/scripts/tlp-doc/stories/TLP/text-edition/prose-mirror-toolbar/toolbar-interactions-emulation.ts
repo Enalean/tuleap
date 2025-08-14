@@ -21,6 +21,7 @@ import type {
     ToolbarBus,
     LinkProperties,
     ImageProperties,
+    EmojiProperties,
 } from "@tuleap/prose-mirror-editor-toolbar";
 import { buildToolbarBus } from "@tuleap/prose-mirror-editor-toolbar";
 
@@ -36,6 +37,7 @@ const default_toolbar_state = {
     is_link_active: false,
     is_unlink_active: false,
     is_image_active: false,
+    is_emoji_active: false,
 };
 
 let toolbar_state = { ...default_toolbar_state };
@@ -103,6 +105,14 @@ export const getToolbarDemoBus = (): ToolbarBus => {
                 is_disabled: false,
                 image_src: "https://example.com/example.jpg",
                 image_title: "An example image",
+            });
+        },
+        applyEmoji(emoji: EmojiProperties): void {
+            toolbar_state.is_emoji_active = emoji.emoji !== "";
+            toolbar_bus.view.activateEmoji({
+                is_activated: true,
+                is_disabled: false,
+                emoji_string: emoji.emoji,
             });
         },
         toggleOrderedList(): void {

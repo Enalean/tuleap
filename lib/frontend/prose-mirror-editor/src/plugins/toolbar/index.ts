@@ -32,6 +32,7 @@ export { buildKeymap };
 export type { LinkState } from "./links/LinkState";
 export type { ImageState } from "./image/ImageState";
 export type { ListState } from "./list/ListState";
+export type { EmojiState } from "./emoji/EmojiState";
 export type { Heading } from "./text-style/Heading";
 
 export const NB_HEADING = 3;

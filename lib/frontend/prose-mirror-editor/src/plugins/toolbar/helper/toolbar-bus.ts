@@ -20,9 +20,10 @@
 
 import type { LinkState } from "../links/LinkState";
 import type { ImageState } from "../image/ImageState";
-import type { ImageProperties, LinkProperties } from "../../../types";
+import type { ImageProperties, LinkProperties, EmojiProperties } from "../../../types";
 import type { ListState } from "../list/ListState";
 import type { Heading } from "../text-style/Heading";
+import type { EmojiState } from "../emoji/EmojiState";
 
 export interface ToolbarHandler {
     toggleBold: () => void;
@@ -40,6 +41,7 @@ export interface ToolbarHandler {
     applyImage: (image: ImageProperties) => void;
     toggleOrderedList: () => void;
     toggleBulletList: () => void;
+    applyEmoji: (emoji: EmojiProperties) => void;
     focus: () => void;
 }
 
@@ -59,6 +61,7 @@ export interface ToolbarView {
     activatePlainText: (is_activated: boolean) => void;
     activatePreformattedText: (is_activated: boolean) => void;
     activateSubtitle: (is_activated: boolean) => void;
+    activateEmoji: (emoji_state: EmojiState) => void;
     toggleToolbarState: (is_enabled: boolean) => void;
     toggleToolbarMenu: (menu: string) => void;
 }
@@ -86,6 +89,7 @@ export interface ToolbarBus {
     disableToolbar: () => void;
     enableToolbar: () => void;
     toggleMenu: (menu: string) => void;
+    emoji: (emoji: EmojiProperties) => void;
     focusEditor: () => void;
 }
 
@@ -108,6 +112,7 @@ const default_view: ToolbarView = {
     activatePlainText: noop,
     activatePreformattedText: noop,
     activateSubtitle: noop,
+    activateEmoji: noop,
     toggleToolbarState: noop,
     toggleToolbarMenu: noop,
 };
@@ -175,6 +180,9 @@ export const buildToolbarBus = (): ToolbarBus => ({
     },
     enableToolbar(): void {
         this.view.toggleToolbarState(true);
+    },
+    emoji(emoji: EmojiProperties): void {
+        this.handler?.applyEmoji(emoji);
     },
     toggleMenu(menu: string): void {
         this.view.toggleToolbarMenu(menu);

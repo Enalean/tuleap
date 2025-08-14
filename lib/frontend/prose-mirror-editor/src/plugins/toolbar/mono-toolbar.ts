@@ -53,6 +53,8 @@ import { SelectedNodesHaveSameParentChecker } from "./text-style/SelectedNodesHa
 import { SingleListInSelectionDetector } from "./list/SingleListInSelectionDetector";
 import { ListsInSelectionDetector } from "./list/ListsInSelectionDetector";
 import { ListStateBuilder } from "./list/ListStateBuilder";
+import type { EmojiProperties } from "../../types/internal-types";
+import { EmojiNodeInserter } from "./emoji/EmojiNodeInserter";
 
 const getToolbarActivator = (state: EditorState): ActivateToolbar => {
     const schema = state.schema;
@@ -171,6 +173,10 @@ export function setupMonoToolbar(toolbar_bus: ToolbarBus): Plugin {
                                 view.state,
                                 view.dispatch,
                             );
+                            view.focus();
+                        },
+                        applyEmoji(emoji: EmojiProperties): void {
+                            EmojiNodeInserter(view.state, view.dispatch).insertEmoji(emoji);
                             view.focus();
                         },
                         focus(): void {

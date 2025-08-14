@@ -34,6 +34,7 @@ import "./buttons/image/image";
 import "./buttons/ordered-list";
 import "./buttons/bullet-list";
 import "./buttons/text-style/text-style";
+import "./buttons/emojis/emojis";
 import type { GetText } from "@tuleap/gettext";
 import {
     getLocaleWithDefault,
@@ -48,7 +49,8 @@ export type ItemGroupName =
     | "link_items"
     | "scripts_items"
     | "text_styles_items"
-    | "additional_items";
+    | "additional_items"
+    | "other_items";
 
 export const BASIC_TEXT_ITEMS_GROUP: ItemGroupName = "basic_text_items";
 export const LIST_ITEMS_GROUP: ItemGroupName = "list_items";
@@ -56,6 +58,7 @@ export const LINK_ITEMS_GROUP: ItemGroupName = "link_items";
 export const SCRIPTS_ITEMS_GROUP: ItemGroupName = "scripts_items";
 export const TEXT_STYLES_ITEMS_GROUP: ItemGroupName = "text_styles_items";
 export const ADDITIONAL_ITEMS_GROUP: ItemGroupName = "additional_items";
+export const OTHER_ITEMS_GROUP: ItemGroupName = "other_items";
 
 export type ItemGroup = {
     name: ItemGroupName;
@@ -69,6 +72,7 @@ export type ProseMirrorToolbarElement = {
     script_elements: ScriptElements | null;
     link_elements: LinkElements | null;
     style_elements: StyleElements | null;
+    other_elements: OtherElements | null;
     additional_elements: AdditionalElement[] | null;
 };
 
@@ -100,6 +104,10 @@ export type StyleElements = {
     subtitles: boolean;
     text: boolean;
     preformatted: boolean;
+};
+
+export type OtherElements = {
+    emoji: boolean;
 };
 
 export type AdditionalElementPosition = "before" | "after" | "at_the_start" | "at_the_end";
@@ -250,6 +258,19 @@ export const renderToolbar = (
         elements: has_at_least_one_link_element ? [link_item, unlink_item, image_item] : [],
     };
 
+    const emoji_item = host.other_elements?.emoji
+        ? html`<emoji-item
+              toolbar_bus="${host.controller.getToolbarBus()}"
+              gettext_provider="${gettext_provider}"
+              is_disabled="${host.is_disabled}"
+          ></emoji-item>`
+        : html``;
+
+    const other_items: ItemGroup = {
+        name: OTHER_ITEMS_GROUP,
+        elements: [emoji_item],
+    };
+
     const has_at_least_one_style_element_activated =
         host.style_elements !== null &&
         (host.style_elements.headings ||
@@ -276,6 +297,7 @@ export const renderToolbar = (
         list_items,
         link_items,
         supersubscript_items,
+        other_items,
     ];
 
     return html`
@@ -317,6 +339,7 @@ initGettext(
         link_elements: null,
         list_elements: null,
         style_elements: null,
+        other_elements: null,
         additional_elements: null,
         is_disabled: {
             value: true,
