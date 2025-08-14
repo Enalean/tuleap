@@ -26,7 +26,6 @@ describe(`InEditionCustomService`, () => {
 
     beforeEach(() => {
         props = {
-            minimal_rank: 10,
             service_prop: {
                 id: 101,
                 icon_name: "",
@@ -67,7 +66,6 @@ describe(`InEditionCustomService`, () => {
             wrapper.get("[data-test=iframe-switch]").setChecked(false);
             const updated_service = { ...props.service_prop, is_in_iframe: false };
             const new_props = {
-                minimal_rank: 10,
                 service_prop: updated_service,
                 allowed_icons: {},
             };

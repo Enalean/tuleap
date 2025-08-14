@@ -35,12 +35,7 @@
         />
         <hidden-service-is-active v-bind:value="service.is_active" />
         <read-only-service-rank v-if="is_summary_service" v-bind:value="service.rank" />
-        <service-rank
-            v-else
-            id="project-service-edit-modal-rank"
-            v-bind:minimal_rank="minimal_rank"
-            v-bind:value="service.rank"
-        />
+        <service-rank v-else id="project-service-edit-modal-rank" v-bind:value="service.rank" />
         <service-link
             id="project-service-edit-modal-link"
             v-bind:value="service.link"
@@ -77,10 +72,6 @@ export default {
         ReadOnlyServiceIcon,
     },
     props: {
-        minimal_rank: {
-            type: Number,
-            required: true,
-        },
         service: {
             type: Object,
             required: true,

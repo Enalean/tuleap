@@ -28,7 +28,6 @@
                 v-bind:allowed_icons="allowed_icons"
             />
             <in-creation-custom-service
-                v-bind:minimal_rank="minimal_rank"
                 v-bind:service_prop="service"
                 v-bind:allowed_icons="allowed_icons"
             />
@@ -37,7 +36,7 @@
 </template>
 <script>
 import { strictInject } from "@tuleap/vue-strict-inject";
-import { PROJECT_ID } from "../injection-symbols.js";
+import { MINIMAL_RANK, PROJECT_ID } from "../injection-symbols.js";
 import AddModal from "./AddModal.vue";
 import SidebarPreviewer from "./SidebarPreviewer.vue";
 import InCreationCustomService from "./Service/InCreationCustomService.vue";
@@ -46,10 +45,6 @@ export default {
     name: "BaseProjectAdminAddModal",
     components: { AddModal, SidebarPreviewer, InCreationCustomService },
     props: {
-        minimal_rank: {
-            type: Number,
-            required: true,
-        },
         csrf_token: {
             type: String,
             required: true,
@@ -65,7 +60,8 @@ export default {
     },
     setup() {
         const project_id = strictInject(PROJECT_ID);
-        return { project_id };
+        const minimal_rank = strictInject(MINIMAL_RANK);
+        return { project_id, minimal_rank };
     },
     data() {
         return {

@@ -39,11 +39,7 @@
         <slot name="is_active">
             <hidden-service-is-active v-bind:value="service.is_active" />
         </slot>
-        <service-rank
-            id="project-service-edit-modal-rank"
-            v-bind:minimal_rank="minimal_rank"
-            v-bind:value="service.rank"
-        />
+        <service-rank id="project-service-edit-modal-rank" v-bind:value="service.rank" />
         <service-link id="project-service-edit-modal-link" v-bind:value="service.link" />
         <service-description
             id="project-service-edit-modal-description"
@@ -127,10 +123,6 @@ export default {
     props: {
         allowed_icons: {
             type: Object,
-            required: true,
-        },
-        minimal_rank: {
-            type: Number,
             required: true,
         },
         service_prop: {

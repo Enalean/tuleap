@@ -22,7 +22,7 @@ import BaseProjectAdminEditModal from "./BaseProjectAdminEditModal.vue";
 import InEditionCustomService from "./Service/InEditionCustomService.vue";
 import ReadOnlySystemService from "./Service/ReadOnlySystemService.vue";
 import { getGlobalTestOptions } from "../support/global-options-for-tests.js";
-import { PROJECT_ID } from "../injection-symbols.js";
+import { MINIMAL_RANK, PROJECT_ID } from "../injection-symbols.js";
 
 function createFakeButton(service) {
     return {
@@ -36,7 +36,6 @@ describe(`BaseProjectAdminEdit`, () => {
     let props;
     beforeEach(() => {
         props = {
-            minimal_rank: 10,
             csrf_token: "csrf",
             csrf_token_name: "challenge",
             allowed_icons: {},
@@ -57,6 +56,7 @@ describe(`BaseProjectAdminEdit`, () => {
                 },
                 provide: {
                     [PROJECT_ID.valueOf()]: 101,
+                    [MINIMAL_RANK.valueOf()]: 10,
                 },
             },
             props,
