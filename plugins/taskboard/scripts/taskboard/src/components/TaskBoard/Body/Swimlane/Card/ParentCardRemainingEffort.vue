@@ -31,6 +31,7 @@
         data-not-drag-handle="true"
         draggable="true"
         data-shortcut="edit-remaining-effort"
+        data-test="edit-remaining-effort-card"
     >
         <edit-remaining-effort
             v-if="is_in_edit_mode"
