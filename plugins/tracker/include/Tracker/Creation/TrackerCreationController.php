@@ -30,7 +30,7 @@ use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssViteAsset;
 use Tuleap\Layout\HeaderConfigurationBuilder;
 use Tuleap\Layout\IncludeViteAssets;
-use Tuleap\Layout\JavascriptAsset;
+use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithProject;
 use Tuleap\Request\DispatchableWithRequest;
@@ -101,7 +101,7 @@ class TrackerCreationController implements DispatchableWithRequest, Dispatchable
             __DIR__ . '/../../../scripts/tracker-creation/frontend-assets',
             '/assets/trackers/tracker-creation'
         );
-        $layout->addJavascriptAsset(new JavascriptAsset($assets, 'src/index.ts'));
+        $layout->addJavascriptAsset(new JavascriptViteAsset($assets, 'src/index.ts'));
         $layout->addCssAsset(CssViteAsset::fromFileName($assets, 'themes/main.scss'));
 
         $layout->addBreadcrumbs(
