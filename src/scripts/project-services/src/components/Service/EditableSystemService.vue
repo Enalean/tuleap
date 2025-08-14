@@ -29,7 +29,7 @@
             v-bind:value="service.label"
             v-on:input="onEditServiceLabel"
         />
-        <read-only-service-icon v-bind:value="service.icon_name" />
+        <read-only-service-icon v-bind:icon_name="service.icon_name" />
         <service-is-used
             v-if="can_update_is_used"
             id="project-service-edit-modal-enabled"

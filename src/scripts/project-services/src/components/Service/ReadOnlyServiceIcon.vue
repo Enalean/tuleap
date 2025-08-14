@@ -20,17 +20,11 @@
 <template>
     <div class="tlp-property">
         <label class="tlp-label">{{ $gettext("Icon") }}</label>
-        <i class="fa fa-fw" v-bind:class="value"></i>
+        <i class="fa fa-fw" v-bind:class="icon_name"></i>
     </div>
 </template>
-<script>
-export default {
-    name: "ReadOnlyServiceIcon",
-    props: {
-        value: {
-            type: String,
-            required: true,
-        },
-    },
-};
+<script setup lang="ts">
+defineProps<{
+    icon_name: string;
+}>();
 </script>

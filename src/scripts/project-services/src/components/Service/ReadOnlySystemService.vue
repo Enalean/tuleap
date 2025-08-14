@@ -24,7 +24,7 @@
             v-if="service.short_name"
             v-bind:short_name="service.short_name"
         />
-        <read-only-service-icon v-bind:value="service.icon_name" />
+        <read-only-service-icon v-bind:icon_name="service.icon_name" />
         <div class="tlp-property">
             <label class="tlp-label">{{ $gettext("Label") }}</label>
             <span>{{ service.label }}</span>
