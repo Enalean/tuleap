@@ -46,7 +46,7 @@
 </template>
 <script>
 import { strictInject } from "@tuleap/vue-strict-inject";
-import { CSRF_TOKEN, MINIMAL_RANK, PROJECT_ID } from "../injection-symbols.js";
+import { CSRF_TOKEN, MINIMAL_RANK, PROJECT_ID } from "../injection-symbols";
 import InEditionCustomService from "./Service/InEditionCustomService.vue";
 import EditModal from "./EditModal.vue";
 import ServiceIsActive from "./Service/ServiceIsActive.vue";

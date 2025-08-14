@@ -45,7 +45,7 @@
 <script>
 import { createListPicker } from "@tuleap/list-picker";
 import { strictInject } from "@tuleap/vue-strict-inject";
-import { ALLOWED_ICONS } from "../../injection-symbols.js";
+import { ALLOWED_ICONS } from "../../injection-symbols";
 
 export default {
     name: "IconSelector",

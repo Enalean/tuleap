@@ -19,7 +19,7 @@
 
 import { shallowMount } from "@vue/test-utils";
 import InEditionCustomService from "./InEditionCustomService.vue";
-import { getGlobalTestOptions } from "../../support/global-options-for-tests.js";
+import { getGlobalTestOptions } from "../../support/global-options-for-tests.ts";
 
 describe(`InEditionCustomService`, () => {
     let props;

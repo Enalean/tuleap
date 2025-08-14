@@ -19,7 +19,7 @@
 
 import { shallowMount } from "@vue/test-utils";
 import ServiceIsUsed from "./ServiceIsUsed.vue";
-import { getGlobalTestOptions } from "../../support/global-options-for-tests.js";
+import { getGlobalTestOptions } from "../../support/global-options-for-tests";
 
 describe(`ServiceIsUsed`, () => {
     let service_is_used, service_activation_disabled_message;
