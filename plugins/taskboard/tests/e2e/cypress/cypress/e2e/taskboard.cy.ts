@@ -66,6 +66,9 @@ describe(`Taskboard`, function () {
             const on_going_column = this.taskboard_columns.find(
                 (column: ColumnDefinition) => column.label === "On Going",
             );
+            const review_column = this.taskboard_columns.find(
+                (column: ColumnDefinition) => column.label === "Review",
+            );
             const quality_sunshine_swimlane = this.taskboard_swimlanes.find(
                 (swimlane: Card) => swimlane.label === "Quality Sunshine",
             );
@@ -80,6 +83,20 @@ describe(`Taskboard`, function () {
                         cy.get("[data-test=label-editor]").type("Discarded Epsilon{enter}");
                     });
 
+                cy.get("[data-test=child-card]").contains("Discarded Epsilon");
+            });
+            cy.log("Move the column to the right");
+            cy.get(
+                `[data-column-id=${on_going_column.id}][data-swimlane-id=${quality_sunshine_swimlane.id}]`,
+            ).within(() => {
+                cy.log("And move it with keyboard shortcut");
+                cy.get("[data-test=child-card]").first().focus().type("{shift}l");
+            });
+
+            cy.log("Card is present in review column");
+            cy.get(
+                `[data-column-id=${review_column.id}][data-swimlane-id=${quality_sunshine_swimlane.id}]`,
+            ).within(() => {
                 cy.get("[data-test=child-card]").contains("Discarded Epsilon");
             });
         });
