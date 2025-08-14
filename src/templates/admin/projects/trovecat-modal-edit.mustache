@@ -87,7 +87,9 @@
                            data-warning-id="nb-max-values-warning-{{ trove_cat_id }}"
                            name="nb-max-values"
                            value="{{ nb_max_values }}"
-                           placeholder="3">
+                           placeholder="3"
+                           data-test="trove-cats-nb-max-values-input"
+                    >
                     <p class="tlp-text-warning trove-cats-nb-max-values-input-warning"
                        id="nb-max-values-warning-{{ trove_cat_id }}"
                     >
@@ -133,6 +135,7 @@
                                 {{/ is_project_flag }}
                             {{/ is_quota_of_project_flags_reached }}
                             data-is-permanently-disabled="{{# is_quota_of_project_flags_reached }}{{^ is_project_flag }}1{{/ is_project_flag }}{{/ is_quota_of_project_flags_reached }}"
+                            data-test="trove-cats-modal-is-project-flag"
                         >
                         {{# gettext }}Use as project flag{{/ gettext }}
                     </label>
@@ -149,7 +152,7 @@
             <button type="button" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">
                 {{ cancel }}
             </button>
-            <button type="submit" class="tlp-button-primary tlp-modal-action">
+            <button type="submit" class="tlp-button-primary tlp-modal-action" data-test="add-trove-cat-update-button">
                 <i class="fa fa-save tlp-button-icon"></i> {{ edit }}
             </button>
         </div>

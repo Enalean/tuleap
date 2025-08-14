@@ -14,6 +14,7 @@
                             type="button"
                             class="tlp-button-primary tlp-table-actions-element"
                             id="add-project-category-button"
+                            data-test="add-project-category-button"
                         >
                             <i class="fa fa-plus tlp-button-icon"></i> {{ add_trove_cat }}
                         </button>
@@ -30,7 +31,7 @@
                         </thead>
                         <tbody>
                         {{# trovecats }}
-                            <tr>
+                            <tr data-test="trove-cat-row">
                                 <td>
                                     <div style="margin: 0 0 0 {{ spacing }}px">
                                         {{# has_spacing }} &#8627;  {{/ has_spacing }}
@@ -39,13 +40,14 @@
                                 </td>
                                 <td>{{ description }}</td>
                                 <td class="trove-cats-project-flag-column">
-                                    {{# is_project_flag }}<i class="fa fa-check"></i>{{/ is_project_flag }}
+                                    {{# is_project_flag }}<i class="fa fa-check" data-test="trove-cats-project-flag-checked"></i>{{/ is_project_flag }}
                                 </td>
-                                <td class="tlp-table-cell-actions">
+                                <td class="tlp-table-cell-actions" data-test="trove-cat-cell-actions">
                                     <button
                                         type="button"
                                         class="tlp-table-cell-actions-button tlp-button-small tlp-button-primary tlp-button-outline trovecats-edit-button"
                                         data-modal-id="trove-cat-edit-{{ trove_cat_id }}"
+                                        data-test="trove-cat-edit-button"
                                     >
                                         <i class="fas fa-pencil-alt tlp-button-icon"></i> {{ edit_button }}
                                     </button>
@@ -53,7 +55,7 @@
                                     <button
                                         type="button"
                                         class="tlp-table-cell-actions-button tlp-button-small tlp-button-danger trovecats-delete-button
-                                        tlp-button-outline" data-modal-id="trove-cat-delete-{{ trove_cat_id }}">
+                                        tlp-button-outline" data-modal-id="trove-cat-delete-{{ trove_cat_id }}" data-test="trove-cat-cancel-button">
                                         <i class="fas fa-trash-alt tlp-button-icon"></i> {{ delete_button }}
                                     </button>
                                     {{> trovecat-modal-delete }}
