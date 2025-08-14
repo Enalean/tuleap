@@ -39,7 +39,11 @@
             <hidden-service-is-active v-bind:is_active="service.is_active" />
         </slot>
         <service-rank id="project-service-edit-modal-rank" v-bind:value="service.rank" />
-        <service-link id="project-service-edit-modal-link" v-bind:value="service.link" />
+        <service-link
+            id="project-service-edit-modal-link"
+            v-bind:link="service.link"
+            v-bind:disabled="false"
+        />
         <service-description
             id="project-service-edit-modal-description"
             v-bind:description="service.description"
