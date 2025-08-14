@@ -23,8 +23,8 @@ import { createGettext } from "vue3-gettext";
 import { selectOrThrow } from "@tuleap/dom";
 import BaseProjectAdminAddModal from "./components/BaseProjectAdminAddModal.vue";
 import BaseProjectAdminEditModal from "./components/BaseProjectAdminEditModal.vue";
-import { setupDeleteButtons } from "./setup-delete-buttons.js";
-import { gatherConfiguration } from "./gather-configuration.js";
+import { setupDeleteButtons } from "./setup-delete-buttons.ts";
+import { gatherConfiguration } from "./gather-configuration.ts";
 import { ALLOWED_ICONS, CSRF_TOKEN, MINIMAL_RANK, PROJECT_ID } from "./injection-symbols";
 
 const ADD_BUTTON_SELECTOR = "#project-admin-services-add-button";
@@ -37,9 +37,14 @@ document.addEventListener("DOMContentLoaded", async () => {
         createGettext,
         (locale) => import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`),
     );
+    const gettext_provider = {
+        $gettext: gettext_plugin.$gettext,
+        $gettextInterpolate: gettext_plugin.interpolate,
+    };
+
     setupCreateServiceModal(gettext_plugin);
     setupEditServiceModals(gettext_plugin);
-    setupDeleteButtons(gettext_plugin);
+    setupDeleteButtons(gettext_provider);
 });
 
 function setupCreateServiceModal(gettext_plugin) {
