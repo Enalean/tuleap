@@ -42,7 +42,7 @@
         <slot name="shortname" />
         <service-description
             id="project-service-add-modal-description"
-            v-bind:value="service.description"
+            v-bind:description="service.description"
         />
 
         <service-open-in-new-tab

@@ -27,27 +27,18 @@
             name="description"
             v-bind:placeholder="description_placeholder"
             maxlength="255"
-            v-bind:value="value"
+            v-bind:value="description"
         />
     </div>
 </template>
-<script>
-export default {
-    name: "ServiceDescription",
-    props: {
-        value: {
-            type: String,
-            required: true,
-        },
-        id: {
-            type: String,
-            required: true,
-        },
-    },
-    computed: {
-        description_placeholder() {
-            return this.$gettext("Awesome service to manage extra stuff");
-        },
-    },
-};
+<script setup lang="ts">
+import { useGettext } from "vue3-gettext";
+const { $gettext } = useGettext();
+
+defineProps<{
+    description: string;
+    id: string;
+}>();
+
+const description_placeholder = $gettext("Awesome service to manage extra stuff");
 </script>
