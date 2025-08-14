@@ -20,17 +20,11 @@
 <template>
     <div class="tlp-property">
         <label class="tlp-label">{{ $gettext("Rank") }}</label>
-        <span>{{ value }}</span>
+        <span>{{ rank }}</span>
     </div>
 </template>
-<script>
-export default {
-    name: "ReadOnlyServiceRank",
-    props: {
-        value: {
-            type: Number,
-            required: true,
-        },
-    },
-};
+<script setup lang="ts">
+defineProps<{
+    rank: number;
+}>();
 </script>
