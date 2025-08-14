@@ -111,6 +111,10 @@ export function uploadVersion(
     updated_file: FakeItem | ItemFile,
     new_version: CreatedItemFileProperties,
 ): Upload {
+    if (context.state.current_folder === null) {
+        throw new Error("State error: current_folder is null");
+    }
+
     const parent_folder = getParentFolder(
         context.state.folder_content,
         updated_file,
@@ -158,6 +162,10 @@ export function uploadVersionFromEmpty(
     updated_empty: Empty,
     new_version: CreatedItemFileProperties,
 ): Upload {
+    if (context.state.current_folder === null) {
+        throw new Error("State error: current_folder is null");
+    }
+
     const parent_folder = getParentFolder(
         context.state.folder_content,
         updated_empty,

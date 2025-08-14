@@ -87,7 +87,12 @@ describe("Item mutations", () => {
                 throw Error("folder_content should contain only items");
             }
             expect(state.folder_content[0].lock_info).toBeNull();
-            expect(state.currently_previewed_item?.lock_info).toBeNull();
+            expect(
+                state.currently_previewed_item && "lock_info" in state.currently_previewed_item,
+            ).toBe(true);
+            if (state.currently_previewed_item && "lock_info" in state.currently_previewed_item) {
+                expect(state.currently_previewed_item?.lock_info).toBeNull();
+            }
         });
 
         it("don't do anything when preview item is not the one updated", () => {
@@ -105,7 +110,12 @@ describe("Item mutations", () => {
                 throw Error("folder_content should contain only items");
             }
             expect(state.folder_content[0].lock_info).toBe(lock_info);
-            expect(state.currently_previewed_item?.lock_info).toBe(lock_info);
+            expect(
+                state.currently_previewed_item && "lock_info" in state.currently_previewed_item,
+            ).toBe(true);
+            if (state.currently_previewed_item && "lock_info" in state.currently_previewed_item) {
+                expect(state.currently_previewed_item?.lock_info).toBe(lock_info);
+            }
         });
     });
 });

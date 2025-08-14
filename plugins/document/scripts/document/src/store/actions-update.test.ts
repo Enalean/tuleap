@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Mock } from "vitest";
+import type { MockInstance } from "vitest";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { NewVersionFromEmptyInformation } from "./actions-update";
 import {
@@ -40,15 +40,15 @@ import * as RestQuerier from "../api/rest-querier";
 
 describe("actions-update", () => {
     let context: ActionContext<RootState, RootState>;
-    let emit: vi.SpyInstance;
-    let createNewVersion: Mock;
-    let postEmbeddedFile: Mock;
-    let postWiki: Mock;
-    let postNewLinkVersionFromEmpty: Mock;
-    let postNewEmbeddedFileVersionFromEmpty: Mock;
-    let postNewFileVersionFromEmpty: Mock;
-    let postLinkVersion: Mock;
-    let getItem: Mock;
+    let emit: MockInstance;
+    let createNewVersion: MockInstance;
+    let postEmbeddedFile: MockInstance;
+    let postWiki: MockInstance;
+    let postNewLinkVersionFromEmpty: MockInstance;
+    let postNewEmbeddedFileVersionFromEmpty: MockInstance;
+    let postNewFileVersionFromEmpty: MockInstance;
+    let postLinkVersion: MockInstance;
+    let getItem: MockInstance;
 
     beforeEach(() => {
         const project_id = "101";
@@ -56,7 +56,7 @@ describe("actions-update", () => {
             commit: vi.fn(),
             dispatch: vi.fn(),
             state: {
-                configuration: { project_id } as ConfigurationState,
+                configuration: { project_id } as unknown as ConfigurationState,
                 current_folder_ascendant_hierarchy: [],
             } as unknown as RootState,
         } as unknown as ActionContext<RootState, RootState>;
@@ -79,7 +79,7 @@ describe("actions-update", () => {
     });
 
     describe("createNewFileVersion", () => {
-        let uploadVersion: vi.SpyInstance;
+        let uploadVersion: MockInstance;
 
         beforeEach(() => {
             uploadVersion = vi.spyOn(upload_file, "uploadVersion");
@@ -128,7 +128,7 @@ describe("actions-update", () => {
     });
 
     describe("createNewFileVersionFromModal", () => {
-        let uploadVersion: vi.SpyInstance;
+        let uploadVersion: MockInstance;
 
         beforeEach(() => {
             uploadVersion = vi.spyOn(upload_file, "uploadVersion");

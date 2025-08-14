@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { MockInstance } from "vitest";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import * as rest_querier from "../../api/rest-querier";
 import { loadFolderContent } from "./load-folder-content";
@@ -25,7 +26,7 @@ import type { Folder, ItemFile, RootState } from "../../type";
 import { FetchWrapperError } from "@tuleap/tlp-fetch";
 
 describe("loadFolderContent", () => {
-    let context: ActionContext<RootState, RootState>, getFolderContent: vi.SpyInstance;
+    let context: ActionContext<RootState, RootState>, getFolderContent: MockInstance;
 
     beforeEach(() => {
         context = {
