@@ -25,34 +25,28 @@
                 v-bind:id="id"
                 name="is_in_new_tab"
                 value="1"
-                v-bind:checked="value"
+                v-bind:checked="is_in_new_tab"
                 v-on:change="onEditNewTab"
             />
             {{ $gettext("Open in a new tab") }}
         </label>
     </div>
 </template>
-<script>
-export default {
-    name: "ServiceOpenInNewTab",
-    props: {
-        id: {
-            type: String,
-            required: true,
-        },
-        value: {
-            type: Boolean,
-            required: true,
-        },
-    },
-    emits: ["input"],
-    methods: {
-        onEditNewTab($event) {
-            if (!($event.target instanceof HTMLInputElement)) {
-                return;
-            }
-            this.$emit("input", $event.target.checked);
-        },
-    },
-};
+<script setup lang="ts">
+defineProps<{
+    id: string;
+    is_in_new_tab: boolean;
+}>();
+
+const emit = defineEmits<{
+    (e: "input", is_in_new_tab: boolean): void;
+}>();
+
+function onEditNewTab($event: Event) {
+    if (!($event.target instanceof HTMLInputElement)) {
+        return;
+    }
+
+    emit("input", $event.target.checked);
+}
 </script>
