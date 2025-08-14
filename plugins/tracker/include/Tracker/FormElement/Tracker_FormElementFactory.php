@@ -32,8 +32,9 @@ use Tuleap\Tracker\FormElement\Field\FieldDao;
 use Tuleap\Tracker\FormElement\Field\Float\FloatField;
 use Tuleap\Tracker\FormElement\Field\Integer\IntegerField;
 use Tuleap\Tracker\FormElement\Field\LastUpdateDate\LastUpdateDateField;
-use Tuleap\Tracker\FormElement\Field\List\SelectboxField;
 use Tuleap\Tracker\FormElement\Field\List\MultiSelectboxField;
+use Tuleap\Tracker\FormElement\Field\List\SelectboxField;
+use Tuleap\Tracker\FormElement\Field\List\CheckboxField;
 use Tuleap\Tracker\FormElement\Field\ListFields\RetrieveUsedListField;
 use Tuleap\Tracker\FormElement\Field\PerTrackerArtifactId\PerTrackerArtifactIdField;
 use Tuleap\Tracker\FormElement\Field\Priority\PriorityField;
@@ -109,7 +110,7 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
         self::FIELD_RADIO_BUTTON_TYPE => Tracker_FormElement_Field_Radiobutton::class,
         self::FIELD_MULTI_SELECT_BOX_TYPE => MultiSelectboxField::class,
         self::FIELD_FILE_TYPE => Tracker_FormElement_Field_File::class,
-        self::FIELD_CHECKBOX_TYPE => Tracker_FormElement_Field_Checkbox::class,
+        self::FIELD_CHECKBOX_TYPE => CheckboxField::class,
         self::FIELD_INTEGER_TYPE => IntegerField::class,
         self::FIELD_OPEN_LIST_TYPE => Tracker_FormElement_Field_OpenList::class,
         self::FIELD_ARTIFACT_LINKS => ArtifactLinkField::class,
@@ -754,7 +755,7 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
 
     /**
      *
-     * @return array<SelectboxField|Tracker_FormElement_Field_Checkbox|MultiSelectboxField|Tracker_FormElement_Field_Radiobutton>
+     * @return array<SelectboxField|CheckboxField|MultiSelectboxField|Tracker_FormElement_Field_Radiobutton>
      */
     public function searchUsedUserClosedListFields(Tracker $tracker): array
     {
@@ -763,7 +764,7 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
             $list = $this->getCachedInstanceFromRow($row);
             assert(
                 $list instanceof SelectboxField
-                || $list instanceof Tracker_FormElement_Field_Checkbox
+                || $list instanceof CheckboxField
                 || $list instanceof MultiSelectboxField
                 || $list instanceof Tracker_FormElement_Field_Radiobutton
             );
