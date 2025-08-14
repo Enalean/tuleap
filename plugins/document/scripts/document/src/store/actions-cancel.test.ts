@@ -34,7 +34,7 @@ describe("actions-cancel", () => {
             commit: vi.fn(),
             dispatch: vi.fn(),
             state: {
-                configuration: { project_id } as ConfigurationState,
+                configuration: { project_id } as unknown as ConfigurationState,
                 current_folder_ascendant_hierarchy: [],
             } as unknown as RootState,
         } as unknown as ActionContext<RootState, RootState>;
@@ -56,7 +56,7 @@ describe("actions-cancel", () => {
             expect(item.uploader?.abort).toHaveBeenCalled();
         });
         it("asks to tus server to abort the upload, because tus client does not do it for us", async () => {
-            const cancelUpload = vi.spyOn(rest_querier, "cancelUpload").mockImplementation();
+            const cancelUpload = vi.spyOn(rest_querier, "cancelUpload");
             await cancelFileUpload(context, item);
             expect(cancelUpload).toHaveBeenCalledWith(item);
         });

@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { MockInstance } from "vitest";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import * as load_folder_content from "./actions-helpers/load-folder-content";
 import * as rest_querier from "../api/rest-querier";
@@ -183,9 +184,9 @@ describe("actions-get", () => {
     });
 
     describe("loadFolder", () => {
-        let getItem: vi.SpyInstance,
-            loadFolderContent: vi.SpyInstance,
-            loadAscendantHierarchy: vi.SpyInstance;
+        let getItem: MockInstance,
+            loadFolderContent: MockInstance,
+            loadAscendantHierarchy: MockInstance;
 
         beforeEach(() => {
             getItem = vi.spyOn(rest_querier, "getItem");
@@ -384,7 +385,7 @@ describe("actions-get", () => {
     });
 
     describe("loadDocumentWithAscendentHierarchy", () => {
-        let loadAscendantHierarchy: vi.SpyInstance;
+        let loadAscendantHierarchy: MockInstance;
 
         beforeEach(() => {
             loadAscendantHierarchy = vi.spyOn(load_ascendant_hierarchy, "loadAscendantHierarchy");
@@ -448,7 +449,7 @@ describe("actions-get", () => {
         });
 
         it("throw error permission error if user does not have enough permissions", async () => {
-            const getItem: vi.SpyInstance = vi.spyOn(rest_querier, "getItem");
+            const getItem: MockInstance = vi.spyOn(rest_querier, "getItem");
             getItem.mockRejectedValue(
                 new FetchWrapperError("", {
                     status: 403,
@@ -462,7 +463,7 @@ describe("actions-get", () => {
         });
 
         it("throw translated exceptions", async () => {
-            const getItem: vi.SpyInstance = vi.spyOn(rest_querier, "getItem");
+            const getItem: MockInstance = vi.spyOn(rest_querier, "getItem");
             getItem.mockRejectedValue(
                 new FetchWrapperError("", {
                     status: 400,
@@ -485,7 +486,7 @@ describe("actions-get", () => {
         });
 
         it("throw internal server error if something bad happens", async () => {
-            const getItem: vi.SpyInstance = vi.spyOn(rest_querier, "getItem");
+            const getItem: MockInstance = vi.spyOn(rest_querier, "getItem");
             getItem.mockRejectedValue(
                 new FetchWrapperError("", {
                     status: 400,
@@ -534,7 +535,7 @@ describe("actions-get", () => {
     });
 
     describe("getWikisReferencingSameWikiPage()", () => {
-        let getItemsReferencingSameWikiPage: vi.SpyInstance, getParents: vi.SpyInstance;
+        let getItemsReferencingSameWikiPage: MockInstance, getParents: MockInstance;
 
         beforeEach(() => {
             getItemsReferencingSameWikiPage = vi.spyOn(

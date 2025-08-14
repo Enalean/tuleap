@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { MockInstance } from "vitest";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import * as rest_querier from "../api/rest-querier";
 import {
@@ -46,7 +47,7 @@ describe("actions-create", () => {
             commit: vi.fn(),
             dispatch: vi.fn(),
             state: {
-                configuration: { project_id } as ConfigurationState,
+                configuration: { project_id } as unknown as ConfigurationState,
                 current_folder_ascendant_hierarchy: [],
             } as unknown as RootState,
         } as unknown as ActionContext<RootState, RootState>;
@@ -54,14 +55,14 @@ describe("actions-create", () => {
     });
 
     describe("createNewItem", () => {
-        let addNewEmpty: vi.SpyInstance, getItem: vi.SpyInstance;
+        let addNewEmpty: MockInstance, getItem: MockInstance;
 
         beforeEach(() => {
             addNewEmpty = vi.spyOn(rest_querier, "addNewEmpty");
             getItem = vi.spyOn(rest_querier, "getItem");
         });
 
-        it("Replace the obsolescence date with null when date is permantent", async () => {
+        it("Replace the obsolescence date with null when date is permanent", async () => {
             const created_item_reference = { id: 66 } as CreatedItem;
             addNewEmpty.mockResolvedValue(created_item_reference);
 
@@ -344,7 +345,7 @@ describe("actions-create", () => {
                 { collapsed_folder: collapsed_folder_of_created_item, toggle: true },
             );
         });
-        it("displays the created file when it is created in a extanded sub folder and not displays the progress bar along the folder", async () => {
+        it("displays the created file when it is created in an extended sub folder and not displays the progress bar along the folder", async () => {
             context.state.folder_content = [{ id: 10 } as Folder];
             const created_item_reference = { id: 66 } as CreatedItem;
 
@@ -514,7 +515,7 @@ describe("actions-create", () => {
             vi.spyOn(rest_querier, "addNewFile").mockReturnValue(
                 Promise.resolve(created_item_reference),
             );
-            const uploadFile = vi.spyOn(upload_file, "uploadFile").mockImplementation();
+            const uploadFile = vi.spyOn(upload_file, "uploadFile");
 
             await addNewUploadFile(context, [
                 dropped_file,
@@ -542,7 +543,7 @@ describe("actions-create", () => {
             const created_item = { id: 66, parent_id: 42, type: "file" } as ItemFile;
             vi.spyOn(rest_querier, "getItem").mockResolvedValue(created_item);
 
-            const uploadFile = vi.spyOn(upload_file, "uploadFile").mockImplementation();
+            const uploadFile = vi.spyOn(upload_file, "uploadFile");
 
             await addNewUploadFile(context, [
                 dropped_file,
@@ -563,8 +564,8 @@ describe("actions-create", () => {
 
     describe("adjustItemToContentAfterItemCreationInAFolder", () => {
         let context: ActionContext<State, State>,
-            flagItemAsCreated: vi.SpyInstance,
-            getItem: vi.SpyInstance;
+            flagItemAsCreated: MockInstance,
+            getItem: MockInstance;
 
         beforeEach(() => {
             context = {

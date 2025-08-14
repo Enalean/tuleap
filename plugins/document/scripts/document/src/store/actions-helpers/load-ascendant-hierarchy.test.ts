@@ -17,6 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { MockInstance } from "vitest";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import * as rest_querier from "../../api/rest-querier";
 import { loadAscendantHierarchy } from "./load-ascendant-hierarchy";
@@ -25,7 +26,7 @@ import type { Folder, Item, RootState } from "../../type";
 import { FetchWrapperError } from "@tuleap/tlp-fetch";
 
 describe("loadAscendantHierarchy", () => {
-    let context: ActionContext<RootState, RootState>, getParents: vi.SpyInstance;
+    let context: ActionContext<RootState, RootState>, getParents: MockInstance;
 
     beforeEach(() => {
         context = {
