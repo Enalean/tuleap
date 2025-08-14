@@ -79,7 +79,7 @@ const selectColor = (): void => {
         $(color_selector.value).val(store.state.default_tracker_color);
     }
 
-    $(color_selector.value).trigger("change");
+    color_selector.value.dispatchEvent(new Event("change"));
 };
 
 watch(
