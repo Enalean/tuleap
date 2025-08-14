@@ -43,7 +43,7 @@ final class AssignedToResultBuilderTest extends TestCase
     private \Tuleap\Tracker\Artifact\Artifact $artifact;
     private RetrieveArtifactStub $retrieve_artifact;
     private TrackerSemanticContributor&\PHPUnit\Framework\MockObject\MockObject $semantic_contributor;
-    private \Tuleap\Tracker\FormElement\Field\List\SelectboxField|\Tracker_FormElement_Field_MultiSelectbox $assigned_to_field;
+    private \Tuleap\Tracker\FormElement\Field\List\SelectboxField|\Tuleap\Tracker\FormElement\Field\List\MultiSelectboxField $assigned_to_field;
 
     #[\Override]
     protected function setUp(): void

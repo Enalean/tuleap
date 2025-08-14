@@ -33,6 +33,7 @@ use Tuleap\Tracker\FormElement\Field\Float\FloatField;
 use Tuleap\Tracker\FormElement\Field\Integer\IntegerField;
 use Tuleap\Tracker\FormElement\Field\LastUpdateDate\LastUpdateDateField;
 use Tuleap\Tracker\FormElement\Field\List\SelectboxField;
+use Tuleap\Tracker\FormElement\Field\List\MultiSelectboxField;
 use Tuleap\Tracker\FormElement\Field\ListFields\RetrieveUsedListField;
 use Tuleap\Tracker\FormElement\Field\PerTrackerArtifactId\PerTrackerArtifactIdField;
 use Tuleap\Tracker\FormElement\Field\Priority\PriorityField;
@@ -106,7 +107,7 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
         self::FIELD_DATE_TYPE => DateField::class,
         self::FIELD_SELECT_BOX_TYPE => SelectboxField::class,
         self::FIELD_RADIO_BUTTON_TYPE => Tracker_FormElement_Field_Radiobutton::class,
-        self::FIELD_MULTI_SELECT_BOX_TYPE => Tracker_FormElement_Field_MultiSelectbox::class,
+        self::FIELD_MULTI_SELECT_BOX_TYPE => MultiSelectboxField::class,
         self::FIELD_FILE_TYPE => Tracker_FormElement_Field_File::class,
         self::FIELD_CHECKBOX_TYPE => Tracker_FormElement_Field_Checkbox::class,
         self::FIELD_INTEGER_TYPE => IntegerField::class,
@@ -753,7 +754,7 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
 
     /**
      *
-     * @return array<SelectboxField|Tracker_FormElement_Field_Checkbox|Tracker_FormElement_Field_MultiSelectbox|Tracker_FormElement_Field_Radiobutton>
+     * @return array<SelectboxField|Tracker_FormElement_Field_Checkbox|MultiSelectboxField|Tracker_FormElement_Field_Radiobutton>
      */
     public function searchUsedUserClosedListFields(Tracker $tracker): array
     {
@@ -763,7 +764,7 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
             assert(
                 $list instanceof SelectboxField
                 || $list instanceof Tracker_FormElement_Field_Checkbox
-                || $list instanceof Tracker_FormElement_Field_MultiSelectbox
+                || $list instanceof MultiSelectboxField
                 || $list instanceof Tracker_FormElement_Field_Radiobutton
             );
             $form_elements[] = $list;

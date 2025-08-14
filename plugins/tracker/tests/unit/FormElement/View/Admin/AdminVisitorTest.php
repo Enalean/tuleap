@@ -24,7 +24,6 @@ namespace Tuleap\Tracker\FormElement\View\Admin;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use Tracker_FormElement_Container_Column;
 use Tracker_FormElement_Field_CrossReferences;
-use Tracker_FormElement_Field_MultiSelectbox;
 use Tracker_FormElement_Field_OpenList;
 use Tracker_FormElement_Field_PermissionsOnArtifact;
 use Tracker_FormElement_Field_SubmittedBy;
@@ -50,6 +49,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\FormElement\Field\ArtifactId\ArtifactIdField;
 use Tuleap\Tracker\FormElement\Field\LastUpdateDate\LastUpdateDateField;
 use Tuleap\Tracker\FormElement\Field\List\SelectboxField;
+use Tuleap\Tracker\FormElement\Field\List\MultiSelectboxField;
 use Tuleap\Tracker\FormElement\Field\String\StringField;
 use Tuleap\Tracker\FormElement\Field\SubmittedOn\SubmittedOnField;
 
@@ -123,7 +123,7 @@ final class AdminVisitorTest extends TestCase
     public function testVisitMultiSelectbox(): void
     {
         $visitor     = new Tracker_FormElement_View_Admin_Visitor([]);
-        $formElement = new Tracker_FormElement_Field_MultiSelectbox(null, null, null, null, null, null, null, null, null, null, null, null);
+        $formElement = new MultiSelectboxField(null, null, null, null, null, null, null, null, null, null, null, null);
         $formElement->accept($visitor);
         self::assertInstanceOf(Tracker_FormElement_View_Admin_Field_MultiSelectbox::class, $visitor->getAdmin());
     }

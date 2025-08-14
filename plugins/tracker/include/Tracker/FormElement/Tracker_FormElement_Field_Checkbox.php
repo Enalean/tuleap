@@ -20,9 +20,10 @@
  */
 
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\List\MultiSelectboxField;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
-class Tracker_FormElement_Field_Checkbox extends Tracker_FormElement_Field_MultiSelectbox
+class Tracker_FormElement_Field_Checkbox extends MultiSelectboxField
 {
     private const NOT_INDICATED_VALUE = '0';
 

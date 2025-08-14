@@ -26,6 +26,7 @@ use Tuleap\Tracker\FormElement\Field\Float\FloatField;
 use Tuleap\Tracker\FormElement\Field\Integer\IntegerField;
 use Tuleap\Tracker\FormElement\Field\LastUpdateDate\LastUpdateDateField;
 use Tuleap\Tracker\FormElement\Field\List\SelectboxField;
+use Tuleap\Tracker\FormElement\Field\List\MultiSelectboxField;
 use Tuleap\Tracker\FormElement\Field\PerTrackerArtifactId\PerTrackerArtifactIdField;
 use Tuleap\Tracker\FormElement\Field\Priority\PriorityField;
 use Tuleap\Tracker\FormElement\Field\String\StringField;
@@ -138,7 +139,7 @@ class Tracker_XML_Updater_FieldChangeXMLUpdaterVisitor implements Tracker_FormEl
         return $this->unknown_updater;
     }
 
-    public function visitMultiSelectbox(Tracker_FormElement_Field_MultiSelectbox $field)
+    public function visitMultiSelectbox(MultiSelectboxField $field)
     {
         return $this->list_updater;
     }

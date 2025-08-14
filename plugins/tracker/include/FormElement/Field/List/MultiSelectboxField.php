@@ -19,14 +19,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\Tracker\FormElement\Field\List;
+
+use Override;
+use Tracker_FormElement_Field_List;
+use Tracker_FormElement_Field_List_Bind;
+use Tracker_FormElement_Field_List_Bind_StaticValue_None;
+use Tracker_FormElement_FieldVisitor;
+use Tracker_FormElement_InvalidFieldValueException;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\FormElement\Field\List\SelectboxField;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\DeleteSpecificProperties;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\MultiSelectboxFieldSpecificPropertiesDAO;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\SaveSpecificFieldProperties;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\SearchSpecificProperties;
 
-class Tracker_FormElement_Field_MultiSelectbox extends SelectboxField // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class MultiSelectboxField extends SelectboxField
 {
     public array $default_properties = [
         'size' => [
@@ -36,49 +43,55 @@ class Tracker_FormElement_Field_MultiSelectbox extends SelectboxField // phpcs:i
         ],
     ];
 
-    #[\Override]
+    #[Override]
     protected function getDeleteSpecificPropertiesDao(): DeleteSpecificProperties
     {
         return new MultiSelectboxFieldSpecificPropertiesDAO();
     }
 
-    #[\Override]
+    #[Override]
     protected function getSearchSpecificPropertiesDao(): SearchSpecificProperties
     {
         return new MultiSelectboxFieldSpecificPropertiesDAO();
     }
 
-    #[\Override]
+    #[Override]
     protected function getSaveSpecificPropertiesDao(): SaveSpecificFieldProperties
     {
         return new MultiSelectboxFieldSpecificPropertiesDAO();
     }
 
+    #[Override]
     public function isMultiple(): bool
     {
         return true;
     }
 
+    #[Override]
     protected function getMaxSize()
     {
         return $this->getproperty('size') ? $this->getproperty('size') : parent::getMaxSize();
     }
 
+    #[Override]
     public static function getFactoryLabel()
     {
         return dgettext('tuleap-tracker', 'Multi Select Box');
     }
 
+    #[Override]
     public static function getFactoryDescription()
     {
         return dgettext('tuleap-tracker', 'The user can choose some values among others');
     }
 
+    #[Override]
     public static function getFactoryIconUseIt()
     {
         return $GLOBALS['HTML']->getImagePath('ic/ui-list-box.png');
     }
 
+    #[Override]
     public static function getFactoryIconCreate()
     {
         return $GLOBALS['HTML']->getImagePath('ic/ui-list-box--plus.png');
@@ -90,6 +103,7 @@ class Tracker_FormElement_Field_MultiSelectbox extends SelectboxField // phpcs:i
      *
      * @return bool true if the change is allowed and successful
      */
+    #[Override]
     public function changeType($type)
     {
         if (in_array($type, ['sb', 'rb', 'cb'])) {
@@ -110,6 +124,7 @@ class Tracker_FormElement_Field_MultiSelectbox extends SelectboxField // phpcs:i
      *
      * @return void
      */
+    #[Override]
     public function augmentDataFromRequest(&$fields_data)
     {
         if (! $this->canAugmentData($fields_data)) {
@@ -142,7 +157,7 @@ class Tracker_FormElement_Field_MultiSelectbox extends SelectboxField // phpcs:i
         if (
             isset($fields_data['request_method_called']) &&
             ($fields_data['request_method_called'] === 'artifact-update' ||
-                $fields_data['request_method_called'] === 'artifact-masschange')
+             $fields_data['request_method_called'] === 'artifact-masschange')
         ) {
             return false;
         }
@@ -150,6 +165,7 @@ class Tracker_FormElement_Field_MultiSelectbox extends SelectboxField // phpcs:i
         return true;
     }
 
+    #[Override]
     public function getFieldDataFromCSVValue($csv_value, ?Artifact $artifact = null)
     {
         if ($csv_value == null) {
@@ -159,6 +175,7 @@ class Tracker_FormElement_Field_MultiSelectbox extends SelectboxField // phpcs:i
         return parent::getFieldDataFromCSVValue($csv_value, $artifact);
     }
 
+    #[Override]
     public function getFieldDataFromRESTValue(array $value, ?Artifact $artifact = null)
     {
         if (array_key_exists('bind_value_ids', $value) && is_array($value['bind_value_ids'])) {
@@ -176,12 +193,13 @@ class Tracker_FormElement_Field_MultiSelectbox extends SelectboxField // phpcs:i
         }
 
         throw new Tracker_FormElement_InvalidFieldValueException('List fields values must be passed as an array of ids (integer) in \'bind_value_ids\''
-           . ' Example: {"field_id": 1548, "bind_value_ids": [457]}');
+                                                                 . ' Example: {"field_id": 1548, "bind_value_ids": [457]}');
     }
 
     /**
      * @return bool true if the value corresponds to what we defined as "none"
      */
+    #[Override]
     public function isNone($value)
     {
         return $this->isScalarNone($value) || (is_array($value) && $this->isArrayNone($value));
@@ -202,11 +220,13 @@ class Tracker_FormElement_Field_MultiSelectbox extends SelectboxField // phpcs:i
         return count($value) == 0;
     }
 
+    #[Override]
     public function accept(Tracker_FormElement_FieldVisitor $visitor)
     {
         return $visitor->visitMultiSelectbox($this);
     }
 
+    #[Override]
     public function getDefaultValue()
     {
         $default_array = $this->getBind()->getDefaultValues();
