@@ -39,7 +39,6 @@ describe(`InEditionCustomService`, () => {
                 rank: 11,
                 is_project_scope: true,
             },
-            allowed_icons: {},
         };
     });
 

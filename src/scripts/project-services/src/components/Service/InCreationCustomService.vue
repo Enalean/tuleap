@@ -28,7 +28,6 @@
             id="project-service-add-modal-icon"
             v-bind:value="service.icon_name"
             v-on:input="onEditIcon"
-            v-bind:allowed_icons="allowed_icons"
         />
         <service-is-used
             id="project-service-add-modal-enabled"
@@ -76,10 +75,6 @@ export default {
         IconSelector,
     },
     props: {
-        allowed_icons: {
-            type: Object,
-            required: true,
-        },
         service_prop: {
             type: Object,
             required: true,

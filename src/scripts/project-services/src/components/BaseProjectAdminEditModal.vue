@@ -25,12 +25,10 @@
                 v-bind:label="service.label"
                 v-bind:icon_name="service.icon_name"
                 v-bind:is_in_new_tab="service.is_in_new_tab"
-                v-bind:allowed_icons="allowed_icons"
             />
             <in-edition-custom-service
                 v-if="service.is_project_scope && is_shown"
                 v-bind:service_prop="service"
-                v-bind:allowed_icons="allowed_icons"
             />
             <read-only-system-service
                 v-if="!service.is_project_scope && is_shown"
@@ -50,12 +48,6 @@ import ReadOnlySystemService from "./Service/ReadOnlySystemService.vue";
 export default {
     name: "BaseProjectAdminEditModal",
     components: { ReadOnlySystemService, EditModal, InEditionCustomService, SidebarPreviewer },
-    props: {
-        allowed_icons: {
-            type: Object,
-            required: true,
-        },
-    },
     setup() {
         const project_id = strictInject(PROJECT_ID);
         const minimal_rank = strictInject(MINIMAL_RANK);

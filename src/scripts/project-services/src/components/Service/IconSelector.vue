@@ -44,6 +44,8 @@
 </template>
 <script>
 import { createListPicker } from "@tuleap/list-picker";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { ALLOWED_ICONS } from "../../injection-symbols.js";
 
 export default {
     name: "IconSelector",
@@ -56,10 +58,10 @@ export default {
             type: String,
             required: true,
         },
-        allowed_icons: {
-            type: Object,
-            required: true,
-        },
+    },
+    setup() {
+        const allowed_icons = strictInject(ALLOWED_ICONS);
+        return { allowed_icons };
     },
     emits: ["input"],
     data() {
