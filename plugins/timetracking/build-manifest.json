@@ -8,9 +8,7 @@
         "timetracking-management-widget": {
             "src": "scripts/timetracking-management-widget/src",
             "po": "scripts/timetracking-management-widget/po"
-        }
-    },
-    "gettext-vue": {
+        },
         "timetracking-overview-widget": {
             "src": "scripts/timetracking-overview-widget/src",
             "po": "scripts/timetracking-overview-widget/po"

@@ -31,7 +31,9 @@
         v-on:input="setSelected($event)"
         data-test="overview-tracker-selector"
     >
-        <option v-bind:value="null">{{ $gettext("Please choose...") }}</option>
+        <option v-bind:value="null">
+            {{ $gettext("Please choose...") }}
+        </option>
         <option
             v-for="tracker in overview_store.trackers"
             v-bind:disabled="tracker.disabled"
@@ -48,6 +50,7 @@ import { useOverviewWidgetStore } from "../../store/index";
 
 export default {
     name: "TimeTrackingOverviewTrackersOptions",
+    emits: ["input"],
     setup: () => {
         const overview_store = useOverviewWidgetStore(inject("report_id"))();
         return { overview_store };
