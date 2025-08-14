@@ -14,7 +14,6 @@
     "@tuleap/tlp-modal": "workspace:*",
     "@tuleap/tlp-popovers": "workspace:*",
     "@tuleap/vue3-gettext-init": "workspace:*",
-    "@vue/compat": "^3.3.4",
     "vue": "^3.3.4",
     "vue-dompurify-html": "^4.0.0",
     "vue3-gettext": "2.4.0",
@@ -23,7 +22,8 @@
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*",
     "@tuleap/po-gettext-plugin": "workspace:*",
-    "@vue/test-utils": "^2.4.1"
+    "@vue/test-utils": "^2.4.1",
+    "vue-loader": "17.2.2"
   },
   "scripts": {
     "build": "webpack --config webpack.prod.js",

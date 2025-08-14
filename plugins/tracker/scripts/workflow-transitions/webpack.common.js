@@ -21,6 +21,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { webpack_configurator } from "@tuleap/build-system-configurator";
 import POGettextPlugin from "@tuleap/po-gettext-plugin";
+import { VueLoaderPlugin } from "vue-loader";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -41,7 +42,7 @@ const config = {
     resolve: {
         extensions: [".js", ".ts", ".vue"],
         alias: {
-            vue: path.resolve(__dirname, "node_modules", "@vue", "compat"),
+            vue: path.resolve(__dirname, "node_modules", "vue"),
         },
     },
     module: {
@@ -55,7 +56,7 @@ const config = {
         webpack_configurator.getCleanWebpackPlugin(),
         webpack_configurator.getManifestPlugin(),
         POGettextPlugin.webpack(),
-        webpack_configurator.getVueLoaderPlugin(),
+        new VueLoaderPlugin(),
         ...webpack_configurator.getCSSExtractionPlugins(),
     ],
 };
