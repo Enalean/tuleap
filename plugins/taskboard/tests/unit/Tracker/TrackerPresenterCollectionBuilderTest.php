@@ -322,7 +322,7 @@ final class TrackerPresenterCollectionBuilderTest extends \Tuleap\Test\PHPUnit\T
             $contributor_field->method('getId')->willReturn(1534);
             $contributor_field->method('userCanUpdate')->willReturn($can_user_update);
             $contributor_field->method('isMultiple')->willReturn(
-                $classname === \Tuleap\Tracker\FormElement\Field\List\MultiSelectboxField::class || $classname === \Tracker_FormElement_Field_Checkbox::class
+                $classname === \Tuleap\Tracker\FormElement\Field\List\MultiSelectboxField::class || $classname === \Tuleap\Tracker\FormElement\Field\List\CheckboxField::class
             );
         }
 

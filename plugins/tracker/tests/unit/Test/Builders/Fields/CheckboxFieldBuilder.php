@@ -64,9 +64,9 @@ final class CheckboxFieldBuilder
         return $this;
     }
 
-    public function build(): \Tracker_FormElement_Field_Checkbox
+    public function build(): \Tuleap\Tracker\FormElement\Field\List\CheckboxField
     {
-        $field = new \Tracker_FormElement_Field_Checkbox(
+        $field = new \Tuleap\Tracker\FormElement\Field\List\CheckboxField(
             $this->id,
             $this->tracker->getId(),
             15,

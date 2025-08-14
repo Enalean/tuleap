@@ -21,12 +21,11 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\FormElement;
+namespace Tuleap\Tracker\FormElement\Field\List;
 
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use ReflectionClass;
 use Tracker_Artifact_ChangesetValue_List;
-use Tracker_FormElement_Field_Checkbox;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Bind_StaticValue_None;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -37,7 +36,7 @@ use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 
 #[DisableReturnValueGenerationForTestDoubles]
-final class Tracker_FormElement_Field_CheckboxTest extends TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+final class CheckboxFieldTest extends TestCase
 {
     public function testItIsNoneWhenArrayIsFullOfZero(): void
     {
@@ -129,9 +128,9 @@ final class Tracker_FormElement_Field_CheckboxTest extends TestCase //phpcs:igno
         self::assertTrue($field->checkValueExists('0'));
     }
 
-    protected function getCheckboxField(): Tracker_FormElement_Field_Checkbox
+    protected function getCheckboxField(): CheckboxField
     {
-        return new Tracker_FormElement_Field_Checkbox(
+        return new CheckboxField(
             1,
             10,
             100,

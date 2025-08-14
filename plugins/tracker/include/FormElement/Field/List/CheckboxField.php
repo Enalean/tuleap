@@ -19,21 +19,30 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\FormElement\Field\List\MultiSelectboxField;
+namespace Tuleap\Tracker\FormElement\Field\List;
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
-class Tracker_FormElement_Field_Checkbox extends MultiSelectboxField
+use Override;
+use Tracker_Artifact_ChangesetValue;
+use Tracker_Artifact_ChangesetValue_List;
+use Tracker_FormElement_Field_List_Bind;
+use Tracker_FormElement_Field_List_Bind_StaticValue_None;
+use Tracker_FormElement_Field_List_Value;
+use Tracker_FormElement_FieldVisitor;
+use Tuleap\Tracker\Artifact\Artifact;
+
+final class CheckboxField extends MultiSelectboxField
 {
-    private const NOT_INDICATED_VALUE = '0';
+    private const string NOT_INDICATED_VALUE = '0';
 
     public array $default_properties = [];
 
+    #[Override]
     protected function fetchFieldContainerStart(string $id, string $name, string $data_target_fields_ids): string
     {
         return '';
     }
 
+    #[Override]
     protected function fetchFieldValue(Tracker_FormElement_Field_List_Value $value, $name, $is_selected)
     {
         if ($value->getId() == Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID) {
@@ -50,6 +59,7 @@ class Tracker_FormElement_Field_Checkbox extends MultiSelectboxField
         return $html;
     }
 
+    #[Override]
     protected function fetchArtifactValueReadOnlyForMail(Artifact $artifact, Tracker_Artifact_ChangesetValue $value): string
     {
         return parent::fetchArtifactValueReadOnly($artifact, $value);
@@ -58,6 +68,7 @@ class Tracker_FormElement_Field_Checkbox extends MultiSelectboxField
     /**
      * Fetch the html code to display the field value in artifact in read only mode
      */
+    #[Override]
     public function fetchArtifactValueReadOnly(Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null): string
     {
         $selected_values_ids = ($value && $value instanceof Tracker_Artifact_ChangesetValue_List)
@@ -84,6 +95,7 @@ class Tracker_FormElement_Field_Checkbox extends MultiSelectboxField
         return $html;
     }
 
+    #[Override]
     protected function fetchFieldContainerEnd()
     {
         return '';
@@ -92,11 +104,13 @@ class Tracker_FormElement_Field_Checkbox extends MultiSelectboxField
     /**
      * @see Tracker_FormElement_Field::hasChanges()
      */
+    #[Override]
     public function hasChanges(Artifact $artifact, Tracker_Artifact_ChangesetValue $previous_changesetvalue, $new_value)
     {
         return parent::hasChanges($artifact, $previous_changesetvalue, $this->filterZeroWhenArray($new_value));
     }
 
+    #[Override]
     public function isNone($value)
     {
         return parent::isNone($this->filterZeroWhenArray($value));
@@ -107,21 +121,25 @@ class Tracker_FormElement_Field_Checkbox extends MultiSelectboxField
         return is_array($values) ? array_filter($values) : $values;
     }
 
+    #[Override]
     public static function getFactoryLabel()
     {
         return dgettext('tuleap-tracker', 'Checkbox');
     }
 
+    #[Override]
     public static function getFactoryDescription()
     {
         return dgettext('tuleap-tracker', 'Checkbox');
     }
 
+    #[Override]
     public static function getFactoryIconUseIt()
     {
         return $GLOBALS['HTML']->getImagePath('ic/ui-check-box.png');
     }
 
+    #[Override]
     public static function getFactoryIconCreate()
     {
         return $GLOBALS['HTML']->getImagePath('ic/ui-check--plus.png');
@@ -133,6 +151,7 @@ class Tracker_FormElement_Field_Checkbox extends MultiSelectboxField
      *
      * @return bool true if the change is allowed and successful
      */
+    #[Override]
     public function changeType($type)
     {
         if (in_array($type, ['sb', 'msb', 'rb'])) {
@@ -143,11 +162,13 @@ class Tracker_FormElement_Field_Checkbox extends MultiSelectboxField
         return false;
     }
 
+    #[Override]
     public function accept(Tracker_FormElement_FieldVisitor $visitor)
     {
         return $visitor->visitCheckbox($this);
     }
 
+    #[Override]
     public function checkValueExists(?string $value_id): bool
     {
         return $value_id === self::NOT_INDICATED_VALUE || parent::checkValueExists($value_id);

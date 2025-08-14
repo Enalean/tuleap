@@ -22,7 +22,6 @@ namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder;
 use BaseLanguageFactory;
 use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_Burndown;
-use Tracker_FormElement_Field_Checkbox;
 use Tracker_FormElement_Field_CrossReferences;
 use Tracker_FormElement_Field_File;
 use Tracker_FormElement_Field_LastModifiedBy;
@@ -39,8 +38,9 @@ use Tuleap\Tracker\FormElement\Field\Date\DateField;
 use Tuleap\Tracker\FormElement\Field\Float\FloatField;
 use Tuleap\Tracker\FormElement\Field\Integer\IntegerField;
 use Tuleap\Tracker\FormElement\Field\LastUpdateDate\LastUpdateDateField;
-use Tuleap\Tracker\FormElement\Field\List\SelectboxField;
 use Tuleap\Tracker\FormElement\Field\List\MultiSelectboxField;
+use Tuleap\Tracker\FormElement\Field\List\SelectboxField;
+use Tuleap\Tracker\FormElement\Field\List\CheckboxField;
 use Tuleap\Tracker\FormElement\Field\PerTrackerArtifactId\PerTrackerArtifactIdField;
 use Tuleap\Tracker\FormElement\Field\Priority\PriorityField;
 use Tuleap\Tracker\FormElement\Field\String\StringField;
@@ -113,7 +113,7 @@ final class NotInFieldComparisonVisitor implements
         return $this->visitList($field);
     }
 
-    public function visitCheckbox(Tracker_FormElement_Field_Checkbox $field)
+    public function visitCheckbox(CheckboxField $field)
     {
         return $this->visitList($field);
     }
