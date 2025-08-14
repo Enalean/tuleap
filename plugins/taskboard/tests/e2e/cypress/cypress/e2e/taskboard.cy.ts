@@ -126,6 +126,39 @@ describe(`Taskboard`, function () {
             );
         });
 
+        it(`edits the remaining effort of a card`, function () {
+            cy.projectMemberSession();
+            cy.visit(`/taskboard/taskboard-project/${this.release_id}`);
+            cy.getContains("[data-test=card-with-remaining-effort]", "Lonesome Galaxy")
+                .then((card) => {
+                    cy.wrap(card).find("[data-test=card-edit-button]").click();
+                    return cy.wrap(card).find("[data-test=edit-remaining-effort-card]").click();
+                })
+                .then(($remaining_effort_wrapper) => {
+                    const remaining_effort_input = $remaining_effort_wrapper.find(
+                        "[data-test=edit-remaining-effort]",
+                    );
+                    expect(remaining_effort_input.val()).to.equal("5");
+                    cy.wrap(remaining_effort_input).clear().type("2");
+                    cy.get('[data-test="save"]').click();
+                });
+
+            // Edit back the remaining effort for repeatability
+            cy.getContains("[data-test=card-with-remaining-effort]", "Lonesome Galaxy")
+                .then((card) => {
+                    cy.wrap(card).find("[data-test=card-edit-button]").click();
+                    return cy.wrap(card).find("[data-test=edit-remaining-effort-card]").click();
+                })
+                .then(($remaining_effort_wrapper) => {
+                    const remaining_effort_input = $remaining_effort_wrapper.find(
+                        "[data-test=edit-remaining-effort]",
+                    );
+                    expect(remaining_effort_input.val()).to.equal("2");
+                    cy.wrap(remaining_effort_input).clear().type("5");
+                    cy.get('[data-test="save"]').click();
+                });
+        });
+
         it(`hide/show the swimlanes and cards that are "Done"`, function () {
             cy.projectMemberSession();
             cy.visit(`/taskboard/taskboard-project/${this.release_id}`);
