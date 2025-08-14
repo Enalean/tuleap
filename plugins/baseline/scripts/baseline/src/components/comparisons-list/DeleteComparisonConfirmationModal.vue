@@ -22,7 +22,9 @@
         v-bind:default_failed_message="default_failed_message"
         v-bind:on_submit="confirm"
     >
-        <span v-dompurify-html="message"></span>
+        <template v-slot:default>
+            <span v-dompurify-html="message"></span>
+        </template>
     </delete-confirmation-modal>
 </template>
 

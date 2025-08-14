@@ -60,7 +60,9 @@
 </template>
 <script setup lang="ts">
 import { computed, useSlots } from "vue";
+import { useGettext } from "vue3-gettext";
 
+const { $gettext } = useGettext();
 const slots = useSlots();
 
 const has_comment_slot = computed((): boolean => Boolean(slots.comment));

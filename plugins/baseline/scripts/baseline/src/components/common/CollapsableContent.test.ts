@@ -18,20 +18,20 @@
  *
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import { createLocalVueForTests } from "../../support/local-vue";
+import { getGlobalTestOptions } from "../../support/global-options-for-tests";
 import CollapsableContent from "./CollapsableContent.vue";
 
 describe("CollapsableContent", () => {
     const toggle_selector = '[data-test-action="toggle-expand-collapse"]';
     const header_slot_selector = '[data-test-type="header-slot"]';
 
-    let wrapper: Wrapper<Vue>;
+    let wrapper: VueWrapper<InstanceType<typeof CollapsableContent>>;
 
-    beforeEach(async () => {
+    beforeEach(() => {
         wrapper = shallowMount(CollapsableContent, {
-            localVue: await createLocalVueForTests(),
+            global: { ...getGlobalTestOptions() },
             slots: {
                 default: '<div data-test-type="default-slot">Default slot</div>',
                 header: '<div data-test-type="header-slot">Header slot</div>',
@@ -40,14 +40,11 @@ describe("CollapsableContent", () => {
     });
 
     it("shows header slot", () => {
-        expect(wrapper.get(header_slot_selector).exists()).toBeTruthy();
+        expect(wrapper.get(header_slot_selector)).toBeTruthy();
     });
 
     it("shows default slot", () => {
-        const slot = wrapper.find("[data-test=collapsible-slot]").element;
-        if (!(slot instanceof HTMLElement)) {
-            throw Error("Unable to find the slot");
-        }
+        const slot = wrapper.get<HTMLElement>("[data-test=collapsible-slot]").element;
         expect(slot.style.display).not.toBe("none");
     });
 
@@ -57,14 +54,11 @@ describe("CollapsableContent", () => {
         });
 
         it("still shows header slot", () => {
-            expect(wrapper.get(header_slot_selector).exists()).toBeTruthy();
+            expect(wrapper.get(header_slot_selector)).toBeTruthy();
         });
 
         it("hides default slot", () => {
-            const slot = wrapper.find("[data-test=collapsible-slot]").element;
-            if (!(slot instanceof HTMLElement)) {
-                throw Error("Unable to find the slot");
-            }
+            const slot = wrapper.get<HTMLElement>("[data-test=collapsible-slot]").element;
             expect(slot.style.display).toBe("none");
         });
 
@@ -74,10 +68,7 @@ describe("CollapsableContent", () => {
             });
 
             it("shows default slot", () => {
-                const slot = wrapper.find("[data-test=collapsible-slot]").element;
-                if (!(slot instanceof HTMLElement)) {
-                    throw Error("Unable to find the slot");
-                }
+                const slot = wrapper.get<HTMLElement>("[data-test=collapsible-slot]").element;
                 expect(slot.style.display).not.toBe("none");
             });
         });

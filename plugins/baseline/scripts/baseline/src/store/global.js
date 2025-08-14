@@ -18,7 +18,6 @@
  *
  */
 
-import Vue from "vue";
 import ArrayUtils from "../support/array-utils";
 import { getBaseline, getUser, getTracker, getArtifact } from "../api/rest-querier";
 
@@ -90,10 +89,10 @@ export default {
         },
     },
     mutations: {
-        addBaseline: (state, baseline) => Vue.set(state.baselines_by_id, baseline.id, baseline),
-        addUser: (state, user) => Vue.set(state.users_by_id, user.id, user),
-        addArtifact: (state, artifact) => Vue.set(state.artifacts_by_id, artifact.id, artifact),
-        addTracker: (state, tracker) => Vue.set(state.trackers_by_id, tracker.id, tracker),
+        addBaseline: (state, baseline) => (state.baselines_by_id[baseline.id] = baseline),
+        addUser: (state, user) => (state.users_by_id[user.id] = user),
+        addArtifact: (state, artifact) => (state.artifacts_by_id[artifact.id] = artifact),
+        addTracker: (state, tracker) => (state.trackers_by_id[tracker.id] = tracker),
     },
     getters: {
         findBaselineById: (state) => (id) => state.baselines_by_id[id],

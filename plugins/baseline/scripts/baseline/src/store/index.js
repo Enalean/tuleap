@@ -17,10 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  *
  */
-import Vue from "vue";
-import Vuex from "vuex";
+
+import { createStore } from "vuex";
 import store_options from "./store_options";
 
-Vue.use(Vuex);
-
-export default new Vuex.Store(store_options);
+export default createStore(store_options);

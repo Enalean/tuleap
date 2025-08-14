@@ -21,6 +21,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { webpack_configurator } from "@tuleap/build-system-configurator";
 import POGettextPlugin from "@tuleap/po-gettext-plugin";
+import { VueLoaderPlugin } from "vue-loader";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -39,7 +40,7 @@ export default [
         resolve: {
             extensions: [".ts", ".js", ".vue"],
             alias: {
-                vue: path.resolve(__dirname, "node_modules", "vue"),
+                vue: path.resolve(__dirname, "node_modules", "@vue", "compat"),
             },
         },
         externals: {
@@ -50,7 +51,18 @@ export default [
                 // Allow omitting file extension when importing from a .js file. This matches .ts behaviour
                 { test: /\.js$/, resolve: { fullySpecified: false } },
                 ...webpack_configurator.configureTypescriptRules(),
-                webpack_configurator.rule_vue_loader,
+                {
+                    test: /\.vue$/,
+                    exclude: /node_modules/,
+                    loader: "vue-loader",
+                    options: {
+                        compilerOptions: {
+                            compatConfig: {
+                                MODE: 2,
+                            },
+                        },
+                    },
+                },
                 webpack_configurator.rule_scss_loader,
             ],
         },
@@ -58,7 +70,7 @@ export default [
             webpack_configurator.getCleanWebpackPlugin(),
             webpack_configurator.getManifestPlugin(),
             POGettextPlugin.webpack(),
-            webpack_configurator.getVueLoaderPlugin(),
+            new VueLoaderPlugin(),
             ...webpack_configurator.getCSSExtractionPlugins(),
         ],
     },

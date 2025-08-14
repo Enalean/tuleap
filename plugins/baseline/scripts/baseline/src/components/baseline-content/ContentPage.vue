@@ -29,17 +29,29 @@
         </div>
 
         <content-layout v-else-if="is_loading">
-            <baseline-label-skeleton slot="header" />
-            <baseline-content-filters-skeleton slot="filters" />
+            <template v-slot:header>
+                <baseline-label-skeleton />
+            </template>
+            <template v-slot:filters>
+                <baseline-content-filters-skeleton />
+            </template>
 
-            <content-body-skeleton />
+            <template v-slot:default>
+                <content-body-skeleton />
+            </template>
         </content-layout>
 
         <content-layout v-else>
-            <baseline-label slot="header" v-bind:baseline="baseline" />
-            <baseline-content-filters slot="filters" />
+            <template v-slot:header>
+                <baseline-label v-bind:baseline="baseline" />
+            </template>
+            <template v-slot:filters>
+                <baseline-content-filters />
+            </template>
 
-            <content-body />
+            <template v-slot:default>
+                <content-body />
+            </template>
         </content-layout>
     </div>
 </template>
@@ -70,6 +82,7 @@ export default {
     props: {
         baseline_id: { required: true, type: Number },
     },
+    emits: ["title"],
 
     data() {
         return {

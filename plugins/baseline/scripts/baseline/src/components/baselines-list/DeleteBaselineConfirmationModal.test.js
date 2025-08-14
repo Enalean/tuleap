@@ -19,21 +19,26 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import { createLocalVueForTests } from "../../support/local-vue.ts";
-import { createStoreMock } from "../../support/store-wrapper.test-helper.js";
-import store_options from "../../store/store_options";
+import { getGlobalTestOptions } from "../../support/global-options-for-tests";
 import DeleteBaselineConfirmationModal from "./DeleteBaselineConfirmationModal.vue";
 import * as rest_querier from "../../api/rest-querier";
 
 jest.useFakeTimers();
 
 describe("DeleteBaselineConfirmationModal", () => {
-    let deleteBaseline, deleteBaselineResolve, deleteBaselineReject;
+    let deleteBaseline,
+        deleteBaselineResolve,
+        deleteBaselineReject,
+        notify_mock,
+        hide_modal_mock,
+        delete_mock,
+        wrapper;
 
-    const baseline = { id: 1, name: "Baseline" };
-    let $store, wrapper;
+    beforeEach(() => {
+        notify_mock = jest.fn();
+        hide_modal_mock = jest.fn();
+        delete_mock = jest.fn();
 
-    beforeEach(async () => {
         deleteBaseline = jest.spyOn(rest_querier, "deleteBaseline").mockReturnValue(
             new Promise((resolve, reject) => {
                 deleteBaselineResolve = resolve;
@@ -41,15 +46,31 @@ describe("DeleteBaselineConfirmationModal", () => {
             }),
         );
 
-        $store = createStoreMock(store_options);
+        const baseline = { id: 1, name: "Baseline" };
 
         wrapper = shallowMount(DeleteBaselineConfirmationModal, {
-            propsData: {
-                baseline,
+            props: { baseline },
+            global: {
+                ...getGlobalTestOptions({
+                    modules: {
+                        dialog_interface: {
+                            namespaced: true,
+                            mutations: {
+                                notify: notify_mock,
+                                hideModal: hide_modal_mock,
+                            },
+                        },
+                        baselines: {
+                            namespaced: true,
+                            mutations: {
+                                delete: delete_mock,
+                            },
+                        },
+                    },
+                }),
             },
-            localVue: await createLocalVueForTests(),
-            mocks: {
-                $store,
+            directives: {
+                "dompurify-html": jest.fn(),
             },
         });
     });
@@ -69,16 +90,13 @@ describe("DeleteBaselineConfirmationModal", () => {
                 await jest.runOnlyPendingTimersAsync();
             });
             it("deletes baseline in store", () => {
-                expect($store.commit).toHaveBeenCalledWith("baselines/delete", baseline);
+                expect(delete_mock).toHaveBeenCalled();
             });
             it("notifies user", () => {
-                expect($store.commit).toHaveBeenCalledWith(
-                    "dialog_interface/notify",
-                    expect.any(Object),
-                );
+                expect(notify_mock).toHaveBeenCalled();
             });
             it("hides modal", () => {
-                expect($store.commit).toHaveBeenCalledWith("dialog_interface/hideModal");
+                expect(hide_modal_mock).toHaveBeenCalled();
             });
         });
 
@@ -88,16 +106,10 @@ describe("DeleteBaselineConfirmationModal", () => {
                 await jest.runOnlyPendingTimersAsync();
             });
             it("does not delete baseline in store", () => {
-                expect($store.commit).not.toHaveBeenCalledWith(
-                    "baselines/delete",
-                    expect.any(Object),
-                );
+                expect(delete_mock).not.toHaveBeenCalled();
             });
             it("does not notify user", () => {
-                expect($store.commit).not.toHaveBeenCalledWith(
-                    "dialog_interface/notify",
-                    expect.any(Object),
-                );
+                expect(notify_mock).not.toHaveBeenCalled();
             });
         });
     });

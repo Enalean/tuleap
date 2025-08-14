@@ -18,8 +18,6 @@
   -
   -->
 
-<template functional>
-    <span>
-        <span class="tlp-skeleton-text"></span>
-    </span>
+<template>
+    <span class="tlp-skeleton-text"></span>
 </template>

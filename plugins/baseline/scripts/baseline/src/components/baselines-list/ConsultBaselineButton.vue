@@ -18,8 +18,10 @@
   -
   -->
 <template>
-    <action-button icon="eye" v-on:click="showBaseline()">
-        {{ $gettext("Consult") }}
+    <action-button icon="eye" v-on:click="showBaseline()" v-bind:disabled="false">
+        <template v-slot:default>
+            {{ $gettext("Consult") }}
+        </template>
     </action-button>
 </template>
 <script>

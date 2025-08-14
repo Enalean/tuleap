@@ -19,17 +19,15 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import { createLocalVueForTests } from "../../support/local-vue.ts";
-import Vuex from "vuex";
+import { getGlobalTestOptions } from "../../support/global-options-for-tests";
 import ContentArtifact from "./ContentArtifact.vue";
 import ArtifactsList from "./ArtifactsList.vue";
 
 describe("ArtifactsList", () => {
-    let wrapper;
-
-    beforeEach(async () => {
-        wrapper = shallowMount(ArtifactsList, {
-            propsData: {
+    function getWrapper() {
+        return shallowMount(ArtifactsList, {
+            global: { ...getGlobalTestOptions() },
+            props: {
                 artifacts: [
                     {
                         id: 101,
@@ -66,23 +64,12 @@ describe("ArtifactsList", () => {
                     },
                 ],
             },
-            localVue: await createLocalVueForTests(),
-            store: new Vuex.Store({
-                modules: {
-                    current_baseline: {
-                        namespaced: true,
-                        getters: {
-                            isLimitReachedOnArtifact: () => () => false,
-                            filterArtifacts: () => (artifacts) => artifacts,
-                            findArtifactsByIds: () => () => [],
-                        },
-                    },
-                },
-            }),
         });
-    });
+    }
 
     it("shows as many artifacts as given", () => {
+        const wrapper = getWrapper();
+
         expect(wrapper.findAllComponents(ContentArtifact)).toHaveLength(3);
     });
 });

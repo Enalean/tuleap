@@ -17,9 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Wrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import { createLocalVueForTests } from "../../support/local-vue";
+import { getGlobalTestOptions } from "../../support/global-options-for-tests";
 import DeleteConfirmationModal from "./DeleteConfirmationModal.vue";
 
 jest.useFakeTimers();
@@ -31,9 +31,9 @@ describe("DeleteConfirmationModal", () => {
     let confirm: jest.Mock;
     let confirmResolve: (value: unknown) => void;
 
-    let wrapper: Wrapper<Vue>;
+    let wrapper: VueWrapper<InstanceType<typeof DeleteConfirmationModal>>;
 
-    beforeEach(async () => {
+    beforeEach(() => {
         confirm = jest.fn().mockReturnValue(
             new Promise((resolve) => {
                 confirmResolve = resolve;
@@ -41,12 +41,12 @@ describe("DeleteConfirmationModal", () => {
         );
 
         wrapper = shallowMount(DeleteConfirmationModal, {
-            propsData: {
+            props: {
                 submit_label: "Confirmation message",
                 default_failed_message: "Failed message",
                 on_submit: confirm,
             },
-            localVue: await createLocalVueForTests(),
+            global: { ...getGlobalTestOptions() },
         });
     });
 
@@ -66,7 +66,7 @@ describe("DeleteConfirmationModal", () => {
             expect(wrapper.find(spinner_selector).exists()).toBeTruthy();
         });
         it("disables confirm button", () => {
-            expect(wrapper.get(confirm_selector).attributes().disabled).toBe("disabled");
+            expect(wrapper.get(confirm_selector).attributes().disabled).toBe("");
         });
         it("calls confirm method", () => {
             expect(confirm).toHaveBeenCalled();

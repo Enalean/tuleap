@@ -27,7 +27,9 @@
         v-bind:disabled="is_disabled"
         v-bind:title="title"
     >
-        {{ $gettext("Delete") }}
+        <template v-slot:default>
+            {{ $gettext("Delete") }}
+        </template>
     </action-button>
 </template>
 

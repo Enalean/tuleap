@@ -19,56 +19,63 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import { createLocalVueForTests } from "../../support/local-vue.ts";
 import ComparisonsList from "./ComparisonsList.vue";
 import ComparisonSkeleton from "./ComparisonSkeleton.vue";
 import ComparisonItem from "./ComparisonItem.vue";
-import { createStoreMock } from "../../support/store-wrapper.test-helper";
-import store_options from "../../store/store_options";
+import { getGlobalTestOptions } from "../../support/global-options-for-tests";
 
 describe("ComparisonsList", () => {
     const empty_comparison_selector = '[data-test-type="empty-comparison"]';
-    let $store, wrapper;
 
-    beforeEach(async () => {
-        $store = createStoreMock({
-            ...store_options,
-            getters: {
-                "comparisons/are_some_available": false,
-            },
-        });
-
-        wrapper = shallowMount(ComparisonsList, {
-            propsData: {
+    function createWrapper(is_loading, comparisons, are_some_available) {
+        return shallowMount(ComparisonsList, {
+            props: {
                 project_id: 102,
             },
-            localVue: await createLocalVueForTests(),
-            mocks: { $store },
+            global: {
+                ...getGlobalTestOptions({
+                    modules: {
+                        comparisons: {
+                            namespaced: true,
+                            getters: {
+                                are_some_available: () => are_some_available,
+                            },
+                            state: {
+                                is_loading,
+                                comparisons,
+                            },
+                            actions: {
+                                load: jest.fn(),
+                            },
+                        },
+                    },
+                }),
+            },
         });
-    });
+    }
 
     describe("when comparisons are loading", () => {
-        beforeEach(() => ($store.state.comparisons.is_loading = true));
-
         it("does not show any comparison", () => {
+            const wrapper = createWrapper(true, [], false);
             expect(wrapper.findComponent(ComparisonItem).exists()).toBeFalsy();
         });
 
         it("shows body table skeleton", () => {
+            const wrapper = createWrapper(true, [], false);
             expect(wrapper.findComponent(ComparisonSkeleton).exists()).toBeTruthy();
         });
 
         it("does not show a message that specifies an empty state", () => {
+            const wrapper = createWrapper(true, [], false);
             expect(wrapper.find(empty_comparison_selector).exists()).toBeFalsy();
         });
     });
 
     describe("when comparisons are loaded", () => {
-        beforeEach(() => ($store.state.comparisons.is_loading = false));
-
         describe("with many comparisons", () => {
-            beforeEach(() => {
-                $store.state.comparisons.comparisons = [
+            it(`shows comparisons, does not show body table skeleton
+                and does not show a message that specifies an empty state`, () => {
+                const comparisons = [
                     {
                         base_baseline_id: 1,
                         compared_to_baseline_id: 2,
@@ -82,37 +89,22 @@ describe("ComparisonsList", () => {
                         compared_to_baseline_id: 2,
                     },
                 ];
-                $store.getters["comparisons/are_some_available"] = true;
-            });
 
-            it("shows comparisons", () => {
+                const wrapper = createWrapper(false, comparisons, true);
+
                 expect(wrapper.findComponent(ComparisonItem).exists()).toBeTruthy();
-            });
-
-            it("does not show body table skeleton", () => {
                 expect(wrapper.findComponent(ComparisonSkeleton).exists()).toBeFalsy();
-            });
-
-            it("does not show a message that specifies an empty state", () => {
                 expect(wrapper.find(empty_comparison_selector).exists()).toBeFalsy();
             });
         });
 
         describe("without any comparison", () => {
-            beforeEach(() => {
-                $store.state.comparisons.comparisons = [];
-                $store.getters["comparisons/are_some_available"] = false;
-            });
+            it(`does not show comparisons, does not show body table skeleton
+                and shows a message that specifies an empty state`, () => {
+                const wrapper = createWrapper(false, [], false);
 
-            it("does not show comparisons", () => {
                 expect(wrapper.findComponent(ComparisonItem).exists()).toBeFalsy();
-            });
-
-            it("does not show body table skeleton", () => {
                 expect(wrapper.findComponent(ComparisonSkeleton).exists()).toBeFalsy();
-            });
-
-            it("shows a message that specifies an empty state", () => {
                 expect(wrapper.find(empty_comparison_selector).exists()).toBeTruthy();
             });
         });

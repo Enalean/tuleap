@@ -31,11 +31,14 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from "vue";
+import { useState } from "vuex-composition-helpers";
+import { useGettext } from "vue3-gettext";
 import UserBadge from "./UserBadge.vue";
 import DateUtils from "../../support/date-utils";
 import type { Baseline, User } from "../../type";
-import { useState } from "vuex-composition-helpers";
-import { computed } from "vue";
+
+const { $gettext } = useGettext();
 
 const { users_by_id } = useState<{ users_by_id: Record<number, User> }>(["users_by_id"]);
 

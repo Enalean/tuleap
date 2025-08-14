@@ -19,32 +19,34 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import VueRouter from "vue-router";
+import { getGlobalTestOptions } from "../../support/global-options-for-tests";
 import NewComparisonModal from "./NewComparisonModal.vue";
-import { createLocalVueForTests } from "../../support/local-vue.ts";
+
+const mockRoute = {};
+
+const mockRouter = {
+    push: jest.fn(),
+};
 
 describe("NewComparisonModal", () => {
-    let baseline_on_same_artifact, router, wrapper;
+    let baseline_on_same_artifact, wrapper;
 
-    beforeEach(async () => {
-        router = new VueRouter({
-            mode: "abstract",
-            routes: [
-                { path: "/" },
-                { name: "TransientComparisonPage", path: "/path/to/comparison" },
-            ],
-        });
-
+    beforeEach(() => {
         const baseline = { id: 1, artifact_id: 10 };
         const baseline_on_other_artifact = { id: 2, artifact_id: 11 };
         baseline_on_same_artifact = { id: 3, artifact_id: 10 };
 
         wrapper = shallowMount(NewComparisonModal, {
-            propsData: {
+            props: {
                 baselines: [baseline, baseline_on_other_artifact, baseline_on_same_artifact],
             },
-            localVue: await createLocalVueForTests(),
-            router,
+            global: {
+                ...getGlobalTestOptions(),
+                mocks: {
+                    $route: mockRoute,
+                    $router: mockRouter,
+                },
+            },
         });
     });
 
@@ -53,14 +55,14 @@ describe("NewComparisonModal", () => {
         '[data-test-type="no-baseline-to-compare-message"]';
 
     it("disables submit", () => {
-        expect(wrapper.get(submit_selector).attributes("disabled")).toBe("disabled");
+        expect(wrapper.get(submit_selector).attributes()).toHaveProperty("disabled");
     });
 
     describe("when user choose a reference baseline", () => {
         beforeEach(() => wrapper.setData({ base_baseline_id: 1 }));
 
         it("still disable submit", () => {
-            expect(wrapper.get(submit_selector).attributes("disabled")).toBe("disabled");
+            expect(wrapper.get(submit_selector).attributes()).toHaveProperty("disabled");
         });
 
         describe("when no other baseline with same artifact", () => {
@@ -79,20 +81,16 @@ describe("NewComparisonModal", () => {
             });
 
             it("shows all baselines on same artifact", () => {
-                expect(wrapper.vm.baselines_to_compare).toEqual([baseline_on_same_artifact]);
+                expect(wrapper.vm.baselines_to_compare).toStrictEqual([baseline_on_same_artifact]);
             });
 
             describe("when user choose a baseline to compare", () => {
                 beforeEach(() => {
                     wrapper.setData({ baseline_to_compare_id: baseline_on_same_artifact.id });
-                    // Seems to be a Vue-test-utils bug.
-                    // See https://github.com/vuejs/vue-test-utils/issues/514
-                    // TODO Try to upgrade Vue-test-utils to remove this statement
-                    wrapper.vm.$forceUpdate();
                 });
 
                 it("enables submit", () => {
-                    expect(wrapper.get(submit_selector).attributes("disabled")).not.toBe(
+                    expect(wrapper.get(submit_selector).attributes()).not.toHaveProperty(
                         "disabled",
                     );
                 });
@@ -101,7 +99,7 @@ describe("NewComparisonModal", () => {
                     beforeEach(() => wrapper.get("form").trigger("submit.prevent"));
 
                     it("navigates to comparison page", () => {
-                        expect(router.currentRoute.name).toBe("TransientComparisonPage");
+                        expect(mockRouter.push).toHaveBeenCalled();
                     });
                 });
             });

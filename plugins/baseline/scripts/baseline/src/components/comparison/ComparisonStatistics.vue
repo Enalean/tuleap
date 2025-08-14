@@ -24,21 +24,27 @@
             v-bind:label="added_artifact_label"
             class="comparison-statistic-added-artifacts"
         >
-            {{ added_artifacts_count }}
+            <template v-slot:default>
+                {{ added_artifacts_count }}
+            </template>
         </statistic-item>
 
         <statistic-item
             v-bind:label="removed_artifact_label"
             class="comparison-statistic-deleted-artifacts"
         >
-            {{ removed_artifacts_count }}
+            <template v-slot:default>
+                {{ removed_artifacts_count }}
+            </template>
         </statistic-item>
 
         <statistic-item
             v-bind:label="modified_artifact_label"
             class="comparison-statistic-modified-artifacts"
         >
-            {{ modified_artifacts_count }}
+            <template v-slot:default>
+                {{ modified_artifacts_count }}
+            </template>
         </statistic-item>
     </div>
 </template>
@@ -52,15 +58,6 @@ export default {
 
     components: { StatisticItem },
 
-    filters: {
-        with_sign(value) {
-            if (value >= 0) {
-                return `+ ${value}`;
-            }
-            return `- ${Math.abs(value)}`;
-        },
-    },
-
     computed: {
         ...mapState("comparison", [
             "added_artifacts_count",
@@ -68,22 +65,21 @@ export default {
             "modified_artifacts_count",
         ]),
         added_artifact_label() {
-            if (this.added_artifacts_count > 1) {
-                return this.$gettext("Artifacts added");
-            }
-            return this.$gettext("Artifact added");
+            return this.$ngettext("Artifact added", "Artifacts added", this.added_artifacts_count);
         },
         removed_artifact_label() {
-            if (this.removed_artifacts_count > 1) {
-                return this.$gettext("Artifacts deleted");
-            }
-            return this.$gettext("Artifact deleted");
+            return this.$ngettext(
+                "Artifact deleted",
+                "Artifacts deleted",
+                this.removed_artifacts_count,
+            );
         },
         modified_artifact_label() {
-            if (this.modified_artifacts_count > 1) {
-                return this.$gettext("Artifacts modified");
-            }
-            return this.$gettext("Artifact modified");
+            return this.$ngettext(
+                "Artifact modified",
+                "Artifacts modified",
+                this.modified_artifacts_count,
+            );
         },
     },
 };

@@ -18,20 +18,27 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import { createLocalVueForTests } from "../../support/local-vue.ts";
-import { createStoreMock } from "../../support/store-wrapper.test-helper.js";
-import store_options from "../../store/store_options";
+import { getGlobalTestOptions } from "../../support/global-options-for-tests";
 import DeleteComparisonConfirmationModal from "./DeleteComparisonConfirmationModal.vue";
 import * as rest_querier from "../../api/rest-querier";
 
 jest.useFakeTimers();
 
 describe("DeleteComparisonConfirmationModal", () => {
-    let deleteComparison, deleteComparisonResolve, deleteComparisonReject;
-    const comparison = { id: 1 };
-    let $store, wrapper;
+    let deleteComparison,
+        deleteComparisonResolve,
+        deleteComparisonReject,
+        comparison,
+        wrapper,
+        hide_modal_mock,
+        notify_mock,
+        delete_mock;
 
-    beforeEach(async () => {
+    beforeEach(() => {
+        hide_modal_mock = jest.fn();
+        notify_mock = jest.fn();
+        delete_mock = jest.fn();
+
         deleteComparison = jest.spyOn(rest_querier, "deleteComparison").mockReturnValue(
             new Promise((resolve, reject) => {
                 deleteComparisonResolve = resolve;
@@ -39,10 +46,10 @@ describe("DeleteComparisonConfirmationModal", () => {
             }),
         );
 
-        $store = createStoreMock(store_options);
+        comparison = { id: 1 };
 
         wrapper = shallowMount(DeleteComparisonConfirmationModal, {
-            propsData: {
+            props: {
                 comparison,
                 base_baseline: {
                     id: 1001,
@@ -59,9 +66,27 @@ describe("DeleteComparisonConfirmationModal", () => {
                     author_id: 3,
                 },
             },
-            localVue: await createLocalVueForTests(),
-            mocks: {
-                $store,
+            global: {
+                ...getGlobalTestOptions({
+                    modules: {
+                        dialog_interface: {
+                            namespaced: true,
+                            mutations: {
+                                hideModal: hide_modal_mock,
+                                notify: notify_mock,
+                            },
+                        },
+                        comparisons: {
+                            namespaced: true,
+                            mutations: {
+                                delete: delete_mock,
+                            },
+                        },
+                    },
+                }),
+            },
+            directives: {
+                "dompurify-html": jest.fn(),
             },
         });
     });
@@ -81,16 +106,13 @@ describe("DeleteComparisonConfirmationModal", () => {
                 await jest.runOnlyPendingTimersAsync();
             });
             it("deletes comparison in store", () => {
-                expect($store.commit).toHaveBeenCalledWith("comparisons/delete", comparison);
+                expect(delete_mock).toHaveBeenCalled();
             });
             it("notifies user", () => {
-                expect($store.commit).toHaveBeenCalledWith(
-                    "dialog_interface/notify",
-                    expect.any(Object),
-                );
+                expect(notify_mock).toHaveBeenCalled();
             });
             it("hides modal", () => {
-                expect($store.commit).toHaveBeenCalledWith("dialog_interface/hideModal");
+                expect(hide_modal_mock).toHaveBeenCalled();
             });
         });
 
@@ -100,16 +122,10 @@ describe("DeleteComparisonConfirmationModal", () => {
                 await jest.runOnlyPendingTimersAsync();
             });
             it("does not delete comparison in store", () => {
-                expect($store.commit).not.toHaveBeenCalledWith(
-                    "comparisons/delete",
-                    expect.any(Object),
-                );
+                expect(delete_mock).not.toHaveBeenCalled();
             });
             it("does not notify user", () => {
-                expect($store.commit).not.toHaveBeenCalledWith(
-                    "dialog_interface/notify",
-                    expect.any(Object),
-                );
+                expect(notify_mock).not.toHaveBeenCalled();
             });
         });
     });

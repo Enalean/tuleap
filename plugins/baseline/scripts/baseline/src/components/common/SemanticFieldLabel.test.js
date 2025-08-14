@@ -19,59 +19,51 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import { createLocalVueForTests } from "../../support/local-vue.ts";
-import { createStoreMock } from "../../support/store-wrapper.test-helper.js";
+import { getGlobalTestOptions } from "../../support/global-options-for-tests";
 import SemanticFieldLabel from "./SemanticFieldLabel.vue";
-import store_options from "../../store/store_options";
 
 describe("SemanticFieldLabel", () => {
-    let $store;
-    let wrapper;
+    let load_tracker_id_mock = jest.fn();
 
-    beforeEach(async () => {
-        $store = createStoreMock({
-            ...store_options,
-            getters: {
-                "semantics/field_label": () => "My description",
-                "semantics/is_field_label_available": () => true,
-            },
-        });
-        wrapper = shallowMount(SemanticFieldLabel, {
-            propsData: {
+    function createWrapper(is_field_label_available, field_label = "My description") {
+        return shallowMount(SemanticFieldLabel, {
+            props: {
                 semantic: "description",
                 tracker_id: 1,
             },
-            localVue: await createLocalVueForTests(),
-            mocks: {
-                $store,
+            global: {
+                ...getGlobalTestOptions({
+                    modules: {
+                        semantics: {
+                            namespaced: true,
+                            getters: {
+                                field_label: () => () => field_label,
+                                is_field_label_available: () => () => is_field_label_available,
+                            },
+                            actions: {
+                                loadByTrackerId: load_tracker_id_mock,
+                            },
+                        },
+                    },
+                }),
             },
         });
-    });
+    }
 
     it("loads semantic fields on mount", () => {
-        expect($store.dispatch).toHaveBeenCalledWith("semantics/loadByTrackerId", 1);
+        createWrapper(true);
+        expect(load_tracker_id_mock).toHaveBeenCalled();
     });
 
-    describe("when semantic is not available", () => {
-        beforeEach(() => {
-            $store.getters["semantics/is_field_label_available"] = () => false;
-        });
+    it("when semantic is not available then it shows only skeleton", () => {
+        const wrapper = createWrapper(false);
+        expect(wrapper.find('[data-test-type="skeleton"]').exists()).toBeTruthy();
 
-        it("shows only skeleton", () => {
-            expect(wrapper.find('[data-test-type="skeleton"]').exists()).toBeTruthy();
-
-            expect(wrapper.text()).toBe("");
-        });
+        expect(wrapper.text()).toBe("");
     });
 
-    describe("when semantic is available", () => {
-        beforeEach(() => {
-            $store.getters["semantics/is_field_label_available"] = () => true;
-            $store.getters["semantics/field_label"] = () => "Status";
-        });
-
-        it("shows only field label", () => {
-            expect(wrapper.text()).toBe("Status");
-        });
+    it("when semantic is available then it shows only field label", () => {
+        const wrapper = createWrapper(true, "Status");
+        expect(wrapper.text()).toBe("Status");
     });
 });

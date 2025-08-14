@@ -19,60 +19,77 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import { createLocalVueForTests } from "../../support/local-vue.ts";
+import { getGlobalTestOptions } from "../../support/global-options-for-tests";
 import BaselinesList from "./BaselinesList.vue";
 import BaselineSkeleton from "./BaselineSkeleton.vue";
 import BaselineListItem from "./BaselineListItem.vue";
-import { createStoreMock } from "../../support/store-wrapper.test-helper";
-import store_options from "../../store/store_options";
 
 describe("BaselinesList", () => {
+    let load, are_baselines_available, are_baselines_loading, baselines;
+
     const empty_baseline_selector = '[data-test-type="empty-baseline"]';
-    let $store, wrapper;
 
-    beforeEach(async () => {
-        $store = createStoreMock({
-            ...store_options,
-            getters: {
-                "baselines/are_baselines_available": false,
-            },
-        });
-
-        wrapper = shallowMount(BaselinesList, {
-            propsData: {
-                project_id: 102,
-            },
-            localVue: await createLocalVueForTests(),
-            mocks: { $store },
-        });
+    beforeEach(() => {
+        load = jest.fn();
+        are_baselines_available = () => false;
+        are_baselines_loading = false;
+        baselines = [];
     });
 
+    const getWrapper = () => {
+        return shallowMount(BaselinesList, {
+            global: {
+                ...getGlobalTestOptions({
+                    modules: {
+                        baselines: {
+                            namespaced: true,
+                            state: {
+                                are_baselines_loading,
+                                baselines,
+                            },
+                            actions: {
+                                load,
+                            },
+                            getters: {
+                                are_baselines_available,
+                            },
+                        },
+                    },
+                }),
+            },
+            props: {
+                project_id: 102,
+            },
+        });
+    };
+
     it("loads all baselines from given project id", () => {
-        expect($store.dispatch).toHaveBeenCalledWith("baselines/load", { project_id: 102 });
+        getWrapper();
+        expect(load).toHaveBeenCalledWith(expect.any(Object), { project_id: 102 });
     });
 
     describe("when baselines are loading", () => {
-        beforeEach(() => ($store.state.baselines.are_baselines_loading = true));
+        beforeEach(() => (are_baselines_loading = true));
 
         it("does not show any baseline", () => {
-            expect(wrapper.findComponent(BaselineListItem).exists()).toBeFalsy();
+            expect(getWrapper().findComponent(BaselineListItem).exists()).toBeFalsy();
         });
 
         it("shows baseline skeleton", () => {
-            expect(wrapper.findComponent(BaselineSkeleton).exists()).toBeTruthy();
+            expect(getWrapper().findComponent(BaselineSkeleton).exists()).toBeTruthy();
         });
 
         it("does not show a message that specifies an empty state", () => {
-            expect(wrapper.find(empty_baseline_selector).exists()).toBeFalsy();
+            expect(getWrapper().find(empty_baseline_selector).exists()).toBeFalsy();
         });
     });
 
     describe("when baselines loaded", () => {
-        beforeEach(() => ($store.state.baselines.are_baselines_loading = false));
+        beforeEach(() => (are_baselines_loading = false));
 
         describe("with many baselines", () => {
             beforeEach(() => {
-                $store.state.baselines.baselines = [
+                baselines = [
                     {
                         id: 101,
                         title: "Sprint-1",
@@ -107,39 +124,38 @@ describe("BaselinesList", () => {
                         linked_artifact_ids: [],
                     },
                 ];
-                $store.getters["baselines/are_baselines_available"] = true;
+                are_baselines_available = () => true;
             });
 
             it("shows as many baselines as given", () => {
-                let baselines = wrapper.findAllComponents(BaselineListItem);
-                expect(baselines).toHaveLength(3);
+                expect(getWrapper().findAllComponents(BaselineListItem)).toHaveLength(3);
             });
 
             it("does not show baseline skeleton", () => {
-                expect(wrapper.findComponent(BaselineSkeleton).exists()).toBeFalsy();
+                expect(getWrapper().findComponent(BaselineSkeleton).exists()).toBeFalsy();
             });
 
             it("does not show a message that specifies an empty state", () => {
-                expect(wrapper.find(empty_baseline_selector).exists()).toBeFalsy();
+                expect(getWrapper().find(empty_baseline_selector).exists()).toBeFalsy();
             });
         });
 
         describe("without any baseline", () => {
             beforeEach(() => {
-                $store.state.baselines.baselines = [];
-                $store.getters["baselines/are_baselines_available"] = false;
+                baselines = [];
+                are_baselines_available = () => false;
             });
 
             it("does not show baselines", () => {
-                expect(wrapper.findComponent(BaselineListItem).exists()).toBeFalsy();
+                expect(getWrapper().findComponent(BaselineListItem).exists()).toBeFalsy();
             });
 
             it("does not show baseline skeleton", () => {
-                expect(wrapper.findComponent(BaselineSkeleton).exists()).toBeFalsy();
+                expect(getWrapper().findComponent(BaselineSkeleton).exists()).toBeFalsy();
             });
 
             it("shows a message that specifies an empty state", () => {
-                expect(wrapper.find(empty_baseline_selector).exists()).toBeTruthy();
+                expect(getWrapper().find(empty_baseline_selector).exists()).toBeTruthy();
             });
         });
     });

@@ -20,65 +20,49 @@
 
 import { shallowMount } from "@vue/test-utils";
 import ComparisonItem from "./ComparisonItem.vue";
-import { createStoreMock } from "../../support/store-wrapper.test-helper";
-import store_options from "../../store/store_options";
 import ArtifactLink from "../common/ArtifactLink.vue";
-import { createLocalVueForTests } from "../../support/local-vue.ts";
+import { getGlobalTestOptions } from "../../support/global-options-for-tests";
 
 describe("Comparison", () => {
-    let $store, wrapper;
-
-    const base_baseline_artifact = {
-        id: 1,
-        tracker: {
-            id: 9,
-        },
-    };
+    let wrapper, base_baseline_artifact;
 
     beforeEach(() => {
-        $store = createStoreMock(store_options);
-        $store.getters = {
-            findBaselineById: jest.fn(),
-            findArtifactById: jest.fn(),
-            findTrackerById: jest.fn(),
-            findUserById: jest.fn(),
+        base_baseline_artifact = {
+            id: 1,
+            tracker: {
+                id: 9,
+            },
         };
-    });
 
-    beforeEach(async () => {
-        $store.getters.findBaselineById.mockImplementation((id) => {
-            if (id === 11) {
-                return { artifact_id: 22 };
-            }
-            if (id === 12) {
-                return {
-                    id: 1001,
-                    name: "Baseline label",
-                    artifact_id: 9,
-                    snapshot_date: "2019-03-22T10:01:48+00:00",
-                    author_id: 3,
-                };
-            }
-            throw new Error("Not expected ID: " + id);
-        });
-        $store.getters.findArtifactById.mockImplementation((id) => {
-            if (id === 22) {
-                return base_baseline_artifact;
-            }
-            throw new Error("Not expected ID: " + id);
-        });
-        $store.getters.findTrackerById.mockReturnValue({ id: 9 });
+        const tracker = { id: 9 };
 
         wrapper = shallowMount(ComparisonItem, {
-            propsData: {
-                comparison: {
-                    id: 1,
-                    base_baseline_id: 11,
-                    compared_to_baseline_id: 12,
-                },
+            props: {
+                comparison: { id: 1, base_baseline_id: 11, compared_to_baseline_id: 12 },
             },
-            localVue: await createLocalVueForTests(),
-            mocks: { $store },
+            global: {
+                ...getGlobalTestOptions({
+                    getters: {
+                        findBaselineById: () => (id) => {
+                            if (id === 11) {
+                                return { artifact_id: 22 };
+                            }
+                            if (id === 12) {
+                                return {
+                                    id: 1001,
+                                    name: "Baseline label",
+                                    artifact_id: 9,
+                                    snapshot_date: "2019-03-22T10:01:48+00:00",
+                                    author_id: 3,
+                                };
+                            }
+                            throw new Error("Not expected ID: " + id);
+                        },
+                        findArtifactById: () => () => base_baseline_artifact,
+                        findTrackerById: () => () => tracker,
+                    },
+                }),
+            },
         });
     });
 

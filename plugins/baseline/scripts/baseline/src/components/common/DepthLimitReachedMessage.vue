@@ -25,7 +25,7 @@
     </div>
 </template>
 <script setup lang="ts">
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 
 const { $gettext } = useGettext();
 </script>

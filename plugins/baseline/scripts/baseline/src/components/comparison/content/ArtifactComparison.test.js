@@ -18,52 +18,57 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import { createStoreMock } from "../../../support/store-wrapper.test-helper";
-import { createLocalVueForTests } from "../../../support/local-vue";
+import { getGlobalTestOptions } from "../../../support/global-options-for-tests";
 import ArtifactComparison from "./ArtifactComparison.vue";
-import ArtifactsListComparison from "./ArtifactsListComparison.vue";
-import DepthLimitReachedMessage from "../../common/DepthLimitReachedMessage.vue";
-import store_options from "../../../store/store_options";
 
 describe("ArtifactComparison", () => {
-    let wrapper, $store, linked_artifact;
-
-    beforeEach(async () => {
-        $store = createStoreMock({
-            ...store_options,
-            getters: {
-                "comparison/filterArtifacts": () => [linked_artifact],
-                "comparison/base/findArtifactsByIds": () => [linked_artifact],
-                "comparison/base/isLimitReachedOnArtifact": () => false,
-                "comparison/compared_to/findArtifactsByIds": () => [],
-                "comparison/compared_to/isLimitReachedOnArtifact": () => false,
+    function createWrapper(isLimitReachedOnArtifact) {
+        const linked_artifact = { id: 2 };
+        return shallowMount(ArtifactComparison, {
+            global: {
+                ...getGlobalTestOptions({
+                    modules: {
+                        "comparison/base": {
+                            namespaced: true,
+                            getters: {
+                                filterArtifacts: () => () => [linked_artifact],
+                                findArtifactsByIds: () => () => [linked_artifact],
+                                isLimitReachedOnArtifact: () => () => isLimitReachedOnArtifact,
+                            },
+                            actions: {
+                                load: jest.fn(),
+                            },
+                        },
+                        "comparison/compared_to": {
+                            namespaced: true,
+                            getters: {
+                                filterArtifacts: () => () => [linked_artifact],
+                                findArtifactsByIds: () => () => [linked_artifact],
+                                isLimitReachedOnArtifact: () => () => isLimitReachedOnArtifact,
+                            },
+                            actions: {
+                                load: jest.fn(),
+                            },
+                        },
+                    },
+                }),
             },
-        });
-        linked_artifact = { id: 2 };
-
-        wrapper = shallowMount(ArtifactComparison, {
-            localVue: await createLocalVueForTests(),
-            propsData: {
-                base: {
-                    id: 1,
-                    linked_artifact_ids: [2],
-                },
+            props: {
+                base: { id: 1, linked_artifact_ids: [2] },
                 compared_to: { id: 2 },
             },
-            mocks: { $store },
         });
-    });
+    }
 
     it("does not show depth limit message", () => {
-        expect(wrapper.findComponent(DepthLimitReachedMessage).exists()).toBeFalsy();
-    });
-
-    it("shows artifacts list comparison", () => {
-        expect(wrapper.findComponent(ArtifactsListComparison).exists()).toBeTruthy();
+        const wrapper = createWrapper(false);
+        expect(wrapper.vm.is_depth_limit_reached).toBeFalsy();
+        expect(wrapper.vm.are_linked_artifacts_available).toBeTruthy();
     });
 
     describe("when artifacts does not have linked artifact", () => {
-        beforeEach(async () => {
+        it("does not show depth limit message and list comparison", async () => {
+            const wrapper = createWrapper(false);
             await wrapper.setProps({
                 base: {
                     linked_artifact_ids: [],
@@ -74,28 +79,21 @@ describe("ArtifactComparison", () => {
                     linked_artifacts: [],
                 },
             });
-        });
 
-        it("does not show depth limit message", () => {
-            expect(wrapper.findComponent(DepthLimitReachedMessage).exists()).toBeFalsy();
-        });
-
-        it("does not show artifacts list comparison", () => {
-            expect(wrapper.findComponent(ArtifactsListComparison).exists()).toBeFalsy();
+            expect(wrapper.vm.is_depth_limit_reached).toBeFalsy();
+            expect(wrapper.vm.are_linked_artifacts_available).toBeFalsy();
         });
     });
 
     describe("when the current depth has reached the limit", () => {
-        beforeEach(async () => {
-            $store.getters["comparison/base/isLimitReachedOnArtifact"] = () => true;
+        it("shows depth limit message", async () => {
+            const wrapper = createWrapper(true);
             await wrapper.setProps({
                 reference: { id: 1 },
                 compared_to: { id: 2 },
             });
-        });
 
-        it("shows depth limit message", () => {
-            expect(wrapper.findComponent(DepthLimitReachedMessage).exists()).toBeTruthy();
+            expect(wrapper.vm.is_depth_limit_reached).toBeTruthy();
         });
     });
 });

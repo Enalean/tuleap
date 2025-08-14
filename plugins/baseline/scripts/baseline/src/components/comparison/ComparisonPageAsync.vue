@@ -39,6 +39,7 @@ export default {
     props: {
         comparison_id: { required: true, type: Number },
     },
+    emits: ["title"],
 
     data() {
         return {

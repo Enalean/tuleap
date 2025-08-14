@@ -64,8 +64,11 @@
 </template>
 
 <script setup lang="ts">
-import { getMessageFromException } from "../../support/rest-utils";
 import { ref } from "vue";
+import { useGettext } from "vue3-gettext";
+import { getMessageFromException } from "../../support/rest-utils";
+
+const { $gettext } = useGettext();
 
 const props = defineProps<{
     submit_label: string;

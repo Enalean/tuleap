@@ -20,11 +20,19 @@
 
 <template>
     <content-layout>
-        <comparison-header-skeleton slot="header" />
-        <comparison-statistics-skeleton slot="statistics" />
-        <comparison-content-filters-skeleton slot="filters" />
+        <template v-slot:header>
+            <comparison-header-skeleton />
+        </template>
+        <template v-slot:statistics>
+            <comparison-statistics-skeleton />
+        </template>
+        <template v-slot:filters>
+            <comparison-content-filters-skeleton />
+        </template>
 
-        <comparison-content-skeleton />
+        <template v-slot:default>
+            <comparison-content-skeleton />
+        </template>
     </content-layout>
 </template>
 <script>

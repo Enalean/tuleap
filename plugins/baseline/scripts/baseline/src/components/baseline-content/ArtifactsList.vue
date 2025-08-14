@@ -24,16 +24,18 @@
             v-bind:key="artifact.id"
             class="baseline-content-artifact-li"
         >
-            <artifact v-bind:artifact="artifact" />
+            <content-artifact v-bind:artifact="artifact" />
         </li>
     </ol>
 </template>
 <script>
+import { defineAsyncComponent } from "vue";
+
 export default {
     name: "ArtifactList",
 
     components: {
-        artifact: () => import("./ContentArtifact.vue"),
+        ContentArtifact: defineAsyncComponent(() => import("./ContentArtifact.vue")),
     },
 
     props: {

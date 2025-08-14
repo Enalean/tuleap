@@ -23,7 +23,7 @@
             <div class="tlp-pane-container">
                 <div class="tlp-pane-header">
                     <h1 class="tlp-pane-title">
-                        <i class="fa fa-tlp-baseline"></i>
+                        <i class="fa fa-tlp-baseline tlp-pane-title-icon"></i>
                         {{ $gettext("your baselines") }}
                         <span
                             v-if="baselines !== null"
@@ -58,7 +58,7 @@
             <div class="tlp-pane-container">
                 <div class="tlp-pane-header">
                     <h1 class="tlp-pane-title">
-                        <i class="fa fa-tlp-baseline-comparison"></i>
+                        <i class="fa fa-tlp-baseline-comparison tlp-pane-title-icon"></i>
                         {{ $gettext("Comparisons") }}
                         <span
                             v-if="comparisons !== null"
@@ -108,6 +108,7 @@ export default {
     props: {
         project_id: { mandatory: true, type: Number },
     },
+    emits: ["title"],
 
     data() {
         return {

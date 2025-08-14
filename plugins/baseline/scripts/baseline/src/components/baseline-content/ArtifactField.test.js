@@ -19,36 +19,39 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import { createLocalVueForTests } from "../../support/local-vue.ts";
+import { getGlobalTestOptions } from "../../support/global-options-for-tests";
 import ArtifactField from "./ArtifactField.vue";
 
 describe("Field", () => {
-    let wrapper;
-
-    beforeEach(async () => {
-        wrapper = shallowMount(ArtifactField, {
-            localVue: await createLocalVueForTests(),
-            propsData: { semantic: "description", tracker_id: 1, value: "My description" },
+    function getWrapper() {
+        return shallowMount(ArtifactField, {
+            global: {
+                ...getGlobalTestOptions(),
+                directives: {
+                    "dompurify-html": jest.fn(),
+                },
+            },
+            props: { semantic: "description", tracker_id: 1, value: "My description" },
         });
-    });
+    }
 
     describe("when value prop is html", () => {
-        const value = "Description details <div onload=alert('xss')>";
+        it("renders sanitized value", async () => {
+            const value = "Description details <div onload=alert('xss')>";
+            const wrapper = getWrapper();
+            await wrapper.setProps({ value, html_content: true });
 
-        beforeEach(() => wrapper.setProps({ value, html_content: true }));
-
-        it("renders sanitized value", () => {
             expect(wrapper.html()).not.toContain(value);
             expect(wrapper.html()).not.toContain("Description details <div onload=alert('xss')>");
         });
     });
 
     describe("when value prop is not html", () => {
-        const value = "Description details <br> new line";
+        it("renders value", async () => {
+            const value = "Description details <br> new line";
+            const wrapper = getWrapper();
+            await wrapper.setProps({ value, html_content: false });
 
-        beforeEach(() => wrapper.setProps({ value, html_content: false }));
-
-        it("renders value", () => {
             expect(wrapper.text()).toContain(value);
         });
     });

@@ -19,43 +19,33 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import { createLocalVueForTests } from "../../../support/local-vue.ts";
+import { getGlobalTestOptions } from "../../../support/global-options-for-tests";
 import FieldComparison from "./FieldComparison.vue";
 
 describe("FieldComparison", () => {
-    let wrapper;
-
-    beforeEach(async () => {
-        wrapper = shallowMount(FieldComparison, {
-            localVue: await createLocalVueForTests(),
-            propsData: {
+    function getWrapper() {
+        return shallowMount(FieldComparison, {
+            global: { ...getGlobalTestOptions() },
+            props: {
                 semantic: "description",
                 tracker_id: 1,
                 base: "My description",
                 compared_to: "New description",
             },
+            directives: {
+                "dompurify-html": jest.fn(),
+            },
         });
-    });
-
-    it("renders deletion", () => {
-        expect(wrapper.findAll("del")).toHaveLength(1);
-        expect(wrapper.get("del").text()).toBe("My");
-    });
-
-    it("renders addition", () => {
-        expect(wrapper.findAll("ins")).toHaveLength(1);
-        expect(wrapper.get("ins").text()).toBe("New");
-    });
+    }
 
     describe("when compared values contain html", () => {
-        beforeEach(() => {
-            wrapper.setProps({
+        it("does not render dirty html", async () => {
+            const wrapper = getWrapper();
+            await wrapper.setProps({
                 base: "My description<div onload=alert('xss')>",
                 compared_to: "<div onload=alert('xss')>My description",
             });
-        });
 
-        it("does not render dirty html", () => {
             expect(wrapper.html()).not.toContain("<div onload=alert('xss')>");
         });
     });

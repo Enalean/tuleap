@@ -82,6 +82,7 @@
 
 <script>
 import { createComparison } from "../../api/rest-querier";
+
 export default {
     name: "SaveComparisonModal",
     props: {

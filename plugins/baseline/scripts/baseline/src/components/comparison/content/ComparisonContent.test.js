@@ -19,107 +19,100 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import { createLocalVueForTests } from "../../../support/local-vue.ts";
+import { getGlobalTestOptions } from "../../../support/global-options-for-tests";
 import ComparisonContent from "./ComparisonContent.vue";
-import { createStoreMock } from "../../../support/store-wrapper.test-helper";
-import store_options from "../../../store/store_options";
 import ArtifactsListComparison from "./ArtifactsListComparison.vue";
 
 describe("ComparisonContent", () => {
-    let $store, wrapper;
+    function createWrapper(
+        filter_artifact,
+        base_first_depth_artifacts,
+        compared_first_depth_artifacts,
+    ) {
+        return shallowMount(ComparisonContent, {
+            global: {
+                ...getGlobalTestOptions({
+                    modules: {
+                        comparison: {
+                            namespaced: true,
+                            getters: {
+                                filterArtifacts: () => () => filter_artifact,
+                            },
+                            state: {
+                                base: {
+                                    first_depth_artifacts: base_first_depth_artifacts,
+                                },
+                                compared_to: {
+                                    first_depth_artifacts: compared_first_depth_artifacts,
+                                },
+                            },
+                        },
+                    },
+                }),
+            },
+        });
+    }
 
-    beforeEach(async () => {
-        $store = createStoreMock(
+    it("when there are some artifacts available then it shows artifacts list comparison", () => {
+        const filter_artifacts = [
             {
-                ...store_options,
-                getters: {
-                    "comparison/filterArtifacts": () => [],
-                },
+                id: 101,
+                title: "Sprint-1",
+                status: "Planned",
+                tracker_id: 1,
+                initial_effort: null,
+                tracker_name: "Sprint",
+                description:
+                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit labore et dolore magna aliqua",
+                linked_artifact_ids: [],
             },
             {
-                comparison: {
-                    base: {
-                        first_depth_artifacts: [],
-                    },
-                    compared_to: {
-                        first_depth_artifacts: [],
-                    },
-                },
+                id: 102,
+                title: "Sprint-2",
+                status: "Planned",
+                tracker_id: 1,
+                initial_effort: null,
+                tracker_name: "Sprint",
+                description:
+                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit labore et dolore magna aliqua",
+                linked_artifact_ids: [],
             },
-        );
+        ];
 
-        wrapper = shallowMount(ComparisonContent, {
-            localVue: await createLocalVueForTests(),
-            mocks: { $store },
-        });
+        const base_first_depth_artifacts = [
+            {
+                id: 101,
+                title: "Sprint-1",
+                status: "Planned",
+                tracker_id: 1,
+                initial_effort: null,
+                tracker_name: "Sprint",
+                description:
+                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit labore et dolore magna aliqua",
+                linked_artifact_ids: [],
+            },
+            {
+                id: 102,
+                title: "Sprint-2",
+                status: "Planned",
+                tracker_id: 1,
+                initial_effort: null,
+                tracker_name: "Sprint",
+                description:
+                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit labore et dolore magna aliqua",
+                linked_artifact_ids: [],
+            },
+        ];
+
+        const wrapper = createWrapper(filter_artifacts, base_first_depth_artifacts, []);
+        expect(wrapper.findComponent(ArtifactsListComparison).exists()).toBeTruthy();
     });
 
-    describe("when some artifacts available", () => {
-        beforeEach(() => {
-            $store.getters["comparison/filterArtifacts"] = () => [
-                {
-                    id: 101,
-                    title: "Sprint-1",
-                    status: "Planned",
-                    tracker_id: 1,
-                    initial_effort: null,
-                    tracker_name: "Sprint",
-                    description:
-                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit labore et dolore magna aliqua",
-                    linked_artifact_ids: [],
-                },
-                {
-                    id: 102,
-                    title: "Sprint-2",
-                    status: "Planned",
-                    tracker_id: 1,
-                    initial_effort: null,
-                    tracker_name: "Sprint",
-                    description:
-                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit labore et dolore magna aliqua",
-                    linked_artifact_ids: [],
-                },
-            ];
-            $store.state.comparison.base.first_depth_artifacts = [
-                {
-                    id: 101,
-                    title: "Sprint-1",
-                    status: "Planned",
-                    tracker_id: 1,
-                    initial_effort: null,
-                    tracker_name: "Sprint",
-                    description:
-                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit labore et dolore magna aliqua",
-                    linked_artifact_ids: [],
-                },
-                {
-                    id: 102,
-                    title: "Sprint-2",
-                    status: "Planned",
-                    tracker_id: 1,
-                    initial_effort: null,
-                    tracker_name: "Sprint",
-                    description:
-                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit labore et dolore magna aliqua",
-                    linked_artifact_ids: [],
-                },
-            ];
-            $store.state.comparison.compared_to.first_depth_artifacts = [];
-        });
-        it("shows artifacts list comparison", () => {
-            expect(wrapper.findComponent(ArtifactsListComparison).exists()).toBeTruthy();
-        });
-    });
+    it("when no artifact are available then it shows artifacts list comparison", () => {
+        const wrapper = createWrapper([], [], []);
 
-    describe("when no artifact available", () => {
-        beforeEach(() => {
-            $store.state.comparison.base.first_depth_artifacts = [];
-            $store.state.comparison.compared_to.first_depth_artifacts = [];
-        });
-        it("shows artifacts list comparison", () => {
-            expect(
-                wrapper.find('[data-test-type="no-comparison-available-message"]').exists(),
-            ).toBeTruthy();
-        });
+        expect(
+            wrapper.find('[data-test-type="no-comparison-available-message"]').exists(),
+        ).toBeTruthy();
     });
 });

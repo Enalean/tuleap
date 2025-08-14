@@ -19,7 +19,7 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import { createLocalVueForTests } from "../../support/local-vue.ts";
+import { getGlobalTestOptions } from "../../support/global-options-for-tests";
 import MilestoneList from "./MilestonesSelect.vue";
 
 describe("MilestonesSelect", () => {
@@ -27,12 +27,10 @@ describe("MilestonesSelect", () => {
 
     let wrapper;
 
-    beforeEach(async () => {
+    beforeEach(() => {
         wrapper = shallowMount(MilestoneList, {
-            localVue: await createLocalVueForTests(),
-            propsData: {
-                milestones: [],
-            },
+            global: { ...getGlobalTestOptions() },
+            props: { milestones: [] },
             sync: false,
         });
     });
@@ -55,7 +53,7 @@ describe("MilestonesSelect", () => {
 
         describe("sorted_milestones", () => {
             it("Sorts milestones by label in reverse order", () => {
-                expect(wrapper.vm.sorted_milestones).toEqual([
+                expect(wrapper.vm.sorted_milestones).toStrictEqual([
                     milestone_3,
                     milestone_2,
                     milestone_1,
@@ -74,14 +72,16 @@ describe("MilestonesSelect", () => {
             });
 
             it("Emits change event with a milestone corresponding to id given by event value", () => {
-                expect(wrapper.emitted().change[0]).toEqual([{ id: 1, label: "first milestone" }]);
+                expect(wrapper.emitted().change[0]).toStrictEqual([
+                    { id: 1, label: "first milestone" },
+                ]);
             });
         });
     });
 
     describe("when no milestone", () => {
-        beforeEach(() => {
-            wrapper.setProps({ milestones: [] });
+        beforeEach(async () => {
+            await wrapper.setProps({ milestones: [] });
         });
 
         it("does not show any milestone", () => {

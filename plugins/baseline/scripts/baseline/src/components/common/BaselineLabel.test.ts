@@ -19,14 +19,13 @@
  */
 
 import { mount } from "@vue/test-utils";
-import { createLocalVueForTests } from "../../support/local-vue";
+import { getGlobalTestOptions } from "../../support/global-options-for-tests";
 import BaselineLabel from "./BaselineLabel.vue";
 import DateFormatter from "../../support/date-utils";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { Baseline, User } from "../../type";
 
 describe("BaselineLabel", () => {
-    it("shows baseline information", async () => {
+    it("shows baseline information", () => {
         DateFormatter.setOptions({
             user_locale: "en_EN",
             user_timezone: "Europe/London",
@@ -36,7 +35,7 @@ describe("BaselineLabel", () => {
         const past_snapshot_date = new Date("2019-05-02T06:48:22+00:00");
 
         const wrapper = mount(BaselineLabel, {
-            propsData: {
+            props: {
                 baseline: {
                     id: 1,
                     name: "Baseline V1",
@@ -44,9 +43,8 @@ describe("BaselineLabel", () => {
                     author_id: 9,
                 } as Baseline,
             },
-            localVue: await createLocalVueForTests(),
-            mocks: {
-                $store: createStoreMock({
+            global: {
+                ...getGlobalTestOptions({
                     state: {
                         users_by_id: {
                             9: { display_name: "Alita" } as User,

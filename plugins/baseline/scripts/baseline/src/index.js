@@ -18,34 +18,30 @@
  *
  */
 
-import Vue from "vue";
-import { getPOFileFromLocale, initVueGettext } from "@tuleap/vue2-gettext-init";
-import VueDOMPurifyHTML from "@tuleap/vue2-dompurify-html";
-import router from "./router/index";
+import { createApp } from "vue";
+import { getPOFileFromLocale, initVueGettext } from "@tuleap/vue3-gettext-init";
+import VueDOMPurifyHTML from "vue-dompurify-html";
+import { createGettext } from "vue3-gettext";
+import { createInitializedRouter } from "./router/index";
 import App from "./components/App.vue";
 import store from "./store/index";
 import DateUtils from "./support/date-utils";
 
 document.addEventListener("DOMContentLoaded", async () => {
-    Vue.use(VueDOMPurifyHTML);
-    await initVueGettext(Vue, (locale) => import(`../po/${getPOFileFromLocale(locale)}`));
-
-    let user_locale = document.body.dataset.userLocale;
-
     DateUtils.setOptions({
-        user_locale,
+        user_locale: document.body.dataset.userLocale,
         user_timezone: document.body.dataset.userTimezone,
         format: document.body.dataset.dateTimeFormat,
     });
 
     const vue_mount_point = document.getElementById("baseline-container");
-
     if (!vue_mount_point) {
         return;
     }
 
     const project_id = Number(vue_mount_point.dataset.projectId);
     const project_public_name = vue_mount_point.dataset.projectPublicName;
+    const project_short_name = vue_mount_point.dataset.projectShortName;
     const project_icon = vue_mount_point.dataset.projectIcon;
     const project_url = vue_mount_point.dataset.projectUrl;
     const privacy = JSON.parse(vue_mount_point.dataset.privacy);
@@ -53,22 +49,30 @@ document.addEventListener("DOMContentLoaded", async () => {
     const is_admin = Boolean(vue_mount_point.dataset.isAdmin);
     const admin_url = vue_mount_point.dataset.adminUrl;
 
-    const AppComponent = Vue.extend(App);
-    new AppComponent({
-        store,
-        propsData: {
-            project_id,
-            project_public_name,
-            project_icon,
-            project_url,
-            privacy,
-            project_flags,
-            is_admin,
-            admin_url,
-        },
-        router,
-        provide: () => ({
-            is_admin,
-        }),
-    }).$mount(vue_mount_point);
+    createApp(App, {
+        project_id,
+        project_public_name,
+        project_icon,
+        project_url,
+        privacy,
+        project_flags,
+        is_admin,
+        admin_url,
+    })
+        .provide("is_admin", is_admin)
+        .use(VueDOMPurifyHTML)
+        .use(
+            await initVueGettext(
+                createGettext,
+                (locale) => import(`../po/${getPOFileFromLocale(locale)}`),
+            ),
+        )
+        .use(
+            createInitializedRouter(
+                store,
+                `/plugins/baseline/${encodeURIComponent(project_short_name)}`,
+            ),
+        )
+        .use(store)
+        .mount(vue_mount_point);
 });

@@ -130,6 +130,7 @@ class ServiceController implements DispatchableWithRequest, DispatchableWithBurn
             [
                 'project_id'          => $project_id,
                 'project_public_name' => $project->getPublicName(),
+                'project_short_name'  => $project->getUnixName(),
                 'project_url'         => $project->getUrl(),
                 'privacy'             => json_encode(ProjectPrivacyPresenter::fromProject($project), JSON_THROW_ON_ERROR),
                 'project_flags'       => json_encode($this->project_flags_builder->buildProjectFlags($project), JSON_THROW_ON_ERROR),

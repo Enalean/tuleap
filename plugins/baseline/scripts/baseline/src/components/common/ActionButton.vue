@@ -31,7 +31,7 @@
             data-test-type="spinner"
         ></i>
         <i v-else class="fa-solid fa-fw tlp-button-icon" v-bind:class="icon_class"></i>
-        <slot />
+        <slot></slot>
     </button>
 </template>
 
@@ -42,6 +42,8 @@ const props = withDefaults(defineProps<{ icon: string; loading?: boolean; disabl
     loading: false,
     disabled: false,
 });
+
+defineEmits<{ (e: "click"): void }>();
 
 const icon_class = computed(() => `fa-${props.icon}`);
 </script>
