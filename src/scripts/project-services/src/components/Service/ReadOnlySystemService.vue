@@ -51,7 +51,9 @@
         </div>
     </div>
 </template>
-<script>
+<script setup lang="ts">
+import { computed } from "vue";
+import type { Service } from "../../type";
 import ServiceId from "./ServiceId.vue";
 import ServiceLink from "./ServiceLink.vue";
 import ServiceIsUsed from "./ServiceIsUsed.vue";
@@ -62,31 +64,12 @@ import ReadOnlyServiceRank from "./ReadOnlyServiceRank.vue";
 import ReadOnlyServiceIcon from "./ReadOnlyServiceIcon.vue";
 import { ADMIN_SERVICE_SHORTNAME, SUMMARY_SERVICE_SHORTNAME } from "../../constants";
 
-export default {
-    name: "ReadOnlySystemService",
-    components: {
-        HiddenServiceIsActive,
-        HiddenServiceShortname,
-        ServiceLink,
-        ServiceId,
-        ServiceIsUsed,
-        ServiceRank,
-        ReadOnlyServiceRank,
-        ReadOnlyServiceIcon,
-    },
-    props: {
-        service: {
-            type: Object,
-            required: true,
-        },
-    },
-    computed: {
-        is_summary_service() {
-            return this.service.short_name === SUMMARY_SERVICE_SHORTNAME;
-        },
-        can_update_is_used() {
-            return this.service.short_name !== ADMIN_SERVICE_SHORTNAME || !this.service.is_used;
-        },
-    },
-};
+const props = defineProps<{
+    service: Service;
+}>();
+
+const is_summary_service = computed(() => props.service.short_name === SUMMARY_SERVICE_SHORTNAME);
+const can_update_is_used = computed(
+    () => props.service.short_name !== ADMIN_SERVICE_SHORTNAME || !props.service.is_used,
+);
 </script>
