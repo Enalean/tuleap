@@ -19,11 +19,11 @@
 import type { MockInstance } from "vitest";
 import { describe, it, beforeEach, expect, vi } from "vitest";
 import { shallowMount, type VueWrapper } from "@vue/test-utils";
-import * as rest_querier from "./rest-querier.js";
+import * as rest_querier from "./rest-querier";
 import { mockFetchError } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
 import LabeledItemsList from "./LabeledItemsList.vue";
 import LabeledItem from "./LabeledItem.vue";
-import { getGlobalTestOptions } from "./helpers/global-options-for-tests.js";
+import { getGlobalTestOptions } from "./helpers/global-options-for-tests";
 
 vi.useFakeTimers();
 
@@ -36,8 +36,8 @@ describe("LabeledItemsList", () => {
                 ...getGlobalTestOptions(),
             },
             props: {
-                labelsId: JSON.stringify(labels_ids),
-                projectId: "101",
+                labels_id: JSON.stringify(labels_ids),
+                project_id: "101",
             },
         });
 

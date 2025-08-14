@@ -31,7 +31,7 @@
             {{ $gettext("Please select one or more labels by editing this widget.") }}
         </div>
         <div class="empty-state-pane" v-if="empty && !loading && error === false">
-            <span class="empty-state-text" v-if="are_there_items_user_cannot_see">
+            <span class="empty-state-text" v-if="are_there_items_user_cannot_see_ref">
                 {{ $gettext("There are no items you can see.") }}
             </span>
             <span v-else class="empty-state-text" data-test="items-list-empty-state">
@@ -61,24 +61,24 @@
 import { computed, onMounted, ref } from "vue";
 
 import LabeledItem from "./LabeledItem.vue";
-import { getLabeledItems } from "./rest-querier.js";
+import { getLabeledItems } from "./rest-querier";
 import type { Item } from "./type";
 const props = defineProps<{
-    labelsId: string;
-    projectId: string;
+    labels_id: string;
+    project_id: string;
 }>();
 
 const items = ref<Array<Item>>([]);
 const loading = ref(true);
 const error = ref(false);
-const are_there_items_user_cannot_see = ref(false);
+const are_there_items_user_cannot_see_ref = ref(false);
 const current_offset = ref(0);
 const limit = ref(50);
 const has_more_items = ref(false);
 const is_loading_more = ref(false);
 
 const labels_id = computed(() => {
-    return JSON.parse(props.labelsId);
+    return JSON.parse(props.labels_id);
 });
 
 const empty = computed((): boolean => {
@@ -97,9 +97,9 @@ async function loadLabeledItems(): Promise<void> {
     }
 
     try {
-        const { labeled_items, are_there_items_user_cannot_see_response, has_more, offset } =
+        const { labeled_items, are_there_items_user_cannot_see, has_more, offset } =
             await getLabeledItems(
-                props.projectId,
+                props.project_id,
                 labels_id.value,
                 current_offset.value,
                 limit.value,
@@ -109,7 +109,7 @@ async function loadLabeledItems(): Promise<void> {
         has_more_items.value = has_more;
         items.value = items.value.concat(labeled_items);
 
-        are_there_items_user_cannot_see.value = are_there_items_user_cannot_see_response;
+        are_there_items_user_cannot_see_ref.value = are_there_items_user_cannot_see;
     } catch (e) {
         error.value = true;
     } finally {

@@ -19,8 +19,9 @@
 
 import { createGettext } from "vue3-gettext";
 import VueDOMPurifyHTML from "vue-dompurify-html";
+import type { MountingOptions } from "@vue/test-utils";
 
-export function getGlobalTestOptions() {
+export function getGlobalTestOptions(): MountingOptions<unknown>["global"] {
     return {
         plugins: [createGettext({ silent: true }), VueDOMPurifyHTML],
     };

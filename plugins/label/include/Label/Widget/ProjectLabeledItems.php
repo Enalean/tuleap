@@ -249,7 +249,7 @@ class ProjectLabeledItems extends Widget
     public function getJavascriptAssets(): array
     {
         return [
-            new JavascriptViteAsset($this->getWidgetAssets(), 'src/index.js'),
+            new JavascriptViteAsset($this->getWidgetAssets(), 'src/index.ts'),
             new JavascriptViteAsset($this->getAssets(), 'src/index.js'),
         ];
     }

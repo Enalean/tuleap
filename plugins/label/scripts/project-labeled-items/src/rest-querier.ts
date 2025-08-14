@@ -18,19 +18,37 @@
  */
 
 import { get } from "@tuleap/tlp-fetch";
+import type { Item } from "./type";
 
-export { getLabeledItems };
+interface LabeledItemsResponse {
+    readonly labeled_items: ReadonlyArray<Item>;
+    readonly has_more: boolean;
+    readonly offset: number;
+    readonly are_there_items_user_cannot_see: boolean;
+}
 
-async function getLabeledItems(project_id, labels_id, offset, limit) {
-    const response = await get("/api/projects/" + project_id + "/labeled_items", {
-        params: {
-            query: JSON.stringify({ labels_id }),
-            limit,
-            offset,
+export async function getLabeledItems(
+    project_id: string,
+    labels_id: Array<number>,
+    offset: number,
+    limit: number,
+): Promise<LabeledItemsResponse> {
+    const response = await get(
+        "/api/projects/" + encodeURIComponent(project_id) + "/labeled_items",
+        {
+            params: {
+                query: JSON.stringify({ labels_id }),
+                limit,
+                offset,
+            },
         },
-    });
+    );
 
-    const total = Number.parseInt(response.headers.get("X-PAGINATION-SIZE"), 10);
+    const pagination_size = response.headers.get("X-PAGINATION-SIZE");
+    if (pagination_size === null) {
+        throw new Error("No X-PAGINATION-SIZE field in the header.");
+    }
+    const total = Number.parseInt(pagination_size, 10);
     const json = await response.json();
 
     json.has_more = limit + offset < total;

@@ -19,25 +19,22 @@
 
 import { describe, afterEach, vi, it, expect } from "vitest";
 import { mockFetchSuccess } from "@tuleap/tlp-fetch/mocks/tlp-fetch-mock-helper";
-import { getLabeledItems } from "./rest-querier.js";
+import { getLabeledItems } from "./rest-querier";
 
 import * as tlp_fetch from "@tuleap/tlp-fetch";
 
 vi.mock("@tuleap/tlp-fetch");
 
 describe("getLabeledItems", () => {
-    const project_id = 101;
+    const project_id = "101";
     const labels_id = [3, 4];
+    const headers = new Headers({ "X-PAGINATION-SIZE": "10" });
 
     afterEach(() => {
         vi.clearAllMocks();
     });
 
     it("Returns the items", async () => {
-        const headers = {
-            /** 'X-PAGINATION-SIZE' */
-            get: () => 10,
-        };
         const return_json = {
             labeled_items: [{ title: "Le title" }],
             are_there_items_user_cannot_see: false,
@@ -50,10 +47,6 @@ describe("getLabeledItems", () => {
     });
 
     it("Returns the are_there_items_user_cannot_see flag", async () => {
-        const headers = {
-            /** 'X-PAGINATION-SIZE' */
-            get: () => 10,
-        };
         const return_json = {
             labeled_items: [{ title: "Le title" }],
             are_there_items_user_cannot_see: false,
@@ -71,10 +64,6 @@ describe("getLabeledItems", () => {
     });
 
     it("Sets has_more to true if there are still elements to fetch", async () => {
-        const headers = {
-            /** 'X-PAGINATION-SIZE' */
-            get: () => 10,
-        };
         const return_json = {
             labeled_items: [{ title: "Le title" }],
             are_there_items_user_cannot_see: false,
@@ -87,10 +76,6 @@ describe("getLabeledItems", () => {
     });
 
     it("Sets has_more to false if there are no more elements to fetch", async () => {
-        const headers = {
-            /** 'X-PAGINATION-SIZE' */
-            get: () => 10,
-        };
         const return_json = {
             labeled_items: [{ title: "Le title" }],
             are_there_items_user_cannot_see: false,
@@ -103,10 +88,6 @@ describe("getLabeledItems", () => {
     });
 
     it("Returns the offset so that the caller update its offset in case of recursive calls", async () => {
-        const headers = {
-            /** 'X-PAGINATION-SIZE' */
-            get: () => 10,
-        };
         const return_json = {
             labeled_items: [{ title: "Le title" }],
             are_there_items_user_cannot_see: false,
@@ -123,42 +104,33 @@ describe("getLabeledItems", () => {
         tlpGet
             .mockReturnValueOnce(
                 Promise.resolve({
-                    headers: {
-                        /** 'X-PAGINATION-SIZE' */
-                        get: () => 10,
-                    },
+                    headers,
                     json: () =>
                         Promise.resolve({
                             labeled_items: [],
                             are_there_items_user_cannot_see: true,
                         }),
-                }),
+                } as Response),
             )
             .mockReturnValueOnce(
                 Promise.resolve({
-                    headers: {
-                        /** 'X-PAGINATION-SIZE' */
-                        get: () => 10,
-                    },
+                    headers,
                     json: () =>
                         Promise.resolve({
                             labeled_items: [],
                             are_there_items_user_cannot_see: true,
                         }),
-                }),
+                } as Response),
             )
             .mockReturnValueOnce(
                 Promise.resolve({
-                    headers: {
-                        /** 'X-PAGINATION-SIZE' */
-                        get: () => 10,
-                    },
+                    headers,
                     json: () =>
                         Promise.resolve({
                             labeled_items: [{ title: "Le title" }],
                             are_there_items_user_cannot_see: false,
                         }),
-                }),
+                } as Response),
             );
 
         const { offset, labeled_items } = await getLabeledItems(project_id, labels_id, 0, 1);
