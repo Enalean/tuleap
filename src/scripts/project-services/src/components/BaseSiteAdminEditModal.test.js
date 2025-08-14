@@ -18,7 +18,7 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import { MINIMAL_RANK, PROJECT_ID } from "../injection-symbols.js";
+import { CSRF_TOKEN, MINIMAL_RANK, PROJECT_ID } from "../injection-symbols.js";
 import BaseSiteAdminEditModal from "./BaseSiteAdminEditModal.vue";
 import InEditionCustomService from "./Service/InEditionCustomService.vue";
 import EditableSystemService from "./Service/EditableSystemService.vue";
@@ -36,8 +36,6 @@ describe(`BaseSiteAdminEditModal`, () => {
     let props;
     beforeEach(() => {
         props = {
-            csrf_token: "csrf",
-            csrf_token_name: "challenge",
             allowed_icons: {},
         };
     });
@@ -57,6 +55,7 @@ describe(`BaseSiteAdminEditModal`, () => {
                 provide: {
                     [PROJECT_ID.valueOf()]: 101,
                     [MINIMAL_RANK.valueOf()]: 10,
+                    [CSRF_TOKEN.valueOf()]: { value: "csrf", name: "challenge" },
                 },
             },
             props,
