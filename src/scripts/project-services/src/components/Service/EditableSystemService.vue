@@ -26,7 +26,7 @@
         />
         <service-label
             id="project-service-edit-modal-label"
-            v-bind:value="service.label"
+            v-bind:label="service.label"
             v-on:input="onEditServiceLabel"
         />
         <read-only-service-icon v-bind:icon_name="service.icon_name" />

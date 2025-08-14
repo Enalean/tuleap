@@ -21,7 +21,7 @@
     <div class="tlp-modal-body">
         <service-label
             id="project-service-add-modal-label"
-            v-bind:value="service.label"
+            v-bind:label="service.label"
             v-on:input="onEditServiceLabel"
         />
         <icon-selector

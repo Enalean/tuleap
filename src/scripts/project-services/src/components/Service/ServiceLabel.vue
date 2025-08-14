@@ -31,29 +31,33 @@
             v-bind:placeholder="label_placeholder"
             maxlength="40"
             required
-            v-bind:value="value"
-            v-on:input="$emit('input', $event.target.value)"
+            v-bind:value="label"
+            v-on:input="onInputEmit"
         />
     </div>
 </template>
-<script>
-export default {
-    name: "ServiceLabel",
-    props: {
-        value: {
-            type: String,
-            required: true,
-        },
-        id: {
-            type: String,
-            required: true,
-        },
-    },
-    emits: ["input"],
-    computed: {
-        label_placeholder() {
-            return this.$gettext("My service");
-        },
-    },
-};
+<script setup lang="ts">
+import { computed } from "vue";
+import { useGettext } from "vue3-gettext";
+
+const { $gettext } = useGettext();
+
+defineProps<{
+    label: string;
+    id: string;
+}>();
+
+const emit = defineEmits<{
+    (e: "input", new_label: string): void;
+}>();
+
+const label_placeholder = computed(() => $gettext("My service"));
+
+function onInputEmit(event: Event) {
+    if (!(event.target instanceof HTMLInputElement)) {
+        return;
+    }
+
+    emit("input", event.target.value);
+}
 </script>

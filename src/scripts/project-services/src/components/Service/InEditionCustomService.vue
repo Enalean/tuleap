@@ -22,7 +22,7 @@
         <service-id v-bind:value="service.id" />
         <service-label
             id="project-service-edit-modal-label"
-            v-bind:value="service.label"
+            v-bind:label="service.label"
             v-on:input="onEditServiceLabel"
         />
         <icon-selector
