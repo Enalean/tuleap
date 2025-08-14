@@ -30,7 +30,7 @@
                 <template v-slot:is_active>
                     <service-is-active
                         id="project-service-add-modal-active"
-                        v-bind:value="service.is_active"
+                        v-bind:is_active="service.is_active"
                     />
                 </template>
                 <template v-slot:shortname v-if="is_default_template">

@@ -38,7 +38,7 @@
         />
         <service-is-active
             id="project-service-edit-modal-active"
-            v-bind:value="service.is_active"
+            v-bind:is_active="service.is_active"
         />
         <div class="tlp-property" v-if="service.short_name">
             <label class="tlp-label">{{ $gettext("Short name") }}</label>
