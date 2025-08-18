@@ -63,15 +63,42 @@ describe(`Taskboard`, function () {
             cy.wait("@getChildrenCards");
             cy.contains("[data-test=child-card]", "Golden Wrench");
 
+            const quality_sunshine_swimlane = this.taskboard_swimlanes.find(
+                (swimlane: Card) => swimlane.label === "Quality Sunshine",
+            );
+            const elastic_notorious_swimlane = this.taskboard_swimlanes.find(
+                (swimlane: Card) => swimlane.label === "Elastic Notorious",
+            );
+            const todo_column = this.taskboard_columns.find(
+                (column: ColumnDefinition) => column.label === "Todo",
+            );
             const on_going_column = this.taskboard_columns.find(
                 (column: ColumnDefinition) => column.label === "On Going",
             );
             const review_column = this.taskboard_columns.find(
                 (column: ColumnDefinition) => column.label === "Review",
             );
-            const quality_sunshine_swimlane = this.taskboard_swimlanes.find(
-                (swimlane: Card) => swimlane.label === "Quality Sunshine",
+            const done_column = this.taskboard_columns.find(
+                (column: ColumnDefinition) => column.label === "Done",
             );
+            cy.log("Solo cards are displayed in the column corresponding to their status");
+            cy.get(
+                `[data-column-id=${done_column.id}][data-swimlane-id=${elastic_notorious_swimlane.id}]`,
+            ).within(() => {
+                cy.get("[data-test=card-with-remaining-effort]").contains("Elastic Notorious");
+            });
+
+            cy.log(
+                "Cards with children have their child displayed in the status of the child, and parent card is in the left column",
+            );
+            cy.get(
+                `[data-column-id=${todo_column.id}][data-swimlane-id=${quality_sunshine_swimlane.id}]`,
+            ).within(() => {
+                cy.get("[data-test=child-card]").contains("Golden Wrench");
+                cy.get("[data-test=child-card]").contains("Vital Emerald");
+            });
+            cy.get("[data-test=taskboard-cell-swimlane-header]").contains("Quality Sunshine");
+
             cy.get(
                 `[data-column-id=${on_going_column.id}][data-swimlane-id=${quality_sunshine_swimlane.id}]`,
             ).within(() => {

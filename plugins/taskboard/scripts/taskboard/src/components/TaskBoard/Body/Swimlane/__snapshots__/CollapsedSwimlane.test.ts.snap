@@ -9,6 +9,7 @@ exports[`CollapsedSwimlane displays a toggle icon and a card with minimal inform
   <div
     class="taskboard-cell taskboard-cell-swimlane-header"
     data-navigation="cell"
+    data-test="taskboard-cell-swimlane-header"
   >
     
     <button
