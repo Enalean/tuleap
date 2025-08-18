@@ -94,13 +94,13 @@ function addFolderToTheRightPlace(
         nearest_sibling = folder_siblings[folder_siblings.length - 1];
 
         const nearest_sibling_index = state.folder_content.findIndex(
-            (item) => item.id === nearest_sibling.id,
+            (item) => nearest_sibling !== undefined && item.id === nearest_sibling.id,
         );
 
         state.folder_content.splice(nearest_sibling_index + 1, 0, new_item);
     } else if (nearest_sibling !== undefined) {
         const nearest_sibling_index = state.folder_content.findIndex(
-            (item) => item.id === nearest_sibling.id,
+            (item) => nearest_sibling !== undefined && item.id === nearest_sibling.id,
         );
 
         state.folder_content.splice(nearest_sibling_index, 0, new_item);
@@ -122,7 +122,7 @@ export function addJustCreatedItemToFolderContent(state: State, new_item: Folder
         parent.level = 0;
     }
 
-    new_item.level = parent !== undefined ? parent.level + 1 : 0;
+    new_item.level = parent !== undefined && parent.level !== undefined ? parent.level + 1 : 0;
 
     if (!isFolder(new_item)) {
         return addDocumentToTheRightPlace(state, new_item, parent);
@@ -146,7 +146,9 @@ export function appendSubFolderContent(
     }
 
     sub_items.forEach((item) => {
-        item.level = parent_folder.level + 1;
+        if (parent_folder.level !== undefined) {
+            item.level = parent_folder.level + 1;
+        }
     });
 
     const filtered_sub_items = sub_items.filter(
@@ -164,18 +166,15 @@ export function appendSubFolderContent(
         const folder = findAncestorFoldingFolder(state, folder_id);
 
         if (folder !== undefined) {
-            state.folded_by_map[Number.parseInt(folder[0], 10)].push(...children_ids);
+            state.folded_by_map[Number.parseInt(folder, 10)].push(...children_ids);
         }
     }
 }
 
-function findAncestorFoldingFolder(
-    state: State,
-    folder_id: number,
-): [string, number[]] | undefined {
-    return Object.entries(state.folded_by_map).find(([folder_key]) => {
-        return state.folded_by_map[folder_key].includes(folder_id);
-    });
+function findAncestorFoldingFolder(state: State, folder_id: number): string | undefined {
+    return Object.keys(state.folded_by_map).find((key: string) =>
+        state.folded_by_map[Number.parseInt(key, 10)].includes(folder_id),
+    );
 }
 
 function isParentFoldedByOnOfIsAncestors(state: State, parent_folder: FolderContentItem): boolean {

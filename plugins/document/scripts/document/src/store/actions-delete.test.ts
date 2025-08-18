@@ -36,6 +36,7 @@ import type { TestingPinia } from "@pinia/testing";
 import { createTestingPinia } from "@pinia/testing";
 import { defineStore } from "pinia";
 import { FetchWrapperError } from "@tuleap/tlp-fetch";
+import type { ClipboardStore } from "../stores/types";
 
 let pinia: TestingPinia;
 
@@ -86,7 +87,9 @@ describe("actions-delete", () => {
 
             await deleteItem(context, {
                 item: file_item,
-                clipboard: { emptyClipboardAfterItemDeletion: empty_clipboard },
+                clipboard: {
+                    emptyClipboardAfterItemDeletion: empty_clipboard,
+                } as unknown as ClipboardStore,
             });
             expect(deleteFile).toHaveBeenCalledWith(file_item);
             expect(emitter.emit).toHaveBeenCalledWith("item-has-just-been-deleted");
@@ -104,7 +107,9 @@ describe("actions-delete", () => {
 
             await deleteItem(context, {
                 item: link_item,
-                clipboard: { emptyClipboardAfterItemDeletion: empty_clipboard },
+                clipboard: {
+                    emptyClipboardAfterItemDeletion: empty_clipboard,
+                } as unknown as ClipboardStore,
             });
             expect(emitter.emit).toHaveBeenCalledWith("item-has-just-been-deleted");
             expect(empty_clipboard).toHaveBeenCalled();
@@ -122,7 +127,9 @@ describe("actions-delete", () => {
 
             await deleteItem(context, {
                 item: embedded_file_item,
-                clipboard: { emptyClipboardAfterItemDeletion: empty_clipboard },
+                clipboard: {
+                    emptyClipboardAfterItemDeletion: empty_clipboard,
+                } as unknown as ClipboardStore,
             });
             expect(deleteEmbeddedFile).toHaveBeenCalledWith(embedded_file_item);
             expect(emitter.emit).toHaveBeenCalledWith("item-has-just-been-deleted");
@@ -143,7 +150,9 @@ describe("actions-delete", () => {
 
             await deleteItem(context, {
                 item: wiki_item,
-                clipboard: { emptyClipboardAfterItemDeletion: empty_clipboard },
+                clipboard: {
+                    emptyClipboardAfterItemDeletion: empty_clipboard,
+                } as unknown as ClipboardStore,
                 additional_wiki_options: additional_options,
             });
             expect(deleteWiki).toHaveBeenCalledWith(wiki_item, additional_options);
@@ -163,7 +172,9 @@ describe("actions-delete", () => {
 
             await deleteItem(context, {
                 item: empty_doc_item,
-                clipboard: { emptyClipboardAfterItemDeletion: empty_clipboard },
+                clipboard: {
+                    emptyClipboardAfterItemDeletion: empty_clipboard,
+                } as unknown as ClipboardStore,
             });
             expect(deleteEmptyDocument).toHaveBeenCalledWith(empty_doc_item);
             expect(emitter.emit).toHaveBeenCalledWith("item-has-just-been-deleted");
@@ -182,7 +193,9 @@ describe("actions-delete", () => {
 
             await deleteItem(context, {
                 item: folder_item,
-                clipboard: { emptyClipboardAfterItemDeletion: empty_clipboard },
+                clipboard: {
+                    emptyClipboardAfterItemDeletion: empty_clipboard,
+                } as unknown as ClipboardStore,
             });
             expect(deleteFolder).toHaveBeenCalledWith(folder_item);
             expect(emitter.emit).toHaveBeenCalledWith("item-has-just-been-deleted");
@@ -201,7 +214,9 @@ describe("actions-delete", () => {
 
             await deleteItem(context, {
                 item: other_item,
-                clipboard: { emptyClipboardAfterItemDeletion: empty_clipboard },
+                clipboard: {
+                    emptyClipboardAfterItemDeletion: empty_clipboard,
+                } as unknown as ClipboardStore,
             });
             expect(deleteOtherType).toHaveBeenCalledWith(other_item);
             expect(emitter.emit).toHaveBeenCalledWith("item-has-just-been-deleted");
@@ -219,7 +234,9 @@ describe("actions-delete", () => {
 
             await deleteItem(context, {
                 item: item_to_delete,
-                clipboard: { emptyClipboardAfterItemDeletion: empty_clipboard },
+                clipboard: {
+                    emptyClipboardAfterItemDeletion: empty_clipboard,
+                } as unknown as ClipboardStore,
             });
 
             expect(emitter.emit).toHaveBeenCalledWith("item-has-just-been-deleted");
@@ -245,7 +262,9 @@ describe("actions-delete", () => {
 
             await deleteItem(context, {
                 item: folder_item,
-                clipboard: { emptyClipboardAfterItemDeletion: empty_clipboard },
+                clipboard: {
+                    emptyClipboardAfterItemDeletion: empty_clipboard,
+                } as unknown as ClipboardStore,
             });
 
             expect(context.commit).toHaveBeenCalledWith(
@@ -271,7 +290,9 @@ describe("actions-delete", () => {
 
             await deleteItem(context, {
                 item: folder_item,
-                clipboard: { emptyClipboardAfterItemDeletion: empty_clipboard },
+                clipboard: {
+                    emptyClipboardAfterItemDeletion: empty_clipboard,
+                } as unknown as ClipboardStore,
             });
 
             expect(context.commit).toHaveBeenCalledWith("error/setModalError", "not found");

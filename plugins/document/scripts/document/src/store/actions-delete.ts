@@ -27,7 +27,7 @@ import {
     deleteWiki,
 } from "../api/rest-querier";
 import { handleErrorsForDeletionModal } from "./actions-helpers/handle-errors";
-import type { ActionContext, Store } from "vuex";
+import type { ActionContext } from "vuex";
 import type { Item, RootState } from "../type";
 import {
     isEmbedded,
@@ -39,6 +39,7 @@ import {
     isWiki,
 } from "../helpers/type-check-helper";
 import emitter from "../helpers/emitter";
+import type { ClipboardStore } from "../stores/types";
 
 export interface RootActionsDelete {
     readonly deleteItem: typeof deleteItem;
@@ -46,7 +47,7 @@ export interface RootActionsDelete {
 
 export interface DeleteItemPayload {
     item: Item;
-    clipboard: Store<"clipboard">;
+    clipboard: ClipboardStore;
     additional_wiki_options?: {
         delete_associated_wiki_page: boolean;
     };
