@@ -26,13 +26,31 @@ export function retrieveSelectedOwner(owner_username: string): Promise<RestUser>
     return user_response.match(
         (matching_users: RestUser[]): RestUser => {
             if (matching_users.length === 0) {
-                return { display_name: "", username: "", id: "", realname: "" };
+                return {
+                    avatar_url: "",
+                    has_avatar: false,
+                    is_anonymous: false,
+                    user_url: "",
+                    display_name: "",
+                    username: "",
+                    id: "",
+                    realname: "",
+                };
             }
 
             return matching_users[0];
         },
         (): RestUser => {
-            return { display_name: owner_username, username: "", id: "", realname: "" };
+            return {
+                avatar_url: "",
+                has_avatar: false,
+                is_anonymous: false,
+                user_url: "",
+                display_name: owner_username,
+                username: "",
+                id: "",
+                realname: "",
+            };
         },
     );
 }

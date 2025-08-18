@@ -18,7 +18,7 @@ import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import type { Mock } from "vitest";
+import type { MockInstance } from "vitest";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { errAsync, okAsync } from "neverthrow";
 import HistoryVersions from "./HistoryVersions.vue";
@@ -44,9 +44,9 @@ import * as VersionRestQuerier from "../../api/version-rest-querier";
 vi.useFakeTimers();
 
 describe("HistoryVersions", () => {
-    let getAllFileVersionHistory: Mock;
-    let getAllLinkVersionHistory: Mock;
-    let getAllEmbeddedFileVersionHistory: Mock;
+    let getAllFileVersionHistory: MockInstance;
+    let getAllLinkVersionHistory: MockInstance;
+    let getAllEmbeddedFileVersionHistory: MockInstance;
 
     function getWrapper(item: Item): VueWrapper {
         return shallowMount(HistoryVersions, {

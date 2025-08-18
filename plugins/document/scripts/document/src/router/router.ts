@@ -78,6 +78,9 @@ export const routes: RouteRecordRaw[] = [
         path: "/versions/:item_id",
         name: "versions",
         component: DisplayVersions,
+        props: (route) => ({
+            item_id: Number(route.params.item_id),
+        }),
     },
 ];
 

@@ -157,17 +157,16 @@ function showConfirmationModal(): void {
 }
 
 const { success } = inject(FEEDBACK, noop_feedack_handler);
-const gettext_provider = useGettext();
+const { $gettext, interpolate } = useGettext();
 
 function onConfirmDeletion(): void {
     is_deleting.value = true;
     deleteEmbeddedFileVersion(props.version.id).match(
         () => {
             success(
-                gettext_provider.interpolate(
-                    gettext_provider.$gettext("Version %{ number } has been successfully deleted"),
-                    { number: props.version.number },
-                ),
+                interpolate($gettext("Version %{ number } has been successfully deleted"), {
+                    number: props.version.number,
+                }),
             );
             props.loadVersions();
         },

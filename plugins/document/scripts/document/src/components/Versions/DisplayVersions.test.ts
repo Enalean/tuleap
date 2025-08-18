@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import {
     TYPE_EMBEDDED,
     TYPE_EMPTY,
@@ -31,8 +31,6 @@ import DisplayVersions from "./DisplayVersions.vue";
 import HistoryVersions from "./HistoryVersions.vue";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 import type { Item } from "../../type";
-import * as router from "vue-router";
-import type { RouteLocationNormalizedLoaded } from "vue-router";
 import { SHOULD_DISPLAY_SOURCE_COLUMN_FOR_VERSIONS } from "../../injection-keys";
 
 vi.mock("vue-router");
@@ -40,12 +38,6 @@ vi.mock("vue-router");
 vi.useFakeTimers();
 
 describe("DisplayVersions", () => {
-    beforeEach(() => {
-        vi.spyOn(router, "useRoute").mockReturnValue({
-            params: { item_id: "101" },
-        } as unknown as RouteLocationNormalizedLoaded);
-    });
-
     it.each([
         [TYPE_FOLDER, false],
         [TYPE_FILE, true],
@@ -62,6 +54,9 @@ describe("DisplayVersions", () => {
         });
 
         const wrapper = shallowMount(DisplayVersions, {
+            props: {
+                item_id: 101,
+            },
             global: {
                 ...getGlobalTestOptions({
                     actions: {

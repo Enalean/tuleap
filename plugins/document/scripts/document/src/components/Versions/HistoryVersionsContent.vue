@@ -19,12 +19,12 @@
   -->
 
 <template>
-    <tbody v-if="is_embedded">
+    <tbody v-if="isEmbedded(item)">
         <history-versions-content-row-for-embedded-file
             v-for="version in versions"
             v-bind:key="version.id"
             v-bind:item="item"
-            v-bind:version="version"
+            v-bind:version="embeddedFileVersion(version)"
             v-bind:has_more_than_one_version="versions.length > 1"
             v-bind:load-versions="loadVersions"
         />
@@ -34,7 +34,7 @@
             v-for="version in versions"
             v-bind:key="version.id"
             v-bind:item="item"
-            v-bind:version="version"
+            v-bind:version="fileHistory(version)"
             v-bind:has_more_than_one_version="versions.length > 1"
             v-bind:load-versions="loadVersions"
         />
@@ -42,17 +42,34 @@
 </template>
 
 <script setup lang="ts">
-import type { Embedded, FileHistory, ItemFile } from "../../type";
+import type { Embedded, EmbeddedFileVersion, FileHistory, ItemFile } from "../../type";
 import HistoryVersionsContentRow from "./HistoryVersionsContentRow.vue";
-import { computed } from "vue";
 import { isEmbedded } from "../../helpers/type-check-helper";
 import HistoryVersionsContentRowForEmbeddedFile from "./HistoryVersionsContentRowForEmbeddedFile.vue";
 
-const props = defineProps<{
+defineProps<{
     item: ItemFile | Embedded;
-    versions: readonly FileHistory[];
+    versions: ReadonlyArray<FileHistory | EmbeddedFileVersion>;
     loadVersions: () => void;
 }>();
 
-const is_embedded = computed((): boolean => isEmbedded(props.item));
+function isEmbeddedVersion(item: FileHistory | EmbeddedFileVersion): item is EmbeddedFileVersion {
+    return "open_href" in item;
+}
+
+function embeddedFileVersion(item: FileHistory | EmbeddedFileVersion): EmbeddedFileVersion {
+    if (isEmbeddedVersion(item)) {
+        return item;
+    }
+
+    throw Error("Expected an EmbeddedFileVersion but got a FileHistory");
+}
+
+function fileHistory(item: FileHistory | EmbeddedFileVersion): FileHistory {
+    if (!isEmbeddedVersion(item)) {
+        return item;
+    }
+
+    throw Error("Expected a FileHistory but got an EmbeddedFileVersion");
+}
 </script>

@@ -60,7 +60,7 @@
                             v-bind:versions="link_versions"
                         />
                         <history-versions-content
-                            v-else
+                            v-else-if="isFile(item) || isEmbedded(item)"
                             v-bind:item="item"
                             v-bind:versions="file_versions"
                             v-bind:load-versions="loadVersions"
@@ -84,10 +84,13 @@ import {
     getAllFileVersionHistory,
     getAllLinkVersionHistory,
 } from "../../api/version-rest-querier";
-import { isEmbedded, isLink } from "../../helpers/type-check-helper";
+import { isEmbedded, isFile, isLink } from "../../helpers/type-check-helper";
 import HistoryVersionsContentForLink from "./HistoryVersionsContentForLink.vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { SHOULD_DISPLAY_SOURCE_COLUMN_FOR_VERSIONS } from "../../injection-keys";
+import { useGettext } from "vue3-gettext";
+
+const { $gettext } = useGettext();
 
 const props = defineProps<{ item: Item }>();
 

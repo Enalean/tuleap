@@ -104,6 +104,10 @@ export interface RestUser {
     readonly display_name: string;
     readonly username: string;
     readonly realname: string;
+    readonly has_avatar: boolean;
+    readonly avatar_url: string;
+    readonly user_url: string;
+    readonly is_anonymous: boolean;
 }
 
 export function getUserByName(username: string): ResultAsync<RestUser[], Fault> {

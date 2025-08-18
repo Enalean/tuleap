@@ -161,11 +161,9 @@ const should_display_source_column_for_versions = strictInject(
     SHOULD_DISPLAY_SOURCE_COLUMN_FOR_VERSIONS,
 );
 
-const gettext_provider = useGettext();
+const { $gettext, interpolate } = useGettext();
 const source_text = computed((): string =>
-    props.version.authoring_tool.length > 0
-        ? props.version.authoring_tool
-        : gettext_provider.$gettext("Uploaded"),
+    props.version.authoring_tool.length > 0 ? props.version.authoring_tool : $gettext("Uploaded"),
 );
 
 let modal: Modal | null = null;
@@ -183,10 +181,9 @@ function onConfirmDeletion(): void {
     deleteFileVersion(props.version.id).match(
         () => {
             success(
-                gettext_provider.interpolate(
-                    gettext_provider.$gettext("Version %{ number } has been successfully deleted"),
-                    { number: props.version.number },
-                ),
+                interpolate($gettext("Version %{ number } has been successfully deleted"), {
+                    number: props.version.number,
+                }),
             );
             props.loadVersions();
         },

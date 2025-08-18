@@ -34,6 +34,7 @@
 <script setup lang="ts">
 import UserName from "./UserName.vue";
 import type { User } from "../../type";
+import type { RestUser } from "../../api/rest-querier";
 
-defineProps<{ user: User }>();
+defineProps<{ user: User | RestUser }>();
 </script>
