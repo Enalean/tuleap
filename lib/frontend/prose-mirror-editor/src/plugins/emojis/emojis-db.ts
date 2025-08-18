@@ -20,8 +20,13 @@ import unicode_db from "./unicode-db.json";
 
 type UnicodeDBKey = keyof typeof unicode_db;
 
+const map: Map<string, string> = new Map();
+
 export function getEmojiDB(): ReadonlyMap<string, string> {
-    const map = new Map();
+    if (map.size > 0) {
+        return map;
+    }
+
     Object.keys(unicode_db).forEach((key) => {
         const underscore_key = key.trim().replaceAll(" ", "_").replaceAll(":", "").toLowerCase();
         const dash_key = key.trim().replaceAll(" ", "-").replaceAll(":", "").toLowerCase();
