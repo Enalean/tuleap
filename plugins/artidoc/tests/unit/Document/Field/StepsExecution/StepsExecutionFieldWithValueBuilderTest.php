@@ -20,72 +20,73 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Artidoc\Document\Field\StepDefinition;
+namespace Tuleap\Artidoc\Document\Field\StepsExecution;
 
 use Codendi_HTMLPurifier;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use Tracker_Artifact_ChangesetValue_Text;
 use Tuleap\Artidoc\Document\Field\ConfiguredField;
 use Tuleap\Artidoc\Domain\Document\Section\Field\DisplayType;
-use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StepsDefinitionFieldWithValue;
-use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StepValue;
+use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StepsExecutionFieldWithValue;
+use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StepResultValue;
 use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\Option\Option;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\TestManagement\Step\Definition\Field\StepsDefinition;
-use Tuleap\TestManagement\Step\Definition\Field\StepsDefinitionChangesetValue;
+use Tuleap\TestManagement\Step\Execution\Field\StepsExecution;
+use Tuleap\TestManagement\Step\Execution\Field\StepsExecutionChangesetValue;
+use Tuleap\TestManagement\Step\Execution\StepResult;
 use Tuleap\TestManagement\Step\Step;
-use Tuleap\TestManagement\Test\Builders\ChangesetValueStepsDefinitionTestBuilder;
-use Tuleap\TestManagement\Test\Builders\StepsDefinitionFieldBuilder;
+use Tuleap\TestManagement\Test\Builders\ChangesetValueStepsExecutionTestBuilder;
+use Tuleap\TestManagement\Test\Builders\StepsExecutionFieldBuilder;
 use Tuleap\Tracker\Artifact\ChangesetValue\Text\TextValueInterpreter;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
 #[DisableReturnValueGenerationForTestDoubles]
-final class StepsDefinitionFieldWithValueBuilderTest extends TestCase
+final class StepsExecutionFieldWithValueBuilderTest extends TestCase
 {
-    private StepsDefinition $field;
+    private StepsExecution $field;
 
     #[\Override]
     protected function setUp(): void
     {
-        $this->field = StepsDefinitionFieldBuilder::aStepsDefinitionField(653)
+        $this->field = StepsExecutionFieldBuilder::aStepsExecutionField(653)
             ->inTracker(TrackerTestBuilder::aTracker()->withProject(ProjectTestBuilder::aProject()->build())->build())
             ->build();
     }
 
-    private function buildStepDefinitionFieldWithValue(?StepsDefinitionChangesetValue $value): StepsDefinitionFieldWithValue
+    private function buildStepsExecutionFieldWithValue(?StepsExecutionChangesetValue $value): StepsExecutionFieldWithValue
     {
         $purifier = Codendi_HTMLPurifier::instance();
-        $builder  = new StepsDefinitionFieldWithValueBuilder(new TextValueInterpreter($purifier, CommonMarkInterpreter::build($purifier)));
+        $builder  = new StepsExecutionFieldWithValueBuilder(new TextValueInterpreter($purifier, CommonMarkInterpreter::build($purifier)));
 
-        return $builder->buildStepsDefinitionFieldWithValue(new ConfiguredField($this->field, DisplayType::BLOCK), $value);
+        return $builder->buildStepsExecutionFieldWithValue(new ConfiguredField($this->field, DisplayType::BLOCK), $value);
     }
 
     public function testItReturnsEmptyValueWhenChangesetValueIsNull(): void
     {
         self::assertEquals(
-            new StepsDefinitionFieldWithValue(
+            new StepsExecutionFieldWithValue(
                 $this->field->getLabel(),
                 DisplayType::BLOCK,
                 [],
             ),
-            $this->buildStepDefinitionFieldWithValue(null),
+            $this->buildStepsExecutionFieldWithValue(null),
         );
     }
 
     public function testItReturnsEmptyWhenChangesetValueIsEmpty(): void
     {
         self::assertEquals(
-            new StepsDefinitionFieldWithValue(
+            new StepsExecutionFieldWithValue(
                 $this->field->getLabel(),
                 DisplayType::BLOCK,
                 [],
             ),
-            $this->buildStepDefinitionFieldWithValue(
-                ChangesetValueStepsDefinitionTestBuilder::aValue(1, ChangesetTestBuilder::aChangeset(85)->build(), $this->field)
-                    ->withSteps([])
+            $this->buildStepsExecutionFieldWithValue(
+                ChangesetValueStepsExecutionTestBuilder::aValue(1, ChangesetTestBuilder::aChangeset(85)->build(), $this->field)
+                    ->withStepsResults([])
                     ->build(),
             ),
         );
@@ -94,39 +95,41 @@ final class StepsDefinitionFieldWithValueBuilderTest extends TestCase
     public function testItReturnsOptionNothingWhenNoExpectedResults(): void
     {
         self::assertEquals(
-            new StepsDefinitionFieldWithValue(
+            new StepsExecutionFieldWithValue(
                 $this->field->getLabel(),
                 DisplayType::BLOCK,
                 [
-                    new StepValue(
+                    new StepResultValue(
                         'Step 1',
                         Option::nothing(\Psl\Type\string()),
+                        'passed',
                     ),
-                    new StepValue(
+                    new StepResultValue(
                         'Step 2',
                         Option::nothing(\Psl\Type\string()),
+                        'notrun',
                     ),
                 ],
             ),
-            $this->buildStepDefinitionFieldWithValue(
-                ChangesetValueStepsDefinitionTestBuilder::aValue(1, ChangesetTestBuilder::aChangeset(85)->build(), $this->field)
-                    ->withSteps([
-                        new Step(
+            $this->buildStepsExecutionFieldWithValue(
+                ChangesetValueStepsExecutionTestBuilder::aValue(1, ChangesetTestBuilder::aChangeset(85)->build(), $this->field)
+                    ->withStepsResults([
+                        new StepResult(new Step(
                             54,
                             'Step 1',
                             Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT,
                             null,
                             Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT,
                             1,
-                        ),
-                        new Step(
+                        ), 'passed'),
+                        new StepResult(new Step(
                             55,
                             'Step 2',
                             Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT,
                             null,
                             Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT,
                             2,
-                        ),
+                        ), 'notrun'),
                     ])
                     ->build(),
             ),
@@ -136,29 +139,30 @@ final class StepsDefinitionFieldWithValueBuilderTest extends TestCase
     public function testItReturnsInterpretedTextContent(): void
     {
         self::assertEquals(
-            new StepsDefinitionFieldWithValue(
+            new StepsExecutionFieldWithValue(
                 $this->field->getLabel(),
                 DisplayType::BLOCK,
                 [
-                    new StepValue(
+                    new StepResultValue(
                         <<<HTML
                         <p><em>Use the feature</em></p>\n
                         HTML,
                         Option::fromValue('<p>It should work</p>'),
+                        'blocked'
                     ),
                 ],
             ),
-            $this->buildStepDefinitionFieldWithValue(
-                ChangesetValueStepsDefinitionTestBuilder::aValue(1, ChangesetTestBuilder::aChangeset(85)->build(), $this->field)
-                    ->withSteps([
-                        new Step(
+            $this->buildStepsExecutionFieldWithValue(
+                ChangesetValueStepsExecutionTestBuilder::aValue(1, ChangesetTestBuilder::aChangeset(85)->build(), $this->field)
+                    ->withStepsResults([
+                        new StepResult(new Step(
                             54,
                             '*Use the feature*',
                             Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT,
                             '<p>It should work</p>',
                             Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT,
                             1,
-                        ),
+                        ), 'blocked'),
                     ])
                     ->build(),
             ),

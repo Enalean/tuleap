@@ -22,17 +22,21 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\REST\v1\ArtifactSection\Field;
 
-enum FieldType: string
+use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StepResultValue;
+
+/**
+ * @psalm-immutable
+ */
+final readonly class StepResultValueRepresentation
 {
-    case TEXT             = 'text';
-    case USER_GROUPS_LIST = 'user_groups_list';
-    case STATIC_LIST      = 'static_list';
-    case USER_LIST        = 'user_list';
-    case ARTIFACT_LINK    = 'links';
-    case NUMERIC          = 'numeric';
-    case USER             = 'user';
-    case DATE             = 'date';
-    case PERMISSIONS      = 'permissions';
-    case STEPS_DEFINITION = 'steps_definition';
-    case STEPS_EXECUTION  = 'steps_execution';
+    public string $description;
+    public string $expected_results;
+    public string $status;
+
+    public function __construct(StepResultValue $value)
+    {
+        $this->description      = $value->description;
+        $this->expected_results = $value->expected_results->unwrapOr('');
+        $this->status           = $value->status;
+    }
 }

@@ -53,7 +53,8 @@ use Tuleap\Artidoc\Document\Field\List\UserGroupListWithValueBuilder;
 use Tuleap\Artidoc\Document\Field\List\UserListFieldWithValueBuilder;
 use Tuleap\Artidoc\Document\Field\Numeric\NumericFieldWithValueBuilder;
 use Tuleap\Artidoc\Document\Field\Permissions\PermissionsOnArtifactFieldWithValueBuilder;
-use Tuleap\Artidoc\Document\Field\StepDefinition\StepsDefinitionFieldWithValueBuilder;
+use Tuleap\Artidoc\Document\Field\StepsDefinition\StepsDefinitionFieldWithValueBuilder;
+use Tuleap\Artidoc\Document\Field\StepsExecution\StepsExecutionFieldWithValueBuilder;
 use Tuleap\Artidoc\Document\Field\SuitableFieldRetriever;
 use Tuleap\Artidoc\Document\Field\User\UserFieldWithValueBuilder;
 use Tuleap\Artidoc\Document\Tracker\NoSemanticDescriptionFault;
@@ -84,7 +85,8 @@ use Tuleap\Artidoc\Domain\Document\Section\Field\FieldIsTitleSemanticFault;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldNotFoundFault;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldNotSupportedFault;
 use Tuleap\Artidoc\Domain\Document\Section\Field\LinkFieldMustBeDisplayedInBlockFault;
-use Tuleap\Artidoc\Domain\Document\Section\Field\StepDefinitionFieldMustBeDisplayedInBlockFault;
+use Tuleap\Artidoc\Domain\Document\Section\Field\StepsDefinitionFieldMustBeDisplayedInBlockFault;
+use Tuleap\Artidoc\Domain\Document\Section\Field\StepsExecutionFieldMustBeDisplayedInBlockFault;
 use Tuleap\Artidoc\Domain\Document\Section\Field\TextFieldMustBeDisplayedInBlockFault;
 use Tuleap\Artidoc\Domain\Document\Section\Freetext\Identifier\FreetextIdentifierFactory;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifierFactory;
@@ -409,9 +411,13 @@ final class ArtidocResource extends AuthenticatedResource
                             400,
                             dgettext('tuleap-artidoc', "Text field must use 'block' display type."),
                         ),
-                        StepDefinitionFieldMustBeDisplayedInBlockFault::class => new I18NRestException(
+                        StepsDefinitionFieldMustBeDisplayedInBlockFault::class => new I18NRestException(
                             400,
-                            dgettext('tuleap-artidoc', "Step definition field must use 'block' display type."),
+                            dgettext('tuleap-artidoc', "Steps definition field must use 'block' display type."),
+                        ),
+                        StepsExecutionFieldMustBeDisplayedInBlockFault::class => new I18NRestException(
+                            400,
+                            dgettext('tuleap-artidoc', "Steps execution field must use 'block' display type."),
                         ),
                         TrackerNotFoundFault::class => new I18NRestException(
                             400,
@@ -560,6 +566,7 @@ final class ArtidocResource extends AuthenticatedResource
         $provide_user_avatar_url = new UserAvatarUrlProvider(new AvatarHashDao(), new ComputeAvatarHash());
         $user_manager            = UserManager::instance();
         $purifier                = Codendi_HTMLPurifier::instance();
+        $text_value_interpreter  = new TextValueInterpreter($purifier, CommonMarkInterpreter::build($purifier));
 
         return new ArtifactSectionRepresentationBuilder(
             new FileUploadDataProvider(
@@ -605,7 +612,8 @@ final class ArtidocResource extends AuthenticatedResource
                 ),
                 new DateFieldWithValueBuilder($user),
                 new PermissionsOnArtifactFieldWithValueBuilder(),
-                new StepsDefinitionFieldWithValueBuilder(new TextValueInterpreter($purifier, CommonMarkInterpreter::build($purifier))),
+                new StepsDefinitionFieldWithValueBuilder($text_value_interpreter),
+                new StepsExecutionFieldWithValueBuilder($text_value_interpreter),
             )
         );
     }

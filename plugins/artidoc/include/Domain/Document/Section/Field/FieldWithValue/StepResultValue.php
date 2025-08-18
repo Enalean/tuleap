@@ -20,17 +20,22 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Artidoc\Domain\Document\Section\Field;
+namespace Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue;
 
-use Tuleap\NeverThrow\Fault;
+use Tuleap\Option\Option;
 
 /**
  * @psalm-immutable
  */
-final readonly class StepDefinitionFieldMustBeDisplayedInBlockFault extends Fault
+final readonly class StepResultValue
 {
-    public static function build(): Fault
-    {
-        return new self("Step definition field must use 'block' display type.");
+    /**
+     * @param Option<string> $expected_results
+     */
+    public function __construct(
+        public string $description,
+        public Option $expected_results,
+        public string $status,
+    ) {
     }
 }
