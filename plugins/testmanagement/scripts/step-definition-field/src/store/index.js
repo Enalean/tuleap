@@ -17,19 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vue from "vue";
-import Vuex from "vuex";
 import * as mutations from "./mutations.js";
 import * as getters from "./getters.js";
 import state from "./state.js";
 
-Vue.use(Vuex);
+import { createStore } from "vuex";
 
-export function createStore() {
-    return new Vuex.Store({
-        state: {
-            ...state,
-        },
+export function createInitializedStore() {
+    return createStore({
+        state,
         mutations,
         getters,
     });

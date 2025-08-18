@@ -6,7 +6,7 @@
             "po": "scripts/testmanagement/po"
         }
     },
-    "gettext-vue": {
+    "gettext-vue3": {
         "step-definition-field": {
             "src": "scripts/step-definition-field/src",
             "po": "scripts/step-definition-field/po"

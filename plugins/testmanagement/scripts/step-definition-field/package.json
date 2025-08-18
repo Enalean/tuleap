@@ -12,9 +12,8 @@
     "@tuleap/tlp": "workspace:^",
     "@tuleap/tlp-fetch": "workspace:*",
     "@tuleap/vue3-gettext-init": "workspace:^",
-    "@vue/compat": "^3.5.13",
     "uuid": "^8.3.2",
-    "vue": "^3.3.4",
+    "vue": "^3.5.13",
     "vue-dompurify-html": "^5.2.0",
     "vue3-gettext": "2.4.0",
     "vuex": "^4.1.0"
@@ -23,7 +22,8 @@
     "@tuleap/build-system-configurator": "workspace:*",
     "@tuleap/po-gettext-plugin": "workspace:^",
     "@vue/test-utils": "^2.4.1",
-    "jquery": "^3.6.0"
+    "jquery": "^3.6.0",
+    "vue-loader": "^17.2.2"
   },
   "scripts": {
     "build": "webpack --config webpack.prod.js",
