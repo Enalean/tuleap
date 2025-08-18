@@ -64,9 +64,9 @@ final class RadioButtonFieldBuilder
         return $this;
     }
 
-    public function build(): \Tracker_FormElement_Field_Radiobutton
+    public function build(): \Tuleap\Tracker\FormElement\Field\List\RadioButtonField
     {
-        $field = new \Tracker_FormElement_Field_Radiobutton(
+        $field = new \Tuleap\Tracker\FormElement\Field\List\RadioButtonField(
             $this->id,
             $this->tracker->getId(),
             15,

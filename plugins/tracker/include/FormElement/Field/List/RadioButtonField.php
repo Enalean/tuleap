@@ -19,16 +19,25 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\FormElement\Field\List\SelectboxField;
+namespace Tuleap\Tracker\FormElement\Field\List;
 
-class Tracker_FormElement_Field_Radiobutton extends SelectboxField // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+use Override;
+use Tracker_Artifact_ChangesetValue;
+use Tracker_FormElement_Field_List_Bind_StaticValue_None;
+use Tracker_FormElement_Field_List_Value;
+use Tracker_FormElement_FieldVisitor;
+use Tuleap\Tracker\Artifact\Artifact;
+use WorkflowFactory;
+
+final class RadioButtonField extends SelectboxField
 {
+    #[Override]
     protected function fetchFieldContainerStart(string $id, string $name, string $data_target_fields_ids): string
     {
         return '';
     }
 
+    #[Override]
     protected function fetchFieldValue(Tracker_FormElement_Field_List_Value $value, $name, $is_selected)
     {
         if ($value->getId() == Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID) {
@@ -58,6 +67,7 @@ class Tracker_FormElement_Field_Radiobutton extends SelectboxField // phpcs:igno
         return $html;
     }
 
+    #[Override]
     protected function fetchFieldContainerEnd()
     {
         return '';
@@ -66,11 +76,13 @@ class Tracker_FormElement_Field_Radiobutton extends SelectboxField // phpcs:igno
     /**
      * @see Tracker_FormElement_Field::hasChanges()
      */
+    #[Override]
     public function hasChanges(Artifact $artifact, Tracker_Artifact_ChangesetValue $old_value, $new_value)
     {
         return parent::hasChanges($artifact, $old_value, $this->filterZeroWhenArray($new_value));
     }
 
+    #[Override]
     public function isNone($value)
     {
         return parent::isNone($this->filterZeroWhenArray($value));
@@ -81,21 +93,25 @@ class Tracker_FormElement_Field_Radiobutton extends SelectboxField // phpcs:igno
         return is_array($values) ? array_filter($values) : $values;
     }
 
+    #[Override]
     public static function getFactoryLabel()
     {
         return dgettext('tuleap-tracker', 'Radio button');
     }
 
+    #[Override]
     public static function getFactoryDescription()
     {
         return dgettext('tuleap-tracker', 'Radio button');
     }
 
+    #[Override]
     public static function getFactoryIconUseIt()
     {
         return $GLOBALS['HTML']->getImagePath('ic/ui-radio-buttons.png');
     }
 
+    #[Override]
     public static function getFactoryIconCreate()
     {
         return $GLOBALS['HTML']->getImagePath('ic/ui-radio-buttons-plus.png');
@@ -107,6 +123,7 @@ class Tracker_FormElement_Field_Radiobutton extends SelectboxField // phpcs:igno
      *
      * @return bool true if the change is allowed and successful
      */
+    #[Override]
     public function changeType($type)
     {
         if (in_array($type, ['msb', 'cb'])) {
@@ -119,6 +136,7 @@ class Tracker_FormElement_Field_Radiobutton extends SelectboxField // phpcs:igno
         return false;
     }
 
+    #[Override]
     public function accept(Tracker_FormElement_FieldVisitor $visitor)
     {
         return $visitor->visitRadiobutton($this);
