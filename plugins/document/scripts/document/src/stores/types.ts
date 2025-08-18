@@ -18,6 +18,9 @@
  */
 
 import type { Ref } from "vue";
+import type { PastePayload } from "./clipboard";
+import type { Folder, Item } from "../type";
+import type { Store } from "pinia";
 
 export interface ClipboardState {
     item_id: Ref<null | number>;
@@ -27,3 +30,20 @@ export interface ClipboardState {
     operation_type: Ref<null | string>;
     pasting_in_progress: Ref<boolean>;
 }
+
+export interface ClipboardGetters {}
+
+export interface ClipboardActions {
+    pasteItem(payload: PastePayload): Promise<void>;
+    pasteItemBeingMoved(destination_folder: Folder): Promise<void>;
+    pasteItemBeingCopied(destination_folder: Folder): Promise<Item>;
+    cutItem(item: Item): void;
+    copyItem(item: Item): void;
+    startNewClipboardOperation(item: Item, operationType: string): void;
+    emptyClipboardAfterItemDeletion(deleted_item: Item): void;
+    emptyClipboard(): void;
+    startPasting(): void;
+    pastingHasFailed(): void;
+}
+
+export type ClipboardStore = Store<"clipboard", ClipboardState, ClipboardGetters, ClipboardActions>;

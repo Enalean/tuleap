@@ -19,8 +19,8 @@
 
 import type { Pinia } from "pinia";
 import { defineStore } from "pinia";
-import type { ClipboardState } from "./types";
-import type { Folder, RootState, Item } from "../type";
+import type { ClipboardState, ClipboardStore } from "./types";
+import type { Folder, Item, RootState } from "../type";
 import {
     CLIPBOARD_OPERATION_COPY,
     CLIPBOARD_OPERATION_CUT,
@@ -54,16 +54,12 @@ function buildBaseStorageKey(project_id: string, user_id: string): string {
     return `document_clipboard_state_${project_id}_${user_id}_`;
 }
 
-// We are forced to rewrap defineStore() to make sure the shared items are properly scoped. Letting the type inference
-// retrieving the return type from defineStore() is fine here, hardcoding it will only bring us more work in the long
-// run for no advantages.
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function useClipboardStore(
     store: Store<RootState>,
     project_id: string,
     user_id: string,
     pinia?: Pinia | null | undefined,
-) {
+): ClipboardStore {
     const base_storage_key = buildBaseStorageKey(project_id, user_id);
     return defineStore("clipboard", {
         state: (): ClipboardState => ({

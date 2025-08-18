@@ -54,7 +54,7 @@ export async function handleErrorsForModal(
 }
 
 export async function handleErrorsForLock(
-    context: ActionContext<ErrorState, ErrorState>,
+    context: ActionContext<ErrorState, RootState>,
     exception: unknown,
 ): Promise<void> {
     try {

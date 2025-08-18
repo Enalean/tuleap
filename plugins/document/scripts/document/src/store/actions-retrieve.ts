@@ -133,6 +133,10 @@ export const loadFolder = (
             ? switchToFolderWeFoundInHierarchy(index_of_folder_in_hierarchy)
             : context.state.current_folder;
 
+        if (current_folder === null) {
+            throw new Error("current_folder cannot be null");
+        }
+
         return {
             is_folder_found_in_hierarchy,
             current_folder,
@@ -174,6 +178,10 @@ export const loadFolder = (
 
                 return folder;
             });
+        }
+
+        if (context.state.current_folder === null) {
+            throw new Error("current_folder cannot be null");
         }
 
         return Promise.resolve(context.state.current_folder);

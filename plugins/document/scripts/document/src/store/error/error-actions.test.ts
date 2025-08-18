@@ -68,12 +68,12 @@ describe(`Error module actions`, () => {
     });
 
     describe(`handleErrorsForLock`, () => {
-        let context: ActionContext<ErrorState, ErrorState>;
+        let context: ActionContext<ErrorState, RootState>;
 
         beforeEach(() => {
             context = {
                 commit: vi.fn(),
-            } as unknown as ActionContext<ErrorState, ErrorState>;
+            } as unknown as ActionContext<ErrorState, RootState>;
         });
 
         it(`when a message can be extracted from the FetchWrapperError,
