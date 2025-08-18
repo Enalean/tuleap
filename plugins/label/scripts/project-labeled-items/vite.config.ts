@@ -32,7 +32,7 @@ export default vite.defineAppConfig(
         build: {
             rollupOptions: {
                 input: {
-                    "widget-project-labeled-items": path.resolve(__dirname, "./src/index.js"),
+                    "widget-project-labeled-items": path.resolve(__dirname, "./src/index.ts"),
                 },
             },
         },

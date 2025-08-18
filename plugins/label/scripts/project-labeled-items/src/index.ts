@@ -23,6 +23,7 @@ import VueDOMPurifyHTML from "vue-dompurify-html";
 import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue3-gettext-init";
 import LabeledItemsList from "./LabeledItemsList.vue";
 import { createGettext } from "vue3-gettext";
+import { getAttributeOrThrow } from "@tuleap/dom";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const gettext = await initVueGettext(createGettext, (locale) => {
@@ -31,8 +32,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const widgets = document.getElementsByClassName("labeled-items-widget");
     for (const widget of widgets) {
+        if (!widget || !(widget instanceof HTMLElement)) {
+            return;
+        }
         createApp(LabeledItemsList, {
-            ...widget.dataset,
+            labels_id: getAttributeOrThrow(widget, "data-labels-id"),
+            project_id: getAttributeOrThrow(widget, "data-project-id"),
         })
             .use(gettext)
             .use(VueDOMPurifyHTML, {
