@@ -24,13 +24,13 @@ namespace Tuleap\TestManagement\Move;
 
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\TestManagement\Test\Builders\StepsDefinitionFieldBuilder;
-use Tuleap\TestManagement\Test\Builders\StepExecutionFieldBuilder;
+use Tuleap\TestManagement\Test\Builders\StepsExecutionFieldBuilder;
 use Tuleap\Tracker\Action\CollectMovableExternalFieldEvent;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TTMMovableFieldsCollectorTest extends TestCase
 {
-    public function testItMarksFieldAsFullyMigrateableWhenItIsAStepDefinitionField(): void
+    public function testItMarksFieldAsFullyMigratableWhenItIsAStepDefinitionField(): void
     {
         $event = new CollectMovableExternalFieldEvent(
             StepsDefinitionFieldBuilder::aStepsDefinitionField(1)->build(),
@@ -43,11 +43,11 @@ final class TTMMovableFieldsCollectorTest extends TestCase
         self::assertTrue($event->isFieldFullyMigrateable());
     }
 
-    public function testItMarksFieldAsNotMigrateableWhenItIsAStepExecutionField(): void
+    public function testItMarksFieldAsNotMigratableWhenItIsAStepExecutionField(): void
     {
         $event = new CollectMovableExternalFieldEvent(
-            StepExecutionFieldBuilder::aStepExecutionField(),
-            StepExecutionFieldBuilder::aStepExecutionField(),
+            StepsExecutionFieldBuilder::aStepsExecutionField(1)->build(),
+            StepsExecutionFieldBuilder::aStepsExecutionField(2)->build(),
         );
 
         TTMMovableFieldsCollector::collectMovableFields($event);

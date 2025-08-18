@@ -22,12 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\TestManagement\Move;
 
-use Tuleap\TestManagement\Step\Execution\Field\StepExecution;
+use Tuleap\TestManagement\Step\Execution\Field\StepsExecution;
 
 final class IsAStepExecutionFieldVerifier
 {
     public static function isAStepExecutionField(\Tracker_FormElement_Field $field): bool
     {
-        return $field instanceof StepExecution;
+        return $field instanceof StepsExecution;
     }
 }

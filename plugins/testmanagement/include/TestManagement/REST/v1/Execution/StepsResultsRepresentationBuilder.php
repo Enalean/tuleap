@@ -26,7 +26,7 @@ use Tuleap\TestManagement\REST\v1\DefinitionRepresentations\DefinitionRepresenta
 use Tuleap\TestManagement\REST\v1\ExecutionRepresentation;
 use Tuleap\TestManagement\REST\v1\StepResultRepresentation;
 use Tuleap\TestManagement\Step\Definition\Field\StepsDefinitionChangesetValue;
-use Tuleap\TestManagement\Step\Execution\Field\StepExecutionChangesetValue;
+use Tuleap\TestManagement\Step\Execution\Field\StepsExecutionChangesetValue;
 use Tuleap\TestManagement\Step\Execution\StepResult;
 use Tuleap\Tracker\Artifact\Artifact;
 
@@ -82,7 +82,7 @@ class StepsResultsRepresentationBuilder
         if ($execution_changeset_value === null) {
             return [];
         }
-        assert($execution_changeset_value instanceof StepExecutionChangesetValue);
+        assert($execution_changeset_value instanceof StepsExecutionChangesetValue);
 
         $definition_changeset_value = $this->getFieldChangeValue(
             $user,
@@ -103,7 +103,7 @@ class StepsResultsRepresentationBuilder
     /**
      * @param  string $field_name
      *
-     * @return null | StepsDefinitionChangesetValue | StepExecutionChangesetValue
+     * @return null | StepsDefinitionChangesetValue | StepsExecutionChangesetValue
      */
     private function getFieldChangeValue(PFUser $user, Artifact $execution, $field_name)
     {
@@ -121,7 +121,7 @@ class StepsResultsRepresentationBuilder
             return null;
         }
 
-        assert($value instanceof StepsDefinitionChangesetValue || $value instanceof StepExecutionChangesetValue);
+        assert($value instanceof StepsDefinitionChangesetValue || $value instanceof StepsExecutionChangesetValue);
 
         return $value;
     }

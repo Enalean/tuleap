@@ -22,7 +22,7 @@ namespace Tuleap\TestManagement\XML;
 
 use SimpleXMLElement;
 use Tuleap\TestManagement\Step\Definition\Field\StepsDefinition;
-use Tuleap\TestManagement\Step\Execution\Field\StepExecution;
+use Tuleap\TestManagement\Step\Execution\Field\StepsExecution;
 use XML_RNGValidator;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -161,7 +161,7 @@ final class ImportXMLFromTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
              </externalField>'
         );
 
-        $step_def = new StepExecution(
+        $step_def = new StepsExecution(
             0,
             0,
             0,

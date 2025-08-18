@@ -76,8 +76,8 @@ msgstr ""
 msgid "Enter the tracker id..."
 msgstr "Entrez l'id du tracker…"
 
-msgid "Execution result of a step"
-msgstr "Résultat d'exécution d'une étape"
+msgid "Execution result of steps"
+msgstr "Résultat d'exécution des étapes"
 
 msgid "Expected results"
 msgstr "Résultats attendus"
@@ -118,11 +118,11 @@ msgstr ""
 msgid "Start TestManagement"
 msgstr "Démarrer TestManagement"
 
-msgid "Step execution"
-msgstr "Exécution d'étapes"
-
 msgid "Steps definition"
 msgstr "Définition d'étapes"
+
+msgid "Steps execution"
+msgstr "Exécution d'étapes"
 
 msgid "Submit"
 msgstr "Valider"
