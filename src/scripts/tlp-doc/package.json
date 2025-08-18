@@ -46,7 +46,8 @@
   "scripts": {
     "typecheck": "tsc --noEmit",
     "storybook": "storybook dev -p 6006 -h localhost",
-    "build-storybook": "storybook build --docs"
+    "build-storybook": "storybook build --docs",
+    "test": "vitest"
   },
   "pnpm": {
     "overrides": {
