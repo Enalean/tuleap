@@ -18,47 +18,52 @@
  *
  */
 
-import VueRouter from "vue-router";
 import { shallowMount } from "@vue/test-utils";
 import * as rest_querier from "../../api/rest-querier";
 import SaveComparisonModal from "./SaveComparisonModal.vue";
-import store_options from "../../store/store_options";
-import { createStoreMock } from "../../support/store-wrapper.test-helper";
-import { createLocalVueForTests } from "../../support/local-vue";
+import { getGlobalTestOptions } from "../../support/global-options-for-tests";
 
 jest.useFakeTimers();
 
+const mockRoute = {};
+
+const mockRouter = {
+    push: jest.fn(),
+};
+
 describe("SaveComparisonModal", () => {
-    const error_message_selector = '[data-test-type="error-message"]';
-    let createComparison, $store, wrapper, router;
+    let createComparison, wrapper, notify_mock, hide_modal_mock;
 
-    beforeEach(async () => {
+    beforeEach(() => {
+        notify_mock = jest.fn();
+        hide_modal_mock = jest.fn();
+
         createComparison = jest.spyOn(rest_querier, "createComparison");
-        router = new VueRouter({
-            mode: "abstract", // Do not use hash or history that is shared between tests
-            routes: [
-                {
-                    path: "/",
-                },
-                {
-                    path: "/path/to/comparison",
-                    name: "ComparisonPage",
-                },
-            ],
-        });
-
-        $store = createStoreMock(store_options);
 
         wrapper = shallowMount(SaveComparisonModal, {
-            propsData: { base_baseline_id: 1, compared_to_baseline_id: 2 },
-            localVue: await createLocalVueForTests(),
-            router,
-            mocks: { $store },
+            props: { base_baseline_id: 1, compared_to_baseline_id: 2 },
+            global: {
+                ...getGlobalTestOptions({
+                    modules: {
+                        dialog_interface: {
+                            namespaced: true,
+                            mutations: {
+                                hideModal: hide_modal_mock,
+                                notify: notify_mock,
+                            },
+                        },
+                    },
+                }),
+                mocks: {
+                    $route: mockRoute,
+                    $router: mockRouter,
+                },
+            },
         });
     });
 
     it("does not show error message", () => {
-        expect(wrapper.find(error_message_selector).exists()).toBeFalsy();
+        expect(wrapper.find("[data-test-type=error-message]").exists()).toBeFalsy();
     });
 
     describe("saveComparison()", () => {
@@ -82,8 +87,10 @@ describe("SaveComparisonModal", () => {
         describe("when createComparison() fail", () => {
             it("shows an error message", async () => {
                 createComparisonReject("rejection");
+
                 await wrapper.vm.saveComparison();
-                expect(wrapper.find(error_message_selector).exists()).toBeTruthy();
+
+                expect(wrapper.find("[data-test-type=error-message]").exists()).toBeTruthy();
             });
         });
 
@@ -101,17 +108,18 @@ describe("SaveComparisonModal", () => {
             });
 
             it("Navigates to comparison page", () => {
-                expect(router.currentRoute.name).toBe("ComparisonPage");
-                expect(router.currentRoute.params).toStrictEqual({ comparison_id: 10 });
+                expect(mockRouter.push).toHaveBeenCalledWith({
+                    name: "ComparisonPage",
+                    params: {
+                        comparison_id: 10,
+                    },
+                });
             });
             it("notify user with successful message", () => {
-                expect($store.commit).toHaveBeenCalledWith(
-                    "dialog_interface/notify",
-                    expect.objectContaining({ class: "success" }),
-                );
+                expect(notify_mock).toHaveBeenCalled();
             });
             it("hides modal", () => {
-                expect($store.commit).toHaveBeenCalledWith("dialog_interface/hideModal");
+                expect(hide_modal_mock).toHaveBeenCalled();
             });
         });
     });

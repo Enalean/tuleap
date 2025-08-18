@@ -3,14 +3,14 @@ msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
 "PO-Revision-Date: \n"
-"Last-Translator: Nicolas Terray <nicolas.terray@enalean.com>\n"
+"Last-Translator: Joris MASSON <joris.masson@enalean.com>\n"
 "Language-Team: \n"
 "Language: fr_FR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.3\n"
+"X-Generator: Poedit 3.6\n"
 
 msgid "Administration"
 msgstr "Administration"
@@ -19,22 +19,19 @@ msgid "All artifacts are hidden"
 msgstr "Tous les artifacts sont masqués"
 
 msgid "Artifact added"
-msgstr "Artifact ajouté"
+msgid_plural "Artifacts added"
+msgstr[0] "Artifact ajouté"
+msgstr[1] "Artifacts ajoutés"
 
 msgid "Artifact deleted"
-msgstr "Artifact supprimé"
+msgid_plural "Artifacts deleted"
+msgstr[0] "Artifact supprimé"
+msgstr[1] "Artifacts supprimés"
 
 msgid "Artifact modified"
-msgstr "Artifact modifié"
-
-msgid "Artifacts added"
-msgstr "Artifacts ajoutés"
-
-msgid "Artifacts deleted"
-msgstr "Artifacts supprimés"
-
-msgid "Artifacts modified"
-msgstr "Artifacts modifiés"
+msgid_plural "Artifacts modified"
+msgstr[0] "Artifact modifié"
+msgstr[1] "Artifacts modifiés"
 
 msgid "Author"
 msgstr "Auteur"
@@ -223,6 +220,9 @@ msgstr "La comparaison a été supprimée"
 
 msgid "The comparison was saved"
 msgstr "La comparaison a été sauvegardée"
+
+msgid "Unsaved comparison"
+msgstr "Comparaison non sauvegardée"
 
 msgid "Without date, the baseline will be created with the current date"
 msgstr "Sans date, la baseline sera créée avec la date du jour"

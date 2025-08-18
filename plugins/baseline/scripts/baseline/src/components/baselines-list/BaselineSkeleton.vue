@@ -37,7 +37,9 @@
         </td>
         <td class="tlp-table-cell-actions">
             <action-button icon="eye" v-bind:disabled="true" class="tlp-table-cell-actions-button">
-                {{ $gettext("Consult") }}
+                <template v-slot:default>
+                    {{ $gettext("Consult") }}
+                </template>
             </action-button>
             <action-button
                 icon="trash-o"
@@ -45,7 +47,9 @@
                 class="tlp-button-danger tlp-table-cell-actions-button"
                 v-if="is_admin"
             >
-                {{ $gettext("Delete") }}
+                <template v-slot:default>
+                    {{ $gettext("Delete") }}
+                </template>
             </action-button>
         </td>
     </tr>
@@ -53,6 +57,8 @@
 <script setup lang="ts">
 import ActionButton from "../common/ActionButton.vue";
 import { inject } from "vue";
+import { useGettext } from "vue3-gettext";
 
+const { $gettext } = useGettext();
 const is_admin = inject("is_admin");
 </script>

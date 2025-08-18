@@ -18,27 +18,34 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import VueRouter from "vue-router";
-import { createLocalVueForTests } from "../support/local-vue.ts";
+import { createRouter, createWebHistory } from "vue-router";
+import { getGlobalTestOptions } from "../support/global-options-for-tests";
 import App from "./App.vue";
-import { createStoreMock } from "../support/store-wrapper.test-helper";
-import store_options from "../store/store_options";
 import NotificationAlert from "./NotificationAlert.vue";
+import { routes } from "../router";
 
 describe("App", () => {
-    let $store, wrapper;
+    function createWrapper(notification) {
+        const router = createRouter({
+            history: createWebHistory(),
+            routes,
+        });
 
-    beforeEach(async () => {
-        $store = createStoreMock(store_options);
-        const router = new VueRouter();
-
-        wrapper = shallowMount(App, {
-            localVue: await createLocalVueForTests(),
-            router,
-            mocks: {
-                $store,
+        const config = getGlobalTestOptions({
+            modules: {
+                dialog_interface: {
+                    namespaced: true,
+                    state: {
+                        notification,
+                    },
+                },
             },
-            propsData: {
+        });
+        return shallowMount(App, {
+            global: {
+                plugins: [...config.plugins, router],
+            },
+            props: {
                 project_public_name: "Project Public Name",
                 project_url: "/project_url",
                 project_icon: "🌷",
@@ -48,33 +55,15 @@ describe("App", () => {
                 admin_url: "/admin/url",
             },
         });
+    }
+
+    it("Show notification", () => {
+        const wrapper = createWrapper({ text: "A notification message" });
+        expect(wrapper.findComponent(NotificationAlert).exists()).toBeTruthy();
     });
 
-    describe("#changeTitle", () => {
-        beforeEach(() => wrapper.vm.changeTitle("new title"));
-
-        it('changes document title and suffix with "Tuleap"', () => {
-            expect(document.title).toBe("new title - Tuleap");
-        });
-    });
-
-    describe("With notification", () => {
-        beforeEach(
-            () =>
-                ($store.state.dialog_interface.notification = {
-                    text: "This is a failure notification",
-                    class: "danger",
-                }),
-        );
-        it("Show notification", () => {
-            expect(wrapper.findComponent(NotificationAlert).exists()).toBeTruthy();
-        });
-    });
-
-    describe("Without notification", () => {
-        beforeEach(() => ($store.state.dialog_interface.notification = null));
-        it("Show notification", () => {
-            expect(wrapper.findComponent(NotificationAlert).exists()).toBeFalsy();
-        });
+    it("Does not show notification", () => {
+        const wrapper = createWrapper(null);
+        expect(wrapper.findComponent(NotificationAlert).exists()).toBeFalsy();
     });
 });

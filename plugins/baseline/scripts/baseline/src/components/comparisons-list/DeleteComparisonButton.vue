@@ -23,8 +23,11 @@
         v-on:click="showConfirmation()"
         class="tlp-button-danger"
         v-if="is_admin"
+        v-bind:disabled="false"
     >
-        {{ $gettext("Delete") }}
+        <template v-slot:default>
+            {{ $gettext("Delete") }}
+        </template>
     </action-button>
 </template>
 

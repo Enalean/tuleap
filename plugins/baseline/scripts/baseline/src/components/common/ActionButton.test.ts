@@ -18,56 +18,52 @@
  *
  */
 
-import type { Wrapper } from "@vue/test-utils";
-import { mount } from "@vue/test-utils";
-import { createLocalVueForTests } from "../../support/local-vue";
+import type { VueWrapper } from "@vue/test-utils";
+import { shallowMount } from "@vue/test-utils";
 import ActionButton from "./ActionButton.vue";
+import { getGlobalTestOptions } from "../../support/global-options-for-tests";
 
 describe("ActionButton", () => {
     const spinner_selector = '[data-test-type="spinner"]';
     const button_selector = '[data-test-type="button"]';
-    let wrapper: Wrapper<Vue>;
 
-    beforeEach(async () => {
-        wrapper = mount(ActionButton, {
-            localVue: await createLocalVueForTests(),
-            propsData: {
+    function createWrapper(disabled = false, loading = false): VueWrapper {
+        return shallowMount(ActionButton, {
+            global: { ...getGlobalTestOptions() },
+            props: {
                 icon: "delete",
+                disabled,
+                loading,
             },
         });
-    });
+    }
 
     it("does not show spinner", () => {
+        const wrapper = createWrapper();
         expect(wrapper.find(spinner_selector).exists()).toBeFalsy();
     });
     it("shows icon", () => {
+        const wrapper = createWrapper();
         expect(wrapper.find(".fa-delete").exists()).toBeTruthy();
     });
     it("enables button", () => {
-        expect(wrapper.get(button_selector).attributes().disabled).toBeFalsy();
+        const wrapper = createWrapper();
+        expect(wrapper.get(button_selector).attributes()).not.toHaveProperty("disabled");
     });
 
-    describe("when clicking", () => {
-        beforeEach(() => wrapper.trigger("click"));
-
-        it("emits click", () => {
-            expect(wrapper.emitted().click).toBeTruthy();
-        });
+    it("when clicking it emits click", () => {
+        const wrapper = createWrapper();
+        wrapper.trigger("click");
+        expect(wrapper.emitted().click).toBeTruthy();
     });
 
-    describe("when loading", () => {
-        beforeEach(() => wrapper.setProps({ loading: true }));
-
-        it("shows spinner", () => {
-            expect(wrapper.find(spinner_selector).exists()).toBeTruthy();
-        });
+    it("when loading it shows spinner", () => {
+        const wrapper = createWrapper(false, true);
+        expect(wrapper.find(spinner_selector).exists()).toBeTruthy();
     });
 
-    describe("when disabled", () => {
-        beforeEach(() => wrapper.setProps({ disabled: true }));
-
-        it("disables button", () => {
-            expect(wrapper.get(button_selector).attributes().disabled).toBeTruthy();
-        });
+    it("when disabled it disables button", () => {
+        const wrapper = createWrapper(true);
+        expect(wrapper.get(button_selector).attributes()).toHaveProperty("disabled");
     });
 });

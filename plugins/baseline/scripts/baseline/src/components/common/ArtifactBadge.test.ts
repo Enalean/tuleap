@@ -19,20 +19,20 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import { createLocalVueForTests } from "../../support/local-vue";
+import { getGlobalTestOptions } from "../../support/global-options-for-tests";
 import ArtifactBadge from "./ArtifactBadge.vue";
 import type { Artifact, Tracker } from "../../type";
 
 describe("ArtifactBadge", () => {
-    it("shows tlp badge custom class", async () => {
+    it("shows tlp badge custom class", () => {
         const wrapper = shallowMount(ArtifactBadge, {
-            localVue: await createLocalVueForTests(),
-            propsData: {
+            global: { ...getGlobalTestOptions() },
+            props: {
                 artifact: {} as Artifact,
-                tracker: { color_name: "blue_cyan" } as Tracker,
+                tracker: { color_name: "deep_blue" } as Tracker,
             },
         });
 
-        expect(wrapper.find(".tlp-swatch-blue-cyan").exists()).toBeTruthy();
+        expect(wrapper.find(".tlp-swatch-deep-blue").exists()).toBeTruthy();
     });
 });

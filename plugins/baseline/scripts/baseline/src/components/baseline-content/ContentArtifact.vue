@@ -118,10 +118,6 @@ export default {
         },
     },
 
-    beforeCreate() {
-        this.$options.components.ArtifactsList = ArtifactsList;
-    },
-
     methods: {
         toggleCollapse() {
             this.is_collapsed = !this.is_collapsed;

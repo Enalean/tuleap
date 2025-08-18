@@ -19,19 +19,19 @@
  */
 
 import HumanizedDate from "./HumanizedDate.vue";
-import type { Wrapper } from "@vue/test-utils";
-import { mount } from "@vue/test-utils";
-import { createLocalVueForTests } from "../../support/local-vue";
+import type { VueWrapper } from "@vue/test-utils";
+import { shallowMount } from "@vue/test-utils";
+import { getGlobalTestOptions } from "../../support/global-options-for-tests";
 import DateFormatter from "../../support/date-utils";
 import moment from "moment";
 import "moment/locale/fr";
 
 describe("HumanizedDate", () => {
-    let wrapper: Wrapper<Vue>;
+    let wrapper: VueWrapper<InstanceType<typeof HumanizedDate>>;
 
     const now = moment("2019/02/23 09:37:20 +0001", "YYYY/MM/DD HH:mm:ss Z").toDate();
 
-    beforeEach(async () => {
+    beforeEach(() => {
         jest.spyOn(Date, "now").mockReturnValue(now.getTime());
 
         DateFormatter.setOptions({
@@ -40,9 +40,9 @@ describe("HumanizedDate", () => {
             format: "d/m/Y H:i",
         });
 
-        wrapper = mount(HumanizedDate, {
-            propsData: { date: "2019-03-22T10:01:48+00:00" },
-            localVue: await createLocalVueForTests(),
+        wrapper = shallowMount(HumanizedDate, {
+            props: { date: "2019-03-22T10:01:48+00:00" },
+            global: { ...getGlobalTestOptions() },
         });
     });
 

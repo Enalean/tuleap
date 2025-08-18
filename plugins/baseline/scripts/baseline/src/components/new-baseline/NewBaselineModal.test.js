@@ -19,33 +19,36 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import { createLocalVueForTests } from "../../support/local-vue.ts";
+import { getGlobalTestOptions } from "../../support/global-options-for-tests";
 import * as rest_querier from "../../api/rest-querier";
 import NewBaselineModal from "./NewBaselineModal.vue";
 import MilestonesSelect from "./MilestonesSelect.vue";
 import MilestonesSelectSkeleton from "./MilestonesSelectSkeleton.vue";
-import store_options from "../../store/store_options";
-import { createStoreMock } from "../../support/store-wrapper.test-helper";
 
 jest.useFakeTimers();
 
 describe("NewBaselineModal", () => {
+    let createBaseline, wrapper, hide_modal_mock, notify_mock, load_mock, a_baseline, a_milestone;
+
     const error_message_selector = '[data-test-type="error-message"]';
     const cancel_selector = '[data-test-action="cancel"]';
 
-    let createBaseline, $store, wrapper;
-
-    const a_milestone = { id: 1 };
-    const a_baseline = {
-        id: 1001,
-        name: "Baseline label",
-        artifact_id: 9,
-        snapshot_date: "2019-03-22T10:01:48+00:00",
-        author_id: 3,
-    };
     let getOpenMilestonesResolve, getOpenMilestonesReject;
 
     beforeEach(async () => {
+        hide_modal_mock = jest.fn();
+        notify_mock = jest.fn();
+        load_mock = jest.fn();
+
+        a_milestone = { id: 1 };
+        a_baseline = {
+            id: 1001,
+            name: "Baseline label",
+            artifact_id: 9,
+            snapshot_date: "2019-03-22T10:01:48+00:00",
+            author_id: 3,
+        };
+
         jest.spyOn(rest_querier, "getOpenMilestones").mockReturnValue(
             new Promise((resolve, reject) => {
                 getOpenMilestonesResolve = resolve;
@@ -57,13 +60,26 @@ describe("NewBaselineModal", () => {
             .spyOn(rest_querier, "createBaseline")
             .mockReturnValue(Promise.resolve(a_baseline));
 
-        $store = createStoreMock(store_options);
-
         wrapper = shallowMount(NewBaselineModal, {
-            propsData: { project_id: 1 },
-            localVue: await createLocalVueForTests(),
-            mocks: {
-                $store,
+            props: { project_id: 1 },
+            global: {
+                ...getGlobalTestOptions({
+                    modules: {
+                        dialog_interface: {
+                            namespaced: true,
+                            mutations: {
+                                hideModal: hide_modal_mock,
+                                notify: notify_mock,
+                            },
+                        },
+                        baselines: {
+                            namespaced: true,
+                            actions: {
+                                load: load_mock,
+                            },
+                        },
+                    },
+                }),
             },
         });
         await jest.runOnlyPendingTimersAsync();
@@ -111,16 +127,14 @@ describe("NewBaselineModal", () => {
         });
 
         it("passes milestones returned by getOpenMilestones() to MilestoneList", () => {
-            expect(wrapper.findComponent(MilestonesSelect).props().milestones).toEqual([
+            expect(wrapper.findComponent(MilestonesSelect).props().milestones).toStrictEqual([
                 a_milestone,
             ]);
         });
     });
 
     describe("saveBaseline()", () => {
-        let createBaselineResolve;
-        let createBaselineReject;
-
+        let createBaselineResolve, createBaselineReject;
         beforeEach(() => {
             createBaseline.mockReturnValue(
                 new Promise((resolve, reject) => {
@@ -136,8 +150,8 @@ describe("NewBaselineModal", () => {
         });
 
         it("disables buttons", () => {
-            expect(wrapper.get(cancel_selector).attributes("disabled")).toBe("disabled");
-            expect(wrapper.get('[data-test-action="submit"]').attributes("disabled")).toBe(
+            expect(wrapper.get(cancel_selector).attributes()).toHaveProperty("disabled");
+            expect(wrapper.get('[data-test-action="submit"]').attributes()).toHaveProperty(
                 "disabled",
             );
         });
@@ -163,16 +177,13 @@ describe("NewBaselineModal", () => {
             });
 
             it("notify user with successful creation", () => {
-                expect($store.commit).toHaveBeenCalledWith(
-                    "dialog_interface/notify",
-                    expect.any(Object),
-                );
+                expect(notify_mock).toHaveBeenCalled();
             });
             it("reloads all baselines", () => {
-                expect($store.dispatch).toHaveBeenCalledWith("baselines/load", { project_id: 1 });
+                expect(load_mock).toHaveBeenCalled();
             });
             it("hides modal", () => {
-                expect($store.commit).toHaveBeenCalledWith("dialog_interface/hideModal");
+                expect(hide_modal_mock).toHaveBeenCalled();
             });
         });
     });

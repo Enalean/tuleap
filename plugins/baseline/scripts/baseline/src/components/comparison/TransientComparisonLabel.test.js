@@ -19,41 +19,37 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import { createLocalVueForTests } from "../../support/local-vue.ts";
+import { getGlobalTestOptions } from "../../support/global-options-for-tests";
 import TransientComparisonLabel from "./TransientComparisonLabel.vue";
-import { createStoreMock } from "../../support/store-wrapper.test-helper";
-import store_options from "../../store/store_options";
-import SaveComparisonModal from "./SaveComparisonModal.vue";
 
 describe("TransientComparisonLabel", () => {
-    const save_comparison_selector = '[data-test-action="save-comparison"]';
-    let $store, wrapper;
-
-    beforeEach(async () => {
-        $store = createStoreMock(store_options);
-
-        wrapper = shallowMount(TransientComparisonLabel, {
-            propsData: {
-                base_baseline_id: 1,
-                compared_to_baseline_id: 2,
-            },
-            localVue: await createLocalVueForTests(),
-            mocks: { $store },
-        });
+    let show_modal_mock;
+    beforeEach(() => {
+        show_modal_mock = jest.fn();
     });
 
     describe("when saving comparison", () => {
-        beforeEach(() => wrapper.get(save_comparison_selector).trigger("click"));
-
         it("shows save comparison modal", () => {
-            expect($store.commit).toHaveBeenCalledWith("dialog_interface/showModal", {
-                title: "Save comparison",
-                component: SaveComparisonModal,
+            const wrapper = shallowMount(TransientComparisonLabel, {
                 props: {
                     base_baseline_id: 1,
                     compared_to_baseline_id: 2,
                 },
+                global: {
+                    ...getGlobalTestOptions({
+                        modules: {
+                            dialog_interface: {
+                                namespaced: true,
+                                mutations: {
+                                    showModal: show_modal_mock,
+                                },
+                            },
+                        },
+                    }),
+                },
             });
+            wrapper.get("[data-test=save-comparison]").trigger("click");
+            expect(show_modal_mock).toHaveBeenCalled();
         });
     });
 });

@@ -18,7 +18,7 @@
   -
   -->
 
-<template functionnal>
+<template>
     <div>
         <h1 class="statistic-label">
             <span class="tlp-skeleton-text statistics-skeleton"></span>

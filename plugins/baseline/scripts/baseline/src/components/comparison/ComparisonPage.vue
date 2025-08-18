@@ -27,12 +27,25 @@
         <comparison-page-skeleton v-else-if="is_loading" />
 
         <content-layout v-else>
-            <comparison-header v-bind:comparison="comparison" slot="header" />
-            <comparison-statistics slot="statistics" />
-            <comparison-content-filters slot="filters" />
+            <template v-slot:header>
+                <comparison-header v-bind:comparison="comparison" />
+            </template>
+            <template v-slot:statistics>
+                <comparison-statistics />
+            </template>
+            <template v-slot:filters>
+                <comparison-content-filters />
+            </template>
 
-            <p slot="comment" v-if="has_comparison_comment">{{ comparison.comment }}</p>
-            <comparison-content />
+            <template v-slot:comment>
+                <p v-if="has_comparison_comment">
+                    {{ comparison.comment }}
+                </p>
+            </template>
+
+            <template v-slot:default>
+                <comparison-content />
+            </template>
         </content-layout>
     </div>
 </template>
@@ -60,6 +73,7 @@ export default {
     props: {
         comparison: { required: true, type: Object },
     },
+    emits: ["title"],
 
     data() {
         return {

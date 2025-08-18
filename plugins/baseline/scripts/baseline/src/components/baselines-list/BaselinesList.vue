@@ -64,7 +64,7 @@
 <script>
 import BaselineSkeleton from "./BaselineSkeleton.vue";
 import BaselineListItem from "./BaselineListItem.vue";
-import { mapState, mapGetters } from "vuex";
+import { mapState, mapGetters, mapActions } from "vuex";
 
 export default {
     name: "BaselinesList",
@@ -80,8 +80,12 @@ export default {
         ...mapGetters("baselines", ["are_baselines_available"]),
     },
 
+    methods: {
+        ...mapActions("baselines", ["load"]),
+    },
+
     mounted() {
-        this.$store.dispatch("baselines/load", { project_id: this.project_id });
+        this.load({ project_id: this.project_id });
     },
 };
 </script>

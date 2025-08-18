@@ -48,6 +48,7 @@ export default {
     props: {
         milestones: { mandatory: true, type: Array },
     },
+    emits: ["change"],
 
     computed: {
         sorted_milestones() {

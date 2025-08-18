@@ -18,38 +18,45 @@
  *
  */
 
-import { mount } from "@vue/test-utils";
-import { createLocalVueForTests } from "../../support/local-vue.ts";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
+import { shallowMount } from "@vue/test-utils";
+import { getGlobalTestOptions } from "../../support/global-options-for-tests";
 import DeleteBaselineButton from "./DeleteBaselineButton.vue";
 import ActionButton from "../common/ActionButton.vue";
 
 describe("DeleteBaselineButton", () => {
-    const baseline = { id: 1 };
-    let store;
+    let show_modal_mock = jest.fn();
 
-    async function createWrapper(comparisons) {
-        store = createStoreMock({
-            state: {
-                comparisons,
-                dialog_interface: {},
-            },
-        });
+    function createWrapper(comparisons) {
+        const baseline = { id: 1 };
 
-        return mount(DeleteBaselineButton, {
-            localVue: await createLocalVueForTests(),
-            mocks: {
-                $store: store,
+        return shallowMount(DeleteBaselineButton, {
+            global: {
+                ...getGlobalTestOptions({
+                    modules: {
+                        comparisons: {
+                            namespaced: true,
+                            state: {
+                                ...comparisons,
+                            },
+                        },
+                        dialog_interface: {
+                            namespaced: true,
+                            mutations: {
+                                showModal: show_modal_mock,
+                            },
+                        },
+                    },
+                }),
+                provide: { is_admin: true },
             },
-            propsData: {
+            props: {
                 baseline,
             },
-            provide: () => ({ is_admin: true }),
         });
     }
 
-    it("should display delete button as disabled while comparisons are loading", async () => {
-        const wrapper = await createWrapper({ is_loading: true, comparisons: [] });
+    it("should display delete button as disabled while comparisons are loading", () => {
+        const wrapper = createWrapper({ is_loading: true, comparisons: [] });
 
         expect(wrapper.findComponent(ActionButton).props("disabled")).toBe(true);
     });
@@ -59,8 +66,8 @@ describe("DeleteBaselineButton", () => {
         [[{ base_baseline_id: 2, compared_to_baseline_id: 1 }]],
     ])(
         "should display delete button as disabled if baseline is part of a comparison %s",
-        async (comparisons) => {
-            const wrapper = await createWrapper({
+        (comparisons) => {
+            const wrapper = createWrapper({
                 is_loading: false,
                 comparisons,
             });
@@ -71,8 +78,8 @@ describe("DeleteBaselineButton", () => {
 
     it.each([[[]], [[{ base_baseline_id: 2, compared_to_baseline_id: 3 }]]])(
         "should display delete button as enabled if baseline is not part of comparison %s",
-        async (comparisons) => {
-            const wrapper = await createWrapper({
+        (comparisons) => {
+            const wrapper = createWrapper({
                 is_loading: false,
                 comparisons,
             });
@@ -82,13 +89,13 @@ describe("DeleteBaselineButton", () => {
     );
 
     it("shows modal on click", async () => {
-        const wrapper = await createWrapper({
+        const wrapper = createWrapper({
             is_loading: false,
             comparisons: [],
         });
 
         await wrapper.trigger("click");
 
-        expect(store.commit).toHaveBeenCalledWith("dialog_interface/showModal", expect.any(Object));
+        expect(show_modal_mock).toHaveBeenCalled();
     });
 });

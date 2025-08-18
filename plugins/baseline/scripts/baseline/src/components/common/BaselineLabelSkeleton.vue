@@ -18,7 +18,7 @@
   -
   -->
 
-<template functional>
+<template>
     <h2>
         <span class="tlp-skeleton-text" key="title"></span>
         <span class="baseline-label-author" key="author">

@@ -34,7 +34,9 @@
         </td>
         <td class="tlp-table-cell-actions">
             <action-button icon="eye" v-bind:disabled="true" class="tlp-table-cell-actions-button">
-                {{ $gettext("Consult") }}
+                <template v-slot:default>
+                    {{ $gettext("Consult") }}
+                </template>
             </action-button>
             <action-button
                 icon="trash-o"
@@ -42,13 +44,15 @@
                 class="tlp-button-danger tlp-table-cell-actions-button"
                 v-if="is_admin"
             >
-                {{ $gettext("Delete") }}
+                <template v-slot:default>
+                    {{ $gettext("Delete") }}
+                </template>
             </action-button>
         </td>
     </tr>
 </template>
 <script setup lang="ts">
-import { useGettext } from "@tuleap/vue2-gettext-composition-helper";
+import { useGettext } from "vue3-gettext";
 import { inject } from "vue";
 import ActionButton from "../common/ActionButton.vue";
 

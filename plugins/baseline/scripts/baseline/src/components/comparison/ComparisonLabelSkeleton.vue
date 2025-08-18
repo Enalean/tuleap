@@ -18,7 +18,7 @@
   -
   -->
 
-<template functional>
+<template>
     <h1 class="comparison-label">
         <span class="tlp-skeleton-text"></span>
     </h1>

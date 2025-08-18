@@ -18,7 +18,7 @@
  *
  */
 
-import Vue from "vue";
+import { defineComponent, markRaw } from "vue";
 
 export default {
     namespaced: true,
@@ -30,9 +30,7 @@ export default {
         notify: (state, message) => (state.notification = message),
         clearNotification: (state) => (state.notification = null),
         showModal: (state, modal) =>
-            // Vue.extend() is required here to prevent store mutation when given component is mounted
-            // (which is a bad practice, identified when strict mode is enabled)
-            (state.modal = { ...modal, component: Vue.extend(modal.component) }),
+            (state.modal = { ...modal, component: markRaw(defineComponent(modal.component)) }),
         hideModal: (state) => (state.modal = null),
     },
 };

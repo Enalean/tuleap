@@ -19,70 +19,75 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import VueRouter from "vue-router";
-import { createLocalVueForTests } from "../support/local-vue.ts";
+import { getGlobalTestOptions } from "../support/global-options-for-tests";
 import IndexPage from "./IndexPage.vue";
-import { createStoreMock } from "../support/store-wrapper.test-helper";
-import store_options from "../store/store_options";
 
 describe("IndexPage", () => {
-    let $store, wrapper;
+    let wrapper, show_modal_mock;
 
-    beforeEach(async () => {
-        $store = createStoreMock(store_options);
-        const router = new VueRouter();
+    beforeEach(() => {
+        show_modal_mock = jest.fn();
+
+        const baselines = [
+            {
+                id: 1,
+                name: "Baseline label 1",
+                artifact_id: 9,
+                snapshot_date: "2019-03-22T10:01:48+00:00",
+                author_id: 3,
+            },
+            {
+                id: 2,
+                name: "Baseline label 2",
+                artifact_id: 9,
+                snapshot_date: "2019-03-22T10:01:48+00:00",
+                author_id: 3,
+            },
+        ];
 
         wrapper = shallowMount(IndexPage, {
-            propsData: { project_id: 1 },
-            localVue: await createLocalVueForTests(),
-            router,
-            mocks: {
-                $store,
+            props: { project_id: 1 },
+            global: {
+                ...getGlobalTestOptions({
+                    modules: {
+                        dialog_interface: {
+                            namespaced: true,
+                            mutations: {
+                                showModal: show_modal_mock,
+                            },
+                        },
+                        baselines: {
+                            namespaced: true,
+                            state: {
+                                baselines,
+                                are_baselines_loading: false,
+                            },
+                        },
+                        comparisons: {
+                            namespaced: true,
+                            state: {
+                                comparisons: [],
+                            },
+                        },
+                    },
+                }),
+                provide: { is_admin: true },
             },
-            provide: () => ({ is_admin: true }),
         });
     });
 
     describe("when clicking on new baseline button", () => {
-        beforeEach(() => wrapper.get('[data-test-action="new-baseline"]').trigger("click"));
-
         it("shows new modal", () => {
-            expect($store.commit).toHaveBeenCalledWith(
-                "dialog_interface/showModal",
-                expect.any(Object),
-            );
+            wrapper.get("[data-test-action=new-baseline]").trigger("click");
+            expect(show_modal_mock).toHaveBeenCalled();
         });
     });
 
     describe("when some baselines are available", () => {
-        beforeEach(() => {
-            $store.state.baselines.baselines = [
-                {
-                    id: 1,
-                    name: "Baseline label 1",
-                    artifact_id: 9,
-                    snapshot_date: "2019-03-22T10:01:48+00:00",
-                    author_id: 3,
-                },
-                {
-                    id: 2,
-                    name: "Baseline label 2",
-                    artifact_id: 9,
-                    snapshot_date: "2019-03-22T10:01:48+00:00",
-                    author_id: 3,
-                },
-            ];
-            $store.state.baselines.are_baselines_loading = false;
-        });
-
         describe("when clicking on show comparison button", () => {
-            beforeEach(() => wrapper.get('[data-test-action="show-comparison"]').trigger("click"));
-
             it("shows new modal", () => {
-                expect($store.commit).toHaveBeenCalledWith(
-                    "dialog_interface/showModal",
-                    expect.any(Object),
-                );
+                wrapper.get("[data-test-action=show-comparison]").trigger("click");
+                expect(show_modal_mock).toHaveBeenCalled();
             });
         });
     });

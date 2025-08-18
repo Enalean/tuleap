@@ -26,8 +26,13 @@
         </td>
         <td class="comparisons-table-column">
             <artifact-link class="baselines-table-column-milestone" v-bind:artifact="milestone">
-                <artifact-badge v-bind:artifact="milestone" v-bind:tracker="milestone_tracker" />
-                {{ milestone.title }}
+                <template v-slot:default>
+                    <artifact-badge
+                        v-bind:artifact="milestone"
+                        v-bind:tracker="milestone_tracker"
+                    />
+                    {{ milestone.title }}
+                </template>
             </artifact-link>
         </td>
         <td class="comparisons-table-column">

@@ -20,39 +20,43 @@
 
 <template>
     <collapsable-content class="comparison-content-artifact">
-        <artifact-label
-            slot="header"
-            v-bind:artifact="compared_to"
-            class="comparison-content-artifact-header"
-        />
-        <div class="comparison-content-artifact-body">
-            <field-comparison
-                v-if="base.description !== compared_to.description"
-                semantic="description"
-                v-bind:tracker_id="compared_to.tracker_id"
-                v-bind:base="base.description"
-                v-bind:compared_to="compared_to.description"
+        <template v-slot:header>
+            <artifact-label
+                v-bind:artifact="compared_to"
+                class="comparison-content-artifact-header"
             />
-            <field-comparison
-                v-if="base.status !== compared_to.status"
-                semantic="status"
-                v-bind:tracker_id="compared_to.tracker_id"
-                v-bind:base="base.status"
-                v-bind:compared_to="compared_to.status"
+        </template>
+        <template v-slot:default>
+            <div class="comparison-content-artifact-body">
+                <field-comparison
+                    v-if="base.description !== compared_to.description"
+                    semantic="description"
+                    v-bind:tracker_id="compared_to.tracker_id"
+                    v-bind:base="base.description"
+                    v-bind:compared_to="compared_to.description"
+                />
+                <field-comparison
+                    v-if="base.status !== compared_to.status"
+                    semantic="status"
+                    v-bind:tracker_id="compared_to.tracker_id"
+                    v-bind:base="base.status"
+                    v-bind:compared_to="compared_to.status"
+                />
+            </div>
+
+            <depth-limit-reached-message v-if="is_depth_limit_reached" />
+
+            <artifacts-list-comparison
+                v-else-if="are_linked_artifacts_available"
+                v-bind:base_artifacts="filtered_base_linked_artifacts"
+                v-bind:compared_to_artifacts="filtered_compared_to_linked_artifacts"
             />
-        </div>
-
-        <depth-limit-reached-message v-if="is_depth_limit_reached" />
-
-        <artifacts-list-comparison
-            v-else-if="are_linked_artifacts_available"
-            v-bind:base_artifacts="filtered_base_linked_artifacts"
-            v-bind:compared_to_artifacts="filtered_compared_to_linked_artifacts"
-        />
+        </template>
     </collapsable-content>
 </template>
 
 <script>
+import { defineAsyncComponent } from "vue";
 import CollapsableContent from "../../common/CollapsableContent.vue";
 import FieldComparison from "./FieldComparison.vue";
 import ArtifactLabel from "../../common/ArtifactLabel.vue";
@@ -67,7 +71,9 @@ export default {
         DepthLimitReachedMessage,
         ArtifactLabel,
         FieldComparison,
-        "artifacts-list-comparison": () => import("./ArtifactsListComparison.vue"),
+        "artifacts-list-comparison": defineAsyncComponent(
+            () => import("./ArtifactsListComparison.vue"),
+        ),
     },
 
     props: {

@@ -70,7 +70,8 @@
 import { mapState } from "vuex";
 import NotificationAlert from "./NotificationAlert.vue";
 import BaselineModal from "./layout/BaselineModal.vue";
-import { BreadcrumbPrivacy } from "@tuleap/vue-breadcrumb-privacy";
+import { BreadcrumbPrivacy } from "@tuleap/vue3-breadcrumb-privacy";
+import { useRoute } from "vue-router";
 
 export default {
     name: "App",
@@ -109,6 +110,10 @@ export default {
             type: String,
         },
     },
+    setup() {
+        const route = useRoute();
+        return { route };
+    },
     data() {
         return {
             current_page_title: null,
@@ -117,7 +122,7 @@ export default {
     computed: {
         ...mapState("dialog_interface", ["notification"]),
         is_current_page_root() {
-            return this.$route.name === "IndexPage";
+            return this.route.name === "IndexPage";
         },
     },
     methods: {
