@@ -42,12 +42,6 @@ export function configureTypescriptRules(): object[] {
     ];
 }
 
-export const rule_vue_loader = {
-    test: /\.vue$/,
-    exclude: /node_modules/,
-    use: [{ loader: "vue-loader" }],
-};
-
 export const rule_po_files = {
     test: /\.po$/,
     exclude: /node_modules/,

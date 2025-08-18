@@ -18,9 +18,9 @@
  */
 
 import { createListPicker } from "@tuleap/list-picker";
-import type { GetText } from "@tuleap/vue2-gettext-init";
+import type { GettextProvider } from "../GettextProvider";
 
-export function displayTeamsToAggregate(gettext_provider: GetText, doc: Document): void {
+export function displayTeamsToAggregate(gettext_provider: GettextProvider, doc: Document): void {
     const list_teams = doc.getElementById("program-management-choose-teams");
     if (!list_teams || !(list_teams instanceof HTMLSelectElement)) {
         throw new Error("No list to pick teams");

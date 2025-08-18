@@ -26,6 +26,12 @@ import { VueLoaderPlugin } from "vue-loader";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+const rule_vue_loader = {
+    test: /\.vue$/,
+    exclude: /node_modules/,
+    use: [{ loader: "vue-loader" }],
+};
+
 const config = {
     entry: {
         "tracker-workflow-transitions": "./src/index.js",
@@ -47,7 +53,7 @@ const config = {
     },
     module: {
         rules: [
-            webpack_configurator.rule_vue_loader,
+            rule_vue_loader,
             webpack_configurator.rule_scss_loader,
             webpack_configurator.rule_css_assets,
         ],

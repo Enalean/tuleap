@@ -17,7 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 import { checkAllFieldAreFilledAndSetErrorMessage } from "../helper/form-fields-checker";
-import type { GetText } from "@tuleap/vue2-gettext-init";
 import { resetRestErrorAlert, setRestErrorMessage } from "../helper/rest-error-helper";
 
 import { saveConfiguration } from "../api/manage-configuration";
@@ -28,6 +27,7 @@ import {
 } from "../helper/button-helper";
 import { buildProgramConfiguration } from "../helper/program-configuration-builder";
 import { FetchWrapperError } from "@tuleap/tlp-fetch";
+import type { GettextProvider } from "../GettextProvider";
 
 const DISPLAY_ERROR_REST_ID = "program-management-save-configuration-error-rest";
 const FORM_ID = "form-program-configuration";
@@ -35,7 +35,7 @@ const SUBMIT_BUTTON_ID = "program-management-admin-button-save-configuration";
 
 export function submitConfigurationHandler(
     doc: Document,
-    gettext_provider: GetText,
+    gettext_provider: GettextProvider,
     program_id: number,
 ): void {
     const form = doc.getElementById(FORM_ID);

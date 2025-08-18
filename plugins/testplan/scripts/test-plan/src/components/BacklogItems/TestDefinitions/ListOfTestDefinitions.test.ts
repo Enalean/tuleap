@@ -20,8 +20,6 @@
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import type { BacklogItem, TestDefinition } from "../../../type";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
-import type { RootState } from "../../../store/type";
 import ListOfTestDefinitions from "./ListOfTestDefinitions.vue";
 import TestDefinitionSkeleton from "./TestDefinitionSkeleton.vue";
 import TestDefinitionCard from "./TestDefinitionCard.vue";
@@ -45,13 +43,6 @@ describe("ListOfTestDefinitions", () => {
                             state: backlog_item,
                         },
                     },
-                }),
-            },
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        backlog_item: {},
-                    } as RootState,
                 }),
             },
         });

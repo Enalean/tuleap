@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,24 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { vite, viteDtsPlugin } from "@tuleap/build-system-configurator";
-import * as path from "path";
+import common from "./webpack.common.js";
+import { webpack_configurator } from "@tuleap/build-system-configurator";
 
-export default vite.defineLibConfig({
-    plugins: [viteDtsPlugin()],
-    build: {
-        lib: {
-            entry: path.resolve(__dirname, "src/index.ts"),
-            name: "Vue2DompurifyHtml",
-        },
-        rollupOptions: {
-            external: ["dompurify", "vue"],
-            output: {
-                globals: {
-                    dompurify: "DOMPurify",
-                    vue: "Vue",
-                },
-            },
-        },
-    },
-});
+export default webpack_configurator.extendDevConfiguration(common);

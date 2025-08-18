@@ -132,7 +132,6 @@ if (! $plugin) {
     $json          = json_decode(file_get_contents($core_manifest), true);
 
     gettextTS('core', $basedir, $json);
-    gettextVue('core', $basedir, $json);
     gettextVue3('core', $basedir, $json);
 }
 
@@ -149,7 +148,6 @@ foreach (glob("$basedir/plugins/*", GLOB_ONLYDIR) as $path) {
         $json = json_decode(file_get_contents($manifest), true);
         gettextTS($translated_plugin, $path, $json);
         gettextSmarty($translated_plugin, $path, $json);
-        gettextVue($translated_plugin, $path, $json);
         gettextVue3($translated_plugin, $path, $json);
         gettextAngularJS($translated_plugin, $path, $json);
     }
@@ -268,34 +266,6 @@ function gettextAngularJS(string $translated_plugin, string $path, array $manife
         executeCommandAndExitIfStderrNotEmpty("msgcat --no-location --sort-output -o $template $template");
 
         info("$gettext_step_header Merging .pot file into .po files");
-        exec("find $po -name '*.po' -exec msgmerge --update \"{}\" $template \; -exec msgattrib --no-obsolete --clear-fuzzy --empty -o \"{}\" \"{}\" \;");
-    }
-}
-
-function gettextVue($translated_plugin, $path, $manifest_json)
-{
-    if (! isset($manifest_json['gettext-vue']) || ! is_array($manifest_json['gettext-vue'])) {
-        return;
-    }
-
-    foreach ($manifest_json['gettext-vue'] as $component => $gettext) {
-        info("[$translated_plugin][vue][$component] Generating default .pot file");
-        $src      = escapeshellarg("$path/{$gettext['src']}");
-        $po       = escapeshellarg("$path/{$gettext['po']}");
-        $template = escapeshellarg("$path/{$gettext['po']}/template.pot");
-
-        executeCommandAndExitIfStderrNotEmpty("tools/utils/scripts/vue-typescript-gettext-extractor-cli.js \
-        $(find $src  \
-            -not \( -name '*.cy.ts' -o -name '*.test.js' -o -name '*.test.ts' -o -name '*.d.ts' \) \
-            -not \( -path '**/node_modules/*' -o -path '**/coverage/*' \) \
-            -and \( -type f -name '*.vue' -o -name '*.ts' -o -name '*.js' \) \
-        ) \
-        --output $template");
-        executeCommandAndExitIfStderrNotEmpty("msguniq --sort-output --use-first -o $template $template");
-
-        executeCommandAndExitIfStderrNotEmpty("msgcat --no-location --sort-output -o $template $template");
-
-        info("[$translated_plugin][vue][$component] Merging .pot file into .po files");
         exec("find $po -name '*.po' -exec msgmerge --update \"{}\" $template \; -exec msgattrib --no-obsolete --clear-fuzzy --empty -o \"{}\" \"{}\" \;");
     }
 }

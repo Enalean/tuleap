@@ -18,15 +18,15 @@
  */
 import { getHTMLSelectElementFromId } from "./HTML_element_extractor";
 import { resetErrorOnSelectField, setErrorMessageOnSelectField } from "./form-field-error-helper";
-import type { GetText } from "@tuleap/gettext";
 import {
     PERMISSION_PRIORITIZE_ID,
     PLANNABLE_TRACKERS_ID,
 } from "../milestones/init-list-pickers-milestone-section";
+import type { GettextProvider } from "../GettextProvider";
 
 export function checkAllFieldAreFilledAndSetErrorMessage(
     doc: Document,
-    gettext_provider: GetText,
+    gettext_provider: GettextProvider,
 ): boolean {
     const program_increment_tracker_element = getHTMLSelectElementFromId(
         doc,

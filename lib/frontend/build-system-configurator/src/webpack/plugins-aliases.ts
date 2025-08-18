@@ -32,8 +32,6 @@ import RemoveEmptyScriptsPlugin from "webpack-remove-empty-scripts";
 // eslint-disable-next-line import/no-extraneous-dependencies
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { VueLoaderPlugin } from "vue-loader";
-// eslint-disable-next-line import/no-extraneous-dependencies
 import MergeIntoSingleFilePlugin from "webpack-merge-and-include-globally";
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { ESBuildMinifyPlugin } from "esbuild-loader";
@@ -76,10 +74,6 @@ export function getCleanWebpackPlugin(): CleanWebpackPlugin {
     return new CleanWebpackPlugin({
         cleanAfterEveryBuildPatterns: ["!css-assets/", "!css-assets/**"],
     });
-}
-
-export function getVueLoaderPlugin(): VueLoaderPlugin {
-    return new VueLoaderPlugin();
 }
 
 export function getCopyPlugin(patterns = [], options = {}): CopyWebpackPlugin {

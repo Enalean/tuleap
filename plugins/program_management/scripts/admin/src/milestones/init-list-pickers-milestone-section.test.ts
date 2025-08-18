@@ -17,22 +17,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { GetText } from "@tuleap/vue2-gettext-init";
 import { initListPickersMilestoneSection } from "./init-list-pickers-milestone-section";
 import * as listPicker from "@tuleap/list-picker";
 import * as disabledPlannableTrackerHelper from "../helper/disabled-plannable-tracker-helper";
 import * as disabledIterationTrackerHelper from "../helper/disabled-iteration-tracker-helper";
+import type { GettextProvider } from "../GettextProvider";
 
 const createDocument = (): Document => document.implementation.createHTMLDocument();
 
 jest.mock("../helper/disabled-plannable-tracker-helper");
 jest.mock("../helper/disabled-iteration-tracker-helper");
 describe("initListPickersMilestoneSection", () => {
-    const gettext: GetText = {
-        gettext: (msgid: string) => {
-            return msgid;
-        },
-    } as GetText;
+    const gettext: GettextProvider = {
+        gettext: (msgid: string) => msgid,
+    };
 
     it("When program increment tracker selector does not exist, Then nothing is done", () => {
         const create_list_picker = jest.spyOn(listPicker, "createListPicker");

@@ -18,8 +18,8 @@
     "vue-loader": "^17.2.2"
   },
   "scripts": {
-    "build": "webpack --config webpack.prod.mjs",
-    "watch": "webpack --config webpack.dev.mjs --watch",
+    "build": "webpack --config webpack.prod.js",
+    "watch": "webpack --config webpack.dev.js --watch",
     "test": "jest"
   }
 }

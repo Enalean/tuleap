@@ -67,7 +67,6 @@ export const defineJestConfiguration = (): JestConfiguration => {
             customExportConditions: ["node", "node-addons"],
         },
         transform: {
-            "^.+\\.vue$": "@vue/vue2-jest",
             "^.+\\.ts$": [
                 "ts-jest",
                 {
