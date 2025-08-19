@@ -27,7 +27,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class RegisterIPCommand extends Command
+final class RegisterIPCommand extends Command
 {
     protected function configure()
     {
@@ -36,7 +36,7 @@ class RegisterIPCommand extends Command
             ->addArgument('service', InputArgument::REQUIRED, 'Name of the service (in docker-composer)');
     }
 
-    public function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $tld          = '.tuleap-aio-dev.docker';
         $service_name = $input->getArgument('service');
