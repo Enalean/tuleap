@@ -23,20 +23,13 @@ import { shallowMount } from "@vue/test-utils";
 import WidgetQueryEditor from "./WidgetQueryEditor.vue";
 import WidgetQueryDisplayer from "./WidgetQueryDisplayer.vue";
 import TimetrackingManagementWidget from "./TimetrackingManagementWidget.vue";
-import { RETRIEVE_QUERY } from "../injection-symbols";
-import type { Query } from "../query/QueryRetriever";
 import { RetrieveQueryStub } from "../../tests/stubs/RetrieveQueryStub";
 
 describe("Given a Timetracking Management Widget", () => {
-    let query_retriever: Query;
     function getTimetrackingManagementWidgetInstance(): VueWrapper {
-        query_retriever = RetrieveQueryStub.withDefaults([]);
-
         return shallowMount(TimetrackingManagementWidget, {
-            global: {
-                provide: {
-                    [RETRIEVE_QUERY.valueOf()]: query_retriever,
-                },
+            props: {
+                query_retriever: RetrieveQueryStub.withDefaults([]),
             },
         });
     }

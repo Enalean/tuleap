@@ -20,7 +20,7 @@ import { createApp } from "vue";
 import TimetrackingManagementWidget from "./components/TimetrackingManagementWidget.vue";
 import { createGettext } from "vue3-gettext";
 import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue3-gettext-init";
-import { RETRIEVE_QUERY, USER_LOCALE_KEY, WIDGET_ID } from "./injection-symbols";
+import { USER_LOCALE_KEY, WIDGET_ID } from "./injection-symbols";
 import { QueryRetriever } from "./query/QueryRetriever";
 import { getAttributeOrThrow } from "@tuleap/dom";
 import { formatDatetimeToYearMonthDay } from "@tuleap/plugin-timetracking-time-formatters";
@@ -54,14 +54,15 @@ document.addEventListener("DOMContentLoaded", async () => {
         query.users,
     );
 
-    createApp(TimetrackingManagementWidget)
+    createApp(TimetrackingManagementWidget, {
+        query_retriever,
+    })
         .use(
             await initVueGettext(createGettext, (locale: string) => {
                 return import(`../po/${getPOFileFromLocaleWithoutExtension(locale)}.po`);
             }),
         )
         .provide(USER_LOCALE_KEY, getAttributeOrThrow(document.body, "data-user-locale"))
-        .provide(RETRIEVE_QUERY, query_retriever)
         .provide(WIDGET_ID, query.id)
         .mount(mount_point);
 });

@@ -105,18 +105,22 @@ import type {
 } from "@tuleap/plugin-timetracking-predefined-time-periods";
 import { formatDatetimeToYearMonthDay } from "@tuleap/plugin-timetracking-time-formatters";
 import { strictInject } from "@tuleap/vue-strict-inject";
-import { RETRIEVE_QUERY, USER_LOCALE_KEY, WIDGET_ID } from "../injection-symbols";
+import { USER_LOCALE_KEY, WIDGET_ID } from "../injection-symbols";
 import type { User } from "@tuleap/core-rest-api-types";
 import { initUsersAutocompleter } from "@tuleap/lazybox-users-autocomplete";
 import type { ResultAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
 import { uri, getJSON } from "@tuleap/fetch-result";
+import type { Query } from "../query/QueryRetriever";
 
 const { $gettext } = useGettext();
 
 const user_locale = strictInject(USER_LOCALE_KEY);
 
-const query = strictInject(RETRIEVE_QUERY);
+const props = defineProps<{
+    query_retriever: Query;
+}>();
+
 const widget_id = strictInject(WIDGET_ID);
 
 const start_date_input: Ref<HTMLInputElement | undefined> = ref();
@@ -127,7 +131,7 @@ let start_date_picker: DatePickerInstance;
 let end_date_picker: DatePickerInstance;
 
 let selected_predefined_time_period = ref<PredefinedTimePeriod | "">(
-    query.getQuery().predefined_time_period,
+    props.query_retriever.getQuery().predefined_time_period,
 );
 
 const users_input = ref<Lazybox | undefined>();
@@ -150,14 +154,14 @@ onMounted((): void => {
         return;
     }
     start_date_picker = datePicker(start_date_input.value);
-    start_date_picker.setDate(query.getQuery().start_date);
+    start_date_picker.setDate(props.query_retriever.getQuery().start_date);
 
     end_date_picker = datePicker(end_date_input.value);
-    end_date_picker.setDate(query.getQuery().end_date);
+    end_date_picker.setDate(props.query_retriever.getQuery().end_date);
 
     initUsersAutocompleter(
         users_input.value,
-        query.getQuery().users_list.value,
+        props.query_retriever.getQuery().users_list.value,
         (selected_users: ReadonlyArray<User>): void => {
             currently_selected_users.value = [...selected_users];
         },
@@ -179,14 +183,14 @@ onBeforeUnmount((): void => {
 
 const save = (): void => {
     if (start_date_input.value?.value && end_date_input.value?.value) {
-        query.setQuery(
+        props.query_retriever.setQuery(
             start_date_input.value?.value,
             end_date_input.value?.value,
             selected_predefined_time_period.value,
             currently_selected_users.value,
         );
     }
-    query.saveQuery(widget_id);
+    props.query_retriever.saveQuery(widget_id);
     emit("closeEditMode");
 };
 

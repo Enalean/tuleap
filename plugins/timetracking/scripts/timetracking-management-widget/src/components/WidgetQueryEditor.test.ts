@@ -27,7 +27,7 @@ import { LazyboxVueStub } from "../../tests/stubs/LazyboxVueStub";
 import type { User } from "@tuleap/core-rest-api-types";
 import type { Query } from "../query/QueryRetriever";
 import { RetrieveQueryStub } from "../../tests/stubs/RetrieveQueryStub";
-import { RETRIEVE_QUERY, USER_LOCALE_KEY, WIDGET_ID } from "../injection-symbols";
+import { USER_LOCALE_KEY, WIDGET_ID } from "../injection-symbols";
 
 vi.mock("tlp", () => ({
     datePicker: (): { setDate(): void } => ({
@@ -63,6 +63,9 @@ describe("Given a timetracking management widget query editor", () => {
         query_retriever = RetrieveQueryStub.withDefaults(users_list);
 
         return shallowMount(WidgetQueryEditor, {
+            props: {
+                query_retriever,
+            },
             global: {
                 ...getGlobalTestOptions(),
                 stubs: {
@@ -70,7 +73,6 @@ describe("Given a timetracking management widget query editor", () => {
                     "tuleap-lazybox": LazyboxVueStub,
                 },
                 provide: {
-                    [RETRIEVE_QUERY.valueOf()]: query_retriever,
                     [USER_LOCALE_KEY.valueOf()]: "en_US",
                     [WIDGET_ID.valueOf()]: widget_id,
                 },
