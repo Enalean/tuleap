@@ -125,7 +125,7 @@ if ($project && ! $project->isError()) {
         $allowedQuota = $customQuota;
     }
     if ($allowedQuota) {
-        echo '<div id="help_init" class="stat_help">' . sprintf(dgettext('tuleap-statistics', 'This project uses <b>%1$s</b> of the <b>%2$s</b> allowed quota.'), $duHtml->sizeReadable($usedProportion), $allowedQuota . 'GiB') . '</div>';
+        echo '<div id="help_init" class="stat_help" data-test="stat-help">' . sprintf(dgettext('tuleap-statistics', 'This project uses <b>%1$s</b> of the <b>%2$s</b> allowed quota.'), $duHtml->sizeReadable($usedProportion), $allowedQuota . 'GiB') . '</div>';
 
         $pie_displayer = new DiskUsagePieDisplayer(
             $disk_usage_manager,

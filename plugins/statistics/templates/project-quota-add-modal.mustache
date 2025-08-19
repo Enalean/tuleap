@@ -21,7 +21,9 @@
                     name="project"
                     style="width: 100%"
                     required
-                    data-placeholder="{{ project_placeholder }}"></select>
+                    data-placeholder="{{ project_placeholder }}"
+                    data-test="project-quota-project-filter-select">
+                </select>
         </div>
         <div class="tlp-form-element siteadmin-statistics-project-quota-add-requester">
             <label class="tlp-label" for="new-requester">{{ requester_label }}</label>
@@ -40,7 +42,8 @@
                        id="new-quota"
                        name="quota"
                        placeholder="{{ default_quota }}"
-                       size="5">
+                       size="5"
+                data-test="new-quota-input">
                 <span class="tlp-append">{{ quota_unit }}</span>
             </div>
             <p class="tlp-text-info">{{ max_quota_label }}</p>
@@ -62,7 +65,7 @@
         <button type="button" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">
             {{ cancel_label }}
         </button>
-        <button type="submit" class="tlp-button-primary tlp-modal-action" name="action" value="add">
+        <button type="submit" class="tlp-button-primary tlp-modal-action" name="action" value="add" data-test="project-quota-submit-button">
             <i class="fa fa-plus tlp-button-icon"></i> {{ add_quota_label }}
         </button>
     </div>
