@@ -2,7 +2,7 @@
 status: accepted
 date: 2025-07-17
 decision-makers: Jacques FIADEHOUNDJI, Marie Ange GARNIER, Joris MASSON
-consulted: TODO
+consulted: nobody
 informed: Thomas GORKA, Thomas GERBET, Nicolas TERRAY, Clarck ROBINSON, Martin GOYOT, Kevin TRAINI, Manuel VACELET, Clarisse DESCHAMPS
 ---
 
