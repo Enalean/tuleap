@@ -42,7 +42,7 @@
                 </template>
             </action-button>
             <action-button
-                icon="trash-o"
+                icon="trash"
                 v-bind:disabled="true"
                 class="tlp-button-danger tlp-table-cell-actions-button"
                 v-if="is_admin"

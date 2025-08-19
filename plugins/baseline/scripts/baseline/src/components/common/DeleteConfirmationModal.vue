@@ -56,7 +56,7 @@
                     class="tlp-button-icon fa fa-fw fa-spinner fa-spin"
                     data-test-type="spinner"
                 ></i>
-                <i class="fa fa-fw fa-trash-o tlp-button-icon" v-else></i>
+                <i class="fa-solid fa-fw fa-trash tlp-button-icon" v-else></i>
                 {{ submit_label }}
             </button>
         </div>

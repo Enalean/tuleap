@@ -20,7 +20,7 @@
 
 <template>
     <button
-        v-on:click="$emit('click')"
+        v-on:click="emit('click')"
         class="tlp-button-small tlp-button-primary tlp-button-outline"
         v-bind:disabled="disabled"
         data-test-type="button"
@@ -43,7 +43,7 @@ const props = withDefaults(defineProps<{ icon: string; loading?: boolean; disabl
     disabled: false,
 });
 
-defineEmits<{ (e: "click"): void }>();
+const emit = defineEmits<{ (e: "click"): void }>();
 
 const icon_class = computed(() => `fa-${props.icon}`);
 </script>
