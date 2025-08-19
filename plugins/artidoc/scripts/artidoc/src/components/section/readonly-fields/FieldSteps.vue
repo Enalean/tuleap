@@ -44,6 +44,13 @@
                         v-dompurify-html="step.expected_results"
                     ></div>
                 </section>
+                <span
+                    v-if="'status' in step"
+                    class="step-execution-status"
+                    v-bind:class="getStatusBadgeClasses(step.status)"
+                    data-test="execution-status"
+                    >{{ getBadgeLabel(step.status) }}</span
+                >
             </div>
         </div>
     </div>
@@ -54,13 +61,60 @@
 
 <script setup lang="ts">
 import { useGettext } from "vue3-gettext";
-import type { ReadonlyFieldStepsDefinition } from "@/sections/readonly-fields/ReadonlyFields";
+import type {
+    ReadonlyFieldStepsDefinition,
+    ReadonlyFieldStepsExecution,
+    StepExecutionStatus,
+} from "@/sections/readonly-fields/ReadonlyFields";
+import {
+    STEP_BLOCKED,
+    STEP_FAILED,
+    STEP_NOT_RUN,
+    STEP_PASSED,
+} from "@/sections/readonly-fields/ReadonlyFields";
 import StepDefinitionArrow from "@/components/section/readonly-fields/StepDefinitionArrow.vue";
 
 const { $gettext } = useGettext();
 defineProps<{
-    field: ReadonlyFieldStepsDefinition;
+    field: ReadonlyFieldStepsDefinition | ReadonlyFieldStepsExecution;
 }>();
+
+function getStatusBadgeClasses(status: StepExecutionStatus): string {
+    let badge_class = "";
+
+    switch (status) {
+        case STEP_NOT_RUN:
+            badge_class = "tlp-badge-secondary";
+            break;
+        case STEP_BLOCKED:
+            badge_class = "tlp-badge-info";
+            break;
+        case STEP_PASSED:
+            badge_class = "tlp-badge-success";
+            break;
+        case STEP_FAILED:
+            badge_class = "tlp-badge-danger";
+            break;
+        default:
+            break;
+    }
+    return `tlp-badge ${badge_class}`;
+}
+
+function getBadgeLabel(status: StepExecutionStatus): string {
+    switch (status) {
+        case STEP_NOT_RUN:
+            return $gettext("Not run");
+        case STEP_BLOCKED:
+            return $gettext("Blocked");
+        case STEP_PASSED:
+            return $gettext("Passed");
+        case STEP_FAILED:
+            return $gettext("Failed");
+        default:
+            return "";
+    }
+}
 </script>
 
 <style scoped lang="scss">
@@ -88,6 +142,8 @@ defineProps<{
 .step-definition {
     display: flex;
     flex-direction: column;
+    align-items: flex-start;
+    gap: 5px 0;
 }
 
 .step-description {

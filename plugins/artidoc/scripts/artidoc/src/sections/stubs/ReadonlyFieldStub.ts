@@ -25,8 +25,10 @@ import type {
     ReadonlyFieldPermissions,
     ReadonlyFieldStaticList,
     ReadonlyFieldStaticListValue,
+    ReadonlyFieldStepExecutionValue,
     ReadonlyFieldStepsDefinition,
-    ReadonlyFieldStepValue,
+    ReadonlyFieldStepsExecution,
+    ReadonlyFieldStepDefinitionValue,
     ReadonlyFieldText,
     ReadonlyFieldUser,
     ReadonlyFieldUserGroupsList,
@@ -115,9 +117,19 @@ export const ReadonlyFieldStub = {
         value,
         display_type,
     }),
-    stepsDefinitionField: (value: ReadonlyFieldStepValue[]): ReadonlyFieldStepsDefinition => ({
+    stepsDefinitionField: (
+        value: ReadonlyFieldStepDefinitionValue[],
+    ): ReadonlyFieldStepsDefinition => ({
         type: "steps_definition",
         label: "Steps definition",
+        display_type: DISPLAY_TYPE_BLOCK,
+        value,
+    }),
+    stepsExecutionField: (
+        value: ReadonlyFieldStepExecutionValue[],
+    ): ReadonlyFieldStepsExecution => ({
+        type: "steps_execution",
+        label: "Steps execution",
         display_type: DISPLAY_TYPE_BLOCK,
         value,
     }),
