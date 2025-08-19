@@ -28,7 +28,6 @@ use Tracker_FormElement_Field_List_Bind_Static;
 use Tracker_FormElement_Field_List_Bind_Ugroups;
 use Tracker_FormElement_Field_List_Bind_Users;
 use Tracker_FormElement_Field_List_UnsavedValue;
-use Tracker_FormElement_Field_OpenList;
 use Tracker_FormElement_InvalidFieldValueException;
 use Tracker_Report;
 use Tracker_Report_AdditionalCriterion;
@@ -38,6 +37,7 @@ use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\FormElement\Field\Date\DateField;
+use Tuleap\Tracker\FormElement\Field\List\OpenListField;
 use Tuleap\Tracker\FormElement\Field\String\StringField;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserGroupValueBuilder;
@@ -335,7 +335,7 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
 
     private function buildStaticOpenListCriterion(Tracker_Report $report): Tracker_Report_Criteria
     {
-        $open_list_static_field = $this->createMock(Tracker_FormElement_Field_OpenList::class);
+        $open_list_static_field = $this->createMock(OpenListField::class);
 
         $criterion_open_list_static = new Tracker_Report_Criteria(
             6,
@@ -396,7 +396,7 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
 
     private function buildNotSetOpenListCriterion(Tracker_Report $report): Tracker_Report_Criteria
     {
-        $open_list_static_field = $this->createMock(Tracker_FormElement_Field_OpenList::class);
+        $open_list_static_field = $this->createMock(OpenListField::class);
 
         $criterion_open_list_static = new Tracker_Report_Criteria(
             8,

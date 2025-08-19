@@ -24,7 +24,7 @@ namespace Tuleap\Tracker\Action;
 
 final class OpenListFieldsCompatibilityVerifier implements VerifyOpenListFieldsAreCompatible
 {
-    public function areOpenListFieldsCompatible(\Tracker_FormElement_Field_OpenList $source_field, \Tracker_FormElement_Field_OpenList $destination_field): bool
+    public function areOpenListFieldsCompatible(\Tuleap\Tracker\FormElement\Field\List\OpenListField $source_field, \Tuleap\Tracker\FormElement\Field\List\OpenListField $destination_field): bool
     {
         return $source_field->getBind()::class === $destination_field->getBind()::class;
     }

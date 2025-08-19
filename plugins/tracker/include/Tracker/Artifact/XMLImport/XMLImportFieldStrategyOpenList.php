@@ -20,8 +20,9 @@
 
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
+use Tuleap\Tracker\FormElement\Field\List\OpenListField;
 
-class Tracker_Artifact_XMLImport_XMLImportFieldStrategyOpenList implements Tracker_Artifact_XMLImport_XMLImportFieldStrategy
+class Tracker_Artifact_XMLImport_XMLImportFieldStrategyOpenList implements Tracker_Artifact_XMLImport_XMLImportFieldStrategy // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public const FORMAT_ID       = 'id';
     public const FORMAT_LDAP     = 'ldap';
@@ -82,7 +83,7 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyOpenList implements Track
                 return '';
             }
 
-            return Tracker_FormElement_Field_OpenList::BIND_PREFIX . $user->getId();
+            return OpenListField::BIND_PREFIX . $user->getId();
         }
 
         return $field->getFieldData((string) $value);

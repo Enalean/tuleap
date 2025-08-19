@@ -31,7 +31,7 @@ use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_List_Bind_Static;
 use Tracker_FormElement_Field_List_Bind_Ugroups;
 use Tracker_FormElement_Field_List_Bind_Users;
-use Tracker_FormElement_Field_OpenList;
+use Tuleap\Tracker\FormElement\Field\List\OpenListField;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\OpenListValueBuilder;
 use UserManager;
@@ -77,7 +77,7 @@ final class ChangesetValueOpenListXMLExporterTest extends \Tuleap\Test\PHPUnit\T
         $bind->method('getType')->willReturn('users');
         $open_value = OpenListValueBuilder::anOpenListValue('email@tuleap.org')->build();
 
-        $this->field = $this->createMock(Tracker_FormElement_Field_OpenList::class);
+        $this->field = $this->createMock(OpenListField::class);
         $this->field->method('getBind')->willReturn($bind);
         $this->field->method('getName')->willReturn('CC');
         $this->field->method('getOpenValueById')->willReturn($open_value);
@@ -117,7 +117,7 @@ final class ChangesetValueOpenListXMLExporterTest extends \Tuleap\Test\PHPUnit\T
         $bind->method('getType')->willReturn('ugroups');
         $open_value = OpenListValueBuilder::anOpenListValue('new_ugroup')->build();
 
-        $this->field = $this->createMock(Tracker_FormElement_Field_OpenList::class);
+        $this->field = $this->createMock(OpenListField::class);
         $this->field->method('getBind')->willReturn($bind);
         $this->field->method('getName')->willReturn('ugroup_binded');
         $this->field->method('getOpenValueById')->willReturn($open_value);
@@ -154,7 +154,7 @@ final class ChangesetValueOpenListXMLExporterTest extends \Tuleap\Test\PHPUnit\T
         $bind->method('getType')->willReturn('static');
         $open_value = OpenListValueBuilder::anOpenListValue('keyword01')->build();
 
-        $this->field = $this->createMock(Tracker_FormElement_Field_OpenList::class);
+        $this->field = $this->createMock(OpenListField::class);
         $this->field->method('getBind')->willReturn($bind);
         $this->field->method('getName')->willReturn('keywords');
         $this->field->method('getOpenValueById')->willReturn($open_value);

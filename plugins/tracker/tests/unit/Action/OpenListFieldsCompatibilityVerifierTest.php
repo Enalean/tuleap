@@ -44,9 +44,9 @@ final class OpenListFieldsCompatibilityVerifierTest extends \Tuleap\Test\PHPUnit
         );
     }
 
-    private function getOpenListFieldWithBindType(string $bind_class): \Tracker_FormElement_Field_OpenList
+    private function getOpenListFieldWithBindType(string $bind_class): \Tuleap\Tracker\FormElement\Field\List\OpenListField
     {
-        $field = $this->createStub(\Tracker_FormElement_Field_OpenList::class);
+        $field = $this->createStub(\Tuleap\Tracker\FormElement\Field\List\OpenListField::class);
         $field->method('getBind')->willReturn(
             $this->createStub($bind_class)
         );

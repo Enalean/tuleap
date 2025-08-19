@@ -186,7 +186,7 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
 
     public function testFieldWillNotBeMigratedWhenUserCanNotUpdateField(): void
     {
-        $source_open_list = $this->createStub(\Tracker_FormElement_Field_OpenList::class);
+        $source_open_list = $this->createStub(\Tuleap\Tracker\FormElement\Field\List\OpenListField::class);
         $source_open_list->method('getId')->willReturn(12);
         $source_open_list->method('getTrackerId')->willReturn(self::SOURCE_TRACKER_ID);
         $source_open_list->method('getLabel')->willReturn('string_field');
@@ -535,7 +535,7 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
 
     public function testOpenListFieldWillNotBeMigratedDestinationFieldIsNotCompatible(): void
     {
-        $source_open_list_field = $this->createStub(\Tracker_FormElement_Field_OpenList::class);
+        $source_open_list_field = $this->createStub(\Tuleap\Tracker\FormElement\Field\List\OpenListField::class);
         $source_open_list_field->method('getLabel')->willReturn('open_list');
         $source_open_list_field->method('getName')->willReturn('open_list');
         $source_open_list_field->method('getId')->willReturn(12);
@@ -557,13 +557,13 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
 
     public function testOpenListCanBeMigrated(): void
     {
-        $source_open_list_field = $this->createStub(\Tracker_FormElement_Field_OpenList::class);
+        $source_open_list_field = $this->createStub(\Tuleap\Tracker\FormElement\Field\List\OpenListField::class);
         $source_open_list_field->method('getLabel')->willReturn('open_list');
         $source_open_list_field->method('getName')->willReturn('open_list');
         $source_open_list_field->method('getId')->willReturn(12);
         $source_open_list_field->method('getTrackerId')->willReturn(self::SOURCE_TRACKER_ID);
 
-        $destination_open_list_field = $this->createStub(\Tracker_FormElement_Field_OpenList::class);
+        $destination_open_list_field = $this->createStub(\Tuleap\Tracker\FormElement\Field\List\OpenListField::class);
         $destination_open_list_field->method('getLabel')->willReturn('open_list');
         $destination_open_list_field->method('getName')->willReturn('open_list');
         $destination_open_list_field->method('userCanUpdate')->willReturn(true);

@@ -27,21 +27,21 @@ use Tuleap\Tracker\FormElement\Field\ListFields\RetrieveUsedListField;
 final class RetrieveUsedListFieldStub implements RetrieveUsedListField
 {
     /**
-     * @param array<int, \Tuleap\Tracker\FormElement\Field\List\SelectboxField|\Tracker_FormElement_Field_OpenList> $fields
+     * @param array<int, \Tuleap\Tracker\FormElement\Field\List\SelectboxField|\Tuleap\Tracker\FormElement\Field\List\OpenListField> $fields
      */
     private function __construct(private array $fields)
     {
     }
 
     public static function withField(
-        \Tuleap\Tracker\FormElement\Field\List\SelectboxField|\Tracker_FormElement_Field_OpenList $field,
+        \Tuleap\Tracker\FormElement\Field\List\SelectboxField|\Tuleap\Tracker\FormElement\Field\List\OpenListField $field,
     ): self {
         return new self([$field]);
     }
 
     public static function withFields(
-        \Tuleap\Tracker\FormElement\Field\List\SelectboxField|\Tracker_FormElement_Field_OpenList $field,
-        \Tuleap\Tracker\FormElement\Field\List\SelectboxField|\Tracker_FormElement_Field_OpenList ...$other_fields,
+        \Tuleap\Tracker\FormElement\Field\List\SelectboxField|\Tuleap\Tracker\FormElement\Field\List\OpenListField $field,
+        \Tuleap\Tracker\FormElement\Field\List\SelectboxField|\Tuleap\Tracker\FormElement\Field\List\OpenListField ...$other_fields,
     ): self {
         return new self([$field, ...$other_fields]);
     }
@@ -55,7 +55,7 @@ final class RetrieveUsedListFieldStub implements RetrieveUsedListField
     public function getUsedListFieldById(
         \Tuleap\Tracker\Tracker $tracker,
         int $field_id,
-    ): \Tuleap\Tracker\FormElement\Field\List\SelectboxField|\Tracker_FormElement_Field_OpenList|null {
+    ): \Tuleap\Tracker\FormElement\Field\List\SelectboxField|\Tuleap\Tracker\FormElement\Field\List\OpenListField|null {
         foreach ($this->fields as $field) {
             if ($field_id === $field->getId()) {
                 return $field;
