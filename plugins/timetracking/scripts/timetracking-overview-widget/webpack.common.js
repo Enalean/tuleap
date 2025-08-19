@@ -37,9 +37,6 @@ export default [
             path.resolve(__dirname, "./frontend-assets"),
             "/assets/timetracking/timetracking-overview-widget/",
         ),
-        externals: {
-            tlp: "tlp",
-        },
         module: {
             rules: [
                 webpack_configurator.rule_vue_loader,

@@ -29,12 +29,14 @@ import type { Query } from "../query/QueryRetriever";
 import { RetrieveQueryStub } from "../../tests/stubs/RetrieveQueryStub";
 import { RETRIEVE_QUERY, USER_LOCALE_KEY, WIDGET_ID } from "../injection-symbols";
 
-vi.mock("tlp", () => ({
-    datePicker: (): { setDate(): void } => ({
-        setDate: (): void => {
-            // Do nothing
-        },
-    }),
+vi.mock("@tuleap/tlp-date-picker", () => ({
+    datePicker(): { setDate(): void } {
+        return {
+            setDate(): void {
+                // Do nothing
+            },
+        };
+    },
 }));
 
 const mireillelabeille: User = {

@@ -32,6 +32,9 @@ dependencies:
   '@tuleap/plugin-timetracking-time-formatters':
     specifier: workspace:*
     version: link:../lib/time-formatters
+  '@tuleap/tlp-date-picker':
+    specifier: workspace:^
+    version: link:../../../../lib/frontend/tlp-date-picker
   '@tuleap/tlp-modal':
     specifier: workspace:*
     version: link:../../../../lib/frontend/tlp-modal

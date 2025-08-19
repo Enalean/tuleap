@@ -61,7 +61,7 @@
 
 <script>
 import { inject } from "vue";
-import { datePicker } from "tlp";
+import { datePicker } from "@tuleap/tlp-date-picker";
 import { useOverviewWidgetStore } from "../../store/index";
 
 export default {

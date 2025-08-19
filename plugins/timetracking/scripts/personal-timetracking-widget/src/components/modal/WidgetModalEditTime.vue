@@ -85,7 +85,7 @@ import {
     formatDatetimeToYearMonthDay,
 } from "@tuleap/plugin-timetracking-time-formatters";
 import { TIME_REGEX } from "@tuleap/plugin-timetracking-constants";
-import { datePicker } from "tlp";
+import { datePicker } from "@tuleap/tlp-date-picker";
 import type { Artifact, PersonalTime } from "@tuleap/plugin-timetracking-rest-api-types";
 import { computed, onMounted, ref } from "vue";
 import { useGettext } from "vue3-gettext";

@@ -93,7 +93,7 @@
 <script setup lang="ts">
 import "@tuleap/lazybox";
 import type { Lazybox } from "@tuleap/lazybox";
-import { datePicker, type DatePickerInstance } from "tlp";
+import { datePicker, type DatePickerInstance } from "@tuleap/tlp-date-picker";
 import { useGettext } from "vue3-gettext";
 import type { Ref } from "vue";
 import { onBeforeUnmount, onMounted, ref } from "vue";

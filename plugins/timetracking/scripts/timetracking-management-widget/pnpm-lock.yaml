@@ -26,9 +26,9 @@ dependencies:
   '@tuleap/plugin-timetracking-time-formatters':
     specifier: workspace:^
     version: link:../lib/time-formatters
-  '@tuleap/tlp':
-    specifier: workspace:*
-    version: link:../../../../src/scripts/tlp
+  '@tuleap/tlp-date-picker':
+    specifier: workspace:^
+    version: link:../../../../lib/frontend/tlp-date-picker
   '@tuleap/vue-strict-inject':
     specifier: workspace:^
     version: link:../../../../lib/frontend/vue-strict-inject

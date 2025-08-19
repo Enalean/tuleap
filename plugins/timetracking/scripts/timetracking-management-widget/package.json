@@ -13,7 +13,7 @@
     "@tuleap/lazybox-users-autocomplete": "workspace:*",
     "@tuleap/plugin-timetracking-predefined-time-periods": "workspace:*",
     "@tuleap/plugin-timetracking-time-formatters": "workspace:^",
-    "@tuleap/tlp": "workspace:*",
+    "@tuleap/tlp-date-picker": "workspace:^",
     "@tuleap/vue-strict-inject": "workspace:^",
     "@tuleap/vue3-gettext-init": "workspace:*",
     "neverthrow": "6.0.0",
