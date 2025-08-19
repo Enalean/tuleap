@@ -21,6 +21,7 @@
 namespace Tuleap\TestManagement\Step\Execution\Field;
 
 use Codendi_HTMLPurifier;
+use Override;
 use TemplateRendererFactory;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue;
@@ -37,44 +38,51 @@ use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
 use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 
-class StepExecution extends Tracker_FormElement_Field implements TrackerFormElementExternalField
+class StepsExecution extends Tracker_FormElement_Field implements TrackerFormElementExternalField
 {
-    public const TYPE             = 'ttmstepexec';
-    public const UPDATE_VALUE_KEY = 'steps_results';
+    public const string TYPE             = 'ttmstepexec';
+    public const string UPDATE_VALUE_KEY = 'steps_results';
 
     /**
      * @return void
      */
+    #[Override]
     public function accept(Tracker_FormElement_FieldVisitor $visitor)
     {
         $visitor->visitExternalField($this);
     }
 
+    #[Override]
     public static function getFactoryLabel()
     {
-        return dgettext('tuleap-testmanagement', 'Step execution');
+        return dgettext('tuleap-testmanagement', 'Steps execution');
     }
 
+    #[Override]
     public static function getFactoryDescription()
     {
-        return dgettext('tuleap-testmanagement', 'Execution result of a step');
+        return dgettext('tuleap-testmanagement', 'Execution result of steps');
     }
 
+    #[Override]
     public static function getFactoryIconUseIt()
     {
         return TESTMANAGEMENT_BASE_URL . '/images/ic/tick-circle.png';
     }
 
+    #[Override]
     public static function getFactoryIconCreate()
     {
         return TESTMANAGEMENT_BASE_URL . '/images/ic/tick-circle--plus.png';
     }
 
+    #[Override]
     public static function getFactoryUniqueField()
     {
         return true;
     }
 
+    #[Override]
     protected function fetchAdminFormElement()
     {
         return '<ol><li><span>First step definition</span> <span class="label">passed</span></li></ol>';
@@ -83,6 +91,7 @@ class StepExecution extends Tracker_FormElement_Field implements TrackerFormElem
     /**
      * @return null
      */
+    #[Override]
     public function getRESTAvailableValues()
     {
         return null;
@@ -91,6 +100,7 @@ class StepExecution extends Tracker_FormElement_Field implements TrackerFormElem
     /**
      * @return false
      */
+    #[Override]
     public function canBeUsedAsReportCriterion()
     {
         return false;
@@ -99,36 +109,43 @@ class StepExecution extends Tracker_FormElement_Field implements TrackerFormElem
     /**
      * @return false
      */
+    #[Override]
     public function canBeUsedAsReportColumn()
     {
         return false;
     }
 
+    #[Override]
     public function fetchCriteriaValue(Tracker_Report_Criteria $criteria): string
     {
         return '';
     }
 
+    #[Override]
     public function fetchRawValue(mixed $value): string
     {
         return '';
     }
 
+    #[Override]
     public function getCriteriaFromWhere(Tracker_Report_Criteria $criteria): Option
     {
         return Option::nothing(ParametrizedFromWhere::class);
     }
 
+    #[Override]
     public function getQuerySelect(): string
     {
         return '';
     }
 
+    #[Override]
     protected function getCriteriaDao()
     {
         return null;
     }
 
+    #[Override]
     protected function fetchArtifactValue(
         Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value,
@@ -143,6 +160,7 @@ class StepExecution extends Tracker_FormElement_Field implements TrackerFormElem
             . $this->fetchArtifactValueReadOnly($artifact, $value);
     }
 
+    #[Override]
     public function fetchArtifactValueReadOnly(
         Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value = null,
@@ -164,6 +182,7 @@ class StepExecution extends Tracker_FormElement_Field implements TrackerFormElem
     /**
      * @return string
      */
+    #[Override]
     public function fetchArtifactValueWithEditionFormIfEditable(
         Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value = null,
@@ -173,26 +192,31 @@ class StepExecution extends Tracker_FormElement_Field implements TrackerFormElem
             $this->getHiddenArtifactValueForEdition($artifact, $value, $submitted_values);
     }
 
+    #[Override]
     protected function fetchSubmitValue(array $submitted_values): string
     {
         return '';
     }
 
+    #[Override]
     protected function fetchSubmitValueMasschange(): string
     {
         return '';
     }
 
+    #[Override]
     protected function fetchTooltipValue(Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null): string
     {
         return '';
     }
 
+    #[Override]
     public function fetchAddCardFields(array $used_fields, string $prefix = ''): string
     {
         return '';
     }
 
+    #[Override]
     public function canBeDisplayedInTooltip(): bool
     {
         return false;
@@ -201,21 +225,25 @@ class StepExecution extends Tracker_FormElement_Field implements TrackerFormElem
     /**
      * @return StepExecutionChangesetValueDao
      */
+    #[Override]
     protected function getValueDao()
     {
         return new StepExecutionChangesetValueDao();
     }
 
+    #[Override]
     public function fetchRawValueFromChangeset(Tracker_Artifact_Changeset $changeset): string
     {
         return '';
     }
 
+    #[Override]
     protected function validate(Artifact $artifact, $value)
     {
         return true;
     }
 
+    #[Override]
     public function hasChanges(
         Artifact $artifact,
         Tracker_Artifact_ChangesetValue $old_value,
@@ -232,6 +260,7 @@ class StepExecution extends Tracker_FormElement_Field implements TrackerFormElem
         return array_diff_assoc($new_values, $old_values) !== [] || array_diff_assoc($old_values, $new_values) !== [];
     }
 
+    #[Override]
     protected function saveValue(
         $artifact,
         $changeset_value_id,
@@ -242,6 +271,7 @@ class StepExecution extends Tracker_FormElement_Field implements TrackerFormElem
         return $this->getValueDao()->create($changeset_value_id, $value[self::UPDATE_VALUE_KEY]);
     }
 
+    #[Override]
     public function getChangesetValue($changeset, $value_id, $has_changed)
     {
         $steps = [];
@@ -258,9 +288,10 @@ class StepExecution extends Tracker_FormElement_Field implements TrackerFormElem
             $steps[] = new StepResult($step, $row['status']);
         }
 
-        return new StepExecutionChangesetValue($value_id, $changeset, $this, $has_changed, $steps);
+        return new StepsExecutionChangesetValue($value_id, $changeset, $this, $has_changed, $steps);
     }
 
+    #[Override]
     public function fetchChangesetValue(
         int $artifact_id,
         int $changeset_id,
@@ -274,6 +305,7 @@ class StepExecution extends Tracker_FormElement_Field implements TrackerFormElem
     /**
      * @return ViewAdmin
      */
+    #[Override]
     public function getFormAdminVisitor(Tracker_FormElement_Field $element, array $used_element)
     {
         return new ViewAdmin($element, $used_element);
@@ -305,6 +337,7 @@ class StepExecution extends Tracker_FormElement_Field implements TrackerFormElem
         );
     }
 
+    #[Override]
     public function isAlwaysInEditMode(): bool
     {
         return false;

@@ -53,7 +53,7 @@ msgstr ""
 msgid "Enter the tracker id..."
 msgstr ""
 
-msgid "Execution result of a step"
+msgid "Execution result of steps"
 msgstr ""
 
 msgid "Expected results"
@@ -91,10 +91,10 @@ msgstr ""
 msgid "Start TestManagement"
 msgstr ""
 
-msgid "Step execution"
+msgid "Steps definition"
 msgstr ""
 
-msgid "Steps definition"
+msgid "Steps execution"
 msgstr ""
 
 msgid "Submit"

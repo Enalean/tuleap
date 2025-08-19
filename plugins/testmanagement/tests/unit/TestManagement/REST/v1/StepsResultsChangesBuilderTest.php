@@ -28,8 +28,8 @@ use Tracker_FormElementFactory;
 use Tuleap\TestManagement\Campaign\Execution\ExecutionDao;
 use Tuleap\TestManagement\Step\Definition\Field\StepsDefinition;
 use Tuleap\TestManagement\Step\Definition\Field\StepsDefinitionChangesetValue;
-use Tuleap\TestManagement\Step\Execution\Field\StepExecution;
-use Tuleap\TestManagement\Step\Execution\Field\StepExecutionChangesetValue;
+use Tuleap\TestManagement\Step\Execution\Field\StepsExecution;
+use Tuleap\TestManagement\Step\Execution\Field\StepsExecutionChangesetValue;
 use Tuleap\TestManagement\Step\Execution\StepResult;
 use Tuleap\TestManagement\Step\Step;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -64,7 +64,7 @@ final class StepsResultsChangesBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->definition_artifact  = $this->createMock(Artifact::class);
         $this->form_element_factory = $this->createMock(Tracker_FormElementFactory::class);
         $this->execution_dao        = $this->createMock(ExecutionDao::class);
-        $this->execution_field      = $this->createMock(StepExecution::class);
+        $this->execution_field      = $this->createMock(StepsExecution::class);
         $this->execution_field->method('getId')->willReturn(147);
         $this->execution_status_field     = $this->createMock(Tracker_FormElement_Field_List::class);
         $this->definition_field           = $this->createMock(StepsDefinition::class);
@@ -409,7 +409,7 @@ final class StepsResultsChangesBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $existing_step_result = $this->createMock(StepResult::class);
         $existing_step_result->method('getStep')->willReturn($step1);
         $existing_step_result->method('getStatus')->willReturn($status);
-        $existing_steps_changeset_value = $this->createMock(StepExecutionChangesetValue::class);
+        $existing_steps_changeset_value = $this->createMock(StepsExecutionChangesetValue::class);
         $existing_steps_changeset_value->method('getValue')->willReturn([$existing_step_result]);
         $this->execution_artifact->method('getValue')->willReturn($existing_steps_changeset_value);
     }

@@ -22,15 +22,29 @@ declare(strict_types=1);
 
 namespace Tuleap\TestManagement\Test\Builders;
 
-use Tuleap\TestManagement\Step\Execution\Field\StepExecution;
+use Tuleap\TestManagement\Step\Execution\Field\StepsExecution;
+use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Tracker;
 
-final class StepExecutionFieldBuilder
+final class StepsExecutionFieldBuilder
 {
-    public static function aStepExecutionField(): StepExecution
+    private Tracker $tracker;
+
+    private function __construct(readonly private int $id)
     {
-        return new StepExecution(
-            1,
-            102,
+        $this->tracker = TrackerTestBuilder::aTracker()->withId(65)->build();
+    }
+
+    public static function aStepsExecutionField(int $id): self
+    {
+        return new self($id);
+    }
+
+    public function build(): StepsExecution
+    {
+        $field = new StepsExecution(
+            $this->id,
+            $this->tracker->getId(),
             0,
             'steps_exec',
             'Steps execution',
@@ -40,7 +54,10 @@ final class StepExecutionFieldBuilder
             null,
             null,
             10,
-            null
+            null,
         );
+        $field->setTracker($this->tracker);
+
+        return $field;
     }
 }

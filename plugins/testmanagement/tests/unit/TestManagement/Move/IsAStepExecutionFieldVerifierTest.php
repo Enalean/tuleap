@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\TestManagement\Move;
 
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\TestManagement\Test\Builders\StepExecutionFieldBuilder;
+use Tuleap\TestManagement\Test\Builders\StepsExecutionFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -33,7 +33,7 @@ final class IsAStepExecutionFieldVerifierTest extends TestCase
     {
         self::assertTrue(
             IsAStepExecutionFieldVerifier::isAStepExecutionField(
-                StepExecutionFieldBuilder::aStepExecutionField(),
+                StepsExecutionFieldBuilder::aStepsExecutionField(1)->build(),
             )
         );
     }

@@ -20,12 +20,13 @@
 
 namespace Tuleap\TestManagement\Step\Execution\Field;
 
+use Override;
 use PFUser;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValueVisitor;
 use Tuleap\TestManagement\Step\Execution\StepResult;
 
-class StepExecutionChangesetValue extends \Tracker_Artifact_ChangesetValue
+class StepsExecutionChangesetValue extends \Tracker_Artifact_ChangesetValue
 {
     /**
      * @var StepResult[]
@@ -42,7 +43,7 @@ class StepExecutionChangesetValue extends \Tracker_Artifact_ChangesetValue
     public function __construct(
         $id,
         Tracker_Artifact_Changeset $changeset,
-        StepExecution $field,
+        StepsExecution $field,
         $has_changed,
         array $step_results,
     ) {
@@ -50,6 +51,7 @@ class StepExecutionChangesetValue extends \Tracker_Artifact_ChangesetValue
         $this->steps = $step_results;
     }
 
+    #[Override]
     public function diff($changeset_value, $format = 'html', ?PFUser $user = null, $ignore_perms = false)
     {
         return '';
@@ -59,14 +61,17 @@ class StepExecutionChangesetValue extends \Tracker_Artifact_ChangesetValue
      * @param mixed $format
      * @return void
      */
+    #[Override]
     public function nodiff($format = 'html')
     {
     }
 
+    #[Override]
     public function getRESTValue(PFUser $user)
     {
     }
 
+    #[Override]
     public function getFullRESTValue(PFUser $user)
     {
     }
@@ -74,6 +79,7 @@ class StepExecutionChangesetValue extends \Tracker_Artifact_ChangesetValue
     /**
      * @return mixed
      */
+    #[Override]
     public function accept(Tracker_Artifact_ChangesetValueVisitor $visitor)
     {
         return $visitor->visitExternalField($this);
@@ -84,6 +90,7 @@ class StepExecutionChangesetValue extends \Tracker_Artifact_ChangesetValue
      *
      * @return array The value of this artifact changeset value
      */
+    #[Override]
     public function getValue()
     {
         return $this->steps;
