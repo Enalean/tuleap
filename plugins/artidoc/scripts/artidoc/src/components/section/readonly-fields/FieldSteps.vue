@@ -82,23 +82,24 @@ defineProps<{
 function getStatusBadgeClasses(status: StepExecutionStatus): string {
     let badge_class = "";
 
+    if (status === STEP_NOT_RUN) {
+        return "tlp-badge-outline document-badge-outline tlp-badge-secondary tlp-swatch-secondary";
+    }
+
     switch (status) {
-        case STEP_NOT_RUN:
-            badge_class = "tlp-badge-secondary";
-            break;
         case STEP_BLOCKED:
-            badge_class = "tlp-badge-info";
+            badge_class = "tlp-badge-info document-badge-info";
             break;
         case STEP_PASSED:
-            badge_class = "tlp-badge-success";
+            badge_class = "tlp-badge-success document-badge-success";
             break;
         case STEP_FAILED:
-            badge_class = "tlp-badge-danger";
+            badge_class = "tlp-badge-danger document-badge-danger";
             break;
         default:
             break;
     }
-    return `tlp-badge ${badge_class}`;
+    return `tlp-badge document-badge ${badge_class}`;
 }
 
 function getBadgeLabel(status: StepExecutionStatus): string {

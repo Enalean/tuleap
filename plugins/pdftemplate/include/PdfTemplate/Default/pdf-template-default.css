@@ -7,11 +7,15 @@ body {
     --dimmed-color-darker-10: #585858;
 
     --dark-color: #282621;
+    --white-color: #ffffff;
 
     --medium-spacing: 16px;
     --small-spacing: 8px;
 
-    --secondary-background-color: #e3e6eb;
+    --secondary-color: #e3e6eb;
+    --info-color: #1aacd8;
+    --success-color: #1aa350;
+    --danger-color: #e04b4b;
 
     /* tlp-colors */
     --inca-silver-primary: #5d5d5d;
@@ -519,8 +523,29 @@ tlp-relative-date {
     border: 1px solid var(--border-color);
 }
 
-.document-badge-outline {
+.document-badge-outline, .document-badge {
     border-radius: 3px;
+}
+
+.document-badge {
+    padding: 4px var(--small-spacing);
+    font-size: .75rem;
+    font-weight: 600;
+    line-height: .75rem;
+    white-space: nowrap;
+    color: var(--white-color);
+}
+
+.document-badge-success {
+    background-color: var(--success-color);
+}
+
+.document-badge-info {
+    background-color: var(--info-color);
+}
+
+.document-badge-danger {
+    background-color: var(--danger-color);
 }
 
 .document-avatar-mini {
@@ -583,6 +608,8 @@ tlp-relative-date {
 .document-step-definition {
     display: flex;
     flex-direction: column;
+    align-items: flex-start;
+    gap: 5px 0;
 }
 
 .document-step-description,
