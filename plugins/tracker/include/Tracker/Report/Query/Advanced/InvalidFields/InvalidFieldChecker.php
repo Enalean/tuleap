@@ -63,7 +63,7 @@ final readonly class InvalidFieldChecker
             \Tuleap\Tracker\FormElement\Field\LastUpdateDate\LastUpdateDateField::class,
             \Tuleap\Tracker\FormElement\Field\SubmittedOn\SubmittedOnField::class => $this->date_field_checker->checkFieldIsValidForComparison($comparison, $field),
             \Tracker_FormElement_Field_File::class                                => $this->file_field_checker->checkFieldIsValidForComparison($comparison, $field),
-            \Tracker_FormElement_Field_Radiobutton::class,
+            \Tuleap\Tracker\FormElement\Field\List\RadioButtonField::class,
             \Tuleap\Tracker\FormElement\Field\List\CheckboxField::class,
             \Tuleap\Tracker\FormElement\Field\List\MultiSelectboxField::class,
             \Tuleap\Tracker\FormElement\Field\List\SelectboxField::class          => $this->list_field_checker->checkFieldIsValidForComparison($comparison, $field),

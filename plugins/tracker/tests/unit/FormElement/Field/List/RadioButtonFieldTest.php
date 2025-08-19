@@ -24,11 +24,10 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\FormElement;
+namespace Tuleap\Tracker\FormElement\Field\List;
 
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use Tracker_FormElement_Field_List_Bind_StaticValue_None;
-use Tracker_FormElement_Field_Radiobutton;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
@@ -36,11 +35,11 @@ use Tuleap\Tracker\Test\Builders\ChangesetValueListTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 
 #[DisableReturnValueGenerationForTestDoubles]
-final class Tracker_FormElement_Field_RadiobuttonTest extends TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+final class RadioButtonFieldTest extends TestCase
 {
-    private function getField(): Tracker_FormElement_Field_Radiobutton
+    private function getField(): RadioButtonField
     {
-        return new Tracker_FormElement_Field_Radiobutton(
+        return new RadioButtonField(
             1147,
             111,
             1,
