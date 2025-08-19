@@ -15,8 +15,7 @@ type system, it comes with some issues:
 task which costs us some CPU time
 * it is harder to troubleshoot some typechecking edge cases, some issues only show up under specific `build` or `test`
 conditions
-* it is less easy to integrate specific typechecking tools like [`vue-tsc`](https://github.com/johnsoncodehk/volar/tree/master/packages/vue-tsc)
-with our build tools
+* it is less easy to integrate specific typechecking tools like [`vue-tsc`][1] with our build tools
 
 
 ## Considered Options
@@ -39,3 +38,4 @@ The typechecking is moved into its own task for each package.
 * We have to go through each package of the codebase to do the change
 
 [0]: https://tuleap.net/plugins/tracker/?aid=31907
+[1]: https://github.com/vuejs/language-tools/tree/master/packages/tsc
