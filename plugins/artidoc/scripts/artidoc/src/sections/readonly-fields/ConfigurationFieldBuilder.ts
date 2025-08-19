@@ -49,6 +49,7 @@ import type {
     ConfigurationFieldType,
 } from "@/sections/readonly-fields/AvailableReadonlyFields";
 import {
+    TTM_STEPS_EXECUTION_FIELD,
     TTM_STEPS_DEFINITION_FIELD,
     DISPLAY_TYPE_BLOCK,
     DISPLAY_TYPE_COLUMN,
@@ -60,6 +61,7 @@ import {
     PERMISSIONS_FIELD,
     STATIC_LIST_FIELD,
     STEPS_DEFINITION_FIELD,
+    STEPS_EXECUTION_FIELD,
     TEXT_FIELD,
     USER_FIELD,
     USER_GROUP_LIST_FIELD,
@@ -182,6 +184,15 @@ const buildConfiguredFieldIfSupported = (
             ...field_base,
             display_type: DISPLAY_TYPE_BLOCK,
             type: STEPS_DEFINITION_FIELD,
+            can_display_type_be_changed: false,
+        });
+    }
+
+    if (field.type === TTM_STEPS_EXECUTION_FIELD) {
+        return Option.fromValue<ConfigurationField>({
+            ...field_base,
+            display_type: DISPLAY_TYPE_BLOCK,
+            type: STEPS_EXECUTION_FIELD,
             can_display_type_be_changed: false,
         });
     }

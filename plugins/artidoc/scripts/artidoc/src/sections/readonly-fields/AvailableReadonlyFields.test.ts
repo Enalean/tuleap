@@ -23,6 +23,7 @@ import type {
     ConfigurationField,
 } from "@/sections/readonly-fields/AvailableReadonlyFields";
 import {
+    TTM_STEPS_EXECUTION_FIELD,
     TTM_STEPS_DEFINITION_FIELD,
     filterAlreadySelectedFields,
     filterSemanticsTitleDescriptionBoundField,
@@ -265,6 +266,12 @@ describe("getAvailableFields", () => {
         label: "Steps definition",
     } as ArtidocStructureFields;
 
+    const steps_execution_field = {
+        field_id: 153,
+        type: TTM_STEPS_EXECUTION_FIELD,
+        label: "Steps execution",
+    } as ArtidocStructureFields;
+
     const all_fields: Readonly<ArtidocStructureFields[]> = [
         string_field,
         text_field,
@@ -303,6 +310,7 @@ describe("getAvailableFields", () => {
         last_update_date_field,
         permissions_field,
         steps_definition_field,
+        steps_execution_field,
     ];
 
     const tracker_information = {
@@ -350,6 +358,7 @@ describe("getAvailableFields", () => {
                 ConfigurationFieldBuilder.fromSupportedTrackerField(last_update_date_field),
                 ConfigurationFieldBuilder.fromSupportedTrackerField(permissions_field),
                 ConfigurationFieldBuilder.fromSupportedTrackerField(steps_definition_field),
+                ConfigurationFieldBuilder.fromSupportedTrackerField(steps_execution_field),
             ]);
         });
     });
