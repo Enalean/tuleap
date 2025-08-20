@@ -32,7 +32,6 @@ use Tracker_Artifact_ChangesetValue_Text;
 use Tracker_FormElement_Field_LastModifiedBy;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_PermissionsOnArtifact;
-use Tracker_FormElement_Field_SubmittedBy;
 use Tuleap\Artidoc\Document\Field\ArtifactLink\ArtifactLinkFieldWithValueBuilder;
 use Tuleap\Artidoc\Document\Field\Date\DateFieldWithValueBuilder;
 use Tuleap\Artidoc\Document\Field\List\ListFieldWithValueBuilder;
@@ -51,6 +50,7 @@ use Tuleap\Tracker\Artifact\Changeset\ArtifactLink\ArtifactLinkChangesetValue;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\Date\DateField;
 use Tuleap\Tracker\FormElement\Field\NumericField;
+use Tuleap\Tracker\FormElement\Field\SubmittedBy\SubmittedByField;
 use Tuleap\Tracker\FormElement\Field\Text\TextField;
 
 final readonly class FieldsWithValuesBuilder implements GetFieldsWithValues
@@ -105,7 +105,7 @@ final readonly class FieldsWithValuesBuilder implements GetFieldsWithValues
 
         if (
             $configured_field->field instanceof Tracker_FormElement_Field_LastModifiedBy
-            || $configured_field->field instanceof Tracker_FormElement_Field_SubmittedBy
+            || $configured_field->field instanceof SubmittedByField
         ) {
             return [...$fields, $this->user_field_with_value_builder->buildUserFieldWithValue($configured_field, $changeset)];
         }

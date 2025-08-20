@@ -35,8 +35,8 @@ use Tuleap\Tracker\FormElement\Field\LastUpdateDate\LastUpdateDateField;
 use Tuleap\Tracker\FormElement\Field\List\CheckboxField;
 use Tuleap\Tracker\FormElement\Field\List\MultiSelectboxField;
 use Tuleap\Tracker\FormElement\Field\List\OpenListField;
-use Tuleap\Tracker\FormElement\Field\List\SelectboxField;
 use Tuleap\Tracker\FormElement\Field\List\RadioButtonField;
+use Tuleap\Tracker\FormElement\Field\List\SelectboxField;
 use Tuleap\Tracker\FormElement\Field\ListFields\RetrieveUsedListField;
 use Tuleap\Tracker\FormElement\Field\PerTrackerArtifactId\PerTrackerArtifactIdField;
 use Tuleap\Tracker\FormElement\Field\Priority\PriorityField;
@@ -44,6 +44,7 @@ use Tuleap\Tracker\FormElement\Field\RetrieveFieldById;
 use Tuleap\Tracker\FormElement\Field\RetrieveUsedFields;
 use Tuleap\Tracker\FormElement\Field\Shareable\PropagatePropertiesDao;
 use Tuleap\Tracker\FormElement\Field\String\StringField;
+use Tuleap\Tracker\FormElement\Field\SubmittedBy\SubmittedByField;
 use Tuleap\Tracker\FormElement\Field\SubmittedOn\SubmittedOnField;
 use Tuleap\Tracker\FormElement\Field\Text\TextField;
 use Tuleap\Tracker\FormElement\FieldNameFormatter;
@@ -125,7 +126,7 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
         self::FIELD_ARTIFACT_ID_TYPE => ArtifactIdField::class,
         self::FIELD_SUBMITTED_ON_TYPE => SubmittedOnField::class,
         self::FIELD_ARTIFACT_IN_TRACKER => PerTrackerArtifactIdField::class,
-        self::FIELD_SUBMITTED_BY_TYPE => Tracker_FormElement_Field_SubmittedBy::class,
+        self::FIELD_SUBMITTED_BY_TYPE => SubmittedByField::class,
         self::FIELD_LAST_MODIFIED_BY => Tracker_FormElement_Field_LastModifiedBy::class,
         self::FIELD_CROSS_REFERENCES => Tracker_FormElement_Field_CrossReferences::class,
         self::FIELD_BURNDOWN => Tracker_FormElement_Field_Burndown::class,
