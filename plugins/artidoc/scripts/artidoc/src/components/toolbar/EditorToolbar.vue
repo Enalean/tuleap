@@ -39,6 +39,7 @@
             bullet_list: true,
         }"
         v-bind:style_elements="{ subtitles: true, text: true, preformatted: true }"
+        v-bind:other_elements="{ emoji: true }"
         v-bind:additional_elements="[
             {
                 position: 'at_the_end',

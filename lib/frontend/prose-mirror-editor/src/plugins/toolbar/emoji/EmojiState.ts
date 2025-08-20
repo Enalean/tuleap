@@ -1,5 +1,5 @@
-/*
- * Copyright (c) Enalean, 2024 - present. All Rights Reserved.
+/**
+ * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,28 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * Reexport the prose-mirror Node type as EditorNode to avoid
- * the confusion with the DOM Node type.
- */
-import type { Node } from "prosemirror-model";
-export type EditorNode = Node;
-
-export type LinkProperties = {
-    readonly href: string;
-    readonly title: string;
+export type EmojiState = {
+    readonly is_activated: boolean;
+    readonly is_disabled: boolean;
+    readonly emoji_string: string;
 };
 
-export type ImageProperties = {
-    readonly src: string;
-    readonly title: string;
-};
-
-export type EmojiProperties = {
-    readonly emoji: string;
-};
-
-export type Extents = {
-    from: number;
-    to: number;
+export const EmojiState = {
+    disabled: (): EmojiState => ({
+        is_activated: false,
+        is_disabled: true,
+        emoji_string: "",
+    }),
 };

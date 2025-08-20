@@ -20,4 +20,4 @@
 export * from "./prose-mirror";
 export type { EditorNodes } from "../custom_schema";
 export { prosemirror_nodes } from "../custom_schema";
-export type { LinkProperties, ImageProperties } from "./internal-types";
+export type { LinkProperties, ImageProperties, EmojiProperties } from "./internal-types";

@@ -80,3 +80,31 @@ $height-of-separator: calc(
 .prose-mirror-toolbar-select-disabled {
     cursor: not-allowed;
 }
+
+.popover-scroll {
+    max-height: 250px;
+    overflow-x: scroll;
+}
+
+.emoji-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--tlp-small-spacing);
+
+    > .emoji-button {
+        transition: background-color 200ms ease;
+        border: 0;
+        border-radius: var(--tlp-small-radius);
+        background: none;
+        font-size: 1rem;
+
+        &:hover {
+            background-color: var(--tlp-dimmed-color-transparent-90);
+            cursor: pointer;
+        }
+
+        &.emoji-button-hide {
+            display: none;
+        }
+    }
+}
