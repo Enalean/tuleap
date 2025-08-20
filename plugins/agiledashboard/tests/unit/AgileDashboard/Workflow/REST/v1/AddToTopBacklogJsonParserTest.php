@@ -88,7 +88,7 @@ final class AddToTopBacklogJsonParserTest extends TestCase
 
         $this->explicit_backlog_dao->expects($this->once())->method('isProjectUsingExplicitBacklog')->willReturn(false);
 
-        self::expectException(I18NRestException::class);
+        $this->expectException(I18NRestException::class);
 
         $this->parser->parse($workflow, $json_post_action);
     }

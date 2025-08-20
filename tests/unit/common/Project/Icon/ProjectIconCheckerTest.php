@@ -36,7 +36,7 @@ class ProjectIconCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItThrowsExceptionIfTheGivenIconIsAForbiddenIcon(): void
     {
         ForgeConfig::set('feature_flag_project_icon_display', '1');
-        self::expectException(InvalidProjectIconException::class);
+        $this->expectException(InvalidProjectIconException::class);
 
         ProjectIconChecker::isIconValid('✖️');
     }

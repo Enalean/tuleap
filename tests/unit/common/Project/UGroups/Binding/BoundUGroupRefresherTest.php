@@ -62,8 +62,8 @@ final class BoundUGroupRefresherTest extends \Tuleap\Test\PHPUnit\TestCase
         $GLOBALS['Response']->expects($this->once())->method('addFeedback')
             ->with('warning', 'Error message');
 
-        self::expectException(\Exception::class);
-        self::expectExceptionMessage('Error message');
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('Error message');
 
         $this->refresher->refresh($source, $destination);
     }

@@ -313,7 +313,7 @@ final class TimeframeWithDurationTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $artifact = $this->anArtifactWithoutStartDate(1);
 
-        self::expectException(\Tracker_FormElement_Chart_Field_Exception::class);
+        $this->expectException(\Tracker_FormElement_Chart_Field_Exception::class);
 
         $this->timeframe->buildDatePeriodWithoutWeekendForChangesetChartRendering(
             $artifact->getLastChangeset(),

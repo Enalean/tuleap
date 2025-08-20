@@ -84,9 +84,9 @@ final class UserRESTReferenceRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $retriever = new UserRESTReferenceRetriever($this->user_manager);
 
-        self::expectException(RestException::class);
-        self::expectExceptionCode(400);
-        self::expectExceptionMessage('More than one user use the email');
+        $this->expectException(RestException::class);
+        $this->expectExceptionCode(400);
+        $this->expectExceptionMessage('More than one user use the email');
 
         $retriever->getUserFromReference($representation);
     }
@@ -99,9 +99,9 @@ final class UserRESTReferenceRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $retriever = new UserRESTReferenceRetriever($this->user_manager);
 
-        self::expectException(RestException::class);
-        self::expectExceptionCode(400);
-        self::expectExceptionMessage('Only one key can be passed');
+        $this->expectException(RestException::class);
+        $this->expectExceptionCode(400);
+        $this->expectExceptionMessage('Only one key can be passed');
 
         $retriever->getUserFromReference($representation);
     }
@@ -110,9 +110,9 @@ final class UserRESTReferenceRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $retriever = new UserRESTReferenceRetriever($this->user_manager);
 
-        self::expectException(RestException::class);
-        self::expectExceptionCode(400);
-        self::expectExceptionMessage('At least one key must');
+        $this->expectException(RestException::class);
+        $this->expectExceptionCode(400);
+        $this->expectExceptionMessage('At least one key must');
 
         $retriever->getUserFromReference(new UserRESTReferenceRepresentation());
     }

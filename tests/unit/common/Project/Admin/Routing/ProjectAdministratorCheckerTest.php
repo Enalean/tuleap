@@ -45,7 +45,7 @@ final class ProjectAdministratorCheckerTest extends \Tuleap\Test\PHPUnit\TestCas
             ->withoutSiteAdministrator()
             ->build();
 
-        self::expectException(ForbiddenException::class);
+        $this->expectException(ForbiddenException::class);
         $this->project_administrator_checker->checkUserIsProjectAdministrator($user, $project);
     }
 

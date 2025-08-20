@@ -149,7 +149,7 @@ final class EditLicenseAgreementControllerTest extends TestCase
 
     public function testItThrowAnExceptionWhenTryingToRenderAnInvalidLicense(): void
     {
-        self::expectException(NotFoundException::class);
+        $this->expectException(NotFoundException::class);
 
         $this->factory->method('getLicenseAgreementById')->with($this->project, 1)->willReturn(null);
 

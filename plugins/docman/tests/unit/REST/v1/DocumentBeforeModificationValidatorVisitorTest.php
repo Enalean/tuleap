@@ -57,7 +57,7 @@ final class DocumentBeforeModificationValidatorVisitorTest extends TestCase
     {
         $link_item = new Docman_Link();
 
-        self::expectException(I18NRestException::class);
+        $this->expectException(I18NRestException::class);
 
         $link_item->accept($this->validator_visitor);
     }
@@ -66,7 +66,7 @@ final class DocumentBeforeModificationValidatorVisitorTest extends TestCase
     {
         $embedded_file_item = new Docman_EmbeddedFile();
 
-        self::expectException(I18NRestException::class);
+        $this->expectException(I18NRestException::class);
 
         $embedded_file_item->accept($this->validator_visitor);
     }
@@ -75,7 +75,7 @@ final class DocumentBeforeModificationValidatorVisitorTest extends TestCase
     {
         $empty_item = new Docman_Empty();
 
-        self::expectException(I18NRestException::class);
+        $this->expectException(I18NRestException::class);
 
         $empty_item->accept($this->validator_visitor);
     }
@@ -84,7 +84,7 @@ final class DocumentBeforeModificationValidatorVisitorTest extends TestCase
     {
         $wiki_item = new Docman_Wiki();
 
-        self::expectException(I18NRestException::class);
+        $this->expectException(I18NRestException::class);
 
         $wiki_item->accept($this->validator_visitor);
     }
@@ -93,7 +93,7 @@ final class DocumentBeforeModificationValidatorVisitorTest extends TestCase
     {
         $folder_item = new Docman_Folder();
 
-        self::expectException(I18NRestException::class);
+        $this->expectException(I18NRestException::class);
 
         $folder_item->accept($this->validator_visitor);
     }
@@ -102,7 +102,7 @@ final class DocumentBeforeModificationValidatorVisitorTest extends TestCase
     {
         $item = new Docman_Item();
 
-        self::expectException(I18NRestException::class);
+        $this->expectException(I18NRestException::class);
 
         $item->accept($this->validator_visitor);
     }
@@ -122,7 +122,7 @@ final class DocumentBeforeModificationValidatorVisitorTest extends TestCase
         $file_item = new Docman_File();
 
         $this->permission_manager->method('userCanWrite')->willReturn(false);
-        self::expectException(I18NRestException::class);
+        $this->expectException(I18NRestException::class);
 
         $file_item->accept($this->validator_visitor);
     }

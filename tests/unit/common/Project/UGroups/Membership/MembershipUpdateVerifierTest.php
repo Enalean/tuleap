@@ -41,7 +41,7 @@ final class MembershipUpdateVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
         $ugroup = $this->createMock(\ProjectUGroup::class);
         $ugroup->method('getProjectId')->willReturn(0);
 
-        self::expectException(InvalidProjectException::class);
+        $this->expectException(InvalidProjectException::class);
 
         $this->verifier->assertUGroupAndUserValidity($user, $ugroup);
     }
@@ -53,7 +53,7 @@ final class MembershipUpdateVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
         $ugroup->method('getProjectId')->willReturn(105);
         $ugroup->method('getId')->willReturn(0);
 
-        self::expectException(\UGroup_Invalid_Exception::class);
+        $this->expectException(\UGroup_Invalid_Exception::class);
 
         $this->verifier->assertUGroupAndUserValidity($user, $ugroup);
     }
@@ -65,7 +65,7 @@ final class MembershipUpdateVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
         $ugroup->method('getProjectId')->willReturn(105);
         $ugroup->method('getId')->willReturn(64);
 
-        self::expectException(UserIsAnonymousException::class);
+        $this->expectException(UserIsAnonymousException::class);
 
         $this->verifier->assertUGroupAndUserValidity($user, $ugroup);
     }

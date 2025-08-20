@@ -104,7 +104,7 @@ final class HierarchyManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $hierarchy_manager->method('getAllParents')->with(185)->willReturn([135]);
         $hierarchy_manager->method('getParentProject')->with(135)->willReturn(null);
 
-        self::expectException(\Project_HierarchyManagerAlreadyAncestorException::class);
+        $this->expectException(\Project_HierarchyManagerAlreadyAncestorException::class);
 
         $hierarchy_manager->setParentProject(135, 185);
     }
@@ -115,7 +115,7 @@ final class HierarchyManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->hierarchy_manager->method('getParentProject');
         $this->hierarchy_manager->method('getAllParents')->willReturn([]);
 
-        self::expectException(\Project_HierarchyManagerAncestorIsSelfException::class);
+        $this->expectException(\Project_HierarchyManagerAncestorIsSelfException::class);
 
         $this->hierarchy_manager->setParentProject(135, 135);
     }

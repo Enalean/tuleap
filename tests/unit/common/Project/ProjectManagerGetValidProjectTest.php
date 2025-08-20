@@ -68,13 +68,13 @@ final class ProjectManagerGetValidProjectTest extends \Tuleap\Test\PHPUnit\TestC
         $this->dao->method('searchById')->willReturn(\TestHelper::emptyDar());
         $this->dao->method('searchByCaseInsensitiveUnixGroupName')->willReturn(\TestHelper::emptyDar());
 
-        self::expectException(\Project_NotFoundException::class);
+        $this->expectException(\Project_NotFoundException::class);
         $this->project_manager->getValidProjectByShortNameOrId('doesnt exist');
     }
 
     public function testItThrowsAnExceptionWhenProjectIsDeleted(): void
     {
-        self::expectException(\Project_NotFoundException::class);
+        $this->expectException(\Project_NotFoundException::class);
         $this->dao->method('searchById')->willReturn(\TestHelper::emptyDar());
         $this->dao->method('searchByCaseInsensitiveUnixGroupName')->with('1gpig')->willReturn(\TestHelper::arrayToDar(['group_id' => 112, 'status' => 'D']));
         $this->project_manager->getValidProjectByShortNameOrId('1gpig');

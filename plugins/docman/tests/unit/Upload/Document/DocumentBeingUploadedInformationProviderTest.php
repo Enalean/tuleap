@@ -109,7 +109,7 @@ final class DocumentBeingUploadedInformationProviderTest extends TestCase
             new CurrentRequestUserProviderStub(null),
         );
 
-        self::expectException(NotFoundException::class);
+        $this->expectException(NotFoundException::class);
         $data_store->getFileInformation((new NullServerRequest())->withAttribute('id', '11'));
     }
 

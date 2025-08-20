@@ -98,7 +98,7 @@ final class VersionImporterTest extends TestCase
         $this->docman_file_storage->expects($this->never())->method('copy')
             ->with($this->extraction_path . '/documents/content-214.bin', 'Pan-Pan-Artwork1.png', 114, 13, 1);
 
-        self::expectException(InvalidDateException::class);
+        $this->expectException(InvalidDateException::class);
 
         $this->importer->import($node, $this->item, 1);
     }
@@ -109,7 +109,7 @@ final class VersionImporterTest extends TestCase
             ->with($this->extraction_path . '/documents/content-214.bin', 'Pan-Pan-Artwork1.png', 114, 13, 1)
             ->willReturn(false);
 
-        self::expectException(UnableToCreateFileOnFilesystemException::class);
+        $this->expectException(UnableToCreateFileOnFilesystemException::class);
 
         $this->importer->import($this->node, $this->item, 1);
     }

@@ -89,8 +89,8 @@ final class BeforeCopyVisitorTest extends TestCase
 
         $item = new $processed_item_class();
 
-        self::expectException(RestException::class);
-        self::expectExceptionCode(400);
+        $this->expectException(RestException::class);
+        $this->expectExceptionCode(400);
         $item->accept(
             $before_copy_visitor,
             ['destination' => new Docman_Folder(), 'current_time' => new DateTimeImmutable()]
@@ -112,7 +112,7 @@ final class BeforeCopyVisitorTest extends TestCase
             $this->createMock(DocumentOngoingUploadRetriever::class)
         );
 
-        self::expectException(LogicException::class);
+        $this->expectException(LogicException::class);
         $before_copy_visitor->visitItem(new Docman_Item());
     }
 
@@ -188,8 +188,8 @@ final class BeforeCopyVisitorTest extends TestCase
 
         $document_ongoing_upload_retriever->method('isThereAlreadyAnUploadOngoing')->willReturn(true);
 
-        self::expectException(RestException::class);
-        self::expectExceptionCode(409);
+        $this->expectException(RestException::class);
+        $this->expectExceptionCode(409);
         $before_copy_visitor->visitEmpty(
             $docman_document,
             ['destination' => $destination, 'current_time' => new DateTimeImmutable()]

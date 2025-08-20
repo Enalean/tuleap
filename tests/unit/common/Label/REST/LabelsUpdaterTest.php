@@ -138,7 +138,7 @@ final class LabelsUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->buildLabelRepresentation(1),
         ];
 
-        self::expectException(\Tuleap\Label\REST\UnableToAddAndRemoveSameLabelException::class);
+        $this->expectException(\Tuleap\Label\REST\UnableToAddAndRemoveSameLabelException::class);
         $this->item_label_dao->expects($this->never())->method('addLabelsInTransaction');
         $this->item_label_dao->expects($this->never())->method('removeLabelsInTransaction');
         $this->project_label_dao->expects($this->once())->method('rollback');
@@ -199,7 +199,7 @@ final class LabelsUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->buildLabelToCreateRepresentation(' '),
         ];
 
-        self::expectException(\Tuleap\Label\REST\UnableToAddEmptyLabelException::class);
+        $this->expectException(\Tuleap\Label\REST\UnableToAddEmptyLabelException::class);
         $this->project_label_dao->expects($this->never())->method('createIfNeededInTransaction');
         $this->item_label_dao->expects($this->never())->method('addLabelsInTransaction');
 

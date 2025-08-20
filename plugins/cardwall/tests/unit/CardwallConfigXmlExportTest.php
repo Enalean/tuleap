@@ -146,7 +146,7 @@ final class CardwallConfigXmlExportTest extends TestCase
         $xml_validator->method('validate')->willThrowException(new ParseExceptionWithErrors('', [], []));
 
         $xml_exporter = new CardwallConfigXmlExport($this->project, $this->tracker_factory, $this->config_factory, $xml_validator);
-        self::expectException(XML_ParseException::class);
+        $this->expectException(XML_ParseException::class);
         $xml_exporter->export(new SimpleXMLElement('<empty/>'));
     }
 }

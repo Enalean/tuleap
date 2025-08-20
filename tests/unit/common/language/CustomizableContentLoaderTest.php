@@ -95,7 +95,7 @@ final class CustomizableContentLoaderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsAnExceptionWhenNoContentIsFound(): void
     {
-        self::expectException(CustomContentNotFoundException::class);
+        $this->expectException(CustomContentNotFoundException::class);
         $this->loader->getContent($this->br_user, 'bar/foo');
     }
 }

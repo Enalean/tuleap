@@ -44,7 +44,7 @@ final class ProjectImportCleanupUserCreatorFromAdministratorsTest extends \Tulea
         $ugroup = $this->createMock(ProjectUGroup::class);
         $ugroup->method('getId')->willReturn(ProjectUGroup::PROJECT_MEMBERS);
 
-        self::expectException(NotProjectAdministratorUGroup::class);
+        $this->expectException(NotProjectAdministratorUGroup::class);
         new ProjectImportCleanupUserCreatorFromAdministrators(UserTestBuilder::buildWithDefaults(), $ugroup);
     }
 }

@@ -348,7 +348,7 @@ final class ProjectXMLExporterTest extends TestCase
     public function testItThrowExceptionIfProjectIsSuspended(): void
     {
         $project = B\ProjectTestBuilder::aProject()->withStatusSuspended()->build();
-        self::expectException(ProjectIsInactiveException::class);
+        $this->expectException(ProjectIsInactiveException::class);
         $this->xml_exporter->export($project, $this->options, $this->user, $this->archive, $this->export_dir);
     }
 }

@@ -161,7 +161,7 @@ class JiraBoardsRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\TestCase
 
         $retriever = new JiraBoardsRetrieverFromAPI($client, new NullLogger(), $this->getEmptyJiraBoardProjectsRetriever());
 
-        self::expectException(RuntimeException::class);
+        $this->expectException(RuntimeException::class);
         $retriever->getScrumBoardByIdForProject('OtherProject', 3);
     }
 
@@ -207,7 +207,7 @@ class JiraBoardsRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\TestCase
 
         $retriever = new JiraBoardsRetrieverFromAPI($client, new NullLogger(), $this->getEmptyJiraBoardProjectsRetriever());
 
-        self::expectException(RuntimeException::class);
+        $this->expectException(RuntimeException::class);
         $retriever->getScrumBoardByIdForProject('OtherProject', 3);
     }
 
@@ -235,7 +235,7 @@ class JiraBoardsRetrieverFromAPITest extends \Tuleap\Test\PHPUnit\TestCase
 
         $retriever = new JiraBoardsRetrieverFromAPI($client, new NullLogger(), $this->getEmptyJiraBoardProjectsRetriever());
 
-        self::expectException(RuntimeException::class);
+        $this->expectException(RuntimeException::class);
         $retriever->getScrumBoardByIdForProject('SP', 3);
     }
 

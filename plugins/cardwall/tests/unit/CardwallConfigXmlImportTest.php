@@ -402,7 +402,7 @@ final class CardwallConfigXmlImportTest extends TestCase
 
         $this->event_manager->expects($this->never())->method('processEvent')->with(Event::IMPORT_XML_PROJECT_CARDWALL_DONE, self::anything());
 
-        self::expectException(CardwallFromXmlImportCannotBeEnabledException::class);
+        $this->expectException(CardwallFromXmlImportCannotBeEnabledException::class);
         $cardwall_config_xml_import->import($this->default_xml_input);
     }
 
@@ -425,7 +425,7 @@ final class CardwallConfigXmlImportTest extends TestCase
             $this->logger
         );
 
-        self::expectException(XML_ParseException::class);
+        $this->expectException(XML_ParseException::class);
 
         $cardwall_config_xml_import->import($this->default_xml_input);
     }

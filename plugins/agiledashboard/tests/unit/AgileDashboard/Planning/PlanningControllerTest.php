@@ -170,7 +170,7 @@ final class PlanningControllerTest extends TestCase
         // redirect() is a never return method, but phpunit mock system cannot handle it, so replace the exit() call by an exception
         $GLOBALS['Response']->expects($this->once())->method('redirect')->willThrowException(new Exception());
 
-        self::expectException(Exception::class);
+        $this->expectException(Exception::class);
 
         $request = HTTPRequestBuilder::get()
             ->withUser($user)
@@ -370,7 +370,7 @@ final class PlanningControllerTest extends TestCase
         // redirect() is a never return method, but phpunit mock system cannot handle it, so replace the exit() call by an exception
         $GLOBALS['Response']->expects($this->once())->method('redirect')->with('/plugins/agiledashboard/?group_id=101')->willThrowException(new Exception());
 
-        self::expectException(Exception::class);
+        $this->expectException(Exception::class);
 
         $request = HTTPRequestBuilder::get()
             ->withUser($user)

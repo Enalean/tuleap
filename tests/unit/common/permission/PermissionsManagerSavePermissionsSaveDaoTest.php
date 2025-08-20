@@ -62,7 +62,7 @@ class PermissionsManagerSavePermissionsSaveDaoTest extends \Tuleap\Test\PHPUnit\
     {
         $this->permissions_dao->method('clearPermission')->willReturn(false);
 
-        self::expectException(\PermissionDaoException::class);
+        $this->expectException(\PermissionDaoException::class);
 
         $this->savePermissions([ProjectUGroup::PROJECT_MEMBERS, 104]);
     }
@@ -72,7 +72,7 @@ class PermissionsManagerSavePermissionsSaveDaoTest extends \Tuleap\Test\PHPUnit\
         $this->permissions_dao->method('clearPermission')->willReturn(true);
         $this->permissions_dao->method('addPermission')->willReturn(false);
 
-        self::expectException(\PermissionDaoException::class);
+        $this->expectException(\PermissionDaoException::class);
 
         $this->savePermissions([ProjectUGroup::PROJECT_MEMBERS, 104]);
     }

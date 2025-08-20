@@ -49,7 +49,7 @@ final class RejectNonProjectAdministratorMiddlewareTest extends \Tuleap\Test\PHP
 
         $request = new NullServerRequest();
 
-        self::expectException(\LogicException::class);
+        $this->expectException(\LogicException::class);
         $this->middleware->process($request, $handler);
     }
 

@@ -220,7 +220,7 @@ final class DocumentToUploadCreatorTest extends TestCase
 
         $this->dao->method('searchDocumentOngoingUploadByParentIDTitleAndExpirationDate')->willReturn([['user_id' => 103]]);
 
-        self::expectException(UploadCreationConflictException::class);
+        $this->expectException(UploadCreationConflictException::class);
 
         $obsolescence_date = DateTimeImmutable::createFromFormat('Y-m-d', '2100-05-19');
 
@@ -259,7 +259,7 @@ final class DocumentToUploadCreatorTest extends TestCase
             ['user_id' => 102, 'filename' => 'filename1', 'filesize' => 123456],
         ]);
 
-        self::expectException(UploadCreationFileMismatchException::class);
+        $this->expectException(UploadCreationFileMismatchException::class);
 
         $obsolescence_date = DateTimeImmutable::createFromFormat('Y-m-d', '2100-05-19');
 
@@ -294,7 +294,7 @@ final class DocumentToUploadCreatorTest extends TestCase
         $user         = UserTestBuilder::buildWithDefaults();
         $current_time = new DateTimeImmutable();
 
-        self::expectException(UploadMaxSizeExceededException::class);
+        $this->expectException(UploadMaxSizeExceededException::class);
 
         $obsolescence_date = DateTimeImmutable::createFromFormat('Y-m-d', '2100-05-19');
 

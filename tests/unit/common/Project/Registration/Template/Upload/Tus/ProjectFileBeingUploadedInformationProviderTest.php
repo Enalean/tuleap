@@ -85,7 +85,7 @@ final class ProjectFileBeingUploadedInformationProviderTest extends TestCase
 
     public function testItThrowsAnExceptionIfThereIsNoCurrentUser(): void
     {
-        self::expectException(NotFoundException::class);
+        $this->expectException(NotFoundException::class);
 
         $this->buildProjectFileBeingUploadedInformationProvider(
             $this->file_upload_dao,
@@ -98,7 +98,7 @@ final class ProjectFileBeingUploadedInformationProviderTest extends TestCase
 
     public function testItThrowsAnExceptionIfTheUserCannotCreateTheProject(): void
     {
-        self::expectException(ForbiddenException::class);
+        $this->expectException(ForbiddenException::class);
 
         $this->buildProjectFileBeingUploadedInformationProvider(
             $this->file_upload_dao,

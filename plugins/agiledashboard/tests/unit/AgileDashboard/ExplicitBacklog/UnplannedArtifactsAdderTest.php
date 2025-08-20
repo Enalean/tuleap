@@ -85,7 +85,7 @@ class UnplannedArtifactsAdderTest extends TestCase
 
         $this->artifacts_in_explicit_backlog_dao->expects($this->never())->method('addArtifactToProjectBacklog');
 
-        self::expectException(ArtifactAlreadyPlannedException::class);
+        $this->expectException(ArtifactAlreadyPlannedException::class);
 
         $this->adder->addArtifactToTopBacklog($this->artifact);
     }

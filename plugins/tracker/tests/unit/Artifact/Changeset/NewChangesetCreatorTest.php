@@ -162,7 +162,7 @@ final class NewChangesetCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->workflow->expects($this->never())->method('after');
         $this->comment_dao->method('createNewVersion')->willReturn(true);
 
-        self::expectException(\Tracker_AfterSaveException::class);
+        $this->expectException(\Tracker_AfterSaveException::class);
         $this->create();
     }
 
@@ -172,7 +172,7 @@ final class NewChangesetCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->changeset_saver->expects($this->once())->method('saveChangeset')
             ->willThrowException(new \Tracker_Artifact_Exception_CannotCreateNewChangeset());
 
-        self::expectException(\Tracker_ChangesetNotCreatedException::class);
+        $this->expectException(\Tracker_ChangesetNotCreatedException::class);
         $this->create();
     }
 

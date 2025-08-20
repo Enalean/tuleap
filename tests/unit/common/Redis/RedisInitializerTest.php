@@ -49,7 +49,7 @@ final class RedisInitializerTest extends TestCase
 
         $redis = $this->createPartialMock(\Redis::class, []);
 
-        self::expectException(RedisConnectionException::class);
+        $this->expectException(RedisConnectionException::class);
 
         $initializer->init($redis);
     }
@@ -61,7 +61,7 @@ final class RedisInitializerTest extends TestCase
         $redis = $this->createPartialMock(\Redis::class, ['connect']);
         $redis->method('connect')->willReturn(false);
 
-        self::expectException(RedisConnectionException::class);
+        $this->expectException(RedisConnectionException::class);
 
         $initializer->init($redis);
     }
@@ -80,7 +80,7 @@ final class RedisInitializerTest extends TestCase
         $redis->method('auth')->willReturn(false);
         $redis->expects($this->once())->method('getLastError')->willReturn($password);
 
-        self::expectException(RedisConnectionException::class);
+        $this->expectException(RedisConnectionException::class);
 
         try {
             $initializer->init($redis);

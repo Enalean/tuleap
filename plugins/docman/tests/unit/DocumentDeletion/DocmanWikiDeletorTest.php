@@ -77,7 +77,7 @@ final class DocmanWikiDeletorTest extends TestCase
         $this->permissions_manager->method('userCanDelete')->willReturn(false);
         $this->item_factory->expects($this->never())->method('delete');
 
-        self::expectException(DeleteFailedException::class);
+        $this->expectException(DeleteFailedException::class);
 
         $this->wiki_deletor->deleteWiki(
             $wiki_to_delete,
@@ -161,7 +161,7 @@ final class DocmanWikiDeletorTest extends TestCase
         $this->item_factory->method('delete')->with($wiki_to_delete);
         $this->item_factory->method('deleteWikiPage')->with('My kinky wiki', 104)->willReturn(false);
 
-        self::expectException(DeleteFailedException::class);
+        $this->expectException(DeleteFailedException::class);
 
         $this->wiki_deletor->deleteWiki(
             $wiki_to_delete,

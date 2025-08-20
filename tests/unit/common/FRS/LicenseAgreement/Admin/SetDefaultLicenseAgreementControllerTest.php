@@ -155,7 +155,7 @@ final class SetDefaultLicenseAgreementControllerTest extends TestCase
         $this->helper->method('assertCanAccess');
         $this->csrf_token->method('check');
 
-        self::expectException(InvalidLicenseAgreementException::class);
+        $this->expectException(InvalidLicenseAgreementException::class);
 
         $this->controller->process($this->request, $this->layout, ['project_id' => '101']);
     }
@@ -169,7 +169,7 @@ final class SetDefaultLicenseAgreementControllerTest extends TestCase
 
         $this->factory->method('getLicenseAgreementById')->with($this->project, 6)->willReturn(null);
 
-        self::expectException(InvalidLicenseAgreementException::class);
+        $this->expectException(InvalidLicenseAgreementException::class);
 
         $this->controller->process($this->request, $this->layout, ['project_id' => '101']);
     }

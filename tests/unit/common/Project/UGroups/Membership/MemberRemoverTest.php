@@ -96,7 +96,7 @@ final class MemberRemoverTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->static_member_remover->expects($this->never())->method('removeUser')->with($ugroup, $this->user_to_remove);
         $this->dynamic_ugroup_members_updater->expects($this->never())->method('removeUser');
 
-        self::expectException(CannotModifyBoundGroupException::class);
+        $this->expectException(CannotModifyBoundGroupException::class);
 
         $this->member_remover->removeMember($this->user_to_remove, $this->project_administrator, $ugroup);
     }

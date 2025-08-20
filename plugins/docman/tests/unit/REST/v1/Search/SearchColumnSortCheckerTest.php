@@ -40,7 +40,7 @@ final class SearchColumnSortCheckerTest extends TestCase
 
         $column_report = new Docman_ReportColumn(new Docman_Metadata());
 
-        self::expectException(ColumnCannotBeSortedException::class);
+        $this->expectException(ColumnCannotBeSortedException::class);
 
         SearchColumnSortChecker::checkColumnCanBeSorted($sort_representation, $column_report);
     }
@@ -61,7 +61,7 @@ final class SearchColumnSortCheckerTest extends TestCase
 
         $column_report = new Docman_ReportColumn($property);
 
-        self::expectException(ColumnCannotBeSortedException::class);
+        $this->expectException(ColumnCannotBeSortedException::class);
 
         SearchColumnSortChecker::checkColumnCanBeSorted($sort_representation, $column_report);
     }
@@ -77,7 +77,7 @@ final class SearchColumnSortCheckerTest extends TestCase
 
         $column_report = new Docman_ReportColumn(null);
 
-        self::expectException(ColumnCannotBeSortedException::class);
+        $this->expectException(ColumnCannotBeSortedException::class);
 
         SearchColumnSortChecker::checkColumnCanBeSorted($sort_representation, $column_report);
     }

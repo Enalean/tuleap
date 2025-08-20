@@ -37,9 +37,9 @@ final class StepCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
                 'expected_results_format' => Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT,
             ];
 
-        self::expectException(RestException::class);
-        self::expectExceptionCode(400);
-        self::expectExceptionMessage('Description or Expected Result text field missing');
+        $this->expectException(RestException::class);
+        $this->expectExceptionCode(400);
+        $this->expectExceptionMessage('Description or Expected Result text field missing');
         StepChecker::checkStepDataFromRESTPost($step);
     }
 
@@ -51,9 +51,9 @@ final class StepCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
                 'description_format' => Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT,
             ];
 
-        self::expectException(RestException::class);
-        self::expectExceptionCode(400);
-        self::expectExceptionMessage('Description or Expected Result text field missing');
+        $this->expectException(RestException::class);
+        $this->expectExceptionCode(400);
+        $this->expectExceptionMessage('Description or Expected Result text field missing');
 
         StepChecker::checkStepDataFromRESTPost($step);
     }
@@ -68,9 +68,9 @@ final class StepCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
                 'expected_results_format' => Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT,
             ];
 
-        self::expectException(RestException::class);
-        self::expectExceptionCode(400);
-        self::expectExceptionMessage("Invalid format given, only 'html', 'text' or 'commonmark' are supported for step");
+        $this->expectException(RestException::class);
+        $this->expectExceptionCode(400);
+        $this->expectExceptionMessage("Invalid format given, only 'html', 'text' or 'commonmark' are supported for step");
 
         StepChecker::checkStepDataFromRESTPost($step);
     }
@@ -85,9 +85,9 @@ final class StepCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
                 'expected_results_format' => 'honk_honk_format',
             ];
 
-        self::expectException(RestException::class);
-        self::expectExceptionCode(400);
-        self::expectExceptionMessage("Invalid format given, only 'html', 'text' or 'commonmark' are supported for step");
+        $this->expectException(RestException::class);
+        $this->expectExceptionCode(400);
+        $this->expectExceptionMessage("Invalid format given, only 'html', 'text' or 'commonmark' are supported for step");
 
         StepChecker::checkStepDataFromRESTPost($step);
     }
@@ -101,9 +101,9 @@ final class StepCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
                 'expected_results_format' => Tracker_Artifact_ChangesetValue_Text::COMMONMARK_CONTENT,
             ];
 
-        self::expectException(RestException::class);
-        self::expectExceptionCode(400);
-        self::expectExceptionMessage('Description format or Expected Result format is missing');
+        $this->expectException(RestException::class);
+        $this->expectExceptionCode(400);
+        $this->expectExceptionMessage('Description format or Expected Result format is missing');
 
         StepChecker::checkStepDataFromRESTPost($step);
     }
@@ -118,9 +118,9 @@ final class StepCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
             ];
 
 
-        self::expectException(RestException::class);
-        self::expectExceptionCode(400);
-        self::expectExceptionMessage('Description format or Expected Result format is missing');
+        $this->expectException(RestException::class);
+        $this->expectExceptionCode(400);
+        $this->expectExceptionMessage('Description format or Expected Result format is missing');
 
         StepChecker::checkStepDataFromRESTPost($step);
     }

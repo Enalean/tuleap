@@ -35,7 +35,7 @@ final class InvalidFromCollectionBuilderTest extends TestCase
     public function testItThrowsWhenCalled(): void
     {
         $builder = new InvalidFromCollectionBuilder();
-        self::expectException(LogicException::class);
+        $this->expectException(LogicException::class);
         $builder->buildCollectionOfInvalidFrom(
             new From(new FromProject('@project', new FromProjectEqual('self')), null),
             UserTestBuilder::buildWithDefaults(),

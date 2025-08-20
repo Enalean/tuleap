@@ -130,8 +130,8 @@ final class MetadataResultBuilderTest extends TestCase
 
     public function testItThrowsIfUnknownMetadata(): void
     {
-        self::expectException(LogicException::class);
-        self::expectExceptionMessage('Unknown metadata type: @not-existing');
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage('Unknown metadata type: @not-existing');
         $this->getSelectedResult(
             new Metadata('not-existing'),
             RetrieveArtifactStub::withNoArtifact(),

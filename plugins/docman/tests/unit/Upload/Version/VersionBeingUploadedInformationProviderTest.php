@@ -98,7 +98,7 @@ final class VersionBeingUploadedInformationProviderTest extends TestCase
         $data_store     = new VersionBeingUploadedInformationProvider($dao, $item_factory, $path_allocator, new CurrentRequestUserProviderStub(null));
 
 
-        self::expectException(NotFoundException::class);
+        $this->expectException(NotFoundException::class);
         $data_store->getFileInformation((new NullServerRequest())->withAttribute('id', '102'));
     }
 

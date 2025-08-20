@@ -55,7 +55,7 @@ final class MetadataSelectFromBuilderTest extends TestCase
 
     public function testItThrowsIfMetadataNotRecognized(): void
     {
-        self::expectException(LogicException::class);
+        $this->expectException(LogicException::class);
         $this->getSelectFrom(new Metadata('not-existing'));
     }
 

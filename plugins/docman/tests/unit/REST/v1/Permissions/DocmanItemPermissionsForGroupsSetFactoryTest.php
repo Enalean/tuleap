@@ -122,8 +122,8 @@ final class DocmanItemPermissionsForGroupsSetFactoryTest extends TestCase
         $this->ugroup_retriever->method('getExistingUserGroup')
             ->with($user_group_representation->id)->willThrowException(new RestException(404));
 
-        self::expectException(RestException::class);
-        self::expectExceptionCode(400);
+        $this->expectException(RestException::class);
+        $this->expectExceptionCode(400);
 
         $this->permissions_for_groups_set_factory->fromRepresentation($item, $representation);
     }
@@ -142,8 +142,8 @@ final class DocmanItemPermissionsForGroupsSetFactoryTest extends TestCase
         $ugroup = $this->getUGroupMock(3, 103, false);
         $this->ugroup_retriever->method('getExistingUserGroup')->with($user_group_representation->id)->willReturn($ugroup);
 
-        self::expectException(RestException::class);
-        self::expectExceptionCode(400);
+        $this->expectException(RestException::class);
+        $this->expectExceptionCode(400);
 
         $this->permissions_for_groups_set_factory->fromRepresentation($item, $representation);
     }
@@ -162,8 +162,8 @@ final class DocmanItemPermissionsForGroupsSetFactoryTest extends TestCase
         $this->ugroup_retriever->method('getExistingUserGroup')
             ->with($user_group_representation->id)->willThrowException(new RestException(400));
 
-        self::expectException(RestException::class);
-        self::expectExceptionCode(400);
+        $this->expectException(RestException::class);
+        $this->expectExceptionCode(400);
 
         $this->permissions_for_groups_set_factory->fromRepresentation($item, $representation);
     }

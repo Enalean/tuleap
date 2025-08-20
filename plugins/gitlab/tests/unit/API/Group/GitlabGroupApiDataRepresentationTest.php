@@ -39,8 +39,8 @@ final class GitlabGroupApiDataRepresentationTest extends TestCase
     #[\PHPUnit\Framework\Attributes\TestWith([['id' => 10, 'web_url' => 'https://gitlab.example.com/webur', 'avatar_url' => 'https://gitlab.example.com/avatar']])]
     public function testItThrowsExceptionIfMandatoryKeyIsMissing(array $group_data): void
     {
-        self::expectException(GitlabResponseAPIException::class);
-        self::expectExceptionMessage('Some keys are missing in the group Json. This is not expected. Aborting.');
+        $this->expectException(GitlabResponseAPIException::class);
+        $this->expectExceptionMessage('Some keys are missing in the group Json. This is not expected. Aborting.');
 
         GitlabGroupApiDataRepresentation::buildGitlabGroupFromApi($group_data);
     }
@@ -52,8 +52,8 @@ final class GitlabGroupApiDataRepresentationTest extends TestCase
     #[\PHPUnit\Framework\Attributes\TestWith([['id' => 10, 'name' => 'my_group', 'full_path' => 'https://gitlab.example.com/path/full', 'web_url' => 'https://gitlab.example.com/webur', 'avatar_url' => 20]])]
     public function testItThrowsExceptionIfMandatoryKeyHasNotTheRightType(array $group_data): void
     {
-        self::expectException(GitlabResponseAPIException::class);
-        self::expectExceptionMessage("Some keys haven't the expected types. This is not expected. Aborting.");
+        $this->expectException(GitlabResponseAPIException::class);
+        $this->expectExceptionMessage("Some keys haven't the expected types. This is not expected. Aborting.");
 
         GitlabGroupApiDataRepresentation::buildGitlabGroupFromApi($group_data);
     }

@@ -52,8 +52,8 @@ final class ItemStatusMapperTest extends TestCase
         $mapper = new ItemStatusMapper($this->docman_setting_bo);
 
         $this->docman_setting_bo->method('getMetadataUsage')->willReturn('1');
-        self::expectException(HardCodedMetadataException::class);
-        self::expectExceptionMessage('Status swang is invalid');
+        $this->expectException(HardCodedMetadataException::class);
+        $this->expectExceptionMessage('Status swang is invalid');
         $mapper->getItemStatusIdFromItemStatusString('swang');
     }
 
@@ -63,8 +63,8 @@ final class ItemStatusMapperTest extends TestCase
 
         $this->docman_setting_bo->method('getMetadataUsage')->willReturn('1');
 
-        self::expectException(HardCodedMetadataException::class);
-        self::expectExceptionMessage('Status null is invalid');
+        $this->expectException(HardCodedMetadataException::class);
+        $this->expectExceptionMessage('Status null is invalid');
         $mapper->getItemStatusIdFromItemStatusString(null);
     }
 
@@ -74,8 +74,8 @@ final class ItemStatusMapperTest extends TestCase
 
         $this->docman_setting_bo->method('getMetadataUsage')->willReturn('0');
 
-        self::expectException(HardCodedMetadataException::class);
-        self::expectExceptionMessage('Status is not enabled for project');
+        $this->expectException(HardCodedMetadataException::class);
+        $this->expectExceptionMessage('Status is not enabled for project');
         $mapper->getItemStatusIdFromItemStatusString('rejected');
     }
 
@@ -96,8 +96,8 @@ final class ItemStatusMapperTest extends TestCase
         $parent = new Docman_Item();
 
         $this->docman_setting_bo->method('getMetadataUsage')->willReturn('1');
-        self::expectException(HardCodedMetadataException::class);
-        self::expectExceptionMessage('Status swang is invalid');
+        $this->expectException(HardCodedMetadataException::class);
+        $this->expectExceptionMessage('Status swang is invalid');
         $mapper->getItemStatusWithParentInheritance($parent, 'swang');
     }
 
@@ -121,8 +121,8 @@ final class ItemStatusMapperTest extends TestCase
 
         $this->docman_setting_bo->method('getMetadataUsage')->willReturn('0');
 
-        self::expectException(HardCodedMetadataException::class);
-        self::expectExceptionMessage('Status is not enabled for project');
+        $this->expectException(HardCodedMetadataException::class);
+        $this->expectExceptionMessage('Status is not enabled for project');
         $mapper->getItemStatusWithParentInheritance($parent, 'rejected');
     }
 
@@ -133,8 +133,8 @@ final class ItemStatusMapperTest extends TestCase
 
         $this->docman_setting_bo->method('getMetadataUsage')->willReturn('0');
 
-        self::expectException(HardCodedMetadataException::class);
-        self::expectExceptionMessage('Status is not enabled for project');
+        $this->expectException(HardCodedMetadataException::class);
+        $this->expectExceptionMessage('Status is not enabled for project');
         $mapper->getItemStatusWithParentInheritance($parent, 'rejected');
     }
 

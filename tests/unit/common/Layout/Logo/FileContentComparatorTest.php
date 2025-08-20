@@ -48,7 +48,7 @@ class FileContentComparatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $comparator = new FileContentComparator();
 
-        self::expectException(\RuntimeException::class);
+        $this->expectException(\RuntimeException::class);
 
         $comparator->doesFilesHaveTheSameContent([], 'does not exists');
     }

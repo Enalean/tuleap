@@ -277,8 +277,8 @@ final class DocmanItemCreatorTest extends TestCase
         $this->creator_visitor->expects($this->never())->method('visitOtherDocument');
         $this->custom_metadata_checker->expects($this->never())->method('checkAndRetrieveFormattedRepresentation');
 
-        self::expectException(RestException::class);
-        self::expectExceptionCode(400);
+        $this->expectException(RestException::class);
+        $this->expectExceptionCode(400);
 
         $this->getItemCreator(EventDispatcherStub::withCallback(static fn(object $event) => $event))
             ->createOtherType(
@@ -372,8 +372,8 @@ final class DocmanItemCreatorTest extends TestCase
 
         $this->item_factory->method('doesTitleCorrespondToExistingDocument')->willReturn(false);
 
-        self::expectException(RestException::class);
-        self::expectExceptionCode(400);
+        $this->expectException(RestException::class);
+        $this->expectExceptionCode(400);
 
         $this
             ->getItemCreator(EventDispatcherStub::withIdentityCallback())
@@ -451,8 +451,8 @@ final class DocmanItemCreatorTest extends TestCase
 
         $metadata_to_create = MetadataToCreate::buildMetadataRepresentation([], false);
 
-        self::expectException(RestException::class);
-        self::expectExceptionCode(400);
+        $this->expectException(RestException::class);
+        $this->expectExceptionCode(400);
 
         $this->getItemCreator(EventDispatcherStub::withIdentityCallback())
             ->createFileDocument(
@@ -487,8 +487,8 @@ final class DocmanItemCreatorTest extends TestCase
             MetadataToCreate::buildMetadataRepresentation([], false)
         );
 
-        self::expectException(RestException::class);
-        self::expectExceptionCode(409);
+        $this->expectException(RestException::class);
+        $this->expectExceptionCode(409);
 
         $this->getItemCreator(EventDispatcherStub::withIdentityCallback())
             ->createEmpty(
@@ -707,8 +707,8 @@ final class DocmanItemCreatorTest extends TestCase
 
         $this->custom_metadata_checker->expects($this->never())->method('checkAndRetrieveFormattedRepresentation');
 
-        self::expectException(RestException::class);
-        self::expectExceptionCode(400);
+        $this->expectException(RestException::class);
+        $this->expectExceptionCode(400);
 
         $this->getItemCreator(EventDispatcherStub::withIdentityCallback())
             ->createEmpty(
@@ -749,8 +749,8 @@ final class DocmanItemCreatorTest extends TestCase
             MetadataToCreate::buildMetadataRepresentation([], false)
         );
 
-        self::expectException(HardCodedMetadataException::class);
-        self::expectExceptionMessage('Status is not enabled for project');
+        $this->expectException(HardCodedMetadataException::class);
+        $this->expectExceptionMessage('Status is not enabled for project');
 
         $this->getItemCreator(EventDispatcherStub::withIdentityCallback())
             ->createFolder(

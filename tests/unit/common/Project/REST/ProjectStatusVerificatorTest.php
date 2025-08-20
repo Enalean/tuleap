@@ -60,9 +60,9 @@ final class ProjectStatusVerificatorTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withStatusSuspended()
             ->build();
 
-        self::expectException(RestException::class);
-        self::expectExceptionCode(403);
-        self::expectExceptionMessage('This project is suspended');
+        $this->expectException(RestException::class);
+        $this->expectExceptionCode(403);
+        $this->expectExceptionMessage('This project is suspended');
 
         $this->verificator->checkProjectStatusAllowsAllUsersToAccessIt($project);
     }
@@ -75,9 +75,9 @@ final class ProjectStatusVerificatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->access_checker->method('checkUserCanAccessProject')->with($user, $project)->willThrowException(new ProjectAccessSuspendedException());
 
-        self::expectException(RestException::class);
-        self::expectExceptionCode(403);
-        self::expectExceptionMessage('This project is suspended');
+        $this->expectException(RestException::class);
+        $this->expectExceptionCode(403);
+        $this->expectExceptionMessage('This project is suspended');
 
         $this->verificator->checkProjectStatusAllowsOnlySiteAdminToAccessIt(
             $user,

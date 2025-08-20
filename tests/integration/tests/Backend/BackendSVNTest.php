@@ -166,7 +166,7 @@ final class BackendSVNTest extends TestIntegrationTestCase
         $project->method('getSVNRootPath')->willReturn(ForgeConfig::get('svn_prefix') . '/toto');
         $backend->expects($this->once())->method('log');
 
-        self::expectException(BackendSVNFileForSimlinkAlreadyExistsException::class);
+        $this->expectException(BackendSVNFileForSimlinkAlreadyExistsException::class);
         $backend->updateHooks(
             $project,
             ForgeConfig::get('svn_prefix') . '/toto',

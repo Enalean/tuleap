@@ -64,13 +64,13 @@ class BaseLanguageTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
 
     public function testConstructorThrowExceptionWhenLanguageNotSupported(): void
     {
-        self::expectExceptionMessage('The default language must be part of supported languages');
+        $this->expectExceptionMessage('The default language must be part of supported languages');
         new BaseLanguage('lang1,lang2', 'do-not-exist');
     }
 
     public function testConstructorThrowExceptionWhenNoLanguageProvided(): void
     {
-        self::expectExceptionMessage('You must provide supported languages (see local.inc)');
+        $this->expectExceptionMessage('You must provide supported languages (see local.inc)');
         new BaseLanguage('', '');
     }
 

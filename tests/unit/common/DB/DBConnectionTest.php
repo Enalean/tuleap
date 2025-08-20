@@ -92,7 +92,7 @@ final class DBConnectionTest extends \Tuleap\Test\PHPUnit\TestCase
         $db_creator->method('createDB')->willReturn($db);
 
         $db_connection->getDB();
-        self::expectException(\PDOException::class);
+        $this->expectException(\PDOException::class);
         $db_connection->reconnectAfterALongRunningProcess();
     }
 }

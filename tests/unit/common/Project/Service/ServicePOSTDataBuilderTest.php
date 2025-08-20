@@ -68,7 +68,7 @@ final class ServicePOSTDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         );
 
-        self::expectException(InvalidServicePOSTDataException::class);
+        $this->expectException(InvalidServicePOSTDataException::class);
 
         $this->service_postdata_builder->buildFromREST($service, false);
     }
@@ -92,7 +92,7 @@ final class ServicePOSTDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         );
 
-        self::expectException(InvalidServicePOSTDataException::class);
+        $this->expectException(InvalidServicePOSTDataException::class);
 
         $this->service_postdata_builder->buildFromREST($service, false);
     }
@@ -118,7 +118,7 @@ final class ServicePOSTDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         );
 
-        self::expectException(InvalidServicePOSTDataException::class);
+        $this->expectException(InvalidServicePOSTDataException::class);
 
         $this->service_postdata_builder->buildFromREST($service, false);
     }
@@ -144,7 +144,7 @@ final class ServicePOSTDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         );
 
-        self::expectException(InvalidServicePOSTDataException::class);
+        $this->expectException(InvalidServicePOSTDataException::class);
 
         $this->service_postdata_builder->buildFromREST($service, false);
     }
@@ -196,7 +196,7 @@ final class ServicePOSTDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         );
 
-        self::expectException(InvalidServicePOSTDataException::class);
+        $this->expectException(InvalidServicePOSTDataException::class);
 
         $this->service_postdata_builder->buildFromREST($service, false);
     }
@@ -222,7 +222,7 @@ final class ServicePOSTDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         );
 
-        self::expectException(InvalidServicePOSTDataException::class);
+        $this->expectException(InvalidServicePOSTDataException::class);
 
         $this->service_postdata_builder->buildFromREST($service, false);
     }
@@ -389,7 +389,7 @@ final class ServicePOSTDataBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
                 return false;
             });
 
-        self::expectException(InvalidServicePOSTDataException::class);
+        $this->expectException(InvalidServicePOSTDataException::class);
 
         $this->service_postdata_builder->buildFromRequest($request, $project, $service, $response);
     }

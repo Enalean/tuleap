@@ -57,7 +57,7 @@ final class WebhookUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $dao     = $this->createMock(\Tuleap\Project\Webhook\WebhookDao::class);
         $updater = new WebhookUpdater($dao);
 
-        self::expectException(\Tuleap\Project\Webhook\WebhookMalformedDataException::class);
+        $this->expectException(\Tuleap\Project\Webhook\WebhookMalformedDataException::class);
         $dao->expects($this->never())->method('createWebhook');
         $dao->expects($this->never())->method('editWebhook');
 
@@ -71,7 +71,7 @@ final class WebhookUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
         $dao->method('createWebhook')->willReturn(false);
         $updater = new WebhookUpdater($dao);
 
-        self::expectException(\Tuleap\Project\Webhook\WebhookDataAccessException::class);
+        $this->expectException(\Tuleap\Project\Webhook\WebhookDataAccessException::class);
 
         $updater->add('Webhook name', 'https://example.com');
     }

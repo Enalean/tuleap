@@ -30,6 +30,7 @@
         </testsuite>
         <testsuite name="CodingStandard">
             <directory>../phpcs/tests/</directory>
+            <exclude>../phpcs/tests/**/_fixtures/</exclude>
         </testsuite>
     </testsuites>
 </phpunit>

@@ -121,7 +121,7 @@ final class ProjectCreatorTest extends TestCase
             ->method('collectAllErrorsForProjectRegistration')
             ->willReturn($errors_collection);
 
-        self::expectException(ProjectDescriptionMandatoryException::class);
+        $this->expectException(ProjectDescriptionMandatoryException::class);
 
         $this->creator->processProjectCreation($project_creation_data);
     }
@@ -149,7 +149,7 @@ final class ProjectCreatorTest extends TestCase
             ->method('collectAllErrorsForProjectRegistration')
             ->willReturn($errors_collection);
 
-        self::expectException(ProjectInvalidShortNameException::class);
+        $this->expectException(ProjectInvalidShortNameException::class);
 
         $this->creator->processProjectCreation($project_creation_data);
     }
@@ -177,7 +177,7 @@ final class ProjectCreatorTest extends TestCase
             ->method('collectAllErrorsForProjectRegistration')
             ->willReturn($errors_collection);
 
-        self::expectException(ProjectInvalidFullNameException::class);
+        $this->expectException(ProjectInvalidFullNameException::class);
 
         $this->creator->processProjectCreation($project_creation_data);
     }

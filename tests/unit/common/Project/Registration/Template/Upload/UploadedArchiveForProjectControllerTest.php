@@ -48,7 +48,7 @@ final class UploadedArchiveForProjectControllerTest extends TestCase
             new NoopSapiEmitter(),
         );
 
-        self::expectException(NotFoundException::class);
+        $this->expectException(NotFoundException::class);
         $controller->handle($server_request);
     }
 
@@ -65,7 +65,7 @@ final class UploadedArchiveForProjectControllerTest extends TestCase
             new NoopSapiEmitter(),
         );
 
-        self::expectException(NotFoundException::class);
+        $this->expectException(NotFoundException::class);
         $controller->handle($server_request);
     }
 

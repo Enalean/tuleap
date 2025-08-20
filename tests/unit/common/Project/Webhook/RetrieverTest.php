@@ -47,7 +47,7 @@ final class RetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $retriever = new Retriever($dao);
 
-        self::expectException(\Tuleap\Project\Webhook\WebhookDataAccessException::class);
+        $this->expectException(\Tuleap\Project\Webhook\WebhookDataAccessException::class);
         $retriever->getWebhooks();
     }
 }

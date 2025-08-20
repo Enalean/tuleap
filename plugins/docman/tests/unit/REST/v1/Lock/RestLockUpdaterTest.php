@@ -53,7 +53,7 @@ final class RestLockUpdaterTest extends TestCase
     public function testUserCannotAddALockOnAlreadyLockedDocument(): void
     {
         $this->lock_factory->method('itemIsLockedByItemId')->willReturn(true);
-        self::expectException(I18NRestException::class);
+        $this->expectException(I18NRestException::class);
         $this->lock_factory->expects($this->never())->method('lock');
         $this->updater->lockItem($this->item, $this->user);
     }
@@ -68,7 +68,7 @@ final class RestLockUpdaterTest extends TestCase
     public function testUserCannotUnlockADocumentIfHeHasNoSufficentPermission(): void
     {
         $this->permissions_manager->method('_itemIsLockedForUser')->willReturn(true);
-        self::expectException(I18NRestException::class);
+        $this->expectException(I18NRestException::class);
         $this->updater->unlockItem($this->item, $this->user);
     }
 

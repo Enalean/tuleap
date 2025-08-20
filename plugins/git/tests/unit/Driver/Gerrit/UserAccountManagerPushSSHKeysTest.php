@@ -161,7 +161,7 @@ final class UserAccountManagerPushSSHKeysTest extends TestCase
         $this->gerrit_driver->method('addSSHKeyToAccount')->willThrowException(new Git_Driver_Gerrit_Exception());
         $this->gerrit_driver->method('removeSSHKeyFromAccount');
 
-        self::expectException(Git_UserSynchronisationException::class);
+        $this->expectException(Git_UserSynchronisationException::class);
         $this->user_account_manager->pushSSHKeys($this->user);
     }
 }

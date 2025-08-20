@@ -55,7 +55,7 @@ final class ServiceUpdateCheckerTest extends TestCase
         $service = ServiceBuilder::aSystemService(ProjectTestBuilder::aProject()->build())->withShortName('plugin_git')->isActive(true)->build();
         $body    = new ServicePUTRepresentation(true);
 
-        self::expectException(RestException::class);
+        $this->expectException(RestException::class);
         $this->buildServiceUpdateChecker($service_manager)->checkServiceCanBeUpdated($body, $service, $this->user);
     }
 
@@ -66,7 +66,7 @@ final class ServiceUpdateCheckerTest extends TestCase
         $body    = new ServicePUTRepresentation(true);
         $service = ServiceBuilder::aSystemService(ProjectTestBuilder::aProject()->build())->withShortName('plugin_git')->isActive(false)->build();
 
-        self::expectException(I18NRestException::class);
+        $this->expectException(I18NRestException::class);
         $this->buildServiceUpdateChecker($service_manager)->checkServiceCanBeUpdated($body, $service, $this->user);
     }
 

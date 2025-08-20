@@ -114,8 +114,8 @@ final class DocmanItemCopierTest extends TestCase
 
         $this->item_factory->method('getItemFromDb')->willReturn(null);
 
-        self::expectException(RestException::class);
-        self::expectExceptionCode(404);
+        $this->expectException(RestException::class);
+        $this->expectExceptionCode(404);
         $this->item_copier->copyItem(
             new DateTimeImmutable(),
             new Docman_Folder(),
@@ -134,8 +134,8 @@ final class DocmanItemCopierTest extends TestCase
 
         $this->permission_manager->method('userCanAccess')->willReturn(false);
 
-        self::expectException(RestException::class);
-        self::expectExceptionCode(404);
+        $this->expectException(RestException::class);
+        $this->expectExceptionCode(404);
         $this->item_copier->copyItem(
             new DateTimeImmutable(),
             new Docman_Folder(),
@@ -156,8 +156,8 @@ final class DocmanItemCopierTest extends TestCase
 
         $destination_folder = new Docman_Folder(['item_id' => 963, 'group_id' => 103]);
 
-        self::expectException(RestException::class);
-        self::expectExceptionCode(400);
+        $this->expectException(RestException::class);
+        $this->expectExceptionCode(400);
         $this->item_copier->copyItem(
             new DateTimeImmutable(),
             $destination_folder,
@@ -223,7 +223,7 @@ final class DocmanItemCopierTest extends TestCase
 
         $this->item_factory->method('cloneItems')->willReturn([]);
 
-        self::expectException(RuntimeException::class);
+        $this->expectException(RuntimeException::class);
         $this->item_copier->copyItem(
             new DateTimeImmutable(),
             $destination_folder,

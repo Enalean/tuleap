@@ -107,7 +107,7 @@ final class FRSFileDownloadControllerTest extends TestCase
 
         $this->file_factory->method('getFRSFileFromDb')->willReturn(null);
 
-        self::expectException(NotFoundException::class);
+        $this->expectException(NotFoundException::class);
         $controller->handle($server_request);
     }
 
@@ -131,7 +131,7 @@ final class FRSFileDownloadControllerTest extends TestCase
         $this->url_verification->method('userCanAccessProject')
             ->willThrowException($this->createMock(Project_AccessException::class));
 
-        self::expectException(NotFoundException::class);
+        $this->expectException(NotFoundException::class);
         $controller->handle($server_request);
     }
 
@@ -156,7 +156,7 @@ final class FRSFileDownloadControllerTest extends TestCase
 
         $this->url_verification->method('userCanAccessProject');
 
-        self::expectException(NotFoundException::class);
+        $this->expectException(NotFoundException::class);
         $controller->handle($server_request);
     }
 
@@ -183,7 +183,7 @@ final class FRSFileDownloadControllerTest extends TestCase
 
         $this->url_verification->method('userCanAccessProject');
 
-        self::expectException(FRSFileNotPresentInStorage::class);
+        $this->expectException(FRSFileNotPresentInStorage::class);
         $controller->handle($server_request);
     }
 
@@ -202,7 +202,7 @@ final class FRSFileDownloadControllerTest extends TestCase
         $frs_file = $this->createStub(FRSFile::class);
         $this->file_factory->method('getFRSFileFromDb')->willReturn($frs_file);
 
-        self::expectException(NotFoundException::class);
+        $this->expectException(NotFoundException::class);
         $controller->handle($server_request);
     }
 }

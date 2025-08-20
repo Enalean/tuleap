@@ -76,7 +76,7 @@ final class UploadedLinksRequestFormatterTest extends TestCase
         });
         $request->method('validArray')->willReturn(true);
 
-        self::expectException(UploadedLinksInvalidFormException::class);
+        $this->expectException(UploadedLinksInvalidFormException::class);
         $formatter = new UploadedLinksRequestFormatter();
         $formatter->formatFromRequest($request);
     }
@@ -103,7 +103,7 @@ final class UploadedLinksRequestFormatterTest extends TestCase
 
         $formatter = new UploadedLinksRequestFormatter();
 
-        self::expectException(UploadedLinksInvalidFormException::class);
+        $this->expectException(UploadedLinksInvalidFormException::class);
         $formatter->formatFromRequest($request);
     }
 

@@ -151,7 +151,7 @@ final class ConsistencyCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testInvalidFile(): void
     {
-        self::expectException(\RuntimeException::class);
+        $this->expectException(\RuntimeException::class);
         $this->checker->areAllServicesAvailable(__DIR__ . '/_fixtures', []);
     }
 }
