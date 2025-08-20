@@ -23,7 +23,7 @@ namespace Tuleap\Tracker\Action;
 interface VerifyOpenListFieldsAreCompatible
 {
     public function areOpenListFieldsCompatible(
-        \Tracker_FormElement_Field_OpenList $source_field,
-        \Tracker_FormElement_Field_OpenList $destination_field,
+        \Tuleap\Tracker\FormElement\Field\List\OpenListField $source_field,
+        \Tuleap\Tracker\FormElement\Field\List\OpenListField $destination_field,
     ): bool;
 }

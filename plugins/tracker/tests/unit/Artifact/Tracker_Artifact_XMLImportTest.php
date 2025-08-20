@@ -35,7 +35,6 @@ use TestHelper;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_XMLImport;
 use Tracker_Artifact_XMLImport_XMLImportZipArchive;
-use Tracker_FormElement_Field_OpenList;
 use Tracker_FormElement_Field_PermissionsOnArtifact;
 use Tracker_FormElementFactory;
 use Tracker_XML_Importer_ArtifactImportedMapping;
@@ -61,6 +60,7 @@ use Tuleap\Tracker\Artifact\XMLImport\TrackerXmlImportConfig;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\List\MultiSelectboxField;
+use Tuleap\Tracker\FormElement\Field\List\OpenListField;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
 use Tuleap\Tracker\FormElement\Field\String\StringField;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
@@ -1497,7 +1497,7 @@ final class Tracker_Artifact_XMLImportTest extends TestCase // phpcs:ignore Squi
         $this->artifact_creator->method('createBare')->willReturn($this->artifact);
         $this->artifact_creator->method('createFirstChangeset')->willReturn(ChangesetTestBuilder::aChangeset(259)->build());
 
-        $open_list_field = $this->createMock(Tracker_FormElement_Field_OpenList::class);
+        $open_list_field = $this->createMock(OpenListField::class);
         $open_list_field->method('setTracker');
         $open_list_field->method('getId')->willReturn(369);
         $open_list_field->method('validateField')->willReturn(true);
@@ -1520,7 +1520,7 @@ final class Tracker_Artifact_XMLImportTest extends TestCase // phpcs:ignore Squi
 
     public function testItCreatesArtifactWithCCFieldData(): void
     {
-        $open_list_field = $this->createMock(Tracker_FormElement_Field_OpenList::class);
+        $open_list_field = $this->createMock(OpenListField::class);
         $open_list_field->method('setTracker');
         $open_list_field->method('getId')->willReturn(369);
         $open_list_field->method('validateField')->willReturn(true);

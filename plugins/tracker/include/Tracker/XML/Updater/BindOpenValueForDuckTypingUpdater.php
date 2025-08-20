@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Tracker\XML\Updater;
 
 use SimpleXMLElement;
-use Tracker_FormElement_Field_OpenList;
+use Tuleap\Tracker\FormElement\Field\List\OpenListField;
 use Tuleap\Tracker\FormElement\Field\ListFields\RetrieveMatchingValueByDuckTyping;
 use Tuleap\Tracker\XML\Updater\MoveChangesetXMLUpdater;
 
@@ -55,14 +55,14 @@ final class BindOpenValueForDuckTypingUpdater implements UpdateBindOpenValueByDu
             $value                     = (string) $value_id;
             $destination_list_value_id = null;
 
-            if ($value && ! str_starts_with($value[0], Tracker_FormElement_Field_OpenList::BIND_PREFIX)) {
+            if ($value && ! str_starts_with($value[0], OpenListField::BIND_PREFIX)) {
                 $destinations_values_ids[$value]['value']  = (string) $value_id;
                 $destinations_values_ids[$value]['format'] = 'label';
             } else {
                 $destination_list_value_id = $this->field_value_matcher->getMatchingValueByDuckTyping(
                     $source_field,
                     $destination_field,
-                    (int) str_replace(Tracker_FormElement_Field_OpenList::BIND_PREFIX, '', $value)
+                    (int) str_replace(OpenListField::BIND_PREFIX, '', $value)
                 );
             }
 
@@ -75,7 +75,7 @@ final class BindOpenValueForDuckTypingUpdater implements UpdateBindOpenValueByDu
         }
 
         if (empty($destinations_values_ids)) {
-            $destinations_values_ids[$destination_field->getDefaultValue()]['value']  = (int) str_replace(Tracker_FormElement_Field_OpenList::BIND_PREFIX, '', (string) $destination_field->getDefaultValue());
+            $destinations_values_ids[$destination_field->getDefaultValue()]['value']  = (int) str_replace(OpenListField::BIND_PREFIX, '', (string) $destination_field->getDefaultValue());
             $destinations_values_ids[$destination_field->getDefaultValue()]['format'] = 'id';
         }
 

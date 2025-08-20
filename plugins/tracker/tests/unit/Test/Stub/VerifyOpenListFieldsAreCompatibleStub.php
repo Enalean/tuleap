@@ -42,8 +42,8 @@ final class VerifyOpenListFieldsAreCompatibleStub implements VerifyOpenListField
 
     #[\Override]
     public function areOpenListFieldsCompatible(
-        \Tracker_FormElement_Field_OpenList $source_field,
-        \Tracker_FormElement_Field_OpenList $destination_field,
+        \Tuleap\Tracker\FormElement\Field\List\OpenListField $source_field,
+        \Tuleap\Tracker\FormElement\Field\List\OpenListField $destination_field,
     ): bool {
         return $this->are_fields_compatible;
     }

@@ -100,8 +100,8 @@ final class DryRunDuckTypingFieldCollector implements CollectDryRunTypingField
                 $this->verify_is_open_list_field->isAnOpenListField($source_field)
                 && $this->verify_is_open_list_field->isAnOpenListField($destination_field)
             ) {
-                assert($source_field instanceof \Tracker_FormElement_Field_OpenList);
-                assert($destination_field instanceof \Tracker_FormElement_Field_OpenList);
+                assert($source_field instanceof \Tuleap\Tracker\FormElement\Field\List\OpenListField);
+                assert($destination_field instanceof \Tuleap\Tracker\FormElement\Field\List\OpenListField);
                 $this->collectOpenListFields($source_field, $destination_field, $logger);
                 continue;
             }
@@ -236,8 +236,8 @@ final class DryRunDuckTypingFieldCollector implements CollectDryRunTypingField
     }
 
     private function collectOpenListFields(
-        \Tracker_FormElement_Field_OpenList $source_field,
-        \Tracker_FormElement_Field_OpenList $destination_field,
+        \Tuleap\Tracker\FormElement\Field\List\OpenListField $source_field,
+        \Tuleap\Tracker\FormElement\Field\List\OpenListField $destination_field,
         LoggerInterface $logger,
     ): void {
         if (! $this->verify_open_list_fields_are_compatible->areOpenListFieldsCompatible($source_field, $destination_field)) {

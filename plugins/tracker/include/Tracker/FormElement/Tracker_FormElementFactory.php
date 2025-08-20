@@ -34,6 +34,7 @@ use Tuleap\Tracker\FormElement\Field\Integer\IntegerField;
 use Tuleap\Tracker\FormElement\Field\LastUpdateDate\LastUpdateDateField;
 use Tuleap\Tracker\FormElement\Field\List\CheckboxField;
 use Tuleap\Tracker\FormElement\Field\List\MultiSelectboxField;
+use Tuleap\Tracker\FormElement\Field\List\OpenListField;
 use Tuleap\Tracker\FormElement\Field\List\SelectboxField;
 use Tuleap\Tracker\FormElement\Field\List\RadioButtonField;
 use Tuleap\Tracker\FormElement\Field\ListFields\RetrieveUsedListField;
@@ -113,7 +114,7 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
         self::FIELD_FILE_TYPE => Tracker_FormElement_Field_File::class,
         self::FIELD_CHECKBOX_TYPE => CheckboxField::class,
         self::FIELD_INTEGER_TYPE => IntegerField::class,
-        self::FIELD_OPEN_LIST_TYPE => Tracker_FormElement_Field_OpenList::class,
+        self::FIELD_OPEN_LIST_TYPE => OpenListField::class,
         self::FIELD_ARTIFACT_LINKS => ArtifactLinkField::class,
         self::FIELD_PERMISSION_ON_ARTIFACT_TYPE => Tracker_FormElement_Field_PermissionsOnArtifact::class,
         self::FIELD_SHARED => Tracker_FormElement_Shared::class,
@@ -797,14 +798,14 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
     public function getUsedListFieldById(
         \Tuleap\Tracker\Tracker $tracker,
         int $field_id,
-    ): \Tuleap\Tracker\FormElement\Field\List\SelectboxField|\Tracker_FormElement_Field_OpenList|null {
+    ): \Tuleap\Tracker\FormElement\Field\List\SelectboxField|OpenListField|null {
         $field = $this->getUsedFieldByIdAndType(
             $tracker,
             $field_id,
             [self::FIELD_SELECT_BOX_TYPE, self::FIELD_MULTI_SELECT_BOX_TYPE, self::FIELD_OPEN_LIST_TYPE, self::FIELD_CHECKBOX_TYPE, self::FIELD_RADIO_BUTTON_TYPE]
         );
         assert(
-            $field === null || $field instanceof \Tuleap\Tracker\FormElement\Field\List\SelectboxField || $field instanceof \Tracker_FormElement_Field_OpenList
+            $field === null || $field instanceof \Tuleap\Tracker\FormElement\Field\List\SelectboxField || $field instanceof OpenListField
         );
         return $field;
     }

@@ -35,7 +35,7 @@ final readonly class FieldListOpenValueRepresentation
         public string $label,
         public bool $is_hidden,
     ) {
-        $this->id          = \Tracker_FormElement_Field_OpenList::OPEN_PREFIX . $id;
+        $this->id          = \Tuleap\Tracker\FormElement\Field\List\OpenListField::OPEN_PREFIX . $id;
         $this->value_color = '';
     }
 }

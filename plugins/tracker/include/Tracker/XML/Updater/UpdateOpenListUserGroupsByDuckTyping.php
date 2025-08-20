@@ -24,5 +24,5 @@ use SimpleXMLElement;
 
 interface UpdateOpenListUserGroupsByDuckTyping
 {
-    public function updateUserGroupsForDuckTypingMove(SimpleXMLElement $changeset_xml, \Tracker_FormElement_Field_OpenList $source_field, \Tracker_FormElement_Field_OpenList $destination_field, int $index): void;
+    public function updateUserGroupsForDuckTypingMove(SimpleXMLElement $changeset_xml, \Tuleap\Tracker\FormElement\Field\List\OpenListField $source_field, \Tuleap\Tracker\FormElement\Field\List\OpenListField $destination_field, int $index): void;
 }

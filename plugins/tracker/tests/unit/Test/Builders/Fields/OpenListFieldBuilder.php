@@ -22,19 +22,18 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Test\Builders\Fields;
 
+use Tuleap\Tracker\FormElement\Field\List\OpenListField;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Tracker;
 
 final class OpenListFieldBuilder
 {
+    use FieldBuilderWithPermissions;
+
     private int $field_id = 123;
     private string $name  = 'A field';
     private string $label = 'open_list_field';
     private Tracker $tracker;
-    /** @var list<\PFUser> */
-    private array $user_with_read_permissions = [];
-    /** @var array<int, bool> */
-    private array $read_permissions = [];
 
     private function __construct()
     {
@@ -71,17 +70,9 @@ final class OpenListFieldBuilder
         return $this;
     }
 
-    public function withReadPermission(\PFUser $user, bool $user_can_read): self
+    public function build(): OpenListField
     {
-        $this->user_with_read_permissions[]           = $user;
-        $this->read_permissions[(int) $user->getId()] = $user_can_read;
-
-        return $this;
-    }
-
-    public function build(): \Tracker_FormElement_Field_OpenList
-    {
-        $field = new \Tracker_FormElement_Field_OpenList(
+        $field = new OpenListField(
             $this->field_id,
             $this->tracker->getId(),
             1,
@@ -97,9 +88,7 @@ final class OpenListFieldBuilder
 
         $field->setTracker($this->tracker);
 
-        foreach ($this->user_with_read_permissions as $user) {
-            $field->setUserCanRead($user, $this->read_permissions[(int) $user->getId()]);
-        }
+        $this->setPermissions($field);
 
         return $field;
     }

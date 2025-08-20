@@ -23,8 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Tracker\XML\Updater;
 
 use SimpleXMLElement;
-use Tracker_FormElement_Field_OpenList;
 use Tuleap\Project\UGroupRetriever;
+use Tuleap\Tracker\FormElement\Field\List\OpenListField;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\SearchUserGroupsValuesByFieldIdAndUserGroupId;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\SearchUserGroupsValuesById;
 use Tuleap\Tracker\XML\Updater\MoveChangesetXMLUpdater;
@@ -41,7 +41,7 @@ final class OpenListUserGroupsByDuckTypingUpdater implements UpdateOpenListUserG
     ) {
     }
 
-    public function updateUserGroupsForDuckTypingMove(SimpleXMLElement $changeset_xml, Tracker_FormElement_Field_OpenList $source_field, Tracker_FormElement_Field_OpenList $destination_field, int $index): void
+    public function updateUserGroupsForDuckTypingMove(SimpleXMLElement $changeset_xml, OpenListField $source_field, OpenListField $destination_field, int $index): void
     {
         $list_value_ids = $changeset_xml->field_change[$index]->value;
         if ($list_value_ids === null) {
@@ -50,7 +50,7 @@ final class OpenListUserGroupsByDuckTypingUpdater implements UpdateOpenListUserG
 
         $destination_values_ids = [];
         foreach ($list_value_ids as $value_id) {
-            $bind_value_id     = (int) str_replace(Tracker_FormElement_Field_OpenList::BIND_PREFIX, '', (string) $value_id);
+            $bind_value_id     = (int) str_replace(OpenListField::BIND_PREFIX, '', (string) $value_id);
             $source_ugroup_raw = $this->search_user_groups_values_by_id->searchById($bind_value_id);
             if (! $source_ugroup_raw) {
                 continue;
@@ -90,7 +90,7 @@ final class OpenListUserGroupsByDuckTypingUpdater implements UpdateOpenListUserG
             $this->cdata_factory->insertWithAttributes(
                 $changeset_xml->field_change[$index],
                 'value',
-                Tracker_FormElement_Field_OpenList::BIND_PREFIX . $value_id,
+                OpenListField::BIND_PREFIX . $value_id,
                 ['format' => 'id']
             );
         }

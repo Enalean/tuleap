@@ -26,6 +26,6 @@ final class OpenListFieldVerifier implements VerifyIsOpenListField
 {
     public function isAnOpenListField(\Tracker_FormElement_Field $field): bool
     {
-        return $field instanceof \Tracker_FormElement_Field_OpenList;
+        return $field instanceof \Tuleap\Tracker\FormElement\Field\List\OpenListField;
     }
 }

@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\FormElement\Field\List\OpenListField;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindListUserValueGetter;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindParameters;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindUsersDao;
@@ -718,13 +719,13 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
             return $bind_default;
         }
 
-        if (! $this->field instanceof Tracker_FormElement_Field_OpenList) {
+        if (! $this->field instanceof OpenListField) {
             return parent::filterDefaultValues($bind_default);
         }
 
         $bind_default = explode(',', $bind_default[0]);
         foreach ($bind_default as $key => $value) {
-            $bind_default[$key] = str_replace(Tracker_FormElement_Field_OpenList::BIND_PREFIX, '', $value);
+            $bind_default[$key] = str_replace(OpenListField::BIND_PREFIX, '', $value);
         }
 
         return parent::filterDefaultValues($bind_default);
@@ -946,7 +947,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
             if (! $user) {
                 throw new Tracker_FormElement_InvalidFieldValueException('Cannot Bind to user with ID ' . $id . ' for field ID ' . $field->getId());
             }
-            return Tracker_FormElement_Field_OpenList::BIND_PREFIX . $id;
+            return OpenListField::BIND_PREFIX . $id;
         }
 
         if (isset($rest_data['username'])) {
@@ -957,7 +958,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
                 throw new Tracker_FormElement_InvalidFieldValueException('Cannot Bind to user "' . $identifier . '" for field ID ' . $field->getId());
             }
 
-            return Tracker_FormElement_Field_OpenList::BIND_PREFIX . $user->getId();
+            return OpenListField::BIND_PREFIX . $user->getId();
         }
 
         if (! isset($rest_data['email'])) {
@@ -968,9 +969,9 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
         $user       = $this->userManager->getUserByIdentifier("email:$identifier");
 
         if (! $user) {
-            return Tracker_FormElement_Field_OpenList::NEW_VALUE_PREFIX . $identifier;
+            return OpenListField::NEW_VALUE_PREFIX . $identifier;
         }
-        return Tracker_FormElement_Field_OpenList::BIND_PREFIX . $user->getId();
+        return OpenListField::BIND_PREFIX . $user->getId();
     }
 
     public function getFullRESTValue(Tracker_FormElement_Field_List_Value $value)

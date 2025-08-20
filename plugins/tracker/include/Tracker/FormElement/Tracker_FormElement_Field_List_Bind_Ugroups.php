@@ -21,9 +21,10 @@ use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\Project\REST\MinimalUserGroupRepresentation;
 use Tuleap\Project\REST\UserGroupRepresentation;
 use Tuleap\Project\UGroupRetriever;
+use Tuleap\Tracker\FormElement\Field\List\OpenListField;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindParameters;
-use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindVisitor;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindUgroupsValueDao;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindVisitor;
 use Tuleap\Tracker\FormElement\Field\ListFields\OpenListValueDao;
 use Tuleap\Tracker\REST\FieldListBindUGroupValueRepresentation;
 
@@ -730,7 +731,7 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
 
             $bind_value = $this->getValueByUGroupId($id);
             if ($bind_value) {
-                return Tracker_FormElement_Field_OpenList::BIND_PREFIX . $bind_value->getId();
+                return OpenListField::BIND_PREFIX . $bind_value->getId();
             }
 
             $user_group = $this->ugroup_retriever->getUGroup($project, $id);
@@ -757,11 +758,11 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
         if ($identifier !== null) {
             $row = $this->getOpenValueDao()->searchByExactLabel($field->getId(), $identifier)->getRow();
             if ($row) {
-                return Tracker_FormElement_Field_OpenList::OPEN_PREFIX . $row['id'];
+                return OpenListField::OPEN_PREFIX . $row['id'];
             }
         }
 
-        return Tracker_FormElement_Field_OpenList::NEW_VALUE_PREFIX . $identifier;
+        return OpenListField::NEW_VALUE_PREFIX . $identifier;
     }
 
     public function getFullRESTValue(Tracker_FormElement_Field_List_Value $value)

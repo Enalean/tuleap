@@ -26,7 +26,7 @@ final class UserGroupOpenListFieldVerifier implements VerifyIsUserGroupOpenListF
 {
     public function isUserGroupOpenListField(\Tracker_FormElement_Field $field): bool
     {
-        if (! $field instanceof \Tracker_FormElement_Field_OpenList) {
+        if (! $field instanceof \Tuleap\Tracker\FormElement\Field\List\OpenListField) {
             return false;
         }
 

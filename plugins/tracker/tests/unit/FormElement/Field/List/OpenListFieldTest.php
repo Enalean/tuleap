@@ -22,7 +22,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\FormElement;
+namespace Tuleap\Tracker\FormElement\Field\List;
 
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -33,7 +33,6 @@ use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Bind_Static;
 use Tracker_FormElement_Field_List_BindValue;
 use Tracker_FormElement_Field_List_OpenValue;
-use Tracker_FormElement_Field_OpenList;
 use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\GlobalResponseMock;
@@ -47,18 +46,19 @@ use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 
 #[DisableReturnValueGenerationForTestDoubles]
-final class Tracker_FormElement_Field_OpenListTest extends TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+final class OpenListFieldTest extends TestCase
 {
     use GlobalLanguageMock;
     use GlobalResponseMock;
 
     private OpenListValueDao&MockObject $dao;
     private Tracker_FormElement_Field_List_Bind_Static&MockObject $bind;
-    private Tracker_FormElement_Field_OpenList $field;
+    private OpenListField $field;
 
+    #[\Override]
     protected function setUp(): void
     {
-        $this->field = $this->createPartialMock(Tracker_FormElement_Field_OpenList::class, ['getId', 'getBind', 'getOpenValueDao']);
+        $this->field = $this->createPartialMock(OpenListField::class, ['getId', 'getBind', 'getOpenValueDao']);
         $this->bind  = $this->createMock(Tracker_FormElement_Field_List_Bind_Static::class);
         $this->dao   = $this->createMock(OpenListValueDao::class);
 
@@ -103,7 +103,7 @@ final class Tracker_FormElement_Field_OpenListTest extends TestCase //phpcs:igno
                 '1002' => ListStaticValueBuilder::aStaticValue('1002')->build(),
             ]);
 
-        $list_field = $this->createPartialMock(Tracker_FormElement_Field_OpenList::class, ['getId', 'getValueDao', 'getOpenValueDao', 'getBind']);
+        $list_field = $this->createPartialMock(OpenListField::class, ['getId', 'getValueDao', 'getOpenValueDao', 'getBind']);
         $list_field->method('getId')->willReturn(1);
         $list_field->method('getValueDao')->willReturn($value_dao);
         $list_field->method('getOpenValueDao')->willReturn($open_value_dao);
@@ -126,7 +126,7 @@ final class Tracker_FormElement_Field_OpenListTest extends TestCase //phpcs:igno
         $value_dao = $this->createMock(OpenListChangesetValueDao::class);
         $value_dao->method('searchbyId')->willReturn(TestHelper::arrayToDar());
 
-        $list_field = $this->createPartialMock(Tracker_FormElement_Field_OpenList::class, ['getId', 'getValueDao']);
+        $list_field = $this->createPartialMock(OpenListField::class, ['getId', 'getValueDao']);
         $list_field->method('getId')->willReturn(1);
         $list_field->method('getValueDao')->willReturn($value_dao);
 
@@ -171,7 +171,7 @@ final class Tracker_FormElement_Field_OpenListTest extends TestCase //phpcs:igno
             ],
         );
 
-        $list_field = $this->createPartialMock(Tracker_FormElement_Field_OpenList::class, ['getId', 'getValueDao', 'getOpenValueDao']);
+        $list_field = $this->createPartialMock(OpenListField::class, ['getId', 'getValueDao', 'getOpenValueDao']);
         $list_field->method('getId')->willReturn(1);
         $list_field->method('getValueDao')->willReturn($value_dao);
         $list_field->method('getOpenValueDao')->willReturn($open_value_dao);
@@ -268,7 +268,7 @@ final class Tracker_FormElement_Field_OpenListTest extends TestCase //phpcs:igno
 
     public function testItThrowsAnExceptionWhenReturningValueIndexedByFieldName(): void
     {
-        $field = new Tracker_FormElement_Field_OpenList(
+        $field = new OpenListField(
             1,
             101,
             null,
@@ -292,7 +292,7 @@ final class Tracker_FormElement_Field_OpenListTest extends TestCase //phpcs:igno
     public function testItAcceptsValidValues(): void
     {
         $artifact = ArtifactTestBuilder::anArtifact(963)->build();
-        $field    = $this->createPartialMock(Tracker_FormElement_Field_OpenList::class, ['validate']);
+        $field    = $this->createPartialMock(OpenListField::class, ['validate']);
         $field->method('validate')->willReturn(true);
 
         self::assertTrue($field->isValid($artifact, ''));
@@ -300,7 +300,7 @@ final class Tracker_FormElement_Field_OpenListTest extends TestCase //phpcs:igno
         self::assertTrue(
             $field->isValid(
                 $artifact,
-                Tracker_FormElement_Field_OpenList::BIND_PREFIX . Tracker_FormElement_Field_List::NONE_VALUE
+                OpenListField::BIND_PREFIX . Tracker_FormElement_Field_List::NONE_VALUE
             )
         );
         self::assertTrue($field->isValid($artifact, ['b101', 'b102']));
@@ -344,20 +344,20 @@ final class Tracker_FormElement_Field_OpenListTest extends TestCase //phpcs:igno
         self::assertTrue($field->isValidRegardingRequiredProperty($artifact, $value));
     }
 
-    private function aRequiredOpenListField(): Tracker_FormElement_Field_OpenList
+    private function aRequiredOpenListField(): OpenListField
     {
-        return new Tracker_FormElement_Field_OpenList(
+        return new OpenListField(
             102,
-            null,
-            null,
+            10,
+            1,
             'openlist',
             'My Open List',
-            null,
-            null,
-            null,
+            '',
             true,
-            null,
-            null,
+            'P',
+            true,
+            'null',
+            1,
             null
         );
     }

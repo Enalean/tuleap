@@ -23,12 +23,12 @@ declare(strict_types=1);
 namespace Tuleap\DocumentGeneration\Report;
 
 use Tracker_FormElement_Field_List;
-use Tracker_FormElement_Field_OpenList;
 use Tracker_FormElement_InvalidFieldValueException;
 use Tracker_Report;
 use Tracker_Report_Criteria;
 use Tuleap\REST\JsonCast;
 use Tuleap\Tracker\FormElement\Field\Date\DateField;
+use Tuleap\Tracker\FormElement\Field\List\OpenListField;
 
 class ReportCriteriaJsonBuilder
 {
@@ -62,7 +62,7 @@ class ReportCriteriaJsonBuilder
                 if ($date_criterion_json_value !== null) {
                     $criteria_value_json[] = $date_criterion_json_value;
                 }
-            } elseif ($criterion_field instanceof Tracker_FormElement_Field_OpenList) {
+            } elseif ($criterion_field instanceof OpenListField) {
                 $open_list_criterion_json_value = $this->buildCriterionValueJsonFromOpenListValue($criterion);
                 if ($open_list_criterion_json_value !== null) {
                     $criteria_value_json[] = $open_list_criterion_json_value;

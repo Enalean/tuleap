@@ -28,8 +28,8 @@ use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue_List;
 use Tracker_Artifact_ChangesetValue_OpenList;
 use Tracker_FormElement_Field_List_BindValue;
-use Tracker_FormElement_Field_OpenList;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\FormElement\Field\List\OpenListField;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\OpenListFieldBuilder;
@@ -37,7 +37,7 @@ use Tuleap\Tracker\Test\Builders\Fields\OpenListFieldBuilder;
 #[DisableReturnValueGenerationForTestDoubles]
 final class Tracker_Artifact_ChangesetValue_OpenListTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    private Tracker_FormElement_Field_OpenList $field;
+    private OpenListField $field;
     private Tracker_Artifact_Changeset $changeset;
 
 

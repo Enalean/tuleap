@@ -21,10 +21,10 @@
 namespace Tuleap\Tracker\XML\Updater;
 
 use SimpleXMLElement;
-use Tracker_FormElement_Field_OpenList;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\ProjectUGroupTestBuilder;
 use Tuleap\Test\Stubs\UGroupRetrieverStub;
+use Tuleap\Tracker\FormElement\Field\List\OpenListField;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserGroupBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\OpenListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -38,8 +38,8 @@ final class OpenListUserGroupsByDuckTypingUpdaterTest extends \Tuleap\Test\PHPUn
 {
     private \Tracker_FormElement_Field_List_Bind_Ugroups $source_bind;
     private \Tracker_FormElement_Field_List_Bind_Ugroups $target_bind;
-    private \Tracker_FormElement_Field_OpenList $source_field;
-    private \Tracker_FormElement_Field_OpenList $target_field;
+    private \Tuleap\Tracker\FormElement\Field\List\OpenListField $source_field;
+    private \Tuleap\Tracker\FormElement\Field\List\OpenListField $target_field;
     private XML_SimpleXMLCDATAFactory $cdata_factory;
     private MoveChangesetXMLUpdater $move_changeset_updater;
 
@@ -55,8 +55,8 @@ final class OpenListUserGroupsByDuckTypingUpdaterTest extends \Tuleap\Test\PHPUn
             OpenListFieldBuilder::anOpenListField()->withTracker($destination_tracker)->build()
         )->build();
 
-        assert($this->source_bind->getField() instanceof Tracker_FormElement_Field_OpenList);
-        assert($this->target_bind->getField() instanceof Tracker_FormElement_Field_OpenList);
+        assert($this->source_bind->getField() instanceof OpenListField);
+        assert($this->target_bind->getField() instanceof OpenListField);
         $this->source_field =  $this->source_bind->getField();
         $this->target_field =  $this->target_bind->getField();
 

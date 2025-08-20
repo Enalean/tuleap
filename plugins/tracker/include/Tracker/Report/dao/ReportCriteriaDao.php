@@ -21,7 +21,7 @@
 
 namespace Tuleap\Tracker\Report\dao;
 
-use Tracker_FormElement_Field_OpenList;
+use Tuleap\Tracker\FormElement\Field\List\OpenListField;
 
 final class ReportCriteriaDao extends \Tuleap\DB\DataAccessObject
 {
@@ -119,9 +119,9 @@ final class ReportCriteriaDao extends \Tuleap\DB\DataAccessObject
             $value = trim($value);
             if ($value) {
                 switch ($value[0]) {
-                    case Tracker_FormElement_Field_OpenList::BIND_PREFIX:
+                    case OpenListField::BIND_PREFIX:
                         $bindvalue_id       = (int) substr($value, 1);
-                        $converted_values[] = Tracker_FormElement_Field_OpenList::BIND_PREFIX . $mapping['values'][$bindvalue_id];
+                        $converted_values[] = OpenListField::BIND_PREFIX . $mapping['values'][$bindvalue_id];
                         break;
                     default:
                         $converted_values[] = $value;
