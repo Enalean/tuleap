@@ -18,12 +18,17 @@
   -->
 
 <template>
-    <no-more-viewable-users-warning />
+    <no-more-viewable-users-warning v-bind:query_retriever="query_retriever" />
     <widget-query-displayer
         v-if="!is_query_being_edited"
         v-on:click="is_query_being_edited = true"
+        v-bind:query_retriever="query_retriever"
     />
-    <widget-query-editor v-else v-on:close-edit-mode="is_query_being_edited = false" />
+    <widget-query-editor
+        v-else
+        v-on:close-edit-mode="is_query_being_edited = false"
+        v-bind:query_retriever="query_retriever"
+    />
 </template>
 
 <script setup lang="ts">
@@ -31,6 +36,11 @@ import WidgetQueryDisplayer from "./WidgetQueryDisplayer.vue";
 import WidgetQueryEditor from "./WidgetQueryEditor.vue";
 import { ref } from "vue";
 import NoMoreViewableUsersWarning from "./NoMoreViewableUsersWarning.vue";
+import type { Query } from "../query/QueryRetriever";
+
+defineProps<{
+    query_retriever: Query;
+}>();
 
 const is_query_being_edited = ref(false);
 </script>

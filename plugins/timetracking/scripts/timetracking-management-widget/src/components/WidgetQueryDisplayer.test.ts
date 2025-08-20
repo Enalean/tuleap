@@ -24,7 +24,6 @@ import WidgetQueryDisplayer from "./WidgetQueryDisplayer.vue";
 import { getGlobalTestOptions } from "../../tests/global-options-for-tests";
 import type { User } from "@tuleap/core-rest-api-types";
 import { injected_query, RetrieveQueryStub } from "../../tests/stubs/RetrieveQueryStub";
-import { RETRIEVE_QUERY } from "../injection-symbols";
 
 const mireillelabeille: User = {
     id: 101,
@@ -45,11 +44,11 @@ describe("Given a timetracking management widget query displayer", () => {
 
     function getWidgetQueryDisplayerInstance(): VueWrapper {
         return shallowMount(WidgetQueryDisplayer, {
+            props: {
+                query_retriever: RetrieveQueryStub.withDefaults(users_list),
+            },
             global: {
                 ...getGlobalTestOptions(),
-                provide: {
-                    [RETRIEVE_QUERY.valueOf()]: RetrieveQueryStub.withDefaults(users_list),
-                },
             },
         });
     }
