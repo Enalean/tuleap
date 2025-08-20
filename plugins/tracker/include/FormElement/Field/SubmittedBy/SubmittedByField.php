@@ -19,15 +19,31 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\Tracker\FormElement\Field\SubmittedBy;
+
+use Codendi_HTMLPurifier;
+use Override;
+use PFUser;
+use Tracker_Artifact_Changeset;
+use Tracker_Artifact_ChangesetValue;
+use Tracker_CardDisplayPreferences;
+use Tracker_FormElement_Field_List;
+use Tracker_FormElement_Field_List_Bind;
+use Tracker_FormElement_Field_List_Bind_UsersValue;
+use Tracker_FormElement_Field_ReadOnly;
+use Tracker_FormElement_FieldVisitor;
+use Tracker_FormElementFactory;
+use Tracker_Report;
+use Tracker_Report_Criteria;
 use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
+use UserManager;
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
-class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_List implements Tracker_FormElement_Field_ReadOnly
+final class SubmittedByField extends Tracker_FormElement_Field_List implements Tracker_FormElement_Field_ReadOnly
 {
     public array $default_properties = [];
 
@@ -39,10 +55,11 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
         return new DatabaseUUIDV7Factory();
     }
 
+    #[Override]
     public function getCriteriaFromWhere(Tracker_Report_Criteria $criteria): Option
     {
         return $this->getCriteriaWhereFragment($criteria)->mapOr(
-            static fn (ParametrizedSQLFragment $where) => Option::fromValue(
+            static fn(ParametrizedSQLFragment $where) => Option::fromValue(
                 new ParametrizedFromWhere(
                     '',
                     $where->sql,
@@ -83,18 +100,21 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
         return Option::nothing(ParametrizedSQLFragment::class);
     }
 
+    #[Override]
     public function getQuerySelect(): string
     {
         // SubmittedOn is stored in the artifact
         return 'a.submitted_by AS ' . $this->getQuerySelectName();
     }
 
+    #[Override]
     public function getQueryFrom()
     {
         // SubmittedOn is stored in the artifact
         return '';
     }
 
+    #[Override]
     public function getQueryFromAggregate()
     {
         $R1 = 'R1_' . $this->id;
@@ -105,6 +125,7 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
     /**
      * Get the "group by" statement to retrieve field values
      */
+    #[Override]
     public function getQueryGroupby(): string
     {
         // SubmittedOn is stored in the artifact
@@ -114,31 +135,37 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
     /**
      * Get the "order by" statement to retrieve field values
      */
+    #[Override]
     public function getQueryOrderby(): string
     {
         return $this->getQuerySelectName();
     }
 
+    #[Override]
     public static function getFactoryLabel()
     {
         return dgettext('tuleap-tracker', 'Submitted By');
     }
 
+    #[Override]
     public static function getFactoryDescription()
     {
         return dgettext('tuleap-tracker', 'Display the user who submitted the artifact');
     }
 
+    #[Override]
     public static function getFactoryIconUseIt()
     {
         return $GLOBALS['HTML']->getImagePath('ic/user-female.png');
     }
 
+    #[Override]
     public static function getFactoryIconCreate()
     {
         return $GLOBALS['HTML']->getImagePath('ic/user-female--plus.png');
     }
 
+    #[Override]
     protected function saveValue(
         $artifact,
         $changeset_value_id,
@@ -153,12 +180,13 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
     /**
      * Keep the value
      *
-     * @param Artifact                        $artifact                The artifact
-     * @param int                             $changeset_value_id      The id of the changeset_value
+     * @param Artifact $artifact The artifact
+     * @param int $changeset_value_id The id of the changeset_value
      * @param Tracker_Artifact_ChangesetValue $previous_changesetvalue The data previously stored in the db
      *
      * @return int or array of int
      */
+    #[Override]
     protected function keepValue($artifact, $changeset_value_id, Tracker_Artifact_ChangesetValue $previous_changesetvalue)
     {
         //The field is ReadOnly
@@ -171,6 +199,7 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
      * @param bool $tracker_is_empty
      * @return void
      */
+    #[Override]
     public function afterCreate(array $form_element_data, $tracker_is_empty)
     {
         //force the bind
@@ -183,23 +212,26 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
         parent::afterCreate($form_element_data, $tracker_is_empty);
     }
 
+    #[Override]
     public function fetchSubmit(array $submitted_values)
     {
         // We do not display the field in the artifact submit form
         return '';
     }
 
+    #[Override]
     public function fetchSubmitMasschange()
     {
         return '';
     }
 
+    #[Override]
     public function getFullRESTValue(PFUser $user, Tracker_Artifact_Changeset $changeset)
     {
         $value              = Tracker_FormElement_Field_List_Bind_UsersValue::fromId($this->getUUIdFactory()->buildUUIDFromBytesData($this->getUUIdFactory()->buildUUIDBytes()), $changeset->getArtifact()->getSubmittedBy());
         $submitted_by_value = $value->getFullRESTValue($this);
 
-        $artifact_field_value_full_representation = new Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFullRepresentation();
+        $artifact_field_value_full_representation = new \Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFullRepresentation();
         $artifact_field_value_full_representation->build(
             $this->getId(),
             Tracker_FormElementFactory::instance()->getType($this),
@@ -212,10 +244,11 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
     /**
      * Fetch the html code to display the field value in artifact
      *
-     * @param Artifact                        $artifact         The artifact
-     * @param Tracker_Artifact_ChangesetValue $value            The actual value of the field
-     * @param array                           $submitted_values The value already submitted by the user
+     * @param Artifact $artifact The artifact
+     * @param Tracker_Artifact_ChangesetValue $value The actual value of the field
+     * @param array $submitted_values The value already submitted by the user
      */
+    #[Override]
     protected function fetchArtifactValue(
         Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value,
@@ -227,11 +260,12 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
     /**
      * Fetch the html code to display the field value in artifact in read only mode
      *
-     * @param Artifact                        $artifact The artifact
-     * @param Tracker_Artifact_ChangesetValue $value    The actual value of the field
+     * @param Artifact $artifact The artifact
+     * @param Tracker_Artifact_ChangesetValue $value The actual value of the field
      *
      * @return string
      */
+    #[Override]
     public function fetchArtifactValueReadOnly(Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
     {
         $purifier   = Codendi_HTMLPurifier::instance();
@@ -242,11 +276,13 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
         return $html;
     }
 
+    #[Override]
     public function fetchArtifactCopyMode(Artifact $artifact, array $submitted_values)
     {
         return '';
     }
 
+    #[Override]
     public function fetchArtifactValueWithEditionFormIfEditable(
         Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value,
@@ -255,9 +291,10 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
         return $this->fetchArtifactValueReadOnly($artifact, $value);
     }
 
-     /**
+    /**
      * Fetch the field value in artifact to be displayed in mail
      */
+    #[Override]
     public function fetchMailArtifactValue(
         Artifact $artifact,
         PFUser $user,
@@ -284,21 +321,23 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
      * Say if the value is valid. If not valid set the internal has_error to true.
      *
      * @param Artifact $artifact The artifact
-     * @param mixed    $value    data coming from the request. May be string or array.
+     * @param mixed $value data coming from the request. May be string or array.
      *
      * @return bool true if the value is considered ok
      */
+    #[Override]
     public function isValid(Artifact $artifact, $value)
     {
         // this field is always valid as it is not filled by users.
         return true;
     }
 
-     /**
+    /**
      * Validate a field
      *
-     * @param mixed $submitted_value      The submitted value
+     * @param mixed $submitted_value The submitted value
      */
+    #[Override]
     public function validateFieldWithPermissionsAndRequiredStatus(
         Artifact $artifact,
         $submitted_value,
@@ -323,6 +362,7 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
      *
      * @return string html
      */
+    #[Override]
     protected function fetchAdminFormElement()
     {
         $purifier   = Codendi_HTMLPurifier::instance();
@@ -335,6 +375,7 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
         return $html;
     }
 
+    #[Override]
     public function fetchChangesetValue(
         int $artifact_id,
         int $changeset_id,
@@ -345,6 +386,7 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
         return $this->getBind()->formatChangesetValue(Tracker_FormElement_Field_List_Bind_UsersValue::fromId($this->getUUIdFactory()->buildUUIDFromBytesData($this->getUUIdFactory()->buildUUIDBytes()), $value));
     }
 
+    #[Override]
     protected function fetchTooltipValue(Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null): string
     {
         return $this->fetchArtifactValueReadOnly($artifact, $value);
@@ -353,6 +395,7 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
     /**
      * @see Tracker_FormElement_Field::fetchCardValue()
      */
+    #[Override]
     public function fetchCardValue(Artifact $artifact, ?Tracker_CardDisplayPreferences $display_preferences = null)
     {
         $value = Tracker_FormElement_Field_List_Bind_UsersValue::fromId($this->getUUIdFactory()->buildUUIDFromBytesData($this->getUUIdFactory()->buildUUIDBytes()), $artifact->getSubmittedBy());
@@ -363,6 +406,7 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
      * Display the field for CSV
      * Used in CSV data export
      */
+    #[Override]
     public function fetchCSVChangesetValue(int $artifact_id, int $changeset_id, mixed $value, ?Tracker_Report $report): string
     {
         return $this->getBind()->formatChangesetValueForCSV(Tracker_FormElement_Field_List_Bind_UsersValue::fromId($this->getUUIdFactory()->buildUUIDFromBytesData($this->getUUIdFactory()->buildUUIDBytes()), $value));
@@ -373,6 +417,7 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
      *
      * @return bool
      */
+    #[Override]
     public function isNotificationsSupported()
     {
         return true;
@@ -383,6 +428,7 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
      *
      * @return bool
      */
+    #[Override]
     public function shouldBeBindXML()
     {
         return false;
@@ -393,7 +439,7 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
         return UserManager::instance();
     }
 
-     /**
+    /**
      * Get the field data for artifact submission
      * Check if the user name exists in the platform
      *
@@ -401,6 +447,7 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
      *
      * @return int the user id
      */
+    #[Override]
     public function getFieldData($value)
     {
         $um = $this->getUserManager();
@@ -412,26 +459,31 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
         }
     }
 
+    #[Override]
     public function isNone($value)
     {
         return false;
     }
 
+    #[Override]
     public function accept(Tracker_FormElement_FieldVisitor $visitor)
     {
         return $visitor->visitSubmittedBy($this);
     }
 
+    #[Override]
     public function getDefaultValue()
     {
         return Tracker_FormElement_Field_List_Bind::NONE_VALUE;
     }
 
+    #[Override]
     public function getFieldDataFromRESTValue(array $value, ?Artifact $artifact = null)
     {
-         return null;
+        return null;
     }
 
+    #[Override]
     public function isAlwaysInEditMode(): bool
     {
         return false;

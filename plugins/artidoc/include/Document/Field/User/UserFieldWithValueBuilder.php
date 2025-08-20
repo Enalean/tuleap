@@ -25,10 +25,10 @@ namespace Tuleap\Artidoc\Document\Field\User;
 use Exception;
 use Tracker_Artifact_Changeset;
 use Tracker_FormElement_Field_LastModifiedBy;
-use Tracker_FormElement_Field_SubmittedBy;
 use Tuleap\Artidoc\Document\Field\ConfiguredField;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserValue;
+use Tuleap\Tracker\FormElement\Field\SubmittedBy\SubmittedByField;
 use Tuleap\User\Avatar\ProvideDefaultUserAvatarUrl;
 use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 use Tuleap\User\BuildDisplayName;
@@ -66,7 +66,7 @@ final readonly class UserFieldWithValueBuilder
                     $this->provide_default_user_avatar_url->getDefaultAvatarUrl(),
                 );
             }
-        } elseif ($configured_field->field instanceof Tracker_FormElement_Field_SubmittedBy) {
+        } elseif ($configured_field->field instanceof SubmittedByField) {
             $user_id = $changeset->getArtifact()->getSubmittedBy();
         } else {
             throw new Exception('Unknown field type: ' . $configured_field->field::class);

@@ -34,7 +34,7 @@ final class RetrieveFieldTypeStub implements RetrieveFieldType
         \Tracker_FormElementFactory::FIELD_DATE_TYPE => \Tuleap\Tracker\FormElement\Field\Date\DateField::class,
         \Tracker_FormElementFactory::FIELD_TEXT_TYPE => \Tuleap\Tracker\FormElement\Field\Text\TextField::class,
         \Tracker_FormElementFactory::FIELD_SUBMITTED_ON_TYPE => \Tuleap\Tracker\FormElement\Field\SubmittedOn\SubmittedOnField::class,
-        \Tracker_FormElementFactory::FIELD_SUBMITTED_BY_TYPE => \Tracker_FormElement_Field_SubmittedBy::class,
+        \Tracker_FormElementFactory::FIELD_SUBMITTED_BY_TYPE => \Tuleap\Tracker\FormElement\Field\SubmittedBy\SubmittedByField::class,
     ];
 
     private function __construct(private string $predefined_type)
