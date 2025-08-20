@@ -22,6 +22,7 @@
                         name="fullname"
                         required
                         placeholder="{{ label_fullname }}"
+                        data-test="fullname"
                     >
                 </div>
                 <div class="tlp-form-element trove-cats-shortname-property">
@@ -33,6 +34,7 @@
                             name="shortname"
                             required
                             placeholder="{{ label_shortname }}"
+                            data-test="shortname"
                     >
                 </div>
                 <div class="tlp-form-element trove-cats-parent-property">
@@ -45,6 +47,7 @@
                             data-id="0"
                             data-is-parent-top-level-id="1"
                             data-is-parent-mandatory="0"
+                            data-test="trove-cat-add-modal-select-parent-category"
                     >
                         <option value="0">{{ root_label }}</option>
                         {{# trovecats }}
@@ -97,7 +100,7 @@
             <button type="button" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">
                 {{ cancel }}
             </button>
-            <button type="submit" class="tlp-button-primary tlp-modal-action">
+            <button type="submit" class="tlp-button-primary tlp-modal-action" data-test="add-trove-cat-submit-button">
                 <i class="fa fa-plus tlp-button-icon"></i> {{ add }}
             </button>
         </div>

@@ -4,7 +4,7 @@
             <div class="tlp-pane-header">
                 <h1 class="tlp-pane-title">{{# gettext }}Project categories{{/ gettext }}</h1>
             </div>
-            <form method="POST" class="tlp-pane-section" id="project-admin-category-form">
+            <form method="POST" class="tlp-pane-section" id="project-admin-category-form" data-test="project-admin-category-form">
                 {{# csrf }}{{> csrf_token_input }}{{/csrf}}
                 <p>{{# gettext }}Categorizing your project will help potential developers and users to find your project and engage.{{/ gettext }}</p>
                 {{# categories }}
@@ -28,6 +28,7 @@
                                     {{ maximum_selection_length }} |
                                     {{ maximum_selection_length }}
                                 {{/ ngettext }}"
+                                data-test="project-admin-category-select"
                         >
                             {{^ is_multiple }}
                                 {{^ is_mandatory }}<option value="">{{# gettext }}Choose a category…{{/gettext}}</option>{{/is_mandatory}}
@@ -51,7 +52,7 @@
                     </div>
                 {{/ categories }}
                 <div class="tlp-pane-section-submit">
-                    <button type="submit" class="tlp-button-primary">
+                    <button type="submit" class="tlp-button-primary" data-test="project-admin-category-form-submit">
                         <i class="fa fa-save tlp-button-icon"></i>
                         {{# gettext }}Save categories{{/ gettext }}
                     </button>

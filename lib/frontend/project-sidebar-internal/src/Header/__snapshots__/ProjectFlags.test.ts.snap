@@ -7,6 +7,7 @@ exports[`ProjectFlags > displays the project flags with a popover 1`] = `
   
   <div
     class="project-sidebar-project-flags"
+    data-test="project-sidebar-project-flags"
     role="button"
     tabindex="0"
   >

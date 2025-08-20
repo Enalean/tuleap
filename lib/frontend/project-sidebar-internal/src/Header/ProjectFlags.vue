@@ -27,6 +27,7 @@
         class="project-sidebar-project-flags"
         role="button"
         tabindex="0"
+        data-test="project-sidebar-project-flags"
     >
         <div class="project-sidebar-project-flags-icon">
             <project-shield-icon />
