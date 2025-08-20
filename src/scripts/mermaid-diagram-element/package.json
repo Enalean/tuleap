@@ -6,7 +6,7 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "mermaid": "^11.3.0",
+    "mermaid": "^11.10.0",
     "panzoom": "^9.4.3"
   },
   "devDependencies": {
