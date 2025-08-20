@@ -35,7 +35,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Http\Adapter\Guzzle7\Client;
 
-class GerritSetupCommand extends Command
+final class GerritSetupCommand extends Command
 {
     protected function configure()
     {
@@ -49,7 +49,7 @@ class GerritSetupCommand extends Command
             ->addOption('ssh-public-key-path', '', InputOption::VALUE_OPTIONAL, 'Where is stored the codendiadm ssh public key for gerrit', '/var/lib/tuleap/.ssh/id_rsa-gerrit.pub');
     }
 
-    public function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         if ($input->getOption('gerrit-admin-password') === null) {
             throw new RuntimeException('--gerrit-admin-password is mandatory');
