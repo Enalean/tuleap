@@ -24,7 +24,7 @@ namespace Tuleap\CrossTracker\Query\Advanced;
 
 use PFUser;
 use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\Field\FieldSelectFromBuilder;
-use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\IProvideParametrizedSelectAndFromSQLFragments;
+use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\IProvideParametrizedSelectAndFromAndWhereSQLFragments;
 use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\Metadata\MetadataSelectFromBuilder;
 use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\SelectBuilderVisitorParameters;
 use Tuleap\Option\Option;
@@ -35,7 +35,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\SelectableVisitor;
 use Tuleap\Tracker\Tracker;
 
 /**
- * @template-implements SelectableVisitor<SelectBuilderVisitorParameters, IProvideParametrizedSelectAndFromSQLFragments>
+ * @template-implements SelectableVisitor<SelectBuilderVisitorParameters, IProvideParametrizedSelectAndFromAndWhereSQLFragments>
  */
 final readonly class SelectBuilderVisitor implements SelectableVisitor
 {
@@ -48,19 +48,20 @@ final readonly class SelectBuilderVisitor implements SelectableVisitor
     /**
      * @param Selectable[] $selects
      * @param Tracker[] $trackers
-     * @param Option<int> $target_artifact_id_for_reverse_links
-     * @return list<IProvideParametrizedSelectAndFromSQLFragments>
+     * @param Option<int> $artifact_id_for_links
+     * @return list<IProvideParametrizedSelectAndFromAndWhereSQLFragments>
      */
     public function buildSelectFrom(
         array $selects,
         array $trackers,
         PFUser $user,
-        Option $target_artifact_id_for_reverse_links,
+        Option $artifact_id_for_links,
+        array $artifact_ids,
     ): array {
         $selects   = array_unique($selects, SORT_REGULAR);
         $fragments = [];
         foreach ($selects as $select) {
-            $fragments[] = $select->acceptSelectableVisitor($this, new SelectBuilderVisitorParameters($trackers, $user, $target_artifact_id_for_reverse_links));
+            $fragments[] = $select->acceptSelectableVisitor($this, new SelectBuilderVisitorParameters($trackers, $user, $artifact_id_for_links, $artifact_ids));
         }
 
         return $fragments;
@@ -77,6 +78,6 @@ final readonly class SelectBuilderVisitor implements SelectableVisitor
 
     public function visitMetaData(Metadata $metadata, $parameters)
     {
-        return $this->metadata_select_from_builder->getSelectFrom($metadata, $parameters->target_artifact_id_for_reverse_links);
+        return $this->metadata_select_from_builder->getSelectFrom($metadata, $parameters->target_artifact_id_for_reverse_links, $parameters->artifact_ids);
     }
 }

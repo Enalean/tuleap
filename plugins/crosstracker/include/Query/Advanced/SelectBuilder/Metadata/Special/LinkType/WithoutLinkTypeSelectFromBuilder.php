@@ -22,9 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Query\Advanced\SelectBuilder\Metadata\Special\LinkType;
 
-use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\IProvideParametrizedSelectAndFromSQLFragments;
-use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\ParametrizedSelectFrom;
+use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\IProvideParametrizedSelectAndFromAndWhereSQLFragments;
+use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\ParametrizedSelectFromAndWhere;
 use Tuleap\Option\Option;
+use function Psl\Type\string;
 
 /**
  * @psalm-immutable
@@ -32,8 +33,8 @@ use Tuleap\Option\Option;
 final readonly class WithoutLinkTypeSelectFromBuilder implements BuildLinkTypeSelectFrom
 {
     #[\Override]
-    public function getSelectFrom(Option $target_artifact_id_for_reverse_links): IProvideParametrizedSelectAndFromSQLFragments
+    public function getSelectFrom(Option $artifact_id, array $artifact_ids): IProvideParametrizedSelectAndFromAndWhereSQLFragments
     {
-        return new ParametrizedSelectFrom('', '', []);
+        return new ParametrizedSelectFromAndWhere('', '', [], Option::nothing(string()), []);
     }
 }

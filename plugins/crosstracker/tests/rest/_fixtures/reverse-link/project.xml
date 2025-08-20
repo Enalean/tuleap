@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project unix-name="reverse-link" full-name="Reverse link in XTS" description="Turtle City's creation" access="public" icon-codepoint="🐢">
+  <long-description/>
+  <services>
+    <service shortname="summary" enabled="1"/>
+    <service shortname="admin" enabled="1"/>
+    <service shortname="plugin_tracker" enabled="1"/>
+  </services>
+  <ugroups>
+    <ugroup name="project_admins" description="Project administrators">
+      <members>
+        <member format="username">rest_api_tester_1</member>
+      </members>
+    </ugroup>
+    <ugroup name="project_members" description="Project members">
+      <members>
+        <member format="username">rest_api_tester_1</member>
+      </members>
+    </ugroup>
+  </ugroups>
+  <dashboards>
+    <dashboard name="Tableau de bord">
+      <line layout="one-column">
+        <column>
+          <widget name="crosstrackersearch">
+            <preference name="query">
+              <value name="is-default">0</value>
+              <value name="title"><![CDATA[Query for the fix]]></value>
+              <value name="description"><![CDATA[]]></value>
+              <value name="tql"><![CDATA[SELECT @pretty_title, @link_type
+FROM @project = 'self' WHERE @id > 1
+ORDER BY @last_update_date DESC]]></value>
+            </preference>
+          </widget>
+        </column>
+      </line>
+    </dashboard>
+  </dashboards>
+  <trackers use-natures="true">
+    <tracker id="T169" parent_id="0" allow_copy="1" instantiate_for_new_projects="1" is_displayed_in_new_dropdown="1" enable_move_artifacts="1">
+      <name><![CDATA[myCrossLink]]></name>
+      <item_name><![CDATA[myCrossLink]]></item_name>
+      <description><![CDATA[cross trackers artifacts with some artifact links]]></description>
+      <color><![CDATA[surf-green]]></color>
+      <cannedResponses/>
+      <formElements>
+        <formElement type="fieldset" ID="F3879" rank="26" id="3879" tracker_id="169" parent_id="0">
+          <name><![CDATA[details_1]]></name>
+          <label><![CDATA[Details]]></label>
+          <formElements>
+            <formElement type="string" ID="F3880" rank="0" id="3880" tracker_id="169" parent_id="3879" required="1">
+              <name><![CDATA[title]]></name>
+              <label><![CDATA[Title]]></label>
+              <properties maxchars="150" size="80"/>
+            </formElement>
+            <formElement type="text" ID="F3881" rank="2" id="3881" tracker_id="169" parent_id="3879">
+              <name><![CDATA[description]]></name>
+              <label><![CDATA[Description]]></label>
+              <properties rows="10" cols="100"/>
+            </formElement>
+          </formElements>
+        </formElement>
+        <formElement type="fieldset" ID="F3890" rank="29" id="3890" tracker_id="169" parent_id="0">
+          <name><![CDATA[links_fieldset]]></name>
+          <label><![CDATA[Links]]></label>
+          <formElements>
+            <formElement type="art_link" ID="F3891" rank="0" id="3891" tracker_id="169" parent_id="3890">
+              <name><![CDATA[links]]></name>
+              <label><![CDATA[Links]]></label>
+              <description><![CDATA[Links]]></description>
+              <properties can_edit_reverse_links="1"/>
+            </formElement>
+          </formElements>
+        </formElement>
+      </formElements>
+      <semantics>
+        <semantic type="title">
+          <shortname><![CDATA[title]]></shortname>
+          <label><![CDATA[Title]]></label>
+          <description><![CDATA[Define the title of an artifact]]></description>
+          <field REF="F3880"/>
+        </semantic>
+      </semantics>
+      <rules>
+        <date_rules/>
+        <list_rules/>
+      </rules>
+      <reports>
+        <report id="REPORT_379">
+          <name><![CDATA[Activities]]></name>
+          <description><![CDATA[The system default artifact report]]></description>
+          <criterias/>
+          <renderers>
+            <renderer ID="R612" type="table" rank="0" chunksz="15">
+              <name><![CDATA[Results]]></name>
+              <columns>
+                <field REF="F3879"/>
+                <field REF="F3891" artlink-nature="_is_child"/>
+              </columns>
+            </renderer>
+          </renderers>
+        </report>
+      </reports>
+      <permissions>
+        <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+        <permission scope="field" REF="F3880" ugroup="UGROUP_PROJECT_ADMIN" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F3881" ugroup="UGROUP_PROJECT_ADMIN" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F3891" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F3891" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F3891" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+      </permissions>
+      <artifacts>
+
+        <artifact id="499">
+          <changeset id="CHANGESET_1512">
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2025-07-10T17:21:12+02:00</submitted_on>
+            <comments/>
+            <field_change type="string" field_name="title">
+              <value><![CDATA[forward 1]]></value>
+            </field_change>
+            <field_change type="text" field_name="description">
+              <value format="commonmark"><![CDATA[]]></value>
+            </field_change>
+          </changeset>
+        </artifact>
+        <artifact id="500">
+          <changeset id="CHANGESET_1513">
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2025-07-10T17:21:14+02:00</submitted_on>
+            <comments/>
+            <field_change type="string" field_name="title">
+              <value><![CDATA[current artifact]]></value>
+            </field_change>
+            <field_change type="text" field_name="description">
+              <value format="commonmark"><![CDATA[]]></value>
+            </field_change>
+            <field_change field_name="attachments_1" type="file">
+              <value/>
+            </field_change>
+            <field_change field_name="links" type="art_link">
+              <value nature="_is_child"><![CDATA[499]]></value>
+            </field_change>
+          </changeset>
+          <changeset id="CHANGESET_1518">
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2025-07-10T17:22:03+02:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">rest_api_tester_1</submitted_by>
+                <submitted_on format="ISO8601"><![CDATA[2025-07-10T17:22:03+02:00]]></submitted_on>
+                <body format="commonmark"><![CDATA[]]></body>
+              </comment>
+            </comments>
+            <field_change field_name="attachments_1" type="file">
+              <value/>
+            </field_change>
+            <field_change field_name="links" type="art_link">
+              <value nature="_is_child"><![CDATA[499]]></value>
+            </field_change>
+          </changeset>
+          <changeset id="CHANGESET_1571">
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2025-07-15T09:14:09+02:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">rest_api_tester_1</submitted_by>
+                <submitted_on format="ISO8601"><![CDATA[2025-07-15T09:14:09+02:00]]></submitted_on>
+                <body format="commonmark"><![CDATA[]]></body>
+              </comment>
+            </comments>
+            <field_change field_name="attachments_1" type="file">
+              <value/>
+            </field_change>
+            <field_change field_name="links" type="art_link">
+              <value nature="_is_child"><![CDATA[499]]></value>
+              <value nature="_is_child"><![CDATA[501]]></value>
+            </field_change>
+          </changeset>
+          <changeset id="CHANGESET_1673">
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2025-07-28T10:47:46+02:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">rest_api_tester_1</submitted_by>
+                <submitted_on format="ISO8601"><![CDATA[2025-07-28T10:47:46+02:00]]></submitted_on>
+                <body format="commonmark"><![CDATA[]]></body>
+              </comment>
+            </comments>
+            <field_change field_name="attachments_1" type="file">
+              <value/>
+            </field_change>
+            <field_change field_name="links" type="art_link">
+              <value nature="_is_child"><![CDATA[499]]></value>
+              <value nature="_is_child"><![CDATA[501]]></value>
+              <value nature="_is_child"><![CDATA[502]]></value>
+            </field_change>
+          </changeset>
+          <changeset id="CHANGESET_1676">
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2025-07-29T16:50:56+02:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">rest_api_tester_1</submitted_by>
+                <submitted_on format="ISO8601"><![CDATA[2025-07-29T16:50:56+02:00]]></submitted_on>
+                <body format="commonmark"><![CDATA[]]></body>
+              </comment>
+            </comments>
+            <field_change type="text" field_name="description">
+              <value format="commonmark"><![CDATA[Description of July]]></value>
+            </field_change>
+          </changeset>
+        </artifact>
+        <artifact id="501">
+          <changeset id="CHANGESET_1514">
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2025-07-10T17:21:33+02:00</submitted_on>
+            <comments/>
+            <field_change type="string" field_name="title">
+              <value><![CDATA[forward 2]]></value>
+            </field_change>
+            <field_change type="text" field_name="description">
+              <value format="commonmark"><![CDATA[]]></value>
+            </field_change>
+          </changeset>
+        </artifact>
+        <artifact id="502">
+          <changeset id="CHANGESET_1515">
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2025-07-10T17:21:44+02:00</submitted_on>
+            <comments/>
+            <field_change type="string" field_name="title">
+              <value><![CDATA[forward 3]]></value>
+            </field_change>
+            <field_change type="text" field_name="description">
+              <value format="commonmark"><![CDATA[]]></value>
+            </field_change>
+          </changeset>
+        </artifact>
+        <artifact id="603">
+          <changeset id="CHANGESET_1666">
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2025-07-24T16:31:39+02:00</submitted_on>
+            <comments/>
+            <field_change type="string" field_name="title">
+              <value><![CDATA[Reverse]]></value>
+            </field_change>
+            <field_change type="text" field_name="description">
+              <value format="commonmark"><![CDATA[]]></value>
+            </field_change>
+          </changeset>
+          <changeset id="CHANGESET_1667">
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2025-07-24T16:31:42+02:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">rest_api_tester_1</submitted_by>
+                <submitted_on format="ISO8601"><![CDATA[2025-07-24T16:31:42+02:00]]></submitted_on>
+                <body format="commonmark"><![CDATA[]]></body>
+              </comment>
+            </comments>
+            <field_change field_name="links" type="art_link">
+              <value nature="_is_child"><![CDATA[500]]></value>
+              <value nature=""><![CDATA[604]]></value>
+            </field_change>
+          </changeset>
+        </artifact>
+        <artifact id="604">
+          <changeset id="CHANGESET_12345">
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2025-07-24T16:31:39+02:00</submitted_on>
+            <comments/>
+            <field_change type="string" field_name="title">
+              <value><![CDATA[Other artifact]]></value>
+            </field_change>
+            <field_change type="text" field_name="description">
+              <value format="commonmark"><![CDATA[]]></value>
+            </field_change>
+          </changeset>
+          <changeset id="CHANGESET_12346">
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2025-07-24T16:31:42+02:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">rest_api_tester_1</submitted_by>
+                <submitted_on format="ISO8601"><![CDATA[2025-07-24T16:31:42+02:00]]></submitted_on>
+                <body format="commonmark"><![CDATA[]]></body>
+              </comment>
+            </comments>
+          </changeset>
+        </artifact>
+      </artifacts>
+    </tracker>
+    <triggers/>
+  </trackers>
+  <natures>
+    <nature><![CDATA[_is_child]]></nature>
+    <nature><![CDATA[_covered_by]]></nature>
+  </natures>
+</project>

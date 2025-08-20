@@ -37,6 +37,7 @@ final readonly class SelectBuilderVisitorParameters implements VisitorParameters
         public array $trackers,
         public PFUser $user,
         public Option $target_artifact_id_for_reverse_links,
+        public array $artifact_ids,
     ) {
     }
 }

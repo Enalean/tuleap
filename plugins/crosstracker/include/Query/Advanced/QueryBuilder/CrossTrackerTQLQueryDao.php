@@ -24,7 +24,7 @@ namespace Tuleap\CrossTracker\Query\Advanced\QueryBuilder;
 
 use ParagonIE\EasyDB\EasyStatement;
 use Tuleap\CrossTracker\Query\Advanced\OrderByBuilder\ParametrizedFromOrder;
-use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\IProvideParametrizedSelectAndFromSQLFragments;
+use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\IProvideParametrizedSelectAndFromAndWhereSQLFragments;
 use Tuleap\DB\DataAccessObject;
 use Tuleap\Tracker\Report\Query\IProvideParametrizedFromAndWhereSQLFragments;
 
@@ -126,7 +126,7 @@ final class CrossTrackerTQLQueryDao extends DataAccessObject
     }
 
     /**
-     * @param list<IProvideParametrizedSelectAndFromSQLFragments> $select_from_fragments,
+     * @param list<IProvideParametrizedSelectAndFromAndWhereSQLFragments> $select_from_fragments,
      * @param list<int> $artifact_ids
      */
     public function searchArtifactsColumnsMatchingIds(
@@ -136,10 +136,23 @@ final class CrossTrackerTQLQueryDao extends DataAccessObject
     ): array {
         $results = [];
         foreach ($select_from_fragments as $select_from) {
-            $select    = $select_from->getSelect();
-            $from      = $select_from->getFrom() . ' ' . $from_order->getFrom();
-            $order     = $from_order->getOrderBy();
-            $condition = EasyStatement::open()->in('artifact.id IN (?*)', $artifact_ids);
+            $select           = $select_from->getSelect();
+            $from             = $select_from->getFrom() . ' ' . $from_order->getFrom();
+            $order            = $from_order->getOrderBy();
+            $condition        = '';
+            $where_parameters = [];
+
+            $select_from->getWhere()
+                ->match(
+                    function ($where) use (&$condition, &$where_parameters, $select_from) {
+                        $condition        = $where;
+                        $where_parameters = $select_from->getWhereParameters();
+                    },
+                    function () use (&$condition, &$where_parameters, $artifact_ids) {
+                        $condition        = EasyStatement::open()->in('artifact.id IN (?*)', $artifact_ids);
+                        $where_parameters = $artifact_ids;
+                    }
+                );
 
             if ($select !== '') {
                 $select = ', ' . $select;
@@ -163,7 +176,7 @@ final class CrossTrackerTQLQueryDao extends DataAccessObject
             $parameters = [
                 ...$select_from->getFromParameters(),
                 ...$from_order->getFromParameters(),
-                ...$artifact_ids,
+                ...$where_parameters,
             ];
 
             $results = $this->mergeArtifactColumns($results, $this->getDB()->q($sql, ...$parameters));

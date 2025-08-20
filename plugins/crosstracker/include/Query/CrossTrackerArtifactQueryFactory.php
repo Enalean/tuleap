@@ -152,7 +152,7 @@ final readonly class CrossTrackerArtifactQueryFactory
             $additional_from_where,
             $limit,
             $offset,
-            Option::nothing(\Psl\Type\int())
+            Option::nothing(\Psl\Type\int()),
         );
     }
 
@@ -191,7 +191,7 @@ final readonly class CrossTrackerArtifactQueryFactory
             ),
             $limit,
             $offset,
-            Option::nothing(\Psl\Type\int())
+            Option::fromValue($source_artifact_id)
         );
     }
 
@@ -235,7 +235,7 @@ final readonly class CrossTrackerArtifactQueryFactory
     }
 
     /**
-     * @param Option<int> $target_artifact_id_for_reverse_links
+     * @param Option<int> $artifact_id_for_links
      * @throws FromIsInvalidException
      * @throws LimitSizeIsExceededException
      * @throws MissingFromException
@@ -255,7 +255,7 @@ final readonly class CrossTrackerArtifactQueryFactory
         IProvideParametrizedFromAndWhereSQLFragments $additional_from_where,
         int $limit,
         int $offset,
-        Option $target_artifact_id_for_reverse_links,
+        Option $artifact_id_for_links,
     ): CrossTrackerQueryContentRepresentation {
         $trackers = $this->trackers_permissions->retrieveUserPermissionOnTrackers(
             $current_user,
@@ -280,7 +280,7 @@ final readonly class CrossTrackerArtifactQueryFactory
             $this->instrumentation->updateOrderByUsage();
         }
 
-        return $this->retrieveQueryContentRepresentation($query, $trackers, $current_user, $additional_from_where, $limit, $offset, $target_artifact_id_for_reverse_links);
+        return $this->retrieveQueryContentRepresentation($query, $trackers, $current_user, $additional_from_where, $limit, $offset, $artifact_id_for_links);
     }
 
     /**
@@ -324,7 +324,7 @@ final readonly class CrossTrackerArtifactQueryFactory
         );
 
         $this->instrumentation->updateSelectCount(count($query->parsed_query->getSelect()));
-        $select_from_fragments = $this->select_builder->buildSelectFrom($query->parsed_query->getSelect(), $trackers, $current_user, $target_artifact_id_for_reverse_links);
+        $select_from_fragments = $this->select_builder->buildSelectFrom($query->parsed_query->getSelect(), $trackers, $current_user, $target_artifact_id_for_reverse_links, $artifact_ids);
         $select_results        = $this->expert_query_dao->searchArtifactsColumnsMatchingIds(
             $select_from_fragments,
             $additional_from_order,

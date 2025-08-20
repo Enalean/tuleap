@@ -1,0 +1,574 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project unix-name="forward-link" full-name="Forward link in XTS" description="" access="public">
+  <long-description/>
+  <services>
+    <service shortname="summary" enabled="1"/>
+    <service shortname="admin" enabled="1"/>
+    <service shortname="docman" enabled="1"/>
+    <service shortname="plugin_svn" enabled="0"/>
+    <service shortname="file" enabled="1"/>
+    <service shortname="plugin_baseline" enabled="0"/>
+    <service shortname="plugin_tracker" enabled="1"/>
+    <service shortname="plugin_agiledashboard" enabled="1"/>
+    <service shortname="plugin_program_management" enabled="0"/>
+    <service shortname="plugin_kanban" enabled="0"/>
+    <service shortname="plugin_mediawiki" enabled="0"/>
+    <service shortname="plugin_mediawiki_standalone" enabled="0"/>
+    <service shortname="hudson" enabled="0"/>
+    <service shortname="plugin_git" enabled="1"/>
+    <service shortname="plugin_testmanagement" enabled="0"/>
+  </services>
+  <ugroups>
+    <ugroup name="project_admins" description="Project administrators">
+      <members>
+        <member format="username">rest_api_tester_1</member>
+      </members>
+    </ugroup>
+    <ugroup name="project_members" description="Project members">
+      <members>
+        <member format="username">rest_api_tester_1</member>
+      </members>
+    </ugroup>
+  </ugroups>
+  <dashboards>
+    <dashboard name="Dashboard">
+      <line layout="two-columns-small-big">
+        <column>
+          <widget name="crosstrackersearch">
+            <preference name="query">
+              <value name="is-default">0</value>
+              <value name="title"><![CDATA[Open artifacts assigned to me]]></value>
+              <value name="description"><![CDATA[]]></value>
+              <value name="tql"><![CDATA[SELECT @pretty_title, @status, @last_update_date, @submitted_by, @link_type
+FROM @project = 'self'
+WHERE @status = OPEN() AND (@id=265)
+ORDER BY @last_update_date DESC]]></value>
+            </preference>
+          </widget>
+        </column>
+      </line>
+    </dashboard>
+  </dashboards>
+  <trackers use-natures="true">
+    <tracker id="T23" parent_id="0" allow_copy="1" instantiate_for_new_projects="1" notifications_level="1" enable_move_artifacts="1">
+      <name><![CDATA[Epics]]></name>
+      <item_name><![CDATA[epic]]></item_name>
+      <description><![CDATA[Epics]]></description>
+      <color><![CDATA[deep-blue]]></color>
+      <cannedResponses/>
+      <formElements>
+        <formElement type="fieldset" ID="F588" rank="0" id="588" tracker_id="23" parent_id="0">
+          <name><![CDATA[access_information]]></name>
+          <label><![CDATA[Access Information]]></label>
+          <formElements>
+            <formElement type="column" ID="F589" rank="0" id="589" tracker_id="23" parent_id="588">
+              <name><![CDATA[access_information_left_column]]></name>
+              <label><![CDATA[Access information left column]]></label>
+              <formElements>
+                <formElement type="aid" ID="F590" rank="0" id="590" tracker_id="23" parent_id="589">
+                  <name><![CDATA[artifact_id]]></name>
+                  <label><![CDATA[Artifact ID]]></label>
+                  <description><![CDATA[Unique artifact identifier]]></description>
+                </formElement>
+                <formElement type="subon" ID="F591" rank="1" id="591" tracker_id="23" parent_id="589">
+                  <name><![CDATA[submitted_on]]></name>
+                  <label><![CDATA[Submitted on]]></label>
+                  <description><![CDATA[Date and time for the initial artifact submission]]></description>
+                </formElement>
+                <formElement type="subby" ID="F592" rank="2" id="592" tracker_id="23" parent_id="589">
+                  <name><![CDATA[submitted_by]]></name>
+                  <label><![CDATA[Submitted by]]></label>
+                  <description><![CDATA[User who originally submitted the artifact]]></description>
+                </formElement>
+              </formElements>
+            </formElement>
+            <formElement type="column" ID="F593" rank="1" id="593" tracker_id="23" parent_id="588">
+              <name><![CDATA[access_information_right_column]]></name>
+              <label><![CDATA[Access information right column]]></label>
+              <formElements>
+                <formElement type="lud" ID="F594" rank="0" id="594" tracker_id="23" parent_id="593">
+                  <name><![CDATA[last_update_on]]></name>
+                  <label><![CDATA[Last Update On]]></label>
+                </formElement>
+                <formElement type="luby" ID="F595" rank="1" id="595" tracker_id="23" parent_id="593">
+                  <name><![CDATA[last_update_by]]></name>
+                  <label><![CDATA[Last Update By]]></label>
+                </formElement>
+              </formElements>
+            </formElement>
+          </formElements>
+        </formElement>
+        <formElement type="fieldset" ID="F596" rank="84" id="596" tracker_id="23" parent_id="0">
+          <name><![CDATA[details]]></name>
+          <label><![CDATA[Details]]></label>
+          <formElements>
+            <formElement type="string" ID="F597" rank="0" id="597" tracker_id="23" parent_id="596" required="1">
+              <name><![CDATA[epic]]></name>
+              <label><![CDATA[Epic]]></label>
+              <properties size="70"/>
+            </formElement>
+            <formElement type="text" ID="F598" rank="1" id="598" tracker_id="23" parent_id="596">
+              <name><![CDATA[description]]></name>
+              <label><![CDATA[Description]]></label>
+              <properties rows="10" cols="100"/>
+            </formElement>
+            <formElement type="sb" ID="F599" rank="2" id="599" tracker_id="23" parent_id="596">
+              <name><![CDATA[status]]></name>
+              <label><![CDATA[Status]]></label>
+              <bind type="static" is_rank_alpha="0">
+                <items>
+                  <item ID="V0198ccf6-f792-7340-a2c1-c4dfc59cca52" label="Open" is_hidden="0"/>
+                  <item ID="V0198ccf6-f792-7340-a2c1-c4dfc62a2de8" label="Closed" is_hidden="0"/>
+                </items>
+                <default_values>
+                  <value REF="V0198ccf6-f792-7340-a2c1-c4dfc59cca52"/>
+                </default_values>
+              </bind>
+            </formElement>
+            <formElement type="computed" ID="F600" rank="3" id="600" tracker_id="23" parent_id="596">
+              <name><![CDATA[initial_effort]]></name>
+              <label><![CDATA[Total Initial Effort]]></label>
+            </formElement>
+            <formElement type="computed" ID="F601" rank="4" id="601" tracker_id="23" parent_id="596">
+              <name><![CDATA[remaining_effort]]></name>
+              <label><![CDATA[Total Remaining Effort]]></label>
+            </formElement>
+          </formElements>
+        </formElement>
+        <formElement type="fieldset" ID="F602" rank="85" id="602" tracker_id="23" parent_id="0">
+          <name><![CDATA[links_1]]></name>
+          <label><![CDATA[Links]]></label>
+          <formElements>
+            <formElement type="art_link" ID="F603" rank="0" id="603" tracker_id="23" parent_id="602">
+              <name><![CDATA[links]]></name>
+              <label><![CDATA[Links]]></label>
+              <description><![CDATA[Links]]></description>
+              <properties can_edit_reverse_links="1"/>
+            </formElement>
+            <formElement type="cross" ID="F604" rank="1" id="604" tracker_id="23" parent_id="602">
+              <name><![CDATA[references]]></name>
+              <label><![CDATA[References]]></label>
+            </formElement>
+          </formElements>
+        </formElement>
+      </formElements>
+      <semantics>
+        <semantic type="title">
+          <shortname><![CDATA[title]]></shortname>
+          <label><![CDATA[Title]]></label>
+          <description><![CDATA[Define the title of an artifact]]></description>
+          <field REF="F597"/>
+        </semantic>
+        <semantic type="description">
+          <shortname><![CDATA[description]]></shortname>
+          <label><![CDATA[Description]]></label>
+          <description><![CDATA[Define the description of an artifact]]></description>
+          <field REF="F598"/>
+        </semantic>
+        <semantic type="status">
+          <shortname><![CDATA[status]]></shortname>
+          <label><![CDATA[Status]]></label>
+          <description><![CDATA[Define the status of an artifact]]></description>
+          <field REF="F599"/>
+          <open_values>
+            <open_value REF="V0198ccf6-f792-7340-a2c1-c4dfc59cca52"/>
+          </open_values>
+        </semantic>
+        <semantic type="done">
+          <shortname><![CDATA[done]]></shortname>
+          <label><![CDATA[Done]]></label>
+          <description><![CDATA[Define the closed status that are considered Done]]></description>
+          <closed_values/>
+        </semantic>
+        <semantic type="progress">
+          <total_effort_field REF="F600"/>
+          <remaining_effort_field REF="F601"/>
+        </semantic>
+        <semantic type="tooltip">
+          <field REF="F597"/>
+          <field REF="F599"/>
+        </semantic>
+        <semantic type="plugin_cardwall_card_fields">
+          <field REF="F599"/>
+          <field REF="F603"/>
+        </semantic>
+      </semantics>
+      <rules>
+        <date_rules/>
+        <list_rules/>
+      </rules>
+      <reports>
+        <report id="REPORT_139" is_default="0">
+          <name><![CDATA[Epics]]></name>
+          <description><![CDATA[The system default artifact report]]></description>
+          <criterias>
+            <criteria rank="0">
+              <field REF="F597"/>
+            </criteria>
+            <criteria rank="1" is_advanced="1">
+              <field REF="F599"/>
+            </criteria>
+          </criterias>
+          <renderers>
+            <renderer ID="R183" type="table" rank="0" chunksz="15">
+              <name><![CDATA[Epics]]></name>
+              <columns>
+                <field REF="F590"/>
+                <field REF="F597"/>
+                <field REF="F599"/>
+                <field REF="F603"/>
+              </columns>
+            </renderer>
+          </renderers>
+        </report>
+      </reports>
+      <permissions>
+        <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+        <permission scope="field" REF="F590" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F591" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F592" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F594" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F595" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F597" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F597" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F597" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F598" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F598" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F598" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F599" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F599" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F599" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F600" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F600" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F600" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F601" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F601" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F601" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F603" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F603" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F603" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F604" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+      </permissions>
+      <artifacts>
+        <artifact id="265">
+          <changeset id="CHANGESET_608">
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2025-08-21T15:26:48+02:00</submitted_on>
+            <comments/>
+            <field_change type="string" field_name="epic">
+              <value><![CDATA[1]]></value>
+            </field_change>
+            <field_change type="text" field_name="description">
+              <value format="commonmark"><![CDATA[]]></value>
+            </field_change>
+            <field_change field_name="status" type="list" bind="static">
+              <value format="id"><![CDATA[V0198ccf6-f792-7340-a2c1-c4dfc59cca52]]></value>
+            </field_change>
+            <field_change field_name="initial_effort" type="computed">
+              <is_autocomputed>1</is_autocomputed>
+            </field_change>
+            <field_change field_name="remaining_effort" type="computed">
+              <is_autocomputed>1</is_autocomputed>
+            </field_change>
+            <field_change field_name="links" type="art_link"/>
+          </changeset>
+          <changeset id="CHANGESET_611">
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2025-08-21T15:27:08+02:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">rest_api_tester_1</submitted_by>
+                <submitted_on format="ISO8601"><![CDATA[2025-08-21T15:27:08+02:00]]></submitted_on>
+                <body format="commonmark"><![CDATA[]]></body>
+              </comment>
+            </comments>
+            <field_change field_name="links" type="art_link">
+              <value nature="_is_child"><![CDATA[266]]></value>
+              <value nature="_is_child"><![CDATA[267]]></value>
+            </field_change>
+          </changeset>
+          <changeset id="CHANGESET_615">
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2025-08-21T15:27:40+02:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">rest_api_tester_1</submitted_by>
+                <submitted_on format="ISO8601"><![CDATA[2025-08-21T15:27:40+02:00]]></submitted_on>
+                <body format="commonmark"><![CDATA[]]></body>
+              </comment>
+            </comments>
+            <field_change field_name="links" type="art_link">
+              <value nature="_is_child"><![CDATA[266]]></value>
+              <value nature="_is_child"><![CDATA[267]]></value>
+              <value nature="_is_child"><![CDATA[268]]></value>
+            </field_change>
+          </changeset>
+          <changeset id="CHANGESET_636">
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2025-08-21T16:08:29+02:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">rest_api_tester_1</submitted_by>
+                <submitted_on format="ISO8601"><![CDATA[2025-08-21T16:08:29+02:00]]></submitted_on>
+                <body format="commonmark"><![CDATA[]]></body>
+              </comment>
+            </comments>
+            <field_change type="string" field_name="epic">
+              <value><![CDATA[artifact A]]></value>
+            </field_change>
+          </changeset>
+        </artifact>
+        <artifact id="266">
+          <changeset id="CHANGESET_609">
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2025-08-21T15:26:55+02:00</submitted_on>
+            <comments/>
+            <field_change type="string" field_name="epic">
+              <value><![CDATA[2]]></value>
+            </field_change>
+            <field_change type="text" field_name="description">
+              <value format="commonmark"><![CDATA[]]></value>
+            </field_change>
+            <field_change field_name="status" type="list" bind="static">
+              <value format="id"><![CDATA[V0198ccf6-f792-7340-a2c1-c4dfc59cca52]]></value>
+            </field_change>
+          </changeset>
+          <changeset id="CHANGESET_637">
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2025-08-21T16:08:45+02:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">rest_api_tester_1</submitted_by>
+                <submitted_on format="ISO8601"><![CDATA[2025-08-21T16:08:45+02:00]]></submitted_on>
+                <body format="commonmark"><![CDATA[]]></body>
+              </comment>
+            </comments>
+            <field_change type="string" field_name="epic">
+              <value><![CDATA[artifact B]]></value>
+            </field_change>
+            <field_change field_name="initial_effort" type="computed">
+              <is_autocomputed>1</is_autocomputed>
+            </field_change>
+            <field_change field_name="remaining_effort" type="computed">
+              <is_autocomputed>1</is_autocomputed>
+            </field_change>
+            <field_change field_name="links" type="art_link"/>
+          </changeset>
+        </artifact>
+        <artifact id="267">
+          <changeset id="CHANGESET_610">
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2025-08-21T15:27:04+02:00</submitted_on>
+            <comments/>
+            <field_change type="string" field_name="epic">
+              <value><![CDATA[3]]></value>
+            </field_change>
+            <field_change type="text" field_name="description">
+              <value format="commonmark"><![CDATA[]]></value>
+            </field_change>
+            <field_change field_name="status" type="list" bind="static">
+              <value format="id"><![CDATA[V0198ccf6-f792-7340-a2c1-c4dfc59cca52]]></value>
+            </field_change>
+          </changeset>
+          <changeset id="CHANGESET_613">
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2025-08-21T15:27:29+02:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">rest_api_tester_1</submitted_by>
+                <submitted_on format="ISO8601"><![CDATA[2025-08-21T15:27:29+02:00]]></submitted_on>
+                <body format="commonmark"><![CDATA[]]></body>
+              </comment>
+            </comments>
+            <field_change field_name="initial_effort" type="computed">
+              <is_autocomputed>1</is_autocomputed>
+            </field_change>
+            <field_change field_name="remaining_effort" type="computed">
+              <is_autocomputed>1</is_autocomputed>
+            </field_change>
+            <field_change field_name="links" type="art_link"/>
+          </changeset>
+          <changeset id="CHANGESET_617">
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2025-08-21T15:28:10+02:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">rest_api_tester_1</submitted_by>
+                <submitted_on format="ISO8601"><![CDATA[2025-08-21T15:28:10+02:00]]></submitted_on>
+                <body format="commonmark"><![CDATA[]]></body>
+              </comment>
+            </comments>
+            <field_change field_name="links" type="art_link">
+              <value nature="_is_child"><![CDATA[266]]></value>
+              <value nature=""><![CDATA[269]]></value>
+            </field_change>
+          </changeset>
+          <changeset id="CHANGESET_638">
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2025-08-21T16:09:02+02:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">rest_api_tester_1</submitted_by>
+                <submitted_on format="ISO8601"><![CDATA[2025-08-21T16:09:02+02:00]]></submitted_on>
+                <body format="commonmark"><![CDATA[]]></body>
+              </comment>
+            </comments>
+            <field_change type="string" field_name="epic">
+              <value><![CDATA[artifact C]]></value>
+            </field_change>
+          </changeset>
+        </artifact>
+        <artifact id="268">
+          <changeset id="CHANGESET_612">
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2025-08-21T15:27:24+02:00</submitted_on>
+            <comments/>
+            <field_change type="string" field_name="epic">
+              <value><![CDATA[2]]></value>
+            </field_change>
+            <field_change type="text" field_name="description">
+              <value format="commonmark"><![CDATA[]]></value>
+            </field_change>
+            <field_change field_name="status" type="list" bind="static">
+              <value format="id"><![CDATA[V0198ccf6-f792-7340-a2c1-c4dfc59cca52]]></value>
+            </field_change>
+          </changeset>
+          <changeset id="CHANGESET_614">
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2025-08-21T15:27:29+02:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">rest_api_tester_1</submitted_by>
+                <submitted_on format="ISO8601"><![CDATA[2025-08-21T15:27:29+02:00]]></submitted_on>
+                <body format="commonmark"><![CDATA[]]></body>
+              </comment>
+            </comments>
+            <field_change field_name="links" type="art_link">
+              <value nature="_is_child"><![CDATA[267]]></value>
+            </field_change>
+          </changeset>
+          <changeset id="CHANGESET_639">
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2025-08-21T16:09:13+02:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">rest_api_tester_1</submitted_by>
+                <submitted_on format="ISO8601"><![CDATA[2025-08-21T16:09:13+02:00]]></submitted_on>
+                <body format="commonmark"><![CDATA[]]></body>
+              </comment>
+            </comments>
+            <field_change type="string" field_name="epic">
+              <value><![CDATA[artifact D]]></value>
+            </field_change>
+            <field_change field_name="initial_effort" type="computed">
+              <is_autocomputed>1</is_autocomputed>
+            </field_change>
+            <field_change field_name="remaining_effort" type="computed">
+              <is_autocomputed>1</is_autocomputed>
+            </field_change>
+          </changeset>
+        </artifact>
+        <artifact id="269">
+          <changeset id="CHANGESET_616">
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2025-08-21T15:28:09+02:00</submitted_on>
+            <comments/>
+            <field_change type="string" field_name="epic">
+              <value><![CDATA[4]]></value>
+            </field_change>
+            <field_change type="text" field_name="description">
+              <value format="commonmark"><![CDATA[]]></value>
+            </field_change>
+            <field_change field_name="status" type="list" bind="static">
+              <value format="id"><![CDATA[V0198ccf6-f792-7340-a2c1-c4dfc59cca52]]></value>
+            </field_change>
+          </changeset>
+          <changeset id="CHANGESET_640">
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2025-08-21T16:09:37+02:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">rest_api_tester_1</submitted_by>
+                <submitted_on format="ISO8601"><![CDATA[2025-08-21T16:09:37+02:00]]></submitted_on>
+                <body format="commonmark"><![CDATA[]]></body>
+              </comment>
+            </comments>
+            <field_change type="string" field_name="epic">
+              <value><![CDATA[artifact E]]></value>
+            </field_change>
+            <field_change field_name="initial_effort" type="computed">
+              <is_autocomputed>1</is_autocomputed>
+            </field_change>
+            <field_change field_name="remaining_effort" type="computed">
+              <is_autocomputed>1</is_autocomputed>
+            </field_change>
+            <field_change field_name="links" type="art_link"/>
+          </changeset>
+        </artifact>
+        <artifact id="270">
+          <changeset id="CHANGESET_618">
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2025-08-21T16:00:37+02:00</submitted_on>
+            <comments/>
+            <field_change type="string" field_name="epic">
+              <value><![CDATA[artifact C]]></value>
+            </field_change>
+            <field_change type="text" field_name="description">
+              <value format="commonmark"><![CDATA[]]></value>
+            </field_change>
+            <field_change field_name="status" type="list" bind="static">
+              <value format="id"><![CDATA[V0198ccf6-f792-7340-a2c1-c4dfc59cca52]]></value>
+            </field_change>
+          </changeset>
+        </artifact>
+        <artifact id="271">
+          <changeset id="CHANGESET_619">
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2025-08-21T16:00:50+02:00</submitted_on>
+            <comments/>
+            <field_change type="string" field_name="epic">
+              <value><![CDATA[artifact B]]></value>
+            </field_change>
+            <field_change type="text" field_name="description">
+              <value format="commonmark"><![CDATA[]]></value>
+            </field_change>
+            <field_change field_name="status" type="list" bind="static">
+              <value format="id"><![CDATA[V0198ccf6-f792-7340-a2c1-c4dfc59cca52]]></value>
+            </field_change>
+          </changeset>
+        </artifact>
+        <artifact id="272">
+          <changeset id="CHANGESET_620">
+            <submitted_by format="username">rest_api_tester_1</submitted_by>
+            <submitted_on format="ISO8601">2025-08-21T16:00:51+02:00</submitted_on>
+            <comments/>
+            <field_change type="string" field_name="epic">
+              <value><![CDATA[artifact A]]></value>
+            </field_change>
+            <field_change type="text" field_name="description">
+              <value format="commonmark"><![CDATA[]]></value>
+            </field_change>
+            <field_change field_name="status" type="list" bind="static">
+              <value format="id"><![CDATA[V0198ccf6-f792-7340-a2c1-c4dfc59cca52]]></value>
+            </field_change>
+            <field_change field_name="initial_effort" type="computed">
+              <is_autocomputed>1</is_autocomputed>
+            </field_change>
+            <field_change field_name="remaining_effort" type="computed">
+              <is_autocomputed>1</is_autocomputed>
+            </field_change>
+            <field_change field_name="links" type="art_link">
+              <value nature=""><![CDATA[270]]></value>
+              <value nature=""><![CDATA[271]]></value>
+            </field_change>
+          </changeset>
+        </artifact>
+      </artifacts>
+    </tracker>
+    <triggers/>
+  </trackers>
+  <natures>
+    <nature><![CDATA[_is_child]]></nature>
+    <nature><![CDATA[_covered_by]]></nature>
+  </natures>
+</project>

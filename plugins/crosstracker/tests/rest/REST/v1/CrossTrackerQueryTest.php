@@ -24,6 +24,7 @@ namespace Tuleap\CrossTracker\REST\v1;
 
 use Psl\Json;
 use REST_TestDataBuilder;
+use TestDataBuilder;
 use Tuleap\CrossTracker\TestBase;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -31,7 +32,8 @@ final class CrossTrackerQueryTest extends TestBase
 {
     private const string UUID_PATTERN = '/^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/';
 
-    private const int CROSS_LINK_WIDGET_ID = 1;
+    private const int REVERSE_CROSS_LINK_WIDGET_ID = 1;
+    private const int FORWARD_CROSS_LINK_WIDGET_ID = 2;
 
     private string $query_id;
 
@@ -127,7 +129,7 @@ final class CrossTrackerQueryTest extends TestBase
     }
 
     /**
-     * Data structure used for the test, ids in parentheses and label text are the one exposed in xml _fixture/cross-link project
+     * Data structure used for the test, ids in parentheses and label text are the one exposed in xml _fixture/reverse-link project
      *
      *                            ┌────────────────────────────────┐
      *                            │                                │
@@ -165,7 +167,7 @@ final class CrossTrackerQueryTest extends TestBase
      *  - reverse artifact 603 has two forward links, 500 and 604
      *  - when we call for reverse links of current artifact 500, we should only find one link with _is_child type
      */
-    public function testGetForwardAndReverseLinksFromCrossTrackerQuery(): void
+    public function testGetReverseLinksFromCrossTrackerQuery(): void
     {
         $query = http_build_query(
             ['order' => 'asc']
@@ -174,18 +176,70 @@ final class CrossTrackerQueryTest extends TestBase
         $artifacts = Json\decode(
             $this->getResponseByName(
                 REST_TestDataBuilder::ADMIN_USER_NAME,
-                $this->request_factory->createRequest('GET', "trackers/$this->cross_tracker_tracker_id/artifacts?$query")
+                $this->request_factory->createRequest('GET', "trackers/$this->reverse_cross_tracker_tracker_id/artifacts?$query")
             )->getBody()->getContents(),
         );
 
-        $artifat_title    = 'current artifact';
-        $current_artifact = $this->findItemByTitle($artifacts, $artifat_title);
+        $artifact_title   = 'current artifact';
+        $current_artifact = $this->findItemByTitle($artifacts, $artifact_title);
         self::assertNotNull($current_artifact);
         $current_artifact_id = $current_artifact['id'];
 
         $tql_query = "SELECT @pretty_title, @link_type FROM @project = 'self' WHERE @id = $current_artifact_id ORDER BY @last_update_date DESC";
         $response  = $this->getResponse(
-            $this->request_factory->createRequest('GET', 'crosstracker_widget/' . self::CROSS_LINK_WIDGET_ID . '/reverse_links?target_artifact_id=' . $current_artifact_id . '&tql_query=' . (urlencode($tql_query)) .  '&limit=50&offset=0'),
+            $this->request_factory->createRequest('GET', 'crosstracker_widget/' . self::REVERSE_CROSS_LINK_WIDGET_ID . '/reverse_links?target_artifact_id=' . $current_artifact_id . '&tql_query=' . (urlencode($tql_query)) .  '&limit=50&offset=0'),
+        );
+
+        self::assertSame(200, $response->getStatusCode());
+        $json_response = Json\decode($response->getBody()->getContents());
+
+        self::assertGreaterThan(1, count($json_response['artifacts'][0]['@artifact']));
+
+        self::assertSame('_is_child', $json_response['artifacts'][0]['@link_type']['value']);
+    }
+
+    /**
+     * Data structure used for the test, ids in parentheses and label text are the one exposed in xml _fixture/forward-link project
+     *
+     *                                   ┌─────────────────────────┐
+     *                                   │                         │
+     *                     _is_child     │  artifact A (265)       │    _is_child
+     *                        ┌──────────┴───────────┬─────────────┴────────────────────────┐
+     *                        │                      │                                      │
+     *                        │                      │ _is_child                         │
+     *                        │                      │                                      │
+     *              ┌─────────▼──────────┐     ┌─────▼───────────────┐       ┌──────────────▼───────────┐
+     *              │                    │     │                     │       │                          │
+     *              │ artifact B (266)   │     │ artifact C (267)    │       │   artifact D (268)       │
+     *              └─────────▲──────────┘     └──────┬────────▲─────┘       └──────────────┬───────────┘
+     *                        │                       │        │                            │
+     *                        └───────────────────────┘        └────────────────────────────┘
+     *                            _is_child                       _is_child
+     */
+    public function testGetForwardLinksFromCrossTrackerQuery(): void
+    {
+        $query = http_build_query(
+            ['order' => 'asc']
+        );
+
+        $artifacts = json_decode(
+            $this->getResponseByName(
+                TestDataBuilder::ADMIN_USER_NAME,
+                $this->request_factory->createRequest('GET', "trackers/$this->forward_cross_tracker_tracker_id/artifacts?$query")
+            )->getBody()->getContents(),
+            true,
+            512,
+            JSON_THROW_ON_ERROR
+        );
+
+        $artifact_title   = 'artifact A';
+        $current_artifact = $this->findItemByTitle($artifacts, $artifact_title);
+        self::assertNotNull($current_artifact);
+        $current_artifact_id = $current_artifact['id'];
+
+        $tql_query = "SELECT @pretty_title, @link_type FROM @project = 'self' WHERE @id = $current_artifact_id ORDER BY @last_update_date DESC";
+        $response  = $this->getResponse(
+            $this->request_factory->createRequest('GET', 'crosstracker_widget/' . self::REVERSE_CROSS_LINK_WIDGET_ID . '/forward_links?source_artifact_id=' . $current_artifact_id . '&tql_query=' . (urlencode($tql_query)) .  '&limit=50&offset=0'),
         );
 
         self::assertSame(200, $response->getStatusCode());

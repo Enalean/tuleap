@@ -22,18 +22,51 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Query\Advanced\SelectBuilder\Metadata\Special\LinkType;
 
-use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\IProvideParametrizedSelectAndFromSQLFragments;
-use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\ParametrizedSelectFrom;
+use ParagonIE\EasyDB\EasyStatement;
+use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\IProvideParametrizedSelectAndFromAndWhereSQLFragments;
+use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\ParametrizedSelectFromAndWhere;
 use Tuleap\Option\Option;
+use function Psl\Type\string;
 
-/**
- * @psalm-immutable
- */
 final readonly class ForwardLinkTypeSelectFromBuilder implements BuildLinkTypeSelectFrom
 {
     #[\Override]
-    public function getSelectFrom(Option $target_artifact_id_for_reverse_links): IProvideParametrizedSelectAndFromSQLFragments
+    public function getSelectFrom(Option $artifact_id, array $artifact_ids): IProvideParametrizedSelectAndFromAndWhereSQLFragments
     {
-        return new ParametrizedSelectFrom('', '', []);
+        $select =  <<<EOSQL
+        IFNULL(forward_artlink.nature, '') AS '@link_type', forward_artlink.artifact_id AS forward_art_id
+        EOSQL;
+        $from   = <<<EOSQL
+        LEFT JOIN tracker_artifact AS source ON (source.id = ?)
+        LEFT JOIN tracker_changeset AS source_changeset ON (source_changeset.id = source.last_changeset_id)
+        LEFT JOIN tracker_changeset_value AS cv ON (cv.changeset_id = source_changeset.id)
+        LEFT JOIN tracker_changeset_value_artifactlink AS forward_artlink ON (
+            forward_artlink.changeset_value_id = cv.id AND
+            forward_artlink.artifact_id = artifact.id
+        )
+        EOSQL;
+
+        return $artifact_id->match(
+            function (int $id) use ($select, $from, $artifact_ids): IProvideParametrizedSelectAndFromAndWhereSQLFragments {
+                $ids_statement = EasyStatement::open()->in('artifact.id IN (?*)', $artifact_ids);
+
+                return new ParametrizedSelectFromAndWhere(
+                    $select,
+                    $from,
+                    [$id],
+                    Option::fromValue($ids_statement->sql() . ' AND forward_artlink.artifact_id IS NOT NULL'),
+                    $ids_statement->values(),
+                );
+            },
+            function (): IProvideParametrizedSelectAndFromAndWhereSQLFragments {
+                return new ParametrizedSelectFromAndWhere(
+                    '',
+                    '',
+                    [],
+                    Option::nothing(string()),
+                    []
+                );
+            }
+        );
     }
 }

@@ -22,12 +22,14 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Query\Advanced\SelectBuilder\Metadata\Special\PrettyTitle;
 
-use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\IProvideParametrizedSelectAndFromSQLFragments;
-use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\ParametrizedSelectFrom;
+use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\IProvideParametrizedSelectAndFromAndWhereSQLFragments;
+use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\ParametrizedSelectFromAndWhere;
+use Tuleap\Option\Option;
+use function Psl\Type\string;
 
 final class PrettyTitleSelectFromBuilder
 {
-    public function getSelectFrom(): IProvideParametrizedSelectAndFromSQLFragments
+    public function getSelectFrom(): IProvideParametrizedSelectAndFromAndWhereSQLFragments
     {
         $select = "tracker.item_name AS '@pretty_title.tracker', tracker.color AS '@pretty_title.color', pretty_title.value AS '@pretty_title'";
         $from   = <<<EOSQL
@@ -38,6 +40,12 @@ final class PrettyTitleSelectFromBuilder
         LEFT JOIN tracker_changeset_value_text AS pretty_title ON (pretty_title.changeset_value_id = pretty_title_tcv.id)
         EOSQL;
 
-        return new ParametrizedSelectFrom($select, $from, []);
+        return new ParametrizedSelectFromAndWhere(
+            $select,
+            $from,
+            [],
+            Option::nothing(string()),
+            []
+        );
     }
 }

@@ -22,12 +22,14 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Query\Advanced\SelectBuilder\Metadata\Semantic\AssignedTo;
 
-use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\IProvideParametrizedSelectAndFromSQLFragments;
-use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\ParametrizedSelectFrom;
+use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\IProvideParametrizedSelectAndFromAndWhereSQLFragments;
+use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\ParametrizedSelectFromAndWhere;
+use Tuleap\Option\Option;
+use function Psl\Type\string;
 
 final class AssignedToSelectFromBuilder
 {
-    public function getSelectFrom(): IProvideParametrizedSelectAndFromSQLFragments
+    public function getSelectFrom(): IProvideParametrizedSelectAndFromAndWhereSQLFragments
     {
         $select = "contributor.bindvalue_id AS '@assigned_to'";
         $from   = <<<EOSQL
@@ -38,6 +40,12 @@ final class AssignedToSelectFromBuilder
         LEFT JOIN tracker_changeset_value_list AS contributor ON (contributor.changeset_value_id = contributor_tcv.id)
         EOSQL;
 
-        return new ParametrizedSelectFrom($select, $from, []);
+        return new ParametrizedSelectFromAndWhere(
+            $select,
+            $from,
+            [],
+            Option::nothing(string()),
+            []
+        );
     }
 }

@@ -26,26 +26,37 @@ use Tuleap\REST\RestBase;
 
 class TestBase extends RestBase
 {
-    public const string CROSS_TRACKER_SHORTNAME = 'myCrossLink';
-    public const WIDGET_ID                      = 4;
+    public const string REVERSE_CROSS_TRACKER_SHORTNAME = 'myCrossLink';
+    public const string FORWARD_CROSS_TRACKER_SHORTNAME = 'epic';
+    public const int WIDGET_ID                          = 5;
 
-    protected int $cross_tracker_project_id;
-    protected int $cross_tracker_tracker_id;
+    protected int $reverse_cross_tracker_project_id;
+    protected int $forward_cross_tracker_project_id;
+    protected int $reverse_cross_tracker_tracker_id;
 
     /** @var int[] */
-    protected array $artifact_cross_tracker_ids = [];
+    protected array $reverse_artifact_cross_tracker_ids = [];
+    protected int $forward_cross_tracker_tracker_id;
+    /** @var int[] */
+    protected array $forward_artifact_cross_tracker_ids = [];
 
     #[\Override]
     public function setUp(): void
     {
         parent::setUp();
 
-        $this->cross_tracker_project_id = $this->getProjectId(CrossTrackerDataBuilder::CROSS_PROJECT_SHORTNAME);
-        $this->cross_tracker_tracker_id = $this->tracker_ids[$this->cross_tracker_project_id][self::CROSS_TRACKER_SHORTNAME];
+        $this->reverse_cross_tracker_project_id = $this->getProjectId(CrossTrackerDataBuilder::REVERSE_CROSS_PROJECT_SHORTNAME);
+        $this->forward_cross_tracker_project_id = $this->getProjectId(CrossTrackerDataBuilder::FORWARD_CROSS_PROJECT_SHORTNAME);
+        $this->reverse_cross_tracker_tracker_id = $this->tracker_ids[$this->reverse_cross_tracker_project_id][self::REVERSE_CROSS_TRACKER_SHORTNAME];
+        $this->forward_cross_tracker_tracker_id = $this->tracker_ids[$this->forward_cross_tracker_project_id][self::FORWARD_CROSS_TRACKER_SHORTNAME];
 
         $this->getArtifactIds(
-            $this->cross_tracker_tracker_id,
-            $this->artifact_cross_tracker_ids
+            $this->reverse_cross_tracker_tracker_id,
+            $this->reverse_artifact_cross_tracker_ids
+        );
+        $this->getArtifactIds(
+            $this->forward_cross_tracker_tracker_id,
+            $this->forward_artifact_cross_tracker_ids
         );
     }
 }

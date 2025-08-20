@@ -21,13 +21,16 @@
 
 namespace Tuleap\CrossTracker\Query\Advanced\SelectBuilder\Metadata\Special\LinkType;
 
-use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\IProvideParametrizedSelectAndFromSQLFragments;
+use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\IProvideParametrizedSelectAndFromAndWhereSQLFragments;
 use Tuleap\Option\Option;
 
 interface BuildLinkTypeSelectFrom
 {
     /**
-     * @param Option<int> $target_artifact_id_for_reverse_links
+     * source artifact id for forward links
+     * target artifact id for reverse links
+     * @param Option<int> $artifact_id
+     * @param array<int> $artifact_ids
      */
-    public function getSelectFrom(Option $target_artifact_id_for_reverse_links): IProvideParametrizedSelectAndFromSQLFragments;
+    public function getSelectFrom(Option $artifact_id, array $artifact_ids): IProvideParametrizedSelectAndFromAndWhereSQLFragments;
 }

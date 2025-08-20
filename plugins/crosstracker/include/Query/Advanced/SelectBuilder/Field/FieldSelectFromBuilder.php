@@ -32,14 +32,16 @@ use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\Field\StaticList\StaticList
 use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\Field\Text\TextSelectFromBuilder;
 use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\Field\UGroupList\UGroupListSelectFromBuilder;
 use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\Field\UserList\UserListSelectFromBuilder;
-use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\IProvideParametrizedSelectAndFromSQLFragments;
-use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\ParametrizedSelectFrom;
+use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\IProvideParametrizedSelectAndFromAndWhereSQLFragments;
+use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\ParametrizedSelectFromAndWhere;
+use Tuleap\Option\Option;
 use Tuleap\Tracker\FormElement\Field\RetrieveUsedFields;
 use Tuleap\Tracker\FormElement\RetrieveFieldType;
 use Tuleap\Tracker\Permission\FieldPermissionType;
 use Tuleap\Tracker\Permission\RetrieveUserPermissionOnFields;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
 use Tuleap\Tracker\Tracker;
+use function Psl\Type\string;
 
 final readonly class FieldSelectFromBuilder
 {
@@ -63,7 +65,7 @@ final readonly class FieldSelectFromBuilder
         Field $field,
         PFUser $user,
         array $trackers,
-    ): IProvideParametrizedSelectAndFromSQLFragments {
+    ): IProvideParametrizedSelectAndFromAndWhereSQLFragments {
         $tracker_ids = array_map(static fn(Tracker $tracker) => $tracker->getId(), $trackers);
         $fields      = array_filter(
             array_map(
@@ -83,11 +85,11 @@ final readonly class FieldSelectFromBuilder
             $tracker_ids,
         )->match(
             fn(DuckTypedFieldSelect $duck_typed_field) => $this->matchTypeToBuilder($duck_typed_field),
-            static fn() => new ParametrizedSelectFrom('', '', []),
+            static fn() => new ParametrizedSelectFromAndWhere('', '', [], Option::nothing(string()), []),
         );
     }
 
-    private function matchTypeToBuilder(DuckTypedFieldSelect $field): IProvideParametrizedSelectAndFromSQLFragments
+    private function matchTypeToBuilder(DuckTypedFieldSelect $field): IProvideParametrizedSelectAndFromAndWhereSQLFragments
     {
         return match ($field->type) {
             DuckTypedFieldTypeSelect::DATE    => $this->date_builder->getSelectFrom($field),
@@ -96,7 +98,7 @@ final readonly class FieldSelectFromBuilder
             DuckTypedFieldTypeSelect::STATIC_LIST => $this->static_list_builder->getSelectFrom($field),
             DuckTypedFieldTypeSelect::UGROUP_LIST => $this->user_group_list_builder->getSelectFrom($field),
             DuckTypedFieldTypeSelect::USER_LIST => $this->user_list_builder->getSelectFrom($field),
-            DuckTypedFieldTypeSelect::UNKNOWN => new ParametrizedSelectFrom('', '', []),
+            DuckTypedFieldTypeSelect::UNKNOWN => new ParametrizedSelectFromAndWhere('', '', [], Option::nothing(string()), []),
         };
     }
 }

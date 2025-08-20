@@ -29,7 +29,7 @@ final class ParametrizedSelectFromBaseTest extends TestCase
 {
     public function testItMergeAllSelects(): void
     {
-        $base = new ParametrizedSelectFromBase();
+        $base = new ParametrizedSelectFromAndWhereBase();
         $base->addSelect('1');
         $base->addSelect('2');
 
@@ -38,7 +38,7 @@ final class ParametrizedSelectFromBaseTest extends TestCase
 
     public function testItSkipsEmptySelect(): void
     {
-        $base = new ParametrizedSelectFromBase();
+        $base = new ParametrizedSelectFromAndWhereBase();
         $base->addSelect('1');
         $base->addSelect('');
         $base->addSelect('2');
@@ -48,7 +48,7 @@ final class ParametrizedSelectFromBaseTest extends TestCase
 
     public function testItMergeAllFrom(): void
     {
-        $base = new ParametrizedSelectFromBase();
+        $base = new ParametrizedSelectFromAndWhereBase();
         $base->addFrom('1', ['a']);
         $base->addFrom('2', ['b']);
 
@@ -58,7 +58,7 @@ final class ParametrizedSelectFromBaseTest extends TestCase
 
     public function testItSkipsEmptyFrom(): void
     {
-        $base = new ParametrizedSelectFromBase();
+        $base = new ParametrizedSelectFromAndWhereBase();
         $base->addFrom('1', ['a']);
         $base->addFrom('', ['b']);
         $base->addFrom('2', ['c']);
