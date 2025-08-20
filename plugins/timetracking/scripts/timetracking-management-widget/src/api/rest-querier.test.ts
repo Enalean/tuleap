@@ -18,12 +18,11 @@
  */
 
 import { describe, expect, it, vi } from "vitest";
-import { ref } from "vue";
 import { putQuery } from "./rest-querier";
 import * as fetch_result from "@tuleap/fetch-result";
 import { okAsync } from "neverthrow";
 import { uri } from "@tuleap/fetch-result";
-import type { TimetrackingManagementQuery } from "../query/QueryRetriever";
+import type { Query } from "../type";
 import type { User } from "@tuleap/core-rest-api-types";
 
 const widget_id = 47;
@@ -31,11 +30,11 @@ const start_date = "2024-08-02T00:00:00Z";
 const end_date = "2024-09-01T00:00:00Z";
 const users = [{ id: 101 } as User, { id: 102 } as User];
 
-const query: TimetrackingManagementQuery = {
+const query: Query = {
     start_date: start_date,
     end_date: end_date,
     predefined_time_period: "",
-    users_list: ref(users),
+    users_list: users,
 };
 
 describe("rest-querier", () => {

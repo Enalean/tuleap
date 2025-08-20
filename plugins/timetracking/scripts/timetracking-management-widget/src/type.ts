@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2025 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,6 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { StrictInjectionKey } from "@tuleap/vue-strict-inject";
+import type { PredefinedTimePeriod } from "@tuleap/plugin-timetracking-predefined-time-periods";
+import type { User } from "@tuleap/core-rest-api-types";
 
-export const USER_LOCALE_KEY: StrictInjectionKey<string> = Symbol("user_locale");
+export type Query = {
+    start_date: string;
+    end_date: string;
+    predefined_time_period: PredefinedTimePeriod | "";
+    users_list: User[];
+};

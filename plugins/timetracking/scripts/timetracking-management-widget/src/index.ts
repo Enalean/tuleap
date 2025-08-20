@@ -20,8 +20,8 @@ import { createApp } from "vue";
 import TimetrackingManagementWidget from "./components/TimetrackingManagementWidget.vue";
 import { createGettext } from "vue3-gettext";
 import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue3-gettext-init";
-import { USER_LOCALE_KEY, WIDGET_ID } from "./injection-symbols";
-import { QueryRetriever } from "./query/QueryRetriever";
+import { USER_LOCALE_KEY } from "./injection-symbols";
+import type { Query } from "./type";
 import { getAttributeOrThrow } from "@tuleap/dom";
 import { formatDatetimeToYearMonthDay } from "@tuleap/plugin-timetracking-time-formatters";
 import {
@@ -46,16 +46,16 @@ document.addEventListener("DOMContentLoaded", async () => {
     const start_date = formatDatetimeToYearMonthDay(period?.start ?? new Date(query.start_date));
     const end_date = formatDatetimeToYearMonthDay(period?.end ?? new Date(query.end_date));
 
-    const query_retriever = QueryRetriever();
-    query_retriever.setQuery(
+    const initial_query: Query = {
         start_date,
         end_date,
-        getPredefinedTimePeriodWithString(query.predefined_time),
-        query.users,
-    );
+        predefined_time_period: getPredefinedTimePeriodWithString(query.predefined_time),
+        users_list: query.users,
+    };
 
     createApp(TimetrackingManagementWidget, {
-        query_retriever,
+        initial_query,
+        widget_id: query.id,
     })
         .use(
             await initVueGettext(createGettext, (locale: string) => {
@@ -63,6 +63,5 @@ document.addEventListener("DOMContentLoaded", async () => {
             }),
         )
         .provide(USER_LOCALE_KEY, getAttributeOrThrow(document.body, "data-user-locale"))
-        .provide(WIDGET_ID, query.id)
         .mount(mount_point);
 });
