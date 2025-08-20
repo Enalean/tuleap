@@ -52,8 +52,11 @@
                 v-bind:field="readonly_field"
             />
             <field-date v-if="readonly_field.type === DATE_FIELD" v-bind:field="readonly_field" />
-            <field-steps-definition
-                v-if="readonly_field.type === STEPS_DEFINITION_FIELD"
+            <field-steps
+                v-if="
+                    readonly_field.type === STEPS_DEFINITION_FIELD ||
+                    readonly_field.type === STEPS_EXECUTION_FIELD
+                "
                 v-bind:field="readonly_field"
             />
         </div>
@@ -63,6 +66,7 @@
 <script setup lang="ts">
 import type { ReadonlyField } from "@/sections/readonly-fields/ReadonlyFields";
 import {
+    STEPS_EXECUTION_FIELD,
     DATE_FIELD,
     LINKS_FIELD,
     NUMERIC_FIELD,
@@ -74,6 +78,7 @@ import {
     USER_GROUP_LIST_FIELD,
     USER_LIST_FIELD,
 } from "@/sections/readonly-fields/ReadonlyFields";
+import { DISPLAY_TYPE_BLOCK } from "@/sections/readonly-fields/AvailableReadonlyFields";
 import type { SectionBasedOnArtifact } from "@/helpers/artidoc-section.type";
 import FieldText from "@/components/section/readonly-fields/FieldText.vue";
 import FieldUserGroupsList from "@/components/section/readonly-fields/FieldUserGroupsList.vue";
@@ -81,9 +86,8 @@ import FieldStaticList from "@/components/section/readonly-fields/FieldStaticLis
 import FieldUserList from "@/components/section/readonly-fields/FieldUserList.vue";
 import FieldLinks from "@/components/section/readonly-fields/FieldLinks.vue";
 import FieldNumeric from "@/components/section/readonly-fields/FieldNumeric.vue";
-import { DISPLAY_TYPE_BLOCK } from "@/sections/readonly-fields/AvailableReadonlyFields";
 import FieldDate from "@/components/section/readonly-fields/FieldDate.vue";
-import FieldStepsDefinition from "@/components/section/readonly-fields/FieldStepsDefinition.vue";
+import FieldSteps from "@/components/section/readonly-fields/FieldSteps.vue";
 
 defineProps<{
     section: SectionBasedOnArtifact;

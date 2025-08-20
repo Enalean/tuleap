@@ -69,6 +69,9 @@ msgstr "Artidoc permet la composition d'un document basé sur des artifacts."
 msgid "Available templates"
 msgstr "Modèles disponibles"
 
+msgid "Blocked"
+msgstr "Bloqué"
+
 msgid "Cancel"
 msgstr "Annuler"
 
@@ -132,6 +135,9 @@ msgstr "Exporter le document en PDF"
 
 msgid "Export error"
 msgstr "Erreur d'export"
+
+msgid "Failed"
+msgstr "Échoué"
 
 msgid "Field"
 msgstr "Champ"
@@ -205,6 +211,9 @@ msgstr ""
 "Aucun modèles n'a été défini pour l'export, veuillez contacter "
 "l'administrateur de la plateforme"
 
+msgid "Not run"
+msgstr "Non exécuté"
+
 msgid ""
 "Note: the tracker must have a title semantic (string field), a description "
 "semantic, and no required fields except title and description."
@@ -221,6 +230,9 @@ msgstr "Ouvrir le menu contextuel"
 
 msgid "Open sidebar"
 msgstr "Ouvrir la barre latérale"
+
+msgid "Passed"
+msgstr "Succès"
 
 msgid "Please log in in order to be able to export as PDF"
 msgstr "Veuillez vous connecter afin de pouvoir exporter en PDF"
