@@ -27,6 +27,7 @@ use ForgeConfig;
 use LogicException;
 use PFUser;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Representations\NumericResultRepresentation;
+use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\Metadata\Special\LinkType\WithoutLinkTypeSelectFromBuilder;
 use Tuleap\CrossTracker\Query\CrossTrackerArtifactQueryFactoryBuilder;
 use Tuleap\CrossTracker\Query\CrossTrackerQuery;
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerQueryContentRepresentation;
@@ -103,7 +104,7 @@ abstract class CrossTrackerFieldTestCase extends TestIntegrationTestCase
     final protected function getMatchingArtifactIds(CrossTrackerQuery $query, PFUser $user): array
     {
         $result = (new CrossTrackerArtifactQueryFactoryBuilder())
-            ->getArtifactFactory()
+            ->getArtifactFactory(new WithoutLinkTypeSelectFromBuilder())
             ->getArtifactsMatchingQuery($query, $user, 10, 0);
         return array_values(array_map(static function (array $artifact): int {
             if (! isset($artifact['@id']) || ! ($artifact['@id'] instanceof NumericResultRepresentation)) {
@@ -117,7 +118,7 @@ abstract class CrossTrackerFieldTestCase extends TestIntegrationTestCase
     final protected function getQueryResults(CrossTrackerQuery $query, PFUser $user): CrossTrackerQueryContentRepresentation
     {
         $result = (new CrossTrackerArtifactQueryFactoryBuilder())
-            ->getArtifactFactory()
+            ->getArtifactFactory(new WithoutLinkTypeSelectFromBuilder())
             ->getArtifactsMatchingQuery($query, $user, 10, 0);
         assert($result instanceof CrossTrackerQueryContentRepresentation);
         return $result;

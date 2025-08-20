@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright (c) Enalean, 2025 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -18,22 +18,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Query\Advanced\SelectBuilder\Metadata\Special\LinkType;
 
 use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\IProvideParametrizedSelectAndFromSQLFragments;
-use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\ParametrizedSelectFrom;
 use Tuleap\Option\Option;
 
-/**
- * @psalm-immutable
- */
-final readonly class ForwardLinkTypeSelectFromBuilder implements BuildLinkTypeSelectFrom
+interface BuildLinkTypeSelectFrom
 {
-    #[\Override]
-    public function getSelectFrom(Option $target_artifact_id_for_reverse_links): IProvideParametrizedSelectAndFromSQLFragments
-    {
-        return new ParametrizedSelectFrom('', '', []);
-    }
+    /**
+     * @param Option<int> $target_artifact_id_for_reverse_links
+     */
+    public function getSelectFrom(Option $target_artifact_id_for_reverse_links): IProvideParametrizedSelectAndFromSQLFragments;
 }

@@ -32,6 +32,7 @@ use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\Metadata\Semantic\Title\Tit
 use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\Metadata\Special\LinkType\ForwardLinkTypeSelectFromBuilder;
 use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\Metadata\Special\PrettyTitle\PrettyTitleSelectFromBuilder;
 use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\Metadata\Special\ProjectName\ProjectNameSelectFromBuilder;
+use Tuleap\Option\Option;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 
@@ -50,7 +51,7 @@ final class MetadataSelectFromBuilderTest extends TestCase
             new ForwardLinkTypeSelectFromBuilder(),
         );
 
-        return $builder->getSelectFrom($metadata);
+        return $builder->getSelectFrom($metadata, Option::fromValue(21));
     }
 
     public function testItThrowsIfMetadataNotRecognized(): void

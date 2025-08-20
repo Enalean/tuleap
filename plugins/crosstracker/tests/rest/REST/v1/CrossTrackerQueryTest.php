@@ -22,16 +22,19 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\REST\v1;
 
+require_once __DIR__ . '/../../bootstrap.php';
+
 use REST_TestDataBuilder;
-use RestBase;
+use Tuleap\CrossTracker\TestBase;
 use function Psl\Json\decode;
 use function Psl\Json\encode;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class CrossTrackerQueryTest extends RestBase
+final class CrossTrackerQueryTest extends TestBase
 {
-    private const UUID_PATTERN = '/^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/';
-    private const WIDGET_ID    = 3;
+    private const string UUID_PATTERN = '/^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/';
+
+    private const int CROSS_LINK_WIDGET_ID = 1;
 
     private string $query_id;
 
@@ -124,36 +127,77 @@ final class CrossTrackerQueryTest extends RestBase
         self::assertEquals($this->epic_artifact_ids[1], $json_response['artifacts'][0]['@id']['value']);
     }
 
-    #[\PHPUnit\Framework\Attributes\Depends('testPut')]
+    /**
+     * Data structure used for the test, ids in parentheses and label text are the one exposed in xml _fixture/cross-link project
+     *
+     *                            ┌────────────────────────────────┐
+     *                            │                                │
+     *                            │    Reverse (603)               │
+     *                            │                                │
+     *                            └─────────────┬──────────────────┘
+     *                           ┌────────────────────────────────┐
+     *                           │                                │
+     *                        _is_child                       _is_child
+     *                           │                                │
+     *                           │                                │
+     *         ┌─────────────────▼─────────────────────┐    ┌────────────────────────────────┐
+     *         │                                       │    │                                │
+     *         │   current artifact   (500)            │    │     Other artifact (604)       │
+     *         │                                       │    │                                │
+     *         └─────────────────┴─────────────────────┘    └────────────────────────────────┘
+     *                           │
+     *                       _is_child
+     *                           │
+     *                    ┌─────────────────────────────────────┬───────────────────────────────────┐
+     *                    │                                     │                                   │
+     *                    │                                     │                                   │
+     *                    │                                     │                                   │
+     *                    │                                     │                                   │
+     *                    │                                     │                                   │
+     *                    ▼                                     │                                   │
+     *           ┌───────────────────────┐           ┌──────────▼──────────┐       ┌────────────────▼───────┐
+     *           │                       │           │                     │       │                        │
+     *           │  forward 1  (499)     │           │ forward 2  (501)    │       │ forward 3  (502)       │
+     *           │                       │           │                     │       │                        │
+     *           └───────────────────────┘           └─────────────────────┘       └────────────────────────┘
+     *
+     * TLDR;
+     *  - artifact 500 has three forward links, 499, 501, 502 and one reverse link 603
+     *  - reverse artifact 603 has two forward links, 500 and 604
+     *  - when we call for reverse links of current artifact 500, we should only find one link with _is_child type
+     */
     public function testGetForwardAndReverseLinksFromCrossTrackerQuery(): void
     {
-        $tql_query = "SELECT @pretty_title, @status, @last_update_date, @submitted_by FROM @project = 'self' WHERE @status = OPEN() ORDER BY @last_update_date DESC";
+        $query = http_build_query(
+            ['order' => 'asc']
+        );
+
+        $artifacts = json_decode(
+            $this->getResponseByName(
+                REST_TestDataBuilder::ADMIN_USER_NAME,
+                $this->request_factory->createRequest('GET', "trackers/$this->cross_tracker_tracker_id/artifacts?$query")
+            )->getBody()->getContents(),
+            true,
+            512,
+            JSON_THROW_ON_ERROR
+        );
+
+        $artifat_title    = 'current artifact';
+        $current_artifact = $this->findItemByTitle($artifacts, $artifat_title);
+        self::assertNotNull($current_artifact);
+        $current_artifact_id = $current_artifact['id'];
+
+        $tql_query = "SELECT @pretty_title, @link_type FROM @project = 'self' WHERE @id = $current_artifact_id ORDER BY @last_update_date DESC";
         $response  = $this->getResponse(
-            $this->request_factory->createRequest('GET', 'crosstracker_widget/' . self::WIDGET_ID . '/forward_links?source_artifact_id=' . $this->release_artifact_ids[1] . '&tql_query=' . (urlencode($tql_query)) .  '&limit=50&offset=0'),
+            $this->request_factory->createRequest('GET', 'crosstracker_widget/' . self::CROSS_LINK_WIDGET_ID . '/reverse_links?target_artifact_id=' . $current_artifact_id . '&tql_query=' . (urlencode($tql_query)) .  '&limit=50&offset=0'),
         );
 
         self::assertSame(200, $response->getStatusCode());
         $json_response = decode($response->getBody()->getContents());
 
-        self::assertGreaterThan(1, $json_response['artifacts']);
+        self::assertGreaterThan(1, count($json_response['artifacts'][0]['@artifact']));
 
-        $parent_id = $json_response['artifacts'][0]['@artifact']['id'];
-
-        $response = $this->getResponse(
-            $this->request_factory->createRequest('GET', 'crosstracker_widget/' . self::WIDGET_ID . '/reverse_links?target_artifact_id=' . $parent_id . '&tql_query=' . (urlencode($tql_query)) .  '&limit=50&offset=0'),
-        );
-
-        self::assertSame(200, $response->getStatusCode());
-        $json_response = decode($response->getBody()->getContents());
-
-        self::assertGreaterThan(1, $json_response['artifacts']);
-        self::assertTrue(
-            in_array(
-                $this->release_artifact_ids[1],
-                array_column(array_column($json_response['artifacts'], '@artifact'), 'id')
-            ),
-            sprintf('Artifact ID %s not found in the list of reverse links', $this->release_artifact_ids[1])
-        );
+        self::assertSame('_is_child', $json_response['artifacts'][0]['@link_type']['value']);
     }
 
     public function testGetQueryWithoutArtifacts(): void
@@ -209,5 +253,14 @@ final class CrossTrackerQueryTest extends RestBase
 
         self::assertNotEmpty($json_response['artifacts']);
         self::assertNotEmpty($json_response['selected']);
+    }
+
+    public function findItemByTitle(array $items, string $title): ?array
+    {
+        $index = array_search($title, array_column($items, 'title'), true);
+        if ($index === false) {
+            return null;
+        }
+        return $items[$index];
     }
 }

@@ -25,6 +25,8 @@ namespace Tuleap\CrossTracker\REST\v1;
 use Luracast\Restler\RestException;
 use ProjectManager;
 use Tuleap\CrossTracker\Query\Advanced\ExpertQueryIsEmptyException;
+use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\Metadata\Special\LinkType\ForwardLinkTypeSelectFromBuilder;
+use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\Metadata\Special\LinkType\ReverseLinkTypeSelectFromBuilder;
 use Tuleap\CrossTracker\Query\CrossTrackerArtifactQueryFactoryBuilder;
 use Tuleap\CrossTracker\Query\CrossTrackerQueryDao;
 use Tuleap\CrossTracker\Query\CrossTrackerQueryFactory;
@@ -158,7 +160,7 @@ final class CrossTrackerWidgetResource extends AuthenticatedResource
             $this->getUserIsAllowedToSeeWidgetChecker()->checkUserIsAllowedToSeeWidget($current_user, $id);
 
             $artifacts = $this->factory_builder->getInstrumentation()->updateQueryDuration(
-                fn(): CrossTrackerQueryContentRepresentation => $this->factory_builder->getArtifactFactory()->getForwardLinks(
+                fn(): CrossTrackerQueryContentRepresentation => $this->factory_builder->getArtifactFactory(new ForwardLinkTypeSelectFromBuilder())->getForwardLinks(
                     CrossTrackerQueryFactory::fromTqlQueryAndWidgetId($tql_query, Option::fromValue($id)),
                     $source_artifact_id,
                     $current_user,
@@ -230,7 +232,7 @@ final class CrossTrackerWidgetResource extends AuthenticatedResource
             $this->getUserIsAllowedToSeeWidgetChecker()->checkUserIsAllowedToSeeWidget($current_user, $id);
 
             $artifacts = $this->factory_builder->getInstrumentation()->updateQueryDuration(
-                fn(): CrossTrackerQueryContentRepresentation => $this->factory_builder->getArtifactFactory()->getReverseLinks(
+                fn(): CrossTrackerQueryContentRepresentation => $this->factory_builder->getArtifactFactory(new ReverseLinkTypeSelectFromBuilder())->getReverseLinks(
                     CrossTrackerQueryFactory::fromTqlQueryAndWidgetId($tql_query, Option::fromValue($id)),
                     $target_artifact_id,
                     $current_user,

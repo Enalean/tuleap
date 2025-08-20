@@ -37,6 +37,8 @@ use UserManager;
 
 final class CrossTrackerDataBuilder extends REST_TestDataBuilder
 {
+    public const string CROSS_PROJECT_SHORTNAME = 'cross-tracker-link';
+
     public function setUp(): void
     {
         $this->instanciateFactories();
