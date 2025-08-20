@@ -16,7 +16,6 @@
     "@tuleap/tlp-popovers": "workspace:*",
     "@tuleap/vue3-breadcrumb-privacy": "workspace:^",
     "@tuleap/vue3-gettext-init": "workspace:^",
-    "@tuleap/vuex-store-wrapper-jest": "workspace:^",
     "@vitejs/plugin-vue": "^5.0.5",
     "javascript-time-ago": "^2.3.4",
     "vue": "^3.4.38",

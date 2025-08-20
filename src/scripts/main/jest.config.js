@@ -23,8 +23,4 @@ const jest_base_config = defineJestConfiguration();
 module.exports = {
     ...jest_base_config,
     displayName: "tuleap-core",
-    transform: {
-        ...jest_base_config.transform,
-        "^.+\\.vue$": "unplugin-vue2-script-setup/jest",
-    },
 };

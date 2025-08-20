@@ -1,4 +1,4 @@
-# @tuleap/vue-breadcrumb-privacy
+# @tuleap/vue3-breadcrumb-privacy
 
 Provides a breadcrumb component to display the project's Privacy flags.
 
@@ -12,14 +12,6 @@ Provides a breadcrumb component to display the project's Privacy flags.
         v-bind:project_public_name="project_public_name"
     />
 </template>
-<script>
-import { BreadcrumbPrivacy } from "@tuleap/vue-breadcrumb-privacy";
-
-export default {
-  name: "MyComponent",
-  components: [BreadcrumbPrivacy]
-};
-</script>
 ```
 
 ```typescript

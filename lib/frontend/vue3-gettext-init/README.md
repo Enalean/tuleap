@@ -9,15 +9,15 @@ Tuleap user.
 
 ```ts
 import { createApp } from "vue";
-import { initVueGettext, getPOFileFromLocale } from "@tuleap/vue3-gettext-init";
+import { initVueGettext, getPOFileFromLocaleWithoutExtension } from "@tuleap/vue3-gettext-init";
 import { createGettext } from "vue3-gettext";
 
 const app = createApp();
-app.use(await initVueGettext(
-    createGettext,
-    (locale: string) =>
-        import(
-            /* webpackChunkName: "some-app-po" */ "./po/" + getPOFileFromLocale(locale)
-        )
-));
+app.use(
+    await initVueGettext(
+        createGettext,
+        (locale) =>
+            import("../po/" + getPOFileFromLocaleWithoutExtension(locale))
+    )
+);
 ```

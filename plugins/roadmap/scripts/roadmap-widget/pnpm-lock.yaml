@@ -55,9 +55,6 @@ devDependencies:
   '@tuleap/po-gettext-plugin':
     specifier: workspace:^
     version: link:../../../../lib/frontend/po-gettext-plugin
-  '@tuleap/vuex-store-wrapper-jest':
-    specifier: workspace:*
-    version: link:../../../../lib/frontend/vuex-store-wrapper-jest
   '@types/luxon':
     specifier: ^3.7.1
     version: 3.7.1

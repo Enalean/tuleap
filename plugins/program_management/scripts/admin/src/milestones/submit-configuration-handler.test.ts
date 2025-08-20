@@ -19,16 +19,14 @@
  */
 
 import { submitConfigurationHandler } from "./submit-configuration-handler";
-import type { GetText } from "@tuleap/vue2-gettext-init";
+import type { GettextProvider } from "../GettextProvider";
 
 const createDocument = (): Document => document.implementation.createHTMLDocument();
 
 describe(`submitConfigurationHandler`, () => {
-    const gettext: GetText = {
-        gettext: (msgid: string) => {
-            return msgid;
-        },
-    } as GetText;
+    const gettext: GettextProvider = {
+        gettext: (msgid: string) => msgid,
+    };
 
     it(`returns when form is not displayed (aka no team have been configured)`, () => {
         const program_id = 101;

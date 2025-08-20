@@ -15,7 +15,6 @@
             "tlp": ["../../../../src/scripts/tlp/src/js/index.ts"]
         },
         "esModuleInterop": true,
-        "experimentalDecorators": true,
         "types": [],
         "incremental": true,
         "jsx": "preserve"

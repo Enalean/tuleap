@@ -18,10 +18,10 @@
  */
 
 import path from "node:path";
-import {fileURLToPath} from "node:url";
-import {webpack_configurator} from "@tuleap/build-system-configurator";
+import { fileURLToPath } from "node:url";
+import { webpack_configurator } from "@tuleap/build-system-configurator";
 import POGettextPlugin from "@tuleap/po-gettext-plugin";
-import {VueLoaderPlugin} from "vue-loader";
+import { VueLoaderPlugin } from "vue-loader";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -29,6 +29,12 @@ const __dirname = path.dirname(__filename);
 const entry_points = {
     "create-pullrequest-button": "./src/index.js",
     "repository-style": "./themes/style.scss",
+};
+
+const rule_vue_loader = {
+    test: /\.vue$/,
+    exclude: /node_modules/,
+    use: [{ loader: "vue-loader" }],
 };
 
 export default [
@@ -47,9 +53,9 @@ export default [
         },
         module: {
             rules: [
+                rule_vue_loader,
                 webpack_configurator.rule_scss_loader,
                 webpack_configurator.rule_css_assets,
-                webpack_configurator.rule_vue_loader,
             ],
         },
         plugins: [
@@ -57,7 +63,7 @@ export default [
             webpack_configurator.getManifestPlugin(),
             POGettextPlugin.webpack(),
             new VueLoaderPlugin(),
-            ...webpack_configurator.getCSSExtractionPlugins()
+            ...webpack_configurator.getCSSExtractionPlugins(),
         ],
     },
 ];

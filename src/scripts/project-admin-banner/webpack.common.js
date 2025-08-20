@@ -26,6 +26,12 @@ import { VueLoaderPlugin } from "vue-loader";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+const rule_vue_loader = {
+    test: /\.vue$/,
+    exclude: /node_modules/,
+    use: [{ loader: "vue-loader" }],
+};
+
 const config = {
     entry: {
         "project-admin-banner": "./src/main.ts",
@@ -42,10 +48,7 @@ const config = {
         extensions: [".js", ".ts", ".vue"],
     },
     module: {
-        rules: [
-            ...webpack_configurator.configureTypescriptRules(),
-            webpack_configurator.rule_vue_loader,
-        ],
+        rules: [...webpack_configurator.configureTypescriptRules(), rule_vue_loader],
     },
     plugins: [
         webpack_configurator.getCleanWebpackPlugin(),

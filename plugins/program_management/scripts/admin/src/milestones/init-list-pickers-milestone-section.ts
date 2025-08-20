@@ -18,17 +18,20 @@
  */
 
 import { createListPicker } from "@tuleap/list-picker";
-import type { GetText } from "@tuleap/vue2-gettext-init";
 import { disabledPlannableTrackers } from "../helper/disabled-plannable-tracker-helper";
 import { getHTMLSelectElementFromId } from "../helper/HTML_element_extractor";
 import { disabledIterationTrackersFromProgramIncrementAndPlannableTrackers } from "../helper/disabled-iteration-tracker-helper";
 import { ITERATION_SELECT_ID } from "../helper/init-preview-labels-helper";
+import type { GettextProvider } from "../GettextProvider";
 
 export const PROGRAM_INCREMENT_TRACKER_ID = "admin-configuration-program-increment-tracker";
 export const PLANNABLE_TRACKERS_ID = "admin-configuration-plannable-trackers";
 export const PERMISSION_PRIORITIZE_ID = "admin-configuration-permission-prioritize";
 
-export function initListPickersMilestoneSection(doc: Document, gettext_provider: GetText): void {
+export function initListPickersMilestoneSection(
+    doc: Document,
+    gettext_provider: GettextProvider,
+): void {
     const program_increment_tracker_element = doc.getElementById(PROGRAM_INCREMENT_TRACKER_ID);
 
     if (
@@ -82,7 +85,7 @@ function setIterationSection(
     doc: Document,
     program_increment_tracker_element: HTMLSelectElement,
     plannable_trackers_element: HTMLSelectElement,
-    gettext_provider: GetText,
+    gettext_provider: GettextProvider,
 ): void {
     const iteration_trackers_element = getHTMLSelectElementFromId(doc, ITERATION_SELECT_ID);
 

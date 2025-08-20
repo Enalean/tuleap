@@ -78,27 +78,6 @@ reason = "ckeditor4 code snippet GeSHi."
 id = "GHSA-j8xg-fqg3-53r7" # CVE-2023-26115
 reason = "ReDoS. No direct impact in our situation."
 
-# unplugin-vue2-script-setup via the transitive dep @antfu/utils
-[[IgnoredVulns]]
-id = "GHSA-p2fh-2h23-6grg" # CVE-2023-2972
-reason = "No impact in our situation, unplugin-vue2-script-setup will be removed when the Vue 2 migration is completed."
-
-# @vue/vue2-jest & vue-loader v15 via the transitive dep @vue/component-compiler-utils
-## postcss
-[[IgnoredVulns]]
-id = "GHSA-7fh5-64p2-3v2j" # CVE-2023-44270
-reason = "@vue/component-compiler-utils will be removed when the Vue 2 migration is completed."
-
-# vue-template-compiler (Vue 2)
-[[IgnoredVulns]]
-id = "GHSA-g3ch-rx76-35fx" # CVE-2024-6783
-reason = "No direct exploitation path, template are not compiled at runtime. The migration to move away from Vue 2 is underway."
-
-# vue 2
-[[IgnoredVulns]]
-id = "GHSA-5j4c-8p2g-v4jx" # CVE-2024-9506
-reason = "Vue 2 is EOL. Nothing in the codebase can trigger this ReDoS issue."
-
 # node-gettext
 [[IgnoredVulns]]
 id = "GHSA-g974-hxvm-x689" # CVE-2024-21528

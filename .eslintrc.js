@@ -182,34 +182,6 @@ module.exports = {
             },
         },
         {
-            // Configuration for remaining Vue 2 apps
-            files: [
-                "plugins/baseline/scripts/baseline/src/**/*.vue",
-                "plugins/testmanagement/scripts/step-definition-field/**/*.vue",
-                "plugins/timetracking/scripts/timetracking-overview-widget/**/*.vue",
-                "plugins/tracker/scripts/workflow-transitions/**/*.vue",
-                "src/scripts/project-services/src/**/*.vue",
-            ],
-            extends: ["plugin:vue/recommended"],
-            rules: {
-                "vue/html-indent": "off",
-                "vue/max-attributes-per-line": "off",
-                "@typescript-eslint/explicit-function-return-type": "off",
-                "@typescript-eslint/explicit-module-boundary-types": "off",
-                "no-var": "off",
-                "prefer-const": "off",
-                "vue/attributes-order": "off",
-                "vue/no-v-for-template-key": "off", //will be supported in vue3, we do not want template introduce div when we don't need them
-                "vue/no-v-for-template-key-on-child": "off", // Will be supported in Vue 3
-                "vue/prop-name-casing": "off", // This would be interesting, but the --fix does not rename all instances, which will silently break your code
-                // Vue 3 deprecations
-                "vue/no-deprecated-destroyed-lifecycle": "warn",
-                "vue/no-deprecated-functional-template": "warn",
-                "vue/no-deprecated-slot-attribute": "warn",
-                "vue/no-deprecated-v-on-native-modifier": "warn",
-            },
-        },
-        {
             files: [
                 "*.test.js",
                 "*.test.ts",
@@ -284,10 +256,15 @@ module.exports = {
             },
         },
         {
-            // Disable some rules enabled by the Vue 3 recommended rules  until remaining migrations compat issues can be resolved
+            // Disable some rules enabled by the Vue 3 recommended rules until remaining migrations compat issues can be resolved
             files: [
+                "plugins/baseline/scripts/baseline/src/**/*.vue",
                 "plugins/document/**/*.vue",
-                "plugins/pullrequest/scripts/create-pullrequest-button/**/*.vue", // Until migrated to Composition API + TypeScript
+                "plugins/pullrequest/scripts/create-pullrequest-button/**/*.vue",
+                "plugins/testmanagement/scripts/step-definition-field/**/*.vue",
+                "plugins/timetracking/scripts/timetracking-overview-widget/**/*.vue",
+                "plugins/tracker/scripts/workflow-transitions/**/*.vue",
+                "src/scripts/project-services/src/**/*.vue",
             ],
             rules: {
                 "@typescript-eslint/explicit-function-return-type": "off",

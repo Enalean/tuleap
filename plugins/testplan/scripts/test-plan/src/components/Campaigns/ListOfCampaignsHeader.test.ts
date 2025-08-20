@@ -19,7 +19,6 @@
 
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
-import { createStoreMock } from "@tuleap/vuex-store-wrapper-jest";
 import type { RootState } from "../../store/type";
 import type { Campaign } from "../../type";
 import type { CampaignState } from "../../store/campaign/type";
@@ -33,14 +32,6 @@ describe("ListOfCampaignsHeader", () => {
         show_create_modal = jest.fn(),
     ): VueWrapper<InstanceType<typeof ListOfCampaignsHeader>> {
         return shallowMount(ListOfCampaignsHeader, {
-            mocks: {
-                $store: createStoreMock({
-                    state: {
-                        user_can_create_campaign,
-                        campaign,
-                    } as RootState,
-                }),
-            },
             props: {
                 show_create_modal,
             },

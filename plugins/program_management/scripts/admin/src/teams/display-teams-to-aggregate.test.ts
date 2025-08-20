@@ -17,18 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 import { displayTeamsToAggregate } from "./display-teams-to-aggregate";
-import type { GetText } from "@tuleap/vue2-gettext-init";
 import * as listPicker from "@tuleap/list-picker";
+import type { GettextProvider } from "../GettextProvider";
 
 const createDocument = (): Document => document.implementation.createHTMLDocument();
 
 describe("DisplayTeamsToAggregate", () => {
     describe("displayTeamsToAggregate", () => {
-        const gettext: GetText = {
-            gettext: (msgid: string) => {
-                return msgid;
-            },
-        } as GetText;
+        const gettext: GettextProvider = {
+            gettext: (msgid: string) => msgid,
+        };
 
         it("Given document without list, Then error is thrown", () => {
             const doc = createDocument();

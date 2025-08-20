@@ -24,7 +24,6 @@
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*",
     "@tuleap/po-gettext-plugin": "workspace:^",
-    "@tuleap/vuex-store-wrapper-jest": "workspace:*",
     "@types/luxon": "^3.7.1",
     "@vitejs/plugin-vue": "^4.2.3",
     "@vue/test-utils": "^2.4.6",
