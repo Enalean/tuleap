@@ -84,11 +84,10 @@
     </form>
 </template>
 <script setup lang="ts">
-import { datePicker } from "tlp";
-import type { DatePickerInstance } from "tlp";
+import type { DatePickerInstance } from "@tuleap/tlp-date-picker";
+import { datePicker } from "@tuleap/tlp-date-picker";
 import { usePersonalTimetrackingWidgetStore } from "../store/root";
 import { onMounted, ref } from "vue";
-import type { Ref } from "vue";
 import { useGettext } from "vue3-gettext";
 import type {
     PeriodOption,
@@ -101,23 +100,22 @@ import { formatDatetimeToYearMonthDay } from "@tuleap/plugin-timetracking-time-f
 const { $gettext } = useGettext();
 const personal_store = usePersonalTimetrackingWidgetStore();
 
-let start_date_input: Ref<HTMLInputElement | undefined> = ref();
-let end_date_input: Ref<HTMLInputElement | undefined> = ref();
-let selected_option: Ref<PredefinedTimePeriod | ""> = ref(
+let start_date_input = ref<HTMLInputElement>();
+let end_date_input = ref<HTMLInputElement>();
+let selected_option = ref<PredefinedTimePeriod | "">(
     personal_store.selected_time_period.unwrapOr(""),
 );
 
 let start_date_picker: DatePickerInstance;
 let end_date_picker: DatePickerInstance;
 
-const predefined_time_period_select: Ref<PredefinedTimePeriodSelect | undefined> = ref();
-
-const isHTMLInputElement = (element: HTMLElement | undefined): element is HTMLInputElement => {
-    return element instanceof HTMLInputElement;
-};
+const predefined_time_period_select = ref<PredefinedTimePeriodSelect>();
 
 onMounted((): void => {
-    if (!isHTMLInputElement(start_date_input.value) || !isHTMLInputElement(end_date_input.value)) {
+    if (
+        !(start_date_input.value instanceof HTMLInputElement) ||
+        !(end_date_input.value instanceof HTMLInputElement)
+    ) {
         return;
     }
 
@@ -135,7 +133,7 @@ const resetSelectedOption = (): void => {
 };
 
 const setDatePickersValues = (
-    selected_time_period: PredefinedTimePeriod,
+    selected_time_period: PredefinedTimePeriod | "",
     period: PeriodOption,
 ): void => {
     selected_option.value = selected_time_period;
@@ -144,17 +142,15 @@ const setDatePickersValues = (
         end_date_picker.setDate(formatDatetimeToYearMonthDay(period.end));
     });
 
-    const isPredefinedTimePeriod = (
-        selected_option: PredefinedTimePeriod | "",
-    ): selected_option is PredefinedTimePeriod => selected_option !== "";
-
-    personal_store.selected_time_period = isPredefinedTimePeriod(selected_option.value)
-        ? Option.fromValue(selected_option.value)
-        : Option.nothing();
+    personal_store.selected_time_period =
+        selected_option.value === "" ? Option.nothing() : Option.fromValue(selected_option.value);
 };
 
 const changeDates = (): void => {
-    if (!isHTMLInputElement(start_date_input.value) || !isHTMLInputElement(end_date_input.value)) {
+    if (
+        !(start_date_input.value instanceof HTMLInputElement) ||
+        !(end_date_input.value instanceof HTMLInputElement)
+    ) {
         return;
     }
 

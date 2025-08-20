@@ -27,12 +27,14 @@ import type { Option } from "@tuleap/option";
 import { usePersonalTimetrackingWidgetStore } from "../store/root";
 import { PredefinedTimePeriodsVueStub } from "../../tests/stubs/PredefinedTimePeriodsVueStub";
 
-vi.mock("tlp", () => ({
-    datePicker: (): { setDate(): void } => ({
-        setDate: (): void => {
-            // Do nothing
-        },
-    }),
+vi.mock("@tuleap/tlp-date-picker", () => ({
+    datePicker(): { setDate(): void } {
+        return {
+            setDate(): void {
+                // Do nothing
+            },
+        };
+    },
 }));
 
 let selected_time_period: Option<PredefinedTimePeriod>;

@@ -15,6 +15,7 @@
     "@tuleap/plugin-timetracking-predefined-time-periods": "workspace:*",
     "@tuleap/plugin-timetracking-rest-api-types": "workspace:*",
     "@tuleap/plugin-timetracking-time-formatters": "workspace:*",
+    "@tuleap/tlp-date-picker": "workspace:^",
     "@tuleap/tlp-modal": "workspace:*",
     "@tuleap/tlp-popovers": "workspace:*",
     "@tuleap/vue3-gettext-init": "workspace:*",

@@ -25,7 +25,7 @@ import WidgetModalEditTime from "./WidgetModalEditTime.vue";
 import type { Artifact, PersonalTime } from "@tuleap/plugin-timetracking-rest-api-types";
 import { getGlobalTestOptions } from "../../../tests/global-options-for-tests";
 
-vi.mock("tlp", () => {
+vi.mock("@tuleap/tlp-date-picker", () => {
     return { datePicker: vi.fn() };
 });
 
