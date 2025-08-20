@@ -140,7 +140,7 @@ export const updateProperties = async (
                 item_to_update.title,
                 item_to_update.description,
                 item_to_update.owner.id,
-                typeof item_to_update.status === "string" ? item_to_update.status : null,
+                item_to_update.status,
                 obsolescence_date,
                 custom_properties,
             );
