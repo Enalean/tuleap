@@ -54,13 +54,20 @@
 
 <script setup lang="ts">
 import DocumentTitleLockInfo from "../Folder/LockInfo/DocumentTitleLockInfo.vue";
-import { useRoute } from "vue-router";
 import { useActions } from "vuex-composition-helpers";
 import { onBeforeMount, provide, ref } from "vue";
 import type { Item } from "../../type";
 import HistoryVersions from "./HistoryVersions.vue";
 import { isEmbedded, isFile, isLink } from "../../helpers/type-check-helper";
 import { FEEDBACK } from "../../injection-keys";
+import type { RootActionsRetrieve } from "../../store/actions-retrieve";
+import { useGettext } from "vue3-gettext";
+
+const { $gettext } = useGettext();
+
+const props = defineProps<{
+    item_id: number;
+}>();
 
 const success_feedback = ref<string | null>(null);
 
@@ -73,12 +80,14 @@ provide(FEEDBACK, {
 const item = ref<Item | null>(null);
 const item_type_has_versions = ref(false);
 
-const { loadDocumentWithAscendentHierarchy } = useActions(["loadDocumentWithAscendentHierarchy"]);
+const { loadDocumentWithAscendentHierarchy } = useActions<RootActionsRetrieve>([
+    "loadDocumentWithAscendentHierarchy",
+]);
 
-const route = useRoute();
 onBeforeMount(async () => {
-    item.value = await loadDocumentWithAscendentHierarchy(parseInt(route.params.item_id, 10));
-    if (item.value) {
+    const loaded_item = await loadDocumentWithAscendentHierarchy(props.item_id);
+    if (loaded_item) {
+        item.value = loaded_item;
         item_type_has_versions.value =
             isFile(item.value) || isLink(item.value) || isEmbedded(item.value);
     }

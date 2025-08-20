@@ -21,20 +21,21 @@
 <template>
     <span>
         <a
-            v-bind:href="props.user.user_url"
+            v-bind:href="user.user_url"
             class="document-badge-avatar-username"
-            v-if="!props.user.is_anonymous"
+            v-if="!user.is_anonymous"
             data-test="document-user-profile-link"
             data-shortcut-author
         >
-            {{ props.user.display_name }}
+            {{ user.display_name }}
         </a>
-        <span v-else class="document-badge-avatar-username">{{ props.user.display_name }}</span>
+        <span v-else class="document-badge-avatar-username">{{ user.display_name }}</span>
     </span>
 </template>
 
 <script setup lang="ts">
 import type { User } from "../../type";
+import type { RestUser } from "../../api/rest-querier";
 
-const props = defineProps<{ user: User }>();
+defineProps<{ user: User | RestUser }>();
 </script>

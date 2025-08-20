@@ -55,6 +55,7 @@ export class FolderBuilder {
                 has_avatar: false,
                 avatar_url: "",
                 user_url: "",
+                is_anonymous: false,
             },
             parent_id: this.parent_id,
             permissions_for_groups: {

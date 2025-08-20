@@ -65,6 +65,7 @@ export class ItemBuilder {
                 has_avatar: false,
                 avatar_url: "",
                 user_url: "",
+                is_anonymous: false,
             },
             parent_id: this.parent_id,
             post_processed_description: "",

@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import type { Mock } from "vitest";
+import type { MockInstance } from "vitest";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { Modal } from "@tuleap/tlp-modal";
 import { errAsync, okAsync } from "neverthrow";
@@ -25,20 +25,19 @@ import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import HistoryVersionsContentRowForEmbeddedFile from "./HistoryVersionsContentRowForEmbeddedFile.vue";
 import type { RestUser } from "../../api/rest-querier";
-import type { EmbeddedFileVersion, User } from "../../type";
+import type { Embedded, EmbeddedFileVersion } from "../../type";
 import { FEEDBACK } from "../../injection-keys";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 import * as VersionRestQuerier from "../../api/version-rest-querier";
 import * as tlp_modal from "@tuleap/tlp-modal";
 
 describe("HistoryVersionsContentRowForEmbeddedFile", () => {
-    let location: Pick<Location, "reload">;
     let loadVersions: () => void;
     let success: () => void;
-    let deleteEmbeddedFileVersion: Mock;
+    let deleteEmbeddedFileVersion: MockInstance;
 
     function getWrapper(
-        item: User,
+        item: Embedded,
         has_more_than_one_version: boolean,
     ): VueWrapper<InstanceType<typeof HistoryVersionsContentRowForEmbeddedFile>> {
         return shallowMount(HistoryVersionsContentRowForEmbeddedFile, {
@@ -54,20 +53,18 @@ describe("HistoryVersionsContentRowForEmbeddedFile", () => {
                     date: "2021-10-06",
                     author: { id: 102 } as unknown as RestUser,
                 } as EmbeddedFileVersion,
-                location,
                 loadVersions,
             },
             global: {
                 ...getGlobalTestOptions({}),
                 provide: {
-                    [FEEDBACK as symbol]: { success },
+                    [FEEDBACK.valueOf()]: { success },
                 },
             },
         });
     }
 
     beforeEach(() => {
-        location = { reload: vi.fn() };
         loadVersions = vi.fn();
         success = vi.fn();
         deleteEmbeddedFileVersion = vi.spyOn(VersionRestQuerier, "deleteEmbeddedFileVersion");
@@ -84,19 +81,19 @@ describe("HistoryVersionsContentRowForEmbeddedFile", () => {
     });
 
     it("should display a link to the approval table", () => {
-        const wrapper = getWrapper({ user_can_delete: true } as unknown as User, true);
+        const wrapper = getWrapper({ user_can_delete: true } as unknown as Embedded, true);
 
         expect(wrapper.find("[data-test=approval-link]").exists()).toBe(true);
     });
 
     it("should not display a delete button if user cannot delete", () => {
-        const wrapper = getWrapper({ user_can_delete: false } as unknown as User, true);
+        const wrapper = getWrapper({ user_can_delete: false } as unknown as Embedded, true);
 
         expect(wrapper.find("[data-test=delete-button]").exists()).toBe(false);
     });
 
     it("should display a disabled button if user can delete but there is only one version", () => {
-        const wrapper = getWrapper({ user_can_delete: true } as unknown as User, false);
+        const wrapper = getWrapper({ user_can_delete: true } as unknown as Embedded, false);
 
         const button = wrapper.find("[data-test=delete-button]").element;
         if (!(button instanceof HTMLButtonElement)) {
@@ -107,7 +104,7 @@ describe("HistoryVersionsContentRowForEmbeddedFile", () => {
     });
 
     it("should display a delete button if user can delete and there is more than one version", () => {
-        const wrapper = getWrapper({ user_can_delete: true } as unknown as User, true);
+        const wrapper = getWrapper({ user_can_delete: true } as unknown as Embedded, true);
 
         const button = wrapper.find("[data-test=delete-button]").element;
         if (!(button instanceof HTMLButtonElement)) {
@@ -120,7 +117,7 @@ describe("HistoryVersionsContentRowForEmbeddedFile", () => {
     it("should delete the version if user confirm the deletion and reload the versions to display latest data", async () => {
         deleteEmbeddedFileVersion.mockReturnValue(okAsync(null));
 
-        const wrapper = getWrapper({ user_can_delete: true } as unknown as User, true);
+        const wrapper = getWrapper({ user_can_delete: true } as unknown as Embedded, true);
 
         await wrapper.find("[data-test=confirm-button]").trigger("click");
 
@@ -132,7 +129,7 @@ describe("HistoryVersionsContentRowForEmbeddedFile", () => {
     it("should not reload anything if deletion of version failed", async () => {
         deleteEmbeddedFileVersion.mockReturnValue(errAsync(Fault.fromMessage("Oops!")));
 
-        const wrapper = getWrapper({ user_can_delete: true } as unknown as User, true);
+        const wrapper = getWrapper({ user_can_delete: true } as unknown as Embedded, true);
 
         await wrapper.find("[data-test=confirm-button]").trigger("click");
 

@@ -18,8 +18,6 @@
  *
  */
 
-import type { createGettext } from "vue3-gettext";
-
 declare module "*.vue" {
     import type { DefineComponent } from "vue";
     const component: DefineComponent;
@@ -39,12 +37,4 @@ declare module "*.pptx" {
 declare module "*.xlsx" {
     const value: string;
     export default value;
-}
-
-type Language = ReturnType<typeof createGettext>;
-declare module "vue" {
-    interface ComponentCustomProperties
-        extends Pick<Language, "$gettext" | "$pgettext" | "$ngettext" | "$npgettext"> {
-        $gettextInterpolate: Language["interpolate"];
-    }
 }

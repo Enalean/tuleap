@@ -308,6 +308,7 @@ export interface User {
     has_avatar: boolean;
     avatar_url: string;
     user_url: string;
+    is_anonymous: boolean;
 }
 
 export interface Permissions {

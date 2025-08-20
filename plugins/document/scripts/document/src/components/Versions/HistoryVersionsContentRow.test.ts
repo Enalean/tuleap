@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-import type { Mock } from "vitest";
+import type { MockInstance } from "vitest";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { Modal } from "@tuleap/tlp-modal";
 import { errAsync, okAsync } from "neverthrow";
@@ -36,7 +36,7 @@ describe("HistoryVersionsContentRow", () => {
     let location: Pick<Location, "reload">;
     let loadVersions: () => void;
     let success: () => void;
-    let deleteFileVersion: Mock;
+    let deleteFileVersion: MockInstance;
 
     function getWrapper(
         item: Item,
