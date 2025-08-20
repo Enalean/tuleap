@@ -21,6 +21,7 @@ import { describe, expect, it } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import UserBadge from "./UserBadge.vue";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
+import type { User } from "../../type";
 
 describe("UserBadge", () => {
     it(`Given user has avatar
@@ -33,7 +34,7 @@ describe("UserBadge", () => {
                     has_avatar: true,
                     user_url: "https://example.com/avatar",
                     is_anonymous: false,
-                },
+                } as unknown as User,
             },
             global: { ...getGlobalTestOptions({}) },
         });
@@ -51,8 +52,9 @@ describe("UserBadge", () => {
                     has_avatar: false,
                     user_url: "https://example.com/avatar",
                     is_anonymous: false,
-                },
+                } as unknown as User,
             },
+            global: { ...getGlobalTestOptions({}) },
         });
 
         expect(wrapper.find("[data-test=document-user-avatar]").exists()).toBeFalsy();
