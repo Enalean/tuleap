@@ -209,7 +209,7 @@ final class ImportPropertiesExtractorTest extends TestCase
             EOS
         );
 
-        self::expectException(UnknownItemTypeException::class);
+        $this->expectException(UnknownItemTypeException::class);
 
         $this->properties_extractor->getImportProperties($node);
     }

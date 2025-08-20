@@ -99,8 +99,8 @@ final class CustomMetadataRepresentationRetrieverTest extends TestCase
             CustomMetadataCollection::build([$project_field_representation, $project_list_representation])
         );
 
-        self::expectException(CustomMetadataException::class);
-        self::expectExceptionMessage('missing metadata keys: field_list_1');
+        $this->expectException(CustomMetadataException::class);
+        $this->expectExceptionMessage('missing metadata keys: field_list_1');
 
         $this->checker->checkAndRetrieveFormattedRepresentation($item, [$existing_metadata]);
     }
@@ -131,8 +131,8 @@ final class CustomMetadataRepresentationRetrieverTest extends TestCase
 
         $this->collection_builder->method('build')->willReturn(CustomMetadataCollection::build([$project_field_representation]));
 
-        self::expectException(CustomMetadataException::class);
-        self::expectExceptionMessage('missing required values for: field_text_1');
+        $this->expectException(CustomMetadataException::class);
+        $this->expectExceptionMessage('missing required values for: field_text_1');
 
         $this->checker->checkAndRetrieveFormattedRepresentation($item, [$existing_metadata]);
     }
@@ -163,8 +163,8 @@ final class CustomMetadataRepresentationRetrieverTest extends TestCase
 
         $this->collection_builder->method('build')->willReturn(CustomMetadataCollection::build([$project_field_representation]));
 
-        self::expectException(CustomMetadataException::class);
-        self::expectExceptionMessage('missing required values for: field_list_1');
+        $this->expectException(CustomMetadataException::class);
+        $this->expectExceptionMessage('missing required values for: field_list_1');
 
         $this->checker->checkAndRetrieveFormattedRepresentation($item, [$existing_metadata]);
     }
@@ -195,8 +195,8 @@ final class CustomMetadataRepresentationRetrieverTest extends TestCase
 
         $this->collection_builder->method('build')->willReturn(CustomMetadataCollection::build([$project_field_representation]));
 
-        self::expectException(CustomMetadataException::class);
-        self::expectExceptionMessage('missing required values for: field_text_1');
+        $this->expectException(CustomMetadataException::class);
+        $this->expectExceptionMessage('missing required values for: field_text_1');
 
         $this->checker->checkAndRetrieveFormattedRepresentation($item, [$existing_metadata]);
     }
@@ -289,8 +289,8 @@ final class CustomMetadataRepresentationRetrieverTest extends TestCase
 
         $this->collection_builder->method('build')->willReturn(CustomMetadataCollection::build([$project_field_representation]));
 
-        self::expectException(CustomMetadataException::class);
-        self::expectExceptionMessage('missing metadata keys: field_text_1');
+        $this->expectException(CustomMetadataException::class);
+        $this->expectExceptionMessage('missing metadata keys: field_text_1');
 
         $this->checker->checkAndRetrieveFormattedRepresentation($item, []);
     }
@@ -354,8 +354,8 @@ final class CustomMetadataRepresentationRetrieverTest extends TestCase
 
         $this->collection_builder->method('build')->willReturn(CustomMetadataCollection::build([$project_field_representation]));
 
-        self::expectException(CustomMetadataException::class);
-        self::expectExceptionMessage('metadata unknown_short_name is not found');
+        $this->expectException(CustomMetadataException::class);
+        $this->expectExceptionMessage('metadata unknown_short_name is not found');
 
         $this->checker->checkAndRetrieveFormattedRepresentation($item, [$unknown_metadata, $existing_metadata]);
     }
@@ -398,8 +398,8 @@ final class CustomMetadataRepresentationRetrieverTest extends TestCase
         $element_two = new Docman_MetadataListOfValuesElement();
         $element_two->initFromRow($value_two);
 
-        self::expectException(CustomMetadataException::class);
-        self::expectExceptionMessage('metadata field_list_1 is a multiple list');
+        $this->expectException(CustomMetadataException::class);
+        $this->expectExceptionMessage('metadata field_list_1 is a multiple list');
 
         $this->checker->checkAndRetrieveFormattedRepresentation($item, [$metadata]);
     }
@@ -433,8 +433,8 @@ final class CustomMetadataRepresentationRetrieverTest extends TestCase
 
         $this->collection_builder->method('build')->willReturn(CustomMetadataCollection::build([$project_field_representation]));
 
-        self::expectException(CustomMetadataException::class);
-        self::expectExceptionMessage('list field_list_1 has too many values');
+        $this->expectException(CustomMetadataException::class);
+        $this->expectExceptionMessage('list field_list_1 has too many values');
 
         $this->checker->checkAndRetrieveFormattedRepresentation($item, [$metadata]);
     }
@@ -467,8 +467,8 @@ final class CustomMetadataRepresentationRetrieverTest extends TestCase
 
         $this->collection_builder->method('build')->willReturn(CustomMetadataCollection::build([$project_field_representation]));
 
-        self::expectException(CustomMetadataException::class);
-        self::expectExceptionMessage('metadata field_text_1 is not a list and a list_value is provided');
+        $this->expectException(CustomMetadataException::class);
+        $this->expectExceptionMessage('metadata field_text_1 is not a list and a list_value is provided');
 
         $this->checker->checkAndRetrieveFormattedRepresentation($item, [$metadata]);
     }
@@ -502,8 +502,8 @@ final class CustomMetadataRepresentationRetrieverTest extends TestCase
 
         $this->collection_builder->method('build')->willReturn(CustomMetadataCollection::build([$project_field_representation]));
 
-        self::expectException(CustomMetadataException::class);
-        self::expectExceptionMessage('list field_list_1 has too many values');
+        $this->expectException(CustomMetadataException::class);
+        $this->expectExceptionMessage('list field_list_1 has too many values');
 
         $this->checker->checkAndRetrieveFormattedRepresentation($item, [$metadata]);
     }
@@ -534,8 +534,8 @@ final class CustomMetadataRepresentationRetrieverTest extends TestCase
 
         $this->list_values_builder->method('build')->with(1, true)->willReturn([$element, $element_two]);
 
-        self::expectException(CustomMetadataException::class);
-        self::expectExceptionMessage('value: 999 are unknown for metadata field_list_1');
+        $this->expectException(CustomMetadataException::class);
+        $this->expectExceptionMessage('value: 999 are unknown for metadata field_list_1');
 
         $this->factory->expects($this->once())->method('appendItemMetadataList');
 
@@ -774,8 +774,8 @@ final class CustomMetadataRepresentationRetrieverTest extends TestCase
 
         $this->collection_builder->method('build')->willReturn(CustomMetadataCollection::build([$project_field_representation]));
 
-        self::expectException(CustomMetadataException::class);
-        self::expectExceptionMessage('metadata unknown_short_name is not found');
+        $this->expectException(CustomMetadataException::class);
+        $this->expectExceptionMessage('metadata unknown_short_name is not found');
 
         $this->checker->checkAndRetrieveFileFormattedRepresentation($item, [$unknown_metadata, $existing_metadata]);
     }

@@ -83,7 +83,7 @@ final class MetadataValueStoreTest extends TestCase
         $metadata_value = new Docman_MetadataValueScalar();
         $metadata_value->setType(1233);
 
-        self::expectException(MetadataDoesNotExistException::class);
+        $this->expectException(MetadataDoesNotExistException::class);
         $this->store->storeMetadata($metadata_value, 102);
     }
 
@@ -123,7 +123,7 @@ final class MetadataValueStoreTest extends TestCase
         $metadata_value = new Docman_MetadataValueScalar();
         $metadata_value->setType(1233);
 
-        self::expectException(MetadataDoesNotExistException::class);
+        $this->expectException(MetadataDoesNotExistException::class);
         $this->store->updateMetadata($metadata_value, 102);
     }
 }

@@ -37,7 +37,7 @@ class GlyphFinderTest extends \Tuleap\Test\PHPUnit\TestCase
         $event_manager->method('processEvent');
         $glyph_finder = new GlyphFinder($event_manager);
 
-        self::expectException(GlyphNotFoundException::class);
+        $this->expectException(GlyphNotFoundException::class);
 
         $glyph_finder->get('does-not-exist');
     }

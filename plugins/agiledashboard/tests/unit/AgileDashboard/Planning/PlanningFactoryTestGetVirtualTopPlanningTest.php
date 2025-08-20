@@ -62,7 +62,7 @@ final class PlanningFactoryTestGetVirtualTopPlanningTest extends TestCase
 
     public function testItThrowsAnExceptionIfNoPlanningsExistForProject(): void
     {
-        self::expectException(Planning_NoPlanningsException::class);
+        $this->expectException(Planning_NoPlanningsException::class);
 
         $this->partial_factory->method('getRootPlanning')->willReturn(false);
         $this->partial_factory->getVirtualTopPlanning(UserTestBuilder::buildWithDefaults(), 112);

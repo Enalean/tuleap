@@ -105,7 +105,7 @@ final class PluginTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $plugin = $this->getFakePluginToTestHooks();
 
-        self::expectException(Exception::class);
+        $this->expectException(Exception::class);
         $plugin->addHook('conflict_in_callbacks');
     }
 
@@ -113,7 +113,7 @@ final class PluginTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $plugin = $this->getFakePluginToTestHooks();
 
-        self::expectException(Exception::class);
+        $this->expectException(Exception::class);
         $plugin->addHook('no_callback_defined');
     }
 
@@ -333,7 +333,7 @@ final class PluginTest extends \Tuleap\Test\PHPUnit\TestCase
             {
             }
         };
-        self::expectException(Exception::class);
+        $this->expectException(Exception::class);
         $plugin->addHook('bla');
         $plugin->addHook('bla');
     }
@@ -527,7 +527,7 @@ final class PluginTest extends \Tuleap\Test\PHPUnit\TestCase
             }
         };
 
-        self::expectException(LogicException::class);
+        $this->expectException(LogicException::class);
 
         $plugin->getHooksAndCallbacks();
     }

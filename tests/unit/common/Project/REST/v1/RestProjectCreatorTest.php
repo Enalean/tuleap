@@ -136,7 +136,7 @@ final class RestProjectCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
             new MaxNumberOfProjectReachedForPlatformException()
         );
 
-        self::expectException(RestException::class);
+        $this->expectException(RestException::class);
 
         $creator->create(
             $this->project_post_representation,

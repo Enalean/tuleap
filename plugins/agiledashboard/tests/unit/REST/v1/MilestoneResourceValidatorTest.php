@@ -148,7 +148,7 @@ final class MilestoneResourceValidatorTest extends TestCase
 
     public function testItThrowsAnExceptionIfArtifactIdIsPassedSeveralTime(): void
     {
-        self::expectException(IdsFromBodyAreNotUniqueException::class);
+        $this->expectException(IdsFromBodyAreNotUniqueException::class);
 
         $ids = [102, 174, 102];
 
@@ -157,7 +157,7 @@ final class MilestoneResourceValidatorTest extends TestCase
 
     public function testItThrowsAnExceptionIfArtifactIdDoesNotExist(): void
     {
-        self::expectException(ArtifactDoesNotExistException::class);
+        $this->expectException(ArtifactDoesNotExistException::class);
 
         $this->tracker_artifact_factory->method('getArtifactById')->willReturn(null);
         $this->planning_factory->method('getBacklogTrackersIds')
@@ -173,7 +173,7 @@ final class MilestoneResourceValidatorTest extends TestCase
 
     public function testItThrowsAnExceptionIfArtifactIsNotInBacklogTracker(): void
     {
-        self::expectException(ArtifactIsNotInBacklogTrackerException::class);
+        $this->expectException(ArtifactIsNotInBacklogTrackerException::class);
 
         $this->planning_factory->method('getBacklogTrackersIds')
             ->with($this->milestone->getPlanning()->getId())
@@ -189,7 +189,7 @@ final class MilestoneResourceValidatorTest extends TestCase
 
     public function testItThrowsAnExceptionIfArtifactIsClosedOrAlreadyPlannedInAnotherMilestone(): void
     {
-        self::expectException(ArtifactIsClosedOrAlreadyPlannedInAnotherMilestone::class);
+        $this->expectException(ArtifactIsClosedOrAlreadyPlannedInAnotherMilestone::class);
 
         $this->unplanned_collection->push($this->unplanned_item);
 
@@ -228,7 +228,7 @@ final class MilestoneResourceValidatorTest extends TestCase
 
     public function testItForbidsToRemoveFromContentWhenRemovedIdsArePartOfLinkedArtifacts(): void
     {
-        self::expectException(ArtifactIsNotInMilestoneContentException::class);
+        $this->expectException(ArtifactIsNotInMilestoneContentException::class);
         $this->getMockedValidator()->getValidatedArtifactsIdsToAddOrRemoveFromContent(
             $this->user,
             $this->mockMilestoneWithArtifactLinks(),

@@ -70,7 +70,7 @@ final class UGroupRemoveUserTest extends \Tuleap\Test\PHPUnit\TestCase
             ->getMock();
         $ugroup->method('exists')->willReturn(false);
 
-        self::expectException(UGroup_Invalid_Exception::class);
+        $this->expectException(UGroup_Invalid_Exception::class);
 
         $ugroup->removeUser($this->user, $this->project_administrator);
     }
@@ -95,7 +95,7 @@ final class UGroupRemoveUserTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $ugroup = new ProjectUGroup(['ugroup_id' => $ugroup_id]);
 
-        self::expectException(\Exception::class);
+        $this->expectException(\Exception::class);
 
         $ugroup->removeUser($this->user, $this->project_administrator);
     }
@@ -106,7 +106,7 @@ final class UGroupRemoveUserTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $ugroup = new ProjectUGroup(['group_id' => $group_id]);
 
-        self::expectException(UGroup_Invalid_Exception::class);
+        $this->expectException(UGroup_Invalid_Exception::class);
 
         $ugroup->removeUser($this->user, $this->project_administrator);
     }
@@ -118,7 +118,7 @@ final class UGroupRemoveUserTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $ugroup = new ProjectUGroup(['group_id' => $group_id, 'ugroup_id' => $ugroup_id]);
 
-        self::expectException(\Exception::class);
+        $this->expectException(\Exception::class);
 
         $user = new PFUser(['user_id' => 0, 'language_id' => 'en_US']);
 

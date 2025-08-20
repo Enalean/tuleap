@@ -55,7 +55,7 @@ class LicenseAgreementFactoryTest extends TestCase
 
     public function testGetLicenseAgreementOnNonExistingPackageShouldRaiseAnException(): void
     {
-        self::expectException(InvalidLicenseAgreementException::class);
+        $this->expectException(InvalidLicenseAgreementException::class);
 
         $this->factory->getLicenseAgreementForPackage(new FRSPackage([]));
     }
@@ -72,7 +72,7 @@ class LicenseAgreementFactoryTest extends TestCase
     {
         ForgeConfig::set('sys_frs_license_mandatory', true);
 
-        self::expectException(InvalidLicenseAgreementException::class);
+        $this->expectException(InvalidLicenseAgreementException::class);
 
         $this->factory->updateLicenseAgreementForPackage($this->project, $this->package, -1);
     }
@@ -98,7 +98,7 @@ class LicenseAgreementFactoryTest extends TestCase
     {
         $this->dao->expects($this->once())->method('isLicenseAgreementValidForProject')->with($this->project, 5)->willReturn(false);
 
-        self::expectException(InvalidLicenseAgreementException::class);
+        $this->expectException(InvalidLicenseAgreementException::class);
 
         $this->factory->updateLicenseAgreementForPackage($this->project, $this->package, 5);
     }
@@ -185,7 +185,7 @@ class LicenseAgreementFactoryTest extends TestCase
 
         $this->dao->expects($this->never())->method('delete');
 
-        self::expectException(InvalidLicenseAgreementException::class);
+        $this->expectException(InvalidLicenseAgreementException::class);
 
         $this->factory->delete($this->project, $license);
     }
@@ -196,7 +196,7 @@ class LicenseAgreementFactoryTest extends TestCase
 
         $this->dao->expects($this->never())->method('delete');
 
-        self::expectException(InvalidLicenseAgreementException::class);
+        $this->expectException(InvalidLicenseAgreementException::class);
 
         $this->factory->delete($this->project, $license);
     }
@@ -207,7 +207,7 @@ class LicenseAgreementFactoryTest extends TestCase
 
         $this->dao->expects($this->never())->method('delete');
 
-        self::expectException(InvalidLicenseAgreementException::class);
+        $this->expectException(InvalidLicenseAgreementException::class);
 
         $this->factory->delete($this->project, $license);
     }

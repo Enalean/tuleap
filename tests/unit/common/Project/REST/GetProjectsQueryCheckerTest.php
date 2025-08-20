@@ -71,8 +71,8 @@ class GetProjectsQueryCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $json_query = ['whatever' => true];
 
-        self::expectException(RestException::class);
-        self::expectExceptionCode(400);
+        $this->expectException(RestException::class);
+        $this->expectExceptionCode(400);
 
         $this->checker->checkQuery($json_query, false);
     }
@@ -82,8 +82,8 @@ class GetProjectsQueryCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->event_manager->method('processEvent');
         $json_query = ['whatever' => true];
 
-        self::expectException(RestException::class);
-        self::expectExceptionCode(400);
+        $this->expectException(RestException::class);
+        $this->expectExceptionCode(400);
 
         $this->checker->checkQuery($json_query, false);
     }
@@ -93,8 +93,8 @@ class GetProjectsQueryCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->event_manager->method('processEvent');
         $json_query = ['is_member_of' => false];
 
-        self::expectException(RestException::class);
-        self::expectExceptionCode(400);
+        $this->expectException(RestException::class);
+        $this->expectExceptionCode(400);
 
         $this->checker->checkQuery($json_query, false);
     }
@@ -104,8 +104,8 @@ class GetProjectsQueryCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->event_manager->method('processEvent');
         $json_query = ['is_tracker_admin' => false];
 
-        self::expectException(RestException::class);
-        self::expectExceptionCode(400);
+        $this->expectException(RestException::class);
+        $this->expectExceptionCode(400);
 
         $this->checker->checkQuery($json_query, false);
     }
@@ -115,8 +115,8 @@ class GetProjectsQueryCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->event_manager->method('processEvent');
         $json_query = ['with_status' => true];
 
-        self::expectException(RestException::class);
-        self::expectExceptionCode(403);
+        $this->expectException(RestException::class);
+        $this->expectExceptionCode(403);
 
         $this->checker->checkQuery($json_query, false);
     }
@@ -126,8 +126,8 @@ class GetProjectsQueryCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->event_manager->method('processEvent');
         $json_query = ['with_status' => false];
 
-        self::expectException(RestException::class);
-        self::expectExceptionCode(400);
+        $this->expectException(RestException::class);
+        $this->expectExceptionCode(400);
 
         $this->checker->checkQuery($json_query, true);
     }

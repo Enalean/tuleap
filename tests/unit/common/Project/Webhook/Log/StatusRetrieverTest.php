@@ -51,7 +51,7 @@ final class StatusRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $retriever = new StatusRetriever($dao);
 
-        self::expectException(\Tuleap\Project\Webhook\Log\StatusDataAccessException::class);
+        $this->expectException(\Tuleap\Project\Webhook\Log\StatusDataAccessException::class);
         $retriever->getMostRecentStatus($webhook);
     }
 }

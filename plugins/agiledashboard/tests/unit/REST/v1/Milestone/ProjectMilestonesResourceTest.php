@@ -113,7 +113,7 @@ namespace Tuleap\AgileDashboard\REST\v1\Milestone {
             $project = ProjectTestBuilder::aProject()->build();
             $query   = 'null';
 
-            self::expectExceptionCode(400);
+            $this->expectExceptionCode(400);
             $this->controller->get($user, $project, MilestoneRepresentation::SLIM, $query, 50, 0, 'asc');
         }
 

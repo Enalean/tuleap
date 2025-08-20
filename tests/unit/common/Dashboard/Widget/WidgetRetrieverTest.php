@@ -159,7 +159,7 @@ class WidgetRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $dao->method('searchWidgetById')->willReturn(\TestHelper::emptyDar());
 
-        self::expectException(\Exception::class);
+        $this->expectException(\Exception::class);
 
         $retriever->getWidgetById(1);
     }

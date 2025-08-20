@@ -78,7 +78,7 @@ final class TimeframeChangesetFieldsValueRetrieverTest extends TestCase
             ChangesetValueDateTestBuilder::aValue(101, $this->changeset, $date_field)->withTimestamp(1234567890)->build()
         );
 
-        self::expectException(TimeframeFieldNotFoundException::class);
+        $this->expectException(TimeframeFieldNotFoundException::class);
 
         TimeframeChangesetFieldsValueRetriever::getTimestamp(
             $date_field,
@@ -128,7 +128,7 @@ final class TimeframeChangesetFieldsValueRetrieverTest extends TestCase
             ChangesetValueIntegerTestBuilder::aValue(101, $this->changeset, $duration_field)->withValue(50)->build()
         );
 
-        self::expectException(TimeframeFieldNotFoundException::class);
+        $this->expectException(TimeframeFieldNotFoundException::class);
 
         TimeframeChangesetFieldsValueRetriever::getDurationFieldValue(
             $duration_field,

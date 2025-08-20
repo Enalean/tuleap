@@ -122,7 +122,7 @@ final class XMLExporterTest extends TestCase
 
         $plannings = [$planning];
 
-        self::expectException(AgileDashboard_XMLExporterUnableToGetValueException::class);
+        $this->expectException(AgileDashboard_XMLExporterUnableToGetValueException::class);
 
         $this->exporter->exportPlannings($this->agiledasboard_node, $plannings);
     }
@@ -139,7 +139,7 @@ final class XMLExporterTest extends TestCase
 
         $plannings = [$planning];
 
-        self::expectException(AgileDashboard_XMLExporterUnableToGetValueException::class);
+        $this->expectException(AgileDashboard_XMLExporterUnableToGetValueException::class);
 
         $this->exporter->exportPlannings($this->agiledasboard_node, $plannings);
     }
@@ -156,7 +156,7 @@ final class XMLExporterTest extends TestCase
 
         $plannings = [$planning];
 
-        self::expectException(AgileDashboard_XMLExporterUnableToGetValueException::class);
+        $this->expectException(AgileDashboard_XMLExporterUnableToGetValueException::class);
 
         $this->exporter->exportPlannings($this->agiledasboard_node, $plannings);
     }
@@ -173,7 +173,7 @@ final class XMLExporterTest extends TestCase
 
         $plannings = [$planning];
 
-        self::expectException(AgileDashboard_XMLExporterUnableToGetValueException::class);
+        $this->expectException(AgileDashboard_XMLExporterUnableToGetValueException::class);
 
         $this->exporter->exportPlannings($this->agiledasboard_node, $plannings);
     }
@@ -191,7 +191,7 @@ final class XMLExporterTest extends TestCase
         $plannings = [$planning];
 
         $this->planning_permissions_manager->method('getGroupIdsWhoHasPermissionOnPlanning');
-        self::expectException(AgileDashboard_XMLExporterUnableToGetValueException::class);
+        $this->expectException(AgileDashboard_XMLExporterUnableToGetValueException::class);
 
         $this->exporter->exportPlannings($this->agiledasboard_node, $plannings);
     }

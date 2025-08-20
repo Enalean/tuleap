@@ -147,7 +147,7 @@ final class MilestoneElementAdderTest extends TestCase
         $this->resources_patcher->expects($this->never())->method('removeArtifactFromSource');
         $this->explicit_backlog_dao->expects($this->never())->method('isProjectUsingExplicitBacklog');
 
-        self::expectException(ProvidedAddedIdIsNotInPartOfTopBacklogException::class);
+        $this->expectException(ProvidedAddedIdIsNotInPartOfTopBacklogException::class);
 
         $this->adder->addElementToBacklog($project, $add, $user);
     }
@@ -168,7 +168,7 @@ final class MilestoneElementAdderTest extends TestCase
         $this->resources_patcher->expects($this->never())->method('removeArtifactFromSource');
         $this->explicit_backlog_dao->expects($this->never())->method('isProjectUsingExplicitBacklog');
 
-        self::expectException(NoRootPlanningException::class);
+        $this->expectException(NoRootPlanningException::class);
 
         $this->adder->addElementToBacklog($project, $add, $user);
     }

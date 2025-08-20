@@ -99,8 +99,8 @@ final class DocmanItemMoverTest extends TestCase
 
         $this->item_factory->method('getItemFromDb')->willReturn(null);
 
-        self::expectException(RestException::class);
-        self::expectExceptionCode(404);
+        $this->expectException(RestException::class);
+        $this->expectExceptionCode(404);
         $this->item_mover->moveItem(
             new DateTimeImmutable(),
             new Docman_Item(),
@@ -118,8 +118,8 @@ final class DocmanItemMoverTest extends TestCase
 
         $this->permissions_manager->method('userCanAccess')->willReturn(false);
 
-        self::expectException(RestException::class);
-        self::expectExceptionCode(404);
+        $this->expectException(RestException::class);
+        $this->expectExceptionCode(404);
         $this->item_mover->moveItem(
             new DateTimeImmutable(),
             new Docman_Item(),
@@ -141,8 +141,8 @@ final class DocmanItemMoverTest extends TestCase
 
         $item_to_move = new Docman_Item(['group_id' => 102]);
 
-        self::expectException(RestException::class);
-        self::expectExceptionCode(400);
+        $this->expectException(RestException::class);
+        $this->expectExceptionCode(400);
         $this->item_mover->moveItem(
             new DateTimeImmutable(),
             $item_to_move,
@@ -164,8 +164,8 @@ final class DocmanItemMoverTest extends TestCase
 
         $item_to_move = new Docman_Item(['group_id' => 102, 'parent_id' => $destination_folder_id]);
 
-        self::expectException(RestException::class);
-        self::expectExceptionCode(400);
+        $this->expectException(RestException::class);
+        $this->expectExceptionCode(400);
         $this->item_mover->moveItem(
             new DateTimeImmutable(),
             $item_to_move,
@@ -188,8 +188,8 @@ final class DocmanItemMoverTest extends TestCase
 
         $item_to_move = new Docman_Item(['item_id' => 123, 'group_id' => 102, 'parent_id' => 146]);
 
-        self::expectException(RestException::class);
-        self::expectExceptionCode(400);
+        $this->expectException(RestException::class);
+        $this->expectExceptionCode(400);
         $this->item_mover->moveItem(
             new DateTimeImmutable(),
             $item_to_move,
@@ -220,8 +220,8 @@ final class DocmanItemMoverTest extends TestCase
 
         $item_to_move->method('accept')->with(self::isInstanceOf(BeforeMoveVisitor::class), self::anything());
 
-        self::expectException(RestException::class);
-        self::expectExceptionCode(403);
+        $this->expectException(RestException::class);
+        $this->expectExceptionCode(403);
         $this->item_mover->moveItem(
             new DateTimeImmutable(),
             $item_to_move,
@@ -252,8 +252,8 @@ final class DocmanItemMoverTest extends TestCase
 
         $item_to_move->method('accept')->with(self::isInstanceOf(BeforeMoveVisitor::class), self::anything());
 
-        self::expectException(RestException::class);
-        self::expectExceptionCode(403);
+        $this->expectException(RestException::class);
+        $this->expectExceptionCode(403);
         $this->item_mover->moveItem(
             new DateTimeImmutable(),
             $item_to_move,

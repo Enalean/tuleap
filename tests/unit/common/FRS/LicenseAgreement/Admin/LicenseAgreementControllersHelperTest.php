@@ -76,7 +76,7 @@ class LicenseAgreementControllersHelperTest extends TestCase
         $this->permissions_manager->method('isAdmin')->with($this->project, $this->current_user)->willReturn(true);
         $this->project->method('getService')->with(\Service::FILE)->willReturn(null);
 
-        self::expectException(NotFoundException::class);
+        $this->expectException(NotFoundException::class);
 
         $this->helper->assertCanAccess($this->project, $this->current_user);
     }
@@ -85,7 +85,7 @@ class LicenseAgreementControllersHelperTest extends TestCase
     {
         $this->permissions_manager->method('isAdmin')->with($this->project, $this->current_user)->willReturn(false);
 
-        self::expectException(ForbiddenException::class);
+        $this->expectException(ForbiddenException::class);
 
         $this->helper->assertCanAccess($this->project, $this->current_user);
     }

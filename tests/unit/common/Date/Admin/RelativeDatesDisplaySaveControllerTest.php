@@ -74,7 +74,7 @@ final class RelativeDatesDisplaySaveControllerTest extends \Tuleap\Test\PHPUnit\
         $this->config_dao->expects($this->once())->method('save');
         $this->preferences_dao->expects($this->never())->method('deletePreferenceForAllUsers');
 
-        self::expectException(LayoutInspectorRedirection::class);
+        $this->expectException(LayoutInspectorRedirection::class);
         $this->controller->process($request, $layout, []);
     }
 
@@ -91,7 +91,7 @@ final class RelativeDatesDisplaySaveControllerTest extends \Tuleap\Test\PHPUnit\
         $this->config_dao->expects($this->once())->method('save');
         $this->preferences_dao->expects($this->once())->method('deletePreferenceForAllUsers');
 
-        self::expectException(LayoutInspectorRedirection::class);
+        $this->expectException(LayoutInspectorRedirection::class);
         $this->controller->process($request, $layout, []);
     }
 }

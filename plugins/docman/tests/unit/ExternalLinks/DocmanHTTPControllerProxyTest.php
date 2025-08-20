@@ -46,7 +46,7 @@ final class DocmanHTTPControllerProxyTest extends TestCase
         $project->method('getID')->willReturn(null);
         $request->setProject($project);
 
-        self::expectException(NotFoundException::class);
+        $this->expectException(NotFoundException::class);
         $controller_proxy->process($request, UserTestBuilder::aUser()->build());
     }
 }

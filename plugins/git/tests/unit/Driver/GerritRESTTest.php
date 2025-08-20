@@ -157,7 +157,7 @@ final class GerritRESTTest extends TestCase
     {
         $this->http_client->addResponse($this->response_factory->createResponse(400));
 
-        self::expectException(ProjectDeletionException::class);
+        $this->expectException(ProjectDeletionException::class);
         $this->driver->deleteProject($this->gerrit_server, 'project');
         self::assertTrue($this->logger->hasInfoRecords());
         self::assertTrue($this->logger->hasErrorRecords());
@@ -456,7 +456,7 @@ final class GerritRESTTest extends TestCase
             $this->response_factory->createResponse(500)
         );
 
-        self::expectException(Git_Driver_Gerrit_Exception::class);
+        $this->expectException(Git_Driver_Gerrit_Exception::class);
         $this->driver->createProject(
             $this->gerrit_server,
             $this->buildGitRepository('project', 'repo'),

@@ -65,7 +65,7 @@ final class CommitStatusCreatorTest extends TestCase
     {
         $this->git_exec->method('doesObjectExists')->willReturn(false);
 
-        self::expectException(CommitDoesNotExistException::class);
+        $this->expectException(CommitDoesNotExistException::class);
 
         $this->commit_status_creator->createCommitStatus(
             $this->repository,
@@ -80,7 +80,7 @@ final class CommitStatusCreatorTest extends TestCase
         $this->git_exec->method('doesObjectExists')->willReturn(true);
         $this->git_exec->method('getObjectType')->willReturn('tag');
 
-        self::expectException(InvalidCommitReferenceException::class);
+        $this->expectException(InvalidCommitReferenceException::class);
 
         $this->commit_status_creator->createCommitStatus(
             $this->repository,

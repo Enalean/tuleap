@@ -86,7 +86,7 @@ final class DestinationCloneItemTest extends TestCase
         $item_factory = $this->createMock(Docman_ItemFactory::class);
         $item_factory->method('getRoot')->willReturn(new Docman_Folder());
 
-        self::expectException(LogicException::class);
+        $this->expectException(LogicException::class);
         DestinationCloneItem::fromDestinationProject(
             $item_factory,
             $project,

@@ -1,248 +1,249 @@
 <?xml version="1.0"?>
 <ruleset
-    name="Tuleap_Not_PSR"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:noNamespaceSchemaLocation="../../src/vendor/squizlabs/php_codesniffer/phpcs.xsd"
+  name="Tuleap_Not_PSR"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:noNamespaceSchemaLocation="../../src/vendor/squizlabs/php_codesniffer/phpcs.xsd"
 >
-    <description>Tuleap rules not PSR related.</description>
+  <description>Tuleap rules not PSR related.</description>
 
-    <config name="installed_paths" value="../../slevomat/coding-standard"/>
+  <config name="installed_paths" value="../../slevomat/coding-standard"/>
 
-    <exclude-pattern>*/vendor/*</exclude-pattern>
-    <exclude-pattern>*/node_modules/*</exclude-pattern>
-    <exclude-pattern>*/src/www/assets/*</exclude-pattern>
-    <exclude-pattern>*/plugins/**/frontend-assets/*</exclude-pattern>
-    <exclude-pattern>*/plugins/**/backend-assets/*</exclude-pattern>
-    <exclude-pattern>*/tests/phpcs/tests/Sniffs/*/_fixtures/*</exclude-pattern>
-    <exclude-pattern>*/plugins/mediawiki_standalone/additional-packages/mediawiki-extensions-1.35/*</exclude-pattern>
-    <exclude-pattern>*/plugins/mediawiki_standalone/additional-packages/mediawiki-extensions-current-lts/*</exclude-pattern>
+  <exclude-pattern>*/vendor/*</exclude-pattern>
+  <exclude-pattern>*/node_modules/*</exclude-pattern>
+  <exclude-pattern>*/src/www/assets/*</exclude-pattern>
+  <exclude-pattern>*/plugins/**/frontend-assets/*</exclude-pattern>
+  <exclude-pattern>*/plugins/**/backend-assets/*</exclude-pattern>
+  <exclude-pattern>*/tests/phpcs/tests/Sniffs/*/_fixtures/*</exclude-pattern>
+  <exclude-pattern>*/plugins/mediawiki_standalone/additional-packages/mediawiki-extensions-1.35/*</exclude-pattern>
+  <exclude-pattern>*/plugins/mediawiki_standalone/additional-packages/mediawiki-extensions-current-lts/*</exclude-pattern>
 
-    <!-- Forbid useless semicolon `;` -->
-    <rule ref="SlevomatCodingStandard.PHP.UselessSemicolon"/>
-    <!-- Forbid blank line after function opening brace -->
-    <rule ref="Squiz.WhiteSpace.FunctionOpeningBraceSpace"/>
+  <!-- Forbid useless semicolon `;` -->
+  <rule ref="SlevomatCodingStandard.PHP.UselessSemicolon"/>
+  <!-- Forbid blank line after function opening brace -->
+  <rule ref="Squiz.WhiteSpace.FunctionOpeningBraceSpace"/>
 
-    <!-- Spacing-->
-    <!-- Forbid spaces around square brackets -->
-    <rule ref="Squiz.Arrays.ArrayBracketSpacing"/>
-    <!-- Require that single line arrays have the correct spacing: no space around brackets and one space after comma -->
-    <rule ref="SlevomatCodingStandard.Arrays.SingleLineArrayWhitespace"/>
-    <!-- Force space after ! -->
-    <rule ref="Generic.Formatting.SpaceAfterNot"/>
-    <!-- Force space after language constructs -->
-    <rule ref="Generic.WhiteSpace.LanguageConstructSpacing"/>
-    <!-- Force space around logical operators -->
-    <rule ref="Squiz.WhiteSpace.LogicalOperatorSpacing"/>
-    <!-- Forbid space around typehint union (Ok|Err) and force replacing Type|null by ?Type -->)
-    <rule ref="SlevomatCodingStandard.TypeHints.DNFTypeHintFormat">
-        <properties>
-            <property name="enable" value="yes"/>
-            <property name="withSpacesAroundOperators" value="no"/>
-            <property name="withSpacesInsideParentheses" value="no"/>
-            <property name="shortNullable" value="yes"/>
-            <property name="nullPosition" value="last"/>
-        </properties>
-    </rule>
-    <!-- Force space after a type cast -->
-    <rule ref="Generic.Formatting.SpaceAfterCast"/>
-    <!-- Forbid space between increment/decrement operator and its operand -->
-    <rule ref="Generic.WhiteSpace.IncrementDecrementSpacing"/>
-    <!-- Forbid spaces in type casts -->
-    <rule ref="Squiz.WhiteSpace.CastSpacing"/>
-    <!-- Forbid spaces before semicolon `;` -->
-    <rule ref="Squiz.WhiteSpace.SemicolonSpacing"/>
-    <!-- Forbid spaces around `->` operator -->
-    <rule ref="Squiz.WhiteSpace.ObjectOperatorSpacing">
-        <properties>
-            <property name="ignoreNewlines" value="true"/>
-        </properties>
-    </rule>
-    <!-- Forbid spaces before semicolon `;` -->
-    <rule ref="Squiz.WhiteSpace.SemicolonSpacing"/>
-    <!-- Force whitespace after a type cast -->
-    <rule ref="Generic.Formatting.SpaceAfterCast">
-        <properties>
-            <property name="spacing" value="1"/>
-        </properties>
-    </rule>
+  <!-- Spacing-->
+  <!-- Forbid spaces around square brackets -->
+  <rule ref="Squiz.Arrays.ArrayBracketSpacing"/>
+  <!-- Require that single line arrays have the correct spacing: no space around brackets and one space after comma -->
+  <rule ref="SlevomatCodingStandard.Arrays.SingleLineArrayWhitespace"/>
+  <!-- Force space after ! -->
+  <rule ref="Generic.Formatting.SpaceAfterNot"/>
+  <!-- Force space after language constructs -->
+  <rule ref="Generic.WhiteSpace.LanguageConstructSpacing"/>
+  <!-- Force space around logical operators -->
+  <rule ref="Squiz.WhiteSpace.LogicalOperatorSpacing"/>
+  <!-- Forbid space around typehint union (Ok|Err) and force replacing Type|null by ?Type -->)
+  <rule ref="SlevomatCodingStandard.TypeHints.DNFTypeHintFormat">
+    <properties>
+      <property name="enable" value="yes"/>
+      <property name="withSpacesAroundOperators" value="no"/>
+      <property name="withSpacesInsideParentheses" value="no"/>
+      <property name="shortNullable" value="yes"/>
+      <property name="nullPosition" value="last"/>
+    </properties>
+  </rule>
+  <!-- Force space after a type cast -->
+  <rule ref="Generic.Formatting.SpaceAfterCast"/>
+  <!-- Forbid space between increment/decrement operator and its operand -->
+  <rule ref="Generic.WhiteSpace.IncrementDecrementSpacing"/>
+  <!-- Forbid spaces in type casts -->
+  <rule ref="Squiz.WhiteSpace.CastSpacing"/>
+  <!-- Forbid spaces before semicolon `;` -->
+  <rule ref="Squiz.WhiteSpace.SemicolonSpacing"/>
+  <!-- Forbid spaces around `->` operator -->
+  <rule ref="Squiz.WhiteSpace.ObjectOperatorSpacing">
+    <properties>
+      <property name="ignoreNewlines" value="true"/>
+    </properties>
+  </rule>
+  <!-- Forbid spaces before semicolon `;` -->
+  <rule ref="Squiz.WhiteSpace.SemicolonSpacing"/>
+  <!-- Force whitespace after a type cast -->
+  <rule ref="Generic.Formatting.SpaceAfterCast">
+    <properties>
+      <property name="spacing" value="1"/>
+    </properties>
+  </rule>
 
-    <!-- Strings -->
-    <!-- Forbid strings in `"` unless necessary -->
-    <rule ref="Squiz.Strings.DoubleQuoteUsage.NotRequired"/>
+  <!-- Strings -->
+  <!-- Forbid strings in `"` unless necessary -->
+  <rule ref="Squiz.Strings.DoubleQuoteUsage.NotRequired"/>
 
-    <!-- Force alignment of corresponding assignment statement tokens -->
-    <rule ref="Generic.Formatting.MultipleStatementAlignment">
-          <properties>
-              <property name="error" value="true"/>
-          </properties>
-    </rule>
-    <!-- Force array element indentation with 4 spaces -->
-    <rule ref="Generic.Arrays.ArrayIndent"/>
-    <!-- Force level of indentation for each call in a method chain. Each call should be indented exactly once respective to the origin of the chain.
-         ```
-         Instead of this:
-         $very_long_result_name->map()
-                               ->andThen()
-                               ->match();
-         Produce this:
-         $very_long_result_name->map()
-             ->andThen()
-             ->match();
-         ```
-         This is common for Results, Options, Mocks and Builders.
-     -->
-    <rule ref="PEAR.WhiteSpace.ObjectOperatorIndent">
-      <properties>
-        <property name="multilevel" value="true"/>
-      </properties>
-    </rule>
-    <rule ref="Generic.PHP.ForbiddenFunctions">
-        <properties>
-            <property name="forbiddenFunctions" type="array">
-                <element key="rand" value="random_int"/>
-                <element key="mt_rand" value="random_int"/>
-                <element key="openssl_random_pseudo_bytes" value="random_bytes"/>
-                <element key="srand" value="null"/>
-                <element key="mt_srand" value="null"/>
-                <element key="uniqid" value="random_bytes"/>
-                <element key="libxml_disable_entity_loader" value="null"/>
-            </property>
-        </properties>
-    </rule>
-    <!-- Comments -->
-    <!-- Forbid comments starting with # -->
-    <rule ref="PEAR.Commenting.InlineComment"/>
-    <!-- Forbid empty comments -->
-    <rule ref="SlevomatCodingStandard.Commenting.EmptyComment"/>
-    <!-- Forbid useless comments -->
-    <rule ref="SlevomatCodingStandard.Commenting.ForbiddenComments">
-        <properties>
-            <property name="forbiddenCommentPatterns" type="array">
-                <element value="~^(?:(?!private|protected|static)\S+ )?(?:con|de)structor\.\z~i"/>
-                <element value="~^Created by .+\.\z~i"/>
-                <element value="~^(User|Date|Time): \S+\z~i"/>
-                <element value="~^\S+ [gs]etter\.\z~i"/>
-                <element value="~^Class \S+\z~i"/>
-            </property>
-        </properties>
-    </rule>
-    <!-- report invalid format of inline phpDocs with @var -->
-    <rule ref="SlevomatCodingStandard.Commenting.InlineDocCommentDeclaration"/>
-    <!-- Forbid useless annotations -->
-    <rule ref="SlevomatCodingStandard.Commenting.ForbiddenAnnotations">
-        <properties>
-            <property name="forbiddenAnnotations" type="array">
-                <element value="@api"/>
-                <element value="@author"/>
-                <element value="@category"/>
-                <element value="@copyright"/>
-                <element value="@created"/>
-                <element value="@license"/>
-                <element value="@package"/>
-                <element value="@since"/>
-                <element value="@subpackage"/>
-                <element value="@version"/>
-            </property>
-        </properties>
-    </rule>
+  <!-- Force alignment of corresponding assignment statement tokens -->
+  <rule ref="Generic.Formatting.MultipleStatementAlignment">
+    <properties>
+      <property name="error" value="true"/>
+    </properties>
+  </rule>
+  <!-- Force array element indentation with 4 spaces -->
+  <rule ref="Generic.Arrays.ArrayIndent"/>
+  <!-- Force level of indentation for each call in a method chain. Each call should be indented exactly once respective to the origin of the chain.
+       ```
+       Instead of this:
+       $very_long_result_name->map()
+                             ->andThen()
+                             ->match();
+       Produce this:
+       $very_long_result_name->map()
+           ->andThen()
+           ->match();
+       ```
+       This is common for Results, Options, Mocks and Builders.
+   -->
+  <rule ref="PEAR.WhiteSpace.ObjectOperatorIndent">
+    <properties>
+      <property name="multilevel" value="true"/>
+    </properties>
+  </rule>
+  <rule ref="Generic.PHP.ForbiddenFunctions">
+    <properties>
+      <property name="forbiddenFunctions" type="array">
+        <element key="rand" value="random_int"/>
+        <element key="mt_rand" value="random_int"/>
+        <element key="openssl_random_pseudo_bytes" value="random_bytes"/>
+        <element key="srand" value="null"/>
+        <element key="mt_srand" value="null"/>
+        <element key="uniqid" value="random_bytes"/>
+        <element key="libxml_disable_entity_loader" value="null"/>
+      </property>
+    </properties>
+  </rule>
+  <!-- Comments -->
+  <!-- Forbid comments starting with # -->
+  <rule ref="PEAR.Commenting.InlineComment"/>
+  <!-- Forbid empty comments -->
+  <rule ref="SlevomatCodingStandard.Commenting.EmptyComment"/>
+  <!-- Forbid useless comments -->
+  <rule ref="SlevomatCodingStandard.Commenting.ForbiddenComments">
+    <properties>
+      <property name="forbiddenCommentPatterns" type="array">
+        <element value="~^(?:(?!private|protected|static)\S+ )?(?:con|de)structor\.\z~i"/>
+        <element value="~^Created by .+\.\z~i"/>
+        <element value="~^(User|Date|Time): \S+\z~i"/>
+        <element value="~^\S+ [gs]etter\.\z~i"/>
+        <element value="~^Class \S+\z~i"/>
+      </property>
+    </properties>
+  </rule>
+  <!-- report invalid format of inline phpDocs with @var -->
+  <rule ref="SlevomatCodingStandard.Commenting.InlineDocCommentDeclaration"/>
+  <!-- Forbid useless annotations -->
+  <rule ref="SlevomatCodingStandard.Commenting.ForbiddenAnnotations">
+    <properties>
+      <property name="forbiddenAnnotations" type="array">
+        <element value="@api"/>
+        <element value="@author"/>
+        <element value="@category"/>
+        <element value="@copyright"/>
+        <element value="@created"/>
+        <element value="@license"/>
+        <element value="@package"/>
+        <element value="@since"/>
+        <element value="@subpackage"/>
+        <element value="@version"/>
+      </property>
+    </properties>
+  </rule>
   <!-- Forbid useless inherit doc comment -->
   <rule ref="SlevomatCodingStandard.Commenting.UselessInheritDocComment"/>
-    <!-- Forbid unused use statements -->
-    <rule ref="SlevomatCodingStandard.Namespaces.UnusedUses">
-        <properties>
-            <property name="searchAnnotations" value="true"/>
-        </properties>
-    </rule>
+  <!-- Forbid unused use statements -->
+  <rule ref="SlevomatCodingStandard.Namespaces.UnusedUses">
+    <properties>
+      <property name="searchAnnotations" value="true"/>
+    </properties>
+  </rule>
 
-    <!-- Require presence of class constant visibility -->
-    <rule ref="SlevomatCodingStandard.Classes.ClassConstantVisibility"/>
-    <!-- Require ? when default value is null -->
-    <rule ref="SlevomatCodingStandard.TypeHints.NullableTypeForNullDefaultValue"/>
-    <!-- Require one space between typehint and variable, require no space between nullability sign and typehint -->
-    <rule ref="SlevomatCodingStandard.TypeHints.ParameterTypeHintSpacing"/>
-    <!-- Forbid useless @param annotations -->
-    <rule ref="SlevomatCodingStandard.TypeHints.ParameterTypeHint.UselessAnnotation"/>
-    <!-- Forbid useless @return annotations -->
-    <rule ref="SlevomatCodingStandard.TypeHints.ReturnTypeHint.UselessAnnotation"/>
-    <!-- Forbid useless @var annotations on properties -->
-    <rule ref="SlevomatCodingStandard.TypeHints.PropertyTypeHint.UselessAnnotation"/>
-    <!-- Require use of short versions of scalar types (i.e. int instead of integer) -->
-    <rule ref="SlevomatCodingStandard.TypeHints.LongTypeHints"/>
-    <!-- Require usage of ::class instead of __CLASS__, get_class(), get_class($this), get_called_class() and get_parent_class() -->
-    <rule ref="SlevomatCodingStandard.Classes.ModernClassNameReference"/>
-    <rule ref="SlevomatCodingStandard.Classes.DisallowLateStaticBindingForConstants"/>
-    <!-- Require usage of self for self-referencing -->
-    <rule ref="Squiz.Classes.SelfMemberReference"/>
-    <!-- Check the presence of a comment/copyright block at the very beginning of the file -->
-    <rule ref="./TuleapCodingStandard/Sniffs/Commenting/FileCopyrightSniff.php"/>
-    <!-- Forbid fancy group uses -->
-    <rule ref="SlevomatCodingStandard.Namespaces.DisallowGroupUse"/>
-    <!-- Forbid multiple use statements on same line -->
-    <rule ref="SlevomatCodingStandard.Namespaces.MultipleUsesPerLine"/>
-    <!-- Forbid useless uses of the same namespace -->
-    <rule ref="SlevomatCodingStandard.Namespaces.UseFromSameNamespace"/>
-    <!-- Require 1 blank line between class methods -->
-    <rule ref="SlevomatCodingStandard.Classes.MethodSpacing"/>
-    <!-- Require empty newlines before and after uses -->
-    <rule ref="SlevomatCodingStandard.Namespaces.UseSpacing">
-        <properties>
-            <property name="linesCountAfterLastUse" value="1"/>
-            <property name="linesCountBeforeFirstUse" value="1"/>
-            <property name="linesCountBetweenUseTypes" value="0"/>
-        </properties>
-    </rule>
-    <!-- Forbid superfluous leading backslash in use statements -->
-    <rule ref="SlevomatCodingStandard.Namespaces.UseDoesNotStartWithBackslash"/>
-    <!-- Forbid useless alias for classes, constants and functions -->
-    <rule ref="SlevomatCodingStandard.Namespaces.UselessAlias"/>
-    <!-- Require /* @var type $foo */ and similar simple inline annotations to be replaced by assert() -->
-    <rule ref="SlevomatCodingStandard.PHP.RequireExplicitAssertion"/>
-    <!-- Forbid `array(...)` -->
-    <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
-    <rule ref="SlevomatCodingStandard.PHP.ForbiddenClasses">
-        <properties>
-            <property name="forbiddenExtends" type="array">
-                <!-- Force usage of Tuleap's TestCase instead of PHPUnit's TestCase -->
-                <element key="PHPUnit\Framework\TestCase" value="Tuleap\Test\PHPUnit\TestCase"/>
+  <!-- Require presence of class constant visibility -->
+  <rule ref="SlevomatCodingStandard.Classes.ClassConstantVisibility"/>
+  <!-- Require ? when default value is null -->
+  <rule ref="SlevomatCodingStandard.TypeHints.NullableTypeForNullDefaultValue"/>
+  <!-- Require one space between typehint and variable, require no space between nullability sign and typehint -->
+  <rule ref="SlevomatCodingStandard.TypeHints.ParameterTypeHintSpacing"/>
+  <!-- Forbid useless @param annotations -->
+  <rule ref="SlevomatCodingStandard.TypeHints.ParameterTypeHint.UselessAnnotation"/>
+  <!-- Forbid useless @return annotations -->
+  <rule ref="SlevomatCodingStandard.TypeHints.ReturnTypeHint.UselessAnnotation"/>
+  <!-- Forbid useless @var annotations on properties -->
+  <rule ref="SlevomatCodingStandard.TypeHints.PropertyTypeHint.UselessAnnotation"/>
+  <!-- Require use of short versions of scalar types (i.e. int instead of integer) -->
+  <rule ref="SlevomatCodingStandard.TypeHints.LongTypeHints"/>
+  <!-- Require usage of ::class instead of __CLASS__, get_class(), get_class($this), get_called_class() and get_parent_class() -->
+  <rule ref="SlevomatCodingStandard.Classes.ModernClassNameReference"/>
+  <rule ref="SlevomatCodingStandard.Classes.DisallowLateStaticBindingForConstants"/>
+  <!-- Require usage of self for self-referencing -->
+  <rule ref="Squiz.Classes.SelfMemberReference"/>
+  <!-- Check the presence of a comment/copyright block at the very beginning of the file -->
+  <rule ref="./TuleapCodingStandard/Sniffs/Commenting/FileCopyrightSniff.php"/>
+  <!-- Forbid fancy group uses -->
+  <rule ref="SlevomatCodingStandard.Namespaces.DisallowGroupUse"/>
+  <!-- Forbid multiple use statements on same line -->
+  <rule ref="SlevomatCodingStandard.Namespaces.MultipleUsesPerLine"/>
+  <!-- Forbid useless uses of the same namespace -->
+  <rule ref="SlevomatCodingStandard.Namespaces.UseFromSameNamespace"/>
+  <!-- Require 1 blank line between class methods -->
+  <rule ref="SlevomatCodingStandard.Classes.MethodSpacing"/>
+  <!-- Require empty newlines before and after uses -->
+  <rule ref="SlevomatCodingStandard.Namespaces.UseSpacing">
+    <properties>
+      <property name="linesCountAfterLastUse" value="1"/>
+      <property name="linesCountBeforeFirstUse" value="1"/>
+      <property name="linesCountBetweenUseTypes" value="0"/>
+    </properties>
+  </rule>
+  <!-- Forbid superfluous leading backslash in use statements -->
+  <rule ref="SlevomatCodingStandard.Namespaces.UseDoesNotStartWithBackslash"/>
+  <!-- Forbid useless alias for classes, constants and functions -->
+  <rule ref="SlevomatCodingStandard.Namespaces.UselessAlias"/>
+  <!-- Require /* @var type $foo */ and similar simple inline annotations to be replaced by assert() -->
+  <rule ref="SlevomatCodingStandard.PHP.RequireExplicitAssertion"/>
+  <!-- Forbid `array(...)` -->
+  <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
+  <rule ref="SlevomatCodingStandard.PHP.ForbiddenClasses">
+    <properties>
+      <property name="forbiddenExtends" type="array">
+        <!-- Force usage of Tuleap's TestCase instead of PHPUnit's TestCase -->
+        <element key="PHPUnit\Framework\TestCase" value="Tuleap\Test\PHPUnit\TestCase"/>
 
-                <!-- Force usage of the namespaced ForgeUpgrade bucket class -->
-                <element key="ForgeUpgrade_Bucket" value="Tuleap\ForgeUpgrade\Bucket"/>
-            </property>
-            <property name="forbiddenClasses" type="array">
-                <!-- Force usage of non deprecated ForgeUpgrade classes -->
-                <element key="ForgeUpgrade_Bucket_Db" value="Tuleap\ForgeUpgrade\Bucket\BucketDb"/>
-                <element key="ForgeUpgrade_Bucket_Db_Exception" value="Tuleap\ForgeUpgrade\Bucket\BucketDbException"/>
-                <element key="ForgeUpgrade_Bucket_Exception_UpgradeNotComplete" value="Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException"/>
-            </property>
-        </properties>
-        <exclude-pattern>tests/lib/PHPUnit/TestCase.php</exclude-pattern>
-    </rule>
-    <rule ref="SlevomatCodingStandard.PHP.ForbiddenClasses">
-      <properties>
-        <property name="forbiddenClasses" type="array">
-          <!-- Force usage of Tuleap Valinor Mapper builder (handle cache) -->
-          <element key="CuyZ\Valinor\MapperBuilder" value="Tuleap\Mapper\ValinorMapperBuilderFactory"/>
-        </property>
-      </properties>
-      <exclude-pattern>src/common/Mapper/ValinorMapperBuilderFactory.php</exclude-pattern>
-      <exclude-pattern>**/tests/unit/**</exclude-pattern>
-      <exclude-pattern>**/tests/integration/**</exclude-pattern>
-      <exclude-pattern>tools/utils/CVE-2024-30246/**</exclude-pattern>
-    </rule>
-    <!-- Forbid named arguments -->
-    <rule ref="SlevomatCodingStandard.Functions.DisallowNamedArguments"/>
-    <!-- Force trailing comma in multilines arrays and function/method declaration -->
-    <rule ref="SlevomatCodingStandard.Arrays.TrailingArrayComma"/>
-    <rule ref="SlevomatCodingStandard.Functions.RequireTrailingCommaInDeclaration"/>
-    <!-- Make PHP attribute usages consistent -->
-    <rule ref="SlevomatCodingStandard.Attributes.AttributeAndTargetSpacing">
-      <properties>
-        <property name="linesCount" value="0"/>
-      </properties>
-    </rule>
-    <rule ref="SlevomatCodingStandard.Attributes.DisallowAttributesJoining"/>
-    <rule ref="SlevomatCodingStandard.Attributes.RequireAttributeAfterDocComment"/>
-    <!-- Enforce some PHPUnit test behaviors -->
-    <rule ref="./TuleapCodingStandard/Sniffs/Test/EnforcePHPUnitAttributesSniff.php"/>
-    <rule ref="./TuleapCodingStandard/Sniffs/Test/DisallowUsageOfSelfForMockExpectsSniff.php"/>
+        <!-- Force usage of the namespaced ForgeUpgrade bucket class -->
+        <element key="ForgeUpgrade_Bucket" value="Tuleap\ForgeUpgrade\Bucket"/>
+      </property>
+      <property name="forbiddenClasses" type="array">
+        <!-- Force usage of non deprecated ForgeUpgrade classes -->
+        <element key="ForgeUpgrade_Bucket_Db" value="Tuleap\ForgeUpgrade\Bucket\BucketDb"/>
+        <element key="ForgeUpgrade_Bucket_Db_Exception" value="Tuleap\ForgeUpgrade\Bucket\BucketDbException"/>
+        <element key="ForgeUpgrade_Bucket_Exception_UpgradeNotComplete" value="Tuleap\ForgeUpgrade\Bucket\BucketUpgradeNotCompleteException"/>
+      </property>
+    </properties>
+    <exclude-pattern>tests/lib/PHPUnit/TestCase.php</exclude-pattern>
+  </rule>
+  <rule ref="SlevomatCodingStandard.PHP.ForbiddenClasses">
+    <properties>
+      <property name="forbiddenClasses" type="array">
+        <!-- Force usage of Tuleap Valinor Mapper builder (handle cache) -->
+        <element key="CuyZ\Valinor\MapperBuilder" value="Tuleap\Mapper\ValinorMapperBuilderFactory"/>
+      </property>
+    </properties>
+    <exclude-pattern>src/common/Mapper/ValinorMapperBuilderFactory.php</exclude-pattern>
+    <exclude-pattern>**/tests/unit/**</exclude-pattern>
+    <exclude-pattern>**/tests/integration/**</exclude-pattern>
+    <exclude-pattern>tools/utils/CVE-2024-30246/**</exclude-pattern>
+  </rule>
+  <!-- Forbid named arguments -->
+  <rule ref="SlevomatCodingStandard.Functions.DisallowNamedArguments"/>
+  <!-- Force trailing comma in multilines arrays and function/method declaration -->
+  <rule ref="SlevomatCodingStandard.Arrays.TrailingArrayComma"/>
+  <rule ref="SlevomatCodingStandard.Functions.RequireTrailingCommaInDeclaration"/>
+  <!-- Make PHP attribute usages consistent -->
+  <rule ref="SlevomatCodingStandard.Attributes.AttributeAndTargetSpacing">
+    <properties>
+      <property name="linesCount" value="0"/>
+    </properties>
+  </rule>
+  <rule ref="SlevomatCodingStandard.Attributes.DisallowAttributesJoining"/>
+  <rule ref="SlevomatCodingStandard.Attributes.RequireAttributeAfterDocComment"/>
+  <!-- Enforce some PHPUnit test behaviors -->
+  <rule ref="./TuleapCodingStandard/Sniffs/Test/EnforcePHPUnitAttributesSniff.php"/>
+  <rule ref="./TuleapCodingStandard/Sniffs/Test/DisallowUsageOfSelfForMockExpectsSniff.php"/>
+  <rule ref="./TuleapCodingStandard/Sniffs/Test/DisallowUsageOfSelfInNonStaticExpectationsSniff.php"/>
 </ruleset>

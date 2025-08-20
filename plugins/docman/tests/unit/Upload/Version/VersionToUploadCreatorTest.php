@@ -121,7 +121,7 @@ final class VersionToUploadCreatorTest extends TestCase
 
         $this->dao->method('searchDocumentVersionOngoingUploadByItemIdAndExpirationDate')->willReturn([['user_id' => 103]]);
 
-        self::expectException(UploadCreationConflictException::class);
+        $this->expectException(UploadCreationConflictException::class);
 
         $creator->create(
             $parent_item,
@@ -153,7 +153,7 @@ final class VersionToUploadCreatorTest extends TestCase
             ['user_id' => 102, 'filename' => 'filename1', 'filesize' => 123456],
         ]);
 
-        self::expectException(UploadCreationFileMismatchException::class);
+        $this->expectException(UploadCreationFileMismatchException::class);
 
         $creator->create(
             $parent_item,
@@ -181,7 +181,7 @@ final class VersionToUploadCreatorTest extends TestCase
         $user         = UserTestBuilder::buildWithDefaults();
         $current_time = new DateTimeImmutable();
 
-        self::expectException(UploadMaxSizeExceededException::class);
+        $this->expectException(UploadMaxSizeExceededException::class);
 
         $creator->create(
             $parent_item,

@@ -48,7 +48,7 @@ final class GitlabProjectBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $project_builder = new GitlabProjectBuilder(
             $gitlab_client
         );
-        self::expectException(GitlabResponseAPIException::class);
+        $this->expectException(GitlabResponseAPIException::class);
 
         $project_builder->getProjectFromGitlabAPI($this->credentials, 1);
     }
@@ -214,7 +214,7 @@ final class GitlabProjectBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $project_builder = new GitlabProjectBuilder(
             $gitlab_client
         );
-        self::expectException(GitlabResponseAPIException::class);
+        $this->expectException(GitlabResponseAPIException::class);
 
         $project_builder->getProjectFromGitlabAPI($this->credentials, 1);
     }

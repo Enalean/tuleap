@@ -63,7 +63,7 @@ final class DocmanMetadataTypeValueFactoryTest extends TestCase
 
     public function testItThrowsAnExceptionWhenTypeIsNotFound(): void
     {
-        self::expectException(LogicException::class);
+        $this->expectException(LogicException::class);
         $this->type_value_factory->createFromType(1233);
     }
 }

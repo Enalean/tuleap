@@ -240,7 +240,7 @@ final class ClientWrapperTest extends TestCase
 
         $credentials = CredentialsTestBuilder::get()->build();
 
-        self::expectException(GitlabRequestException::class);
+        $this->expectException(GitlabRequestException::class);
         $wrapper = new ClientWrapper(HTTPFactoryBuilder::requestFactory(), HTTPFactoryBuilder::streamFactory(), $client_factory);
         $wrapper->getPaginatedUrl($credentials, '/url');
     }
@@ -259,8 +259,8 @@ final class ClientWrapperTest extends TestCase
 
         $credentials = CredentialsTestBuilder::get()->build();
 
-        self::expectException(GitlabResponseAPIException::class);
-        self::expectExceptionMessage('The query is not in error but we cannot retrieve the link header');
+        $this->expectException(GitlabResponseAPIException::class);
+        $this->expectExceptionMessage('The query is not in error but we cannot retrieve the link header');
 
         $wrapper = new ClientWrapper(HTTPFactoryBuilder::requestFactory(), HTTPFactoryBuilder::streamFactory(), $client_factory);
         $result  = $wrapper->getPaginatedUrl($credentials, '/url');

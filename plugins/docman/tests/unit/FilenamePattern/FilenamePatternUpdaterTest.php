@@ -40,7 +40,7 @@ final class FilenamePatternUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsAnExceptionWhenThePatternIsNotValid(): void
     {
-        self::expectException(InvalidMinimalPatternException::class);
+        $this->expectException(InvalidMinimalPatternException::class);
 
         $this->filename_pattern_updater->updatePattern(
             101,
@@ -50,7 +50,7 @@ final class FilenamePatternUpdaterTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItThrowsAnExceptionWhenThePatternIsEnforcedButEmpty(): void
     {
-        self::expectException(EnforcedEmptyPatternException::class);
+        $this->expectException(EnforcedEmptyPatternException::class);
 
         $this->filename_pattern_updater->updatePattern(
             101,

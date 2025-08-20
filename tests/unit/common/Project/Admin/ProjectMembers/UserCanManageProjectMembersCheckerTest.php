@@ -80,7 +80,7 @@ final class UserCanManageProjectMembersCheckerTest extends TestCase
         $delegation_dao = $this->createMock(MembershipDelegationDao::class);
         $delegation_dao->method('doesUserHasMembershipDelegation')->willReturn(false);
 
-        self::expectException(UserIsNotAllowedToManageProjectMembersException::class);
+        $this->expectException(UserIsNotAllowedToManageProjectMembersException::class);
 
         (new UserCanManageProjectMembersChecker(
             $delegation_dao,
@@ -100,7 +100,7 @@ final class UserCanManageProjectMembersCheckerTest extends TestCase
             ->withAdministratorOf($project)
             ->build();
 
-        self::expectException(UserIsNotAllowedToManageProjectMembersException::class);
+        $this->expectException(UserIsNotAllowedToManageProjectMembersException::class);
 
         (new UserCanManageProjectMembersChecker(
             $this->createMock(MembershipDelegationDao::class),

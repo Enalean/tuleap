@@ -167,7 +167,7 @@ final class ProjectXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItStopsIfNoProjectIsFound(): void
     {
         $this->project_manager->method('getValidProjectByShortNameOrId')->willThrowException(new Project_NotFoundException());
-        self::expectException('Project_NotFoundException');
+        $this->expectException('Project_NotFoundException');
 
         $this->xml_importer->import($this->configuration, 122, $this->xml_file_path);
     }

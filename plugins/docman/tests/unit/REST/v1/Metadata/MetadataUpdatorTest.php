@@ -271,8 +271,8 @@ final class MetadataUpdatorTest extends TestCase
 
         $this->representation_retriever->expects($this->never())->method('checkAndBuildMetadataToUpdate');
 
-        self::expectException(I18NRestException::class);
-        self::expectExceptionCode(400);
+        $this->expectException(I18NRestException::class);
+        $this->expectExceptionCode(400);
 
         $this->item_factory->method('getItemFromDb')->willReturn(new Docman_Folder());
         $this->document_on_going_retriever->method('isThereAlreadyAnUploadOngoing')->willReturn(false);
@@ -309,7 +309,7 @@ final class MetadataUpdatorTest extends TestCase
 
         $this->representation_retriever->expects($this->once())->method('checkAndBuildMetadataToUpdate')->willReturn([]);
 
-        self::expectException(RuntimeException::class);
+        $this->expectException(RuntimeException::class);
 
         $this->item_factory->method('getItemFromDb')->willReturn(new Docman_Folder());
         $this->document_on_going_retriever->method('isThereAlreadyAnUploadOngoing')->willReturn(false);
@@ -484,7 +484,7 @@ final class MetadataUpdatorTest extends TestCase
 
         $this->representation_retriever->expects($this->never())->method('checkAndBuildMetadataToUpdate');
 
-        self::expectException(RestException::class);
+        $this->expectException(RestException::class);
 
         $this->item_factory->method('doesTitleCorrespondToExistingDocument')->willReturn(true);
         $this->updator->updateDocumentMetadata($representation, $item, UserTestBuilder::buildWithDefaults());
@@ -518,7 +518,7 @@ final class MetadataUpdatorTest extends TestCase
 
         $this->representation_retriever->expects($this->never())->method('checkAndBuildMetadataToUpdate');
 
-        self::expectException(I18NRestException::class);
+        $this->expectException(I18NRestException::class);
 
         $this->item_factory->method('doesTitleCorrespondToExistingDocument')->willReturn(false);
         $this->item_factory->method('getItemFromDb')->willReturn(new Docman_Folder());
@@ -555,7 +555,7 @@ final class MetadataUpdatorTest extends TestCase
 
         $this->representation_retriever->expects($this->never())->method('checkAndBuildMetadataToUpdate');
 
-        self::expectException(LogicException::class);
+        $this->expectException(LogicException::class);
 
         $this->item_factory->method('doesTitleCorrespondToExistingDocument')->willReturn(false);
         $this->item_factory->method('getItemFromDb')->willReturn(null);
@@ -577,7 +577,7 @@ final class MetadataUpdatorTest extends TestCase
         $representation->status->value     = 'draft';
         $representation->status->recursion = null;
 
-        self::expectException(RestException::class);
+        $this->expectException(RestException::class);
 
         $this->item_factory->method('doesTitleCorrespondToExistingFolder')->willReturn(true);
         $this->updator->updateFolderMetadata($representation, $item, ProjectTestBuilder::aProject()->build(), UserTestBuilder::buildWithDefaults());

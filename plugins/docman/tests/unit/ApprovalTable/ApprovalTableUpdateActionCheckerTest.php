@@ -60,8 +60,8 @@ final class ApprovalTableUpdateActionCheckerTest extends TestCase
 
         $this->approval_table_retriever->method('hasApprovalTable')->willReturn(true);
 
-        self::expectException(ApprovalTableException::class);
-        self::expectExceptionMessage('approval_table_action is required');
+        $this->expectException(ApprovalTableException::class);
+        $this->expectExceptionMessage('approval_table_action is required');
 
         $approval_checker->checkApprovalTableForItem($representation->approval_table_action, $item);
     }
@@ -75,8 +75,8 @@ final class ApprovalTableUpdateActionCheckerTest extends TestCase
 
         $this->approval_table_retriever->method('hasApprovalTable')->willReturn(false);
 
-        self::expectException(ApprovalTableException::class);
-        self::expectExceptionMessage('approval_table_action should not be provided');
+        $this->expectException(ApprovalTableException::class);
+        $this->expectExceptionMessage('approval_table_action should not be provided');
 
         $approval_checker->checkApprovalTableForItem($representation->approval_table_action, $item);
     }

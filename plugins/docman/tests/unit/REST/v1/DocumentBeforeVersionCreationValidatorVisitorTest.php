@@ -70,7 +70,7 @@ final class DocumentBeforeVersionCreationValidatorVisitorTest extends TestCase
     {
         $link_item = new Docman_Link();
 
-        self::expectException(I18NRestException::class);
+        $this->expectException(I18NRestException::class);
 
         $params = [
             'approval_table_action' => ApprovalTableUpdater::APPROVAL_TABLE_UPDATE_COPY,
@@ -86,7 +86,7 @@ final class DocumentBeforeVersionCreationValidatorVisitorTest extends TestCase
     {
         $embedded_file_item = new Docman_EmbeddedFile();
 
-        self::expectException(I18NRestException::class);
+        $this->expectException(I18NRestException::class);
 
         $params = [
             'approval_table_action' => ApprovalTableUpdater::APPROVAL_TABLE_UPDATE_COPY,
@@ -102,7 +102,7 @@ final class DocumentBeforeVersionCreationValidatorVisitorTest extends TestCase
     {
         $empty_item = new Docman_Empty();
 
-        self::expectException(I18NRestException::class);
+        $this->expectException(I18NRestException::class);
 
         $params = [
             'approval_table_action' => ApprovalTableUpdater::APPROVAL_TABLE_UPDATE_COPY,
@@ -118,7 +118,7 @@ final class DocumentBeforeVersionCreationValidatorVisitorTest extends TestCase
     {
         $wiki_item = new Docman_Wiki();
 
-        self::expectException(I18NRestException::class);
+        $this->expectException(I18NRestException::class);
 
         $params = [
             'approval_table_action' => ApprovalTableUpdater::APPROVAL_TABLE_UPDATE_COPY,
@@ -134,7 +134,7 @@ final class DocumentBeforeVersionCreationValidatorVisitorTest extends TestCase
     {
         $folder_item = new Docman_Folder();
 
-        self::expectException(I18NRestException::class);
+        $this->expectException(I18NRestException::class);
 
         $params = [
             'approval_table_action' => ApprovalTableUpdater::APPROVAL_TABLE_UPDATE_COPY,
@@ -150,7 +150,7 @@ final class DocumentBeforeVersionCreationValidatorVisitorTest extends TestCase
     {
         $item = new Docman_Item();
 
-        self::expectException(I18NRestException::class);
+        $this->expectException(I18NRestException::class);
 
         $params = [
             'approval_table_action' => ApprovalTableUpdater::APPROVAL_TABLE_UPDATE_COPY,
@@ -168,7 +168,7 @@ final class DocumentBeforeVersionCreationValidatorVisitorTest extends TestCase
 
         $this->permission_manager->method('userCanWrite')->willReturn(false);
         $this->docamn_factory->method('doesTitleCorrespondToExistingDocument')->willReturn(false);
-        self::expectException(I18NRestException::class);
+        $this->expectException(I18NRestException::class);
 
         $params = [
             'approval_table_action' => ApprovalTableUpdater::APPROVAL_TABLE_UPDATE_COPY,
@@ -191,7 +191,7 @@ final class DocumentBeforeVersionCreationValidatorVisitorTest extends TestCase
         );
         $this->permission_manager->method('_itemIsLockedForUser')->willReturn(false);
 
-        self::expectException(ApprovalTableException::class);
+        $this->expectException(ApprovalTableException::class);
 
         $params = [
             'approval_table_action' => ApprovalTableUpdater::APPROVAL_TABLE_UPDATE_COPY,
@@ -214,7 +214,7 @@ final class DocumentBeforeVersionCreationValidatorVisitorTest extends TestCase
         );
         $this->permission_manager->method('_itemIsLockedForUser')->willReturn(false);
 
-        self::expectException(RestException::class);
+        $this->expectException(RestException::class);
 
         $params = [
             'approval_table_action' => ApprovalTableUpdater::APPROVAL_TABLE_UPDATE_COPY,
@@ -237,7 +237,7 @@ final class DocumentBeforeVersionCreationValidatorVisitorTest extends TestCase
         );
         $this->permission_manager->method('_itemIsLockedForUser')->willReturn(false);
 
-        self::expectException(RestException::class);
+        $this->expectException(RestException::class);
 
         $params = [
             'approval_table_action' => ApprovalTableUpdater::APPROVAL_TABLE_UPDATE_COPY,
@@ -258,7 +258,7 @@ final class DocumentBeforeVersionCreationValidatorVisitorTest extends TestCase
         $this->approval_checker->method('checkApprovalTableForItem');
         $this->permission_manager->method('_itemIsLockedForUser')->willReturn(true);
 
-        self::expectException(I18NRestException::class);
+        $this->expectException(I18NRestException::class);
 
         $params = [
             'approval_table_action' => ApprovalTableUpdater::APPROVAL_TABLE_UPDATE_COPY,
@@ -309,7 +309,7 @@ final class DocumentBeforeVersionCreationValidatorVisitorTest extends TestCase
             'project'       => $project,
         ];
 
-        self::expectException(RestException::class);
+        $this->expectException(RestException::class);
         $file_item->accept($this->validator_visitor, $params);
     }
 
@@ -333,7 +333,7 @@ final class DocumentBeforeVersionCreationValidatorVisitorTest extends TestCase
             'project'               => $project,
         ];
 
-        self::expectException(I18NRestException::class);
+        $this->expectException(I18NRestException::class);
         $file_item->accept($this->validator_visitor, $params);
     }
 }

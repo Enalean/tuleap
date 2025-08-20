@@ -103,8 +103,8 @@ final class HardcodedMetadataObsolescenceDateRetrieverTest extends TestCase
         $this->metadata_obsolescence_date_checker->method('isObsolescenceMetadataUsed')->willReturn(true);
         $this->metadata_obsolescence_date_checker->expects($this->never())->method('checkDateValidity');
 
-        self::expectException(HardCodedMetadataException::class);
-        self::expectExceptionMessage('obsolescence date format is incorrect');
+        $this->expectException(HardCodedMetadataException::class);
+        $this->expectExceptionMessage('obsolescence date format is incorrect');
 
         $retriever->getTimeStampOfDate($obsolescence_date_bad_format);
     }

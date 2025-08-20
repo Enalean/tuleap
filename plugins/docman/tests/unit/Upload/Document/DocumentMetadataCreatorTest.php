@@ -51,7 +51,7 @@ final class DocumentMetadataCreatorTest extends TestCase
     {
         $this->metadata_dao->method('searchById')->willReturn(false);
 
-        self::expectException(LogicException::class);
+        $this->expectException(LogicException::class);
 
         $this->creator->storeItemCustomMetadata(1, [['id' => 5, 'value' => 'abcde']]);
     }

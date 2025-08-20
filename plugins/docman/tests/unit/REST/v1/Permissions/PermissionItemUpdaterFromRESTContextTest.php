@@ -115,8 +115,8 @@ final class PermissionItemUpdaterFromRESTContextTest extends TestCase
 
         $this->permissions_manager->method('userCanManage')->willReturn(false);
 
-        self::expectException(RestException::class);
-        self::expectExceptionCode(403);
+        $this->expectException(RestException::class);
+        $this->expectExceptionCode(403);
 
         $this->permissions_item_updater_rest->updateItemPermissions(
             $item,
@@ -131,8 +131,8 @@ final class PermissionItemUpdaterFromRESTContextTest extends TestCase
 
         $this->permissions_manager->method('userCanManage')->willReturn(false);
 
-        self::expectException(RestException::class);
-        self::expectExceptionCode(403);
+        $this->expectException(RestException::class);
+        $this->expectExceptionCode(403);
         $this->permissions_item_updater_rest->updateItemPermissions(
             $item,
             UserTestBuilder::buildWithDefaults(),
@@ -146,8 +146,8 @@ final class PermissionItemUpdaterFromRESTContextTest extends TestCase
 
         $this->permissions_manager->method('userCanManage')->willReturn(false);
 
-        self::expectException(RestException::class);
-        self::expectExceptionCode(403);
+        $this->expectException(RestException::class);
+        $this->expectExceptionCode(403);
         $this->permissions_item_updater_rest->updateFolderPermissions(
             $folder,
             UserTestBuilder::buildWithDefaults(),

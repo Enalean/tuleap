@@ -83,7 +83,7 @@ final class MemberAdderTest extends \Tuleap\Test\PHPUnit\TestCase
             ->build();
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
 
-        self::expectException(CannotAddRestrictedUserToProjectNotAllowingRestricted::class);
+        $this->expectException(CannotAddRestrictedUserToProjectNotAllowingRestricted::class);
 
         $this->adder->addMember($user, $ugroup, UserTestBuilder::buildWithDefaults());
     }
@@ -95,7 +95,7 @@ final class MemberAdderTest extends \Tuleap\Test\PHPUnit\TestCase
         $ugroup->method('getProject')->willReturn(null);
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::REGULAR);
 
-        self::expectException(\UGroup_Invalid_Exception::class);
+        $this->expectException(\UGroup_Invalid_Exception::class);
 
         $this->adder->addMember($user, $ugroup, UserTestBuilder::buildWithDefaults());
     }
@@ -133,7 +133,7 @@ final class MemberAdderTest extends \Tuleap\Test\PHPUnit\TestCase
         $ugroup->method('getId')->willReturn(24);
         $ugroup->method('exists')->willReturn(false);
 
-        self::expectException(\UGroup_Invalid_Exception::class);
+        $this->expectException(\UGroup_Invalid_Exception::class);
 
         $this->adder->addMember($user, $ugroup, UserTestBuilder::buildWithDefaults());
     }

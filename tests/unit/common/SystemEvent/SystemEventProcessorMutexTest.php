@@ -77,7 +77,7 @@ final class SystemEventProcessorMutexTest extends TestCase
     {
         $this->mutex->expects($this->once())->method('checkCurrentUserProcessOwner')->willThrowException(new Exception());
 
-        self::expectException(Exception::class);
+        $this->expectException(Exception::class);
         $this->object->expects($this->never())->method('execute');
 
         $this->mutex->execute();

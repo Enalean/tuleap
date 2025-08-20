@@ -28,7 +28,7 @@ final class ParserTest extends TestCase
 {
     public function testItThrowsASyntaxErrorIfQueryIsEmpty(): void
     {
-        self::expectException(SyntaxError::class);
+        $this->expectException(SyntaxError::class);
         $parser = new Parser();
         $parser->parse('');
     }
@@ -299,7 +299,7 @@ final class ParserTest extends TestCase
     public function testItFailIfSelectEndWithComma(): void
     {
         $parser = new Parser();
-        self::expectException(SyntaxError::class);
+        $this->expectException(SyntaxError::class);
         $parser->parse('SELECT field, WHERE field = "value"');
     }
 

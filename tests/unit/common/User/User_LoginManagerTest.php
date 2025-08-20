@@ -327,7 +327,7 @@ final class User_LoginManagerTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs
     {
         $this->user_manager->expects($this->once())->method('getUserByUserName')->willReturn(UserTestBuilder::aUser()->build());
         $this->user_manager->method('isPasswordlessOnly')->willReturn(true);
-        self::expectException(User_InvalidPasswordException::class);
+        $this->expectException(User_InvalidPasswordException::class);
 
         $this->login_manager->authenticate('john', new ConcealedString('password'));
     }

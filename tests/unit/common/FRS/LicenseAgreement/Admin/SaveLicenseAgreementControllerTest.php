@@ -163,7 +163,7 @@ final class SaveLicenseAgreementControllerTest extends TestCase
 
         $this->factory->expects($this->never())->method('save');
 
-        self::expectException(NotFoundException::class);
+        $this->expectException(NotFoundException::class);
 
         $this->controller->process($this->request, $this->createMock(BaseLayout::class), ['project_id' => '101']);
     }
@@ -179,7 +179,7 @@ final class SaveLicenseAgreementControllerTest extends TestCase
 
         $this->factory->expects($this->never())->method('save');
 
-        self::expectException(ForbiddenException::class);
+        $this->expectException(ForbiddenException::class);
 
         $this->controller->process($this->request, $this->createMock(BaseLayout::class), ['project_id' => '101']);
     }
@@ -206,7 +206,7 @@ final class SaveLicenseAgreementControllerTest extends TestCase
 
         $this->factory->method('getLicenseAgreementById')->with($this->project, 1)->willReturn(null);
 
-        self::expectException(NotFoundException::class);
+        $this->expectException(NotFoundException::class);
 
         $this->controller->process($this->request, $this->layout, ['project_id' => '101']);
     }
@@ -216,7 +216,7 @@ final class SaveLicenseAgreementControllerTest extends TestCase
         $this->request->set('id', '');
         $this->request->set('delete', '');
 
-        self::expectException(NotFoundException::class);
+        $this->expectException(NotFoundException::class);
 
         $this->controller->process($this->request, $this->layout, ['project_id' => '101']);
     }

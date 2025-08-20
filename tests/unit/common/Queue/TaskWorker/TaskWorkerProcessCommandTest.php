@@ -86,7 +86,7 @@ final class TaskWorkerProcessCommandTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $command_tester = new CommandTester($command);
 
-        self::expectException(\RuntimeException::class);
+        $this->expectException(\RuntimeException::class);
         $command_tester->execute(['input_file' => $path_to_file]);
     }
 }

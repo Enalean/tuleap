@@ -88,7 +88,7 @@ final class AddProjectMemberTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->user_permissions_dao->method('isUserPartOfProjectMembers')->with($this->an_active_project_id, $this->an_active_user_id)->willReturn(true);
         $this->user_permissions_dao->expects($this->never())->method('addUserAsProjectMember');
 
-        self::expectException(AlreadyProjectMemberException::class);
+        $this->expectException(AlreadyProjectMemberException::class);
 
         $this->buildAddProjectMember(EnsureUserCanManageProjectMembersStub::canManageMembers())
             ->addProjectMember($this->an_active_user, $this->an_active_project, $project_admin);
@@ -104,7 +104,7 @@ final class AddProjectMemberTest extends \Tuleap\Test\PHPUnit\TestCase
 
         $this->user_permissions_dao->expects($this->never())->method('addUserAsProjectMember');
 
-        self::expectException(CannotAddRestrictedUserToProjectNotAllowingRestricted::class);
+        $this->expectException(CannotAddRestrictedUserToProjectNotAllowingRestricted::class);
 
         $this->buildAddProjectMember(EnsureUserCanManageProjectMembersStub::canManageMembers())
             ->addProjectMember($user, $project, $project_admin);
@@ -186,7 +186,7 @@ final class AddProjectMemberTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with($this->an_active_project_id, $this->an_active_user_id)
             ->willReturn(false);
 
-        self::expectException(UserIsNotAllowedToManageProjectMembersException::class);
+        $this->expectException(UserIsNotAllowedToManageProjectMembersException::class);
 
         $this->buildAddProjectMember(EnsureUserCanManageProjectMembersStub::cannotManageMembers())
             ->addProjectMember($this->an_active_user, $this->an_active_project, $project_admin);

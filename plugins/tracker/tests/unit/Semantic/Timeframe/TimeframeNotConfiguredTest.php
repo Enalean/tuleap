@@ -156,7 +156,7 @@ final class TimeframeNotConfiguredTest extends TestCase
 
         $changeset->expects($this->once())->method('getTracker')->willReturn($tracker);
 
-        self::expectException(\Tracker_FormElement_Chart_Field_Exception::class);
+        $this->expectException(\Tracker_FormElement_Chart_Field_Exception::class);
 
         $this->timeframe->buildDatePeriodWithoutWeekendForChangesetChartRendering(
             $artifact->getLastChangeset(),

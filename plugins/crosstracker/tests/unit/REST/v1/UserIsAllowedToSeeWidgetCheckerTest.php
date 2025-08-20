@@ -88,8 +88,8 @@ final class UserIsAllowedToSeeWidgetCheckerTest extends TestCase
             ]
         );
 
-        self::expectException(RestException::class);
-        self::expectExceptionCode(404);
+        $this->expectException(RestException::class);
+        $this->expectExceptionCode(404);
 
         $this->checkUserIsAllowedToSeeWidget($cross_tracker_dao);
     }
@@ -123,8 +123,8 @@ final class UserIsAllowedToSeeWidgetCheckerTest extends TestCase
             $this->user,
         );
 
-        self::expectException(RestException::class);
-        self::expectExceptionCode(404);
+        $this->expectException(RestException::class);
+        $this->expectExceptionCode(404);
 
         $this->checkUserIsAllowedToSeeWidget($cross_tracker_dao);
     }
@@ -173,8 +173,8 @@ final class UserIsAllowedToSeeWidgetCheckerTest extends TestCase
         $this->project_manager  = ProjectByIDFactoryStub::buildWith(ProjectTestBuilder::aProject()->withId(105)->build());
         $this->url_verification = CheckUserCanAccessProjectStub::build();
 
-        self::expectException(RestException::class);
-        self::expectExceptionCode(404);
+        $this->expectException(RestException::class);
+        $this->expectExceptionCode(404);
 
         $this->checkUserIsAllowedToUpdateWidget($cross_tracker_dao);
     }
@@ -204,8 +204,8 @@ final class UserIsAllowedToSeeWidgetCheckerTest extends TestCase
         );
         $this->user        = UserTestBuilder::buildWithId(215);
 
-        self::expectException(RestException::class);
-        self::expectExceptionCode(404);
+        $this->expectException(RestException::class);
+        $this->expectExceptionCode(404);
 
         $this->checkUserIsAllowedToUpdateWidget($cross_tracker_dao);
     }

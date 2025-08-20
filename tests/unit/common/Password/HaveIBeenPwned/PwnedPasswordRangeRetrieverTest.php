@@ -55,7 +55,7 @@ class PwnedPasswordRangeRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             new NullLogger()
         );
 
-        self::expectException(\LengthException::class);
+        $this->expectException(\LengthException::class);
 
         $retriever->getHashSuffixesMatchingPrefix(sha1('password'));
     }

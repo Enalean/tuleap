@@ -961,7 +961,7 @@ class FRSFileFactoryTest extends TestCase
         $f  = new FRSFile();
         $f->setFileName('%toto#.txt');
 
-        self::expectException(FRSFileIllegalNameException::class);
+        $this->expectException(FRSFileIllegalNameException::class);
 
         $ff->createFile($f);
     }
@@ -1083,7 +1083,7 @@ class FRSFileFactoryTest extends TestCase
         $ff->method('getSrcDir')->willReturn(ForgeConfig::get('ftp_incoming_dir'));
         $ff->method('isFileBaseNameExists')->willReturn(true);
 
-        self::expectException(FRSFileExistsException::class);
+        $this->expectException(FRSFileExistsException::class);
 
         $ff->createFile($f);
     }
@@ -1176,7 +1176,7 @@ class FRSFileFactoryTest extends TestCase
         $ff->method('isFileBaseNameExists')->willReturn(false);
         $ff->method('isSameFileMarkedToBeRestored')->willReturn(true);
 
-        self::expectException(FRSFileToBeRestoredException::class);
+        $this->expectException(FRSFileToBeRestoredException::class);
 
         $ff->createFile($f, ~FRSFileFactory::COMPUTE_MD5);
     }
@@ -1207,7 +1207,7 @@ class FRSFileFactoryTest extends TestCase
         $ff->method('getSrcDir')->willReturn(ForgeConfig::get('ftp_incoming_dir'));
         self::assertFalse(is_file(ForgeConfig::get('ftp_incoming_dir') . '/toto.txt'));
 
-        self::expectException(FRSFileInvalidNameException::class);
+        $this->expectException(FRSFileInvalidNameException::class);
 
         $ff->createFile($f, ~FRSFileFactory::COMPUTE_MD5);
     }
@@ -1331,7 +1331,7 @@ class FRSFileFactoryTest extends TestCase
 
         $ff->method('moveFileForge')->willReturn(false);
 
-        self::expectException(FRSFileForgeException::class);
+        $this->expectException(FRSFileForgeException::class);
 
         $ff->createFile($f, ~FRSFileFactory::COMPUTE_MD5);
     }
@@ -1373,7 +1373,7 @@ class FRSFileFactoryTest extends TestCase
         $ff->method('moveFileForge')->willReturn(true);
         $ff->method('create')->willReturn(false);
 
-        self::expectException(FRSFileDbException::class);
+        $this->expectException(FRSFileDbException::class);
 
         $ff->createFile($f, ~FRSFileFactory::COMPUTE_MD5);
     }

@@ -72,7 +72,7 @@ final class ProjectMembersControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             EnsureUserCanManageProjectMembersStub::cannotManageMembers(),
         );
 
-        self::expectException(ForbiddenException::class);
+        $this->expectException(ForbiddenException::class);
         $controller->process($request, $this->createMock(BaseLayout::class), ['project_id' => '102']);
     }
 
@@ -103,7 +103,7 @@ final class ProjectMembersControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             EnsureUserCanManageProjectMembersStub::canManageMembers(),
         );
 
-        self::expectException(ForbiddenException::class);
+        $this->expectException(ForbiddenException::class);
         $controller->process($request, $this->createMock(BaseLayout::class), ['project_id' => '102']);
     }
 

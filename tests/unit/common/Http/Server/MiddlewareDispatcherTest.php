@@ -59,7 +59,7 @@ final class MiddlewareDispatcherTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testMiddlewareStackCannotBeEmpty(): void
     {
-        self::expectException(EmptyMiddlewareStackException::class);
+        $this->expectException(EmptyMiddlewareStackException::class);
         new MiddlewareDispatcher();
     }
 
@@ -76,7 +76,7 @@ final class MiddlewareDispatcherTest extends \Tuleap\Test\PHPUnit\TestCase
         };
 
         $dispatcher = new MiddlewareDispatcher($passthrough_middleware);
-        self::expectException(MissingMiddlewareResponseException::class);
+        $this->expectException(MissingMiddlewareResponseException::class);
         $dispatcher->handle(new NullServerRequest());
     }
 }

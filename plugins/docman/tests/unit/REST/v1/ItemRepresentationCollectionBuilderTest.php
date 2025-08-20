@@ -418,7 +418,7 @@ final class ItemRepresentationCollectionBuilderTest extends TestCase
 
         $this->permission_manager->method('userCanRead')->willReturn(false);
 
-        self::expectException(ForbiddenException::class);
+        $this->expectException(ForbiddenException::class);
         $this->item_representation_collection_builder->buildParentRowCollection($item, $user, 50, 0);
     }
 

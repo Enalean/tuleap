@@ -47,14 +47,14 @@ final class CommitStatusWithKnownStatusTest extends TestCase
 
     public function testInvalidStatusNameIsRejectedWhenBuilding(): void
     {
-        self::expectException(DomainException::class);
+        $this->expectException(DomainException::class);
 
         CommitStatusWithKnownStatus::buildFromStatusName('invalid_status_name', $this->date);
     }
 
     public function testInvalidStatusIdIsRejectedWhenBuilding(): void
     {
-        self::expectException(DomainException::class);
+        $this->expectException(DomainException::class);
 
         new CommitStatusWithKnownStatus(999999999999999, $this->date);
     }

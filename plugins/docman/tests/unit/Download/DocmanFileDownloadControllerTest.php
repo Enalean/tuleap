@@ -61,7 +61,7 @@ final class DocmanFileDownloadControllerTest extends TestCase
 
         $request = (new NullServerRequest())->withAttribute('file_id', '1');
 
-        self::expectException(NotFoundException::class);
+        $this->expectException(NotFoundException::class);
         $controller->handle($request);
     }
 
@@ -79,7 +79,7 @@ final class DocmanFileDownloadControllerTest extends TestCase
 
         $request = (new NullServerRequest())->withAttribute('file_id', '1');
 
-        self::expectException(NotFoundException::class);
+        $this->expectException(NotFoundException::class);
         $controller->handle($request);
     }
 
@@ -102,7 +102,7 @@ final class DocmanFileDownloadControllerTest extends TestCase
 
         $this->response_generator->method('generateResponse')->willThrowException(new VersionNotFoundException($docman_file, 1));
 
-        self::expectException(NotFoundException::class);
+        $this->expectException(NotFoundException::class);
         self::expectExceptionMessageMatches('/version/');
         $controller->handle($request);
     }
@@ -124,7 +124,7 @@ final class DocmanFileDownloadControllerTest extends TestCase
             ->withAttribute('file_id', '1')
             ->withAttribute('version_id', '1');
 
-        self::expectException(NotFoundException::class);
+        $this->expectException(NotFoundException::class);
         $controller->handle($request);
     }
 
@@ -146,7 +146,7 @@ final class DocmanFileDownloadControllerTest extends TestCase
 
         $this->response_generator->method('generateResponse')->willThrowException($this->createMock(FileDownloadException::class));
 
-        self::expectException(NotFoundException::class);
+        $this->expectException(NotFoundException::class);
         $controller->handle($request);
     }
 

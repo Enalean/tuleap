@@ -255,7 +255,7 @@ final class PluginFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             }
         };
 
-        self::expectException(MissingInstallRequirementException::class);
+        $this->expectException(MissingInstallRequirementException::class);
         self::expectExceptionMessageMatches('/test_plugin.+missing_requirement/');
         $this->factory->enablePlugin($plugin);
     }

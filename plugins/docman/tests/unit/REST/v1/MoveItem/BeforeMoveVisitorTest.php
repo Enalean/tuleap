@@ -98,8 +98,8 @@ final class BeforeMoveVisitorTest extends TestCase
 
         $item = new $processed_item_class();
 
-        self::expectException(RestException::class);
-        self::expectExceptionCode(400);
+        $this->expectException(RestException::class);
+        $this->expectExceptionCode(400);
         $item->accept(
             $before_move_visitor,
             ['destination' => new Docman_Folder(), 'current_time' => new DateTimeImmutable()]
@@ -122,8 +122,8 @@ final class BeforeMoveVisitorTest extends TestCase
         $document = new $processed_document_class();
         $document->setTitle('Title');
 
-        self::expectException(RestException::class);
-        self::expectExceptionCode(400);
+        $this->expectException(RestException::class);
+        $this->expectExceptionCode(400);
         $document->accept(
             $before_move_visitor,
             ['destination' => new Docman_Folder(['item_id' => 147]), 'current_time' => new DateTimeImmutable()]
@@ -148,8 +148,8 @@ final class BeforeMoveVisitorTest extends TestCase
         $document = new $processed_document_class();
         $document->setTitle('Title');
 
-        self::expectException(RestException::class);
-        self::expectExceptionCode(409);
+        $this->expectException(RestException::class);
+        $this->expectExceptionCode(409);
         $document->accept(
             $before_move_visitor,
             ['destination' => new Docman_Folder(['item_id' => 147]), 'current_time' => new DateTimeImmutable()]
@@ -171,8 +171,8 @@ final class BeforeMoveVisitorTest extends TestCase
         $folder_to_move = new Docman_Folder();
         $folder_to_move->setTitle('Title');
 
-        self::expectException(RestException::class);
-        self::expectExceptionCode(400);
+        $this->expectException(RestException::class);
+        $this->expectExceptionCode(400);
         $folder_to_move->accept(
             $before_move_visitor,
             ['destination' => new Docman_Folder(['item_id' => 147]), 'current_time' => new DateTimeImmutable()]
@@ -195,8 +195,8 @@ final class BeforeMoveVisitorTest extends TestCase
         $folder_to_move->setTitle('Title');
         $folder_to_move->setId(147);
 
-        self::expectException(RestException::class);
-        self::expectExceptionCode(400);
+        $this->expectException(RestException::class);
+        $this->expectExceptionCode(400);
         $folder_to_move->accept(
             $before_move_visitor,
             ['destination' => new Docman_Folder(['item_id' => 147]), 'current_time' => new DateTimeImmutable()]
@@ -219,8 +219,8 @@ final class BeforeMoveVisitorTest extends TestCase
         $folder_to_move = new Docman_Folder();
         $folder_to_move->setTitle('Title');
 
-        self::expectException(RestException::class);
-        self::expectExceptionCode(400);
+        $this->expectException(RestException::class);
+        $this->expectExceptionCode(400);
         $folder_to_move->accept(
             $before_move_visitor,
             ['destination' => new Docman_Folder(['item_id' => 147]), 'current_time' => new DateTimeImmutable()]

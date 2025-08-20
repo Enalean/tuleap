@@ -120,7 +120,7 @@ final class XMLImporterTest extends TestCase
         $rng_validator->expects($this->once())->method('validate')
             ->willThrowException(new ParseExceptionWithErrors('', [], []));
 
-        self::expectException(XML_ParseException::class);
+        $this->expectException(XML_ParseException::class);
         $importer = new XMLImporter($item_factory, $project, new NullLogger(), $node_importer, $rng_validator);
         $importer->import($node);
     }

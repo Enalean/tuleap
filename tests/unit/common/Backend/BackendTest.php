@@ -67,7 +67,7 @@ final class BackendTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         //The base classname is mandatory for unkown (by core) backends
         // else it search for Backend . $type
-        self::expectException(\RuntimeException::class);
+        $this->expectException(\RuntimeException::class);
         Backend::instance('plugin_fake');
     }
 
@@ -206,8 +206,8 @@ final class BackendTest extends \Tuleap\Test\PHPUnit\TestCase
             'getBackend',
             false
         );
-        self::expectException(\Exception::class);
-        self::expectExceptionMessage('does not have setUp');
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('does not have setUp');
         Backend::instance(Backend::SVN, null, [1, 2, 3]);
     }
 

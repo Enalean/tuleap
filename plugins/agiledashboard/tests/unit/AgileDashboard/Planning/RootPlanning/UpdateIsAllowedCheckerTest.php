@@ -80,7 +80,7 @@ final class UpdateIsAllowedCheckerTest extends TestCase
         $this->backlog_tracker_removal_checker->expects($this->once())->method('checkRemovedBacklogTrackersCanBeRemoved');
         $this->tracker_factory->expects($this->once())->method('getTrackerById')->willReturn(null);
 
-        self::expectException(TrackerNotFoundException::class);
+        $this->expectException(TrackerNotFoundException::class);
         $this->checker->checkUpdateIsAllowed(
             $planning,
             PlanningParameters::fromArray(['planning_tracker_id' => '404']),
@@ -99,7 +99,7 @@ final class UpdateIsAllowedCheckerTest extends TestCase
             ->build();
         $this->tracker_factory->expects($this->once())->method('getTrackerById')->willReturn($tracker);
 
-        self::expectException(TrackerNotFoundException::class);
+        $this->expectException(TrackerNotFoundException::class);
         $this->checker->checkUpdateIsAllowed(
             $planning,
             PlanningParameters::fromArray(['planning_tracker_id' => '404']),

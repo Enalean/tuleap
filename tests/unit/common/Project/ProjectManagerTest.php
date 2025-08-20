@@ -256,7 +256,7 @@ final class ProjectManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->project_manager_test_version->method('_getDao')->willReturn($this->project_dao);
         $this->project_dao->expects($this->never())->method('updateStatus');
 
-        self::expectException(DeletedProjectStatusChangeException::class);
+        $this->expectException(DeletedProjectStatusChangeException::class);
         $this->project_manager_test_version->updateStatus($project, 'A');
     }
 
@@ -267,7 +267,7 @@ final class ProjectManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->project_manager_test_version->method('_getDao')->willReturn($this->project_dao);
         $this->project_dao->expects($this->never())->method('updateStatus');
 
-        self::expectException(SwitchingBackToPendingException::class);
+        $this->expectException(SwitchingBackToPendingException::class);
         $this->project_manager_test_version->updateStatus($project, 'P');
     }
 }
