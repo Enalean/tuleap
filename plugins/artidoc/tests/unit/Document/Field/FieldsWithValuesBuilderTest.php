@@ -39,7 +39,8 @@ use Tuleap\Artidoc\Document\Field\List\UserGroupListWithValueBuilder;
 use Tuleap\Artidoc\Document\Field\List\UserListFieldWithValueBuilder;
 use Tuleap\Artidoc\Document\Field\Numeric\NumericFieldWithValueBuilder;
 use Tuleap\Artidoc\Document\Field\Permissions\PermissionsOnArtifactFieldWithValueBuilder;
-use Tuleap\Artidoc\Document\Field\StepDefinition\StepsDefinitionFieldWithValueBuilder;
+use Tuleap\Artidoc\Document\Field\StepsDefinition\StepsDefinitionFieldWithValueBuilder;
+use Tuleap\Artidoc\Document\Field\StepsExecution\StepsExecutionFieldWithValueBuilder;
 use Tuleap\Artidoc\Document\Field\User\UserFieldWithValueBuilder;
 use Tuleap\Artidoc\Domain\Document\Section\Field\DisplayType;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\ArtifactLinkFieldWithValue;
@@ -52,7 +53,9 @@ use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\NumericFieldWith
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\PermissionsOnArtifactFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StaticListFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StaticListValue;
+use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StepResultValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StepsDefinitionFieldWithValue;
+use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StepsExecutionFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StepValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\TextFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserFieldWithValue;
@@ -73,9 +76,12 @@ use Tuleap\Test\Stubs\BuildDisplayNameStub;
 use Tuleap\Test\Stubs\RetrieveUserByIdStub;
 use Tuleap\Test\Stubs\User\Avatar\ProvideDefaultUserAvatarUrlStub;
 use Tuleap\Test\Stubs\User\Avatar\ProvideUserAvatarUrlStub;
+use Tuleap\TestManagement\Step\Execution\StepResult;
 use Tuleap\TestManagement\Step\Step;
 use Tuleap\TestManagement\Test\Builders\ChangesetValueStepsDefinitionTestBuilder;
+use Tuleap\TestManagement\Test\Builders\ChangesetValueStepsExecutionTestBuilder;
 use Tuleap\TestManagement\Test\Builders\StepsDefinitionFieldBuilder;
+use Tuleap\TestManagement\Test\Builders\StepsExecutionFieldBuilder;
 use Tuleap\Tracker\Artifact\ChangesetValue\Text\TextValueInterpreter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeIsChildPresenter;
@@ -100,8 +106,8 @@ use Tuleap\Tracker\Test\Builders\Fields\List\ListUserGroupBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserGroupValueBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserValueBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\MultiSelectboxFieldBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\PermissionsOnArtifactFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\TextFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -166,6 +172,7 @@ final class FieldsWithValuesBuilderTest extends TestCase
         $provide_default_user_avatar_url = ProvideDefaultUserAvatarUrlStub::build();
         $retrieve_user_by_id             = RetrieveUserByIdStub::withUsers($bob, $alice);
         $purifier                        = Codendi_HTMLPurifier::instance();
+        $text_value_interpreter          = new TextValueInterpreter($purifier, CommonMarkInterpreter::build($purifier));
         $builder                         = new FieldsWithValuesBuilder(
             new ConfiguredFieldCollection([self::TRACKER_ID => $fields]),
             new ListFieldWithValueBuilder(
@@ -194,7 +201,8 @@ final class FieldsWithValuesBuilderTest extends TestCase
             ),
             new DateFieldWithValueBuilder($this->current_user),
             new PermissionsOnArtifactFieldWithValueBuilder(),
-            new StepsDefinitionFieldWithValueBuilder(new TextValueInterpreter($purifier, CommonMarkInterpreter::build($purifier))),
+            new StepsDefinitionFieldWithValueBuilder($text_value_interpreter),
+            new StepsExecutionFieldWithValueBuilder($text_value_interpreter),
         );
         return $builder->getFieldsWithValues($this->changeset);
     }
@@ -460,14 +468,14 @@ final class FieldsWithValuesBuilderTest extends TestCase
         ]));
     }
 
-    public function testItBuildsStepDefinitionFieldWithValue(): void
+    public function testItBuildsStepsDefinitionFieldWithValue(): void
     {
-        $step_definition_field = StepsDefinitionFieldBuilder::aStepsDefinitionField(123)
+        $steps_definition_field = StepsDefinitionFieldBuilder::aStepsDefinitionField(123)
             ->inTracker($this->tracker)
             ->build();
 
-        $expected_step_definition_field_with_value = new StepsDefinitionFieldWithValue(
-            $step_definition_field->getLabel(),
+        $expected_steps_definition_field_with_value = new StepsDefinitionFieldWithValue(
+            $steps_definition_field->getLabel(),
             DisplayType::BLOCK,
             [
                 new StepValue(
@@ -478,8 +486,8 @@ final class FieldsWithValuesBuilderTest extends TestCase
         );
 
         $this->changeset->setFieldValue(
-            $step_definition_field,
-            ChangesetValueStepsDefinitionTestBuilder::aValue(54, $this->changeset, $step_definition_field)
+            $steps_definition_field,
+            ChangesetValueStepsDefinitionTestBuilder::aValue(54, $this->changeset, $steps_definition_field)
                 ->withSteps([
                     new Step(
                         12,
@@ -493,8 +501,50 @@ final class FieldsWithValuesBuilderTest extends TestCase
                 ->build(),
         );
 
-        self::assertEquals([$expected_step_definition_field_with_value], $this->getFields([
-            new ConfiguredField($step_definition_field, DisplayType::BLOCK),
+        self::assertEquals([$expected_steps_definition_field_with_value], $this->getFields([
+            new ConfiguredField($steps_definition_field, DisplayType::BLOCK),
+        ]));
+    }
+
+    public function testItBuildsStepsExecutionFieldWithValue(): void
+    {
+        $steps_execution_field = StepsExecutionFieldBuilder::aStepsExecutionField(123)
+            ->inTracker($this->tracker)
+            ->build();
+
+        $expected_steps_execution_field_with_value = new StepsExecutionFieldWithValue(
+            $steps_execution_field->getLabel(),
+            DisplayType::BLOCK,
+            [
+                new StepResultValue(
+                    'Some description',
+                    Option::nothing(\Psl\Type\string()),
+                    'passed'
+                ),
+            ],
+        );
+
+        $this->changeset->setFieldValue(
+            $steps_execution_field,
+            ChangesetValueStepsExecutionTestBuilder::aValue(54, $this->changeset, $steps_execution_field)
+                ->withStepsResults([
+                    new StepResult(
+                        new Step(
+                            12,
+                            'Some description',
+                            Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT,
+                            null,
+                            Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT,
+                            1,
+                        ),
+                        'passed',
+                    ),
+                ])
+                ->build(),
+        );
+
+        self::assertEquals([$expected_steps_execution_field_with_value], $this->getFields([
+            new ConfiguredField($steps_execution_field, DisplayType::BLOCK),
         ]));
     }
 }

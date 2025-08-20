@@ -43,8 +43,11 @@ msgid "Parent folders are not displayed to not clutter the interface"
 msgstr ""
 "Les dossiers parents ne sont pas affichés pour ne pas encombrer l'interface"
 
-msgid "Step definition field must use 'block' display type."
+msgid "Steps definition field must use 'block' display type."
 msgstr "Le champ définition d'étapes doit utiliser l'affichage 'block'."
+
+msgid "Steps execution field must use 'block' display type."
+msgstr "Le champ exécution d'étapes doit utiliser l'affichage 'block'."
 
 msgid "Text field must use 'block' display type."
 msgstr "Le champ texte doit utiliser l'affichage 'block'."

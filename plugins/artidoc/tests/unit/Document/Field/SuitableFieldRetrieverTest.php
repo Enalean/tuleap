@@ -39,7 +39,9 @@ use Tuleap\NeverThrow\Result;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\TestManagement\Step\Definition\Field\StepsDefinition;
+use Tuleap\TestManagement\Step\Execution\Field\StepsExecution;
 use Tuleap\TestManagement\Test\Builders\StepsDefinitionFieldBuilder;
+use Tuleap\TestManagement\Test\Builders\StepsExecutionFieldBuilder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\Date\DateField;
 use Tuleap\Tracker\FormElement\Field\NumericField;
@@ -58,10 +60,10 @@ use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserGroupBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\MultiSelectboxFieldBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\PermissionsOnArtifactFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\PerTrackerArtifactIdFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\PriorityFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\SubmittedByFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\SubmittedOnFieldBuilder;
@@ -93,7 +95,7 @@ final class SuitableFieldRetrieverTest extends TestCase
     }
 
     /**
-     * @return Ok<TextField> | Ok<Tracker_FormElement_Field_List> | Ok<ArtifactLinkField> | OK<NumericField> | Ok<DateField> | OK<Tracker_FormElement_Field_PermissionsOnArtifact> | Ok<StepsDefinition> | Err<Fault>
+     * @return Ok<TextField> | Ok<Tracker_FormElement_Field_List> | Ok<ArtifactLinkField> | OK<NumericField> | Ok<DateField> | OK<Tracker_FormElement_Field_PermissionsOnArtifact> | Ok<StepsDefinition> | Ok<StepsExecution> | Err<Fault>
      */
     private function retrieve(): Ok|Err
     {
@@ -433,16 +435,29 @@ final class SuitableFieldRetrieverTest extends TestCase
         self::assertSame($permissions_field, $result->value);
     }
 
-    public function testItAllowsStepDefinitionField(): void
+    public function testItAllowsStepsDefinitionField(): void
     {
-        $step_definition_field = StepsDefinitionFieldBuilder::aStepsDefinitionField(self::FIELD_ID)
+        $steps_definition_field = StepsDefinitionFieldBuilder::aStepsDefinitionField(self::FIELD_ID)
             ->inTracker($this->tracker)
             ->withReadPermission($this->user, true)
             ->build();
-        $this->field_retriever = RetrieveUsedFieldsStub::withFields($step_definition_field);
+        $this->field_retriever  = RetrieveUsedFieldsStub::withFields($steps_definition_field);
 
         $result = $this->retrieve();
         self::assertTrue(Result::isOk($result));
-        self::assertSame($step_definition_field, $result->value);
+        self::assertSame($steps_definition_field, $result->value);
+    }
+
+    public function testItAllowsStepsExecutionField(): void
+    {
+        $steps_execution_field = StepsExecutionFieldBuilder::aStepsExecutionField(self::FIELD_ID)
+            ->inTracker($this->tracker)
+            ->withReadPermission($this->user, true)
+            ->build();
+        $this->field_retriever = RetrieveUsedFieldsStub::withFields($steps_execution_field);
+
+        $result = $this->retrieve();
+        self::assertTrue(Result::isOk($result));
+        self::assertSame($steps_execution_field, $result->value);
     }
 }

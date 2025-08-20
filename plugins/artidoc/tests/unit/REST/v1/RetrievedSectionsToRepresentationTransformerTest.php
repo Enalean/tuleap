@@ -39,7 +39,8 @@ use Tuleap\Artidoc\Document\Field\List\UserGroupListWithValueBuilder;
 use Tuleap\Artidoc\Document\Field\List\UserListFieldWithValueBuilder;
 use Tuleap\Artidoc\Document\Field\Numeric\NumericFieldWithValueBuilder;
 use Tuleap\Artidoc\Document\Field\Permissions\PermissionsOnArtifactFieldWithValueBuilder;
-use Tuleap\Artidoc\Document\Field\StepDefinition\StepsDefinitionFieldWithValueBuilder;
+use Tuleap\Artidoc\Document\Field\StepsDefinition\StepsDefinitionFieldWithValueBuilder;
+use Tuleap\Artidoc\Document\Field\StepsExecution\StepsExecutionFieldWithValueBuilder;
 use Tuleap\Artidoc\Document\Field\User\UserFieldWithValueBuilder;
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\Artidoc\Domain\Document\Section\PaginatedRetrievedSections;
@@ -120,6 +121,7 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
         $provide_user_avatar_url         = ProvideUserAvatarUrlStub::build();
         $provide_default_user_avatar_url = ProvideDefaultUserAvatarUrlStub::build();
         $purifier                        = Codendi_HTMLPurifier::instance();
+        $text_value_interpreter          = new TextValueInterpreter($purifier, CommonMarkInterpreter::build($purifier));
         $transformer                     = new RetrievedSectionsToRepresentationTransformer(
             new SectionRepresentationBuilder(
                 new ArtifactSectionRepresentationBuilder(
@@ -151,7 +153,8 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
                         ),
                         new DateFieldWithValueBuilder($this->user),
                         new PermissionsOnArtifactFieldWithValueBuilder(),
-                        new StepsDefinitionFieldWithValueBuilder(new TextValueInterpreter($purifier, CommonMarkInterpreter::build($purifier))),
+                        new StepsDefinitionFieldWithValueBuilder($text_value_interpreter),
+                        new StepsExecutionFieldWithValueBuilder($text_value_interpreter),
                     )
                 ),
             ),

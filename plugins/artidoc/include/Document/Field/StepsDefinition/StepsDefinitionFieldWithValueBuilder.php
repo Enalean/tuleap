@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Artidoc\Document\Field\StepDefinition;
+namespace Tuleap\Artidoc\Document\Field\StepsDefinition;
 
 use Tuleap\Artidoc\Document\Field\ConfiguredField;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StepsDefinitionFieldWithValue;

@@ -20,19 +20,17 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Artidoc\REST\v1\ArtifactSection\Field;
+namespace Tuleap\Artidoc\Domain\Document\Section\Field;
 
-enum FieldType: string
+use Tuleap\NeverThrow\Fault;
+
+/**
+ * @psalm-immutable
+ */
+final readonly class StepsExecutionFieldMustBeDisplayedInBlockFault extends Fault
 {
-    case TEXT             = 'text';
-    case USER_GROUPS_LIST = 'user_groups_list';
-    case STATIC_LIST      = 'static_list';
-    case USER_LIST        = 'user_list';
-    case ARTIFACT_LINK    = 'links';
-    case NUMERIC          = 'numeric';
-    case USER             = 'user';
-    case DATE             = 'date';
-    case PERMISSIONS      = 'permissions';
-    case STEPS_DEFINITION = 'steps_definition';
-    case STEPS_EXECUTION  = 'steps_execution';
+    public static function build(): Fault
+    {
+        return new self("Steps execution field must use 'block' display type.");
+    }
 }
