@@ -32,6 +32,7 @@ import type {
     PERMISSIONS_FIELD,
     STATIC_LIST_FIELD,
     STEPS_DEFINITION_FIELD,
+    STEPS_EXECUTION_FIELD,
     TEXT_FIELD,
     USER_FIELD,
     USER_GROUP_LIST_FIELD,
@@ -40,13 +41,22 @@ import type {
 import { ConfigurationFieldBuilder } from "@/sections/readonly-fields/ConfigurationFieldBuilder";
 
 export type StepsDefinitionFieldIdentifier = "ttmstepdef";
+export type StepsExecutionFieldIdentifier = "ttmstepexec";
 export const TTM_STEPS_DEFINITION_FIELD: StepsDefinitionFieldIdentifier = "ttmstepdef";
+export const TTM_STEPS_EXECUTION_FIELD: StepsExecutionFieldIdentifier = "ttmstepexec";
 
-export interface StepDefinitionFieldStructure extends BaseFieldStructure {
+export interface StepsDefinitionFieldStructure extends BaseFieldStructure {
     readonly type: StepsDefinitionFieldIdentifier;
 }
 
-export type ArtidocStructureFields = StructureFields | StepDefinitionFieldStructure;
+export interface StepsExecutionFieldStructure extends BaseFieldStructure {
+    readonly type: StepsExecutionFieldIdentifier;
+}
+
+export type ArtidocStructureFields =
+    | StructureFields
+    | StepsDefinitionFieldStructure
+    | StepsExecutionFieldStructure;
 
 export interface TrackerForFields extends Pick<TrackerResponseNoInstance, "semantics"> {
     readonly fields: ReadonlyArray<ArtidocStructureFields>;
@@ -66,7 +76,8 @@ export type ConfigurationFieldType =
     | typeof USER_FIELD
     | typeof DATE_FIELD
     | typeof PERMISSIONS_FIELD
-    | typeof STEPS_DEFINITION_FIELD;
+    | typeof STEPS_DEFINITION_FIELD
+    | typeof STEPS_EXECUTION_FIELD;
 
 export type ConfigurationField = {
     readonly type: ConfigurationFieldType;
