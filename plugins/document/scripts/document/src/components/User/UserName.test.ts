@@ -21,6 +21,7 @@
 import { describe, expect, it } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import UserName from "./UserName.vue";
+import type { User } from "../../type";
 
 describe("UserName", () => {
     it(`Given user is connected
@@ -31,7 +32,7 @@ describe("UserName", () => {
                 user: {
                     id: 1,
                     is_anonymous: false,
-                },
+                } as unknown as User,
             },
         });
 
@@ -46,7 +47,7 @@ describe("UserName", () => {
                 user: {
                     id: 1,
                     is_anonymous: true,
-                },
+                } as unknown as User,
             },
         });
 
