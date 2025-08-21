@@ -33,8 +33,3 @@
     </svg>
 </template>
 <script setup lang="ts"></script>
-<style scoped lang="scss">
-.step-arrow {
-    flex-shrink: 0;
-}
-</style>
