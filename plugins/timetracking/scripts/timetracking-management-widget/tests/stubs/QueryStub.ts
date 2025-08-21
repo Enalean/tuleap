@@ -16,7 +16,19 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+import type { PredefinedTimePeriod } from "@tuleap/plugin-timetracking-predefined-time-periods";
+import type { User } from "@tuleap/core-rest-api-types";
+import type { Query } from "../../src/type";
 
-import type { StrictInjectionKey } from "@tuleap/vue-strict-inject";
+const start_date: string = new Date().toISOString().split("T")[0];
+const end_date: string = new Date().toISOString().split("T")[0];
+const predefined_time_period: PredefinedTimePeriod | "" = "";
 
-export const USER_LOCALE_KEY: StrictInjectionKey<string> = Symbol("user_locale");
+export const QueryStub = {
+    withDefaults: (users_list: User[]): Query => ({
+        start_date,
+        end_date,
+        predefined_time_period,
+        users_list,
+    }),
+};

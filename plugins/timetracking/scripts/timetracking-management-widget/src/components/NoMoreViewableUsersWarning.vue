@@ -18,19 +18,19 @@
   -->
 
 <template>
-    <div class="tlp-alert-warning" v-if="query_retriever.no_more_viewable_users.value.length > 0">
+    <div class="tlp-alert-warning" v-if="no_more_viewable_users.length > 0">
         {{
             $ngettext(
                 "You don't have the permission to access this user times, user removed from list:",
                 "You don't have the permission to access those users times, users removed from list:",
-                query_retriever.no_more_viewable_users.value.length,
+                no_more_viewable_users.length,
             )
         }}
-        <code v-if="query_retriever.no_more_viewable_users.value.length === 1">{{
-            query_retriever.no_more_viewable_users.value[0].display_name
+        <code v-if="no_more_viewable_users.length === 1">{{
+            no_more_viewable_users[0].display_name
         }}</code>
         <ul v-else>
-            <li v-for="user in query_retriever.no_more_viewable_users.value" v-bind:key="user.id">
+            <li v-for="user in no_more_viewable_users" v-bind:key="user.id">
                 <code>{{ user.display_name }}</code>
             </li>
         </ul>
@@ -39,11 +39,11 @@
 
 <script setup lang="ts">
 import { useGettext } from "vue3-gettext";
-import type { Query } from "../query/QueryRetriever";
+import type { User } from "@tuleap/core-rest-api-types";
 
 const { $ngettext } = useGettext();
 
 defineProps<{
-    query_retriever: Query;
+    no_more_viewable_users: User[];
 }>();
 </script>

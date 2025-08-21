@@ -17,25 +17,31 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, it, expect } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import WidgetQueryEditor from "./WidgetQueryEditor.vue";
 import WidgetQueryDisplayer from "./WidgetQueryDisplayer.vue";
 import TimetrackingManagementWidget from "./TimetrackingManagementWidget.vue";
-import { RetrieveQueryStub } from "../../tests/stubs/RetrieveQueryStub";
+import { QueryStub } from "../../tests/stubs/QueryStub";
+import type { User } from "@tuleap/core-rest-api-types";
+import * as rest_querier from "../api/rest-querier";
+import { okAsync } from "neverthrow";
+import process from "node:process";
+import NoMoreViewableUsersWarning from "./NoMoreViewableUsersWarning.vue";
 
 describe("Given a Timetracking Management Widget", () => {
-    function getTimetrackingManagementWidgetInstance(): VueWrapper {
+    function getTimetrackingManagementWidgetInstance(users_list: User[]): VueWrapper {
         return shallowMount(TimetrackingManagementWidget, {
             props: {
-                query_retriever: RetrieveQueryStub.withDefaults([]),
+                initial_query: QueryStub.withDefaults(users_list),
+                widget_id: 42,
             },
         });
     }
 
     it("When the query displayer is clicked, then the query editor should be displayed but not query displayer", async () => {
-        const wrapper = getTimetrackingManagementWidgetInstance();
+        const wrapper = getTimetrackingManagementWidgetInstance([]);
 
         await wrapper.findComponent(WidgetQueryDisplayer).trigger("click");
 
@@ -43,15 +49,108 @@ describe("Given a Timetracking Management Widget", () => {
         expect(wrapper.findComponent(WidgetQueryEditor).exists()).toBeTruthy();
     });
 
-    it("When the query is being edited, and the 'closeEditMode' event is emitted, then the query displayer should be displayed again but not query editor", async () => {
-        const wrapper = getTimetrackingManagementWidgetInstance();
+    it("When the query is being edited, and the editor wants to close, then the query displayer should be displayed again but not query editor", async () => {
+        const wrapper = getTimetrackingManagementWidgetInstance([]);
 
         await wrapper.findComponent(WidgetQueryDisplayer).trigger("click");
 
         expect(wrapper.findComponent(WidgetQueryDisplayer).exists()).toBeFalsy();
         expect(wrapper.findComponent(WidgetQueryEditor).exists()).toBeTruthy();
 
-        await wrapper.findComponent(WidgetQueryEditor).vm.$emit("closeEditMode");
+        await wrapper.findComponent(WidgetQueryEditor).props("close")();
+
+        expect(wrapper.findComponent(WidgetQueryDisplayer).exists()).toBeTruthy();
+        expect(wrapper.findComponent(WidgetQueryEditor).exists()).toBeFalsy();
+    });
+
+    it("Should sort users", () => {
+        const users: User[] = [
+            {
+                id: 1858,
+                user_url: "/users/alice.hernandez",
+                display_name: "Alice Hernandez (alice.hernandez)",
+                avatar_url: "/avatar-ea78.png",
+            },
+            {
+                id: 6871,
+                user_url: "/users/bobby.arnold",
+                display_name: "Bobby Arnold (bobby.arnold)",
+                avatar_url: "/avatar-2129.png",
+            },
+            {
+                id: 7964,
+                user_url: "/users/alyssa.buchanan",
+                display_name: "Alyssa Buchanan (alyssa.buchanan)",
+                avatar_url: "/avatar-77a6.png",
+            },
+        ];
+
+        const wrapper = getTimetrackingManagementWidgetInstance(users);
+
+        expect(
+            wrapper
+                .findComponent(WidgetQueryDisplayer)
+                .props("query")
+                .users_list.map((user) => user.display_name),
+        ).toStrictEqual([
+            "Alice Hernandez (alice.hernandez)",
+            "Alyssa Buchanan (alyssa.buchanan)",
+            "Bobby Arnold (bobby.arnold)",
+        ]);
+    });
+
+    it("should save the query and close the editor", async () => {
+        const alice: User = {
+            id: 1858,
+            user_url: "/users/alice.hernandez",
+            display_name: "Alice Hernandez (alice.hernandez)",
+            avatar_url: "/avatar-ea78.png",
+        };
+        const bobby: User = {
+            id: 6871,
+            user_url: "/users/bobby.arnold",
+            display_name: "Bobby Arnold (bobby.arnold)",
+            avatar_url: "/avatar-2129.png",
+        };
+        const alyssa: User = {
+            id: 7964,
+            user_url: "/users/alyssa.buchanan",
+            display_name: "Alyssa Buchanan (alyssa.buchanan)",
+            avatar_url: "/avatar-77a6.png",
+        };
+
+        const wrapper = getTimetrackingManagementWidgetInstance([]);
+
+        await wrapper.findComponent(WidgetQueryDisplayer).trigger("click");
+
+        expect(wrapper.findComponent(WidgetQueryDisplayer).exists()).toBeFalsy();
+        expect(wrapper.findComponent(WidgetQueryEditor).exists()).toBeTruthy();
+
+        vi.spyOn(rest_querier, "putQuery").mockReturnValue(
+            okAsync({
+                viewable_users: [alice],
+                no_more_viewable_users: [bobby],
+            }),
+        );
+
+        wrapper.findComponent(WidgetQueryEditor).props("save")(
+            QueryStub.withDefaults([alice, bobby, alyssa]),
+        );
+
+        await new Promise(process.nextTick);
+
+        expect(
+            wrapper
+                .findComponent(WidgetQueryDisplayer)
+                .props("query")
+                .users_list.map((user) => user.display_name),
+        ).toStrictEqual([alice.display_name]);
+        expect(
+            wrapper
+                .findComponent(NoMoreViewableUsersWarning)
+                .props("no_more_viewable_users")
+                .map((user) => user.display_name),
+        ).toStrictEqual([bobby.display_name]);
 
         expect(wrapper.findComponent(WidgetQueryDisplayer).exists()).toBeTruthy();
         expect(wrapper.findComponent(WidgetQueryEditor).exists()).toBeFalsy();

@@ -18,16 +18,17 @@
   -->
 
 <template>
-    <no-more-viewable-users-warning v-bind:query_retriever="query_retriever" />
+    <no-more-viewable-users-warning v-bind:no_more_viewable_users="no_more_viewable_users" />
     <widget-query-displayer
         v-if="!is_query_being_edited"
         v-on:click="is_query_being_edited = true"
-        v-bind:query_retriever="query_retriever"
+        v-bind:query="current_query"
     />
     <widget-query-editor
         v-else
-        v-on:close-edit-mode="is_query_being_edited = false"
-        v-bind:query_retriever="query_retriever"
+        v-bind:query="current_query"
+        v-bind:save="save"
+        v-bind:close="closeEdition"
     />
 </template>
 
@@ -36,11 +37,49 @@ import WidgetQueryDisplayer from "./WidgetQueryDisplayer.vue";
 import WidgetQueryEditor from "./WidgetQueryEditor.vue";
 import { ref } from "vue";
 import NoMoreViewableUsersWarning from "./NoMoreViewableUsersWarning.vue";
-import type { Query } from "../query/QueryRetriever";
+import { putQuery } from "../api/rest-querier";
+import type { User } from "@tuleap/core-rest-api-types";
+import type { Query } from "../type";
 
-defineProps<{
-    query_retriever: Query;
+const props = defineProps<{
+    initial_query: Query;
+    widget_id: number;
 }>();
 
 const is_query_being_edited = ref(false);
+
+const no_more_viewable_users = ref<User[]>([]);
+const current_query = ref<Query>(sortUsers(props.initial_query));
+
+function save(query: Query): void {
+    putQuery(props.widget_id, query).match(
+        (result) => {
+            current_query.value = sortUsers({
+                ...query,
+                users_list: result.viewable_users,
+            });
+            no_more_viewable_users.value = result.no_more_viewable_users;
+
+            closeEdition();
+        },
+        () => {
+            // will handle errors later
+        },
+    );
+}
+
+function sortUsers(query: Query): Query {
+    return {
+        ...query,
+        users_list: query.users_list.sort(compareUsers),
+    };
+}
+
+function closeEdition(): void {
+    is_query_being_edited.value = false;
+}
+
+function compareUsers(a: User, b: User): number {
+    return a.display_name.localeCompare(b.display_name, undefined, { numeric: true });
+}
 </script>

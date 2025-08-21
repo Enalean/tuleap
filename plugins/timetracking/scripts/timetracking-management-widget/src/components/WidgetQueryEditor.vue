@@ -75,7 +75,7 @@
             class="tlp-button-primary tlp-button-outline"
             type="button"
             data-test="cancel-button"
-            v-on:click="$emit('closeEditMode')"
+            v-on:click="close"
         >
             {{ $gettext("Cancel") }}
         </button>
@@ -83,7 +83,7 @@
             class="tlp-button-primary"
             data-test="search-button"
             type="button"
-            v-on:click="save"
+            v-on:click="saveQuery"
         >
             {{ $gettext("Save query") }}
         </button>
@@ -105,23 +105,23 @@ import type {
 } from "@tuleap/plugin-timetracking-predefined-time-periods";
 import { formatDatetimeToYearMonthDay } from "@tuleap/plugin-timetracking-time-formatters";
 import { strictInject } from "@tuleap/vue-strict-inject";
-import { USER_LOCALE_KEY, WIDGET_ID } from "../injection-symbols";
+import { USER_LOCALE_KEY } from "../injection-symbols";
 import type { User } from "@tuleap/core-rest-api-types";
 import { initUsersAutocompleter } from "@tuleap/lazybox-users-autocomplete";
 import type { ResultAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
 import { uri, getJSON } from "@tuleap/fetch-result";
-import type { Query } from "../query/QueryRetriever";
+import type { Query } from "../type";
 
 const { $gettext } = useGettext();
 
 const user_locale = strictInject(USER_LOCALE_KEY);
 
 const props = defineProps<{
-    query_retriever: Query;
+    query: Query;
+    save: (query: Query) => void;
+    close: () => void;
 }>();
-
-const widget_id = strictInject(WIDGET_ID);
 
 const start_date_input: Ref<HTMLInputElement | undefined> = ref();
 const end_date_input: Ref<HTMLInputElement | undefined> = ref();
@@ -131,15 +131,11 @@ let start_date_picker: DatePickerInstance;
 let end_date_picker: DatePickerInstance;
 
 let selected_predefined_time_period = ref<PredefinedTimePeriod | "">(
-    props.query_retriever.getQuery().predefined_time_period,
+    props.query.predefined_time_period,
 );
 
 const users_input = ref<Lazybox | undefined>();
 const currently_selected_users = ref<Array<User>>([]);
-
-const emit = defineEmits<{
-    (e: "closeEditMode"): void;
-}>();
 
 const isHTMLInputElement = (element: HTMLElement | undefined): element is HTMLInputElement => {
     return element instanceof HTMLInputElement;
@@ -154,14 +150,14 @@ onMounted((): void => {
         return;
     }
     start_date_picker = datePicker(start_date_input.value);
-    start_date_picker.setDate(props.query_retriever.getQuery().start_date);
+    start_date_picker.setDate(props.query.start_date);
 
     end_date_picker = datePicker(end_date_input.value);
-    end_date_picker.setDate(props.query_retriever.getQuery().end_date);
+    end_date_picker.setDate(props.query.end_date);
 
     initUsersAutocompleter(
         users_input.value,
-        props.query_retriever.getQuery().users_list.value,
+        props.query.users_list,
         (selected_users: ReadonlyArray<User>): void => {
             currently_selected_users.value = [...selected_users];
         },
@@ -181,17 +177,13 @@ onBeforeUnmount((): void => {
     end_date_picker.destroy();
 });
 
-const save = (): void => {
-    if (start_date_input.value?.value && end_date_input.value?.value) {
-        props.query_retriever.setQuery(
-            start_date_input.value?.value,
-            end_date_input.value?.value,
-            selected_predefined_time_period.value,
-            currently_selected_users.value,
-        );
-    }
-    props.query_retriever.saveQuery(widget_id);
-    emit("closeEditMode");
+const saveQuery = (): void => {
+    props.save({
+        start_date: start_date_input.value?.value || "",
+        end_date: end_date_input.value?.value || "",
+        predefined_time_period: selected_predefined_time_period.value,
+        users_list: currently_selected_users.value,
+    });
 };
 
 const resetSelectedOption = (): void => {
