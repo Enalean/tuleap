@@ -24,7 +24,7 @@
         <option
             v-for="field in currently_available_fields"
             v-bind:key="field.field_id"
-            v-bind:value="field.label"
+            v-bind:value="field.field_id"
             data-test="available-readonly-fields"
         >
             {{ field.label }}
@@ -83,9 +83,9 @@ function selectField(event: Event): void {
         return;
     }
 
-    const field_label = event.target.value;
+    const field_id = Number.parseInt(event.target.selectedOptions[0].value, 10);
     const field_index = currently_available_fields.value.findIndex(
-        (field) => field_label === field.label,
+        (field) => field_id === field.field_id,
     );
     const field = currently_available_fields.value[field_index];
 
