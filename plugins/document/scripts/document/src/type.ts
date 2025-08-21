@@ -279,6 +279,7 @@ export interface Embedded extends Item, ApprovableDocument {
 
 export interface OtherTypeItem extends Item {
     other_type_properties: OtherTypeProperties | null;
+    status: string;
 }
 
 export interface Wiki extends Item, ApprovableDocument {

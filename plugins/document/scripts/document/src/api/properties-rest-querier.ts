@@ -145,7 +145,7 @@ export function putOtherTypeDocumentProperties(
     title: string,
     description: string,
     owner_id: number,
-    status: string | null,
+    status: string,
     obsolescence_date: number | null,
     properties: Array<Property> | null,
 ): Promise<Response> {
