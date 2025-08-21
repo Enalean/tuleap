@@ -18,6 +18,7 @@
   -->
 
 <template>
+    <error-message v-bind:error_message="error_message" />
     <no-more-viewable-users-warning v-bind:no_more_viewable_users="no_more_viewable_users" />
     <widget-query-displayer
         v-if="!is_query_being_edited"
@@ -27,6 +28,7 @@
     <widget-query-editor
         v-else
         v-bind:query="current_query"
+        v-bind:is_query_being_saved="is_query_being_saved"
         v-bind:save="save"
         v-bind:close="closeEdition"
     />
@@ -40,18 +42,25 @@ import NoMoreViewableUsersWarning from "./NoMoreViewableUsersWarning.vue";
 import { putQuery } from "../api/rest-querier";
 import type { User } from "@tuleap/core-rest-api-types";
 import type { Query } from "../type";
+import { useGettext } from "vue3-gettext";
+import ErrorMessage from "./ErrorMessage.vue";
 
 const props = defineProps<{
     initial_query: Query;
     widget_id: number;
 }>();
 
+const { $gettext } = useGettext();
+
 const is_query_being_edited = ref(false);
+const is_query_being_saved = ref(false);
+const error_message = ref("");
 
 const no_more_viewable_users = ref<User[]>([]);
 const current_query = ref<Query>(sortUsers(props.initial_query));
 
 function save(query: Query): void {
+    is_query_being_saved.value = true;
     putQuery(props.widget_id, query).match(
         (result) => {
             current_query.value = sortUsers({
@@ -60,10 +69,16 @@ function save(query: Query): void {
             });
             no_more_viewable_users.value = result.no_more_viewable_users;
 
+            is_query_being_saved.value = false;
             closeEdition();
         },
-        () => {
-            // will handle errors later
+        (fault) => {
+            error_message.value = $gettext(
+                "Error while saving the query: %{error}",
+                { error: String(fault) },
+                true,
+            );
+            is_query_being_saved.value = false;
         },
     );
 }
@@ -76,6 +91,7 @@ function sortUsers(query: Query): Query {
 }
 
 function closeEdition(): void {
+    error_message.value = "";
     is_query_being_edited.value = false;
 }
 

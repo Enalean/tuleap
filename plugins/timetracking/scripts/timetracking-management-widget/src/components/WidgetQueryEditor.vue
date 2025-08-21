@@ -76,15 +76,24 @@
             type="button"
             data-test="cancel-button"
             v-on:click="close"
+            v-bind:disabled="is_query_being_saved"
         >
             {{ $gettext("Cancel") }}
         </button>
         <button
             class="tlp-button-primary"
-            data-test="search-button"
+            data-test="save-button"
             type="button"
             v-on:click="saveQuery"
+            v-bind:disabled="is_query_being_saved"
         >
+            <i
+                class="tlp-button-icon"
+                v-bind:class="
+                    is_query_being_saved ? 'fa-solid fa-circle-notch fa-spin' : 'fa-solid fa-save'
+                "
+                aria-hidden="true"
+            ></i>
             {{ $gettext("Save query") }}
         </button>
     </div>
@@ -121,6 +130,7 @@ const props = defineProps<{
     query: Query;
     save: (query: Query) => void;
     close: () => void;
+    is_query_being_saved: boolean;
 }>();
 
 const start_date_input: Ref<HTMLInputElement | undefined> = ref();
