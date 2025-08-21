@@ -24,6 +24,7 @@
         v-if="!is_query_being_edited"
         v-on:click="is_query_being_edited = true"
         v-bind:query="current_query"
+        v-bind:widget_id="widget_id"
     />
     <widget-query-editor
         v-else
@@ -31,6 +32,11 @@
         v-bind:is_query_being_saved="is_query_being_saved"
         v-bind:save="save"
         v-bind:close="closeEdition"
+    />
+    <query-results
+        v-if="!is_query_being_edited"
+        v-bind:widget_id="widget_id"
+        v-bind:nb_users="current_query.users_list.length"
     />
 </template>
 
@@ -44,6 +50,7 @@ import type { User } from "@tuleap/core-rest-api-types";
 import type { Query } from "../type";
 import { useGettext } from "vue3-gettext";
 import ErrorMessage from "./ErrorMessage.vue";
+import QueryResults from "./QueryResults.vue";
 
 const props = defineProps<{
     initial_query: Query;

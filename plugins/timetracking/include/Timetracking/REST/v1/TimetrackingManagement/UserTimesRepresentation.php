@@ -1,4 +1,5 @@
-/*
+<?php
+/**
  * Copyright (c) Enalean, 2025 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -17,18 +18,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { PredefinedTimePeriod } from "@tuleap/plugin-timetracking-predefined-time-periods";
-import type { User } from "@tuleap/core-rest-api-types";
+declare(strict_types=1);
 
-export type Query = {
-    start_date: string;
-    end_date: string;
-    predefined_time_period: PredefinedTimePeriod | "";
-    users_list: User[];
-};
+namespace Tuleap\Timetracking\REST\v1\TimetrackingManagement;
 
-interface UserTimes {
-    readonly user: User;
+use Tuleap\User\REST\MinimalUserRepresentation;
+
+/**
+ * @psalm-immutable
+ */
+final class UserTimesRepresentation
+{
+    /**
+     * @param TimeSpentInProjectRepresentation[] $times
+     */
+    public function __construct(public MinimalUserRepresentation $user, public array $times)
+    {
+    }
 }
-
-export type QueryResults = readonly UserTimes[];
