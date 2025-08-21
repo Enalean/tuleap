@@ -83,7 +83,7 @@ function getStatusBadgeClasses(status: StepExecutionStatus): string {
     let badge_class = "";
 
     if (status === STEP_NOT_RUN) {
-        return "tlp-badge-outline document-badge-outline tlp-badge-secondary tlp-swatch-secondary";
+        return "tlp-badge-outline document-badge-outline tlp-badge-secondary";
     }
 
     switch (status) {
