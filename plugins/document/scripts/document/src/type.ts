@@ -141,7 +141,7 @@ export interface Item extends MinimalItem {
     description: string;
     post_processed_description: string;
     owner: User;
-    last_update_date: Date | string | number;
+    last_update_date: string;
     creation_date: string;
     user_can_write: boolean;
     user_can_delete: boolean;

@@ -33,6 +33,9 @@ import DropDownQuickLook from "../Folder/DropDown/DropDownQuickLook.vue";
 import { useNamespacedState } from "vuex-composition-helpers";
 import type { ConfigurationState } from "../../store/configuration";
 import type { Item } from "../../type";
+import { useGettext } from "vue3-gettext";
+
+const { $gettext } = useGettext();
 
 const { project_id } = useNamespacedState<Pick<ConfigurationState, "project_id">>("configuration", [
     "project_id",

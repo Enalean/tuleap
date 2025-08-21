@@ -24,7 +24,13 @@
         </label>
         <p v-bind:id="property_label">
             <quick-look-property-date v-if="isDate" v-bind:property="property" />
-            <template v-else-if="isList">
+            <template
+                v-else-if="
+                    isList &&
+                    property.list_value !== null &&
+                    assertListIsOnlyMultipleValue(property.list_value)
+                "
+            >
                 <ul v-if="isMultipleList">
                     <li v-for="value in property.list_value" v-bind:key="value.id">
                         {{ value.name }}
@@ -51,6 +57,7 @@ import QuickLookPropertyDate from "./QuickLookPropertyDate.vue";
 import { computed } from "vue";
 import type { Property } from "../../type";
 import { useGettext } from "vue3-gettext";
+import { assertListIsOnlyMultipleValue } from "../../helpers/properties-helpers/value-transformer/list-value-helper";
 
 const { $gettext } = useGettext();
 

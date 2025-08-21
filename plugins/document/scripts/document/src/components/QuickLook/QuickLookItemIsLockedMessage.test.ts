@@ -21,27 +21,20 @@
 import { describe, expect, it } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import QuickLookItemIsLockedMessage from "./QuickLookItemIsLockedMessage.vue";
-import { TYPE_FILE } from "../../constants";
-import type { Item, RootState, User } from "../../type";
+import type { User } from "../../type";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 
 describe("QuickLookItemIsLockedMessage", () => {
     it("renders locked message for document", () => {
-        const item = {
-            type: TYPE_FILE,
-            lock_info: {
-                lock_by: { id: 1 } as User,
-                lock_date: "2019-04-25T16:32:59+02:00",
-            } as LockInfo,
-        } as Item;
-
         const wrapper = shallowMount(QuickLookItemIsLockedMessage, {
+            props: {
+                lock_info: {
+                    lock_by: { id: 1 } as User,
+                    lock_date: "2019-04-25T16:32:59+02:00",
+                },
+            },
             global: {
-                ...getGlobalTestOptions({
-                    state: {
-                        currently_previewed_item: item,
-                    } as RootState,
-                }),
+                ...getGlobalTestOptions({}),
             },
         });
 

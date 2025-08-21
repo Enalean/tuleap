@@ -63,6 +63,9 @@ import { useNamespacedState } from "vuex-composition-helpers";
 import { computed } from "vue";
 import type { ConfigurationState } from "../../store/configuration";
 import type { Property } from "../../type";
+import { useGettext } from "vue3-gettext";
+
+const { $gettext } = useGettext();
 
 const props = defineProps<{ property: Property }>();
 

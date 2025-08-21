@@ -34,11 +34,11 @@ describe("QuickLookDocumentPreview", () => {
         return shallowMount(QuickLookDocumentPreview, {
             props: {
                 iconClass: icon_class,
+                item: currently_previewed_item,
             },
             global: {
                 ...getGlobalTestOptions({
                     state: {
-                        currently_previewed_item,
                         is_loading_currently_previewed_item,
                     } as RootState,
                 }),

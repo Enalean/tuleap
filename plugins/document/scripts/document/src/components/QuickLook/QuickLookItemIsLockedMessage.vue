@@ -20,16 +20,18 @@
 <template>
     <div class="tlp-alert-info document-preview-item-is-locked-icon">
         {{ $gettext("This document is currently locked by") }}
-        <user-name v-bind:user="currently_previewed_item.lock_info.locked_by" />
+        <user-name v-bind:user="lock_info.lock_by" />
     </div>
 </template>
 
 <script setup lang="ts">
-import { useState } from "vuex-composition-helpers";
-import type { State } from "../../type";
+import type { LockInfo } from "../../type";
 import UserName from "../User/UserName.vue";
+import { useGettext } from "vue3-gettext";
 
-const { currently_previewed_item } = useState<Pick<State, "currently_previewed_item">>([
-    "currently_previewed_item",
-]);
+const { $gettext } = useGettext();
+
+defineProps<{
+    lock_info: LockInfo;
+}>();
 </script>

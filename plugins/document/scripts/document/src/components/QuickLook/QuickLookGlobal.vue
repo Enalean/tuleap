@@ -30,7 +30,10 @@
             <div class="document-quick-look-close-button" v-on:click="closeQuickLookEvent">×</div>
         </div>
         <section class="tlp-pane-section">
-            <quick-look-item-is-locked-message v-if="currently_previewed_item.lock_info !== null" />
+            <quick-look-item-is-locked-message
+                v-if="currently_previewed_item.lock_info !== null"
+                v-bind:lock_info="currently_previewed_item.lock_info"
+            />
             <quick-look-document-preview
                 v-bind:icon-class="icon_class"
                 v-bind:item="currently_previewed_item"
@@ -76,6 +79,9 @@ import { computed, defineAsyncComponent } from "vue";
 import { isFile } from "../../helpers/type-check-helper";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { OTHER_ITEM_TYPES } from "../../injection-keys";
+import { useGettext } from "vue3-gettext";
+
+const { $gettext } = useGettext();
 
 const props = defineProps<{ currently_previewed_item: Item }>();
 

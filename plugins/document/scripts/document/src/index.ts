@@ -39,6 +39,7 @@ import {
 } from "./injection-keys";
 import type { ConfigurationState } from "./store/configuration";
 import type { SearchCriterion, SearchListOption } from "./type";
+import { getRelativeDateUserPreferenceOrThrow } from "@tuleap/tlp-relative-date";
 
 interface MustacheCriterion {
     readonly name: string;
@@ -108,7 +109,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     );
     const csrf_token_name = getAttributeOrThrow(vue_mount_point, "data-csrf-token-name");
     const csrf_token = getAttributeOrThrow(vue_mount_point, "data-csrf-token");
-    const relative_dates_display = getAttributeOrThrow(
+    const relative_dates_display = getRelativeDateUserPreferenceOrThrow(
         vue_mount_point,
         "data-relative-dates-display",
     );

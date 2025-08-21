@@ -39,12 +39,16 @@ import DropDownQuickLook from "../Folder/DropDown/DropDownQuickLook.vue";
 import type { ItemFile } from "../../type";
 import { computed } from "vue";
 import DownloadButton from "./DownloadButton.vue";
+import { useGettext } from "vue3-gettext";
+
+const { $gettext } = useGettext();
 
 const props = defineProps<{ item: ItemFile }>();
 
 const should_display_open_button = computed(
-    (): boolean => props.item.file_properties && Boolean(props.item.file_properties.open_href),
+    (): boolean =>
+        props.item.file_properties !== null && Boolean(props.item.file_properties.open_href),
 );
 
-const open_href = computed((): string | undefined | null => props.item.file_properties?.open_href);
+const open_href = computed((): string => props.item.file_properties?.open_href ?? "");
 </script>

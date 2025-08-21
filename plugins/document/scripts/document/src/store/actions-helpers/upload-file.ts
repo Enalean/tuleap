@@ -133,7 +133,7 @@ export function uploadVersion(
         onSuccess: async (): Promise<void> => {
             updated_file.progress = null;
             updated_file.is_uploading_new_version = false;
-            updated_file.last_update_date = new Date();
+            updated_file.last_update_date = new Date().toISOString();
             context.commit("removeFileFromUploadsList", updated_file);
 
             const new_item_version = await getItem(updated_file.id);
@@ -184,7 +184,7 @@ export function uploadVersionFromEmpty(
         onSuccess: async (): Promise<void> => {
             updated_empty.progress = null;
             updated_empty.is_uploading_new_version = false;
-            updated_empty.last_update_date = new Date();
+            updated_empty.last_update_date = new Date().toISOString();
             context.commit("removeFileFromUploadsList", updated_empty);
             const new_item_version = await getItem(updated_empty.id);
             context.commit("removeItemFromFolderContent", new_item_version);

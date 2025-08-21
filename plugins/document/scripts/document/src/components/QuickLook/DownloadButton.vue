@@ -27,6 +27,9 @@
 <script setup lang="ts">
 import type { ItemFile } from "../../type";
 import { computed } from "vue";
+import { useGettext } from "vue3-gettext";
+
+const { $gettext } = useGettext();
 
 const props = defineProps<{ item: ItemFile }>();
 

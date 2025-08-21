@@ -34,6 +34,9 @@
 <script setup lang="ts">
 import DropDownQuickLook from "../Folder/DropDown/DropDownQuickLook.vue";
 import type { Item } from "../../type";
+import { useGettext } from "vue3-gettext";
+
+const { $gettext } = useGettext();
 
 defineProps<{ item: Item }>();
 </script>

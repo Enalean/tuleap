@@ -5,6 +5,8 @@ exports[`QuickLookItemIsLockedMessage > renders locked message for document 1`] 
   class="tlp-alert-info document-preview-item-is-locked-icon"
 >
   This document is currently locked by 
-  <user-name-stub />
+  <user-name-stub
+    user="[object Object]"
+  />
 </div>
 `;

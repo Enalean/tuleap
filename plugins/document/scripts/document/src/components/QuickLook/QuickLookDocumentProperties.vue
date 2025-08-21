@@ -56,7 +56,7 @@
             </div>
             <div
                 class="tlp-property"
-                v-if="has_an_approval_table"
+                v-if="hasAnApprovalTable(item)"
                 data-test="docman-item-approval-table-status-badge"
             >
                 <label for="document-approval-table-status" class="tlp-label">
@@ -98,6 +98,9 @@ import type { Item, Property } from "../../type";
 import { computed } from "vue";
 import { hasAnApprovalTable } from "../../helpers/approval-table-helper";
 import DocumentRelativeDate from "../Date/DocumentRelativeDate.vue";
+import { useGettext } from "vue3-gettext";
+
+const { $gettext } = useGettext();
 
 const props = defineProps<{ item: Item }>();
 
@@ -125,9 +128,6 @@ const file_size_in_mega_bytes = computed((): string => {
         return prettyBytes(0);
     }
     return prettyBytes(item.file_properties.file_size);
-});
-const has_an_approval_table = computed((): boolean => {
-    return hasAnApprovalTable(props.item);
 });
 
 const is_file = computed((): boolean => {
