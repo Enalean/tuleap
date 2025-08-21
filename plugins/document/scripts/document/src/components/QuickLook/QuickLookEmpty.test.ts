@@ -22,7 +22,7 @@ import { describe, expect, it } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import QuickLookEmpty from "./QuickLookEmpty.vue";
 import { TYPE_EMPTY } from "../../constants";
-import type { Item } from "../../type";
+import type { Empty } from "../../type";
 import NewVersionEmptyDropdown from "../Folder/DropDown/NewVersion/NewVersionEmptyDropdown.vue";
 
 describe("QuickLookEmpty", () => {
@@ -30,7 +30,7 @@ describe("QuickLookEmpty", () => {
         const item = {
             type: TYPE_EMPTY,
             user_can_write: true,
-        } as Item;
+        } as Empty;
 
         const wrapper = shallowMount(QuickLookEmpty, {
             props: { item: item },
@@ -43,7 +43,7 @@ describe("QuickLookEmpty", () => {
         const item = {
             type: TYPE_EMPTY,
             user_can_write: false,
-        } as Item;
+        } as Empty;
 
         const wrapper = shallowMount(QuickLookEmpty, {
             props: { item: item },

@@ -37,15 +37,17 @@
 import DropDownQuickLook from "../Folder/DropDown/DropDownQuickLook.vue";
 import type { OtherTypeItem } from "../../type";
 import { computed } from "vue";
+import { useGettext } from "vue3-gettext";
+
+const { $gettext } = useGettext();
 
 const props = defineProps<{ item: OtherTypeItem }>();
 
 const should_display_open_button = computed(
     (): boolean =>
-        props.item.other_type_properties && Boolean(props.item.other_type_properties.open_href),
+        props.item.other_type_properties !== null &&
+        Boolean(props.item.other_type_properties.open_href),
 );
 
-const open_href = computed(
-    (): string | undefined | null => props.item.other_type_properties?.open_href,
-);
+const open_href = computed((): string => props.item.other_type_properties?.open_href ?? "");
 </script>

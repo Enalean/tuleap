@@ -82,9 +82,9 @@ describe("QuickLookDocumentAdditionalProperties", () => {
             const value_list_element = wrapper.findAll("li");
 
             expect(value_list_element).toHaveLength(3);
-            expect(value_list_element.at(0).text()).toBe("value 1");
-            expect(value_list_element.at(1).text()).toBe("fail");
-            expect(value_list_element.at(2).text()).toBe("Tea");
+            expect(value_list_element.at(0)?.text()).toBe("value 1");
+            expect(value_list_element.at(1)?.text()).toBe("fail");
+            expect(value_list_element.at(2)?.text()).toBe("Tea");
         });
         it(`Given a list value with one value
              Then it displays the value`, () => {

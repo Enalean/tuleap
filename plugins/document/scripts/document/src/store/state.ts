@@ -50,7 +50,7 @@ export const state: RootState = {
         is_changelog_proposed_after_dnd: false,
         is_deletion_allowed: false,
         user_locale: "",
-        relative_dates_display: "",
+        relative_dates_display: "absolute_first-relative_tooltip",
         project_icon: "",
         criteria: [],
         columns: [],
