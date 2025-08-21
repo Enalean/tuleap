@@ -34,23 +34,38 @@ final readonly class StaticListFieldWithValueBuilder
 {
     public function buildStaticListFieldWithValue(ConfiguredField $configured_field, ?\Tracker_Artifact_ChangesetValue_List $changeset_value): StaticListFieldWithValue
     {
-        assert($configured_field->field instanceof \Tracker_FormElement_Field_List);
-
         return new StaticListFieldWithValue(
             $configured_field->field->getLabel(),
             $configured_field->display_type,
             array_values(
                 array_map(
                     function (Tracker_FormElement_Field_List_BindValue|Tracker_FormElement_Field_List_OpenValue $value) use ($configured_field) {
-                        $decorators = $configured_field->field->getDecorators();
-
-                        $color = isset($decorators[$value->getId()]) ? ColorName::fromName($decorators[$value->getId()]->getCurrentColor()) : null;
-
-                        return new StaticListValue($value->getLabel(), Option::fromNullable($color));
+                        assert($configured_field->field instanceof \Tracker_FormElement_Field_List);
+                        return new StaticListValue(
+                            $value->getLabel(),
+                            Option::fromNullable($this->getColorDecoratorIfSupported($configured_field->field, $value))
+                        );
                     },
                     $changeset_value?->getListValues() ?? [],
                 )
             )
         );
+    }
+
+    private function getColorDecoratorIfSupported(
+        \Tracker_FormElement_Field_List $configured_field,
+        Tracker_FormElement_Field_List_BindValue|Tracker_FormElement_Field_List_OpenValue $value,
+    ): ?ColorName {
+        $decorators = $configured_field->getDecorators();
+        if (! isset($decorators[$value->getId()])) {
+            return null;
+        }
+
+        $decorator = $decorators[$value->getId()];
+        if ($decorator->isUsingOldPalette()) {
+            return null;
+        }
+
+        return ColorName::fromName($decorator->getCurrentColor());
     }
 }
