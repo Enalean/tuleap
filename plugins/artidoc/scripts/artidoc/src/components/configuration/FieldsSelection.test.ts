@@ -28,8 +28,8 @@ import type { ConfigurationField } from "@/sections/readonly-fields/AvailableRea
 import SelectedFieldsList from "@/components/configuration/SelectedFieldsList.vue";
 import { ConfigurationFieldStub } from "@/sections/stubs/ConfigurationFieldStub";
 
-const field_1 = ConfigurationFieldStub.withLabel("Field 1");
-const field_2 = ConfigurationFieldStub.withLabel("Field 2");
+const field_1 = ConfigurationFieldStub.withFieldId(1001);
+const field_2 = ConfigurationFieldStub.withFieldId(1003);
 
 describe("FieldsSelection", () => {
     let available_fields: ConfigurationField[];
@@ -77,5 +77,36 @@ describe("FieldsSelection", () => {
         expect(available_fields.length).toBe(2);
         expect(available_fields[0].html()).toContain(field_1.label);
         expect(available_fields[1].html()).toContain(field_2.label);
+    });
+
+    it("When a value is selected, Then it should move it from the available fields list to the selected fields list", () => {
+        const wrapper = getWrapper();
+
+        expect(available_fields).toHaveLength(2);
+        expect(selected_fields).toHaveLength(0);
+
+        wrapper.find<HTMLSelectElement>("select").setValue(field_1.field_id);
+
+        expect(available_fields).toHaveLength(1);
+        expect(available_fields[0]).toBe(field_2);
+
+        expect(selected_fields).toHaveLength(1);
+        expect(selected_fields[0]).toBe(field_1);
+    });
+
+    it("When a value is unselected, Then it should move it from the selected fields list to the available fields list", async () => {
+        const wrapper = getWrapper();
+
+        await wrapper.find<HTMLSelectElement>("select").setValue(field_1.field_id);
+
+        wrapper.findComponent(SelectedFieldsList).trigger("unselect-field", field_1);
+
+        expect(available_fields).toHaveLength(2);
+        expect(selected_fields).toHaveLength(0);
+
+        expect(available_fields.map((field) => field.field_id)).toStrictEqual([
+            field_2.field_id,
+            field_1.field_id,
+        ]);
     });
 });
