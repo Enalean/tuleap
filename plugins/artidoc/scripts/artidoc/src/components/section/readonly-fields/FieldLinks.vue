@@ -79,7 +79,7 @@ function getStatusBadgeClasses(status: LinkedArtifactStatus): string {
     const badge_class =
         status.color !== ""
             ? `tlp-badge-${status.color} tlp-swatch-${status.color}`
-            : "tlp-badge-secondary tlp-swatch-secondary";
+            : "tlp-badge-secondary";
     return `tlp-badge-outline document-badge-outline ${badge_class}`;
 }
 
