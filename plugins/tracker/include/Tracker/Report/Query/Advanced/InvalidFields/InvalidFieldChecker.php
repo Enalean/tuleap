@@ -58,18 +58,18 @@ final readonly class InvalidFieldChecker
             \Tuleap\Tracker\FormElement\Field\Float\FloatField::class             => $this->float_field_checker->checkFieldIsValidForComparison($comparison, $field),
             \Tuleap\Tracker\FormElement\Field\Integer\IntegerField::class         => $this->int_field_checker->checkFieldIsValidForComparison($comparison, $field),
             \Tuleap\Tracker\FormElement\Field\String\StringField::class,
-            \Tuleap\Tracker\FormElement\Field\Text\TextField::class               => $this->text_field_checker->checkFieldIsValidForComparison($comparison, $field),
+            \Tuleap\Tracker\FormElement\Field\Text\TextField::class                 => $this->text_field_checker->checkFieldIsValidForComparison($comparison, $field),
             \Tuleap\Tracker\FormElement\Field\Date\DateField::class,
             \Tuleap\Tracker\FormElement\Field\LastUpdateDate\LastUpdateDateField::class,
-            \Tuleap\Tracker\FormElement\Field\SubmittedOn\SubmittedOnField::class => $this->date_field_checker->checkFieldIsValidForComparison($comparison, $field),
-            \Tracker_FormElement_Field_File::class                                => $this->file_field_checker->checkFieldIsValidForComparison($comparison, $field),
+            \Tuleap\Tracker\FormElement\Field\SubmittedOn\SubmittedOnField::class   => $this->date_field_checker->checkFieldIsValidForComparison($comparison, $field),
+            \Tracker_FormElement_Field_File::class                                  => $this->file_field_checker->checkFieldIsValidForComparison($comparison, $field),
             \Tuleap\Tracker\FormElement\Field\List\RadioButtonField::class,
             \Tuleap\Tracker\FormElement\Field\List\CheckboxField::class,
             \Tuleap\Tracker\FormElement\Field\List\MultiSelectboxField::class,
-            \Tuleap\Tracker\FormElement\Field\List\SelectboxField::class          => $this->list_field_checker->checkFieldIsValidForComparison($comparison, $field),
+            \Tuleap\Tracker\FormElement\Field\List\SelectboxField::class            => $this->list_field_checker->checkFieldIsValidForComparison($comparison, $field),
             \Tuleap\Tracker\FormElement\Field\SubmittedBy\SubmittedByField::class,
-            \Tracker_FormElement_Field_LastModifiedBy::class                      => $this->submitter_checker->checkFieldIsValidForComparison($comparison, $field),
-            \Tuleap\Tracker\FormElement\Field\List\OpenListField::class           => $this->checkOpenList($comparison, $field),
+            \Tuleap\Tracker\FormElement\Field\LastUpdateBy\LastUpdateByField::class => $this->submitter_checker->checkFieldIsValidForComparison($comparison, $field),
+            \Tuleap\Tracker\FormElement\Field\List\OpenListField::class             => $this->checkOpenList($comparison, $field),
             \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::class,
             \Tracker_FormElement_Field_PermissionsOnArtifact::class,
             \Tuleap\Tracker\FormElement\Field\ArtifactId\ArtifactIdField::class,
@@ -77,8 +77,8 @@ final readonly class InvalidFieldChecker
             \Tracker_FormElement_Field_CrossReferences::class,
             \Tracker_FormElement_Field_Burndown::class,
             \Tuleap\Tracker\FormElement\Field\Computed\ComputedField::class,
-            \Tuleap\Tracker\FormElement\Field\Priority\PriorityField::class       => throw new FieldIsNotSupportedAtAllException($field),
-            default                                                               => throw new ExternalFieldNotSupportedException()
+            \Tuleap\Tracker\FormElement\Field\Priority\PriorityField::class         => throw new FieldIsNotSupportedAtAllException($field),
+            default                                                                 => throw new ExternalFieldNotSupportedException()
         };
     }
 

@@ -24,10 +24,10 @@ namespace Tuleap\Artidoc\Document\Field\User;
 
 use Exception;
 use Tracker_Artifact_Changeset;
-use Tracker_FormElement_Field_LastModifiedBy;
 use Tuleap\Artidoc\Document\Field\ConfiguredField;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserValue;
+use Tuleap\Tracker\FormElement\Field\LastUpdateBy\LastUpdateByField;
 use Tuleap\Tracker\FormElement\Field\SubmittedBy\SubmittedByField;
 use Tuleap\User\Avatar\ProvideDefaultUserAvatarUrl;
 use Tuleap\User\Avatar\ProvideUserAvatarUrl;
@@ -57,7 +57,7 @@ final readonly class UserFieldWithValueBuilder
 
     private function buildUserValue(ConfiguredField $configured_field, Tracker_Artifact_Changeset $changeset): UserValue
     {
-        if ($configured_field->field instanceof Tracker_FormElement_Field_LastModifiedBy) {
+        if ($configured_field->field instanceof LastUpdateByField) {
             $user_id = (int) $changeset->getSubmittedBy();
             if ($user_id === \PFUser::ANONYMOUS_USER_ID) {
                 $user_mail = $changeset->getEmail() ?? '';

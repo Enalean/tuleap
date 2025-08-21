@@ -24,6 +24,7 @@ use Tuleap\Tracker\FormElement\Field\Computed\ComputedField;
 use Tuleap\Tracker\FormElement\Field\Date\DateField;
 use Tuleap\Tracker\FormElement\Field\Float\FloatField;
 use Tuleap\Tracker\FormElement\Field\Integer\IntegerField;
+use Tuleap\Tracker\FormElement\Field\LastUpdateBy\LastUpdateByField;
 use Tuleap\Tracker\FormElement\Field\LastUpdateDate\LastUpdateDateField;
 use Tuleap\Tracker\FormElement\Field\List\CheckboxField;
 use Tuleap\Tracker\FormElement\Field\List\MultiSelectboxField;
@@ -73,7 +74,7 @@ interface Tracker_FormElement_FieldVisitor // phpcs:ignore PSR1.Classes.ClassDec
 
     public function visitSubmittedBy(SubmittedByField $field);
 
-    public function visitLastModifiedBy(Tracker_FormElement_Field_LastModifiedBy $field);
+    public function visitLastModifiedBy(LastUpdateByField $field);
 
     public function visitArtifactId(ArtifactIdField $field);
 

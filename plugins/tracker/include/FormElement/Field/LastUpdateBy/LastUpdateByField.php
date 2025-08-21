@@ -18,21 +18,41 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\Tracker\FormElement\Field\LastUpdateBy;
+
+use Codendi_HTMLPurifier;
+use Override;
+use PFUser;
+use Tracker_Artifact_Changeset;
+use Tracker_Artifact_ChangesetFactoryBuilder;
+use Tracker_Artifact_ChangesetValue;
+use Tracker_ArtifactFactory;
+use Tracker_CardDisplayPreferences;
+use Tracker_FormElement_Field_List;
+use Tracker_FormElement_Field_List_Bind;
+use Tracker_FormElement_Field_List_Bind_UsersValue;
+use Tracker_FormElement_Field_ReadOnly;
+use Tracker_FormElement_FieldVisitor;
+use Tracker_FormElementFactory;
+use Tracker_Report;
+use Tracker_Report_Criteria;
+use Tuleap;
 use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
+use UserManager;
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
-class Tracker_FormElement_Field_LastModifiedBy extends Tracker_FormElement_Field_List implements Tracker_FormElement_Field_ReadOnly
+final class LastUpdateByField extends Tracker_FormElement_Field_List implements Tracker_FormElement_Field_ReadOnly
 {
     public array $default_properties = [];
 
+    #[Override]
     public function getCriteriaFromWhere(Tracker_Report_Criteria $criteria): Option
     {
         return $this->getCriteriaWhereFragment($criteria)->mapOr(
-            static fn (ParametrizedSQLFragment $where) => Option::fromValue(
+            static fn(ParametrizedSQLFragment $where) => Option::fromValue(
                 new ParametrizedFromWhere(
                     '',
                     $where->sql,
@@ -44,6 +64,7 @@ class Tracker_FormElement_Field_LastModifiedBy extends Tracker_FormElement_Field
         );
     }
 
+    #[Override]
     public function afterCreate(array $form_element_data, $tracker_is_empty)
     {
         $form_element_data['bind-type'] = 'users';
@@ -79,21 +100,25 @@ class Tracker_FormElement_Field_LastModifiedBy extends Tracker_FormElement_Field
         return Option::nothing(ParametrizedSQLFragment::class);
     }
 
+    #[Override]
     public function getQuerySelect(): string
     {
         return 'c.submitted_by AS ' . $this->getQuerySelectName();
     }
 
+    #[Override]
     public function getQueryOrderby(): string
     {
         return $this->getQuerySelectName();
     }
 
+    #[Override]
     public function getQueryFrom()
     {
         return '';
     }
 
+    #[Override]
     public function getQueryFromAggregate()
     {
         $R1 = 'R1_' . $this->id;
@@ -101,31 +126,37 @@ class Tracker_FormElement_Field_LastModifiedBy extends Tracker_FormElement_Field
         return " LEFT JOIN  user AS $R2 ON ($R2.user_id = c.submitted_by ) ";
     }
 
+    #[Override]
     public function getQueryGroupby(): string
     {
         return '';
     }
 
+    #[Override]
     public static function getFactoryLabel()
     {
         return dgettext('tuleap-tracker', 'Last Updated By');
     }
 
+    #[Override]
     public static function getFactoryDescription()
     {
         return dgettext('tuleap-tracker', 'The last person to update the artifact');
     }
 
+    #[Override]
     public static function getFactoryIconUseIt()
     {
         return $GLOBALS['HTML']->getImagePath('ic/user-female.png');
     }
 
+    #[Override]
     public static function getFactoryIconCreate()
     {
         return $GLOBALS['HTML']->getImagePath('ic/user-female--plus.png');
     }
 
+    #[Override]
     protected function saveValue(
         $artifact,
         $changeset_value_id,
@@ -136,21 +167,25 @@ class Tracker_FormElement_Field_LastModifiedBy extends Tracker_FormElement_Field
         return false;
     }
 
+    #[Override]
     protected function keepValue($artifact, $changeset_value_id, Tracker_Artifact_ChangesetValue $previous_changesetvalue)
     {
         return null;
     }
 
+    #[Override]
     public function fetchSubmit(array $submitted_values)
     {
         return '';
     }
 
+    #[Override]
     public function fetchSubmitMasschange()
     {
         return '';
     }
 
+    #[Override]
     public function getFullRESTValue(PFUser $user, Tracker_Artifact_Changeset $changeset)
     {
         $last_modified_by = $changeset->getArtifact()->getLastModifiedBy();
@@ -175,11 +210,12 @@ class Tracker_FormElement_Field_LastModifiedBy extends Tracker_FormElement_Field
     /**
      * Fetch the html code to display the field value in artifact
      *
-     * @param Artifact                        $artifact         The artifact
-     * @param Tracker_Artifact_ChangesetValue $value            The actual value of the field
-     * @param array                           $submitted_values The value already submitted by the user
+     * @param Artifact $artifact The artifact
+     * @param Tracker_Artifact_ChangesetValue $value The actual value of the field
+     * @param array $submitted_values The value already submitted by the user
      *
      */
+    #[Override]
     protected function fetchArtifactValue(
         Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value,
@@ -191,11 +227,12 @@ class Tracker_FormElement_Field_LastModifiedBy extends Tracker_FormElement_Field
     /**
      * Fetch the html code to display the field value in artifact in read only mode
      *
-     * @param Artifact                        $artifact The artifact
-     * @param Tracker_Artifact_ChangesetValue $value    The actual value of the field
+     * @param Artifact $artifact The artifact
+     * @param Tracker_Artifact_ChangesetValue $value The actual value of the field
      *
      * @return string
      */
+    #[Override]
     public function fetchArtifactValueReadOnly(Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
     {
         $purifier = Codendi_HTMLPurifier::instance();
@@ -210,11 +247,13 @@ class Tracker_FormElement_Field_LastModifiedBy extends Tracker_FormElement_Field
         return $label;
     }
 
+    #[Override]
     public function fetchArtifactCopyMode(Artifact $artifact, array $submitted_values)
     {
         return '';
     }
 
+    #[Override]
     public function fetchArtifactValueWithEditionFormIfEditable(
         Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value,
@@ -223,9 +262,10 @@ class Tracker_FormElement_Field_LastModifiedBy extends Tracker_FormElement_Field
         return $this->fetchArtifactValueReadOnly($artifact, $value);
     }
 
-     /**
+    /**
      * Fetch the field value in artifact to be displayed in mail
      */
+    #[Override]
     public function fetchMailArtifactValue(
         Artifact $artifact,
         PFUser $user,
@@ -246,11 +286,13 @@ class Tracker_FormElement_Field_LastModifiedBy extends Tracker_FormElement_Field
         return $output;
     }
 
+    #[Override]
     public function isValid(Artifact $artifact, $value)
     {
         return true;
     }
 
+    #[Override]
     public function validateFieldWithPermissionsAndRequiredStatus(
         Artifact $artifact,
         $submitted_value,
@@ -265,6 +307,7 @@ class Tracker_FormElement_Field_LastModifiedBy extends Tracker_FormElement_Field
         return true;
     }
 
+    #[Override]
     protected function fetchAdminFormElement()
     {
         $purifier   = Codendi_HTMLPurifier::instance();
@@ -277,6 +320,7 @@ class Tracker_FormElement_Field_LastModifiedBy extends Tracker_FormElement_Field
         return $html;
     }
 
+    #[Override]
     public function fetchChangesetValue(
         int $artifact_id,
         int $changeset_id,
@@ -300,6 +344,7 @@ class Tracker_FormElement_Field_LastModifiedBy extends Tracker_FormElement_Field
         return $this->getBind()->formatChangesetValue(new Tracker_FormElement_Field_List_Bind_UsersValue($this->getBind()->uuid_factory->buildUUIDFromBytesData($this->getBind()->uuid_factory->buildUUIDBytes()), $value));
     }
 
+    #[Override]
     protected function fetchTooltipValue(Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null): string
     {
         return $this->fetchArtifactValueReadOnly($artifact, $value);
@@ -308,6 +353,7 @@ class Tracker_FormElement_Field_LastModifiedBy extends Tracker_FormElement_Field
     /**
      * @see Tracker_FormElement_Field::fetchCardValue()
      */
+    #[Override]
     public function fetchCardValue(Artifact $artifact, ?Tracker_CardDisplayPreferences $display_preferences = null)
     {
         $value = new Tracker_FormElement_Field_List_Bind_UsersValue($this->getBind()->uuid_factory->buildUUIDFromBytesData($this->getBind()->uuid_factory->buildUUIDBytes()), $artifact->getLastModifiedBy());
@@ -319,6 +365,7 @@ class Tracker_FormElement_Field_LastModifiedBy extends Tracker_FormElement_Field
      * Used in CSV data export
      *
      */
+    #[Override]
     public function fetchCSVChangesetValue(int $artifact_id, int $changeset_id, mixed $value, ?Tracker_Report $report): string
     {
         return $this->getBind()->formatChangesetValueForCSV(new Tracker_FormElement_Field_List_Bind_UsersValue($this->getBind()->uuid_factory->buildUUIDFromBytesData($this->getBind()->uuid_factory->buildUUIDBytes()), $value));
@@ -329,6 +376,7 @@ class Tracker_FormElement_Field_LastModifiedBy extends Tracker_FormElement_Field
      *
      * @return bool
      */
+    #[Override]
     public function isNotificationsSupported()
     {
         return true;
@@ -339,6 +387,7 @@ class Tracker_FormElement_Field_LastModifiedBy extends Tracker_FormElement_Field
      *
      * @return bool
      */
+    #[Override]
     public function shouldBeBindXML()
     {
         return false;
@@ -349,7 +398,7 @@ class Tracker_FormElement_Field_LastModifiedBy extends Tracker_FormElement_Field
         return UserManager::instance();
     }
 
-     /**
+    /**
      * Get the field data for artifact submission
      * Check if the user name exists in the platform
      *
@@ -357,6 +406,7 @@ class Tracker_FormElement_Field_LastModifiedBy extends Tracker_FormElement_Field
      *
      * @return null|int the user id
      */
+    #[Override]
     public function getFieldData($value)
     {
         $um = $this->getUserManager();
@@ -368,26 +418,31 @@ class Tracker_FormElement_Field_LastModifiedBy extends Tracker_FormElement_Field
         }
     }
 
+    #[Override]
     public function isNone($value)
     {
         return false;
     }
 
+    #[Override]
     public function accept(Tracker_FormElement_FieldVisitor $visitor)
     {
         return $visitor->visitLastModifiedBy($this);
     }
 
+    #[Override]
     public function getDefaultValue()
     {
         return Tracker_FormElement_Field_List_Bind::NONE_VALUE;
     }
 
+    #[Override]
     public function getFieldDataFromRESTValue(array $value, ?Artifact $artifact = null)
     {
-         return null;
+        return null;
     }
 
+    #[Override]
     public function isAlwaysInEditMode(): bool
     {
         return false;
