@@ -31,13 +31,19 @@ final class StaticBindDecoratorBuilder
     private int $value_id = 1;
 
     private function __construct(
-        private readonly ColorName $tlp_color,
+        private readonly ?ColorName $tlp_color,
+        private readonly ?BindDecoratorLegacyColor $legacy_color,
     ) {
     }
 
     public static function withColor(ColorName $tlp_color): self
     {
-        return new self($tlp_color);
+        return new self($tlp_color, null);
+    }
+
+    public static function withLegacyColor(BindDecoratorLegacyColor $legacy_color): self
+    {
+        return new self(null, $legacy_color);
     }
 
     public function withFieldId(int $field_id): self
@@ -54,13 +60,24 @@ final class StaticBindDecoratorBuilder
 
     public function build(): Tracker_FormElement_Field_List_BindDecorator
     {
+        if ($this->legacy_color !== null) {
+            return new Tracker_FormElement_Field_List_BindDecorator(
+                $this->field_id,
+                $this->value_id,
+                $this->legacy_color->red,
+                $this->legacy_color->green,
+                $this->legacy_color->blue,
+                null,
+            );
+        }
+
         return new Tracker_FormElement_Field_List_BindDecorator(
             $this->field_id,
             $this->value_id,
             null,
             null,
             null,
-            $this->tlp_color->value,
+            $this->tlp_color?->value,
         );
     }
 }
