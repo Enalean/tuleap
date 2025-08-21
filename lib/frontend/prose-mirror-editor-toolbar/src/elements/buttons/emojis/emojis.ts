@@ -48,6 +48,13 @@ export const connect = (host: InternalEmojiButton): void => {
             host.is_disabled = emoji_state.is_disabled;
             host.emoji_string = emoji_state.emoji_string;
         },
+        toggleToolbarMenu: (menu: string) => {
+            if (menu !== "emoji" || !host.popover_instance) {
+                return;
+            }
+
+            host.popover_instance.show();
+        },
     });
 };
 
