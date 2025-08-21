@@ -59,6 +59,7 @@ const new_end_date = "2024-06-12";
 
 describe("Given a timetracking management widget query editor", () => {
     let users_list: User[] = [];
+    let is_query_being_saved = false;
     let query: Query;
     let save: Mock;
     let close: Mock;
@@ -73,6 +74,7 @@ describe("Given a timetracking management widget query editor", () => {
                 query,
                 save,
                 close,
+                is_query_being_saved,
             },
             global: {
                 ...getGlobalTestOptions(),
@@ -96,7 +98,7 @@ describe("Given a timetracking management widget query editor", () => {
 
         start_date_input.setValue(new_start_date);
         end_date_input.setValue(new_end_date);
-        wrapper.find("[data-test=search-button]").trigger("click");
+        wrapper.find("[data-test=save-button]").trigger("click");
 
         expect(save).toHaveBeenCalledWith({
             start_date: new_start_date,
@@ -159,5 +161,13 @@ describe("Given a timetracking management widget query editor", () => {
         const lazybox_stub = wrapper.findComponent(LazyboxVueStub);
 
         expect(lazybox_stub.vm.getInitialSelection()).toStrictEqual([]);
+    });
+
+    it(`When the query is being saved, then save button is disabled`, () => {
+        is_query_being_saved = true;
+        const wrapper = getWidgetQueryEditorInstance();
+
+        expect(wrapper.find("[data-test=save-button]").attributes("disabled")).toBeDefined();
+        expect(wrapper.find("[data-test=cancel-button]").attributes("disabled")).toBeDefined();
     });
 });

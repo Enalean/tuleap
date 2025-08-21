@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi, beforeEach } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import WidgetQueryEditor from "./WidgetQueryEditor.vue";
@@ -26,16 +26,24 @@ import TimetrackingManagementWidget from "./TimetrackingManagementWidget.vue";
 import { QueryStub } from "../../tests/stubs/QueryStub";
 import type { User } from "@tuleap/core-rest-api-types";
 import * as rest_querier from "../api/rest-querier";
-import { okAsync } from "neverthrow";
+import { okAsync, errAsync } from "neverthrow";
+import { Fault } from "@tuleap/fault";
 import process from "node:process";
 import NoMoreViewableUsersWarning from "./NoMoreViewableUsersWarning.vue";
+import { getGlobalTestOptions } from "../../tests/global-options-for-tests";
+import ErrorMessage from "./ErrorMessage.vue";
 
 describe("Given a Timetracking Management Widget", () => {
-    function getTimetrackingManagementWidgetInstance(users_list: User[]): VueWrapper {
+    function getTimetrackingManagementWidgetInstance(
+        users_list: User[],
+    ): VueWrapper<InstanceType<typeof TimetrackingManagementWidget>> {
         return shallowMount(TimetrackingManagementWidget, {
             props: {
                 initial_query: QueryStub.withDefaults(users_list),
                 widget_id: 42,
+            },
+            global: {
+                ...getGlobalTestOptions(),
             },
         });
     }
@@ -45,8 +53,8 @@ describe("Given a Timetracking Management Widget", () => {
 
         await wrapper.findComponent(WidgetQueryDisplayer).trigger("click");
 
-        expect(wrapper.findComponent(WidgetQueryDisplayer).exists()).toBeFalsy();
-        expect(wrapper.findComponent(WidgetQueryEditor).exists()).toBeTruthy();
+        expect(wrapper.findComponent(WidgetQueryDisplayer).exists()).toBe(false);
+        expect(wrapper.findComponent(WidgetQueryEditor).exists()).toBe(true);
     });
 
     it("When the query is being edited, and the editor wants to close, then the query displayer should be displayed again but not query editor", async () => {
@@ -54,13 +62,13 @@ describe("Given a Timetracking Management Widget", () => {
 
         await wrapper.findComponent(WidgetQueryDisplayer).trigger("click");
 
-        expect(wrapper.findComponent(WidgetQueryDisplayer).exists()).toBeFalsy();
-        expect(wrapper.findComponent(WidgetQueryEditor).exists()).toBeTruthy();
+        expect(wrapper.findComponent(WidgetQueryDisplayer).exists()).toBe(false);
+        expect(wrapper.findComponent(WidgetQueryEditor).exists()).toBe(true);
 
         await wrapper.findComponent(WidgetQueryEditor).props("close")();
 
-        expect(wrapper.findComponent(WidgetQueryDisplayer).exists()).toBeTruthy();
-        expect(wrapper.findComponent(WidgetQueryEditor).exists()).toBeFalsy();
+        expect(wrapper.findComponent(WidgetQueryDisplayer).exists()).toBe(true);
+        expect(wrapper.findComponent(WidgetQueryEditor).exists()).toBe(false);
     });
 
     it("Should sort users", () => {
@@ -123,8 +131,8 @@ describe("Given a Timetracking Management Widget", () => {
 
         await wrapper.findComponent(WidgetQueryDisplayer).trigger("click");
 
-        expect(wrapper.findComponent(WidgetQueryDisplayer).exists()).toBeFalsy();
-        expect(wrapper.findComponent(WidgetQueryEditor).exists()).toBeTruthy();
+        expect(wrapper.findComponent(WidgetQueryDisplayer).exists()).toBe(false);
+        expect(wrapper.findComponent(WidgetQueryEditor).exists()).toBe(true);
 
         vi.spyOn(rest_querier, "putQuery").mockReturnValue(
             okAsync({
@@ -152,7 +160,48 @@ describe("Given a Timetracking Management Widget", () => {
                 .map((user) => user.display_name),
         ).toStrictEqual([bobby.display_name]);
 
-        expect(wrapper.findComponent(WidgetQueryDisplayer).exists()).toBeTruthy();
-        expect(wrapper.findComponent(WidgetQueryEditor).exists()).toBeFalsy();
+        expect(wrapper.findComponent(WidgetQueryDisplayer).exists()).toBe(true);
+        expect(wrapper.findComponent(WidgetQueryEditor).exists()).toBe(false);
+        expect(wrapper.findComponent(ErrorMessage).props("error_message")).toBe("");
+    });
+
+    describe("When the saving fails", () => {
+        let wrapper: VueWrapper<InstanceType<typeof TimetrackingManagementWidget>>;
+
+        beforeEach(async () => {
+            wrapper = getTimetrackingManagementWidgetInstance([]);
+
+            await wrapper.findComponent(WidgetQueryDisplayer).trigger("click");
+
+            expect(wrapper.findComponent(WidgetQueryDisplayer).exists()).toBe(false);
+            expect(wrapper.findComponent(WidgetQueryEditor).exists()).toBe(true);
+            expect(wrapper.findComponent(ErrorMessage).props("error_message")).toBe("");
+
+            vi.spyOn(rest_querier, "putQuery").mockReturnValue(
+                errAsync(Fault.fromMessage("Bad request")),
+            );
+
+            wrapper.findComponent(WidgetQueryEditor).props("save")(QueryStub.withDefaults([]));
+
+            await new Promise(process.nextTick);
+        });
+
+        it("Then the editor should stay and the error message should be displayed", () => {
+            expect(wrapper.findComponent(WidgetQueryDisplayer).exists()).toBe(false);
+            expect(wrapper.findComponent(WidgetQueryEditor).exists()).toBe(true);
+            expect(wrapper.findComponent(ErrorMessage).props("error_message")).toBe(
+                "Error while saving the query: Bad request",
+            );
+        });
+
+        it("Then the error message is not displayed anymore if the user decides to close the editor", async () => {
+            wrapper.findComponent(WidgetQueryEditor).props("close")();
+
+            await new Promise(process.nextTick);
+
+            expect(wrapper.findComponent(WidgetQueryDisplayer).exists()).toBe(true);
+            expect(wrapper.findComponent(WidgetQueryEditor).exists()).toBe(false);
+            expect(wrapper.findComponent(ErrorMessage).props("error_message")).toBe("");
+        });
     });
 });

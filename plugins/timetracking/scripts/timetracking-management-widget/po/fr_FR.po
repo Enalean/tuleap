@@ -15,6 +15,9 @@ msgstr ""
 msgid "Cancel"
 msgstr "Annuler"
 
+msgid "Error while saving the query: %{error}"
+msgstr "Une erreur est survenue lors de la sauvegarde de la requête : %{error}"
+
 msgid "From"
 msgstr "Du"
 
