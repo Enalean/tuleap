@@ -19,7 +19,7 @@
 
 <template>
     <a
-        v-bind:href="artifact.html_url"
+        v-bind:href="artifact_url"
         class="timetracking-widget-artifact-title"
         v-bind:title="artifact_title"
     >
@@ -35,6 +35,10 @@
 <script setup lang="ts">
 import type { Artifact } from "@tuleap/plugin-timetracking-rest-api-types";
 import { computed } from "vue";
+import { DASHBOARD_ID } from "../injection-symbols";
+import { strictInject } from "@tuleap/vue-strict-inject";
+
+const dashboard_id = strictInject(DASHBOARD_ID);
 
 const props = defineProps<{
     artifact: Artifact;
@@ -45,6 +49,10 @@ const badge_color = computed((): string => {
 });
 
 const artifact_title = props.artifact.title !== null ? props.artifact.title : "";
+
+const artifact_url = computed((): string => {
+    return `${props.artifact.html_url}&my-dashboard-id=${dashboard_id}`;
+});
 </script>
 
 <style scoped lang="scss">
