@@ -39,8 +39,9 @@
                     data-test="step-results"
                 >
                     <step-definition-arrow />
+                    {{ $gettext("Expected results") }}
                     <div
-                        class="document-step-expected"
+                        class="step-expected document-step-expected"
                         v-dompurify-html="step.expected_results"
                     ></div>
                 </section>
@@ -99,7 +100,7 @@ function getStatusBadgeClasses(status: StepExecutionStatus): string {
         default:
             break;
     }
-    return `tlp-badge document-badge ${badge_class}`;
+    return `document-badge ${badge_class}`;
 }
 
 function getBadgeLabel(status: StepExecutionStatus): string {
@@ -152,8 +153,18 @@ function getBadgeLabel(status: StepExecutionStatus): string {
 }
 
 .step-results {
-    display: flex;
-    align-items: baseline;
+    display: grid;
+    grid:
+        "icon label" auto
+        ". expect" auto / 16px auto;
     gap: 5px;
+}
+
+.step-arrow {
+    align-self: center;
+}
+
+.step-expected {
+    grid-area: expect;
 }
 </style>

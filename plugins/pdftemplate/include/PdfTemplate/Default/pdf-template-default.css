@@ -624,11 +624,17 @@ tlp-relative-date {
 }
 
 .document-step-results {
-    display: flex;
-    align-items: baseline;
+    display: grid;
+    grid:
+        "icon label" auto
+        ". expect" auto / 16px auto;
     gap: 5px;
 }
 
 .document-step-arrow {
-    flex-shrink: 0;
+    align-self: center;
+}
+
+.document-step-expected {
+    grid-area: expect;
 }

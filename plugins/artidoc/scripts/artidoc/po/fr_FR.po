@@ -130,6 +130,9 @@ msgstr "Erreur"
 msgid "Error details"
 msgstr "Détails de l'erreur"
 
+msgid "Expected results"
+msgstr "Résultats attendus"
+
 msgid "Export document in PDF"
 msgstr "Exporter le document en PDF"
 
