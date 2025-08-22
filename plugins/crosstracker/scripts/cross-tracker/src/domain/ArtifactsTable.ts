@@ -31,6 +31,7 @@ export const USER_GROUP_LIST_CELL = "list_user_group";
 export const PROJECT_CELL = "project";
 export const TRACKER_CELL = "tracker";
 export const PRETTY_TITLE_CELL = "pretty_title";
+export const LINK_TYPE_CELL = "link_type";
 export const FORWARD_DIRECTION = "forward";
 export const REVERSE_DIRECTION = "reverse";
 
@@ -100,6 +101,12 @@ export type PrettyTitleCell = {
     readonly title: string;
 };
 
+export type LinkTypeCell = {
+    readonly type: typeof LINK_TYPE_CELL;
+    readonly label: string;
+    readonly direction: ArtifactLinkDirection;
+};
+
 export type Cell =
     | DateCell
     | NumericCell
@@ -110,7 +117,8 @@ export type Cell =
     | UserGroupListCell
     | ProjectCell
     | TrackerCell
-    | PrettyTitleCell;
+    | PrettyTitleCell
+    | LinkTypeCell;
 
 export type ArtifactRow = {
     readonly id: number;

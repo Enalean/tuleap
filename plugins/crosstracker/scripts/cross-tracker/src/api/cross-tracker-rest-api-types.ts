@@ -17,7 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { TrackerResponseWithProject } from "@tuleap/plugin-tracker-rest-api-types";
+import type {
+    LinkTypeRepresentation,
+    TrackerResponseWithProject,
+} from "@tuleap/plugin-tracker-rest-api-types";
 import type { ColorName } from "@tuleap/core-constants";
 
 export type TrackerReference = Pick<TrackerResponseWithProject, "id" | "label" | "project">;
@@ -124,10 +127,7 @@ export type ArtifactSelectableRepresentation = {
     readonly number_of_reverse_link: number;
 };
 
-export type LinkTypeSelectableRepresentation = {
-    readonly value: string;
-};
-
+export type LinkTypeSelectableRepresentation = Pick<LinkTypeRepresentation, "direction" | "label">;
 export type SelectableRepresentation =
     | DateSelectableRepresentation
     | NumericSelectableRepresentation
