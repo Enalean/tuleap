@@ -146,6 +146,12 @@
       <description>Define the title of an artifact</description>
       <field REF="F12744"/>
     </semantic>
+    <semantic type="description">
+      <shortname>description</shortname>
+      <label>Description</label>
+      <description>Define the description of an artifact</description>
+      <field REF="F12745"/>
+    </semantic>
     <semantic type="tooltip">
       <field REF="F12757"/>
       <field REF="F12744"/>
