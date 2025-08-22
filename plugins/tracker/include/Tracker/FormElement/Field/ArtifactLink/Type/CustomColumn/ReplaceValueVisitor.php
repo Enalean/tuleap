@@ -26,7 +26,6 @@ use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_Burndown;
 use Tracker_FormElement_Field_CrossReferences;
 use Tracker_FormElement_Field_File;
-use Tracker_FormElement_Field_LastModifiedBy;
 use Tracker_FormElement_Field_PermissionsOnArtifact;
 use Tracker_FormElement_FieldVisitor;
 use Tuleap\Tracker\FormElement\Field\ArtifactId\ArtifactIdField;
@@ -35,6 +34,7 @@ use Tuleap\Tracker\FormElement\Field\Computed\ComputedField;
 use Tuleap\Tracker\FormElement\Field\Date\DateField;
 use Tuleap\Tracker\FormElement\Field\Float\FloatField;
 use Tuleap\Tracker\FormElement\Field\Integer\IntegerField;
+use Tuleap\Tracker\FormElement\Field\LastUpdateBy\LastUpdateByField;
 use Tuleap\Tracker\FormElement\Field\LastUpdateDate\LastUpdateDateField;
 use Tuleap\Tracker\FormElement\Field\List\CheckboxField;
 use Tuleap\Tracker\FormElement\Field\List\MultiSelectboxField;
@@ -199,7 +199,7 @@ class ReplaceValueVisitor implements Tracker_FormElement_FieldVisitor
         throw new UnsupportedFieldException();
     }
 
-    public function visitLastModifiedBy(Tracker_FormElement_Field_LastModifiedBy $field)
+    public function visitLastModifiedBy(LastUpdateByField $field)
     {
         throw new UnsupportedFieldException();
     }

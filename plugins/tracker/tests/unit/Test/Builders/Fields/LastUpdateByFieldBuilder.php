@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Test\Builders\Fields;
 
+use Tuleap\Tracker\FormElement\Field\LastUpdateBy\LastUpdateByField;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Tracker;
 
@@ -54,9 +55,9 @@ final class LastUpdateByFieldBuilder
         return $this;
     }
 
-    public function build(): \Tracker_FormElement_Field_LastModifiedBy
+    public function build(): LastUpdateByField
     {
-        $field = new \Tracker_FormElement_Field_LastModifiedBy(
+        $field = new LastUpdateByField(
             $this->id,
             $this->tracker->getId(),
             8,
@@ -70,6 +71,7 @@ final class LastUpdateByFieldBuilder
             10,
             null
         );
+        $field->setTracker($this->tracker);
         $this->setPermissions($field);
 
         return $field;

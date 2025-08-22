@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\Artidoc\Document\Field;
 
 use PFUser;
-use Tracker_FormElement_Field_LastModifiedBy;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Bind_Null;
 use Tracker_FormElement_Field_PermissionsOnArtifact;
@@ -39,6 +38,7 @@ use Tuleap\TestManagement\Step\Definition\Field\StepsDefinition;
 use Tuleap\TestManagement\Step\Execution\Field\StepsExecution;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\Date\DateField;
+use Tuleap\Tracker\FormElement\Field\LastUpdateBy\LastUpdateByField;
 use Tuleap\Tracker\FormElement\Field\NumericField;
 use Tuleap\Tracker\FormElement\Field\RetrieveUsedFields;
 use Tuleap\Tracker\FormElement\Field\SubmittedBy\SubmittedByField;
@@ -106,7 +106,7 @@ final readonly class SuitableFieldRetriever
     private function validateListField(Tracker_FormElement_Field_List $field): Ok|Err
     {
         if (
-            $field instanceof Tracker_FormElement_Field_LastModifiedBy
+            $field instanceof LastUpdateByField
             || $field instanceof SubmittedByField
         ) {
             /** @psalm-var Tracker_FormElement_Field_List $field_return */

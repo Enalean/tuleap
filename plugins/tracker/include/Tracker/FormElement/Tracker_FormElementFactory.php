@@ -31,6 +31,7 @@ use Tuleap\Tracker\FormElement\Field\Date\DateField;
 use Tuleap\Tracker\FormElement\Field\FieldDao;
 use Tuleap\Tracker\FormElement\Field\Float\FloatField;
 use Tuleap\Tracker\FormElement\Field\Integer\IntegerField;
+use Tuleap\Tracker\FormElement\Field\LastUpdateBy\LastUpdateByField;
 use Tuleap\Tracker\FormElement\Field\LastUpdateDate\LastUpdateDateField;
 use Tuleap\Tracker\FormElement\Field\List\CheckboxField;
 use Tuleap\Tracker\FormElement\Field\List\MultiSelectboxField;
@@ -127,7 +128,7 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
         self::FIELD_SUBMITTED_ON_TYPE => SubmittedOnField::class,
         self::FIELD_ARTIFACT_IN_TRACKER => PerTrackerArtifactIdField::class,
         self::FIELD_SUBMITTED_BY_TYPE => SubmittedByField::class,
-        self::FIELD_LAST_MODIFIED_BY => Tracker_FormElement_Field_LastModifiedBy::class,
+        self::FIELD_LAST_MODIFIED_BY => LastUpdateByField::class,
         self::FIELD_CROSS_REFERENCES => Tracker_FormElement_Field_CrossReferences::class,
         self::FIELD_BURNDOWN => Tracker_FormElement_Field_Burndown::class,
         self::FIELD_COMPUTED => ComputedField::class,
