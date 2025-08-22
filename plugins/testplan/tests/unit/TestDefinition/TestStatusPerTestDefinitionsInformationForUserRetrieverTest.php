@@ -22,11 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\TestPlan\TestDefinition;
 
-use Tracker_FormElement_Field_List;
 use Tracker_FormElementFactory;
 use TrackerFactory;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\TestManagement\Config;
+use Tuleap\Tracker\FormElement\Field\ListField;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TestStatusPerTestDefinitionsInformationForUserRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -69,7 +69,7 @@ final class TestStatusPerTestDefinitionsInformationForUserRetrieverTest extends 
 
         $this->testmanagement_config->method('getTestExecutionTrackerId')->willReturn(11);
         $test_exec_tracker = $this->buildTracker(true);
-        $status_field      = $this->createMock(Tracker_FormElement_Field_List::class);
+        $status_field      = $this->createMock(ListField::class);
         $status_field->method('getId')->willReturn(4444);
         $status_field->method('userCanRead')->willReturn(true);
         $test_exec_tracker->method('getStatusField')->willReturn($status_field);
@@ -120,7 +120,7 @@ final class TestStatusPerTestDefinitionsInformationForUserRetrieverTest extends 
     {
         $this->testmanagement_config->method('getTestExecutionTrackerId')->willReturn(11);
         $test_exec_tracker = $this->buildTracker(true);
-        $status_field      = $this->createMock(Tracker_FormElement_Field_List::class);
+        $status_field      = $this->createMock(ListField::class);
         $status_field->method('getId')->willReturn(4444);
         $status_field->method('userCanRead')->willReturn(true);
         $test_exec_tracker->method('getStatusField')->willReturn($status_field);
@@ -152,7 +152,7 @@ final class TestStatusPerTestDefinitionsInformationForUserRetrieverTest extends 
 
         $this->testmanagement_config->method('getTestExecutionTrackerId')->willReturn(11);
         $test_exec_tracker = $this->buildTracker(true);
-        $status_field      = $this->createMock(Tracker_FormElement_Field_List::class);
+        $status_field      = $this->createMock(ListField::class);
         $status_field->method('getId')->willReturn(4444);
         $status_field->method('userCanRead')->willReturn(true);
         $test_exec_tracker->method('getStatusField')->willReturn($status_field);
@@ -187,7 +187,7 @@ final class TestStatusPerTestDefinitionsInformationForUserRetrieverTest extends 
         $this->testmanagement_config->method('getTestExecutionTrackerId')->willReturn(11);
         $test_exec_tracker = $this->buildTracker(true);
         $this->tracker_factory->method('getTrackerById')->with(11)->willReturn($test_exec_tracker);
-        $status_field = $this->createMock(Tracker_FormElement_Field_List::class);
+        $status_field = $this->createMock(ListField::class);
         $status_field->method('getId')->willReturn(4444);
         $status_field->method('userCanRead')->willReturn(true);
         $test_exec_tracker->method('getStatusField')->willReturn($status_field);
@@ -213,7 +213,7 @@ final class TestStatusPerTestDefinitionsInformationForUserRetrieverTest extends 
         $this->testmanagement_config->method('getTestExecutionTrackerId')->willReturn(11);
         $test_exec_tracker = $this->buildTracker(true);
         $this->tracker_factory->method('getTrackerById')->with(11)->willReturn($test_exec_tracker);
-        $status_field = $this->createMock(Tracker_FormElement_Field_List::class);
+        $status_field = $this->createMock(ListField::class);
         $status_field->method('getId')->willReturn(4444);
         $status_field->method('userCanRead')->willReturn(false);
         $test_exec_tracker->method('getStatusField')->willReturn($status_field);

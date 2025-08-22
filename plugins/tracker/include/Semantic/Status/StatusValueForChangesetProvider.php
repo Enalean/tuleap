@@ -25,8 +25,8 @@ namespace Tuleap\Tracker\Semantic\Status;
 use PFUser;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue_List;
-use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_BindValue;
+use Tuleap\Tracker\FormElement\Field\ListField;
 
 class StatusValueForChangesetProvider
 {
@@ -58,7 +58,7 @@ class StatusValueForChangesetProvider
         return current($values);
     }
 
-    protected function loadSemanticField(Tracker_Artifact_Changeset $changeset): ?Tracker_FormElement_Field_List
+    protected function loadSemanticField(Tracker_Artifact_Changeset $changeset): ?ListField
     {
         return CachedSemanticStatusFieldRetriever::instance()->fromTracker($changeset->getTracker());
     }

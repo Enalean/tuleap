@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Test\Stub;
 
-use Tracker_FormElement_Field_List;
+use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\Semantic\Status\RetrieveSemanticStatusField;
 use Tuleap\Tracker\Tracker;
 
@@ -30,7 +30,7 @@ final class RetrieveSemanticStatusFieldStub implements RetrieveSemanticStatusFie
 {
     private int $call_count = 0;
     /**
-     * @var array<int, Tracker_FormElement_Field_List>
+     * @var array<int, ListField>
      */
     private array $fields = [];
 
@@ -43,14 +43,14 @@ final class RetrieveSemanticStatusFieldStub implements RetrieveSemanticStatusFie
         return new self();
     }
 
-    public function withField(Tracker_FormElement_Field_List $field): self
+    public function withField(ListField $field): self
     {
         $this->fields[$field->getTrackerId()] = $field;
         return $this;
     }
 
     #[\Override]
-    public function fromTracker(Tracker $tracker): ?Tracker_FormElement_Field_List
+    public function fromTracker(Tracker $tracker): ?ListField
     {
         $this->call_count++;
         return $this->fields[$tracker->getId()] ?? null;

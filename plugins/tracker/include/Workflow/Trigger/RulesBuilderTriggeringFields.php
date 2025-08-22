@@ -18,9 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\Tracker;
 
-class Tracker_Workflow_Trigger_RulesBuilderTriggeringFields
+class Tracker_Workflow_Trigger_RulesBuilderTriggeringFields // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /**
      * @var Tracker
@@ -28,7 +29,7 @@ class Tracker_Workflow_Trigger_RulesBuilderTriggeringFields
     private $tracker;
 
     /**
-     * @var Tracker_FormElement_Field_List[]
+     * @var ListField[]
      */
     private $fields;
 

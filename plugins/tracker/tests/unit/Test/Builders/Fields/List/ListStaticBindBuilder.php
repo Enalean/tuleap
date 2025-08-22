@@ -22,12 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Test\Builders\Fields\List;
 
-use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Bind_Static;
 use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Tracker_FormElement_Field_List_BindDecorator;
 use Tracker_FormElement_Field_List_OpenValue;
 use Tuleap\DB\DatabaseUUIDV7Factory;
+use Tuleap\Tracker\FormElement\Field\ListField;
 
 final class ListStaticBindBuilder
 {
@@ -40,11 +40,11 @@ final class ListStaticBindBuilder
      */
     private array $decorators = [];
 
-    private function __construct(private readonly Tracker_FormElement_Field_List $field)
+    private function __construct(private readonly ListField $field)
     {
     }
 
-    public static function aStaticBind(Tracker_FormElement_Field_List $field): self
+    public static function aStaticBind(ListField $field): self
     {
         return new self($field);
     }

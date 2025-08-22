@@ -205,9 +205,9 @@ final class Tracker_Rule_List_FactoryTest extends \Tuleap\Test\PHPUnit\TestCase 
 
     public function testExport(): void
     {
-        $f1 = $this->createMock(\Tracker_FormElement_Field_List::class);
+        $f1 = $this->createMock(\Tuleap\Tracker\FormElement\Field\ListField::class);
         $f1->method('getId')->willReturn(102);
-        $f2 = $this->createMock(\Tracker_FormElement_Field_List::class);
+        $f2 = $this->createMock(\Tuleap\Tracker\FormElement\Field\ListField::class);
         $f2->method('getId')->willReturn(103);
 
         $form_element_factory = $this->createMock(\Tracker_FormElementFactory::class);

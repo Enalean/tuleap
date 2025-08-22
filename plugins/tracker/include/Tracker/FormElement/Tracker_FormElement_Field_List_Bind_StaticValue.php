@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\FormElement\Field\ListField;
+
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_FormElement_Field_List_Bind_StaticValue extends Tracker_FormElement_Field_List_BindValue
 {
@@ -127,7 +129,7 @@ class Tracker_FormElement_Field_List_Bind_StaticValue extends Tracker_FormElemen
         return $this;
     }
 
-    public function getDataset(Tracker_FormElement_Field_List $field): array
+    public function getDataset(ListField $field): array
     {
         $decorators = $field->getDecorators();
         $id         = $this->getId();

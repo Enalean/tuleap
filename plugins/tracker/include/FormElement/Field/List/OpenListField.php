@@ -30,7 +30,6 @@ use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue;
 use Tracker_Artifact_ChangesetValue_OpenList;
 use Tracker_CardDisplayPreferences;
-use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Bind_Null;
 use Tracker_FormElement_Field_List_Bind_Static;
 use Tracker_FormElement_Field_List_Bind_Ugroups;
@@ -54,6 +53,7 @@ use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindVisitor;
 use Tuleap\Tracker\FormElement\Field\ListFields\OpenListChangesetValueDao;
 use Tuleap\Tracker\FormElement\Field\ListFields\OpenListFieldDao;
 use Tuleap\Tracker\FormElement\Field\ListFields\OpenListValueDao;
+use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\DeleteSpecificProperties;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\OpenListSpecificPropertiesDAO;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\SaveSpecificFieldProperties;
@@ -66,7 +66,7 @@ use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
 use UGroupManager;
 use UserManager;
 
-class OpenListField extends Tracker_FormElement_Field_List implements BindVisitor
+class OpenListField extends ListField implements BindVisitor
 {
     public const string BIND_PREFIX      = 'b';
     public const string OPEN_PREFIX      = 'o';

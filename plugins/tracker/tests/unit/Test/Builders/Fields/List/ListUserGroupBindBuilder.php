@@ -37,11 +37,11 @@ final class ListUserGroupBindBuilder
      */
     private array $user_groups = [];
 
-    private function __construct(private readonly \Tracker_FormElement_Field_List $field)
+    private function __construct(private readonly \Tuleap\Tracker\FormElement\Field\ListField $field)
     {
     }
 
-    public static function aUserGroupBind(\Tracker_FormElement_Field_List $field): self
+    public static function aUserGroupBind(\Tuleap\Tracker\FormElement\Field\ListField $field): self
     {
         return new self($field);
     }

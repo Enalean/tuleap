@@ -24,12 +24,12 @@ namespace Tuleap\CrossTracker\Query\Advanced\Metadata;
 
 use PFUser;
 use ProjectUGroup;
-use Tracker_FormElement_Field_List;
 use Tuleap\CrossTracker\Query\Advanced\CrossTrackerFieldTestCase;
 use Tuleap\CrossTracker\Tests\CrossTrackerQueryTestBuilder;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\UUID;
 use Tuleap\Test\Builders\CoreDatabaseBuilder;
+use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
 use Tuleap\Tracker\Tracker;
 use UserManager;
@@ -115,7 +115,7 @@ final class AssignedToMetadataTest extends CrossTrackerFieldTestCase
         $tracker_builder->buildListValue(
             $release_artifact_empty_changeset,
             $release_assignee_field_id,
-            Tracker_FormElement_Field_List::NONE_VALUE,
+            ListField::NONE_VALUE,
         );
         $tracker_builder->buildListValue(
             $release_artifact_with_alice_changeset,
@@ -125,7 +125,7 @@ final class AssignedToMetadataTest extends CrossTrackerFieldTestCase
         $tracker_builder->buildListValue(
             $sprint_artifact_empty_changeset,
             $sprint_assignee_field_id,
-            Tracker_FormElement_Field_List::NONE_VALUE,
+            ListField::NONE_VALUE,
         );
         $tracker_builder->buildListValue(
             $sprint_artifact_with_alice_bob_changeset,

@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\CrossTracker\Query\Advanced;
 
 use LogicException;
-use Tracker_FormElement_Field_List;
+use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 use Tuleap\Tracker\Semantic\Contributor\RetrieveContributorField;
 use Tuleap\Tracker\Semantic\Status\RetrieveSemanticStatusField;
@@ -52,7 +52,7 @@ final readonly class InvalidOrderByListChecker
         return true;
     }
 
-    private function getFieldFromMetadata(Metadata $metadata, Tracker $tracker): ?Tracker_FormElement_Field_List
+    private function getFieldFromMetadata(Metadata $metadata, Tracker $tracker): ?ListField
     {
         return match ($metadata->getName()) {
             AllowedMetadata::ASSIGNED_TO => $this->contributor_field_retriever->getContributorField($tracker),

@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\FormElement\Field\List;
 
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
-use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Bind;
 use Tracker_FormElement_Field_List_Bind_StaticValue_None;
 use Tracker_FormElement_InvalidFieldValueException;
@@ -32,6 +31,7 @@ use Tuleap\GlobalLanguageMock;
 use Tuleap\GlobalResponseMock;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
 
 #[DisableReturnValueGenerationForTestDoubles]
@@ -94,7 +94,7 @@ final class SelectboxFieldTest extends TestCase
     public function testGetFieldDataFromRESTValueReturns100IfBindValueIdsIsEmpty(): void
     {
         self::assertEquals(
-            Tracker_FormElement_Field_List::NONE_VALUE,
+            ListField::NONE_VALUE,
             $this->field->getFieldDataFromRESTValue(['bind_value_ids' => []])
         );
     }
@@ -102,7 +102,7 @@ final class SelectboxFieldTest extends TestCase
     public function testGetFieldDataFromRESTValueReturns100IfValueIs100(): void
     {
         self::assertEquals(
-            Tracker_FormElement_Field_List::NONE_VALUE,
+            ListField::NONE_VALUE,
             $this->field->getFieldDataFromRESTValue(['bind_value_ids' => [100]])
         );
     }

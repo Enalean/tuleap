@@ -30,7 +30,6 @@ use Tracker_Artifact_Changeset;
 use Tracker_ArtifactDao;
 use Tracker_ArtifactNotificationSubscriber;
 use Tracker_Exception;
-use Tracker_FormElement_Field_List;
 use Tracker_NoChangeException;
 use Tracker_Report;
 use Tracker_RuleFactory;
@@ -41,6 +40,7 @@ use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
 use Tuleap\Tracker\Artifact\RetrieveArtifact;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\ListFields\RetrieveUsedListField;
+use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\Tracker;
 
 final readonly class MasschangeUpdater
@@ -213,7 +213,7 @@ final readonly class MasschangeUpdater
     }
 
     /**
-     * @return Tracker_FormElement_Field_List[]
+     * @return ListField[]
      */
     private function getFieldListUsedInTrackerRules(): array
     {
@@ -227,11 +227,11 @@ final readonly class MasschangeUpdater
             $target_field_id = $tracker_rule_for_list_field->getTargetFieldId();
             $target_field    = $this->form_element_factory->getUsedListFieldById($this->tracker, $target_field_id);
             if ($source_field !== null) {
-                assert($source_field instanceof Tracker_FormElement_Field_List);
+                assert($source_field instanceof ListField);
                 $list_fields_used_in_tracker_rules[$source_field_id] = $source_field;
             }
             if ($target_field !== null) {
-                assert($target_field instanceof Tracker_FormElement_Field_List);
+                assert($target_field instanceof ListField);
                 $list_fields_used_in_tracker_rules[$target_field_id] = $target_field;
             }
         }
@@ -240,7 +240,7 @@ final readonly class MasschangeUpdater
     }
 
     /**
-     * @param Tracker_FormElement_Field_List[] $list_fields
+     * @param ListField[] $list_fields
      */
     private function consolidateFieldListDataForArtifact(
         Tracker_Artifact_Changeset $changeset,
@@ -252,7 +252,7 @@ final readonly class MasschangeUpdater
             if ($changeset_value !== null) {
                 $value = $changeset_value->getValue();
                 if ($list_field->isNone($value) && ! (isset($fields_data[$list_field->getId()]))) {
-                    $field_value = [Tracker_FormElement_Field_List::NONE_VALUE];
+                    $field_value = [ListField::NONE_VALUE];
                     if (count($field_value) === 1) {
                         $fields_data[$list_field->getId()] = current($field_value);
                     } else {

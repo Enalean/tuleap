@@ -29,7 +29,6 @@ use PHPUnit\Framework\MockObject\MockObject;
 use ReflectionClass;
 use TestHelper;
 use Tracker_Artifact_ChangesetValue_OpenList;
-use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Bind_Static;
 use Tracker_FormElement_Field_List_BindValue;
 use Tracker_FormElement_Field_List_OpenValue;
@@ -41,6 +40,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\ListFields\OpenListChangesetValueDao;
 use Tuleap\Tracker\FormElement\Field\ListFields\OpenListValueDao;
+use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
@@ -300,7 +300,7 @@ final class OpenListFieldTest extends TestCase
         self::assertTrue(
             $field->isValid(
                 $artifact,
-                OpenListField::BIND_PREFIX . Tracker_FormElement_Field_List::NONE_VALUE
+                OpenListField::BIND_PREFIX . ListField::NONE_VALUE
             )
         );
         self::assertTrue($field->isValid($artifact, ['b101', 'b102']));

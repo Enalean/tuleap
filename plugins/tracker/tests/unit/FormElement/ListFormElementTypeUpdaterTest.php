@@ -25,13 +25,13 @@ namespace Tuleap\Tracker\FormElement;
 
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use PHPUnit\Framework\MockObject\MockObject;
-use Tracker_FormElement_Field_List;
 use Tracker_FormElementFactory;
 use Tuleap\GlobalResponseMock;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\FormElement\Field\FieldDao;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDefaultValueDao;
+use Tuleap\Tracker\FormElement\Field\ListField;
 
 #[DisableReturnValueGenerationForTestDoubles]
 final class ListFormElementTypeUpdaterTest extends TestCase
@@ -131,13 +131,13 @@ final class ListFormElementTypeUpdaterTest extends TestCase
 
         $this->field_dao->expects($this->exactly(3))->method('setType')
             ->with(
-                self::callback(static fn(Tracker_FormElement_Field_List $field) => in_array($field, [$form_element, $target_field_01, $target_field_02])),
+                self::callback(static fn(ListField $field) => in_array($field, [$form_element, $target_field_01, $target_field_02])),
                 'msb',
             )
             ->willReturn(true);
 
         $this->form_element_factory->expects($this->exactly(3))->method('clearElementFromCache')
-            ->with(self::callback(static fn(Tracker_FormElement_Field_List $field) => in_array($field, [$form_element, $target_field_01, $target_field_02])));
+            ->with(self::callback(static fn(ListField $field) => in_array($field, [$form_element, $target_field_01, $target_field_02])));
 
         $this->form_element_factory->expects($this->exactly(3))->method('getFormElementById')
             ->willReturnCallback(fn(int $id) => match ($id) {
@@ -171,10 +171,10 @@ final class ListFormElementTypeUpdaterTest extends TestCase
 
         $this->field_dao->expects($this->exactly(3))->method('setType')
             ->with(self::anything(), 'msb')
-            ->willReturnCallback(static fn(Tracker_FormElement_Field_List $field) => $field !== $target_field_02);
+            ->willReturnCallback(static fn(ListField $field) => $field !== $target_field_02);
 
         $this->form_element_factory->expects($this->exactly(2))->method('clearElementFromCache')
-            ->with(self::callback(static fn(Tracker_FormElement_Field_List $field) => in_array($field, [$form_element, $target_field_01])));
+            ->with(self::callback(static fn(ListField $field) => in_array($field, [$form_element, $target_field_01])));
 
         $this->form_element_factory->expects($this->exactly(2))->method('getFormElementById')
             ->willReturnCallback(fn(int $id) => match ($id) {
@@ -192,9 +192,9 @@ final class ListFormElementTypeUpdaterTest extends TestCase
         );
     }
 
-    private function getListFormElement(int $element_id, bool $is_multiple): Tracker_FormElement_Field_List&MockObject
+    private function getListFormElement(int $element_id, bool $is_multiple): ListField&MockObject
     {
-        $mock = $this->createMock(Tracker_FormElement_Field_List::class);
+        $mock = $this->createMock(ListField::class);
         $mock->method('getId')->willReturn($element_id);
         $mock->method('isMultiple')->willReturn($is_multiple);
         $mock->method('changeType')->willReturn(true);
@@ -202,7 +202,7 @@ final class ListFormElementTypeUpdaterTest extends TestCase
         return $mock;
     }
 
-    private function getUpdatedListFormElement(int $element_id, bool $is_multiple): Tracker_FormElement_Field_List&MockObject
+    private function getUpdatedListFormElement(int $element_id, bool $is_multiple): ListField&MockObject
     {
         $mock = $this->getListFormElement($element_id, $is_multiple);
         $mock->expects($this->once())->method('getFlattenPropertiesValues')->willReturn([]);

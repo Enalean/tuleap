@@ -21,12 +21,12 @@
 namespace Tuleap\Tracker\FormElement\Field\ListFields;
 
 use SimpleXMLElement;
-use Tracker_FormElement_Field_List;
+use Tuleap\Tracker\FormElement\Field\ListField;
 
 interface RetrieveMatchingUserValue
 {
     public function isSourceUserValueMatchingADestinationUserValue(
-        Tracker_FormElement_Field_List $destination_contributor_field,
+        ListField $destination_contributor_field,
         SimpleXMLElement $value,
     ): bool;
 }

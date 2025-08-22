@@ -22,12 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Document\Field\List;
 
-use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_BindValue;
 use Tracker_FormElement_Field_List_OpenValue;
 use Tuleap\Artidoc\Document\Field\ConfiguredField;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserListFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserValue;
+use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\User\Avatar\ProvideDefaultUserAvatarUrl;
 use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 use Tuleap\User\RetrieveUserById;
@@ -56,7 +56,7 @@ final readonly class UserListFieldWithValueBuilder
                     },
                     array_filter(
                         $changeset_value?->getListValues() ?? [],
-                        fn ($value) => $value->getId() !== Tracker_FormElement_Field_List::NONE_VALUE,
+                        fn ($value) => $value->getId() !== ListField::NONE_VALUE,
                     ),
                 )
             )

@@ -25,7 +25,6 @@ require_once __DIR__ . '/../../bootstrap.php';
 use Cardwall_Semantic_CardFields;
 use PFUser;
 use PHPUnit_Framework_MockObject_MockObject;
-use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_BindDecorator;
 use Tuleap\Cardwall\Semantic\BackgroundColorSemanticFieldNotFoundException;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -33,6 +32,7 @@ use Tuleap\Tracker\Artifact\Exception\NoChangesetException;
 use Tuleap\Tracker\Artifact\Exception\NoChangesetValueException;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\NoBindDecoratorException;
+use Tuleap\Tracker\FormElement\Field\ListField;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class BackgroundColorBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -60,7 +60,7 @@ class BackgroundColorBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->artifact                 = $this->createMock(Artifact::class);
         $this->current_user             = $this->createMock(PFUser::class);
         $this->decorator_retriever      = $this->createMock(BindDecoratorRetriever::class);
-        $this->field                    = $this->createMock(Tracker_FormElement_Field_List::class);
+        $this->field                    = $this->createMock(ListField::class);
         $this->decorator                = $this->createMock(Tracker_FormElement_Field_List_BindDecorator::class);
         $this->background_color_builder = new BackgroundColorBuilder($this->decorator_retriever);
     }

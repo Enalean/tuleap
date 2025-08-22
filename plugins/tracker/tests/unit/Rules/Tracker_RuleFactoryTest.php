@@ -22,7 +22,6 @@
 namespace Tuleap\Tracker\Rule;
 
 use SimpleXMLElement;
-use Tracker_FormElement_Field_List;
 use Tracker_Rule_Date;
 use Tracker_Rule_Date_Dao;
 use Tracker_Rule_Date_Factory;
@@ -31,6 +30,7 @@ use Tracker_Rule_List_Dao;
 use Tracker_Rule_List_Factory;
 use Tracker_RuleDao;
 use Tracker_RuleFactory;
+use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Tracker;
@@ -41,11 +41,11 @@ final class Tracker_RuleFactoryTest extends \Tuleap\Test\PHPUnit\TestCase //phpc
     private string $xmlstr;
     private SimpleXMLElement $xml;
     private Tracker $tracker;
-    private Tracker_FormElement_Field_List $f1;
-    private Tracker_FormElement_Field_List $f2;
-    private Tracker_FormElement_Field_List $f3;
-    private Tracker_FormElement_Field_List $f4;
-    private Tracker_FormElement_Field_List $f5;
+    private ListField $f1;
+    private ListField $f2;
+    private ListField $f3;
+    private ListField $f4;
+    private ListField $f5;
 
     protected function setUp(): void
     {

@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Tracker\FormElement\Field\RetrieveUsedFields;
+use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\Tracker;
 
 /**
@@ -79,7 +80,7 @@ class Tracker_Workflow_Trigger_RulesFactory //phpcs:ignore PSR1.Classes.ClassDec
         throw new Tracker_FormElement_InvalidFieldException('Unknown field');
     }
 
-    private function getTargetFieldValue($target_value_id, Tracker_FormElement_Field_List $target_field)
+    private function getTargetFieldValue($target_value_id, ListField $target_field)
     {
         return $this->getMatchingValueById(
             $target_field,
@@ -110,7 +111,7 @@ class Tracker_Workflow_Trigger_RulesFactory //phpcs:ignore PSR1.Classes.ClassDec
         }
     }
 
-    private function getMatchingValueById(Tracker_FormElement_Field_List $field, $value_id)
+    private function getMatchingValueById(ListField $field, $value_id)
     {
         foreach ($field->getAllValues() as $value) {
             if ($value->getId() == $value_id) {

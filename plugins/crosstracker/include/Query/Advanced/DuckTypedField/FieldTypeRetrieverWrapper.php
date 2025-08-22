@@ -23,11 +23,11 @@ declare(strict_types=1);
 namespace Tuleap\CrossTracker\Query\Advanced\DuckTypedField;
 
 use Tracker_FormElement;
-use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Bind_Static;
 use Tracker_FormElement_Field_List_Bind_Ugroups;
 use Tracker_FormElement_Field_List_Bind_Users;
 use Tuleap\Tracker\FormElement\Field\Date\DateField;
+use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\FormElement\RetrieveFieldType;
 
 final readonly class FieldTypeRetrieverWrapper implements RetrieveFieldType
@@ -48,7 +48,7 @@ final readonly class FieldTypeRetrieverWrapper implements RetrieveFieldType
             return self::FIELD_DATETIME_TYPE;
         }
 
-        if ($form_element instanceof Tracker_FormElement_Field_List) {
+        if ($form_element instanceof ListField) {
             switch ($form_element->getBind()->getType()) {
                 case Tracker_FormElement_Field_List_Bind_Static::TYPE:
                     return self::FIELD_STATIC_LIST_TYPE;

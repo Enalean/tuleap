@@ -26,7 +26,6 @@ use Override;
 use PFUser;
 use Tracker_Artifact_ChangesetValue;
 use Tracker_Artifact_ChangesetValue_List;
-use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Bind;
 use Tracker_FormElement_Field_List_Bind_StaticValue_None;
 use Tracker_FormElement_FieldVisitor;
@@ -34,9 +33,10 @@ use Tracker_FormElement_IComputeValues;
 use Tracker_FormElement_InvalidFieldValueException;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueUnchanged;
+use Tuleap\Tracker\FormElement\Field\ListField;
 use WorkflowFactory;
 
-class SelectboxField extends Tracker_FormElement_Field_List implements Tracker_FormElement_IComputeValues
+class SelectboxField extends ListField implements Tracker_FormElement_IComputeValues
 {
     #[Override]
     public static function getFactoryLabel()
@@ -237,7 +237,7 @@ class SelectboxField extends Tracker_FormElement_Field_List implements Tracker_F
             }
 
             if (empty($submitted_bind_value_ids)) {
-                return Tracker_FormElement_Field_List::NONE_VALUE;
+                return ListField::NONE_VALUE;
             }
 
             return $this->getBindValueIdFromSubmittedBindValueId($submitted_bind_value_ids[0]);
@@ -254,8 +254,8 @@ class SelectboxField extends Tracker_FormElement_Field_List implements Tracker_F
      */
     protected function getBindValueIdFromSubmittedBindValueId($submitted_bind_value_id): int
     {
-        if ((int) $submitted_bind_value_id === Tracker_FormElement_Field_List::NONE_VALUE) {
-            return Tracker_FormElement_Field_List::NONE_VALUE;
+        if ((int) $submitted_bind_value_id === ListField::NONE_VALUE) {
+            return ListField::NONE_VALUE;
         }
 
         $bind_value_id = $this->getBind()->getFieldDataFromRESTValue($submitted_bind_value_id);

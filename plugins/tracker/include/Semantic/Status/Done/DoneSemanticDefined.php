@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Semantic\Status\Done;
 
-use Tracker_FormElement_Field_List;
+use Tuleap\Tracker\FormElement\Field\ListField;
 
 /**
  * @psalm-immutable
@@ -30,7 +30,7 @@ use Tracker_FormElement_Field_List;
 class DoneSemanticDefined
 {
     /**
-     * @var Tracker_FormElement_Field_List
+     * @var ListField
      */
     private $field;
     /**
@@ -38,13 +38,13 @@ class DoneSemanticDefined
      */
     private $done_values;
 
-    public function __construct(Tracker_FormElement_Field_List $field, array $done_values)
+    public function __construct(ListField $field, array $done_values)
     {
         $this->field       = $field;
         $this->done_values = $done_values;
     }
 
-    public function getField(): Tracker_FormElement_Field_List
+    public function getField(): ListField
     {
         return $this->field;
     }

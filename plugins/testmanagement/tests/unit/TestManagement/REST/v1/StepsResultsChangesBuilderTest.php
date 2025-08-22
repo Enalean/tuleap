@@ -23,7 +23,6 @@ namespace Tuleap\TestManagement\REST\v1;
 use Luracast\Restler\RestException;
 use PFUser;
 use Tracker_Artifact_Changeset;
-use Tracker_FormElement_Field_List;
 use Tracker_FormElementFactory;
 use Tuleap\TestManagement\Campaign\Execution\ExecutionDao;
 use Tuleap\TestManagement\Step\Definition\Field\StepsDefinition;
@@ -33,6 +32,7 @@ use Tuleap\TestManagement\Step\Execution\Field\StepsExecutionChangesetValue;
 use Tuleap\TestManagement\Step\Execution\StepResult;
 use Tuleap\TestManagement\Step\Step;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\Test\Builders\ArtifactValuesRepresentationBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -66,7 +66,7 @@ final class StepsResultsChangesBuilderTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->execution_dao        = $this->createMock(ExecutionDao::class);
         $this->execution_field      = $this->createMock(StepsExecution::class);
         $this->execution_field->method('getId')->willReturn(147);
-        $this->execution_status_field     = $this->createMock(Tracker_FormElement_Field_List::class);
+        $this->execution_status_field     = $this->createMock(ListField::class);
         $this->definition_field           = $this->createMock(StepsDefinition::class);
         $this->definition_changeset       = $this->createMock(Tracker_Artifact_Changeset::class);
         $this->definition_changeset_value = $this->createMock(StepsDefinitionChangesetValue::class);

@@ -110,8 +110,8 @@ final class DryRunDuckTypingFieldCollector implements CollectDryRunTypingField
                 $this->verify_is_static_list_field->isStaticListField($source_field)
                 && $this->verify_is_static_list_field->isStaticListField($destination_field)
             ) {
-                assert($source_field instanceof \Tracker_FormElement_Field_List);
-                assert($destination_field instanceof \Tracker_FormElement_Field_List);
+                assert($source_field instanceof \Tuleap\Tracker\FormElement\Field\ListField);
+                assert($destination_field instanceof \Tuleap\Tracker\FormElement\Field\ListField);
                 $this->collectStaticFields($source_field, $destination_field, $artifact, $logger);
                 continue;
             }
@@ -120,8 +120,8 @@ final class DryRunDuckTypingFieldCollector implements CollectDryRunTypingField
                 $this->verify_is_user_list_field->isUserListField($source_field)
                 && $this->verify_is_user_list_field->isUserListField($destination_field)
             ) {
-                assert($source_field instanceof \Tracker_FormElement_Field_List);
-                assert($destination_field instanceof \Tracker_FormElement_Field_List);
+                assert($source_field instanceof \Tuleap\Tracker\FormElement\Field\ListField);
+                assert($destination_field instanceof \Tuleap\Tracker\FormElement\Field\ListField);
                 $this->collectUserBoundFields($source_field, $destination_field, $artifact, $logger);
                 continue;
             }
@@ -130,8 +130,8 @@ final class DryRunDuckTypingFieldCollector implements CollectDryRunTypingField
                 $this->verify_is_user_group_list_field->isUserGroupListField($source_field)
                 && $this->verify_is_user_group_list_field->isUserGroupListField($destination_field)
             ) {
-                assert($source_field instanceof \Tracker_FormElement_Field_List);
-                assert($destination_field instanceof \Tracker_FormElement_Field_List);
+                assert($source_field instanceof \Tuleap\Tracker\FormElement\Field\ListField);
+                assert($destination_field instanceof \Tuleap\Tracker\FormElement\Field\ListField);
                 $this->collectUserGroupBoundFields($source_field, $destination_field, $artifact, $logger);
                 continue;
             }
@@ -156,8 +156,8 @@ final class DryRunDuckTypingFieldCollector implements CollectDryRunTypingField
     }
 
     private function collectStaticFields(
-        \Tracker_FormElement_Field_List $source_field,
-        \Tracker_FormElement_Field_List $destination_field,
+        \Tuleap\Tracker\FormElement\Field\ListField $source_field,
+        \Tuleap\Tracker\FormElement\Field\ListField $destination_field,
         Artifact $artifact,
         LoggerInterface $logger,
     ): void {
@@ -176,8 +176,8 @@ final class DryRunDuckTypingFieldCollector implements CollectDryRunTypingField
     }
 
     private function collectUserBoundFields(
-        \Tracker_FormElement_Field_List $source_field,
-        \Tracker_FormElement_Field_List $destination_field,
+        \Tuleap\Tracker\FormElement\Field\ListField $source_field,
+        \Tuleap\Tracker\FormElement\Field\ListField $destination_field,
         Artifact $artifact,
         LoggerInterface $logger,
     ): void {
@@ -196,8 +196,8 @@ final class DryRunDuckTypingFieldCollector implements CollectDryRunTypingField
     }
 
     private function collectUserGroupBoundFields(
-        \Tracker_FormElement_Field_List $source_field,
-        \Tracker_FormElement_Field_List $destination_field,
+        \Tuleap\Tracker\FormElement\Field\ListField $source_field,
+        \Tuleap\Tracker\FormElement\Field\ListField $destination_field,
         Artifact $artifact,
         LoggerInterface $logger,
     ): void {

@@ -24,11 +24,11 @@ namespace Tuleap\CrossTracker\Query\Advanced\QueryBuilder\Field\StaticList;
 
 use LogicException;
 use ParagonIE\EasyDB\EasyStatement;
-use Tracker_FormElement_Field_List;
 use Tuleap\CrossTracker\Query\Advanced\DuckTypedField\Where\DuckTypedFieldWhere;
 use Tuleap\CrossTracker\Query\Advanced\QueryBuilder\Field\FieldValueWrapperParameters;
 use Tuleap\CrossTracker\Query\Advanced\QueryBuilder\Field\ListFromWhereBuilder;
 use Tuleap\CrossTracker\Query\Advanced\QueryBuilder\Field\ParametrizedListFromWhere;
+use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ComparisonType;
@@ -118,7 +118,7 @@ final readonly class StaticListFromWhereBuilder implements ValueWrapperVisitor
                 self::LIST_FROM,
                 'IF(tcvl.bindvalue_id IS NOT NULL, tcvl.bindvalue_id = ?, tcvol.changeset_value_id IS NULL)',
                 "$filter_alias.artifact_id IS NOT NULL",
-                [Tracker_FormElement_Field_List::NONE_VALUE]
+                [ListField::NONE_VALUE]
             );
         }
 
@@ -143,7 +143,7 @@ final readonly class StaticListFromWhereBuilder implements ValueWrapperVisitor
                 self::LIST_FROM,
                 'IF(tcvl.bindvalue_id IS NOT NULL, tcvl.bindvalue_id = ?, tcvol.changeset_value_id IS NULL)',
                 "$filter_alias.artifact_id IS NULL",
-                [Tracker_FormElement_Field_List::NONE_VALUE]
+                [ListField::NONE_VALUE]
             );
         }
 

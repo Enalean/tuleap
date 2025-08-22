@@ -23,11 +23,11 @@ declare(strict_types=1);
 namespace Tuleap\TestManagement\Campaign;
 
 use PHPUnit\Framework\MockObject\MockObject;
-use Tracker_FormElement_Field_List;
 use Tracker_FormElementFactory;
 use TrackerFactory;
 use Tuleap\TestManagement\Config;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\ListField;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class InformationNeededToRetrieveTestStatusOfACampaignTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -64,7 +64,7 @@ final class InformationNeededToRetrieveTestStatusOfACampaignTest extends \Tuleap
         $this->testmanagement_config->method('getTestExecutionTrackerId')->willReturn(11);
         $test_exec_tracker = $this->buildTracker(true);
         $this->tracker_factory->method('getTrackerById')->with(11)->willReturn($test_exec_tracker);
-        $status_field    = $this->createMock(Tracker_FormElement_Field_List::class);
+        $status_field    = $this->createMock(ListField::class);
         $status_field_id = 4444;
         $status_field->method('getId')->willReturn($status_field_id);
         $status_field->method('userCanRead')->willReturn(true);
@@ -130,7 +130,7 @@ final class InformationNeededToRetrieveTestStatusOfACampaignTest extends \Tuleap
         $this->testmanagement_config->method('getTestExecutionTrackerId')->willReturn(11);
         $test_exec_tracker = $this->buildTracker(true);
         $this->tracker_factory->method('getTrackerById')->with(11)->willReturn($test_exec_tracker);
-        $status_field = $this->createMock(Tracker_FormElement_Field_List::class);
+        $status_field = $this->createMock(ListField::class);
         $status_field->method('getId')->willReturn(4444);
         $status_field->method('userCanRead')->willReturn(false);
         $test_exec_tracker->method('getStatusField')->willReturn($status_field);

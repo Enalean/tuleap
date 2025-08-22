@@ -31,7 +31,6 @@ use Tracker_DateReminder_Role_Submitter;
 use Tracker_DateReminderFactory;
 use Tracker_DateReminderRenderer;
 use Tracker_FormElement;
-use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Tracker_FormElementFactory;
 use Tracker_Migration_V3;
@@ -46,6 +45,7 @@ use Tuleap\Tracker\DateReminder\DateReminderDao;
 use Tuleap\Tracker\FormElement\Field\Date\DateField;
 use Tuleap\Tracker\FormElement\Field\String\StringField;
 use Tuleap\Tracker\FormElement\Field\Text\TextField;
+use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\Semantic\TrackerSemanticFactory;
 use Tuleap\Tracker\Tracker;
 
@@ -181,7 +181,7 @@ final class TaskTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
     private function checkItHasAStatusSemantic(): void
     {
         $field = $this->task_tracker->getStatusField();
-        self::assertInstanceOf(Tracker_FormElement_Field_List::class, $field);
+        self::assertInstanceOf(ListField::class, $field);
         self::assertSame('status_id', $field->getName());
         self::assertSame('Status', $field->getLabel());
         self::assertTrue($field->isRequired());
@@ -210,7 +210,7 @@ final class TaskTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
     private function checkItHasAnAssignedToSemantic(): void
     {
         $field = $this->task_tracker->getContributorField();
-        self::assertInstanceOf(Tracker_FormElement_Field_List::class, $field);
+        self::assertInstanceOf(ListField::class, $field);
         self::assertSame('multi_assigned_to', $field->getName());
         self::assertSame('Assigned to (multiple)', $field->getLabel());
         self::assertFalse($field->isRequired());
@@ -230,7 +230,7 @@ final class TaskTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
     private function checkItHasSubmittedBy(): void
     {
         $field = $this->form_element_factory->getFormElementByName($this->task_tracker->getId(), 'submitted_by');
-        self::assertInstanceOf(Tracker_FormElement_Field_List::class, $field);
+        self::assertInstanceOf(ListField::class, $field);
         self::assertSame('submitted_by', $field->getName());
         self::assertSame('Submitted by', $field->getLabel());
         self::assertFalse($field->isRequired());
@@ -283,7 +283,7 @@ final class TaskTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
     private function checkItHasAnUnusedField(): void
     {
         $field = $this->form_element_factory->getFormElementByName($this->task_tracker->getId(), 'stage');
-        self::assertInstanceOf(Tracker_FormElement_Field_List::class, $field);
+        self::assertInstanceOf(ListField::class, $field);
         self::assertSame('stage', $field->getName());
         self::assertSame('Stage', $field->getLabel());
         self::assertFalse($field->isUsed());
@@ -292,7 +292,7 @@ final class TaskTrackerTest extends \Tuleap\Test\PHPUnit\TestCase
     private function checkItHasAListFieldResolutionWithValues(): void
     {
         $field = $this->form_element_factory->getFormElementByName($this->task_tracker->getId(), 'severity');
-        self::assertInstanceOf(Tracker_FormElement_Field_List::class, $field);
+        self::assertInstanceOf(ListField::class, $field);
         self::assertSame('severity', $field->getName());
         self::assertSame('Priority', $field->getLabel());
         self::assertTrue($field->isRequired());

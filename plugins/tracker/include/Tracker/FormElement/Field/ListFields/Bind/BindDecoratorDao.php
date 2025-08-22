@@ -23,7 +23,7 @@
 namespace Tuleap\Tracker\FormElement\Field\ListFields\Bind;
 
 use DataAccessObject;
-use Tracker_FormElement_Field_List;
+use Tuleap\Tracker\FormElement\Field\ListField;
 
 class BindDecoratorDao extends DataAccessObject
 {
@@ -66,7 +66,7 @@ class BindDecoratorDao extends DataAccessObject
     public function saveNoneLegacyColor(int $field_id, int $red, int $green, int $blue): bool
     {
         $field_id = $this->da->escapeInt($field_id);
-        $none_id  = $this->da->escapeInt(Tracker_FormElement_Field_List::NONE_VALUE);
+        $none_id  = $this->da->escapeInt(ListField::NONE_VALUE);
         $red      = $this->da->escapeInt($red);
         $green    = $this->da->escapeInt($green);
         $blue     = $this->da->escapeInt($blue);
@@ -109,7 +109,7 @@ class BindDecoratorDao extends DataAccessObject
     public function updateNoneLegacyColor(int $field_id, int $red, int $green, int $blue): void
     {
         $field_id = $this->da->escapeInt($field_id);
-        $value_id = $this->da->escapeInt(Tracker_FormElement_Field_List::NONE_VALUE);
+        $value_id = $this->da->escapeInt(ListField::NONE_VALUE);
         $red      = $this->da->escapeInt($red);
         $green    = $this->da->escapeInt($green);
         $blue     = $this->da->escapeInt($blue);
@@ -136,7 +136,7 @@ class BindDecoratorDao extends DataAccessObject
     {
         $tlp_color = $this->da->quoteSmart($tlp_color);
         $field_id  = $this->da->escapeInt($field_id);
-        $value_id  = $this->da->escapeInt(Tracker_FormElement_Field_List::NONE_VALUE);
+        $value_id  = $this->da->escapeInt(ListField::NONE_VALUE);
 
         $sql = "INSERT INTO tracker_field_list_bind_decorator(field_id, value_id, red, green, blue, tlp_color_name)
             VALUES ($field_id, $value_id, null, null, null, $tlp_color)";
@@ -159,7 +159,7 @@ class BindDecoratorDao extends DataAccessObject
     public function updateNoneTlpColor(int $field_id, string $tlp_color): void
     {
         $tlp_color = $this->da->quoteSmart($tlp_color);
-        $value_id  = $this->da->escapeInt(Tracker_FormElement_Field_List::NONE_VALUE);
+        $value_id  = $this->da->escapeInt(ListField::NONE_VALUE);
 
         $sql = "REPLACE INTO tracker_field_list_bind_decorator  (field_id, value_id, red, green, blue, tlp_color_name)
                 VALUES ($field_id, $value_id, null, null, null, $tlp_color)";

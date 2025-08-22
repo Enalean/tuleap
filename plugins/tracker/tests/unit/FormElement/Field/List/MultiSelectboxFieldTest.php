@@ -26,13 +26,13 @@ use PermissionsManager;
 use PFUser;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use PHPUnit\Framework\MockObject\MockObject;
-use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Bind;
 use Tracker_FormElement_InvalidFieldValueException;
 use Tracker_FormElement_RESTValueByField_NotImplementedException;
 use TrackerFactory;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\User\CurrentUserWithLoggedInInformation;
 use UserManager;
@@ -214,7 +214,7 @@ final class MultiSelectboxFieldTest extends TestCase
     public function testGetFieldDataFromRESTValueReturns100IfBindValueIdsIsEmpty(): void
     {
         self::assertEquals(
-            [Tracker_FormElement_Field_List::NONE_VALUE],
+            [ListField::NONE_VALUE],
             $this->field->getFieldDataFromRESTValue(['bind_value_ids' => []])
         );
     }
@@ -222,7 +222,7 @@ final class MultiSelectboxFieldTest extends TestCase
     public function testGetFieldDataFromRESTValueReturns100IfValueIs100(): void
     {
         self::assertEquals(
-            [Tracker_FormElement_Field_List::NONE_VALUE],
+            [ListField::NONE_VALUE],
             $this->field->getFieldDataFromRESTValue(['bind_value_ids' => [100]])
         );
     }

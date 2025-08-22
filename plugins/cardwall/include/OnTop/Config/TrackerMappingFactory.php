@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Cardwall\OnTop\Config\ColumnCollection;
+use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\Semantic\Status\RetrieveSemanticStatusField;
 use Tuleap\Tracker\Tracker;
 
@@ -80,7 +81,7 @@ class Cardwall_OnTop_Config_TrackerMappingFactory // phpcs:ignore PSR1.Classes.C
     /**
      * @return Cardwall_OnTop_Config_TrackerMapping
      */
-    private function instantiateMappingStatus(Tracker_FormElement_Field_List $status_field, Tracker $mapping_tracker, array $available_fields, ColumnCollection $columns)
+    private function instantiateMappingStatus(ListField $status_field, Tracker $mapping_tracker, array $available_fields, ColumnCollection $columns)
     {
         $mapping_values = $this->value_mapping_factory->getStatusMappings($mapping_tracker, $columns);
         return new Cardwall_OnTop_Config_TrackerMappingStatus(

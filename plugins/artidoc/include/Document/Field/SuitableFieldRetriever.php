@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\Artidoc\Document\Field;
 
 use PFUser;
-use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Bind_Null;
 use Tracker_FormElement_Field_PermissionsOnArtifact;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldIsDescriptionSemanticFault;
@@ -43,6 +42,7 @@ use Tuleap\Tracker\FormElement\Field\NumericField;
 use Tuleap\Tracker\FormElement\Field\RetrieveUsedFields;
 use Tuleap\Tracker\FormElement\Field\SubmittedBy\SubmittedByField;
 use Tuleap\Tracker\FormElement\Field\Text\TextField;
+use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\Semantic\Description\RetrieveSemanticDescriptionField;
 use Tuleap\Tracker\Semantic\Title\RetrieveSemanticTitleField;
 
@@ -56,7 +56,7 @@ final readonly class SuitableFieldRetriever
     }
 
     /**
-     * @return Ok<TextField> | Ok<Tracker_FormElement_Field_List> | Ok<ArtifactLinkField> | Ok<NumericField> | OK<DateField> | Ok<Tracker_FormElement_Field_PermissionsOnArtifact> | Ok<StepsDefinition> | Ok<StepsExecution> | Err<Fault>
+     * @return Ok<TextField> | Ok<ListField> | Ok<ArtifactLinkField> | Ok<NumericField> | OK<DateField> | Ok<Tracker_FormElement_Field_PermissionsOnArtifact> | Ok<StepsDefinition> | Ok<StepsExecution> | Err<Fault>
      */
     public function retrieveField(int $field_id, PFUser $user): Ok|Err
     {
@@ -68,7 +68,7 @@ final readonly class SuitableFieldRetriever
 
         return match (true) {
             $field instanceof TextField                                       => $this->validateTextField($field),
-            $field instanceof Tracker_FormElement_Field_List                  => $this->validateListField($field),
+            $field instanceof ListField                                       => $this->validateListField($field),
             $field instanceof ArtifactLinkField                               => Result::ok($field),
             $field instanceof NumericField                                    => Result::ok($field),
             $field instanceof DateField                                       => Result::ok($field),
@@ -101,15 +101,15 @@ final readonly class SuitableFieldRetriever
     }
 
     /**
-     * @return Ok<Tracker_FormElement_Field_List>|Err<Fault>
+     * @return Ok<ListField>|Err<Fault>
      */
-    private function validateListField(Tracker_FormElement_Field_List $field): Ok|Err
+    private function validateListField(ListField $field): Ok|Err
     {
         if (
             $field instanceof LastUpdateByField
             || $field instanceof SubmittedByField
         ) {
-            /** @psalm-var Tracker_FormElement_Field_List $field_return */
+            /** @psalm-var ListField $field_return */
             $field_return = $field;
             return Result::ok($field_return);
         }

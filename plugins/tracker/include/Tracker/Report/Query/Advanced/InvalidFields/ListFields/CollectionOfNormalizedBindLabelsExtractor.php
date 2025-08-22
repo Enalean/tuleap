@@ -20,13 +20,13 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields;
 
-use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Bind_Null;
 use Tracker_FormElement_Field_List_Bind_Static;
 use Tracker_FormElement_Field_List_Bind_Ugroups;
 use Tracker_FormElement_Field_List_Bind_Users;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindParameters;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindVisitor;
+use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\Report\Query\Advanced\ListFieldBindValueNormalizer;
 use Tuleap\Tracker\Report\Query\Advanced\UgroupLabelConverter;
 
@@ -38,7 +38,7 @@ final readonly class CollectionOfNormalizedBindLabelsExtractor implements BindVi
     ) {
     }
 
-    public function extractCollectionOfNormalizedLabels(Tracker_FormElement_Field_List $field): array
+    public function extractCollectionOfNormalizedLabels(ListField $field): array
     {
         return (array) $field->getBind()->accept($this, new BindParameters($field));
     }

@@ -25,8 +25,8 @@ namespace Tuleap\CrossTracker\Query\Advanced\QueryBuilder\Metadata\Semantic\Assi
 use LogicException;
 use ParagonIE\EasyDB\EasyStatement;
 use PFUser;
-use Tracker_FormElement_Field_List;
 use Tuleap\CrossTracker\Query\Advanced\QueryBuilder\Metadata\MetadataValueWrapperParameters;
+use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ComparisonType;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentDateTimeValueWrapper;
@@ -104,7 +104,7 @@ final readonly class AssignedToFromWhereBuilder implements ValueWrapperVisitor
                 $from,
                 '(changeset_value_assigned_to.changeset_id IS NULL OR tracker_changeset_value_assigned_to.bindvalue_id = ?)',
                 $field_ids_statement->values(),
-                [Tracker_FormElement_Field_List::NONE_VALUE]
+                [ListField::NONE_VALUE]
             );
         }
 
@@ -173,7 +173,7 @@ final readonly class AssignedToFromWhereBuilder implements ValueWrapperVisitor
                 $from,
                 'changeset_value_assigned_to_not_equal.changeset_id IS NOT NULL AND changeset_value_list_assigned_to_not_equal.bindvalue_id != ?',
                 $field_ids_statement->values(),
-                [Tracker_FormElement_Field_List::NONE_VALUE]
+                [ListField::NONE_VALUE]
             );
         }
 

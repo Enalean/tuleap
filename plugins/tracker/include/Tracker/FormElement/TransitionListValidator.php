@@ -37,7 +37,7 @@ class TransitionListValidator
     }
 
     public function checkTransition(
-        \Tracker_FormElement_Field_List $field,
+        Field\ListField $field,
         $value,
         ?\Tracker_Artifact_Changeset $last_changeset = null,
     ) {

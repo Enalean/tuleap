@@ -25,6 +25,7 @@ use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindParameters;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindUsersDao;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindVisitor;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\PlatformUsersGetterSingleton;
+use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\Import\Spotter;
 use Tuleap\Tracker\REST\FieldListBindUserValueRepresentation;
 use Tuleap\Tracker\REST\FormElement\UserListValueRepresentation;
@@ -938,7 +939,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
         return $rest_array;
     }
 
-    public function getFieldDataFromRESTObject(array $rest_data, Tracker_FormElement_Field_List $field)
+    public function getFieldDataFromRESTObject(array $rest_data, ListField $field)
     {
         if (isset($rest_data['id']) && is_numeric($rest_data['id'])) {
             $id   = (int) $rest_data['id'];

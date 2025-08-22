@@ -747,7 +747,7 @@ class ExecutionsResource
 
         if ($status_field) {
             $status_field_binds = [];
-            assert($status_field instanceof \Tracker_FormElement_Field_List);
+            assert($status_field instanceof \Tuleap\Tracker\FormElement\Field\ListField);
             $bind = $status_field->getBind();
             if ($bind) {
                 assert($bind instanceof Tracker_FormElement_Field_List_Bind);

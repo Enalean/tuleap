@@ -20,9 +20,9 @@
 
 namespace Tuleap\TestManagement\REST\v1;
 
-use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Bind_Static;
 use Tuleap\TestManagement\Step\Step;
+use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\Test\Builders\ArtifactValuesRepresentationBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 
@@ -41,14 +41,14 @@ class TestStatusAccordingToStepsStatusChangesBuilderTest extends \Tuleap\Test\PH
      */
     private $builder;
     /**
-     * @var Tracker_FormElement_Field_List
+     * @var ListField
      */
     private $status_field;
 
     public function setUp(): void
     {
         $this->builder      = new TestStatusAccordingToStepsStatusChangesBuilder();
-        $this->status_field = $this->createMock(Tracker_FormElement_Field_List::class);
+        $this->status_field = $this->createMock(ListField::class);
         $this->status_field->method('getId')->willReturn(42);
 
         $bind = $this->createMock(Tracker_FormElement_Field_List_Bind_Static::class);

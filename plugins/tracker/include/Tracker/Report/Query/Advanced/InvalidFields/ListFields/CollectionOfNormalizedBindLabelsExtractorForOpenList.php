@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields;
 
-use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Bind_Null;
 use Tracker_FormElement_Field_List_Bind_Static;
 use Tracker_FormElement_Field_List_Bind_Ugroups;
@@ -30,6 +29,7 @@ use Tracker_FormElement_Field_List_Bind_Users;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindParameters;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindVisitor;
 use Tuleap\Tracker\FormElement\Field\ListFields\OpenListValueDao;
+use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\Report\Query\Advanced\ListFieldBindValueNormalizer;
 
 final readonly class CollectionOfNormalizedBindLabelsExtractorForOpenList implements BindVisitor, ExtractCollectionOfNormalizedLabels
@@ -41,7 +41,7 @@ final readonly class CollectionOfNormalizedBindLabelsExtractorForOpenList implem
     ) {
     }
 
-    public function extractCollectionOfNormalizedLabels(Tracker_FormElement_Field_List $field): array
+    public function extractCollectionOfNormalizedLabels(ListField $field): array
     {
         return $field->getBind()->accept($this, new BindParameters($field));
     }

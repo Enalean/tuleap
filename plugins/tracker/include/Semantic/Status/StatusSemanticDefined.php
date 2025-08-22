@@ -20,7 +20,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Semantic\Status;
 
-use Tracker_FormElement_Field_List;
+use Tuleap\Tracker\FormElement\Field\ListField;
 
 /**
  * @psalm-immutable
@@ -28,7 +28,7 @@ use Tracker_FormElement_Field_List;
 class StatusSemanticDefined
 {
     /**
-     * @var Tracker_FormElement_Field_List
+     * @var ListField
      */
     private $field;
     /**
@@ -36,13 +36,13 @@ class StatusSemanticDefined
      */
     private $open_values;
 
-    public function __construct(Tracker_FormElement_Field_List $field, array $open_values)
+    public function __construct(ListField $field, array $open_values)
     {
         $this->field       = $field;
         $this->open_values = $open_values;
     }
 
-    public function getField(): Tracker_FormElement_Field_List
+    public function getField(): ListField
     {
         return $this->field;
     }

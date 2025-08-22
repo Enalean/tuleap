@@ -20,12 +20,13 @@
  */
 
 use Tuleap\DB\DatabaseUUIDV7Factory;
-use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDefaultValueDao;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorDao;
-use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindUsersDao;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDefaultValueDao;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticDao;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindUgroupsValueDao;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindUsersDao;
+use Tuleap\Tracker\FormElement\Field\ListField;
 
 class Tracker_FormElement_Field_List_BindFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
@@ -256,7 +257,7 @@ class Tracker_FormElement_Field_List_BindFactory // phpcs:ignore PSR1.Classes.Cl
                 if (isset($deco['REF'])) {
                     $ID = (string) $deco['REF'];
                 } else {
-                    $ID = Tracker_FormElement_Field_List::NONE_VALUE;
+                    $ID = ListField::NONE_VALUE;
                 }
                 $row['decorators'][$ID] = $this->getDecoratorInstance(
                     $field,

@@ -19,15 +19,46 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\Tracker\FormElement\Field;
+
+use Codendi_HTMLPurifier;
+use Feedback;
+use LogicException;
+use Override;
+use PFUser;
+use SimpleXMLElement;
+use Tracker_Artifact_Changeset;
+use Tracker_Artifact_ChangesetValue;
+use Tracker_Artifact_ChangesetValue_List;
+use Tracker_CardDisplayPreferences;
+use Tracker_FormElement_Field;
+use Tracker_FormElement_Field_List_Bind;
+use Tracker_FormElement_Field_List_Bind_Static;
+use Tracker_FormElement_Field_List_Bind_StaticValue;
+use Tracker_FormElement_Field_List_Bind_StaticValue_None;
+use Tracker_FormElement_Field_List_BindDecorator;
+use Tracker_FormElement_Field_List_BindFactory;
+use Tracker_FormElement_Field_List_BindValue;
+use Tracker_FormElement_Field_List_Value;
+use Tracker_FormElement_Field_Shareable;
+use Tracker_FormElement_InvalidFieldValueException;
+use Tracker_FormElement_RESTValueByField_NotImplementedException;
+use Tracker_FormElementFactory;
+use Tracker_IDisplayTrackerLayout;
+use Tracker_Report;
+use Tracker_Report_Criteria;
+use Tracker_Report_Criteria_List_ValueDao;
+use Tracker_Report_Criteria_ValueDao;
+use Tracker_Report_InvalidRESTCriterionException;
+use Tracker_Report_REST;
+use TransitionFactory;
 use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\FormElement\Field\FieldDao;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDefaultValueDao;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueUnchanged;
 use Tuleap\Tracker\FormElement\Field\ListFields\ItemsDataset\ItemsDatasetBuilder;
 use Tuleap\Tracker\FormElement\Field\ListFields\ListValueDao;
-use Tuleap\Tracker\FormElement\Field\XMLCriteriaValueCache;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\DeleteSpecificProperties;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\ListFieldSpecificPropertiesDAO;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\SpecificPropertiesWithMappingDuplicator;
@@ -38,14 +69,17 @@ use Tuleap\Tracker\Report\Criteria\DeleteReportCriteriaValue;
 use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
+use User;
+use UserXMLExporter;
+use Workflow;
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field implements Tracker_FormElement_Field_Shareable
+abstract class ListField extends Tracker_FormElement_Field implements Tracker_FormElement_Field_Shareable
 {
-    public const NONE_VALUE = 100;
+    public const int NONE_VALUE = 100;
 
     protected $bind;
 
+    #[Override]
     public function getFormElementDataForCreation($parent_id): array
     {
         $form_element_data = parent::getFormElementDataForCreation($parent_id);
@@ -72,7 +106,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
             $dao          = new ListFieldSpecificPropertiesDAO();
             $bind_factory = $this->getBindFactory();
             $this->bind   = $dao->searchBindByFieldId($this->id)
-                ->mapOr(fn (string $bind_type): ?Tracker_FormElement_Field_List_Bind => $bind_factory->getBind($this, $bind_type), null);
+                ->mapOr(fn(string $bind_type): ?Tracker_FormElement_Field_List_Bind => $bind_factory->getBind($this, $bind_type), null);
         }
         return $this->bind;
     }
@@ -90,12 +124,13 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         $this->bind = $bind;
     }
 
-    #[\Override]
+    #[Override]
     protected function getDeleteSpecificPropertiesDao(): DeleteSpecificProperties
     {
         return new ListFieldSpecificPropertiesDAO();
     }
 
+    #[Override]
     public function duplicate(int $from_field_id): SpecificPropertiesWithMappingDuplicator
     {
         $duplicator = new SpecificPropertiesWithMappingDuplicator(new ListFieldSpecificPropertiesDAO());
@@ -106,11 +141,13 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         return $duplicator;
     }
 
+    #[Override]
     public function canBeUsedToSortReport()
     {
         return ! $this->isMultiple();
     }
 
+    #[Override]
     public function getCriteriaFromWhere(Tracker_Report_Criteria $criteria): Option
     {
         //Only filter query if field is used
@@ -128,6 +165,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      * @see getQueryFrom
      *
      */
+    #[Override]
     public function getQuerySelect(): string
     {
         return $this->getBind()->getQuerySelect();
@@ -150,6 +188,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      * which tables used to retrieve the last changeset of matching artifacts.
      * @return string
      */
+    #[Override]
     public function getQueryFrom()
     {
         return $this->getBind()->getQueryFrom();
@@ -169,6 +208,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     /**
      * Get the "order by" statement to retrieve field values
      */
+    #[Override]
     public function getQueryOrderby(): string
     {
         return $this->getBind()->getQueryOrderby();
@@ -177,6 +217,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     /**
      * Get the "group by" statement to retrieve field values
      */
+    #[Override]
     public function getQueryGroupby(): string
     {
         if (! $this->isUsed()) {
@@ -212,6 +253,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      *               - selectbox: count group by
      *               - multiselectbox: all (else it breaks other computations)
      */
+    #[Override]
     public function getQuerySelectAggregate($functions)
     {
         return $this->getBind()->getQuerySelectAggregate($functions);
@@ -220,6 +262,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     /**
      * @return array the available aggreagate functions for this field. empty array if none or irrelevant.
      */
+    #[Override]
     public function getAggregateFunctions()
     {
         return ['COUNT', 'COUNT_GRBY'];
@@ -229,17 +272,19 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      * Return the dao of the criteria value used with this field.
      * @return Tracker_Report_Criteria_ValueDao
      */
+    #[Override]
     protected function getCriteriaDao()
     {
         return new Tracker_Report_Criteria_List_ValueDao();
     }
 
-    #[\Override]
+    #[Override]
     public function getDeleteCriteriaValueDAO(): DeleteReportCriteriaValue
     {
         return new CriteriaListValueDAO();
     }
 
+    #[Override]
     public function fetchChangesetValue(
         int $artifact_id,
         int $changeset_id,
@@ -272,6 +317,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      * Display the field as a Changeset value.
      * Used in CSV data export.
      */
+    #[Override]
     public function fetchCSVChangesetValue(int $artifact_id, int $changeset_id, mixed $value, ?Tracker_Report $report): string
     {
         $values = [];
@@ -286,6 +332,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      * @param Tracker_Report_Criteria $criteria
      * @return mixed
      */
+    #[Override]
     public function getCriteriaValue($criteria)
     {
         if (empty($this->criteria_value) || empty($this->criteria_value[$criteria->getReport()->getId()])) {
@@ -310,6 +357,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     /**
      * @throws Tracker_Report_InvalidRESTCriterionException
      */
+    #[Override]
     public function setCriteriaValueFromREST(Tracker_Report_Criteria $criteria, array $rest_criteria_value)
     {
         $searched_field_values = $rest_criteria_value[Tracker_Report_REST::VALUE_PROPERTY_NAME];
@@ -351,6 +399,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         return is_numeric($value_to_match);
     }
 
+    #[Override]
     public function exportCriteriaValueToXML(Tracker_Report_Criteria $criteria, SimpleXMLElement $xml_criteria, array $xml_mapping): void
     {
         $bind = $this->getBind();
@@ -386,6 +435,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         }
     }
 
+    #[Override]
     public function setCriteriaValueFromXML(
         Tracker_Report_Criteria $criteria,
         SimpleXMLElement $xml_criteria_value,
@@ -423,6 +473,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         }
     }
 
+    #[Override]
     public function saveCriteriaValueFromXML(Tracker_Report_Criteria $criteria)
     {
         if (! $this->getBind() instanceof Tracker_FormElement_Field_List_Bind_Static) {
@@ -459,6 +510,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      *
      * @return mixed
      */
+    #[Override]
     public function getFormattedCriteriaValue($value)
     {
         if (empty($value['values'])) {
@@ -467,6 +519,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         return $value['values'];
     }
 
+    #[Override]
     public function fetchCriteriaValue(Tracker_Report_Criteria $criteria): string
     {
         $hp             = Codendi_HTMLPurifier::instance();
@@ -494,8 +547,8 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         $html .= '<input type="hidden" name="' . $hp->purify($prefix_name) . '" />';
         $html .= '<select data-test="list-report-criteria" id="tracker_report_criteria_' . ($criteria->is_advanced ? 'adv_' : '') . $hp->purify($this->id) . '"
                           name="' . $hp->purify($name) . '" ' .
-                          $size .
-                          $multiple . '>';
+                 $size .
+                 $multiple . '>';
         //Any value
         $selected = count($criteria_value) && ! in_array('', $criteria_value) ? '' : 'selected="selected"';
         $html    .= '<option value="" ' . $selected . ' title="' . $GLOBALS['Language']->getText('global', 'any') . '">' . $GLOBALS['Language']->getText('global', 'any') . '</option>';
@@ -549,17 +602,19 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      * to enhance the user experience
      * @return string
      */
+    #[Override]
     public function fetchArtifactAdditionnalInfo(?Tracker_Artifact_ChangesetValue $value, array $submitted_values)
     {
         return '';
     }
 
-     /**
+    /**
      * Add some additionnal information beside the field in the submit new artifact form.
      * This is up to the field. It can be html or inline javascript
      * to enhance the user experience
      * @return string
      */
+    #[Override]
     public function fetchSubmitAdditionnalInfo(array $submitted_values)
     {
         return '';
@@ -568,16 +623,19 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     /**
      * @return bool
      */
+    #[Override]
     protected function criteriaCanBeAdvanced()
     {
         return true;
     }
 
+    #[Override]
     public function fetchRawValue(mixed $value): string
     {
         return $this->getBind()->fetchRawValue($value);
     }
 
+    #[Override]
     public function fetchRawValueFromChangeset(Tracker_Artifact_Changeset $changeset): string
     {
         return $this->getBind()->fetchRawValueFromChangeset($changeset);
@@ -586,11 +644,13 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     /**
      * @return ListValueDao
      */
+    #[Override]
     protected function getValueDao()
     {
         return new ListValueDao();
     }
 
+    #[Override]
     protected function fetchSubmitValue(array $submitted_values): string
     {
         $selected_values = isset($submitted_values[$this->id]) ? $submitted_values[$this->id] : [];
@@ -613,6 +673,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         return $this->getBind()->getDefaultValues();
     }
 
+    #[Override]
     protected function fetchSubmitValueMasschange(): string
     {
         return $this->_fetchFieldMasschange('tracker_field_' . $this->id, 'artifact[' . $this->id . ']');
@@ -621,10 +682,11 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     /**
      * Fetch the html code to display the field value in artifact
      *
-     * @param Artifact                        $artifact         The artifact
-     * @param Tracker_Artifact_ChangesetValue $value            The actual value of the field
-     * @param array                           $submitted_values The value already submitted by the user
+     * @param Artifact $artifact The artifact
+     * @param Tracker_Artifact_ChangesetValue $value The actual value of the field
+     * @param array $submitted_values The value already submitted by the user
      */
+    #[Override]
     protected function fetchArtifactValue(
         Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value,
@@ -640,10 +702,11 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         );
     }
 
-     /**
+    /**
      * Fetch the field value in artifact to be displayed in mail
      */
 
+    #[Override]
     public function fetchMailArtifactValue(
         Artifact $artifact,
         PFUser $user,
@@ -679,11 +742,12 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     /**
      * Fetch the html code to display the field value in artifact in read only mode
      *
-     * @param Artifact                        $artifact The artifact
-     * @param Tracker_Artifact_ChangesetValue $value    The actual value of the field
+     * @param Artifact $artifact The artifact
+     * @param Tracker_Artifact_ChangesetValue $value The actual value of the field
      *
      * @return string
      */
+    #[Override]
     public function fetchArtifactValueReadOnly(Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
     {
         $html            = '';
@@ -705,6 +769,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         return $html;
     }
 
+    #[Override]
     public function fetchArtifactValueWithEditionFormIfEditable(
         Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value,
@@ -727,7 +792,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         return false;
     }
 
-     /**
+    /**
      * Indicate if a workflow is defined on a field_id.
      * @param $id the field_id
      * @return bool , true if a workflow is defined on the field_id
@@ -756,6 +821,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      *
      * @return bool true if the value is considered ok
      */
+    #[Override]
     protected function validate(Artifact $artifact, $value)
     {
         $valid          = true;
@@ -768,8 +834,8 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
                 $field_value_to = $this->getBind()->getValue($value);
                 if (! $last_changeset) {
                     if (! $this->isTransitionValid(null, $field_value_to)) {
-                           $this->has_errors = true;
-                           $valid            = false;
+                        $this->has_errors = true;
+                        $valid            = false;
                     }
                 } else {
                     if ($last_changeset->getValue($this) != null) {
@@ -915,8 +981,8 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     }
 
     /**
-     * @param array  $selected_values
-     * @param mixed  $submitted_values_for_this_list
+     * @param array $selected_values
+     * @param mixed $submitted_values_for_this_list
      */
     protected function _fetchField(string $id, string $name, $selected_values, $submitted_values_for_this_list = []): string //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
@@ -1062,7 +1128,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         $html .= $size . $multiple . $bind_type . '>';
 
         $html .= '<option value="' . $purifier->purify(BindStaticValueUnchanged::VALUE_ID) . '" selected="selected">' .
-            $GLOBALS['Language']->getText('global', 'unchanged') . '</option>';
+                 $GLOBALS['Language']->getText('global', 'unchanged') . '</option>';
         $html .= '<option value="' . Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID . '">' . $GLOBALS['Language']->getText('global', 'none') . '</option>';
 
         foreach ($this->getBind()->getAllValues() as $id => $value) {
@@ -1088,6 +1154,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      * Display the html field in the admin ui
      * @return string html
      */
+    #[Override]
     protected function fetchAdminFormElement()
     {
         $html  = '';
@@ -1095,6 +1162,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         return $html;
     }
 
+    #[Override]
     protected function fetchTooltipValue(Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null): string
     {
         $html           = '';
@@ -1108,6 +1176,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     /**
      * @see Tracker_FormElement_Field::fetchCardValue()
      */
+    #[Override]
     public function fetchCardValue(
         Artifact $artifact,
         ?Tracker_CardDisplayPreferences $display_preferences = null,
@@ -1132,6 +1201,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      * Update the form element.
      * Override the parent function to handle binds
      */
+    #[Override]
     protected function processUpdate(Tracker_IDisplayTrackerLayout $layout, $request, $current_user, $redirect = false)
     {
         $redirect = false;
@@ -1150,6 +1220,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      *
      * @param bool $tracker_is_empty
      */
+    #[Override]
     public function afterCreate(array $form_element_data, $tracker_is_empty)
     {
         parent::afterCreate($form_element_data, $tracker_is_empty);
@@ -1165,6 +1236,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     /**
      * Transforms FormElement_List into a SimpleXMLElement
      */
+    #[Override]
     public function exportToXml(
         SimpleXMLElement $parent_node,
         array &$xmlMapping,
@@ -1194,9 +1266,10 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      * Continue the initialisation from an xml (FormElementFactory is not smart enough to do all stuff.
      * Polymorphism rulez!!!
      *
-     * @param SimpleXMLElement                          $xml         containing the structure of the imported Tracker_FormElement
+     * @param SimpleXMLElement $xml containing the structure of the imported Tracker_FormElement
      * @param array                                     &$xmlMapping where the newly created formElements indexed by their XML IDs are stored (and values)
      */
+    #[Override]
     public function continueGetInstanceFromXML(
         $xml,
         &$xmlMapping,
@@ -1217,6 +1290,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      * @param Tracker $tracker The tracker
      * @param bool $tracker_is_empty
      */
+    #[Override]
     public function afterSaveObject(Tracker $tracker, $tracker_is_empty, $force_absolute_ranking)
     {
         $bind = $this->getBind();
@@ -1234,6 +1308,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         return new Tracker_FormElement_Field_List_BindFactory(new \Tuleap\DB\DatabaseUUIDV7Factory());
     }
 
+    #[Override]
     protected function saveValue(
         $artifact,
         $changeset_value_id,
@@ -1247,12 +1322,13 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     /**
      * Get the value of this field
      *
-     * @param Tracker_Artifact_Changeset $changeset   The changeset (needed in only few cases like 'lud' field)
-     * @param int                        $value_id    The id of the value
+     * @param Tracker_Artifact_Changeset $changeset The changeset (needed in only few cases like 'lud' field)
+     * @param int $value_id The id of the value
      * @param bool $has_changed If the changeset value has changed from the rpevious one
      *
      * @return Tracker_Artifact_ChangesetValue or null if not found
      */
+    #[Override]
     public function getChangesetValue($changeset, $value_id, $has_changed)
     {
         $changeset_value = null;
@@ -1271,21 +1347,24 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         return $changeset_value;
     }
 
+    #[Override]
     public function getRESTBindingProperties()
     {
         $bind = $this->getBind();
         return $bind->getRESTBindingProperties();
     }
 
+    #[Override]
     public function getFieldDataFromRESTValue(array $value, ?Artifact $artifact = null)
     {
         if (array_key_exists('bind_value_ids', $value) && is_array($value['bind_value_ids'])) {
             return array_map('intval', $value['bind_value_ids']);
         }
         throw new Tracker_FormElement_InvalidFieldValueException('List fields values must be passed as an array of ids (integer) in \'bind_value_ids\''
-           . ' Example: {"field_id": 1548, "bind_value_ids": [457]}');
+                                                                 . ' Example: {"field_id": 1548, "bind_value_ids": [457]}');
     }
 
+    #[Override]
     public function getFieldDataFromRESTValueByField(array $value, ?Artifact $artifact = null)
     {
         throw new Tracker_FormElement_RESTValueByField_NotImplementedException();
@@ -1298,6 +1377,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      *
      * @return mixed the field data corresponding to the rest_value for artifact submision
      */
+    #[Override]
     public function getFieldData($value)
     {
         if ($value === $GLOBALS['Language']->getText('global', 'none')) {
@@ -1320,6 +1400,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     /**
      * @see Tracker_FormElement_Field::hasChanges()
      */
+    #[Override]
     public function hasChanges(Artifact $artifact, Tracker_Artifact_ChangesetValue $previous_changesetvalue, $new_value)
     {
         if (! is_array($new_value)) {
@@ -1344,6 +1425,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      *
      * @return bool
      */
+    #[Override]
     public function isNotificationsSupported()
     {
         if ($b = $this->getBind()) {
@@ -1362,10 +1444,10 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     /**
      * Check if the user can make the transition
      *
-     * @param int  $transition_id The id of the transition
-     * @param PFUser $user          The user. If null, take the current user
+     * @param int $transition_id The id of the transition
+     * @param PFUser $user The user. If null, take the current user
      *
-     *@return bool true if user has permission on this field
+     * @return bool true if user has permission on this field
      */
     public function userCanMakeTransition($transition_id, ?PFUser $user = null)
     {
@@ -1387,6 +1469,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      *
      * @return string[]
      */
+    #[Override]
     public function getRecipients(Tracker_Artifact_ChangesetValue $changeset_value)
     {
         return $this->getBind()->getRecipients($changeset_value);
@@ -1397,6 +1480,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         return TransitionFactory::instance()->getTransitionId($this->getTracker(), $from, $to);
     }
 
+    #[Override]
     public function getDefaultValue()
     {
         $default_array = $this->getBind()->getDefaultValues();
@@ -1406,6 +1490,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         return array_keys($default_array);
     }
 
+    #[Override]
     public function getDefaultRESTValue()
     {
         return $this->getBind()->getDefaultRESTValues();
@@ -1415,10 +1500,11 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      * Say if the value is valid. If not valid set the internal has_error to true.
      *
      * @param Artifact $artifact The artifact
-     * @param mixed    $value    data coming from the request. May be string or array.
+     * @param mixed $value data coming from the request. May be string or array.
      *
      * @return bool true if the value is considered ok
      */
+    #[Override]
     public function isValid(Artifact $artifact, $value)
     {
         $this->has_errors = ! ($this->isPossibleValue($value) && $this->validate($artifact, $value));
@@ -1455,10 +1541,11 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      * Validate a required field
      *
      * @param Artifact $artifact The artifact to check
-     * @param mixed    $value    The submitted value
+     * @param mixed $value The submitted value
      *
      * @return bool true on success or false on failure
      */
+    #[Override]
     public function isValidRegardingRequiredProperty(Artifact $artifact, $value)
     {
         $this->has_errors = false;
@@ -1470,6 +1557,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         return ! $this->has_errors;
     }
 
+    #[Override]
     public function isEmpty($value, Artifact $artifact)
     {
         return $this->isNone($value);
@@ -1478,6 +1566,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     /**
      * @see Tracker_FormElement_Field_Shareable
      */
+    #[Override]
     public function fixOriginalValueIds(array $value_mapping)
     {
         $this->getBind()->fixOriginalValueIds($value_mapping);
@@ -1486,6 +1575,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     /**
      * @see Tracker_FormElement::process()
      */
+    #[Override]
     public function process(Tracker_IDisplayTrackerLayout $layout, $request, $current_user)
     {
         if ($request->get('func') == 'get-values') {
@@ -1495,6 +1585,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         parent::process($layout, $request, $current_user);
     }
 
+    #[Override]
     public function fetchFormattedForJson()
     {
         $json           = parent::fetchFormattedForJson();
@@ -1502,6 +1593,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         return $json;
     }
 
+    #[Override]
     public function getRESTAvailableValues()
     {
         $values = null;
@@ -1548,7 +1640,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
 
         foreach ($this->getAllVisibleValues() as $v) {
             $selected = isset($default_values[$v->getId()]) ? 'selected="selected"' : '';
-            $html    .= '<option value="' . $v->getId() . '" ' . $selected . '>' . $hp->purify($v->getLabel(), CODENDI_PURIFIER_CONVERT_HTML)  . '</option>';
+            $html    .= '<option value="' . $v->getId() . '" ' . $selected . '>' . $hp->purify($v->getLabel(), CODENDI_PURIFIER_CONVERT_HTML) . '</option>';
         }
         $html .= '</select>';
         $html .= '</p>';
@@ -1556,6 +1648,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         return $html;
     }
 
+    #[Override]
     protected function updateFormElementType(string $new_type): void
     {
         $db_transaction = new \Tuleap\DB\DBTransactionExecutorWithConnection(

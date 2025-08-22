@@ -20,6 +20,7 @@
 use Tuleap\Option\Option;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindParameters;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindVisitor;
+use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
@@ -295,7 +296,7 @@ class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field
         return self::TYPE;
     }
 
-    public function getFieldDataFromRESTObject(array $rest_data, Tracker_FormElement_Field_List $field)
+    public function getFieldDataFromRESTObject(array $rest_data, ListField $field)
     {
         return;
     }

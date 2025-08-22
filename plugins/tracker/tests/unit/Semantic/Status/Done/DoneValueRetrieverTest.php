@@ -24,12 +24,12 @@ namespace Tuleap\Tracker\Semantic\Status\Done;
 
 use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
-use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_BindValue;
 use Tuleap\Color\ColorName;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
@@ -204,7 +204,7 @@ final class DoneValueRetrieverTest extends TestCase
 
     private function mockSemanticStatusDefinedWithAllValuesHidden(): void
     {
-        $field = $this->createMock(Tracker_FormElement_Field_List::class);
+        $field = $this->createMock(ListField::class);
         $field->expects($this->once())
             ->method('userCanRead')
             ->with($this->user)
@@ -254,7 +254,7 @@ final class DoneValueRetrieverTest extends TestCase
 
     private function mockDoneSemanticDefinedWithDoneValue(): void
     {
-        $field = $this->createMock(Tracker_FormElement_Field_List::class);
+        $field = $this->createMock(ListField::class);
         $field->expects($this->once())
             ->method('userCanRead')
             ->with($this->user)
@@ -300,7 +300,7 @@ final class DoneValueRetrieverTest extends TestCase
 
     private function mockDoneSemanticDefinedWithoutDoneValue(): void
     {
-        $field = $this->createMock(Tracker_FormElement_Field_List::class);
+        $field = $this->createMock(ListField::class);
         $field->expects($this->once())
             ->method('userCanRead')
             ->with($this->user)

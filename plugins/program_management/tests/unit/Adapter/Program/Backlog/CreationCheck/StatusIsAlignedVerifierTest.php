@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\CreationCheck;
 
-use Tracker_FormElement_Field_List;
 use Tuleap\ProgramManagement\Domain\Program\Admin\Configuration\ConfigurationErrorsCollector;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\Source\SourceTrackerCollection;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TrackerCollection;
@@ -35,8 +34,9 @@ use Tuleap\ProgramManagement\Tests\Stub\RetrieveVisibleProgramIncrementTrackerSt
 use Tuleap\ProgramManagement\Tests\Stub\TrackerReferenceStub;
 use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\ProgramManagement\Tests\Stub\VerifyIsTeamStub;
-use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
+use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\Semantic\Status\StatusSemanticDAO;
+use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
 use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatusFactory;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Tracker;
@@ -120,7 +120,7 @@ final class StatusIsAlignedVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsTrueIfAllStatusSemanticAreWellConfigured(): void
     {
-        $list_field = $this->createMock(Tracker_FormElement_Field_List::class);
+        $list_field = $this->createMock(ListField::class);
 
         $top_planning_tracker_semantic_status = $this->createMock(TrackerSemanticStatus::class);
         $top_planning_tracker_semantic_status->method('getField')
@@ -206,7 +206,7 @@ final class StatusIsAlignedVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
             ->with($this->program_increment)
             ->willReturn($top_planning_tracker_semantic_status);
 
-        $list_field = $this->createMock(Tracker_FormElement_Field_List::class);
+        $list_field = $this->createMock(ListField::class);
         $top_planning_tracker_semantic_status->method('getField')
             ->willReturn($list_field);
 
@@ -229,7 +229,7 @@ final class StatusIsAlignedVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsFalseIfSomeTeamStatusSemanticDoesNotContainTheProgramOpenValue(): void
     {
-        $list_field = $this->createMock(Tracker_FormElement_Field_List::class);
+        $list_field = $this->createMock(ListField::class);
 
         $top_planning_tracker_semantic_status = $this->createMock(TrackerSemanticStatus::class);
         $top_planning_tracker_semantic_status->method('getField')

@@ -22,9 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Semantic\Status;
 
-use Tracker_FormElement_Field_List;
 use Tuleap\Option\Option;
 use Tuleap\Tracker\FormElement\Field\RetrieveFieldById;
+use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\Tracker;
 
 final readonly class SemanticStatusFieldRetriever implements RetrieveSemanticStatusField
@@ -35,7 +35,7 @@ final readonly class SemanticStatusFieldRetriever implements RetrieveSemanticSta
     ) {
     }
 
-    public function fromTracker(Tracker $tracker): ?Tracker_FormElement_Field_List
+    public function fromTracker(Tracker $tracker): ?ListField
     {
         return $this->search_status_field->searchFieldByTrackerId($tracker->getId())
             ->andThen(fn(int $field_id) => Option::fromNullable($this->retrieve_field_by_id->getFieldById($field_id)))

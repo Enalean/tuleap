@@ -25,12 +25,12 @@ namespace Tuleap\Tracker\FormElement;
 
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use SimpleXMLElement;
-use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Bind_Static;
 use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
+use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueListTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
@@ -45,7 +45,7 @@ final class Tracker_FormElement_Field_List_Bind_StaticTest extends TestCase // p
     private Tracker_FormElement_Field_List_Bind_Static $bind_without_values;
     private Tracker_FormElement_Field_List_Bind_StaticValue $first_value;
     private Tracker_FormElement_Field_List_Bind_StaticValue $second_value;
-    private Tracker_FormElement_Field_List $field;
+    private ListField $field;
 
     protected function setUp(): void
     {

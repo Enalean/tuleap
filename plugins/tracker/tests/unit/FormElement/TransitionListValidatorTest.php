@@ -24,9 +24,9 @@ namespace Tuleap\Tracker\FormElement;
 
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use PHPUnit\Framework\MockObject\MockObject;
-use Tracker_FormElement_Field_List;
 use TransitionFactory;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueListTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
@@ -47,7 +47,7 @@ final class TransitionListValidatorTest extends TestCase
     public function testTransitionToParamIsCorrectlyExtractedForStringFields(): void
     {
         $changeset = ChangesetTestBuilder::aChangeset(65)->build();
-        $field     = $this->createMock(Tracker_FormElement_Field_List::class);
+        $field     = $this->createMock(ListField::class);
         $value     = 'Closed';
         $tracker   = TrackerTestBuilder::aTracker()->build();
         $field->method('getId')->willReturn(2864);
@@ -72,7 +72,7 @@ final class TransitionListValidatorTest extends TestCase
     public function testTransitionToParamIsCorrectlyExtractedForListFields(): void
     {
         $changeset = ChangesetTestBuilder::aChangeset(65)->build();
-        $field     = $this->createMock(Tracker_FormElement_Field_List::class);
+        $field     = $this->createMock(ListField::class);
         $field->method('getId')->willReturn(2864);
         $value   = ChangesetValueListTestBuilder::aListOfValue(101, $changeset, $field)->build();
         $tracker = TrackerTestBuilder::aTracker()->build();
@@ -97,7 +97,7 @@ final class TransitionListValidatorTest extends TestCase
     public function testTransitionIsInvalidWhenUserDoesNotHaveSufficientPermissions(): void
     {
         $changeset = ChangesetTestBuilder::aChangeset(65)->build();
-        $field     = $this->createMock(Tracker_FormElement_Field_List::class);
+        $field     = $this->createMock(ListField::class);
         $value     = 'Closed';
         $tracker   = TrackerTestBuilder::aTracker()->build();
         $field->method('getId')->willReturn(2864);

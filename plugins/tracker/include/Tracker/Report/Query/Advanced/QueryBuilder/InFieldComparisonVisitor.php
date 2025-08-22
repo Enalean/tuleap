@@ -24,7 +24,6 @@ use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_Burndown;
 use Tracker_FormElement_Field_CrossReferences;
 use Tracker_FormElement_Field_File;
-use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_PermissionsOnArtifact;
 use Tracker_FormElement_FieldVisitor;
 use Tuleap\Tracker\FormElement\Field\ArtifactId\ArtifactIdField;
@@ -46,6 +45,7 @@ use Tuleap\Tracker\FormElement\Field\String\StringField;
 use Tuleap\Tracker\FormElement\Field\SubmittedBy\SubmittedByField;
 use Tuleap\Tracker\FormElement\Field\SubmittedOn\SubmittedOnField;
 use Tuleap\Tracker\FormElement\Field\Text\TextField;
+use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
 use Tuleap\Tracker\Report\Query\Advanced\CollectionOfListValuesExtractor;
 use Tuleap\Tracker\Report\Query\Advanced\FieldFromWhereBuilder;
@@ -128,7 +128,7 @@ final class InFieldComparisonVisitor implements
         return $this->visitList($field);
     }
 
-    private function visitList(Tracker_FormElement_Field_List $field)
+    private function visitList(ListField $field)
     {
         $static_bind_builder  = new InComparison\ForListBindStatic(
             new CollectionOfListValuesExtractor(),

@@ -43,7 +43,7 @@ class BackgroundColorFieldRetriever
     }
 
     /**
-     * @return \Tracker_FormElement_Field_List
+     * @return \Tuleap\Tracker\FormElement\Field\ListField
      * @throws BackgroundColorSemanticFieldNotFoundException
      */
     public function getField(Tracker $tracker)

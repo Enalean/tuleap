@@ -24,16 +24,16 @@ namespace Tuleap\CrossTracker\Query\Advanced;
 
 use LogicException;
 use PHPUnit\Framework\Attributes\DataProvider;
-use Tracker_FormElement_Field_List;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 use Tuleap\Tracker\Semantic\Contributor\ContributorFieldRetriever;
 use Tuleap\Tracker\Semantic\Contributor\TrackerSemanticContributorFactory;
 use Tuleap\Tracker\Test\Builders\Fields\CheckboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\MultiSelectboxFieldBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\OpenListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\RadioButtonFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Test\Stub\RetrieveSemanticStatusFieldStub;
 use Tuleap\Tracker\Tracker;
@@ -97,7 +97,7 @@ final class InvalidOrderByListCheckerTest extends TestCase
     }
 
     #[DataProvider('generateFields')]
-    public function testItAllowsSingleValueListFields(Tracker_FormElement_Field_List $list, Tracker $tracker, bool $is_allowed): void
+    public function testItAllowsSingleValueListFields(ListField $list, Tracker $tracker, bool $is_allowed): void
     {
         $this->status_field_retriever->withField($list);
 

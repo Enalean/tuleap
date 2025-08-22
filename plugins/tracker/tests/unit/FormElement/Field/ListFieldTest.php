@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\FormElement;
+namespace Tuleap\Tracker\FormElement\Field;
 
 use HTTPRequest;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
@@ -29,7 +29,6 @@ use PHPUnit\Framework\MockObject\MockObject;
 use SimpleXMLElement;
 use TestHelper;
 use Tracker_Artifact_ChangesetValue_List;
-use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Bind_Static;
 use Tracker_FormElement_Field_List_BindFactory;
 use Tracker_FormElement_Field_List_BindValue;
@@ -47,6 +46,7 @@ use Tuleap\Test\Stubs\User\XML\Import\IFindUserFromXMLReferenceStub;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\ListFields\ListValueDao;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\ListFieldSpecificPropertiesDAO;
+use Tuleap\Tracker\FormElement\TransitionListValidator;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueListTestBuilder;
@@ -57,20 +57,21 @@ use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
 use Workflow;
 
 #[DisableReturnValueGenerationForTestDoubles]
-final class Tracker_FormElement_Field_ListTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+final class ListFieldTest extends TestCase
 {
     use GlobalResponseMock;
     use GlobalLanguageMock;
 
     private Tracker_Artifact_ChangesetValue_List&MockObject $changeset_value;
-    private Tracker_FormElement_Field_List&MockObject $list_field;
+    private ListField&MockObject $list_field;
     private Tracker_FormElement_Field_List_BindValue $bind_value;
     private Tracker_FormElement_Field_List_Bind_Static&MockObject $bind;
     private ListValueDao&MockObject $value_dao;
 
+    #[\Override]
     protected function setUp(): void
     {
-        $this->list_field      = $this->createPartialMock(Tracker_FormElement_Field_List::class, [
+        $this->list_field      = $this->createPartialMock(ListField::class, [
             'getValueDao', 'getBind', 'isNone', 'getFactoryLabel', 'getFactoryDescription', 'getFactoryIconUseIt',
             'getFactoryIconCreate', 'accept', 'isAlwaysInEditMode', 'fieldHasEnableWorkflow', 'getWorkflow',
             'getBindFactory', 'isRequired', 'getTransitionListValidator', 'getListDao', 'getId',
@@ -85,6 +86,7 @@ final class Tracker_FormElement_Field_ListTest extends TestCase // phpcs:ignore 
         $this->list_field->method('getId')->willReturn(66);
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         unset($GLOBALS['_SESSION']);

@@ -33,7 +33,6 @@ use Tracker_Artifact_Changeset_CommentDao;
 use Tracker_Artifact_Changeset_NewChangesetFieldsValidator;
 use Tracker_Artifact_PriorityHistoryChange;
 use Tracker_ArtifactFactory;
-use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Bind;
 use Tracker_FormElementFactory;
 use Tracker_NoChangeException;
@@ -114,6 +113,7 @@ use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
 use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
+use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\Permission\SubmissionPermissionVerifier;
 use Tuleap\Tracker\REST\Helpers\ArtifactsRankOrderer;
 use Tuleap\Tracker\REST\Helpers\IdsFromBodyAreNotUniqueException;
@@ -664,7 +664,7 @@ final class KanbanResource extends AuthenticatedResource
         }
     }
 
-    private function getStatusField(Kanban $kanban, PFUser $user): Tracker_FormElement_Field_List
+    private function getStatusField(Kanban $kanban, PFUser $user): ListField
     {
         $tracker      = $this->getTrackerForKanban($kanban);
         $status_field = $tracker->getStatusField();
@@ -1613,7 +1613,7 @@ final class KanbanResource extends AuthenticatedResource
     private function moveArtifact(
         \Tuleap\Tracker\Artifact\Artifact $artifact,
         PFUser $user,
-        Tracker_FormElement_Field_List $status_field,
+        ListField $status_field,
         int $closed_value,
     ): void {
         if (! $artifact->userCanView($user)) {

@@ -24,10 +24,10 @@
 namespace Tuleap\GraphOnTrackersV5\DataTransformation;
 
 use Tracker_FormElement_Field;
-use Tracker_FormElement_Field_List;
 use Tracker_FormElementFactory;
 use Tuleap\DB\DBFactory;
 use Tuleap\GraphOnTrackersV5\GraphicLibrary\GraphOnTrackersV5_Engine_Bar;
+use Tuleap\Tracker\FormElement\Field\ListField;
 
 class GraphOnTrackersV5_Chart_BarDataBuilder extends ChartDataBuilderV5 // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
@@ -49,7 +49,7 @@ class GraphOnTrackersV5_Chart_BarDataBuilder extends ChartDataBuilderV5 // phpcs
         $has_group_by_field = $from_group = $group_group = $order_by = '';
         if ($this->isAGroupBarChart()) {
             $group_by_field = $this->buildGroupByField();
-            \assert($group_by_field instanceof Tracker_FormElement_Field_List);
+            \assert($group_by_field instanceof ListField);
             if ($group_by_field && $group_by_field->userCanRead()) {
                 $has_group_by_field = ', ' . $group_by_field->getQuerySelect();
                 $from_group         = '  ' . $group_by_field->getQueryFrom();
@@ -74,7 +74,7 @@ class GraphOnTrackersV5_Chart_BarDataBuilder extends ChartDataBuilderV5 // phpcs
         return Tracker_FormElementFactory::instance();
     }
 
-    protected function buildSourceField(): Tracker_FormElement_Field_List
+    protected function buildSourceField(): ListField
     {
         if ($this->chart->getField_base() === null) {
             throw new ChartFieldNotFoundException($this->chart->getTitle());
@@ -83,7 +83,7 @@ class GraphOnTrackersV5_Chart_BarDataBuilder extends ChartDataBuilderV5 // phpcs
         if (! $source_field) {
             throw new ChartFieldNotFoundException($this->chart->getTitle());
         }
-        \assert($source_field instanceof Tracker_FormElement_Field_List);
+        \assert($source_field instanceof ListField);
 
         return $source_field;
     }
@@ -140,9 +140,9 @@ class GraphOnTrackersV5_Chart_BarDataBuilder extends ChartDataBuilderV5 // phpcs
     private function buildChartEngine(
         array $result,
         string $has_group_by_field,
-        ?Tracker_FormElement_Field_List $group_by_field,
+        ?ListField $group_by_field,
         GraphOnTrackersV5_Engine_Bar $engine,
-        Tracker_FormElement_Field_List $source_field,
+        ListField $source_field,
     ): void {
         $engine->data = [];
 
@@ -175,8 +175,8 @@ class GraphOnTrackersV5_Chart_BarDataBuilder extends ChartDataBuilderV5 // phpcs
         $color,
         GraphOnTrackersV5_Engine_Bar $engine,
         array $data,
-        Tracker_FormElement_Field_List $source_field,
-        Tracker_FormElement_Field_List $group_by_field,
+        ListField $source_field,
+        ListField $group_by_field,
     ): void {
         $none                                                      = $GLOBALS['Language']->getText('global', 'none');
         $engine->colors[$data[$source_field->getPrefixedName()]]   = $color;
@@ -195,7 +195,7 @@ class GraphOnTrackersV5_Chart_BarDataBuilder extends ChartDataBuilderV5 // phpcs
     }
 
     private function buildChartQuery(
-        Tracker_FormElement_Field_List $source_field,
+        ListField $source_field,
         string $has_group_by_field,
         string $from_group,
         string $group_group,

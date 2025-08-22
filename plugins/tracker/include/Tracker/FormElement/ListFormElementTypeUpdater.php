@@ -42,7 +42,7 @@ class ListFormElementTypeUpdater
     /**
      * @throws FormElementTypeUpdateErrorException
      */
-    public function updateFormElementType(\Tracker_FormElement_Field_List $form_element, string $type): void
+    public function updateFormElementType(Field\ListField $form_element, string $type): void
     {
         $this->db_transaction_executor->execute(
             function () use ($form_element, $type) {
@@ -62,7 +62,7 @@ class ListFormElementTypeUpdater
                 }
 
                 foreach ($target_fields as $target_field) {
-                    assert($target_field instanceof \Tracker_FormElement_Field_List);
+                    assert($target_field instanceof Field\ListField);
 
                     if ($this->changeFormElementType($target_field, $type) === false) {
                         throw new FormElementTypeUpdateErrorException(
@@ -79,7 +79,7 @@ class ListFormElementTypeUpdater
         );
     }
 
-    private function changeFormElementType(\Tracker_FormElement_Field_List $form_element, string $type): bool
+    private function changeFormElementType(Field\ListField $form_element, string $type): bool
     {
         if (! $form_element->changeType($type) || ! $this->field_dao->setType($form_element, $type)) {
             return false;
@@ -88,7 +88,7 @@ class ListFormElementTypeUpdater
         $this->form_element_factory->clearElementFromCache($form_element); //todo: clear other caches?
 
         $new_form_element = $this->form_element_factory->getFormElementById($form_element->getId());
-        if (! $new_form_element instanceof \Tracker_FormElement_Field_List) {
+        if (! $new_form_element instanceof Field\ListField) {
             return false;
         }
 
@@ -98,7 +98,7 @@ class ListFormElementTypeUpdater
         return true;
     }
 
-    private function clearDefaultValuesIfNeeded(\Tracker_FormElement_Field_List $old_form_element, \Tracker_FormElement_Field_List $new_form_element): void
+    private function clearDefaultValuesIfNeeded(Field\ListField $old_form_element, Field\ListField $new_form_element): void
     {
         // Clear default values when type changes from a multiple list to a simple list
         if ($old_form_element->isMultiple() && ! $new_form_element->isMultiple()) {

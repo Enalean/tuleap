@@ -39,7 +39,7 @@ class BoundDecoratorSaver
 
     public function save(\Tracker_FormElement_Field $field, int $value_id, string $color): void
     {
-        if ($value_id === \Tracker_FormElement_Field_List::NONE_VALUE) {
+        if ($value_id === \Tuleap\Tracker\FormElement\Field\ListField::NONE_VALUE) {
             $this->saveNone($field, $value_id, $color);
             return;
         }

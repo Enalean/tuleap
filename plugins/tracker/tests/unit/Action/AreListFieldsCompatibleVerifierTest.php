@@ -20,8 +20,8 @@
 
 namespace Tuleap\Tracker\Action;
 
-use Tracker_FormElement_Field_List;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserGroupBindBuilder;
@@ -40,8 +40,8 @@ final class AreListFieldsCompatibleVerifierTest extends TestCase
 
     #[\PHPUnit\Framework\Attributes\DataProvider('getSourceAndDestinationFieldsForSameBindTypeTest')]
     public function testReturnsFalseWhenTheFieldsDoNotHaveTheSameTypeOfBind(
-        Tracker_FormElement_Field_List $source_field,
-        Tracker_FormElement_Field_List $destination_field,
+        ListField $source_field,
+        ListField $destination_field,
         bool $are_compatible_expectation,
     ): void {
         self::assertSame(

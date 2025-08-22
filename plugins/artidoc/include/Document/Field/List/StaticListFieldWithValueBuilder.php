@@ -29,6 +29,7 @@ use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StaticListFieldW
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\StaticListValue;
 use Tuleap\Color\ColorName;
 use Tuleap\Option\Option;
+use Tuleap\Tracker\FormElement\Field\ListField;
 
 final readonly class StaticListFieldWithValueBuilder
 {
@@ -40,7 +41,7 @@ final readonly class StaticListFieldWithValueBuilder
             array_values(
                 array_map(
                     function (Tracker_FormElement_Field_List_BindValue|Tracker_FormElement_Field_List_OpenValue $value) use ($configured_field) {
-                        assert($configured_field->field instanceof \Tracker_FormElement_Field_List);
+                        assert($configured_field->field instanceof ListField);
                         return new StaticListValue(
                             $value->getLabel(),
                             Option::fromNullable($this->getColorDecoratorIfSupported($configured_field->field, $value))
@@ -53,7 +54,7 @@ final readonly class StaticListFieldWithValueBuilder
     }
 
     private function getColorDecoratorIfSupported(
-        \Tracker_FormElement_Field_List $configured_field,
+        ListField $configured_field,
         Tracker_FormElement_Field_List_BindValue|Tracker_FormElement_Field_List_OpenValue $value,
     ): ?ColorName {
         $decorators = $configured_field->getDecorators();

@@ -22,8 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Test\Stub;
 
-use Tracker_FormElement_Field_List;
 use Tuleap\Tracker\FormElement\Field\ListFields\RetrieveMatchingValueByDuckTyping;
+use Tuleap\Tracker\FormElement\Field\ListField;
 
 final class RetrieveMatchingValueByDuckTypingStub implements RetrieveMatchingValueByDuckTyping
 {
@@ -46,8 +46,8 @@ final class RetrieveMatchingValueByDuckTypingStub implements RetrieveMatchingVal
 
     #[\Override]
     public function getMatchingValueByDuckTyping(
-        Tracker_FormElement_Field_List $source_field,
-        Tracker_FormElement_Field_List $destination_field,
+        ListField $source_field,
+        ListField $destination_field,
         int $source_value_id,
     ): ?int {
         return $this->values[$source_value_id] ?? null;

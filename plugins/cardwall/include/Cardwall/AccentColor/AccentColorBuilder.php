@@ -60,7 +60,7 @@ class AccentColorBuilder
         if (! $selectbox) {
             return $no_color;
         }
-        \assert($selectbox instanceof \Tracker_FormElement_Field_List);
+        \assert($selectbox instanceof \Tuleap\Tracker\FormElement\Field\ListField);
 
         if (! $selectbox->userCanRead($current_user)) {
             return $no_color;

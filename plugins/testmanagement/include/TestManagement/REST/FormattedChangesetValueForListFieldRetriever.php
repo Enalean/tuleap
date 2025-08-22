@@ -55,7 +55,7 @@ class FormattedChangesetValueForListFieldRetriever
         }
 
         $binds = [];
-        assert($field instanceof \Tracker_FormElement_Field_List);
+        assert($field instanceof \Tuleap\Tracker\FormElement\Field\ListField);
         if ($field->getBind()) {
             $binds = $field->getBind()->getValuesByKeyword($value);
         }

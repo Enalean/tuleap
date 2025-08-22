@@ -25,7 +25,6 @@ use Luracast\Restler\RestException;
 use PFUser;
 use Tracker_Artifact_Changeset_InitialChangesetFieldsValidator;
 use Tracker_ArtifactFactory;
-use Tracker_FormElement_Field_List;
 use Tracker_FormElementFactory;
 use TrackerFactory;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
@@ -50,6 +49,7 @@ use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ChangesetValueArtifactLi
 use Tuleap\Tracker\Artifact\ChangesetValue\InitialChangesetValueSaver;
 use Tuleap\Tracker\Artifact\Creation\TrackerArtifactCreator;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
+use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\Permission\SubmissionPermissionVerifier;
 use Tuleap\Tracker\REST\Artifact\ArtifactCreator;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkChangesetValueBuilder;
@@ -319,7 +319,7 @@ final class KanbanItemsResource extends AuthenticatedResource
             throw new RestException(403);
         }
 
-        $value = Tracker_FormElement_Field_List::NONE_VALUE;
+        $value = ListField::NONE_VALUE;
         if (! empty($item->column_id)) {
             $semantic = CachedSemanticStatusRetriever::instance()->fromTracker($tracker);
 
