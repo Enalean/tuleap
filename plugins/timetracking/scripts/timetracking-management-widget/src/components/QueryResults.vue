@@ -21,9 +21,9 @@
     <table class="tlp-table">
         <thead>
             <tr>
-                <th>{{ $gettext("Users") }}</th>
-                <th>{{ $gettext("Time") }}</th>
-                <th></th>
+                <th class="users">{{ $gettext("Users") }}</th>
+                <th class="tlp-table-cell-numeric">{{ $gettext("Time") }}</th>
+                <th class="actions"></th>
             </tr>
         </thead>
         <query-results-no-users v-if="nb_users === 0" />
@@ -36,6 +36,7 @@
                 />
                 <template v-else>
                     <query-results-empty-state v-if="nb_results === 0" />
+                    <query-results-rows v-else v-bind:results="results" />
                 </template>
             </template>
         </template>
@@ -45,12 +46,13 @@
 <script setup lang="ts">
 import { useGettext } from "vue3-gettext";
 import type { QueryResults } from "../type";
-import { onMounted, ref } from "vue";
+import { onMounted, ref, computed } from "vue";
 import QueryResultsNoUsers from "./QueryResultsNoUsers.vue";
 import QueryResultsLoadingState from "./QueryResultsLoadingState.vue";
 import QueryResultsErrorState from "./QueryResultsErrorState.vue";
 import QueryResultsEmptyState from "./QueryResultsEmptyState.vue";
 import { getTimes } from "../api/rest-querier";
+import QueryResultsRows from "./QueryResultsRows.vue";
 
 const props = defineProps<{
     nb_users: number;
@@ -61,7 +63,8 @@ const { $gettext } = useGettext();
 
 const is_loading = ref(true);
 const error_message = ref("");
-const nb_results = ref(0);
+const results = ref<QueryResults>([]);
+const nb_results = computed(() => results.value.length);
 
 onMounted(() => {
     if (props.nb_users === 0) {
@@ -69,8 +72,8 @@ onMounted(() => {
     }
 
     getTimes(props.widget_id).match(
-        (results: QueryResults) => {
-            nb_results.value = results.length;
+        (res: QueryResults) => {
+            results.value = res;
             is_loading.value = false;
         },
         (fault) => {
@@ -94,5 +97,10 @@ onMounted(() => {
 <style lang="scss" scoped>
 table {
     margin: 0 0 var(--tlp-medium-spacing);
+}
+
+.users,
+.actions {
+    width: 50%;
 }
 </style>
