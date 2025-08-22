@@ -22,10 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Semantic\Contributor;
 
-use Tracker_FormElement_Field_List;
+use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\Tracker;
 
 interface RetrieveContributorField
 {
-    public function getContributorField(Tracker $tracker): ?Tracker_FormElement_Field_List;
+    public function getContributorField(Tracker $tracker): ?ListField;
 }

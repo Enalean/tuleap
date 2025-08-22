@@ -22,8 +22,8 @@
 
 namespace Tuleap\GraphOnTrackersV5\DataTransformation;
 
-use Tracker_FormElement_Field_List;
 use Tracker_FormElementFactory;
+use Tuleap\Tracker\FormElement\Field\ListField;
 
 class GraphOnTrackersV5_Chart_PieDataBuilder extends ChartDataBuilderV5 // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
@@ -46,7 +46,7 @@ class GraphOnTrackersV5_Chart_PieDataBuilder extends ChartDataBuilderV5 // phpcs
         if (! $af) {
             throw new ChartFieldNotFoundException($this->chart->getTitle());
         }
-        \assert($af instanceof Tracker_FormElement_Field_List);
+        \assert($af instanceof ListField);
 
         if ($af->userCanRead()) {
             $select = ' SELECT count(a.id) AS nb, ' . $af->getQuerySelectWithDecorator();

@@ -24,10 +24,10 @@ namespace Tuleap\Tracker\FormElement\Field\ListFields\Bind;
 
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use SimpleXMLElement;
-use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_BindDecorator;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\NoneStaticValueBuilder;
 use XML_SimpleXMLCDATAFactory;
@@ -92,7 +92,7 @@ final class BindStaticXmlExporterTest extends TestCase
         $values     = [
             $none_value,
         ];
-        $decorators = [new Tracker_FormElement_Field_List_BindDecorator(Tracker_FormElement_Field_List::NONE_VALUE, 100, null, null, null, 'inca-silver')];
+        $decorators = [new Tracker_FormElement_Field_List_BindDecorator(ListField::NONE_VALUE, 100, null, null, null, 'inca-silver')];
 
         $xml_mapping = [];
         $this->exporter->exportStaticBindToXml($this->xml, $values, $decorators, $this->default_values, $xml_mapping);
@@ -116,7 +116,7 @@ final class BindStaticXmlExporterTest extends TestCase
         $values     = [
             $none_value,
         ];
-        $decorators = [new Tracker_FormElement_Field_List_BindDecorator(Tracker_FormElement_Field_List::NONE_VALUE, 100, '123', '456', '789', null)];
+        $decorators = [new Tracker_FormElement_Field_List_BindDecorator(ListField::NONE_VALUE, 100, '123', '456', '789', null)];
 
         $xml_mapping = [];
         $this->exporter->exportStaticBindToXml($this->xml, $values, $decorators, $this->default_values, $xml_mapping);

@@ -38,6 +38,7 @@ use Tuleap\Tracker\FormElement\Field\String\StringField;
 use Tuleap\Tracker\FormElement\Field\SubmittedBy\SubmittedByField;
 use Tuleap\Tracker\FormElement\Field\SubmittedOn\SubmittedOnField;
 use Tuleap\Tracker\FormElement\Field\Text\TextField;
+use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
 use Tuleap\Tracker\FormElement\View\Admin\Field\Computed;
 
@@ -185,7 +186,7 @@ class Tracker_FormElement_View_Admin_Visitor implements Tracker_FormElement_Visi
         $this->adminElement = new Tracker_FormElement_View_Admin_Field_PermissionsOnArtifact($element, $this->allUsedElements);
     }
 
-    private function visitList(Tracker_FormElement_Field_List $element)
+    private function visitList(ListField $element)
     {
         $this->element      = $element;
         $this->adminElement = new Tracker_FormElement_View_Admin_Field_List($element, $this->allUsedElements);

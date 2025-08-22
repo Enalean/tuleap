@@ -24,12 +24,12 @@ namespace Tuleap\CrossTracker\Query\Advanced\DuckTypedField;
 
 use PFUser;
 use ProjectUGroup;
-use Tracker_FormElement_Field_List;
 use Tuleap\CrossTracker\Query\Advanced\CrossTrackerFieldTestCase;
 use Tuleap\CrossTracker\Tests\CrossTrackerQueryTestBuilder;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\UUID;
 use Tuleap\Test\Builders\CoreDatabaseBuilder;
+use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\Test\Builders\TrackerDatabaseBuilder;
 use Tuleap\Tracker\Tracker;
 
@@ -94,7 +94,7 @@ final class OpenStaticListDuckTypedFieldTest extends CrossTrackerFieldTestCase
         $tracker_builder->buildListValue(
             $release_artifact_empty_changeset,
             $release_list_field_id,
-            Tracker_FormElement_Field_List::NONE_VALUE
+            ListField::NONE_VALUE
         );
         $tracker_builder->buildListValue(
             $release_artifact_with_cheese_changeset,
@@ -109,7 +109,7 @@ final class OpenStaticListDuckTypedFieldTest extends CrossTrackerFieldTestCase
         $tracker_builder->buildOpenValue(
             $sprint_artifact_empty_changeset,
             $sprint_list_field_id,
-            Tracker_FormElement_Field_List::NONE_VALUE,
+            ListField::NONE_VALUE,
             false,
         );
         $tracker_builder->buildOpenValue(

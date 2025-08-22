@@ -25,13 +25,13 @@ use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use PHPUnit\Framework\MockObject\MockObject;
 use ProjectUGroup;
 use SimpleXMLElement;
-use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Bind_Ugroups;
 use Tracker_FormElement_Field_List_Bind_UgroupsValue;
 use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDefaultValueDao;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindUgroupsValueDao;
+use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserGroupValueBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use UGroupManager;
@@ -47,7 +47,7 @@ final class Tracker_FormElement_Field_List_Bind_UgroupsTest extends TestCase //p
     private BindDefaultValueDao&MockObject $default_value_dao;
     private BindUgroupsValueDao&MockObject $value_dao;
     private UGroupManager&MockObject $ugroup_manager;
-    private Tracker_FormElement_Field_List $field;
+    private ListField $field;
 
     protected function setUp(): void
     {

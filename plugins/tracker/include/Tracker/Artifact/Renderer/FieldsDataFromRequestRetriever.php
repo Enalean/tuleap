@@ -21,9 +21,9 @@
 namespace Tuleap\Tracker\Artifact\Renderer;
 
 use Codendi_Request;
-use Tracker_FormElement_Field_List;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\Semantic\Status\StatusValuesCollection;
 use Tuleap\Tracker\Workflow\FirstPossibleValueInListRetriever;
 use Tuleap\Tracker\Workflow\NoPossibleValueException;
@@ -62,7 +62,7 @@ final class FieldsDataFromRequestRetriever
         $value_collection = new StatusValuesCollection(json_decode($field_values['possible_values']));
         $field            = $this->form_element_factory->getFieldById($field_values['field_id']);
 
-        assert($field instanceof Tracker_FormElement_Field_List);
+        assert($field instanceof ListField);
         $fields_data[$field->getId()] = $this->first_possible_value_retriever->getFirstPossibleValue(
             $artifact,
             $field,

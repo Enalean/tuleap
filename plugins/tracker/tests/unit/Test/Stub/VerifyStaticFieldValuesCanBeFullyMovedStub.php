@@ -43,7 +43,7 @@ final class VerifyStaticFieldValuesCanBeFullyMovedStub implements VerifyStaticFi
     }
 
     #[\Override]
-    public function canAllStaticFieldValuesBeMoved(\Tracker_FormElement_Field_List $source_field, \Tracker_FormElement_Field_List $destination_field, Artifact $artifact, LoggerInterface $logger): bool
+    public function canAllStaticFieldValuesBeMoved(\Tuleap\Tracker\FormElement\Field\ListField $source_field, \Tuleap\Tracker\FormElement\Field\ListField $destination_field, Artifact $artifact, LoggerInterface $logger): bool
     {
         return $this->can_be_fully_moved;
     }

@@ -22,14 +22,14 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Semantic\Status;
 
-use Tracker_FormElement_Field_List;
 use Tracker_FormElementFactory;
+use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\Tracker;
 
 final class CachedSemanticStatusFieldRetriever implements RetrieveSemanticStatusField
 {
     private static ?self $instance = null;
-    /** @var array<int, ?Tracker_FormElement_Field_List> */
+    /** @var array<int, ?ListField> */
     private array $semantic_cache = [];
 
     public static function instance(): self
@@ -48,7 +48,7 @@ final class CachedSemanticStatusFieldRetriever implements RetrieveSemanticStatus
     {
     }
 
-    public function fromTracker(Tracker $tracker): ?Tracker_FormElement_Field_List
+    public function fromTracker(Tracker $tracker): ?ListField
     {
         if (! isset($this->semantic_cache[$tracker->getId()])) {
             $this->semantic_cache[$tracker->getId()] = $this->semantic_retriever->fromTracker($tracker);

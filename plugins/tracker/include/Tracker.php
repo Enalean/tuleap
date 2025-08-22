@@ -61,7 +61,6 @@ use Tracker_Dispatchable_Interface;
 use Tracker_Exception;
 use Tracker_FormElement;
 use Tracker_FormElement_Field;
-use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_BindFactory;
 use Tracker_FormElementFactory;
 use Tracker_GeneralSettings_Presenter;
@@ -188,8 +187,9 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeIsChildLinkRetriever;
 use Tuleap\Tracker\FormElement\Field\Date\CSVFormatter;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
-use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
 use Tuleap\Tracker\FormElement\Field\Text\TextField;
+use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
+use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\FormElement\View\Admin\DisplayAdminFormElementsWarningsEvent;
 use Tuleap\Tracker\Hierarchy\HierarchyController;
 use Tuleap\Tracker\Hierarchy\HierarchyDAO;
@@ -3174,9 +3174,9 @@ class Tracker implements Tracker_Dispatchable_Interface
     /**
      * Return the status field, or null if no status field defined
      *
-     * @return ?Tracker_FormElement_Field_List the status field, or null if not defined
+     * @return ?ListField the status field, or null if not defined
      */
-    public function getStatusField(): ?Tracker_FormElement_Field_List
+    public function getStatusField(): ?ListField
     {
         return CachedSemanticStatusFieldRetriever::instance()->fromTracker($this);
     }
@@ -3184,7 +3184,7 @@ class Tracker implements Tracker_Dispatchable_Interface
     /**
      * Return the contributor field, or null if no contributor field defined
      *
-     * @return Tracker_FormElement_Field_List the contributor field, or null if not defined
+     * @return ListField the contributor field, or null if not defined
      */
     public function getContributorField()
     {

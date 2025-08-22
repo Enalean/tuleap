@@ -109,7 +109,7 @@ final class AdminPresenterBuilderTest extends TestCase
         );
     }
 
-    private function getFieldWithIdAndLabel(int $id, $label): \Tracker_FormElement_Field_List
+    private function getFieldWithIdAndLabel(int $id, $label): \Tuleap\Tracker\FormElement\Field\ListField
     {
         return new \Tuleap\Tracker\FormElement\Field\List\SelectboxField(
             $id,

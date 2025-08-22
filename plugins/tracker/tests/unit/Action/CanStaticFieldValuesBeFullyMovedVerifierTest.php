@@ -26,9 +26,9 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub;
 use Psr\Log\NullLogger;
 use Tracker_Artifact_ChangesetValue_List;
-use Tracker_FormElement_Field_List;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserValueBuilder;
@@ -38,15 +38,15 @@ use Tuleap\Tracker\Test\Stub\RetrieveMatchingBindValueByDuckTypingStub;
 final class CanStaticFieldValuesBeFullyMovedVerifierTest extends TestCase
 {
     private Artifact $artifact;
-    private Stub&Tracker_FormElement_Field_List $destination_list_field;
-    private MockObject&Tracker_FormElement_Field_List $source_list_field;
+    private Stub&ListField $destination_list_field;
+    private MockObject&ListField $source_list_field;
 
     protected function setUp(): void
     {
-        $this->source_list_field = $this->createMock(Tracker_FormElement_Field_List::class);
+        $this->source_list_field = $this->createMock(ListField::class);
         $this->source_list_field->method('getId')->willReturn('123');
         $this->source_list_field->method('getName')->willReturn('List');
-        $this->destination_list_field = $this->createStub(Tracker_FormElement_Field_List::class);
+        $this->destination_list_field = $this->createStub(ListField::class);
         $this->destination_list_field->method('getId')->willReturn('456');
         $this->destination_list_field->method('getName')->willReturn('List');
         $this->artifact = ArtifactTestBuilder::anArtifact(1)->build();

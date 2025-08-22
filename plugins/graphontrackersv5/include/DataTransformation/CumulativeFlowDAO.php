@@ -43,6 +43,6 @@ class CumulativeFlowDAO extends DataAccessObject
                 FROM  tracker_field_list_bind_decorator AS deco
                 WHERE deco.field_id = ? AND deco.value_id = ?';
 
-        return $this->getDB()->row($sql, $field_id, \Tracker_FormElement_Field_List::NONE_VALUE);
+        return $this->getDB()->row($sql, $field_id, \Tuleap\Tracker\FormElement\Field\ListField::NONE_VALUE);
     }
 }

@@ -28,8 +28,8 @@ interface UpdateBindOpenValueByDuckTyping
 {
     public function updateOpenValueForDuckTypingMove(
         SimpleXMLElement $changeset_xml,
-        \Tracker_FormElement_Field_List $source_field,
-        \Tracker_FormElement_Field_List $destination_field,
+        \Tuleap\Tracker\FormElement\Field\ListField $source_field,
+        \Tuleap\Tracker\FormElement\Field\ListField $destination_field,
         int $index,
     ): void;
 }

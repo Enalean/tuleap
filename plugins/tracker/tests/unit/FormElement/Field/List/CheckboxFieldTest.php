@@ -26,9 +26,9 @@ namespace Tuleap\Tracker\FormElement\Field\List;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use ReflectionClass;
 use Tracker_Artifact_ChangesetValue_List;
-use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Bind_StaticValue_None;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueListTestBuilder;
@@ -145,7 +145,7 @@ final class CheckboxFieldTest extends TestCase
         );
     }
 
-    protected function getPreviousChangesetValue(Tracker_FormElement_Field_List $field): Tracker_Artifact_ChangesetValue_List
+    protected function getPreviousChangesetValue(ListField $field): Tracker_Artifact_ChangesetValue_List
     {
         return ChangesetValueListTestBuilder::aListOfValue(1, ChangesetTestBuilder::aChangeset(1)->build(), $field)
             ->withValues([

@@ -20,9 +20,9 @@
 
 namespace Tuleap\TestManagement\REST\v1;
 
-use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_BindValue;
 use Tuleap\TestManagement\Step\Step;
+use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 
 class TestStatusAccordingToStepsStatusChangesBuilder
@@ -32,7 +32,7 @@ class TestStatusAccordingToStepsStatusChangesBuilder
      *
      */
     public function enforceTestStatusAccordingToStepsStatus(
-        Tracker_FormElement_Field_List $status_field,
+        ListField $status_field,
         array &$changes,
         array $steps_defined_in_test,
         array $steps_changes,
@@ -55,7 +55,7 @@ class TestStatusAccordingToStepsStatusChangesBuilder
         $changes[] = $value_representation;
     }
 
-    private function getValuesIdsIndexedByLabel(Tracker_FormElement_Field_List $status_field): array
+    private function getValuesIdsIndexedByLabel(ListField $status_field): array
     {
         $bind = $status_field->getBind();
         if (! $bind) {

@@ -23,12 +23,12 @@ namespace Tuleap\GraphOnTrackersV5\DataTransformation;
 
 use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
-use Tracker_FormElement_Field_List;
 use Tracker_FormElementFactory;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\GraphOnTrackersV5\GraphicLibrary\GraphOnTrackersV5_Engine_Bar;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Tuleap\User\CurrentUserWithLoggedInInformation;
@@ -110,7 +110,7 @@ final class GraphOnTrackersV5ChartBarDataBuilderTest extends TestCase
         self::assertEquals($expected_xaxis, $engine->xaxis);
     }
 
-    private function buildGroupField(): Tracker_FormElement_Field_List
+    private function buildGroupField(): ListField
     {
         return ListStaticBindBuilder::aStaticBind(
             SelectboxFieldBuilder::aSelectboxField(98)
@@ -123,7 +123,7 @@ final class GraphOnTrackersV5ChartBarDataBuilderTest extends TestCase
         ])->build()->getField();
     }
 
-    private function buildSourceField(): Tracker_FormElement_Field_List
+    private function buildSourceField(): ListField
     {
         return ListStaticBindBuilder::aStaticBind(
             SelectboxFieldBuilder::aSelectboxField(100)

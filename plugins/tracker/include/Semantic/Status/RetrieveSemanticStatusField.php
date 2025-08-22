@@ -22,10 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Semantic\Status;
 
-use Tracker_FormElement_Field_List;
+use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\Tracker;
 
 interface RetrieveSemanticStatusField
 {
-    public function fromTracker(Tracker $tracker): ?Tracker_FormElement_Field_List;
+    public function fromTracker(Tracker $tracker): ?ListField;
 }

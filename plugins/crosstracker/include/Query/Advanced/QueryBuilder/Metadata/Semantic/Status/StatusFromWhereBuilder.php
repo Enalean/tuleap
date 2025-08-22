@@ -24,9 +24,9 @@ namespace Tuleap\CrossTracker\Query\Advanced\QueryBuilder\Metadata\Semantic\Stat
 
 use LogicException;
 use ParagonIE\EasyDB\EasyStatement;
-use Tracker_FormElement_Field_List;
 use Tuleap\CrossTracker\Query\Advanced\QueryBuilder\Metadata\MetadataValueWrapperParameters;
 use Tuleap\CrossTracker\Query\ParametrizedWhere;
+use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\ComparisonType;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentDateTimeValueWrapper;
@@ -62,7 +62,7 @@ final class StatusFromWhereBuilder implements ValueWrapperVisitor
         return new ParametrizedFromWhere(
             $from,
             $where->getWhere(),
-            [Tracker_FormElement_Field_List::NONE_VALUE],
+            [ListField::NONE_VALUE],
             $where->getWhereParameters(),
         );
     }

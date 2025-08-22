@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\Timebox;
 
-use Tracker_FormElement_Field_List;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TimeboxIdentifier;
 use Tuleap\ProgramManagement\Domain\Workspace\UserIdentifier;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveFullArtifactStub;
@@ -33,6 +32,7 @@ use Tuleap\ProgramManagement\Tests\Stub\UserIdentifierStub;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -48,7 +48,7 @@ final class StatusValueRetrieverTest extends TestCase
      */
     private $tracker;
     /**
-     * @var \PHPUnit\Framework\MockObject\Stub&Tracker_FormElement_Field_List
+     * @var \PHPUnit\Framework\MockObject\Stub&ListField
      */
     private $status_field;
     private TimeboxIdentifier $artifact_identifier;
@@ -57,7 +57,7 @@ final class StatusValueRetrieverTest extends TestCase
     #[\Override]
     protected function setUp(): void
     {
-        $this->status_field = $this->createStub(Tracker_FormElement_Field_List::class);
+        $this->status_field = $this->createStub(ListField::class);
 
         $this->tracker = $this->createStub(Tracker::class);
 

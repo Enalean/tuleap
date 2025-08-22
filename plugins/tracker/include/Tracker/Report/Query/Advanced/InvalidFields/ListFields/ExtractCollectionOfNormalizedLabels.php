@@ -22,9 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields;
 
-use Tracker_FormElement_Field_List;
+use Tuleap\Tracker\FormElement\Field\ListField;
 
 interface ExtractCollectionOfNormalizedLabels
 {
-    public function extractCollectionOfNormalizedLabels(Tracker_FormElement_Field_List $field): array;
+    public function extractCollectionOfNormalizedLabels(ListField $field): array;
 }

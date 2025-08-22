@@ -43,7 +43,7 @@ final class ListStaticValueBuilder
 
     public static function noneStaticValue(): self
     {
-        return (new self('None'))->withId(\Tracker_FormElement_Field_List::NONE_VALUE);
+        return (new self('None'))->withId(\Tuleap\Tracker\FormElement\Field\ListField::NONE_VALUE);
     }
 
     public function withId(int $id): self

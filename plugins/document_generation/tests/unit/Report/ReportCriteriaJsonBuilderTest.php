@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\DocumentGeneration\Report;
 
 use ProjectUGroup;
-use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Bind_Static;
 use Tracker_FormElement_Field_List_Bind_Ugroups;
 use Tracker_FormElement_Field_List_Bind_Users;
@@ -39,6 +38,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\FormElement\Field\Date\DateField;
 use Tuleap\Tracker\FormElement\Field\List\OpenListField;
 use Tuleap\Tracker\FormElement\Field\String\StringField;
+use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserGroupValueBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserValueBuilder;
@@ -221,7 +221,7 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
 
     private function buildUserListCriterion(Tracker_Report $report): Tracker_Report_Criteria
     {
-        $list_user_field = $this->createMock(Tracker_FormElement_Field_List::class);
+        $list_user_field = $this->createMock(ListField::class);
 
         $criterion_user_list = new Tracker_Report_Criteria(
             3,
@@ -257,7 +257,7 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
 
     private function buildUserGroupListCriterion(Tracker_Report $report): Tracker_Report_Criteria
     {
-        $list_groups_field = $this->createMock(Tracker_FormElement_Field_List::class);
+        $list_groups_field = $this->createMock(ListField::class);
 
         $criterion_groups_list = new Tracker_Report_Criteria(
             4,
@@ -299,7 +299,7 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
 
     private function buildStaticListCriterion(Tracker_Report $report): Tracker_Report_Criteria
     {
-        $list_static_field = $this->createMock(Tracker_FormElement_Field_List::class);
+        $list_static_field = $this->createMock(ListField::class);
 
         $criterion_static_list = new Tracker_Report_Criteria(
             5,
@@ -372,7 +372,7 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
 
     private function buildNotSetListCriterion(Tracker_Report $report): Tracker_Report_Criteria
     {
-        $list_static_field = $this->createMock(Tracker_FormElement_Field_List::class);
+        $list_static_field = $this->createMock(ListField::class);
 
         $criterion_static_list = new Tracker_Report_Criteria(
             5,
@@ -420,7 +420,7 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
 
     private function buildListCriterionWithInvalidValue(Tracker_Report $report): Tracker_Report_Criteria
     {
-        $field = $this->createMock(Tracker_FormElement_Field_List::class);
+        $field = $this->createMock(ListField::class);
 
         $criterion_with_invalid_value = new Tracker_Report_Criteria(
             5,

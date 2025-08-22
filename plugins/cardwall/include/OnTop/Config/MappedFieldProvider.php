@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\Tracker;
 
 require_once dirname(__FILE__) . '/../../constants.php';
@@ -26,7 +27,7 @@ require_once dirname(__FILE__) . '/../../constants.php';
  * Provides the Cardwall_OnTop configured field for an artifact, and fallbacks on the status field if
  * there is no mapping
  */
-class Cardwall_OnTop_Config_MappedFieldProvider implements Cardwall_FieldProviders_IProvideFieldGivenAnArtifact
+class Cardwall_OnTop_Config_MappedFieldProvider implements Cardwall_FieldProviders_IProvideFieldGivenAnArtifact // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /**
      * @var Cardwall_FieldProviders_SemanticStatusFieldRetriever
@@ -51,7 +52,7 @@ class Cardwall_OnTop_Config_MappedFieldProvider implements Cardwall_FieldProvide
         $mapping = $this->config->getMappingFor($tracker);
         if ($mapping) {
             $field = $mapping->getField();
-            assert($field === null || $field instanceof Tracker_FormElement_Field_List);
+            assert($field === null || $field instanceof ListField);
             return $field;
         }
         return $this->semantic_status_provider->getField($tracker);

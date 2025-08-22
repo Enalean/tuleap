@@ -41,7 +41,7 @@ final class VerifyListFieldsAreCompatibleStub implements VerifyListFieldsAreComp
     }
 
     #[\Override]
-    public function areListFieldsCompatible(\Tracker_FormElement_Field_List $source_field, \Tracker_FormElement_Field_List $destination_field): bool
+    public function areListFieldsCompatible(\Tuleap\Tracker\FormElement\Field\ListField $source_field, \Tuleap\Tracker\FormElement\Field\ListField $destination_field): bool
     {
         return $this->are_fields_compatible;
     }

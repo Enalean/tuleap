@@ -48,6 +48,7 @@ use Tuleap\Tracker\FormElement\Field\String\StringField;
 use Tuleap\Tracker\FormElement\Field\SubmittedBy\SubmittedByField;
 use Tuleap\Tracker\FormElement\Field\SubmittedOn\SubmittedOnField;
 use Tuleap\Tracker\FormElement\Field\Text\TextField;
+use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\FormElement\FieldNameFormatter;
 use Tuleap\Tracker\FormElement\FormElementDeletedEvent;
 use Tuleap\Tracker\FormElement\RetrieveFieldType;
@@ -284,12 +285,12 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
     }
 
     /**
-     * @return Tracker_FormElement_Field_List|null
+     * @return ListField|null
      */
     public function getFormElementListById($field_id)
     {
         $field = $this->getFormElementById($field_id);
-        if ($field instanceof Tracker_FormElement_Field_List) {
+        if ($field instanceof ListField) {
             return $field;
         }
         return null;
@@ -692,7 +693,7 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
 
     /**
      * @param Tracker $tracker
-     * @return Tracker_FormElement_Field_List[] All (multi) selectboxes formElements used by the tracker
+     * @return ListField[] All (multi) selectboxes formElements used by the tracker
      */
     public function getUsedListFields($tracker)
     {

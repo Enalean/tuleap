@@ -25,9 +25,9 @@ namespace Tuleap\Tracker\FormElement;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use PHPUnit\Framework\MockObject\MockObject;
 use SimpleXMLElement;
-use Tracker_FormElement_Field_List;
 use Tracker_Report_Criteria;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\FormElement\Field\XMLCriteriaValueCache;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
@@ -38,7 +38,7 @@ use Tuleap\Tracker\Test\Builders\ReportTestBuilder;
 #[DisableReturnValueGenerationForTestDoubles]
 final class Tracker_FormElement_Field_List_CriteriaTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    private Tracker_FormElement_Field_List $field;
+    private ListField $field;
     private Tracker_Report_Criteria&MockObject $criteria;
 
     public function setUp(): void

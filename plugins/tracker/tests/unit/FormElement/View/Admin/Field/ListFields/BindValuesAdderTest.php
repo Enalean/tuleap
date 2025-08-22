@@ -23,10 +23,10 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\FormElement\View\Admin\Field\ListFields;
 
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
-use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Bind_StaticValue_None;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 
@@ -35,7 +35,7 @@ final class BindValuesAdderTest extends TestCase
 {
     use GlobalLanguageMock;
 
-    private Tracker_FormElement_Field_List $field;
+    private ListField $field;
     private BindValuesAdder $adder;
 
     protected function setUp(): void

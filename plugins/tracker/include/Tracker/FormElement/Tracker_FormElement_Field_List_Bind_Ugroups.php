@@ -26,6 +26,7 @@ use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindParameters;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindUgroupsValueDao;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindVisitor;
 use Tuleap\Tracker\FormElement\Field\ListFields\OpenListValueDao;
+use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\REST\FieldListBindUGroupValueRepresentation;
 
 /**
@@ -719,7 +720,7 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
         return $rest_array;
     }
 
-    public function getFieldDataFromRESTObject(array $rest_data, Tracker_FormElement_Field_List $field)
+    public function getFieldDataFromRESTObject(array $rest_data, ListField $field)
     {
         $project = $field->getTracker()->getProject();
 

@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\AsynchronousCreation;
 
-use Tracker_FormElement_Field_List;
 use Tuleap\ProgramManagement\Adapter\Program\Backlog\ProgramIncrement\Source\Changeset\Values\BindValueIdentifierProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\AsynchronousCreation\MapStatusByValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\BindValueIdentifier;
@@ -30,6 +29,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Chan
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Changeset\Values\StatusValue;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\NoDuckTypedMatchingValueException;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\ProgramIncrement\Source\Fields\StatusFieldReference;
+use Tuleap\Tracker\FormElement\Field\ListField;
 
 final class StatusValueMapper implements MapStatusByValue
 {
@@ -41,7 +41,7 @@ final class StatusValueMapper implements MapStatusByValue
     {
         $matching_values = [];
         $status_field    = $this->form_element_factory->getFieldById($target_field->getId());
-        assert($status_field instanceof Tracker_FormElement_Field_List);
+        assert($status_field instanceof ListField);
         foreach ($source_value->getListValues() as $label) {
             $matching_value = $this->getMatchingValueByDuckTyping($label, $status_field);
             if ($matching_value === null) {
@@ -59,7 +59,7 @@ final class StatusValueMapper implements MapStatusByValue
 
     private function getMatchingValueByDuckTyping(
         BindValueLabel $source_label,
-        \Tracker_FormElement_Field_List $target_field,
+        \Tuleap\Tracker\FormElement\Field\ListField $target_field,
     ): ?BindValueIdentifier {
         $lowercase_label = strtolower($source_label->getLabel());
         foreach ($target_field->getBind()->getAllValues() as $target_value) {

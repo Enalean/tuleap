@@ -22,12 +22,12 @@
 namespace Tuleap\Tracker\FormElement\Field\List;
 
 use Override;
-use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Bind;
 use Tracker_FormElement_Field_List_Bind_StaticValue_None;
 use Tracker_FormElement_FieldVisitor;
 use Tracker_FormElement_InvalidFieldValueException;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\DeleteSpecificProperties;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\MultiSelectboxFieldSpecificPropertiesDAO;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\SaveSpecificFieldProperties;
@@ -181,7 +181,7 @@ class MultiSelectboxField extends SelectboxField
         if (array_key_exists('bind_value_ids', $value) && is_array($value['bind_value_ids'])) {
             $submitted_bind_value_ids = array_filter(array_unique($value['bind_value_ids']));
             if (empty($submitted_bind_value_ids)) {
-                return [Tracker_FormElement_Field_List::NONE_VALUE];
+                return [ListField::NONE_VALUE];
             }
 
             return array_unique(

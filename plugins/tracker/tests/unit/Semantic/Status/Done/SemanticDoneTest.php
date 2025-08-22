@@ -57,7 +57,7 @@ final class SemanticDoneTest extends \Tuleap\Test\PHPUnit\TestCase
             2,
         ]);
 
-        $field = $this->createMock(\Tracker_FormElement_Field_List::class);
+        $field = $this->createMock(\Tuleap\Tracker\FormElement\Field\ListField::class);
 
         $field->method('getId')->willReturn(101);
         $field->method('getAllVisibleValues')->willReturn([

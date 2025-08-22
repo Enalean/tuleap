@@ -24,10 +24,10 @@ namespace Tuleap\Tracker\Test\Builders;
 
 use ParagonIE\EasyDB\EasyDB;
 use Tracker_FormElement;
-use Tracker_FormElement_Field_List;
 use Tracker_FormElementFactory;
 use Tuleap\Color\ColorName;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\Semantic\Description\DescriptionSemanticDAO;
 use Tuleap\Tracker\Semantic\Title\TitleSemanticDAO;
 use Tuleap\Tracker\Tracker;
@@ -483,7 +483,7 @@ final class TrackerDatabaseBuilder
     {
         $changeset_value_id = $this->buildChangesetValue($parent_changeset_id, $list_field_id);
 
-        if ($bind_value_id === Tracker_FormElement_Field_List::NONE_VALUE) {
+        if ($bind_value_id === ListField::NONE_VALUE) {
             return;
         }
 

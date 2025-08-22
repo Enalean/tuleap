@@ -23,10 +23,10 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Workflow;
 
 use PFUser;
-use Tracker_FormElement_Field_List;
 use Tracker_Rule_List;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindValueIdCollection;
+use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\Rule\FirstValidValueAccordingToDependenciesRetriever;
 
 class FirstPossibleValueInListRetriever
@@ -42,7 +42,7 @@ class FirstPossibleValueInListRetriever
      */
     public function getFirstPossibleValue(
         Artifact $artifact,
-        Tracker_FormElement_Field_List $field,
+        ListField $field,
         BindValueIdCollection $list_of_values,
         PFUser $user,
     ): int {

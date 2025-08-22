@@ -20,22 +20,22 @@
 
 namespace Tuleap\Tracker\FormElement\Field\ListFields\Bind;
 
-use Tracker_FormElement_Field_List;
+use Tuleap\Tracker\FormElement\Field\ListField;
 
 class BindParameters
 {
     /**
-     * @var Tracker_FormElement_Field_List
+     * @var ListField
      */
     private $list_field;
 
-    public function __construct(Tracker_FormElement_Field_List $list_field)
+    public function __construct(ListField $list_field)
     {
         $this->list_field = $list_field;
     }
 
     /**
-     * @return Tracker_FormElement_Field_List
+     * @return ListField
      */
     public function getField()
     {

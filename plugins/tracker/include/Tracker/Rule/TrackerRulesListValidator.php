@@ -24,9 +24,9 @@ namespace Tuleap\Tracker\Rule;
 
 use Feedback;
 use Psr\Log\LoggerInterface;
-use Tracker_FormElement_Field_List;
 use Tracker_FormElementFactory;
 use Tracker_Rule_List;
+use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\Tracker;
 
 class TrackerRulesListValidator
@@ -208,7 +208,7 @@ class TrackerRulesListValidator
         $GLOBALS['Response']->addFeedback(Feedback::ERROR, $message);
     }
 
-    private function getSelectedValuesForField(Tracker_FormElement_Field_List $field, array $value_field_list): array
+    private function getSelectedValuesForField(ListField $field, array $value_field_list): array
     {
         $selected_values = [];
         foreach ($value_field_list as $value_field) {

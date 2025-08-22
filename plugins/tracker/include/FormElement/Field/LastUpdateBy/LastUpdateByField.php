@@ -28,7 +28,6 @@ use Tracker_Artifact_ChangesetFactoryBuilder;
 use Tracker_Artifact_ChangesetValue;
 use Tracker_ArtifactFactory;
 use Tracker_CardDisplayPreferences;
-use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Bind;
 use Tracker_FormElement_Field_List_Bind_UsersValue;
 use Tracker_FormElement_Field_ReadOnly;
@@ -40,11 +39,12 @@ use Tuleap;
 use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
+use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
 use UserManager;
 
-final class LastUpdateByField extends Tracker_FormElement_Field_List implements Tracker_FormElement_Field_ReadOnly
+final class LastUpdateByField extends ListField implements Tracker_FormElement_Field_ReadOnly
 {
     public array $default_properties = [];
 

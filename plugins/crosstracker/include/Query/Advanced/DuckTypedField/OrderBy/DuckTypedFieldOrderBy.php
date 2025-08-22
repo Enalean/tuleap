@@ -23,13 +23,13 @@ declare(strict_types=1);
 namespace Tuleap\CrossTracker\Query\Advanced\DuckTypedField\OrderBy;
 
 use Tracker_FormElement_Field;
-use Tracker_FormElement_Field_List;
 use Tuleap\CrossTracker\Query\Advanced\DuckTypedField\FieldTypeRetrieverWrapper;
 use Tuleap\CrossTracker\Query\Advanced\DuckTypedField\FieldTypesAreIncompatibleFault;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
+use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\FormElement\RetrieveFieldType;
 
 /**
@@ -66,7 +66,7 @@ final readonly class DuckTypedFieldOrderBy
         foreach ($fields as $field) {
             $field_identifier = DuckTypedFieldTypeOrderBy::fromString($retrieve_field_type->getType($field))
                 ->map(static fn(DuckTypedFieldTypeOrderBy $type) => new FieldIdentifierPropertiesOrderBy($field->getId(), $type));
-            if (Result::isOk($field_identifier) && $field instanceof Tracker_FormElement_Field_List && $field->isMultiple()) {
+            if (Result::isOk($field_identifier) && $field instanceof ListField && $field->isMultiple()) {
                 return Result::err(FieldIsMultipleValueListFault::build($field_name));
             }
             $field_identifiers[] = $field_identifier;

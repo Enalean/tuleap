@@ -32,11 +32,11 @@ use TemplateRendererFactory;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue_List;
 use Tracker_FormElement_Field;
-use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Value;
 use TrackerManager;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\JavascriptAsset;
+use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\Semantic\Status\CachedSemanticStatusRetriever;
 use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
 use Tuleap\Tracker\Semantic\TrackerSemantic;
@@ -212,7 +212,7 @@ class SemanticDone extends TrackerSemantic
     /**
      * @return array
      */
-    private function getFormattedClosedValues(Tracker_FormElement_Field_List $semantic_status_field)
+    private function getFormattedClosedValues(ListField $semantic_status_field)
     {
         $done_values_ids        = $this->getDoneValuesIds();
         $formated_closed_values = [];
@@ -231,7 +231,7 @@ class SemanticDone extends TrackerSemantic
     /**
      * @return array
      */
-    private function getClosedValues(Tracker_FormElement_Field_List $semantic_status_field)
+    private function getClosedValues(ListField $semantic_status_field)
     {
         $all_values    = $semantic_status_field->getAllVisibleValues();
         $open_values   = $this->semantic_status->getOpenValues();
@@ -309,7 +309,7 @@ class SemanticDone extends TrackerSemantic
     }
 
     private function updateValuesForTracker(
-        Tracker_FormElement_Field_List $semantic_status_field,
+        ListField $semantic_status_field,
         int $tracker_id,
         array $selected_values,
     ): void {

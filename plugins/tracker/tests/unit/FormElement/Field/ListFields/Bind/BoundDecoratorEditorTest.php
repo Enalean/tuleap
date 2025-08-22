@@ -24,8 +24,8 @@ namespace Tuleap\Tracker\FormElement\Field\ListFields\Bind;
 
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use PHPUnit\Framework\MockObject\MockObject;
-use Tracker_FormElement_Field_List;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 
 #[DisableReturnValueGenerationForTestDoubles]
@@ -33,7 +33,7 @@ final class BoundDecoratorEditorTest extends TestCase
 {
     private const FIELD_ID = 101;
 
-    private Tracker_FormElement_Field_List $field;
+    private ListField $field;
     private BoundDecoratorEditor $bound_decorator_editor;
     private BindDecoratorDao&MockObject $bind_decorator_dao;
 
@@ -53,7 +53,7 @@ final class BoundDecoratorEditorTest extends TestCase
     public function testItHasSpecificEditForNoneLegacyColor(): void
     {
         $this->bind_decorator_dao->expects($this->once())->method('updateNoneLegacyColor')->with(self::FIELD_ID, 255, 255, 255);
-        $this->bound_decorator_editor->update($this->field, Tracker_FormElement_Field_List::NONE_VALUE, '#FFFFFF', false);
+        $this->bound_decorator_editor->update($this->field, ListField::NONE_VALUE, '#FFFFFF', false);
     }
 
     public function testItHasSpecificEditForTlpColor(): void
@@ -65,15 +65,15 @@ final class BoundDecoratorEditorTest extends TestCase
     public function testItHasSpecificEditForNoneTlpColor(): void
     {
         $this->bind_decorator_dao->expects($this->once())->method('updateNoneTlpColor')->with(self::FIELD_ID, 'peggy-pink');
-        $this->bound_decorator_editor->update($this->field, Tracker_FormElement_Field_List::NONE_VALUE, 'peggy-pink', false);
+        $this->bound_decorator_editor->update($this->field, ListField::NONE_VALUE, 'peggy-pink', false);
     }
 
     public function testItDeleteExistingNoneColorWhenFieldIsRequired(): void
     {
-        $this->bind_decorator_dao->expects($this->once())->method('delete')->with(self::FIELD_ID, Tracker_FormElement_Field_List::NONE_VALUE);
+        $this->bind_decorator_dao->expects($this->once())->method('delete')->with(self::FIELD_ID, ListField::NONE_VALUE);
         $this->bound_decorator_editor->update(
             $this->field,
-            Tracker_FormElement_Field_List::NONE_VALUE,
+            ListField::NONE_VALUE,
             '#FFFFFF',
             true
         );

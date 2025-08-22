@@ -53,8 +53,8 @@ class CumulativeFlowColumnBuilder
 
         $result_array = [];
 
-        $result_array[\Tracker_FormElement_Field_List::NONE_VALUE] = [
-            'id'     => \Tracker_FormElement_Field_List::NONE_VALUE,
+        $result_array[\Tuleap\Tracker\FormElement\Field\ListField::NONE_VALUE] = [
+            'id'     => \Tuleap\Tracker\FormElement\Field\ListField::NONE_VALUE,
             'label'  => $GLOBALS['Language']->getText('global', 'none'),
             'color'  => $this->getColumnColor($none_color),
             'values' => $this->generateEmptyValues($start_date, $nb_steps, $time_filler, $scale),

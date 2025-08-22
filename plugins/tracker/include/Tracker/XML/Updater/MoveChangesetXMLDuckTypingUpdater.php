@@ -186,14 +186,14 @@ final class MoveChangesetXMLDuckTypingUpdater implements UpdateMoveChangesetXMLD
 
             if (
                 ! ($this->verify_is_open_list_field->isAnOpenListField($source_field) && $this->verify_is_open_list_field->isAnOpenListField($destination_field))
-                && ($source_field instanceof \Tracker_FormElement_Field_List && $destination_field instanceof \Tracker_FormElement_Field_List)
+                && ($source_field instanceof \Tuleap\Tracker\FormElement\Field\ListField && $destination_field instanceof \Tuleap\Tracker\FormElement\Field\ListField)
             ) {
                 $this->duck_typing_updater->updateValueForDuckTypingMove($changeset_xml, $source_field, $destination_field, $index);
             }
 
             if (
                 ($this->verify_is_open_list_field->isAnOpenListField($source_field) && $this->verify_is_open_list_field->isAnOpenListField($destination_field))
-                && ($source_field instanceof \Tracker_FormElement_Field_List && $destination_field instanceof \Tracker_FormElement_Field_List)
+                && ($source_field instanceof \Tuleap\Tracker\FormElement\Field\ListField && $destination_field instanceof \Tuleap\Tracker\FormElement\Field\ListField)
             ) {
                 $this->open_value_duck_typing_updater->updateOpenValueForDuckTypingMove($changeset_xml, $source_field, $destination_field, $index);
             }

@@ -20,10 +20,10 @@
 
 namespace Tuleap\Tracker\Masschange;
 
-use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_PermissionsOnArtifact;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueUnchanged;
+use Tuleap\Tracker\FormElement\Field\ListField;
 
 class MasschangeDataValueExtractor
 {
@@ -40,7 +40,7 @@ class MasschangeDataValueExtractor
                 continue;
             }
 
-            if ($field instanceof Tracker_FormElement_Field_List) {
+            if ($field instanceof ListField) {
                 $data = $this->removeUnchangedValueForMultiSelectWhenMoreThanAValueIsSubmitted($data);
             }
 
@@ -72,7 +72,7 @@ class MasschangeDataValueExtractor
 
     private function hasDataChanged(\Tracker_FormElement_Field $field, mixed $data): bool
     {
-        if ($field instanceof Tracker_FormElement_Field_List) {
+        if ($field instanceof ListField) {
             return $this->hasListValueChanged($data);
         }
 

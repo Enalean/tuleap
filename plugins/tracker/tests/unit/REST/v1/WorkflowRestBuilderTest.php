@@ -37,7 +37,7 @@ final class WorkflowRestBuilderTest extends TestCase
     private \PFUser $user;
     private \Tuleap\Tracker\Tracker $tracker;
     private \PHPUnit\Framework\MockObject\MockObject|\Workflow $workflow;
-    private \PHPUnit\Framework\MockObject\MockObject|\Tracker_FormElement_Field_List $field;
+    private \PHPUnit\Framework\MockObject\MockObject|\Tuleap\Tracker\FormElement\Field\ListField $field;
     private Workflow_Transition_Condition_Permissions|\PHPUnit\Framework\MockObject\MockObject $condition_permissions;
     /**
      * @var Tracker_RulesManager&\PHPUnit\Framework\MockObject\MockObject
@@ -50,7 +50,7 @@ final class WorkflowRestBuilderTest extends TestCase
         $this->builder               = $this->createPartialMock(WorkflowRestBuilder::class, ['getConditionPermissions']);
         $this->builder->method('getConditionPermissions')->willReturn($this->condition_permissions);
         $this->workflow             = $this->createMock(\Workflow::class);
-        $this->field                = $this->createMock(\Tracker_FormElement_Field_List::class);
+        $this->field                = $this->createMock(\Tuleap\Tracker\FormElement\Field\ListField::class);
         $this->user                 = UserTestBuilder::buildWithDefaults();
         $this->global_rules_manager = $this->createMock(Tracker_RulesManager::class);
         $this->global_rules_manager->method('getAllDateRulesByTrackerId')->willReturn([]);

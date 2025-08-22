@@ -22,11 +22,11 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\FormElement;
 
 use Tracker_FormElement_Field;
-use Tracker_FormElement_Field_List;
-use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
 use Tracker_FormElement_Field_List_OpenValue;
 use Tracker_FormElement_Field_List_Value;
 use Tuleap\Tracker\Colorpicker\ColorpickerMountPointPresenter;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
+use Tuleap\Tracker\FormElement\Field\ListField;
 
 class FormElementListValueAdminViewPresenterBuilder
 {
@@ -65,7 +65,7 @@ class FormElementListValueAdminViewPresenterBuilder
             return true;
         }
 
-        return $value->getId() !== Tracker_FormElement_Field_List::NONE_VALUE
+        return $value->getId() !== ListField::NONE_VALUE
             && $this->value_dao->canValueBeHidden($field, $value->getId());
     }
 
@@ -75,7 +75,7 @@ class FormElementListValueAdminViewPresenterBuilder
             return false;
         }
 
-        return $value->getId() !== Tracker_FormElement_Field_List::NONE_VALUE
+        return $value->getId() !== ListField::NONE_VALUE
             && $this->value_dao->canValueBeDeleted($field, $value->getId());
     }
 }

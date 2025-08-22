@@ -34,7 +34,7 @@ final class StatusColorForChangesetProviderTest extends \Tuleap\Test\PHPUnit\Tes
      */
     private $value_for_changeset_provider;
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\Tracker_FormElement_Field_List|\Tracker_FormElement_Field_List&\PHPUnit\Framework\MockObject\MockObject
+     * @var \PHPUnit\Framework\MockObject\MockObject|\Tuleap\Tracker\FormElement\Field\ListField|\Tuleap\Tracker\FormElement\Field\ListField&\PHPUnit\Framework\MockObject\MockObject
      */
     private $field;
     private StatusColorForChangesetProvider $color_provider;
@@ -61,7 +61,7 @@ final class StatusColorForChangesetProviderTest extends \Tuleap\Test\PHPUnit\Tes
         $this->tracker->method('getId')->willReturn($tracker_id);
         $this->artifact  = new Artifact($artifact_id, $this->tracker->getId(), $this->user->getId(), 1669714644, false);
         $this->changeset = new \Tracker_Artifact_Changeset($changset_id, $this->artifact, $this->user->getId(), 1669714644, 'example@email.com');
-        $this->field     = $this->createMock(\Tracker_FormElement_Field_List::class);
+        $this->field     = $this->createMock(\Tuleap\Tracker\FormElement\Field\ListField::class);
         $this->field->method('getId')->willReturn(4);
         $this->bind_value =  ListStaticValueBuilder::aStaticValue('My bind value')->build();
     }

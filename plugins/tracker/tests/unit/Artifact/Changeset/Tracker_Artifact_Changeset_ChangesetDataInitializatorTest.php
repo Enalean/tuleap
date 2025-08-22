@@ -22,8 +22,9 @@
 use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\Test\Builders\Fields\SubmittedOnFieldBuilder;
+use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\Test\Builders\Fields\LastUpdateDateFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SubmittedOnFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Tracker;
 
@@ -111,7 +112,7 @@ final class Tracker_Artifact_Changeset_ChangesetDataInitializatorTest extends Te
 
     public function testAnEmptyValueForListFieldAtCreationShouldUseDefaultValueToWorkWellWithFieldDependenciesCheckingAfterward(): void
     {
-        $list_field = $this->createMock(Tracker_FormElement_Field_List::class);
+        $list_field = $this->createMock(ListField::class);
         $list_field->method('getId')->willReturn(22);
         $list_field->method('getDefaultValue')->willReturn([598]);
 
@@ -131,7 +132,7 @@ final class Tracker_Artifact_Changeset_ChangesetDataInitializatorTest extends Te
 
     public function testAnEmptyValueForListFieldAtCreationShouldUseNoneValueToWorkWellWithFieldDependenciesCheckingAfterwardIfThereIsNoDefaultValue(): void
     {
-        $list_field = $this->createMock(Tracker_FormElement_Field_List::class);
+        $list_field = $this->createMock(ListField::class);
         $list_field->method('getId')->willReturn(22);
         $list_field->method('getDefaultValue')->willReturn([100]);
 
@@ -151,7 +152,7 @@ final class Tracker_Artifact_Changeset_ChangesetDataInitializatorTest extends Te
 
     public function testCreationWithListFieldValueHasTheSelectedValue(): void
     {
-        $list_field = $this->createMock(Tracker_FormElement_Field_List::class);
+        $list_field = $this->createMock(ListField::class);
         $list_field->method('getId')->willReturn(22);
 
         $this->formelement_factory->method('getAllFormElementsForTracker')

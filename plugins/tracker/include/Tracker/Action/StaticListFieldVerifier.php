@@ -26,7 +26,7 @@ final class StaticListFieldVerifier implements VerifyIsStaticListField
 {
     public function isStaticListField(\Tracker_FormElement_Field $field): bool
     {
-        if (! $field instanceof \Tracker_FormElement_Field_List) {
+        if (! $field instanceof \Tuleap\Tracker\FormElement\Field\ListField) {
             return false;
         }
 

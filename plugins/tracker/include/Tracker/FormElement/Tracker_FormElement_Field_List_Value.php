@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\FormElement\Field\ListField;
+
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 abstract class Tracker_FormElement_Field_List_Value implements Tracker_IProvideJsonFormatOfMyself
 {
@@ -99,7 +101,7 @@ abstract class Tracker_FormElement_Field_List_Value implements Tracker_IProvideJ
     /**
      * Get the data to bind on select <option> through a data- attribute
      */
-    public function getDataset(Tracker_FormElement_Field_List $field): array
+    public function getDataset(ListField $field): array
     {
         return [];
     }

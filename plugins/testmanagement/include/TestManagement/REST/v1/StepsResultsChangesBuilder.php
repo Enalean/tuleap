@@ -224,7 +224,7 @@ class StepsResultsChangesBuilder
         if (! $status_field) {
             return;
         }
-        assert($status_field instanceof \Tracker_FormElement_Field_List);
+        assert($status_field instanceof \Tuleap\Tracker\FormElement\Field\ListField);
 
         $this->test_status_changes_builder->enforceTestStatusAccordingToStepsStatus(
             $status_field,

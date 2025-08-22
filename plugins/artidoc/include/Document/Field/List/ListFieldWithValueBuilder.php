@@ -38,7 +38,7 @@ final readonly class ListFieldWithValueBuilder
 
     public function buildListFieldWithValue(ConfiguredField $configured_field, ?\Tracker_Artifact_ChangesetValue_List $changeset_value): UserGroupsListFieldWithValue|StaticListFieldWithValue|UserListFieldWithValue
     {
-        assert($configured_field->field instanceof \Tracker_FormElement_Field_List);
+        assert($configured_field->field instanceof \Tuleap\Tracker\FormElement\Field\ListField);
 
         return match ($configured_field->field->getBind()?->getType()) {
             \Tracker_FormElement_Field_List_Bind_Ugroups::TYPE => $this->user_group_list_with_value_builder->buildUserGroupsListFieldWithValue($configured_field, $changeset_value),

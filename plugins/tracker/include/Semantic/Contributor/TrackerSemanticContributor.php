@@ -27,9 +27,9 @@ use PFUser;
 use SimpleXMLElement;
 use TemplateRendererFactory;
 use Tracker_FormElement_Field;
-use Tracker_FormElement_Field_List;
 use Tracker_FormElementFactory;
 use TrackerManager;
+use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\Semantic\TrackerSemantic;
 use Tuleap\Tracker\Semantic\TrackerSemanticManager;
 use Tuleap\Tracker\Tracker;
@@ -39,7 +39,7 @@ class TrackerSemanticContributor extends TrackerSemantic
     public const CONTRIBUTOR_SEMANTIC_SHORTNAME = 'contributor';
 
     /**
-     * @var Tracker_FormElement_Field_List
+     * @var ListField
      */
     protected $list_field;
 
@@ -52,9 +52,9 @@ class TrackerSemanticContributor extends TrackerSemantic
      * Cosntructor
      *
      * @param Tracker $tracker The tracker
-     * @param Tracker_FormElement_Field_List $list_field The field
+     * @param ListField $list_field The field
      */
-    public function __construct(Tracker $tracker, ?Tracker_FormElement_Field_List $list_field = null)
+    public function __construct(Tracker $tracker, ?ListField $list_field = null)
     {
         parent::__construct($tracker);
         $this->list_field = $list_field;
@@ -107,7 +107,7 @@ class TrackerSemanticContributor extends TrackerSemantic
     /**
      * The (list) field used for contributor semantic
      *
-     * @return Tracker_FormElement_Field_List The (list) field used for contributor semantic, or null if no field
+     * @return ListField The (list) field used for contributor semantic, or null if no field
      */
     public function getField()
     {

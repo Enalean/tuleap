@@ -21,6 +21,7 @@
 use Tuleap\Cardwall\OnTop\Config\ColumnCollection;
 use Tuleap\Cardwall\OnTop\Config\ColumnFactory;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\Tracker;
 
 /**
@@ -104,7 +105,7 @@ class Cardwall_OnTop_Config implements Cardwall_OnTop_IConfig // phpcs:ignore PS
      * Get Columns from the values of a $field
      * @return ColumnCollection
      */
-    public function getRendererColumns(Tracker_FormElement_Field_List $cardwall_field)
+    public function getRendererColumns(ListField $cardwall_field)
     {
         return $this->column_factory->getRendererColumns($cardwall_field);
     }
@@ -112,7 +113,7 @@ class Cardwall_OnTop_Config implements Cardwall_OnTop_IConfig // phpcs:ignore PS
     /**
      * @return ColumnCollection
      */
-    public function getFilteredRendererColumns(Tracker_FormElement_Field_List $cardwall_field, array $filter)
+    public function getFilteredRendererColumns(ListField $cardwall_field, array $filter)
     {
         return $this->column_factory->getFilteredRendererColumns($cardwall_field, $filter);
     }
@@ -164,7 +165,7 @@ class Cardwall_OnTop_Config implements Cardwall_OnTop_IConfig // phpcs:ignore PS
      * Get the column/field/value mappings by duck typing the colums labels
      * with the values of the given fields
      *
-     * @param Tracker_FormElement_Field_List[] $fields
+     * @param ListField[] $fields
      *
      * @return Cardwall_MappingCollection
      */

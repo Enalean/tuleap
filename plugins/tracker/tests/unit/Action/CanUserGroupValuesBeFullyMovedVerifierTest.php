@@ -23,18 +23,18 @@ namespace Tuleap\Tracker\Action;
 use PHPUnit\Framework\MockObject\Stub;
 use Psr\Log\NullLogger;
 use Tracker_Artifact_ChangesetValue_List;
-use Tracker_FormElement_Field_List;
 use Tuleap\Test\Builders\ProjectUGroupTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserGroupValueBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CanUserGroupValuesBeFullyMovedVerifierTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    private Stub&\Tracker_FormElement_Field_List $source_field;
-    private Stub&\Tracker_FormElement_Field_List $destination_field;
+    private Stub&\Tuleap\Tracker\FormElement\Field\ListField $source_field;
+    private Stub&\Tuleap\Tracker\FormElement\Field\ListField $destination_field;
     private Artifact $artifact;
     private Stub&Tracker_Artifact_ChangesetValue_List $changeset_value;
     private \PFUser $user;
@@ -42,10 +42,10 @@ final class CanUserGroupValuesBeFullyMovedVerifierTest extends \Tuleap\Test\PHPU
     protected function setUp(): void
     {
         $this->user         = UserTestBuilder::anActiveUser()->withId(101)->withUserName('Mildred Favorito')->build();
-        $this->source_field = $this->createStub(Tracker_FormElement_Field_List::class);
+        $this->source_field = $this->createStub(ListField::class);
         $this->source_field->method('getId')->willReturn('123');
         $this->source_field->method('getName')->willReturn('UserGroup');
-        $this->destination_field = $this->createStub(Tracker_FormElement_Field_List::class);
+        $this->destination_field = $this->createStub(ListField::class);
         $this->destination_field->method('getId')->willReturn('456');
         $this->destination_field->method('getName')->willReturn('UserGroup');
 

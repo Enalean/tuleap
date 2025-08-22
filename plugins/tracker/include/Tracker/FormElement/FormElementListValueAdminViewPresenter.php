@@ -82,7 +82,7 @@ class FormElementListValueAdminViewPresenter
         $this->value_can_be_hidden  = $value_can_be_hidden;
         $this->value_can_be_deleted = $value_can_be_deleted;
         $this->decorator            = $decorator;
-        $this->is_none_value        = (int) $value->getId() === \Tracker_FormElement_Field_List::NONE_VALUE;
+        $this->is_none_value        = (int) $value->getId() === Field\ListField::NONE_VALUE;
         $this->is_custom_value      = $is_custom_value;
     }
 

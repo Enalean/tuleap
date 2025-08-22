@@ -22,13 +22,13 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Rule;
 
 use PHPUnit\Framework\MockObject\MockObject;
-use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Bind_Static;
 use Tracker_FormElementFactory;
 use Tracker_Rule_Date_Factory;
 use Tracker_Rule_List;
 use Tuleap\GlobalResponseMock;
 use Tuleap\Tracker\FormElement\Field\List\SelectboxField;
+use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Tracker;
 
@@ -43,9 +43,9 @@ final class TrackerRulesListValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private Tracker $tracker;
 
-    private Tracker_FormElement_Field_List&MockObject $source_field;
+    private ListField&MockObject $source_field;
 
-    private Tracker_FormElement_Field_List&MockObject $target_field;
+    private ListField&MockObject $target_field;
 
     private Tracker_FormElement_Field_List_Bind_Static&MockObject $bind;
 
@@ -67,13 +67,13 @@ final class TrackerRulesListValidatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->bind_3 = $this->createMock(\Tracker_FormElement_Field_List_Bind_Static::class);
         $this->bind_4 = $this->createMock(\Tracker_FormElement_Field_List_Bind_Static::class);
 
-        $this->source_field = $this->createMock(\Tracker_FormElement_Field_List::class);
+        $this->source_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\ListField::class);
         $this->source_field->method('getID')->willReturn(123);
         $this->source_field->method('getLabel')->willReturn('aaaaa');
         $this->source_field->method('getBind')->willReturn($this->bind);
         $this->source_field->method('getTracker')->willReturn($this->tracker);
 
-        $this->target_field = $this->createMock(\Tracker_FormElement_Field_List::class);
+        $this->target_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\ListField::class);
         $this->target_field->method('getID')->willReturn(789);
         $this->target_field->method('getLabel')->willReturn('bbbbb');
         $this->target_field->method('getBind')->willReturn($this->bind_2);

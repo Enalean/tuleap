@@ -27,6 +27,7 @@ use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticXmlExporter;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindVisitor;
 use Tuleap\Tracker\FormElement\Field\ListFields\OpenListValueDao;
+use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\FormElement\FormElementListValueAdminViewPresenterBuilder;
 use Tuleap\Tracker\FormElement\View\Admin\Field\ListFields\BindValuesAdder;
 use Tuleap\Tracker\REST\FieldListOpenValueRepresentation;
@@ -904,7 +905,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
         return self::TYPE;
     }
 
-    public function getFieldDataFromRESTObject(array $rest_data, Tracker_FormElement_Field_List $field)
+    public function getFieldDataFromRESTObject(array $rest_data, ListField $field)
     {
         if (isset($rest_data['id']) && is_numeric($rest_data['id'])) {
             $id = (int) $rest_data['id'];

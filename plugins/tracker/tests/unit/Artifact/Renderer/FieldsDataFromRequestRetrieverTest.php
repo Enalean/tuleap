@@ -23,11 +23,11 @@ namespace Tuleap\Tracker\Artifact\Renderer;
 use Codendi_Request;
 use PHPUnit\Framework\MockObject\Stub;
 use ProjectManager;
-use Tracker_FormElement_Field_List;
 use Tracker_FormElementFactory;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\Semantic\Status\StatusValuesCollection;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Tracker;
@@ -41,14 +41,14 @@ final class FieldsDataFromRequestRetrieverTest extends TestCase
     private Tracker_FormElementFactory|Stub $form_element_factory;
     private Stub|FirstPossibleValueInListRetriever $first_possible_value_retriever;
     private FieldsDataFromRequestRetriever $fields_data_from_request_retriever;
-    private Stub|Tracker_FormElement_Field_List $field;
+    private Stub|ListField $field;
     private \PFUser $user;
 
     protected function setUp(): void
     {
         $this->user = UserTestBuilder::anActiveUser()->withId(114)->build();
 
-        $this->field = $this->createStub(Tracker_FormElement_Field_List::class);
+        $this->field = $this->createStub(ListField::class);
         $this->field->method('getId')->willReturn(123);
 
         $this->tracker = $this->createStub(Tracker::class);

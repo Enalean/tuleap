@@ -24,7 +24,6 @@ namespace Tuleap\Artidoc\Document\Field;
 
 use PFUser;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
-use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Bind_Null;
 use Tracker_FormElement_Field_PermissionsOnArtifact;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldIsDescriptionSemanticFault;
@@ -46,6 +45,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\Date\DateField;
 use Tuleap\Tracker\FormElement\Field\NumericField;
 use Tuleap\Tracker\FormElement\Field\Text\TextField;
+use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\Semantic\Title\RetrieveSemanticTitleField;
 use Tuleap\Tracker\Test\Builders\Fields\ArtifactIdFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ArtifactLinkFieldBuilder;
@@ -95,7 +95,7 @@ final class SuitableFieldRetrieverTest extends TestCase
     }
 
     /**
-     * @return Ok<TextField> | Ok<Tracker_FormElement_Field_List> | Ok<ArtifactLinkField> | OK<NumericField> | Ok<DateField> | OK<Tracker_FormElement_Field_PermissionsOnArtifact> | Ok<StepsDefinition> | Ok<StepsExecution> | Err<Fault>
+     * @return Ok<TextField> | Ok<ListField> | Ok<ArtifactLinkField> | OK<NumericField> | Ok<DateField> | OK<Tracker_FormElement_Field_PermissionsOnArtifact> | Ok<StepsDefinition> | Ok<StepsExecution> | Err<Fault>
      */
     private function retrieve(): Ok|Err
     {
@@ -242,7 +242,7 @@ final class SuitableFieldRetrieverTest extends TestCase
 
     public function testItDoesNotAllowListFieldWithoutBind(): void
     {
-        $list_field = $this->createMock(Tracker_FormElement_Field_List::class);
+        $list_field = $this->createMock(ListField::class);
         $list_field->method('getId')->willReturn(self::FIELD_ID);
         $list_field->method('userCanRead')->with($this->user)->willReturn(true);
         $list_field->method('getBind')->willReturn(null);

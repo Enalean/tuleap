@@ -20,6 +20,7 @@
 
 use Tuleap\Cardwall\OnTop\Config\ColumnCollection;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\Tracker;
 
 /**
@@ -37,9 +38,9 @@ interface Cardwall_OnTop_IConfig // phpcs:ignore PSR1.Classes.ClassDeclaration.M
 
     public function getDashboardColumns();
 
-    public function getRendererColumns(Tracker_FormElement_Field_List $cardwall_field);
+    public function getRendererColumns(ListField $cardwall_field);
 
-    public function getFilteredRendererColumns(Tracker_FormElement_Field_List $cardwall_field, array $filter);
+    public function getFilteredRendererColumns(ListField $cardwall_field, array $filter);
 
     public function getMappings();
 
@@ -54,7 +55,7 @@ interface Cardwall_OnTop_IConfig // phpcs:ignore PSR1.Classes.ClassDeclaration.M
     );
 
     /**
-     * @param Tracker_FormElement_Field_List[] $fields
+     * @param ListField[] $fields
      */
     public function getCardwallMappings(array $fields, ColumnCollection $cardwall_columns);
 

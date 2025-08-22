@@ -20,7 +20,7 @@
 namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\EqualComparison;
 
 use Tracker_FormElement_Field;
-use Tracker_FormElement_Field_List;
+use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\Report\Query\Advanced\FieldFromWhereBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 use Tuleap\Tracker\Report\Query\Advanced\QueryBuilder\FromWhereComparisonListFieldBuilder;
@@ -66,7 +66,7 @@ final class ForListBindStatic implements FieldFromWhereBuilder, ListBindStaticFr
         $condition = "($query_presenter->changeset_value_alias.changeset_id IS NULL OR $query_presenter->changeset_value_list_alias.bindvalue_id = ?)";
 
         $query_presenter->setCondition($condition);
-        $query_presenter->setParameters([Tracker_FormElement_Field_List::NONE_VALUE]);
+        $query_presenter->setParameters([ListField::NONE_VALUE]);
 
         return $this->empty_comparison_builder->getFromWhere($query_presenter);
     }

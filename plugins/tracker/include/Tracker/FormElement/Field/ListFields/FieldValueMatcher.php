@@ -21,7 +21,7 @@
 namespace Tuleap\Tracker\FormElement\Field\ListFields;
 
 use SimpleXMLElement;
-use Tracker_FormElement_Field_List;
+use Tuleap\Tracker\FormElement\Field\ListField;
 use User\XML\Import\IFindUserFromXMLReference;
 
 final class FieldValueMatcher implements RetrieveMatchingBindValueByDuckTyping, RetrieveMatchingValueByDuckTyping, RetrieveMatchingUserValue
@@ -31,12 +31,12 @@ final class FieldValueMatcher implements RetrieveMatchingBindValueByDuckTyping, 
     }
 
     public function getMatchingValueByDuckTyping(
-        Tracker_FormElement_Field_List $source_field,
-        Tracker_FormElement_Field_List $destination_field,
+        ListField $source_field,
+        ListField $destination_field,
         int $source_value_id,
     ): ?int {
-        if (! $source_value_id || $source_value_id === Tracker_FormElement_Field_List::NONE_VALUE) {
-            return Tracker_FormElement_Field_List::NONE_VALUE;
+        if (! $source_value_id || $source_value_id === ListField::NONE_VALUE) {
+            return ListField::NONE_VALUE;
         }
 
         $source_bind = $source_field->getBind();
@@ -57,7 +57,7 @@ final class FieldValueMatcher implements RetrieveMatchingBindValueByDuckTyping, 
 
     public function getMatchingBindValueByDuckTyping(
         \Tracker_FormElement_Field_List_BindValue $source_value,
-        \Tracker_FormElement_Field_List $destination_field,
+        \Tuleap\Tracker\FormElement\Field\ListField $destination_field,
     ): ?\Tracker_FormElement_Field_List_BindValue {
         $source_value_label = strtolower($source_value->getLabel());
         foreach ($destination_field->getBind()->getAllValues() as $destination_value) {
@@ -68,7 +68,7 @@ final class FieldValueMatcher implements RetrieveMatchingBindValueByDuckTyping, 
         return null;
     }
 
-    public function isSourceUserValueMatchingADestinationUserValue(Tracker_FormElement_Field_List $destination_contributor_field, SimpleXMLElement $value): bool
+    public function isSourceUserValueMatchingADestinationUserValue(ListField $destination_contributor_field, SimpleXMLElement $value): bool
     {
         $user = $this->user_finder->getUser($value);
 

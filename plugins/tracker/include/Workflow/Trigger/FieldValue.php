@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\ListField;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_Workflow_Trigger_FieldValue
@@ -27,7 +28,7 @@ class Tracker_Workflow_Trigger_FieldValue
     private $value;
 
     public function __construct(
-        Tracker_FormElement_Field_List $field,
+        ListField $field,
         Tracker_FormElement_Field_List_BindValue $value,
     ) {
         $this->field = $field;
@@ -35,7 +36,7 @@ class Tracker_Workflow_Trigger_FieldValue
     }
 
     /**
-     * @return Tracker_FormElement_Field_List
+     * @return ListField
      */
     public function getField()
     {

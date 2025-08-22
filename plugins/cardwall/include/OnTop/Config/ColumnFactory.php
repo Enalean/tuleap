@@ -23,10 +23,10 @@ declare(strict_types=1);
 namespace Tuleap\Cardwall\OnTop\Config;
 
 use Cardwall_Column;
-use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Bind_StaticValue_None;
 use Tracker_FormElement_InvalidFieldValueException;
 use Tuleap\Cardwall\Column\ColumnColorRetriever;
+use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\Tracker;
 
 class ColumnFactory
@@ -48,14 +48,14 @@ class ColumnFactory
     /**
      * Get Columns from the values of a $field
      */
-    public function getRendererColumns(Tracker_FormElement_Field_List $field): ColumnCollection
+    public function getRendererColumns(ListField $field): ColumnCollection
     {
         $columns = new ColumnCollection();
         $this->fillColumnsFor($columns, $field, []);
         return $columns;
     }
 
-    public function getFilteredRendererColumns(Tracker_FormElement_Field_List $field, array $filter): ColumnCollection
+    public function getFilteredRendererColumns(ListField $field, array $filter): ColumnCollection
     {
         $columns = new ColumnCollection();
         $this->fillColumnsFor($columns, $field, $filter);
@@ -75,7 +75,7 @@ class ColumnFactory
 
     private function fillColumnsFor(
         ColumnCollection $columns,
-        Tracker_FormElement_Field_List $field,
+        ListField $field,
         array $filter,
     ): void {
         $decorators = $field->getDecorators();
@@ -86,7 +86,7 @@ class ColumnFactory
     }
 
     private function getFieldBindValues(
-        Tracker_FormElement_Field_List $field,
+        ListField $field,
         array $filter,
     ): array {
         if (count($filter) === 0) {

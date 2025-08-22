@@ -20,13 +20,13 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder;
 
-use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_Bind_Null;
 use Tracker_FormElement_Field_List_Bind_Static;
 use Tracker_FormElement_Field_List_Bind_Ugroups;
 use Tracker_FormElement_Field_List_Bind_Users;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindParameters;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindVisitor;
+use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\Report\Query\Advanced\FieldFromWhereBuilder;
 
 final class ListFieldBindVisitor implements BindVisitor
@@ -55,7 +55,7 @@ final class ListFieldBindVisitor implements BindVisitor
     }
 
     /** @return FieldFromWhereBuilder */
-    public function getFromWhereBuilder(Tracker_FormElement_Field_List $field)
+    public function getFromWhereBuilder(ListField $field)
     {
         return $field->getBind()->accept($this, new BindParameters($field));
     }
