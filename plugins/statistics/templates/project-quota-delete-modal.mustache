@@ -21,7 +21,7 @@
         <button type="button" class="tlp-button-danger tlp-button-outline tlp-modal-action" data-dismiss="modal">
             {{ cancel_label }}
         </button>
-        <button type="submit" class="tlp-button-danger tlp-modal-action" name="delete_quota" value="{{ project_id }}">
+        <button type="submit" class="tlp-button-danger tlp-modal-action" name="delete_quota" value="{{ project_id }}" data-test="modal-confirmation-delete-quota">
             <i class="far fa-trash-alt tlp-button-icon"></i> {{ delete_quota_label }}
         </button>
     </form>

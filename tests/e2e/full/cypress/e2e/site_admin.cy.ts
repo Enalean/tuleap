@@ -75,6 +75,7 @@ describe("Site admin", function () {
             cy.siteAdministratorSession();
             cy.visit("/");
             cy.get("[data-test=platform-administration-link]").click();
+            // eslint-disable-next-line cypress/no-force
             cy.get("[data-test=statistics]").click({ force: true });
 
             cy.log("Check that image is rendered by asserting that its size is > 0");
@@ -90,13 +91,16 @@ describe("Site admin", function () {
             cy.siteAdministratorSession();
             cy.visit("/");
             cy.get("[data-test=platform-administration-link]").click();
+            // eslint-disable-next-line cypress/no-force
             cy.get("[data-test=statistics]").click({ force: true });
+            // eslint-disable-next-line cypress/no-force
             cy.get("[data-test=disk-usage-by-services]").click({ force: true });
             cy.get("[data-test=services-usages]").find("tr").should("have.length.at.least", 2);
 
+            // eslint-disable-next-line cypress/no-force
             cy.get("[data-test=disk-usage-by-projects]").click({ force: true });
             cy.get("[data-test=disk-usage-project]").find("tr").should("have.length.at.least", 2);
-
+            // eslint-disable-next-line cypress/no-force
             cy.get("[data-test=global-usage]").click({ force: true });
             cy.get("[data-test=global-usage]").contains("Global usage");
         });
@@ -104,6 +108,7 @@ describe("Site admin", function () {
             cy.siteAdministratorSession();
             cy.visit("/");
             cy.get("[data-test=platform-administration-link]").click();
+            // eslint-disable-next-line cypress/no-force
             cy.get("[data-test=statistics]").click({ force: true });
             cy.get("[data-test=data-export]").click();
             cy.intercept("*service_usage*").as("export_csv");
@@ -164,6 +169,57 @@ describe("Site admin", function () {
             });
 
             cy.get("[data-test=feedback]").contains("This project is deleted");
+        });
+    });
+    context("Project quota", function () {
+        let project_name: string;
+        before(function () {
+            cy.projectAdministratorSession();
+            const now = Date.now();
+            project_name = "project-quota-" + now;
+            cy.createNewPublicProject(project_name, "scrum").as("project_id");
+        });
+        it("can change project quota", function () {
+            cy.siteAdministratorSession();
+            cy.visit("/plugins/statistics/project_quota.php");
+            cy.get("[data-test=modal-add-quota-button]").click();
+
+            cy.intercept(`/project/autocomplete.php*`).as("autoCompleteProject");
+
+            cy.get("[data-test=project-quota-project-filter-select] + .select2-container").click();
+            // ignore rule for select2
+            // eslint-disable-next-line cypress/require-data-selectors
+            cy.get(".select2-search__field").type(`${project_name}{enter}`);
+            cy.wait("@autoCompleteProject");
+            // eslint-disable-next-line cypress/require-data-selectors
+            cy.get(".select2-results__option").click();
+
+            const new_quota = "10";
+            cy.get("[data-test=new-quota-input]").type(new_quota);
+            cy.get("[data-test=project-quota-submit-button]").click();
+
+            cy.getContains("[data-test=project-quota-row]", project_name).should("exist");
+
+            cy.log("Log as project admin and see if the quota is applied");
+            cy.projectAdministratorSession();
+            cy.visit(`/plugins/statistics/project_stat.php?group_id=${this.project_id}`);
+            cy.get("[data-test=stat-help]").should("contain.text", `${new_quota}GiB`);
+
+            cy.log("Log as site admin and remove the applied quota");
+            cy.siteAdministratorSession();
+            cy.visit("/plugins/statistics/project_quota.php");
+            cy.getContains("[data-test=project-quota-row]", project_name).within(() => {
+                cy.get("[data-test=modal-delete-quota]")
+                    .click()
+                    .then((modal) => {
+                        cy.wrap(modal).get("[data-test=modal-confirmation-delete-quota]").click();
+                    });
+            });
+
+            cy.log("Log as project admin and see if the quota has been removed");
+            cy.projectAdministratorSession();
+            cy.visit(`/plugins/statistics/project_stat.php?group_id=${this.project_id}`);
+            cy.get("[data-test=stat-help]").should("contain.text", `5GiB`);
         });
     });
 });
