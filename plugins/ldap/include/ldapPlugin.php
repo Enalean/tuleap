@@ -970,13 +970,10 @@ class LdapPlugin extends Plugin implements PluginWithConfigKeys
     {
         switch ($params['type']) {
             case 'PLUGIN_LDAP_UPDATE_LOGIN':
-                include_once dirname(__FILE__) . '/system_event/SystemEvent_PLUGIN_LDAP_UPDATE_LOGIN.php';
-                $params['class']        = 'SystemEvent_PLUGIN_LDAP_UPDATE_LOGIN';
+                $params['class']        = SystemEvent_PLUGIN_LDAP_UPDATE_LOGIN::class;
                 $params['dependencies'] = [
                     UserManager::instance(),
-                    Backend::instance(Backend::SVN),
                     ProjectManager::instance(),
-                    new LDAP_ProjectManager(),
                 ];
                 break;
         }
