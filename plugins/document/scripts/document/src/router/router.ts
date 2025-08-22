@@ -73,6 +73,9 @@ export const routes: RouteRecordRaw[] = [
         path: "/history/:item_id",
         name: "history",
         component: DisplayHistory,
+        props: (route) => ({
+            item_id: Number(route.params.item_id),
+        }),
     },
     {
         path: "/versions/:item_id",
