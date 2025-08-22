@@ -17,17 +17,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const path = require("path");
-const { webpack_configurator } = require("@tuleap/build-system-configurator");
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import { webpack_configurator } from "@tuleap/build-system-configurator";
 
-let entry_points = {
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const entry_points = {
     "style-fp": "./themes/FlamingParrot/css/style.scss",
     "disk-usage-pie": "./scripts/disk-usage-pie/src/disk-usage-pie-chart.js",
     admin: "./scripts/admin.js",
     "style-bp": "./themes/BurningParrot/css/statistics.scss",
 };
 
-module.exports = [
+export default [
     {
         entry: entry_points,
         context: path.resolve(__dirname),
@@ -38,16 +42,11 @@ module.exports = [
             tuleap: "tuleap",
         },
         module: {
-            rules: [
-                webpack_configurator.rule_po_files,
-                webpack_configurator.rule_scss_loader,
-                webpack_configurator.rule_css_assets,
-            ],
+            rules: [webpack_configurator.rule_scss_loader, webpack_configurator.rule_css_assets],
         },
         plugins: [
             webpack_configurator.getCleanWebpackPlugin(),
             webpack_configurator.getManifestPlugin(),
-            webpack_configurator.getMomentLocalePlugin(),
             ...webpack_configurator.getCSSExtractionPlugins(),
         ],
     },
