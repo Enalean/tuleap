@@ -38,7 +38,8 @@ use User_ForgeUserGroupPermissionsManager;
 
 final class TimetrackingManagementWidgetResource extends AuthenticatedResource
 {
-    public const NAME = 'timetracking_management_widget';
+    public const string NAME    = 'timetracking_management_widget';
+    private const int MAX_LIMIT = 50;
 
     /**
      * @url OPTIONS {id}
@@ -136,6 +137,35 @@ final class TimetrackingManagementWidgetResource extends AuthenticatedResource
                     FaultMapper::mapToRestException($fault);
                 }
             );
+    }
+
+    /**
+     * @url OPTIONS {id}/times
+     */
+    public function optionsTimes(int $id): void
+    {
+        Header::allowOptionsGet();
+    }
+
+    /**
+     * Get times
+     *
+     * Get the times of users of a given Timetracking Management Widget
+     *
+     * @url GET {id}/times
+     * @access protected
+     *
+     * @param int $id Id of the timetracking management widget
+     * @param int $limit Number of users displayed per page {@from query}{@min 1}{@max 50}
+     * @param int $offset Position of the first user to display {@from query}{@min 0}
+     *
+     * @return array {@type \Tuleap\Timetracking\REST\v1\TimetrackingManagement\UserTimesRepresentation}
+     * @psalm-return UserTimesRepresentation[]
+     */
+    public function getTimes(int $id, int $limit = self::MAX_LIMIT, int $offset = 0): array
+    {
+        Header::sendPaginationHeaders($limit, $offset, 0, self::MAX_LIMIT);
+        return [];
     }
 
     private function getLogger(): LoggerInterface

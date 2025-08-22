@@ -15,6 +15,11 @@ msgstr ""
 msgid "Cancel"
 msgstr "Annuler"
 
+msgid "Error while retrieving user times: %{error}"
+msgstr ""
+"Une erreur est survenue lors de la récupération des temps d'utilisateurs : %"
+"{error}"
+
 msgid "Error while saving the query: %{error}"
 msgstr "Une erreur est survenue lors de la sauvegarde de la requête : %{error}"
 
@@ -24,8 +29,17 @@ msgstr "Du"
 msgid "No user selected"
 msgstr "Aucun utilisateur sélectionné"
 
+msgid "No user times are available to display"
+msgstr "Il n'y a pas de temps d'utilisateurs à afficher"
+
+msgid "Please select some users to display their times"
+msgstr "Veuillez sélectionner des utilisateurs pour afficher leur temps"
+
 msgid "Save query"
 msgstr "Enregistrer la requête"
+
+msgid "Time"
+msgstr "Temps"
 
 msgid "To"
 msgstr "Au"

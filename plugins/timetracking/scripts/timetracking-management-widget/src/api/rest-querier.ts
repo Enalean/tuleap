@@ -19,10 +19,10 @@
 
 import type { ResultAsync } from "neverthrow";
 import type { Fault } from "@tuleap/fault";
-import { putJSON, uri } from "@tuleap/fetch-result";
+import { getAllJSON, putJSON, uri } from "@tuleap/fetch-result";
 import type { User } from "@tuleap/core-rest-api-types";
 import { formatDatetimeToISO } from "@tuleap/plugin-timetracking-time-formatters";
-import type { Query } from "../type";
+import type { Query, QueryResults } from "../type";
 
 export interface PutQueryResult {
     readonly viewable_users: User[];
@@ -46,5 +46,11 @@ export function putQuery(widget_id: number, query: Query): ResultAsync<PutQueryR
         end_date: formatDatetimeToISO(query.end_date),
         predefined_time_period: null,
         users: formatted_user_list,
+    });
+}
+
+export function getTimes(widget_id: number): ResultAsync<QueryResults, Fault> {
+    return getAllJSON(uri`/api/v1/timetracking_management_widget/${widget_id}/times`, {
+        params: { limit: 50 },
     });
 }
