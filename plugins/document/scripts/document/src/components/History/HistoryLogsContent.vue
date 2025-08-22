@@ -63,6 +63,9 @@
 import UserBadge from "../User/UserBadge.vue";
 import type { LogEntry } from "../../api/log-rest-querier";
 import DocumentRelativeDate from "../Date/DocumentRelativeDate.vue";
+import { useGettext } from "vue3-gettext";
+
+const { $gettext } = useGettext();
 
 defineProps<{ log_entries: readonly LogEntry[] }>();
 </script>

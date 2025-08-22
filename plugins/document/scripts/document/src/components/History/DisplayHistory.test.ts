@@ -40,18 +40,17 @@ vi.mock("vue-router");
 vi.useFakeTimers();
 
 describe("DisplayHistory", () => {
-    let load_document: vi.Mock;
-
     beforeEach(() => {
         vi.spyOn(router, "useRoute").mockReturnValue({
             params: { item_id: "101" },
         } as unknown as RouteLocationNormalizedLoaded);
-        load_document = vi.fn();
     });
 
     it("should display logs", async () => {
+        const load_document = vi.fn();
         load_document.mockReturnValue({ id: 10 } as Item);
         const wrapper = shallowMount(DisplayHistory, {
+            props: { item_id: 10 },
             global: {
                 ...getGlobalTestOptions({
                     actions: {
@@ -83,8 +82,10 @@ describe("DisplayHistory", () => {
     ])(
         `should display a Versions link for %s: %s`,
         async (type, should_versions_link_be_displayed) => {
+            const load_document = vi.fn();
             load_document.mockReturnValue({ id: 10, type } as Item);
             const wrapper = shallowMount(DisplayHistory, {
+                props: { item_id: 10 },
                 global: {
                     ...getGlobalTestOptions({
                         actions: {

@@ -58,6 +58,9 @@ import HistoryLogsLoadingState from "./HistoryLogsLoadingState.vue";
 import HistoryLogsErrorState from "./HistoryLogsErrorState.vue";
 import HistoryLogsEmptyState from "./HistoryLogsEmptyState.vue";
 import HistoryLogsContent from "./HistoryLogsContent.vue";
+import { useGettext } from "vue3-gettext";
+
+const { $gettext } = useGettext();
 
 const props = defineProps<{ item: Item }>();
 
