@@ -30,7 +30,7 @@ export const renderEmojiButton = (
         class="${getClass(host)}"
         data-role="popover-trigger"
         disabled="${host.is_disabled}"
-        title="${gettext_provider.gettext("Insert emoji")}"
+        title="${gettext_provider.gettext("Insert emoji `Ctrl+;`")}"
         data-test="button-emoji"
     >
         <i class="prose-mirror-toolbar-button-icon fa-solid fa-face-smile"></i>

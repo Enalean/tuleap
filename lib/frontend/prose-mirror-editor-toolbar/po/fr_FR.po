@@ -51,8 +51,8 @@ msgstr "Éditer un lien"
 msgid "Image source"
 msgstr "Source de l'image"
 
-msgid "Insert emoji"
-msgstr "Insérer une émoticône"
+msgid "Insert emoji `Ctrl+;`"
+msgstr "Insérer une émoticône `Ctrl+;`"
 
 msgid "Insert new emoji"
 msgstr "Insérer une nouvelle émoticône"

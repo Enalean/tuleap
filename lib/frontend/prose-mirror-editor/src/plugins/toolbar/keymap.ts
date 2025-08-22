@@ -26,6 +26,7 @@ import { getHeadingCommand } from "./text-style/transform-text";
 import type { DetectSingleListInSelection } from "./list/SingleListInSelectionDetector";
 import type { BuildLinkImageMenuCommand } from "./image/OpenLinkMenuCommandBuilder";
 import { NB_HEADING } from "./index";
+import type { BuildEmojiMenuCommand } from "./emoji/OpenEmojiMenuCommandBuilder";
 
 export type ProseMirrorKeyMap = { [key: string]: Command };
 export function buildKeymap(
@@ -33,6 +34,7 @@ export function buildKeymap(
     detect_ordered_list: DetectSingleListInSelection,
     detect_bullet_list: DetectSingleListInSelection,
     open_link_menu_command: BuildLinkImageMenuCommand,
+    open_emoji_menu_command: BuildEmojiMenuCommand,
     are_headings_enabled: boolean,
     are_subtitles_enabled: boolean,
     map_keys?: { [key: string]: false | string },
@@ -64,6 +66,8 @@ export function buildKeymap(
     bind("Mod-,", toggleMark(schema.marks.subscript));
     bind("Mod-.", toggleMark(schema.marks.superscript));
     bind("Mod-k", open_link_menu_command.build());
+
+    bind("Mod-;", open_emoji_menu_command.build());
 
     const listCommand = chainCommands(exitCode, (state, dispatch) => {
         const node_type = schema.nodes.bullet_list;
