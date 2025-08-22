@@ -25,7 +25,10 @@
       "json-stable-stringify": "npm:@nolyfill/json-stable-stringify@^1",
       "side-channel": "npm:@nolyfill/side-channel@^1",
       "es-set-tostringtag": "npm:@nolyfill/es-set-tostringtag@^1",
-      "safe-buffer": "npm:@nolyfill/safe-buffer@^1"
+      "safe-buffer": "npm:@nolyfill/safe-buffer@^1",
+      "hasown": "npm:@nolyfill/hasown@^1",
+      "isarray": "npm:@nolyfill/isarray@^1",
+      "typed-array-buffer": "npm:@nolyfill/typed-array-buffer@^1"
     }
   }
 }

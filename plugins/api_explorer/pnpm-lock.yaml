@@ -12,6 +12,9 @@ overrides:
   side-channel: npm:@nolyfill/side-channel@^1
   es-set-tostringtag: npm:@nolyfill/es-set-tostringtag@^1
   safe-buffer: npm:@nolyfill/safe-buffer@^1
+  hasown: npm:@nolyfill/hasown@^1
+  isarray: npm:@nolyfill/isarray@^1
+  typed-array-buffer: npm:@nolyfill/typed-array-buffer@^1
 
 dependencies:
   react:
@@ -56,9 +59,25 @@ packages:
     engines: {node: '>=12.4.0'}
     dev: false
 
+  /@nolyfill/isarray@1.0.44:
+    resolution: {integrity: sha512-NTSBKMkzaaVG3lVR5/lMTnW2y26XRQAgkdHMNaBviexwHgmtPsONFJ/HhQDak16BOrpYLasGMKGsgk3oKez57g==}
+    engines: {node: '>=12.4.0'}
+    dev: false
+
   /@nolyfill/safe-buffer@1.0.44:
     resolution: {integrity: sha512-SqlKXtlhNTDMeZKey9jnnuPhi8YTl1lJuEcY9zbm5i4Pqe79UJJ8IJ9oiD6DhgI8KjYc+HtLzpQJNRdNYqb/hw==}
     engines: {node: '>=12.4.0'}
+    dev: false
+
+  /@nolyfill/shared@1.0.44:
+    resolution: {integrity: sha512-NI1zxDh4LYL7PYlKKCwojjuc5CEZslywrOTKBNyodjmWjRiZ4AlCMs3Gp+zDoPQPNkYCSQp/luNojHmJWWfCbw==}
+    dev: false
+
+  /@nolyfill/typed-array-buffer@1.0.44:
+    resolution: {integrity: sha512-QDtsud32BpViorcc6KOgFaRYUI2hyQewOaRD9NF1fs7g+cv6d3MbIJCYWpkOwAXATKlCeELtSbuTYDXAaw7S+Q==}
+    engines: {node: '>=12.4.0'}
+    dependencies:
+      '@nolyfill/shared': 1.0.44
     dev: false
 
   /@scarf/scarf@1.4.0:
@@ -1125,12 +1144,14 @@ packages:
       type-fest: 0.20.2
     dev: false
 
-  /sha.js@2.4.11:
-    resolution: {integrity: sha512-QMEp5B7cftE7APOjk5Y6xgrbWu+WkLVQwk8JNjZ8nKRciZaByEW6MubieAiToS7+dwvrjGhH8jRXz3MVd0AYqQ==}
+  /sha.js@2.4.12:
+    resolution: {integrity: sha512-8LzC5+bvI45BjpfXU8V5fdU2mfeKiQe1D1gIMn7XUlF3OTUrpdJpPPH4EMAnF0DsHHdSZqCdSss5qCmJKuiO3w==}
+    engines: {node: '>= 0.10'}
     hasBin: true
     dependencies:
       inherits: 2.0.4
       safe-buffer: /@nolyfill/safe-buffer@1.0.44
+      to-buffer: 1.2.1
     dev: false
 
   /short-unique-id@5.2.0:
@@ -1203,7 +1224,7 @@ packages:
       remarkable: 2.0.1
       reselect: 5.1.1
       serialize-error: 8.1.0
-      sha.js: 2.4.11
+      sha.js: 2.4.12
       swagger-client: 3.34.3
       url-parse: 1.5.10
       xml: 1.0.1
@@ -1212,6 +1233,15 @@ packages:
     transitivePeerDependencies:
       - '@types/react'
       - debug
+    dev: false
+
+  /to-buffer@1.2.1:
+    resolution: {integrity: sha512-tB82LpAIWjhLYbqjx3X4zEeHN6M8CiuOEy2JY8SEQVdYRe3CCHOFaqrBW1doLDrfpWhplcW7BL+bO3/6S3pcDQ==}
+    engines: {node: '>= 0.4'}
+    dependencies:
+      isarray: /@nolyfill/isarray@1.0.44
+      safe-buffer: /@nolyfill/safe-buffer@1.0.44
+      typed-array-buffer: /@nolyfill/typed-array-buffer@1.0.44
     dev: false
 
   /toggle-selection@1.0.6:
