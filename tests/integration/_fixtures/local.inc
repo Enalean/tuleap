@@ -58,9 +58,6 @@ $ftp_frs_dir_prefix  = "/var/lib/tuleap/ftp/codendi";   // Where the released fi
 $ftp_incoming_dir    = "/var/lib/tuleap/ftp/incoming";// Where files are placed when uploaded
 $ftp_anon_dir_prefix = "/var/lib/tuleap/ftp/pub";     // prefix to add to the anon ftp project homedir
 
-// Path for DB dumps. Do *not* use variables in this parameter
-$dump_dir         = "/var/lib/tuleap/dumps";// Where should we stick files we're working with
-
 // Paths for backend scripts
 $codendi_log        = "/tmp";   // Tuleap log dir
 

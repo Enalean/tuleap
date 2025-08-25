@@ -38,13 +38,6 @@ chown codendiadm \
 chown -R codendiadm \
     /data/lib/tuleap/svnroot/*
 
-chown dummy \
-    /data/home/groups/* \
-    /data/lib/tuleap/ftp/pub/*
-
-chown dummy:dummy \
-    /data/lib/tuleap/dumps
-
 chown root:ftp \
      /data/lib/tuleap/ftp
 

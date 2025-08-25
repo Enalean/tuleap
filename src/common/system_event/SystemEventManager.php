@@ -53,7 +53,6 @@ class SystemEventManager
             Event::COMPUTE_MD5SUM,
             Event::MASSMAIL,
             Event::UPDATE_ALIASES,
-            'approve_pending_project',
             ProjectStatusUpdate::NAME,
             'project_admin_add_user',
             'project_admin_remove_user',
@@ -184,13 +183,6 @@ class SystemEventManager
                     SystemEvent::TYPE_MOVE_FRS_FILE,
                     $this->concatParameters($params, ['project_path', 'file_id', 'old_path']),
                     SystemEvent::PRIORITY_HIGH
-                );
-                break;
-            case 'approve_pending_project':
-                $this->createEvent(
-                    SystemEvent::TYPE_PROJECT_CREATE,
-                    $params['group_id'],
-                    SystemEvent::PRIORITY_MEDIUM
                 );
                 break;
             case Event::PROJECT_RENAME:
@@ -431,7 +423,6 @@ class SystemEventManager
                 break;
             case SystemEvent::TYPE_SYSTEM_CHECK:
             case SystemEvent::TYPE_EDIT_SSH_KEYS:
-            case SystemEvent::TYPE_PROJECT_CREATE:
             case SystemEvent::TYPE_PROJECT_RENAME:
             case SystemEvent::TYPE_MEMBERSHIP_CREATE:
             case SystemEvent::TYPE_MEMBERSHIP_DELETE:

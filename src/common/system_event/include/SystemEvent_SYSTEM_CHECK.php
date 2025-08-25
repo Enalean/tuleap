@@ -67,12 +67,6 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent
         $project_manager = ProjectManager::instance();
         foreach ($project_manager->getProjectsByStatus(Project::STATUS_ACTIVE) as $project) {
             try {
-                $backendSystem->systemCheck($project);
-            } catch (Exception $exception) {
-                $errors[] = $exception->getMessage();
-            }
-
-            try {
                 $backendSVN->systemCheck($project);
             } catch (Exception $exception) {
                 $errors[] = $exception->getMessage();

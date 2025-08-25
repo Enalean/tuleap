@@ -24,8 +24,6 @@
 
 %define app_group        codendiadm
 %define app_user         codendiadm
-%define dummy_group      dummy
-%define dummy_user       dummy
 %define ftpadmin_group   ftpadmin
 %define ftpadmin_user    ftpadmin
 %define ftp_group        ftp
@@ -884,10 +882,6 @@ if [ "$1" -eq "1" ]; then
     if ! grep -q "^%{app_group}:" /etc/group 2> /dev/null ; then
         /usr/sbin/groupadd -r %{app_group} 2> /dev/null || :
     fi
-    # dummy
-    if ! grep -q "^%{dummy_group}:" /etc/group 2> /dev/null ; then
-        /usr/sbin/groupadd -r %{dummy_group} 2> /dev/null || :
-    fi
     # ftpadmin
     if ! grep -q "^%{ftpadmin_group}:" /etc/group 2> /dev/null ; then
         /usr/sbin/groupadd -r %{ftpadmin_group} 2> /dev/null || :
@@ -916,12 +910,6 @@ if [ "$1" -eq "1" ]; then
         /usr/sbin/usermod -c 'FTP User'    -d '/var/lib/tuleap/ftp'    -g %{ftp_group} %{ftp_user}
     else
         /usr/sbin/useradd -c 'FTP User' -M -d '/var/lib/tuleap/ftp' -r -g %{ftp_group} %{ftp_user}
-    fi
-    # dummy
-    if id %{dummy_user} >/dev/null 2>&1; then
-        /usr/sbin/usermod -c 'Dummy Tuleap User'    -d '/var/lib/tuleap/dumps'    -g %{dummy_group} %{dummy_user}
-    else
-        /usr/sbin/useradd -c 'Dummy Tuleap User' -M -d '/var/lib/tuleap/dumps' -r -g %{dummy_group} %{dummy_user}
     fi
 else
     true

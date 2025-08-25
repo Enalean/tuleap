@@ -39,7 +39,6 @@ abstract class SystemEvent
     // Define event types
     public const TYPE_SYSTEM_CHECK                    = 'SYSTEM_CHECK';
     public const TYPE_EDIT_SSH_KEYS                   = 'EDIT_SSH_KEYS';
-    public const TYPE_PROJECT_CREATE                  = 'PROJECT_CREATE';
     public const TYPE_PROJECT_ACTIVE                  = 'PROJECT_ACTIVE';
     public const TYPE_PROJECT_DELETE                  = 'PROJECT_DELETE';
     public const TYPE_PROJECT_RENAME                  = 'PROJECT_RENAME';
@@ -94,7 +93,7 @@ abstract class SystemEvent
      * Constructor
      * @param int $id The id of the event
      * @param string $type SystemEvent type (const defined in this class)
-     * @param string $parameters Event Parameter (e.g. group_id if event type is PROJECT_CREATE)
+     * @param string $parameters Event Parameter (e.g. group_id)
      * @param int $priority Event priority (PRIORITY_HIGH | PRIORITY_MEDIUM | PRIORITY_LOW)
      * @param string $status Event status (STATUS_NEW | STATUS_RUNNING | STATUS_DONE | STATUS_WARNING | STATUS_ERROR)
      * @param string $create_date

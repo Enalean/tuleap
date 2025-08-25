@@ -24,41 +24,6 @@
 
 class BackendSystem extends Backend
 {
-    public function systemCheck(\Project $project): void
-    {
-        // Recreate project directories if they were deleted
-        if (! $this->createProjectFRSDirectory($project)) {
-            throw new \RuntimeException('Could not create project FRS directory');
-        }
-    }
-
-    public function createProjectFRSDirectory(Project $project): bool
-    {
-        $ftp_frs_dir_prefix = (string) ForgeConfig::get('ftp_frs_dir_prefix');
-        assert($ftp_frs_dir_prefix !== '');
-
-        if (! \Psl\Filesystem\exists($ftp_frs_dir_prefix)) {
-            \Psl\Filesystem\create_directory($ftp_frs_dir_prefix);
-        }
-
-        $unix_group_name = $project->getUnixNameMixedCase();
-        $ftp_frs_dir     = $ftp_frs_dir_prefix . '/' . $unix_group_name;
-        if (! is_dir($ftp_frs_dir)) {
-            // Now lets create the group's ftp homedir for anonymous ftp space
-            // This one must be owned by the project gid so that all project
-            // admins can work on it (upload, delete, etc...)
-            if (mkdir($ftp_frs_dir, 0771)) {
-                chmod($ftp_frs_dir, 0771);
-                $this->chown($ftp_frs_dir, 'dummy');
-                $this->chgrp($ftp_frs_dir, $this->getUnixGroupNameForProject($project));
-            } else {
-                $this->log("Can't create project file release dir: $ftp_frs_dir", Backend::LOG_ERROR);
-                return false;
-            }
-        }
-        return true;
-    }
-
     /**
      * Remove deleted releases and released files
      *
