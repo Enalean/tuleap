@@ -33,29 +33,18 @@
             maxlength="5"
             v-bind:min="minimal_rank"
             required
-            v-bind:value="value"
+            v-bind:value="rank"
         />
     </div>
 </template>
-<script>
+<script setup lang="ts">
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { MINIMAL_RANK } from "../../injection-symbols";
 
-export default {
-    name: "ServiceRank",
-    props: {
-        id: {
-            type: String,
-            required: true,
-        },
-        value: {
-            type: Number,
-            required: true,
-        },
-    },
-    setup() {
-        const minimal_rank = strictInject(MINIMAL_RANK);
-        return { minimal_rank };
-    },
-};
+const minimal_rank = strictInject(MINIMAL_RANK);
+
+defineProps<{
+    id: string;
+    rank: number;
+}>();
 </script>
