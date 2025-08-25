@@ -26,7 +26,7 @@
         <progress
             class="document-file-upload-progress-bar"
             max="100"
-            v-bind:value="item.progress"
+            v-bind:value="item.progress ?? 0"
         ></progress>
         <a
             class="document-file-upload-progress-cancel tlp-tooltip tlp-tooltip-left"
