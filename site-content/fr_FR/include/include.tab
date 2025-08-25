@@ -143,9 +143,7 @@ include_project_home	project_description	Description du projet
 include_project_home	project_classification	Classification du projet
 include_project_home	homepage	Accueil Web
 include_project_home	proj_home	Page d'accueil Web du projet
-include_project_home	public_forums	Forums publics
 include_project_home	msg	<B>$1</B> messages dans
-include_project_home	forums	<B>$1</B> forums
 include_project_home	bug_track	Tracker de bugs
 include_project_home	open_bugs	Bugs ouvert
 include_project_home	supp_manager	Tracker de demandes de support

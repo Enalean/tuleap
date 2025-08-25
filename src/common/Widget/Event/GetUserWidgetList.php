@@ -32,7 +32,6 @@ class GetUserWidgetList extends GetWidgetList
         'myadmin',
         'myprojects',
         'mybookmarks',
-        'mymonitoredforums',
         'mymonitoredfp',
         'myartifacts',
         'myimageviewer',

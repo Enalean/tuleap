@@ -601,7 +601,6 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
         if ($project->isTemplate()) {
             switch ($service_top_tab) {
                 case 'admin':
-                case 'forum':
                 case 'docman':
                 case 'svn':
                 case 'file':

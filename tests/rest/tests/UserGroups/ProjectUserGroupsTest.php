@@ -102,15 +102,6 @@ final class ProjectUserGroupsTest extends RestBase
                 'additional_information' => [],
             ],
             [
-                'id'                     => $this->project_private_member_id . '_' . BaseTestDataBuilder::DYNAMIC_UGROUP_FORUM_ADMIN_ID,
-                'uri'                    => 'user_groups/' . $this->project_private_member_id . '_' . BaseTestDataBuilder::DYNAMIC_UGROUP_FORUM_ADMIN_ID,
-                'label'                  => 'Forum moderators',
-                'users_uri'              => 'user_groups/' . $this->project_private_member_id . '_' . BaseTestDataBuilder::DYNAMIC_UGROUP_FORUM_ADMIN_ID . '/users',
-                'key'                    => 'ugroup_forum_admin_name_key',
-                'short_name'             => 'forum_admins',
-                'additional_information' => [],
-            ],
-            [
                 'id'                     => (string) BaseTestDataBuilder::STATIC_UGROUP_1_ID,
                 'uri'                    => 'user_groups/' . BaseTestDataBuilder::STATIC_UGROUP_1_ID,
                 'label'                  => BaseTestDataBuilder::STATIC_UGROUP_1_LABEL,

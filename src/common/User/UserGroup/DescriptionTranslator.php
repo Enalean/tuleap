@@ -29,7 +29,6 @@ class DescriptionTranslator
     private const  string REGISTERED         = 'ugroup_registered_users_desc_key';
     private const  string PROJECT_MEMBERS    = 'ugroup_project_members_desc_key';
     private const  string WIKI_ADMINS        = 'ugroup_wiki_admin_desc_key';
-    private const  string FORUM_ADMINS       = 'ugroup_forum_admin_desc_key';
     private const  string FILE_ADMINS        = 'ugroup_file_manager_admin_desc_key';
     private const  string TV3_TRACKER_ADMINS = 'ugroup_tracker_admins_desc_key';
 
@@ -52,8 +51,6 @@ class DescriptionTranslator
                 return $GLOBALS['Language']->getText('project_ugroup', 'ugroup_wiki_admin_desc_key');
             case self::TV3_TRACKER_ADMINS:
                 return $GLOBALS['Language']->getText('project_ugroup', 'ugroup_tracker_admins_desc_key');
-            case self::FORUM_ADMINS:
-                return $GLOBALS['Language']->getText('project_ugroup', 'ugroup_forum_admin_desc_key');
             case self::NOBODY:
                 return $GLOBALS['Language']->getText('project_ugroup', 'ugroup_nobody_desc_key');
             default:

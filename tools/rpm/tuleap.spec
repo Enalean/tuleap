@@ -1051,7 +1051,6 @@ fi
 %{APP_DIR}/src/www/api/reference
 %{APP_DIR}/src/www/favicon.ico
 %{APP_DIR}/src/www/file
-%{APP_DIR}/src/www/forum
 %{APP_DIR}/src/www/help
 %{APP_DIR}/src/www/include
 %{APP_DIR}/src/www/my

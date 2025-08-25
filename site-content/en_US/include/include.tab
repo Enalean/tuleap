@@ -149,9 +149,7 @@ include_project_home	project_description	Project Description
 include_project_home	project_classification	Project Classification
 include_project_home	homepage	Homepage
 include_project_home	proj_home	Project Homepage
-include_project_home	public_forums	Public Forums
 include_project_home	msg	<B>$1</B> messages in
-include_project_home	forums	<B>$1</B> forums
 include_project_home	bug_track	Bug Tracking
 include_project_home	open_bugs	open bugs
 include_project_home	supp_manager	Support Manager

@@ -117,12 +117,6 @@ msgstr[0] "%d membre"
 msgstr[1] "%d membres"
 
 #, php-format
-msgid "%d message"
-msgid_plural "%d messages"
-msgstr[0] "%d message"
-msgstr[1] "%d messages"
-
-#, php-format
 msgid "%s (opens in a new tab)"
 msgstr "%s (s'ouvre dans un nouvel onglet)"
 
@@ -663,9 +657,6 @@ msgstr "Demander à rejoindre ce projet"
 msgid "Authenticated users (Registered + Restricted) label"
 msgstr "Label pour les utilisateurs authentifiés (enregistrés + retreints)"
 
-msgid "Author"
-msgstr "Auteur"
-
 msgid "Available?"
 msgstr "Disponible ?"
 
@@ -713,9 +704,6 @@ msgstr "Lié au service"
 
 msgid "Built from template"
 msgstr "Créé à partir du modèle"
-
-msgid "By"
-msgstr "De"
 
 msgid "By %s"
 msgstr "Par %s"
@@ -830,9 +818,6 @@ msgstr "Le nom complet de la catégorie ne peut pas contenir '::'."
 msgid "Category short name cannot contain '::'."
 msgstr "Le nom court de la catégorie ne peut pas contenir '::'."
 
-msgid "Change View"
-msgstr "Changer de format"
-
 msgid "Change avatar"
 msgstr "Changer l'avatar"
 
@@ -848,11 +833,6 @@ msgstr "Projets enfants"
 
 msgid "Choose a category…"
 msgstr "Choisissez une catégorie…"
-
-msgid "Choose a forum and you can browse, search, and post messages."
-msgstr ""
-"Choisissez un forum et vous pourrez le parcourir, effectuer une recherche et "
-"poster un message."
 
 msgid "Choose a timezone"
 msgstr "Sélectionnez un fuseau horaire"
@@ -1163,9 +1143,6 @@ msgstr "Restreindre pour tous les projets"
 msgid "Disallowing for all projects"
 msgstr "Restriction pour tous les projets"
 
-msgid "Discussion Forums"
-msgstr "Forums de discussions"
-
 msgid "Display density"
 msgstr "Densité d'affichage"
 
@@ -1311,9 +1288,6 @@ msgstr ""
 msgid "Error"
 msgstr "Erreur"
 
-msgid "Error - choose a forum first"
-msgstr "Erreur - Veuillez d'abord choisir un forum"
-
 msgid "Error:"
 msgstr "Erreur :"
 
@@ -1395,9 +1369,6 @@ msgstr "Rempli"
 msgid "Filter by name"
 msgstr "Filtrer par nom"
 
-msgid "Flat"
-msgstr "A plat"
-
 msgid "Forbidden"
 msgstr "Interdit"
 
@@ -1406,21 +1377,6 @@ msgstr "Force la création du modèle de la référence"
 
 msgid "Force usage?"
 msgstr "Forcer l'utilisation ?"
-
-msgid "Forum Administration"
-msgstr "Administration des forums"
-
-msgid "Forum is restricted"
-msgstr "Forum restreint"
-
-#, php-format
-msgid "Forums for '%1$s'"
-msgstr "Forums pour '%1$s'"
-
-msgid ""
-"Forums service is deprecated. It will be completely removed in March 2025."
-msgstr ""
-"Le service Forums est déprécié. Il sera complètement supprimé en Mars 2025."
 
 msgid "Full name"
 msgstr "Nom Complet"
@@ -1941,9 +1897,6 @@ msgstr "Mois"
 msgid "Must be project admin to add a project member"
 msgstr "Doit être administrateur de projet pour ajouter un membre de projet"
 
-msgid "Must include a message body and subject"
-msgstr "Veuillez remplir le sujet et le corps du message"
-
 msgid "My Dashboard"
 msgstr "Mon tableau de bord"
 
@@ -1985,9 +1938,6 @@ msgstr "Nb maximum de valeurs autorisées doit être à 1."
 
 msgid "Nb members"
 msgstr "Nb membres"
-
-msgid "Nested"
-msgstr "Hiérarchisé"
 
 msgid "Never"
 msgstr "Jamais"
@@ -2033,18 +1983,8 @@ msgstr "Créer une référence système"
 msgid "New user"
 msgstr "Nouvel utilisateur"
 
-msgid "Next Messages"
-msgstr "Messages suivants"
-
 msgid "No"
 msgstr "Non"
-
-msgid "No Comments"
-msgstr "Sans message"
-
-#, php-format
-msgid "No Messages in %1$s"
-msgstr "Aucun message dans %1$s"
 
 msgid "No activity yet"
 msgstr "Pas encore d'activité"
@@ -2057,10 +1997,6 @@ msgstr "Aucun projet enfant"
 
 msgid "No email for user account"
 msgstr "Pas d'adresse email pour ce compte"
-
-#, php-format
-msgid "No forums found for '%1$s'"
-msgstr "Aucun forum pour '%1$s'"
 
 msgid "No items can use labels in this project."
 msgstr "Aucun éléments dans ce projet ne peux utiliser les labels."
@@ -2425,9 +2361,6 @@ msgstr "La prévisualisation a été envoyée"
 
 msgid "Preview:"
 msgstr "Aperçu :"
-
-msgid "Previous Messages"
-msgstr "Messages précédents"
 
 msgid "Previous successful login"
 msgstr "Connexion précédente"
@@ -3066,10 +2999,6 @@ msgid ""
 msgstr ""
 "Si vous voulez garder votre compte, notifiez votre contact %s pour ce projet."
 
-#, php-format
-msgid "Show %1$s"
-msgstr "Afficher %1$s"
-
 msgid "Show project announcement"
 msgstr "Afficher l'annonce du projet"
 
@@ -3114,9 +3043,6 @@ msgstr ""
 
 msgid "Specific project"
 msgstr "Projet spécifique"
-
-msgid "Start New Thread"
-msgstr "Commencer une nouvelle discussion"
 
 msgid "Start a new project"
 msgstr "Démarrer un nouveau projet"
@@ -3756,12 +3682,6 @@ msgstr ""
 
 msgid "This will remove this service from all projects."
 msgstr "Ceci supprimera ce service de tous les projets."
-
-msgid "Thread"
-msgstr "Fil de discussion"
-
-msgid "Threaded"
-msgstr "En fils de discussions"
 
 msgid "Timezone"
 msgstr "Fuseau horaire"

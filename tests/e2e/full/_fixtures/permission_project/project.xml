@@ -18,7 +18,6 @@
     <services>
         <service shortname="summary" enabled="true"/>
         <service shortname="admin" enabled="true"/>
-        <service shortname="forum" enabled="true"/>
         <service shortname="mail" enabled="true"/>
         <service shortname="wiki" enabled="true"/>
         <service shortname="file" enabled="true"/>

@@ -122,7 +122,7 @@ information, in conjunction with content subject to an open source license
 such personal information necessarily will be disclosed subject to the terms
 of the applicable license. An example of such a disclosure includes, but is
 not limited to, a user's disclosure of personal information as part of a
-message posted to a public message forum, or a publicly-released software
+message posted to a public message, or a publicly-released software
 application.
 </p>
 

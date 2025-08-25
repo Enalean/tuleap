@@ -68,7 +68,7 @@ the purpose of fostering the cross-organizational software development as well a
 <?php echo \ForgeConfig::get(\Tuleap\Config\ConfigurationVariables::NAME); ?> currently offers users access to a
 rich collection of on-line resources for <?php echo \ForgeConfig::get('sys_org_name'); ?> internal software  development
 and content creation, including various  communications tools, source code
-control and project management tools, online forums (collectively, the "Services").
+control and project management tools (collectively, the "Services").
 </p>
 
     </section>

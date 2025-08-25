@@ -102,90 +102,6 @@ CREATE TABLE filerelease (
 );
 
 #
-# Table structure for table 'forum'
-#
-
-CREATE TABLE forum (
-  msg_id int(11) NOT NULL auto_increment,
-  group_forum_id int(11) NOT NULL default '0',
-  posted_by int(11) NOT NULL default '0',
-  subject text NOT NULL,
-  body text NOT NULL,
-  date int(11) NOT NULL default '0',
-  is_followup_to int(11) NOT NULL default '0',
-  thread_id int(11) NOT NULL default '0',
-  has_followups int(11) default '0',
-  PRIMARY KEY  (msg_id),
-  KEY idx_forum_group_forum_id (group_forum_id),
-  KEY idx_forum_is_followup_to (is_followup_to),
-  KEY idx_forum_thread_id (thread_id),
-  KEY idx_forum_id_date (group_forum_id,date),
-  KEY idx_forum_id_date_followup (group_forum_id,date,is_followup_to),
-  KEY idx_forum_thread_date_followup (thread_id,date,is_followup_to)
-);
-
-#
-# Table structure for table 'forum_group_list'
-#
-
-CREATE TABLE forum_group_list (
-  group_forum_id int(11) NOT NULL auto_increment,
-  group_id int(11) NOT NULL default '0',
-  forum_name text NOT NULL,
-  is_public int(11) NOT NULL default '0',
-  description text,
-  PRIMARY KEY  (group_forum_id),
-  FULLTEXT (description),
-  KEY idx_forum_group_list_group_id (group_id)
-);
-
-#
-# Table structure for table 'forum_monitored_forums'
-#
-
-CREATE TABLE forum_monitored_forums (
-  monitor_id int(11) NOT NULL auto_increment,
-  forum_id int(11) NOT NULL default '0',
-  user_id int(11) NOT NULL default '0',
-  PRIMARY KEY  (monitor_id),
-  KEY idx_forum_monitor_thread_id (forum_id),
-  KEY idx_forum_monitor_combo_id (forum_id,user_id)
-);
-
-#
-# Table structure for 'forum_monitored_threads' table
-#
-
-CREATE TABLE forum_monitored_threads (
-  thread_monitor_id int(11) NOT NULL auto_increment,
-  forum_id int(11) NOT NULL default '0',
-  thread_id int(11) NOT NULL default '0',
-  user_id int(11) NOT NULL default '0',
-  PRIMARY KEY (thread_monitor_id)
-);
-
-#
-# Table structure for table 'forum_saved_place'
-#
-
-CREATE TABLE forum_saved_place (
-  saved_place_id int(11) NOT NULL auto_increment,
-  user_id int(11) NOT NULL default '0',
-  forum_id int(11) NOT NULL default '0',
-  save_date int(11) NOT NULL default '0',
-  PRIMARY KEY  (saved_place_id)
-);
-
-#
-# Table structure for table 'forum_thread_id'
-#
-
-CREATE TABLE forum_thread_id (
-  thread_id int(11) NOT NULL auto_increment,
-  PRIMARY KEY  (thread_id)
-);
-
-#
 # Table structure for table 'frs_dlstats_file_agg'
 #
 
@@ -706,19 +622,16 @@ CREATE TABLE user_group (
   group_id int(11) NOT NULL default '0',
   admin_flags char(16) NOT NULL default '',
   bug_flags int(11) NOT NULL default '0',
-  forum_flags int(11) NOT NULL default '0',
   project_flags int(11) NOT NULL default '2',
   patch_flags int(11) NOT NULL default '1',
   support_flags int(11) NOT NULL default '1',
   file_flags int(11) NOT NULL default '0',
   wiki_flags int(11) NOT NULL default '0',
   svn_flags int(11) NOT NULL default '0',
-  news_flags int(11) NOT NULL default '0',
   PRIMARY KEY  (user_group_id),
   KEY idx_user_group_user_id (user_id),
   KEY idx_user_group_group_id (group_id),
   KEY bug_flags_idx (bug_flags),
-  KEY forum_flags_idx (forum_flags),
   KEY project_flags_idx (project_flags),
   KEY admin_flags_idx (admin_flags)
 ) ENGINE=InnoDB;

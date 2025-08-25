@@ -123,12 +123,6 @@ class Project extends Group implements PFO_Project  // phpcs:ignore PSR1.Classes
         return $this->usesService(Service::FILE);
     }
 
-    //whether or not this group has opted to use discussion forums
-    public function usesForum(): bool
-    {
-        return $this->usesService(Service::FORUM);
-    }
-
     //whether or not this group has opted to use wiki
     public function usesWiki(): bool
     {
@@ -157,11 +151,6 @@ class Project extends Group implements PFO_Project  // phpcs:ignore PSR1.Classes
     public function getWikiPage(): string
     {
         return $this->getServiceLink(Service::WIKI);
-    }
-
-    public function getForumPage(): string
-    {
-        return $this->getServiceLink(Service::FORUM);
     }
 
     public function isSVNMandatoryRef()

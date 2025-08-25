@@ -42,7 +42,6 @@ class ProjectMembersDAO extends DataAccessObject
                     user.status,
                     user_group.admin_flags,
                     user_group.wiki_flags,
-                    user_group.forum_flags,
                     GROUP_CONCAT(DISTINCT ugroup_user.ugroup_id) AS ugroups_ids
                 FROM user_group
                     INNER JOIN user
@@ -59,7 +58,7 @@ class ProjectMembersDAO extends DataAccessObject
                         )
                         ON (user.user_id = ugroup_user.user_id)
                 WHERE user_group.group_id = $escaped_project_id
-                GROUP BY user.user_id, user.user_name, user.realname, user.email, user.status, user_group.admin_flags, user_group.wiki_flags, user_group.forum_flags
+                GROUP BY user.user_id, user.user_name, user.realname, user.email, user.status, user_group.admin_flags, user_group.wiki_flags
                 ORDER BY $sql_order";
 
         return $this->retrieve($sql);
