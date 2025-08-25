@@ -26,7 +26,6 @@ use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_Burndown;
 use Tracker_FormElement_Field_CrossReferences;
 use Tracker_FormElement_Field_File;
-use Tracker_FormElement_Field_PermissionsOnArtifact;
 use Tracker_FormElement_FieldVisitor;
 use Tuleap\Tracker\FormElement\Field\ArtifactId\ArtifactIdField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
@@ -41,6 +40,7 @@ use Tuleap\Tracker\FormElement\Field\List\MultiSelectboxField;
 use Tuleap\Tracker\FormElement\Field\List\OpenListField;
 use Tuleap\Tracker\FormElement\Field\List\RadioButtonField;
 use Tuleap\Tracker\FormElement\Field\List\SelectboxField;
+use Tuleap\Tracker\FormElement\Field\PermissionsOnArtifact\PermissionsOnArtifactField;
 use Tuleap\Tracker\FormElement\Field\PerTrackerArtifactId\PerTrackerArtifactIdField;
 use Tuleap\Tracker\FormElement\Field\Priority\PriorityField;
 use Tuleap\Tracker\FormElement\Field\String\StringField;
@@ -115,7 +115,7 @@ class ReplaceValueVisitor implements Tracker_FormElement_FieldVisitor
         throw new UnsupportedFieldException();
     }
 
-    public function visitPermissionsOnArtifact(Tracker_FormElement_Field_PermissionsOnArtifact $field)
+    public function visitPermissionsOnArtifact(PermissionsOnArtifactField $field)
     {
         throw new UnsupportedFieldException();
     }

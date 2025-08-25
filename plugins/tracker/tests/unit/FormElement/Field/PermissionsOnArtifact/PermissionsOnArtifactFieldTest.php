@@ -25,7 +25,7 @@ namespace Tuleap\Tracker\FormElement\Field\PermissionsOnArtifact;
 use ForgeAccess;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use PHPUnit\Framework\MockObject\MockObject;
-use Tracker_FormElement_Field_PermissionsOnArtifact;
+use Tracker_FormElement_RESTValueByField_NotImplementedException;
 use Tuleap\GlobalResponseMock;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -33,22 +33,23 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
 #[DisableReturnValueGenerationForTestDoubles]
-class Tracker_FormElement_Field_PermissionsOnArtifactTest extends TestCase //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+class PermissionsOnArtifactFieldTest extends TestCase
 {
     use GlobalResponseMock;
 
-    private Tracker_FormElement_Field_PermissionsOnArtifact&MockObject $field;
+    private PermissionsOnArtifactField&MockObject $field;
     private Artifact $artifact;
 
-    public function setUp(): void
+    #[\Override]
+    protected function setUp(): void
     {
         $this->artifact = ArtifactTestBuilder::anArtifact(101)->build();
-        $this->field    = $this->createPartialMock(Tracker_FormElement_Field_PermissionsOnArtifact::class, ['isRequired']);
+        $this->field    = $this->createPartialMock(PermissionsOnArtifactField::class, ['isRequired']);
     }
 
     public function testItThrowsAnExceptionWhenReturningValueIndexedByFieldName(): void
     {
-        $this->expectException('Tracker_FormElement_RESTValueByField_NotImplementedException');
+        $this->expectException(Tracker_FormElement_RESTValueByField_NotImplementedException::class);
 
         $value = ['some_value'];
         $this->field->getFieldDataFromRESTValueByField($value);

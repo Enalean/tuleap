@@ -22,9 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Test\Stub;
 
-use Tracker_FormElement_Field_PermissionsOnArtifact;
 use Tuleap\Tracker\Action\VerifyThereArePermissionsToMigrate;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\PermissionsOnArtifact\PermissionsOnArtifactField;
 
 final class VerifyThereArePermissionsToMigrateStub implements VerifyThereArePermissionsToMigrate
 {
@@ -43,7 +43,7 @@ final class VerifyThereArePermissionsToMigrateStub implements VerifyThereArePerm
     }
 
     #[\Override]
-    public function areTherePermissionsToMigrate(Tracker_FormElement_Field_PermissionsOnArtifact $source_field, Artifact $artifact): bool
+    public function areTherePermissionsToMigrate(PermissionsOnArtifactField $source_field, Artifact $artifact): bool
     {
         return $this->with_permissions_to_migrate;
     }

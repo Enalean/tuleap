@@ -37,8 +37,8 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\FormElement\Field\Date\DateField;
 use Tuleap\Tracker\FormElement\Field\List\OpenListField;
-use Tuleap\Tracker\FormElement\Field\String\StringField;
 use Tuleap\Tracker\FormElement\Field\ListField;
+use Tuleap\Tracker\FormElement\Field\String\StringField;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserGroupValueBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserValueBuilder;
@@ -449,7 +449,7 @@ final class ReportCriteriaJsonBuilderTest extends TestCase
 
     private function buildPermissionsOnArtifactCriterion(Tracker_Report $report): Tracker_Report_Criteria
     {
-        $field = $this->createStub(\Tracker_FormElement_Field_PermissionsOnArtifact::class);
+        $field = $this->createStub(\Tuleap\Tracker\FormElement\Field\PermissionsOnArtifact\PermissionsOnArtifactField::class);
         $field->method('getLabel')->willReturn('Perms');
         $tracker = $this->createStub(Tracker::class);
         $tracker->method('getProject')->willReturn(ProjectTestBuilder::aProject()->build());

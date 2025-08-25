@@ -913,7 +913,6 @@
             <file name="plugins/tracker/tests/unit/FormElement/Field/ListFields/XML/XMLSelectBoxFieldTest.php"/>
             <file name="plugins/tracker/tests/unit/FormElement/Field/PermissionsOnArtifact/ChangesCheckerTest.php"/>
             <file name="plugins/tracker/tests/unit/FormElement/Field/PermissionsOnArtifact/PermissionDuckTypingMatcherTest.php"/>
-            <file name="plugins/tracker/tests/unit/FormElement/Field/PermissionsOnArtifact/Tracker_FormElement_Field_PermissionsOnArtifactTest.php"/>
             <file name="plugins/tracker/tests/unit/FormElement/Field/String/TrackerFormElementFieldStringChangesTest.php"/>
             <file name="plugins/tracker/tests/unit/FormElement/Field/String/TrackerFormElementFieldStringRESTTest.php"/>
             <file name="plugins/tracker/tests/unit/FormElement/Field/String/TrackerFormElementFieldStringTest.php"/>

@@ -23,14 +23,14 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Action;
 
 use Psr\Log\LoggerInterface;
-use Tracker_FormElement_Field_PermissionsOnArtifact;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\PermissionsOnArtifact\PermissionsOnArtifactField;
 
 final class CanPermissionsBeFullyMovedVerifier implements VerifyPermissionsCanBeFullyMoved
 {
     public function canAllPermissionsBeFullyMoved(
-        Tracker_FormElement_Field_PermissionsOnArtifact $source_field,
-        Tracker_FormElement_Field_PermissionsOnArtifact $destination_field,
+        PermissionsOnArtifactField $source_field,
+        PermissionsOnArtifactField $destination_field,
         Artifact $artifact,
         LoggerInterface $logger,
     ): bool {

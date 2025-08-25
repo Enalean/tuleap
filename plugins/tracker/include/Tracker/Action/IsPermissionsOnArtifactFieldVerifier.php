@@ -26,6 +26,6 @@ final class IsPermissionsOnArtifactFieldVerifier implements VerifyIsPermissionsO
 {
     public function isPermissionsOnArtifactField(\Tracker_FormElement_Field $field): bool
     {
-        return $field instanceof \Tracker_FormElement_Field_PermissionsOnArtifact;
+        return $field instanceof \Tuleap\Tracker\FormElement\Field\PermissionsOnArtifact\PermissionsOnArtifactField;
     }
 }

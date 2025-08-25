@@ -20,10 +20,10 @@
 
 namespace Tuleap\Tracker\Masschange;
 
-use Tracker_FormElement_Field_PermissionsOnArtifact;
 use Tracker_FormElementFactory;
-use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueUnchanged;
 use Tuleap\Tracker\FormElement\Field\ListField;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueUnchanged;
+use Tuleap\Tracker\FormElement\Field\PermissionsOnArtifact\PermissionsOnArtifactField;
 
 class MasschangeDataValueExtractor
 {
@@ -76,7 +76,7 @@ class MasschangeDataValueExtractor
             return $this->hasListValueChanged($data);
         }
 
-        if ($field instanceof Tracker_FormElement_Field_PermissionsOnArtifact) {
+        if ($field instanceof PermissionsOnArtifactField) {
             return $this->hasPermissionsOnArtifactChanged($data);
         }
 
@@ -90,8 +90,8 @@ class MasschangeDataValueExtractor
 
     private function hasPermissionsOnArtifactChanged(mixed $data): bool
     {
-        return isset($data[Tracker_FormElement_Field_PermissionsOnArtifact::DO_MASS_UPDATE_FLAG]) &&
-            $data[Tracker_FormElement_Field_PermissionsOnArtifact::DO_MASS_UPDATE_FLAG] === '1';
+        return isset($data[PermissionsOnArtifactField::DO_MASS_UPDATE_FLAG]) &&
+               $data[PermissionsOnArtifactField::DO_MASS_UPDATE_FLAG] === '1';
     }
 
     private function isValueNotInData(mixed $data, string $value): bool

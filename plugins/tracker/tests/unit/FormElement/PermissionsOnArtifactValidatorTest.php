@@ -25,18 +25,18 @@ namespace Tuleap\Tracker\FormElement;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use PHPUnit\Framework\MockObject\MockObject;
 use ProjectUGroup;
-use Tracker_FormElement_Field_PermissionsOnArtifact;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\FormElement\Field\PermissionsOnArtifact\PermissionsOnArtifactField;
 
 #[DisableReturnValueGenerationForTestDoubles]
 final class PermissionsOnArtifactValidatorTest extends TestCase
 {
-    private Tracker_FormElement_Field_PermissionsOnArtifact&MockObject $field;
+    private PermissionsOnArtifactField&MockObject $field;
     private PermissionsOnArtifactValidator $validator;
 
     protected function setUp(): void
     {
-        $this->field     = $this->createMock(Tracker_FormElement_Field_PermissionsOnArtifact::class);
+        $this->field     = $this->createMock(PermissionsOnArtifactField::class);
         $this->validator = new PermissionsOnArtifactValidator();
     }
 
@@ -72,7 +72,7 @@ final class PermissionsOnArtifactValidatorTest extends TestCase
     public function testItReturnsFalseWhenPermissionsAreNotChecked(): void
     {
         $value = [
-            Tracker_FormElement_Field_PermissionsOnArtifact::USE_IT => 0,
+            PermissionsOnArtifactField::USE_IT => 0,
         ];
 
         self::assertFalse($this->validator->isArtifactPermissionChecked($value));
@@ -81,7 +81,7 @@ final class PermissionsOnArtifactValidatorTest extends TestCase
     public function testItReturnsTrueWhenPermissionsAreSentAndChecked(): void
     {
         $value = [
-            Tracker_FormElement_Field_PermissionsOnArtifact::USE_IT => 1,
+            PermissionsOnArtifactField::USE_IT => 1,
         ];
 
         self::assertTrue($this->validator->isArtifactPermissionChecked($value));

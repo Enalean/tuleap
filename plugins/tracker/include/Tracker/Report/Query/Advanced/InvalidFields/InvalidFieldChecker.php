@@ -71,7 +71,7 @@ final readonly class InvalidFieldChecker
             \Tuleap\Tracker\FormElement\Field\LastUpdateBy\LastUpdateByField::class => $this->submitter_checker->checkFieldIsValidForComparison($comparison, $field),
             \Tuleap\Tracker\FormElement\Field\List\OpenListField::class             => $this->checkOpenList($comparison, $field),
             \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::class,
-            \Tracker_FormElement_Field_PermissionsOnArtifact::class,
+            \Tuleap\Tracker\FormElement\Field\PermissionsOnArtifact\PermissionsOnArtifactField::class,
             \Tuleap\Tracker\FormElement\Field\ArtifactId\ArtifactIdField::class,
             \Tuleap\Tracker\FormElement\Field\PerTrackerArtifactId\PerTrackerArtifactIdField::class,
             \Tracker_FormElement_Field_CrossReferences::class,

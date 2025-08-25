@@ -22,13 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Action;
 
-use Tracker_FormElement_Field_PermissionsOnArtifact;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\PermissionsOnArtifact\PermissionsOnArtifactField;
 
 final class AreTherePermissionsToMigrateVerifier implements VerifyThereArePermissionsToMigrate
 {
     public function areTherePermissionsToMigrate(
-        Tracker_FormElement_Field_PermissionsOnArtifact $source_field,
+        PermissionsOnArtifactField $source_field,
         Artifact $artifact,
     ): bool {
         $last_changeset = $source_field->getLastChangesetValue($artifact);

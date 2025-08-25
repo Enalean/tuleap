@@ -72,7 +72,7 @@ class ReportCriteriaJsonBuilder
                 if ($list_criterion_json_value !== null) {
                     $criteria_value_json[] = $list_criterion_json_value;
                 }
-            } elseif ($criterion_field instanceof \Tracker_FormElement_Field_PermissionsOnArtifact) {
+            } elseif ($criterion_field instanceof \Tuleap\Tracker\FormElement\Field\PermissionsOnArtifact\PermissionsOnArtifactField) {
                 $value = $this->buildCriterionValueJsonFromPermissionsOnArtifactValue($criterion);
                 if ($value !== null) {
                     $criteria_value_json[] = $value;

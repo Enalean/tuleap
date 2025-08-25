@@ -21,7 +21,7 @@
 namespace Tuleap\Tracker\FormElement;
 
 use ProjectUGroup;
-use Tracker_FormElement_Field_PermissionsOnArtifact;
+use Tuleap\Tracker\FormElement\Field\PermissionsOnArtifact\PermissionsOnArtifactField;
 
 class PermissionsOnArtifactValidator
 {
@@ -48,7 +48,7 @@ class PermissionsOnArtifactValidator
      */
     public function isArtifactPermissionChecked(array $value)
     {
-        return (isset($value[Tracker_FormElement_Field_PermissionsOnArtifact::USE_IT])
-            && $value[Tracker_FormElement_Field_PermissionsOnArtifact::USE_IT] == 1);
+        return (isset($value[PermissionsOnArtifactField::USE_IT])
+            && $value[PermissionsOnArtifactField::USE_IT] == 1);
     }
 }

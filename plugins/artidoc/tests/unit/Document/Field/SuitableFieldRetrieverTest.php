@@ -25,7 +25,6 @@ namespace Tuleap\Artidoc\Document\Field;
 use PFUser;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use Tracker_FormElement_Field_List_Bind_Null;
-use Tracker_FormElement_Field_PermissionsOnArtifact;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldIsDescriptionSemanticFault;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldIsTitleSemanticFault;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldNotFoundFault;
@@ -43,9 +42,10 @@ use Tuleap\TestManagement\Test\Builders\StepsDefinitionFieldBuilder;
 use Tuleap\TestManagement\Test\Builders\StepsExecutionFieldBuilder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\Date\DateField;
-use Tuleap\Tracker\FormElement\Field\NumericField;
-use Tuleap\Tracker\FormElement\Field\Text\TextField;
 use Tuleap\Tracker\FormElement\Field\ListField;
+use Tuleap\Tracker\FormElement\Field\NumericField;
+use Tuleap\Tracker\FormElement\Field\PermissionsOnArtifact\PermissionsOnArtifactField;
+use Tuleap\Tracker\FormElement\Field\Text\TextField;
 use Tuleap\Tracker\Semantic\Title\RetrieveSemanticTitleField;
 use Tuleap\Tracker\Test\Builders\Fields\ArtifactIdFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ArtifactLinkFieldBuilder;
@@ -95,7 +95,7 @@ final class SuitableFieldRetrieverTest extends TestCase
     }
 
     /**
-     * @return Ok<TextField> | Ok<ListField> | Ok<ArtifactLinkField> | OK<NumericField> | Ok<DateField> | OK<Tracker_FormElement_Field_PermissionsOnArtifact> | Ok<StepsDefinition> | Ok<StepsExecution> | Err<Fault>
+     * @return Ok<TextField> | Ok<ListField> | Ok<ArtifactLinkField> | OK<NumericField> | Ok<DateField> | OK<PermissionsOnArtifactField> | Ok<StepsDefinition> | Ok<StepsExecution> | Err<Fault>
      */
     private function retrieve(): Ok|Err
     {

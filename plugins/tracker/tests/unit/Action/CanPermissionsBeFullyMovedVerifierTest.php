@@ -22,9 +22,9 @@ namespace Tuleap\Tracker\Action;
 
 use Psr\Log\NullLogger;
 use Tracker_Artifact_ChangesetValue_PermissionsOnArtifact;
-use Tracker_FormElement_Field_PermissionsOnArtifact;
 use Tuleap\Test\Builders\ProjectUGroupTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\PermissionsOnArtifact\PermissionsOnArtifactField;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -88,9 +88,9 @@ final class CanPermissionsBeFullyMovedVerifierTest extends \Tuleap\Test\PHPUnit\
     /**
      * @param string[] | null $user_groups_names
      */
-    private function getSourceFieldWithLastChangesetValue(?array $user_groups_names): Tracker_FormElement_Field_PermissionsOnArtifact
+    private function getSourceFieldWithLastChangesetValue(?array $user_groups_names): PermissionsOnArtifactField
     {
-        $source_field = $this->createStub(Tracker_FormElement_Field_PermissionsOnArtifact::class);
+        $source_field = $this->createStub(PermissionsOnArtifactField::class);
         $source_field->method('getId')->willReturn('123');
         $source_field->method('getName')->willReturn('Permissions');
 
@@ -111,9 +111,9 @@ final class CanPermissionsBeFullyMovedVerifierTest extends \Tuleap\Test\PHPUnit\
     /**
      * @param \ProjectUGroup[] $user_groups
      */
-    private function getDestinationFieldWithUserGroupsNames(array $user_groups): Tracker_FormElement_Field_PermissionsOnArtifact
+    private function getDestinationFieldWithUserGroupsNames(array $user_groups): PermissionsOnArtifactField
     {
-        $destination_field = $this->createStub(Tracker_FormElement_Field_PermissionsOnArtifact::class);
+        $destination_field = $this->createStub(PermissionsOnArtifactField::class);
         $destination_field->method('getAllUserGroups')->willReturn($user_groups);
         $destination_field->method('getId')->willReturn('456');
         $destination_field->method('getName')->willReturn('Permissions');

@@ -38,7 +38,9 @@ use Tuleap\Tracker\FormElement\Field\List\MultiSelectboxField;
 use Tuleap\Tracker\FormElement\Field\List\OpenListField;
 use Tuleap\Tracker\FormElement\Field\List\RadioButtonField;
 use Tuleap\Tracker\FormElement\Field\List\SelectboxField;
+use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\FormElement\Field\ListFields\RetrieveUsedListField;
+use Tuleap\Tracker\FormElement\Field\PermissionsOnArtifact\PermissionsOnArtifactField;
 use Tuleap\Tracker\FormElement\Field\PerTrackerArtifactId\PerTrackerArtifactIdField;
 use Tuleap\Tracker\FormElement\Field\Priority\PriorityField;
 use Tuleap\Tracker\FormElement\Field\RetrieveFieldById;
@@ -48,7 +50,6 @@ use Tuleap\Tracker\FormElement\Field\String\StringField;
 use Tuleap\Tracker\FormElement\Field\SubmittedBy\SubmittedByField;
 use Tuleap\Tracker\FormElement\Field\SubmittedOn\SubmittedOnField;
 use Tuleap\Tracker\FormElement\Field\Text\TextField;
-use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\FormElement\FieldNameFormatter;
 use Tuleap\Tracker\FormElement\FormElementDeletedEvent;
 use Tuleap\Tracker\FormElement\RetrieveFieldType;
@@ -119,7 +120,7 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
         self::FIELD_INTEGER_TYPE => IntegerField::class,
         self::FIELD_OPEN_LIST_TYPE => OpenListField::class,
         self::FIELD_ARTIFACT_LINKS => ArtifactLinkField::class,
-        self::FIELD_PERMISSION_ON_ARTIFACT_TYPE => Tracker_FormElement_Field_PermissionsOnArtifact::class,
+        self::FIELD_PERMISSION_ON_ARTIFACT_TYPE => PermissionsOnArtifactField::class,
         self::FIELD_SHARED => Tracker_FormElement_Shared::class,
     ];
 

@@ -24,7 +24,7 @@ namespace Tuleap\Tracker\Test\Builders;
 
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue_PermissionsOnArtifact;
-use Tracker_FormElement_Field_PermissionsOnArtifact;
+use Tuleap\Tracker\FormElement\Field\PermissionsOnArtifact\PermissionsOnArtifactField;
 
 final class ChangesetValuePermissionsOnArtifactTestBuilder
 {
@@ -37,11 +37,11 @@ final class ChangesetValuePermissionsOnArtifactTestBuilder
     private function __construct(
         private readonly int $id,
         private readonly Tracker_Artifact_Changeset $changeset,
-        private readonly Tracker_FormElement_Field_PermissionsOnArtifact $field,
+        private readonly PermissionsOnArtifactField $field,
     ) {
     }
 
-    public static function aListOfPermissions(int $id, Tracker_Artifact_Changeset $changeset, Tracker_FormElement_Field_PermissionsOnArtifact $field): self
+    public static function aListOfPermissions(int $id, Tracker_Artifact_Changeset $changeset, PermissionsOnArtifactField $field): self
     {
         return new self($id, $changeset, $field);
     }

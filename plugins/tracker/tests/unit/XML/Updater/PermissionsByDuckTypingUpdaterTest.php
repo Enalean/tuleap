@@ -24,7 +24,7 @@ namespace Tuleap\Tracker\XML\Updater;
 
 use Monolog\Test\TestCase;
 use ProjectUGroup;
-use Tracker_FormElement_Field_PermissionsOnArtifact;
+use Tuleap\Tracker\FormElement\Field\PermissionsOnArtifact\PermissionsOnArtifactField;
 use Tuleap\Tracker\Test\Stub\MatchPermissionsByDuckTypingStub;
 use Tuleap\Tracker\Tracker\XML\Updater\PermissionsByDuckTypingUpdater;
 
@@ -49,7 +49,7 @@ final class PermissionsByDuckTypingUpdaterTest extends TestCase
 
         $updater->updatePermissionsForDuckTypingMove(
             $changeset_xml,
-            $this->createStub(Tracker_FormElement_Field_PermissionsOnArtifact::class),
+            $this->createStub(PermissionsOnArtifactField::class),
             0
         );
 

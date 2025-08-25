@@ -22,11 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\Field\PermissionsOnArtifact;
 
-use Tracker_FormElement_Field_PermissionsOnArtifact;
-
 final class PermissionDuckTypingMatcher implements MatchPermissionsByDuckTyping
 {
-    public function doesUserGroupExistsInDestinationField(Tracker_FormElement_Field_PermissionsOnArtifact $destination_field, string $user_group_name): bool
+    public function doesUserGroupExistsInDestinationField(PermissionsOnArtifactField $destination_field, string $user_group_name): bool
     {
         $destination_user_group_names = array_map(static fn($user_group) => $user_group->getName(), $destination_field->getAllUserGroups());
         return in_array($user_group_name, $destination_user_group_names, true);

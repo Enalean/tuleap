@@ -25,13 +25,13 @@ namespace Tuleap\Artidoc\Document\Field\Permissions;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use ProjectUGroup;
 use Tracker_Artifact_ChangesetValue_PermissionsOnArtifact;
-use Tracker_FormElement_Field_PermissionsOnArtifact;
 use Tuleap\Artidoc\Document\Field\ConfiguredField;
 use Tuleap\Artidoc\Domain\Document\Section\Field\DisplayType;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\PermissionsOnArtifactFieldWithValue;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldWithValue\UserGroupValue;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\FormElement\Field\PermissionsOnArtifact\PermissionsOnArtifactField;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValuePermissionsOnArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\PermissionsOnArtifactFieldBuilder;
@@ -43,7 +43,7 @@ final class PermissionsOnArtifactFieldWithValueBuilderTest extends TestCase
     use GlobalLanguageMock;
 
     private function buildPermissionsOnArtifactFieldWithValue(
-        Tracker_FormElement_Field_PermissionsOnArtifact $field,
+        PermissionsOnArtifactField $field,
         ?Tracker_Artifact_ChangesetValue_PermissionsOnArtifact $value,
     ): PermissionsOnArtifactFieldWithValue {
         return new PermissionsOnArtifactFieldWithValueBuilder()->buildPermissionsOnArtifactFieldWithValue(
