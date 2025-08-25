@@ -17,33 +17,35 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import type { MockInstance } from "vitest";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import UploadProgressBar from "./UploadProgressBar.vue";
-import type { FakeItem } from "../../../type";
+import type { FakeItem, RootState } from "../../../type";
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
-
-let cancel_file_upload: vi.Mock;
-let cancel_version_upload: vi.Mock;
-let cancel_folder_upload: vi.Mock;
-
-function getWrapper(item: FakeItem): VueWrapper<InstanceType<typeof UploadProgressBar>> {
-    return shallowMount(UploadProgressBar, {
-        props: { item },
-        global: {
-            ...getGlobalTestOptions({
-                actions: {
-                    cancelFileUpload: cancel_file_upload,
-                    cancelVersionUpload: cancel_version_upload,
-                    cancelFolderUpload: cancel_folder_upload,
-                },
-            }),
-        },
-    });
-}
+import type { Action } from "vuex";
 
 describe("UploadProgressBar", () => {
+    let cancel_file_upload: MockInstance & Action<RootState, RootState>;
+    let cancel_version_upload: MockInstance & Action<RootState, RootState>;
+    let cancel_folder_upload: MockInstance & Action<RootState, RootState>;
+
+    function getWrapper(item: FakeItem): VueWrapper<InstanceType<typeof UploadProgressBar>> {
+        return shallowMount(UploadProgressBar, {
+            props: { item },
+            global: {
+                ...getGlobalTestOptions({
+                    actions: {
+                        cancelFileUpload: cancel_file_upload,
+                        cancelVersionUpload: cancel_version_upload,
+                        cancelFolderUpload: cancel_folder_upload,
+                    },
+                }),
+            },
+        });
+    }
+
     beforeEach(() => {
         cancel_file_upload = vi.fn();
         cancel_version_upload = vi.fn();
