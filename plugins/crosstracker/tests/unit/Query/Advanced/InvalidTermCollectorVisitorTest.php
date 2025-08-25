@@ -84,7 +84,7 @@ use Tuleap\Tracker\Semantic\Contributor\TrackerSemanticContributorFactory;
 use Tuleap\Tracker\Test\Builders\Fields\CheckboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ExternalFieldBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\FileFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\FilesFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\FloatFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\IntegerFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
@@ -423,7 +423,7 @@ final class InvalidTermCollectorVisitorTest extends TestCase
     public function testItRejectsInvalidFileComparisons(Comparison $comparison): void
     {
         $this->fields_retriever = RetrieveUsedFieldsStub::withFields(
-            FileFieldBuilder::aFileField(324)
+            FilesFieldBuilder::aFileField(324)
                 ->withName(self::FIELD_NAME)
                 ->inTracker($this->first_tracker)
                 ->withReadPermission($this->user, true)
@@ -589,7 +589,7 @@ final class InvalidTermCollectorVisitorTest extends TestCase
             $user,
         ];
         yield 'file' => [
-            FileFieldBuilder::aFileField(415)
+            FilesFieldBuilder::aFileField(415)
                 ->withName(self::FIELD_NAME)
                 ->inTracker($tracker)
                 ->withReadPermission($user, true)

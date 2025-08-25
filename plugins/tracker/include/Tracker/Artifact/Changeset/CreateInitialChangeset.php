@@ -23,7 +23,7 @@ namespace Tuleap\Tracker\Artifact\Changeset;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerImportConfig;
 use Tuleap\Tracker\Changeset\Validation\ChangesetValidationContext;
-use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
+use Tuleap\Tracker\FormElement\Field\Files\CreatedFileURLMapping;
 
 interface CreateInitialChangeset
 {

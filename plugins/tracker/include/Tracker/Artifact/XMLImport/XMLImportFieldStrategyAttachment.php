@@ -20,9 +20,10 @@
 
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
-use Tuleap\Tracker\FormElement\Field\File\IdForXMLImportExportConvertor;
+use Tuleap\Tracker\FormElement\Field\Files\IdForXMLImportExportConvertor;
+use Tuleap\Tracker\FormElement\Field\Files\FilesField;
 
-class Tracker_Artifact_XMLImport_XMLImportFieldStrategyAttachment implements Tracker_Artifact_XMLImport_XMLImportFieldStrategy
+class Tracker_Artifact_XMLImport_XMLImportFieldStrategyAttachment implements Tracker_Artifact_XMLImport_XMLImportFieldStrategy // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public const FILE_INFO_COPY_OPTION = 'is_migrated';
     public const FILE_INFO_MOVE_OPTION = 'is_moved';
@@ -47,7 +48,7 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyAttachment implements Tra
     ) {
         $values = $field_change->value;
 
-        assert($field instanceof Tracker_FormElement_Field_File);
+        assert($field instanceof FilesField);
 
         $files_infos = [];
 
@@ -98,7 +99,7 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyAttachment implements Tra
         return count($values) > 0 && count($files_infos) === 0;
     }
 
-    private function getFileInfoForAttachment(SimpleXMLElement $file_xml, PFUser $submitted_by, ?PostCreationContext $context, Tracker_FormElement_Field_File $field)
+    private function getFileInfoForAttachment(SimpleXMLElement $file_xml, PFUser $submitted_by, ?PostCreationContext $context, FilesField $field)
     {
         $file_path = $this->extraction_path . '/' . (string) $file_xml->path;
 
@@ -155,7 +156,7 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyAttachment implements Tra
         return null;
     }
 
-    private function getFileInfoTmpName(?PostCreationContext $context, Tracker_FormElement_Field_File $field, array $fileinfo): string
+    private function getFileInfoTmpName(?PostCreationContext $context, FilesField $field, array $fileinfo): string
     {
         if ($context?->getImportConfig()->getMoveImportConfig()->is_ducktyping_move) {
             $source_field = $this->findSourceFieldInFieldsMapping($context?->getImportConfig()->getMoveImportConfig()->field_mapping, $field->getId());

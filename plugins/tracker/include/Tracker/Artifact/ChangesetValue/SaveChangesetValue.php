@@ -21,7 +21,7 @@
 namespace Tuleap\Tracker\Artifact\ChangesetValue;
 
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
+use Tuleap\Tracker\FormElement\Field\Files\CreatedFileURLMapping;
 
 interface SaveChangesetValue
 {

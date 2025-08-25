@@ -21,7 +21,7 @@
 namespace Tuleap\Tracker\REST\FormElement;
 
 use Tracker_FormElement;
-use Tracker_FormElement_Field_File;
+use Tuleap\Tracker\FormElement\Field\Files\FilesField;
 use Tuleap\Tracker\REST\v1\TrackerFieldsResource;
 
 /**
@@ -56,7 +56,7 @@ class FieldFileRepresentation extends \Tracker_REST_FormElementRepresentation
         ?PermissionsForGroupsRepresentation $permissions_for_groups,
     ): \Tracker_REST_FormElementRepresentation {
         $representation = parent::build($form_element, $type, $permissions, $permissions_for_groups);
-        if (! $form_element instanceof Tracker_FormElement_Field_File) {
+        if (! $form_element instanceof FilesField) {
             return $representation;
         }
 

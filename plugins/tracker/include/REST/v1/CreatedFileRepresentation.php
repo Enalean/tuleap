@@ -20,7 +20,7 @@
 
 namespace Tuleap\Tracker\REST\v1;
 
-use Tuleap\Tracker\FormElement\Field\File\Upload\FileToUpload;
+use Tuleap\Tracker\FormElement\Field\Files\Upload\FileToUpload;
 
 /**
  * @psalm-immutable

@@ -19,9 +19,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\FormElement\Field\Files\FilesField;
 use Tuleap\Tracker\REST\Artifact\FileInfoRepresentation;
 
-class Tracker_FileInfo
+class Tracker_FileInfo // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public const THUMBNAILS_MAX_WIDTH  = 150;
     public const THUMBNAILS_MAX_HEIGHT = 112;
@@ -101,7 +102,7 @@ class Tracker_FileInfo
     }
 
     /**
-     * @return Tracker_FormElement_Field_File
+     * @return FilesField
      */
     public function getField()
     {

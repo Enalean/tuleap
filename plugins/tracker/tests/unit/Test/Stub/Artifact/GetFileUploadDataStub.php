@@ -23,10 +23,10 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Test\Stub\Artifact;
 
 use PFUser;
-use Tracker_FormElement_Field_File;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\FileUploadData;
 use Tuleap\Tracker\Artifact\GetFileUploadData;
+use Tuleap\Tracker\FormElement\Field\Files\FilesField;
 use Tuleap\Tracker\Tracker;
 
 final class GetFileUploadDataStub implements GetFileUploadData
@@ -40,7 +40,7 @@ final class GetFileUploadDataStub implements GetFileUploadData
         return new self(null);
     }
 
-    public static function withField(Tracker_FormElement_Field_File $field): self
+    public static function withField(FilesField $field): self
     {
         return new self(new FileUploadData($field));
     }

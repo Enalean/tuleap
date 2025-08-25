@@ -27,7 +27,7 @@ use Tracker_Artifact_ChangesetValue;
 use Tracker_FormElement_Field;
 use Tracker_Report_Criteria;
 use Tuleap\Option\Option;
-use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
+use Tuleap\Tracker\FormElement\Field\Files\CreatedFileURLMapping;
 use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
 
 /**

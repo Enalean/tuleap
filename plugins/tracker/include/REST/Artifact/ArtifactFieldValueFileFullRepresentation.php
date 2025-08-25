@@ -20,7 +20,7 @@
 
 namespace Tuleap\Tracker\REST\Artifact;
 
-use Tracker_FormElement_Field_File;
+use Tuleap\Tracker\FormElement\Field\Files\FilesField;
 
 class ArtifactFieldValueFileFullRepresentation extends ArtifactFieldValueRepresentationData
 {
@@ -37,7 +37,7 @@ class ArtifactFieldValueFileFullRepresentation extends ArtifactFieldValueReprese
     /**
      * @param FileInfoRepresentation[] $values
      */
-    public static function fromValues(Tracker_FormElement_Field_File $file, array $values): self
+    public static function fromValues(FilesField $file, array $values): self
     {
         $representation = new self();
 
@@ -49,7 +49,7 @@ class ArtifactFieldValueFileFullRepresentation extends ArtifactFieldValueReprese
         return $representation;
     }
 
-    public static function fromEmptyValues(Tracker_FormElement_Field_File $file): self
+    public static function fromEmptyValues(FilesField $file): self
     {
         return self::fromValues($file, []);
     }

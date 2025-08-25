@@ -49,7 +49,7 @@ use Tuleap\Tracker\Artifact\CodeBlockFeaturesOnArtifact;
 use Tuleap\Tracker\Artifact\FileUploadDataProvider;
 use Tuleap\Tracker\Artifact\RichTextareaConfiguration;
 use Tuleap\Tracker\Artifact\RichTextareaProvider;
-use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
+use Tuleap\Tracker\FormElement\Field\Files\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\AlphaNumericField;
 use Tuleap\Tracker\FormElement\FieldContentIndexer;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\DeleteSpecificProperties;
@@ -669,7 +669,7 @@ class TextField extends AlphaNumericField
         $body_format = $this->getRightBodyFormat($artifact, $value);
 
         if ($body_format === Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT) {
-            $substitutor = new \Tuleap\Tracker\FormElement\Field\File\FileURLSubstitutor();
+            $substitutor = new \Tuleap\Tracker\FormElement\Field\Files\FileURLSubstitutor();
             $content     = $substitutor->substituteURLsInHTML($content, $url_mapping);
         }
 

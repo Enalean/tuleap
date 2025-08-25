@@ -19,12 +19,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\FormElement\Field\Files\FilesField;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFileFullRepresentation;
 
 /**
  * Manage values in changeset for files fields
  */
-class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetValue implements Countable, ArrayAccess, Iterator
+class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetValue implements Countable, ArrayAccess, Iterator // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /**
      * @var Tracker_FileInfo[]
@@ -164,7 +165,7 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
 
     public function getFullRESTValue(PFUser $user)
     {
-        assert($this->field instanceof Tracker_FormElement_Field_File);
+        assert($this->field instanceof FilesField);
         $values = [];
         foreach ($this->getFiles() as $file_info) {
             $values[] = $file_info->getRESTValue();

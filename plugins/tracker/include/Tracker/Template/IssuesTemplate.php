@@ -32,7 +32,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactId\XML\XMLArtifactIdField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\XML\XMLArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\CrossReference\XML\XMLCrossReferenceField;
 use Tuleap\Tracker\FormElement\Field\Date\XML\XMLDateField;
-use Tuleap\Tracker\FormElement\Field\File\XML\XMLFileField;
+use Tuleap\Tracker\FormElement\Field\Files\XML\XMLFileField;
 use Tuleap\Tracker\FormElement\Field\LastModifiedBy\XML\XMLLastModifiedByField;
 use Tuleap\Tracker\FormElement\Field\LastUpdateDate\XML\XMLLastUpdateDateField;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStatic\XML\XMLBindStaticValue;

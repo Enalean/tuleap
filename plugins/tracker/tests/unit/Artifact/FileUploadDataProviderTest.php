@@ -29,7 +29,7 @@ use Tracker_FormElementFactory;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\FileFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\FilesFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
@@ -63,8 +63,8 @@ final class FileUploadDataProviderTest extends TestCase
         $file_1 = $this->createMock(Tracker_FileInfo::class);
         $file_1->method('getId')->willReturn(12);
 
-        $field_1 = FileFieldBuilder::aFileField(1)->withUpdatePermission($this->user, true)->build();
-        $field_2 = FileFieldBuilder::aFileField(2)->build();
+        $field_1 = FilesFieldBuilder::aFileField(1)->withUpdatePermission($this->user, true)->build();
+        $field_2 = FilesFieldBuilder::aFileField(2)->build();
 
         $this->form_element_factory->method('getUsedFileFields')->willReturn([$field_1, $field_2]);
 
@@ -81,7 +81,7 @@ final class FileUploadDataProviderTest extends TestCase
         $file_1 = $this->createMock(Tracker_FileInfo::class);
         $file_1->method('getId')->willReturn(12);
 
-        $field_1 = FileFieldBuilder::aFileField(1)->withUpdatePermission($this->user, true)->build();
+        $field_1 = FilesFieldBuilder::aFileField(1)->withUpdatePermission($this->user, true)->build();
 
         $this->form_element_factory->method('getUsedFileFields')->willReturn([$field_1]);
 
@@ -97,7 +97,7 @@ final class FileUploadDataProviderTest extends TestCase
         $file_1 = $this->createMock(Tracker_FileInfo::class);
         $file_1->method('getId')->willReturn(12);
 
-        $field_1 = FileFieldBuilder::aFileField(1)->withUpdatePermission($this->user, false)->build();
+        $field_1 = FilesFieldBuilder::aFileField(1)->withUpdatePermission($this->user, false)->build();
 
         $this->form_element_factory->method('getUsedFileFields')->willReturn([$field_1]);
 
@@ -117,8 +117,8 @@ final class FileUploadDataProviderTest extends TestCase
         $file_1 = $this->createMock(Tracker_FileInfo::class);
         $file_1->method('getId')->willReturn(12);
 
-        $field_1 = FileFieldBuilder::aFileField(1)->withSubmitPermission($this->user, true)->build();
-        $field_2 = FileFieldBuilder::aFileField(2)->build();
+        $field_1 = FilesFieldBuilder::aFileField(1)->withSubmitPermission($this->user, true)->build();
+        $field_2 = FilesFieldBuilder::aFileField(2)->build();
 
         $this->form_element_factory->method('getUsedFileFields')->willReturn([$field_1, $field_2]);
 
@@ -135,7 +135,7 @@ final class FileUploadDataProviderTest extends TestCase
         $file_1 = $this->createMock(Tracker_FileInfo::class);
         $file_1->method('getId')->willReturn(12);
 
-        $field_1 = FileFieldBuilder::aFileField(1)->withSubmitPermission($this->user, false)->build();
+        $field_1 = FilesFieldBuilder::aFileField(1)->withSubmitPermission($this->user, false)->build();
 
         $this->form_element_factory->method('getUsedFileFields')->willReturn([$field_1]);
 

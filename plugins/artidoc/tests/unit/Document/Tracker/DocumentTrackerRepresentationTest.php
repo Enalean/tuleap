@@ -22,10 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Document\Tracker;
 
-use Tracker_FormElement_Field_File;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\FormElement\Field\Files\FilesField;
 use Tuleap\Tracker\FormElement\Field\String\StringField;
 use Tuleap\Tracker\FormElement\Field\Text\TextField;
 use Tuleap\Tracker\Test\Builders\Fields\TextFieldBuilder;
@@ -201,9 +201,9 @@ final class DocumentTrackerRepresentationTest extends TestCase
         self::assertSame('A File Field', $representation->file->label);
     }
 
-    private function getFileField(int $id, bool $submittable): Tracker_FormElement_Field_File
+    private function getFileField(int $id, bool $submittable): FilesField
     {
-        $field = $this->createMock(Tracker_FormElement_Field_File::class);
+        $field = $this->createMock(FilesField::class);
         $field->method('getId')->willReturn($id);
         $field->method('getLabel')->willReturn('A File Field');
         $field->method('userCanSubmit')->willReturn($submittable);

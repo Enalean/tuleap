@@ -27,7 +27,7 @@ use Tracker_FileInfo;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\FileFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\FilesFieldBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TrackerArtifactChangesetValueFileTest extends TestCase
@@ -46,7 +46,7 @@ final class TrackerArtifactChangesetValueFileTest extends TestCase
         $info = $this->createMock(Tracker_FileInfo::class);
         $info->method('getFilename')->willReturn('Screenshot.png');
         $info->method('getId')->willReturn(111);
-        $field = FileFieldBuilder::aFileField(45)->build();
+        $field = FilesFieldBuilder::aFileField(45)->build();
 
         $file_1 = new Tracker_Artifact_ChangesetValue_File(111, $this->changeset, $field, false, [$info]);
         $file_2 = new Tracker_Artifact_ChangesetValue_File(111, $this->changeset, $field, false, [$info]);
@@ -62,7 +62,7 @@ final class TrackerArtifactChangesetValueFileTest extends TestCase
         $info->method('getFilename')->willReturn('Screenshot.png');
         $info->method('getId')->willReturn(111);
 
-        $field = FileFieldBuilder::aFileField(45)->build();
+        $field = FilesFieldBuilder::aFileField(45)->build();
 
         $file_1 = new Tracker_Artifact_ChangesetValue_File(111, $this->changeset, $field, false, []);
         $file_2 = new Tracker_Artifact_ChangesetValue_File(111, $this->changeset, $field, false, [$info]);
@@ -95,7 +95,7 @@ final class TrackerArtifactChangesetValueFileTest extends TestCase
         $info4->method('getFilename')->willReturn('Screenshot4.png');
         $info3->method('getId')->willReturn(4);
 
-        $field = FileFieldBuilder::aFileField(45)->build();
+        $field = FilesFieldBuilder::aFileField(45)->build();
 
         $file_1 = new Tracker_Artifact_ChangesetValue_File(
             111,

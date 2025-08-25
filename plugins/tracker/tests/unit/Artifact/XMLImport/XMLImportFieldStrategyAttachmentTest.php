@@ -32,7 +32,6 @@ use SimpleXMLElement;
 use Tracker_Artifact_XMLImport_CollectionOfFilesToImportInArtifact;
 use Tracker_Artifact_XMLImport_Exception_NoValidAttachementsException;
 use Tracker_Artifact_XMLImport_XMLImportFieldStrategyAttachment;
-use Tracker_FormElement_Field_File;
 use Tracker_FormElement_InvalidFieldException;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Test\Builders\UserTestBuilder;
@@ -40,8 +39,9 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Action\FieldMapping;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
+use Tuleap\Tracker\FormElement\Field\Files\FilesField;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\FileFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\FilesFieldBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class XMLImportFieldStrategyAttachmentTest extends TestCase
@@ -51,7 +51,7 @@ final class XMLImportFieldStrategyAttachmentTest extends TestCase
     private TestLogger $logger;
     private Tracker_Artifact_XMLImport_CollectionOfFilesToImportInArtifact&MockObject $files_importer;
     private Tracker_Artifact_XMLImport_XMLImportFieldStrategyAttachment $strategy;
-    private Tracker_FormElement_Field_File $field;
+    private FilesField $field;
     private PFUser $submitted_by;
     private Artifact $artifact;
     private string $extraction_path;
@@ -71,7 +71,7 @@ final class XMLImportFieldStrategyAttachmentTest extends TestCase
             $this->logger
         );
 
-        $this->field        = FileFieldBuilder::aFileField(1)->withName('Attachments')->build();
+        $this->field        = FilesFieldBuilder::aFileField(1)->withName('Attachments')->build();
         $this->submitted_by = UserTestBuilder::anActiveUser()->build();
         $this->artifact     = ArtifactTestBuilder::anArtifact(45)->build();
     }
@@ -348,7 +348,7 @@ final class XMLImportFieldStrategyAttachmentTest extends TestCase
                     new TrackerXmlImportConfig(
                         $this->submitted_by,
                         new DateTimeImmutable(),
-                        MoveImportConfig::buildForMoveArtifact(true, [FieldMapping::fromFields(FileFieldBuilder::aFileField(2)->withName('Attachments')->build(), $this->field)])
+                        MoveImportConfig::buildForMoveArtifact(true, [FieldMapping::fromFields(FilesFieldBuilder::aFileField(2)->withName('Attachments')->build(), $this->field)])
                     ),
                     false
                 )

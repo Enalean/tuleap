@@ -24,10 +24,10 @@ namespace Tuleap\Tracker\REST\v1;
 use DateTimeImmutable;
 use Luracast\Restler\RestException;
 use PFUser;
-use Tuleap\Tracker\FormElement\Field\File\Upload\EmptyFileToUploadFinisher;
-use Tuleap\Tracker\FormElement\Field\File\Upload\FileToUploadCreator;
-use Tuleap\Tracker\FormElement\Field\File\Upload\UploadCreationConflictException;
-use Tuleap\Tracker\FormElement\Field\File\Upload\UploadMaxSizeExceededException;
+use Tuleap\Tracker\FormElement\Field\Files\Upload\EmptyFileToUploadFinisher;
+use Tuleap\Tracker\FormElement\Field\Files\Upload\FileToUploadCreator;
+use Tuleap\Tracker\FormElement\Field\Files\Upload\UploadCreationConflictException;
+use Tuleap\Tracker\FormElement\Field\Files\Upload\UploadMaxSizeExceededException;
 
 final class FileCreator
 {
@@ -49,7 +49,7 @@ final class FileCreator
     }
 
     public function create(
-        \Tracker_FormElement_Field_File $field,
+        \Tuleap\Tracker\FormElement\Field\Files\FilesField $field,
         PFUser $user,
         FilePOSTRepresentation $file_post_representation,
         DateTimeImmutable $current_time,

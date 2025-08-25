@@ -23,12 +23,12 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Artifact;
 
 use ForgeConfig;
-use Tracker_FormElement_Field_File;
+use Tuleap\Tracker\FormElement\Field\Files\FilesField;
 
 class FileUploadData
 {
     /**
-     * @var Tracker_FormElement_Field_File
+     * @var FilesField
      */
     private $field;
     /**
@@ -45,7 +45,7 @@ class FileUploadData
      */
     private $upload_max_size;
 
-    public function __construct(Tracker_FormElement_Field_File $field)
+    public function __construct(FilesField $field)
     {
         $this->field            = $field;
         $this->upload_url       = '/api/v1/tracker_fields/' . $field->getId() . '/files';
@@ -53,7 +53,7 @@ class FileUploadData
         $this->upload_max_size  = (int) ForgeConfig::get('sys_max_size_upload');
     }
 
-    public function getField(): Tracker_FormElement_Field_File
+    public function getField(): FilesField
     {
         return $this->field;
     }

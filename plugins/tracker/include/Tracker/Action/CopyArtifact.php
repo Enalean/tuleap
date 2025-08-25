@@ -26,7 +26,7 @@ use Tuleap\Tracker\Artifact\XML\Exporter\ChildrenXMLExporter;
 use Tuleap\Tracker\Artifact\XML\Exporter\TooManyChildrenException;
 use Tuleap\Tracker\Artifact\XMLImport\MoveImportConfig;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerNoXMLImportLoggedConfig;
-use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
+use Tuleap\Tracker\FormElement\Field\Files\CreatedFileURLMapping;
 use Tuleap\Tracker\Tracker;
 
 class Tracker_Action_CopyArtifact // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps

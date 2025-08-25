@@ -38,7 +38,6 @@ use Tracker_Artifact_ChangesetValue_Text;
 use Tracker_ArtifactFactory;
 use Tracker_Exception;
 use Tracker_FormElement_Field;
-use Tracker_FormElement_Field_File;
 use Tracker_FormElementFactory;
 use Tracker_HierarchyFactory;
 use Tracker_NoChangeException;
@@ -70,7 +69,8 @@ use Tuleap\Tracker\Artifact\XML\Exporter\InArchiveFilePathXMLExporter;
 use Tuleap\Tracker\Artifact\XML\Exporter\NullChildrenCollector;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerNoXMLImportLoggedConfig;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
-use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
+use Tuleap\Tracker\FormElement\Field\Files\CreatedFileURLMapping;
+use Tuleap\Tracker\FormElement\Field\Files\FilesField;
 use Tuleap\Tracker\FormElement\Field\String\StringField;
 use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
@@ -207,7 +207,7 @@ final class Tracker_ArtifactTest extends TestCase //phpcs:ignore Squiz.Classes.V
         $factory->method('getUsedFields')->willReturn([$field1, $field2]);
         $factory->method('getAllFormElementsForTracker')->willReturn([]);
         $factory->method('isFieldAFileField')
-            ->willReturnCallback(static fn(Tracker_FormElement_Field $field) => $field::class === Tracker_FormElement_Field_File::class);
+            ->willReturnCallback(static fn(Tracker_FormElement_Field $field) => $field::class === FilesField::class);
 
         $new_changeset = $this->createMock(Tracker_Artifact_Changeset::class);
         $new_changeset->method('executePostCreationActions')->with([true]);
@@ -404,7 +404,7 @@ final class Tracker_ArtifactTest extends TestCase //phpcs:ignore Squiz.Classes.V
         $factory->method('getUsedFields')->willReturn([$field1, $field2, $field3]);
         $factory->method('getAllFormElementsForTracker')->willReturn([]);
         $factory->method('isFieldAFileField')
-            ->willReturnCallback(static fn(Tracker_FormElement_Field $field) => $field::class === Tracker_FormElement_Field_File::class);
+            ->willReturnCallback(static fn(Tracker_FormElement_Field $field) => $field::class === FilesField::class);
 
         $new_changeset = $this->createMock(Tracker_Artifact_Changeset::class);
         $new_changeset->method('executePostCreationActions')->with([true]);
@@ -628,7 +628,7 @@ final class Tracker_ArtifactTest extends TestCase //phpcs:ignore Squiz.Classes.V
         $factory->method('getUsedFields')->willReturn([$field1, $field2, $field3]);
         $factory->method('getAllFormElementsForTracker')->willReturn([]);
         $factory->method('isFieldAFileField')
-            ->willReturnCallback(static fn(Tracker_FormElement_Field $field) => $field::class === Tracker_FormElement_Field_File::class);
+            ->willReturnCallback(static fn(Tracker_FormElement_Field $field) => $field::class === FilesField::class);
 
         $new_changeset = $this->createMock(Tracker_Artifact_Changeset::class);
         $new_changeset->method('executePostCreationActions')->with([false]);

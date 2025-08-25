@@ -38,7 +38,7 @@ use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ChangeForwardLinksComman
 use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\RetrieveForwardLinks;
 use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValuesContainer;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\RetrieveUsedArtifactLinkFields;
-use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
+use Tuleap\Tracker\FormElement\Field\Files\CreatedFileURLMapping;
 
 /**
  * I'm responsible for adding and changing the artifact links of an artifact. I cannot remove links.

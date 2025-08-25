@@ -67,7 +67,6 @@ use Tracker_Exception;
 use Tracker_FormElement;
 use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_Burndown;
-use Tracker_FormElement_Field_File;
 use Tracker_FormElementFactory;
 use Tracker_HierarchyFactory;
 use Tracker_IDisplayTrackerLayout;
@@ -150,7 +149,8 @@ use Tuleap\Tracker\FormElement\Field\Burndown\BurndownCacheGenerationChecker;
 use Tuleap\Tracker\FormElement\Field\Burndown\BurndownCacheGenerator;
 use Tuleap\Tracker\FormElement\Field\Burndown\BurndownRemainingEffortAdderForREST;
 use Tuleap\Tracker\FormElement\Field\Computed\ComputedFieldDao;
-use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
+use Tuleap\Tracker\FormElement\Field\Files\CreatedFileURLMapping;
+use Tuleap\Tracker\FormElement\Field\Files\FilesField;
 use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
 use Tuleap\Tracker\Notifications\UnsubscribersNotificationDAO;
 use Tuleap\Tracker\Permission\TrackersPermissionsRetriever;
@@ -888,7 +888,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
                 if ((int) $request->get('field') && (int) $request->get('attachment')) {
                     $ff    = Tracker_FormElementFactory::instance();
                     $field = $ff->getFormElementById($request->get('field'));
-                    \assert($field instanceof Tracker_FormElement_Field_File);
+                    \assert($field instanceof FilesField);
                     if ($field === null || ! $field->userCanRead($current_user)) {
                         $GLOBALS['Response']->addFeedback(
                             Feedback::ERROR,

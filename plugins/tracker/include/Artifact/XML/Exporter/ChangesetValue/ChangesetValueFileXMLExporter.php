@@ -25,7 +25,7 @@ use Tracker_Artifact_ChangesetValue;
 use Tracker_FileInfo;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\XML\Exporter\FileInfoXMLExporter;
-use Tuleap\Tracker\FormElement\Field\File\IdForXMLImportExportConvertor;
+use Tuleap\Tracker\FormElement\Field\Files\IdForXMLImportExportConvertor;
 
 class ChangesetValueFileXMLExporter extends ChangesetValueXMLExporter
 {

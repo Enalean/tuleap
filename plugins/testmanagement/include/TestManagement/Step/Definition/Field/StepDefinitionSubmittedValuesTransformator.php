@@ -22,8 +22,8 @@ namespace Tuleap\TestManagement\Step\Definition\Field;
 
 use Tracker_Artifact_ChangesetValue_Text;
 use Tuleap\TestManagement\Step\Step;
-use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
-use Tuleap\Tracker\FormElement\Field\File\FileURLSubstitutor;
+use Tuleap\Tracker\FormElement\Field\Files\CreatedFileURLMapping;
+use Tuleap\Tracker\FormElement\Field\Files\FileURLSubstitutor;
 
 class StepDefinitionSubmittedValuesTransformator
 {

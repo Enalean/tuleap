@@ -26,7 +26,6 @@ use Codendi_HTMLPurifier;
 use PFUser;
 use PHPUnit\Framework\Attributes\TestWith;
 use Tracker_Artifact_Changeset;
-use Tracker_FormElement_Field_File;
 use Tuleap\Artidoc\Adapter\Document\ArtidocDocument;
 use Tuleap\Artidoc\Adapter\Document\Section\RequiredSectionInformationCollector;
 use Tuleap\Artidoc\Document\Field\ArtifactLink\ArtifactLinkFieldWithValueBuilder;
@@ -67,6 +66,7 @@ use Tuleap\Test\Stubs\User\Avatar\ProvideUserAvatarUrlStub;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\ChangesetValue\Text\TextValueInterpreter;
 use Tuleap\Tracker\Artifact\UploadDataAttributesForRichTextEditorBuilder;
+use Tuleap\Tracker\FormElement\Field\Files\FilesField;
 use Tuleap\Tracker\FormElement\Field\String\StringField;
 use Tuleap\Tracker\FormElement\Field\Text\TextField;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFileFullRepresentation;
@@ -246,7 +246,7 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
             ->build();
         $this->retrieve_description_field->withDescriptionField($description_field);
 
-        $file = $this->createMock(Tracker_FormElement_Field_File::class);
+        $file = $this->createMock(FilesField::class);
         $file->method('getId')->willReturn(600);
         $file->method('getLabel')->willReturn('Attachments');
         $this->file_upload_provider = GetFileUploadDataStub::withField($file);
@@ -315,7 +315,7 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
             ->build();
         $this->retrieve_description_field->withDescriptionField($description_field);
 
-        $file = $this->createMock(Tracker_FormElement_Field_File::class);
+        $file = $this->createMock(FilesField::class);
         $file->method('getId')->willReturn(600);
         $file->method('getLabel')->willReturn('Attachments');
         $this->file_upload_provider = GetFileUploadDataStub::withField($file);
@@ -360,7 +360,7 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
             ->build();
         $this->retrieve_description_field->withDescriptionField($description_field);
 
-        $file = $this->createMock(Tracker_FormElement_Field_File::class);
+        $file = $this->createMock(FilesField::class);
         $file->method('getId')->willReturn(600);
         $file->method('getLabel')->willReturn('Attachments');
         $this->file_upload_provider = GetFileUploadDataStub::withField($file);
@@ -405,7 +405,7 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
             ->build();
         $this->retrieve_description_field->withDescriptionField($description_field);
 
-        $file = $this->createMock(Tracker_FormElement_Field_File::class);
+        $file = $this->createMock(FilesField::class);
         $file->method('getId')->willReturn(600);
         $file->method('getLabel')->willReturn('Attachments');
         $this->file_upload_provider = GetFileUploadDataStub::withField($file);
@@ -466,7 +466,7 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
             ->build();
         $this->retrieve_description_field->withDescriptionField($description_field);
 
-        $file = $this->createMock(Tracker_FormElement_Field_File::class);
+        $file = $this->createMock(FilesField::class);
         $file->method('getId')->willReturn(600);
         $file->method('getLabel')->willReturn('Attachments');
         $this->file_upload_provider = GetFileUploadDataStub::withField($file);
@@ -768,7 +768,7 @@ final class RetrievedSectionsToRepresentationTransformerTest extends TestCase
         self::assertCount(0, $result->value->sections);
     }
 
-    private function getFileValue(Tracker_FormElement_Field_File $field, Artifact $artifact): ArtifactFieldValueFileFullRepresentation
+    private function getFileValue(FilesField $field, Artifact $artifact): ArtifactFieldValueFileFullRepresentation
     {
         return ArtifactFieldValueFileFullRepresentation::fromValues($field, [
             new FileInfoRepresentation(

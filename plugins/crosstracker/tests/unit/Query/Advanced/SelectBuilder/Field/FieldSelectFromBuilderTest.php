@@ -38,7 +38,7 @@ use Tuleap\Tracker\Permission\FieldPermissionType;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
 use Tuleap\Tracker\Test\Builders\Fields\ArtifactLinkFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\FileFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\FilesFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\FloatFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\IntegerFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
@@ -105,7 +105,7 @@ final class FieldSelectFromBuilderTest extends TestCase
                     ->withName(self::FIELD_NAME)
                     ->inTracker($this->first_tracker)
                     ->build(),
-                FileFieldBuilder::aFileField(self::SECOND_FIELD_ID)
+                FilesFieldBuilder::aFileField(self::SECOND_FIELD_ID)
                     ->withName(self::FIELD_NAME)
                     ->inTracker($this->second_tracker)
                     ->withReadPermission($this->user, true)

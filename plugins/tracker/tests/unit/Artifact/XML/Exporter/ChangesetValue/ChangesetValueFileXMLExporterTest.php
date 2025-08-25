@@ -27,11 +27,11 @@ use PHPUnit\Framework\MockObject\MockObject;
 use SimpleXMLElement;
 use Tracker_Artifact_ChangesetValue_File;
 use Tracker_FileInfo;
-use Tracker_FormElement_Field_File;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\XML\Exporter\FileInfoXMLExporter;
+use Tuleap\Tracker\FormElement\Field\Files\FilesField;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\FileFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\FilesFieldBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ChangesetValueFileXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -57,7 +57,7 @@ final class ChangesetValueFileXMLExporterTest extends \Tuleap\Test\PHPUnit\TestC
             $this->file_exporter
         );
 
-        $field = FileFieldBuilder::aFileField(1001)->withName('attachments')->build();
+        $field = FilesFieldBuilder::aFileField(1001)->withName('attachments')->build();
 
         $this->changeset_value = $this->createMock(Tracker_Artifact_ChangesetValue_File::class);
         $this->changeset_value->method('getField')->willReturn($field);
@@ -83,7 +83,7 @@ final class ChangesetValueFileXMLExporterTest extends \Tuleap\Test\PHPUnit\TestC
     {
         $file_1 = new Tracker_FileInfo(
             190,
-            $this->createMock(Tracker_FormElement_Field_File::class),
+            $this->createMock(FilesField::class),
             101,
             '',
             'document.txt',
@@ -92,7 +92,7 @@ final class ChangesetValueFileXMLExporterTest extends \Tuleap\Test\PHPUnit\TestC
         );
         $file_2 = new Tracker_FileInfo(
             191,
-            $this->createMock(Tracker_FormElement_Field_File::class),
+            $this->createMock(FilesField::class),
             102,
             '',
             'landscape.png',

@@ -25,7 +25,7 @@ namespace Tuleap\Tracker\Artifact\XML\Exporter;
 use SimpleXMLElement;
 use Tracker_FileInfo;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\FormElement\Field\File\IdForXMLImportExportConvertor;
+use Tuleap\Tracker\FormElement\Field\Files\IdForXMLImportExportConvertor;
 use XML_SimpleXMLCDATAFactory;
 
 class FileInfoXMLExporter
