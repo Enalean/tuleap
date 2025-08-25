@@ -37,7 +37,7 @@
             id="project-service-edit-modal-active"
             v-bind:value="service.is_active"
         />
-        <div class="tlp-property" v-if="service.shortname">
+        <div class="tlp-property" v-if="service.short_name">
             <label class="tlp-label">{{ $gettext("Short name") }}</label>
             <span>{{ service.short_name }}</span>
         </div>
@@ -50,7 +50,10 @@
         />
     </div>
 </template>
-<script>
+<script setup lang="ts">
+import { ref, computed } from "vue";
+import type { Service } from "../../type";
+import { useGettext } from "vue3-gettext";
 import ServiceId from "./ServiceId.vue";
 import HiddenServiceShortname from "./HiddenServiceShortname.vue";
 import ServiceLabel from "./ServiceLabel.vue";
@@ -63,43 +66,20 @@ import ReadOnlyServiceRank from "./ReadOnlyServiceRank.vue";
 import ReadOnlyServiceIcon from "./ReadOnlyServiceIcon.vue";
 import { ADMIN_SERVICE_SHORTNAME, SUMMARY_SERVICE_SHORTNAME } from "../../constants";
 
-export default {
-    name: "EditableSystemService",
-    components: {
-        ServiceId,
-        HiddenServiceShortname,
-        ServiceLabel,
-        ServiceIsUsed,
-        ServiceIsActive,
-        ServiceRank,
-        ReadOnlyServiceRank,
-        ServiceLink,
-        ServiceDescription,
-        ReadOnlyServiceIcon,
-    },
-    props: {
-        service_prop: {
-            type: Object,
-            required: true,
-        },
-    },
-    data() {
-        return {
-            service: this.service_prop,
-        };
-    },
-    computed: {
-        is_summary_service() {
-            return this.service.short_name === SUMMARY_SERVICE_SHORTNAME;
-        },
-        can_update_is_used() {
-            return this.service.short_name !== ADMIN_SERVICE_SHORTNAME || !this.service.is_used;
-        },
-    },
-    methods: {
-        onEditServiceLabel(new_label) {
-            this.service.label = new_label;
-        },
-    },
-};
+const { $gettext } = useGettext();
+
+const props = defineProps<{
+    service_prop: Service;
+}>();
+
+const service = ref(props.service_prop);
+
+const is_summary_service = computed(() => service.value.short_name === SUMMARY_SERVICE_SHORTNAME);
+const can_update_is_used = computed(
+    () => service.value.short_name !== ADMIN_SERVICE_SHORTNAME || !service.value.is_used,
+);
+
+function onEditServiceLabel(new_label: string): void {
+    service.value.label = new_label;
+}
 </script>
