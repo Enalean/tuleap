@@ -18,8 +18,17 @@
  */
 
 import { getAttributeOrThrow } from "@tuleap/dom";
+import type { AllowedIcons } from "./type";
 
-export function gatherConfiguration(vue_mount_point) {
+type Configuration = {
+    project_id: string;
+    minimal_rank: number;
+    csrf_token: string;
+    csrf_token_name: string;
+    allowed_icons: AllowedIcons;
+};
+
+export function gatherConfiguration(vue_mount_point: HTMLElement): Configuration {
     const project_id = getAttributeOrThrow(vue_mount_point, "data-project-id");
     const minimal_rank = Number.parseInt(
         getAttributeOrThrow(vue_mount_point, "data-minimal-rank"),

@@ -18,28 +18,34 @@
  */
 
 import { openModalAndReplacePlaceholders } from "@tuleap/tlp-modal";
+import type { VueGettextProvider } from "./support/vue-gettext-provider";
 
 const DELETE_BUTTONS_SELECTOR = ".project-admin-services-delete-button";
 const DELETE_MODAL_ID = "project-admin-services-delete-modal";
 const DELETE_MODAL_HIDDEN_INPUT_ID = "project-admin-services-delete-modal-service-id";
 const DELETE_MODAL_DESCRIPTION_ID = "project-admin-services-delete-modal-description";
 
-export function setupDeleteButtons(gettext_provider) {
+export function setupDeleteButtons(gettext_provider: VueGettextProvider): void {
     openModalAndReplacePlaceholders({
         document,
         buttons_selector: DELETE_BUTTONS_SELECTOR,
         modal_element_id: DELETE_MODAL_ID,
         hidden_input_replacement: {
             input_id: DELETE_MODAL_HIDDEN_INPUT_ID,
-            hiddenInputReplaceCallback(clicked_button) {
+            hiddenInputReplaceCallback(clicked_button: HTMLElement): string {
+                if (!clicked_button.dataset.serviceId) {
+                    throw new Error("Missing data-service-id attribute on button");
+                }
                 return clicked_button.dataset.serviceId;
             },
         },
         paragraph_replacement: {
             paragraph_id: DELETE_MODAL_DESCRIPTION_ID,
             paragraphReplaceCallback(clicked_button) {
-                return gettext_provider.$gettext(
-                    `You are about to delete the %{ service_name } service. Please, confirm your action`,
+                return gettext_provider.$gettextInterpolate(
+                    gettext_provider.$gettext(
+                        `You are about to delete the %{ service_name } service. Please, confirm your action`,
+                    ),
                     { service_name: `${clicked_button.dataset.serviceLabel}` },
                 );
             },
