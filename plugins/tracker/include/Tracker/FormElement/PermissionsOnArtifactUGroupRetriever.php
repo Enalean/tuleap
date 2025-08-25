@@ -20,7 +20,7 @@
 
 namespace Tuleap\Tracker\FormElement;
 
-use Tracker_FormElement_Field_PermissionsOnArtifact;
+use Tuleap\Tracker\FormElement\Field\PermissionsOnArtifact\PermissionsOnArtifactField;
 
 class PermissionsOnArtifactUGroupRetriever
 {
@@ -30,7 +30,7 @@ class PermissionsOnArtifactUGroupRetriever
      */
     public function initializeUGroupsIfNoUGroupsAreChoosenWithRequiredCondition(
         array $value,
-        Tracker_FormElement_Field_PermissionsOnArtifact $field,
+        PermissionsOnArtifactField $field,
     ) {
         if ($field->isRequired() === true && ! isset($value['u_groups'])) {
             $value['u_groups'] = [];

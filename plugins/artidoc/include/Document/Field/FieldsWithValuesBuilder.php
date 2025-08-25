@@ -29,7 +29,6 @@ use Tracker_Artifact_ChangesetValue_List;
 use Tracker_Artifact_ChangesetValue_Numeric;
 use Tracker_Artifact_ChangesetValue_PermissionsOnArtifact;
 use Tracker_Artifact_ChangesetValue_Text;
-use Tracker_FormElement_Field_PermissionsOnArtifact;
 use Tuleap\Artidoc\Document\Field\ArtifactLink\ArtifactLinkFieldWithValueBuilder;
 use Tuleap\Artidoc\Document\Field\Date\DateFieldWithValueBuilder;
 use Tuleap\Artidoc\Document\Field\List\ListFieldWithValueBuilder;
@@ -48,10 +47,11 @@ use Tuleap\Tracker\Artifact\Changeset\ArtifactLink\ArtifactLinkChangesetValue;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\Date\DateField;
 use Tuleap\Tracker\FormElement\Field\LastUpdateBy\LastUpdateByField;
+use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\FormElement\Field\NumericField;
+use Tuleap\Tracker\FormElement\Field\PermissionsOnArtifact\PermissionsOnArtifactField;
 use Tuleap\Tracker\FormElement\Field\SubmittedBy\SubmittedByField;
 use Tuleap\Tracker\FormElement\Field\Text\TextField;
-use Tuleap\Tracker\FormElement\Field\ListField;
 
 final readonly class FieldsWithValuesBuilder implements GetFieldsWithValues
 {
@@ -130,7 +130,7 @@ final readonly class FieldsWithValuesBuilder implements GetFieldsWithValues
             return [...$fields, $this->date_field_with_value_builder->buildDateFieldWithValue($configured_field, $changeset, $changeset_value)];
         }
 
-        if ($configured_field->field instanceof Tracker_FormElement_Field_PermissionsOnArtifact) {
+        if ($configured_field->field instanceof PermissionsOnArtifactField) {
             assert($changeset_value === null || $changeset_value instanceof Tracker_Artifact_ChangesetValue_PermissionsOnArtifact);
             return [...$fields, $this->permissions_on_artifact_field_with_value_builder->buildPermissionsOnArtifactFieldWithValue($configured_field, $changeset_value)];
         }

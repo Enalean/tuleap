@@ -35,7 +35,6 @@ use TestHelper;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_XMLImport;
 use Tracker_Artifact_XMLImport_XMLImportZipArchive;
-use Tracker_FormElement_Field_PermissionsOnArtifact;
 use Tracker_FormElementFactory;
 use Tracker_XML_Importer_ArtifactImportedMapping;
 use TrackerXmlFieldsMapping_InSamePlatform;
@@ -62,6 +61,7 @@ use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\List\MultiSelectboxField;
 use Tuleap\Tracker\FormElement\Field\List\OpenListField;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
+use Tuleap\Tracker\FormElement\Field\PermissionsOnArtifact\PermissionsOnArtifactField;
 use Tuleap\Tracker\FormElement\Field\String\StringField;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
@@ -1563,7 +1563,7 @@ final class Tracker_Artifact_XMLImportTest extends TestCase // phpcs:ignore Squi
 
     public function testItCreatesArtifactWithPermsFieldData(): void
     {
-        $perms_field = $this->createMock(Tracker_FormElement_Field_PermissionsOnArtifact::class);
+        $perms_field = $this->createMock(PermissionsOnArtifactField::class);
         $perms_field->method('getId')->willReturn(369);
         $perms_field->method('validateField')->willReturn(true);
         $perms_field->method('setTracker');

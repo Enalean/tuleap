@@ -26,7 +26,6 @@ use Tracker_Artifact_ChangesetValue_File;
 use Tracker_FormElement_Field_Burndown;
 use Tracker_FormElement_Field_CrossReferences;
 use Tracker_FormElement_Field_File;
-use Tracker_FormElement_Field_PermissionsOnArtifact;
 use Tracker_FormElement_FieldVisitor;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\ArtifactId\ArtifactIdField;
@@ -42,6 +41,7 @@ use Tuleap\Tracker\FormElement\Field\List\MultiSelectboxField;
 use Tuleap\Tracker\FormElement\Field\List\OpenListField;
 use Tuleap\Tracker\FormElement\Field\List\RadioButtonField;
 use Tuleap\Tracker\FormElement\Field\List\SelectboxField;
+use Tuleap\Tracker\FormElement\Field\PermissionsOnArtifact\PermissionsOnArtifactField;
 use Tuleap\Tracker\FormElement\Field\PerTrackerArtifactId\PerTrackerArtifactIdField;
 use Tuleap\Tracker\FormElement\Field\Priority\PriorityField;
 use Tuleap\Tracker\FormElement\Field\String\StringField;
@@ -95,7 +95,7 @@ class ArtifactFilesDeletorVisitor implements Tracker_FormElement_FieldVisitor
     {
     }
 
-    public function visitPermissionsOnArtifact(Tracker_FormElement_Field_PermissionsOnArtifact $field): void
+    public function visitPermissionsOnArtifact(PermissionsOnArtifactField $field): void
     {
     }
 

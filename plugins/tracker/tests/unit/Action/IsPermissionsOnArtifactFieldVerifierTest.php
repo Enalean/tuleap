@@ -20,7 +20,7 @@
 
 namespace Tuleap\Tracker\Action;
 
-use Tracker_FormElement_Field_PermissionsOnArtifact;
+use Tuleap\Tracker\FormElement\Field\PermissionsOnArtifact\PermissionsOnArtifactField;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -39,7 +39,7 @@ final class IsPermissionsOnArtifactFieldVerifierTest extends \Tuleap\Test\PHPUni
     {
         self::assertTrue(
             (new IsPermissionsOnArtifactFieldVerifier())->isPermissionsOnArtifactField(
-                $this->createStub(Tracker_FormElement_Field_PermissionsOnArtifact::class)
+                $this->createStub(PermissionsOnArtifactField::class)
             )
         );
     }

@@ -430,7 +430,7 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
 
     public function testPermissionsFieldWillNotBeMigratedDestinationFieldIsNotCompatible(): void
     {
-        $source_permissions_field = $this->createStub(\Tracker_FormElement_Field_PermissionsOnArtifact::class);
+        $source_permissions_field = $this->createStub(\Tuleap\Tracker\FormElement\Field\PermissionsOnArtifact\PermissionsOnArtifactField::class);
         $source_permissions_field->method('getLabel')->willReturn('permissions');
         $source_permissions_field->method('getName')->willReturn('permissions');
         $source_permissions_field->method('getId')->willReturn(12);
@@ -453,13 +453,13 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
 
     public function testPermissionsFieldWillNotBeMigratedIfThereIsNoPermissionToMigrate(): void
     {
-        $source_permissions_field = $this->createStub(\Tracker_FormElement_Field_PermissionsOnArtifact::class);
+        $source_permissions_field = $this->createStub(\Tuleap\Tracker\FormElement\Field\PermissionsOnArtifact\PermissionsOnArtifactField::class);
         $source_permissions_field->method('getLabel')->willReturn('permissions');
         $source_permissions_field->method('getName')->willReturn('permissions');
         $source_permissions_field->method('getId')->willReturn(12);
         $source_permissions_field->method('getTrackerId')->willReturn(self::SOURCE_TRACKER_ID);
 
-        $destination_permissions_field = $this->createStub(\Tracker_FormElement_Field_PermissionsOnArtifact::class);
+        $destination_permissions_field = $this->createStub(\Tuleap\Tracker\FormElement\Field\PermissionsOnArtifact\PermissionsOnArtifactField::class);
         $destination_permissions_field->method('getLabel')->willReturn('permissions');
         $destination_permissions_field->method('getName')->willReturn('permissions');
         $destination_permissions_field->method('userCanUpdate')->willReturn(true);
@@ -478,13 +478,13 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
 
     public function testPermissionsFieldWillBePartiallyMigratedWhenDestinationFieldDoesNotContainAllSourceValues(): void
     {
-        $source_permissions_field = $this->createStub(\Tracker_FormElement_Field_PermissionsOnArtifact::class);
+        $source_permissions_field = $this->createStub(\Tuleap\Tracker\FormElement\Field\PermissionsOnArtifact\PermissionsOnArtifactField::class);
         $source_permissions_field->method('getLabel')->willReturn('permissions');
         $source_permissions_field->method('getName')->willReturn('permissions');
         $source_permissions_field->method('getId')->willReturn(12);
         $source_permissions_field->method('getTrackerId')->willReturn(self::SOURCE_TRACKER_ID);
 
-        $destination_permissions_field = $this->createStub(\Tracker_FormElement_Field_PermissionsOnArtifact::class);
+        $destination_permissions_field = $this->createStub(\Tuleap\Tracker\FormElement\Field\PermissionsOnArtifact\PermissionsOnArtifactField::class);
         $destination_permissions_field->method('getLabel')->willReturn('permissions');
         $destination_permissions_field->method('getName')->willReturn('permissions');
         $destination_permissions_field->method('userCanUpdate')->willReturn(true);
@@ -506,13 +506,13 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
 
     public function testPermissionsFieldWillBeFullyMigratedWhenAllValuesAreAvailableInDestinationField(): void
     {
-        $source_permissions_field = $this->createStub(\Tracker_FormElement_Field_PermissionsOnArtifact::class);
+        $source_permissions_field = $this->createStub(\Tuleap\Tracker\FormElement\Field\PermissionsOnArtifact\PermissionsOnArtifactField::class);
         $source_permissions_field->method('getLabel')->willReturn('permissions');
         $source_permissions_field->method('getName')->willReturn('permissions');
         $source_permissions_field->method('getId')->willReturn(12);
         $source_permissions_field->method('getTrackerId')->willReturn(self::SOURCE_TRACKER_ID);
 
-        $destination_permissions_field = $this->createStub(\Tracker_FormElement_Field_PermissionsOnArtifact::class);
+        $destination_permissions_field = $this->createStub(\Tuleap\Tracker\FormElement\Field\PermissionsOnArtifact\PermissionsOnArtifactField::class);
         $destination_permissions_field->method('getLabel')->willReturn('permissions');
         $destination_permissions_field->method('getName')->willReturn('permissions');
         $destination_permissions_field->method('userCanUpdate')->willReturn(true);

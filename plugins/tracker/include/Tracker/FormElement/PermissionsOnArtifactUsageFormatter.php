@@ -20,7 +20,7 @@
 
 namespace Tuleap\Tracker\FormElement;
 
-use Tracker_FormElement_Field_PermissionsOnArtifact;
+use Tuleap\Tracker\FormElement\Field\PermissionsOnArtifact\PermissionsOnArtifactField;
 
 class PermissionsOnArtifactUsageFormatter
 {
@@ -40,7 +40,7 @@ class PermissionsOnArtifactUsageFormatter
     public function setRestrictAccessForArtifact(array $value)
     {
         if (empty($value) || $this->permissions_validator->isArtifactPermissionChecked($value) === false) {
-            $value[Tracker_FormElement_Field_PermissionsOnArtifact::USE_IT] = 0;
+            $value[PermissionsOnArtifactField::USE_IT] = 0;
         }
 
         return $value;
@@ -51,10 +51,10 @@ class PermissionsOnArtifactUsageFormatter
      */
     public function alwaysUseRestrictedPermissionsForRequiredField(
         array $value,
-        Tracker_FormElement_Field_PermissionsOnArtifact $field,
+        PermissionsOnArtifactField $field,
     ) {
         if ($field->isRequired() === true) {
-            $value[Tracker_FormElement_Field_PermissionsOnArtifact::USE_IT] = 1;
+            $value[PermissionsOnArtifactField::USE_IT] = 1;
         }
 
         return $value;

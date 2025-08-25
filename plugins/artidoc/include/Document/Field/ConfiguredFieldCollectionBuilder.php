@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\Artidoc\Document\Field;
 
 use PFUser;
-use Tracker_FormElement_Field_PermissionsOnArtifact;
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\Artidoc\Domain\Document\Section\Field\ArtifactSectionField;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
@@ -31,9 +30,10 @@ use Tuleap\TestManagement\Step\Definition\Field\StepsDefinition;
 use Tuleap\TestManagement\Step\Execution\Field\StepsExecution;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\Date\DateField;
-use Tuleap\Tracker\FormElement\Field\NumericField;
-use Tuleap\Tracker\FormElement\Field\Text\TextField;
 use Tuleap\Tracker\FormElement\Field\ListField;
+use Tuleap\Tracker\FormElement\Field\NumericField;
+use Tuleap\Tracker\FormElement\Field\PermissionsOnArtifact\PermissionsOnArtifactField;
+use Tuleap\Tracker\FormElement\Field\Text\TextField;
 
 final readonly class ConfiguredFieldCollectionBuilder
 {
@@ -66,7 +66,7 @@ final readonly class ConfiguredFieldCollectionBuilder
         $fields = [];
         foreach ($stored_fields as $stored_field) {
             $this->field_retriever->retrieveField($stored_field->field_id, $user)
-                ->map(static function (TextField|ListField|ArtifactLinkField|NumericField|DateField|Tracker_FormElement_Field_PermissionsOnArtifact|StepsDefinition|StepsExecution $field) use (&$fields, $stored_field) {
+                ->map(static function (TextField|ListField|ArtifactLinkField|NumericField|DateField|PermissionsOnArtifactField|StepsDefinition|StepsExecution $field) use (&$fields, $stored_field) {
                     if (! isset($fields[$field->tracker_id])) {
                         $fields[$field->tracker_id] = [];
                     }

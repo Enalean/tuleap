@@ -23,8 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Tracker\XML\Updater;
 
 use SimpleXMLElement;
-use Tracker_FormElement_Field_PermissionsOnArtifact;
 use Tuleap\Tracker\FormElement\Field\PermissionsOnArtifact\MatchPermissionsByDuckTyping;
+use Tuleap\Tracker\FormElement\Field\PermissionsOnArtifact\PermissionsOnArtifactField;
 use Tuleap\Tracker\XML\Updater\MoveChangesetXMLUpdater;
 
 final class PermissionsByDuckTypingUpdater implements UpdatePermissionsByDuckTyping
@@ -37,7 +37,7 @@ final class PermissionsByDuckTypingUpdater implements UpdatePermissionsByDuckTyp
 
     public function updatePermissionsForDuckTypingMove(
         SimpleXMLElement $changeset_xml,
-        Tracker_FormElement_Field_PermissionsOnArtifact $destination_field,
+        PermissionsOnArtifactField $destination_field,
         int $index,
     ): void {
         $last_index = count($changeset_xml->field_change[$index]->value) - 1;

@@ -44,8 +44,8 @@ use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserGroupBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\MultiSelectboxFieldBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\OpenListFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\TextFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -257,7 +257,7 @@ final class MoveChangesetXMLDuckTypingUpdaterTest extends TestCase
         $source_remaining_effort_field     = FloatFieldBuilder::aFloatField(8)->withName('remaining_effort')->build();
         $source_not_existing_field         = StringFieldBuilder::aStringField(9)->withName('notexisting')->build();
         $source_cc_field                   = $source_cc_field_bind->getField();
-        $source_permissions_field          = $this->createStub(\Tracker_FormElement_Field_PermissionsOnArtifact::class);
+        $source_permissions_field          = $this->createStub(\Tuleap\Tracker\FormElement\Field\PermissionsOnArtifact\PermissionsOnArtifactField::class);
         $source_permissions_field->method('getName')->willReturn('permissions');
         $source_computed_field = $this->createStub(\Tuleap\Tracker\FormElement\Field\Computed\ComputedField::class);
         $source_computed_field->method('getName')->willReturn('computed');
@@ -300,7 +300,7 @@ final class MoveChangesetXMLDuckTypingUpdaterTest extends TestCase
         $destination_remaining_effort_field     = FloatFieldBuilder::aFloatField(28)->withName('remaining_effort')->build();
         $destination_assigned_to_field          = $destination_assigned_to_field_bind->getField();
         $destination_cc_field                   = $destination_cc_field_bind->getField();
-        $destination_permissions_field          = $this->createStub(\Tracker_FormElement_Field_PermissionsOnArtifact::class);
+        $destination_permissions_field          = $this->createStub(\Tuleap\Tracker\FormElement\Field\PermissionsOnArtifact\PermissionsOnArtifactField::class);
         $destination_permissions_field->method('getName')->willReturn('permissions');
         $destination_permissions_field->method('getAllUserGroups')->willReturn([
             ProjectUGroupTestBuilder::buildProjectMembers(),

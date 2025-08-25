@@ -202,7 +202,7 @@ final class MoveChangesetXMLDuckTypingUpdater implements UpdateMoveChangesetXMLD
                 $this->verify_is_permissions_on_artifact_field->isPermissionsOnArtifactField($source_field)
                 && $this->verify_is_permissions_on_artifact_field->isPermissionsOnArtifactField($destination_field)
             ) {
-                assert($destination_field instanceof \Tracker_FormElement_Field_PermissionsOnArtifact);
+                assert($destination_field instanceof \Tuleap\Tracker\FormElement\Field\PermissionsOnArtifact\PermissionsOnArtifactField);
                 $this->permissions_by_duck_typing->updatePermissionsForDuckTypingMove($changeset_xml, $destination_field, $index);
             }
 

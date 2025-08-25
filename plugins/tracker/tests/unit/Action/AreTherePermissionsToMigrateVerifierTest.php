@@ -21,8 +21,8 @@
 namespace Tuleap\Tracker\Action;
 
 use Tracker_Artifact_ChangesetValue_PermissionsOnArtifact;
-use Tracker_FormElement_Field_PermissionsOnArtifact;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\PermissionsOnArtifact\PermissionsOnArtifactField;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -70,9 +70,9 @@ final class AreTherePermissionsToMigrateVerifierTest extends \Tuleap\Test\PHPUni
     /**
      * @param string[] | null $user_groups_names
      */
-    private function getSourceFieldWithLastChangesetValue(?array $user_groups_names): Tracker_FormElement_Field_PermissionsOnArtifact
+    private function getSourceFieldWithLastChangesetValue(?array $user_groups_names): PermissionsOnArtifactField
     {
-        $source_field = $this->createStub(Tracker_FormElement_Field_PermissionsOnArtifact::class);
+        $source_field = $this->createStub(PermissionsOnArtifactField::class);
 
         if ($user_groups_names === null) {
             $source_field->method('getLastChangesetValue')->willReturn(null);

@@ -20,7 +20,6 @@
 
 namespace Tuleap\Tracker\FormElement\Field\PermissionsOnArtifact;
 
-use Tracker_FormElement_Field_PermissionsOnArtifact;
 use Tuleap\Test\Builders\ProjectUGroupTestBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -46,9 +45,9 @@ final class PermissionDuckTypingMatcherTest extends \Tuleap\Test\PHPUnit\TestCas
         );
     }
 
-    private function getDestinationField(): Tracker_FormElement_Field_PermissionsOnArtifact
+    private function getDestinationField(): PermissionsOnArtifactField
     {
-        $field = $this->createStub(Tracker_FormElement_Field_PermissionsOnArtifact::class);
+        $field = $this->createStub(PermissionsOnArtifactField::class);
         $field->method('getAllUserGroups')->willReturn([
             ProjectUGroupTestBuilder::aCustomUserGroup(101)->withName('semi-crusty')->build(),
             ProjectUGroupTestBuilder::aCustomUserGroup(102)->withName('crusty')->build(),

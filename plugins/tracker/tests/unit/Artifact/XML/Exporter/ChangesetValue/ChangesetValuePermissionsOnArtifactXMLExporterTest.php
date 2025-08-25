@@ -34,13 +34,13 @@ final class ChangesetValuePermissionsOnArtifactXMLExporterTest extends \Tuleap\T
 
     private SimpleXMLElement $artifact_xml;
 
-    private \Tracker_FormElement_Field_PermissionsOnArtifact $field;
+    private \Tuleap\Tracker\FormElement\Field\PermissionsOnArtifact\PermissionsOnArtifactField $field;
 
     public function setUp(): void
     {
         parent::setUp();
 
-        $this->field = new \Tracker_FormElement_Field_PermissionsOnArtifact(
+        $this->field = new \Tuleap\Tracker\FormElement\Field\PermissionsOnArtifact\PermissionsOnArtifactField(
             1,
             101,
             null,

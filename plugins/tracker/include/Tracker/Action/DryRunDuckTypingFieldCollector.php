@@ -140,8 +140,8 @@ final class DryRunDuckTypingFieldCollector implements CollectDryRunTypingField
                 $this->verify_is_permissions_on_artifact_field->isPermissionsOnArtifactField($source_field)
                 && $this->verify_is_permissions_on_artifact_field->isPermissionsOnArtifactField($destination_field)
             ) {
-                assert($source_field instanceof \Tracker_FormElement_Field_PermissionsOnArtifact);
-                assert($destination_field instanceof \Tracker_FormElement_Field_PermissionsOnArtifact);
+                assert($source_field instanceof \Tuleap\Tracker\FormElement\Field\PermissionsOnArtifact\PermissionsOnArtifactField);
+                assert($destination_field instanceof \Tuleap\Tracker\FormElement\Field\PermissionsOnArtifact\PermissionsOnArtifactField);
                 $this->collectPermissionsOnArtifactFields($source_field, $destination_field, $artifact, $logger);
                 continue;
             }
@@ -216,8 +216,8 @@ final class DryRunDuckTypingFieldCollector implements CollectDryRunTypingField
     }
 
     private function collectPermissionsOnArtifactFields(
-        \Tracker_FormElement_Field_PermissionsOnArtifact $source_field,
-        \Tracker_FormElement_Field_PermissionsOnArtifact $destination_field,
+        \Tuleap\Tracker\FormElement\Field\PermissionsOnArtifact\PermissionsOnArtifactField $source_field,
+        \Tuleap\Tracker\FormElement\Field\PermissionsOnArtifact\PermissionsOnArtifactField $destination_field,
         Artifact $artifact,
         LoggerInterface $logger,
     ): void {

@@ -20,12 +20,10 @@
 
 namespace Tuleap\Tracker\FormElement\Field\PermissionsOnArtifact;
 
-use Tracker_FormElement_Field_PermissionsOnArtifact;
-
 interface MatchPermissionsByDuckTyping
 {
     public function doesUserGroupExistsInDestinationField(
-        Tracker_FormElement_Field_PermissionsOnArtifact $destination_field,
+        PermissionsOnArtifactField $destination_field,
         string $user_group_name,
     ): bool;
 }

@@ -23,13 +23,13 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Tracker\XML\Updater;
 
 use SimpleXMLElement;
-use Tracker_FormElement_Field_PermissionsOnArtifact;
+use Tuleap\Tracker\FormElement\Field\PermissionsOnArtifact\PermissionsOnArtifactField;
 
 interface UpdatePermissionsByDuckTyping
 {
     public function updatePermissionsForDuckTypingMove(
         SimpleXMLElement $changeset_xml,
-        Tracker_FormElement_Field_PermissionsOnArtifact $destination_field,
+        PermissionsOnArtifactField $destination_field,
         int $index,
     ): void;
 }

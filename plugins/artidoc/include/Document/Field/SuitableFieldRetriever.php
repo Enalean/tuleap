@@ -24,7 +24,6 @@ namespace Tuleap\Artidoc\Document\Field;
 
 use PFUser;
 use Tracker_FormElement_Field_List_Bind_Null;
-use Tracker_FormElement_Field_PermissionsOnArtifact;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldIsDescriptionSemanticFault;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldIsTitleSemanticFault;
 use Tuleap\Artidoc\Domain\Document\Section\Field\FieldNotFoundFault;
@@ -38,11 +37,12 @@ use Tuleap\TestManagement\Step\Execution\Field\StepsExecution;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\Date\DateField;
 use Tuleap\Tracker\FormElement\Field\LastUpdateBy\LastUpdateByField;
+use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\FormElement\Field\NumericField;
+use Tuleap\Tracker\FormElement\Field\PermissionsOnArtifact\PermissionsOnArtifactField;
 use Tuleap\Tracker\FormElement\Field\RetrieveUsedFields;
 use Tuleap\Tracker\FormElement\Field\SubmittedBy\SubmittedByField;
 use Tuleap\Tracker\FormElement\Field\Text\TextField;
-use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\Semantic\Description\RetrieveSemanticDescriptionField;
 use Tuleap\Tracker\Semantic\Title\RetrieveSemanticTitleField;
 
@@ -56,7 +56,7 @@ final readonly class SuitableFieldRetriever
     }
 
     /**
-     * @return Ok<TextField> | Ok<ListField> | Ok<ArtifactLinkField> | Ok<NumericField> | OK<DateField> | Ok<Tracker_FormElement_Field_PermissionsOnArtifact> | Ok<StepsDefinition> | Ok<StepsExecution> | Err<Fault>
+     * @return Ok<TextField> | Ok<ListField> | Ok<ArtifactLinkField> | Ok<NumericField> | OK<DateField> | Ok<PermissionsOnArtifactField> | Ok<StepsDefinition> | Ok<StepsExecution> | Err<Fault>
      */
     public function retrieveField(int $field_id, PFUser $user): Ok|Err
     {
@@ -67,15 +67,15 @@ final readonly class SuitableFieldRetriever
         }
 
         return match (true) {
-            $field instanceof TextField                                       => $this->validateTextField($field),
-            $field instanceof ListField                                       => $this->validateListField($field),
-            $field instanceof ArtifactLinkField                               => Result::ok($field),
-            $field instanceof NumericField                                    => Result::ok($field),
-            $field instanceof DateField                                       => Result::ok($field),
-            $field instanceof Tracker_FormElement_Field_PermissionsOnArtifact => Result::ok($field),
-            $field instanceof StepsDefinition                                 => Result::ok($field),
-            $field instanceof StepsExecution                                  => Result::ok($field),
-            default                                                           => Result::err(FieldNotSupportedFault::build($field_id))
+            $field instanceof TextField                  => $this->validateTextField($field),
+            $field instanceof ListField                  => $this->validateListField($field),
+            $field instanceof ArtifactLinkField          => Result::ok($field),
+            $field instanceof NumericField               => Result::ok($field),
+            $field instanceof DateField                  => Result::ok($field),
+            $field instanceof PermissionsOnArtifactField => Result::ok($field),
+            $field instanceof StepsDefinition            => Result::ok($field),
+            $field instanceof StepsExecution             => Result::ok($field),
+            default                                      => Result::err(FieldNotSupportedFault::build($field_id))
         };
     }
 

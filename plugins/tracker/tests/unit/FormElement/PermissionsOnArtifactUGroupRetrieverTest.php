@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement;
 
-use Tracker_FormElement_Field_PermissionsOnArtifact;
+use Tuleap\Tracker\FormElement\Field\PermissionsOnArtifact\PermissionsOnArtifactField;
 use function PHPUnit\Framework\assertArrayHasKey;
 use function PHPUnit\Framework\assertArrayNotHasKey;
 use function PHPUnit\Framework\assertEmpty;
@@ -37,7 +37,7 @@ class PermissionsOnArtifactUGroupRetrieverTest extends \Tuleap\Test\PHPUnit\Test
         $retriever = new PermissionsOnArtifactUGroupRetriever();
 
         $value = [];
-        $field = new Tracker_FormElement_Field_PermissionsOnArtifact(null, null, null, null, null, null, null, null, true, null, null, null);
+        $field = new PermissionsOnArtifactField(null, null, null, null, null, null, null, null, true, null, null, null);
 
         $new_value = $retriever->initializeUGroupsIfNoUGroupsAreChoosenWithRequiredCondition(
             $value,
@@ -56,7 +56,7 @@ class PermissionsOnArtifactUGroupRetrieverTest extends \Tuleap\Test\PHPUnit\Test
             'u_groups' => ['102'],
         ];
 
-        $field = new Tracker_FormElement_Field_PermissionsOnArtifact(null, null, null, null, null, null, null, null, true, null, null, null);
+        $field = new PermissionsOnArtifactField(null, null, null, null, null, null, null, null, true, null, null, null);
 
         $new_value = $retriever->initializeUGroupsIfNoUGroupsAreChoosenWithRequiredCondition(
             $value,
@@ -72,7 +72,7 @@ class PermissionsOnArtifactUGroupRetrieverTest extends \Tuleap\Test\PHPUnit\Test
         $retriever = new PermissionsOnArtifactUGroupRetriever();
 
         $value = [];
-        $field = new Tracker_FormElement_Field_PermissionsOnArtifact(null, null, null, null, null, null, null, null, false, null, null, null);
+        $field = new PermissionsOnArtifactField(null, null, null, null, null, null, null, null, false, null, null, null);
 
         $new_value = $retriever->initializeUGroupsIfNoUGroupsAreChoosenWithRequiredCondition(
             $value,
@@ -90,7 +90,7 @@ class PermissionsOnArtifactUGroupRetrieverTest extends \Tuleap\Test\PHPUnit\Test
             'u_groups' => ['102'],
         ];
 
-        $field = new Tracker_FormElement_Field_PermissionsOnArtifact(null, null, null, null, null, null, null, null, false, null, null, null);
+        $field = new PermissionsOnArtifactField(null, null, null, null, null, null, null, null, false, null, null, null);
 
         $new_value = $retriever->initializeUGroupsIfNoUGroupsAreChoosenWithRequiredCondition(
             $value,
