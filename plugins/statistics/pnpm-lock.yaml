@@ -14,6 +14,12 @@ dependencies:
   '@tuleap/pie-chart':
     specifier: workspace:*
     version: link:../../lib/frontend/pie-chart
+  '@tuleap/tlp-date-picker':
+    specifier: workspace:^
+    version: link:../../lib/frontend/tlp-date-picker
+  '@tuleap/tlp-modal':
+    specifier: workspace:^
+    version: link:../../lib/frontend/tlp-modal
 
 devDependencies:
   '@tuleap/build-system-configurator':

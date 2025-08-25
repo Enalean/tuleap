@@ -4,10 +4,13 @@
   "homepage": "https://tuleap.org",
   "license": "GPL-2.0-or-later",
   "private": true,
+  "type": "module",
   "dependencies": {
     "@tuleap/autocomplete-for-select2": "workspace:*",
     "@tuleap/filter-inline-table": "workspace:*",
-    "@tuleap/pie-chart": "workspace:*"
+    "@tuleap/pie-chart": "workspace:*",
+    "@tuleap/tlp-date-picker": "workspace:^",
+    "@tuleap/tlp-modal": "workspace:^"
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*"

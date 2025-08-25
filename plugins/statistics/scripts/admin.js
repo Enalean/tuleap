@@ -17,7 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { datePicker, createModal } from "tlp";
+import { openAllTargetModalsOnClick } from "@tuleap/tlp-modal";
+import { datePicker } from "@tuleap/tlp-date-picker";
 import { filterInlineTable } from "@tuleap/filter-inline-table";
 import CKEDITOR from "ckeditor4";
 import tuleap from "tuleap";
@@ -27,70 +28,56 @@ import {
 } from "@tuleap/autocomplete-for-select2";
 
 document.addEventListener("DOMContentLoaded", function () {
-    var date_picker_elements = document.querySelectorAll(".tlp-input-date");
+    const date_picker_elements = document.querySelectorAll(".tlp-input-date");
 
-    [].forEach.call(date_picker_elements, function (element) {
+    for (const element of date_picker_elements) {
         datePicker(element);
-    });
+    }
 
-    var ckeditor_selector = document.querySelectorAll(".project-over-quota-massmail-body");
+    const ckeditor_selector = document.querySelectorAll(".project-over-quota-massmail-body");
 
-    [].forEach.call(ckeditor_selector, function (ckeditor_element) {
+    for (const ckeditor_element of ckeditor_selector) {
         CKEDITOR.replace(ckeditor_element.id, tuleap.ckeditor.config);
-    });
+    }
 
-    var project_selectors = document.querySelectorAll(".project-autocompleter");
-    [].forEach.call(project_selectors, function (project_selector) {
+    const project_selectors = document.querySelectorAll(".project-autocompleter");
+    for (const project_selector of project_selectors) {
         autocomplete_projects_for_select2(project_selector, {
             include_private_projects: true,
         });
-    });
+    }
 
-    var user_selectors = document.querySelectorAll(".user-autocompleter");
-    [].forEach.call(user_selectors, function (user_selector) {
+    const user_selectors = document.querySelectorAll(".user-autocompleter");
+    for (const user_selector of user_selectors) {
         autocomplete_users_for_select2(user_selector, {
             internal_users_only: true,
         });
-    });
+    }
 
-    var modal_buttons = document.querySelectorAll("[data-modal-id]");
-    [].forEach.call(modal_buttons, function (button) {
-        var modal_element = document.getElementById(button.dataset.modalId);
-        if (!modal_element) {
-            throw new Error(
-                "Bad reference to an unknown modal element: '" + button.dataset.modalId + "'",
-            );
-        }
+    openAllTargetModalsOnClick(document, "[data-statistics-button]");
 
-        var modal = createModal(modal_element);
-
-        button.addEventListener("click", function () {
-            modal.toggle();
-        });
-    });
-
-    var data_export_contents = document.querySelectorAll(".siteadmin-export-data");
-    var data_export_inputs = document.querySelectorAll('input[name="data-export-content"]');
-    [].forEach.call(data_export_inputs, function (data_export_input) {
+    const data_export_contents = document.querySelectorAll(".siteadmin-export-data");
+    const data_export_inputs = document.querySelectorAll('input[name="data-export-content"]');
+    for (const data_export_input of data_export_inputs) {
         data_export_input.addEventListener("change", function (event) {
-            var content_value = event.target.value;
+            const content_value = event.target.value;
 
-            [].forEach.call(data_export_contents, function (content_to_disappear) {
+            for (const content_to_disappear of data_export_contents) {
                 if (content_to_disappear.id !== content_value) {
                     content_to_disappear.classList.add("siteadmin-export-data-disappear");
                 } else {
                     content_to_disappear.classList.remove("siteadmin-export-data-disappear");
                 }
-            });
+            }
 
-            var inputs = document.querySelectorAll("input[value=" + content_value + "]");
-            [].forEach.call(inputs, function (input) {
+            const inputs = document.querySelectorAll("input[value=" + content_value + "]");
+            for (const input of inputs) {
                 input.checked = input.value === content_value;
-            });
+            }
         });
-    });
+    }
 
-    var filter_project_over_quota = document.getElementById("filter-table-project-over-quota");
+    const filter_project_over_quota = document.getElementById("filter-table-project-over-quota");
     if (filter_project_over_quota) {
         filterInlineTable(filter_project_over_quota);
     }
