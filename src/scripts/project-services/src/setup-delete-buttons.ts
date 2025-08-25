@@ -44,7 +44,7 @@ export function setupDeleteButtons(gettext_provider: VueGettextProvider): void {
             paragraphReplaceCallback(clicked_button) {
                 return gettext_provider.$gettextInterpolate(
                     gettext_provider.$gettext(
-                        `You are about to delete the %{ service_name } service. Please, confirm your action`,
+                        `You are about to delete the "%{ service_name }" service. Please, confirm your action`,
                     ),
                     { service_name: `${clicked_button.dataset.serviceLabel}` },
                 );
