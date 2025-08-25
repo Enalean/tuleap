@@ -35,22 +35,20 @@
 
 <script setup lang="ts">
 import DropDownQuickLook from "../Folder/DropDown/DropDownQuickLook.vue";
-import { useNamespacedState } from "vuex-composition-helpers";
-import type { ConfigurationState } from "../../store/configuration";
 import type { Item } from "../../type";
 import { useGettext } from "vue3-gettext";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { PROJECT_ID } from "../../configuration-keys";
 
 const { $gettext } = useGettext();
 
-const { project_id } = useNamespacedState<Pick<ConfigurationState, "project_id">>("configuration", [
-    "project_id",
-]);
+const project_id = strictInject(PROJECT_ID);
 
 const props = defineProps<{ item: Item }>();
 
 function wikiPageRedirect(): void {
     window.location.assign(
-        encodeURI(`/plugins/docman/?group_id=${project_id.value}&action=show&id=${props.item.id}`),
+        encodeURI(`/plugins/docman/?group_id=${project_id}&action=show&id=${props.item.id}`),
     );
 }
 </script>

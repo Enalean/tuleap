@@ -80,6 +80,8 @@ import type { Item, RootState } from "../../../../type";
 import type { ErrorState } from "../../../../store/error/module";
 import type { PermissionsState } from "../../../../store/permissions/permissions-default-state";
 import type { ConfigurationState } from "../../../../store/configuration";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { PROJECT_ID } from "../../../../configuration-keys";
 
 const $store = useStore();
 
@@ -98,9 +100,10 @@ const { project_ugroups } = useNamespacedState<Pick<PermissionsState, "project_u
     "permissions",
     ["project_ugroups"],
 );
-const { project_id, is_status_property_used } = useNamespacedState<
-    Pick<ConfigurationState, "project_id" | "is_status_property_used">
->("configuration", ["project_id", "is_status_property_used"]);
+const project_id = strictInject(PROJECT_ID);
+const { is_status_property_used } = useNamespacedState<
+    Pick<ConfigurationState, "is_status_property_used">
+>("configuration", ["is_status_property_used"]);
 
 onMounted(() => {
     modal = createModal(form.value);
@@ -147,7 +150,7 @@ async function show(event: { detail: { parent: Item } }): Promise<void> {
     is_displayed.value = true;
     modal?.show();
     try {
-        await $store.dispatch("permissions/loadProjectUserGroupsIfNeeded", project_id.value);
+        await $store.dispatch("permissions/loadProjectUserGroupsIfNeeded", project_id);
     } catch (err) {
         await handleErrors($store, err);
         modal?.hide();

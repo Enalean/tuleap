@@ -52,6 +52,8 @@ import {
 import type { ConfigurationGetters } from "../../../store/configuration/getters";
 import type { ConfigurationState } from "../../../store/configuration";
 import { useGettext } from "vue3-gettext";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { USER_ID } from "../../../configuration-keys";
 
 const MAX_FILES_ERROR = "max_files";
 const CREATION_ERROR = "creation_error";
@@ -74,6 +76,8 @@ const is_drop_possible = ref<boolean>(true);
 const dragover_error_reason = ref<string>("");
 const fake_item_list = ref<Array<FakeItem>>([]);
 
+const user_id = strictInject(USER_ID);
+
 const { user_can_dragndrop } = useNamespacedGetters<
     Pick<ConfigurationGetters, "user_can_dragndrop">
 >("configuration", ["user_can_dragndrop"]);
@@ -81,7 +85,6 @@ const { current_folder, folder_content } = useState<
     Pick<RootState, "current_folder" | "folder_content">
 >(["current_folder", "folder_content"]);
 const {
-    user_id,
     max_files_dragndrop,
     max_size_upload,
     is_changelog_proposed_after_dnd,
@@ -89,14 +92,12 @@ const {
 } = useNamespacedState<
     Pick<
         ConfigurationState,
-        | "user_id"
         | "max_files_dragndrop"
         | "max_size_upload"
         | "is_changelog_proposed_after_dnd"
         | "is_filename_pattern_enforced"
     >
 >("configuration", [
-    "user_id",
     "max_files_dragndrop",
     "max_size_upload",
     "is_changelog_proposed_after_dnd",
@@ -359,7 +360,7 @@ function getDropZoneItem() {
 async function uploadNewFileVersion(event: DragEvent, dropzone_item: ItemFile): Promise<void> {
     const { lock_info, approval_table } = dropzone_item;
     const is_document_locked_by_current_user =
-        lock_info === null || lock_info.lock_by.id === user_id.value;
+        lock_info === null || lock_info.lock_by.id === user_id;
 
     if (!is_document_locked_by_current_user) {
         error_modal_shown.value = EDITION_LOCKED;

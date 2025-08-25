@@ -28,9 +28,9 @@ import { useClipboardStore } from "../../../stores/clipboard";
 import type { TestingPinia } from "@pinia/testing";
 import { createTestingPinia } from "@pinia/testing";
 import { ref } from "vue";
-import type { ConfigurationState } from "../../../store/configuration";
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 import emitter from "../../../helpers/emitter";
+import { PROJECT_ID, USER_ID } from "../../../configuration-keys";
 
 const mocked_store = { store: { dispatch: vi.fn() } } as unknown as Store<RootState>;
 
@@ -50,23 +50,14 @@ describe("CutItem", () => {
             createSpy: vi.fn,
         });
 
-        store = useClipboardStore(mocked_store, "1", "1", pinia);
+        store = useClipboardStore(mocked_store, 1, 1, pinia);
         return shallowMount(CutItem, {
             global: {
-                ...getGlobalTestOptions(
-                    {
-                        modules: {
-                            configuration: {
-                                state: {
-                                    user_id: "1",
-                                    project_id: "1",
-                                } as ConfigurationState,
-                                namespaced: true,
-                            },
-                        },
-                    },
-                    pinia,
-                ),
+                ...getGlobalTestOptions({}, pinia),
+                provide: {
+                    [USER_ID.valueOf()]: 1,
+                    [PROJECT_ID.valueOf()]: 1,
+                },
             },
             props: { item },
         });

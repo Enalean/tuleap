@@ -21,8 +21,6 @@ import type { RootState } from "../type";
 
 export const state: RootState = {
     configuration: {
-        user_id: 0,
-        project_id: 0,
         root_id: 0,
         project_name: "",
         project_public_name: "",

@@ -22,7 +22,7 @@ import { describe, expect, it } from "vitest";
 import { shallowMount } from "@vue/test-utils";
 import ItemPermissionError from "./ItemPermissionError.vue";
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
-import type { ConfigurationState } from "../../../store/configuration";
+import { PROJECT_ID } from "../../../configuration-keys";
 
 describe("ItemPermissionError", () => {
     it("displays the error with a for to send custom email", () => {
@@ -35,16 +35,10 @@ describe("ItemPermissionError", () => {
             },
             props: { csrf_token: "", csrf_token_name: "challenge" },
             global: {
-                ...getGlobalTestOptions({
-                    modules: {
-                        configuration: {
-                            state: {
-                                project_id: 101,
-                            } as unknown as ConfigurationState,
-                            namespaced: true,
-                        },
-                    },
-                }),
+                ...getGlobalTestOptions({}),
+                provide: {
+                    [PROJECT_ID.valueOf()]: 101,
+                },
             },
         });
 

@@ -38,13 +38,12 @@ import { TYPE_FOLDER } from "../constants";
 
 describe("actions-get", () => {
     let context: ActionContext<RootState, RootState>;
+    const project_id = 101;
 
     beforeEach(() => {
-        const project_id = 101;
         context = {
             commit: vi.fn(),
             state: {
-                configuration: { project_id },
                 current_folder_ascendant_hierarchy: [],
             },
         } as unknown as ActionContext<RootState, RootState>;
@@ -88,7 +87,7 @@ describe("actions-get", () => {
             vi.spyOn(rest_querier, "getFolderContent").mockResolvedValue([item]);
             const handle_error = vi.spyOn(error_handler, "handleErrors");
 
-            await loadRootFolder(context);
+            await loadRootFolder(context, project_id);
 
             expect(context.commit).toHaveBeenCalledWith("beginLoading");
             expect(context.commit).toHaveBeenCalledWith("setCurrentFolder", {
@@ -122,7 +121,7 @@ describe("actions-get", () => {
                 ),
             );
 
-            await loadRootFolder(context);
+            await loadRootFolder(context, project_id);
 
             expect(context.commit).toHaveBeenCalledWith("error/switchFolderPermissionError");
             expect(context.commit).toHaveBeenCalledWith("stopLoading");
@@ -146,7 +145,7 @@ describe("actions-get", () => {
                 ),
             );
 
-            await loadRootFolder(context);
+            await loadRootFolder(context, project_id);
 
             expect(context.commit).toHaveBeenCalledWith(
                 "error/setFolderLoadingError",
@@ -173,7 +172,7 @@ describe("actions-get", () => {
                 ),
             );
 
-            await loadRootFolder(context);
+            await loadRootFolder(context, project_id);
 
             expect(context.commit).toHaveBeenCalledWith(
                 "error/setFolderLoadingError",

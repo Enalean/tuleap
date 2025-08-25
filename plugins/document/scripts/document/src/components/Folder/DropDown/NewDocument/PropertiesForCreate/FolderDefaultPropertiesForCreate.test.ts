@@ -25,6 +25,7 @@ import type { Property, ListValue } from "../../../../../type";
 import type { ConfigurationState } from "../../../../../store/configuration";
 import type { PropertiesState } from "../../../../../store/properties/module";
 import { getGlobalTestOptions } from "../../../../../helpers/global-options-for-test";
+import { PROJECT_ID } from "../../../../../configuration-keys";
 
 vi.mock("tlp", () => {
     return { datePicker: vi.fn() };
@@ -56,6 +57,9 @@ describe("FolderDefaultPropertiesForCreate", () => {
                         },
                     },
                 }),
+                provide: {
+                    [PROJECT_ID.valueOf()]: 101,
+                },
             },
         });
     }

@@ -54,11 +54,10 @@ export interface PropertiesActions {
 
 export const loadProjectProperties = async (
     context: ActionContext<PropertiesState, RootState>,
+    project_id: number,
 ): Promise<void> => {
     try {
-        const project_properties = await getProjectProperties(
-            context.rootState.configuration.project_id,
-        );
+        const project_properties = await getProjectProperties(project_id);
 
         context.commit("saveProjectProperties", project_properties);
     } catch (exception) {

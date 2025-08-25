@@ -43,17 +43,15 @@
 import FakeCaret from "./FakeCaret.vue";
 import { ICON_WIKI, ACTION_ICON_WIKI } from "../../../constants";
 import type { Item } from "../../../type";
-import { useNamespacedState } from "vuex-composition-helpers";
-import type { ConfigurationState } from "../../../store/configuration";
 import { computed } from "vue";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { PROJECT_ID } from "../../../configuration-keys";
 
 const props = defineProps<{ item: Item }>();
 
-const { project_id } = useNamespacedState<Pick<ConfigurationState, "project_id">>("configuration", [
-    "project_id",
-]);
+const project_id = strictInject(PROJECT_ID);
 
 const wiki_url = computed((): string => {
-    return `/plugins/docman/?group_id=${project_id.value}&action=show&id=${props.item.id}`;
+    return `/plugins/docman/?group_id=${project_id}&action=show&id=${props.item.id}`;
 });
 </script>

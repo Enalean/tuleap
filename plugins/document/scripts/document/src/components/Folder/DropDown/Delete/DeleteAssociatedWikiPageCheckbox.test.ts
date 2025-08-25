@@ -25,7 +25,7 @@ import DeleteAssociatedWikiPageCheckbox from "./DeleteAssociatedWikiPageCheckbox
 import type { Wiki } from "../../../../type";
 import type { ItemPath } from "../../../../store/actions-helpers/build-parent-paths";
 import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
-import type { ConfigurationState } from "../../../../store/configuration";
+import { PROJECT_ID } from "../../../../configuration-keys";
 
 describe("ModalConfirmationDeletion", () => {
     function createWrapper(
@@ -43,14 +43,10 @@ describe("ModalConfirmationDeletion", () => {
         return shallowMount(DeleteAssociatedWikiPageCheckbox, {
             props: { item, wikiPageReferencers },
             global: {
-                ...getGlobalTestOptions({
-                    modules: {
-                        configuration: {
-                            state: { project_id: "104" } as ConfigurationState,
-                            namespaced: true,
-                        },
-                    },
-                }),
+                ...getGlobalTestOptions({}),
+                provide: {
+                    [PROJECT_ID.valueOf()]: 104,
+                },
             },
         });
     }

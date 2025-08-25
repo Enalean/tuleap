@@ -56,11 +56,13 @@ import {
     doesFolderNameAlreadyExist,
 } from "../../../helpers/properties-helpers/check-item-title";
 import { isItemDestinationIntoItself } from "../../../helpers/clipboard/clipboard-helpers";
-import { useNamespacedState, useState } from "vuex-composition-helpers";
+import { useState } from "vuex-composition-helpers";
 import { useClipboardStore } from "../../../stores/clipboard";
 import { computed } from "vue";
-import type { ConfigurationState } from "../../../store/configuration";
 import { useGettext } from "vue3-gettext";
+import { useStore } from "vuex";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { PROJECT_ID, USER_ID } from "../../../configuration-keys";
 
 const { $gettext } = useGettext();
 
@@ -70,14 +72,11 @@ const { folder_content, current_folder } = useState<
     Pick<State, "folder_content" | "current_folder">
 >(["folder_content", "current_folder"]);
 
-import { useStore } from "vuex";
-
 const store = useStore();
 
-const { project_id, user_id } = useNamespacedState<
-    Pick<ConfigurationState, "project_id" | "user_id">
->("configuration", ["project_id", "user_id"]);
-const clipboard = useClipboardStore(store, project_id.value, user_id.value);
+const user_id = strictInject(USER_ID);
+const project_id = strictInject(PROJECT_ID);
+const clipboard = useClipboardStore(store, project_id, user_id);
 
 const can_item_be_pasted = computed((): boolean => {
     if (

@@ -27,6 +27,7 @@ import type { Folder, Property, ListValue } from "../../../../type";
 import type { ConfigurationState } from "../../../../store/configuration";
 import type { PropertiesState } from "../../../../store/properties/module";
 import emitter from "../../../../helpers/emitter";
+import { PROJECT_ID } from "../../../../configuration-keys";
 
 vi.mock("tlp", () => {
     return { datePicker: vi.fn() };
@@ -72,6 +73,9 @@ describe("FolderDefaultPropertiesForUpdate", () => {
                         },
                     },
                 }),
+                provide: {
+                    [PROJECT_ID.valueOf()]: 101,
+                },
             },
         });
     }

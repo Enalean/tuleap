@@ -101,6 +101,8 @@ import { useNamespacedActions, useNamespacedState } from "vuex-composition-helpe
 import type { ConfigurationState } from "../../../../store/configuration";
 import type { PropertiesState } from "../../../../store/properties/module";
 import type { PropertiesActions } from "../../../../store/properties/properties-actions";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { PROJECT_ID } from "../../../../configuration-keys";
 
 const props = defineProps<{
     itemProperty: Array<Property>;
@@ -112,6 +114,8 @@ const props = defineProps<{
 let list_of_properties_to_update: Array<string> = [];
 let properties_to_update = ref(list_of_properties_to_update);
 let status_input = ref<InstanceType<typeof HTMLInputElement>>();
+
+const project_id = strictInject(PROJECT_ID);
 
 const { is_status_property_used } = useNamespacedState<
     Pick<ConfigurationState, "is_status_property_used">
@@ -131,7 +135,7 @@ const has_recursion_property = computed((): boolean => {
 
 onMounted((): void => {
     if (!has_loaded_properties.value) {
-        loadProjectProperties();
+        loadProjectProperties(project_id);
     }
 });
 

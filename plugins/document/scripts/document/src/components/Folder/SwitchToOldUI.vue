@@ -33,18 +33,17 @@
 <script setup lang="ts">
 import { useRoute } from "vue-router";
 import { computed } from "vue";
-import { useNamespacedState, useState } from "vuex-composition-helpers";
+import { useState } from "vuex-composition-helpers";
 import type { RootState } from "../../type";
-import type { ConfigurationState } from "../../store/configuration";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { PROJECT_ID } from "../../configuration-keys";
 
 const { current_folder } = useState<Pick<RootState, "current_folder">>(["current_folder"]);
-const { project_id } = useNamespacedState<Pick<ConfigurationState, "project_id">>("configuration", [
-    "project_id",
-]);
+const project_id = strictInject(PROJECT_ID);
 
 const redirectUrl = computed(() => {
     const route = useRoute();
-    const encoded_project_id = encodeURIComponent(project_id.value);
+    const encoded_project_id = encodeURIComponent(project_id);
     if (route.name === "folder") {
         let item_id = route.params.item_id;
         if (Array.isArray(item_id)) {

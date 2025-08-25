@@ -47,12 +47,11 @@ export interface RootActionsRetrieve {
 
 export const loadRootFolder = async (
     context: ActionContext<RootState, RootState>,
+    project_id: number,
 ): Promise<void> => {
     try {
         context.commit("beginLoading");
-        const service = await getDocumentManagerServiceInformation(
-            Number(context.state.configuration.project_id),
-        );
+        const service = await getDocumentManagerServiceInformation(project_id);
         const root: RestFolder = await service.root_item;
 
         const folder = convertFolderItemToFolder(root);

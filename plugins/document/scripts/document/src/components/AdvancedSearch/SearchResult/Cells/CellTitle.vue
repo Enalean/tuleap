@@ -90,17 +90,15 @@ import {
 } from "../../../../constants";
 import { iconForMimeType } from "../../../../helpers/icon-for-mime-type";
 import type { Route } from "vue-router/types/router";
-import { useNamespacedState, useState } from "vuex-composition-helpers";
-import type { ConfigurationState } from "../../../../store/configuration";
+import { useState } from "vuex-composition-helpers";
 import SearchItemDropdown from "./SearchItemDropdown.vue";
 import { OTHER_ITEM_TYPES } from "../../../../injection-keys";
 import { strictInject } from "@tuleap/vue-strict-inject";
+import { PROJECT_ID } from "../../../../configuration-keys";
 
 const { current_folder } = useState<{ current_folder: Folder }>(["current_folder"]);
 
-const { project_id } = useNamespacedState<Pick<ConfigurationState, "project_id">>("configuration", [
-    "project_id",
-]);
+const project_id = strictInject(PROJECT_ID);
 
 const props = defineProps<{ item: ItemSearchResult }>();
 
@@ -155,7 +153,7 @@ const href = computed((): string | null => {
     }
 
     if (props.item.type === TYPE_LINK || props.item.type === TYPE_WIKI) {
-        return `/plugins/docman/?group_id=${project_id.value}&action=show&id=${props.item.id}`;
+        return `/plugins/docman/?group_id=${project_id}&action=show&id=${props.item.id}`;
     }
 
     return null;

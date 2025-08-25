@@ -20,14 +20,14 @@ import { describe, expect, it, vi } from "vitest";
 import type { Wrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import ClipboardContentInformation from "./ClipboardContentInformation.vue";
-import { CLIPBOARD_OPERATION_CUT, CLIPBOARD_OPERATION_COPY } from "../../../constants";
+import { CLIPBOARD_OPERATION_COPY, CLIPBOARD_OPERATION_CUT } from "../../../constants";
 import { useClipboardStore } from "../../../stores/clipboard";
 import type { ClipboardState } from "../../../stores/types";
 import type { TestingPinia } from "@pinia/testing";
 import { createTestingPinia } from "@pinia/testing";
 import { ref } from "vue";
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
-import type { ConfigurationState } from "../../../store/configuration";
+import { PROJECT_ID, USER_ID } from "../../../configuration-keys";
 
 let pinia: TestingPinia;
 const mocked_store = { dispatch: vi.fn() };
@@ -42,23 +42,15 @@ function getWrapper(clipboard: ClipboardState): Wrapper<ClipboardContentInformat
     useClipboardStore(mocked_store, "1", "1", pinia);
     return shallowMount(ClipboardContentInformation, {
         global: {
-            ...getGlobalTestOptions(
-                {
-                    modules: {
-                        configuration: {
-                            state: {
-                                user_id: "1",
-                                project_id: "1",
-                            } as ConfigurationState,
-                            namespaced: true,
-                        },
-                    },
-                },
-                pinia,
-            ),
+            ...getGlobalTestOptions({}, pinia),
+            provide: {
+                [USER_ID.valueOf()]: 1,
+                [PROJECT_ID.valueOf()]: 1,
+            },
         },
     });
 }
+
 describe("ClipboardContentInformation", () => {
     it(`Given there is no item in the clipboard
         Then no information is displayed`, () => {

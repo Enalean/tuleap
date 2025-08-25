@@ -22,11 +22,11 @@ import type { FileProperties, ItemSearchResult, OtherItemTypeCollection } from "
 import type { VueWrapper } from "@vue/test-utils";
 import { RouterLinkStub, shallowMount } from "@vue/test-utils";
 import CellTitle from "./CellTitle.vue";
-import type { ConfigurationState } from "../../../../store/configuration";
 import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
 import type { Dropdown } from "@tuleap/tlp-dropdown";
 import * as tlp_dropdown from "@tuleap/tlp-dropdown";
 import { OTHER_ITEM_TYPES } from "../../../../injection-keys";
+import { PROJECT_ID } from "../../../../configuration-keys";
 
 vi.mock("@tuleap/tlp-dropdown");
 
@@ -40,21 +40,13 @@ describe("CellTitle", () => {
                 item,
             },
             global: {
-                ...getGlobalTestOptions({
-                    modules: {
-                        configuration: {
-                            state: {
-                                project_id: "101",
-                            } as unknown as ConfigurationState,
-                            namespaced: true,
-                        },
-                    },
-                }),
+                ...getGlobalTestOptions({}),
                 stubs: {
                     RouterLink: RouterLinkStub,
                 },
                 provide: {
                     [OTHER_ITEM_TYPES.valueOf()]: other_item_types,
+                    [PROJECT_ID.valueOf()]: 101,
                 },
             },
         });
