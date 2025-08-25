@@ -21,11 +21,11 @@ import { getAttributeOrThrow } from "@tuleap/dom";
 import type { AllowedIcons } from "./type";
 
 type Configuration = {
-    project_id: string;
-    minimal_rank: number;
-    csrf_token: string;
-    csrf_token_name: string;
-    allowed_icons: AllowedIcons;
+    readonly project_id: string;
+    readonly minimal_rank: number;
+    readonly csrf_token: string;
+    readonly csrf_token_name: string;
+    readonly allowed_icons: AllowedIcons;
 };
 
 export function gatherConfiguration(vue_mount_point: HTMLElement): Configuration {

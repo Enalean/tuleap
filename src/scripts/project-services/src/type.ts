@@ -18,19 +18,19 @@
  */
 
 export type CsrfToken = {
-    value: string;
-    name: string;
+    readonly value: string;
+    readonly name: string;
 };
 
 type IconInfo = {
-    description: string;
-    "fa-icon": string;
+    readonly description: string;
+    readonly "fa-icon": string;
 };
 
 export type AllowedIcons = Record<string, IconInfo>;
 
 export type Service = {
-    id: number | null;
+    readonly id: number | null;
     icon_name: string;
     label: string;
     short_name: string;
