@@ -24,7 +24,6 @@ use Tuleap\REST\MilestoneBase;
 #[\PHPUnit\Framework\Attributes\Group('MilestonesTest')]
 class MilestonesBacklogPatchTest extends MilestoneBase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
-    /** @var Test\Rest\Tracker\Tracker */
     private $release;
     private $story_add;
     private $story_sub;

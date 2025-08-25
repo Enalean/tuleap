@@ -23,10 +23,11 @@ use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;
-use Test\Rest\Cache;
-use Test\Rest\RequestWrapper;
+use Tuleap\REST\Cache;
+use Tuleap\REST\RequestWrapper;
+use Tuleap\Test\PHPUnit\TestCase;
 
-class RestBase extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+class RestBase extends TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     protected RequestFactoryInterface $request_factory;
     protected StreamFactoryInterface $stream_factory;
