@@ -42,7 +42,6 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
                 {
                     update_permissions_on_init: true,
                     hide_permissions: true,
-                    hide_news: true,
                     default_position: false,
                 },
                 options.newItem || {},
@@ -302,31 +301,6 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
                 new Insertion.Before(
                     "docman_new_permissions_panel",
                     "<input type=hidden name=user_has_displayed_permissions value=1 />",
-                );
-            }
-        }
-        //}}}
-
-        //{{{ News
-        if ($("docman_new_news_panel")) {
-            if (this.options.newItem.hide_news) {
-                new Insertion.Before(
-                    "docman_new_news_panel",
-                    '<div id="docman_new_news_text">' +
-                        this.options.language.new_news_explaination +
-                        ' <a href="" onclick="' +
-                        "Element.show('docman_new_news_panel'); " +
-                        "Element.hide('docman_new_news_text'); " +
-                        "new Insertion.Before('docman_new_news_panel', '<input type=hidden name=user_has_displayed_news value=1 />'); " +
-                        'return false;">[' +
-                        this.options.language.new_news_displayform +
-                        "]</a></div>",
-                );
-                Element.hide("docman_new_news_panel");
-            } else {
-                new Insertion.Before(
-                    "docman_new_news_panel",
-                    "<input type=hidden name=user_has_displayed_news value=1 />",
                 );
             }
         }

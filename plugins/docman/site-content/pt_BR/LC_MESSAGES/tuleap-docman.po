@@ -725,9 +725,6 @@ msgid ""
 "embedded files are supported</em>."
 msgstr ""
 
-msgid "Display news form"
-msgstr ""
-
 msgid "Docman item"
 msgstr ""
 
@@ -886,15 +883,6 @@ msgid "Error while creating initial version."
 msgstr ""
 
 msgid "Error while creating new version."
-msgstr ""
-
-msgid "Error while creating news. Check that details field is not empty."
-msgstr ""
-
-msgid "Error while creating news. Check that subject field is not empty."
-msgstr ""
-
-msgid "Error while creating news. Check that you have right permissions."
 msgstr ""
 
 msgid "Error while trying to delete the wiki page from wiki service."
@@ -1126,9 +1114,6 @@ msgstr ""
 msgid "Last update of the document content or properties."
 msgstr ""
 
-msgid "Let fields blank if you do not want news."
-msgstr ""
-
 msgid "Link"
 msgstr "Link"
 
@@ -1282,9 +1267,6 @@ msgid "New version of %s wiki page was created by %s."
 msgstr ""
 
 msgid "New version successfully created."
-msgstr ""
-
-msgid "News successfully created."
 msgstr ""
 
 #, php-format
@@ -2353,9 +2335,6 @@ msgid "You can not paste an item into itself."
 msgstr ""
 
 msgid "You can only clone 'Project' wide reports or your 'Personal' reports."
-msgstr ""
-
-msgid "You can post news about your new item if you are admin of this project."
 msgstr ""
 
 msgid "You cannot add emails"
