@@ -33,7 +33,7 @@
             v-bind:value="service.is_used"
             v-bind:disabled-reason="service.is_disabled_reason"
         />
-        <hidden-service-is-active v-bind:value="service.is_active" />
+        <hidden-service-is-active v-bind:is_active="service.is_active" />
         <read-only-service-rank v-if="is_summary_service" v-bind:value="service.rank" />
         <service-rank v-else id="project-service-edit-modal-rank" v-bind:value="service.rank" />
         <service-link
