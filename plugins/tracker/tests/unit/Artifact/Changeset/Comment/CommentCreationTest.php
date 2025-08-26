@@ -24,7 +24,7 @@ namespace Tuleap\Tracker\Artifact\Changeset\Comment;
 
 use Tuleap\Test\Builders\ProjectUGroupTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
-use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
+use Tuleap\Tracker\FormElement\Field\Files\CreatedFileURLMapping;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CommentCreationTest extends \Tuleap\Test\PHPUnit\TestCase

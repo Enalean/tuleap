@@ -36,7 +36,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\FormElement\Field\String\StringField;
 use Tuleap\Tracker\FormElement\Field\Text\TextField;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\FileFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\FilesFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\TextFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -340,7 +340,7 @@ final class ArtifactContentUpdaterTest extends TestCase
         $update_artifact                 = HandlePUTStub::build();
         $update_level                    = UpdateLevelStub::build();
         $this->file_upload_data_provider = GetFileUploadDataStub::withField(
-            FileFieldBuilder::aFileField(self::FILES_ID)->build(),
+            FilesFieldBuilder::aFileField(self::FILES_ID)->build(),
         );
 
         $updater = $this->getUpdater($update_level, $update_artifact);

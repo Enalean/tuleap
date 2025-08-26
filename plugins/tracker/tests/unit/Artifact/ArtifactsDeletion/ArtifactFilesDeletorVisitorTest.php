@@ -28,7 +28,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueFileTestBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\FileFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\FilesFieldBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtifactFilesDeletorVisitorTest extends TestCase
@@ -44,7 +44,7 @@ final class ArtifactFilesDeletorVisitorTest extends TestCase
 
     public function testItDeleteFile(): void
     {
-        $field = FileFieldBuilder::aFileField(25)->build();
+        $field = FilesFieldBuilder::aFileField(25)->build();
 
         $file1 = $this->createMock(Tracker_FileInfo::class);
         $file1->expects($this->once())->method('deleteFiles');

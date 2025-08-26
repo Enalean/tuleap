@@ -59,7 +59,7 @@ final class FileInfoXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             $another_artifact,
             new Tracker_FileInfo(
                 188,
-                $this->createMock(\Tracker_FormElement_Field_File::class),
+                $this->createMock(\Tuleap\Tracker\FormElement\Field\Files\FilesField::class),
                 101,
                 '',
                 'avatar.png',
@@ -71,7 +71,7 @@ final class FileInfoXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             $artifact,
             new Tracker_FileInfo(
                 190,
-                $this->createMock(\Tracker_FormElement_Field_File::class),
+                $this->createMock(\Tuleap\Tracker\FormElement\Field\Files\FilesField::class),
                 101,
                 '',
                 'document.txt',
@@ -83,7 +83,7 @@ final class FileInfoXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             $artifact,
             new Tracker_FileInfo(
                 191,
-                $this->createMock(\Tracker_FormElement_Field_File::class),
+                $this->createMock(\Tuleap\Tracker\FormElement\Field\Files\FilesField::class),
                 102,
                 '',
                 'landscape.png',

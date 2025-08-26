@@ -72,7 +72,7 @@ final class AfterNewChangesetHandlerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItTriggersAllFieldsPostSaveNewChangesetAndWorkflowAfter(): void
     {
         $string_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\String\StringField::class);
-        $file_field   = $this->createMock(\Tracker_FormElement_Field_File::class);
+        $file_field   = $this->createMock(\Tuleap\Tracker\FormElement\Field\Files\FilesField::class);
         $this->form_element_factory->method('getUsedFields')->willReturn([$string_field, $file_field]);
         $this->form_element_factory->method('isFieldAFileField')->willReturnOnConsecutiveCalls(false, true);
 

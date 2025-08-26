@@ -26,10 +26,10 @@ use Luracast\Restler\RestException;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
-use Tuleap\Tracker\FormElement\Field\File\Upload\EmptyFileToUploadFinisher;
-use Tuleap\Tracker\FormElement\Field\File\Upload\FileOngoingUploadDao;
-use Tuleap\Tracker\FormElement\Field\File\Upload\FileToUploadCreator;
-use Tuleap\Tracker\FormElement\Field\File\Upload\NewFileUpload;
+use Tuleap\Tracker\FormElement\Field\Files\Upload\EmptyFileToUploadFinisher;
+use Tuleap\Tracker\FormElement\Field\Files\Upload\FileOngoingUploadDao;
+use Tuleap\Tracker\FormElement\Field\Files\Upload\FileToUploadCreator;
+use Tuleap\Tracker\FormElement\Field\Files\Upload\NewFileUpload;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FileCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -67,7 +67,7 @@ final class FileCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
     {
         $uploader = UserTestBuilder::aUser()->withId(102)->build();
 
-        $file_field = new \Tracker_FormElement_Field_File(
+        $file_field = new \Tuleap\Tracker\FormElement\Field\Files\FilesField(
             42,
             67,
             1,

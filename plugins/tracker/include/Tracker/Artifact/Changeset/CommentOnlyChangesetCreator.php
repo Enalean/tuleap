@@ -29,7 +29,7 @@ use Tuleap\NeverThrow\Result;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\Comment\NewComment;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
-use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
+use Tuleap\Tracker\FormElement\Field\Files\CreatedFileURLMapping;
 
 final class CommentOnlyChangesetCreator implements CreateCommentOnlyChangeset
 {

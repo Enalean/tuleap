@@ -65,7 +65,7 @@ final class FormattedChangesetValueForFieldsRetrieverTest extends \Tuleap\Test\P
         $changeset_value = $this->createMock(Tracker_Artifact_ChangesetValue_File::class);
         $changeset_value->method('getFiles')->willReturn($files);
 
-        $field = $this->createMock(\Tracker_FormElement_Field_File::class);
+        $field = $this->createMock(\Tuleap\Tracker\FormElement\Field\Files\FilesField::class);
         $field->method('getId')->willReturn(112);
         $field->method('getLastChangesetValue')->willReturn($changeset_value);
 
@@ -100,7 +100,7 @@ final class FormattedChangesetValueForFieldsRetrieverTest extends \Tuleap\Test\P
     {
         $changeset_value = null;
 
-        $field = $this->createMock(\Tracker_FormElement_Field_File::class);
+        $field = $this->createMock(\Tuleap\Tracker\FormElement\Field\Files\FilesField::class);
         $field->method('getId')->willReturn(112);
         $field->method('getLastChangesetValue')->willReturn($changeset_value);
 
@@ -124,7 +124,7 @@ final class FormattedChangesetValueForFieldsRetrieverTest extends \Tuleap\Test\P
         $changeset_value = $this->createMock(Tracker_Artifact_ChangesetValue_File::class);
         $changeset_value->method('getFiles')->willReturn([]);
 
-        $field = $this->createMock(\Tracker_FormElement_Field_File::class);
+        $field = $this->createMock(\Tuleap\Tracker\FormElement\Field\Files\FilesField::class);
         $field->method('getId')->willReturn(112);
         $field->method('getLastChangesetValue')->willReturn($changeset_value);
 

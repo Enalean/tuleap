@@ -21,7 +21,7 @@
 
 use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
+use Tuleap\Tracker\FormElement\Field\Files\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
 use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 use Tuleap\TrackerEncryption\ChangesetValue;

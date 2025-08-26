@@ -29,7 +29,7 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\FileFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\FilesFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\TextFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Tracker;
@@ -92,7 +92,7 @@ final class RichTextareaProviderTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItDoesNotAllowImageUploadDuringArtifactCopy(): void
     {
-        $upload_data = new FileUploadData(FileFieldBuilder::aFileField(1002)->build());
+        $upload_data = new FileUploadData(FilesFieldBuilder::aFileField(1002)->build());
 
         $this->first_usable_field_data_getter->method('getFileUploadData')->willReturn($upload_data);
 
@@ -131,7 +131,7 @@ final class RichTextareaProviderTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItIncludesUploadOptionsIfAFileFieldIsUpdatable(): void
     {
         $file_field_id = 1002;
-        $upload_data   = new FileUploadData(FileFieldBuilder::aFileField($file_field_id)->build());
+        $upload_data   = new FileUploadData(FilesFieldBuilder::aFileField($file_field_id)->build());
 
         $this->first_usable_field_data_getter->method('getFileUploadData')->willReturn($upload_data);
 

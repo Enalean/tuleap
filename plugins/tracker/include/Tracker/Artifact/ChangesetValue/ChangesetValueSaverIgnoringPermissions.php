@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Artifact\ChangesetValue;
 
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
+use Tuleap\Tracker\FormElement\Field\Files\CreatedFileURLMapping;
 
 /**
  * I save a changeset value for a field, but I ignore required fields and permissions. This is used for import of

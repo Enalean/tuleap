@@ -22,6 +22,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactId\ArtifactIdField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\Computed\ComputedField;
 use Tuleap\Tracker\FormElement\Field\Date\DateField;
+use Tuleap\Tracker\FormElement\Field\Files\FilesField;
 use Tuleap\Tracker\FormElement\Field\Float\FloatField;
 use Tuleap\Tracker\FormElement\Field\Integer\IntegerField;
 use Tuleap\Tracker\FormElement\Field\LastUpdateBy\LastUpdateByField;
@@ -80,7 +81,7 @@ class Tracker_XML_Updater_FieldChangeXMLUpdaterVisitor implements Tracker_FormEl
         return $this->date_updater;
     }
 
-    public function visitFile(Tracker_FormElement_Field_File $field)
+    public function visitFile(FilesField $field)
     {
         return $this->unknown_updater;
     }

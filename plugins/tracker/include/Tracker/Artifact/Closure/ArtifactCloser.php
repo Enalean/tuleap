@@ -38,7 +38,7 @@ use Tuleap\Tracker\Artifact\Changeset\CreateCommentOnlyChangeset;
 use Tuleap\Tracker\Artifact\Changeset\CreateNewChangeset;
 use Tuleap\Tracker\Artifact\Changeset\NewChangeset;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
-use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
+use Tuleap\Tracker\FormElement\Field\Files\CreatedFileURLMapping;
 use Tuleap\Tracker\Semantic\Status\Done\DoneValueRetriever;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneNotDefinedException;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneValueNotFoundException;

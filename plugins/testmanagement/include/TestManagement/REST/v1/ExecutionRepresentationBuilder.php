@@ -152,7 +152,7 @@ class ExecutionRepresentationBuilder
     }
 
     /**
-     * @param \Tracker_FormElement_Field_File[] $file_fields
+     * @param \Tuleap\Tracker\FormElement\Field\Files\FilesField[] $file_fields
      *
      * @return \Tuleap\TestManagement\REST\v1\ExecutionRepresentation
      * @throws DefinitionNotFoundException
@@ -195,7 +195,7 @@ class ExecutionRepresentationBuilder
     }
 
     /**
-     * @param \Tracker_FormElement_Field_File[] $file_fields
+     * @param \Tuleap\Tracker\FormElement\Field\Files\FilesField[] $file_fields
      *
      * @return AttachmentRepresentation[]
      */

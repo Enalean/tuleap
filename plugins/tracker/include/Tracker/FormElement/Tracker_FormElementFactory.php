@@ -29,6 +29,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\RetrieveUsedArtifactLinkFields
 use Tuleap\Tracker\FormElement\Field\Computed\ComputedField;
 use Tuleap\Tracker\FormElement\Field\Date\DateField;
 use Tuleap\Tracker\FormElement\Field\FieldDao;
+use Tuleap\Tracker\FormElement\Field\Files\FilesField;
 use Tuleap\Tracker\FormElement\Field\Float\FloatField;
 use Tuleap\Tracker\FormElement\Field\Integer\IntegerField;
 use Tuleap\Tracker\FormElement\Field\LastUpdateBy\LastUpdateByField;
@@ -115,7 +116,7 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
         self::FIELD_SELECT_BOX_TYPE => SelectboxField::class,
         self::FIELD_RADIO_BUTTON_TYPE => RadioButtonField::class,
         self::FIELD_MULTI_SELECT_BOX_TYPE => MultiSelectboxField::class,
-        self::FIELD_FILE_TYPE => Tracker_FormElement_Field_File::class,
+        self::FIELD_FILE_TYPE => FilesField::class,
         self::FIELD_CHECKBOX_TYPE => CheckboxField::class,
         self::FIELD_INTEGER_TYPE => IntegerField::class,
         self::FIELD_OPEN_LIST_TYPE => OpenListField::class,
@@ -637,7 +638,7 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
 
     /**
      * @param Tracker $tracker
-     * @return Tracker_FormElement_Field_File[]
+     * @return FilesField[]
      */
     public function getUsedFileFields($tracker)
     {

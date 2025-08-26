@@ -44,7 +44,7 @@ use Tracker_Report_Criteria_PermissionsOnArtifact_ValueDao;
 use Tuleap\Option\Option;
 use Tuleap\Project\REST\UserGroupRepresentation;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
+use Tuleap\Tracker\FormElement\Field\Files\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\PermissionsOnArtifactUGroupRetriever;
 use Tuleap\Tracker\FormElement\PermissionsOnArtifactUsageFormatter;
 use Tuleap\Tracker\FormElement\PermissionsOnArtifactValidator;

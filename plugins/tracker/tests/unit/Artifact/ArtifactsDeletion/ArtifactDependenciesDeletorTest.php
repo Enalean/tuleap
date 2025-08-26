@@ -38,7 +38,7 @@ final class ArtifactDependenciesDeletorTest extends TestCase
     private const PROJECT_ID = 109;
     private ArtifactDependenciesCleaner $deletor;
     private \Tuleap\Tracker\Tracker|\PHPUnit\Framework\MockObject\Stub $tracker;
-    private \Tracker_FormElement_Field_File $file_field;
+    private \Tuleap\Tracker\FormElement\Field\Files\FilesField $file_field;
     private \PFUser $user;
     private \PHPUnit\Framework\MockObject\MockObject&PostArtifactMoveReferencesCleaner $post_move_deletor;
     private PostArtifactDeletionCleaner&\PHPUnit\Framework\MockObject\MockObject $artifact_deletor;

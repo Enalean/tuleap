@@ -24,7 +24,6 @@ use ForgeConfig;
 use Luracast\Restler\RestException;
 use PFUser;
 use Tracker_FormElement_Field;
-use Tracker_FormElement_Field_File;
 use Tracker_FormElement_Field_List_Bind_Static;
 use Tracker_FormElementFactory;
 use Tracker_REST_FormElementRepresentation;
@@ -34,10 +33,11 @@ use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\REST\v1\TrackerFieldRepresentations\TrackerFieldPatchRepresentation;
-use Tuleap\Tracker\FormElement\Field\File\Upload\EmptyFileToUploadFinisher;
-use Tuleap\Tracker\FormElement\Field\File\Upload\FileOngoingUploadDao;
-use Tuleap\Tracker\FormElement\Field\File\Upload\FileToUploadCreator;
-use Tuleap\Tracker\FormElement\Field\File\Upload\UploadPathAllocator;
+use Tuleap\Tracker\FormElement\Field\Files\FilesField;
+use Tuleap\Tracker\FormElement\Field\Files\Upload\EmptyFileToUploadFinisher;
+use Tuleap\Tracker\FormElement\Field\Files\Upload\FileOngoingUploadDao;
+use Tuleap\Tracker\FormElement\Field\Files\Upload\FileToUploadCreator;
+use Tuleap\Tracker\FormElement\Field\Files\Upload\UploadPathAllocator;
 use UserManager;
 
 class TrackerFieldsResource extends AuthenticatedResource
@@ -214,10 +214,10 @@ class TrackerFieldsResource extends AuthenticatedResource
     /**
      * @throws RestException
      */
-    private function getFileFieldUserCanUpdate(int $id, PFUser $user): Tracker_FormElement_Field_File
+    private function getFileFieldUserCanUpdate(int $id, PFUser $user): FilesField
     {
         $field = $this->getField($id, $user);
-        \assert($field instanceof Tracker_FormElement_Field_File);
+        \assert($field instanceof FilesField);
 
         $form_element_factory = Tracker_FormElementFactory::instance();
         if (! $form_element_factory->isFieldAFileField($field)) {

@@ -43,7 +43,7 @@ use Tracker_Report_REST;
 use Tuleap\Date\DateHelper;
 use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
+use Tuleap\Tracker\FormElement\Field\Files\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\DateFieldSpecificPropertiesDAO;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\DeleteSpecificProperties;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\SaveSpecificFieldProperties;

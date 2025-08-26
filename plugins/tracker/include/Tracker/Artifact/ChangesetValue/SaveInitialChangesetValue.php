@@ -23,7 +23,7 @@ namespace Tuleap\Tracker\Artifact\ChangesetValue;
 use PFUser;
 use Tracker_FormElement_Field;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
+use Tuleap\Tracker\FormElement\Field\Files\CreatedFileURLMapping;
 
 interface SaveInitialChangesetValue
 {

@@ -27,7 +27,7 @@ use Tuleap;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueFileTestBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\FileFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\FilesFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use ZipArchive;
 
@@ -57,7 +57,7 @@ final class ArtifactAttachmentExporterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItAddsFileIntoArchive(): void
     {
         $tracker    = TrackerTestBuilder::aTracker()->build();
-        $file_field = FileFieldBuilder::aFileField(1001)->build();
+        $file_field = FilesFieldBuilder::aFileField(1001)->build();
         $file_info  = $this->createMock(\Tracker_FileInfo::class);
         $file_info->method('getPath')->willReturn($this->file01_path);
         $file_info->method('getId')->willReturn(1);

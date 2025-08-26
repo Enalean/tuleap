@@ -36,7 +36,7 @@ use Tracker_Report_Criteria;
 use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\Date\DateField;
-use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
+use Tuleap\Tracker\FormElement\Field\Files\CreatedFileURLMapping;
 use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFullRepresentation;
 

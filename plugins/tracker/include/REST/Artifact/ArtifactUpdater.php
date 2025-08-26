@@ -26,7 +26,7 @@ use Tuleap\Tracker\Artifact\Changeset\Comment\CommentFormatIdentifier;
 use Tuleap\Tracker\Artifact\Changeset\NewChangeset;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreator;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
-use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
+use Tuleap\Tracker\FormElement\Field\Files\CreatedFileURLMapping;
 use Tuleap\Tracker\REST\Artifact\Changeset\Comment\NewChangesetCommentRepresentation;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\FieldsDataBuilder;
 

@@ -29,7 +29,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Changeset\Comment\CommentCreation;
 use Tuleap\Tracker\Artifact\Changeset\Comment\CommentFormatIdentifier;
 use Tuleap\Tracker\Artifact\Changeset\Comment\NewComment;
-use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
+use Tuleap\Tracker\FormElement\Field\Files\CreatedFileURLMapping;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TextValueValidatorTest extends TestCase

@@ -24,8 +24,8 @@ declare(strict_types=1);
 namespace Tuleap\TestManagement\Step\Definition\Field;
 
 use Tuleap\Test\PHPUnit\TestCase;
-use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
-use Tuleap\Tracker\FormElement\Field\File\FileURLSubstitutor;
+use Tuleap\Tracker\FormElement\Field\Files\CreatedFileURLMapping;
+use Tuleap\Tracker\FormElement\Field\Files\FileURLSubstitutor;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class StepDefinitionSubmittedValuesTransformatorTest extends TestCase

@@ -46,7 +46,7 @@ use Tracker_Report_Criteria_ValueDao;
 use Tuleap\Option\Option;
 use Tuleap\Project\REST\MinimalUserGroupRepresentation;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
+use Tuleap\Tracker\FormElement\Field\Files\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindParameters;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueUnchanged;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindVisitor;

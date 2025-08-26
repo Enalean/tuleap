@@ -38,7 +38,7 @@ use Tracker_Report_Criteria;
 use Tuleap;
 use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
+use Tuleap\Tracker\FormElement\Field\Files\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;

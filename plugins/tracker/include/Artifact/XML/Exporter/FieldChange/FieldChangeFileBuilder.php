@@ -24,7 +24,7 @@ namespace Tuleap\Tracker\Artifact\XML\Exporter\FieldChange;
 
 use SimpleXMLElement;
 use Tracker_FormElementFactory;
-use Tuleap\Tracker\FormElement\Field\File\IdForXMLImportExportConvertor;
+use Tuleap\Tracker\FormElement\Field\Files\IdForXMLImportExportConvertor;
 
 readonly class FieldChangeFileBuilder
 {

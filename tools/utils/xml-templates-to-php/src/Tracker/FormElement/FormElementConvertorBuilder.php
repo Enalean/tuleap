@@ -38,7 +38,7 @@ class FormElementConvertorBuilder
             'int'      => \Tuleap\Tracker\FormElement\Field\Integer\XML\XMLIntegerField::class,
             'date'     => \Tuleap\Tracker\FormElement\Field\Date\XML\XMLDateField::class,
             'sb'       => \Tuleap\Tracker\FormElement\Field\ListFields\XML\XMLSelectBoxField::class,
-            'file'     => \Tuleap\Tracker\FormElement\Field\File\XML\XMLFileField::class,
+            'file'     => \Tuleap\Tracker\FormElement\Field\Files\XML\XMLFileField::class,
             'lud'      => \Tuleap\Tracker\FormElement\Field\LastUpdateDate\XML\XMLLastUpdateDateField::class,
             'subon'    => \Tuleap\Tracker\FormElement\Field\SubmittedOn\XML\XMLSubmittedOnField::class,
             'subby'    => \Tuleap\Tracker\FormElement\Field\SubmittedBy\XML\XMLSubmittedByField::class,

@@ -22,8 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact\Changeset\Comment;
 
-use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
-use Tuleap\Tracker\FormElement\Field\File\FileURLSubstitutor;
+use Tuleap\Tracker\FormElement\Field\Files\CreatedFileURLMapping;
+use Tuleap\Tracker\FormElement\Field\Files\FileURLSubstitutor;
 
 /**
  * I hold all the information needed to store a new comment, including the new changeset ID.

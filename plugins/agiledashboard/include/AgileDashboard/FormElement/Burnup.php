@@ -54,7 +54,7 @@ use Tuleap\Tracker\FormElement\ChartConfigurationValueChecker;
 use Tuleap\Tracker\FormElement\ChartConfigurationValueRetriever;
 use Tuleap\Tracker\FormElement\ChartFieldUsage;
 use Tuleap\Tracker\FormElement\ChartMessageFetcher;
-use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
+use Tuleap\Tracker\FormElement\Field\Files\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
 use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFullRepresentation;

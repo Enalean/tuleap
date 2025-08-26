@@ -77,7 +77,7 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidMetadata\NotEqualComparisonCheck
 use Tuleap\Tracker\Report\Query\Advanced\InvalidMetadata\NotInComparisonChecker;
 use Tuleap\Tracker\Test\Builders\Fields\CheckboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\FileFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\FilesFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\FloatFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\IntegerFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\LastUpdateByFieldBuilder;
@@ -442,7 +442,7 @@ final class InvalidTermCollectorVisitorTest extends \Tuleap\Test\PHPUnit\TestCas
     {
         $this->formelement_factory->method('getUsedFormElementFieldByNameForUser')
             ->willReturn(
-                FileFieldBuilder::aFileField(324)
+                FilesFieldBuilder::aFileField(324)
                     ->withName(self::FIELD_NAME)
                     ->build()
             );
@@ -597,7 +597,7 @@ final class InvalidTermCollectorVisitorTest extends \Tuleap\Test\PHPUnit\TestCas
         yield 'last update date' => [
             LastUpdateDateFieldBuilder::aLastUpdateDateField(129)->withName(self::FIELD_NAME)->build(),
         ];
-        yield 'file' => [FileFieldBuilder::aFileField(272)->withName(self::FIELD_NAME)->build()];
+        yield 'file' => [FilesFieldBuilder::aFileField(272)->withName(self::FIELD_NAME)->build()];
 
         $list_field = SelectboxFieldBuilder::aSelectboxField(175)->withName(self::FIELD_NAME)->build();
 

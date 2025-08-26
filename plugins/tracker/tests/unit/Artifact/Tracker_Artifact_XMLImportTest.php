@@ -57,7 +57,7 @@ use Tuleap\Tracker\Artifact\XMLImport\MoveImportConfig;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerImportConfig;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerXmlImportConfig;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
-use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
+use Tuleap\Tracker\FormElement\Field\Files\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\List\MultiSelectboxField;
 use Tuleap\Tracker\FormElement\Field\List\OpenListField;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
@@ -67,7 +67,7 @@ use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ArtifactLinkFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\FileFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\FilesFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\FloatFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\IntegerFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
@@ -1255,7 +1255,7 @@ final class Tracker_Artifact_XMLImportTest extends TestCase // phpcs:ignore Squi
     {
         $this->artifact_creator->method('create')->willReturn($this->artifact);
         $this->formelement_factory->method('getUsedFieldByName')->with(self::TRACKER_ID, 'attachment')
-            ->willReturn(FileFieldBuilder::aFileField(51)->build());
+            ->willReturn(FilesFieldBuilder::aFileField(51)->build());
 
         touch($this->extraction_path . '/34_File33.png');
 
@@ -1382,7 +1382,7 @@ final class Tracker_Artifact_XMLImportTest extends TestCase // phpcs:ignore Squi
         touch($this->extraction_path . '/34_File34.pdf');
 
         $this->formelement_factory->method('getUsedFieldByName')->with(self::TRACKER_ID, 'attachment')
-            ->willReturn(FileFieldBuilder::aFileField(51)->build());
+            ->willReturn(FilesFieldBuilder::aFileField(51)->build());
         $this->user_manager->method('getUserByIdentifier')->with('manuel')->willReturn($this->john_doe);
         $this->private_comment_extractor->method('extractUGroupsFromXML')->willReturn([]);
 
@@ -1442,7 +1442,7 @@ final class Tracker_Artifact_XMLImportTest extends TestCase // phpcs:ignore Squi
         touch($this->extraction_path . '/34_File34.pdf');
 
         $this->formelement_factory->method('getUsedFieldByName')->with(self::TRACKER_ID, 'attachment')
-            ->willReturn(FileFieldBuilder::aFileField(51)->build());
+            ->willReturn(FilesFieldBuilder::aFileField(51)->build());
         $this->user_manager->method('getUserByIdentifier')->with('manuel')->willReturn($this->john_doe);
         $this->private_comment_extractor->method('extractUGroupsFromXML')->willReturn([]);
 

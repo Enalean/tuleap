@@ -34,7 +34,7 @@ use Tuleap\TestManagement\Step\Execution\StepResultPresenter;
 use Tuleap\TestManagement\Step\Step;
 use Tuleap\TestManagement\Step\StepPresenter;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
+use Tuleap\Tracker\FormElement\Field\Files\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
 use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 

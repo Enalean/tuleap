@@ -39,7 +39,7 @@ use Tuleap\Reference\CrossReferencePresenterFactory;
 use Tuleap\Reference\CrossReferencesDao;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\CrossReference\CrossReferenceFieldRenderer;
-use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
+use Tuleap\Tracker\FormElement\Field\Files\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\View\Reference\CrossReferenceFieldPresenterBuilder;
 use Tuleap\Tracker\Report\Query\ParametrizedFrom;
 use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
