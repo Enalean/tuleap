@@ -22,6 +22,7 @@ import type { Command } from "prosemirror-state";
 import { TextSelection } from "prosemirror-state";
 import type { Schema } from "prosemirror-model";
 import { liftListItem, sinkListItem, splitListItem, wrapInList } from "prosemirror-schema-list";
+import { redo, undo } from "prosemirror-history";
 import { getHeadingCommand } from "./text-style/transform-text";
 import type { DetectSingleListInSelection } from "./list/SingleListInSelectionDetector";
 import type { BuildLinkImageMenuCommand } from "./image/OpenLinkMenuCommandBuilder";
@@ -54,6 +55,13 @@ export function buildKeymap(
             keys[key] = cmd;
         }
     }
+
+    bind("Ctrl-z", undo);
+    bind("Ctrl-Z", undo);
+    bind("Ctrl-y", redo);
+    bind("Ctrl-Y", redo);
+    bind("Ctrl-Shift-z", redo);
+    bind("Ctrl-Shift-Z", redo);
 
     bind("Mod-b", toggleMark(schema.marks.strong));
     bind("Mod-B", toggleMark(schema.marks.strong));
