@@ -18,16 +18,10 @@
   -->
 
 <template>
-    <input type="hidden" name="short_name" v-bind:value="value" />
+    <input type="hidden" name="short_name" v-bind:value="short_name" />
 </template>
-<script>
-export default {
-    name: "HiddenServiceShortname",
-    props: {
-        value: {
-            type: String,
-            required: true,
-        },
-    },
-};
+<script setup lang="ts">
+defineProps<{
+    short_name: string;
+}>();
 </script>

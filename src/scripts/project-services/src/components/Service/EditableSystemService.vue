@@ -20,7 +20,10 @@
 <template>
     <div class="tlp-modal-body">
         <service-id v-bind:value="service.id" />
-        <hidden-service-shortname v-if="service.short_name" v-bind:value="service.short_name" />
+        <hidden-service-shortname
+            v-if="service.short_name"
+            v-bind:short_name="service.short_name"
+        />
         <service-label
             id="project-service-edit-modal-label"
             v-bind:value="service.label"

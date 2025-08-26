@@ -20,7 +20,10 @@
 <template>
     <div class="tlp-modal-body">
         <service-id v-bind:value="service.id" />
-        <hidden-service-shortname v-if="service.short_name" v-bind:value="service.short_name" />
+        <hidden-service-shortname
+            v-if="service.short_name"
+            v-bind:short_name="service.short_name"
+        />
         <read-only-service-icon v-bind:value="service.icon_name" />
         <div class="tlp-property">
             <label class="tlp-label">{{ $gettext("Label") }}</label>
