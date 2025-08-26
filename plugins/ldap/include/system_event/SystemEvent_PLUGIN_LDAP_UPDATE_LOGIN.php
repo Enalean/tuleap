@@ -30,30 +30,18 @@ use Tuleap\SVNCore\Event\UpdateProjectAccessFilesEvent;
  * So we need to propagate LDAP login change to SVNAccessFile only (the Tuleap
  * user name is not changed).
  */
-class SystemEvent_PLUGIN_LDAP_UPDATE_LOGIN extends SystemEvent
+class SystemEvent_PLUGIN_LDAP_UPDATE_LOGIN extends SystemEvent // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    /** @var UserManager */
-    private $user_manager;
+    private UserManager $user_manager;
 
-    /** @var BackendSVN */
-    private $backend_svn;
-
-    /** @var ProjectManager */
-    private $project_manager;
-
-    /** @var LDAP_ProjectManager */
-    private $ldap_project_manager;
+    private ProjectManager $project_manager;
 
     public function injectDependencies(
         UserManager $user_manager,
-        BackendSVN $backend_svn,
         ProjectManager $project_manager,
-        LDAP_ProjectManager $ldap_project_manager,
-    ) {
-        $this->user_manager         = $user_manager;
-        $this->backend_svn          = $backend_svn;
-        $this->project_manager      = $project_manager;
-        $this->ldap_project_manager = $ldap_project_manager;
+    ): void {
+        $this->user_manager    = $user_manager;
+        $this->project_manager = $project_manager;
     }
 
     /**
@@ -67,9 +55,8 @@ class SystemEvent_PLUGIN_LDAP_UPDATE_LOGIN extends SystemEvent
         $project_ids = [];
 
         // Get all projects the user is member of (project member or user group member)
-        $um = $this->getUserManager();
         foreach ($user_ids as $user_id) {
-            $user = $um->getUserById($user_id);
+            $user = $this->user_manager->getUserById($user_id);
             if ($user && ($user->isActive() || $user->isRestricted())) {
                 $prjs = $user->getAllProjects();
                 foreach ($prjs as $pid) {
@@ -100,15 +87,5 @@ class SystemEvent_PLUGIN_LDAP_UPDATE_LOGIN extends SystemEvent
     public function verbalizeParameters($with_link)
     {
         return $this->parameters;
-    }
-
-    /**
-     * Wrapper for UserManager
-     *
-     * @return UserManager
-     */
-    protected function getUserManager()
-    {
-        return $this->user_manager;
     }
 }
