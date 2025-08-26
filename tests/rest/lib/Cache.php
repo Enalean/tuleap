@@ -19,30 +19,37 @@
  *
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\REST;
 
-class Cache
+final class Cache
 {
-    private static $instance;
+    private static ?self $instance = null;
 
-    private $project_ids     = [];
-    private $tracker_ids     = [];
-    private $user_groups_ids = [];
-    private $user_ids        = [];
-    private $tokens          = [];
+    /** @var array<string, int> $project_ids */
+    private array $project_ids = [];
+    /** @var array<int, array<string, int>> $tracker_ids */
+    private array $tracker_ids = [];
+    /** @var array<int, array<string, string>> $user_groups_ids */
+    private array $user_groups_ids = [];
+    /** @var array<string, int> $user_ids */
+    private array $user_ids = [];
+    /** @var array<string, array{user_id: int, token: string}> $tokens */
+    private array $tokens   = [];
+    private array $trackers = [];
+    /** @var array<int, list<array{id: int, title: string}>>  */
+    private array $artifacts = [];
 
-    private $trackers  = [];
-    private $artifacts = [];
-
-    public static function instance()
+    public static function instance(): self
     {
         if (! isset(self::$instance)) {
-            self::$instance = new Cache();
+            self::$instance = new self();
         }
         return self::$instance;
     }
 
-    public function getTrackerInProject($project_name, $tracker_name)
+    public function getTrackerInProject(string $project_name, string $tracker_name): int
     {
         $project_id = $this->getProjectId($project_name);
         if (isset($this->tracker_ids[$project_id][$tracker_name])) {
@@ -51,7 +58,7 @@ class Cache
         throw new \Exception('Tracker name does not exist in cache');
     }
 
-    public function getProjectId($project_name)
+    public function getProjectId(string $project_name): int
     {
         if (isset($this->project_ids[$project_name])) {
             return $this->project_ids[$project_name];
@@ -59,22 +66,25 @@ class Cache
         throw new \Exception('Project name not in cache');
     }
 
-    public function setProjectIds($project_ids)
+    /** @param array<string, int> $project_ids */
+    public function setProjectIds(array $project_ids): void
     {
         $this->project_ids = $project_ids;
     }
 
-    public function getProjectIds()
+    /** @return array<string, int> */
+    public function getProjectIds(): array
     {
         return $this->project_ids;
     }
 
-    public function setTrackerIds($tracker_ids)
+    /** @param array<int, array<string, int>> $tracker_ids */
+    public function setTrackerIds(array $tracker_ids): void
     {
         $this->tracker_ids = $tracker_ids;
     }
 
-    public function addTrackerRepresentations(array $tracker_representations)
+    public function addTrackerRepresentations(array $tracker_representations): void
     {
         $this->trackers = $this->trackers + $tracker_representations;
     }
@@ -84,53 +94,56 @@ class Cache
         return $this->trackers;
     }
 
-    public function getTrackerIds()
+    /** @return array<int, array<string, int>> */
+    public function getTrackerIds(): array
     {
         return $this->tracker_ids;
     }
 
-    public function setUserGroupIds($user_groups_ids)
+    /** @param array<int, array<string, string>> $user_groups_ids */
+    public function setUserGroupIds(array $user_groups_ids): void
     {
         $this->user_groups_ids = $user_groups_ids;
     }
 
-    public function getUserGroupIds()
+    /** @return array<int, array<string, string>> */
+    public function getUserGroupIds(): array
     {
         return $this->user_groups_ids;
     }
 
-    public function setArtifacts($tracker_id, $artifacts)
+    /** @param list<array{id: int, title: string}> $artifacts */
+    public function setArtifacts(int $tracker_id, array $artifacts): void
     {
         $this->artifacts[$tracker_id] = $artifacts;
     }
 
-    public function getArtifacts($tracker_id)
+    /** @return list<array{id: int, title: string}> | null */
+    public function getArtifacts(int $tracker_id): ?array
     {
-        if (isset($this->artifacts[$tracker_id])) {
-            return $this->artifacts[$tracker_id];
-        }
-        return null;
+        return $this->artifacts[$tracker_id] ?? null;
     }
 
-    public function setTokenForUser($username, $token)
+    /** @param array{user_id: int, token: string} $token */
+    public function setTokenForUser(string $username, array $token): void
     {
         $this->tokens[$username] = $token;
     }
 
-    public function getTokenForUser($username)
+    /** @return array{user_id: int, token: string}|null */
+    public function getTokenForUser(string $username): ?array
     {
-        if (isset($this->tokens[$username])) {
-            return $this->tokens[$username];
-        }
-        return null;
+        return $this->tokens[$username] ?? null;
     }
 
-    public function setUserId($user)
+    /** @param array{id: int, username: string} $user */
+    public function setUserId(array $user): void
     {
         $this->user_ids[$user['username']] = $user['id'];
     }
 
-    public function getUserIds()
+    /** @return array<string, int> */
+    public function getUserIds(): array
     {
         return $this->user_ids;
     }

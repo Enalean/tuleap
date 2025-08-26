@@ -1443,7 +1443,6 @@
             <file name="tests/rest/lib/ArtifactBase.php"/>
             <file name="tests/rest/lib/ArtifactFileBase.php"/>
             <file name="tests/rest/lib/ArtifactsTestExecutionHelper.php"/>
-            <file name="tests/rest/lib/Cache.php"/>
             <file name="tests/rest/lib/CardsBase.php"/>
             <file name="tests/rest/lib/ForgeAccessSandbox.php"/>
             <file name="tests/rest/lib/MilestoneBase.php"/>
