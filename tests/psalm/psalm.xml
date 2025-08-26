@@ -1455,8 +1455,6 @@
             <file name="tests/rest/lib/TrackerBase.php"/>
             <file name="tests/rest/lib/TuleapConfig.php"/>
             <file name="tests/rest/lib/bootstrap.php"/>
-            <file name="tests/rest/lib/tracker/Tracker.php"/>
-            <file name="tests/rest/lib/tracker/TrackerFactory.php"/>
             <file name="tests/rest/tests/AccessKeyTest.php"/>
             <file name="tests/rest/tests/ArtifactFilesTest.php"/>
             <file name="tests/rest/tests/ArtifactsChangesetsTest.php"/>
@@ -1491,7 +1489,6 @@
             <file name="tests/rest/tests/UserMembershipTest.php"/>
             <file name="tests/rest/tests/UsersTest.php"/>
             <file name="tests/rest/tests/Version/VersionTest.php"/>
-            <file name="tests/rest/tests/regressions/ArtifactsCreationWithWrongWorkflowTest.php"/>
             <file name="tests/rest/tests/regressions/MilestonesContentOrderTest.php"/>
             <file name="tests/rest/tests/regressions/MilestonesContentTest.php"/>
             <file name="tests/rest/tests/regressions/PutSoloCardTest.php"/>

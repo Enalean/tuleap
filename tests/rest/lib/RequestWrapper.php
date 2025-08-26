@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-namespace Test\Rest;
+namespace Tuleap\REST;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\RequestOptions;

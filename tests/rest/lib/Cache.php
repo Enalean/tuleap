@@ -19,7 +19,7 @@
  *
  */
 
-namespace Test\Rest;
+namespace Tuleap\REST;
 
 class Cache
 {
