@@ -20,8 +20,6 @@
 
 namespace Tuleap\REST;
 
-use RestBase;
-
 class MilestoneBase extends RestBase
 {
     #[\Override]

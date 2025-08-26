@@ -20,7 +20,7 @@
 
 namespace Tuleap\Timetracking\REST;
 
-use RestBase;
+use Tuleap\REST\RestBase;
 
 class TimetrackingBase extends RestBase
 {

@@ -21,7 +21,7 @@
 namespace Tuleap\TestManagement;
 
 use Psr\Http\Message\ResponseInterface;
-use RestBase;
+use Tuleap\REST\RestBase;
 use Tuleap\TestManagement\Tests\Rest\Cache;
 
 #[\PHPUnit\Framework\Attributes\Group('TestManagementTest')]

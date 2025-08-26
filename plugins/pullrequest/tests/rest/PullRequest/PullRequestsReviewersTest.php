@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\PullRequest;
 
 use REST_TestDataBuilder;
-use RestBase;
+use Tuleap\REST\RestBase;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PullRequestsReviewersTest extends RestBase

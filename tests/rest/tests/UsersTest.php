@@ -20,6 +20,7 @@
 
 use Test\Rest\TuleapConfig;
 use Tuleap\REST\ForgeAccessSandbox;
+use Tuleap\REST\RestBase;
 
 #[\PHPUnit\Framework\Attributes\Group('UserGroupTests')]
 final class UsersTest extends RestBase // phpcs:ignore

@@ -20,8 +20,6 @@
 
 namespace Tuleap\REST;
 
-use RestBase;
-
 class TrackerBase extends RestBase
 {
     protected $report_id;

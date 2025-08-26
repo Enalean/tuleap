@@ -18,5 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once __DIR__ . '/TestBase.php';
-require_once __DIR__ . '/CrossTrackerDataBuilder.php';
+declare(strict_types=1);
+
+require_once __DIR__ . '/../../vendor/autoload.php';

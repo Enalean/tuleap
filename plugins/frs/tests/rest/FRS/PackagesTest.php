@@ -21,7 +21,7 @@
 namespace Tuleap\FRS\Tests\REST\Packages;
 
 use REST_TestDataBuilder;
-use RestBase;
+use Tuleap\REST\RestBase;
 
 /**
  * @group FRSTests

@@ -22,7 +22,6 @@ namespace Tuleap\REST;
 
 use Psr\Http\Message\ResponseInterface;
 use REST_TestDataBuilder;
-use RestBase;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 #[\PHPUnit\Framework\Attributes\Group('BacklogItemsTest')]

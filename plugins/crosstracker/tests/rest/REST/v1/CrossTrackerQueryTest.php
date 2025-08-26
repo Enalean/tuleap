@@ -22,12 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\REST\v1;
 
-require_once __DIR__ . '/../../bootstrap.php';
-
+use Psl\Json;
 use REST_TestDataBuilder;
 use Tuleap\CrossTracker\TestBase;
-use function Psl\Json\decode;
-use function Psl\Json\encode;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CrossTrackerQueryTest extends TestBase
@@ -38,6 +35,7 @@ final class CrossTrackerQueryTest extends TestBase
 
     private string $query_id;
 
+    #[\Override]
     public function setUp(): void
     {
         parent::setUp();
@@ -46,9 +44,10 @@ final class CrossTrackerQueryTest extends TestBase
         $this->getReleaseArtifactIds();
 
         $response      = $this->getResponse($this->request_factory->createRequest('GET', 'crosstracker_widget/' . self::WIDGET_ID));
-        $json_response = decode($response->getBody()->getContents());
+        $json_response = Json\decode($response->getBody()->getContents());
         self::assertIsArray($json_response);
         self::assertArrayHasKey('queries', $json_response);
+        /** @var list<array{id: string}> $queries */
         $queries = $json_response['queries'];
         self::assertCount(1, $queries);
         $this->query_id = $queries[0]['id'];
@@ -63,10 +62,10 @@ final class CrossTrackerQueryTest extends TestBase
             'widget_id'   => self::WIDGET_ID,
         ];
         $response = $this->getResponse($this->request_factory->createRequest('PUT', 'crosstracker_query/' . urlencode($this->query_id))
-            ->withBody($this->stream_factory->createStream(encode($params))));
+            ->withBody($this->stream_factory->createStream(Json\encode($params))));
 
         self::assertSame(200, $response->getStatusCode());
-        $json_response = decode($response->getBody()->getContents());
+        $json_response = Json\decode($response->getBody()->getContents());
         self::assertSame("SELECT @id FROM @project = 'self' WHERE @id = {$this->epic_artifact_ids[1]}", $json_response['tql_query']);
         self::assertSame('My awesome title', $json_response['title']);
         self::assertSame('Hello World!', $json_response['description']);
@@ -83,7 +82,7 @@ final class CrossTrackerQueryTest extends TestBase
         ];
         $response = $this->getResponse(
             $this->request_factory->createRequest('PUT', 'crosstracker_query/' . urlencode($this->query_id))
-                ->withBody($this->stream_factory->createStream(encode($params))),
+                ->withBody($this->stream_factory->createStream(Json\encode($params))),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
@@ -100,7 +99,7 @@ final class CrossTrackerQueryTest extends TestBase
         );
 
         self::assertSame(200, $response->getStatusCode());
-        $json_response = decode($response->getBody()->getContents());
+        $json_response = Json\decode($response->getBody()->getContents());
         self::assertCount(2, $json_response['selected']);
         self::assertSame('@artifact', $json_response['selected'][0]['name']);
         self::assertSame('@id', $json_response['selected'][1]['name']);
@@ -118,7 +117,7 @@ final class CrossTrackerQueryTest extends TestBase
         );
 
         self::assertSame(200, $response->getStatusCode());
-        $json_response = decode($response->getBody()->getContents());
+        $json_response = Json\decode($response->getBody()->getContents());
         self::assertCount(2, $json_response['selected']);
         self::assertSame('@artifact', $json_response['selected'][0]['name']);
         self::assertSame('@id', $json_response['selected'][1]['name']);
@@ -172,14 +171,11 @@ final class CrossTrackerQueryTest extends TestBase
             ['order' => 'asc']
         );
 
-        $artifacts = json_decode(
+        $artifacts = Json\decode(
             $this->getResponseByName(
                 REST_TestDataBuilder::ADMIN_USER_NAME,
                 $this->request_factory->createRequest('GET', "trackers/$this->cross_tracker_tracker_id/artifacts?$query")
             )->getBody()->getContents(),
-            true,
-            512,
-            JSON_THROW_ON_ERROR
         );
 
         $artifat_title    = 'current artifact';
@@ -193,7 +189,7 @@ final class CrossTrackerQueryTest extends TestBase
         );
 
         self::assertSame(200, $response->getStatusCode());
-        $json_response = decode($response->getBody()->getContents());
+        $json_response = Json\decode($response->getBody()->getContents());
 
         self::assertGreaterThan(1, count($json_response['artifacts'][0]['@artifact']));
 
@@ -209,7 +205,7 @@ final class CrossTrackerQueryTest extends TestBase
             'widget_id'   => self::WIDGET_ID,
         ];
         $put_response = $this->getResponse($this->request_factory->createRequest('PUT', 'crosstracker_query/' . urlencode($this->query_id))
-            ->withBody($this->stream_factory->createStream(encode($params))));
+            ->withBody($this->stream_factory->createStream(Json\encode($params))));
         self::assertSame(200, $put_response->getStatusCode());
 
         $query_id = urlencode($this->query_id);
@@ -218,7 +214,7 @@ final class CrossTrackerQueryTest extends TestBase
         );
 
         self::assertSame(200, $response->getStatusCode());
-        $cross_tracker_artifacts = decode($response->getBody()->getContents());
+        $cross_tracker_artifacts = Json\decode($response->getBody()->getContents());
 
         self::assertEmpty($cross_tracker_artifacts['artifacts']);
     }
@@ -229,10 +225,10 @@ final class CrossTrackerQueryTest extends TestBase
             'widget_id' => self::WIDGET_ID,
             'tql_query' => "SELECT @id FROM @project = 'self' WHERE @id = {$this->epic_artifact_ids[1]}",
         ];
-        $response = $this->getResponse($this->request_factory->createRequest('GET', 'crosstracker_query/content?query=' . urlencode(encode($query))));
+        $response = $this->getResponse($this->request_factory->createRequest('GET', 'crosstracker_query/content?query=' . urlencode(Json\encode($query))));
 
         self::assertSame(200, $response->getStatusCode());
-        $json_response = decode($response->getBody()->getContents());
+        $json_response = Json\decode($response->getBody()->getContents());
         self::assertCount(2, $json_response['selected']);
         self::assertSame('@artifact', $json_response['selected'][0]['name']);
         self::assertSame('@id', $json_response['selected'][1]['name']);
@@ -246,10 +242,10 @@ final class CrossTrackerQueryTest extends TestBase
         $query    = [
             'tql_query' => "SELECT @id FROM @project = MY_PROJECTS() WHERE @id = {$this->epic_artifact_ids[1]}",
         ];
-        $response = $this->getResponse($this->request_factory->createRequest('GET', 'crosstracker_query/content?query=' . urlencode(encode($query))));
+        $response = $this->getResponse($this->request_factory->createRequest('GET', 'crosstracker_query/content?query=' . urlencode(Json\encode($query))));
 
         self::assertSame(200, $response->getStatusCode());
-        $json_response = decode($response->getBody()->getContents());
+        $json_response = Json\decode($response->getBody()->getContents());
 
         self::assertNotEmpty($json_response['artifacts']);
         self::assertNotEmpty($json_response['selected']);

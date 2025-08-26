@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\PullRequest;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class InlineCommentsTest extends \RestBase
+final class InlineCommentsTest extends \Tuleap\REST\RestBase
 {
     public function testOptions(): void
     {

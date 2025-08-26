@@ -1450,7 +1450,6 @@
             <file name="tests/rest/lib/MilestoneBase.php"/>
             <file name="tests/rest/lib/ProjectBase.php"/>
             <file name="tests/rest/lib/RequestWrapper.php"/>
-            <file name="tests/rest/lib/RestBase.php"/>
             <file name="tests/rest/lib/TestDataBuilder.php"/>
             <file name="tests/rest/lib/TrackerBase.php"/>
             <file name="tests/rest/lib/TuleapConfig.php"/>

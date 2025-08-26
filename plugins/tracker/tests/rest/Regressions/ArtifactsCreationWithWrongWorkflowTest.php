@@ -25,7 +25,7 @@ namespace Tuleap\Tracker\REST\Regressions;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use PHPUnit\Framework\Attributes\Group;
 use REST_TestDataBuilder;
-use RestBase;
+use Tuleap\REST\RestBase;
 
 #[DisableReturnValueGenerationForTestDoubles]
 #[Group('Regressions')]

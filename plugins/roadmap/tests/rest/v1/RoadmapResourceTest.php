@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Roadmap\REST\v1;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class RoadmapResourceTest extends \RestBase
+class RoadmapResourceTest extends \Tuleap\REST\RestBase
 {
     public function testOPTIONS(): void
     {

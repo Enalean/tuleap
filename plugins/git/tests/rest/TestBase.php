@@ -21,7 +21,7 @@
 namespace Tuleap\Git\REST;
 
 use GitDataBuilder;
-use RestBase;
+use Tuleap\REST\RestBase;
 
 class TestBase extends RestBase
 {

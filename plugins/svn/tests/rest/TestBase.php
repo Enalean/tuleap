@@ -20,7 +20,7 @@
 
 namespace Tuleap\SVN\REST;
 
-use RestBase;
+use Tuleap\REST\RestBase;
 
 #[\PHPUnit\Framework\Attributes\Group('SVNTests')]
 class TestBase extends RestBase

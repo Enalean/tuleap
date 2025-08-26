@@ -19,6 +19,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\REST\RestBase;
+
 #[\PHPUnit\Framework\Attributes\Group('TokenTests')]
 class AuthenticationTest extends RestBase // phpcs:ignore
 {

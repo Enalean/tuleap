@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+use Tuleap\REST\RestBase;
 
 /**
  * @group BacklogItemsTest

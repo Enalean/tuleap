@@ -18,9 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\CrossTracker;
 
-use RestBase;
+use Tuleap\REST\RestBase;
 
 class TestBase extends RestBase
 {
@@ -33,12 +35,13 @@ class TestBase extends RestBase
     /** @var int[] */
     protected array $artifact_cross_tracker_ids = [];
 
+    #[\Override]
     public function setUp(): void
     {
         parent::setUp();
 
-        $this->cross_tracker_project_id = (int) $this->getProjectId(CrossTrackerDataBuilder::CROSS_PROJECT_SHORTNAME);
-        $this->cross_tracker_tracker_id = (int) $this->tracker_ids[$this->cross_tracker_project_id][self::CROSS_TRACKER_SHORTNAME];
+        $this->cross_tracker_project_id = $this->getProjectId(CrossTrackerDataBuilder::CROSS_PROJECT_SHORTNAME);
+        $this->cross_tracker_tracker_id = $this->tracker_ids[$this->cross_tracker_project_id][self::CROSS_TRACKER_SHORTNAME];
 
         $this->getArtifactIds(
             $this->cross_tracker_tracker_id,

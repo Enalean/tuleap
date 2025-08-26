@@ -22,8 +22,8 @@
 namespace Tuleap\SystemEvent\REST;
 
 use Psr\Http\Message\ResponseInterface;
-use RestBase;
 use REST_TestDataBuilder;
+use Tuleap\REST\RestBase;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 #[\PHPUnit\Framework\Attributes\Group('SystemEventTests')]

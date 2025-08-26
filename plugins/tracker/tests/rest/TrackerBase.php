@@ -24,7 +24,7 @@
 
 namespace Tuleap\Tracker\Tests\REST;
 
-use RestBase;
+use Tuleap\REST\RestBase;
 use Tuleap\Tracker\REST\DataBuilder;
 
 class TrackerBase extends RestBase

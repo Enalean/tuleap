@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\TestPlan\REST\v1;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class BacklogItemTest extends \RestBase
+final class BacklogItemTest extends \Tuleap\REST\RestBase
 {
     public function testRetrievesLinkedTestDefinitionsToABacklogItem(): void
     {

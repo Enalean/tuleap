@@ -21,7 +21,7 @@
 namespace Tuleap\Kanban\REST;
 
 use REST_TestDataBuilder;
-use RestBase;
+use Tuleap\REST\RestBase;
 
 class TestBase extends RestBase
 {

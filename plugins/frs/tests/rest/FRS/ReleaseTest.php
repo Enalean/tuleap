@@ -21,7 +21,7 @@
 namespace Tuleap\FRS\Tests\REST;
 
 use REST_TestDataBuilder;
-use RestBase;
+use Tuleap\REST\RestBase;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ReleaseTest extends RestBase
