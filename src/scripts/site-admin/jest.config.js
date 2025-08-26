@@ -17,9 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const { defineJestConfiguration } = require("@tuleap/build-system-configurator");
+import { defineJestConfiguration } from "@tuleap/build-system-configurator";
 
-module.exports = {
+export default {
     ...defineJestConfiguration(),
     displayName: "@tuleap/core-site-admin",
 };

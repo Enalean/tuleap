@@ -15,7 +15,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { datePicker } from "tlp";
+import { datePicker } from "@tuleap/tlp-date-picker";
 
 document.addEventListener("DOMContentLoaded", () => {
     const expiry_elements = document.querySelectorAll("input[id^=expiry-]");

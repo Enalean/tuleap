@@ -4,14 +4,17 @@
   "homepage": "https://tuleap.org",
   "license": "GPL-2.0-or-later",
   "private": true,
+  "type": "module",
   "dependencies": {
     "@tuleap/autocomplete-for-select2": "workspace:*",
     "@tuleap/ckeditor-config": "workspace:*",
     "@tuleap/dom": "workspace:*",
+    "@tuleap/fault": "workspace:*",
     "@tuleap/fetch-result": "workspace:*",
     "@tuleap/filter-inline-table": "workspace:*",
     "@tuleap/pie-chart": "workspace:*",
     "@tuleap/tlp": "workspace:*",
+    "@tuleap/tlp-date-picker": "workspace:^",
     "@tuleap/tlp-dropdown": "workspace:*",
     "@tuleap/tlp-modal": "workspace:*",
     "@tuleap/tlp-relative-date": "workspace:*",
@@ -19,7 +22,6 @@
   },
   "devDependencies": {
     "@tuleap/build-system-configurator": "workspace:*",
-    "@tuleap/fault": "workspace:*",
     "@types/ckeditor": "^4.9.10"
   },
   "scripts": {
