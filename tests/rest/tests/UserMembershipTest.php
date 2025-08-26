@@ -20,6 +20,7 @@
  */
 
 use Psr\Http\Message\ResponseInterface;
+use Tuleap\REST\RestBase;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 #[\PHPUnit\Framework\Attributes\Group('UserMembershipTests')]

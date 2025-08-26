@@ -21,7 +21,7 @@
 namespace Tuleap\PullRequest;
 
 use REST_TestDataBuilder;
-use RestBase;
+use Tuleap\REST\RestBase;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 #[\PHPUnit\Framework\Attributes\Group('PullRequest')]

@@ -20,8 +20,6 @@
 
 namespace Tuleap\REST;
 
-use RestBase;
-
 class CardsBase extends RestBase
 {
     #[\Override]

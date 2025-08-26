@@ -17,12 +17,15 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
+
+use Tuleap\REST\RestBase;
+
 /**
  * When you move an artifact from the release plan back to the product backlog and Submit the changes an error is generated
  */
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 #[\PHPUnit\Framework\Attributes\Group('Regressions')]
-class Regressions_MilestonesContentTest extends RestBase
+class Regressions_MilestonesContentTest extends RestBase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public function testItCanMoveBackFromReleaseBacklogToProductBacklog()
     {

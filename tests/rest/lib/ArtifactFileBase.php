@@ -20,8 +20,6 @@
 
 namespace Tuleap\REST;
 
-use RestBase;
-
 class ArtifactFileBase extends RestBase
 {
     #[\Override]

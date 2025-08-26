@@ -21,7 +21,7 @@
 namespace Tuleap\Tracker\Tests\REST\TQL;
 
 use Psr\Http\Message\ResponseInterface;
-use RestBase;
+use Tuleap\REST\RestBase;
 
 require_once dirname(__FILE__) . '/../bootstrap.php';
 

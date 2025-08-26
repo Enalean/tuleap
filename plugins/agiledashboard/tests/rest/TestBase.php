@@ -20,7 +20,7 @@
 
 namespace Tuleap\AgileDashboard\REST;
 
-use RestBase;
+use Tuleap\REST\RestBase;
 
 class TestBase extends RestBase
 {

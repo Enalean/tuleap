@@ -20,7 +20,7 @@
 
 namespace Tuleap\HudsonGit\Tests\REST;
 
-use RestBase;
+use Tuleap\REST\RestBase;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class JenkinsServersTest extends RestBase

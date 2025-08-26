@@ -22,7 +22,7 @@ namespace Tuleap\JWT\REST;
 
 use Psr\Http\Message\ResponseInterface;
 use REST_TestDataBuilder;
-use RestBase;
+use Tuleap\REST\RestBase;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 #[\PHPUnit\Framework\Attributes\Group('TokenTests')]

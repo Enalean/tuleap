@@ -22,8 +22,8 @@
 
 namespace Tuleap\Docman\Test\rest;
 
-use RestBase;
 use TestDataBuilder;
+use Tuleap\REST\RestBase;
 
 class DocmanBase extends RestBase
 {

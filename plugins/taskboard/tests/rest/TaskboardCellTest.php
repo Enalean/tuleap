@@ -25,7 +25,7 @@ namespace Tuleap\Taskboard\REST;
 use REST_TestDataBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class TaskboardCellTest extends \RestBase
+final class TaskboardCellTest extends \Tuleap\REST\RestBase
 {
     /** @var int */
     private static $milestone_id;

@@ -20,7 +20,6 @@
 
 namespace Tuleap\REST;
 
-use RestBase;
 use REST_TestDataBuilder;
 
 class ArtifactBase extends RestBase
@@ -45,7 +44,6 @@ class ArtifactBase extends RestBase
 
     protected $project_computed_fields_id;
     protected $project_burndown_id;
-    protected $project_suspended_id;
 
     #[\Override]
     public function setUp(): void
@@ -57,7 +55,6 @@ class ArtifactBase extends RestBase
 
         $this->project_computed_fields_id = $this->getProjectId(REST_TestDataBuilder::PROJECT_COMPUTED_FIELDS);
         $this->project_burndown_id        = $this->getProjectId(REST_TestDataBuilder::PROJECT_BURNDOWN);
-        $this->project_suspended_id       = $this->getProjectId(REST_TestDataBuilder::PROJECT_SUSPENDED_SHORTNAME);
 
         $this->getTrackerIdsForComputedFieldsProject();
         $this->getLevelOneArtifactIds();

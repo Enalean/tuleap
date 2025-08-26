@@ -24,7 +24,7 @@ namespace Tuleap\Baseline\Tests\REST;
 
 require_once __DIR__ . '/BaselineFixtureData.php';
 
-use RestBase;
+use Tuleap\REST\RestBase;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class BaselinesResourceTest extends RestBase

@@ -22,7 +22,7 @@ namespace Tuleap\User\AccessKey\REST;
 
 use DateTimeImmutable;
 use REST_TestDataBuilder;
-use RestBase;
+use Tuleap\REST\RestBase;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class AccessKeyTest extends RestBase

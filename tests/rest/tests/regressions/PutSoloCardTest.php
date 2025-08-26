@@ -17,6 +17,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
+
+use Tuleap\REST\RestBase;
+
 /**
  * PUT /cards/:id cannot update solo card
  *
@@ -28,7 +31,7 @@
  */
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 #[\PHPUnit\Framework\Attributes\Group('Regressions')]
-class Regressions_PutSoloCardTest extends RestBase
+class Regressions_PutSoloCardTest extends RestBase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public function testItEditSoloCardLabel()
     {

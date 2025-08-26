@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\FRS\Tests\REST;
 
 use REST_TestDataBuilder;
-use RestBase;
+use Tuleap\REST\RestBase;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class FileTest extends RestBase

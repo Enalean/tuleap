@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\Test\rest;
 
-use RestBase;
+use Tuleap\REST\RestBase;
 
 class DocmanWithMetadataActivatedBase extends RestBase
 {

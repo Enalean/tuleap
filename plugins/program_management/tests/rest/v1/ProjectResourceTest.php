@@ -25,7 +25,7 @@ namespace Tuleap\ProgramManagement\REST\v1;
 use REST_TestDataBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class ProjectResourceTest extends \RestBase
+final class ProjectResourceTest extends \Tuleap\REST\RestBase
 {
     public function testOPTIONS(): void
     {
