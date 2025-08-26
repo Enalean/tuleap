@@ -20,6 +20,7 @@
 
 namespace Tuleap\AgileDashboard\FormElement\Burnup\Calculator\SystemEvent;
 
+use Override;
 use Psr\Log\LoggerInterface;
 use SystemEvent;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsCacheDao;
@@ -45,6 +46,7 @@ final class SystemEvent_BURNUP_DAILY extends SystemEvent // @codingStandardsIgno
     private PlanningDao $planning_dao;
     private \PlanningFactory $planning_factory;
 
+    #[Override]
     public function verbalizeParameters($with_link)
     {
         return '-';
@@ -72,6 +74,7 @@ final class SystemEvent_BURNUP_DAILY extends SystemEvent // @codingStandardsIgno
         $this->planning_factory                 = $planning_factory;
     }
 
+    #[Override]
     public function process(): bool
     {
         TimezoneWrapper::wrapTimezone(

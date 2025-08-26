@@ -20,6 +20,7 @@
 
 namespace Tuleap\AgileDashboard\Milestone\Pane\TopPlanning;
 
+use Override;
 use Tuleap\AgileDashboard\Milestone\Pane\Planning\PlanningV2PaneInfo;
 
 class TopPlanningV2PaneInfo extends PlanningV2PaneInfo
@@ -27,6 +28,7 @@ class TopPlanningV2PaneInfo extends PlanningV2PaneInfo
     public const ACTION     = 'show-top';
     public const IDENTIFIER = 'topplanning-v2';
 
+    #[Override]
     public function getIdentifier()
     {
         return self::IDENTIFIER;

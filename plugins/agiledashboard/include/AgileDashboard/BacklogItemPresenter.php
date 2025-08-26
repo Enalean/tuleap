@@ -26,6 +26,7 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard;
 
+use Override;
 use Tuleap\AgileDashboard\Milestone\Backlog\BacklogRowPresenter;
 use Tuleap\AgileDashboard\Milestone\Backlog\IBacklogItem;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -59,37 +60,44 @@ final class BacklogItemPresenter implements IBacklogItem, BacklogRowPresenter
         $this->short_type = $tracker->getItemName();
     }
 
+    #[Override]
     public function setParent(Artifact $parent): void
     {
         $this->parent = $parent;
     }
 
+    #[Override]
     public function getParent(): ?Artifact
     {
         return $this->parent;
     }
 
+    #[Override]
     public function setInitialEffort(?float $value): void
     {
         $this->initial_effort = $value;
     }
 
+    #[Override]
     public function getInitialEffort(): ?float
     {
         return $this->initial_effort;
     }
 
+    #[Override]
     public function setStatus(string $status, string $status_semantic): void
     {
         $this->status                  = $status;
         $this->normalized_status_label = $status_semantic;
     }
 
+    #[Override]
     public function id(): int
     {
         return $this->id;
     }
 
+    #[Override]
     public function title(): string
     {
         return $this->title;
@@ -100,21 +108,25 @@ final class BacklogItemPresenter implements IBacklogItem, BacklogRowPresenter
         return $this->type;
     }
 
+    #[Override]
     public function url(): string
     {
         return $this->getUrlWithRedirect($this->url);
     }
 
+    #[Override]
     public function points(): ?float
     {
         return $this->initial_effort;
     }
 
+    #[Override]
     public function parent_title(): ?string //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         return $this->parent?->getTitle();
     }
 
+    #[Override]
     public function parent_url(): ?string //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if ($this->parent !== null) {
@@ -129,6 +141,7 @@ final class BacklogItemPresenter implements IBacklogItem, BacklogRowPresenter
         return $this->parent?->getId();
     }
 
+    #[Override]
     public function getStatus(): string
     {
         return $this->status;
@@ -142,21 +155,25 @@ final class BacklogItemPresenter implements IBacklogItem, BacklogRowPresenter
         return $url;
     }
 
+    #[Override]
     public function getArtifact(): Artifact
     {
         return $this->artifact;
     }
 
+    #[Override]
     public function color(): string
     {
         return $this->color;
     }
 
+    #[Override]
     public function setHasChildren(bool $has_children): void
     {
         $this->has_children = $has_children;
     }
 
+    #[Override]
     public function hasChildren(): bool
     {
         if ($this->has_children === null) {
@@ -165,36 +182,43 @@ final class BacklogItemPresenter implements IBacklogItem, BacklogRowPresenter
         return $this->has_children;
     }
 
+    #[Override]
     public function xRef(): string
     {
         return $this->artifact->getXRef();
     }
 
+    #[Override]
     public function isInconsistent(): bool
     {
         return $this->is_inconsistent;
     }
 
+    #[Override]
     public function getNormalizedStatusLabel(): string
     {
         return $this->normalized_status_label;
     }
 
+    #[Override]
     public function isOpen(): bool
     {
         return $this->artifact->isOpen();
     }
 
+    #[Override]
     public function getRemainingEffort(): ?float
     {
         return $this->remaining_effort;
     }
 
+    #[Override]
     public function setRemainingEffort(?float $value): void
     {
         $this->remaining_effort = $value;
     }
 
+    #[Override]
     public function getShortType(): string
     {
         return $this->short_type;

@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\AgileDashboard\FormElement\Burnup\Calculator;
 
 use AgileDashboard_Semantic_InitialEffortFactory;
+use Override;
 use Tracker_Artifact_ChangesetFactory;
 use Tuleap\AgileDashboard\FormElement\BurnupEffort;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -37,6 +38,7 @@ final class BurnupEffortCalculatorForArtifact implements RetrieveBurnupEffortFor
     ) {
     }
 
+    #[Override]
     public function getEffort(
         Artifact $artifact,
         int $timestamp,

@@ -67,16 +67,19 @@ class Planning_VirtualTopMilestone implements Planning_Milestone
     /**
      * @return string
      */
+    #[Override]
     public function getXRef()
     {
         return '';
     }
 
+    #[Override]
     public function getArtifact()
     {
         return null;
     }
 
+    #[Override]
     public function getArtifactId()
     {
         return null;
@@ -87,11 +90,13 @@ class Planning_VirtualTopMilestone implements Planning_Milestone
         $this->artifact = $artifact;
     }
 
+    #[Override]
     public function getTrackerId()
     {
         return $this->planning->getBacklogTrackersIds();
     }
 
+    #[Override]
     public function getArtifactTitle()
     {
         return null;
@@ -100,49 +105,59 @@ class Planning_VirtualTopMilestone implements Planning_Milestone
     /**
      * @return bool
      */
+    #[Override]
     public function userCanView(PFUser $user)
     {
         return false;
     }
 
+    #[Override]
     public function getLinkedArtifacts(PFUser $user)
     {
     }
 
+    #[Override]
     public function getPlannedArtifacts()
     {
     }
 
+    #[Override]
     public function getPlanning()
     {
         return $this->planning;
     }
 
+    #[Override]
     public function getPlanningId()
     {
         return $this->planning->getId();
     }
 
+    #[Override]
     public function getProject()
     {
         return $this->project;
     }
 
+    #[Override]
     public function getGroupId(): int
     {
         return (int) $this->project->getID();
     }
 
+    #[Override]
     public function hasAncestors()
     {
         return false;
     }
 
+    #[Override]
     public function getAncestors()
     {
         return [];
     }
 
+    #[Override]
     public function setAncestors(array $ancestors)
     {
     }
@@ -151,6 +166,7 @@ class Planning_VirtualTopMilestone implements Planning_Milestone
     {
     }
 
+    #[Override]
     public function getStartDate()
     {
         return null;
@@ -160,68 +176,82 @@ class Planning_VirtualTopMilestone implements Planning_Milestone
     {
     }
 
+    #[Override]
     public function getEndDate()
     {
         return null;
     }
 
+    #[Override]
     public function getCapacity()
     {
         return null;
     }
 
+    #[Override]
     public function getRemainingEffort()
     {
         return null;
     }
 
+    #[Override]
     public function getLastModifiedDate()
     {
         return null;
     }
 
+    #[Override]
     public function getDuration()
     {
         return null;
     }
 
+    #[Override]
     public function getParent()
     {
         return null;
     }
 
+    #[Override]
     public function milestoneCanBeSubmilestone(Planning_Milestone $potential_submilestone)
     {
         return false;
     }
 
+    #[Override]
     public function hasBurdownField(PFUser $user)
     {
         return false;
     }
 
+    #[Override]
     public function getDaysSinceStart()
     {
         return 0;
     }
 
+    #[Override]
     public function getDaysUntilEnd()
     {
         return 0;
     }
 
+    #[Override]
     public function setDatePeriod(DatePeriodWithOpenDays $date_period): void
     {
     }
 
+    #[Override]
     public function setCapacity($capacity)
     {
     }
 
+    #[Override]
     public function setRemainingEffort($remaining_effort)
     {
     }
 
+    #[Override]
     public function getPromotedMilestoneId(): string
     {
         return 'topbacklog';

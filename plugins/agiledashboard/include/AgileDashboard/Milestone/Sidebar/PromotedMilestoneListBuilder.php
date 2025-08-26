@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Milestone\Sidebar;
 
+use Override;
 use PFUser;
 use Planning_ArtifactMilestone;
 use Planning_VirtualTopMilestone;
@@ -38,6 +39,7 @@ final class PromotedMilestoneListBuilder implements BuildPromotedMilestoneList
     ) {
     }
 
+    #[Override]
     public function buildPromotedMilestoneList(PFUser $user, Planning_VirtualTopMilestone $virtual_top_milestone): PromotedMilestoneList
     {
         $project         = $virtual_top_milestone->getProject();

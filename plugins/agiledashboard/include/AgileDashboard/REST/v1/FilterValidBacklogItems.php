@@ -21,11 +21,13 @@
 
 namespace Tuleap\AgileDashboard\REST\v1;
 
+use Override;
 use PFUser;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\IFilterValidElementsToUnkink;
 
 class FilterValidBacklogItems implements IFilterValidElementsToUnkink
 {
+    #[Override]
     public function filter(PFUser $user, array $artifact_ids_to_be_removed): array
     {
         // No filter, was already done in PatchAddBacklogItemsValidator

@@ -21,7 +21,9 @@
 
 namespace Tuleap\AgileDashboard\REST\v1;
 
+use Override;
 use Tracker_ArtifactFactory;
+use Tuleap\Tracker\Tracker;
 
 class PatchAddBacklogItemsValidator implements IValidateElementsToAdd
 {
@@ -49,6 +51,7 @@ class PatchAddBacklogItemsValidator implements IValidateElementsToAdd
     /**
      * @throws ArtifactCannotBeChildrenOfException
      */
+    #[Override]
     public function validate(array $to_add)
     {
         foreach ($to_add as $id) {

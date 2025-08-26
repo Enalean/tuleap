@@ -22,11 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard;
 
+use Override;
 use Tuleap\Project\Routing\ProjectCSRFSynchronizerTokenProvider;
 use Tuleap\Request\CSRFSynchronizerTokenInterface;
 
 final class CSRFSynchronizerTokenProvider implements ProjectCSRFSynchronizerTokenProvider
 {
+    #[Override]
     public function getCSRF(\Project $project): CSRFSynchronizerTokenInterface
     {
         return new \CSRFSynchronizerToken(AgileDashboardServiceHomepageUrlBuilder::getTopBacklogUrl($project));

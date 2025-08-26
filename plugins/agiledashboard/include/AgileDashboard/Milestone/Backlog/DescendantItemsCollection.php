@@ -35,31 +35,37 @@ class AgileDashboard_Milestone_Backlog_DescendantItemsCollection implements Iter
         $this->items[] = $item;
     }
 
+    #[Override]
     public function current(): Artifact
     {
         return current($this->items);
     }
 
+    #[Override]
     public function key(): int
     {
         return key($this->items);
     }
 
+    #[Override]
     public function next(): void
     {
         next($this->items);
     }
 
+    #[Override]
     public function rewind(): void
     {
         reset($this->items);
     }
 
+    #[Override]
     public function count(string $mode = 'COUNT_NORMAL'): int
     {
         return count($this->items);
     }
 
+    #[Override]
     public function valid(): bool
     {
         return current($this->items) !== false;

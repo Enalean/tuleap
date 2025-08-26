@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\AgileDashboard;
 
 use BackendLogger;
+use Override;
 use PFUser;
 use Planning_MilestoneFactory;
 use PlanningFactory;
@@ -39,31 +40,37 @@ use Tuleap\Tracker\Semantic\Title\CachedSemanticTitleFieldRetriever;
 
 class AgileDashboardService extends \Service
 {
+    #[Override]
     public function getIconName(): string
     {
         return 'fa-solid fa-tlp-backlog';
     }
 
+    #[Override]
     public function getInternationalizedName(): string
     {
         return dgettext('tuleap-agiledashboard', 'Backlog');
     }
 
+    #[Override]
     public function getProjectAdministrationName(): string
     {
         return dgettext('tuleap-agiledashboard', 'Backlog');
     }
 
+    #[Override]
     public function getInternationalizedDescription(): string
     {
         return dgettext('tuleap-agiledashboard', 'Backlog');
     }
 
+    #[Override]
     public function urlCanChange(): bool
     {
         return false;
     }
 
+    #[Override]
     public function getUrl(?string $url = null): string
     {
         return AgileDashboardServiceHomepageUrlBuilder::getTopBacklogUrl($this->project);
@@ -72,6 +79,7 @@ class AgileDashboardService extends \Service
     /**
      * @return list<SidebarPromotedItemPresenter>
      */
+    #[Override]
     public function getPromotedItemPresenters(PFUser $user, ?string $active_promoted_item_id): array
     {
         $planning_factory = PlanningFactory::build();
@@ -93,6 +101,7 @@ class AgileDashboardService extends \Service
         ))->getSidebarPromotedMilestones($user, $active_promoted_item_id);
     }
 
+    #[Override]
     public function getSidebarInfoTooltip(): string
     {
         if ((new MilestonesInSidebarDao())->shouldSidebarDisplayLastMilestones((int) $this->project->getID())) {

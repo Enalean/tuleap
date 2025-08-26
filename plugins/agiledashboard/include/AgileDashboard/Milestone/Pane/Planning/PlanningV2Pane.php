@@ -44,6 +44,7 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningV2Pane extends AgileDashboa
     /**
      * @return string
      */
+    #[Override]
     public function getIdentifier()
     {
         return $this->info->getIdentifier();
@@ -52,6 +53,7 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningV2Pane extends AgileDashboa
     /**
      * @see AgileDashboard_Pane::getFullContent()
      */
+    #[Override]
     public function getFullContent()
     {
         return $this->getPaneContent();
@@ -60,16 +62,19 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningV2Pane extends AgileDashboa
     /**
      * @see AgileDashboard_Pane::getMinimalContent()
      */
+    #[Override]
     public function getMinimalContent()
     {
         return '';
     }
 
+    #[Override]
     public function getBodyClass(): array
     {
         return ['has-sidebar-with-pinned-header'];
     }
 
+    #[Override]
     public function shouldIncludeFatCombined(): bool
     {
         return true;

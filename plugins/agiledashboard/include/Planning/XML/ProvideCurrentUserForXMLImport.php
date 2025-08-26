@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Planning\XML;
 
+use Override;
 use Tuleap\User\ProvideCurrentUser;
 
 final class ProvideCurrentUserForXMLImport implements ProvideCurrentUser
@@ -33,6 +34,7 @@ final class ProvideCurrentUserForXMLImport implements ProvideCurrentUser
         $this->current_user_provider = $current_user_provider;
     }
 
+    #[Override]
     public function getCurrentUser(): \PFUser
     {
         $current_user = $this->current_user_provider->getCurrentUser();

@@ -22,10 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Milestone\Sidebar;
 
+use Override;
 use Tuleap\DB\DataAccessObject;
 
 final class MilestoneDao extends DataAccessObject implements RetrieveMilestonesWithSubMilestones
 {
+    #[Override]
     public function retrieveMilestonesWithSubMilestones(int $project_id, int $parent_tracker_id): array
     {
         $sql = <<<SQL

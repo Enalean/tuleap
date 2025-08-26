@@ -22,11 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Workflow\PostAction\Update;
 
+use Override;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\PostActionVisitor;
 use Tuleap\Tracker\Workflow\Update\PostAction;
 
 final class AddToTopBacklogValue implements PostAction
 {
+    #[Override]
     public function accept(PostActionVisitor $visitor)
     {
         $visitor->visitExternalPostActionValue($this);

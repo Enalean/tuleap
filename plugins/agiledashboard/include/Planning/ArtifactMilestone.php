@@ -107,6 +107,7 @@ class Planning_ArtifactMilestone implements Planning_Milestone
     /**
      * @return int The project identifier.
      */
+    #[Override]
     public function getGroupId()
     {
         return $this->project->getID();
@@ -115,6 +116,7 @@ class Planning_ArtifactMilestone implements Planning_Milestone
     /**
      * @return Project
      */
+    #[Override]
     public function getProject()
     {
         return $this->project;
@@ -123,6 +125,7 @@ class Planning_ArtifactMilestone implements Planning_Milestone
     /**
      * @return Artifact
      */
+    #[Override]
     public function getArtifact()
     {
         return $this->artifact;
@@ -131,6 +134,7 @@ class Planning_ArtifactMilestone implements Planning_Milestone
     /**
      * @return bool
      */
+    #[Override]
     public function userCanView(PFUser $user)
     {
         return $this->artifact->getTracker()->userCanView($user);
@@ -139,6 +143,7 @@ class Planning_ArtifactMilestone implements Planning_Milestone
     /**
      * @return int
      */
+    #[Override]
     public function getTrackerId()
     {
         return $this->artifact->getTrackerId();
@@ -147,6 +152,7 @@ class Planning_ArtifactMilestone implements Planning_Milestone
     /**
      * @return int
      */
+    #[Override]
     public function getArtifactId()
     {
         return $this->artifact->getId();
@@ -155,6 +161,7 @@ class Planning_ArtifactMilestone implements Planning_Milestone
     /**
      * @return string
      */
+    #[Override]
     public function getArtifactTitle()
     {
         return $this->artifact->getTitle() ?? '';
@@ -163,6 +170,7 @@ class Planning_ArtifactMilestone implements Planning_Milestone
     /**
      * @return string
      */
+    #[Override]
     public function getXRef()
     {
         return $this->artifact->getXRef();
@@ -171,6 +179,7 @@ class Planning_ArtifactMilestone implements Planning_Milestone
     /**
      * @return Planning
      */
+    #[Override]
     public function getPlanning()
     {
         return $this->planning;
@@ -179,6 +188,7 @@ class Planning_ArtifactMilestone implements Planning_Milestone
     /**
      * @return int
      */
+    #[Override]
     public function getPlanningId()
     {
         return $this->planning->getId();
@@ -187,6 +197,7 @@ class Planning_ArtifactMilestone implements Planning_Milestone
     /**
      * @return ArtifactNode
      */
+    #[Override]
     public function getPlannedArtifacts()
     {
         return $this->planned_artifacts;
@@ -196,6 +207,7 @@ class Planning_ArtifactMilestone implements Planning_Milestone
      * All artifacts linked by either the root artifact or any of the artifacts in plannedArtifacts()
      * @return Artifact[]
      */
+    #[Override]
     public function getLinkedArtifacts(PFUser $user)
     {
         $artifacts = $this->artifact->getUniqueLinkedArtifacts($user);
@@ -217,27 +229,32 @@ class Planning_ArtifactMilestone implements Planning_Milestone
         }
     }
 
+    #[Override]
     public function hasAncestors()
     {
         return ! empty($this->parent_milestones);
     }
 
+    #[Override]
     public function getAncestors()
     {
         return $this->parent_milestones;
     }
 
+    #[Override]
     public function getParent()
     {
         $parent_milestones_values = array_values($this->parent_milestones);
         return array_shift($parent_milestones_values);
     }
 
+    #[Override]
     public function setAncestors(array $ancestors)
     {
         $this->parent_milestones = $ancestors;
     }
 
+    #[Override]
     public function getStartDate()
     {
         if ($this->date_period !== null) {
@@ -247,6 +264,7 @@ class Planning_ArtifactMilestone implements Planning_Milestone
         return null;
     }
 
+    #[Override]
     public function getEndDate()
     {
         if (! $this->getStartDate()) {
@@ -264,6 +282,7 @@ class Planning_ArtifactMilestone implements Planning_Milestone
         return null;
     }
 
+    #[Override]
     public function getDaysSinceStart()
     {
         if ($this->date_period !== null) {
@@ -273,6 +292,7 @@ class Planning_ArtifactMilestone implements Planning_Milestone
         return null;
     }
 
+    #[Override]
     public function getDaysUntilEnd()
     {
         if ($this->date_period !== null) {
@@ -282,21 +302,25 @@ class Planning_ArtifactMilestone implements Planning_Milestone
         return null;
     }
 
+    #[Override]
     public function getCapacity()
     {
         return $this->capacity;
     }
 
+    #[Override]
     public function setCapacity($capacity)
     {
         $this->capacity = $capacity;
     }
 
+    #[Override]
     public function getRemainingEffort()
     {
         return $this->remaining_effort;
     }
 
+    #[Override]
     public function setRemainingEffort($remaining_effort)
     {
         $this->remaining_effort = $remaining_effort;
@@ -317,6 +341,7 @@ class Planning_ArtifactMilestone implements Planning_Milestone
      *
      * @return int
      */
+    #[Override]
     public function getLastModifiedDate()
     {
         return $this->getArtifact()->getLastUpdateDate();
@@ -326,6 +351,7 @@ class Planning_ArtifactMilestone implements Planning_Milestone
      * @see Planning_Milestone::getDuration()
      * @return int|null
      */
+    #[Override]
     public function getDuration()
     {
         if ($this->date_period !== null) {
@@ -335,6 +361,7 @@ class Planning_ArtifactMilestone implements Planning_Milestone
         return null;
     }
 
+    #[Override]
     public function milestoneCanBeSubmilestone(Planning_Milestone $potential_submilestone): bool
     {
         if ($potential_submilestone->getArtifact()->getTracker()->getParent()) {
@@ -351,6 +378,7 @@ class Planning_ArtifactMilestone implements Planning_Milestone
     /**
      * @return bool
      */
+    #[Override]
     public function hasBurdownField(PFUser $user)
     {
         $burndown_field = $this->getArtifact()->getABurndownField($user);
@@ -358,11 +386,13 @@ class Planning_ArtifactMilestone implements Planning_Milestone
         return (bool) $burndown_field;
     }
 
+    #[Override]
     public function setDatePeriod(DatePeriodWithOpenDays $date_period): void
     {
         $this->date_period = $date_period;
     }
 
+    #[Override]
     public function getPromotedMilestoneId(): string
     {
         return self::PROMOTED_ITEM_PREFIX . $this->getArtifactId();

@@ -22,10 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\ExplicitBacklog;
 
+use Override;
 use Tuleap\DB\DataAccessObject;
 
 class ExplicitBacklogDao extends DataAccessObject implements VerifyProjectUsesExplicitBacklog
 {
+    #[Override]
     public function isProjectUsingExplicitBacklog(int $project_id): bool
     {
         $sql  = 'SELECT NULL FROM plugin_agiledashboard_planning_explicit_backlog_usage WHERE project_id = ?';

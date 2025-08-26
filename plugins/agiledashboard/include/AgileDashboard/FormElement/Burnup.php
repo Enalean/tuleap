@@ -22,6 +22,7 @@ namespace Tuleap\AgileDashboard\FormElement;
 
 use AgileDashboard_Semantic_InitialEffortFactory;
 use EventManager;
+use Override;
 use PFUser;
 use Psr\Log\LoggerInterface;
 use SystemEventManager;
@@ -69,25 +70,30 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
 {
     public const TYPE = 'burnup';
 
+    #[Override]
     public function accept(Tracker_FormElement_FieldVisitor $visitor)
     {
         return $visitor->visitExternalField($this);
     }
 
+    #[Override]
     public function getFormAdminVisitor(Tracker_FormElement_Field $element, array $used_element)
     {
         return new ViewAdminBurnupField($element, $used_element);
     }
 
+    #[Override]
     public function afterCreate(array $form_element_data, $tracker_is_empty)
     {
     }
 
+    #[Override]
     public function canBeUsedAsReportCriterion()
     {
         return false;
     }
 
+    #[Override]
     public function canBeUsedToSortReport()
     {
         return false;
@@ -96,6 +102,7 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
     /**
      * @return string html
      */
+    #[Override]
     public function fetchAdminFormElement()
     {
         $field_usage = $this->getChartFieldUsage();
@@ -125,10 +132,12 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
         );
     }
 
+    #[Override]
     public function fetchArtifactForOverlay(Artifact $artifact, array $submitted_values)
     {
     }
 
+    #[Override]
     public function fetchArtifactValue(
         Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value = null,
@@ -137,6 +146,7 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
         return '';
     }
 
+    #[Override]
     public function fetchArtifactValueReadOnly(
         Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value = null,
@@ -186,11 +196,13 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
         );
     }
 
+    #[Override]
     public function fetchCSVChangesetValue(int $artifact_id, int $changeset_id, mixed $value, ?\Tracker_Report $report): string
     {
         return '';
     }
 
+    #[Override]
     public function fetchChangesetValue(
         int $artifact_id,
         int $changeset_id,
@@ -201,11 +213,13 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
         return '';
     }
 
+    #[Override]
     public function fetchCriteriaValue(Tracker_Report_Criteria $criteria): string
     {
         return '';
     }
 
+    #[Override]
     public function fetchMailArtifactValue(
         Artifact $artifact,
         PFUser $user,
@@ -216,93 +230,112 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
         return '';
     }
 
+    #[Override]
     public function fetchRawValue(mixed $value): string
     {
         return '';
     }
 
+    #[Override]
     public function fetchRawValueFromChangeset(Tracker_Artifact_Changeset $changeset): string
     {
         return '';
     }
 
+    #[Override]
     public function fetchSubmit(array $submitted_values)
     {
         return '';
     }
 
+    #[Override]
     public function fetchSubmitMasschange()
     {
         return '';
     }
 
+    #[Override]
     protected function fetchSubmitValue(array $submitted_values): string
     {
         return '';
     }
 
+    #[Override]
     protected function fetchSubmitValueMasschange(): string
     {
         return '';
     }
 
+    #[Override]
     protected function fetchTooltipValue(Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null): string
     {
         return '';
     }
 
+    #[Override]
     public function getChangesetValue($changeset, $value_id, $has_changed)
     {
     }
 
+    #[Override]
     protected function getCriteriaDao()
     {
     }
 
+    #[Override]
     public function getCriteriaFromWhere(Tracker_Report_Criteria $criteria): Option
     {
         return Option::nothing(ParametrizedFromWhere::class);
     }
 
+    #[Override]
     public function isCSVImportable(): bool
     {
         return false;
     }
 
+    #[Override]
     public static function getFactoryDescription()
     {
         return dgettext('tuleap-tracker', 'Display the burnup chart for the artifact');
     }
 
+    #[Override]
     public static function getFactoryIconCreate()
     {
         return $GLOBALS['HTML']->getImagePath('ic/burnup--plus.png');
     }
 
+    #[Override]
     public static function getFactoryIconUseIt()
     {
         return $GLOBALS['HTML']->getImagePath('ic/burnup.png');
     }
 
+    #[Override]
     public static function getFactoryLabel()
     {
         return dgettext('tuleap-agiledashboard', 'Burnup Chart');
     }
 
+    #[Override]
     public static function getFactoryUniqueField()
     {
         return true;
     }
 
+    #[Override]
     public function getQueryFrom()
     {
     }
 
+    #[Override]
     public function getQuerySelect(): string
     {
         return '';
     }
 
+    #[Override]
     public function getRESTValue(PFUser $user, Tracker_Artifact_Changeset $changeset)
     {
         $artifact = $changeset->getArtifact();
@@ -325,14 +358,17 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
         return $field_representation;
     }
 
+    #[Override]
     public function getRESTAvailableValues()
     {
     }
 
+    #[Override]
     protected function getValueDao()
     {
     }
 
+    #[Override]
     protected function keepValue(
         $artifact,
         $changeset_value_id,
@@ -343,6 +379,7 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
     /**
      * @see Tracker_FormElement_Field::postSaveNewChangeset()
      */
+    #[Override]
     public function postSaveNewChangeset(
         Artifact $artifact,
         PFUser $submitter,
@@ -352,6 +389,7 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
     ) {
     }
 
+    #[Override]
     protected function saveValue(
         $artifact,
         $changeset_value_id,
@@ -362,6 +400,7 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
         return false;
     }
 
+    #[Override]
     public function testImport()
     {
         return true;
@@ -373,6 +412,7 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
      *
      * @return bool
      */
+    #[Override]
     protected function validate(Artifact $artifact, $value)
     {
         return true;
@@ -480,6 +520,7 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
         return new CountElementsModeChecker(new ProjectsCountModeDao());
     }
 
+    #[Override]
     public function isAlwaysInEditMode(): bool
     {
         return false;

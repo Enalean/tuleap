@@ -42,11 +42,13 @@ class Planning_PlanningOutOfHierarchyAdminPresenter extends Planning_PlanningAdm
         $this->is_planning_removal_dangerous = $is_planning_removal_dangerous;
     }
 
+    #[Override]
     public function li_class()
     {
         return 'alert alert-error';
     }
 
+    #[Override]
     public function extra_message()
     {
         return sprintf(dgettext('tuleap-agiledashboard', 'This planning doesn\'t belong to root planning (%1$s) hierarchy. This configuration is not supported. You should remove this planning.'), $this->root_planning_name);

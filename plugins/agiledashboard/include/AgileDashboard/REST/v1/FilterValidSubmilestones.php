@@ -21,6 +21,7 @@
 
 namespace Tuleap\AgileDashboard\REST\v1;
 
+use Override;
 use PFUser;
 use Planning_Milestone;
 use Planning_MilestoneFactory;
@@ -44,6 +45,7 @@ class FilterValidSubmilestones implements IFilterValidElementsToUnkink
         $this->milestone         = $milestone;
     }
 
+    #[Override]
     public function filter(PFUser $user, array $artifact_ids_to_be_removed): array
     {
         $submilestones = [];

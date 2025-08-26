@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Workflow\PostAction\Update\Internal;
 
+use Override;
 use Transition;
 use Tuleap\AgileDashboard\Workflow\PostAction\Update\AddToTopBacklogValue;
 use Tuleap\Tracker\Workflow\PostAction\Update\Internal\PostActionUpdater;
@@ -39,6 +40,7 @@ class AddToTopBacklogValueUpdater implements PostActionUpdater
         $this->add_to_top_backlog_value_repository = $add_to_top_backlog_value_repository;
     }
 
+    #[Override]
     public function updateByTransition(PostActionCollection $actions, Transition $transition): void
     {
         $add_to_top_backlog_post_action_value = [];

@@ -21,6 +21,7 @@
 namespace Tuleap\AgileDashboard\Milestone;
 
 use Codendi_Request;
+use Override;
 use PFUser;
 use Planning_Milestone;
 use Tuleap\Tracker\Artifact\View\TrackerArtifactView;
@@ -33,6 +34,7 @@ final readonly class ArtifactView extends TrackerArtifactView
     }
 
     /** @see TrackerArtifactView::getTitle() */
+    #[Override]
     public function getTitle(): string
     {
         return dgettext('tuleap-agiledashboard', 'Milestone')
@@ -40,18 +42,21 @@ final readonly class ArtifactView extends TrackerArtifactView
     }
 
     /** @see TrackerArtifactView::getIdentifier() */
+    #[Override]
     public function getIdentifier(): string
     {
         return 'milestone';
     }
 
     /** @see TrackerArtifactView::fetch() */
+    #[Override]
     public function fetch(): string
     {
         // Nothing to fetch as the tab is a redirect to the milestone
         return '';
     }
 
+    #[Override]
     public function getURL(): string
     {
         return AGILEDASHBOARD_BASE_URL . '/?' . http_build_query(

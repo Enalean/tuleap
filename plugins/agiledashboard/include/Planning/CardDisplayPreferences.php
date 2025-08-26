@@ -20,6 +20,7 @@
 
 class Planning_CardDisplayPreferences implements Tracker_CardDisplayPreferences
 {
+    #[Override]
     public function shouldDisplayAvatars()
     {
         // Returning True because it's always avatars which

@@ -22,8 +22,11 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\AgileDashboard\Planning;
 
+use Override;
+
 final class EnsureThatTrackerIsReadableByUser implements VerifyTrackerAccessDuringImportStrategy
 {
+    #[Override]
     public function canUserViewTracker(\PFUser $user, \Tuleap\Tracker\Tracker $tracker): bool
     {
         return $tracker->userCanView($user);

@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Workflow;
 
+use Override;
 use Tracker_FormElement_Field;
 use Transition;
 use Transition_PostAction;
@@ -62,6 +63,7 @@ class AddToTopBacklogPostActionFactory implements Transition_PostActionSubFactor
         $this->explicit_backlog_dao               = $explicit_backlog_dao;
     }
 
+    #[Override]
     public function warmUpCacheForWorkflow(Workflow $workflow): void
     {
         $workflow_id = (int) $workflow->getId();
@@ -81,6 +83,7 @@ class AddToTopBacklogPostActionFactory implements Transition_PostActionSubFactor
      * @return AddToTopBacklog[]
      * @throws \Tuleap\Tracker\Workflow\Transition\OrphanTransitionException
      */
+    #[Override]
     public function loadPostActions(Transition $transition): array
     {
         $workflow_id = (int) $transition->getWorkflow()->getId();
@@ -118,6 +121,7 @@ class AddToTopBacklogPostActionFactory implements Transition_PostActionSubFactor
         return [];
     }
 
+    #[Override]
     public function saveObject(Transition_PostAction $post_action)
     {
         $to_transition_id = (int) $post_action->getTransition()->getId();
@@ -127,12 +131,14 @@ class AddToTopBacklogPostActionFactory implements Transition_PostActionSubFactor
         );
     }
 
+    #[Override]
     public function isFieldUsedInPostActions(Tracker_FormElement_Field $field)
     {
         //Does nothing
         return false;
     }
 
+    #[Override]
     public function duplicate(Transition $from_transition, int $to_transition_id, array $field_mapping): void
     {
         $postactions = $this->loadPostActions($from_transition);
@@ -143,6 +149,7 @@ class AddToTopBacklogPostActionFactory implements Transition_PostActionSubFactor
         }
     }
 
+    #[Override]
     public function getInstanceFromXML($xml, &$xmlMapping, Transition $transition)
     {
         return new AddToTopBacklog(
