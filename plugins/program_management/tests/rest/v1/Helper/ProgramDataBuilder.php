@@ -43,10 +43,12 @@ use Tuleap\ProgramManagement\Domain\Team\Creation\Team;
 use Tuleap\ProgramManagement\Domain\Team\Creation\TeamCollection;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\Queue\QueueFactory;
+use Tuleap\REST\BaseTestDataBuilder;
 use Tuleap\Test\Stubs\include\CheckUserCanAccessProjectStub;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
+use Tuleap\Tracker\Tracker;
 use UserManager;
 
 final class ProgramDataBuilder extends REST_TestDataBuilder
@@ -57,11 +59,11 @@ final class ProgramDataBuilder extends REST_TestDataBuilder
 
     private ProgramIncrementCreationDispatcher $creation_dispatcher;
     private ?\PFUser $user;
-    private \Tuleap\Tracker\Tracker $program_increment;
-    private \Tuleap\Tracker\Tracker $user_story;
-    private \Tuleap\Tracker\Tracker $feature;
-    private \Tuleap\Tracker\Tracker $iteration;
-    private \Tuleap\Tracker\Tracker $mirrored_iteration;
+    private Tracker $program_increment;
+    private Tracker $user_story;
+    private Tracker $feature;
+    private Tracker $iteration;
+    private Tracker $mirrored_iteration;
     private \Tracker_ArtifactFactory $artifact_factory;
     private ProgramIncrementsDAO $program_increment_DAO;
 
@@ -89,7 +91,7 @@ final class ProgramDataBuilder extends REST_TestDataBuilder
             new QueueFactory($null_logger),
         );
 
-        $this->user = $user_manager->getUserByUserName(\TestDataBuilder::TEST_USER_1_NAME);
+        $this->user = $user_manager->getUserByUserName(BaseTestDataBuilder::TEST_USER_1_NAME);
 
         $program_project = $this->getProjectByShortName(self::PROJECT_PROGRAM_NAME);
         $team_project    = $this->getProjectByShortName(self::PROJECT_TEAM_NAME);
@@ -185,9 +187,9 @@ final class ProgramDataBuilder extends REST_TestDataBuilder
     }
 
     /**
-     * @param \Tuleap\Tracker\Tracker[] $trackers
+     * @param Tracker[] $trackers
      */
-    private function getTrackerByName(array $trackers, string $name): \Tuleap\Tracker\Tracker
+    private function getTrackerByName(array $trackers, string $name): Tracker
     {
         foreach ($trackers as $tracker) {
             if ($tracker->getItemName() === $name) {

@@ -30,7 +30,6 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use REST_TestDataBuilder;
-use TestDataBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
 class RestBase extends TestCase
@@ -442,7 +441,7 @@ class RestBase extends TestCase
         );
 
         $response = $this->getResponseByName(
-            TestDataBuilder::ADMIN_USER_NAME,
+            BaseTestDataBuilder::ADMIN_USER_NAME,
             $this->request_factory->createRequest('GET', "users/?query=$query")
         );
         $user     = Json\decode($response->getBody()->getContents());
@@ -452,14 +451,14 @@ class RestBase extends TestCase
 
     private function initUserIds(): void
     {
-        $this->initUserId(TestDataBuilder::ADMIN_USER_NAME);
-        $this->initUserId(TestDataBuilder::TEST_USER_1_NAME);
-        $this->initUserId(TestDataBuilder::TEST_USER_2_NAME);
-        $this->initUserId(TestDataBuilder::TEST_USER_3_NAME);
+        $this->initUserId(BaseTestDataBuilder::ADMIN_USER_NAME);
+        $this->initUserId(BaseTestDataBuilder::TEST_USER_1_NAME);
+        $this->initUserId(BaseTestDataBuilder::TEST_USER_2_NAME);
+        $this->initUserId(BaseTestDataBuilder::TEST_USER_3_NAME);
         $this->initUserId(REST_TestDataBuilder::TEST_USER_4_NAME);
-        $this->initUserId(TestDataBuilder::TEST_USER_5_NAME);
-        $this->initUserId(TestDataBuilder::TEST_USER_RESTRICTED_1_NAME);
-        $this->initUserId(TestDataBuilder::TEST_USER_RESTRICTED_2_NAME);
+        $this->initUserId(BaseTestDataBuilder::TEST_USER_5_NAME);
+        $this->initUserId(BaseTestDataBuilder::TEST_USER_RESTRICTED_1_NAME);
+        $this->initUserId(BaseTestDataBuilder::TEST_USER_RESTRICTED_2_NAME);
     }
 
     /** @param array{id: int, username: string} $user */

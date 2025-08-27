@@ -27,6 +27,7 @@ require_once __DIR__ . '/../../../vendor/autoload.php';
 use REST_TestDataBuilder;
 use Tuleap\Docman\Test\rest\DocmanDataBuilder;
 use Tuleap\Docman\Test\rest\Helper\DocmanTestExecutionHelper;
+use Tuleap\REST\BaseTestDataBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DocmanEmbeddedTest extends DocmanTestExecutionHelper
@@ -165,13 +166,13 @@ final class DocmanEmbeddedTest extends DocmanTestExecutionHelper
         $this->assertEquals(403, $permission_update_response_with_rest_read_only_user->getStatusCode());
 
         $permission_update_response = $this->getResponseByName(
-            \TestDataBuilder::ADMIN_USER_NAME,
+            BaseTestDataBuilder::ADMIN_USER_NAME,
             $this->request_factory->createRequest('PUT', 'docman_embedded_files/' . urlencode((string) $embedded_doc_id) . '/permissions')->withBody($this->stream_factory->createStream($put_body))
         );
         $this->assertEquals(200, $permission_update_response->getStatusCode());
 
         $embedded_doc_representation_response = $this->getResponseByName(
-            \TestDataBuilder::ADMIN_USER_NAME,
+            BaseTestDataBuilder::ADMIN_USER_NAME,
             $this->request_factory->createRequest('GET', 'docman_items/' . urlencode((string) $embedded_doc_id))
         );
         $this->assertEquals(200, $permission_update_response->getStatusCode());
@@ -189,7 +190,7 @@ final class DocmanEmbeddedTest extends DocmanTestExecutionHelper
 
         $this->getResponse(
             $this->request_factory->createRequest('DELETE', 'docman_embedded_files/' . urlencode((string) $embedded_doc_id)),
-            \TestDataBuilder::ADMIN_USER_NAME
+            BaseTestDataBuilder::ADMIN_USER_NAME
         );
     }
 
@@ -235,7 +236,7 @@ final class DocmanEmbeddedTest extends DocmanTestExecutionHelper
         $file_to_delete_id = $file_to_delete['id'];
 
         $response = $this->getResponseByName(
-            \TestDataBuilder::ADMIN_USER_NAME,
+            BaseTestDataBuilder::ADMIN_USER_NAME,
             $this->request_factory->createRequest('DELETE', 'docman_embedded_files/' . $file_to_delete_id)
         );
 
@@ -267,7 +268,7 @@ final class DocmanEmbeddedTest extends DocmanTestExecutionHelper
         $file_to_delete_id = $file_to_delete['id'];
 
         $response = $this->getResponseByName(
-            \TestDataBuilder::ADMIN_USER_NAME,
+            BaseTestDataBuilder::ADMIN_USER_NAME,
             $this->request_factory->createRequest('DELETE', 'docman_embedded_files/' . $file_to_delete_id)
         );
 
@@ -289,19 +290,19 @@ final class DocmanEmbeddedTest extends DocmanTestExecutionHelper
         $this->assertEquals(403, $post_response_with_rest_read_only_user->getStatusCode());
 
         $response = $this->getResponseByName(
-            \TestDataBuilder::ADMIN_USER_NAME,
+            BaseTestDataBuilder::ADMIN_USER_NAME,
             $this->request_factory->createRequest('POST', 'docman_embedded_files/' . $locked_document_id . '/lock')
         );
 
         $this->assertEquals(201, $response->getStatusCode());
 
         $response = $this->getResponseByName(
-            \TestDataBuilder::ADMIN_USER_NAME,
+            BaseTestDataBuilder::ADMIN_USER_NAME,
             $this->request_factory->createRequest('GET', 'docman_items/' . $locked_document_id)
         );
 
         $document = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
-        $this->assertEquals($document['lock_info']['locked_by']['username'], \TestDataBuilder::ADMIN_USER_NAME);
+        $this->assertEquals($document['lock_info']['locked_by']['username'], BaseTestDataBuilder::ADMIN_USER_NAME);
     }
 
     #[\PHPUnit\Framework\Attributes\Depends('testGetDocumentItemsForAdminUser')]
@@ -317,14 +318,14 @@ final class DocmanEmbeddedTest extends DocmanTestExecutionHelper
         $this->assertEquals(403, $delete_response_with_rest_read_only_user->getStatusCode());
 
         $response = $this->getResponseByName(
-            \TestDataBuilder::ADMIN_USER_NAME,
+            BaseTestDataBuilder::ADMIN_USER_NAME,
             $this->request_factory->createRequest('DELETE', 'docman_embedded_files/' . $locked_document_id . '/lock')
         );
 
         $this->assertEquals(200, $response->getStatusCode());
 
         $response = $this->getResponseByName(
-            \TestDataBuilder::ADMIN_USER_NAME,
+            BaseTestDataBuilder::ADMIN_USER_NAME,
             $this->request_factory->createRequest('GET', 'docman_items/' . $locked_document_id)
         );
 
@@ -375,7 +376,7 @@ final class DocmanEmbeddedTest extends DocmanTestExecutionHelper
             ]
         );
         $new_version_response = $this->getResponseByName(
-            \TestDataBuilder::ADMIN_USER_NAME,
+            BaseTestDataBuilder::ADMIN_USER_NAME,
             $this->request_factory->createRequest('POST', 'docman_embedded_files/' . $file_to_update_id . '/versions')->withBody($this->stream_factory->createStream($new_version_resource))
         );
 
@@ -404,7 +405,7 @@ final class DocmanEmbeddedTest extends DocmanTestExecutionHelper
             ]
         );
         $new_version_response = $this->getResponseByName(
-            \TestDataBuilder::ADMIN_USER_NAME,
+            BaseTestDataBuilder::ADMIN_USER_NAME,
             $this->request_factory->createRequest('POST', 'docman_embedded_files/' . $file_to_update_id . '/versions')->withBody($this->stream_factory->createStream($new_version_resource))
         );
 
@@ -434,7 +435,7 @@ final class DocmanEmbeddedTest extends DocmanTestExecutionHelper
             ]
         );
         $new_version_response = $this->getResponseByName(
-            \TestDataBuilder::ADMIN_USER_NAME,
+            BaseTestDataBuilder::ADMIN_USER_NAME,
             $this->request_factory->createRequest('POST', 'docman_embedded_files/' . $file_to_update_id . '/versions')->withBody($this->stream_factory->createStream($new_version_resource))
         );
 
@@ -466,14 +467,14 @@ final class DocmanEmbeddedTest extends DocmanTestExecutionHelper
             ]
         );
         $new_version_response = $this->getResponseByName(
-            \TestDataBuilder::ADMIN_USER_NAME,
+            BaseTestDataBuilder::ADMIN_USER_NAME,
             $this->request_factory->createRequest('POST', 'docman_embedded_files/' . $file_to_update_id . '/versions')->withBody($this->stream_factory->createStream($new_version_resource))
         );
 
         $this->assertEquals(200, $new_version_response->getStatusCode());
 
         $new_version_file_response = $this->getResponseByName(
-            \TestDataBuilder::ADMIN_USER_NAME,
+            BaseTestDataBuilder::ADMIN_USER_NAME,
             $this->request_factory->createRequest('GET', 'docman_items/' . $file_to_update_id)
         );
         $this->assertEquals($new_version_file_response->getStatusCode(), 200);
@@ -500,7 +501,7 @@ final class DocmanEmbeddedTest extends DocmanTestExecutionHelper
             ]
         );
         $new_version_response = $this->getResponseByName(
-            \TestDataBuilder::ADMIN_USER_NAME,
+            BaseTestDataBuilder::ADMIN_USER_NAME,
             $this->request_factory->createRequest('POST', 'docman_embedded_files/' . $file_to_update_id . '/versions')->withBody($this->stream_factory->createStream($new_version_resource))
         );
 
@@ -565,14 +566,14 @@ final class DocmanEmbeddedTest extends DocmanTestExecutionHelper
             ]
         );
         $new_version_response = $this->getResponseByName(
-            \TestDataBuilder::ADMIN_USER_NAME,
+            BaseTestDataBuilder::ADMIN_USER_NAME,
             $this->request_factory->createRequest('POST', 'docman_embedded_files/' . $file_to_update_id . '/versions')->withBody($this->stream_factory->createStream($new_version_resource))
         );
 
         $this->assertEquals(200, $new_version_response->getStatusCode());
 
         $response = $this->getResponseByName(
-            \TestDataBuilder::ADMIN_USER_NAME,
+            BaseTestDataBuilder::ADMIN_USER_NAME,
             $this->request_factory->createRequest('GET', 'docman_items/' . $file_to_update_id)
         );
         $this->assertEquals($response->getStatusCode(), 200);
@@ -642,14 +643,14 @@ final class DocmanEmbeddedTest extends DocmanTestExecutionHelper
         $this->assertEquals(403, $updated_metadata_file_response_with_rest_read_only_user->getStatusCode());
 
         $updated_metadata_file_response = $this->getResponseByName(
-            \TestDataBuilder::ADMIN_USER_NAME,
+            BaseTestDataBuilder::ADMIN_USER_NAME,
             $this->request_factory->createRequest('PUT', 'docman_embedded_files/' . $item_to_update_id . '/metadata')->withBody($this->stream_factory->createStream(json_encode($put_resource)))
         );
 
         $this->assertEquals(200, $updated_metadata_file_response->getStatusCode());
 
         $new_version_response = $this->getResponseByName(
-            \TestDataBuilder::ADMIN_USER_NAME,
+            BaseTestDataBuilder::ADMIN_USER_NAME,
             $this->request_factory->createRequest('GET', 'docman_items/' . $item_to_update_id)
         );
 
@@ -674,7 +675,7 @@ final class DocmanEmbeddedTest extends DocmanTestExecutionHelper
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('OPTIONS', 'docman_embedded_files/' . $id . '/metadata'),
-            \TestDataBuilder::ADMIN_USER_NAME
+            BaseTestDataBuilder::ADMIN_USER_NAME
         );
 
         $this->assertEquals(['OPTIONS', 'PUT'], explode(', ', $response->getHeaderLine('Allow')));
@@ -684,7 +685,10 @@ final class DocmanEmbeddedTest extends DocmanTestExecutionHelper
     #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testOptions(int $id): void
     {
-        $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', 'docman_embedded_files/' . $id), \TestDataBuilder::ADMIN_USER_NAME);
+        $response = $this->getResponse(
+            $this->request_factory->createRequest('OPTIONS', 'docman_embedded_files/' . $id),
+            BaseTestDataBuilder::ADMIN_USER_NAME
+        );
         $this->assertEquals(['OPTIONS', 'PATCH', 'DELETE'], explode(', ', $response->getHeaderLine('Allow')));
         $this->assertEquals($response->getStatusCode(), 200);
     }
@@ -692,7 +696,10 @@ final class DocmanEmbeddedTest extends DocmanTestExecutionHelper
         #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testOptionsLock($id): void
     {
-        $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', 'docman_embedded_files/' . $id . '/lock'), \TestDataBuilder::ADMIN_USER_NAME);
+        $response = $this->getResponse(
+            $this->request_factory->createRequest('OPTIONS', 'docman_embedded_files/' . $id . '/lock'),
+            BaseTestDataBuilder::ADMIN_USER_NAME
+        );
 
         $this->assertEquals(['OPTIONS', 'POST', 'DELETE'], explode(', ', $response->getHeaderLine('Allow')));
         $this->assertEquals($response->getStatusCode(), 200);
@@ -703,7 +710,7 @@ final class DocmanEmbeddedTest extends DocmanTestExecutionHelper
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('OPTIONS', 'docman_embedded_files/' . $id . '/versions'),
-            \TestDataBuilder::ADMIN_USER_NAME
+            BaseTestDataBuilder::ADMIN_USER_NAME
         );
 
         $this->assertEquals(['OPTIONS', 'GET', 'POST'], explode(', ', $response->getHeaderLine('Allow')));

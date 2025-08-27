@@ -29,6 +29,7 @@ require_once __DIR__ . '/../../../vendor/autoload.php';
 use REST_TestDataBuilder;
 use Tuleap\Docman\Test\rest\DocmanDataBuilder;
 use Tuleap\Docman\Test\rest\Helper\DocmanTestExecutionHelper;
+use Tuleap\REST\BaseTestDataBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class DocmanItemsTest extends DocmanTestExecutionHelper
@@ -59,7 +60,7 @@ class DocmanItemsTest extends DocmanTestExecutionHelper
         $wiki     = $this->findItemByTitle($items_folder_1, 'GET W');
 
         $response       = $this->getResponseByName(
-            \TestDataBuilder::ADMIN_USER_NAME,
+            BaseTestDataBuilder::ADMIN_USER_NAME,
             $this->request_factory->createRequest('GET', 'docman_items/' . $folder['id'] . '/docman_items')
         );
         $items_folder_2 = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);

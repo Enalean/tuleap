@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Taskboard\REST;
 
 use REST_TestDataBuilder;
+use Tuleap\REST\BaseTestDataBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class TaskboardCellTest extends \Tuleap\REST\RestBase
@@ -139,7 +140,7 @@ final class TaskboardCellTest extends \Tuleap\REST\RestBase
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('GET', 'taskboard/' . self::$milestone_id . '/cards'),
-            \TestDataBuilder::TEST_USER_1_NAME
+            BaseTestDataBuilder::TEST_USER_1_NAME
         );
         self::assertSame(200, $response->getStatusCode());
         return $this->indexByLabel(json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR));
@@ -165,7 +166,7 @@ final class TaskboardCellTest extends \Tuleap\REST\RestBase
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('GET', 'taskboard/' . self::$milestone_id . '/columns'),
-            \TestDataBuilder::TEST_USER_1_NAME
+            BaseTestDataBuilder::TEST_USER_1_NAME
         );
         self::assertSame(200, $response->getStatusCode());
         return $this->indexByLabel(json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR));

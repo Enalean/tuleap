@@ -197,7 +197,7 @@ final class TrackersTest extends TrackerBase
     {
         $tracker = json_decode(
             $this->getResponseByName(
-                \TestDataBuilder::TEST_USER_1_NAME,
+                BaseTestDataBuilder::TEST_USER_1_NAME,
                 $this->request_factory->createRequest('GET', $this->getReleaseTrackerUri())
             )->getBody()->getContents(),
             true,
@@ -290,7 +290,7 @@ final class TrackersTest extends TrackerBase
     {
         $tracker = json_decode(
             $this->getResponseByName(
-                \TestDataBuilder::TEST_USER_2_NAME,
+                BaseTestDataBuilder::TEST_USER_2_NAME,
                 $this->request_factory->createRequest('GET', $this->getReleaseTrackerUri())
             )->getBody()->getContents(),
             true,

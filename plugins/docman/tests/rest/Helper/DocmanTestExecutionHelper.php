@@ -25,6 +25,7 @@ namespace Tuleap\Docman\Test\rest\Helper;
 use REST_TestDataBuilder;
 use Tuleap\Docman\Test\rest\DocmanBase;
 use Tuleap\Docman\Test\rest\DocmanDataBuilder;
+use Tuleap\REST\BaseTestDataBuilder;
 
 class DocmanTestExecutionHelper extends DocmanBase
 {
@@ -77,7 +78,7 @@ class DocmanTestExecutionHelper extends DocmanBase
 
     public function loadRootFolderContent(
         int $root_id,
-        string $user_name = \TestDataBuilder::ADMIN_USER_NAME,
+        string $user_name = BaseTestDataBuilder::ADMIN_USER_NAME,
     ): array {
         $response = $this->getResponseByName(
             $user_name,
@@ -94,7 +95,7 @@ class DocmanTestExecutionHelper extends DocmanBase
     public function loadFolderContent(
         int $folder_id,
         string $folder_name,
-        string $user_name = \TestDataBuilder::ADMIN_USER_NAME,
+        string $user_name = BaseTestDataBuilder::ADMIN_USER_NAME,
     ): array {
         $response = $this->getResponseByName(
             $user_name,
@@ -130,7 +131,7 @@ class DocmanTestExecutionHelper extends DocmanBase
     public function checkItemHasNotBeenDeleted(int $file_to_delete_id): void
     {
         $response = $this->getResponseByName(
-            \TestDataBuilder::ADMIN_USER_NAME,
+            BaseTestDataBuilder::ADMIN_USER_NAME,
             $this->request_factory->createRequest('GET', 'docman_items/' . $file_to_delete_id)
         );
 
@@ -140,7 +141,7 @@ class DocmanTestExecutionHelper extends DocmanBase
     public function checkItemHasBeenDeleted(int $file_to_delete_id): void
     {
         $response = $this->getResponseByName(
-            \TestDataBuilder::ADMIN_USER_NAME,
+            BaseTestDataBuilder::ADMIN_USER_NAME,
             $this->request_factory->createRequest('GET', 'docman_items/' . $file_to_delete_id)
         );
 
@@ -167,7 +168,7 @@ class DocmanTestExecutionHelper extends DocmanBase
         $file = $this->findItemByTitle($items, $title);
 
         $response = $this->getResponseByName(
-            \TestDataBuilder::ADMIN_USER_NAME,
+            BaseTestDataBuilder::ADMIN_USER_NAME,
             $this->request_factory->createRequest('GET', 'docman_items/' . $file['id'])
         );
 

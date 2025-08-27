@@ -19,6 +19,7 @@
  */
 
 use Test\Rest\TuleapConfig;
+use Tuleap\REST\BaseTestDataBuilder;
 use Tuleap\REST\ForgeAccessSandbox;
 use Tuleap\REST\RestBase;
 
@@ -159,16 +160,16 @@ final class UsersTest extends RestBase // phpcs:ignore
         $this->assertEquals('user_groups/' . $expected_ugroup_id, $json[0]['uri']);
         $this->assertEquals('Project members', $json[0]['label']);
         $this->assertEquals('user_groups/' . $expected_ugroup_id . '/users', $json[0]['users_uri']);
-        $this->assertEquals(TestDataBuilder::DYNAMIC_UGROUP_PROJECT_MEMBERS_KEY, $json[0]['key']);
+        $this->assertEquals(BaseTestDataBuilder::DYNAMIC_UGROUP_PROJECT_MEMBERS_KEY, $json[0]['key']);
         $this->assertEquals('project_members', $json[0]['short_name']);
         $this->assertProject101($json[0]['project']);
 
-        $this->assertEquals(TestDataBuilder::STATIC_UGROUP_2_ID, $json[1]['id']);
-        $this->assertEquals('user_groups/' . TestDataBuilder::STATIC_UGROUP_2_ID, $json[1]['uri']);
-        $this->assertEquals(TestDataBuilder::STATIC_UGROUP_2_LABEL, $json[1]['label']);
-        $this->assertEquals('user_groups/' . TestDataBuilder::STATIC_UGROUP_2_ID . '/users', $json[1]['users_uri']);
-        $this->assertEquals(TestDataBuilder::STATIC_UGROUP_2_LABEL, $json[1]['key']);
-        $this->assertEquals(TestDataBuilder::STATIC_UGROUP_2_LABEL, $json[1]['short_name']);
+        $this->assertEquals(BaseTestDataBuilder::STATIC_UGROUP_2_ID, $json[1]['id']);
+        $this->assertEquals('user_groups/' . BaseTestDataBuilder::STATIC_UGROUP_2_ID, $json[1]['uri']);
+        $this->assertEquals(BaseTestDataBuilder::STATIC_UGROUP_2_LABEL, $json[1]['label']);
+        $this->assertEquals('user_groups/' . BaseTestDataBuilder::STATIC_UGROUP_2_ID . '/users', $json[1]['users_uri']);
+        $this->assertEquals(BaseTestDataBuilder::STATIC_UGROUP_2_LABEL, $json[1]['key']);
+        $this->assertEquals(BaseTestDataBuilder::STATIC_UGROUP_2_LABEL, $json[1]['short_name']);
         $this->assertProject101($json[1]['project']);
     }
 
@@ -176,8 +177,8 @@ final class UsersTest extends RestBase // phpcs:ignore
     {
         $this->assertEquals($project['id'], '101');
         $this->assertEquals($project['uri'], 'projects/101');
-        $this->assertEquals($project['label'], TestDataBuilder::PROJECT_PRIVATE_MEMBER_LABEL);
-        $this->assertEquals($project['shortname'], TestDataBuilder::PROJECT_PRIVATE_MEMBER_SHORTNAME);
+        $this->assertEquals($project['label'], BaseTestDataBuilder::PROJECT_PRIVATE_MEMBER_LABEL);
+        $this->assertEquals($project['shortname'], BaseTestDataBuilder::PROJECT_PRIVATE_MEMBER_SHORTNAME);
         $this->assertEquals($project['status'], 'active');
         $this->assertEquals($project['access'], 'private');
         $this->assertEquals($project['is_template'], false);

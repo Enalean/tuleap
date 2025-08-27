@@ -22,13 +22,12 @@
 use Tuleap\admin\ProjectCreation\ProjectFields\ProjectFieldsDao;
 use Tuleap\admin\ProjectEdit\ProjectEditDao;
 use Tuleap\Project\Admin\ProjectDetails\ProjectDetailsDAO;
+use Tuleap\REST\BaseTestDataBuilder;
 use Tuleap\Tracker\Tracker;
 use Tuleap\User\ForgeUserGroupPermission\RestProjectManagementPermission;
 use Tuleap\User\ForgeUserGroupPermission\RESTReadOnlyAdmin\RestReadOnlyAdminPermission;
 
-require_once __DIR__ . '/../../lib/TestDataBuilder.php';
-
-class REST_TestDataBuilder extends TestDataBuilder  // @codingStandardsIgnoreLine
+class REST_TestDataBuilder extends BaseTestDataBuilder  // @codingStandardsIgnoreLine
 {
     public const STANDARD_PASSWORD = 'welcome0';
 
