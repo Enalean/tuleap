@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\FormElement;
+namespace Tuleap\Tracker\FormElement\Field\Burndown;
 
 use Codendi_Request;
 use PFUser;
@@ -33,7 +33,6 @@ use Tracker_ArtifactFactory;
 use Tracker_Chart_BurndownView;
 use Tracker_Chart_Data_Burndown;
 use Tracker_FormElement_Chart_Field_Exception;
-use Tracker_FormElement_Field_Burndown;
 use Tracker_FormElementFactory;
 use TrackerManager;
 use Tuleap\Date\DatePeriodWithOpenDays;
@@ -52,17 +51,18 @@ use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Tracker;
 
 #[DisableReturnValueGenerationForTestDoubles]
-final class Tracker_FormElement_Field_BurndownTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+final class BurndownFieldTest extends TestCase
 {
     private TrackerManager&MockObject $tracker_manager;
     private Tracker $tracker;
-    private Tracker_FormElement_Field_Burndown&MockObject $burndown_field;
+    private BurndownField&MockObject $burndown_field;
     private Artifact $artifact;
     private Tracker_FormElementFactory&MockObject $form_element_factory;
     private PFUser $user;
     private Artifact $sprint;
     private Tracker $sprint_tracker;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->tracker_manager = $this->createMock(TrackerManager::class);
@@ -79,7 +79,7 @@ final class Tracker_FormElement_Field_BurndownTest extends TestCase // phpcs:ign
         $this->form_element_factory = $this->createMock(Tracker_FormElementFactory::class);
         Tracker_FormElementFactory::setInstance($this->form_element_factory);
 
-        $this->burndown_field = $this->createPartialMock(Tracker_FormElement_Field_Burndown::class, [
+        $this->burndown_field = $this->createPartialMock(BurndownField::class, [
             'getLogger', 'fetchBurndownReadOnly', 'getTimeframeCalculator', 'getCurrentUser', 'userCanRead', 'renderPresenter', 'getBurndown', 'buildBurndownDataForLegacy',
         ]);
 
@@ -98,6 +98,7 @@ final class Tracker_FormElement_Field_BurndownTest extends TestCase // phpcs:ign
         $this->sprint         = ArtifactTestBuilder::anArtifact(456)->inTracker($this->sprint_tracker)->build();
     }
 
+    #[\Override]
     protected function tearDown(): void
     {
         SystemEventManager::clearInstance();
@@ -229,7 +230,7 @@ final class Tracker_FormElement_Field_BurndownTest extends TestCase // phpcs:ign
         $request = new Codendi_Request(
             [
                 'formElement' => 1234,
-                'func'        => Tracker_FormElement_Field_Burndown::FUNC_SHOW_BURNDOWN,
+                'func'        => BurndownField::FUNC_SHOW_BURNDOWN,
                 'src_aid'     => $artifact_id,
             ]
         );
@@ -238,7 +239,7 @@ final class Tracker_FormElement_Field_BurndownTest extends TestCase // phpcs:ign
         $artifactFactory = $this->createMock(Tracker_ArtifactFactory::class);
         $artifactFactory->method('getArtifactById')->with($artifact_id)->willReturn($artifact);
 
-        $field = $this->createPartialMock(Tracker_FormElement_Field_Burndown::class, ['getArtifactFactory', 'fetchBurndownImage']);
+        $field = $this->createPartialMock(BurndownField::class, ['getArtifactFactory', 'fetchBurndownImage']);
         $field->method('getArtifactFactory')->willReturn($artifactFactory);
         $field->expects($this->once())->method('fetchBurndownImage')->with($artifact, $this->user);
 
@@ -249,7 +250,7 @@ final class Tracker_FormElement_Field_BurndownTest extends TestCase // phpcs:ign
     {
         $request = new Codendi_Request([
             'formElement' => 1234,
-            'func'        => Tracker_FormElement_Field_Burndown::FUNC_SHOW_BURNDOWN,
+            'func'        => BurndownField::FUNC_SHOW_BURNDOWN,
             'src_aid'     => '; DROP DATABASE mouuahahahaha!',
         ]);
 
@@ -257,7 +258,7 @@ final class Tracker_FormElement_Field_BurndownTest extends TestCase // phpcs:ign
         $artifactFactory = $this->createMock(Tracker_ArtifactFactory::class);
         $artifactFactory->method('getArtifactById')->willReturn(null);
 
-        $field = $this->createPartialMock(Tracker_FormElement_Field_Burndown::class, ['getArtifactFactory', 'fetchBurndownImage']);
+        $field = $this->createPartialMock(BurndownField::class, ['getArtifactFactory', 'fetchBurndownImage']);
         $field->method('getArtifactFactory')->willReturn($artifactFactory);
         $field->expects($this->never())->method('fetchBurndownImage');
 
@@ -269,14 +270,14 @@ final class Tracker_FormElement_Field_BurndownTest extends TestCase // phpcs:ign
         $this->expectNotToPerformAssertions();
         $request = new Codendi_Request([
             'formElement' => 1234,
-            'func'        => Tracker_FormElement_Field_Burndown::FUNC_SHOW_BURNDOWN,
+            'func'        => BurndownField::FUNC_SHOW_BURNDOWN,
             'src_aid'     => 999,
         ]);
 
         $artifactFactory = $this->createMock(Tracker_ArtifactFactory::class);
         $artifactFactory->method('getArtifactById')->willReturn(null);
 
-        $field = $this->createPartialMock(Tracker_FormElement_Field_Burndown::class, ['getArtifactFactory', 'fetchBurndownImage']);
+        $field = $this->createPartialMock(BurndownField::class, ['getArtifactFactory', 'fetchBurndownImage']);
         $field->method('getArtifactFactory')->willReturn($artifactFactory);
 
         $field->process($this->tracker_manager, $request, $this->user);

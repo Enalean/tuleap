@@ -25,7 +25,7 @@ namespace Tuleap\Tracker\Report\CSVExport;
 
 use Tracker_FormElement_Field;
 use Tuleap\Tracker\FormElement\Field\ArtifactId\ArtifactIdField;
-use Tracker_FormElement_Field_Burndown;
+use Tuleap\Tracker\FormElement\Field\Burndown\BurndownField;
 use Tuleap\Tracker\FormElement\Field\PerTrackerArtifactId\PerTrackerArtifactIdField;
 
 class CSVFieldUsageChecker
@@ -36,7 +36,7 @@ class CSVFieldUsageChecker
             && $field->userCanRead()
             && ! (
                 ($field instanceof ArtifactIdField && ! $field instanceof PerTrackerArtifactIdField)
-                || $field instanceof Tracker_FormElement_Field_Burndown
+                || $field instanceof BurndownField
             );
     }
 }

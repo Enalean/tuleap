@@ -20,10 +20,10 @@
 namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder;
 
 use Tracker_FormElement_Field;
-use Tracker_FormElement_Field_Burndown;
 use Tracker_FormElement_FieldVisitor;
 use Tuleap\Tracker\FormElement\Field\ArtifactId\ArtifactIdField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
+use Tuleap\Tracker\FormElement\Field\Burndown\BurndownField;
 use Tuleap\Tracker\FormElement\Field\Computed\ComputedField;
 use Tuleap\Tracker\FormElement\Field\CrossReferences\CrossReferencesField;
 use Tuleap\Tracker\FormElement\Field\Date\DateField;
@@ -154,7 +154,7 @@ final class LesserThanFieldComparisonVisitor implements Tracker_FormElement_Fiel
         return null;
     }
 
-    public function visitBurndown(Tracker_FormElement_Field_Burndown $field)
+    public function visitBurndown(BurndownField $field)
     {
         return null;
     }

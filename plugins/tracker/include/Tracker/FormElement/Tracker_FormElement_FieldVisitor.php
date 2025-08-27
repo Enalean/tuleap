@@ -20,6 +20,7 @@
 
 use Tuleap\Tracker\FormElement\Field\ArtifactId\ArtifactIdField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
+use Tuleap\Tracker\FormElement\Field\Burndown\BurndownField;
 use Tuleap\Tracker\FormElement\Field\Computed\ComputedField;
 use Tuleap\Tracker\FormElement\Field\CrossReferences\CrossReferencesField;
 use Tuleap\Tracker\FormElement\Field\Date\DateField;
@@ -85,7 +86,7 @@ interface Tracker_FormElement_FieldVisitor // phpcs:ignore PSR1.Classes.ClassDec
 
     public function visitCrossReferences(CrossReferencesField $field);
 
-    public function visitBurndown(Tracker_FormElement_Field_Burndown $field);
+    public function visitBurndown(BurndownField $field);
 
     public function visitLastUpdateDate(LastUpdateDateField $field);
 

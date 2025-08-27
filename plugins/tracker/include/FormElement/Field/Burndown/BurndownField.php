@@ -18,6 +18,30 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\Tracker\FormElement\Field\Burndown;
+
+use Codendi_HTMLPurifier;
+use Codendi_Mail;
+use ErrorChart;
+use EventManager;
+use HTTPRequest;
+use Override;
+use PFUser;
+use SystemEventManager;
+use TemplateRendererFactory;
+use Tracker_Artifact_Changeset;
+use Tracker_Artifact_ChangesetValue;
+use Tracker_ArtifactFactory;
+use Tracker_Chart_BurndownView;
+use Tracker_Chart_Data_Burndown;
+use Tracker_FormElement_Chart_Field_Exception;
+use Tracker_FormElement_Field;
+use Tracker_FormElement_Field_ReadOnly;
+use Tracker_FormElement_FieldVisitor;
+use Tracker_HierarchyFactory;
+use Tracker_IDisplayTrackerLayout;
+use Tracker_Report;
+use Tracker_Report_Criteria;
 use Tuleap\Date\DatePeriodWithOpenDays;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Option\Option;
@@ -31,13 +55,6 @@ use Tuleap\Tracker\FormElement\ChartConfigurationValueChecker;
 use Tuleap\Tracker\FormElement\ChartConfigurationValueRetriever;
 use Tuleap\Tracker\FormElement\ChartFieldUsage;
 use Tuleap\Tracker\FormElement\ChartMessageFetcher;
-use Tuleap\Tracker\FormElement\Field\Burndown\BurndownCacheGenerationChecker;
-use Tuleap\Tracker\FormElement\Field\Burndown\BurndownCacheGenerator;
-use Tuleap\Tracker\FormElement\Field\Burndown\BurndownCommonDataBuilder;
-use Tuleap\Tracker\FormElement\Field\Burndown\BurndownDataBuilderForLegacy;
-use Tuleap\Tracker\FormElement\Field\Burndown\BurndownDataBuilderForREST;
-use Tuleap\Tracker\FormElement\Field\Burndown\BurndownRemainingEffortAdderForLegacy;
-use Tuleap\Tracker\FormElement\Field\Burndown\BurndownRemainingEffortAdderForREST;
 use Tuleap\Tracker\FormElement\Field\Computed\ComputedFieldDao;
 use Tuleap\Tracker\FormElement\Field\Files\CreatedFileURLMapping;
 use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
@@ -45,42 +62,47 @@ use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFullRepresentation;
 use Tuleap\Tracker\Semantic\Timeframe\IComputeTimeframes;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\UserWithReadAllPermissionBuilder;
+use UserManager;
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
-class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field implements Tracker_FormElement_Field_ReadOnly
+class BurndownField extends Tracker_FormElement_Field implements Tracker_FormElement_Field_ReadOnly
 {
-    public const LOG_IDENTIFIER = 'burndown_syslog';
+    public const string LOG_IDENTIFIER = 'burndown_syslog';
 
     /**
      * Request parameter to display burndown image
      */
-    public const FUNC_SHOW_BURNDOWN = 'show_burndown';
+    public const string FUNC_SHOW_BURNDOWN = 'show_burndown';
 
     /**
      * @var Tracker_HierarchyFactory
      */
     private $hierarchy_factory;
 
+    #[Override]
     public static function getFactoryLabel()
     {
         return dgettext('tuleap-tracker', 'Burndown Chart');
     }
 
+    #[Override]
     public static function getFactoryDescription()
     {
         return dgettext('tuleap-tracker', 'Display the burndown chart for the artifact');
     }
 
+    #[Override]
     public static function getFactoryIconUseIt()
     {
         return $GLOBALS['HTML']->getImagePath('ic/burndown.png');
     }
 
+    #[Override]
     public static function getFactoryIconCreate()
     {
         return $GLOBALS['HTML']->getImagePath('ic/burndown--plus.png');
     }
 
+    #[Override]
     public static function getFactoryUniqueField()
     {
         return true;
@@ -111,6 +133,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         $this->hierarchy_factory = $hierarchy_factory;
     }
 
+    #[Override]
     public function fetchArtifactValue(
         Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value,
@@ -122,11 +145,12 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     /**
      * Fetch the html code to display the field value in artifact in read only mode
      *
-     * @param Artifact                        $artifact The artifact
-     * @param Tracker_Artifact_ChangesetValue $value    The actual value of the field
+     * @param Artifact $artifact The artifact
+     * @param Tracker_Artifact_ChangesetValue $value The actual value of the field
      *
      * @return string
      */
+    #[Override]
     public function fetchArtifactValueReadOnly(
         Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value = null,
@@ -176,7 +200,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         }
 
         $assets = new IncludeAssets(
-            __DIR__ . '/../../../scripts/burndown-chart/frontend-assets',
+            __DIR__ . '/../../../../scripts/burndown-chart/frontend-assets',
             '/assets/trackers/burndown-chart'
         );
 
@@ -191,12 +215,13 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         );
     }
 
+    #[Override]
     public function fetchArtifactForOverlay(Artifact $artifact, array $submitted_values)
     {
         $purifier = Codendi_HTMLPurifier::instance();
         $html     = '';
         $html    .= '<img src="' . $this->getBurndownImageUrl($artifact) . '" alt="' .
-            $purifier->purify($this->getLabel()) . '" width="390" height="400" />';
+                     $purifier->purify($this->getLabel()) . '" width="390" height="400" />';
 
         return $html;
     }
@@ -213,7 +238,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
             && ! strpos($_SERVER['REQUEST_URI'], 'from_agiledashboard')
         ) {
             $html .= '<a class="btn chart-cache-button-generate" data-toggle="modal" href="#burndown-generate">' .
-                dgettext('tuleap-tracker', 'Force cache regeneration') . '</a>';
+                     dgettext('tuleap-tracker', 'Force cache regeneration') . '</a>';
 
             $html .= $this->fetchBurndownGenerationModal($artifact);
         }
@@ -248,9 +273,10 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
 
     /**
      *
-     * @param HTTPRequest                   $request
-     * @param PFUser                        $current_user
+     * @param HTTPRequest $request
+     * @param PFUser $current_user
      */
+    #[Override]
     public function process(Tracker_IDisplayTrackerLayout $layout, $request, $current_user)
     {
         switch ($request->get('func')) {
@@ -297,6 +323,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         }
     }
 
+    #[Override]
     public function getRESTValue(PFUser $user, Tracker_Artifact_Changeset $changeset): ArtifactFieldValueFullRepresentation
     {
         $artifact     = $changeset->getArtifact();
@@ -358,6 +385,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      *
      * @return string html
      */
+    #[Override]
     public function fetchSubmit(array $submitted_values)
     {
         return '';
@@ -368,6 +396,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      *
      * @return string html
      */
+    #[Override]
     public function fetchSubmitMasschange()
     {
         return '';
@@ -376,13 +405,14 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     /**
      * Fetch data to display the field value in mail
      *
-     * @param Artifact                        $artifact The artifact
-     * @param PFUser                          $user     The user who will receive the email
-     * @param Tracker_Artifact_ChangesetValue $value    The actual value of the field
-     * @param string                          $format   output format
+     * @param Artifact $artifact The artifact
+     * @param PFUser $user The user who will receive the email
+     * @param Tracker_Artifact_ChangesetValue $value The actual value of the field
+     * @param string $format output format
      *
      */
 
+    #[Override]
     public function fetchMailArtifactValue(
         Artifact $artifact,
         PFUser $user,
@@ -403,14 +433,15 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      * Display the html field in the admin ui
      * @return string html
      */
+    #[Override]
     public function fetchAdminFormElement()
     {
         $html  = '';
         $html .= $this->getBurndownMessageFetcher()->fetchWarnings($this, $this->getChartFieldUsage());
         $html .= '<img src="' . TRACKER_BASE_URL . '/images/fake-burndown-admin.png" />';
         $html .= '<a class="btn chart-cache-button-generate" disabled="disabled">' .
-            dgettext('tuleap-tracker', 'Force cache regeneration') .
-            '</a>';
+                 dgettext('tuleap-tracker', 'Force cache regeneration') .
+                 '</a>';
 
         return $html;
     }
@@ -420,25 +451,30 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      *
      * @return true if Tracler is ok
      */
+    #[Override]
     public function testImport()
     {
         return true;
     }
 
+    #[Override]
     public function getCriteriaFromWhere(Tracker_Report_Criteria $criteria): Option
     {
         return Option::nothing(ParametrizedFromWhere::class);
     }
 
+    #[Override]
     public function getQuerySelect(): string
     {
         return '';
     }
 
+    #[Override]
     public function getQueryFrom()
     {
     }
 
+    #[Override]
     public function fetchChangesetValue(
         int $artifact_id,
         int $changeset_id,
@@ -449,38 +485,46 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         return '';
     }
 
+    #[Override]
     public function fetchCSVChangesetValue(int $artifact_id, int $changeset_id, mixed $value, ?Tracker_Report $report): string
     {
         return '';
     }
 
+    #[Override]
     public function fetchCriteriaValue(Tracker_Report_Criteria $criteria): string
     {
         return '';
     }
 
+    #[Override]
     public function fetchRawValue(mixed $value): string
     {
         return '';
     }
 
+    #[Override]
     public function afterCreate(array $form_element_data, $tracker_is_empty)
     {
     }
 
+    #[Override]
     public function fetchRawValueFromChangeset(Tracker_Artifact_Changeset $changeset): string
     {
         return '';
     }
 
+    #[Override]
     public function getChangesetValue($changeset, $value_id, $has_changed)
     {
     }
 
+    #[Override]
     public function getRESTAvailableValues()
     {
     }
 
+    #[Override]
     protected function saveValue(
         $artifact,
         $changeset_value_id,
@@ -491,24 +535,29 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         return false;
     }
 
+    #[Override]
     protected function keepValue($artifact, $changeset_value_id, Tracker_Artifact_ChangesetValue $previous_changesetvalue)
     {
     }
 
+    #[Override]
     protected function getCriteriaDao()
     {
     }
 
+    #[Override]
     protected function fetchSubmitValue(array $submitted_values): string
     {
         return '';
     }
 
+    #[Override]
     protected function fetchSubmitValueMasschange(): string
     {
         return '';
     }
 
+    #[Override]
     protected function getValueDao()
     {
     }
@@ -535,6 +584,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         return new Tracker_Chart_BurndownView($burndown_data);
     }
 
+    #[Override]
     protected function fetchTooltipValue(Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null): string
     {
         return $this->fetchArtifactValueReadOnly($artifact, $value);
@@ -544,10 +594,11 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      * Validate a value
      *
      * @param Artifact $artifact The artifact
-     * @param mixed    $value    data coming from the request.
+     * @param mixed $value data coming from the request.
      *
      * @return bool true if the value is considered ok
      */
+    #[Override]
     protected function validate(Artifact $artifact, $value)
     {
         //No need to validate artifact id (read only for all)
@@ -573,6 +624,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         return TRACKER_BASE_URL . '/?' . $url_query;
     }
 
+    #[Override]
     public function accept(Tracker_FormElement_FieldVisitor $visitor)
     {
         return $visitor->visitBurndown($this);
@@ -588,6 +640,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         return new ComputedFieldDao();
     }
 
+    #[Override]
     public function canBeUsedAsReportCriterion()
     {
         return false;
@@ -596,6 +649,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     /**
      * @see Tracker_FormElement_Field::postSaveNewChangeset()
      */
+    #[Override]
     public function postSaveNewChangeset(
         Artifact $artifact,
         PFUser $submitter,
@@ -800,6 +854,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         return Tracker_ArtifactFactory::instance();
     }
 
+    #[Override]
     public function isAlwaysInEditMode(): bool
     {
         return false;

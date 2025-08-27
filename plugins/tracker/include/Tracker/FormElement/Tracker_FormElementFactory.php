@@ -26,6 +26,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactId\ArtifactIdField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\RetrieveAnArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\RetrieveUsedArtifactLinkFields;
+use Tuleap\Tracker\FormElement\Field\Burndown\BurndownField;
 use Tuleap\Tracker\FormElement\Field\Computed\ComputedField;
 use Tuleap\Tracker\FormElement\Field\CrossReferences\CrossReferencesField;
 use Tuleap\Tracker\FormElement\Field\Date\DateField;
@@ -134,7 +135,7 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
         self::FIELD_SUBMITTED_BY_TYPE => SubmittedByField::class,
         self::FIELD_LAST_MODIFIED_BY => LastUpdateByField::class,
         self::FIELD_CROSS_REFERENCES => CrossReferencesField::class,
-        self::FIELD_BURNDOWN => Tracker_FormElement_Field_Burndown::class,
+        self::FIELD_BURNDOWN => BurndownField::class,
         self::FIELD_COMPUTED => ComputedField::class,
         self::FIELD_RANK => PriorityField::class,
     ];
@@ -741,7 +742,7 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
     /**
      * @param Tracker $tracker
      *
-     * @return Tracker_FormElement_Field_Burndown[]
+     * @return BurndownField[]
      */
     private function getUsedBurndownFields($tracker)
     {
@@ -749,7 +750,7 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
     }
 
     /**
-     * @return Tracker_FormElement_Field_Burndown|null
+     * @return BurndownField|null
      */
     public function getABurndownField(PFUser $user, Tracker $tracker)
     {

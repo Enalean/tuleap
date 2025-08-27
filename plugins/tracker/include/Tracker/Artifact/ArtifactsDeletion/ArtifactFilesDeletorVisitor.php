@@ -23,11 +23,11 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Artifact\ArtifactsDeletion;
 
 use Tracker_Artifact_ChangesetValue_File;
-use Tracker_FormElement_Field_Burndown;
 use Tracker_FormElement_FieldVisitor;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\ArtifactId\ArtifactIdField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
+use Tuleap\Tracker\FormElement\Field\Burndown\BurndownField;
 use Tuleap\Tracker\FormElement\Field\Computed\ComputedField;
 use Tuleap\Tracker\FormElement\Field\CrossReferences\CrossReferencesField;
 use Tuleap\Tracker\FormElement\Field\Date\DateField;
@@ -143,7 +143,7 @@ class ArtifactFilesDeletorVisitor implements Tracker_FormElement_FieldVisitor
     {
     }
 
-    public function visitBurndown(Tracker_FormElement_Field_Burndown $field): void
+    public function visitBurndown(BurndownField $field): void
     {
     }
 
