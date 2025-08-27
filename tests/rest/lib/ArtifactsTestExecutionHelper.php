@@ -16,25 +16,21 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see http://www.gnu.org/licenses/.
- *
  */
 
 declare(strict_types=1);
 
-namespace Test\Rest\Tracker;
+namespace Tuleap\REST;
 
 use Exception;
+use Psl\Json;
 use Psr\Http\Message\ResponseInterface;
-use Tuleap\REST\ArtifactBase;
 
-/**
- * @group ArtifactsTest
- */
 class ArtifactsTestExecutionHelper extends ArtifactBase
 {
-    protected function buildPOSTBodyContent($summary_field_label, $summary_field_value): string
+    protected function buildPOSTBodyContent(string $summary_field_label, string $summary_field_value): string
     {
-        return json_encode(
+        return Json\encode(
             [
                 'tracker' => [
                     'id'  => $this->epic_tracker_id,
@@ -51,7 +47,7 @@ class ArtifactsTestExecutionHelper extends ArtifactBase
 
     protected function buildPOSTBodyContentWithTooBigTextContent(): string
     {
-        return json_encode(
+        return Json\encode(
             [
                 'tracker' => [
                     'id'  => $this->epic_tracker_id,
@@ -66,7 +62,7 @@ class ArtifactsTestExecutionHelper extends ArtifactBase
         );
     }
 
-    private function getSubmitStringValue($tracker_id, $field_label, $field_value): array
+    private function getSubmitStringValue(int $tracker_id, string $field_label, string $field_value): array
     {
         $field_def = $this->getFieldDefByFieldLabel($tracker_id, $field_label);
         return [
@@ -75,7 +71,7 @@ class ArtifactsTestExecutionHelper extends ArtifactBase
         ];
     }
 
-    private function getSubmitTextValue($tracker_id, $field_label, $field_value): array
+    private function getSubmitTextValue(int $tracker_id, string $field_label, string $field_value): array
     {
         $field_def = $this->getFieldDefByFieldLabel($tracker_id, $field_label);
         return [
@@ -84,7 +80,7 @@ class ArtifactsTestExecutionHelper extends ArtifactBase
         ];
     }
 
-    private function getSubmitListValue($tracker_id, $field_label, $field_value): array
+    private function getSubmitListValue(int $tracker_id, string $field_label, int $field_value): array
     {
         $field_def = $this->getFieldDefByFieldLabel($tracker_id, $field_label);
         return [
@@ -95,58 +91,63 @@ class ArtifactsTestExecutionHelper extends ArtifactBase
         ];
     }
 
-    private function getFieldDefByFieldLabel($tracker_id, $field_label): array
+    private function getFieldDefByFieldLabel(int $tracker_id, string $field_label): array
     {
         $tracker = $this->getTracker($tracker_id);
         foreach ($tracker['fields'] as $field) {
-            if ($field['label'] == $field_label) {
+            if ($field['label'] === $field_label) {
                 return $field;
             }
         }
+        throw new \RuntimeException(sprintf('Could not find field "%s"', $field_label));
     }
 
-    protected function getFieldIdForFieldLabel($artifact_id, $field_label): int
+    protected function getFieldIdForFieldLabel(int $artifact_id, string $field_label): int
     {
         $value = $this->getFieldByFieldLabel($artifact_id, $field_label);
         return $value['field_id'];
     }
 
-    protected function getFieldValueForFieldLabel($artifact_id, $field_label): string
+    protected function getFieldValueForFieldLabel(int $artifact_id, string $field_label): string
     {
         $value = $this->getFieldByFieldLabel($artifact_id, $field_label);
         return $value['value'];
     }
 
-    protected function getFieldByFieldLabel($artifact_id, $field_label): array
+    protected function getFieldByFieldLabel(int $artifact_id, string $field_label): array
     {
         $artifact = $this->getArtifact($artifact_id);
         foreach ($artifact['values'] as $value) {
-            if ($value['label'] == $field_label) {
+            if ($value['label'] === $field_label) {
                 return $value;
             }
         }
+        throw new \RuntimeException(sprintf('Could not find field "%s"', $field_label));
     }
 
-    private function getArtifact($artifact_id): array
+    private function getArtifact(int $artifact_id): array
     {
         $response = $this->getResponse($this->request_factory->createRequest('GET', 'artifacts/' . $artifact_id));
         if ($response->getStatusCode() !== 200) {
-            throw new Exception(json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['error']['message'], $response->getStatusCode());
+            throw new Exception(
+                Json\decode($response->getBody()->getContents())['error']['message'],
+                $response->getStatusCode()
+            );
         }
         self::assertNotEmpty($response->getHeader('Last-Modified'));
         self::assertNotEmpty($response->getHeader('Etag'));
 
-        return json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+        return Json\decode($response->getBody()->getContents());
     }
 
-    private function getTracker($tracker_id): array
+    private function getTracker(int $tracker_id): array
     {
         return $this->tracker_representations[$tracker_id];
     }
 
-    protected function assertLinks(ResponseInterface $response, $nature_is_child, $artifact_id, $nature_empty): void
+    protected function assertLinks(ResponseInterface $response, string $nature_is_child, int $artifact_id, string $nature_empty): void
     {
-        $links = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+        $links = Json\decode($response->getBody()->getContents());
 
         $expected_link = [
             'natures' => [
@@ -165,6 +166,6 @@ class ArtifactsTestExecutionHelper extends ArtifactBase
             ],
         ];
 
-        $this->assertEquals($expected_link, $links);
+        self::assertEquals($expected_link, $links);
     }
 }
