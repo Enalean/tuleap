@@ -18,26 +18,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\REST;
 
+use GuzzleHttp\Exception\GuzzleException;
+use Psl\Json;
 use GuzzleHttp\Client;
 use GuzzleHttp\RequestOptions;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
-class RequestWrapper
+final readonly class RequestWrapper
 {
-    private Client $client;
-
-    /**
-     * @var Cache
-     */
-    private $cache;
-
-    public function __construct(Client $client, Cache $cache)
-    {
-        $this->client = $client;
-        $this->cache  = $cache;
+    public function __construct(
+        private Client $client,
+        private Cache $cache,
+    ) {
     }
 
     public function getResponseWithoutAuth(RequestInterface $request): ResponseInterface
@@ -45,7 +42,7 @@ class RequestWrapper
         return $this->client->sendRequest($request);
     }
 
-    public function getResponseByName($name, RequestInterface $request): ResponseInterface
+    public function getResponseByName(string $name, RequestInterface $request): ResponseInterface
     {
         $token = $this->cache->getTokenForUser($name);
         if (! $token) {
@@ -56,18 +53,22 @@ class RequestWrapper
         return $this->client->sendRequest(
             $request
                 ->withHeader('X-Auth-Token', $token['token'])
-                ->withHeader('X-Auth-UserId', $token['user_id'])
+                ->withHeader('X-Auth-UserId', (string) $token['user_id'])
         );
     }
 
-    public function getResponseByBasicAuth($username, $password, RequestInterface $request): ResponseInterface
+    public function getResponseByBasicAuth(string $username, string $password, RequestInterface $request): ResponseInterface
     {
         return $this->client->send($request, [RequestOptions::AUTH => [$username, $password], RequestOptions::HTTP_ERRORS => false]);
     }
 
-    private function getTokenForUser($username, $password)
+    /**
+     * @throws GuzzleException
+     * @return array{user_id: int, token: string}
+     */
+    private function getTokenForUser(string $username, string $password): array
     {
-        $payload = json_encode(
+        $payload = Json\encode(
             [
                 'username' => $username,
                 'password' => $password,
@@ -76,6 +77,6 @@ class RequestWrapper
 
         $response = $this->client->request('POST', 'tokens', ['body' => $payload]);
 
-        return json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+        return Json\decode($response->getBody()->getContents());
     }
 }
