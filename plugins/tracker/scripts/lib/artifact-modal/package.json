@@ -27,6 +27,7 @@
     "@tuleap/plugin-tracker-rest-api-types": "workspace:*",
     "@tuleap/plugin-tracker-rich-text-editor": "workspace:*",
     "@tuleap/tlp": "workspace:*",
+    "@tuleap/tlp-date-picker": "workspace:^",
     "@tuleap/tlp-fetch": "workspace:*",
     "@tuleap/tlp-modal": "workspace:*",
     "@tuleap/tlp-popovers": "workspace:*",

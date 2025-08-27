@@ -17,12 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as tlp from "tlp";
+import * as tlp_date_picker from "@tuleap/tlp-date-picker";
 import { DatePickerInitializer } from "./DatePickerInitializer";
 
 describe("DatePickerInitializer", () => {
     it("Given an input element, Then it should init a TLP datePicker on it", () => {
-        const datePickerSpy = jest.spyOn(tlp, "datePicker");
+        const datePickerSpy = jest.spyOn(tlp_date_picker, "datePicker");
         const input = document.implementation.createHTMLDocument().createElement("input");
         const initializer = DatePickerInitializer();
 
