@@ -23,9 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\CrossTracker\REST\v1;
 
 use Psl\Json;
-use REST_TestDataBuilder;
-use TestDataBuilder;
 use Tuleap\CrossTracker\TestBase;
+use Tuleap\REST\BaseTestDataBuilder;
+use Tuleap\REST\RESTTestDataBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CrossTrackerQueryTest extends TestBase
@@ -85,7 +85,7 @@ final class CrossTrackerQueryTest extends TestBase
         $response = $this->getResponse(
             $this->request_factory->createRequest('PUT', 'crosstracker_query/' . urlencode($this->query_id))
                 ->withBody($this->stream_factory->createStream(Json\encode($params))),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         self::assertSame(404, $response->getStatusCode());
@@ -97,7 +97,7 @@ final class CrossTrackerQueryTest extends TestBase
         $query_id = urlencode($this->query_id);
         $response = $this->getResponse(
             $this->request_factory->createRequest('GET', "crosstracker_query/$query_id/content?limit=50&offset=0"),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         self::assertSame(200, $response->getStatusCode());
@@ -175,7 +175,7 @@ final class CrossTrackerQueryTest extends TestBase
 
         $artifacts = Json\decode(
             $this->getResponseByName(
-                REST_TestDataBuilder::ADMIN_USER_NAME,
+                BaseTestDataBuilder::ADMIN_USER_NAME,
                 $this->request_factory->createRequest('GET', "trackers/$this->reverse_cross_tracker_tracker_id/artifacts?$query")
             )->getBody()->getContents(),
         );
@@ -224,7 +224,7 @@ final class CrossTrackerQueryTest extends TestBase
 
         $artifacts = json_decode(
             $this->getResponseByName(
-                TestDataBuilder::ADMIN_USER_NAME,
+                BaseTestDataBuilder::ADMIN_USER_NAME,
                 $this->request_factory->createRequest('GET', "trackers/$this->forward_cross_tracker_tracker_id/artifacts?$query")
             )->getBody()->getContents(),
             true,

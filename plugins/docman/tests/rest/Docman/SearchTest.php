@@ -25,9 +25,9 @@ namespace Tuleap\Docman\Test\rest\Docman;
 
 require_once __DIR__ . '/../../../vendor/autoload.php';
 
-use REST_TestDataBuilder;
 use Tuleap\Docman\Test\rest\DocmanDataBuilder;
 use Tuleap\Docman\Test\rest\Helper\DocmanTestExecutionHelper;
+use Tuleap\REST\RESTTestDataBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class SearchTest extends DocmanTestExecutionHelper
@@ -35,7 +35,7 @@ final class SearchTest extends DocmanTestExecutionHelper
     #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testSearchInFolder(int $root_id): void
     {
-        $root_folder   = $this->loadRootFolderContent($root_id, REST_TestDataBuilder::TEST_BOT_USER_NAME);
+        $root_folder   = $this->loadRootFolderContent($root_id, RESTTestDataBuilder::TEST_BOT_USER_NAME);
         $folder_search = $this->findItemByTitle($root_folder, 'Search');
 
         assert($folder_search !== null);
@@ -93,7 +93,7 @@ final class SearchTest extends DocmanTestExecutionHelper
     #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
     public function testItSearchInFolderUsingProperties(int $root_id): void
     {
-        $root_folder   = $this->loadRootFolderContent($root_id, REST_TestDataBuilder::TEST_BOT_USER_NAME);
+        $root_folder   = $this->loadRootFolderContent($root_id, RESTTestDataBuilder::TEST_BOT_USER_NAME);
         $folder_search = $this->findItemByTitle($root_folder, 'Search');
 
         assert($folder_search !== null);

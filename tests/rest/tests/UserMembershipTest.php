@@ -20,6 +20,7 @@
  */
 
 use Psr\Http\Message\ResponseInterface;
+use Tuleap\REST\RESTTestDataBuilder;
 use Tuleap\REST\RestBase;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -27,7 +28,7 @@ use Tuleap\REST\RestBase;
 final class UserMembershipTest extends RestBase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     #[\Override]
-    protected function getResponse($request, $user_name = REST_TestDataBuilder::TEST_USER_1_NAME): ResponseInterface
+    protected function getResponse($request, $user_name = RESTTestDataBuilder::TEST_USER_1_NAME): ResponseInterface
     {
         return parent::getResponse($request, $user_name);
     }
@@ -36,7 +37,7 @@ final class UserMembershipTest extends RestBase //phpcs:ignore PSR1.Classes.Clas
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('GET', 'users_memberships/?query=with_ssh_key&limit=3&offset=0'),
-            REST_TestDataBuilder::ADMIN_USER_NAME
+            RESTTestDataBuilder::ADMIN_USER_NAME
         );
 
         $this->assertGET($response);
@@ -46,7 +47,7 @@ final class UserMembershipTest extends RestBase //phpcs:ignore PSR1.Classes.Clas
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('GET', 'users_memberships/?query=with_ssh_key&limit=3&offset=0'),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertGET($response);
@@ -71,7 +72,7 @@ final class UserMembershipTest extends RestBase //phpcs:ignore PSR1.Classes.Clas
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('OPTIONS', 'users_memberships'),
-            REST_TestDataBuilder::ADMIN_USER_NAME
+            RESTTestDataBuilder::ADMIN_USER_NAME
         );
 
         $this->assertOPTIONS($response);
@@ -81,7 +82,7 @@ final class UserMembershipTest extends RestBase //phpcs:ignore PSR1.Classes.Clas
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('OPTIONS', 'users_memberships'),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertOPTIONS($response);

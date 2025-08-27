@@ -24,6 +24,8 @@
 
 namespace Tuleap\Timetracking\REST;
 
+use Tuleap\REST\RESTTestDataBuilder;
+
 require_once dirname(__FILE__) . '/../bootstrap.php';
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -63,7 +65,7 @@ class TimetrackingTest extends TimetrackingBase
         );
         $response = $this->getResponse(
             $this->request_factory->createRequest('GET', 'users/' . $this->user_ids[TimetrackingDataBuilder::USER_TESTER_NAME] . "/timetracking?query=$query"),
-            \REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(403, $response->getStatusCode());

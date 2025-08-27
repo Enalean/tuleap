@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Tests\REST\Artifacts;
 
-use REST_TestDataBuilder;
+use Tuleap\REST\RESTTestDataBuilder;
 use Tuleap\Tracker\Tests\REST\TrackerBase;
 
 require_once __DIR__ . '/../bootstrap.php';
@@ -61,7 +61,7 @@ final class LinkedArtifactsTest extends TrackerBase
 
         $response_with_read_only_user = $this->getResponse(
             $this->request_factory->createRequest('GET', 'artifacts/' . urlencode((string) $artifact_id_3) . '/linked_artifacts?direction=forward'),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
         $this->assertArtifactLinks($response_with_read_only_user, $artifact_id_1, $artifact_id_2);
 
@@ -123,7 +123,7 @@ final class LinkedArtifactsTest extends TrackerBase
         );
 
         $response = $this->getResponseByName(
-            \REST_TestDataBuilder::ADMIN_USER_NAME,
+            RESTTestDataBuilder::ADMIN_USER_NAME,
             $this->request_factory->createRequest('PUT', "artifacts/$artifact_id_1")->withBody($this->stream_factory->createStream($body))
         );
 
@@ -150,7 +150,7 @@ final class LinkedArtifactsTest extends TrackerBase
         );
 
         $response = $this->getResponseByName(
-            \REST_TestDataBuilder::ADMIN_USER_NAME,
+            RESTTestDataBuilder::ADMIN_USER_NAME,
             $this->request_factory->createRequest('PUT', "artifacts/$artifact_id_1")->withBody($this->stream_factory->createStream($body))
         );
 
@@ -216,7 +216,7 @@ final class LinkedArtifactsTest extends TrackerBase
         );
 
         $response = $this->getResponseByName(
-            \REST_TestDataBuilder::ADMIN_USER_NAME,
+            RESTTestDataBuilder::ADMIN_USER_NAME,
             $this->request_factory->createRequest('POST', 'artifacts')->withBody($this->stream_factory->createStream($body))
         );
 
@@ -269,7 +269,7 @@ final class LinkedArtifactsTest extends TrackerBase
 
         $response_with_read_only_user = $this->getResponse(
             $this->request_factory->createRequest('POST', 'artifacts')->withBody($this->stream_factory->createStream(json_encode($payload))),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(403, $response_with_read_only_user->getStatusCode());

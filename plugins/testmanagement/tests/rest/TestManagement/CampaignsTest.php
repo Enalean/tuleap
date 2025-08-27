@@ -20,7 +20,7 @@
 
 namespace Tuleap\TestManagement;
 
-use REST_TestDataBuilder;
+use Tuleap\REST\RESTTestDataBuilder;
 
 require_once dirname(__FILE__) . '/../bootstrap.php';
 
@@ -44,7 +44,7 @@ final class CampaignsTest extends TestManagementRESTTestCase
 
         $response = $this->getResponse(
             $this->request_factory->createRequest('GET', 'testmanagement_campaigns/' . $expected_campaign['id']),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $campaign = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
@@ -74,7 +74,7 @@ final class CampaignsTest extends TestManagementRESTTestCase
 
         $all_executions_response = $this->getResponse(
             $all_executions_request,
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $executions = json_decode($all_executions_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
@@ -105,7 +105,7 @@ final class CampaignsTest extends TestManagementRESTTestCase
                     'label' => 'Tuleap 9.18',
                 ]
             ))),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(403, $response->getStatusCode());
@@ -215,7 +215,7 @@ final class CampaignsTest extends TestManagementRESTTestCase
     public function testPatchCampaignExecutions(): void
     {
         $campaign = $this->valid_73_campaign;
-        $def_id   = $this->getFirstExecution($campaign['id'], REST_TestDataBuilder::TEST_BOT_USER_NAME)['definition']['id'];
+        $def_id   = $this->getFirstExecution($campaign['id'], RESTTestDataBuilder::TEST_BOT_USER_NAME)['definition']['id'];
 
         $all_executions_response = $this->getResponse(
             $this->request_factory->createRequest('PATCH', 'testmanagement_campaigns/' . $campaign['id'] . '/testmanagement_executions')->withBody($this->stream_factory->createStream(json_encode(['definition_ids_to_add' => [$def_id], 'execution_ids_to_remove' => []])))

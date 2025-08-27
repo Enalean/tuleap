@@ -20,7 +20,7 @@
 
 namespace Tuleap\TestManagement;
 
-use REST_TestDataBuilder;
+use Tuleap\REST\RESTTestDataBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 #[\PHPUnit\Framework\Attributes\Group('TestManagementTest')]
@@ -37,7 +37,7 @@ final class ProjectTest extends TestManagementRESTTestCase
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('GET', "projects/$this->project_id/testmanagement_campaigns"),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertGETCampaings($response);
@@ -90,7 +90,7 @@ final class ProjectTest extends TestManagementRESTTestCase
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('GET', "projects/$this->project_id/testmanagement_definitions"),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $definitions = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);

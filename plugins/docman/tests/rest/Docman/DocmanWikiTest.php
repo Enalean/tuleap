@@ -24,10 +24,10 @@ namespace Tuleap\Docman\Test\rest\Docman;
 
 require_once __DIR__ . '/../../../vendor/autoload.php';
 
-use REST_TestDataBuilder;
 use Tuleap\Docman\Test\rest\DocmanDataBuilder;
 use Tuleap\Docman\Test\rest\Helper\DocmanTestExecutionHelper;
 use Tuleap\REST\BaseTestDataBuilder;
+use Tuleap\REST\RESTTestDataBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class DocmanWikiTest extends DocmanTestExecutionHelper
@@ -60,15 +60,15 @@ class DocmanWikiTest extends DocmanTestExecutionHelper
     #[\PHPUnit\Framework\Attributes\Depends('testGetRootIdWithUserRESTReadOnlyAdmin')]
     public function testGetDocumentItemsForUserRESTReadOnlyAdmin(int $root_id): array
     {
-        $root_folder = $this->loadRootFolderContent($root_id, REST_TestDataBuilder::TEST_BOT_USER_NAME);
+        $root_folder = $this->loadRootFolderContent($root_id, RESTTestDataBuilder::TEST_BOT_USER_NAME);
 
-        $items         = $this->loadFolderContent($root_id, 'Wiki', REST_TestDataBuilder::TEST_BOT_USER_NAME);
+        $items         = $this->loadFolderContent($root_id, 'Wiki', RESTTestDataBuilder::TEST_BOT_USER_NAME);
         $folder        = $this->findItemByTitle($root_folder, 'Wiki');
         $items_id      = $folder['id'];
-        $deleted_items = $this->loadFolderContent($items_id, 'DELETE Wiki', REST_TestDataBuilder::TEST_BOT_USER_NAME);
-        $lock_items    = $this->loadFolderContent($items_id, 'LOCK Wiki', REST_TestDataBuilder::TEST_BOT_USER_NAME);
-        $post_items    = $this->loadFolderContent($items_id, 'POST Wiki', REST_TestDataBuilder::TEST_BOT_USER_NAME);
-        $put_items     = $this->loadFolderContent($items_id, 'PUT HM Wiki', REST_TestDataBuilder::TEST_BOT_USER_NAME);
+        $deleted_items = $this->loadFolderContent($items_id, 'DELETE Wiki', RESTTestDataBuilder::TEST_BOT_USER_NAME);
+        $lock_items    = $this->loadFolderContent($items_id, 'LOCK Wiki', RESTTestDataBuilder::TEST_BOT_USER_NAME);
+        $post_items    = $this->loadFolderContent($items_id, 'POST Wiki', RESTTestDataBuilder::TEST_BOT_USER_NAME);
+        $put_items     = $this->loadFolderContent($items_id, 'PUT HM Wiki', RESTTestDataBuilder::TEST_BOT_USER_NAME);
 
         return array_merge(
             $root_folder,
@@ -103,7 +103,7 @@ class DocmanWikiTest extends DocmanTestExecutionHelper
 
         $move_response_with_rest_read_only_user = $this->getResponse(
             $this->request_factory->createRequest('PATCH', 'docman_wikis/' . urlencode((string) $wiki_doc_id))->withBody($this->stream_factory->createStream(json_encode(['move' => ['destination_folder_id' => $folder_id]]))),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
         $this->assertEquals(403, $move_response_with_rest_read_only_user->getStatusCode());
 
@@ -184,7 +184,7 @@ class DocmanWikiTest extends DocmanTestExecutionHelper
 
         $response = $this->getResponse(
             $this->request_factory->createRequest('DELETE', 'docman_wikis/' . $item_to_delete_id),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(403, $response->getStatusCode());
@@ -216,7 +216,7 @@ class DocmanWikiTest extends DocmanTestExecutionHelper
 
         $response_with_rest_read_only_user = $this->getResponse(
             $this->request_factory->createRequest('POST', 'docman_wikis/' . $locked_document_id . '/lock'),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(403, $response_with_rest_read_only_user->getStatusCode());
@@ -245,7 +245,7 @@ class DocmanWikiTest extends DocmanTestExecutionHelper
 
         $response_with_rest_read_only_user = $this->getResponse(
             $this->request_factory->createRequest('DELETE', 'docman_wikis/' . $locked_document_id . '/lock'),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(403, $response_with_rest_read_only_user->getStatusCode());
@@ -304,7 +304,7 @@ class DocmanWikiTest extends DocmanTestExecutionHelper
 
         $response1_with_rest_read_only_user = $this->getResponse(
             $this->request_factory->createRequest('POST', 'docman_folders/' . $root_id . '/wikis')->withBody($this->stream_factory->createStream($query)),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(403, $response1_with_rest_read_only_user->getStatusCode());
@@ -338,7 +338,7 @@ class DocmanWikiTest extends DocmanTestExecutionHelper
 
         $response_with_rest_read_only_user = $this->getResponse(
             $this->request_factory->createRequest('POST', 'docman_wikis/' . $wiki_id . '/version')->withBody($this->stream_factory->createStream($put_resource)),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(403, $response_with_rest_read_only_user->getStatusCode());
@@ -387,7 +387,7 @@ class DocmanWikiTest extends DocmanTestExecutionHelper
 
         $updated_metadata_file_response_with_reast_read_only_user = $this->getResponse(
             $this->request_factory->createRequest('PUT', 'docman_wikis/' . $item_to_update_id . '/metadata')->withBody($this->stream_factory->createStream(json_encode($put_resource))),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(403, $updated_metadata_file_response_with_reast_read_only_user->getStatusCode());
@@ -455,7 +455,7 @@ class DocmanWikiTest extends DocmanTestExecutionHelper
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('OPTIONS', 'docman_wikis/' . $id . '/metadata'),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(['OPTIONS', 'PUT'], explode(', ', $response->getHeaderLine('Allow')));
@@ -463,7 +463,7 @@ class DocmanWikiTest extends DocmanTestExecutionHelper
 
         $response = $this->getResponse(
             $this->request_factory->createRequest('OPTIONS', 'docman_wikis/' . $id),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(['OPTIONS', 'PATCH', 'DELETE'], explode(', ', $response->getHeaderLine('Allow')));
@@ -471,7 +471,7 @@ class DocmanWikiTest extends DocmanTestExecutionHelper
 
         $response = $this->getResponse(
             $this->request_factory->createRequest('OPTIONS', 'docman_wikis/' . $id . '/lock'),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(['OPTIONS', 'POST', 'DELETE'], explode(', ', $response->getHeaderLine('Allow')));
@@ -490,7 +490,7 @@ class DocmanWikiTest extends DocmanTestExecutionHelper
 
         $response_with_rest_read_only_user = $this->getResponse(
             $this->request_factory->createRequest('PUT', 'docman_wikis/' . urlencode((string) $wiki_doc_id) . '/permissions')->withBody($this->stream_factory->createStream(json_encode(['can_read' => [], 'can_write' => [], 'can_manage' => [['id' => $project_members_identifier]]]))),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(403, $response_with_rest_read_only_user->getStatusCode());
@@ -526,7 +526,7 @@ class DocmanWikiTest extends DocmanTestExecutionHelper
     {
         $response_with_rest_read_only_user = $this->getResponse(
             $this->request_factory->createRequest('POST', 'docman_folders/' . $root_id . '/wikis')->withBody($this->stream_factory->createStream($query)),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(403, $response_with_rest_read_only_user->getStatusCode());

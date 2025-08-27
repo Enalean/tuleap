@@ -24,10 +24,10 @@ namespace Tuleap\Docman\Test\rest\Docman;
 
 require_once __DIR__ . '/../../../vendor/autoload.php';
 
-use REST_TestDataBuilder;
 use Tuleap\Docman\Test\rest\DocmanDataBuilder;
 use Tuleap\Docman\Test\rest\Helper\DocmanHardcodedMetadataExecutionHelper;
 use Tuleap\REST\BaseTestDataBuilder;
+use Tuleap\REST\RESTTestDataBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class CustomMetadataTest extends DocmanHardcodedMetadataExecutionHelper
@@ -49,7 +49,7 @@ class CustomMetadataTest extends DocmanHardcodedMetadataExecutionHelper
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('GET', 'projects/' . $this->project_id . '/docman_metadata'),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         self::assertSame(200, $response->getStatusCode());
@@ -117,7 +117,7 @@ class CustomMetadataTest extends DocmanHardcodedMetadataExecutionHelper
 
         $response1_with_rest_read_only_user = $this->getResponse(
             $this->request_factory->createRequest('POST', 'docman_folders/' . $root_id . '/empties')->withBody($this->stream_factory->createStream($query)),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(403, $response1_with_rest_read_only_user->getStatusCode());
@@ -153,7 +153,7 @@ class CustomMetadataTest extends DocmanHardcodedMetadataExecutionHelper
 
         $response2_with_rest_read_only_user = $this->getResponse(
             $this->request_factory->createRequest('PUT', 'docman_empty_documents/' . $created_document_id . '/metadata')->withBody($this->stream_factory->createStream($updated_query)),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(403, $response2_with_rest_read_only_user->getStatusCode());
@@ -182,7 +182,7 @@ class CustomMetadataTest extends DocmanHardcodedMetadataExecutionHelper
 
         $response_with_rest_read_only_user = $this->getResponse(
             $this->request_factory->createRequest('DELETE', 'docman_empty_documents/' . $created_document_id),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(403, $response_with_rest_read_only_user->getStatusCode());
@@ -232,7 +232,7 @@ class CustomMetadataTest extends DocmanHardcodedMetadataExecutionHelper
 
         $response1_with_rest_read_only_user = $this->getResponse(
             $this->request_factory->createRequest('POST', 'docman_folders/' . $root_id . '/files')->withBody($this->stream_factory->createStream($query)),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(403, $response1_with_rest_read_only_user->getStatusCode());
@@ -327,7 +327,7 @@ class CustomMetadataTest extends DocmanHardcodedMetadataExecutionHelper
 
         $response2_with_rest_read_only_user = $this->getResponse(
             $this->request_factory->createRequest('PUT', 'docman_files/' . $created_document_id . '/metadata')->withBody($this->stream_factory->createStream($updated_query)),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(403, $response2_with_rest_read_only_user->getStatusCode());
@@ -356,7 +356,7 @@ class CustomMetadataTest extends DocmanHardcodedMetadataExecutionHelper
 
         $response_delete_with_rest_read_only_user = $this->getResponse(
             $this->request_factory->createRequest('DELETE', 'docman_files/' . $created_document_id),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(403, $response_delete_with_rest_read_only_user->getStatusCode());
@@ -385,7 +385,7 @@ class CustomMetadataTest extends DocmanHardcodedMetadataExecutionHelper
 
         $folder_response_with_rest_read_only_user = $this->getResponse(
             $this->request_factory->createRequest('POST', 'docman_folders/' . $root_id . '/folders')->withBody($this->stream_factory->createStream($query)),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(403, $folder_response_with_rest_read_only_user->getStatusCode());
@@ -406,7 +406,7 @@ class CustomMetadataTest extends DocmanHardcodedMetadataExecutionHelper
 
         $empty_response_with_rest_read_only_user = $this->getResponse(
             $this->request_factory->createRequest('POST', 'docman_folders/' . $created_document_id . '/empties')->withBody($this->stream_factory->createStream($query)),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(403, $empty_response_with_rest_read_only_user->getStatusCode());
@@ -448,7 +448,7 @@ class CustomMetadataTest extends DocmanHardcodedMetadataExecutionHelper
 
         $response2_with_rest_read_only_user = $this->getResponse(
             $this->request_factory->createRequest('PUT', 'docman_folders/' . $created_document_id . '/metadata')->withBody($this->stream_factory->createStream($updated_query)),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(403, $response2_with_rest_read_only_user->getStatusCode());
@@ -483,7 +483,7 @@ class CustomMetadataTest extends DocmanHardcodedMetadataExecutionHelper
 
         $response_delete_with_rest_read_only_user = $this->getResponse(
             $this->request_factory->createRequest('DELETE', 'docman_folders/' . $created_document_id),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(403, $response_delete_with_rest_read_only_user->getStatusCode());
@@ -511,7 +511,7 @@ class CustomMetadataTest extends DocmanHardcodedMetadataExecutionHelper
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('OPTIONS', 'projects/' . $this->project_id . '/docman_metadata'),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(['OPTIONS', 'GET'], explode(', ', $response->getHeaderLine('Allow')));

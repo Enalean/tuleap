@@ -20,10 +20,12 @@
 
 declare(strict_types=1);
 
+use Tuleap\REST\RESTTestDataBuilder;
+
 require_once __DIR__ . '/DatabaseInitialization.php';
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-final class PullRequestDataBuilder extends REST_TestDataBuilder
+final class PullRequestDataBuilder extends RESTTestDataBuilder
 {
     public function setUp(): void
     {

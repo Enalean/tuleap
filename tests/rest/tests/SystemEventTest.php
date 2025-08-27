@@ -22,7 +22,7 @@
 namespace Tuleap\SystemEvent\REST;
 
 use Psr\Http\Message\ResponseInterface;
-use REST_TestDataBuilder;
+use Tuleap\REST\RESTTestDataBuilder;
 use Tuleap\REST\RestBase;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -33,7 +33,7 @@ final class SystemEventTest extends RestBase
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('GET', 'system_event'),
-            REST_TestDataBuilder::ADMIN_USER_NAME
+            RESTTestDataBuilder::ADMIN_USER_NAME
         );
 
         $this->assertGETSystemEvents($response);
@@ -43,7 +43,7 @@ final class SystemEventTest extends RestBase
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('GET', 'system_event'),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertGETSystemEvents($response);
@@ -63,7 +63,7 @@ final class SystemEventTest extends RestBase
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('OPTIONS', 'system_event'),
-            REST_TestDataBuilder::ADMIN_USER_NAME
+            RESTTestDataBuilder::ADMIN_USER_NAME
         );
 
         $this->assertEquals(200, $response->getStatusCode());
@@ -74,7 +74,7 @@ final class SystemEventTest extends RestBase
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('OPTIONS', 'system_event'),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(200, $response->getStatusCode());

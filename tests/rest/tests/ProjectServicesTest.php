@@ -22,7 +22,6 @@ declare(strict_types=1);
 namespace Tuleap\REST;
 
 use Psr\Http\Message\ResponseInterface;
-use REST_TestDataBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 #[\PHPUnit\Framework\Attributes\Group('ProjectTests')]
@@ -44,7 +43,7 @@ class ProjectServicesTest extends ProjectBase
 
         $response = $this->getResponse(
             $this->request_factory->createRequest('GET', $url),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(200, $response->getStatusCode());
@@ -90,7 +89,7 @@ class ProjectServicesTest extends ProjectBase
 
         $response = $this->getResponse(
             $this->request_factory->createRequest('PUT', $service['uri'])->withBody($this->stream_factory->createStream($body)),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(403, $response->getStatusCode());

@@ -27,6 +27,7 @@ namespace Tuleap\Docman\Test\rest;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Docman\Settings\SettingsDAO;
 use Tuleap\Docman\Test\rest\Helper\DocmanProjectBuilder;
+use Tuleap\REST\RESTTestDataBuilder;
 
 class DocmanForbidWritersDataBuilder
 {
@@ -55,7 +56,7 @@ class DocmanForbidWritersDataBuilder
     private function changePasswordForUser(string $name): void
     {
         $user = $this->user_manager->getUserByUserName($name);
-        $user->setPassword(new ConcealedString(\REST_TestDataBuilder::STANDARD_PASSWORD));
+        $user->setPassword(new ConcealedString(RESTTestDataBuilder::STANDARD_PASSWORD));
         $this->user_manager->updateDb($user);
     }
 

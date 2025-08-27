@@ -20,7 +20,7 @@
 
 namespace Tuleap\FRS\Tests\REST\Packages;
 
-use REST_TestDataBuilder;
+use Tuleap\REST\RESTTestDataBuilder;
 use Tuleap\REST\RestBase;
 
 /**
@@ -50,7 +50,7 @@ final class PackagesTest extends RestBase
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('GET', "projects/$this->project_id"),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertPackageIsInProject($response);
@@ -79,7 +79,7 @@ final class PackagesTest extends RestBase
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('OPTIONS', 'frs_packages'),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(['OPTIONS', 'POST'], explode(', ', $response->getHeaderLine('Allow')));
@@ -96,7 +96,7 @@ final class PackagesTest extends RestBase
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('GET', 'frs_packages/1'),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertGETPackage($response);
@@ -124,7 +124,7 @@ final class PackagesTest extends RestBase
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('GET', 'frs_packages/1/frs_release'),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertGETReleasePackage($response);
@@ -140,7 +140,7 @@ final class PackagesTest extends RestBase
 
     public function testGETPackageWithoutFRSAdminPermissions(): void
     {
-        $response = $this->getResponse($this->request_factory->createRequest('GET', 'frs_packages/1'), REST_TestDataBuilder::TEST_USER_5_NAME);
+        $response = $this->getResponse($this->request_factory->createRequest('GET', 'frs_packages/1'), RESTTestDataBuilder::TEST_USER_5_NAME);
         $package  = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals($package['id'], 1);
@@ -170,7 +170,7 @@ final class PackagesTest extends RestBase
 
         $response = $this->getResponse(
             $this->request_factory->createRequest('POST', 'frs_packages')->withBody($this->stream_factory->createStream($post_resource)),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(403, $response->getStatusCode());

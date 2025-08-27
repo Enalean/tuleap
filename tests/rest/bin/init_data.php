@@ -21,11 +21,12 @@
 
 use ParagonIE\EasyDB\Factory;
 use Tuleap\DB\DBConfig;
+use Tuleap\REST\RESTTestDataBuilder;
 
 require_once __DIR__ . '/../../../src/www/include/pre.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
-$data_builder = new REST_TestDataBuilder();
+$data_builder = new RESTTestDataBuilder();
 $data_builder
     ->instanciateFactories()
     ->generateUsers()

@@ -24,7 +24,7 @@
 
 namespace Tuleap\Tracker\Tests\REST\Artifacts;
 
-use REST_TestDataBuilder;
+use Tuleap\REST\RESTTestDataBuilder;
 use Tuleap\Tracker\Tests\REST\TrackerBase;
 
 require_once __DIR__ . '/../bootstrap.php';
@@ -60,7 +60,7 @@ final class ArtifactsTest extends TrackerBase
 
         $response = $this->getResponse(
             $this->request_factory->createRequest('GET', "artifacts/$artifact_id"),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertArtifactWithMinimalStructure($response);
@@ -72,7 +72,7 @@ final class ArtifactsTest extends TrackerBase
 
         $response = $this->getResponse(
             $this->request_factory->createRequest('GET', "artifacts/$artifact_id?tracker_structure_format=complete"),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertArtifactWithCompleteStructure($response);

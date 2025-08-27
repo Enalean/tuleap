@@ -20,6 +20,7 @@
 
 use Test\Rest\Tracker\ArtifactsTestExecutionHelper;
 use Tuleap\REST\ForgeAccessSandbox;
+use Tuleap\REST\RESTTestDataBuilder;
 
 #[\PHPUnit\Framework\Attributes\Group('ArtifactsTest')]
 class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgnoreLine
@@ -352,7 +353,7 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
 
         $response_with_read_only_user = $this->getResponse(
             $this->request_factory->createRequest('GET', 'artifacts?query=' . urlencode($query)),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
         $artifacts                    = json_decode($response_with_read_only_user->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
@@ -678,7 +679,7 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
     public function testGetSuspendedProjectArtifactForSiteAdmin()
     {
         $response = $this->getResponseByName(
-            REST_TestDataBuilder::ADMIN_USER_NAME,
+            RESTTestDataBuilder::ADMIN_USER_NAME,
             $this->request_factory->createRequest('GET', 'artifacts/' . $this->suspended_tracker_artifacts_ids[1])
         );
 
@@ -688,7 +689,7 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
     public function testGetSuspendedProjectArtifactForRegularUser()
     {
         $response = $this->getResponseByName(
-            REST_TestDataBuilder::TEST_USER_1_NAME,
+            RESTTestDataBuilder::TEST_USER_1_NAME,
             $this->request_factory->createRequest('GET', 'artifacts/' . $this->suspended_tracker_artifacts_ids[1])
         );
 
@@ -713,7 +714,7 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
         );
 
         $response = $this->getResponseByName(
-            REST_TestDataBuilder::ADMIN_USER_NAME,
+            RESTTestDataBuilder::ADMIN_USER_NAME,
             $this->request_factory->createRequest(
                 'PUT',
                 'artifacts/' . $target_artifact_id
@@ -740,7 +741,7 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
         );
 
         $response = $this->getResponseByName(
-            REST_TestDataBuilder::TEST_USER_1_NAME,
+            RESTTestDataBuilder::TEST_USER_1_NAME,
             $this->request_factory->createRequest(
                 'PUT',
                 'artifacts/' . $target_artifact_id,

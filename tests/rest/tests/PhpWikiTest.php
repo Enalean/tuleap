@@ -19,6 +19,7 @@
  *
  */
 
+use Tuleap\REST\RESTTestDataBuilder;
 use Tuleap\REST\RestBase;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -27,7 +28,7 @@ class PhpWikiTest extends RestBase //phpcs:ignore PSR1.Classes.ClassDeclaration.
 {
     public function testOPTIONSId()
     {
-        $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', 'phpwiki/' . REST_TestDataBuilder::PHPWIKI_PAGE_ID));
+        $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', 'phpwiki/' . RESTTestDataBuilder::PHPWIKI_PAGE_ID));
         $this->assertEquals($response->getStatusCode(), 200);
         self::assertEqualsCanonicalizing(['OPTIONS', 'GET'], explode(', ', $response->getHeaderLine('Allow')));
     }
@@ -35,8 +36,8 @@ class PhpWikiTest extends RestBase //phpcs:ignore PSR1.Classes.ClassDeclaration.
     public function testOPTIONSIdWithRESTReadOnlyUser()
     {
         $response = $this->getResponse(
-            $this->request_factory->createRequest('OPTIONS', 'phpwiki/' . REST_TestDataBuilder::PHPWIKI_PAGE_ID),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            $this->request_factory->createRequest('OPTIONS', 'phpwiki/' . RESTTestDataBuilder::PHPWIKI_PAGE_ID),
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(200, $response->getStatusCode());
@@ -45,7 +46,7 @@ class PhpWikiTest extends RestBase //phpcs:ignore PSR1.Classes.ClassDeclaration.
 
     public function testGETId()
     {
-        $response = $this->getResponse($this->request_factory->createRequest('GET', 'phpwiki/' . REST_TestDataBuilder::PHPWIKI_PAGE_ID));
+        $response = $this->getResponse($this->request_factory->createRequest('GET', 'phpwiki/' . RESTTestDataBuilder::PHPWIKI_PAGE_ID));
 
         $this->assertEquals(200, $response->getStatusCode());
 
@@ -55,8 +56,8 @@ class PhpWikiTest extends RestBase //phpcs:ignore PSR1.Classes.ClassDeclaration.
     public function testGETIdWithRESTReadOnlyUser()
     {
         $response = $this->getResponse(
-            $this->request_factory->createRequest('GET', 'phpwiki/' . REST_TestDataBuilder::PHPWIKI_PAGE_ID),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            $this->request_factory->createRequest('GET', 'phpwiki/' . RESTTestDataBuilder::PHPWIKI_PAGE_ID),
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(200, $response->getStatusCode());
@@ -71,13 +72,13 @@ class PhpWikiTest extends RestBase //phpcs:ignore PSR1.Classes.ClassDeclaration.
         $this->assertArrayHasKey('versions', $content);
         $this->assertCount(4, $content['versions']);
         $this->assertEquals(4, $content['last_version']);
-        $this->assertEquals($content['id'], REST_TestDataBuilder::PHPWIKI_PAGE_ID);
-        $this->assertEquals($content['versions'][0]['uri'], 'phpwiki/' . REST_TestDataBuilder::PHPWIKI_PAGE_ID . '/versions?version_id=1');
+        $this->assertEquals($content['id'], RESTTestDataBuilder::PHPWIKI_PAGE_ID);
+        $this->assertEquals($content['versions'][0]['uri'], 'phpwiki/' . RESTTestDataBuilder::PHPWIKI_PAGE_ID . '/versions?version_id=1');
     }
 
     public function testOPTIONSVersions()
     {
-        $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', 'phpwiki/' . REST_TestDataBuilder::PHPWIKI_PAGE_ID . '/versions'));
+        $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', 'phpwiki/' . RESTTestDataBuilder::PHPWIKI_PAGE_ID . '/versions'));
         $this->assertEquals($response->getStatusCode(), 200);
         self::assertEqualsCanonicalizing(['OPTIONS', 'GET'], explode(', ', $response->getHeaderLine('Allow')));
     }
@@ -85,8 +86,8 @@ class PhpWikiTest extends RestBase //phpcs:ignore PSR1.Classes.ClassDeclaration.
     public function testOPTIONSVersionsWithRESTReadOnlyUser()
     {
         $response = $this->getResponse(
-            $this->request_factory->createRequest('OPTIONS', 'phpwiki/' . REST_TestDataBuilder::PHPWIKI_PAGE_ID . '/versions'),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            $this->request_factory->createRequest('OPTIONS', 'phpwiki/' . RESTTestDataBuilder::PHPWIKI_PAGE_ID . '/versions'),
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(200, $response->getStatusCode());
@@ -95,15 +96,15 @@ class PhpWikiTest extends RestBase //phpcs:ignore PSR1.Classes.ClassDeclaration.
 
     public function testGETVersionsReturns400IfNoVersionGiven()
     {
-        $response = $this->getResponse($this->request_factory->createRequest('GET', 'phpwiki/' . REST_TestDataBuilder::PHPWIKI_PAGE_ID . '/versions'));
+        $response = $this->getResponse($this->request_factory->createRequest('GET', 'phpwiki/' . RESTTestDataBuilder::PHPWIKI_PAGE_ID . '/versions'));
         $this->assertEquals($response->getStatusCode(), 400);
     }
 
     public function testGETVersionWithRESTReadOnlyUser()
     {
         $response = $this->getResponse(
-            $this->request_factory->createRequest('GET', 'phpwiki/' . REST_TestDataBuilder::PHPWIKI_PAGE_ID . '/versions?version_id=0'),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            $this->request_factory->createRequest('GET', 'phpwiki/' . RESTTestDataBuilder::PHPWIKI_PAGE_ID . '/versions?version_id=0'),
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertResponseBodyIsVersion4($response);
@@ -111,19 +112,19 @@ class PhpWikiTest extends RestBase //phpcs:ignore PSR1.Classes.ClassDeclaration.
 
     public function testGETLastVersion()
     {
-        $response = $this->getResponse($this->request_factory->createRequest('GET', 'phpwiki/' . REST_TestDataBuilder::PHPWIKI_PAGE_ID . '/versions?version_id=0'));
+        $response = $this->getResponse($this->request_factory->createRequest('GET', 'phpwiki/' . RESTTestDataBuilder::PHPWIKI_PAGE_ID . '/versions?version_id=0'));
         $this->assertResponseBodyIsVersion4($response);
     }
 
     public function testGETVersion4()
     {
-        $response = $this->getResponse($this->request_factory->createRequest('GET', 'phpwiki/' . REST_TestDataBuilder::PHPWIKI_PAGE_ID . '/versions?version_id=4'));
+        $response = $this->getResponse($this->request_factory->createRequest('GET', 'phpwiki/' . RESTTestDataBuilder::PHPWIKI_PAGE_ID . '/versions?version_id=4'));
         $this->assertResponseBodyIsVersion4($response);
     }
 
     public function testGETVersionsThrows404WhenVersionNotExists()
     {
-        $response = $this->getResponse($this->request_factory->createRequest('GET', 'phpwiki/' . REST_TestDataBuilder::PHPWIKI_PAGE_ID . '/versions?version_id=10'));
+        $response = $this->getResponse($this->request_factory->createRequest('GET', 'phpwiki/' . RESTTestDataBuilder::PHPWIKI_PAGE_ID . '/versions?version_id=10'));
 
         $this->assertEquals($response->getStatusCode(), 404);
     }

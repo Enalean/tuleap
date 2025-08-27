@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\REST\v1;
 
-use REST_TestDataBuilder;
+use Tuleap\REST\RESTTestDataBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ProjectResourceTest extends \Tuleap\REST\RestBase
@@ -31,7 +31,7 @@ final class ProjectResourceTest extends \Tuleap\REST\RestBase
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('OPTIONS', 'projects/' . $this->getProgramProjectId() . '/program_plan'),
-            REST_TestDataBuilder::TEST_USER_1_NAME
+            RESTTestDataBuilder::TEST_USER_1_NAME
         );
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals(['OPTIONS', 'PUT'], explode(', ', $response->getHeaderLine('Allow')));
@@ -59,7 +59,7 @@ final class ProjectResourceTest extends \Tuleap\REST\RestBase
 
         $response = $this->getResponse(
             $this->request_factory->createRequest('PUT', 'projects/' . $program_id . '/program_teams')->withBody($this->stream_factory->createStream($team_definition)),
-            REST_TestDataBuilder::TEST_USER_1_NAME
+            RESTTestDataBuilder::TEST_USER_1_NAME
         );
 
         $this->assertEquals(200, $response->getStatusCode());
@@ -80,7 +80,7 @@ final class ProjectResourceTest extends \Tuleap\REST\RestBase
 
         $response = $this->getResponse(
             $this->request_factory->createRequest('PUT', 'projects/' . $project_id . '/program_plan')->withBody($this->stream_factory->createStream($plan_definition)),
-            REST_TestDataBuilder::TEST_USER_1_NAME
+            RESTTestDataBuilder::TEST_USER_1_NAME
         );
 
         self::assertEquals(200, $response->getStatusCode());
@@ -103,7 +103,7 @@ final class ProjectResourceTest extends \Tuleap\REST\RestBase
 
         $response = $this->getResponse(
             $this->request_factory->createRequest('PUT', 'projects/' . $project_id . '/program_plan')->withBody($this->stream_factory->createStream($plan_definition)),
-            REST_TestDataBuilder::TEST_USER_1_NAME
+            RESTTestDataBuilder::TEST_USER_1_NAME
         );
 
         self::assertEquals(200, $response->getStatusCode());
@@ -125,7 +125,7 @@ final class ProjectResourceTest extends \Tuleap\REST\RestBase
 
         $response = $this->getResponse(
             $this->request_factory->createRequest('PUT', 'projects/' . $project_id . '/program_plan')->withBody($this->stream_factory->createStream($plan_definition)),
-            REST_TestDataBuilder::TEST_USER_1_NAME
+            RESTTestDataBuilder::TEST_USER_1_NAME
         );
 
         self::assertEquals(200, $response->getStatusCode());
@@ -147,7 +147,7 @@ final class ProjectResourceTest extends \Tuleap\REST\RestBase
 
         $response = $this->getResponse(
             $this->request_factory->createRequest('PUT', 'projects/' . $project_id . '/program_plan')->withBody($this->stream_factory->createStream($plan_definition)),
-            REST_TestDataBuilder::TEST_USER_1_NAME
+            RESTTestDataBuilder::TEST_USER_1_NAME
         );
 
         self::assertEquals(200, $response->getStatusCode());

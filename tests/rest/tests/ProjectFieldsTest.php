@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\REST\v1;
 
-use REST_TestDataBuilder;
+use Tuleap\REST\RESTTestDataBuilder;
 use Tuleap\REST\RestBase;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -46,7 +46,7 @@ class ProjectFieldsTest extends RestBase
 
         $response = $this->getResponse(
             $this->request_factory->createRequest('GET', 'project_fields/'),
-            REST_TestDataBuilder::TEST_USER_1_NAME
+            RESTTestDataBuilder::TEST_USER_1_NAME
         );
 
         $this->assertEquals($expected_result, json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR));

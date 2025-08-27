@@ -20,6 +20,7 @@
 
 namespace Tuleap\Tracker\Tests\REST\ArtifactsActions;
 
+use Tuleap\REST\RESTTestDataBuilder;
 use Tuleap\Tracker\Tests\REST\TrackerBase;
 
 require_once __DIR__ . '/../bootstrap.php';
@@ -30,7 +31,7 @@ class TrackerWorkflowsTest extends TrackerBase
     public function testGetStatusFieldId(): int
     {
         $response = $this->getResponseByName(
-            \REST_TestDataBuilder::ADMIN_USER_NAME,
+            RESTTestDataBuilder::ADMIN_USER_NAME,
             $this->request_factory->createRequest('GET', 'trackers/' . $this->tracker_workflows_tracker_id)
         );
 
@@ -46,7 +47,7 @@ class TrackerWorkflowsTest extends TrackerBase
     public function testGetIsUsedFieldIsString(): void
     {
         $response = $this->getResponseByName(
-            \REST_TestDataBuilder::ADMIN_USER_NAME,
+            RESTTestDataBuilder::ADMIN_USER_NAME,
             $this->request_factory->createRequest('GET', 'trackers/' . $this->tracker_workflow_transitions_tracker_id)
         );
 
@@ -64,7 +65,7 @@ class TrackerWorkflowsTest extends TrackerBase
         $query = '{"workflow": {"set_transitions_rules": {"field_id":' . $field_status_id . '}}}';
 
         $response = $this->getResponseByName(
-            \REST_TestDataBuilder::TEST_USER_1_NAME,
+            RESTTestDataBuilder::TEST_USER_1_NAME,
             $this->request_factory->createRequest('PATCH', 'trackers/' . $this->tracker_workflows_tracker_id . '?query=' . urlencode($query))
         );
 
@@ -77,7 +78,7 @@ class TrackerWorkflowsTest extends TrackerBase
         $query = '{"workflow": {"set_transitions_rules": {"field_id":' . $field_status_id . '}}}';
 
         $response = $this->getResponseByName(
-            \REST_TestDataBuilder::TEST_USER_2_NAME,
+            RESTTestDataBuilder::TEST_USER_2_NAME,
             $this->request_factory->createRequest('PATCH', 'trackers/' . $this->tracker_workflows_tracker_id . '?query=' . urlencode($query))
         );
 
@@ -91,7 +92,7 @@ class TrackerWorkflowsTest extends TrackerBase
         $query = '{"workflow": {"set_transitions_rules": {"field_id":' . $field_status_id . '}}}';
 
         $response = $this->getResponseByName(
-            \REST_TestDataBuilder::TEST_USER_1_NAME,
+            RESTTestDataBuilder::TEST_USER_1_NAME,
             $this->request_factory->createRequest('PATCH', 'trackers/' . $this->tracker_workflows_tracker_id . '?query=' . urlencode($query))
         );
 
@@ -104,7 +105,7 @@ class TrackerWorkflowsTest extends TrackerBase
         $query = '{"workflow": {"set_transitions_rules": {"field_id":' . $field_status_id . '}, "delete_transitions_rules": true}}';
 
         $response = $this->getResponseByName(
-            \REST_TestDataBuilder::TEST_USER_1_NAME,
+            RESTTestDataBuilder::TEST_USER_1_NAME,
             $this->request_factory->createRequest('PATCH', 'trackers/' . $this->tracker_workflows_tracker_id . '?query=' . urlencode($query))
         );
 
@@ -116,7 +117,7 @@ class TrackerWorkflowsTest extends TrackerBase
     {
         $query    = '{"workflow": {"set_transitions_rules": {"is_used": true}}}';
         $response = $this->getResponseByName(
-            \REST_TestDataBuilder::TEST_USER_1_NAME,
+            RESTTestDataBuilder::TEST_USER_1_NAME,
             $this->request_factory->createRequest('PATCH', 'trackers/' . $this->tracker_workflows_tracker_id . '?query=' . urlencode($query))
         );
         $result   = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
@@ -129,7 +130,7 @@ class TrackerWorkflowsTest extends TrackerBase
     {
         $query    = '{"workflow": {"set_transitions_rules": {"is_used": false}}}';
         $response = $this->getResponseByName(
-            \REST_TestDataBuilder::TEST_USER_1_NAME,
+            RESTTestDataBuilder::TEST_USER_1_NAME,
             $this->request_factory->createRequest('PATCH', 'trackers/' . $this->tracker_workflows_tracker_id . '?query=' . urlencode($query))
         );
         $result   = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
@@ -143,7 +144,7 @@ class TrackerWorkflowsTest extends TrackerBase
     {
         $query    = '{"workflow": {"delete_transitions_rules": true}}';
         $response = $this->getResponseByName(
-            \REST_TestDataBuilder::TEST_USER_1_NAME,
+            RESTTestDataBuilder::TEST_USER_1_NAME,
             $this->request_factory->createRequest('PATCH', 'trackers/' . $this->tracker_workflows_tracker_id . '?query=' . urlencode($query))
         );
         $result   = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
@@ -160,7 +161,7 @@ class TrackerWorkflowsTest extends TrackerBase
     {
         $query    = '{"workflow": {"delete_transitions_rules": true}}';
         $response = $this->getResponseByName(
-            \REST_TestDataBuilder::TEST_USER_1_NAME,
+            RESTTestDataBuilder::TEST_USER_1_NAME,
             $this->request_factory->createRequest('PATCH', 'trackers/' . $this->tracker_workflows_tracker_id . '?query=' . urlencode($query))
         );
         $this->assertEquals(400, $response->getStatusCode());

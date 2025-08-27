@@ -22,8 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\REST;
 
-use REST_TestDataBuilder;
-
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 #[\PHPUnit\Framework\Attributes\Group('ProjectTests')]
 class ProjectMilestonesPeriodTest extends ProjectBase
@@ -72,7 +70,7 @@ class ProjectMilestonesPeriodTest extends ProjectBase
                 'GET',
                 'projects/' . $this->project_future_releases_id . '/milestones?query=' . $query
             ),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(200, $response->getStatusCode());

@@ -24,10 +24,10 @@ namespace Tuleap\Docman\Test\rest\Docman;
 
 require_once __DIR__ . '/../../../vendor/autoload.php';
 
-use REST_TestDataBuilder;
 use Tuleap\Docman\Test\rest\DocmanDataBuilder;
 use Tuleap\Docman\Test\rest\Helper\DocmanTestExecutionHelper;
 use Tuleap\REST\BaseTestDataBuilder;
+use Tuleap\REST\RESTTestDataBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class DocmanFilesTest extends DocmanTestExecutionHelper
@@ -62,16 +62,16 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
     {
         $root_folder = $this->loadRootFolderContent(
             $root_id,
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
-        $items_file    = $this->loadFolderContent($root_id, 'File', REST_TestDataBuilder::TEST_BOT_USER_NAME);
+        $items_file    = $this->loadFolderContent($root_id, 'File', RESTTestDataBuilder::TEST_BOT_USER_NAME);
         $folder_files  = $this->findItemByTitle($root_folder, 'File');
         $items_file_id = $folder_files['id'];
-        $deleted_files = $this->loadFolderContent($items_file_id, 'DELETE File', REST_TestDataBuilder::TEST_BOT_USER_NAME);
-        $lock_files    = $this->loadFolderContent($items_file_id, 'LOCK File', REST_TestDataBuilder::TEST_BOT_USER_NAME);
-        $post_files    = $this->loadFolderContent($items_file_id, 'POST File Version', REST_TestDataBuilder::TEST_BOT_USER_NAME);
-        $put_files     = $this->loadFolderContent($items_file_id, 'PUT HM File', REST_TestDataBuilder::TEST_BOT_USER_NAME);
+        $deleted_files = $this->loadFolderContent($items_file_id, 'DELETE File', RESTTestDataBuilder::TEST_BOT_USER_NAME);
+        $lock_files    = $this->loadFolderContent($items_file_id, 'LOCK File', RESTTestDataBuilder::TEST_BOT_USER_NAME);
+        $post_files    = $this->loadFolderContent($items_file_id, 'POST File Version', RESTTestDataBuilder::TEST_BOT_USER_NAME);
+        $put_files     = $this->loadFolderContent($items_file_id, 'PUT HM File', RESTTestDataBuilder::TEST_BOT_USER_NAME);
 
         return array_merge(
             $root_folder,
@@ -93,7 +93,7 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
         ]);
 
         $response_file_creation_with_rest_read_only_user = $this->getResponseByName(
-            REST_TestDataBuilder::TEST_BOT_USER_NAME,
+            RESTTestDataBuilder::TEST_BOT_USER_NAME,
             $this->request_factory->createRequest('POST', 'docman_folders/' . urlencode((string) $root_id) . '/files')->withBody($this->stream_factory->createStream($file_creation_body_content))
         );
         $this->assertEquals(403, $response_file_creation_with_rest_read_only_user->getStatusCode());
@@ -106,7 +106,7 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
         $file_doc_id = json_decode($response_file_creation->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['id'];
 
         $response_folder_creation_with_rest_read_only_user = $this->getResponseByName(
-            REST_TestDataBuilder::TEST_BOT_USER_NAME,
+            RESTTestDataBuilder::TEST_BOT_USER_NAME,
             $this->request_factory->createRequest('POST', 'docman_folders/' . urlencode((string) $root_id) . '/folders')->withBody($this->stream_factory->createStream(json_encode(['title' => 'File cut folder'])))
         );
         $this->assertEquals(403, $response_folder_creation_with_rest_read_only_user->getStatusCode());
@@ -119,7 +119,7 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
         $folder_id = json_decode($response_folder_creation->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['id'];
 
         $move_response_with_rest_read_only_user = $this->getResponseByName(
-            REST_TestDataBuilder::TEST_BOT_USER_NAME,
+            RESTTestDataBuilder::TEST_BOT_USER_NAME,
             $this->request_factory->createRequest('PATCH', 'docman_files/' . urlencode((string) $file_doc_id))->withBody($this->stream_factory->createStream(json_encode(['move' => ['destination_folder_id' => $folder_id]])))
         );
         $this->assertEquals(403, $move_response_with_rest_read_only_user->getStatusCode());
@@ -138,13 +138,13 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
 
         $moved_item_response_with_rest_read_only_user = $this->getResponse(
             $this->request_factory->createRequest('GET', 'docman_items/' . urlencode((string) $file_doc_id)),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
         $this->assertEquals($folder_id, json_decode($moved_item_response_with_rest_read_only_user->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['parent_id']);
 
         $delete_response_with_rest_read_only_user = $this->getResponse(
             $this->request_factory->createRequest('DELETE', 'docman_folders/' . urlencode((string) $folder_id)),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
         $this->assertEquals(403, $delete_response_with_rest_read_only_user->getStatusCode());
 
@@ -169,7 +169,7 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
 
         $permission_update_response_with_rest_read_only_user = $this->getResponse(
             $this->request_factory->createRequest('PUT', 'docman_files/' . urlencode((string) $file_doc_id) . '/permissions')->withBody($this->stream_factory->createStream($put_body)),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
         $this->assertEquals(403, $permission_update_response_with_rest_read_only_user->getStatusCode());
 
@@ -192,7 +192,7 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
 
         $delete_response_with_rest_read_only_user = $this->getResponse(
             $this->request_factory->createRequest('DELETE', 'docman_files/' . urlencode((string) $file_doc_id)),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
         $this->assertEquals(403, $delete_response_with_rest_read_only_user->getStatusCode());
 
@@ -261,7 +261,7 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
 
         $response = $this->getResponse(
             $this->request_factory->createRequest('DELETE', 'docman_files/' . $file_to_delete_id),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(403, $response->getStatusCode());
@@ -307,7 +307,7 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
 
         $post_response_with_rest_read_only_user = $this->getResponse(
             $this->request_factory->createRequest('POST', 'docman_files/' . $file_to_lock_id . '/lock'),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
         $this->assertEquals(403, $post_response_with_rest_read_only_user->getStatusCode());
 
@@ -364,7 +364,7 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
 
         $response = $this->getResponse(
             $this->request_factory->createRequest('DELETE', 'docman_files/' . $file_to_delete_id . '/lock'),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(403, $response->getStatusCode());
@@ -412,7 +412,7 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
 
         $new_version_response_with_rest_read_only_user = $this->getResponse(
             $this->request_factory->createRequest('POST', 'docman_files/' . $file_to_update_id . '/version')->withBody($this->stream_factory->createStream($new_version_resource)),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(403, $new_version_response_with_rest_read_only_user->getStatusCode());
@@ -975,7 +975,7 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
 
         $updated_metadata_file_response_with_rest_read_only_user = $this->getResponse(
             $this->request_factory->createRequest('PUT', 'docman_files/' . $file_to_update_id . '/metadata')->withBody($this->stream_factory->createStream(json_encode($put_resource))),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
         $this->assertEquals(403, $updated_metadata_file_response_with_rest_read_only_user->getStatusCode());
 
@@ -1119,7 +1119,7 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('OPTIONS', 'docman_files/' . $id),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(['OPTIONS', 'PATCH', 'DELETE'], explode(', ', $response->getHeaderLine('Allow')));
@@ -1127,7 +1127,7 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
 
         $response = $this->getResponse(
             $this->request_factory->createRequest('OPTIONS', 'docman_files/' . $id . '/metadata'),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(['OPTIONS', 'PUT'], explode(', ', $response->getHeaderLine('Allow')));
@@ -1135,7 +1135,7 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
 
         $response = $this->getResponse(
             $this->request_factory->createRequest('OPTIONS', 'docman_files/' . $id . '/lock'),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(['OPTIONS', 'POST', 'DELETE'], explode(', ', $response->getHeaderLine('Allow')));
@@ -1143,7 +1143,7 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
 
         $response = $this->getResponse(
             $this->request_factory->createRequest('OPTIONS', 'docman_files/' . $id . '/version'),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(['OPTIONS', 'POST'], explode(', ', $response->getHeaderLine('Allow')));

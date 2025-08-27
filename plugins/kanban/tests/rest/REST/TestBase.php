@@ -20,7 +20,7 @@
 
 namespace Tuleap\Kanban\REST;
 
-use REST_TestDataBuilder;
+use Tuleap\REST\RESTTestDataBuilder;
 use Tuleap\REST\RestBase;
 
 class TestBase extends RestBase
@@ -58,7 +58,7 @@ class TestBase extends RestBase
         );
 
         $response = $this->getResponseByName(
-            REST_TestDataBuilder::ADMIN_USER_NAME,
+            RESTTestDataBuilder::ADMIN_USER_NAME,
             $this->request_factory->createRequest('GET', "trackers/$this->kanban_tracker_id/tracker_reports?$query")
         );
 

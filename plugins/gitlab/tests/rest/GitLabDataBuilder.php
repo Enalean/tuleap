@@ -26,9 +26,9 @@ require_once __DIR__ . '/DatabaseInitialization.php';
 
 use PluginManager;
 use Project;
-use REST_TestDataBuilder;
+use Tuleap\REST\RESTTestDataBuilder;
 
-class GitLabDataBuilder extends REST_TestDataBuilder
+class GitLabDataBuilder extends RESTTestDataBuilder
 {
     public const PROJECT_TEST_GITLAB_SHORTNAME = 'test-gitlab';
 

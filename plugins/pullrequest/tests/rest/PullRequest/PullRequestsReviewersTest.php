@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\PullRequest;
 
-use REST_TestDataBuilder;
+use Tuleap\REST\RESTTestDataBuilder;
 use Tuleap\REST\RestBase;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -39,7 +39,7 @@ final class PullRequestsReviewersTest extends RestBase
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('GET', 'pull_requests/1/reviewers'),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(200, $response->getStatusCode());
@@ -52,12 +52,12 @@ final class PullRequestsReviewersTest extends RestBase
             $this->request_factory->createRequest('PUT', 'pull_requests/1/reviewers')->withBody($this->stream_factory->createStream(json_encode(
                 [
                     'users' => [
-                        ['username' => REST_TestDataBuilder::TEST_USER_1_NAME],
+                        ['username' => RESTTestDataBuilder::TEST_USER_1_NAME],
                     ],
                 ],
                 JSON_THROW_ON_ERROR
             ))),
-            REST_TestDataBuilder::TEST_USER_1_NAME
+            RESTTestDataBuilder::TEST_USER_1_NAME
         );
         $this->assertEquals(204, $update_response->getStatusCode());
 
@@ -67,7 +67,7 @@ final class PullRequestsReviewersTest extends RestBase
         $this->assertEquals(200, $response_current_reviewers->getStatusCode());
         $current_reviewers = json_decode($response_current_reviewers->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertCount(1, $current_reviewers['users']);
-        $this->assertEquals(REST_TestDataBuilder::TEST_USER_1_NAME, $current_reviewers['users'][0]['username']);
+        $this->assertEquals(RESTTestDataBuilder::TEST_USER_1_NAME, $current_reviewers['users'][0]['username']);
 
         $clear_reviewer_response = $this->getResponse(
             $this->request_factory->createRequest('PUT', 'pull_requests/1/reviewers')->withBody($this->stream_factory->createStream(json_encode(['users' => []], JSON_THROW_ON_ERROR)))
@@ -85,7 +85,7 @@ final class PullRequestsReviewersTest extends RestBase
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('PUT', 'pull_requests/1/reviewers')->withBody($this->stream_factory->createStream(json_encode(['users' => []], JSON_THROW_ON_ERROR))),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
         $this->assertEquals(403, $response->getStatusCode());
     }

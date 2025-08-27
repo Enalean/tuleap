@@ -19,6 +19,7 @@
  */
 
 use Tuleap\REST\MilestoneBase;
+use Tuleap\REST\RESTTestDataBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 #[\PHPUnit\Framework\Attributes\Group('MilestonesTest')]
@@ -72,7 +73,7 @@ class MilestonesBacklogPatchTest extends MilestoneBase //phpcs:ignore PSR1.Class
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('PATCH', $this->uri),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(403, $response->getStatusCode());
@@ -111,7 +112,7 @@ class MilestonesBacklogPatchTest extends MilestoneBase //phpcs:ignore PSR1.Class
     public function testPatchBacklogWithoutPermission()
     {
         $response = $this->getResponseByName(
-            REST_TestDataBuilder::TEST_USER_2_NAME,
+            RESTTestDataBuilder::TEST_USER_2_NAME,
             $this->request_factory->createRequest('PATCH', $this->uri)->withBody(
                 $this->stream_factory->createStream(
                     json_encode(
@@ -260,7 +261,7 @@ class MilestonesBacklogPatchTest extends MilestoneBase //phpcs:ignore PSR1.Class
         $uri = 'milestones/' . $this->release['id'] . '/content';
 
         $response = $this->getResponseByName(
-            REST_TestDataBuilder::TEST_USER_2_NAME,
+            RESTTestDataBuilder::TEST_USER_2_NAME,
             $this->request_factory->createRequest('PATCH', $uri)->withBody(
                 $this->stream_factory->createStream(
                     json_encode(

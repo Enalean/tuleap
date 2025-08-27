@@ -19,6 +19,7 @@
  */
 
 use Tuleap\REST\MilestoneBase;
+use Tuleap\REST\RESTTestDataBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 #[\PHPUnit\Framework\Attributes\Group('MilestonesTest')]
@@ -34,7 +35,7 @@ class MilestonesContentTest extends MilestoneBase //phpcs:ignore PSR1.Classes.Cl
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('OPTIONS', 'milestones/' . $this->release_artifact_ids[1] . '/content'),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         self::assertEqualsCanonicalizing(['OPTIONS', 'GET', 'PUT', 'PATCH'], explode(', ', $response->getHeaderLine('Allow')));
@@ -51,7 +52,7 @@ class MilestonesContentTest extends MilestoneBase //phpcs:ignore PSR1.Classes.Cl
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('GET', 'milestones/' . $this->release_artifact_ids[1] . '/content'),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertGETContent($response);
@@ -158,7 +159,7 @@ class MilestonesContentTest extends MilestoneBase //phpcs:ignore PSR1.Classes.Cl
     public function testPUTContentWithoutPermission(): void
     {
         $response_put = $this->getResponseByName(
-            REST_TestDataBuilder::TEST_USER_2_NAME,
+            RESTTestDataBuilder::TEST_USER_2_NAME,
             $this->request_factory->createRequest(
                 'PUT',
                 'milestones/' . $this->release_artifact_ids[1] . '/content'
@@ -184,7 +185,7 @@ class MilestonesContentTest extends MilestoneBase //phpcs:ignore PSR1.Classes.Cl
                     '[' . $this->epic_artifact_ids[4] . ',' . $this->epic_artifact_ids[1] . ']'
                 )
             ),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(403, $response_put->getStatusCode());

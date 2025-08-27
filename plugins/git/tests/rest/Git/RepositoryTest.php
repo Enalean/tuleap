@@ -21,8 +21,8 @@
 namespace Git;
 
 use GitDataBuilder;
-use REST_TestDataBuilder;
 use Tuleap\Git\REST\TestBase;
+use Tuleap\REST\RESTTestDataBuilder;
 
 /**
  * @group GitTests
@@ -52,7 +52,7 @@ final class RepositoryTest extends TestBase
 
     protected function getResponseForNonMember($request)
     {
-        return $this->getResponse($request, REST_TestDataBuilder::TEST_USER_2_NAME);
+        return $this->getResponse($request, RESTTestDataBuilder::TEST_USER_2_NAME);
     }
 
     public function testGetGitRepository(): void
@@ -66,7 +66,7 @@ final class RepositoryTest extends TestBase
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('GET', 'git/' . GitDataBuilder::REPOSITORY_GIT_ID),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertGETGitRepository($response);
@@ -93,7 +93,7 @@ final class RepositoryTest extends TestBase
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('OPTIONS', 'git/' . GitDataBuilder::REPOSITORY_GIT_ID),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
         $this->assertEquals(['OPTIONS', 'GET', 'PATCH'], explode(', ', $response->getHeaderLine('Allow')));
     }
@@ -120,7 +120,7 @@ final class RepositoryTest extends TestBase
 
         $response = $this->getResponse(
             $this->request_factory->createRequest('PATCH', $url)->withBody($this->stream_factory->createStream($patch_payload)),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals($response->getStatusCode(), 403);
@@ -146,7 +146,7 @@ final class RepositoryTest extends TestBase
 
         $response = $this->getResponse(
             $this->request_factory->createRequest('OPTIONS', $url),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(['OPTIONS', 'GET'], explode(', ', $response->getHeaderLine('Allow')));
@@ -173,7 +173,7 @@ final class RepositoryTest extends TestBase
 
         $response = $this->getResponse(
             $this->request_factory->createRequest('GET', $url),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertGETFiles($response);
@@ -237,7 +237,7 @@ final class RepositoryTest extends TestBase
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('OPTIONS', 'git/' . GitDataBuilder::REPOSITORY_GIT_ID . '/branches'),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(['OPTIONS', 'GET', 'POST'], explode(', ', $response->getHeaderLine('Allow')));
@@ -254,7 +254,7 @@ final class RepositoryTest extends TestBase
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('GET', 'git/' . GitDataBuilder::REPOSITORY_GIT_ID . '/branches'),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertGETBranches($response);
@@ -436,7 +436,7 @@ final class RepositoryTest extends TestBase
             $this->request_factory
                 ->createRequest('POST', 'git/' . GitDataBuilder::REPOSITORY_GIT_ID . '/branches')
                 ->withBody($this->stream_factory->createStream($post_payload)),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(403, $response->getStatusCode());
@@ -452,7 +452,7 @@ final class RepositoryTest extends TestBase
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('OPTIONS', 'git/' . GitDataBuilder::REPOSITORY_GIT_ID . '/tags'),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(['OPTIONS', 'GET'], explode(', ', $response->getHeaderLine('Allow')));
@@ -469,7 +469,7 @@ final class RepositoryTest extends TestBase
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('GET', 'git/' . GitDataBuilder::REPOSITORY_GIT_ID . '/tags'),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertGETTags($response);
@@ -512,7 +512,7 @@ final class RepositoryTest extends TestBase
         );
         $response     = $this->getResponse(
             $this->request_factory->createRequest('POST', 'git/')->withBody($this->stream_factory->createStream($post_payload)),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(403, $response->getStatusCode());
@@ -545,7 +545,7 @@ final class RepositoryTest extends TestBase
 
         $response = $this->getResponse(
             $this->request_factory->createRequest('POST', 'git/' . GitDataBuilder::REPOSITORY_GIT_ID . '/statuses/5d408503daf6f1348e264122cfa8fc89a30f7f12')->withBody($this->stream_factory->createStream($post_payload)),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(403, $response->getStatusCode());
@@ -596,7 +596,7 @@ final class RepositoryTest extends TestBase
 
         $response = $this->getResponse(
             $this->request_factory->createRequest('GET', $url),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(200, $response->getStatusCode());

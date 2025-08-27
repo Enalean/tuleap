@@ -20,6 +20,7 @@
  */
 
 use Tuleap\REST\ArtifactFileBase;
+use Tuleap\REST\RESTTestDataBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 #[\PHPUnit\Framework\Attributes\Group('ArtifactFilesTest')]
@@ -34,7 +35,7 @@ class ArtifactFilesTest extends ArtifactFileBase //phpcs:ignore PSR1.Classes.Cla
 
     protected function getResponseForDifferentUser(\Psr\Http\Message\RequestInterface $request)
     {
-        return $this->getResponse($request, REST_TestDataBuilder::TEST_USER_2_NAME);
+        return $this->getResponse($request, RESTTestDataBuilder::TEST_USER_2_NAME);
     }
 
     #[\Override]
@@ -90,7 +91,7 @@ class ArtifactFilesTest extends ArtifactFileBase //phpcs:ignore PSR1.Classes.Cla
         $this->assertEquals($file_representation['description'], 'a very LARGE file');
         $this->assertEquals($file_representation['type'], 'text/plain');
         $this->assertEquals($file_representation['size'], strlen('a very LARGE file'));
-        $this->assertEquals($file_representation['submitted_by'], $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME]);
+        $this->assertEquals($file_representation['submitted_by'], $this->user_ids[RESTTestDataBuilder::TEST_USER_1_NAME]);
 
         $this->assertEquals(17, $response->getHeaderLine('X-DISK-USAGE'));
         $this->assertEquals(self::$DEFAULT_QUOTA, $response->getHeaderLine('X-QUOTA'));
@@ -134,7 +135,7 @@ class ArtifactFilesTest extends ArtifactFileBase //phpcs:ignore PSR1.Classes.Cla
         $this->assertEquals($file_representation['description'], 'a very LARGE file');
         $this->assertEquals($file_representation['type'], 'text/plain');
         $this->assertEquals($file_representation['size'], strlen('a very LARGE file' . $second_chunk));
-        $this->assertEquals($file_representation['submitted_by'], $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME]);
+        $this->assertEquals($file_representation['submitted_by'], $this->user_ids[RESTTestDataBuilder::TEST_USER_1_NAME]);
 
         return $file_id;
     }
@@ -230,7 +231,7 @@ class ArtifactFilesTest extends ArtifactFileBase //phpcs:ignore PSR1.Classes.Cla
     public function testOptionsArtifactIdWithUserRESTReadOnlyAdmin($file_id)
     {
         $request  = $this->request_factory->createRequest('OPTIONS', 'artifact_temporary_files/' . $file_id);
-        $response = $this->getResponse($request, REST_TestDataBuilder::TEST_BOT_USER_NAME);
+        $response = $this->getResponse($request, RESTTestDataBuilder::TEST_BOT_USER_NAME);
         $this->assertEquals(200, $response->getStatusCode());
     }
 
@@ -419,7 +420,7 @@ class ArtifactFilesTest extends ArtifactFileBase //phpcs:ignore PSR1.Classes.Cla
     public function testArtifactAttachedFilesGetIdWithUserRESTReadOnlyAdmin($file_id)
     {
         $request  = $this->request_factory->createRequest('GET', 'artifact_files/' . $file_id);
-        $response = $this->getResponse($request, REST_TestDataBuilder::TEST_BOT_USER_NAME);
+        $response = $this->getResponse($request, RESTTestDataBuilder::TEST_BOT_USER_NAME);
 
         $this->assertEquals(200, $response->getStatusCode());
 
@@ -445,7 +446,7 @@ class ArtifactFilesTest extends ArtifactFileBase //phpcs:ignore PSR1.Classes.Cla
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('OPTIONS', 'artifact_files/' . $file_id),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals($response->getStatusCode(), 200);

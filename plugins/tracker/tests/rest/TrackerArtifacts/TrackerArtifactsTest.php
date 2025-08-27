@@ -26,7 +26,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Tests\REST\TrackerArtifacts;
 
-use REST_TestDataBuilder;
+use Tuleap\REST\RESTTestDataBuilder;
 use Tuleap\Tracker\REST\DataBuilder;
 use Tuleap\Tracker\Tests\REST\TrackerBase;
 
@@ -40,12 +40,12 @@ class TrackerArtifactsTest extends TrackerBase
         $query = [
             'submitted_by' => [
                 'operator' => 'contains',
-                'value' => $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME],
+                'value' => $this->user_ids[RESTTestDataBuilder::TEST_USER_1_NAME],
             ],
         ];
 
         $response = $this->getResponseByName(
-            REST_TestDataBuilder::TEST_USER_1_NAME,
+            RESTTestDataBuilder::TEST_USER_1_NAME,
             $this->request_factory->createRequest('GET', '/api/v1/trackers/' . $this->tracker_artifacts_tracker_id . '/artifacts?limit=100&query=' . urlencode(json_encode($query)))
         );
 
@@ -55,7 +55,7 @@ class TrackerArtifactsTest extends TrackerBase
 
         $artifact = $artifacts[0];
 
-        $this->assertEquals(REST_TestDataBuilder::TEST_USER_1_NAME, $artifact['submitted_by_user']['username']);
+        $this->assertEquals(RESTTestDataBuilder::TEST_USER_1_NAME, $artifact['submitted_by_user']['username']);
     }
 
     public function testQueryFiltersOnSubmittedByFieldDoesNotReturnAllArtifactsWhenQueryContainsWrongUserId(): void
@@ -64,14 +64,14 @@ class TrackerArtifactsTest extends TrackerBase
             'submitted_by' => [
                 'operator' => 'contains',
                 'value' => [
-                    $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME],
+                    $this->user_ids[RESTTestDataBuilder::TEST_USER_1_NAME],
                     10000000,
                 ],
             ],
         ];
 
         $response = $this->getResponseByName(
-            REST_TestDataBuilder::TEST_USER_1_NAME,
+            RESTTestDataBuilder::TEST_USER_1_NAME,
             $this->request_factory->createRequest('GET', '/api/v1/trackers/' . $this->tracker_artifacts_tracker_id . '/artifacts?limit=100&query=' . urlencode(json_encode($query)))
         );
 
@@ -81,7 +81,7 @@ class TrackerArtifactsTest extends TrackerBase
 
         $artifact = $artifacts[0];
 
-        $this->assertEquals(REST_TestDataBuilder::TEST_USER_1_NAME, $artifact['submitted_by_user']['username']);
+        $this->assertEquals(RESTTestDataBuilder::TEST_USER_1_NAME, $artifact['submitted_by_user']['username']);
     }
 
     public function testQueryFiltersOnSubmittedByFieldWithWrongUserIdReturnsEmptyCollection(): void
@@ -94,7 +94,7 @@ class TrackerArtifactsTest extends TrackerBase
         ];
 
         $response = $this->getResponseByName(
-            REST_TestDataBuilder::TEST_USER_1_NAME,
+            RESTTestDataBuilder::TEST_USER_1_NAME,
             $this->request_factory->createRequest('GET', '/api/v1/trackers/' . $this->tracker_artifacts_tracker_id . '/artifacts?limit=100&query=' . urlencode(json_encode($query)))
         );
 
@@ -109,14 +109,14 @@ class TrackerArtifactsTest extends TrackerBase
             'submitted_by' => [
                 'operator' => 'contains',
                 'value' => [
-                    $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME],
+                    $this->user_ids[RESTTestDataBuilder::TEST_USER_1_NAME],
                     $this->user_ids[DataBuilder::USER_TESTER_NAME],
                 ],
             ],
         ];
 
         $response = $this->getResponseByName(
-            REST_TestDataBuilder::TEST_USER_1_NAME,
+            RESTTestDataBuilder::TEST_USER_1_NAME,
             $this->request_factory->createRequest('GET', '/api/v1/trackers/' . $this->tracker_artifacts_tracker_id . '/artifacts?limit=100&query=' . urlencode(json_encode($query)))
         );
 
@@ -128,7 +128,7 @@ class TrackerArtifactsTest extends TrackerBase
             $this->assertContains(
                 $artifact['submitted_by_user']['username'],
                 [
-                    REST_TestDataBuilder::TEST_USER_1_NAME,
+                    RESTTestDataBuilder::TEST_USER_1_NAME,
                     DataBuilder::USER_TESTER_NAME,
                 ]
             );

@@ -25,10 +25,10 @@ namespace Tuleap\Docman\Test\rest\DocmanMandatoryMetadata;
 require_once __DIR__ . '/../../../vendor/autoload.php';
 
 use DateTimeZone;
-use REST_TestDataBuilder;
 use Tuleap\Docman\Test\rest\DocmanDataBuilder;
 use Tuleap\Docman\Test\rest\Helper\DocmanHardcodedMetadataExecutionHelper;
 use Tuleap\REST\BaseTestDataBuilder;
+use Tuleap\REST\RESTTestDataBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
@@ -50,9 +50,9 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
     #[\PHPUnit\Framework\Attributes\Depends('testGetRootIdWithUserRESTReadOnlyAdmin')]
     public function testGetDocumentItemsForUserRESTReadOnlyAdmin(int $root_id): array
     {
-        $root_folder = $this->loadRootFolderContent($root_id, REST_TestDataBuilder::TEST_BOT_USER_NAME);
+        $root_folder = $this->loadRootFolderContent($root_id, RESTTestDataBuilder::TEST_BOT_USER_NAME);
 
-        $items = $this->loadFolderContent($root_id, 'Folder HM', REST_TestDataBuilder::TEST_BOT_USER_NAME);
+        $items = $this->loadFolderContent($root_id, 'Folder HM', RESTTestDataBuilder::TEST_BOT_USER_NAME);
 
         return array_merge(
             $root_folder,
@@ -102,7 +102,7 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
 
         $response = $this->getResponse(
             $this->request_factory->createRequest('POST', 'docman_folders/' . $folder_HM['id'] . '/folders')->withBody($this->stream_factory->createStream($query)),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(403, $response->getStatusCode());
@@ -150,7 +150,7 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
 
         $response = $this->getResponse(
             $this->request_factory->createRequest('POST', 'docman_folders/' . $folder_HM['id'] . '/empties')->withBody($this->stream_factory->createStream($query)),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(403, $response->getStatusCode());
@@ -202,7 +202,7 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
 
         $response = $this->getResponse(
             $this->request_factory->createRequest('POST', 'docman_folders/' . $folder_HM['id'] . '/embedded_files')->withBody($this->stream_factory->createStream($query)),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(403, $response->getStatusCode());
@@ -250,7 +250,7 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
 
         $response = $this->getResponse(
             $this->request_factory->createRequest('POST', 'docman_folders/' . $root_id . '/links')->withBody($this->stream_factory->createStream($query)),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(403, $response->getStatusCode());
@@ -298,7 +298,7 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
 
         $response = $this->getResponse(
             $this->request_factory->createRequest('POST', 'docman_folders/' . $root_id . '/wikis')->withBody($this->stream_factory->createStream($query)),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(403, $response->getStatusCode());
@@ -411,7 +411,7 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
 
         $response = $this->getResponse(
             $this->request_factory->createRequest('POST', 'docman_folders/' . $root_id . '/files')->withBody($this->stream_factory->createStream($query)),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(403, $response->getStatusCode());
@@ -534,7 +534,7 @@ class HardcodedMetadataTest extends DocmanHardcodedMetadataExecutionHelper
 
         $updated_metadata_file_response = $this->getResponse(
             $this->request_factory->createRequest('PUT', 'docman_files/' . $file_to_update_id . '/metadata')->withBody($this->stream_factory->createStream(json_encode($put_resource))),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(403, $updated_metadata_file_response->getStatusCode());

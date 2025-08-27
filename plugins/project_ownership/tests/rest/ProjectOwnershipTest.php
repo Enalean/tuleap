@@ -20,13 +20,15 @@
 
 namespace Tuleap\ProjectOwnership\REST;
 
+use Tuleap\REST\RESTTestDataBuilder;
+
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class ProjectOwnershipTest extends \Tuleap\REST\RestBase
 {
     public function testOptions()
     {
         $response = $this->getResponse(
-            $this->request_factory->createRequest('OPTIONS', 'project_ownership/' . \REST_TestDataBuilder::DEFAULT_TEMPLATE_PROJECT_ID)
+            $this->request_factory->createRequest('OPTIONS', 'project_ownership/' . RESTTestDataBuilder::DEFAULT_TEMPLATE_PROJECT_ID)
         );
 
         $this->assertEquals(['OPTIONS', 'GET', 'PUT'], explode(', ', $response->getHeaderLine('Allow')));
@@ -41,7 +43,7 @@ class ProjectOwnershipTest extends \Tuleap\REST\RestBase
     public function testProjectHasAProjectOwnerAtCreationAndBeUpdated()
     {
         $creation_response = $this->getResponseByName(
-            \REST_TestDataBuilder::ADMIN_USER_NAME,
+            RESTTestDataBuilder::ADMIN_USER_NAME,
             $this->request_factory->createRequest('POST', 'projects')->withBody($this->stream_factory->createStream(json_encode([
                 'shortname'   => 'p' . bin2hex(random_bytes(6)),
                 'description' => 'Test Project Certification Owner',
@@ -55,32 +57,32 @@ class ProjectOwnershipTest extends \Tuleap\REST\RestBase
 
         $project_ownership_representation = $this->getProjectOwnershipRepresentation($new_project_id);
         self::assertSame(
-            $this->user_ids[\REST_TestDataBuilder::ADMIN_USER_NAME],
+            $this->user_ids[RESTTestDataBuilder::ADMIN_USER_NAME],
             $project_ownership_representation['project_owner']['id']
         );
 
         $response_update_admins = $this->getResponseByName(
-            \REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->request_factory->createRequest('PUT', 'user_groups/' . $new_project_id . '_' . \REST_TestDataBuilder::DYNAMIC_UGROUP_PROJECT_ADMINS_ID . '/users')->withBody($this->stream_factory->createStream(json_encode([
+            RESTTestDataBuilder::ADMIN_USER_NAME,
+            $this->request_factory->createRequest('PUT', 'user_groups/' . $new_project_id . '_' . RESTTestDataBuilder::DYNAMIC_UGROUP_PROJECT_ADMINS_ID . '/users')->withBody($this->stream_factory->createStream(json_encode([
                 'user_references' => [
-                    ['username' => \REST_TestDataBuilder::ADMIN_USER_NAME],
-                    ['username' => \REST_TestDataBuilder::TEST_USER_1_NAME],
+                    ['username' => RESTTestDataBuilder::ADMIN_USER_NAME],
+                    ['username' => RESTTestDataBuilder::TEST_USER_1_NAME],
                 ],
             ])))
         );
         self::assertSame(200, $response_update_admins->getStatusCode());
 
         $response_update_project_ownership = $this->getResponseByName(
-            \REST_TestDataBuilder::ADMIN_USER_NAME,
+            RESTTestDataBuilder::ADMIN_USER_NAME,
             $this->request_factory->createRequest('PUT', 'project_ownership/' . $new_project_id)->withBody($this->stream_factory->createStream(json_encode([
-                'project_owner' => ['username' => \REST_TestDataBuilder::TEST_USER_1_NAME],
+                'project_owner' => ['username' => RESTTestDataBuilder::TEST_USER_1_NAME],
             ])))
         );
         self::assertSame(200, $response_update_project_ownership->getStatusCode());
 
         $updated_project_ownership_representation = $this->getProjectOwnershipRepresentation($new_project_id);
         self::assertSame(
-            $this->user_ids[\REST_TestDataBuilder::TEST_USER_1_NAME],
+            $this->user_ids[RESTTestDataBuilder::TEST_USER_1_NAME],
             $updated_project_ownership_representation['project_owner']['id']
         );
     }
@@ -89,7 +91,7 @@ class ProjectOwnershipTest extends \Tuleap\REST\RestBase
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('GET', 'project_ownership/' . $project_id),
-            \REST_TestDataBuilder::ADMIN_USER_NAME
+            RESTTestDataBuilder::ADMIN_USER_NAME
         );
 
         self::assertSame(200, $response->getStatusCode());

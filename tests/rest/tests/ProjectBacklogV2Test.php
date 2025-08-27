@@ -21,7 +21,6 @@
 namespace Tuleap\REST;
 
 use Psr\Http\Message\ResponseInterface;
-use REST_TestDataBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 #[\PHPUnit\Framework\Attributes\Group('BacklogItemsTest')]
@@ -37,7 +36,7 @@ class ProjectBacklogV2Test extends RestBase
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('OPTIONS', "v2/projects/$this->project_pbi_id/backlog"),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         self::assertEqualsCanonicalizing(['OPTIONS', 'GET'], explode(', ', $response->getHeaderLine('Allow')));
@@ -54,7 +53,7 @@ class ProjectBacklogV2Test extends RestBase
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('GET', "v2/projects/$this->project_pbi_id/backlog?limit=0&offset=0"),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertGETProjectBacklog($response);

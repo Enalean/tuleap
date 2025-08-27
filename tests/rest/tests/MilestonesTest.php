@@ -19,6 +19,7 @@
  */
 
 use Tuleap\REST\MilestoneBase;
+use Tuleap\REST\RESTTestDataBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 #[\PHPUnit\Framework\Attributes\Group('MilestonesTest')]
@@ -40,13 +41,13 @@ class MilestonesTest extends MilestoneBase //phpcs:ignore PSR1.Classes.ClassDecl
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('OPTIONS', 'milestones'),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
         self::assertEqualsCanonicalizing(['OPTIONS'], explode(', ', $response->getHeaderLine('Allow')));
 
         $response = $this->getResponse(
             $this->request_factory->createRequest('OPTIONS', 'milestones/' . $this->release_artifact_ids[1]),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
         self::assertEqualsCanonicalizing(['OPTIONS', 'GET'], explode(', ', $response->getHeaderLine('Allow')));
     }
@@ -69,7 +70,7 @@ class MilestonesTest extends MilestoneBase //phpcs:ignore PSR1.Classes.ClassDecl
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('GET', 'milestones/' . $this->release_artifact_ids[1]),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(200, $response->getStatusCode());
@@ -97,7 +98,7 @@ class MilestonesTest extends MilestoneBase //phpcs:ignore PSR1.Classes.ClassDecl
                             'project' => [
                                 'id'    => $this->project_private_member_id,
                                 'uri'   => 'projects/' . $this->project_private_member_id,
-                                'label' => REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_LABEL,
+                                'label' => RESTTestDataBuilder::PROJECT_PRIVATE_MEMBER_LABEL,
                                 'icon' => '',
                             ],
                         ],
@@ -125,7 +126,7 @@ class MilestonesTest extends MilestoneBase //phpcs:ignore PSR1.Classes.ClassDecl
                             'project' => [
                                 'id'    => $this->project_private_member_id,
                                 'uri'   => 'projects/' . $this->project_private_member_id,
-                                'label' => REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_LABEL,
+                                'label' => RESTTestDataBuilder::PROJECT_PRIVATE_MEMBER_LABEL,
                                 'icon' => '',
                             ],
                         ],
@@ -139,7 +140,7 @@ class MilestonesTest extends MilestoneBase //phpcs:ignore PSR1.Classes.ClassDecl
                             'project' => [
                                 'id'    => $this->project_private_member_id,
                                 'uri'   => 'projects/' . $this->project_private_member_id,
-                                'label' => REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_LABEL,
+                                'label' => RESTTestDataBuilder::PROJECT_PRIVATE_MEMBER_LABEL,
                                 'icon' => '',
                             ],
                         ],
@@ -165,7 +166,7 @@ class MilestonesTest extends MilestoneBase //phpcs:ignore PSR1.Classes.ClassDecl
                             'project' => [
                                 'id'    => $this->project_private_member_id,
                                 'uri'   => 'projects/' . $this->project_private_member_id,
-                                'label' => REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_LABEL,
+                                'label' => RESTTestDataBuilder::PROJECT_PRIVATE_MEMBER_LABEL,
                                 'icon' => '',
                             ],
                         ],

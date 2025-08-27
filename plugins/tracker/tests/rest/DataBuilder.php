@@ -20,13 +20,13 @@
 
 namespace Tuleap\Tracker\REST;
 
-use REST_TestDataBuilder;
+use Tuleap\REST\RESTTestDataBuilder;
 use Tuleap\Tracker\Admin\ArtifactDeletion\ArtifactsDeletionConfigDAO;
 use Tuleap\Tracker\Tests\REST\TrackerBase;
 
 require_once __DIR__ . '/TrackerBase.php';
 
-class DataBuilder extends REST_TestDataBuilder
+class DataBuilder extends RESTTestDataBuilder
 {
     public const USER_TESTER_NAME                   = 'rest_api_tracker_admin_1';
     public const MY_ARTIFACTS_USER_NAME             = 'rest_my_artifacts';

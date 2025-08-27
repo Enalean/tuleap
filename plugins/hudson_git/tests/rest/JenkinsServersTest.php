@@ -21,6 +21,7 @@
 namespace Tuleap\HudsonGit\Tests\REST;
 
 use Tuleap\REST\RestBase;
+use Tuleap\REST\RESTTestDataBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class JenkinsServersTest extends RestBase
@@ -30,7 +31,7 @@ class JenkinsServersTest extends RestBase
     public function testGetJenkinsServers()
     {
         $response = $this->getResponseByName(
-            \REST_TestDataBuilder::ADMIN_USER_NAME,
+            RESTTestDataBuilder::ADMIN_USER_NAME,
             $this->request_factory->createRequest('GET', 'projects/' . $this->getProjectId(self::TEST_JENKINS_SERVERS_SHORTNAME)   . '/git_jenkins_servers')
         );
 

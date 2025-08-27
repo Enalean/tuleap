@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\ProgramManagement\REST\v1\Helper;
 
 use Psr\Log\NullLogger;
-use REST_TestDataBuilder;
 use Tracker_ArtifactFactory;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\ProgramManagement\Adapter\Events\ArtifactCreatedProxy;
@@ -44,6 +43,7 @@ use Tuleap\ProgramManagement\Domain\Team\Creation\TeamCollection;
 use Tuleap\ProgramManagement\Tests\Stub\RetrieveUserStub;
 use Tuleap\Queue\QueueFactory;
 use Tuleap\REST\BaseTestDataBuilder;
+use Tuleap\REST\RESTTestDataBuilder;
 use Tuleap\Test\Stubs\include\CheckUserCanAccessProjectStub;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Event\ArtifactCreated;
@@ -51,7 +51,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\Tracker;
 use UserManager;
 
-final class ProgramDataBuilder extends REST_TestDataBuilder
+final class ProgramDataBuilder extends RESTTestDataBuilder
 {
     public const PROJECT_TEAM_NAME        = 'team';
     public const PROJECT_PROGRAM_NAME     = 'program';

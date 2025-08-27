@@ -20,7 +20,7 @@
 
 namespace Tuleap\Tracker\Tests\REST\Workflows;
 
-use REST_TestDataBuilder;
+use Tuleap\REST\RESTTestDataBuilder;
 use Tuleap\Tracker\Tests\REST\TrackerBase;
 
 require_once __DIR__ . '/../bootstrap.php';
@@ -85,7 +85,7 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
         );
 
         $response = $this->getResponseByName(
-            REST_TestDataBuilder::TEST_BOT_USER_NAME,
+            RESTTestDataBuilder::TEST_BOT_USER_NAME,
             $this->request_factory->createRequest('POST', 'tracker_workflow_transitions')->withBody($this->stream_factory->createStream($params))
         );
         $this->assertEquals(403, $response->getStatusCode());
@@ -104,7 +104,7 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
         ]);
 
         $response = $this->getResponseByName(
-            REST_TestDataBuilder::TEST_USER_1_NAME,
+            RESTTestDataBuilder::TEST_USER_1_NAME,
             $this->request_factory->createRequest('POST', 'tracker_workflow_transitions')->withBody($this->stream_factory->createStream($params))
         );
 
@@ -129,7 +129,7 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
         ]);
 
         $response = $this->getResponseByName(
-            REST_TestDataBuilder::TEST_USER_2_NAME,
+            RESTTestDataBuilder::TEST_USER_2_NAME,
             $this->request_factory->createRequest('POST', 'tracker_workflow_transitions')->withBody($this->stream_factory->createStream($params))
         );
 
@@ -145,7 +145,7 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
         ]);
 
         $response = $this->getResponseByName(
-            REST_TestDataBuilder::TEST_USER_1_NAME,
+            RESTTestDataBuilder::TEST_USER_1_NAME,
             $this->request_factory->createRequest('POST', 'tracker_workflow_transitions')->withBody($this->stream_factory->createStream($params))
         );
 
@@ -161,7 +161,7 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
         ]);
 
         $response = $this->getResponseByName(
-            REST_TestDataBuilder::TEST_USER_1_NAME,
+            RESTTestDataBuilder::TEST_USER_1_NAME,
             $this->request_factory->createRequest('POST', 'tracker_workflow_transitions')->withBody($this->stream_factory->createStream($params))
         );
 
@@ -181,7 +181,7 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
         ]);
 
         $response = $this->getResponseByName(
-            REST_TestDataBuilder::TEST_USER_1_NAME,
+            RESTTestDataBuilder::TEST_USER_1_NAME,
             $this->request_factory->createRequest('POST', 'tracker_workflow_transitions')->withBody($this->stream_factory->createStream($params))
         );
 
@@ -201,7 +201,7 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
         ]);
 
         $response = $this->getResponseByName(
-            REST_TestDataBuilder::TEST_USER_1_NAME,
+            RESTTestDataBuilder::TEST_USER_1_NAME,
             $this->request_factory->createRequest('POST', 'tracker_workflow_transitions')->withBody($this->stream_factory->createStream($params))
         );
 
@@ -221,7 +221,7 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
         ]);
 
         $response = $this->getResponseByName(
-            REST_TestDataBuilder::TEST_USER_1_NAME,
+            RESTTestDataBuilder::TEST_USER_1_NAME,
             $this->request_factory->createRequest('POST', 'tracker_workflow_transitions')->withBody($this->stream_factory->createStream($params))
         );
 
@@ -235,7 +235,7 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
         $used_transition = $transition_combinations['transitions'][1];
 
         $response = $this->getResponseByName(
-            REST_TestDataBuilder::TEST_BOT_USER_NAME,
+            RESTTestDataBuilder::TEST_BOT_USER_NAME,
             $this->request_factory->createRequest('DELETE', 'tracker_workflow_transitions/' . $used_transition['id'])
         );
 
@@ -249,7 +249,7 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
         $used_transition = $transition_combinations['transitions'][1];
 
         $response = $this->getResponseByName(
-            REST_TestDataBuilder::TEST_USER_1_NAME,
+            RESTTestDataBuilder::TEST_USER_1_NAME,
             $this->request_factory->createRequest('DELETE', 'tracker_workflow_transitions/' . $used_transition['id'])
         );
 
@@ -259,7 +259,7 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
     public function testDELETETrackerWorkflowTransitionsReturns404WhenTransitionDoesNotExist(): void
     {
         $response = $this->getResponseByName(
-            REST_TestDataBuilder::TEST_USER_1_NAME,
+            RESTTestDataBuilder::TEST_USER_1_NAME,
             $this->request_factory->createRequest('DELETE', 'tracker_workflow_transitions/0')
         );
 
@@ -273,7 +273,7 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
         $transition = $transition_combinations['transitions'][0];
 
         $response = $this->getResponseByName(
-            REST_TestDataBuilder::TEST_USER_1_NAME,
+            RESTTestDataBuilder::TEST_USER_1_NAME,
             $this->request_factory->createRequest('GET', 'tracker_workflow_transitions/' . $transition['id'])
         );
 
@@ -298,7 +298,7 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
         ]);
 
         $response = $this->getResponseByName(
-            REST_TestDataBuilder::ADMIN_USER_NAME,
+            RESTTestDataBuilder::ADMIN_USER_NAME,
             $this->request_factory->createRequest('PATCH', 'tracker_workflow_transitions/' . $transition['id'])->withBody($this->stream_factory->createStream($params))
         );
 
@@ -332,7 +332,7 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
         );
 
         $response = $this->getResponseByName(
-            REST_TestDataBuilder::TEST_BOT_USER_NAME,
+            RESTTestDataBuilder::TEST_BOT_USER_NAME,
             $this->request_factory->createRequest('PATCH', "tracker_workflow_transitions/$transition_id")->withBody($this->stream_factory->createStream($params))
         );
         $this->assertEquals(403, $response->getStatusCode());
@@ -352,13 +352,13 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
         ]);
 
         $response = $this->getResponseByName(
-            REST_TestDataBuilder::ADMIN_USER_NAME,
+            RESTTestDataBuilder::ADMIN_USER_NAME,
             $this->request_factory->createRequest('PATCH', "tracker_workflow_transitions/$transition_id")->withBody($this->stream_factory->createStream($params))
         );
         $this->assertEquals($response->getStatusCode(), 200);
 
         $response = $this->getResponseByName(
-            REST_TestDataBuilder::TEST_USER_1_NAME,
+            RESTTestDataBuilder::TEST_USER_1_NAME,
             $this->request_factory->createRequest('GET', "tracker_workflow_transitions/$transition_id")
         );
 
@@ -373,7 +373,7 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
         $a_user_group_id              = $this->user_groups_ids[$tracker_workflows_project_id]['project_members'];
 
         $response = $this->getResponseByName(
-            REST_TestDataBuilder::TEST_BOT_USER_NAME,
+            RESTTestDataBuilder::TEST_BOT_USER_NAME,
             $this->request_factory->createRequest('GET', "tracker_workflow_transitions/$transition_id")
         );
 
@@ -398,7 +398,7 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
         $transition_id = $this->getResolvedToClosedTransition();
 
         $response = $this->getResponseByName(
-            REST_TestDataBuilder::TEST_USER_1_NAME,
+            RESTTestDataBuilder::TEST_USER_1_NAME,
             $this->request_factory->createRequest('GET', "tracker_workflow_transitions/$transition_id/actions")
         );
 
@@ -412,7 +412,7 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
         $transition_id = $this->getResolvedToClosedTransition();
 
         $response = $this->getResponseByName(
-            REST_TestDataBuilder::TEST_BOT_USER_NAME,
+            RESTTestDataBuilder::TEST_BOT_USER_NAME,
             $this->request_factory->createRequest('GET', "tracker_workflow_transitions/$transition_id/actions")
         );
 
@@ -460,7 +460,7 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
         );
 
         $response = $this->getResponseByName(
-            REST_TestDataBuilder::TEST_BOT_USER_NAME,
+            RESTTestDataBuilder::TEST_BOT_USER_NAME,
             $this->request_factory->createRequest('PUT', "tracker_workflow_transitions/$transition_id/actions")->withBody($this->stream_factory->createStream($body))
         );
 
@@ -482,7 +482,7 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
         ]);
 
         $response = $this->getResponseByName(
-            REST_TestDataBuilder::TEST_USER_1_NAME,
+            RESTTestDataBuilder::TEST_USER_1_NAME,
             $this->request_factory->createRequest('PUT', "tracker_workflow_transitions/$transition_id/actions")->withBody($this->stream_factory->createStream($body))
         );
 
@@ -510,7 +510,7 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
         ]);
 
         $response = $this->getResponseByName(
-            REST_TestDataBuilder::TEST_USER_1_NAME,
+            RESTTestDataBuilder::TEST_USER_1_NAME,
             $this->request_factory->createRequest('PUT', "tracker_workflow_transitions/$transition_id/actions")->withBody($this->stream_factory->createStream($body))
         );
 
@@ -536,7 +536,7 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
         ]);
 
         $response = $this->getResponseByName(
-            REST_TestDataBuilder::TEST_USER_1_NAME,
+            RESTTestDataBuilder::TEST_USER_1_NAME,
             $this->request_factory->createRequest('PUT', "tracker_workflow_transitions/$transition_id/actions")->withBody($this->stream_factory->createStream($body))
         );
 
@@ -563,14 +563,14 @@ class TrackerWorkflowTransitionsTest extends TrackerBase
         ]);
 
         $response = $this->getResponseByName(
-            REST_TestDataBuilder::ADMIN_USER_NAME,
+            RESTTestDataBuilder::ADMIN_USER_NAME,
             $this->request_factory->createRequest('PUT', "tracker_workflow_transitions/$transition_id/actions")->withBody($this->stream_factory->createStream($json))
         );
 
         $this->assertEquals(200, $response->getStatusCode());
 
         $response_get = $this->getResponseByName(
-            REST_TestDataBuilder::TEST_USER_1_NAME,
+            RESTTestDataBuilder::TEST_USER_1_NAME,
             $this->request_factory->createRequest('GET', "tracker_workflow_transitions/$transition_id/actions")
         );
 
