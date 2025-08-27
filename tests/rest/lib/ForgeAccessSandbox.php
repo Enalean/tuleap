@@ -23,8 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\REST;
 
-use Test\Rest\TuleapConfig;
-
 trait ForgeAccessSandbox
 {
     private string $site_access;

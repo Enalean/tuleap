@@ -18,11 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Test\Rest\TuleapConfig;
 use Tuleap\REST\BaseTestDataBuilder;
 use Tuleap\REST\ForgeAccessSandbox;
-use Tuleap\REST\RESTTestDataBuilder;
 use Tuleap\REST\RestBase;
+use Tuleap\REST\RESTTestDataBuilder;
+use Tuleap\REST\TuleapConfig;
 
 #[\PHPUnit\Framework\Attributes\Group('UserGroupTests')]
 final class UsersTest extends RestBase // phpcs:ignore

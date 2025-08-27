@@ -29,7 +29,7 @@ setup_database() {
     echo "Use remote db $DB_HOST"
 
     # runner should have access to Tuleap conf, esp. database.inc because some tests pre-cond changes values directly
-    # into the db (@see \Test\Rest\TuleapConfig)
+    # into the db (@see \Tuleap\REST\TuleapConfig)
     usermod -a -G codendiadm runner
 
     /usr/share/tuleap/src/tuleap-cfg/tuleap-cfg.php setup:mysql-init \
