@@ -152,6 +152,7 @@ class Planning_MilestoneController extends BaseController
     /**
      * @return BreadCrumbCollection
      */
+    #[Override]
     public function getBreadcrumbs()
     {
         $this->generateBareMilestone();

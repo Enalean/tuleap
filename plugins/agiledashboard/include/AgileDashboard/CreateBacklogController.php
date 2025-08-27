@@ -24,6 +24,7 @@ namespace Tuleap\AgileDashboard;
 
 use AgileDashboard_FirstScrumCreator;
 use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
+use Override;
 use PFUser;
 use Project;
 use Psr\EventDispatcher\EventDispatcherInterface;
@@ -50,6 +51,7 @@ final class CreateBacklogController extends DispatchablePSR15Compatible
         parent::__construct($emitter, ...$middleware_stack);
     }
 
+    #[Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $user = $request->getAttribute(PFUser::class);

@@ -38,62 +38,74 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollection implements
 
     private int $total_available_size = 0;
 
+    #[Override]
     public function getParentItemName(): string
     {
         return $this->parent_item_name;
     }
 
+    #[Override]
     public function setParentItemName(string $name): void
     {
         $this->parent_item_name = $name;
     }
 
+    #[Override]
     public function push(IBacklogItem $item): void
     {
         $this->rows[]             = $item;
         $this->index[$item->id()] = true;
     }
 
+    #[Override]
     public function containsId(int $id): bool
     {
         return isset($this->index[$id]);
     }
 
+    #[Override]
     public function current(): mixed
     {
         return current($this->rows);
     }
 
+    #[Override]
     public function key(): mixed
     {
         return key($this->rows);
     }
 
+    #[Override]
     public function next(): void
     {
         next($this->rows);
     }
 
+    #[Override]
     public function rewind(): void
     {
         reset($this->rows);
     }
 
+    #[Override]
     public function valid(): bool
     {
         return current($this->rows) !== false;
     }
 
+    #[Override]
     public function count(): int
     {
         return count($this->rows);
     }
 
+    #[Override]
     public function getTotalAvaialableSize(): int
     {
         return $this->total_available_size;
     }
 
+    #[Override]
     public function setTotalAvaialableSize(int $size): void
     {
         $this->total_available_size = $size;
@@ -102,6 +114,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollection implements
     /**
      * @return list<int>
      */
+    #[Override]
     public function getItemIds(): array
     {
         return array_keys($this->index);

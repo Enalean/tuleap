@@ -26,6 +26,7 @@ namespace Tuleap\AgileDashboard;
 use AgileDashboardRouterBuilder;
 use Feedback;
 use HTTPRequest;
+use Override;
 use Tuleap\AgileDashboard\Milestone\Pane\Details\DetailsPaneInfo;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\IncludeViteAssets;
@@ -53,6 +54,7 @@ class AgileDashboardLegacyController implements DispatchableWithRequest, Dispatc
      * @throws NotFoundException
      * @throws ForbiddenException
      */
+    #[Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $project = $request->getProject();
@@ -73,6 +75,7 @@ class AgileDashboardLegacyController implements DispatchableWithRequest, Dispatc
         }
     }
 
+    #[Override]
     public function isInABurningParrotPage(HTTPRequest $request, array $variables): bool
     {
         return $this->isInOverviewTab($request)

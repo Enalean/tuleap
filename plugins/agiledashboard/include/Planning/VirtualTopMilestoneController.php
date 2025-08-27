@@ -20,6 +20,7 @@
 
 namespace Tuleap\AgileDashboard\Planning;
 
+use Override;
 use Tuleap\AgileDashboard\AgileDashboard\Milestone\Backlog\RecentlyVisitedTopBacklogDao;
 use Tuleap\AgileDashboard\BaseController;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
@@ -109,6 +110,7 @@ final class VirtualTopMilestoneController extends BaseController
         $displayFooter();
     }
 
+    #[Override]
     public function getBreadcrumbs(): BreadCrumbCollection
     {
         $breadcrumb_dropdowns = new BreadCrumbCollection();

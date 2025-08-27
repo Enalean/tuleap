@@ -213,6 +213,7 @@ class PlanningFactory implements RetrievePlannings, RetrieveRootPlanning
      *
      * Note: if there are several parallel, we only return the fist one
      */
+    #[Override]
     public function getRootPlanning(PFUser $user, int $group_id): Planning|false
     {
         $project_plannings = $this->getOrderedPlanningsWithBacklogTracker($user, $group_id);
@@ -225,6 +226,7 @@ class PlanningFactory implements RetrievePlannings, RetrieveRootPlanning
      * are not parents themselves
      * @return Planning[]
      */
+    #[Override]
     public function getLastLevelPlannings(PFUser $user, int $project_id): array
     {
         $plannings = $this->getPlannings($user, $project_id);
@@ -246,6 +248,7 @@ class PlanningFactory implements RetrievePlannings, RetrieveRootPlanning
      * Get all plannings that are not bottom plannings
      * @return Planning[]
      */
+    #[Override]
     public function getNonLastLevelPlannings(PFUser $user, int $project_id): array
     {
         $plannings = $this->getPlannings($user, $project_id);

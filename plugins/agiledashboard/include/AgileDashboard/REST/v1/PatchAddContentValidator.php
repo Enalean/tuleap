@@ -21,6 +21,7 @@
 
 namespace Tuleap\AgileDashboard\REST\v1;
 
+use Override;
 use Planning_Milestone;
 use PFUser;
 use Tuleap\Tracker\REST\Helpers\IdsFromBodyAreNotUniqueException;
@@ -55,6 +56,7 @@ class PatchAddContentValidator implements IValidateElementsToAdd
      * @throws ArtifactIsNotInBacklogTrackerException
      * @throws ArtifactIsClosedOrAlreadyPlannedInAnotherMilestone
      */
+    #[Override]
     public function validate(array $to_add)
     {
         $this->milestone_validator->validateArtifactsFromBodyContentWithClosedItems($to_add, $this->milestone, $this->user);

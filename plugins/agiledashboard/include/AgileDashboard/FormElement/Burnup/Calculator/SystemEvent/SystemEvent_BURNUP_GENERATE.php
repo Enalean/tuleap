@@ -21,6 +21,7 @@
 namespace Tuleap\AgileDashboard\FormElement\Burnup\Calculator\SystemEvent;
 
 use DateTime;
+use Override;
 use Psr\Log\LoggerInterface;
 use SystemEvent;
 use Tracker_ArtifactFactory;
@@ -83,11 +84,13 @@ final class SystemEvent_BURNUP_GENERATE extends SystemEvent // @codingStandardsI
         return (int) $parameters[0];
     }
 
+    #[Override]
     public function verbalizeParameters($with_link)
     {
         return 'Artifact_id : ' . $this->getArtifactIdFromParameters();
     }
 
+    #[Override]
     public function process(): bool
     {
         return TimezoneWrapper::wrapTimezone(

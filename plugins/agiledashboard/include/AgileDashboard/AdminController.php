@@ -23,6 +23,7 @@ namespace Tuleap\AgileDashboard;
 use Codendi_Request;
 use CSRFSynchronizerToken;
 use EventManager;
+use Override;
 use Planning_MilestoneFactory;
 use Project;
 use Tuleap\AgileDashboard\Artifact\PlannedArtifactDao;
@@ -109,6 +110,7 @@ class AdminController extends BaseController
     /**
      * @return BreadCrumbCollection
      */
+    #[Override]
     public function getBreadcrumbs()
     {
         $breadcrumbs = new BreadCrumbCollection();

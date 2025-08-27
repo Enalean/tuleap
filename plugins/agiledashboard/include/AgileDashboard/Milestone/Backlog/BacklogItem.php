@@ -26,6 +26,7 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Milestone\Backlog;
 
+use Override;
 use Tuleap\Tracker\Artifact\Artifact;
 
 class BacklogItem implements IBacklogItem
@@ -54,37 +55,44 @@ class BacklogItem implements IBacklogItem
         $this->short_type = $tracker->getItemName();
     }
 
+    #[Override]
     public function setParent(Artifact $parent): void
     {
         $this->parent = $parent;
     }
 
+    #[Override]
     public function getParent(): ?Artifact
     {
         return $this->parent;
     }
 
+    #[Override]
     public function setInitialEffort(?float $value): void
     {
         $this->initial_effort = $value;
     }
 
+    #[Override]
     public function getInitialEffort(): ?float
     {
         return $this->initial_effort;
     }
 
+    #[Override]
     public function setStatus(string $status, string $status_semantic): void
     {
         $this->status                  = $status;
         $this->normalized_status_label = $status_semantic;
     }
 
+    #[Override]
     public function id(): int
     {
         return $this->id;
     }
 
+    #[Override]
     public function title(): string
     {
         return $this->title;
@@ -95,6 +103,7 @@ class BacklogItem implements IBacklogItem
         return $this->type;
     }
 
+    #[Override]
     public function getShortType(): string
     {
         return $this->short_type;
@@ -110,21 +119,25 @@ class BacklogItem implements IBacklogItem
         return $this->parent?->getTitle();
     }
 
+    #[Override]
     public function getStatus(): string
     {
         return $this->status;
     }
 
+    #[Override]
     public function color(): string
     {
         return $this->color;
     }
 
+    #[Override]
     public function setHasChildren(bool $has_children): void
     {
         $this->has_children = $has_children;
     }
 
+    #[Override]
     public function hasChildren(): bool
     {
         if ($this->has_children === null) {
@@ -133,36 +146,43 @@ class BacklogItem implements IBacklogItem
         return $this->has_children;
     }
 
+    #[Override]
     public function getArtifact(): Artifact
     {
         return $this->artifact;
     }
 
+    #[Override]
     public function xRef(): string
     {
         return $this->artifact->getXRef();
     }
 
+    #[Override]
     public function isInconsistent(): bool
     {
         return $this->is_inconsistent;
     }
 
+    #[Override]
     public function getNormalizedStatusLabel(): string
     {
         return $this->normalized_status_label;
     }
 
+    #[Override]
     public function isOpen(): bool
     {
         return $this->artifact->isOpen();
     }
 
+    #[Override]
     public function getRemainingEffort(): ?float
     {
         return $this->remaining_effort;
     }
 
+    #[Override]
     public function setRemainingEffort(?float $value): void
     {
         $this->remaining_effort = $value;

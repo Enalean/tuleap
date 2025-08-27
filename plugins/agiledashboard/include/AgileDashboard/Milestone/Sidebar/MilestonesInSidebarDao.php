@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Milestone\Sidebar;
 
+use Override;
 use Tuleap\Config\ConfigKeyInt;
 use Tuleap\Config\FeatureFlagConfigKey;
 use Tuleap\DB\DataAccessObject;
@@ -34,6 +35,7 @@ final class MilestonesInSidebarDao extends DataAccessObject implements CheckMile
 
     private const SHOULD_SIDEBAR_DISPLAY_LAST_MILESTONES_WHEN_NO_CONFIG = true;
 
+    #[Override]
     public function shouldSidebarDisplayLastMilestones(int $project_id): bool
     {
         $feature_flag = \ForgeConfig::getFeatureFlag(self::FEATURE_FLAG);
@@ -56,6 +58,7 @@ final class MilestonesInSidebarDao extends DataAccessObject implements CheckMile
         return $config === 1;
     }
 
+    #[Override]
     public function duplicate(int $target_project_id, int $source_project_id): void
     {
         $sql = <<<EOSQL
@@ -67,6 +70,7 @@ final class MilestonesInSidebarDao extends DataAccessObject implements CheckMile
         $this->getDB()->run($sql, $target_project_id, $source_project_id);
     }
 
+    #[Override]
     public function activateMilestonesInSidebar(int $project_id): void
     {
         $this->getDB()
@@ -80,6 +84,7 @@ final class MilestonesInSidebarDao extends DataAccessObject implements CheckMile
             );
     }
 
+    #[Override]
     public function deactivateMilestonesInSidebar(int $project_id): void
     {
         $this->getDB()

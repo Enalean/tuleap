@@ -20,16 +20,20 @@
 
 namespace Tuleap\AgileDashboard\Milestone\Criterion\Status;
 
+use Override;
+
 /**
  * @psalm-immutable
  */
 final class StatusClosed implements ISearchOnStatus
 {
+    #[Override]
     public function shouldRetrieveOpenMilestones(): bool
     {
         return false;
     }
 
+    #[Override]
     public function shouldRetrieveClosedMilestones(): bool
     {
         return true;

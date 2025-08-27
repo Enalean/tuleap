@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\AgileDashboard\Workflow;
 
 use Feedback;
+use Override;
 use SimpleXMLElement;
 use Tracker_Artifact_Changeset;
 use Tracker_FormElement_Field;
@@ -49,33 +50,39 @@ class AddToTopBacklog extends Transition_PostAction
         $this->unplanned_artifacts_adder = $unplanned_artifacts_adder;
     }
 
+    #[Override]
     public function getShortName()
     {
         return self::SHORT_NAME;
     }
 
+    #[Override]
     public static function getLabel()
     {
         // Not implemented. We do not support the legacy UI for this new post action
         return '';
     }
 
+    #[Override]
     public function isDefined()
     {
         // Since we do not support the legacy UI, it is always well defined
         return true;
     }
 
+    #[Override]
     public function exportToXml(SimpleXMLElement $root, $xmlMapping)
     {
         $root->addChild(self::XML_TAG_NAME);
     }
 
+    #[Override]
     public function bypassPermissions(Tracker_FormElement_Field $field)
     {
         return false;
     }
 
+    #[Override]
     public function accept(Visitor $visitor)
     {
         $visitor->visitExternalActions($this);
@@ -86,6 +93,7 @@ class AddToTopBacklog extends Transition_PostAction
      *
      * @return void
      */
+    #[Override]
     public function after(Tracker_Artifact_Changeset $changeset)
     {
         try {

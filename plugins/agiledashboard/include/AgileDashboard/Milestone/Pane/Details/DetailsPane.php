@@ -21,6 +21,7 @@
 namespace Tuleap\AgileDashboard\Milestone\Pane\Details;
 
 use AgileDashboard_Pane;
+use Override;
 use TemplateRendererFactory;
 
 /**
@@ -45,6 +46,7 @@ class DetailsPane extends AgileDashboard_Pane
         $this->presenter = $presenter;
     }
 
+    #[Override]
     public function getIdentifier()
     {
         return $this->info->getIdentifier();
@@ -53,6 +55,7 @@ class DetailsPane extends AgileDashboard_Pane
     /**
      * @see AgileDashboard_Pane::getFullContent()
      */
+    #[Override]
     public function getFullContent()
     {
         return $this->getPaneContent();
@@ -61,6 +64,7 @@ class DetailsPane extends AgileDashboard_Pane
     /**
      * @see AgileDashboard_Pane::getMinimalContent()
      */
+    #[Override]
     public function getMinimalContent()
     {
         return '';

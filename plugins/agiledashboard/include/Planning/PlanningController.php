@@ -503,6 +503,7 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
     /**
      * @return BreadCrumbCollection
      */
+    #[Override]
     public function getBreadcrumbs()
     {
         $breadcrumbs = new BreadCrumbCollection();

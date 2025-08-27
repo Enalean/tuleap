@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Workflow\REST\v1;
 
+use Override;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\AgileDashboard\Workflow\AddToTopBacklog;
 use Tuleap\AgileDashboard\Workflow\PostAction\Update\AddToTopBacklogValue;
@@ -42,6 +43,7 @@ class AddToTopBacklogJsonParser implements PostActionUpdateJsonParser
         $this->explicit_backlog_dao = $explicit_backlog_dao;
     }
 
+    #[Override]
     public function accept(array $json): bool
     {
         return isset($json['type']) && $json['type'] === AddToTopBacklog::SHORT_NAME;
@@ -50,6 +52,7 @@ class AddToTopBacklogJsonParser implements PostActionUpdateJsonParser
     /**
      * @throws I18NRestException
      */
+    #[Override]
     public function parse(Workflow $workflow, array $json): PostAction
     {
         $project_id = (int) $workflow->getTracker()->getGroupId();

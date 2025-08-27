@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\AgileDashboard\Milestone\Sidebar;
 
 use DateTime;
+use Override;
 use PFUser;
 use Planning_ArtifactMilestone;
 use PlanningFactory;
@@ -45,6 +46,7 @@ final readonly class PromotedMilestoneBuilder implements BuildPromotedMilestone
     /**
      * @return Option<Planning_ArtifactMilestone>
      */
+    #[Override]
     public function build(Artifact $milestone_artifact, PFUser $user, \Project $project): Option
     {
         if (! $milestone_artifact->userCanView($user)) {

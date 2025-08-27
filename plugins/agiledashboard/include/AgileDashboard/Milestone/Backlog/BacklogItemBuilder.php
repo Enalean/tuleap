@@ -30,11 +30,13 @@ use Tuleap\Tracker\Artifact\Artifact;
  */
 class AgileDashboard_Milestone_Backlog_BacklogItemBuilder implements AgileDashboard_Milestone_Backlog_IBuildBacklogItemAndBacklogItemCollection
 {
+    #[Override]
     public function getCollection()
     {
         return new AgileDashboard_Milestone_Backlog_BacklogItemCollection();
     }
 
+    #[Override]
     public function getItem(Artifact $artifact, ?string $redirect_to_self, bool $is_inconsistent)
     {
         return new BacklogItem($artifact, $is_inconsistent);

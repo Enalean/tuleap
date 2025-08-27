@@ -23,11 +23,13 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\FormElement\Burnup\XML;
 
+use Override;
 use Tuleap\AgileDashboard\FormElement\Burnup;
 use Tuleap\Tracker\FormElement\Field\XML\XMLField;
 
 final class XMLBurnupField extends XMLField
 {
+    #[Override]
     public static function getType(): string
     {
         return Burnup::TYPE;

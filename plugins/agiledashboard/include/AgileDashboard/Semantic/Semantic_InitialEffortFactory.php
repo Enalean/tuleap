@@ -58,6 +58,7 @@ class AgileDashboard_Semantic_InitialEffortFactory implements IBuildSemanticFrom
         return AgileDashBoard_Semantic_InitialEffort::load($tracker);
     }
 
+    #[Override]
     public function getInstanceFromXML(
         SimpleXMLElement $current_semantic_xml,
         SimpleXMLElement $all_semantics_xml,
@@ -87,6 +88,7 @@ class AgileDashboard_Semantic_InitialEffortFactory implements IBuildSemanticFrom
     /**
      * Duplicate the semantic from tracker source to tracker target
      */
+    #[Override]
     public function duplicate(int $from_tracker_id, int $to_tracker_id, array $field_mapping): void
     {
         $row = $this->getDao()->searchByTrackerId($from_tracker_id)->getRow();

@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\ServiceAdministration;
 
+use Override;
+
 /**
  * @psalm-immutable
  */
@@ -51,6 +53,7 @@ final class RedirectURI implements \Stringable
         return new self($uri);
     }
 
+    #[Override]
     public function __toString(): string
     {
         return $this->uri;

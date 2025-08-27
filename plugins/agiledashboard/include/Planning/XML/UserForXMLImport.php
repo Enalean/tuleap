@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Planning\XML;
 
+use Override;
+
 final class UserForXMLImport extends \PFUser
 {
     public function __construct(\PFUser $user)
@@ -29,6 +31,7 @@ final class UserForXMLImport extends \PFUser
         parent::__construct($user->toRow());
     }
 
+    #[Override]
     public function isSuperUser(): bool
     {
         return true;
