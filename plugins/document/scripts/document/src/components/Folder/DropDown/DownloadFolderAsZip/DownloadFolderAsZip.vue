@@ -45,12 +45,15 @@ import { useNamespacedActions, useNamespacedState } from "vuex-composition-helpe
 import type { ConfigurationState } from "../../../../store/configuration";
 import { computed, ref } from "vue";
 import type { PropertiesActions } from "../../../../store/properties/properties-actions";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { PROJECT_NAME } from "../../../../configuration-keys";
 
 const props = defineProps<{ item: Folder }>();
 
-const { project_name, max_archive_size, warning_threshold } = useNamespacedState<
-    Pick<ConfigurationState, "project_name" | "max_archive_size" | "warning_threshold">
->("configuration", ["project_name", "max_archive_size", "warning_threshold"]);
+const project_name = strictInject(PROJECT_NAME);
+const { max_archive_size, warning_threshold } = useNamespacedState<
+    Pick<ConfigurationState, "max_archive_size" | "warning_threshold">
+>("configuration", ["max_archive_size", "warning_threshold"]);
 
 const { getFolderProperties } = useNamespacedActions<PropertiesActions>("properties", [
     "getFolderProperties",
@@ -59,7 +62,7 @@ const { getFolderProperties } = useNamespacedActions<PropertiesActions>("propert
 const is_retrieving_folder_size = ref(false);
 
 const folder_href = computed((): string => {
-    return `/plugins/document/${project_name.value}/folders/${encodeURIComponent(
+    return `/plugins/document/${project_name}/folders/${encodeURIComponent(
         props.item.id,
     )}/download-folder-as-zip`;
 });

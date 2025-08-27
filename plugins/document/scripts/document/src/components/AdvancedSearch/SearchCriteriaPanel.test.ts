@@ -26,6 +26,7 @@ import type { AdvancedSearchParams, SearchDate } from "../../type";
 import { buildAdvancedSearchParams } from "../../helpers/build-advanced-search-params";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 import emitter from "../../helpers/emitter";
+import { ROOT_ID } from "../../configuration-keys";
 
 vi.mock("@tuleap/autocomplete-for-select2", () => {
     return { autocomplete_users_for_select2: vi.fn() };
@@ -42,7 +43,6 @@ describe("SearchCriteriaPanel", () => {
         }
 
         const state = {
-            root_id: 101,
             criteria: [
                 { name: "id", type: "number", title: "Id" },
                 { name: "type", type: "list", title: "Type" },
@@ -75,6 +75,9 @@ describe("SearchCriteriaPanel", () => {
                         },
                     },
                 }),
+                provide: {
+                    [ROOT_ID.valueOf()]: 101,
+                },
             },
         });
 
@@ -157,13 +160,15 @@ describe("SearchCriteriaPanel", () => {
                     modules: {
                         configuration: {
                             state: {
-                                root_id: 101,
                                 criteria: [],
                             },
                             namespaced: true,
                         } as unknown as ConfigurationState,
                     },
                 }),
+                provide: {
+                    [ROOT_ID.valueOf()]: 101,
+                },
             },
         });
 

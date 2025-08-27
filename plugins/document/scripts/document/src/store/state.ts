@@ -21,11 +21,6 @@ import type { RootState } from "../type";
 
 export const state: RootState = {
     configuration: {
-        root_id: 0,
-        project_name: "",
-        project_public_name: "",
-        user_is_admin: false,
-        user_can_create_wiki: false,
         embedded_are_allowed: false,
         is_status_property_used: false,
         is_obsolescence_date_property_used: false,

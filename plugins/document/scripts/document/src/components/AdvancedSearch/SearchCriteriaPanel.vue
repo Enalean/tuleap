@@ -92,13 +92,16 @@ import CriterionOwner from "./Criteria/CriterionOwner.vue";
 import CriterionDate from "./Criteria/CriterionDate.vue";
 import CriterionList from "./Criteria/CriterionList.vue";
 import CriterionNumber from "./Criteria/CriterionNumber.vue";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { ROOT_ID } from "../../configuration-keys";
 
 const props = defineProps<{ query: AdvancedSearchParams; folder_id: number }>();
 
-const { root_id, criteria } = useNamespacedState<Pick<ConfigurationState, "root_id" | "criteria">>(
-    "configuration",
-    ["root_id", "criteria"],
-);
+const root_id = strictInject(ROOT_ID);
+
+const { criteria } = useNamespacedState<Pick<ConfigurationState, "criteria">>("configuration", [
+    "criteria",
+]);
 
 const new_query: Ref<AdvancedSearchParams | null> = ref(null);
 
@@ -140,6 +143,6 @@ function updateCriteriaDate(event: UpdateCriteriaDateEvent): void {
 }
 
 const is_in_root_folder = computed((): boolean => {
-    return props.folder_id === root_id.value;
+    return props.folder_id === root_id;
 });
 </script>

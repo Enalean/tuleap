@@ -25,11 +25,6 @@ import * as getters from "./getters";
 import type { RelativeDatesDisplayPreference } from "@tuleap/tlp-relative-date";
 
 export interface ConfigurationState {
-    readonly root_id: number;
-    readonly project_name: string;
-    readonly project_public_name: string;
-    readonly user_is_admin: boolean;
-    readonly user_can_create_wiki: boolean;
     readonly embedded_are_allowed: boolean;
     readonly is_status_property_used: boolean;
     readonly is_obsolescence_date_property_used: boolean;

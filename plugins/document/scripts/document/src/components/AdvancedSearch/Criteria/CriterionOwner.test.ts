@@ -24,8 +24,8 @@ import type { Select2Plugin } from "tlp";
 import * as autocomplete from "@tuleap/autocomplete-for-select2";
 import * as retrieve_selected_owner from "../../../helpers/owner/retrieve-selected-owner";
 import type { RestUser } from "../../../api/rest-querier";
-import type { ConfigurationState } from "../../../store/configuration";
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
+import { PROJECT_NAME } from "../../../configuration-keys";
 
 vi.mock("@tuleap/autocomplete-for-select2", () => {
     return { autocomplete_users_for_select2: vi.fn() };
@@ -62,14 +62,10 @@ describe("CriterionOwner", () => {
                 value: "jdoe",
             },
             global: {
-                ...getGlobalTestOptions({
-                    modules: {
-                        configuration: {
-                            state: { project_name: "test" } as ConfigurationState,
-                            namespaced: true,
-                        },
-                    },
-                }),
+                ...getGlobalTestOptions({}),
+                provide: {
+                    [PROJECT_NAME.valueOf()]: "test",
+                },
             },
         });
         await vi.runOnlyPendingTimersAsync();

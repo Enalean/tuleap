@@ -20,3 +20,8 @@ import type { StrictInjectionKey } from "@tuleap/vue-strict-inject";
 
 export const USER_ID: StrictInjectionKey<number> = Symbol("user-id");
 export const PROJECT_ID: StrictInjectionKey<number> = Symbol("project-id");
+export const ROOT_ID: StrictInjectionKey<number> = Symbol("root-id");
+export const PROJECT_NAME: StrictInjectionKey<string> = Symbol("project-name");
+export const PROJECT_PUBLIC_NAME: StrictInjectionKey<string> = Symbol("project-public-name");
+export const USER_IS_ADMIN: StrictInjectionKey<boolean> = Symbol("user-is-admin");
+export const USER_CAN_CREATE_WIKI: StrictInjectionKey<boolean> = Symbol("user-can-create-wiki");

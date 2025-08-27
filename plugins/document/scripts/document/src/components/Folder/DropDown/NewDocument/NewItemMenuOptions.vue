@@ -142,13 +142,15 @@ import type { ConfigurationState } from "../../../../store/configuration";
 import { iconForMimeType } from "../../../../helpers/icon-for-mime-type";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { NEW_ITEMS_ALTERNATIVES, OTHER_ITEM_TYPES } from "../../../../injection-keys";
+import { USER_CAN_CREATE_WIKI } from "../../../../configuration-keys";
 
-const { embedded_are_allowed, user_can_create_wiki } = useNamespacedState<
-    Pick<ConfigurationState, "embedded_are_allowed" | "user_can_create_wiki">
->("configuration", ["embedded_are_allowed", "user_can_create_wiki"]);
+const { embedded_are_allowed } = useNamespacedState<
+    Pick<ConfigurationState, "embedded_are_allowed">
+>("configuration", ["embedded_are_allowed"]);
 
 const create_new_item_alternatives = strictInject(NEW_ITEMS_ALTERNATIVES);
 const other_item_types = strictInject(OTHER_ITEM_TYPES);
+const user_can_create_wiki = strictInject(USER_CAN_CREATE_WIKI);
 
 const props = defineProps<{ item: Item }>();
 function showNewDocumentModal(type: ItemType): void {
