@@ -169,6 +169,7 @@ use Tuleap\Tracker\REST\v1\Move\DryRunMover;
 use Tuleap\Tracker\REST\v1\Move\MovePatchAction;
 use Tuleap\Tracker\REST\v1\Move\PostMoveArtifactRESTAddFeedback;
 use Tuleap\Tracker\REST\v1\Move\RestArtifactMover;
+use Tuleap\Tracker\REST\v1\TrackerFieldRepresentations\ArtifactLinkRepresentation;
 use Tuleap\Tracker\REST\WorkflowRestBuilder;
 use Tuleap\Tracker\Semantic\Description\CachedSemanticDescriptionFieldRetriever;
 use Tuleap\Tracker\Semantic\Status\CachedSemanticStatusRetriever;
