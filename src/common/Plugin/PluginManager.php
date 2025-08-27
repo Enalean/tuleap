@@ -19,12 +19,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Psr\Log\NullLogger;
 use Tuleap\DAO\DBTablesDao;
+use Tuleap\DB\DatabaseUUIDV7Factory;
+use Tuleap\DB\DBFactory;
+use Tuleap\ForgeUpgrade\ForgeUpgrade;
 use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\Markdown\ContentInterpretor;
+use Tuleap\Option\Option;
 use Tuleap\Plugin\InvalidPluginNameException;
 use Tuleap\Plugin\RetrieveEnabledPlugins;
 use Tuleap\Plugin\UnableToCreatePluginException;
+use function Psl\Type\string;
 
 class PluginManager implements RetrieveEnabledPlugins // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
@@ -71,10 +77,10 @@ class PluginManager implements RetrieveEnabledPlugins // phpcs:ignore PSR1.Class
                 PluginFactory::instance(),
                 new SiteCache(),
                 new ForgeUpgradeConfig(
-                    new \Tuleap\ForgeUpgrade\ForgeUpgrade(
-                        \Tuleap\DB\DBFactory::getMainTuleapDBConnection()->getDB()->getPdo(),
-                        new \Psr\Log\NullLogger(),
-                        new \Tuleap\DB\DatabaseUUIDV7Factory(),
+                    new ForgeUpgrade(
+                        DBFactory::getMainTuleapDBConnection()->getDB()->getPdo(),
+                        new NullLogger(),
+                        new DatabaseUUIDV7Factory(),
                     )
                 ),
                 CommonMarkInterpreter::build(Codendi_HTMLPurifier::instance())
@@ -217,33 +223,40 @@ class PluginManager implements RetrieveEnabledPlugins // phpcs:ignore PSR1.Class
         return $this->plugin_factory->removePlugin($plugin);
     }
 
-    public function getInstallReadme($name)
+    public function getInstallReadme(string $name): Option
     {
         foreach ($this->plugin_factory->getAllPossiblePluginsDir() as $dir) {
             $path = $dir . '/' . $name;
             if (file_exists($path . '/README.mkd') || file_exists($path . '/README.md') || file_exists($path . '/README.txt') || file_exists($path . '/README')) {
-                return $path . '/README';
+                return Option::fromValue($path . '/README');
             }
         }
-        return false;
+        return Option::nothing(string());
     }
 
     /**
      * Format the readme file of a plugin
      *
-     * Use markdown formatter if README.mkd exists
+     * Use markdown formatter if README.mkd|.md exists
      * Otherwise assume text/plain and put it in <pre> tags
      * If README file doesn't exist, return empty string.
      *
      * @return string html
      */
-    public function fetchFormattedReadme($file)
+    public function fetchFormattedReadme(string $file): string
     {
         if (is_file("$file.mkd")) {
             $content = file_get_contents("$file.mkd");
 
             return $this->commonmark_content_interpretor->getInterpretedContent($content);
         }
+
+        if (is_file("$file.md")) {
+            $content = file_get_contents("$file.md");
+
+            return $this->commonmark_content_interpretor->getInterpretedContent((string) $content);
+        }
+
 
         if (is_file("$file.txt")) {
             return $this->getEscapedReadme(file_get_contents("$file.txt"));

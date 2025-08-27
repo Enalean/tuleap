@@ -23,10 +23,12 @@ declare(strict_types=1);
 
 namespace Tuleap\Plugin;
 
+use Codendi_HTMLPurifier;
 use ForgeConfig;
 use PHPUnit\Framework\MockObject\MockObject;
 use PluginManager;
 use ServiceManager;
+use Tuleap\Markdown\CommonMarkInterpreter;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PluginManagerTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -211,5 +213,85 @@ final class PluginManagerTest extends \Tuleap\Test\PHPUnit\TestCase
         );
 
         $pm->getPluginByName('plugin_name');
+    }
+
+    private function getPluginManagerForReadmeFiles(): PluginManager
+    {
+        return new PluginManager(
+            $this->createMock(\PluginFactory::class),
+            $this->createMock(\SiteCache::class),
+            $this->createMock(\ForgeUpgradeConfig::class),
+            CommonMarkInterpreter::build(Codendi_HTMLPurifier::instance())
+        );
+    }
+
+    public function testItReturnsTheInterpretedMarkdownContentOfReadMeMDFile(): void
+    {
+        $pm = $this->getPluginManagerForReadmeFiles();
+
+        $result = $pm->fetchFormattedReadme(__DIR__ . '/_fixtures/README-files/md/README');
+        self::assertEquals(
+            '<h1>My Awesome plugin</h1>
+<p>Description <strong>bla bla bla</strong></p>
+',
+            $result
+        );
+    }
+
+    public function testItReturnsTheInterpretedMarkdownContentOfReadMeMKDFile(): void
+    {
+        $pm = $this->getPluginManagerForReadmeFiles();
+
+        $result = $pm->fetchFormattedReadme(__DIR__ . '/_fixtures/README-files/mkd/README');
+        self::assertEquals(
+            '<h1>My Awesome plugin</h1>
+<p>Description <strong>bla bla bla</strong></p>
+',
+            $result
+        );
+    }
+
+    public function testItReturnsTheTextContentIfReadmeFileIsTxtFile(): void
+    {
+        $pm = $this->getPluginManagerForReadmeFiles();
+
+        $result = $pm->fetchFormattedReadme(__DIR__ . '/_fixtures/README-files/txt/README');
+        self::assertEquals(
+            '<pre># My Awesome plugin
+
+Description **bla bla bla**
+</pre>',
+            $result
+        );
+    }
+
+    public function testItReturnsTheTextContentIfReadmeFileHasNoExtension(): void
+    {
+        $pm = $this->getPluginManagerForReadmeFiles();
+
+        $result = $pm->fetchFormattedReadme(__DIR__ . '/_fixtures/README-files/README');
+        self::assertEquals(
+            '<pre># My Awesome plugin
+
+Description **bla bla bla**
+</pre>',
+            $result
+        );
+    }
+
+    public function testItReturnsEmptyStringIfTheExtensionIsNotSupported(): void
+    {
+        $pm = $this->getPluginManagerForReadmeFiles();
+
+        $result = $pm->fetchFormattedReadme(__DIR__ . '/_fixtures/README-files/not-supported/README');
+        self::assertSame('', $result);
+    }
+
+    public function testItReturnsEmptyStringIfTheReadMeFileDoesNotExist(): void
+    {
+        $pm = $this->getPluginManagerForReadmeFiles();
+
+        $result = $pm->fetchFormattedReadme(__DIR__ . '/_fixtures/README-files/empty/README');
+        self::assertSame('', $result);
     }
 }

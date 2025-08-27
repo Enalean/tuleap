@@ -19,10 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*
- * PluginsAdministrationViews
- */
-
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptViteAsset;
@@ -30,18 +26,16 @@ use Tuleap\PluginsAdministration\AvailablePluginsPresenter;
 use Tuleap\PluginsAdministration\PluginDisablerVerifier;
 use Tuleap\PluginsAdministration\PluginPropertiesPresenter;
 
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class PluginsAdministrationViews extends Views
 {
-    /** @var PluginManager */
-    private $plugin_manager;
+    private PluginManager $plugin_manager;
 
-    /** @var PluginDependencySolver */
-    private $dependency_solver;
+    private PluginDependencySolver $dependency_solver;
 
-    /**
-     * @var PluginDisablerVerifier
-     */
-    private $plugin_disabler_verifier;
+    private PluginDisablerVerifier $plugin_disabler_verifier;
+
+    public mixed $plugins = null;
 
     public function __construct(&$controler, $view = null)
     {
@@ -135,7 +129,7 @@ class PluginsAdministrationViews extends Views
                 break;
 
             case 'available':
-                $this->_searchPlugins();
+                $this->searchPlugins();
                 $renderer->renderANoFramedPresenter(
                     dgettext('tuleap-pluginsadministration', 'Plugins'),
                     PLUGINSADMINISTRATION_TEMPLATE_DIR,
@@ -145,7 +139,7 @@ class PluginsAdministrationViews extends Views
                 break;
 
             case 'installed':
-                $this->_searchPlugins();
+                $this->searchPlugins();
                 $renderer = new AdminPageRenderer();
                 $renderer->renderANoFramedPresenter(
                     dgettext('tuleap-pluginsadministration', 'Plugins'),
@@ -167,9 +161,12 @@ class PluginsAdministrationViews extends Views
 
     private function getFormattedReadme($name)
     {
-        $readme_file    = $this->plugin_manager->getInstallReadme($name);
-        $readme_content = $this->plugin_manager->fetchFormattedReadme($readme_file);
-        return $readme_content;
+        return $this->plugin_manager->getInstallReadme($name)->match(
+            function (string $readme_file) {
+                return $this->plugin_manager->fetchFormattedReadme($readme_file);
+            },
+            static fn() => ''
+        );
     }
 
     private function getPluginPropertiesPresenter(Plugin $plugin)
@@ -267,12 +264,10 @@ class PluginsAdministrationViews extends Views
         );
     }
 
-    public $_plugins;
-
-    public function _searchPlugins()
+    public function searchPlugins(): void
     {
-        if (! $this->_plugins) {
-            $this->_plugins = [];
+        if (! $this->plugins) {
+            $this->plugins = [];
 
             $plugins = $this->plugin_manager->getAllPlugins();
             foreach ($plugins as $plugin) {
@@ -286,7 +281,7 @@ class PluginsAdministrationViews extends Views
                 $dont_touch    = ! $this->plugin_disabler_verifier->canPluginBeDisabled($plugin);
                 $dont_restrict = $plugin->getScope() !== Plugin::SCOPE_PROJECT;
 
-                $this->_plugins[] = [
+                $this->plugins[] = [
                     'id'            => $plugin->getId(),
                     'name'          => $name,
                     'description'   => $descriptor->getDescription(),
@@ -302,14 +297,14 @@ class PluginsAdministrationViews extends Views
     private function getInstalledPluginsPresenter()
     {
         usort(
-            $this->_plugins,
+            $this->plugins,
             function ($a, $b) {
                 return strcasecmp($a['name'], $b['name']);
             }
         );
 
         $plugins = [];
-        foreach ($this->_plugins as $plugin_row) {
+        foreach ($this->plugins as $plugin_row) {
             $plugin = $this->plugin_manager->getPluginById($plugin_row['id']);
             if (! $plugin) {
                 continue;

@@ -14,4 +14,3 @@ Configuration Instructions
 2. Select "Project Links"
 3. Configure properties
 4. Make the plugin available.
-
