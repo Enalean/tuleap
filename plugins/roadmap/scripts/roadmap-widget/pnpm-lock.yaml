@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@tuleap/dom':
+    specifier: workspace:^
+    version: link:../../../../lib/frontend/dom
   '@tuleap/svg-arrow-path':
     specifier: workspace:^
     version: link:../../../../lib/frontend/svg-arrow-path
@@ -20,6 +23,9 @@ dependencies:
   '@tuleap/tooltip':
     specifier: workspace:*
     version: link:../../../../lib/frontend/tooltip
+  '@tuleap/vue-strict-inject':
+    specifier: workspace:^
+    version: link:../../../../lib/frontend/vue-strict-inject
   '@tuleap/vue3-breadcrumb-privacy':
     specifier: workspace:^
     version: link:../../../../lib/frontend/vue3-breadcrumb-privacy

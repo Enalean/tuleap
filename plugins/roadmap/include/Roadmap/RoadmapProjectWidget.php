@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Roadmap;
 
 use Codendi_Request;
+use Override;
 use Project;
 use TemplateRenderer;
 use TrackerFactory;
@@ -69,6 +70,7 @@ final class RoadmapProjectWidget extends \Widget
         );
     }
 
+    #[Override]
     public function getContent(): string
     {
         Prometheus::instance()->increment(
@@ -84,30 +86,36 @@ final class RoadmapProjectWidget extends \Widget
                 $this->lvl2_iteration_tracker_id,
                 $this->default_timescale,
                 $this->getCurrentUser(),
+                $this->dashboard_id
             )
         );
     }
 
+    #[Override]
     public function isAjax(): bool
     {
         return false;
     }
 
+    #[Override]
     public function getIcon(): string
     {
         return 'fa-stream';
     }
 
+    #[Override]
     public function isUnique(): bool
     {
         return false;
     }
 
+    #[Override]
     public function getTitle(): string
     {
         return $this->title ?: dgettext('tuleap-roadmap', 'Roadmap');
     }
 
+    #[Override]
     public function getCategory(): string
     {
         return dgettext('tuleap-tracker', 'Trackers');
@@ -116,11 +124,13 @@ final class RoadmapProjectWidget extends \Widget
     /**
      * @param string $widget_id
      */
+    #[Override]
     public function hasPreferences($widget_id): bool
     {
         return true;
     }
 
+    #[Override]
     public function getPreferences(int $widget_id, int $content_id): string
     {
         return $this->renderer->renderToString(
@@ -141,6 +151,7 @@ final class RoadmapProjectWidget extends \Widget
         );
     }
 
+    #[Override]
     public function getInstallPreferences(): string
     {
         return $this->renderer->renderToString(
@@ -166,6 +177,7 @@ final class RoadmapProjectWidget extends \Widget
      * @param int|string $owner_id
      * @param string     $owner_type
      */
+    #[Override]
     public function cloneContent(
         Project $template_project,
         Project $new_project,
@@ -223,6 +235,7 @@ final class RoadmapProjectWidget extends \Widget
     /**
      * @param string $id
      */
+    #[Override]
     public function loadContent($id): void
     {
         $row = $this->dao->searchContent(
@@ -244,6 +257,7 @@ final class RoadmapProjectWidget extends \Widget
     /**
      * @return false|int
      */
+    #[Override]
     public function create(Codendi_Request $request)
     {
         $roadmap_parameters = $request->get('roadmap');
@@ -293,6 +307,7 @@ final class RoadmapProjectWidget extends \Widget
         return $timescale;
     }
 
+    #[Override]
     public function updatePreferences(Codendi_Request $request): bool
     {
         $id = (int) $request->get('content_id');
@@ -344,11 +359,13 @@ final class RoadmapProjectWidget extends \Widget
     /**
      * @param string $id
      */
+    #[Override]
     public function destroy($id): void
     {
         $this->dao->delete((int) $id, (int) $this->owner_id, $this->owner_type);
     }
 
+    #[Override]
     public function getJavascriptAssets(): array
     {
         return [
@@ -373,6 +390,7 @@ final class RoadmapProjectWidget extends \Widget
         );
     }
 
+    #[Override]
     public function exportAsXML(): ?\SimpleXMLElement
     {
         $widget = new \SimpleXMLElement('<widget />');

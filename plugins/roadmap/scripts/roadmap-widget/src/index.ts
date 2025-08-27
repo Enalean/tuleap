@@ -30,6 +30,8 @@ import type { TimeScale } from "./type";
 import { Settings } from "luxon";
 import "./style/widget-roadmap.scss";
 import type { VueGettextProvider } from "./helpers/vue-gettext-provider";
+import { getAttributeOrThrow } from "@tuleap/dom";
+import { DASHBOARD_ID } from "./injection-symbols";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const timezone = document.body.dataset.userTimezone;
@@ -47,10 +49,14 @@ document.addEventListener("DOMContentLoaded", async () => {
             continue;
         }
 
-        const roadmap_id = Number(vue_mount_point.dataset.roadmapId);
-        if (!roadmap_id) {
-            continue;
-        }
+        const dashboard_id = JSON.parse(getAttributeOrThrow(vue_mount_point, "data-dashboard-id"));
+        const roadmap_id = JSON.parse(getAttributeOrThrow(vue_mount_point, "data-roadmap-id"));
+        const should_load_lvl1_iterations = JSON.parse(
+            getAttributeOrThrow(vue_mount_point, "data-should-load-lvl1-iterations"),
+        );
+        const should_load_lvl2_iterations = JSON.parse(
+            getAttributeOrThrow(vue_mount_point, "data-should-load-lvl2-iterations"),
+        );
 
         const gettext_plugin = await initVueGettext(
             createGettext,
@@ -67,8 +73,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         const initial_root_state: RootState = {
             gettext_provider,
             locale_bcp47: toBCP47(document.body.dataset.userLocale || "en_US"),
-            should_load_lvl1_iterations: Boolean(vue_mount_point.dataset.shouldLoadLvl1Iterations),
-            should_load_lvl2_iterations: Boolean(vue_mount_point.dataset.shouldLoadLvl2Iterations),
+            should_load_lvl1_iterations,
+            should_load_lvl2_iterations,
         } as RootState;
 
         const default_timescale: TimeScale = ((
@@ -92,6 +98,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             .use(VueDOMPurifyHTML)
             .use(gettext_plugin)
             .use(createInitializedStore(initial_root_state, default_timescale))
+            .provide(DASHBOARD_ID, dashboard_id)
             .mount(vue_mount_point);
     }
 });

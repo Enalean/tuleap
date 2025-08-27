@@ -44,6 +44,7 @@ final class RoadmapWidgetPresenter
         bool $should_load_lvl1_iterations,
         bool $should_load_lvl2_iterations,
         string $default_timescale,
+        public int $dashboard_id,
     ) {
         $this->roadmap_id                  = $roadmap_id;
         $this->visible_natures             = \json_encode(array_values($visible_natures), \JSON_THROW_ON_ERROR);

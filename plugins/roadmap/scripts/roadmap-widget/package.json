@@ -6,11 +6,13 @@
   "private": true,
   "type": "module",
   "dependencies": {
+    "@tuleap/dom": "workspace:^",
     "@tuleap/svg-arrow-path": "workspace:^",
     "@tuleap/tlp-fetch": "workspace:*",
     "@tuleap/tlp-popovers": "workspace:*",
     "@tuleap/tlp-swatch-colors": "workspace:*",
     "@tuleap/tooltip": "workspace:*",
+    "@tuleap/vue-strict-inject": "workspace:^",
     "@tuleap/vue3-breadcrumb-privacy": "workspace:^",
     "@tuleap/vue3-gettext-init": "workspace:^",
     "@vueuse/core": "^8.7.3",
