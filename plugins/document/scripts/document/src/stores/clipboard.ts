@@ -50,14 +50,14 @@ export interface PastePayload {
     current_folder: Folder;
 }
 
-function buildBaseStorageKey(project_id: string, user_id: string): string {
+function buildBaseStorageKey(project_id: number, user_id: number): string {
     return `document_clipboard_state_${project_id}_${user_id}_`;
 }
 
 export function useClipboardStore(
     store: Store<RootState>,
-    project_id: string,
-    user_id: string,
+    project_id: number,
+    user_id: number,
     pinia?: Pinia | null | undefined,
 ): ClipboardStore {
     const base_storage_key = buildBaseStorageKey(project_id, user_id);

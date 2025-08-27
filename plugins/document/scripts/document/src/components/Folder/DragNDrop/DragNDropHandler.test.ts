@@ -26,6 +26,7 @@ import DragNDropHandler from "./DragNDropHandler.vue";
 import emitter from "../../../helpers/emitter";
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 import { buildFakeItem } from "../../../helpers/item-builder";
+import { USER_ID } from "../../../configuration-keys";
 
 vi.mock("../../../helpers/emitter");
 
@@ -69,7 +70,6 @@ describe("DragNDropHandler", () => {
                             state: {
                                 is_changelog_proposed_after_dnd,
                                 is_filename_pattern_enforced,
-                                user_id: CURRENT_USER_ID,
                                 max_files_dragndrop: 2,
                                 max_size_upload,
                             },
@@ -88,6 +88,9 @@ describe("DragNDropHandler", () => {
                         createNewFileVersion: create_new_file_version_mock,
                     },
                 }),
+                provide: {
+                    [USER_ID.valueOf()]: CURRENT_USER_ID,
+                },
             },
         });
         closest_mock.mockReturnValue(false);

@@ -24,7 +24,7 @@ import QuickLookWiki from "./QuickLookWiki.vue";
 import { TYPE_WIKI } from "../../constants";
 import type { Item } from "../../type";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
-import type { ConfigurationState } from "../../store/configuration";
+import { PROJECT_ID } from "../../configuration-keys";
 
 describe("QuickLookWiki", () => {
     it("renders quick look for wiki document", () => {
@@ -34,16 +34,10 @@ describe("QuickLookWiki", () => {
 
         const wrapper = shallowMount(QuickLookWiki, {
             global: {
-                ...getGlobalTestOptions({
-                    modules: {
-                        configuration: {
-                            state: {
-                                project_id: 101,
-                            } as unknown as ConfigurationState,
-                            namespaced: true,
-                        },
-                    },
-                }),
+                ...getGlobalTestOptions({}),
+                provide: {
+                    [PROJECT_ID.valueOf()]: 101,
+                },
             },
             props: { item: item },
         });

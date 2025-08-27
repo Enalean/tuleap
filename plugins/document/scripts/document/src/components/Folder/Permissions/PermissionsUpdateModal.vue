@@ -78,10 +78,11 @@ import { CAN_MANAGE, CAN_READ, CAN_WRITE } from "../../../constants";
 import type { Item } from "../../../type";
 import { computed, onBeforeMount, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { useNamespacedState, useStore } from "vuex-composition-helpers";
-import type { ConfigurationState } from "../../../store/configuration";
 import type { ErrorState } from "../../../store/error/module";
 import type { PermissionsState } from "../../../store/permissions/permissions-default-state";
 import { useGettext } from "vue3-gettext";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { PROJECT_ID } from "../../../configuration-keys";
 
 const { $gettext } = useGettext();
 const $store = useStore();
@@ -100,9 +101,7 @@ const updated_permissions = ref({
 const form = ref<HTMLFormElement>();
 let modal: Modal | null = null;
 
-const { project_id } = useNamespacedState<Pick<ConfigurationState, "project_id">>("configuration", [
-    "project_id",
-]);
+const project_id = strictInject(PROJECT_ID);
 const { has_modal_error } = useNamespacedState<Pick<ErrorState, "has_modal_error">>("error", [
     "has_modal_error",
 ]);
@@ -152,7 +151,7 @@ function setPermissionsToUpdateFromItem(): void {
 async function show(): Promise<void> {
     modal?.show();
     try {
-        await $store.dispatch("permissions/loadProjectUserGroupsIfNeeded", project_id.value);
+        await $store.dispatch("permissions/loadProjectUserGroupsIfNeeded", project_id);
     } catch (err) {
         await handleErrors($store, err);
         modal?.hide();

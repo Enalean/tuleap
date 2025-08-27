@@ -36,18 +36,17 @@
 import type { Item } from "../../../type";
 import emitter from "../../../helpers/emitter";
 import { useClipboardStore } from "../../../stores/clipboard";
-import { useNamespacedState } from "vuex-composition-helpers";
-import type { ConfigurationState } from "../../../store/configuration";
 import { useStore } from "vuex";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { PROJECT_ID, USER_ID } from "../../../configuration-keys";
 
 const store = useStore();
 
 const props = defineProps<{ item: Item }>();
 
-const { project_id, user_id } = useNamespacedState<
-    Pick<ConfigurationState, "project_id" | "user_id">
->("configuration", ["project_id", "user_id"]);
-const clipboard = useClipboardStore(store, project_id.value, user_id.value);
+const user_id = strictInject(USER_ID);
+const project_id = strictInject(PROJECT_ID);
+const clipboard = useClipboardStore(store, project_id, user_id);
 
 function doCopyItem(): void {
     if (!clipboard.pasting_in_progress) {

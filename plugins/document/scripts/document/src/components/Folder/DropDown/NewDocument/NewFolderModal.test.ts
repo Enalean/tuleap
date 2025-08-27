@@ -26,6 +26,7 @@ import * as tlp_modal from "@tuleap/tlp-modal";
 import emitter from "../../../../helpers/emitter";
 import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
 import { nextTick } from "vue";
+import { PROJECT_ID } from "../../../../configuration-keys";
 
 vi.mock("tlp", () => {
     return { datePicker: vi.fn() };
@@ -100,6 +101,9 @@ describe("NewFolderModal", () => {
                         current_folder,
                     },
                 }),
+                provide: {
+                    [PROJECT_ID.valueOf()]: 101,
+                },
             },
         });
     }

@@ -89,8 +89,8 @@
 import ItemPermissionErrorSvg from "../../svg/error/ItemPermissionErrorSvg.vue";
 import { computed, ref } from "vue";
 import { useGettext } from "vue3-gettext";
-import { useNamespacedState } from "vuex-composition-helpers";
-import type { ConfigurationState } from "../../../store/configuration";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { PROJECT_ID } from "../../../configuration-keys";
 
 const { $gettext } = useGettext();
 
@@ -102,9 +102,7 @@ defineProps<{
 let error = ref("");
 let mail_content = ref("");
 
-const { project_id } = useNamespacedState<Pick<ConfigurationState, "project_id">>("configuration", [
-    "project_id",
-]);
+const project_id = strictInject(PROJECT_ID);
 
 const form_anchor = ref<InstanceType<typeof HTMLFormElement>>();
 

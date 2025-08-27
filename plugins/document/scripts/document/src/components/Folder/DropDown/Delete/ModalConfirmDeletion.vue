@@ -117,7 +117,8 @@ import { useGettext } from "vue3-gettext";
 import { useRouter } from "../../../../helpers/use-router";
 import { useClipboardStore } from "../../../../stores/clipboard";
 import { useStore } from "vuex";
-import type { ConfigurationState } from "../../../../store/configuration";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { PROJECT_ID, USER_ID } from "../../../../configuration-keys";
 
 const props = defineProps<{ item: Item }>();
 
@@ -140,11 +141,9 @@ const { showPostDeletionNotification, updateCurrentlyPreviewedItem } = useMutati
 ]);
 const { resetModalError } = useNamespacedMutations("error", ["resetModalError"]);
 
-const { project_id, user_id } = useNamespacedState<
-    Pick<ConfigurationState, "project_id" | "user_id">
->("configuration", ["project_id", "user_id"]);
-
-const clipboard = useClipboardStore(useStore(), project_id.value, user_id.value);
+const user_id = strictInject(USER_ID);
+const project_id = strictInject(PROJECT_ID);
+const clipboard = useClipboardStore(useStore(), project_id, user_id);
 
 const modal = ref<Modal | null>(null);
 

@@ -62,16 +62,14 @@
 import { sprintf } from "sprintf-js";
 import type { Wiki } from "../../../../type";
 import type { ItemPath } from "../../../../store/actions-helpers/build-parent-paths";
-import { useNamespacedState } from "vuex-composition-helpers";
-import type { ConfigurationState } from "../../../../store/configuration";
 import { computed, ref } from "vue";
 import { useGettext } from "vue3-gettext";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { PROJECT_ID } from "../../../../configuration-keys";
 
 const props = defineProps<{ item: Wiki; wikiPageReferencers: Array<ItemPath> }>();
 
-const { project_id } = useNamespacedState<Pick<ConfigurationState, "project_id">>("configuration", [
-    "project_id",
-]);
+const project_id = strictInject(PROJECT_ID);
 
 const is_option_checked = ref(false);
 
@@ -103,7 +101,7 @@ function processInput($event: Event): void {
 
 function getWikiPageUrl(referencer: ItemPath): string {
     return `/plugins/docman/?group_id=${encodeURIComponent(
-        project_id.value,
+        project_id,
     )}&action=show&id=${encodeURIComponent(referencer.id)}`;
 }
 </script>

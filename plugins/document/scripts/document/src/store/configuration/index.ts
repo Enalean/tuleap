@@ -25,8 +25,6 @@ import * as getters from "./getters";
 import type { RelativeDatesDisplayPreference } from "@tuleap/tlp-relative-date";
 
 export interface ConfigurationState {
-    readonly user_id: number;
-    readonly project_id: number;
     readonly root_id: number;
     readonly project_name: string;
     readonly project_public_name: string;

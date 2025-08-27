@@ -32,6 +32,7 @@ import {
     TYPE_WIKI,
 } from "../../../constants";
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
+import { PROJECT_ID } from "../../../configuration-keys";
 
 describe("DropDownMenu", () => {
     function createWrapper(item: Item): VueWrapper<InstanceType<typeof DropDownMenu>> {
@@ -42,7 +43,6 @@ describe("DropDownMenu", () => {
                     modules: {
                         configuration: {
                             state: {
-                                project_id: 101,
                                 is_deletion_allowed: true,
                             } as unknown as ConfigurationState,
                             namespaced: true,
@@ -51,6 +51,9 @@ describe("DropDownMenu", () => {
                 }),
                 stubs: {
                     RouterLink: RouterLinkStub,
+                },
+                provide: {
+                    [PROJECT_ID.valueOf()]: 101,
                 },
             },
         });

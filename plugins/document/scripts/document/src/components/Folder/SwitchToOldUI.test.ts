@@ -26,6 +26,7 @@ import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 import type { RouteLocationNormalized } from "vue-router";
 import * as router from "vue-router";
 import type { Folder, RootState } from "../../type";
+import { PROJECT_ID } from "../../configuration-keys";
 
 vi.mock("vue-router");
 
@@ -38,16 +39,13 @@ describe("SwitchToOldUI", () => {
             return shallowMount(SwitchToOldUI, {
                 global: {
                     ...getGlobalTestOptions({
-                        modules: {
-                            configuration: {
-                                state: { project_id: 101 },
-                                namespaced: true,
-                            },
-                        },
                         state: {
                             current_folder,
                         } as unknown as RootState,
                     }),
+                    provide: {
+                        [PROJECT_ID.valueOf()]: 101,
+                    },
                 },
             });
         };

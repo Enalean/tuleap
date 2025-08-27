@@ -23,8 +23,8 @@ import LinkCellTitle from "./LinkCellTitle.vue";
 import { shallowMount } from "@vue/test-utils";
 import { TYPE_LINK } from "../../../constants";
 import type { Link } from "../../../type";
-import type { ConfigurationState } from "../../../store/configuration";
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
+import { PROJECT_ID } from "../../../configuration-keys";
 
 describe("LinkCellTitle", () => {
     it(`should render link title`, () => {
@@ -38,14 +38,10 @@ describe("LinkCellTitle", () => {
         const wrapper = shallowMount(LinkCellTitle, {
             props: { item },
             global: {
-                ...getGlobalTestOptions({
-                    modules: {
-                        configuration: {
-                            state: { project_id: 101 } as unknown as ConfigurationState,
-                            namespaced: true,
-                        },
-                    },
-                }),
+                ...getGlobalTestOptions({}),
+                provide: {
+                    [PROJECT_ID.valueOf()]: 101,
+                },
             },
         });
 

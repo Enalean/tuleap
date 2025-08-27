@@ -53,12 +53,16 @@ import type { ConfigurationState } from "../../../../store/configuration";
 import type { PropertiesState } from "../../../../store/properties/module";
 import { computed, onMounted } from "vue";
 import type { PropertiesActions } from "../../../../store/properties/properties-actions";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { PROJECT_ID } from "../../../../configuration-keys";
 
 const props = defineProps<{
     currentlyUpdatedItem: Item;
     propertyToUpdate: Array<Property>;
     value: string;
 }>();
+
+const project_id = strictInject(PROJECT_ID);
 
 const { is_obsolescence_date_property_used } = useNamespacedState<
     Pick<ConfigurationState, "is_obsolescence_date_property_used">
@@ -78,7 +82,7 @@ const { loadProjectProperties } = useNamespacedActions<PropertiesActions>("prope
 
 onMounted((): void => {
     if (!has_loaded_properties.value) {
-        loadProjectProperties();
+        loadProjectProperties(project_id);
     }
 });
 </script>

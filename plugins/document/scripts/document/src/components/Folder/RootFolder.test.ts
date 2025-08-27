@@ -23,6 +23,7 @@ import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import RootFolder from "./RootFolder.vue";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
+import { PROJECT_ID } from "../../configuration-keys";
 
 vi.mock("tlp", () => {
     return { datePicker: vi.fn() };
@@ -51,6 +52,9 @@ describe("RootFolder", () => {
                         resetAscendantHierarchy: reset_ascendent_hierarchy,
                     },
                 }),
+                provide: {
+                    [PROJECT_ID.valueOf()]: 101,
+                },
             },
         });
     }

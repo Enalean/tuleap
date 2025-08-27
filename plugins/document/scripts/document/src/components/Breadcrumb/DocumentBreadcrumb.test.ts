@@ -24,6 +24,7 @@ import { RouterLinkStub, shallowMount } from "@vue/test-utils";
 import type { Embedded, Folder, Item, RootState } from "../../type";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 import type { ConfigurationState } from "../../store/configuration";
+import { PROJECT_ID } from "../../configuration-keys";
 
 describe("DocumentBreadcrumb", () => {
     function createWrapper(
@@ -44,7 +45,6 @@ describe("DocumentBreadcrumb", () => {
                                 project_url: " /project",
                                 privacy: "private",
                                 project_flags: [],
-                                project_id: "101",
                                 project_public_name: "My project",
                             } as unknown as ConfigurationState,
                             namespaced: true,
@@ -59,6 +59,9 @@ describe("DocumentBreadcrumb", () => {
                 }),
                 stubs: {
                     RouterLink: RouterLinkStub,
+                },
+                provide: {
+                    [PROJECT_ID.valueOf()]: 101,
                 },
             },
         });

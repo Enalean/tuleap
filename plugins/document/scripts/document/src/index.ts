@@ -40,6 +40,7 @@ import {
 import type { ConfigurationState } from "./store/configuration";
 import type { SearchCriterion, SearchListOption } from "./type";
 import { getRelativeDateUserPreferenceOrThrow } from "@tuleap/tlp-relative-date";
+import { PROJECT_ID, USER_ID } from "./configuration-keys";
 
 interface MustacheCriterion {
     readonly name: string;
@@ -152,8 +153,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
     const configuration_state: ConfigurationState = {
-        user_id,
-        project_id,
         root_id,
         project_name,
         project_public_name,
@@ -203,6 +202,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     );
     app.provide(NEW_ITEMS_ALTERNATIVES, create_new_item_alternatives);
     app.provide(OTHER_ITEM_TYPES, other_item_types);
+    app.provide(USER_ID, user_id).provide(PROJECT_ID, project_id);
     app.use(VueDOMPurifyHTML);
 
     app.mount(vue_mount_point);

@@ -26,6 +26,7 @@ import type { ItemFile, Property } from "../../../../../type";
 import { getGlobalTestOptions } from "../../../../../helpers/global-options-for-test";
 import type { ConfigurationState } from "../../../../../store/configuration";
 import type { PropertiesState } from "../../../../../store/properties/module";
+import { PROJECT_ID } from "../../../../../configuration-keys";
 
 vi.mock("../../../../../helpers/emitter");
 
@@ -77,6 +78,9 @@ describe("OtherInformationPropertiesForCreate", () => {
                         },
                     },
                 }),
+                provide: {
+                    [PROJECT_ID.valueOf()]: 101,
+                },
             },
         });
     }

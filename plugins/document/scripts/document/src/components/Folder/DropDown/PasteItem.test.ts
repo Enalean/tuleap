@@ -19,7 +19,6 @@
 
 import type { Mock } from "vitest";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { ConfigurationState } from "../../../store/configuration";
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 import { createTestingPinia } from "@pinia/testing";
 import type { VueWrapper } from "@vue/test-utils";
@@ -28,15 +27,16 @@ import PasteItem from "./PasteItem.vue";
 import * as check_item_title from "../../../helpers/properties-helpers/check-item-title";
 import * as clipboard_helpers from "../../../helpers/clipboard/clipboard-helpers";
 import {
-    TYPE_FOLDER,
-    TYPE_EMPTY,
     CLIPBOARD_OPERATION_COPY,
     CLIPBOARD_OPERATION_CUT,
+    TYPE_EMPTY,
+    TYPE_FOLDER,
 } from "../../../constants";
 import type { Folder, Item, RootState } from "../../../type";
 import { useClipboardStore } from "../../../stores/clipboard";
 import type { Store } from "vuex";
 import emitter from "../../../helpers/emitter";
+import { PROJECT_ID, USER_ID } from "../../../configuration-keys";
 
 const mocked_store = { store: { dispatch: vi.fn() } } as unknown as Store<RootState>;
 
@@ -74,20 +74,11 @@ describe("PasteItem", () => {
             createSpy: vi.fn,
         });
 
-        store = useClipboardStore(mocked_store, "1", "1", pinia);
+        store = useClipboardStore(mocked_store, 1, 1, pinia);
         return shallowMount(PasteItem, {
             global: {
                 ...getGlobalTestOptions(
                     {
-                        modules: {
-                            configuration: {
-                                state: {
-                                    user_id: "1",
-                                    project_id: "1",
-                                } as ConfigurationState,
-                                namespaced: true,
-                            },
-                        },
                         state: {
                             current_folder,
                             folder_content: [],
@@ -95,6 +86,10 @@ describe("PasteItem", () => {
                     },
                     pinia,
                 ),
+                provide: {
+                    [USER_ID.valueOf()]: 1,
+                    [PROJECT_ID.valueOf()]: 1,
+                },
             },
             props: { destination },
         });
