@@ -84,11 +84,13 @@ function initTrackerToBeCreatedWithSelectedTracker(state: State, selected_tracke
     const name = selected_tracker.name;
     const color = selected_tracker.tlp_color;
     const shortname = getSlugifiedShortname(name);
+    const description = selected_tracker.description;
 
     state.tracker_to_be_created = {
         name,
         shortname,
         color,
+        description,
     };
 }
 
@@ -97,6 +99,7 @@ export function reinitTrackerToBeCreatedData(state: State): void {
         name: "",
         shortname: "",
         color: state.default_tracker_color,
+        description: "",
     };
 }
 
@@ -132,6 +135,10 @@ export function setTrackerName(state: State, name: string): void {
     if (state.is_in_slugify_mode) {
         setTrackerShortName(state, getSlugifiedShortname(name));
     }
+}
+
+export function setTrackerDescription(state: State, description: string): void {
+    state.tracker_to_be_created.description = description;
 }
 
 export function setTrackerShortName(state: State, shortname: string): void {

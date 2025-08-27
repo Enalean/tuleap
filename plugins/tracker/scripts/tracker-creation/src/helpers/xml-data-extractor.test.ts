@@ -133,10 +133,11 @@ describe("xml-data-extractor", () => {
 
         const result = await extractNameAndShortnameFromXmlFile(file);
 
-        expect(result).toEqual({
+        expect(result).toStrictEqual({
             name: "Bugs",
             shortname: "bugs_tracker",
             color: "peggy-pink",
+            description: "",
         });
     });
 
@@ -156,10 +157,58 @@ describe("xml-data-extractor", () => {
 
         const result = await extractNameAndShortnameFromXmlFile(file);
 
-        expect(result).toEqual({
+        expect(result).toStrictEqual({
             name: "Bugs",
             shortname: "bugs_tracker",
             color: "inca-silver",
+            description: "",
+        });
+    });
+
+    it("sets an empty description when it is missing from the XML", async () => {
+        const file = new File(
+            [
+                `<tracker instantiate_for_new_projects="1">
+                    <name>Bugs</name>
+                    <item_name>bugs_tracker</item_name>
+                    <color>peggy-pink</color>
+                </tracker>`,
+            ],
+            "tracker.xml",
+            { type: "text/xml" },
+        );
+
+        const result = await extractNameAndShortnameFromXmlFile(file);
+
+        expect(result).toStrictEqual({
+            name: "Bugs",
+            shortname: "bugs_tracker",
+            color: "peggy-pink",
+            description: "",
+        });
+    });
+
+    it("retrieves the description from the XML", async () => {
+        const file = new File(
+            [
+                `<tracker instantiate_for_new_projects="1">
+                    <name>Bugs</name>
+                    <item_name>bugs_tracker</item_name>
+                    <color>peggy-pink</color>
+                    <description>Some pretty description</description>
+                </tracker>`,
+            ],
+            "tracker.xml",
+            { type: "text/xml" },
+        );
+
+        const result = await extractNameAndShortnameFromXmlFile(file);
+
+        expect(result).toStrictEqual({
+            name: "Bugs",
+            shortname: "bugs_tracker",
+            color: "peggy-pink",
+            description: "Some pretty description",
         });
     });
 });

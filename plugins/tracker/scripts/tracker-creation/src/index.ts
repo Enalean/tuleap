@@ -121,6 +121,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             name: "",
             shortname: "",
             color: tracker_colors.default_color,
+            description: "",
         },
         has_form_been_submitted: false,
         is_a_xml_file_selected: false,
