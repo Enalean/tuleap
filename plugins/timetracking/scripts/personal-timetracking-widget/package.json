@@ -8,6 +8,7 @@
   "dependencies": {
     "@tuleap/burningparrot-theme": "workspace:*",
     "@tuleap/core-rest-api-types": "workspace:*",
+    "@tuleap/dom": "workspace:^",
     "@tuleap/fault": "workspace:*",
     "@tuleap/fetch-result": "workspace:*",
     "@tuleap/option": "workspace:*",
@@ -18,6 +19,7 @@
     "@tuleap/tlp-date-picker": "workspace:^",
     "@tuleap/tlp-modal": "workspace:*",
     "@tuleap/tlp-popovers": "workspace:*",
+    "@tuleap/vue-strict-inject": "workspace:^",
     "@tuleap/vue3-gettext-init": "workspace:*",
     "neverthrow": "^6.0.0",
     "pinia": "^2.0.21",
