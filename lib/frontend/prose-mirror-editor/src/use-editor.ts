@@ -22,6 +22,7 @@ import { EditorState } from "prosemirror-state";
 import { EditorView } from "prosemirror-view";
 import { DOMParser } from "prosemirror-model";
 import { dropCursor } from "prosemirror-dropcursor";
+import { history } from "prosemirror-history";
 import { buildCustomSchema } from "./custom_schema";
 import type { EditorNodes } from "./custom_schema";
 import type { PluginDropFile, PluginInput, SerializeDOM } from "./plugins";
@@ -103,6 +104,7 @@ export async function useEditor(
         initPluginCloseMarksAfterSpace(),
         ...initCrossReferencesPlugins(project_id),
         initAddMarkAfterEnterPlugin(buildAddMarkAfterEnterPluginMap(schema, project_id)),
+        history({ newGroupDelay: 250 }),
     ];
 
     const state: EditorState = getState(initial_content);
