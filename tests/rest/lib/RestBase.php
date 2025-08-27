@@ -357,18 +357,19 @@ class RestBase extends TestCase
     protected function getArtifacts(int $tracker_id): array
     {
         $artifacts = $this->cache->getArtifacts($tracker_id);
-        if (! $artifacts) {
-            $query = http_build_query(['order' => 'asc']);
-
-            $artifacts = Json\decode(
-                $this->getResponseByName(
-                    REST_TestDataBuilder::ADMIN_USER_NAME,
-                    $this->request_factory->createRequest('GET', "trackers/$tracker_id/artifacts?$query")
-                )->getBody()->getContents(),
-            );
-
-            $this->cache->setArtifacts($tracker_id, $artifacts);
+        if ($artifacts !== null) {
+            return $artifacts;
         }
+
+        $query     = http_build_query(['order' => 'asc']);
+        $artifacts = Json\decode(
+            $this->getResponseByName(
+                REST_TestDataBuilder::ADMIN_USER_NAME,
+                $this->request_factory->createRequest('GET', "trackers/$tracker_id/artifacts?$query")
+            )->getBody()->getContents(),
+        );
+
+        $this->cache->setArtifacts($tracker_id, $artifacts);
         return $artifacts;
     }
 
