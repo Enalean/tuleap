@@ -21,11 +21,11 @@ namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder;
 
 use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_Burndown;
-use Tracker_FormElement_Field_CrossReferences;
 use Tracker_FormElement_FieldVisitor;
 use Tuleap\Tracker\FormElement\Field\ArtifactId\ArtifactIdField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\Computed\ComputedField;
+use Tuleap\Tracker\FormElement\Field\CrossReferences\CrossReferencesField;
 use Tuleap\Tracker\FormElement\Field\Date\DateField;
 use Tuleap\Tracker\FormElement\Field\Files\FilesField;
 use Tuleap\Tracker\FormElement\Field\Float\FloatField;
@@ -149,7 +149,7 @@ final class GreaterThanFieldComparisonVisitor implements Tracker_FormElement_Fie
         return null;
     }
 
-    public function visitCrossReferences(Tracker_FormElement_Field_CrossReferences $field)
+    public function visitCrossReferences(CrossReferencesField $field)
     {
         return null;
     }

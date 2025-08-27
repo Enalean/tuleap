@@ -24,12 +24,12 @@ namespace Tuleap\Tracker\Artifact\ArtifactsDeletion;
 
 use Tracker_Artifact_ChangesetValue_File;
 use Tracker_FormElement_Field_Burndown;
-use Tracker_FormElement_Field_CrossReferences;
 use Tracker_FormElement_FieldVisitor;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\ArtifactId\ArtifactIdField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\Computed\ComputedField;
+use Tuleap\Tracker\FormElement\Field\CrossReferences\CrossReferencesField;
 use Tuleap\Tracker\FormElement\Field\Date\DateField;
 use Tuleap\Tracker\FormElement\Field\Files\FilesField;
 use Tuleap\Tracker\FormElement\Field\Float\FloatField;
@@ -139,7 +139,7 @@ class ArtifactFilesDeletorVisitor implements Tracker_FormElement_FieldVisitor
     {
     }
 
-    public function visitCrossReferences(Tracker_FormElement_Field_CrossReferences $field): void
+    public function visitCrossReferences(CrossReferencesField $field): void
     {
     }
 

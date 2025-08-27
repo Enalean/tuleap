@@ -27,6 +27,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\RetrieveAnArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\RetrieveUsedArtifactLinkFields;
 use Tuleap\Tracker\FormElement\Field\Computed\ComputedField;
+use Tuleap\Tracker\FormElement\Field\CrossReferences\CrossReferencesField;
 use Tuleap\Tracker\FormElement\Field\Date\DateField;
 use Tuleap\Tracker\FormElement\Field\FieldDao;
 use Tuleap\Tracker\FormElement\Field\Files\FilesField;
@@ -132,7 +133,7 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
         self::FIELD_ARTIFACT_IN_TRACKER => PerTrackerArtifactIdField::class,
         self::FIELD_SUBMITTED_BY_TYPE => SubmittedByField::class,
         self::FIELD_LAST_MODIFIED_BY => LastUpdateByField::class,
-        self::FIELD_CROSS_REFERENCES => Tracker_FormElement_Field_CrossReferences::class,
+        self::FIELD_CROSS_REFERENCES => CrossReferencesField::class,
         self::FIELD_BURNDOWN => Tracker_FormElement_Field_Burndown::class,
         self::FIELD_COMPUTED => ComputedField::class,
         self::FIELD_RANK => PriorityField::class,
