@@ -47,6 +47,7 @@ final class api_explorerPlugin extends Plugin
         bindtextdomain('tuleap-api_explorer', __DIR__ . '/../site-content');
     }
 
+    #[Override]
     public function getPluginInfo(): PluginInfo
     {
         if ($this->pluginInfo === null) {

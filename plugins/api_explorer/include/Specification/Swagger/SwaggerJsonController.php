@@ -24,6 +24,7 @@ namespace Tuleap\APIExplorer\Specification\Swagger;
 
 use Codendi_HTMLPurifier;
 use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
+use Override;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -76,6 +77,7 @@ final class SwaggerJsonController extends DispatchablePSR15Compatible implements
         parent::__construct($emitter, ...$middleware_stack);
     }
 
+    #[Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $request_uri  = $request->getUri();
