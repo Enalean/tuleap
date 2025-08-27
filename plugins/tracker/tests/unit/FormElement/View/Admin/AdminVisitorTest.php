@@ -23,7 +23,6 @@ namespace Tuleap\Tracker\FormElement\View\Admin;
 
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use Tracker_FormElement_Container_Column;
-use Tracker_FormElement_Field_CrossReferences;
 use Tracker_FormElement_StaticField_LineBreak;
 use Tracker_FormElement_StaticField_RichText;
 use Tracker_FormElement_StaticField_Separator;
@@ -44,6 +43,7 @@ use Tracker_FormElement_View_Admin_StaticField_Separator;
 use Tracker_FormElement_View_Admin_Visitor;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\FormElement\Field\ArtifactId\ArtifactIdField;
+use Tuleap\Tracker\FormElement\Field\CrossReferences\CrossReferencesField;
 use Tuleap\Tracker\FormElement\Field\LastUpdateDate\LastUpdateDateField;
 use Tuleap\Tracker\FormElement\Field\List\MultiSelectboxField;
 use Tuleap\Tracker\FormElement\Field\List\OpenListField;
@@ -107,7 +107,7 @@ final class AdminVisitorTest extends TestCase
     public function testVisitCrossReferences(): void
     {
         $visitor     = new Tracker_FormElement_View_Admin_Visitor([]);
-        $formElement = new Tracker_FormElement_Field_CrossReferences(null, null, null, null, null, null, null, null, null, null, null, null);
+        $formElement = new CrossReferencesField(null, null, null, null, null, null, null, null, null, null, null, null);
         $formElement->accept($visitor);
         self::assertInstanceOf(Tracker_FormElement_View_Admin_Field_CrossReferences::class, $visitor->getAdmin());
     }

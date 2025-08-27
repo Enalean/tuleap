@@ -74,7 +74,7 @@ final readonly class InvalidFieldChecker
             \Tuleap\Tracker\FormElement\Field\PermissionsOnArtifact\PermissionsOnArtifactField::class,
             \Tuleap\Tracker\FormElement\Field\ArtifactId\ArtifactIdField::class,
             \Tuleap\Tracker\FormElement\Field\PerTrackerArtifactId\PerTrackerArtifactIdField::class,
-            \Tracker_FormElement_Field_CrossReferences::class,
+            \Tuleap\Tracker\FormElement\Field\CrossReferences\CrossReferencesField::class,
             \Tracker_FormElement_Field_Burndown::class,
             \Tuleap\Tracker\FormElement\Field\Computed\ComputedField::class,
             \Tuleap\Tracker\FormElement\Field\Priority\PriorityField::class         => throw new FieldIsNotSupportedAtAllException($field),
