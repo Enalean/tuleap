@@ -27,6 +27,7 @@ require_once __DIR__ . '/../../../vendor/autoload.php';
 use REST_TestDataBuilder;
 use Tuleap\Docman\Test\rest\DocmanDataBuilder;
 use Tuleap\Docman\Test\rest\Helper\DocmanTestExecutionHelper;
+use Tuleap\REST\BaseTestDataBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class DocmanFoldersTest extends DocmanTestExecutionHelper
@@ -846,13 +847,13 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
         $this->assertEquals(403, $permission_update_response_with_rest_read_only_user->getStatusCode());
 
         $permission_update_response = $this->getResponseByName(
-            \TestDataBuilder::ADMIN_USER_NAME,
+            BaseTestDataBuilder::ADMIN_USER_NAME,
             $this->request_factory->createRequest('PUT', 'docman_folders/' . urlencode((string) $folder_id) . '/permissions')->withBody($this->stream_factory->createStream($permission_update_put_body))
         );
         $this->assertEquals(200, $permission_update_response->getStatusCode());
 
         $folder_representation_response = $this->getResponseByName(
-            \TestDataBuilder::ADMIN_USER_NAME,
+            BaseTestDataBuilder::ADMIN_USER_NAME,
             $this->request_factory->createRequest('GET', 'docman_items/' . urlencode((string) $folder_id))
         );
         $this->assertEquals(200, $folder_representation_response->getStatusCode());
@@ -864,7 +865,7 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
 
         $this->getResponse(
             $this->request_factory->createRequest('DELETE', 'docman_folders/' . urlencode((string) $folder_id)),
-            \TestDataBuilder::ADMIN_USER_NAME
+            BaseTestDataBuilder::ADMIN_USER_NAME
         );
     }
 
@@ -887,7 +888,7 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
 
         $project_members_identifier = $this->project_id . '_3';
         $permission_update_response = $this->getResponseByName(
-            \TestDataBuilder::ADMIN_USER_NAME,
+            BaseTestDataBuilder::ADMIN_USER_NAME,
             $this->request_factory->createRequest('PUT', 'docman_folders/' . urlencode((string) $folder_id) . '/permissions')->withBody($this->stream_factory->createStream(json_encode([
                 'apply_permissions_on_children' => true,
                 'can_read'                      => [],
@@ -898,7 +899,7 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
         $this->assertEquals(200, $permission_update_response->getStatusCode());
 
         $folder_representation_response = $this->getResponseByName(
-            \TestDataBuilder::ADMIN_USER_NAME,
+            BaseTestDataBuilder::ADMIN_USER_NAME,
             $this->request_factory->createRequest('GET', 'docman_items/' . urlencode((string) $folder_id))
         );
         $this->assertEquals(200, $folder_representation_response->getStatusCode());
@@ -908,7 +909,7 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
         $this->assertCount(1, $permissions_for_groups_representation['can_manage']);
         $this->assertEquals($project_members_identifier, $permissions_for_groups_representation['can_manage'][0]['id']);
         $child_representation_response = $this->getResponseByName(
-            \TestDataBuilder::ADMIN_USER_NAME,
+            BaseTestDataBuilder::ADMIN_USER_NAME,
             $this->request_factory->createRequest('GET', 'docman_items/' . urlencode((string) $child_id))
         );
         $this->assertEquals(200, $child_representation_response->getStatusCode());
@@ -916,7 +917,7 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
 
         $this->getResponse(
             $this->request_factory->createRequest('DELETE', 'docman_folders/' . urlencode((string) $folder_id)),
-            \TestDataBuilder::ADMIN_USER_NAME
+            BaseTestDataBuilder::ADMIN_USER_NAME
         );
     }
 
@@ -974,7 +975,7 @@ class DocmanFoldersTest extends DocmanTestExecutionHelper
         $file_to_delete_id = $file_to_delete['id'];
 
         $response = $this->getResponseByName(
-            \TestDataBuilder::ADMIN_USER_NAME,
+            BaseTestDataBuilder::ADMIN_USER_NAME,
             $this->request_factory->createRequest('DELETE', 'docman_folders/' . $file_to_delete_id)
         );
 

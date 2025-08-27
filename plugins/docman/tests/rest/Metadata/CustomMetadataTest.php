@@ -27,6 +27,7 @@ require_once __DIR__ . '/../../../vendor/autoload.php';
 use REST_TestDataBuilder;
 use Tuleap\Docman\Test\rest\DocmanDataBuilder;
 use Tuleap\Docman\Test\rest\Helper\DocmanHardcodedMetadataExecutionHelper;
+use Tuleap\REST\BaseTestDataBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class CustomMetadataTest extends DocmanHardcodedMetadataExecutionHelper
@@ -165,7 +166,7 @@ class CustomMetadataTest extends DocmanHardcodedMetadataExecutionHelper
 
         $response = $this->getResponse(
             $this->request_factory->createRequest('GET', 'docman_items/' . $created_document_id),
-            \TestDataBuilder::ADMIN_USER_NAME
+            BaseTestDataBuilder::ADMIN_USER_NAME
         );
 
         $updated_content  = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
@@ -187,7 +188,7 @@ class CustomMetadataTest extends DocmanHardcodedMetadataExecutionHelper
         $this->assertEquals(403, $response_with_rest_read_only_user->getStatusCode());
 
         $response = $this->getResponseByName(
-            \TestDataBuilder::ADMIN_USER_NAME,
+            BaseTestDataBuilder::ADMIN_USER_NAME,
             $this->request_factory->createRequest('DELETE', 'docman_empty_documents/' . $created_document_id)
         );
 
@@ -339,7 +340,7 @@ class CustomMetadataTest extends DocmanHardcodedMetadataExecutionHelper
 
         $response = $this->getResponse(
             $this->request_factory->createRequest('GET', 'docman_items/' . $created_document_id),
-            \TestDataBuilder::ADMIN_USER_NAME
+            BaseTestDataBuilder::ADMIN_USER_NAME
         );
 
         $updated_content  = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
@@ -361,7 +362,7 @@ class CustomMetadataTest extends DocmanHardcodedMetadataExecutionHelper
         $this->assertEquals(403, $response_delete_with_rest_read_only_user->getStatusCode());
 
         $response = $this->getResponseByName(
-            \TestDataBuilder::ADMIN_USER_NAME,
+            BaseTestDataBuilder::ADMIN_USER_NAME,
             $this->request_factory->createRequest('DELETE', 'docman_files/' . $created_document_id)
         );
 
@@ -460,7 +461,7 @@ class CustomMetadataTest extends DocmanHardcodedMetadataExecutionHelper
 
         $response = $this->getResponse(
             $this->request_factory->createRequest('GET', 'docman_items/' . $created_document_id),
-            \TestDataBuilder::ADMIN_USER_NAME
+            BaseTestDataBuilder::ADMIN_USER_NAME
         );
 
         $folder_content = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
@@ -471,7 +472,7 @@ class CustomMetadataTest extends DocmanHardcodedMetadataExecutionHelper
 
         $response = $this->getResponse(
             $this->request_factory->createRequest('GET', 'docman_items/' . $empty_id),
-            \TestDataBuilder::ADMIN_USER_NAME
+            BaseTestDataBuilder::ADMIN_USER_NAME
         );
 
         $empty_content = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
@@ -488,7 +489,7 @@ class CustomMetadataTest extends DocmanHardcodedMetadataExecutionHelper
         $this->assertEquals(403, $response_delete_with_rest_read_only_user->getStatusCode());
 
         $response = $this->getResponseByName(
-            \TestDataBuilder::ADMIN_USER_NAME,
+            BaseTestDataBuilder::ADMIN_USER_NAME,
             $this->request_factory->createRequest('DELETE', 'docman_folders/' . $created_document_id)
         );
 
@@ -499,7 +500,7 @@ class CustomMetadataTest extends DocmanHardcodedMetadataExecutionHelper
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('OPTIONS', 'projects/' . $this->project_id . '/docman_metadata'),
-            \TestDataBuilder::ADMIN_USER_NAME
+            BaseTestDataBuilder::ADMIN_USER_NAME
         );
 
         $this->assertEquals(['OPTIONS', 'GET'], explode(', ', $response->getHeaderLine('Allow')));

@@ -22,7 +22,7 @@
 
 namespace Tuleap\Docman\Test\rest;
 
-use TestDataBuilder;
+use Tuleap\REST\BaseTestDataBuilder;
 use Tuleap\REST\RestBase;
 
 class DocmanBase extends RestBase
@@ -44,7 +44,7 @@ class DocmanBase extends RestBase
         $this->initUserId(self::DOCMAN_USER_NAME);
 
         $this->docman_user_id          = $this->user_ids[self::DOCMAN_USER_NAME];
-        $this->test_user_1_id          = $this->user_ids[TestDataBuilder::TEST_USER_1_NAME];
+        $this->test_user_1_id          = $this->user_ids[BaseTestDataBuilder::TEST_USER_1_NAME];
         $this->requirements_tracker_id = $this->tracker_ids[$this->project_id][self::REQUIREMENTS_TRACKER_SHORTNAME];
     }
 }

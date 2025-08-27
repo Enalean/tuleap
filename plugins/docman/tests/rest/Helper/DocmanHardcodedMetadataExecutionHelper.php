@@ -25,6 +25,7 @@ namespace Tuleap\Docman\Test\rest\Helper;
 use REST_TestDataBuilder;
 use Tuleap\Docman\Test\rest\DocmanDataBuilder;
 use Tuleap\Docman\Test\rest\DocmanWithMetadataActivatedBase;
+use Tuleap\REST\BaseTestDataBuilder;
 
 class DocmanHardcodedMetadataExecutionHelper extends DocmanWithMetadataActivatedBase
 {
@@ -71,7 +72,7 @@ class DocmanHardcodedMetadataExecutionHelper extends DocmanWithMetadataActivated
         return $json_docman_service['root_item']['id'];
     }
 
-    public function loadRootFolderContent(int $root_id, string $user_name = \TestDataBuilder::ADMIN_USER_NAME): array
+    public function loadRootFolderContent(int $root_id, string $user_name = BaseTestDataBuilder::ADMIN_USER_NAME): array
     {
         $response = $this->getResponseByName(
             $user_name,
@@ -86,7 +87,7 @@ class DocmanHardcodedMetadataExecutionHelper extends DocmanWithMetadataActivated
     public function loadFolderContent(
         int $folder_id,
         string $folder_name,
-        string $user_name = \TestDataBuilder::ADMIN_USER_NAME,
+        string $user_name = BaseTestDataBuilder::ADMIN_USER_NAME,
     ): array {
         $response = $this->getResponseByName(
             $user_name,

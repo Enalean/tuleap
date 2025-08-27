@@ -27,6 +27,7 @@ require_once __DIR__ . '/../../../vendor/autoload.php';
 use REST_TestDataBuilder;
 use Tuleap\Docman\Test\rest\DocmanDataBuilder;
 use Tuleap\Docman\Test\rest\Helper\DocmanTestExecutionHelper;
+use Tuleap\REST\BaseTestDataBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DocmanProjectServiceTest extends DocmanTestExecutionHelper
@@ -35,7 +36,7 @@ final class DocmanProjectServiceTest extends DocmanTestExecutionHelper
     {
         $admin_response = $this->getResponse(
             $this->request_factory->createRequest('GET', 'projects/' . urlencode((string) $this->project_id) . '/docman_service'),
-            \TestDataBuilder::ADMIN_USER_NAME
+            BaseTestDataBuilder::ADMIN_USER_NAME
         );
         self::assertSame(200, $admin_response->getStatusCode());
         $admin_result = json_decode($admin_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);

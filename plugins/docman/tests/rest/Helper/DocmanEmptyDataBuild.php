@@ -24,6 +24,7 @@ namespace Tuleap\Docman\Test\rest\Helper;
 
 use ProjectUGroup;
 use Tuleap\Docman\Test\rest\DocmanDataBuilder;
+use Tuleap\REST\BaseTestDataBuilder;
 
 class DocmanEmptyDataBuild
 {
@@ -45,7 +46,7 @@ class DocmanEmptyDataBuild
     {
         $this->common_builder = $common_builder;
         $this->docman_user_id = $this->common_builder->getUserByName(DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME);
-        $this->admin_user_id  = $this->common_builder->getUserByName(\TestDataBuilder::ADMIN_USER_NAME);
+        $this->admin_user_id  = $this->common_builder->getUserByName(BaseTestDataBuilder::ADMIN_USER_NAME);
     }
 
     /**

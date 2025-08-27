@@ -22,7 +22,6 @@ namespace Tuleap\REST;
 
 use REST_TestDataBuilder;
 use Test\Rest\TuleapConfig;
-use TestDataBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 #[\PHPUnit\Framework\Attributes\Group('ProjectTests')]
@@ -335,7 +334,7 @@ class ProjectTest extends ProjectBase
                     json_encode(
                         [
                             'user_references' => [
-                                ['username' => \TestDataBuilder::TEST_USER_CATCH_ALL_PROJECT_ADMIN],
+                                ['username' => BaseTestDataBuilder::TEST_USER_CATCH_ALL_PROJECT_ADMIN],
                                 ['username' => $original_project_admin],
                             ],
                         ],
@@ -348,7 +347,7 @@ class ProjectTest extends ProjectBase
         self::assertEquals(200, $response->getStatusCode());
 
         $response = $this->getResponseByName(
-            \TestDataBuilder::ADMIN_USER_NAME,
+            BaseTestDataBuilder::ADMIN_USER_NAME,
             $this->request_factory->createRequest(
                 'PUT',
                 sprintf('project_ownership/%d', $project_id)
@@ -357,7 +356,7 @@ class ProjectTest extends ProjectBase
                     json_encode(
                         [
                             'project_owner' => [
-                                'username' => \TestDataBuilder::TEST_USER_CATCH_ALL_PROJECT_ADMIN,
+                                'username' => BaseTestDataBuilder::TEST_USER_CATCH_ALL_PROJECT_ADMIN,
                             ],
                         ],
                         JSON_THROW_ON_ERROR
@@ -379,7 +378,7 @@ class ProjectTest extends ProjectBase
                         [
                             'user_references' => [
                                 [
-                                    'username' => \TestDataBuilder::TEST_USER_CATCH_ALL_PROJECT_ADMIN,
+                                    'username' => BaseTestDataBuilder::TEST_USER_CATCH_ALL_PROJECT_ADMIN,
                                 ],
                             ],
                         ],
@@ -392,7 +391,7 @@ class ProjectTest extends ProjectBase
         self::assertEquals(200, $response->getStatusCode());
 
         $response = $this->getResponseByName(
-            \TestDataBuilder::TEST_USER_CATCH_ALL_PROJECT_ADMIN,
+            BaseTestDataBuilder::TEST_USER_CATCH_ALL_PROJECT_ADMIN,
             $this->request_factory->createRequest(
                 'PUT',
                 sprintf('user_groups/%d_3/users', $project_id)
@@ -402,7 +401,7 @@ class ProjectTest extends ProjectBase
                         [
                             'user_references' => [
                                 [
-                                    'username' => \TestDataBuilder::TEST_USER_CATCH_ALL_PROJECT_ADMIN,
+                                    'username' => BaseTestDataBuilder::TEST_USER_CATCH_ALL_PROJECT_ADMIN,
                                 ],
                             ],
                         ],
@@ -867,16 +866,16 @@ class ProjectTest extends ProjectBase
 
     public function testGETbyIdForForbiddenUser(): void
     {
-        $response = $this->getResponseByName(TestDataBuilder::TEST_USER_1_NAME, $this->request_factory->createRequest('GET', 'projects/' . $this->project_deleted_id));
+        $response = $this->getResponseByName(BaseTestDataBuilder::TEST_USER_1_NAME, $this->request_factory->createRequest('GET', 'projects/' . $this->project_deleted_id));
         self::assertEquals(403, $response->getStatusCode());
     }
 
     public function testGETbyIdForSystemProject(): void
     {
-        $response = $this->getResponseByName(TestDataBuilder::ADMIN_USER_NAME, $this->request_factory->createRequest('GET', 'projects/' . REST_TestDataBuilder::DEFAULT_TEMPLATE_PROJECT_ID));
+        $response = $this->getResponseByName(BaseTestDataBuilder::ADMIN_USER_NAME, $this->request_factory->createRequest('GET', 'projects/' . REST_TestDataBuilder::DEFAULT_TEMPLATE_PROJECT_ID));
         self::assertEquals(200, $response->getStatusCode());
 
-        $response = $this->getResponseByName(TestDataBuilder::TEST_USER_1_NAME, $this->request_factory->createRequest('GET', 'projects/' . REST_TestDataBuilder::DEFAULT_TEMPLATE_PROJECT_ID));
+        $response = $this->getResponseByName(BaseTestDataBuilder::TEST_USER_1_NAME, $this->request_factory->createRequest('GET', 'projects/' . REST_TestDataBuilder::DEFAULT_TEMPLATE_PROJECT_ID));
         self::assertEquals(404, $response->getStatusCode());
     }
 

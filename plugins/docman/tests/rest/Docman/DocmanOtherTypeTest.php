@@ -25,6 +25,7 @@ namespace Tuleap\Docman\Test\rest\Docman;
 require_once __DIR__ . '/../../../vendor/autoload.php';
 
 use Tuleap\Docman\Test\rest\Helper\DocmanTestExecutionHelper;
+use Tuleap\REST\BaseTestDataBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class DocmanOtherTypeTest extends DocmanTestExecutionHelper
@@ -33,7 +34,7 @@ class DocmanOtherTypeTest extends DocmanTestExecutionHelper
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('OPTIONS', 'docman_other_type_documents/123/metadata'),
-            \TestDataBuilder::ADMIN_USER_NAME
+            BaseTestDataBuilder::ADMIN_USER_NAME
         );
 
         self::assertSame(['OPTIONS', 'PUT'], explode(', ', $response->getHeaderLine('Allow')));
@@ -44,7 +45,7 @@ class DocmanOtherTypeTest extends DocmanTestExecutionHelper
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('OPTIONS', 'docman_other_type_documents/123/permissions'),
-            \TestDataBuilder::ADMIN_USER_NAME
+            BaseTestDataBuilder::ADMIN_USER_NAME
         );
 
         self::assertSame(['OPTIONS', 'PUT'], explode(', ', $response->getHeaderLine('Allow')));

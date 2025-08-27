@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\MediawikiStandalone\REST\v1;
 
-use TestDataBuilder;
+use Tuleap\REST\BaseTestDataBuilder;
 use Tuleap\REST\ForgeAccessSandbox;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -35,7 +35,7 @@ final class MediawikiStandaloneProjectResourceTest extends \Tuleap\REST\RestBase
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('OPTIONS', 'projects/' . $this->getProjectId('mediawiki-standalone-test') . '/mediawiki_standalone_permissions'),
-            TestDataBuilder::TEST_USER_1_NAME
+            BaseTestDataBuilder::TEST_USER_1_NAME
         );
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals(['OPTIONS', 'GET'], explode(', ', $response->getHeaderLine('Allow')));
@@ -71,7 +71,7 @@ final class MediawikiStandaloneProjectResourceTest extends \Tuleap\REST\RestBase
     {
         return [
             'project admin has full access' => [
-                'user' => TestDataBuilder::TEST_USER_1_NAME,
+                'user' => BaseTestDataBuilder::TEST_USER_1_NAME,
                 'expected' => [
                     'is_reader' => true,
                     'is_writer' => true,
@@ -80,7 +80,7 @@ final class MediawikiStandaloneProjectResourceTest extends \Tuleap\REST\RestBase
                 ],
             ],
             'project member is writer' => [
-                'user' => TestDataBuilder::TEST_USER_3_NAME,
+                'user' => BaseTestDataBuilder::TEST_USER_3_NAME,
                 'expected' => [
                     'is_reader' => true,
                     'is_writer' => true,
@@ -89,7 +89,7 @@ final class MediawikiStandaloneProjectResourceTest extends \Tuleap\REST\RestBase
                 ],
             ],
             'external user is nothing even if project is public because by default only project members are readers' => [
-                'user' => TestDataBuilder::TEST_USER_2_NAME,
+                'user' => BaseTestDataBuilder::TEST_USER_2_NAME,
                 'expected' => [
                     'is_reader' => false,
                     'is_writer' => false,
