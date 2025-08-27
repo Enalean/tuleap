@@ -27,7 +27,7 @@
         />
         <icon-selector
             id="project-service-edit-modal-icon"
-            v-bind:value="service.icon_name"
+            v-bind:icon_name="service.icon_name"
             v-on:input="onEditIcon"
         />
         <service-is-used
