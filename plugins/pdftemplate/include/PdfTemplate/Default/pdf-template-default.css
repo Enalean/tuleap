@@ -558,8 +558,12 @@ tlp-relative-date {
 .document-artifact-link-row {
     display: flex;
     align-items: center;
-    padding: var(--small-spacing);
+    padding: var(--small-spacing) 0;
     gap: var(--small-spacing);
+}
+
+.document-link-type {
+    width: 110px;
 }
 
 .document-xref {

@@ -26,7 +26,7 @@
         v-bind:title="link.title"
         data-test="linked-artifact"
     >
-        <span>{{ link.link_label }}</span>
+        <span class="artidoc-link-field-link-type document-link-type">{{ link.link_label }}</span>
         <span class="artidoc-link-field-xref document-xref">
             <a
                 v-bind:href="link.html_uri"
@@ -100,12 +100,16 @@ $link-row-padding: 8px;
 .artidoc-link-field-row {
     display: flex;
     align-items: center;
-    padding: $link-row-padding;
+    padding: $link-row-padding 0;
     gap: $link-row-padding;
 }
 
 .artidoc-link-field-xref {
     flex: auto;
+}
+
+.artidoc-link-field-link-type {
+    width: 110px;
 }
 
 .artidoc-link-field-link {
