@@ -564,6 +564,7 @@ tlp-relative-date {
 
 .document-link-type {
     width: 110px;
+    flex-shrink: 0;
 }
 
 .document-xref {
