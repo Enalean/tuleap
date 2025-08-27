@@ -24,6 +24,7 @@
             v-bind:title="trigger_title"
             class="tlp-button-primary tlp-button-ellipsis"
             ref="trigger"
+            data-test="document-actions-button"
         >
             <i class="fa-solid fa-ellipsis" role="img"></i>
         </button>
