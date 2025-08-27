@@ -15,8 +15,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { createModal } from "tlp";
-
+import { createModal } from "@tuleap/tlp-modal";
 import { autocomplete_users_for_select2 as autocomplete } from "@tuleap/autocomplete-for-select2";
 
 document.addEventListener("DOMContentLoaded", function () {

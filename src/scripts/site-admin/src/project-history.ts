@@ -15,7 +15,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { datePicker, select2 } from "tlp";
+import { datePicker } from "@tuleap/tlp-date-picker";
+import { select2 } from "tlp";
 import { autocomplete_users_for_select2 } from "@tuleap/autocomplete-for-select2";
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -29,16 +30,19 @@ document.addEventListener("DOMContentLoaded", () => {
         displayCurrentSubEventsPanel();
 
         events.addEventListener("change", () => {
-            [].forEach.call(sub_events_panels, (panel: HTMLElement) => {
+            for (const panel of sub_events_panels) {
+                if (!(panel instanceof HTMLElement)) {
+                    continue;
+                }
                 const box = panel.querySelector("select");
                 if (box) {
                     panel.style.display = "none";
                     box.disabled = true;
-                    [].forEach.call(box.options, (option: HTMLOptionElement) => {
+                    for (const option of box.options) {
                         option.selected = false;
-                    });
+                    }
                 }
-            });
+            }
 
             displayCurrentSubEventsPanel();
         });
@@ -49,9 +53,11 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     const datepickers = document.querySelectorAll(".tlp-input-date");
-    [].forEach.call(datepickers, (element) => {
-        datePicker(element);
-    });
+    for (const element of datepickers) {
+        if (element instanceof HTMLInputElement) {
+            datePicker(element);
+        }
+    }
 
     function displayCurrentSubEventsPanel(): void {
         if (!events || !(events instanceof HTMLSelectElement) || !events.options) {

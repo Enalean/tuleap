@@ -15,7 +15,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { datePicker } from "tlp";
+import { datePicker } from "@tuleap/tlp-date-picker";
 import { createModal, EVENT_TLP_MODAL_HIDDEN, openTargetModalIdOnClick } from "@tuleap/tlp-modal";
 import { selectOrThrow } from "@tuleap/dom";
 import { postResponse, uri } from "@tuleap/fetch-result";
@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 function initExpirationDatepicker(): void {
     const expiry_element = document.querySelector("#expiry");
-    if (expiry_element && expiry_element instanceof HTMLInputElement) {
+    if (expiry_element instanceof HTMLInputElement) {
         datePicker(expiry_element);
     }
 }

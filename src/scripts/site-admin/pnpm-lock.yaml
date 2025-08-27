@@ -14,6 +14,9 @@ dependencies:
   '@tuleap/dom':
     specifier: workspace:*
     version: link:../../../lib/frontend/dom
+  '@tuleap/fault':
+    specifier: workspace:*
+    version: link:../../../lib/frontend/fault
   '@tuleap/fetch-result':
     specifier: workspace:*
     version: link:../../../lib/frontend/fetch-result
@@ -26,6 +29,9 @@ dependencies:
   '@tuleap/tlp':
     specifier: workspace:*
     version: link:../tlp
+  '@tuleap/tlp-date-picker':
+    specifier: workspace:^
+    version: link:../../../lib/frontend/tlp-date-picker
   '@tuleap/tlp-dropdown':
     specifier: workspace:*
     version: link:../../../lib/frontend/tlp-dropdown
@@ -43,9 +49,6 @@ devDependencies:
   '@tuleap/build-system-configurator':
     specifier: workspace:*
     version: link:../../../lib/frontend/build-system-configurator
-  '@tuleap/fault':
-    specifier: workspace:*
-    version: link:../../../lib/frontend/fault
   '@types/ckeditor':
     specifier: ^4.9.10
     version: 4.9.10
