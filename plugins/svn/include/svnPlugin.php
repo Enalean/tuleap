@@ -211,7 +211,7 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
         return new XMLSvnExporter(
             $this->getRepositoryManager(),
             $project,
-            new SvnAdmin(new System_Command(), self::getLogger(), Backend::instance(Backend::SVN)),
+            new SvnAdmin(new System_Command(), self::getLogger(), BackendSVN::instance()),
             new XML_SimpleXMLCDATAFactory(),
             $this->getMailNotificationManager(),
             self::getLogger(),
@@ -362,7 +362,7 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
                     ProjectManager::instance(),
                     $this->getApacheConfGenerator(),
                     $this->getRepositoryDeleter(),
-                    new SvnAdmin(new System_Command(), self::getLogger(), Backend::instance(Backend::SVN)),
+                    new SvnAdmin(new System_Command(), self::getLogger(), BackendSVN::instance()),
                 ];
                 break;
             case SystemEvent_SVN_IMPORT_CORE_REPOSITORY::class:
@@ -388,7 +388,7 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
             $this->repository_manager = new RepositoryManager(
                 new Dao(),
                 ProjectManager::instance(),
-                new SvnAdmin(new System_Command(), self::getLogger(), Backend::instanceSVN()),
+                new SvnAdmin(new System_Command(), self::getLogger(), \BackendSVN::instance()),
                 self::getLogger(),
                 new System_Command(),
                 new Destructor(
@@ -396,7 +396,7 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
                     self::getLogger()
                 ),
                 EventManager::instance(),
-                Backend::instanceSVN(),
+                \BackendSVN::instance(),
                 $this->getAccessFileHistoryFactory()
             );
         }
@@ -726,7 +726,7 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
 
     private function getBackendSVN(): BackendSVN
     {
-        return Backend::instanceSVN();
+        return \BackendSVN::instance();
     }
 
     #[ListeningToEventClass]

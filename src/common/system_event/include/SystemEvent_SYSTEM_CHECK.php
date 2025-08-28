@@ -23,11 +23,7 @@ use Tuleap\Http\Client\FilteredOutboundHTTPResponseAlerter;
 use Tuleap\Queue\NbBackendWorkersConfigValidator;
 use Tuleap\Queue\WorkerAvailability;
 
-/**
-* System Event classes
-*
-*/
-class SystemEvent_SYSTEM_CHECK extends SystemEvent
+class SystemEvent_SYSTEM_CHECK extends SystemEvent // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /**
      * Verbalize the parameters so they are readable and much user friendly in
@@ -48,11 +44,9 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent
      */
     public function process()
     {
-        $backendSystem = Backend::instance('System');
-        \assert($backendSystem instanceof BackendSystem);
-        $backendAliases = Backend::instance('Aliases');
-        \assert($backendAliases instanceof BackendAliases);
-        $backendSVN = Backend::instanceSVN();
+        $backendSystem  = BackendSystem::instance();
+        $backendAliases = BackendAliases::instance();
+        $backendSVN     = BackendSVN::instance();
 
         //TODO:
         // Private project: if codeaxadm is not member of the project: check access to SVN (incl. ViewVC), Web...

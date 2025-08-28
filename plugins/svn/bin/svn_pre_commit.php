@@ -52,7 +52,7 @@ try {
     $repository_manager = new RepositoryManager(
         new Dao(),
         ProjectManager::instance(),
-        new SvnAdmin(new System_Command(), $logger, Backend::instanceSVN()),
+        new SvnAdmin(new System_Command(), $logger, \BackendSVN::instance()),
         $logger,
         new System_Command(),
         new Destructor(
@@ -60,7 +60,7 @@ try {
             $logger,
         ),
         EventManager::instance(),
-        Backend::instanceSVN(),
+        \BackendSVN::instance(),
         new AccessFileHistoryFactory(new AccessFileHistoryDao()),
     );
     $hook               = new PreCommit(

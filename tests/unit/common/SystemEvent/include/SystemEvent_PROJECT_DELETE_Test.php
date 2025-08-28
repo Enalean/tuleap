@@ -55,7 +55,6 @@ final class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCas
                 'cleanupProjectUgroupsBinding',
                 'cleanupProjectFRS',
                 'getArtifactTypeFactory',
-                'getBackend',
                 'getWikiAttachment',
                 'done',
                 'error',
@@ -84,17 +83,10 @@ final class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCas
         $atf->method('preDeleteAllProjectArtifactTypes')->willReturn(true);
         $evt->method('getArtifactTypeFactory')->with($project)->willReturn($atf);
 
-        // System
-        $backendSystem = $this->createMock(\BackendSystem::class);
-
         // Wiki attachments
         $wa = $this->createMock(\WikiAttachment::class);
         $wa->expects($this->once())->method('deleteProjectAttachments')->willReturn(true);
         $evt->method('getWikiAttachment')->willReturn($wa);
-
-        $evt->method('getBackend')->willReturnMap([
-            ['System', $backendSystem],
-        ]);
 
         $evt->expects($this->never())->method('done');
         $evt->expects($this->once())->method('error')->with('Could not remove project users');
@@ -136,7 +128,6 @@ final class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCas
                 'cleanupProjectUgroupsBinding',
                 'cleanupProjectFRS',
                 'getArtifactTypeFactory',
-                'getBackend',
                 'getWikiAttachment',
                 'done',
                 'error',
@@ -165,17 +156,10 @@ final class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCas
         $atf->method('preDeleteAllProjectArtifactTypes')->willReturn(true);
         $evt->method('getArtifactTypeFactory')->with($project)->willReturn($atf);
 
-        // System
-        $backendSystem = $this->createMock(\BackendSystem::class);
-
         // Wiki attachments
         $wa = $this->createMock(\WikiAttachment::class);
         $wa->expects($this->once())->method('deleteProjectAttachments')->willReturn(true);
         $evt->method('getWikiAttachment')->willReturn($wa);
-
-        $evt->method('getBackend')->willReturnMap([
-            ['System', $backendSystem],
-        ]);
 
         $evt->expects($this->never())->method('done');
         $evt->expects($this->once())->method('error')->with('Could not remove membership request notification ugroups or message');
@@ -217,7 +201,6 @@ final class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCas
                 'cleanupProjectUgroupsBinding',
                 'cleanupProjectFRS',
                 'getArtifactTypeFactory',
-                'getBackend',
                 'getWikiAttachment',
                 'done',
                 'error',
@@ -246,17 +229,10 @@ final class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCas
         $atf->method('preDeleteAllProjectArtifactTypes')->willReturn(true);
         $evt->method('getArtifactTypeFactory')->with($project)->willReturn($atf);
 
-        // System
-        $backendSystem = $this->createMock(\BackendSystem::class);
-
         // Wiki attachments
         $wa = $this->createMock(\WikiAttachment::class);
         $wa->expects($this->once())->method('deleteProjectAttachments')->willReturn(true);
         $evt->method('getWikiAttachment')->willReturn($wa);
-
-        $evt->method('getBackend')->willReturnMap([
-            ['System', $backendSystem],
-        ]);
 
         $evt->expects($this->never())->method('done');
         $evt->expects($this->once())->method('error')->with('Could not remove FRS items');
@@ -298,7 +274,6 @@ final class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCas
                 'cleanupProjectUgroupsBinding',
                 'cleanupProjectFRS',
                 'getArtifactTypeFactory',
-                'getBackend',
                 'getWikiAttachment',
                 'done',
                 'error',
@@ -327,17 +302,10 @@ final class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCas
         $atf->method('preDeleteAllProjectArtifactTypes')->willReturn(false);
         $evt->method('getArtifactTypeFactory')->with($project)->willReturn($atf);
 
-        // System
-        $backendSystem = $this->createMock(\BackendSystem::class);
-
         // Wiki attachments
         $wa = $this->createMock(\WikiAttachment::class);
         $wa->expects($this->once())->method('deleteProjectAttachments')->willReturn(true);
         $evt->method('getWikiAttachment')->willReturn($wa);
-
-        $evt->method('getBackend')->willReturnMap([
-            ['System', $backendSystem],
-        ]);
 
         $evt->expects($this->never())->method('done');
         $evt->expects($this->once())->method('error')->with('Could not mark all trackers as deleted');
@@ -379,7 +347,6 @@ final class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCas
                 'cleanupProjectUgroupsBinding',
                 'cleanupProjectFRS',
                 'getArtifactTypeFactory',
-                'getBackend',
                 'getWikiAttachment',
                 'done',
                 'error',
@@ -408,17 +375,10 @@ final class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCas
         $atf->method('preDeleteAllProjectArtifactTypes')->willReturn(true);
         $evt->method('getArtifactTypeFactory')->with($project)->willReturn($atf);
 
-        // System
-        $backendSystem = $this->createMock(\BackendSystem::class);
-
         // Wiki attachments
         $wa = $this->createMock(\WikiAttachment::class);
         $wa->expects($this->once())->method('deleteProjectAttachments')->willReturn(false);
         $evt->method('getWikiAttachment')->willReturn($wa);
-
-        $evt->method('getBackend')->willReturnMap([
-            ['System', $backendSystem],
-        ]);
 
         $evt->expects($this->never())->method('done');
         $evt->expects($this->once())->method('error')->with('Could not mark all wiki attachments as deleted');
@@ -460,7 +420,6 @@ final class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCas
                 'cleanupProjectUgroupsBinding',
                 'cleanupProjectFRS',
                 'getArtifactTypeFactory',
-                'getBackend',
                 'getWikiAttachment',
                 'done',
                 'error',
@@ -489,17 +448,10 @@ final class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCas
         $atf->method('preDeleteAllProjectArtifactTypes')->willReturn(true);
         $evt->method('getArtifactTypeFactory')->with($project)->willReturn($atf);
 
-        // System
-        $backendSystem = $this->createMock(\BackendSystem::class);
-
         // Wiki attachments
         $wa = $this->createMock(\WikiAttachment::class);
         $wa->expects($this->once())->method('deleteProjectAttachments')->willReturn(true);
         $evt->method('getWikiAttachment')->willReturn($wa);
-
-        $evt->method('getBackend')->willReturnMap([
-            ['System', $backendSystem],
-        ]);
 
         $evt->expects($this->never())->method('done');
         $evt->expects($this->once())->method('error')->with('Could not remove ugroups binding');
@@ -541,7 +493,6 @@ final class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCas
                 'cleanupProjectUgroupsBinding',
                 'cleanupProjectFRS',
                 'getArtifactTypeFactory',
-                'getBackend',
                 'getWikiAttachment',
                 'done',
                 'error',
@@ -570,17 +521,10 @@ final class SystemEvent_PROJECT_DELETE_Test extends \Tuleap\Test\PHPUnit\TestCas
         $atf->method('preDeleteAllProjectArtifactTypes')->willReturn(true);
         $evt->method('getArtifactTypeFactory')->with($project)->willReturn($atf);
 
-        // System
-        $backendSystem = $this->createMock(\BackendSystem::class);
-
         // Wiki attachments
         $wa = $this->createMock(\WikiAttachment::class);
         $wa->expects($this->once())->method('deleteProjectAttachments')->willReturn(true);
         $evt->method('getWikiAttachment')->willReturn($wa);
-
-        $evt->method('getBackend')->willReturnMap([
-            ['System', $backendSystem],
-        ]);
 
         // Expect everything went OK
         $evt->expects($this->once())->method('done');

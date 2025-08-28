@@ -151,7 +151,7 @@ class hudson_svnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclarati
             $this->getSystemCommand(),
             $this->getDestructor(),
             EventManager::instance(),
-            Backend::instanceSVN(),
+            BackendSVN::instance(),
             $this->getAccessFileHistoryFactory()
         );
     }
@@ -179,7 +179,7 @@ class hudson_svnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclarati
 
     private function getSvnAdmin()
     {
-        return new SvnAdmin($this->getSystemCommand(), SvnPlugin::getLogger(), Backend::instance(Backend::SVN));
+        return new SvnAdmin($this->getSystemCommand(), SvnPlugin::getLogger(), BackendSVN::instance());
     }
 
     private function getProjectManager()

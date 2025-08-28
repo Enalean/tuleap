@@ -21,9 +21,8 @@
 
 use Tuleap\ForgeConfigSandbox;
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class SystemEvent_USER_RENAME_Test extends \Tuleap\Test\PHPUnit\TestCase
+final class SystemEvent_USER_RENAME_Test extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     use ForgeConfigSandbox;
 
@@ -51,7 +50,6 @@ final class SystemEvent_USER_RENAME_Test extends \Tuleap\Test\PHPUnit\TestCase
             )
             ->onlyMethods([
                 'getUser',
-                'getBackend',
                 'updateDB',
                 'done',
                 'getProject',
@@ -65,15 +63,8 @@ final class SystemEvent_USER_RENAME_Test extends \Tuleap\Test\PHPUnit\TestCase
         // The project
         $evt->method('getProject')->with(133)->willReturn(\Tuleap\Test\Builders\ProjectTestBuilder::aProject()->withId(133)->build());
 
-        // System
-        $backendSystem = $this->createMock(\BackendSystem::class);
-
         // DB
         $evt->method('updateDB')->willReturn(true);
-
-        $evt->method('getBackend')->willReturnMap([
-            ['System', $backendSystem],
-        ]);
 
         // Expect everything went OK
         $evt->expects($this->once())->method('done');

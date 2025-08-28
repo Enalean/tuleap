@@ -24,7 +24,6 @@
 
 namespace Tuleap\SVNCore;
 
-use Backend;
 use BackendSVN;
 use Tuleap\System\ApacheServiceControl;
 use Tuleap\System\ServiceControl;
@@ -51,7 +50,7 @@ class ApacheConfGenerator
 
     public static function build()
     {
-        return new self(new ApacheServiceControl(new ServiceControl(), new ProcessFactory()), Backend::instanceSVN());
+        return new self(new ApacheServiceControl(new ServiceControl(), new ProcessFactory()), \BackendSVN::instance());
     }
 
     public function generate()

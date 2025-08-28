@@ -89,9 +89,9 @@ class SystemEventProcessor_Factory
             $this->system_event_manager,
             new SystemEventDao(),
             $this->logger,
-            Backend::instance('Aliases'),
-            Backend::instanceSVN(),
-            Backend::instance('System'),
+            BackendAliases::instance(),
+            BackendSVN::instance(),
+            BackendSystem::instance(),
             new SiteCache($this->logger),
             ApacheConfGenerator::build(),
         );

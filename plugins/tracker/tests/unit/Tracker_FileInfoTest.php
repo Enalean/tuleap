@@ -130,7 +130,7 @@ final class Tracker_FileInfoTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:
     public function testItCreatesThumbnailForPng(): void
     {
         $backend = $this->createMock(Backend::class);
-        Backend::setInstance(Backend::BACKEND, $backend);
+        Backend::setInstance(Backend::class, $backend);
         $backend->method('changeOwnerGroupMode');
 
         copy($this->fixture_data_dir . '/logo.png', $this->working_directory . '/66');
@@ -156,7 +156,7 @@ final class Tracker_FileInfoTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:
     public function testItCreatesThumbnailForGif(): void
     {
         $backend = $this->createMock(Backend::class);
-        Backend::setInstance(Backend::BACKEND, $backend);
+        Backend::setInstance(Backend::class, $backend);
         $backend->method('changeOwnerGroupMode');
 
         copy($this->fixture_data_dir . '/logo.gif', $this->working_directory . '/111');
@@ -183,7 +183,7 @@ final class Tracker_FileInfoTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:
     public function testItCreatesThumbnailForJpeg(): void
     {
         $backend = $this->createMock(Backend::class);
-        Backend::setInstance(Backend::BACKEND, $backend);
+        Backend::setInstance(Backend::class, $backend);
         $backend->method('changeOwnerGroupMode');
 
         copy($this->fixture_data_dir . '/logo.jpg', $this->working_directory . '/421');
@@ -210,7 +210,7 @@ final class Tracker_FileInfoTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:
     public function testItEnsuresFilesIsOwnedByHttpUser(): void
     {
         $backend = $this->createMock(Backend::class);
-        Backend::setInstance(Backend::BACKEND, $backend);
+        Backend::setInstance(Backend::class, $backend);
 
         copy($this->fixture_data_dir . '/logo.jpg', $this->working_directory . '/421');
 

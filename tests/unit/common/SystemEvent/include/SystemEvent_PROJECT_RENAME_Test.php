@@ -47,7 +47,7 @@ final class SystemEvent_PROJECT_RENAME_Test extends \Tuleap\Test\PHPUnit\TestCas
             )
             ->onlyMethods([
                 'getProject',
-                'getBackend',
+                'getBackendSystem',
                 'updateDB',
                 'getEventManager',
                 'addProjectHistory',
@@ -63,9 +63,7 @@ final class SystemEvent_PROJECT_RENAME_Test extends \Tuleap\Test\PHPUnit\TestCas
         $backendSystem = $this->createMock(\BackendSystem::class);
         $backendSystem->expects($this->once())->method('renameFileReleasedDirectory')->with($project, 'FooBar')->willReturn(true);
 
-        $evt->method('getBackend')->willReturnMap([
-            ['System', $backendSystem],
-        ]);
+        $evt->method('getBackendSystem')->willReturn($backendSystem);
 
         //DB
         $evt->method('updateDB')->willReturn(true);
@@ -103,7 +101,7 @@ final class SystemEvent_PROJECT_RENAME_Test extends \Tuleap\Test\PHPUnit\TestCas
             )
             ->onlyMethods([
                 'getProject',
-                'getBackend',
+                'getBackendSystem',
                 'updateDB',
                 'getEventManager',
                 'addProjectHistory',
@@ -119,9 +117,7 @@ final class SystemEvent_PROJECT_RENAME_Test extends \Tuleap\Test\PHPUnit\TestCas
         $backendSystem = $this->createMock(\BackendSystem::class);
         $backendSystem->expects($this->once())->method('renameFileReleasedDirectory')->with($project, 'FooBar')->willReturn(false);
 
-        $evt->method('getBackend')->willReturnMap([
-            ['System', $backendSystem],
-        ]);
+        $evt->method('getBackendSystem')->willReturn($backendSystem);
 
         // DB
         $evt->method('updateDB')->willReturn(true);
@@ -164,7 +160,6 @@ final class SystemEvent_PROJECT_RENAME_Test extends \Tuleap\Test\PHPUnit\TestCas
             )
             ->onlyMethods([
                 'getProject',
-                'getBackend',
                 'updateDB',
                 'getEventManager',
                 'addProjectHistory',
@@ -175,16 +170,6 @@ final class SystemEvent_PROJECT_RENAME_Test extends \Tuleap\Test\PHPUnit\TestCas
         // The project
         $project = \Tuleap\Test\Builders\ProjectTestBuilder::aProject()->withUnixName('TestProj')->withId(142)->build();
         $evt->method('getProject')->with('142')->willReturn($project);
-
-        // System
-        $backendSystem = $this->createMock(\BackendSystem::class);
-
-        //FRS
-        $backendSystem->method('renameFileReleasedDirectory')->willReturn(true);
-
-        $evt->method('getBackend')->willReturnMap([
-            ['System', $backendSystem],
-        ]);
 
         // DB
         $evt->method('updateDB')->willReturn(false);
