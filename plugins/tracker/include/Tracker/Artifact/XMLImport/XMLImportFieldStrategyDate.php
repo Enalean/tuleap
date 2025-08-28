@@ -20,8 +20,9 @@
 
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 
-class Tracker_Artifact_XMLImport_XMLImportFieldStrategyDate extends Tracker_Artifact_XMLImport_XMLImportFieldStrategyAlphanumeric
+class Tracker_Artifact_XMLImport_XMLImportFieldStrategyDate extends Tracker_Artifact_XMLImport_XMLImportFieldStrategyAlphanumeric // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /**
      * Extract Field data from XML input
@@ -30,7 +31,7 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyDate extends Tracker_Arti
      * @return mixed
      */
     public function getFieldData(
-        Tracker_FormElement_Field $field,
+        TrackerField $field,
         SimpleXMLElement $field_change,
         PFUser $submitted_by,
         Artifact $artifact,

@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Rule\InvolvedFieldsInRule;
 use Tuleap\Tracker\Rule\TrackerRulesDateValidator;
 use Tuleap\Tracker\Rule\TrackerRulesListValidator;
@@ -236,7 +237,7 @@ class Tracker_RulesManager // phpcs:ignore PSR1.Classes.ClassDeclaration.Missing
         return $targets;
     }
 
-    public function getFieldTargets(Tracker_FormElement_Field $source_field): array
+    public function getFieldTargets(TrackerField $source_field): array
     {
         $targets_ids = [];
         $used_fields = $this->form_element_factory->getUsedSbFields($this->tracker);

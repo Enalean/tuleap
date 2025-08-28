@@ -42,7 +42,7 @@ class AllowedFieldRetriever
         $this->semantic_field_checker = $semantic_field_checker;
     }
 
-    public function retrieveAllowedFieldType(\Tracker_FormElement_Field $field)
+    public function retrieveAllowedFieldType(\Tuleap\Tracker\FormElement\Field\TrackerField $field)
     {
         if (! $this->semantic_field_checker->isUsedInBackgroundColorSemantic($field)) {
             return [];

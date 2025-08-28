@@ -52,7 +52,7 @@ class TimeframeWithDuration implements IComputeTimeframes
         $this->duration_field   = $duration_field;
     }
 
-    public function isFieldUsed(\Tracker_FormElement_Field $field): bool
+    public function isFieldUsed(\Tuleap\Tracker\FormElement\Field\TrackerField $field): bool
     {
         $field_id = $field->getId();
 

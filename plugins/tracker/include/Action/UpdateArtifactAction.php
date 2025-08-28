@@ -29,8 +29,6 @@ use PFUser;
 use Tracker_Artifact_ReadOnlyRenderer;
 use Tracker_Artifact_Redirect;
 use Tracker_Exception;
-use Tracker_FormElement_Field;
-use Tuleap\Tracker\FormElement\Field\Computed\ComputedField;
 use Tracker_FormElementFactory;
 use Tracker_IDisplayTrackerLayout;
 use Tuleap\Dashboard\Project\ProjectDashboard;
@@ -48,6 +46,8 @@ use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 use Tuleap\Tracker\Artifact\Renderer\ArtifactViewCollectionBuilder;
 use Tuleap\Tracker\FormElement\ArtifactLinkFieldDoesNotExistFault;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeIsChildLinkRetriever;
+use Tuleap\Tracker\FormElement\Field\Computed\ComputedField;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Permission\ArtifactPermissionType;
 use Tuleap\Tracker\Permission\RetrieveUserPermissionOnArtifacts;
 use Tuleap\Tracker\Tracker;
@@ -301,7 +301,7 @@ final readonly class UpdateArtifactAction
 
     private function addAutocomputeLabelIfFieldIsAutcocomputed(
         Artifact $artifact,
-        Tracker_FormElement_Field $remaining_effort_field,
+        TrackerField $remaining_effort_field,
         $remaining_effort,
     ) {
         if (

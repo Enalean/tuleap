@@ -19,11 +19,12 @@
  */
 
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 
-class Cardwall_CardFieldPresenter
+class Cardwall_CardFieldPresenter // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /**
-     * @var Tracker_FormElement_Field
+     * @var TrackerField
      */
     private $field;
 
@@ -32,7 +33,7 @@ class Cardwall_CardFieldPresenter
      */
     private $artifact;
 
-    public function __construct(Tracker_FormElement_Field $field, Artifact $artifact, Cardwall_UserPreferences_UserPreferencesDisplayUser $display_preferences)
+    public function __construct(TrackerField $field, Artifact $artifact, Cardwall_UserPreferences_UserPreferencesDisplayUser $display_preferences)
     {
         $this->field               = $field;
         $this->artifact            = $artifact;

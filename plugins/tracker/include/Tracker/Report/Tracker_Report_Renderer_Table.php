@@ -35,6 +35,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeSelectorPresenter;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Hierarchy\HierarchyDAO;
 use Tuleap\Tracker\Hierarchy\ParentInHierarchyRetriever;
 use Tuleap\Tracker\Permission\TrackersPermissionsRetriever;
@@ -107,7 +108,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
     /**
      * Get field ids used to (multi)sort results
      *
-     * @return array<int, array{renderer_id: int|mixed, field_id: int, is_desc: string, rank: string, field: Tracker_FormElement_Field}>
+     * @return array<int, array{renderer_id: int|mixed, field_id: int, is_desc: string, rank: string, field: TrackerField}>
      */
     public function getSort($store_in_session = true): array
     {
@@ -1476,7 +1477,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
     }
 
     private function fetchAddAggregatesUsedFunctionsHeader(
-        Tracker_FormElement_Field $field,
+        TrackerField $field,
         array $used_aggregates,
         array $results,
     ) {
@@ -1520,7 +1521,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
     }
 
     private function fetchAddAggregatesUsedFunctionsValue(
-        Tracker_FormElement_Field $field,
+        TrackerField $field,
         array $used_aggregates,
         array $results,
     ) {
@@ -1576,7 +1577,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
 
     private function fetchAddAggregatesButton(
         $read_only,
-        Tracker_FormElement_Field $field,
+        TrackerField $field,
         PFUser $current_user,
         array $used_aggregates,
         $is_first,
@@ -2694,7 +2695,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         return $html;
     }
 
-    private function isFieldUsedAsColumn(Tracker_FormElement_Field $field)
+    private function isFieldUsedAsColumn(TrackerField $field)
     {
         $columns = $this->getColumns();
         if (isset($columns[$field->getId()])) {

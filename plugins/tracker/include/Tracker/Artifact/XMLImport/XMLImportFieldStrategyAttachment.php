@@ -20,8 +20,9 @@
 
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
-use Tuleap\Tracker\FormElement\Field\Files\IdForXMLImportExportConvertor;
 use Tuleap\Tracker\FormElement\Field\Files\FilesField;
+use Tuleap\Tracker\FormElement\Field\Files\IdForXMLImportExportConvertor;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 
 class Tracker_Artifact_XMLImport_XMLImportFieldStrategyAttachment implements Tracker_Artifact_XMLImport_XMLImportFieldStrategy // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
@@ -40,7 +41,7 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyAttachment implements Tra
      * @throws Tracker_Artifact_XMLImport_Exception_NoValidAttachementsException
      */
     public function getFieldData(
-        Tracker_FormElement_Field $field,
+        TrackerField $field,
         SimpleXMLElement $field_change,
         PFUser $submitted_by,
         Artifact $artifact,
@@ -146,7 +147,7 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyAttachment implements Tra
     private function findSourceFieldInFieldsMapping(
         array $mapping_field,
         int $destination_field_id,
-    ): ?\Tracker_FormElement_Field {
+    ): ?\Tuleap\Tracker\FormElement\Field\TrackerField {
         foreach ($mapping_field as $field) {
             if ($field->destination->getId() === $destination_field_id) {
                 return $field->source;

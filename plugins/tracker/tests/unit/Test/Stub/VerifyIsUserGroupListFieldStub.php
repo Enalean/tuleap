@@ -41,7 +41,7 @@ final class VerifyIsUserGroupListFieldStub implements VerifyIsUserGroupListField
     }
 
     #[\Override]
-    public function isUserGroupListField(\Tracker_FormElement_Field $field): bool
+    public function isUserGroupListField(\Tuleap\Tracker\FormElement\Field\TrackerField $field): bool
     {
         return $this->is_user_group_list_field;
     }

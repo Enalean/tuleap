@@ -32,7 +32,6 @@ use Tracker_Artifact_ChangesetValue_Date;
 use Tracker_ArtifactFactory;
 use Tracker_FormElement_DateFormatter;
 use Tracker_FormElement_DateTimeFormatter;
-use Tracker_FormElement_Field;
 use Tracker_FormElement_FieldVisitor;
 use Tracker_FormElement_RESTValueByField_NotImplementedException;
 use Tracker_Report;
@@ -44,6 +43,7 @@ use Tuleap\Date\DateHelper;
 use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\Files\CreatedFileURLMapping;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\DateFieldSpecificPropertiesDAO;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\DeleteSpecificProperties;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\SaveSpecificFieldProperties;
@@ -59,7 +59,7 @@ use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
 use User;
 use UserManager;
 
-class DateField extends Tracker_FormElement_Field
+class DateField extends TrackerField
 {
     public const int DEFAULT_VALUE_TYPE_TODAY    = 0;
     public const int DEFAULT_VALUE_TYPE_REALDATE = 1;
@@ -891,7 +891,7 @@ class DateField extends Tracker_FormElement_Field
     }
 
     /**
-     * @see Tracker_FormElement_Field::hasChanges()
+     * @see TrackerField::hasChanges()
      */
     #[Override]
     public function hasChanges(Artifact $artifact, Tracker_Artifact_ChangesetValue $old_value, $new_value)

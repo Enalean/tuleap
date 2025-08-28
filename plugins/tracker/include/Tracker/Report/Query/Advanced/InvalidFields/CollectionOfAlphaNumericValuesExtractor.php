@@ -19,7 +19,7 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields;
 
-use Tracker_FormElement_Field;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentDateTimeValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentUserValueWrapper;
@@ -41,7 +41,7 @@ final class CollectionOfAlphaNumericValuesExtractor implements ValueWrapperVisit
      * @throws MySelfIsNotSupportedException
      * @throws StatusOpenIsNotSupportedException
      */
-    public function extractCollectionOfValues(ValueWrapper $value_wrapper, Tracker_FormElement_Field $field): array
+    public function extractCollectionOfValues(ValueWrapper $value_wrapper, TrackerField $field): array
     {
         return (array) $value_wrapper->accept($this, new FieldValueWrapperParameters($field));
     }

@@ -85,7 +85,7 @@ class MethodBasedOnEffort implements IComputeProgression
         );
     }
 
-    public function isFieldUsedInComputation(\Tracker_FormElement_Field $field): bool
+    public function isFieldUsedInComputation(\Tuleap\Tracker\FormElement\Field\TrackerField $field): bool
     {
         $field_id = $field->getId();
 

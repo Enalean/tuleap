@@ -19,12 +19,12 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Integer;
 
-use Tracker_FormElement_Field;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldException;
 
 final class IntegerToMySelfComparisonException extends InvalidFieldException
 {
-    public function __construct(Tracker_FormElement_Field $field)
+    public function __construct(TrackerField $field)
     {
         $message = sprintf(
             dgettext('tuleap-tracker', "The integer field '%s' cannot be compared to MYSELF()."),

@@ -29,10 +29,10 @@ use Cardwall_OnTop_Config_TrackerMappingFreestyle;
 use Cardwall_OnTop_Config_TrackerMappingStatus;
 use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\MockObject\MockObject;
-use Tracker_FormElement_Field;
 use Tracker_FormElementFactory;
 use TrackerFactory;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Test\Builders\Fields\IntegerFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Tracker;
@@ -44,9 +44,9 @@ abstract class Cardwall_OnTop_Config_Command_UpdateMappingFieldsTestBase extends
     protected Tracker $task_tracker;
     protected Tracker $story_tracker;
     protected TrackerFactory&MockObject $tracker_factory;
-    protected Tracker_FormElement_Field $status_field;
-    protected Tracker_FormElement_Field $assignto_field;
-    protected Tracker_FormElement_Field $stage_field;
+    protected TrackerField $status_field;
+    protected TrackerField $assignto_field;
+    protected TrackerField $stage_field;
     protected Tracker_FormElementFactory&MockObject $element_factory;
     protected Cardwall_OnTop_ColumnMappingFieldValueDao&MockObject $value_dao;
     protected Cardwall_OnTop_Config_Command_UpdateMappingFields $command;
@@ -96,7 +96,7 @@ abstract class Cardwall_OnTop_Config_Command_UpdateMappingFieldsTestBase extends
         );
     }
 
-    private function buildField(int $id, Tracker $tracker): Tracker_FormElement_Field
+    private function buildField(int $id, Tracker $tracker): TrackerField
     {
         return IntegerFieldBuilder::anIntField($id)->inTracker($tracker)->build();
     }

@@ -19,12 +19,12 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Text;
 
-use Tracker_FormElement_Field;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldException;
 
 final class TextToNowComparisonException extends InvalidFieldException
 {
-    public function __construct(Tracker_FormElement_Field $field)
+    public function __construct(TrackerField $field)
     {
         $message = sprintf(
             dgettext('tuleap-tracker', "The text field '%s' cannot be compared to NOW()."),

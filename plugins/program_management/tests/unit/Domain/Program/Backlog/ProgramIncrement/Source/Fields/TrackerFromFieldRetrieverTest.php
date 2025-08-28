@@ -54,7 +54,7 @@ final class TrackerFromFieldRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItReturnsTheField(): void
     {
-        $field   = $this->createStub(\Tracker_FormElement_Field::class);
+        $field   = $this->createStub(\Tuleap\Tracker\FormElement\Field\TrackerField::class);
         $tracker = TrackerTestBuilder::aTracker()->withId(1)->withName('Tracker')
             ->withProject(new \Project(['group_id' => 102, 'group_name' => 'A project']))
             ->build();

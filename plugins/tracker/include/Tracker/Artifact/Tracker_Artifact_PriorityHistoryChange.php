@@ -17,8 +17,9 @@
  */
 
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 
-class Tracker_Artifact_PriorityHistoryChange extends Tracker_Artifact_Followup_Item
+class Tracker_Artifact_PriorityHistoryChange extends Tracker_Artifact_Followup_Item // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public const NO_CONTEXT = '-1';
 
@@ -253,7 +254,7 @@ class Tracker_Artifact_PriorityHistoryChange extends Tracker_Artifact_Followup_I
         return '';
     }
 
-    public function getValue(Tracker_FormElement_Field $field)
+    public function getValue(TrackerField $field)
     {
         return null;
     }

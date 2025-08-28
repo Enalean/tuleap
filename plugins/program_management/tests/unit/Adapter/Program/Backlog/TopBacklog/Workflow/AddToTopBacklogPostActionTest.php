@@ -22,12 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Workflow;
 
-use Tracker_FormElement_Field;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\ProgramManagement\Adapter\Workspace\ProgramServiceIsEnabledCertifier;
 use Tuleap\ProgramManagement\ProgramService;
 use Tuleap\ProgramManagement\Tests\Stub\Program\Backlog\TopBacklog\TopBacklogChangeProcessorStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -63,7 +63,7 @@ final class AddToTopBacklogPostActionTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testDoesNotBypassPermissions(): void
     {
-        self::assertFalse($this->getPostAction()->bypassPermissions($this->createMock(Tracker_FormElement_Field::class)));
+        self::assertFalse($this->getPostAction()->bypassPermissions($this->createMock(TrackerField::class)));
     }
 
     public function testTraverseVisitorAsAnExternalAction(): void

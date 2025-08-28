@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Workflow\PostAction\Visitor;
 
 /**
@@ -50,7 +51,7 @@ class Transition_PostAction_Field_Date extends Transition_PostAction_Field
      *
      * @param Transition                   $transition The transition the post action belongs to
      * @param int $id Id of the post action
-     * @param Tracker_FormElement_Field    $field      The field the post action should modify
+     * @param TrackerField    $field      The field the post action should modify
      * @param int $value_type The type of the value to set
      */
     public function __construct(Transition $transition, $id, $field, $value_type)

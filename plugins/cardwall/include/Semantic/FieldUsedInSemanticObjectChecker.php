@@ -20,7 +20,7 @@
 
 namespace Tuleap\Cardwall\Semantic;
 
-use Tracker_FormElement_Field;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 
 class FieldUsedInSemanticObjectChecker
 {
@@ -35,11 +35,11 @@ class FieldUsedInSemanticObjectChecker
     }
 
     /**
-     * @param Tracker_FormElement_Field[] $card_fields
+     * @param TrackerField[] $card_fields
      *
      * @return bool
      */
-    public function isUsedInSemantic(Tracker_FormElement_Field $field, array $card_fields)
+    public function isUsedInSemantic(TrackerField $field, array $card_fields)
     {
         return $this->isUsedInCardFieldSemantic($field, $card_fields) || $this->isUsedInBackgroundColorSemantic($field);
     }
@@ -48,7 +48,7 @@ class FieldUsedInSemanticObjectChecker
      *
      * @return bool
      */
-    private function isUsedInCardFieldSemantic(Tracker_FormElement_Field $field, array $card_fields)
+    private function isUsedInCardFieldSemantic(TrackerField $field, array $card_fields)
     {
         foreach ($card_fields as $card_field) {
             if ($card_field->getId() == $field->getId()) {
@@ -59,7 +59,7 @@ class FieldUsedInSemanticObjectChecker
         return false;
     }
 
-    public function isUsedInBackgroundColorSemantic(Tracker_FormElement_Field $field)
+    public function isUsedInBackgroundColorSemantic(TrackerField $field)
     {
         return $this->color_dao->isFieldUsedAsBackgroundColor($field->getId());
     }

@@ -47,7 +47,7 @@ class BindListUserValueGetter
     public function getSubsetOfUsersValueWithUserIds(
         array $ugroups,
         array $user_ids,
-        \Tracker_FormElement_Field $field,
+        \Tuleap\Tracker\FormElement\Field\TrackerField $field,
     ): array {
         if ($this->isRegisteredUsersPartOfRequestedUserGroups($ugroups)) {
             return $this->platform_users_getter->getRegisteredUsers($this->user_helper);
@@ -65,7 +65,7 @@ class BindListUserValueGetter
      */
     public function getActiveUsersValue(
         array $ugroups,
-        \Tracker_FormElement_Field $field,
+        \Tuleap\Tracker\FormElement\Field\TrackerField $field,
     ): array {
         if ($this->isRegisteredUsersPartOfRequestedUserGroups($ugroups)) {
             return $this->platform_users_getter->getRegisteredUsers($this->user_helper);
@@ -89,7 +89,7 @@ class BindListUserValueGetter
     private function getUsersValueWithUserIdsAccordingToUserStatus(
         array $ugroups,
         array $bindvalue_ids,
-        \Tracker_FormElement_Field $field,
+        \Tuleap\Tracker\FormElement\Field\TrackerField $field,
         bool $filter_on_active_user,
     ): array {
         $da = $this->bind_defaultvalue_dao->getDa();

@@ -65,7 +65,6 @@ use Tracker_ArtifactNotificationSubscriber;
 use Tracker_Dispatchable_Interface;
 use Tracker_Exception;
 use Tracker_FormElement;
-use Tracker_FormElement_Field;
 use Tracker_FormElementFactory;
 use Tracker_HierarchyFactory;
 use Tracker_IDisplayTrackerLayout;
@@ -146,12 +145,13 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeIsChildLinkRetriever;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\Burndown\BurndownCacheGenerationChecker;
 use Tuleap\Tracker\FormElement\Field\Burndown\BurndownCacheGenerator;
-use Tuleap\Tracker\FormElement\Field\Burndown\BurndownRemainingEffortAdderForREST;
 use Tuleap\Tracker\FormElement\Field\Burndown\BurndownField;
+use Tuleap\Tracker\FormElement\Field\Burndown\BurndownRemainingEffortAdderForREST;
 use Tuleap\Tracker\FormElement\Field\Computed\ComputedFieldDao;
 use Tuleap\Tracker\FormElement\Field\Files\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\Files\FilesField;
 use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Notifications\UnsubscribersNotificationDAO;
 use Tuleap\Tracker\Permission\TrackersPermissionsRetriever;
 use Tuleap\Tracker\REST\Artifact\ChangesetValue\ArtifactLink\NewArtifactLinkChangesetValueBuilder;
@@ -1463,7 +1463,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
         return $this->last_changeset;
     }
 
-    public function getLastChangesetWithFieldValue(Tracker_FormElement_Field $field): ?Tracker_Artifact_Changeset
+    public function getLastChangesetWithFieldValue(TrackerField $field): ?Tracker_Artifact_Changeset
     {
         return $this->getChangesetFactory()->getLastChangesetWithFieldValue($this, $field);
     }
@@ -1716,12 +1716,12 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
     /**
      * Get the value for this field in the changeset
      *
-     * @param Tracker_FormElement_Field $field The field
+     * @param TrackerField $field The field
      * @param Tracker_Artifact_Changeset $changeset The changeset. if null given take the last changeset of the artifact
      *
      */
     public function getValue(
-        Tracker_FormElement_Field $field,
+        TrackerField $field,
         ?Tracker_Artifact_Changeset $changeset = null,
     ): ?Tracker_Artifact_ChangesetValue {
         if (! $changeset) {

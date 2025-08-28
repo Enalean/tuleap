@@ -41,7 +41,7 @@ final class VerifyIsExternalFieldStub implements VerifyIsExternalField
     }
 
     #[\Override]
-    public function isAnExternalField(\Tracker_FormElement_Field $field): bool
+    public function isAnExternalField(\Tuleap\Tracker\FormElement\Field\TrackerField $field): bool
     {
         return $this->is_an_external_field;
     }

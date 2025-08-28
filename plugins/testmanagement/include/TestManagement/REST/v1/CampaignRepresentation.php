@@ -21,7 +21,6 @@
 namespace Tuleap\TestManagement\REST\v1;
 
 use PFUser;
-use Tracker_FormElement_Field;
 use Tracker_FormElementFactory;
 use TrackerFactory;
 use Tuleap\TestManagement\Campaign\Campaign;
@@ -29,6 +28,7 @@ use Tuleap\TestManagement\Campaign\InformationNeededToRetrieveTestStatusOfACampa
 use Tuleap\TestManagement\Campaign\TestExecutionTestStatusDAO;
 use Tuleap\TestManagement\Config;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Semantic\Status\SemanticStatusClosedValueNotFoundException;
 use Tuleap\Tracker\Semantic\Status\SemanticStatusNotDefinedException;
 use Tuleap\Tracker\Semantic\Status\StatusValueRetriever;
@@ -192,7 +192,7 @@ class CampaignRepresentation
         );
     }
 
-    private static function getFieldValue(Artifact $artifact, Tracker_FormElement_Field $field): ?\Tracker_Artifact_ChangesetValue
+    private static function getFieldValue(Artifact $artifact, TrackerField $field): ?\Tracker_Artifact_ChangesetValue
     {
         return $artifact->getValue($field);
     }
@@ -233,7 +233,7 @@ class CampaignRepresentation
     private static function isUserAllowedToUpdateLabelField(
         PFUser $user,
         Artifact $artifact,
-        Tracker_FormElement_Field $label_field,
+        TrackerField $label_field,
     ): bool {
         return $artifact->userCanUpdate($user) && $label_field->userCanUpdate($user);
     }
@@ -242,7 +242,7 @@ class CampaignRepresentation
         Tracker_FormElementFactory $form_element_factory,
         int $tracker_id,
         PFUser $user,
-    ): ?Tracker_FormElement_Field {
+    ): ?TrackerField {
         return $form_element_factory->getUsedFieldByNameForUser(
             $tracker_id,
             self::FIELD_NAME,

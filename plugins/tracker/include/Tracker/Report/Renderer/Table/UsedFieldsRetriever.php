@@ -23,13 +23,13 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Report\Renderer\Table;
 
 use PFUser;
-use Tracker_FormElement_Field;
 use Tracker_Report_Renderer_Table;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 
 class UsedFieldsRetriever
 {
     /**
-     * @return Tracker_FormElement_Field[]
+     * @return TrackerField[]
      */
     public function getUsedFieldsInRendererUserCanSee(
         PFUser $current_user,
@@ -42,7 +42,7 @@ class UsedFieldsRetriever
                 continue;
             }
             $field = $column['field'];
-            assert($field instanceof Tracker_FormElement_Field);
+            assert($field instanceof TrackerField);
 
             if (! $field->userCanRead($current_user)) {
                 continue;
@@ -56,7 +56,7 @@ class UsedFieldsRetriever
             static fn (array $column_a, array $column_b): int => (int) $column_a['rank'] <=> (int) $column_b['rank'],
         );
         return array_map(
-            static fn (array $column): Tracker_FormElement_Field => $column['field'],
+            static fn (array $column): TrackerField => $column['field'],
             $used_columns
         );
     }

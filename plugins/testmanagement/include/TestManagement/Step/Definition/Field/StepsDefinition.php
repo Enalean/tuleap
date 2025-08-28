@@ -31,7 +31,6 @@ use TemplateRendererFactory;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue;
 use Tracker_Artifact_ChangesetValue_Text;
-use Tracker_FormElement_Field;
 use Tracker_FormElement_FieldVisitor;
 use Tracker_FormElementFactory;
 use Tracker_Report_Criteria;
@@ -48,12 +47,13 @@ use Tuleap\Tracker\Artifact\FileUploadDataProvider;
 use Tuleap\Tracker\Artifact\UploadDataAttributesForRichTextEditorBuilder;
 use Tuleap\Tracker\FormElement\Field\Files\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\Files\FileURLSubstitutor;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\FormElement\FieldContentIndexer;
 use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
 use Tuleap\Tracker\FormElement\XML\XMLFormElement;
 use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 
-class StepsDefinition extends Tracker_FormElement_Field implements TrackerFormElementExternalField
+class StepsDefinition extends TrackerField implements TrackerFormElementExternalField
 {
     public const int START_RANK = 1;
     public const string TYPE    = 'ttmstepdef';
@@ -527,7 +527,7 @@ class StepsDefinition extends Tracker_FormElement_Field implements TrackerFormEl
      * @return ViewAdmin
      */
     #[Override]
-    public function getFormAdminVisitor(Tracker_FormElement_Field $element, array $used_element)
+    public function getFormAdminVisitor(TrackerField $element, array $used_element)
     {
         return new ViewAdmin($element, $used_element);
     }

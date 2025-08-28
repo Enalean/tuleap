@@ -23,16 +23,16 @@ declare(strict_types=1);
 namespace Tuleap\Cardwall;
 
 use PHPUnit\Framework\MockObject\MockObject;
-use Tracker_FormElement_Field;
 use Tracker_FormElementFactory;
 use Tuleap\Cardwall\Semantic\FieldUsedInSemanticObjectChecker;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Test\Builders\Fields\IntegerFieldBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class AllowedFieldRetrieverTest extends TestCase
 {
-    private Tracker_FormElement_Field $field;
+    private TrackerField $field;
     private FieldUsedInSemanticObjectChecker&MockObject $checker;
     private AllowedFieldRetriever $allowed_field_retriever;
     private Tracker_FormElementFactory&MockObject $form_element_factory;

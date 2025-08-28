@@ -19,6 +19,7 @@
  */
 
 use Tuleap\REST\JsonCast;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\REST\FormElement\PermissionsForGroupsRepresentation;
 
 /**
@@ -111,7 +112,7 @@ class Tracker_REST_FormElementRepresentation //phpcs:ignore
         $this->name     = $form_element->getName();
         $this->label    = $form_element->getLabel();
 
-        if ($form_element instanceof Tracker_FormElement_Field) {
+        if ($form_element instanceof TrackerField) {
             $this->required = JsonCast::toBoolean($form_element->isRequired());
         } else {
             $this->required = false;

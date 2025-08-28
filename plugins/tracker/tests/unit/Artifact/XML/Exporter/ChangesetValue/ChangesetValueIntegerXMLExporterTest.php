@@ -25,7 +25,7 @@ namespace Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValue;
 
 use SimpleXMLElement;
 use Tracker_Artifact_ChangesetValue_Integer;
-use Tracker_FormElement_Field;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetValueIntegerTestBuilder;
@@ -42,7 +42,7 @@ final class ChangesetValueIntegerXMLExporterTest extends \Tuleap\Test\PHPUnit\Te
 
     private Tracker_Artifact_ChangesetValue_Integer $changeset_value;
 
-    private Tracker_FormElement_Field $field;
+    private TrackerField $field;
 
     protected function setUp(): void
     {

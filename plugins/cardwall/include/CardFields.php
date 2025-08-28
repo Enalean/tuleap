@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Tracker;
 
 /**
@@ -27,7 +28,7 @@ use Tuleap\Tracker\Tracker;
 class Cardwall_CardFields // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /**
-     * @return Tracker_FormElement_Field[]
+     * @return TrackerField[]
      */
     public function getFields(Artifact $artifact): array
     {
@@ -42,7 +43,7 @@ class Cardwall_CardFields // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingN
     }
 
     /**
-     * @return Tracker_FormElement_Field[]
+     * @return TrackerField[]
      */
     private function getDisplayedFields(Tracker $tracker): array
     {

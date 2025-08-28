@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Semantic\Status\Done;
 
-use Tracker_FormElement_Field;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 
 class SemanticDoneIntroPresenter
 {
@@ -54,7 +54,7 @@ class SemanticDoneIntroPresenter
 
     public function __construct(
         array $selected_values,
-        ?Tracker_FormElement_Field $semantic_status_field,
+        ?TrackerField $semantic_status_field,
         array $external_services_descriptions,
     ) {
         $this->semantic_status_is_defined = ($semantic_status_field !== null);

@@ -18,12 +18,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Tracker;
 
-abstract class Cardwall_OnTop_Config_TrackerMappingField extends Cardwall_OnTop_Config_TrackerMapping
+abstract class Cardwall_OnTop_Config_TrackerMappingField extends Cardwall_OnTop_Config_TrackerMapping // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /**
-     * @var Tracker_FormElement_Field
+     * @var TrackerField
      */
     private $field;
 
@@ -32,7 +33,7 @@ abstract class Cardwall_OnTop_Config_TrackerMappingField extends Cardwall_OnTop_
      */
     private $value_mappings;
 
-    public function __construct(Tracker $tracker, array $available_fields, array $value_mappings, Tracker_FormElement_Field $field)
+    public function __construct(Tracker $tracker, array $available_fields, array $value_mappings, TrackerField $field)
     {
         parent::__construct($tracker, $available_fields);
         $this->value_mappings = $value_mappings;

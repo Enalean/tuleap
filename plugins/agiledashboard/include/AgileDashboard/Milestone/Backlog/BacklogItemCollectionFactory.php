@@ -28,6 +28,7 @@ use Tuleap\AgileDashboard\Milestone\Backlog\IBacklogItem;
 use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Dao\PriorityDao;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Permission\RetrieveUserPermissionOnArtifacts;
 use Tuleap\Tracker\Semantic\Status\RetrieveSemanticStatusField;
 use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
@@ -521,7 +522,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory //phpcs:igno
         return $this->cache_read_initial_effort[$tracker->getId()];
     }
 
-    protected function getInitialEffortField(Tracker $tracker): ?Tracker_FormElement_Field
+    protected function getInitialEffortField(Tracker $tracker): ?TrackerField
     {
         return AgileDashBoard_Semantic_InitialEffort::load($tracker)->getField();
     }

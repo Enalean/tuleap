@@ -22,5 +22,5 @@ namespace Tuleap\Tracker\Action;
 
 interface VerifyIsUserGroupListField
 {
-    public function isUserGroupListField(\Tracker_FormElement_Field $field): bool;
+    public function isUserGroupListField(\Tuleap\Tracker\FormElement\Field\TrackerField $field): bool;
 }

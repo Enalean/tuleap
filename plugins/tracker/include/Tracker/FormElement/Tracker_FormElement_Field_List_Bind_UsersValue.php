@@ -20,6 +20,7 @@
  */
 
 use Tuleap\Tracker\FormElement\Field\ListField;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\User\Avatar\AvatarHashDao;
 use Tuleap\User\Avatar\ComputeAvatarHash;
 use Tuleap\User\Avatar\UserAvatarUrlProvider;
@@ -184,7 +185,7 @@ class Tracker_FormElement_Field_List_Bind_UsersValue extends Tracker_FormElement
         return $this->id;
     }
 
-    public function getFullRESTValue(Tracker_FormElement_Field $field)
+    public function getFullRESTValue(TrackerField $field)
     {
         if ($this->getId() == 100) {
             $user = new PFUser();

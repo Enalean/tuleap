@@ -23,14 +23,14 @@ declare(strict_types=1);
 namespace Tuleap\Cardwall\Semantic;
 
 use PHPUnit\Framework\MockObject\MockObject;
-use Tracker_FormElement_Field;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Test\Builders\Fields\IntegerFieldBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class FieldUsedInSemanticObjectCheckerTest extends TestCase
 {
-    private Tracker_FormElement_Field $field;
+    private TrackerField $field;
     private FieldUsedInSemanticObjectChecker $checker;
     private BackgroundColorDao&MockObject $background_dao;
 

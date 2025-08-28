@@ -22,5 +22,5 @@ namespace Tuleap\Tracker\Action;
 
 interface VerifyIsStaticListField
 {
-    public function isStaticListField(\Tracker_FormElement_Field $field): bool;
+    public function isStaticListField(\Tuleap\Tracker\FormElement\Field\TrackerField $field): bool;
 }

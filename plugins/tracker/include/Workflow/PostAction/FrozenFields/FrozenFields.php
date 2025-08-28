@@ -23,8 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Workflow\PostAction\FrozenFields;
 
 use SimpleXMLElement;
-use Tracker_FormElement_Field;
 use Transition_PostAction;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Workflow\PostAction\Visitor;
 
 class FrozenFields extends Transition_PostAction
@@ -32,7 +32,7 @@ class FrozenFields extends Transition_PostAction
     public const SHORT_NAME   = 'frozen_fields';
     public const XML_TAG_NAME = 'postaction_frozen_fields';
 
-    /** @var Tracker_FormElement_Field[] */
+    /** @var TrackerField[] */
     private $fields = [];
 
     public function __construct(\Transition $transition, int $id, array $fields)
@@ -100,7 +100,7 @@ class FrozenFields extends Transition_PostAction
      *
      * @return bool
      */
-    public function bypassPermissions(Tracker_FormElement_Field $field)
+    public function bypassPermissions(TrackerField $field)
     {
         return false;
     }

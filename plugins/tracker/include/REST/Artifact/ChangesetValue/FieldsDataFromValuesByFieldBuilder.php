@@ -62,7 +62,7 @@ final class FieldsDataFromValuesByFieldBuilder
     /**
      * @throws \Tracker_FormElement_InvalidFieldException
      */
-    private function getFieldByName(\Tuleap\Tracker\Tracker $tracker, string $field_name): \Tracker_FormElement_Field
+    private function getFieldByName(\Tuleap\Tracker\Tracker $tracker, string $field_name): \Tuleap\Tracker\FormElement\Field\TrackerField
     {
         $field = $this->fields_retriever->getUsedFieldByName($tracker->getId(), $field_name);
         if (! $field) {

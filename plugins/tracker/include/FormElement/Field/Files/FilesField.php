@@ -39,7 +39,6 @@ use Tracker_ArtifactFactory;
 use Tracker_FileInfo;
 use Tracker_FileInfoDao;
 use Tracker_FileInfoFactory;
-use Tracker_FormElement_Field;
 use Tracker_FormElement_FieldVisitor;
 use Tracker_FormElement_InvalidFieldException;
 use Tracker_FormElement_RESTValueByField_NotImplementedException;
@@ -54,6 +53,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\Files\Upload\FileOngoingUploadDao;
 use Tuleap\Tracker\FormElement\Field\Files\Upload\Tus\FileBeingUploadedInformationProvider;
 use Tuleap\Tracker\FormElement\Field\Files\Upload\UploadPathAllocator;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Report\Criteria\CriteriaFileValueDAO;
 use Tuleap\Tracker\Report\Criteria\DeleteReportCriteriaValue;
 use Tuleap\Tracker\Report\Query\ParametrizedFrom;
@@ -61,7 +61,7 @@ use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 use UserHelper;
 use UserManager;
 
-class FilesField extends Tracker_FormElement_Field
+class FilesField extends TrackerField
 {
     #[Override]
     public function getCriteriaFromWhere(Tracker_Report_Criteria $criteria): Option
@@ -917,7 +917,7 @@ class FilesField extends Tracker_FormElement_Field
     }
 
     /**
-     * @see Tracker_FormElement_Field::hasChanges()
+     * @see TrackerField::hasChanges()
      */
     #[Override]
     public function hasChanges(Artifact $artifact, Tracker_Artifact_ChangesetValue $old_value, $new_value)

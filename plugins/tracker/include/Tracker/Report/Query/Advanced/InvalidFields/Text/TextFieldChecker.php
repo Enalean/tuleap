@@ -44,7 +44,7 @@ final class TextFieldChecker implements ValueWrapperVisitor
      * @throws TextToNowComparisonException
      * @throws TextToStatusOpenComparisonException
      */
-    public function checkFieldIsValidForComparison(Comparison $comparison, \Tracker_FormElement_Field $field): void
+    public function checkFieldIsValidForComparison(Comparison $comparison, \Tuleap\Tracker\FormElement\Field\TrackerField $field): void
     {
         match ($comparison->getType()) {
             ComparisonType::Equal,
@@ -58,7 +58,7 @@ final class TextFieldChecker implements ValueWrapperVisitor
      * @throws TextToNowComparisonException
      * @throws TextToStatusOpenComparisonException
      */
-    private function checkTextValueIsValid(Comparison $comparison, \Tracker_FormElement_Field $field): void
+    private function checkTextValueIsValid(Comparison $comparison, \Tuleap\Tracker\FormElement\Field\TrackerField $field): void
     {
         $comparison->getValueWrapper()->accept($this, new FieldValueWrapperParameters($field));
     }

@@ -21,6 +21,7 @@
  */
 
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Workflow\Transition\OrphanTransitionException;
 
 class Transition // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
@@ -320,7 +321,7 @@ class Transition // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     *
     * @return bool true if the permissions on the field can be by passed, false otherwise
     */
-    public function bypassPermissions(Tracker_FormElement_Field $field)
+    public function bypassPermissions(TrackerField $field)
     {
         $postactions = $this->getPostActions();
         foreach ($postactions as $postaction) {

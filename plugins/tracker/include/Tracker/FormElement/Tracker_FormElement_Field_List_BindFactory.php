@@ -20,13 +20,14 @@
  */
 
 use Tuleap\DB\DatabaseUUIDV7Factory;
+use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorDao;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDefaultValueDao;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticDao;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindUgroupsValueDao;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindUsersDao;
-use Tuleap\Tracker\FormElement\Field\ListField;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 
 class Tracker_FormElement_Field_List_BindFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
@@ -66,7 +67,7 @@ class Tracker_FormElement_Field_List_BindFactory // phpcs:ignore PSR1.Classes.Cl
 
     /**
      * Build a binder associated to a list field.
-     * @param Tracker_FormElement_Field $field
+     * @param TrackerField $field
      * @param string $type ('ug', 'submit', 'Static')
      */
     public function getBind($field, $type)
@@ -235,14 +236,14 @@ class Tracker_FormElement_Field_List_BindFactory // phpcs:ignore PSR1.Classes.Cl
      * Creates a Field_List_Bind Object
      *
      * @param SimpleXMLElement          $xml         containing the structure of the imported bind
-     * @param Tracker_FormElement_Field $field       to which the bind is attached
+     * @param TrackerField $field       to which the bind is attached
      * @param array                     &$xmlMapping where the newly created formElements indexed by their XML IDs are stored
      *
      * @return Tracker_FormElement_Field_List_Bind Object
      */
     public function getInstanceFromXML(
         SimpleXMLElement $xml,
-        Tracker_FormElement_Field $field,
+        TrackerField $field,
         array &$xmlMapping,
         User\XML\Import\IFindUserFromXMLReference $user_finder,
     ) {

@@ -82,7 +82,7 @@ final class SelectOptionsBuilderTest extends TestCase
         $tracker = TrackerTestBuilder::aTracker()->build();
         $user    = UserTestBuilder::buildWithDefaults();
 
-        $stepdef = $this->createMock(\Tracker_FormElement_Field::class);
+        $stepdef = $this->createMock(\Tuleap\Tracker\FormElement\Field\TrackerField::class);
         $stepdef->method('userCanRead')->willReturn(true);
         $stepdef->method('getLabel')->willReturn('Step definition');
         $stepdef->method('getId')->willReturn(123);

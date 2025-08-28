@@ -26,11 +26,11 @@ use Feedback;
 use Override;
 use SimpleXMLElement;
 use Tracker_Artifact_Changeset;
-use Tracker_FormElement_Field;
 use Transition;
 use Transition_PostAction;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactAlreadyPlannedException;
 use Tuleap\AgileDashboard\ExplicitBacklog\UnplannedArtifactsAdder;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Workflow\PostAction\Visitor;
 
 class AddToTopBacklog extends Transition_PostAction
@@ -77,7 +77,7 @@ class AddToTopBacklog extends Transition_PostAction
     }
 
     #[Override]
-    public function bypassPermissions(Tracker_FormElement_Field $field)
+    public function bypassPermissions(TrackerField $field)
     {
         return false;
     }

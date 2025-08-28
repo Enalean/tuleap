@@ -24,8 +24,8 @@ namespace Tuleap\Tracker\Test\Builders;
 
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue_List;
-use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_List_BindValue;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 
 final class ChangesetValueListTestBuilder
 {
@@ -37,11 +37,11 @@ final class ChangesetValueListTestBuilder
     private function __construct(
         private readonly int $id,
         private readonly Tracker_Artifact_Changeset $changeset,
-        private readonly Tracker_FormElement_Field $field,
+        private readonly TrackerField $field,
     ) {
     }
 
-    public static function aListOfValue(int $id, Tracker_Artifact_Changeset $changeset, Tracker_FormElement_Field $field): self
+    public static function aListOfValue(int $id, Tracker_Artifact_Changeset $changeset, TrackerField $field): self
     {
         return new self($id, $changeset, $field);
     }

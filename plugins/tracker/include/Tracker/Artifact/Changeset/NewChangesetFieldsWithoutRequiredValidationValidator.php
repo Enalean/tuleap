@@ -21,8 +21,8 @@
 namespace Tuleap\Tracker\Artifact\Changeset;
 
 use Tracker_Artifact_Changeset_FieldsValidator;
-use Tracker_FormElement_Field;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 
 /**
  * I validate fields for both initial and new changesets but without validating required property
@@ -31,7 +31,7 @@ class NewChangesetFieldsWithoutRequiredValidationValidator extends Tracker_Artif
 {
     protected function canValidateField(
         Artifact $artifact,
-        Tracker_FormElement_Field $field,
+        TrackerField $field,
         \PFUser $user,
     ): bool {
         return true;
@@ -39,7 +39,7 @@ class NewChangesetFieldsWithoutRequiredValidationValidator extends Tracker_Artif
 
     protected function validateField(
         Artifact $artifact,
-        Tracker_FormElement_Field $field,
+        TrackerField $field,
         \PFUser $user,
         $submitted_value,
     ) {

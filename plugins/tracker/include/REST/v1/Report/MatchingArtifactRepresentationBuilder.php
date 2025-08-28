@@ -25,10 +25,10 @@ namespace Tuleap\Tracker\REST\v1\Report;
 use Luracast\Restler\RestException;
 use PFUser;
 use Tracker_Artifact_Changeset;
-use Tracker_FormElement_Field;
 use Tracker_Report;
 use Tracker_Report_Renderer_Table;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Report\Renderer\Table\TableRendererForReportRetriever;
 use Tuleap\Tracker\Report\Renderer\Table\UsedFieldsRetriever;
 use Tuleap\Tracker\REST\Artifact\ArtifactRepresentation;
@@ -146,7 +146,7 @@ class MatchingArtifactRepresentationBuilder
     }
 
     /**
-     * @param Tracker_FormElement_Field[] $renderer_table_fields
+     * @param TrackerField[] $renderer_table_fields
      */
     private function getRESTFieldValues(
         PFUser $current_user,

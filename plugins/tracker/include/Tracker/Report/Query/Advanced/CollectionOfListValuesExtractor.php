@@ -19,7 +19,7 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced;
 
-use Tracker_FormElement_Field;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentDateTimeValueWrapper;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\CurrentUserValueWrapper;
@@ -47,7 +47,7 @@ class CollectionOfListValuesExtractor implements ValueWrapperVisitor
      * @throws ListToNowComparisonException
      * @throws ListToStatusOpenComparisonException
      */
-    public function extractCollectionOfValues(ValueWrapper $value_wrapper, Tracker_FormElement_Field $field): array
+    public function extractCollectionOfValues(ValueWrapper $value_wrapper, TrackerField $field): array
     {
         try {
             return (array) $value_wrapper->accept($this, new FieldValueWrapperParameters($field));

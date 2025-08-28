@@ -55,7 +55,7 @@ final class BurnupEffortCalculatorForArtifact implements RetrieveBurnupEffortFor
             return new BurnupEffort((float) $team_effort, (float) $total_effort);
         }
 
-        \assert($initial_effort_field instanceof \Tracker_FormElement_Field);
+        \assert($initial_effort_field instanceof \Tuleap\Tracker\FormElement\Field\TrackerField);
         if ($artifact->getValue($initial_effort_field, $changeset)) {
             $total_effort = $artifact->getValue($initial_effort_field, $changeset)?->getValue();
         }

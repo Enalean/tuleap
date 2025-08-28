@@ -20,6 +20,7 @@
  */
 
 use Tuleap\Tracker\FormElement\Field\Files\FilesField;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\REST\Artifact\FileInfoRepresentation;
 
 class Tracker_FileInfo // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
@@ -39,7 +40,7 @@ class Tracker_FileInfo // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingName
 
     /**
      * @param int $id
-     * @param Tracker_FormElement_Field $field
+     * @param TrackerField $field
      * @param int $submitted_by
      * @param string                    $description
      * @param string                    $filename

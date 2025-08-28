@@ -74,7 +74,7 @@ class ByGroupOneFieldPresenter
      */
     public $has_other_groups = false;
 
-    public function __construct(\Tracker_FormElement_Field $field, ByGroupFieldsPermissions $fields_permission_for_group)
+    public function __construct(\Tuleap\Tracker\FormElement\Field\TrackerField $field, ByGroupFieldsPermissions $fields_permission_for_group)
     {
         $this->field_id          = $field->getId();
         $this->field_label       = $field->getLabel();

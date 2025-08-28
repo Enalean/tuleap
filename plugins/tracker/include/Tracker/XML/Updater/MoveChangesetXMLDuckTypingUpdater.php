@@ -229,8 +229,8 @@ final class MoveChangesetXMLDuckTypingUpdater implements UpdateMoveChangesetXMLD
 
     private function findDestinationFieldInFieldsMapping(
         DuckTypedMoveFieldCollection $field_collection,
-        \Tracker_FormElement_Field $source_field,
-    ): ?\Tracker_FormElement_Field {
+        \Tuleap\Tracker\FormElement\Field\TrackerField $source_field,
+    ): ?\Tuleap\Tracker\FormElement\Field\TrackerField {
         foreach ($field_collection->mapping_fields as $mapping_field) {
             if ($mapping_field->source->getName() === $source_field->getName()) {
                 return $mapping_field->destination;

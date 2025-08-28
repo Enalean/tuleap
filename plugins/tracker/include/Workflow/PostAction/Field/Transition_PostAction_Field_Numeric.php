@@ -18,11 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 
 /**
  * Base class for numeric field post actions.
  */
-abstract class Transition_PostAction_Field_Numeric extends Transition_PostAction_Field
+abstract class Transition_PostAction_Field_Numeric extends Transition_PostAction_Field // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {//phpcs:ignore
 
     /**
@@ -35,7 +36,7 @@ abstract class Transition_PostAction_Field_Numeric extends Transition_PostAction
      *
      * @param Transition                   $transition The transition the post action belongs to
      * @param int $id Id of the post action
-     * @param Tracker_FormElement_Field    $field      The field the post action should modify
+     * @param TrackerField    $field      The field the post action should modify
      * @param int|float $value The value to set
      */
     public function __construct(Transition $transition, $id, $field, $value)

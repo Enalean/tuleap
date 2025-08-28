@@ -23,9 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Artifact\ChangesetValue;
 
 use PFUser;
-use Tracker_FormElement_Field;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\Files\CreatedFileURLMapping;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 
 /**
  * I save the initial changeset of an artifact for a given field
@@ -33,7 +33,7 @@ use Tuleap\Tracker\FormElement\Field\Files\CreatedFileURLMapping;
 final class InitialChangesetValueSaver implements SaveInitialChangesetValue
 {
     public function saveNewChangesetForField(
-        Tracker_FormElement_Field $field,
+        TrackerField $field,
         Artifact $artifact,
         array $fields_data,
         PFUser $submitter,
@@ -91,12 +91,12 @@ final class InitialChangesetValueSaver implements SaveInitialChangesetValue
         }
     }
 
-    private function pushDefaultValueInSubmittedValues(Tracker_FormElement_Field $field, array &$fields_data): void
+    private function pushDefaultValueInSubmittedValues(TrackerField $field, array &$fields_data): void
     {
         $fields_data[$field->getId()] = $field->getDefaultValue();
     }
 
-    private function isFieldSubmitted(Tracker_FormElement_Field $field, array $fields_data): bool
+    private function isFieldSubmitted(TrackerField $field, array $fields_data): bool
     {
         return isset($fields_data[$field->getId()]);
     }

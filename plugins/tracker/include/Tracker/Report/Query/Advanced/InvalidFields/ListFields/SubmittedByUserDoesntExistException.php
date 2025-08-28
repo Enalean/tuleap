@@ -21,12 +21,12 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields;
 
-use Tracker_FormElement_Field;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldException;
 
 final class SubmittedByUserDoesntExistException extends InvalidFieldException
 {
-    public function __construct(Tracker_FormElement_Field $field, string $value)
+    public function __construct(TrackerField $field, string $value)
     {
         $message = sprintf(
             dgettext('tuleap-tracker', "Error with the field '%s'. The user '%s' does not exist."),

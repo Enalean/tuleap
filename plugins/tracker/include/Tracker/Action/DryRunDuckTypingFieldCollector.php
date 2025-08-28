@@ -30,15 +30,15 @@ use Tuleap\Tracker\FormElement\Field\RetrieveUsedFields;
 final class DryRunDuckTypingFieldCollector implements CollectDryRunTypingField
 {
     /**
-     * @var \Tracker_FormElement_Field[]
+     * @var \Tuleap\Tracker\FormElement\Field\TrackerField[]
      */
     private array $migrateable_fields = [];
     /**
-     * @var \Tracker_FormElement_Field[]
+     * @var \Tuleap\Tracker\FormElement\Field\TrackerField[]
      */
     private array $not_migrateable_fields = [];
     /**
-     * @var \Tracker_FormElement_Field[]
+     * @var \Tuleap\Tracker\FormElement\Field\TrackerField[]
      */
     private array $partially_migrated_fields = [];
     /**
@@ -250,8 +250,8 @@ final class DryRunDuckTypingFieldCollector implements CollectDryRunTypingField
     }
 
     private function collectExternalFields(
-        \Tracker_FormElement_Field $source_field,
-        \Tracker_FormElement_Field $destination_field,
+        \Tuleap\Tracker\FormElement\Field\TrackerField $source_field,
+        \Tuleap\Tracker\FormElement\Field\TrackerField $destination_field,
     ): void {
         if (! $this->verify_external_fields_have_same_type->haveBothFieldsSameType($source_field, $destination_field)) {
             $this->addFieldToNotMigrateableList($source_field);
@@ -274,19 +274,19 @@ final class DryRunDuckTypingFieldCollector implements CollectDryRunTypingField
         $this->addFieldToMigrateableList($source_field, $destination_field);
     }
 
-    private function addFieldToMigrateableList(\Tracker_FormElement_Field $source_field, \Tracker_FormElement_Field $destination_field): void
+    private function addFieldToMigrateableList(\Tuleap\Tracker\FormElement\Field\TrackerField $source_field, \Tuleap\Tracker\FormElement\Field\TrackerField $destination_field): void
     {
         $this->fields_mapping[]     = FieldMapping::fromFields($source_field, $destination_field);
         $this->migrateable_fields[] = $source_field;
     }
 
-    private function addFieldToPartiallyMigratedList(\Tracker_FormElement_Field $source_field, \Tracker_FormElement_Field $destination_field): void
+    private function addFieldToPartiallyMigratedList(\Tuleap\Tracker\FormElement\Field\TrackerField $source_field, \Tuleap\Tracker\FormElement\Field\TrackerField $destination_field): void
     {
         $this->partially_migrated_fields[] = $source_field;
         $this->fields_mapping[]            = FieldMapping::fromFields($source_field, $destination_field);
     }
 
-    private function addFieldToNotMigrateableList(\Tracker_FormElement_Field $source_field): void
+    private function addFieldToNotMigrateableList(\Tuleap\Tracker\FormElement\Field\TrackerField $source_field): void
     {
         $this->not_migrateable_fields[] = $source_field;
     }

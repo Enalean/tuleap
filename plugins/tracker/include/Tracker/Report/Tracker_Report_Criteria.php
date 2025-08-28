@@ -20,13 +20,14 @@
  */
 
 use Tuleap\Option\Option;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 
 class Tracker_Report_Criteria // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public $id;
     public $report;
-    public Tracker_FormElement_Field $field;
+    public TrackerField $field;
     public $rank;
 
     /**
@@ -42,11 +43,11 @@ class Tracker_Report_Criteria // phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
      *
      * @param int $id the id of the criteria
      * @param Tracker_Report $report the id of the report
-     * @param Tracker_FormElement_Field $field the name of the renderer
+     * @param TrackerField $field the name of the renderer
      * @param int $rank the rank
      * @param int | bool $is_advanced use advanced search for this field
      */
-    public function __construct($id, $report, Tracker_FormElement_Field $field, $rank, $is_advanced)
+    public function __construct($id, $report, TrackerField $field, $rank, $is_advanced)
     {
         $this->id          = $id;
         $this->report      = $report;

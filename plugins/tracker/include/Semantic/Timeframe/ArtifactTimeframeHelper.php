@@ -23,8 +23,8 @@ namespace Tuleap\Tracker\Semantic\Timeframe;
 use DateTime;
 use PFUser;
 use Psr\Log\LoggerInterface;
-use Tracker_FormElement_Field;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 
 class ArtifactTimeframeHelper
 {
@@ -45,7 +45,7 @@ class ArtifactTimeframeHelper
         $this->logger           = $logger;
     }
 
-    public function artifactHelpShouldBeShownToUser(PFUser $user, Tracker_FormElement_Field $field): bool
+    public function artifactHelpShouldBeShownToUser(PFUser $user, TrackerField $field): bool
     {
         $tracker = $field->getTracker();
 

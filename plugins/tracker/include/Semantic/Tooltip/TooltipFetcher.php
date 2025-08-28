@@ -72,7 +72,7 @@ final class TooltipFetcher
     }
 
     /**
-     * @return \Tracker_FormElement_Field[]
+     * @return \Tuleap\Tracker\FormElement\Field\TrackerField[]
      */
     private function getReadableFields(Artifact $artifact, TooltipFields $tooltip, \PFUser $user): array
     {

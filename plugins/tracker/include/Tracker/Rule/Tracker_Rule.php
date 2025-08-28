@@ -18,13 +18,15 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\FormElement\Field\TrackerField;
+
 /**
  * Rule between two dynamic fields
  *
  * For a tracker, if a source field is selected to a specific value,
  * then target field will react, depending of the implementation of the rule.
  */
-abstract class Tracker_Rule
+abstract class Tracker_Rule // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public const RULETYPE_HIDDEN    = 1;
     public const RULETYPE_DISABLED  = 2;
@@ -41,10 +43,10 @@ abstract class Tracker_Rule
     public $source_field;
     public $target_field;
 
-    /** @var Tracker_FormElement_Field */
+    /** @var TrackerField */
     protected $source_field_obj;
 
-    /** @var Tracker_FormElement_Field */
+    /** @var TrackerField */
     protected $target_field_obj;
 
     /**
@@ -92,7 +94,7 @@ abstract class Tracker_Rule
      */
     public function getSourceFieldId()
     {
-        if ($this->source_field_obj instanceof Tracker_FormElement_Field) {
+        if ($this->source_field_obj instanceof TrackerField) {
             return $this->source_field_obj->getId();
         }
         return $this->source_field;
@@ -100,7 +102,7 @@ abstract class Tracker_Rule
 
     /**
      *
-     * @return Tracker_FormElement_Field
+     * @return TrackerField
      */
     public function getSourceField()
     {
@@ -111,7 +113,7 @@ abstract class Tracker_Rule
      *
      * @return \Tracker_Rule
      */
-    public function setSourceField(Tracker_FormElement_Field $field)
+    public function setSourceField(TrackerField $field)
     {
         $this->source_field_obj = $field;
         $this->source_field     = $field->getId();
@@ -120,7 +122,7 @@ abstract class Tracker_Rule
 
     /**
      *
-     * @return Tracker_FormElement_Field
+     * @return TrackerField
      */
     public function getTargetField()
     {
@@ -131,7 +133,7 @@ abstract class Tracker_Rule
      *
      * @return \Tracker_Rule
      */
-    public function setTargetField(Tracker_FormElement_Field $field)
+    public function setTargetField(TrackerField $field)
     {
         $this->target_field_obj = $field;
         $this->target_field     = $field->getId();
@@ -156,7 +158,7 @@ abstract class Tracker_Rule
      */
     public function getTargetFieldId()
     {
-        if ($this->target_field_obj instanceof Tracker_FormElement_Field) {
+        if ($this->target_field_obj instanceof TrackerField) {
             return $this->target_field_obj->getId();
         }
         return $this->target_field;

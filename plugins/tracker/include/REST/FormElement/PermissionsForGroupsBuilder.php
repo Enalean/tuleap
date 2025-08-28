@@ -65,7 +65,7 @@ class PermissionsForGroupsBuilder
                 $this->addUserGroupRepresentationToArray($can_submit, $tracker, $ugroup);
             }
             if (isset($ugroup['permissions'][Tracker_FormElement::PERMISSION_UPDATE])) {
-                if ($artifact === null || ($form_element instanceof \Tracker_FormElement_Field && ! $this->read_only_field_detector->isFieldFrozen($artifact, $form_element))) {
+                if ($artifact === null || ($form_element instanceof \Tuleap\Tracker\FormElement\Field\TrackerField && ! $this->read_only_field_detector->isFieldFrozen($artifact, $form_element))) {
                     $this->addUserGroupRepresentationToArray($can_update, $tracker, $ugroup);
                 }
             }

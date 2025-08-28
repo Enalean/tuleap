@@ -28,7 +28,6 @@ use Psr\Log\NullLogger;
 use SimpleXMLElement;
 use Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder;
 use Tracker_Artifact_XMLImport_CollectionOfFilesToImportInArtifact;
-use Tracker_FormElement_Field;
 use Tracker_FormElementFactory;
 use Tracker_XML_Importer_ArtifactImportedMapping;
 use TrackerXmlFieldsMapping;
@@ -38,6 +37,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Tracker;
@@ -97,9 +97,9 @@ final class TrackerArtifactXMLImportArtifactFieldsDataBuilderTest extends TestCa
 
         $xml = new SimpleXMLElement($xml_data);
 
-        $field_1        = $this->createMock(Tracker_FormElement_Field::class);
-        $field_2        = $this->createMock(Tracker_FormElement_Field::class);
-        $external_field = $this->createMock(Tracker_FormElement_Field::class);
+        $field_1        = $this->createMock(TrackerField::class);
+        $field_2        = $this->createMock(TrackerField::class);
+        $external_field = $this->createMock(TrackerField::class);
 
         $field_1->method('setTracker')->with($this->tracker);
         $field_2->method('setTracker')->with($this->tracker);

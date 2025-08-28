@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 use PHPUnit\Framework\MockObject\MockObject;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -84,7 +85,7 @@ final class Tracker_Permission_PermissionManager_CheckRequestValidityTest extend
 
     public function testItDoesNotDisplayAFeedbackErrorIfAssignedToSemanticIsDefined(): void
     {
-        $field = $this->createMock(Tracker_FormElement_Field::class);
+        $field = $this->createMock(TrackerField::class);
         $this->tracker->method('getContributorField')->willReturn($field);
         $request = new Tracker_Permission_PermissionRequest([
             ProjectUGroup::ANONYMOUS        => Tracker_Permission_Command::PERMISSION_NONE,

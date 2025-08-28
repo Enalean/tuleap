@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Workflow;
 
-use Tracker_FormElement_Field;
 use Transition;
 use Transition_PostAction;
 use Transition_PostActionSubFactory;
@@ -33,6 +32,7 @@ use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\CreatePostAction;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\SearchByTransitionId;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\SearchByWorkflow;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogChangeProcessor;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Workflow;
 
 final class AddToTopBacklogPostActionFactory implements Transition_PostActionSubFactory
@@ -115,7 +115,7 @@ final class AddToTopBacklogPostActionFactory implements Transition_PostActionSub
         );
     }
 
-    public function isFieldUsedInPostActions(Tracker_FormElement_Field $field): bool
+    public function isFieldUsedInPostActions(TrackerField $field): bool
     {
         return false;
     }

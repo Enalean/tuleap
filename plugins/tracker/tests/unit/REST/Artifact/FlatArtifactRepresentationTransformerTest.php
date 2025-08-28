@@ -178,7 +178,7 @@ final class FlatArtifactRepresentationTransformerTest extends TestCase
     }
 
     /**
-     * @psalm-param \Tracker_FormElement_Field[] $fields
+     * @psalm-param \Tuleap\Tracker\FormElement\Field\TrackerField[] $fields
      */
     private function buildTransformer(array $fields, ?FlatArtifactListValueLabelTransformer $value_labels_transformer = null): FlatArtifactRepresentationTransformer
     {
@@ -198,9 +198,9 @@ final class FlatArtifactRepresentationTransformerTest extends TestCase
         return new FlatArtifactRepresentationTransformer($fields_retriever, $html_purifier, $value_labels_transformer);
     }
 
-    private function buildField(int $id, string $name): \Tracker_FormElement_Field
+    private function buildField(int $id, string $name): \Tuleap\Tracker\FormElement\Field\TrackerField
     {
-        $field = $this->createStub(\Tracker_FormElement_Field::class);
+        $field = $this->createStub(\Tuleap\Tracker\FormElement\Field\TrackerField::class);
         $field->method('getId')->willReturn($id);
         $field->method('getName')->willReturn($name);
 

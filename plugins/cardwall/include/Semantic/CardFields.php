@@ -33,6 +33,7 @@ use Tuleap\Cardwall\Semantic\FieldUsedInSemanticObjectChecker;
 use Tuleap\Cardwall\Semantic\SemanticCardPresenter;
 use Tuleap\Cardwall\Semantic\SingleCardPreviewDetailsBuilder;
 use Tuleap\Tracker\FormElement\Field\ListField;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Semantic\TrackerSemantic;
 use Tuleap\Tracker\Semantic\TrackerSemanticManager;
 use Tuleap\Tracker\Tracker;
@@ -42,7 +43,7 @@ class Cardwall_Semantic_CardFields extends TrackerSemantic //phpcs:ignore PSR1.C
     public const NAME                  = 'plugin_cardwall_card_fields';
     public const BACKGROUND_COLOR_NAME = 'plugin_cardwell_card_fields_background_color';
     /**
-     * @var Tracker_FormElement_Field|null
+     * @var TrackerField|null
      */
     private $background_color_field = null;
 
@@ -68,7 +69,7 @@ class Cardwall_Semantic_CardFields extends TrackerSemantic //phpcs:ignore PSR1.C
      */
     private $html_purifier;
 
-    /** @var Tracker_FormElement_Field[] */
+    /** @var TrackerField[] */
     private $card_fields = [];
 
     /** @var array
@@ -154,7 +155,7 @@ class Cardwall_Semantic_CardFields extends TrackerSemantic //phpcs:ignore PSR1.C
     }
 
     /**
-     * @return Tracker_FormElement_Field[]
+     * @return TrackerField[]
      */
     public function getFields()
     {
@@ -166,7 +167,7 @@ class Cardwall_Semantic_CardFields extends TrackerSemantic //phpcs:ignore PSR1.C
     }
 
     /**
-     * @param Tracker_FormElement_Field[] $fields
+     * @param TrackerField[] $fields
      */
     public function setFields(array $fields)
     {
@@ -236,7 +237,7 @@ class Cardwall_Semantic_CardFields extends TrackerSemantic //phpcs:ignore PSR1.C
         return self::NAME;
     }
 
-    public function isUsedInSemantics(Tracker_FormElement_Field $field)
+    public function isUsedInSemantics(TrackerField $field)
     {
         return $this->semantic_field_checker->isUsedInSemantic($field, $this->getFields());
     }
@@ -371,7 +372,7 @@ class Cardwall_Semantic_CardFields extends TrackerSemantic //phpcs:ignore PSR1.C
     }
 
     /**
-     * @return Tracker_FormElement_Field|null
+     * @return TrackerField|null
      */
     public function instantiateFieldFromRow(array $row)
     {
@@ -391,7 +392,7 @@ class Cardwall_Semantic_CardFields extends TrackerSemantic //phpcs:ignore PSR1.C
         return $this->background_color_field;
     }
 
-    public function setBackgroundColorField(?Tracker_FormElement_Field $background_color_field = null)
+    public function setBackgroundColorField(?TrackerField $background_color_field = null)
     {
         $this->background_color_field = $background_color_field;
     }

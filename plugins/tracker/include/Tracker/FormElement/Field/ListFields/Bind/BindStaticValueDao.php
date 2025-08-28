@@ -23,7 +23,7 @@
 namespace Tuleap\Tracker\FormElement\Field\ListFields\Bind;
 
 use DataAccessObject;
-use Tracker_FormElement_Field;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 
 class BindStaticValueDao extends DataAccessObject
 {
@@ -146,7 +146,7 @@ class BindStaticValueDao extends DataAccessObject
         return $this->update($sql);
     }
 
-    public function delete(Tracker_FormElement_Field $field, int $id): bool
+    public function delete(TrackerField $field, int $id): bool
     {
         if (! $this->canValueBeDeleted($field, $id)) {
             return false;
@@ -176,12 +176,12 @@ class BindStaticValueDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    public function canValueBeHiddenWithoutCheckingSemanticStatus(Tracker_FormElement_Field $field, $value_id)
+    public function canValueBeHiddenWithoutCheckingSemanticStatus(TrackerField $field, $value_id)
     {
         return $this->isValueHiddenable($field->getId(), $value_id, '');
     }
 
-    public function canValueBeHidden(Tracker_FormElement_Field $field, $value_id): bool
+    public function canValueBeHidden(TrackerField $field, $value_id): bool
     {
         $field_id   = $this->da->escapeInt($field->getId());
         $tracker_id = $this->da->escapeInt($field->getTracker()->getId());
@@ -299,7 +299,7 @@ class BindStaticValueDao extends DataAccessObject
      * - it can be hidden
      * - not used in changeset history of not deleted artifacts
      */
-    public function canValueBeDeleted(Tracker_FormElement_Field $field, $value_id): bool
+    public function canValueBeDeleted(TrackerField $field, $value_id): bool
     {
         $field_id = $this->da->escapeInt($field->getId());
 

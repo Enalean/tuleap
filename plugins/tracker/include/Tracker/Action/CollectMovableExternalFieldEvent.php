@@ -35,17 +35,17 @@ final class CollectMovableExternalFieldEvent implements Dispatchable
     private string $migration_state = '';
 
     public function __construct(
-        private readonly \Tracker_FormElement_Field $source_field,
-        private readonly \Tracker_FormElement_Field $destination_field,
+        private readonly \Tuleap\Tracker\FormElement\Field\TrackerField $source_field,
+        private readonly \Tuleap\Tracker\FormElement\Field\TrackerField $destination_field,
     ) {
     }
 
-    public function getSourceField(): \Tracker_FormElement_Field
+    public function getSourceField(): \Tuleap\Tracker\FormElement\Field\TrackerField
     {
         return $this->source_field;
     }
 
-    public function getDestinationField(): \Tracker_FormElement_Field
+    public function getDestinationField(): \Tuleap\Tracker\FormElement\Field\TrackerField
     {
         return $this->destination_field;
     }

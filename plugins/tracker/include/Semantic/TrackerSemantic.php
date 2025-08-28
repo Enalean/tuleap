@@ -25,8 +25,8 @@ use Codendi_Request;
 use CSRFSynchronizerToken;
 use PFUser;
 use SimpleXMLElement;
-use Tracker_FormElement_Field;
 use TrackerManager;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\REST\SemanticRepresentation;
 use Tuleap\Tracker\Tracker;
 
@@ -137,11 +137,11 @@ abstract class TrackerSemantic
     /**
      * Is the field used in semantics?
      *
-     * @param Tracker_FormElement_Field the field to test if it is used in semantics or not
+     * @param TrackerField the field to test if it is used in semantics or not
      *
      * @return bool returns true if the field is used in semantics, false otherwise
      */
-    abstract public function isUsedInSemantics(Tracker_FormElement_Field $field);
+    abstract public function isUsedInSemantics(TrackerField $field);
 
     /**
      * Get the url to this semantic

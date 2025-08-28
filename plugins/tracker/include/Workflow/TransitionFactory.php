@@ -23,6 +23,7 @@ use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Project\Duplication\DuplicationUserGroupMapping;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\Workflow\Event\TransitionDeletionEvent;
 use Tuleap\Tracker\Workflow\Event\WorkflowDeletionEvent;
@@ -196,11 +197,11 @@ class TransitionFactory
     /**
      * Say if a field is used in its tracker workflow transitions
      *
-     * @param Tracker_FormElement_Field $field The field
+     * @param TrackerField $field The field
      *
      * @return bool
      */
-    public function isFieldUsedInTransitions(Tracker_FormElement_Field $field)
+    public function isFieldUsedInTransitions(TrackerField $field)
     {
         return $this->transition_post_action_factory->isFieldUsedInPostActions($field)
             || $this->condition_factory->isFieldUsedInConditions($field);

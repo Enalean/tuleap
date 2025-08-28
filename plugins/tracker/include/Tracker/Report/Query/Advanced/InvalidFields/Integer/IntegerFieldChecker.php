@@ -39,7 +39,7 @@ final readonly class IntegerFieldChecker
      * @throws IntegerToStatusOpenComparisonException
      * @throws IntegerToStringComparisonException
      */
-    public function checkFieldIsValidForComparison(Comparison $comparison, \Tracker_FormElement_Field $field): void
+    public function checkFieldIsValidForComparison(Comparison $comparison, \Tuleap\Tracker\FormElement\Field\TrackerField $field): void
     {
         match ($comparison->getType()) {
             ComparisonType::Equal,
@@ -62,7 +62,7 @@ final readonly class IntegerFieldChecker
      */
     private function checkIntValueIsValid(
         Comparison $comparison,
-        \Tracker_FormElement_Field $field,
+        \Tuleap\Tracker\FormElement\Field\TrackerField $field,
         bool $is_empty_string_a_problem,
     ): void {
         $values_extractor = new CollectionOfAlphaNumericValuesExtractor();

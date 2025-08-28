@@ -21,12 +21,12 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement;
 
-use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_List_OpenValue;
 use Tracker_FormElement_Field_List_Value;
 use Tuleap\Tracker\Colorpicker\ColorpickerMountPointPresenter;
-use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
 use Tuleap\Tracker\FormElement\Field\ListField;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 
 class FormElementListValueAdminViewPresenterBuilder
 {
@@ -42,7 +42,7 @@ class FormElementListValueAdminViewPresenterBuilder
     }
 
     public function buildPresenter(
-        \Tracker_FormElement_Field $field,
+        Field\TrackerField $field,
         Tracker_FormElement_Field_List_Value $value,
         ?ColorpickerMountPointPresenter $decorator,
         bool $is_custom_value,
@@ -59,7 +59,7 @@ class FormElementListValueAdminViewPresenterBuilder
         );
     }
 
-    public function canValueBeHidden(Tracker_FormElement_Field_List_Value $value, Tracker_FormElement_Field $field): bool
+    public function canValueBeHidden(Tracker_FormElement_Field_List_Value $value, TrackerField $field): bool
     {
         if ($value instanceof Tracker_FormElement_Field_List_OpenValue) {
             return true;
@@ -69,7 +69,7 @@ class FormElementListValueAdminViewPresenterBuilder
             && $this->value_dao->canValueBeHidden($field, $value->getId());
     }
 
-    public function canValueBeDeleted(Tracker_FormElement_Field_List_Value $value, Tracker_FormElement_Field $field): bool
+    public function canValueBeDeleted(Tracker_FormElement_Field_List_Value $value, TrackerField $field): bool
     {
         if ($value instanceof Tracker_FormElement_Field_List_OpenValue) {
             return false;

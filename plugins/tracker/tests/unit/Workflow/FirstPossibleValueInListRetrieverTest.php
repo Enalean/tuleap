@@ -24,7 +24,6 @@ namespace Tuleap\Tracker\Workflow;
 
 use PHPUnit\Framework\MockObject\Stub;
 use Tracker_Artifact_ChangesetValue;
-use Tracker_FormElement_Field;
 use Tracker_FormElementFactory;
 use Tracker_Rule_List;
 use Tracker_RulesManager;
@@ -33,6 +32,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\List\SelectboxField;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Rule\FirstValidValueAccordingToDependenciesRetriever;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -116,7 +116,7 @@ final class FirstPossibleValueInListRetrieverTest extends TestCase
         $changeset_value_field_not_changed_2 = $this->createStub(Tracker_Artifact_ChangesetValue::class);
 
         $this->artifact->method('getValue')->willReturnCallback(
-            fn (Tracker_FormElement_Field $field): Tracker_Artifact_ChangesetValue => match ($field) {
+            fn (TrackerField $field): Tracker_Artifact_ChangesetValue => match ($field) {
                 $this->field_changed       => $changeset_value_field_changed,
                 $this->field_not_changed_1 => $changeset_value_field_not_changed_1,
                 $this->field_not_changed_2 => $changeset_value_field_not_changed_2,
@@ -249,7 +249,7 @@ final class FirstPossibleValueInListRetrieverTest extends TestCase
         );
 
         $this->form_element_factory->method('getFieldById')->willReturnCallback(
-            fn (int $field_id): Tracker_FormElement_Field => match ($field_id) {
+            fn (int $field_id): TrackerField => match ($field_id) {
                 202 => $this->field_not_changed_1,
                 203 => $this->field_not_changed_2,
             }
@@ -302,7 +302,7 @@ final class FirstPossibleValueInListRetrieverTest extends TestCase
         );
 
         $this->form_element_factory->method('getFieldById')->willReturnCallback(
-            fn (int $field_id): Tracker_FormElement_Field => match ($field_id) {
+            fn (int $field_id): TrackerField => match ($field_id) {
                 202 => $this->field_not_changed_1,
                 203 => $this->field_not_changed_2,
             }

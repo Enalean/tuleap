@@ -93,21 +93,21 @@ final class ArtifactRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestC
     {
         $current_user = UserTestBuilder::buildWithDefaults();
 
-        $first_field_user_cant_read = $this->createMock(\Tracker_FormElement_Field::class);
+        $first_field_user_cant_read = $this->createMock(\Tuleap\Tracker\FormElement\Field\TrackerField::class);
         $first_field_user_cant_read
             ->method('userCanRead')
             ->with($current_user)
             ->willReturn(false);
         $first_field_user_cant_read->expects($this->never())->method('getRESTValue');
 
-        $field_user_can_read = $this->createMock(\Tracker_FormElement_Field::class);
+        $field_user_can_read = $this->createMock(\Tuleap\Tracker\FormElement\Field\TrackerField::class);
         $field_user_can_read
             ->method('userCanRead')
             ->with($current_user)
             ->willReturn(true);
         $field_user_can_read->expects($this->once())->method('getRESTValue');
 
-        $second_field_user_cant_read = $this->createMock(\Tracker_FormElement_Field::class);
+        $second_field_user_cant_read = $this->createMock(\Tuleap\Tracker\FormElement\Field\TrackerField::class);
         $second_field_user_cant_read
             ->method('userCanRead')
             ->with($current_user)
@@ -131,7 +131,7 @@ final class ArtifactRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\TestC
         $current_user = UserTestBuilder::buildWithDefaults();
 
         $first_field  = StringFieldBuilder::aStringField(1001)->withReadPermission($current_user, false)->build();
-        $second_field = $this->createMock(\Tracker_FormElement_Field::class);
+        $second_field = $this->createMock(\Tuleap\Tracker\FormElement\Field\TrackerField::class);
         $second_field->method('userCanRead')->willReturn(true);
         $second_field->method('getRESTValue')->willReturn('whatever');
         $third_field = StringFieldBuilder::aStringField(1003)->withReadPermission($current_user, false)->build();

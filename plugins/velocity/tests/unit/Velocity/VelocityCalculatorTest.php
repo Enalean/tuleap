@@ -29,10 +29,10 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue_List;
 use Tracker_ArtifactFactory;
-use Tracker_FormElement_Field;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\Integer\IntegerField;
 use Tuleap\Tracker\FormElement\Field\List\SelectboxField;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDone;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneFactory;
 use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
@@ -238,7 +238,7 @@ final class VelocityCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private function mockSemanticInitialEffort(
         Artifact $linked_artifact,
-        MockObject&Tracker_FormElement_Field $initial_effort_field,
+        MockObject&TrackerField $initial_effort_field,
     ): void {
         $initial_effort_field->method('getComputedValue')
             ->with($this->user, $linked_artifact)
@@ -254,7 +254,7 @@ final class VelocityCalculatorTest extends \Tuleap\Test\PHPUnit\TestCase
 
     private function mockSemanticInitialEffortWithListValueNotInteger(
         Artifact $linked_artifact,
-        MockObject&Tracker_FormElement_Field $initial_effort_field,
+        MockObject&TrackerField $initial_effort_field,
     ): void {
         $initial_effort_field->method('getComputedValue')
             ->with($this->user, $linked_artifact)

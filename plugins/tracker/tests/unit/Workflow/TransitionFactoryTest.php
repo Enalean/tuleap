@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Test\Builders\Fields\DateFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 
@@ -60,13 +61,13 @@ final class TransitionFactoryTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs
 
         $this->a_field_used_in_conditions = DateFieldBuilder::aDateField(1004)->build();
 
-        $this->postaction_factory->method('isFieldUsedInPostActions')->willReturnCallback(fn (Tracker_FormElement_Field $field) => match ($field) {
+        $this->postaction_factory->method('isFieldUsedInPostActions')->willReturnCallback(fn (TrackerField $field) => match ($field) {
             $this->a_field_not_used_in_transitions => false,
             $this->a_field_used_in_post_actions => true,
             $this->a_field_used_in_conditions => false,
         });
 
-        $this->condition_factory->method('isFieldUsedInConditions')->willReturnCallback(fn (Tracker_FormElement_Field $field) => match ($field) {
+        $this->condition_factory->method('isFieldUsedInConditions')->willReturnCallback(fn (TrackerField $field) => match ($field) {
             $this->a_field_not_used_in_transitions => false,
             $this->a_field_used_in_post_actions => false,
             $this->a_field_used_in_conditions => true,

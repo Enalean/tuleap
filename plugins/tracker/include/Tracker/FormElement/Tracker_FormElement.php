@@ -22,6 +22,7 @@
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\DeleteSpecificProperties;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\DuplicateSpecificProperties;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\FieldPropertiesRetriever;
@@ -419,7 +420,7 @@ abstract class Tracker_FormElement extends ProvideFactoryButtonInformation imple
     abstract public function fetchAddColumn($used, $prefix = '');
 
     /**
-     * @param array<int, Tracker_FormElement_Field>  $used_fields
+     * @param array<int, TrackerField>  $used_fields
      */
     abstract public function fetchAddCardFields(array $used_fields, string $prefix = ''): string;
 

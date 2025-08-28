@@ -34,7 +34,6 @@ use Tracker_Artifact_PaginatedArtifacts;
 use Tracker_ArtifactDao;
 use Tracker_ArtifactFactory;
 use Tracker_ArtifactLinkInfo;
-use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_ArtifactLink_PostSaveNewChangesetQueue;
 use Tracker_FormElement_Field_ArtifactLink_ProcessChildrenTriggersCommand;
 use Tracker_FormElement_FieldVisitor;
@@ -68,6 +67,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeTablePresenter;
 use Tuleap\Tracker\FormElement\Field\Files\CreatedFileURLMapping;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\ArtifactLinkFieldSpecificPropertiesDAO;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\DuplicateSpecificProperties;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\SaveSpecificFieldProperties;
@@ -83,7 +83,7 @@ use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
 use UserManager;
 
 #[ConfigKeyCategory('Tracker')]
-class ArtifactLinkField extends Tracker_FormElement_Field
+class ArtifactLinkField extends TrackerField
 {
     public const TYPE                    = 'art_link';
     public const CREATE_NEW_PARENT_VALUE = -1;
@@ -1384,7 +1384,7 @@ class ArtifactLinkField extends Tracker_FormElement_Field
     }
 
     /**
-     * @see Tracker_FormElement_Field::hasChanges()
+     * @see TrackerField::hasChanges()
      */
     public function hasChanges(Artifact $artifact, Tracker_Artifact_ChangesetValue $old_value, $new_value)
     {
@@ -1564,7 +1564,7 @@ class ArtifactLinkField extends Tracker_FormElement_Field
     }
 
     /**
-     * @see Tracker_FormElement_Field::postSaveNewChangeset()
+     * @see TrackerField::postSaveNewChangeset()
      */
     public function postSaveNewChangeset(
         Artifact $artifact,

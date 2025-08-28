@@ -37,7 +37,6 @@ use Tracker_Artifact_ChangesetFactory;
 use Tracker_Artifact_ChangesetValue_Text;
 use Tracker_ArtifactFactory;
 use Tracker_Exception;
-use Tracker_FormElement_Field;
 use Tracker_FormElementFactory;
 use Tracker_HierarchyFactory;
 use Tracker_NoChangeException;
@@ -73,6 +72,7 @@ use Tuleap\Tracker\FormElement\Field\Files\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\Files\FilesField;
 use Tuleap\Tracker\FormElement\Field\String\StringField;
 use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetCommentTestBuilder;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
@@ -203,11 +203,11 @@ final class Tracker_ArtifactTest extends TestCase //phpcs:ignore Squiz.Classes.V
             self::isInstanceOf(CreatedFileURLMapping::class)
         )->willReturn(true);
         $workflow->method('bypassPermissions')
-            ->willReturnCallback(static fn(Tracker_FormElement_Field $field) => $field === $field2);
+            ->willReturnCallback(static fn(TrackerField $field) => $field === $field2);
         $factory->method('getUsedFields')->willReturn([$field1, $field2]);
         $factory->method('getAllFormElementsForTracker')->willReturn([]);
         $factory->method('isFieldAFileField')
-            ->willReturnCallback(static fn(Tracker_FormElement_Field $field) => $field::class === FilesField::class);
+            ->willReturnCallback(static fn(TrackerField $field) => $field::class === FilesField::class);
 
         $new_changeset = $this->createMock(Tracker_Artifact_Changeset::class);
         $new_changeset->method('executePostCreationActions')->with([true]);
@@ -327,7 +327,7 @@ final class Tracker_ArtifactTest extends TestCase //phpcs:ignore Squiz.Classes.V
         $changeset = $this->createMock(Tracker_Artifact_Changeset::class);
         $changeset->method('hasChanges')->willReturn(false);
         $changeset->method('getValues')->willReturn([]);
-        $changeset->method('getValue')->willReturnCallback(static fn(Tracker_FormElement_Field $field) => match ($field) {
+        $changeset->method('getValue')->willReturnCallback(static fn(TrackerField $field) => match ($field) {
             $field1 => ChangesetValueTextTestBuilder::aValue(1, $changeset, $field1)->build(),
             $field2 => ChangesetValueTextTestBuilder::aValue(2, $changeset, $field2)->build(),
             $field3 => ChangesetValueTextTestBuilder::aValue(3, $changeset, $field3)->build(),
@@ -404,7 +404,7 @@ final class Tracker_ArtifactTest extends TestCase //phpcs:ignore Squiz.Classes.V
         $factory->method('getUsedFields')->willReturn([$field1, $field2, $field3]);
         $factory->method('getAllFormElementsForTracker')->willReturn([]);
         $factory->method('isFieldAFileField')
-            ->willReturnCallback(static fn(Tracker_FormElement_Field $field) => $field::class === FilesField::class);
+            ->willReturnCallback(static fn(TrackerField $field) => $field::class === FilesField::class);
 
         $new_changeset = $this->createMock(Tracker_Artifact_Changeset::class);
         $new_changeset->method('executePostCreationActions')->with([true]);
@@ -412,7 +412,7 @@ final class Tracker_ArtifactTest extends TestCase //phpcs:ignore Squiz.Classes.V
         $changeset = $this->createMock(Tracker_Artifact_Changeset::class);
         $changeset->method('hasChanges')->willReturn(true);
         $changeset->method('getValues')->willReturn([]);
-        $changeset->method('getValue')->willReturnCallback(static fn(Tracker_FormElement_Field $field) => match ($field) {
+        $changeset->method('getValue')->willReturnCallback(static fn(TrackerField $field) => match ($field) {
             $field1 => ChangesetValueTextTestBuilder::aValue(1, $changeset, $field1)->build(),
             $field2 => ChangesetValueTextTestBuilder::aValue(2, $changeset, $field2)->build(),
             $field3 => ChangesetValueTextTestBuilder::aValue(3, $changeset, $field3)->build(),
@@ -523,7 +523,7 @@ final class Tracker_ArtifactTest extends TestCase //phpcs:ignore Squiz.Classes.V
         $changeset = $this->createMock(Tracker_Artifact_Changeset::class);
         $changeset->method('hasChanges')->willReturn(true);
         $changeset->method('getValues')->willReturn([]);
-        $changeset->method('getValue')->willReturnCallback(static fn(Tracker_FormElement_Field $field) => match ($field) {
+        $changeset->method('getValue')->willReturnCallback(static fn(TrackerField $field) => match ($field) {
             $field1 => ChangesetValueTextTestBuilder::aValue(1, $changeset, $field1)->build(),
             $field2 => ChangesetValueTextTestBuilder::aValue(2, $changeset, $field2)->build(),
             $field3 => ChangesetValueTextTestBuilder::aValue(3, $changeset, $field3)->build(),
@@ -628,7 +628,7 @@ final class Tracker_ArtifactTest extends TestCase //phpcs:ignore Squiz.Classes.V
         $factory->method('getUsedFields')->willReturn([$field1, $field2, $field3]);
         $factory->method('getAllFormElementsForTracker')->willReturn([]);
         $factory->method('isFieldAFileField')
-            ->willReturnCallback(static fn(Tracker_FormElement_Field $field) => $field::class === FilesField::class);
+            ->willReturnCallback(static fn(TrackerField $field) => $field::class === FilesField::class);
 
         $new_changeset = $this->createMock(Tracker_Artifact_Changeset::class);
         $new_changeset->method('executePostCreationActions')->with([false]);
@@ -636,7 +636,7 @@ final class Tracker_ArtifactTest extends TestCase //phpcs:ignore Squiz.Classes.V
         $changeset = $this->createMock(Tracker_Artifact_Changeset::class);
         $changeset->method('hasChanges')->willReturn(true);
         $changeset->method('getValues')->willReturn([]);
-        $changeset->method('getValue')->willReturnCallback(static fn(Tracker_FormElement_Field $field) => match ($field) {
+        $changeset->method('getValue')->willReturnCallback(static fn(TrackerField $field) => match ($field) {
             $field1 => ChangesetValueTextTestBuilder::aValue(1, $changeset, $field1)->build(),
             $field2 => ChangesetValueTextTestBuilder::aValue(2, $changeset, $field2)->build(),
             $field3 => ChangesetValueTextTestBuilder::aValue(3, $changeset, $field3)->build(),

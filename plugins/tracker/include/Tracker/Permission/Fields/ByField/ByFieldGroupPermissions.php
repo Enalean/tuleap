@@ -43,11 +43,11 @@ class ByFieldGroupPermissions
      */
     private $might_not_have_access;
     /**
-     * @var \Tracker_FormElement_Field
+     * @var \Tuleap\Tracker\FormElement\Field\TrackerField
      */
     private $field;
 
-    public function __construct(\Tracker_FormElement_Field $field)
+    public function __construct(\Tuleap\Tracker\FormElement\Field\TrackerField $field)
     {
         $this->field = $field;
     }
@@ -119,7 +119,7 @@ class ByFieldGroupPermissions
         return $this->field->getLabel();
     }
 
-    public function getField(): \Tracker_FormElement_Field
+    public function getField(): \Tuleap\Tracker\FormElement\Field\TrackerField
     {
         return $this->field;
     }

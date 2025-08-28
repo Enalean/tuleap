@@ -23,8 +23,8 @@ namespace Tuleap\Tracker\FormElement;
 use PFUser;
 use Tracker_Artifact_Changeset;
 use Tracker_FormElement_Chart_Field_Exception;
-use Tracker_FormElement_Field;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 
 class ChartConfigurationValueChecker
 {
@@ -65,7 +65,7 @@ class ChartConfigurationValueChecker
 
     private function hasFieldChanged(
         Tracker_Artifact_Changeset $new_changeset,
-        Tracker_FormElement_Field $field,
+        TrackerField $field,
     ) {
         return $new_changeset->getValue($field) && $new_changeset->getValue($field)->hasChanged();
     }

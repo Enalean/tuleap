@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Cardwall\OnTop\Config\ColumnCollection;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Semantic\Status\RetrieveSemanticStatusField;
 use Tuleap\Tracker\Tracker;
 
@@ -55,7 +56,7 @@ class Cardwall_OnTop_Config_ValueMappingFactory // phpcs:ignore PSR1.Classes.Cla
     /**
      * @return array of Cardwall_OnTop_Config_ValueMapping
      */
-    public function getMappings(Tracker $tracker, Tracker $mapping_tracker, Tracker_FormElement_Field $mapping_field)
+    public function getMappings(Tracker $tracker, Tracker $mapping_tracker, TrackerField $mapping_field)
     {
         // Why does we return a collection indexed on value_id in the case of freestyle mappings, and a collection
         // indexed on column_id in the case of status mappings @see getStatusMappings?????????

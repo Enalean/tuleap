@@ -22,7 +22,7 @@ namespace Tuleap\Velocity;
 
 use Feedback;
 use PFUser;
-use Tracker_FormElement_Field;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDone;
 use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
 use Tuleap\Tracker\Workflow\BeforeEvent;
@@ -92,7 +92,7 @@ class VelocityComputation
     private function displayUpdateMessageForUserWhoCanReadField(
         PFUser $user,
         $computed_velocity,
-        ?Tracker_FormElement_Field $field = null,
+        ?TrackerField $field = null,
     ) {
         if ($field && $field->userCanRead($user)) {
             $GLOBALS['Response']->addFeedback(

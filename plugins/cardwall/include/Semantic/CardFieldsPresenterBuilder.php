@@ -20,13 +20,13 @@
 
 namespace Tuleap\Cardwall\Semantic;
 
-use Tracker_FormElement_Field;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 
 class CardFieldsPresenterBuilder
 {
     /**
-     * @param Tracker_FormElement_Field[] $used_fields
-     * @param Tracker_FormElement_Field[] $form_elements_fields
+     * @param TrackerField[] $used_fields
+     * @param TrackerField[] $form_elements_fields
      *
      * @return FieldPresenter
      */
@@ -39,7 +39,7 @@ class CardFieldsPresenterBuilder
     }
 
     /**
-     * @param Tracker_FormElement_Field[] $tracker_field
+     * @param TrackerField[] $tracker_field
      *
      * @return array
      */

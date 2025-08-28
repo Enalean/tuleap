@@ -24,8 +24,8 @@ namespace Tuleap\Tracker\FormElement\Event;
 
 use Project;
 use SimpleXMLElement;
-use Tracker_FormElement_Field;
 use Tuleap\Event\Dispatchable;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
 
 class ImportExternalElement implements Dispatchable
@@ -38,7 +38,7 @@ class ImportExternalElement implements Dispatchable
     private $xml;
 
     /**
-     * @var Tracker_FormElement_Field|null
+     * @var TrackerField|null
      */
     private $form_element;
 
@@ -69,12 +69,12 @@ class ImportExternalElement implements Dispatchable
         return $this->xml;
     }
 
-    public function getFormElement(): ?Tracker_FormElement_Field
+    public function getFormElement(): ?TrackerField
     {
         return $this->form_element;
     }
 
-    public function setFormElement(Tracker_FormElement_Field $form_element): void
+    public function setFormElement(TrackerField $form_element): void
     {
         $this->form_element = $form_element;
     }

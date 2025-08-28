@@ -22,21 +22,21 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Test\Stub;
 
-use Tracker_FormElement_Field;
 use Tuleap\Tracker\FormElement\Field\RetrieveUsedFields;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 
 final class RetrieveUsedFieldsStub implements RetrieveUsedFields
 {
     /**
-     * @param \Tracker_FormElement_Field[] $fields
+     * @param \Tuleap\Tracker\FormElement\Field\TrackerField[] $fields
      */
     private function __construct(private readonly array $fields)
     {
     }
 
     public static function withFields(
-        \Tracker_FormElement_Field $first_field,
-        \Tracker_FormElement_Field ...$other_fields,
+        \Tuleap\Tracker\FormElement\Field\TrackerField $first_field,
+        \Tuleap\Tracker\FormElement\Field\TrackerField ...$other_fields,
     ): self {
         return new self([$first_field, ...$other_fields]);
     }
@@ -59,7 +59,7 @@ final class RetrieveUsedFieldsStub implements RetrieveUsedFields
     }
 
     #[\Override]
-    public function getUsedFormElementFieldById(int $id): ?Tracker_FormElement_Field
+    public function getUsedFormElementFieldById(int $id): ?TrackerField
     {
         foreach ($this->fields as $field) {
             if ($field->getId() === $id) {
@@ -71,7 +71,7 @@ final class RetrieveUsedFieldsStub implements RetrieveUsedFields
     }
 
     #[\Override]
-    public function getUsedFieldByName(int $tracker_id, string $field_name): ?Tracker_FormElement_Field
+    public function getUsedFieldByName(int $tracker_id, string $field_name): ?TrackerField
     {
         foreach ($this->fields as $field) {
             if ($field->getName() === $field_name && $field->getTrackerId() === $tracker_id) {

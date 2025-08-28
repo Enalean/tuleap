@@ -22,7 +22,6 @@ namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\CustomColumn;
 
 use Codendi_HTMLPurifier;
 use Tracker_Artifact_Changeset;
-use Tracker_FormElement_Field;
 use Tracker_FormElement_FieldVisitor;
 use Tuleap\Tracker\FormElement\Field\ArtifactId\ArtifactIdField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
@@ -47,6 +46,7 @@ use Tuleap\Tracker\FormElement\Field\String\StringField;
 use Tuleap\Tracker\FormElement\Field\SubmittedBy\SubmittedByField;
 use Tuleap\Tracker\FormElement\Field\SubmittedOn\SubmittedOnField;
 use Tuleap\Tracker\FormElement\Field\Text\TextField;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
 
 /**
@@ -60,11 +60,11 @@ class ReplaceValueVisitor implements Tracker_FormElement_FieldVisitor
     private $changeset;
 
     /**
-     * @var Tracker_FormElement_Field
+     * @var TrackerField
      */
     private $field;
 
-    public function __construct(Tracker_FormElement_Field $field, Tracker_Artifact_Changeset $changeset)
+    public function __construct(TrackerField $field, Tracker_Artifact_Changeset $changeset)
     {
         $this->field     = $field;
         $this->changeset = $changeset;

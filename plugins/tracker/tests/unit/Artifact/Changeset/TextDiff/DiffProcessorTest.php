@@ -25,8 +25,8 @@ namespace Tuleap\Tracker\Artifact\Changeset\TextDiff;
 use Codendi_UnifiedDiffFormatter;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue_Text;
-use Tracker_FormElement_Field;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\TextFieldBuilder;
 
@@ -35,7 +35,7 @@ final class DiffProcessorTest extends TestCase
 {
     private DiffProcessor $diff_processor;
     private Tracker_Artifact_Changeset $changeset;
-    private Tracker_FormElement_Field $field;
+    private TrackerField $field;
 
     protected function setUp(): void
     {

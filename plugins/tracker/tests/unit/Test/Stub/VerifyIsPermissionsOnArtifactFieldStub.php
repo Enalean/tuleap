@@ -41,7 +41,7 @@ final class VerifyIsPermissionsOnArtifactFieldStub implements VerifyIsPermission
     }
 
     #[\Override]
-    public function isPermissionsOnArtifactField(\Tracker_FormElement_Field $field): bool
+    public function isPermissionsOnArtifactField(\Tuleap\Tracker\FormElement\Field\TrackerField $field): bool
     {
         return $this->is_permission_field;
     }

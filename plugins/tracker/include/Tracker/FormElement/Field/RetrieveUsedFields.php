@@ -20,17 +20,15 @@
 
 namespace Tuleap\Tracker\FormElement\Field;
 
-use Tracker_FormElement_Field;
-
 interface RetrieveUsedFields
 {
     /**
      * All fields used by the tracker
-     * @return \Tracker_FormElement_Field[]
+     * @return \Tuleap\Tracker\FormElement\Field\TrackerField[]
      */
     public function getUsedFields(\Tuleap\Tracker\Tracker $tracker): array;
 
-    public function getUsedFormElementFieldById(int $id): ?Tracker_FormElement_Field;
+    public function getUsedFormElementFieldById(int $id): ?TrackerField;
 
-    public function getUsedFieldByName(int $tracker_id, string $field_name): ?Tracker_FormElement_Field;
+    public function getUsedFieldByName(int $tracker_id, string $field_name): ?TrackerField;
 }

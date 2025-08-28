@@ -70,7 +70,7 @@ class MasschangeDataValueExtractor
         return $data;
     }
 
-    private function hasDataChanged(\Tracker_FormElement_Field $field, mixed $data): bool
+    private function hasDataChanged(\Tuleap\Tracker\FormElement\Field\TrackerField $field, mixed $data): bool
     {
         if ($field instanceof ListField) {
             return $this->hasListValueChanged($data);

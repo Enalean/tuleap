@@ -20,7 +20,7 @@
 
 namespace Tuleap\Velocity\Semantic;
 
-use Tracker_FormElement_Field;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDone;
 use Tuleap\Tracker\Tracker;
 
@@ -53,7 +53,7 @@ class SemanticVelocityPresenterBuilder
         \PFUser $user,
         Tracker $tracker,
         SemanticDone $semantic_done,
-        ?Tracker_FormElement_Field $velocity_field = null,
+        ?TrackerField $velocity_field = null,
     ) {
         $backlog_trackers                     = $this->backlog_retriever->getBacklogTrackers($user, $tracker);
         $backlog_required_trackers_collection = $this->missing_requirement_retriever->buildCollectionFromBacklogTrackers(

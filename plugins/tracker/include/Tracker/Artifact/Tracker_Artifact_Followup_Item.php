@@ -17,8 +17,9 @@
  */
 
 use Tuleap\Date\DateHelper;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 
-abstract class Tracker_Artifact_Followup_Item
+abstract class Tracker_Artifact_Followup_Item // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     abstract public function getId();
 
@@ -65,7 +66,7 @@ abstract class Tracker_Artifact_Followup_Item
         return $this->diffToPrevious();
     }
 
-    abstract public function getValue(Tracker_FormElement_Field $field);
+    abstract public function getValue(TrackerField $field);
 
     /**
      * @return Tracker_Artifact_ChangesetValue[]

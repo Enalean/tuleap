@@ -23,11 +23,11 @@
 
 namespace Tuleap\GraphOnTrackersV5\DataTransformation;
 
-use Tracker_FormElement_Field;
 use Tracker_FormElementFactory;
 use Tuleap\DB\DBFactory;
 use Tuleap\GraphOnTrackersV5\GraphicLibrary\GraphOnTrackersV5_Engine_Bar;
 use Tuleap\Tracker\FormElement\Field\ListField;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 
 class GraphOnTrackersV5_Chart_BarDataBuilder extends ChartDataBuilderV5 // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
@@ -163,7 +163,7 @@ class GraphOnTrackersV5_Chart_BarDataBuilder extends ChartDataBuilderV5 // phpcs
         }
     }
 
-    private function buildGroupByField(): ?Tracker_FormElement_Field
+    private function buildGroupByField(): ?TrackerField
     {
         return $this->getFormElementFactory()->getFormElementById($this->getFieldGroupId());
     }

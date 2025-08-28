@@ -24,8 +24,8 @@ namespace Tuleap\Tracker\REST;
 
 use PFUser;
 use Tracker_FormElement;
-use Tracker_FormElement_Field;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
 
 class PermissionsExporter
@@ -59,7 +59,7 @@ class PermissionsExporter
     ): array {
         $permissions = $this->exportUserPermissionsForFieldWithoutWorkflowComputedPermissions($user, $field);
 
-        if (! $field instanceof Tracker_FormElement_Field) {
+        if (! $field instanceof TrackerField) {
             return $permissions;
         }
 

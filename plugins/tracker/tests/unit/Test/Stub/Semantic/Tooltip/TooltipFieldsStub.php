@@ -25,7 +25,7 @@ namespace Tuleap\Tracker\Test\Stub\Semantic\Tooltip;
 final class TooltipFieldsStub implements \Tuleap\Tracker\Semantic\Tooltip\TooltipFields
 {
     /**
-     * @param \Tracker_FormElement_Field[] $fields
+     * @param \Tuleap\Tracker\FormElement\Field\TrackerField[] $fields
      */
     private function __construct(private array $fields)
     {
@@ -39,7 +39,7 @@ final class TooltipFieldsStub implements \Tuleap\Tracker\Semantic\Tooltip\Toolti
     /**
      * @no-named-arguments
      */
-    public static function withFields(\Tracker_FormElement_Field $field, \Tracker_FormElement_Field ...$other_fields): self
+    public static function withFields(\Tuleap\Tracker\FormElement\Field\TrackerField $field, \Tuleap\Tracker\FormElement\Field\TrackerField ...$other_fields): self
     {
         return new self([$field, ...$other_fields]);
     }

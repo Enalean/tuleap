@@ -21,12 +21,13 @@
 
 use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\Option\Option;
+use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorDao;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDefaultValueDao;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindVisitable;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BoundDecoratorEditor;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BoundDecoratorSaver;
-use Tuleap\Tracker\FormElement\Field\ListField;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 use Tuleap\Tracker\REST\FieldValueRepresentation;
 
@@ -56,7 +57,7 @@ abstract class Tracker_FormElement_Field_List_Bind implements //phpcs:ignore PSR
      */
     protected $decorators;
 
-    /** @var Tracker_FormElement_Field */
+    /** @var TrackerField */
     protected $field;
 
     public function __construct(public DatabaseUUIDV7Factory $uuid_factory, $field, $default_values, $decorators)

@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Tracker\FormElement\Field\Files\FilesField;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class Tracker_FileInfoTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
@@ -84,7 +85,7 @@ final class Tracker_FileInfoTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:
     #[\PHPUnit\Framework\Attributes\DataProvider('dataProviderIsImage')]
     public function testIsImage(string $filetype, bool $is_image): void
     {
-        $fi = new Tracker_FileInfo(1, $this->createMock(Tracker_FormElement_Field::class), 102, 'description', 'image', 10, $filetype);
+        $fi = new Tracker_FileInfo(1, $this->createMock(TrackerField::class), 102, 'description', 'image', 10, $filetype);
 
         $this->assertEquals($is_image, $fi->isImage());
     }
@@ -105,7 +106,7 @@ final class Tracker_FileInfoTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:
     #[\PHPUnit\Framework\Attributes\DataProvider('dataProviderHumanReadableFilesize')]
     public function testHumanReadableFilesize(int $size, string $expected_human_readable_filesize): void
     {
-        $f = new Tracker_FileInfo(1, $this->createMock(Tracker_FormElement_Field::class), 102, 'description', 'name', $size, 'text/plain');
+        $f = new Tracker_FileInfo(1, $this->createMock(TrackerField::class), 102, 'description', 'name', $size, 'text/plain');
         $this->assertEquals($expected_human_readable_filesize, $f->getHumanReadableFilesize());
     }
 

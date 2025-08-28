@@ -41,7 +41,7 @@ final class VerifyIsOpenListFieldStub implements VerifyIsOpenListField
     }
 
     #[\Override]
-    public function isAnOpenListField(\Tracker_FormElement_Field $field): bool
+    public function isAnOpenListField(\Tuleap\Tracker\FormElement\Field\TrackerField $field): bool
     {
         return $this->is_an_open_list_field;
     }

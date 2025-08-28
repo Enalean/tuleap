@@ -168,7 +168,7 @@ class CampaignCreator
         TrackerReference $tracker_reference,
         PFUser $user,
         string $field_name,
-    ): \Tracker_FormElement_Field {
+    ): \Tuleap\Tracker\FormElement\Field\TrackerField {
         $field = $this->formelement_factory->getUsedFieldByNameForUser(
             $tracker_reference->id,
             $field_name,

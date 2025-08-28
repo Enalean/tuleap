@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\FormElement\Field\TrackerField;
+
 /**
  * Base class for field post actions.
  */
@@ -26,14 +28,14 @@
 abstract class Transition_PostAction_Field extends Transition_PostAction
 {
     /**
-     * @var Tracker_FormElement_Field The field the post action should modify
+     * @var TrackerField The field the post action should modify
      */
     protected $field;
 
     /**
      * @param Transition                   $transition The transition the post action belongs to
      * @param int $id Id of the post action
-     * @param Tracker_FormElement_Field    $field      The field or field_id the post action should modify
+     * @param TrackerField    $field      The field or field_id the post action should modify
      */
     public function __construct(Transition $transition, $id, $field)
     {
@@ -44,7 +46,7 @@ abstract class Transition_PostAction_Field extends Transition_PostAction
     /**
      * Return the field associated to this post action
      *
-     * @return Tracker_FormElement_Field
+     * @return TrackerField
      */
     public function getField()
     {
@@ -71,7 +73,7 @@ abstract class Transition_PostAction_Field extends Transition_PostAction
      *
      * @return bool
      */
-    public function bypassPermissions(Tracker_FormElement_Field $field)
+    public function bypassPermissions(TrackerField $field)
     {
         return $this->getFieldId() == $field->getId() && $this->bypass_permissions;
     }

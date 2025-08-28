@@ -22,9 +22,9 @@ namespace Tuleap\Tracker\FormElement;
 
 use PFUser;
 use Tracker_FormElement_Chart_Field_Exception;
-use Tracker_FormElement_Field;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Tracker;
 
@@ -58,7 +58,7 @@ class ChartConfigurationFieldRetriever
     }
 
     /**
-     * @return Tracker_FormElement_Field
+     * @return TrackerField
      */
     public function getCapacityField(Tracker $tracker)
     {
@@ -78,7 +78,7 @@ class ChartConfigurationFieldRetriever
     }
 
     /**
-     * @return Tracker_FormElement_Field
+     * @return TrackerField
      * @throws Tracker_FormElement_Chart_Field_Exception
      */
     public function getDurationField(Tracker $tracker, PFUser $user)
@@ -97,7 +97,7 @@ class ChartConfigurationFieldRetriever
     }
 
     /**
-     * @return Tracker_FormElement_Field
+     * @return TrackerField
      * @throws Tracker_FormElement_Chart_Field_Exception
      */
     public function getEndDateField(Tracker $tracker, PFUser $user)
@@ -116,7 +116,7 @@ class ChartConfigurationFieldRetriever
     }
 
     /**
-     * @return Tracker_FormElement_Field
+     * @return TrackerField
      * @throws Tracker_FormElement_Chart_Field_Exception
      */
     public function getStartDateField(Tracker $tracker, PFUser $user)
@@ -135,7 +135,7 @@ class ChartConfigurationFieldRetriever
     }
 
     /**
-     * @return bool|Tracker_FormElement_Field
+     * @return bool|TrackerField
      */
     public function getBurndownRemainingEffortField(Artifact $artifact, PFUser $user)
     {

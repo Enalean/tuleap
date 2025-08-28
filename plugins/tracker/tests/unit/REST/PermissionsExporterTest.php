@@ -64,7 +64,7 @@ final class PermissionsExporterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItDoesNotChangePermissionsIfNotFrozenField()
     {
         $initial_permissions = [Tracker_FormElement::REST_PERMISSION_READ, Tracker_FormElement::REST_PERMISSION_UPDATE];
-        $form_element        = $this->createMock(\Tracker_FormElement_Field::class);
+        $form_element        = $this->createMock(\Tuleap\Tracker\FormElement\Field\TrackerField::class);
         $form_element
             ->method('exportCurrentUserPermissionsToREST')
             ->willReturn($initial_permissions);
@@ -88,7 +88,7 @@ final class PermissionsExporterTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testItShouldRemoveTheUpdatePermissionIfFieldIsFrozen()
     {
         $initial_permissions = [Tracker_FormElement::REST_PERMISSION_READ, Tracker_FormElement::REST_PERMISSION_UPDATE];
-        $form_element        = $this->createMock(\Tracker_FormElement_Field::class);
+        $form_element        = $this->createMock(\Tuleap\Tracker\FormElement\Field\TrackerField::class);
         $form_element
             ->method('exportCurrentUserPermissionsToREST')
             ->willReturn($initial_permissions);
@@ -118,7 +118,7 @@ final class PermissionsExporterTest extends \Tuleap\Test\PHPUnit\TestCase
             Tracker_FormElement::REST_PERMISSION_UPDATE,
             Tracker_FormElement::REST_PERMISSION_SUBMIT,
         ];
-        $form_element        = $this->createMock(\Tracker_FormElement_Field::class);
+        $form_element        = $this->createMock(\Tuleap\Tracker\FormElement\Field\TrackerField::class);
         $form_element
             ->method('exportCurrentUserPermissionsToREST')
             ->willReturn($initial_permissions);

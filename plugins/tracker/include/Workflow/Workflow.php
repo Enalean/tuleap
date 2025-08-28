@@ -20,6 +20,7 @@
  */
 
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\Workflow\BeforeEvent;
 use Tuleap\Tracker\Workflow\Transition\TransitionRetriever;
@@ -44,7 +45,7 @@ class Workflow // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     public $is_used;
 
     /**
-     * @var Tracker_FormElement_Field
+     * @var TrackerField
      */
     protected $field = null;
 
@@ -93,9 +94,9 @@ class Workflow // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     /**
      * Set field
      *
-     * @param Tracker_FormElement_Field $field Field
+     * @param TrackerField $field Field
      */
-    public function setField(Tracker_FormElement_Field $field)
+    public function setField(TrackerField $field)
     {
         $this->field    = $field;
         $this->field_id = $field->getId();
@@ -123,7 +124,7 @@ class Workflow // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     }
 
     /**
-     * @return Tracker_FormElement_Field
+     * @return TrackerField
      */
     public function getField()
     {
@@ -411,7 +412,7 @@ class Workflow // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
         return $this->disabled;
     }
 
-    public function bypassPermissions(Tracker_FormElement_Field $field): bool
+    public function bypassPermissions(TrackerField $field): bool
     {
         if ($this->disabled === true) {
             return true;

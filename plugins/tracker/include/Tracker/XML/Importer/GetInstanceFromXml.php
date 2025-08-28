@@ -28,7 +28,6 @@ use SimpleXMLElement;
 use Tracker_CannedResponseFactory;
 use Tracker_Exception;
 use Tracker_FormElement;
-use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_ReadOnly;
 use Tracker_FormElementFactory;
 use Tracker_ReportFactory;
@@ -36,6 +35,7 @@ use Tracker_RuleFactory;
 use TrackerFactory;
 use Tuleap\Color\ColorName;
 use Tuleap\Project\UGroupRetrieverWithLegacy;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Semantic\TrackerSemanticFactory;
 use Tuleap\Tracker\Tracker;
 use Tuleap\Tracker\Webhook\WebhookFactory;
@@ -461,7 +461,7 @@ readonly class GetInstanceFromXml
             : $deprecated_stop_notification;
     }
 
-    private function getXMLReference(Tracker_FormElement_Field $field, array $xml_fields_mapping): string
+    private function getXMLReference(TrackerField $field, array $xml_fields_mapping): string
     {
         $xml_id = array_search($field, $xml_fields_mapping, true);
         if ($xml_id === false) {

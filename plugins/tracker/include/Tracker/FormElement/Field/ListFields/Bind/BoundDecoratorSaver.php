@@ -37,7 +37,7 @@ class BoundDecoratorSaver
         $this->bind_decorator_dao = $bind_decorator_dao;
     }
 
-    public function save(\Tracker_FormElement_Field $field, int $value_id, string $color): void
+    public function save(\Tuleap\Tracker\FormElement\Field\TrackerField $field, int $value_id, string $color): void
     {
         if ($value_id === \Tuleap\Tracker\FormElement\Field\ListField::NONE_VALUE) {
             $this->saveNone($field, $value_id, $color);
@@ -47,7 +47,7 @@ class BoundDecoratorSaver
         $this->saveColor($color, $value_id);
     }
 
-    private function saveNone(\Tracker_FormElement_Field $field, int $value_id, string $color): void
+    private function saveNone(\Tuleap\Tracker\FormElement\Field\TrackerField $field, int $value_id, string $color): void
     {
         if (! Tracker_FormElement_Field_List_BindDecorator::isHexaColor($color)) {
             $this->bind_decorator_dao->saveNoneTlpColor($field->getId(), $color);

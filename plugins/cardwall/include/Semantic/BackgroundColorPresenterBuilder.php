@@ -20,9 +20,9 @@
 
 namespace Tuleap\Cardwall\Semantic;
 
-use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_List_Bind_Static;
 use Tracker_FormElementFactory;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Tracker;
 
 class BackgroundColorPresenterBuilder
@@ -57,7 +57,7 @@ class BackgroundColorPresenterBuilder
     }
 
     /**
-     * @param Tracker_FormElement_Field[] $form_elements_fields
+     * @param TrackerField[] $form_elements_fields
      * @param                             $selected_field_id
      *
      * @return array
@@ -79,7 +79,7 @@ class BackgroundColorPresenterBuilder
         return $formatted_field;
     }
 
-    private function isFieldAListBoundToStaticValues(Tracker_FormElement_Field $field): bool
+    private function isFieldAListBoundToStaticValues(TrackerField $field): bool
     {
         return ($this->form_element_factory->getType($field) === 'sb'
                 || $this->form_element_factory->getType($field) === 'rb')
@@ -87,7 +87,7 @@ class BackgroundColorPresenterBuilder
             && $this->doesNotHaveAValueBoundToOldColorPicker($field);
     }
 
-    private function doesNotHaveAValueBoundToOldColorPicker(Tracker_FormElement_Field $field): bool
+    private function doesNotHaveAValueBoundToOldColorPicker(TrackerField $field): bool
     {
         /**
          * @var \Tracker_FormElement_Field_List_BindDecorator[] $decorators

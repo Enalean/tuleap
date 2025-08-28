@@ -23,8 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Workflow\Transition;
 
 use Tracker_Artifact_Changeset;
-use Tracker_FormElement_Field;
 use Transition;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Workflow;
 
 class TransitionRetriever
@@ -59,7 +59,7 @@ class TransitionRetriever
     }
 
     private function getFrom(
-        Tracker_FormElement_Field $workflow_field,
+        TrackerField $workflow_field,
         ?Tracker_Artifact_Changeset $previous_changeset,
     ): ?int {
         if (! $previous_changeset) {
@@ -85,7 +85,7 @@ class TransitionRetriever
     }
 
     private function getTransitionFromWorkflowFieldDefaultValueAtArtifactCreation(
-        Tracker_FormElement_Field $workflow_field,
+        TrackerField $workflow_field,
         Workflow $workflow,
         ?int $from,
     ): ?Transition {

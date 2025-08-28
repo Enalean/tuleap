@@ -29,13 +29,13 @@ use Rule_String;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue;
 use Tracker_Artifact_ChangesetValue_String;
-use Tracker_FormElement_Field;
 use Tracker_FormElement_FieldVisitor;
 use Tuleap\Search\ItemToIndexQueue;
 use Tuleap\Search\ItemToIndexQueueEventBased;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\Files\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\Text\TextField;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\FormElement\FieldContentIndexer;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\DeleteSpecificProperties;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\DuplicateSpecificProperties;
@@ -320,7 +320,7 @@ class StringField extends TextField
      */
     public function isValidRegardingRequiredProperty(Artifact $artifact, $submitted_value): bool
     {
-        return Tracker_FormElement_Field::isValidRegardingRequiredProperty($artifact, $submitted_value);
+        return TrackerField::isValidRegardingRequiredProperty($artifact, $submitted_value);
     }
 
     protected function getRuleNoCr()
@@ -329,7 +329,7 @@ class StringField extends TextField
     }
 
     /**
-     * @see Tracker_FormElement_Field::hasChanges()
+     * @see TrackerField::hasChanges()
      */
     public function hasChanges(Artifact $artifact, Tracker_Artifact_ChangesetValue $old_value, $new_value)
     {

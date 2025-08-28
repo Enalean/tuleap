@@ -23,9 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Workflow\PostAction\FrozenFields;
 
 use SimpleXMLElement;
-use Tracker_FormElement_Field;
 use Transition;
 use Transition_PostAction;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Workflow;
 
 class FrozenFieldsFactory implements \Transition_PostActionSubFactory
@@ -82,11 +82,11 @@ class FrozenFieldsFactory implements \Transition_PostActionSubFactory
     /**
      * Say if a field is used in its tracker workflow transitions post actions
      *
-     * @param Tracker_FormElement_Field $field The field
+     * @param TrackerField $field The field
      *
      * @return bool
      */
-    public function isFieldUsedInPostActions(Tracker_FormElement_Field $field)
+    public function isFieldUsedInPostActions(TrackerField $field)
     {
         return $this->frozen_dao->isFieldUsedInPostAction($field->getId());
     }

@@ -41,6 +41,7 @@ use Tuleap\Tracker\FormElement\Field\String\StringField;
 use Tuleap\Tracker\FormElement\Field\SubmittedBy\SubmittedByField;
 use Tuleap\Tracker\FormElement\Field\SubmittedOn\SubmittedOnField;
 use Tuleap\Tracker\FormElement\Field\Text\TextField;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
 use Tuleap\Tracker\XML\Updater\FieldChange\FieldChangeComputedXMLUpdater;
 use Tuleap\Tracker\XML\Updater\FieldChange\FieldChangeExternalFieldXMLUpdater;
@@ -65,7 +66,7 @@ class Tracker_XML_Updater_FieldChangeXMLUpdaterVisitor implements Tracker_FormEl
 
     public function update(
         SimpleXMLElement $field_change_xml,
-        Tracker_FormElement_Field $field,
+        TrackerField $field,
         $submitted_value,
     ) {
         $updater = $field->accept($this);

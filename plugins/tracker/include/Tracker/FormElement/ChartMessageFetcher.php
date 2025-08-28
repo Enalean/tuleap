@@ -23,9 +23,9 @@ namespace Tuleap\Tracker\FormElement;
 use Codendi_HTMLPurifier;
 use EventManager;
 use Tracker_FormElement_Chart_Field_Exception;
-use Tracker_FormElement_Field;
 use Tracker_HierarchyFactory;
 use Tuleap\Tracker\FormElement\Event\MessageFetcherAdditionalWarnings;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Tracker;
 use Tuleap\User\ProvideCurrentUser;
 
@@ -42,7 +42,7 @@ class ChartMessageFetcher
     /**
      * @return string
      */
-    public function fetchWarnings(Tracker_FormElement_Field $field, ChartFieldUsage $usage)
+    public function fetchWarnings(TrackerField $field, ChartFieldUsage $usage)
     {
         $tracker = $field->getTracker();
         assert($tracker instanceof Tracker);

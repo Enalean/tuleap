@@ -32,6 +32,7 @@ use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateComme
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionInserter;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionRetriever;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsQueuer;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 
 require_once __DIR__ . '/../../../../../src/www/include/utils.php';
 
@@ -72,11 +73,11 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item // phpcs
     /**
      * Return the value of a field in the current changeset
      *
-     * @param Tracker_FormElement_Field $field The field
+     * @param TrackerField $field The field
      *
      * @return Tracker_Artifact_ChangesetValue|null
      */
-    public function getValue(Tracker_FormElement_Field $field)
+    public function getValue(TrackerField $field)
     {
         if (! array_key_exists($field->getId(), $this->values)) {
             $this->values[$field->getId()] = $this->getChangesetValueFromDB($field);
@@ -111,7 +112,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item // phpcs
         return true;
     }
 
-    private function getChangesetValueFromDB(Tracker_FormElement_Field $field)
+    private function getChangesetValueFromDB(TrackerField $field)
     {
         $row = $this->getValueDao()->searchByFieldId($this->getId(), $field->getId());
         if ($row !== null) {
@@ -120,12 +121,12 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item // phpcs
         return null;
     }
 
-    public function setFieldValue(Tracker_FormElement_Field $field, ?Tracker_Artifact_ChangesetValue $value): void
+    public function setFieldValue(TrackerField $field, ?Tracker_Artifact_ChangesetValue $value): void
     {
         $this->values[$field->getId()] = $value;
     }
 
-    public function setNoFieldValue(Tracker_FormElement_Field $field)
+    public function setNoFieldValue(TrackerField $field)
     {
         $this->values[$field->getId()] = false;
     }
@@ -811,7 +812,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item // phpcs
      */
     private function getPreviousChangesetValue(
         Tracker_Artifact_Followup_Item $previous_item,
-        Tracker_FormElement_Field $field,
+        TrackerField $field,
     ) {
         if ($previous_item->canHoldValue()) {
             return $previous_item->getValue($field);

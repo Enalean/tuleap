@@ -22,10 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Report\Renderer\Table;
 
-use Tracker_FormElement_Field;
 use Tracker_Report_Renderer_Table;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class UsedFieldsRetrieverTest extends TestCase
@@ -36,9 +36,9 @@ final class UsedFieldsRetrieverTest extends TestCase
         $user           = UserTestBuilder::aUser()->build();
         $renderer_table = $this->createMock(Tracker_Report_Renderer_Table::class);
 
-        $field_01 = $this->createMock(Tracker_FormElement_Field::class);
-        $field_02 = $this->createMock(Tracker_FormElement_Field::class);
-        $field_03 = $this->createMock(Tracker_FormElement_Field::class);
+        $field_01 = $this->createMock(TrackerField::class);
+        $field_02 = $this->createMock(TrackerField::class);
+        $field_03 = $this->createMock(TrackerField::class);
 
         $field_01->method('userCanRead')->with($user)->willReturn(true);
         $field_02->method('userCanRead')->with($user)->willReturn(true);

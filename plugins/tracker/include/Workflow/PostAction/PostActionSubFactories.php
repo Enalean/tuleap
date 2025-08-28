@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\FormElement\Field\TrackerField;
+
 /**
  * First class collection of PostActionSubFactories.
  *
@@ -69,11 +71,11 @@ class Transition_PostActionSubFactories
     /**
      * Say if a field is used in its tracker workflow transitions post actions
      *
-     * @param Tracker_FormElement_Field $field The field
+     * @param TrackerField $field The field
      *
      * @return bool
      */
-    public function isFieldUsedInPostActions(Tracker_FormElement_Field $field)
+    public function isFieldUsedInPostActions(TrackerField $field)
     {
         foreach ($this->factories as $factory) {
             if ($factory->isFieldUsedInPostActions($field)) {

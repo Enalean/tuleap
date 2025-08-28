@@ -20,9 +20,7 @@
 
 namespace Tuleap\Tracker\FormElement\Field;
 
-use Tracker_FormElement_Field;
-
 interface RetrieveFieldById
 {
-    public function getFieldById($field_id): ?Tracker_FormElement_Field;
+    public function getFieldById($field_id): ?TrackerField;
 }

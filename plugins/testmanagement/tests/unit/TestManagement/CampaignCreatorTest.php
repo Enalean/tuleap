@@ -79,7 +79,7 @@ final class CampaignCreatorTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->formelement_factory = $this->createMock(\Tracker_FormElementFactory::class);
         $this->formelement_factory
             ->method('getUsedFieldByNameForUser')
-            ->willReturnCallback(fn (int $tracker_id, string $field_name, PFUser $user): \Tracker_FormElement_Field => match ($field_name) {
+            ->willReturnCallback(fn (int $tracker_id, string $field_name, PFUser $user): \Tuleap\Tracker\FormElement\Field\TrackerField => match ($field_name) {
                 CampaignRepresentation::FIELD_NAME => StringFieldBuilder::aStringField(1001)->build(),
                 CampaignRepresentation::FIELD_STATUS => ListStaticBindBuilder::aStaticBind(SelectboxFieldBuilder::aSelectboxField(1002)->build())->build()->getField(),
                 CampaignRepresentation::FIELD_ARTIFACT_LINKS => ArtifactLinkFieldBuilder::anArtifactLinkField(1003)->build(),

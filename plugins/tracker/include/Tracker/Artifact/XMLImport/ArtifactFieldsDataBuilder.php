@@ -24,12 +24,13 @@ use Tuleap\Tracker\Artifact\Event\ExternalStrategiesGetter;
 use Tuleap\Tracker\Artifact\XMLImport\XMLImportFieldStrategyComputed;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Tracker;
 
 /**
  * I convert the xml changeset data into data structure in order to create changeset in one artifact
  */
-class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder
+class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public const FIELDTYPE_STRING            = Tracker_FormElementFactory::FIELD_STRING_TYPE;
     public const FIELDTYPE_TEXT              = 'text';
@@ -139,14 +140,14 @@ class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder
     }
 
     private function forceTrackerSoThatFieldDoesNotLoadAFreshNewTrackerAndLooseTheDisabledStateOnWorkflow(
-        Tracker_FormElement_Field $field,
+        TrackerField $field,
     ) {
         $field->setTracker($this->tracker);
     }
 
     private function appendValidValue(
         array &$data,
-        Tracker_FormElement_Field $field,
+        TrackerField $field,
         SimpleXMLElement $field_change,
         PFUser $submitted_by,
         Artifact $artifact,
@@ -183,7 +184,7 @@ class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder
     }
 
     private function getFieldData(
-        Tracker_FormElement_Field $field,
+        TrackerField $field,
         SimpleXMLElement $field_change,
         PFUser $submitted_by,
         Artifact $artifact,

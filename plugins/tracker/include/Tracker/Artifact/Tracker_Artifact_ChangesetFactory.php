@@ -20,6 +20,7 @@
 
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupPermissionRetriever;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 
 class Tracker_Artifact_ChangesetFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
@@ -100,7 +101,7 @@ class Tracker_Artifact_ChangesetFactory // phpcs:ignore PSR1.Classes.ClassDeclar
         return null;
     }
 
-    public function getLastChangesetWithFieldValue(Artifact $artifact, Tracker_FormElement_Field $field): ?Tracker_Artifact_Changeset
+    public function getLastChangesetWithFieldValue(Artifact $artifact, TrackerField $field): ?Tracker_Artifact_Changeset
     {
         $dar = $this->dao->searchLastChangesetAndValueForArtifactField($artifact->getId(), $field->getId());
         if ($dar === false) {
@@ -122,7 +123,7 @@ class Tracker_Artifact_ChangesetFactory // phpcs:ignore PSR1.Classes.ClassDeclar
      */
     public function getPreviousChangesetWithFieldValue(
         Artifact $artifact,
-        Tracker_FormElement_Field $field,
+        TrackerField $field,
         $changeset_id,
     ) {
         $row = $this->dao->searchPreviousChangesetAndValueForArtifactField(

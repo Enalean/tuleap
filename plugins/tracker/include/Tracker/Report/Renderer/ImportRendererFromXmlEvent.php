@@ -89,7 +89,7 @@ class ImportRendererFromXmlEvent implements \Tuleap\Event\Dispatchable
 
     /**
      * @param string $reference
-     * @return \Tracker_FormElement_Field
+     * @return \Tuleap\Tracker\FormElement\Field\TrackerField
      */
     public function getFieldFromXMLReference($reference)
     {

@@ -23,7 +23,7 @@ namespace Tuleap\Tracker\Action;
 interface VerifyExternalFieldsHaveSameType
 {
     public function haveBothFieldsSameType(
-        \Tracker_FormElement_Field $source_field,
-        \Tracker_FormElement_Field $destination_field,
+        \Tuleap\Tracker\FormElement\Field\TrackerField $source_field,
+        \Tuleap\Tracker\FormElement\Field\TrackerField $destination_field,
     ): bool;
 }

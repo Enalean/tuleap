@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 
 /**
  * I validate fields for both initial and new changesets but in the past (thus no check on required or permissions)
@@ -27,7 +28,7 @@ class Tracker_Artifact_Changeset_AtGivenDateFieldsValidator extends Tracker_Arti
 {
     protected function canValidateField(
         Artifact $artifact,
-        Tracker_FormElement_Field $field,
+        TrackerField $field,
         PFUser $user,
     ): bool {
         return true;
@@ -35,7 +36,7 @@ class Tracker_Artifact_Changeset_AtGivenDateFieldsValidator extends Tracker_Arti
 
     protected function validateField(
         Artifact $artifact,
-        Tracker_FormElement_Field $field,
+        TrackerField $field,
         \PFUser $user,
         $submitted_value,
     ) {

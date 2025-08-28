@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 
 /**
  * Fake / Null class for Tracker_Artifact_Changeset
@@ -28,7 +29,7 @@
  *
  * This class follow the Null Object Pattern
  */
-class Tracker_Artifact_Changeset_Null extends Tracker_Artifact_Changeset
+class Tracker_Artifact_Changeset_Null extends Tracker_Artifact_Changeset // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /**
      * Constructor
@@ -42,11 +43,11 @@ class Tracker_Artifact_Changeset_Null extends Tracker_Artifact_Changeset
     /**
      * Return the value of a field in the current changeset
      *
-     * @param Tracker_FormElement_Field $field The field
+     * @param TrackerField $field The field
      *
      * @return null|Tracker_Artifact_ChangesetValue or null if not found
      */
-    public function getValue(Tracker_FormElement_Field $field)
+    public function getValue(TrackerField $field)
     {
         return null;
     }

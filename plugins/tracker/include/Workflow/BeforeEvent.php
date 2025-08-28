@@ -21,9 +21,9 @@
 namespace Tuleap\Tracker\Workflow;
 
 use PFUser;
-use Tracker_FormElement_Field;
 use Tuleap\Event\Dispatchable;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 
 class BeforeEvent implements Dispatchable
 {
@@ -79,7 +79,7 @@ class BeforeEvent implements Dispatchable
         $this->should_bypass_permissions[$field_id] = true;
     }
 
-    public function shouldBypassPermissions(Tracker_FormElement_Field $field)
+    public function shouldBypassPermissions(TrackerField $field)
     {
         return isset($this->should_bypass_permissions[$field->getId()]);
     }

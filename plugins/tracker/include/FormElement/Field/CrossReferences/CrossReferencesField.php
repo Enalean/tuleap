@@ -34,7 +34,6 @@ use ReferenceManager;
 use TemplateRendererFactory;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue;
-use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_ReadOnly;
 use Tracker_FormElement_FieldVisitor;
 use Tracker_FormElementFactory;
@@ -63,11 +62,12 @@ use Tuleap\Reference\CrossReferencesDao;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\CrossReference\CrossReferenceFieldRenderer;
 use Tuleap\Tracker\FormElement\Field\Files\CreatedFileURLMapping;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\FormElement\View\Reference\CrossReferenceFieldPresenterBuilder;
 use Tuleap\Tracker\Report\Query\ParametrizedFrom;
 use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 
-final class CrossReferencesField extends Tracker_FormElement_Field implements Tracker_FormElement_Field_ReadOnly
+final class CrossReferencesField extends TrackerField implements Tracker_FormElement_Field_ReadOnly
 {
     public const string REST_REF_INDEX          = 'ref';
     public const string REST_REF_URL            = 'url';

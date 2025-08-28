@@ -35,7 +35,6 @@ use Tracker_ArtifactFactory;
 use Tracker_Chart_BurndownView;
 use Tracker_Chart_Data_Burndown;
 use Tracker_FormElement_Chart_Field_Exception;
-use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_ReadOnly;
 use Tracker_FormElement_FieldVisitor;
 use Tracker_HierarchyFactory;
@@ -57,6 +56,7 @@ use Tuleap\Tracker\FormElement\ChartFieldUsage;
 use Tuleap\Tracker\FormElement\ChartMessageFetcher;
 use Tuleap\Tracker\FormElement\Field\Computed\ComputedFieldDao;
 use Tuleap\Tracker\FormElement\Field\Files\CreatedFileURLMapping;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFullRepresentation;
 use Tuleap\Tracker\Semantic\Timeframe\IComputeTimeframes;
@@ -64,7 +64,7 @@ use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\UserWithReadAllPermissionBuilder;
 use UserManager;
 
-class BurndownField extends Tracker_FormElement_Field implements Tracker_FormElement_Field_ReadOnly
+class BurndownField extends TrackerField implements Tracker_FormElement_Field_ReadOnly
 {
     public const string LOG_IDENTIFIER = 'burndown_syslog';
 
@@ -647,7 +647,7 @@ class BurndownField extends Tracker_FormElement_Field implements Tracker_FormEle
     }
 
     /**
-     * @see Tracker_FormElement_Field::postSaveNewChangeset()
+     * @see TrackerField::postSaveNewChangeset()
      */
     #[Override]
     public function postSaveNewChangeset(

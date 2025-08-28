@@ -25,7 +25,6 @@ use Override;
 use TemplateRendererFactory;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue;
-use Tracker_FormElement_Field;
 use Tracker_FormElement_FieldVisitor;
 use Tracker_Report_Criteria;
 use Tuleap\Option\Option;
@@ -35,10 +34,11 @@ use Tuleap\TestManagement\Step\Step;
 use Tuleap\TestManagement\Step\StepPresenter;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\Files\CreatedFileURLMapping;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
 use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 
-class StepsExecution extends Tracker_FormElement_Field implements TrackerFormElementExternalField
+class StepsExecution extends TrackerField implements TrackerFormElementExternalField
 {
     public const string TYPE             = 'ttmstepexec';
     public const string UPDATE_VALUE_KEY = 'steps_results';
@@ -306,7 +306,7 @@ class StepsExecution extends Tracker_FormElement_Field implements TrackerFormEle
      * @return ViewAdmin
      */
     #[Override]
-    public function getFormAdminVisitor(Tracker_FormElement_Field $element, array $used_element)
+    public function getFormAdminVisitor(TrackerField $element, array $used_element)
     {
         return new ViewAdmin($element, $used_element);
     }
