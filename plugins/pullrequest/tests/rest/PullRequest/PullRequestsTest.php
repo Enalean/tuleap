@@ -20,7 +20,7 @@
 
 namespace Tuleap\PullRequest;
 
-use REST_TestDataBuilder;
+use Tuleap\REST\RESTTestDataBuilder;
 use Tuleap\REST\RestBase;
 
 require_once dirname(__FILE__) . '/../bootstrap.php';
@@ -31,7 +31,7 @@ class PullRequestsTest extends RestBase
 {
     protected function getResponseForNonMember($request)
     {
-        return $this->getResponse($request, REST_TestDataBuilder::TEST_USER_2_NAME);
+        return $this->getResponse($request, RESTTestDataBuilder::TEST_USER_2_NAME);
     }
 
     public function testOPTIONS()
@@ -45,7 +45,7 @@ class PullRequestsTest extends RestBase
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('OPTIONS', 'pull_requests/'),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(['OPTIONS', 'GET', 'POST', 'PATCH'], explode(', ', $response->getHeaderLine('Allow')));

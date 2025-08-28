@@ -20,12 +20,12 @@
 
 namespace Tuleap\Kanban\REST;
 
+use Exception;
 use Tuleap\Kanban\KanbanDao;
 use Tuleap\Kanban\KanbanManager;
-use Exception;
-use REST_TestDataBuilder;
+use Tuleap\REST\RESTTestDataBuilder;
 
-class DataBuilder extends REST_TestDataBuilder
+class DataBuilder extends RESTTestDataBuilder
 {
     public const PROJECT_KANBAN_CUMULATIVE_FLOW_SHORTNAME = 'kanban-cumulative-flow';
     public const KANBAN_CUMULATIVE_FLOW_NAME              = 'kanban_cumulative_flow_test';

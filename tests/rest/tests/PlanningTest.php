@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
+use Tuleap\REST\RESTTestDataBuilder;
 use Tuleap\REST\RestBase;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -48,7 +49,7 @@ class PlanningTest extends RestBase //phpcs:ignore PSR1.Classes.ClassDeclaration
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('GET', 'projects/' . $this->project_private_member_id . '/plannings'),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertPlannigAndReleasePlanning($response);
@@ -91,7 +92,7 @@ class PlanningTest extends RestBase //phpcs:ignore PSR1.Classes.ClassDeclaration
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('GET', $this->getMilestonesUri()),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertCount(1, json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR));

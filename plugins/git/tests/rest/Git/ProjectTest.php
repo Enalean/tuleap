@@ -21,6 +21,7 @@
 namespace Git;
 
 use Tuleap\Git\REST\TestBase;
+use Tuleap\REST\RESTTestDataBuilder;
 
 require_once __DIR__ . '/../bootstrap.php';
 
@@ -57,7 +58,7 @@ class ProjectTest extends TestBase
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('GET', 'projects/' . $this->git_project_id . '/git'),
-            \REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertGETGitRepositories($response);

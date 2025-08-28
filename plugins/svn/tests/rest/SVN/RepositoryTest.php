@@ -20,7 +20,7 @@
 
 namespace Tuleap\SVN\REST;
 
-use REST_TestDataBuilder;
+use Tuleap\REST\RESTTestDataBuilder;
 
 require_once dirname(__FILE__) . '/../bootstrap.php';
 
@@ -31,7 +31,7 @@ class RepositoryTest extends TestBase
     {
         return $this->getResponse(
             $request,
-            REST_TestDataBuilder::TEST_USER_3_NAME
+            RESTTestDataBuilder::TEST_USER_3_NAME
         );
     }
 
@@ -46,7 +46,7 @@ class RepositoryTest extends TestBase
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('GET', 'svn/1'),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertRepositoryForAdmin($response);
@@ -139,7 +139,7 @@ class RepositoryTest extends TestBase
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('DELETE', 'svn/1'),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(403, $response->getStatusCode());
@@ -156,7 +156,7 @@ class RepositoryTest extends TestBase
 
         $response = $this->getResponse(
             $this->request_factory->createRequest('POST', 'svn')->withBody($this->stream_factory->createStream($params)),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(403, $response->getStatusCode());
@@ -348,7 +348,7 @@ class RepositoryTest extends TestBase
 
         $response = $this->getResponse(
             $this->request_factory->createRequest('PUT', 'svn/1')->withBody($this->stream_factory->createStream($data)),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(403, $response->getStatusCode());
@@ -481,7 +481,7 @@ class RepositoryTest extends TestBase
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('OPTIONS', 'svn'),
-            REST_TestDataBuilder::TEST_USER_1_NAME
+            RESTTestDataBuilder::TEST_USER_1_NAME
         );
 
         $this->assertEquals(['OPTIONS', 'POST'], explode(', ', $response->getHeaderLine('Allow')));
@@ -491,7 +491,7 @@ class RepositoryTest extends TestBase
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('OPTIONS', 'svn/1'),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(
@@ -501,7 +501,7 @@ class RepositoryTest extends TestBase
 
         $response = $this->getResponse(
             $this->request_factory->createRequest('OPTIONS', 'svn'),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(['OPTIONS', 'POST'], explode(', ', $response->getHeaderLine('Allow')));

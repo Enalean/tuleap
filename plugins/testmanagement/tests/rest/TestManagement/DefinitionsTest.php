@@ -20,7 +20,7 @@
 
 namespace Tuleap\TestManagement;
 
-use REST_TestDataBuilder;
+use Tuleap\REST\RESTTestDataBuilder;
 
 require_once dirname(__FILE__) . '/../bootstrap.php';
 
@@ -41,12 +41,12 @@ final class DefinitionsTest extends TestManagementRESTTestCase
 
     public function testGetDefinitionWithRESTReadOnlyUser(): void
     {
-        $first_definition = $this->getFirstDefinition(REST_TestDataBuilder::TEST_BOT_USER_NAME);
+        $first_definition = $this->getFirstDefinition(RESTTestDataBuilder::TEST_BOT_USER_NAME);
 
         $definition_request = $this->request_factory->createRequest('GET', 'testmanagement_definitions/' . $first_definition['id']);
         $definition         = json_decode($this->getResponse(
             $definition_request,
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         )->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals($definition, $first_definition);

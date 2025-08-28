@@ -25,7 +25,7 @@
 namespace Tuleap\Tracker\Tests\REST\ArtifactsActions;
 
 use Psr\Http\Message\ResponseInterface;
-use REST_TestDataBuilder;
+use Tuleap\REST\RESTTestDataBuilder;
 use Tuleap\Tracker\Tests\REST\TrackerBase;
 
 require_once __DIR__ . '/../bootstrap.php';
@@ -66,7 +66,7 @@ final class ArtifactsActionsTest extends TrackerBase
 
         $response = $this->getResponse(
             $this->request_factory->createRequest('PATCH', "artifacts/$artifact_id")->withBody($this->stream_factory->createStream($body)),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         self::assertEquals(403, $response->getStatusCode());
@@ -118,7 +118,7 @@ final class ArtifactsActionsTest extends TrackerBase
 
         $response = $this->getResponse(
             $this->request_factory->createRequest('PATCH', "artifacts/$artifact_id")->withBody($this->stream_factory->createStream($body)),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         self::assertEquals(403, $response->getStatusCode());
@@ -173,7 +173,7 @@ final class ArtifactsActionsTest extends TrackerBase
     {
         $response = $this->performArtifactDeletion(
             $this->delete_artifact_ids[1],
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         self::assertEquals(403, $response->getStatusCode());
@@ -205,7 +205,7 @@ final class ArtifactsActionsTest extends TrackerBase
         self::assertEquals(429, $response->getStatusCode());
     }
 
-    private function performArtifactDeletion($artifact_id, $user_name = REST_TestDataBuilder::TEST_USER_1_NAME): ResponseInterface
+    private function performArtifactDeletion($artifact_id, $user_name = RESTTestDataBuilder::TEST_USER_1_NAME): ResponseInterface
     {
         $url = "artifacts/$artifact_id";
 

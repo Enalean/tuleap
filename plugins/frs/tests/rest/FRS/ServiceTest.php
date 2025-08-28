@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\FRS\Tests\REST;
 
-use REST_TestDataBuilder;
+use Tuleap\REST\RESTTestDataBuilder;
 use Tuleap\REST\RestBase;
 
 /**
@@ -58,7 +58,7 @@ final class ServiceTest extends RestBase
 
     public function testServiceAsRandomUser(): void
     {
-        $response = $this->getResponse($this->request_factory->createRequest('GET', sprintf('projects/%d/frs_service', $this->project_id)), REST_TestDataBuilder::TEST_USER_5_NAME);
+        $response = $this->getResponse($this->request_factory->createRequest('GET', sprintf('projects/%d/frs_service', $this->project_id)), RESTTestDataBuilder::TEST_USER_5_NAME);
         $service  = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertNull($service['permissions_for_groups']);
@@ -66,7 +66,7 @@ final class ServiceTest extends RestBase
 
     public function testServiceAsReadOnlyUser(): void
     {
-        $response = $this->getResponse($this->request_factory->createRequest('GET', sprintf('projects/%d/frs_service', $this->project_id)), REST_TestDataBuilder::TEST_BOT_USER_NAME);
+        $response = $this->getResponse($this->request_factory->createRequest('GET', sprintf('projects/%d/frs_service', $this->project_id)), RESTTestDataBuilder::TEST_BOT_USER_NAME);
         $service  = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertFrsService($service);

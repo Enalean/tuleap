@@ -25,12 +25,12 @@ use Docman_ApprovalTableItemDao;
 use Docman_ItemFactory;
 use Docman_MetadataValueFactory;
 use ProjectUGroup;
-use REST_TestDataBuilder;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Docman\Test\rest\DocmanDatabaseInitialization;
 use Tuleap\Docman\Test\rest\DocmanDataBuilder;
+use Tuleap\REST\RESTTestDataBuilder;
 
-class DocmanProjectBuilder extends REST_TestDataBuilder
+class DocmanProjectBuilder extends RESTTestDataBuilder
 {
     private const DOCMAN_REGULAR_USER_PASSWORD = 'welcome0';
 
@@ -284,7 +284,7 @@ class DocmanProjectBuilder extends REST_TestDataBuilder
     public function createAdminOnlyItem(int $folder_id, string $title, int $item_type): void
     {
         $read_only_file_id = $this->createItem(
-            \REST_TestDataBuilder::DEFAULT_TEMPLATE_PROJECT_ID,
+            RESTTestDataBuilder::DEFAULT_TEMPLATE_PROJECT_ID,
             $folder_id,
             $title,
             $item_type

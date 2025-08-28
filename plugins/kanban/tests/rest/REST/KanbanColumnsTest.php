@@ -20,7 +20,7 @@
 
 namespace Tuleap\Kanban\REST;
 
-use REST_TestDataBuilder;
+use Tuleap\REST\RESTTestDataBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 #[\PHPUnit\Framework\Attributes\Group('KanbanTests')]
@@ -36,7 +36,7 @@ class KanbanColumnsTest extends TestBase
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('OPTIONS', 'kanban_columns'),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME,
+            RESTTestDataBuilder::TEST_BOT_USER_NAME,
         );
 
         $this->assertEquals(['OPTIONS', 'PATCH', 'DELETE'], explode(', ', $response->getHeaderLine('Allow')));
@@ -44,7 +44,7 @@ class KanbanColumnsTest extends TestBase
 
     public function testPATCHKanbanColumns()
     {
-        $url = 'kanban_columns/' . REST_TestDataBuilder::KANBAN_ONGOING_COLUMN_ID . '?kanban_id=' . REST_TestDataBuilder::KANBAN_ID;
+        $url = 'kanban_columns/' . RESTTestDataBuilder::KANBAN_ONGOING_COLUMN_ID . '?kanban_id=' . RESTTestDataBuilder::KANBAN_ID;
 
         $response = $this->getResponse($this->request_factory->createRequest(
             'PATCH',
@@ -58,7 +58,7 @@ class KanbanColumnsTest extends TestBase
 
         $response = $this->getResponse($this->request_factory->createRequest(
             'GET',
-            'kanban/' . REST_TestDataBuilder::KANBAN_ID
+            'kanban/' . RESTTestDataBuilder::KANBAN_ID
         ));
         $kanban   = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
@@ -68,7 +68,7 @@ class KanbanColumnsTest extends TestBase
 
     public function testPATCHKanbanColumnsDeniedForRESTReadOnlyUserNotInvolvedInProject()
     {
-        $url = 'kanban_columns/' . REST_TestDataBuilder::KANBAN_ONGOING_COLUMN_ID . '?kanban_id=' . REST_TestDataBuilder::KANBAN_ID;
+        $url = 'kanban_columns/' . RESTTestDataBuilder::KANBAN_ONGOING_COLUMN_ID . '?kanban_id=' . RESTTestDataBuilder::KANBAN_ID;
 
         $response = $this->getResponse(
             $this->request_factory->createRequest(
@@ -78,7 +78,7 @@ class KanbanColumnsTest extends TestBase
                 'wip_limit' => 200,
                 'label'     => 'yummy',
             ]))),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME,
+            RESTTestDataBuilder::TEST_BOT_USER_NAME,
         );
 
         $this->assertEquals(403, $response->getStatusCode());
@@ -86,10 +86,10 @@ class KanbanColumnsTest extends TestBase
 
     public function testDELETEKanbanColumnsDeniedForRESTReadOnlyUserNotInvolvedInProject(): void
     {
-        $url      = 'kanban_columns/' . REST_TestDataBuilder::KANBAN_OTHER_VALUE_COLUMN_ID . '?kanban_id=' . REST_TestDataBuilder::KANBAN_ID;
+        $url      = 'kanban_columns/' . RESTTestDataBuilder::KANBAN_OTHER_VALUE_COLUMN_ID . '?kanban_id=' . RESTTestDataBuilder::KANBAN_ID;
         $response = $this->getResponse(
             $this->request_factory->createRequest('DELETE', $url),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(403, $response->getStatusCode());
@@ -97,7 +97,7 @@ class KanbanColumnsTest extends TestBase
 
     public function testDELETEKanbanColumns(): void
     {
-        $url = 'kanban_columns/' . REST_TestDataBuilder::KANBAN_OTHER_VALUE_COLUMN_ID . '?kanban_id=' . REST_TestDataBuilder::KANBAN_ID;
+        $url = 'kanban_columns/' . RESTTestDataBuilder::KANBAN_OTHER_VALUE_COLUMN_ID . '?kanban_id=' . RESTTestDataBuilder::KANBAN_ID;
 
         $response = $this->getResponse($this->request_factory->createRequest('DELETE', $url));
         $this->assertEquals($response->getStatusCode(), 200);

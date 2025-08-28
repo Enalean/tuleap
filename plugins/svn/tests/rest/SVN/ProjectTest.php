@@ -20,7 +20,7 @@
 
 namespace Tuleap\SVN\REST;
 
-use REST_TestDataBuilder;
+use Tuleap\REST\RESTTestDataBuilder;
 
 require_once dirname(__FILE__) . '/../bootstrap.php';
 
@@ -39,7 +39,7 @@ class ProjectTest extends TestBase
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('GET', 'projects/' . $this->svn_project_id . '/svn'),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertRepositories($response);
@@ -97,7 +97,7 @@ class ProjectTest extends TestBase
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('OPTIONS', 'projects/' . $this->svn_project_id . '/svn'),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(['OPTIONS', 'GET'], explode(', ', $response->getHeaderLine('Allow')));

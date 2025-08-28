@@ -21,7 +21,7 @@
 namespace Tuleap\User\AccessKey\REST;
 
 use DateTimeImmutable;
-use REST_TestDataBuilder;
+use Tuleap\REST\RESTTestDataBuilder;
 use Tuleap\REST\RestBase;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -125,7 +125,7 @@ class AccessKeyTest extends RestBase
             $this->request_factory->createRequest('POST', 'access_keys')->withBody(
                 $this->stream_factory->createStream($body_content)
             ),
-            REST_TestDataBuilder::TEST_USER_1_NAME
+            RESTTestDataBuilder::TEST_USER_1_NAME
         );
 
         $this->assertEquals(400, $response->getStatusCode());
@@ -145,7 +145,7 @@ class AccessKeyTest extends RestBase
             $this->request_factory->createRequest('POST', 'access_keys')->withBody(
                 $this->stream_factory->createStream($body_content)
             ),
-            REST_TestDataBuilder::TEST_USER_1_NAME
+            RESTTestDataBuilder::TEST_USER_1_NAME
         );
 
         $this->assertEquals(400, $response->getStatusCode());
@@ -172,7 +172,7 @@ class AccessKeyTest extends RestBase
             $this->request_factory->createRequest('POST', 'access_keys')->withBody(
                 $this->stream_factory->createStream($body_content)
             ),
-            REST_TestDataBuilder::TEST_USER_1_NAME
+            RESTTestDataBuilder::TEST_USER_1_NAME
         );
 
         $this->assertEquals(201, $response->getStatusCode());
@@ -184,8 +184,8 @@ class AccessKeyTest extends RestBase
     private function getAccessKeys(): array
     {
         $response = $this->getResponse(
-            $this->request_factory->createRequest('GET', 'users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME] . '/access_keys'),
-            REST_TestDataBuilder::TEST_USER_1_NAME
+            $this->request_factory->createRequest('GET', 'users/' . $this->user_ids[RESTTestDataBuilder::TEST_USER_1_NAME] . '/access_keys'),
+            RESTTestDataBuilder::TEST_USER_1_NAME
         );
         self::assertSame(200, $response->getStatusCode());
         return json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
@@ -196,7 +196,7 @@ class AccessKeyTest extends RestBase
         foreach ($access_keys as $access_key) {
             $response = $this->getResponse(
                 $this->request_factory->createRequest('DELETE', 'access_keys/' . $access_key['id']),
-                REST_TestDataBuilder::TEST_USER_1_NAME
+                RESTTestDataBuilder::TEST_USER_1_NAME
             );
             $this->assertEquals(200, $response->getStatusCode());
         }

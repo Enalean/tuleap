@@ -24,10 +24,10 @@ namespace Tuleap\Docman\Test\rest\Docman;
 
 require_once __DIR__ . '/../../../vendor/autoload.php';
 
-use REST_TestDataBuilder;
 use Tuleap\Docman\Test\rest\DocmanDataBuilder;
 use Tuleap\Docman\Test\rest\Helper\DocmanTestExecutionHelper;
 use Tuleap\REST\BaseTestDataBuilder;
+use Tuleap\REST\RESTTestDataBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class DocmanEmbeddedTest extends DocmanTestExecutionHelper
@@ -62,16 +62,16 @@ final class DocmanEmbeddedTest extends DocmanTestExecutionHelper
     {
         $root_folder = $this->loadRootFolderContent(
             $root_id,
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
-        $items         = $this->loadFolderContent($root_id, 'Embedded', REST_TestDataBuilder::TEST_BOT_USER_NAME);
+        $items         = $this->loadFolderContent($root_id, 'Embedded', RESTTestDataBuilder::TEST_BOT_USER_NAME);
         $folder        = $this->findItemByTitle($root_folder, 'Embedded');
         $items_id      = $folder['id'];
-        $deleted_items = $this->loadFolderContent($items_id, 'DELETE Embedded', REST_TestDataBuilder::TEST_BOT_USER_NAME);
-        $lock_items    = $this->loadFolderContent($items_id, 'LOCK Embedded', REST_TestDataBuilder::TEST_BOT_USER_NAME);
-        $version_items = $this->loadFolderContent($items_id, 'POST Embedded version', REST_TestDataBuilder::TEST_BOT_USER_NAME);
-        $put_items     = $this->loadFolderContent($items_id, 'PUT HM Embedded', REST_TestDataBuilder::TEST_BOT_USER_NAME);
+        $deleted_items = $this->loadFolderContent($items_id, 'DELETE Embedded', RESTTestDataBuilder::TEST_BOT_USER_NAME);
+        $lock_items    = $this->loadFolderContent($items_id, 'LOCK Embedded', RESTTestDataBuilder::TEST_BOT_USER_NAME);
+        $version_items = $this->loadFolderContent($items_id, 'POST Embedded version', RESTTestDataBuilder::TEST_BOT_USER_NAME);
+        $put_items     = $this->loadFolderContent($items_id, 'PUT HM Embedded', RESTTestDataBuilder::TEST_BOT_USER_NAME);
 
         return array_merge(
             $root_folder,
@@ -97,7 +97,7 @@ final class DocmanEmbeddedTest extends DocmanTestExecutionHelper
         $embedded_id = $this->createEmbeddedFileAndReturnItsId($root_id, $query);
 
         $response_folder_creation_with_rest_read_only_user = $this->getResponseByName(
-            REST_TestDataBuilder::TEST_BOT_USER_NAME,
+            RESTTestDataBuilder::TEST_BOT_USER_NAME,
             $this->request_factory->createRequest('POST', 'docman_folders/' . urlencode((string) $root_id) . '/folders')->withBody($this->stream_factory->createStream(json_encode(['title' => 'Embedded cut folder'])))
         );
         $this->assertEquals(403, $response_folder_creation_with_rest_read_only_user->getStatusCode());
@@ -111,7 +111,7 @@ final class DocmanEmbeddedTest extends DocmanTestExecutionHelper
         $folder_id = json_decode($response_folder_creation->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['id'];
 
         $move_response_with_rest_read_only_user = $this->getResponseByName(
-            REST_TestDataBuilder::TEST_BOT_USER_NAME,
+            RESTTestDataBuilder::TEST_BOT_USER_NAME,
             $this->request_factory->createRequest('PATCH', 'docman_embedded_files/' . urlencode((string) $embedded_id))->withBody($this->stream_factory->createStream(json_encode(['move' => ['destination_folder_id' => $folder_id]])))
         );
         $this->assertEquals(403, $move_response_with_rest_read_only_user->getStatusCode());
@@ -130,13 +130,13 @@ final class DocmanEmbeddedTest extends DocmanTestExecutionHelper
 
         $moved_item_response_with_rest_read_only_user = $this->getResponse(
             $this->request_factory->createRequest('GET', 'docman_items/' . urlencode((string) $embedded_id)),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
         $this->assertEquals($folder_id, json_decode($moved_item_response_with_rest_read_only_user->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['parent_id']);
 
         $delete_response_with_rest_read_only_user = $this->getResponse(
             $this->request_factory->createRequest('DELETE', 'docman_folders/' . urlencode((string) $folder_id)),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
         $this->assertEquals(403, $delete_response_with_rest_read_only_user->getStatusCode());
 
@@ -161,7 +161,7 @@ final class DocmanEmbeddedTest extends DocmanTestExecutionHelper
 
         $permission_update_response_with_rest_read_only_user = $this->getResponse(
             $this->request_factory->createRequest('PUT', 'docman_embedded_files/' . urlencode((string) $embedded_doc_id) . '/permissions')->withBody($this->stream_factory->createStream($put_body)),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
         $this->assertEquals(403, $permission_update_response_with_rest_read_only_user->getStatusCode());
 
@@ -184,7 +184,7 @@ final class DocmanEmbeddedTest extends DocmanTestExecutionHelper
 
         $delete_response_with_rest_read_only_user = $this->getResponse(
             $this->request_factory->createRequest('DELETE', 'docman_embedded_files/' . urlencode((string) $embedded_doc_id)),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
         $this->assertEquals(403, $delete_response_with_rest_read_only_user->getStatusCode());
 
@@ -253,7 +253,7 @@ final class DocmanEmbeddedTest extends DocmanTestExecutionHelper
 
         $response = $this->getResponse(
             $this->request_factory->createRequest('DELETE', 'docman_embedded_files/' . $file_to_delete_id),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(403, $response->getStatusCode());
@@ -285,7 +285,7 @@ final class DocmanEmbeddedTest extends DocmanTestExecutionHelper
 
         $post_response_with_rest_read_only_user = $this->getResponse(
             $this->request_factory->createRequest('POST', 'docman_embedded_files/' . $locked_document_id . '/lock'),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
         $this->assertEquals(403, $post_response_with_rest_read_only_user->getStatusCode());
 
@@ -313,7 +313,7 @@ final class DocmanEmbeddedTest extends DocmanTestExecutionHelper
 
         $delete_response_with_rest_read_only_user = $this->getResponse(
             $this->request_factory->createRequest('DELETE', 'docman_embedded_files/' . $locked_document_id . '/lock'),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
         $this->assertEquals(403, $delete_response_with_rest_read_only_user->getStatusCode());
 
@@ -352,7 +352,7 @@ final class DocmanEmbeddedTest extends DocmanTestExecutionHelper
         );
         $new_version_response = $this->getResponse(
             $this->request_factory->createRequest('POST', 'docman_embedded_files/' . $file_to_update_id . '/versions')->withBody($this->stream_factory->createStream($new_version_resource)),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(403, $new_version_response->getStatusCode());
@@ -637,7 +637,7 @@ final class DocmanEmbeddedTest extends DocmanTestExecutionHelper
 
         $updated_metadata_file_response_with_rest_read_only_user = $this->getResponse(
             $this->request_factory->createRequest('PUT', 'docman_embedded_files/' . $item_to_update_id . '/metadata')->withBody($this->stream_factory->createStream(json_encode($put_resource))),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(403, $updated_metadata_file_response_with_rest_read_only_user->getStatusCode());
@@ -722,7 +722,7 @@ final class DocmanEmbeddedTest extends DocmanTestExecutionHelper
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('OPTIONS', 'docman_embedded_files/' . $id),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(['OPTIONS', 'PATCH', 'DELETE'], explode(', ', $response->getHeaderLine('Allow')));
@@ -730,7 +730,7 @@ final class DocmanEmbeddedTest extends DocmanTestExecutionHelper
 
         $response = $this->getResponse(
             $this->request_factory->createRequest('OPTIONS', 'docman_embedded_files/' . $id . '/metadata'),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(['OPTIONS', 'PUT'], explode(', ', $response->getHeaderLine('Allow')));
@@ -738,7 +738,7 @@ final class DocmanEmbeddedTest extends DocmanTestExecutionHelper
 
         $response = $this->getResponse(
             $this->request_factory->createRequest('OPTIONS', 'docman_embedded_files/' . $id . '/lock'),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(['OPTIONS', 'POST', 'DELETE'], explode(', ', $response->getHeaderLine('Allow')));
@@ -746,7 +746,7 @@ final class DocmanEmbeddedTest extends DocmanTestExecutionHelper
 
         $response = $this->getResponse(
             $this->request_factory->createRequest('OPTIONS', 'docman_embedded_files/' . $id . '/versions'),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(['OPTIONS', 'GET', 'POST'], explode(', ', $response->getHeaderLine('Allow')));
@@ -828,7 +828,7 @@ final class DocmanEmbeddedTest extends DocmanTestExecutionHelper
     {
         $post_response_with_rest_read_only_user = $this->getResponse(
             $this->request_factory->createRequest('POST', 'docman_folders/' . $root_id . '/embedded_files')->withBody($this->stream_factory->createStream($query)),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
         $this->assertEquals(403, $post_response_with_rest_read_only_user->getStatusCode());
 
@@ -843,7 +843,7 @@ final class DocmanEmbeddedTest extends DocmanTestExecutionHelper
 
         $get_response_with_rest_read_only_user = $this->getResponse(
             $this->request_factory->createRequest('GET', $response1_json['uri']),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
         $this->assertEquals(200, $get_response_with_rest_read_only_user->getStatusCode());
 

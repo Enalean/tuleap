@@ -27,19 +27,19 @@ namespace Tuleap\Timetracking\REST;
 use DateTimeImmutable;
 use EventManager;
 use Project;
-use REST_TestDataBuilder;
 use Tracker_ArtifactFactory;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Dashboard\User\UserDashboardDao;
 use Tuleap\Dashboard\User\UserDashboardRetriever;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
+use Tuleap\REST\RESTTestDataBuilder;
 use Tuleap\Timetracking\Time\TimeDao;
 use Tuleap\Timetracking\Time\TimetrackingReportDao;
 use Tuleap\Widget\WidgetFactory;
 use User_ForgeUserGroupPermissionsDao;
 use User_ForgeUserGroupPermissionsManager;
 
-class TimetrackingDataBuilder extends REST_TestDataBuilder
+class TimetrackingDataBuilder extends RESTTestDataBuilder
 {
     public const PROJECT_TEST_TIMETRACKING_SHORTNAME = 'test-timetracking';
     public const USER_TESTER_NAME                    = 'rest_api_timetracking_1';

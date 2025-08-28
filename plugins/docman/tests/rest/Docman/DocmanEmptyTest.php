@@ -24,10 +24,10 @@ namespace Tuleap\Docman\Test\rest\Docman;
 
 require_once __DIR__ . '/../../../vendor/autoload.php';
 
-use REST_TestDataBuilder;
 use Tuleap\Docman\Test\rest\DocmanDataBuilder;
 use Tuleap\Docman\Test\rest\Helper\DocmanTestExecutionHelper;
 use Tuleap\REST\BaseTestDataBuilder;
+use Tuleap\REST\RESTTestDataBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class DocmanEmptyTest extends DocmanTestExecutionHelper
@@ -541,43 +541,43 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('OPTIONS', 'docman_empty_documents/' . urlencode((string) $id)),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
         $this->assertEquals(['OPTIONS', 'PATCH', 'DELETE'], explode(', ', $response->getHeaderLine('Allow')));
 
         $response = $this->getResponse(
             $this->request_factory->createRequest('OPTIONS', 'docman_empty_documents/' . urlencode((string) $id) . '/lock'),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
         $this->assertEquals(['OPTIONS', 'POST', 'DELETE'], explode(', ', $response->getHeaderLine('Allow')));
 
         $response = $this->getResponse(
             $this->request_factory->createRequest('OPTIONS', 'docman_empty_documents/' . urlencode((string) $id) . '/embedded_file'),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
         $this->assertEquals(['OPTIONS', 'POST'], explode(', ', $response->getHeaderLine('Allow')));
 
         $response = $this->getResponse(
             $this->request_factory->createRequest('OPTIONS', 'docman_empty_documents/' . urlencode((string) $id) . '/link'),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
         $this->assertEquals(['OPTIONS', 'POST'], explode(', ', $response->getHeaderLine('Allow')));
 
         $response = $this->getResponse(
             $this->request_factory->createRequest('OPTIONS', 'docman_empty_documents/' . urlencode((string) $id) . '/file'),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
         $this->assertEquals(['OPTIONS', 'POST'], explode(', ', $response->getHeaderLine('Allow')));
 
         $response = $this->getResponse(
             $this->request_factory->createRequest('OPTIONS', 'docman_empty_documents/' . urlencode((string) $id) . '/metadata'),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
         $this->assertEquals(['OPTIONS', 'PUT'], explode(', ', $response->getHeaderLine('Allow')));
 
         $response = $this->getResponse(
             $this->request_factory->createRequest('OPTIONS', 'docman_empty_documents/' . urlencode((string) $id) . '/permissions'),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
         $this->assertEquals(['OPTIONS', 'POST'], explode(', ', $response->getHeaderLine('Allow')));
     }
@@ -587,7 +587,7 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('POST', 'docman_empty_documents/' . $root_id)->withBody($this->stream_factory->createStream(['move' => ['destination_folder_id' => $root_id]])),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
         $this->assertEquals(403, $response->getStatusCode());
     }
@@ -598,7 +598,7 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
         $empty_to_update_id = $this->createEmptyDocumentAndReturnId($root_id);
         $response           = $this->getResponse(
             $this->request_factory->createRequest('DELETE', 'docman_empty_documents/' . $empty_to_update_id),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
         $this->assertEquals(403, $response->getStatusCode());
         $this->deleteCreatedEmptyDocument($empty_to_update_id);
@@ -610,7 +610,7 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
         $empty_to_update_id = $this->createEmptyDocumentAndReturnId($root_id);
         $response           = $this->getResponse(
             $this->request_factory->createRequest('POST', 'docman_empty_documents/' . $empty_to_update_id . '/lock'),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
         $this->assertEquals(403, $response->getStatusCode());
         $this->deleteCreatedEmptyDocument($empty_to_update_id);
@@ -622,7 +622,7 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
         $empty_to_update_id = $this->createEmptyDocumentAndReturnId($root_id);
         $response           = $this->getResponse(
             $this->request_factory->createRequest('DELETE', 'docman_empty_documents/' . $empty_to_update_id . '/lock'),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
         $this->assertEquals(403, $response->getStatusCode());
         $this->deleteCreatedEmptyDocument($empty_to_update_id);
@@ -636,7 +636,7 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
         $metadata = ['status' => 'none'];
         $response = $this->getResponse(
             $this->request_factory->createRequest('PUT', 'docman_empty_documents/' . $empty_to_update_id . '/metadata')->withBody($this->stream_factory->createStream($metadata)),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
         $this->assertEquals(403, $response->getStatusCode());
         $this->deleteCreatedEmptyDocument($empty_to_update_id);
@@ -650,7 +650,7 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
         $project_members_identifier = $this->project_id . '_3';
         $response                   = $this->getResponse(
             $this->request_factory->createRequest('PUT', 'docman_empty_documents/' . $empty_to_update_id . '/permissions')->withBody($this->stream_factory->createStream(json_encode(['can_read' => [], 'can_write' => [], 'can_manage' => [['id' => $project_members_identifier]]]))),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
         $this->assertEquals(403, $response->getStatusCode());
         $this->deleteCreatedEmptyDocument($empty_to_update_id);
@@ -668,7 +668,7 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
         );
         $response = $this->getResponse(
             $this->request_factory->createRequest('POST', 'docman_empty_documents/' . $empty_to_update_id . '/embedded_file')->withBody($this->stream_factory->createStream($content)),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
         $this->assertEquals(403, $response->getStatusCode());
 
@@ -680,7 +680,7 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
         );
         $response        = $this->getResponse(
             $this->request_factory->createRequest('POST', 'docman_empty_documents/' . $empty_to_update_id . '/file')->withBody($this->stream_factory->createStream($file_properties)),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
         $this->assertEquals(403, $response->getStatusCode());
 
@@ -691,7 +691,7 @@ class DocmanEmptyTest extends DocmanTestExecutionHelper
         );
         $response = $this->getResponse(
             $this->request_factory->createRequest('POST', 'docman_empty_documents/' . $empty_to_update_id . '/link')->withBody($this->stream_factory->createStream($link_url)),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
         $this->assertEquals(403, $response->getStatusCode());
     }

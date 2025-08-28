@@ -19,6 +19,7 @@
  */
 
 use Tuleap\REST\MilestoneBase;
+use Tuleap\REST\RESTTestDataBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 #[\PHPUnit\Framework\Attributes\Group('MilestonesTest')]
@@ -34,7 +35,7 @@ class MilestonesBacklogTest extends MilestoneBase //phpcs:ignore PSR1.Classes.Cl
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('OPTIONS', 'milestones/' . $this->release_artifact_ids[1] . '/backlog'),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         self::assertEqualsCanonicalizing(['OPTIONS', 'GET', 'PUT', 'POST', 'PATCH'], explode(', ', $response->getHeaderLine('Allow')));
@@ -52,7 +53,7 @@ class MilestonesBacklogTest extends MilestoneBase //phpcs:ignore PSR1.Classes.Cl
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('GET', 'milestones/' . $this->release_artifact_ids[1] . '/backlog'),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
         $backlog  = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertCount(3, $backlog);
@@ -134,7 +135,7 @@ class MilestonesBacklogTest extends MilestoneBase //phpcs:ignore PSR1.Classes.Cl
                 'PUT',
                 'milestones/' . $this->release_artifact_ids[1] . '/backlog'
             )->withBody($this->stream_factory->createStream('[]')),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(403, $response_put->getStatusCode());
@@ -176,7 +177,7 @@ class MilestonesBacklogTest extends MilestoneBase //phpcs:ignore PSR1.Classes.Cl
     public function testPUTBacklogWithoutPermission(): void
     {
         $response_put = $this->getResponseByName(
-            REST_TestDataBuilder::TEST_USER_2_NAME,
+            RESTTestDataBuilder::TEST_USER_2_NAME,
             $this->request_factory->createRequest(
                 'PUT',
                 'milestones/' . $this->release_artifact_ids[1] . '/backlog'
@@ -252,7 +253,7 @@ class MilestonesBacklogTest extends MilestoneBase //phpcs:ignore PSR1.Classes.Cl
                     json_encode($post, JSON_THROW_ON_ERROR)
                 )
             ),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(403, $response_post->getStatusCode());
@@ -290,7 +291,7 @@ class MilestonesBacklogTest extends MilestoneBase //phpcs:ignore PSR1.Classes.Cl
             'artifact' => ['id' => $this->story_artifact_ids[6]],
         ];
         $response_post = $this->getResponseByName(
-            REST_TestDataBuilder::TEST_USER_2_NAME,
+            RESTTestDataBuilder::TEST_USER_2_NAME,
             $this->request_factory->createRequest(
                 'POST',
                 'milestones/' . $this->release_artifact_ids[1] . '/backlog'

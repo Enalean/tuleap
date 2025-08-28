@@ -25,10 +25,10 @@ namespace Tuleap\Artidoc;
 require_once __DIR__ . '/../../../docman/vendor/autoload.php';
 
 use Psl\Json;
-use REST_TestDataBuilder;
 use Tuleap\Docman\Test\rest\DocmanDataBuilder;
 use Tuleap\Docman\Test\rest\Helper\DocmanTestExecutionHelper;
 use Tuleap\REST\BaseTestDataBuilder;
+use Tuleap\REST\RESTTestDataBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtidocTest extends DocmanTestExecutionHelper
@@ -163,7 +163,7 @@ final class ArtidocTest extends DocmanTestExecutionHelper
 
         $response = $this->getResponse(
             $this->request_factory->createRequest('POST', 'docman_folders/' . $root_id . '/others')->withBody($this->stream_factory->createStream($query)),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         self::assertSame(403, $response->getStatusCode());
@@ -668,7 +668,7 @@ final class ArtidocTest extends DocmanTestExecutionHelper
             $this->request_factory->createRequest('POST', 'artidoc_files')->withBody(
                 $this->stream_factory->createStream(Json\encode($payload))
             ),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
         self::assertSame(403, $post_response->getStatusCode());
 

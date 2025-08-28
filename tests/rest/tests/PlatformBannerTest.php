@@ -20,8 +20,6 @@
 
 namespace Tuleap\REST;
 
-use REST_TestDataBuilder;
-
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 #[\PHPUnit\Framework\Attributes\Group('ProjectTests')]
 class PlatformBannerTest extends ProjectBase
@@ -40,7 +38,7 @@ class PlatformBannerTest extends ProjectBase
         ]);
 
         $response = $this->getResponseByName(
-            REST_TestDataBuilder::TEST_USER_2_NAME,
+            RESTTestDataBuilder::TEST_USER_2_NAME,
             $this->request_factory->createRequest('PUT', 'banner')
                 ->withBody($this->stream_factory->createStream($post_resource))
         );
@@ -56,7 +54,7 @@ class PlatformBannerTest extends ProjectBase
         ]);
 
         $response = $this->getResponseByName(
-            REST_TestDataBuilder::ADMIN_USER_NAME,
+            RESTTestDataBuilder::ADMIN_USER_NAME,
             $this->request_factory->createRequest('PUT', 'banner')
                 ->withBody($this->stream_factory->createStream($post_resource))
         );
@@ -72,7 +70,7 @@ class PlatformBannerTest extends ProjectBase
         ]);
 
         $response = $this->getResponseByName(
-            REST_TestDataBuilder::ADMIN_USER_NAME,
+            RESTTestDataBuilder::ADMIN_USER_NAME,
             $this->request_factory->createRequest('PUT', 'banner')
                 ->withBody($this->stream_factory->createStream($payload))
         );
@@ -84,7 +82,7 @@ class PlatformBannerTest extends ProjectBase
     public function testGETBanner(): void
     {
         $response = $this->getResponseByName(
-            REST_TestDataBuilder::TEST_USER_2_NAME,
+            RESTTestDataBuilder::TEST_USER_2_NAME,
             $this->request_factory->createRequest('GET', 'banner'),
         );
 
@@ -102,7 +100,7 @@ class PlatformBannerTest extends ProjectBase
     public function testDELETEBannerForRegularUser(): void
     {
         $response = $this->getResponseByName(
-            REST_TestDataBuilder::TEST_USER_2_NAME,
+            RESTTestDataBuilder::TEST_USER_2_NAME,
             $this->request_factory->createRequest('DELETE', 'banner'),
         );
 
@@ -113,7 +111,7 @@ class PlatformBannerTest extends ProjectBase
     public function testDELETEBannerForAdmin(): void
     {
         $response = $this->getResponseByName(
-            REST_TestDataBuilder::ADMIN_USER_NAME,
+            RESTTestDataBuilder::ADMIN_USER_NAME,
             $this->request_factory->createRequest('DELETE', 'banner')
         );
 

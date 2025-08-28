@@ -20,7 +20,7 @@
 
 namespace Tuleap\Kanban\REST;
 
-use REST_TestDataBuilder;
+use Tuleap\REST\RESTTestDataBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 #[\PHPUnit\Framework\Attributes\Group('KanbanTests')]
@@ -36,7 +36,7 @@ final class KanbanTest extends TestBase
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('OPTIONS', 'kanban'),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
         $this->assertEquals(
             ['OPTIONS', 'GET', 'PATCH', 'DELETE'],
@@ -46,7 +46,7 @@ final class KanbanTest extends TestBase
 
     public function testGETKanban(): void
     {
-        $response = $this->getResponse($this->request_factory->createRequest('GET', 'kanban/' . REST_TestDataBuilder::KANBAN_ID));
+        $response = $this->getResponse($this->request_factory->createRequest('GET', 'kanban/' . RESTTestDataBuilder::KANBAN_ID));
 
         $this->assertGETKanban($response);
     }
@@ -54,8 +54,8 @@ final class KanbanTest extends TestBase
     public function testGETKanbanWithReadOnlyAdmin(): void
     {
         $response = $this->getResponse(
-            $this->request_factory->createRequest('GET', 'kanban/' . REST_TestDataBuilder::KANBAN_ID),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            $this->request_factory->createRequest('GET', 'kanban/' . RESTTestDataBuilder::KANBAN_ID),
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertGETKanban($response);
@@ -86,48 +86,48 @@ final class KanbanTest extends TestBase
 
     private function assertThatBacklogIsToggled()
     {
-        $initial_state_response = $this->getResponse($this->request_factory->createRequest('GET', 'kanban/' . REST_TestDataBuilder::KANBAN_ID));
+        $initial_state_response = $this->getResponse($this->request_factory->createRequest('GET', 'kanban/' . RESTTestDataBuilder::KANBAN_ID));
         $initial_state_kanban   = json_decode($initial_state_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertTrue($initial_state_kanban['backlog']['is_open']);
 
-        $patch_response = $this->getResponse($this->request_factory->createRequest('PATCH', 'kanban/' . REST_TestDataBuilder::KANBAN_ID)->withBody($this->stream_factory->createStream(json_encode(
+        $patch_response = $this->getResponse($this->request_factory->createRequest('PATCH', 'kanban/' . RESTTestDataBuilder::KANBAN_ID)->withBody($this->stream_factory->createStream(json_encode(
             [
                 'collapse_backlog' => true,
             ]
         ))));
         $this->assertEquals($patch_response->getStatusCode(), 200);
 
-        $new_state_response = $this->getResponse($this->request_factory->createRequest('GET', 'kanban/' . REST_TestDataBuilder::KANBAN_ID));
+        $new_state_response = $this->getResponse($this->request_factory->createRequest('GET', 'kanban/' . RESTTestDataBuilder::KANBAN_ID));
         $new_state_kanban   = json_decode($new_state_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertFalse($new_state_kanban['backlog']['is_open']);
     }
 
     private function assertThatArchiveIsToggled()
     {
-        $initial_state_response = $this->getResponse($this->request_factory->createRequest('GET', 'kanban/' . REST_TestDataBuilder::KANBAN_ID));
+        $initial_state_response = $this->getResponse($this->request_factory->createRequest('GET', 'kanban/' . RESTTestDataBuilder::KANBAN_ID));
         $initial_state_kanban   = json_decode($initial_state_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertFalse($initial_state_kanban['archive']['is_open']);
 
-        $patch_response = $this->getResponse($this->request_factory->createRequest('PATCH', 'kanban/' . REST_TestDataBuilder::KANBAN_ID)->withBody($this->stream_factory->createStream(json_encode(
+        $patch_response = $this->getResponse($this->request_factory->createRequest('PATCH', 'kanban/' . RESTTestDataBuilder::KANBAN_ID)->withBody($this->stream_factory->createStream(json_encode(
             [
                 'collapse_archive' => false,
             ]
         ))));
         $this->assertEquals($patch_response->getStatusCode(), 200);
 
-        $new_state_response = $this->getResponse($this->request_factory->createRequest('GET', 'kanban/' . REST_TestDataBuilder::KANBAN_ID));
+        $new_state_response = $this->getResponse($this->request_factory->createRequest('GET', 'kanban/' . RESTTestDataBuilder::KANBAN_ID));
         $new_state_kanban   = json_decode($new_state_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertTrue($new_state_kanban['archive']['is_open']);
     }
 
     private function assertThatColumnIsToggled()
     {
-        $initial_state_response = $this->getResponse($this->request_factory->createRequest('GET', 'kanban/' . REST_TestDataBuilder::KANBAN_ID));
+        $initial_state_response = $this->getResponse($this->request_factory->createRequest('GET', 'kanban/' . RESTTestDataBuilder::KANBAN_ID));
         $initial_state_kanban   = json_decode($initial_state_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $first_column           = $initial_state_kanban['columns'][0];
         $this->assertTrue($first_column['is_open']);
 
-        $patch_response = $this->getResponse($this->request_factory->createRequest('PATCH', 'kanban/' . REST_TestDataBuilder::KANBAN_ID)->withBody($this->stream_factory->createStream(json_encode(
+        $patch_response = $this->getResponse($this->request_factory->createRequest('PATCH', 'kanban/' . RESTTestDataBuilder::KANBAN_ID)->withBody($this->stream_factory->createStream(json_encode(
             [
                 'collapse_column' => [
                     'column_id' => $first_column['id'],
@@ -137,7 +137,7 @@ final class KanbanTest extends TestBase
         ))));
         $this->assertEquals($patch_response->getStatusCode(), 200);
 
-        $new_state_response     = $this->getResponse($this->request_factory->createRequest('GET', 'kanban/' . REST_TestDataBuilder::KANBAN_ID));
+        $new_state_response     = $this->getResponse($this->request_factory->createRequest('GET', 'kanban/' . RESTTestDataBuilder::KANBAN_ID));
         $new_state_kanban       = json_decode($new_state_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $new_state_first_column = $new_state_kanban['columns'][0];
         $this->assertFalse($new_state_first_column['is_open']);
@@ -145,14 +145,14 @@ final class KanbanTest extends TestBase
 
     private function assertThatLabelIsUpdated($new_label)
     {
-        $patch_response = $this->getResponse($this->request_factory->createRequest('PATCH', 'kanban/' . REST_TestDataBuilder::KANBAN_ID)->withBody($this->stream_factory->createStream(json_encode(
+        $patch_response = $this->getResponse($this->request_factory->createRequest('PATCH', 'kanban/' . RESTTestDataBuilder::KANBAN_ID)->withBody($this->stream_factory->createStream(json_encode(
             [
                 'label' => $new_label,
             ]
         ))));
         $this->assertEquals($patch_response->getStatusCode(), 200);
 
-        $response = $this->getResponse($this->request_factory->createRequest('GET', 'kanban/' . REST_TestDataBuilder::KANBAN_ID));
+        $response = $this->getResponse($this->request_factory->createRequest('GET', 'kanban/' . RESTTestDataBuilder::KANBAN_ID));
         $kanban   = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals($new_label, $kanban['label']);
@@ -160,14 +160,14 @@ final class KanbanTest extends TestBase
 
     private function assertThatPromotionIsUpdated(): void
     {
-        $patch_response = $this->getResponse($this->request_factory->createRequest('PATCH', 'kanban/' . REST_TestDataBuilder::KANBAN_ID)->withBody($this->stream_factory->createStream(json_encode(
+        $patch_response = $this->getResponse($this->request_factory->createRequest('PATCH', 'kanban/' . RESTTestDataBuilder::KANBAN_ID)->withBody($this->stream_factory->createStream(json_encode(
             [
                 'is_promoted' => true,
             ]
         ))));
         self::assertEquals(200, $patch_response->getStatusCode());
 
-        $response = $this->getResponse($this->request_factory->createRequest('GET', 'kanban/' . REST_TestDataBuilder::KANBAN_ID));
+        $response = $this->getResponse($this->request_factory->createRequest('GET', 'kanban/' . RESTTestDataBuilder::KANBAN_ID));
         $kanban   = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         self::assertTrue($kanban['is_promoted']);
@@ -176,12 +176,12 @@ final class KanbanTest extends TestBase
     public function testPATCHKanbanWithReadOnlyAdmin()
     {
         $patch_response = $this->getResponse(
-            $this->request_factory->createRequest('PATCH', 'kanban/' . REST_TestDataBuilder::KANBAN_ID)->withBody($this->stream_factory->createStream(json_encode(
+            $this->request_factory->createRequest('PATCH', 'kanban/' . RESTTestDataBuilder::KANBAN_ID)->withBody($this->stream_factory->createStream(json_encode(
                 [
                     'label' => 'SomeNewLabel',
                 ]
             ))),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(403, $patch_response->getStatusCode());
@@ -189,7 +189,7 @@ final class KanbanTest extends TestBase
 
     public function testGETBacklog(): void
     {
-        $url = 'kanban/' . REST_TestDataBuilder::KANBAN_ID . '/backlog';
+        $url = 'kanban/' . RESTTestDataBuilder::KANBAN_ID . '/backlog';
 
         $response = $this->getResponse($this->request_factory->createRequest('GET', $url));
 
@@ -198,11 +198,11 @@ final class KanbanTest extends TestBase
 
     public function testGETBacklogWithReadOnlyAdmin(): void
     {
-        $url = 'kanban/' . REST_TestDataBuilder::KANBAN_ID . '/backlog';
+        $url = 'kanban/' . RESTTestDataBuilder::KANBAN_ID . '/backlog';
 
         $response = $this->getResponse(
             $this->request_factory->createRequest('GET', $url),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertGETBacklog($response);
@@ -220,7 +220,7 @@ final class KanbanTest extends TestBase
     #[\PHPUnit\Framework\Attributes\Depends('testGETBacklog')]
     public function testPATCHBacklog(): void
     {
-        $url = 'kanban/' . REST_TestDataBuilder::KANBAN_ID . '/backlog';
+        $url = 'kanban/' . RESTTestDataBuilder::KANBAN_ID . '/backlog';
 
         $response = $this->getResponse($this->request_factory->createRequest('PATCH', $url)->withBody($this->stream_factory->createStream(json_encode([
             'order' => [
@@ -243,7 +243,7 @@ final class KanbanTest extends TestBase
     #[\PHPUnit\Framework\Attributes\Depends('testGETBacklog')]
     public function testPATCHBacklogWithReadOnlyAdmin(): void
     {
-        $url = 'kanban/' . REST_TestDataBuilder::KANBAN_ID . '/backlog';
+        $url = 'kanban/' . RESTTestDataBuilder::KANBAN_ID . '/backlog';
 
         $response = $this->getResponse(
             $this->request_factory->createRequest('PATCH', $url)->withBody($this->stream_factory->createStream(json_encode([
@@ -253,7 +253,7 @@ final class KanbanTest extends TestBase
                     'compared_to' => $this->kanban_artifact_ids[2],
                 ],
             ]))),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(403, $response->getStatusCode());
@@ -261,7 +261,7 @@ final class KanbanTest extends TestBase
 
     public function testGETItems(): void
     {
-        $url = 'kanban/' . REST_TestDataBuilder::KANBAN_ID . '/items?column_id=' . REST_TestDataBuilder::KANBAN_ONGOING_COLUMN_ID;
+        $url = 'kanban/' . RESTTestDataBuilder::KANBAN_ID . '/items?column_id=' . RESTTestDataBuilder::KANBAN_ONGOING_COLUMN_ID;
 
         $response = $this->getResponse($this->request_factory->createRequest('GET', $url));
 
@@ -270,11 +270,11 @@ final class KanbanTest extends TestBase
 
     public function testGETItemsWithReadOnlyAdmin(): void
     {
-        $url = 'kanban/' . REST_TestDataBuilder::KANBAN_ID . '/items?column_id=' . REST_TestDataBuilder::KANBAN_ONGOING_COLUMN_ID;
+        $url = 'kanban/' . RESTTestDataBuilder::KANBAN_ID . '/items?column_id=' . RESTTestDataBuilder::KANBAN_ONGOING_COLUMN_ID;
 
         $response = $this->getResponse(
             $this->request_factory->createRequest('GET', $url),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertGETItems($response);
@@ -294,7 +294,7 @@ final class KanbanTest extends TestBase
     #[\PHPUnit\Framework\Attributes\Depends('testGETItems')]
     public function testPATCHItems(): void
     {
-        $url = 'kanban/' . REST_TestDataBuilder::KANBAN_ID . '/items?column_id=' . REST_TestDataBuilder::KANBAN_ONGOING_COLUMN_ID;
+        $url = 'kanban/' . RESTTestDataBuilder::KANBAN_ID . '/items?column_id=' . RESTTestDataBuilder::KANBAN_ONGOING_COLUMN_ID;
 
         $response = $this->getResponse($this->request_factory->createRequest('PATCH', $url)->withBody($this->stream_factory->createStream(json_encode([
             'order' => [
@@ -317,7 +317,7 @@ final class KanbanTest extends TestBase
     #[\PHPUnit\Framework\Attributes\Depends('testGETItems')]
     public function testPATCHItemsWithReadOnlyAdmin(): void
     {
-        $url = 'kanban/' . REST_TestDataBuilder::KANBAN_ID . '/items?column_id=' . REST_TestDataBuilder::KANBAN_ONGOING_COLUMN_ID;
+        $url = 'kanban/' . RESTTestDataBuilder::KANBAN_ID . '/items?column_id=' . RESTTestDataBuilder::KANBAN_ONGOING_COLUMN_ID;
 
         $response = $this->getResponse(
             $this->request_factory->createRequest('PATCH', $url)->withBody($this->stream_factory->createStream(json_encode([
@@ -327,7 +327,7 @@ final class KanbanTest extends TestBase
                     'compared_to' => $this->kanban_artifact_ids[4],
                 ],
             ]))),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(403, $response->getStatusCode());
@@ -348,7 +348,7 @@ final class KanbanTest extends TestBase
 
     public function testGETArchive(): void
     {
-        $url = 'kanban/' . REST_TestDataBuilder::KANBAN_ID . '/archive';
+        $url = 'kanban/' . RESTTestDataBuilder::KANBAN_ID . '/archive';
 
         $response = $this->getResponse($this->request_factory->createRequest('GET', $url));
 
@@ -357,11 +357,11 @@ final class KanbanTest extends TestBase
 
     public function testGETArchiveWithReadOnlyAdmin(): void
     {
-        $url = 'kanban/' . REST_TestDataBuilder::KANBAN_ID . '/archive';
+        $url = 'kanban/' . RESTTestDataBuilder::KANBAN_ID . '/archive';
 
         $response = $this->getResponse(
             $this->request_factory->createRequest('GET', $url),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertGETArchive($response);
@@ -379,7 +379,7 @@ final class KanbanTest extends TestBase
     #[\PHPUnit\Framework\Attributes\Depends('testGETArchive')]
     public function testPATCHArchive(): void
     {
-        $url = 'kanban/' . REST_TestDataBuilder::KANBAN_ID . '/archive';
+        $url = 'kanban/' . RESTTestDataBuilder::KANBAN_ID . '/archive';
 
         $response = $this->getResponse($this->request_factory->createRequest('PATCH', $url)->withBody($this->stream_factory->createStream(json_encode([
             'order' => [
@@ -402,7 +402,7 @@ final class KanbanTest extends TestBase
     #[\PHPUnit\Framework\Attributes\Depends('testGETArchive')]
     public function testPATCHArchiveWithReadOnlyAdmin(): void
     {
-        $url = 'kanban/' . REST_TestDataBuilder::KANBAN_ID . '/archive';
+        $url = 'kanban/' . RESTTestDataBuilder::KANBAN_ID . '/archive';
 
         $response = $this->getResponse(
             $this->request_factory->createRequest('PATCH', $url)->withBody($this->stream_factory->createStream(json_encode([
@@ -412,7 +412,7 @@ final class KanbanTest extends TestBase
                     'compared_to' => $this->kanban_artifact_ids[6],
                 ],
             ]))),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(403, $response->getStatusCode());
@@ -421,7 +421,7 @@ final class KanbanTest extends TestBase
     #[\PHPUnit\Framework\Attributes\Depends('testPATCHArchive')]
     public function testPATCHBacklogWithAdd()
     {
-        $url = 'kanban/' . REST_TestDataBuilder::KANBAN_ID . '/backlog';
+        $url = 'kanban/' . RESTTestDataBuilder::KANBAN_ID . '/backlog';
 
         $response = $this->getResponse($this->request_factory->createRequest('PATCH', $url)->withBody($this->stream_factory->createStream(json_encode([
             'add' => [
@@ -443,7 +443,7 @@ final class KanbanTest extends TestBase
     #[\PHPUnit\Framework\Attributes\Depends('testPATCHBacklogWithAdd')]
     public function testPATCHColumnWithAddAndOrder()
     {
-        $url = 'kanban/' . REST_TestDataBuilder::KANBAN_ID . '/items?column_id=' . REST_TestDataBuilder::KANBAN_ONGOING_COLUMN_ID;
+        $url = 'kanban/' . RESTTestDataBuilder::KANBAN_ID . '/items?column_id=' . RESTTestDataBuilder::KANBAN_ONGOING_COLUMN_ID;
 
         $response = $this->getResponse($this->request_factory->createRequest('PATCH', $url)->withBody($this->stream_factory->createStream(json_encode([
             'add' => [
@@ -470,7 +470,7 @@ final class KanbanTest extends TestBase
     #[\PHPUnit\Framework\Attributes\Depends('testPATCHColumnWithAddAndOrder')]
     public function testPATCHArchiveWithAddAndOrder()
     {
-        $url = 'kanban/' . REST_TestDataBuilder::KANBAN_ID . '/archive';
+        $url = 'kanban/' . RESTTestDataBuilder::KANBAN_ID . '/archive';
 
         $response = $this->getResponse($this->request_factory->createRequest('PATCH', $url)->withBody($this->stream_factory->createStream(json_encode([
             'add' => [
@@ -500,11 +500,11 @@ final class KanbanTest extends TestBase
             'label' => 'objective',
         ]);
 
-        $response = $this->getResponse($this->request_factory->createRequest('POST', 'kanban/' . REST_TestDataBuilder::KANBAN_ID . '/columns')->withBody($this->stream_factory->createStream($data)));
+        $response = $this->getResponse($this->request_factory->createRequest('POST', 'kanban/' . RESTTestDataBuilder::KANBAN_ID . '/columns')->withBody($this->stream_factory->createStream($data)));
 
         $this->assertEquals(201, $response->getStatusCode());
 
-        $response_get = $this->getResponse($this->request_factory->createRequest('GET', 'kanban/' . REST_TestDataBuilder::KANBAN_ID));
+        $response_get = $this->getResponse($this->request_factory->createRequest('GET', 'kanban/' . RESTTestDataBuilder::KANBAN_ID));
         $kanban       = json_decode($response_get->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals('objective', $kanban['columns'][3]['label']);
@@ -519,8 +519,8 @@ final class KanbanTest extends TestBase
         ]);
 
         $response = $this->getResponse(
-            $this->request_factory->createRequest('POST', 'kanban/' . REST_TestDataBuilder::KANBAN_ID . '/columns')->withBody($this->stream_factory->createStream($data)),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            $this->request_factory->createRequest('POST', 'kanban/' . RESTTestDataBuilder::KANBAN_ID . '/columns')->withBody($this->stream_factory->createStream($data)),
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(403, $response->getStatusCode());
@@ -531,22 +531,22 @@ final class KanbanTest extends TestBase
     {
         $data = json_encode([
             $new_column_id,
-            REST_TestDataBuilder::KANBAN_ONGOING_COLUMN_ID,
-            REST_TestDataBuilder::KANBAN_TO_BE_DONE_COLUMN_ID,
-            REST_TestDataBuilder::KANBAN_REVIEW_COLUMN_ID,
+            RESTTestDataBuilder::KANBAN_ONGOING_COLUMN_ID,
+            RESTTestDataBuilder::KANBAN_TO_BE_DONE_COLUMN_ID,
+            RESTTestDataBuilder::KANBAN_REVIEW_COLUMN_ID,
         ]);
 
-        $response = $this->getResponse($this->request_factory->createRequest('PUT', 'kanban/' . REST_TestDataBuilder::KANBAN_ID . '/columns')->withBody($this->stream_factory->createStream($data)));
+        $response = $this->getResponse($this->request_factory->createRequest('PUT', 'kanban/' . RESTTestDataBuilder::KANBAN_ID . '/columns')->withBody($this->stream_factory->createStream($data)));
 
         $this->assertEquals(200, $response->getStatusCode());
 
-        $response_get = $this->getResponse($this->request_factory->createRequest('GET', 'kanban/' . REST_TestDataBuilder::KANBAN_ID));
+        $response_get = $this->getResponse($this->request_factory->createRequest('GET', 'kanban/' . RESTTestDataBuilder::KANBAN_ID));
         $kanban       = json_decode($response_get->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals($kanban['columns'][0]['id'], $new_column_id);
-        $this->assertEquals($kanban['columns'][1]['id'], REST_TestDataBuilder::KANBAN_ONGOING_COLUMN_ID);
-        $this->assertEquals($kanban['columns'][2]['id'], REST_TestDataBuilder::KANBAN_TO_BE_DONE_COLUMN_ID);
-        $this->assertEquals($kanban['columns'][3]['id'], REST_TestDataBuilder::KANBAN_REVIEW_COLUMN_ID);
+        $this->assertEquals($kanban['columns'][1]['id'], RESTTestDataBuilder::KANBAN_ONGOING_COLUMN_ID);
+        $this->assertEquals($kanban['columns'][2]['id'], RESTTestDataBuilder::KANBAN_TO_BE_DONE_COLUMN_ID);
+        $this->assertEquals($kanban['columns'][3]['id'], RESTTestDataBuilder::KANBAN_REVIEW_COLUMN_ID);
     }
 
     #[\PHPUnit\Framework\Attributes\Depends('testPOSTKanbanColumn')]
@@ -554,14 +554,14 @@ final class KanbanTest extends TestBase
     {
         $data = json_encode([
             $new_column_id,
-            REST_TestDataBuilder::KANBAN_ONGOING_COLUMN_ID,
-            REST_TestDataBuilder::KANBAN_TO_BE_DONE_COLUMN_ID,
-            REST_TestDataBuilder::KANBAN_REVIEW_COLUMN_ID,
+            RESTTestDataBuilder::KANBAN_ONGOING_COLUMN_ID,
+            RESTTestDataBuilder::KANBAN_TO_BE_DONE_COLUMN_ID,
+            RESTTestDataBuilder::KANBAN_REVIEW_COLUMN_ID,
         ]);
 
         $response = $this->getResponse(
-            $this->request_factory->createRequest('PUT', 'kanban/' . REST_TestDataBuilder::KANBAN_ID . '/columns')->withBody($this->stream_factory->createStream($data)),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            $this->request_factory->createRequest('PUT', 'kanban/' . RESTTestDataBuilder::KANBAN_ID . '/columns')->withBody($this->stream_factory->createStream($data)),
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(403, $response->getStatusCode());
@@ -570,7 +570,7 @@ final class KanbanTest extends TestBase
     #[\PHPUnit\Framework\Attributes\Depends('testPOSTKanbanColumn')]
     public function testDELETEKanbanColumns()
     {
-        $url = 'kanban_columns/' . REST_TestDataBuilder::KANBAN_REVIEW_COLUMN_ID . '?kanban_id=' . REST_TestDataBuilder::KANBAN_ID;
+        $url = 'kanban_columns/' . RESTTestDataBuilder::KANBAN_REVIEW_COLUMN_ID . '?kanban_id=' . RESTTestDataBuilder::KANBAN_ID;
 
         $response = $this->getResponse($this->request_factory->createRequest('DELETE', $url));
 
@@ -580,11 +580,11 @@ final class KanbanTest extends TestBase
     #[\PHPUnit\Framework\Attributes\Depends('testPOSTKanbanColumn')]
     public function testDELETEKanbanColumnsWithReadOnlyAdmin(): void
     {
-        $url = 'kanban_columns/' . REST_TestDataBuilder::KANBAN_REVIEW_COLUMN_ID . '?kanban_id=' . REST_TestDataBuilder::KANBAN_ID;
+        $url = 'kanban_columns/' . RESTTestDataBuilder::KANBAN_REVIEW_COLUMN_ID . '?kanban_id=' . RESTTestDataBuilder::KANBAN_ID;
 
         $response = $this->getResponse(
             $this->request_factory->createRequest('DELETE', $url),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(403, $response->getStatusCode());
@@ -601,7 +601,7 @@ final class KanbanTest extends TestBase
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('OPTIONS', 'kanban_items'),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(['OPTIONS', 'GET', 'POST'], explode(', ', $response->getHeaderLine('Allow')));
@@ -615,7 +615,7 @@ final class KanbanTest extends TestBase
         $response = $this->getResponse($this->request_factory->createRequest('POST', $url)->withBody($this->stream_factory->createStream(json_encode([
             'item' => [
                 'label'     => 'New item in backlog',
-                'kanban_id' => REST_TestDataBuilder::KANBAN_ID,
+                'kanban_id' => RESTTestDataBuilder::KANBAN_ID,
             ],
         ]))));
 
@@ -635,10 +635,10 @@ final class KanbanTest extends TestBase
             $this->request_factory->createRequest('POST', $url)->withBody($this->stream_factory->createStream(json_encode([
                 'item' => [
                     'label' => 'New item in backlog',
-                    'kanban_id' => REST_TestDataBuilder::KANBAN_ID,
+                    'kanban_id' => RESTTestDataBuilder::KANBAN_ID,
                 ],
             ]))),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(403, $response->getStatusCode());
@@ -652,8 +652,8 @@ final class KanbanTest extends TestBase
         $response = $this->getResponse($this->request_factory->createRequest('POST', $url)->withBody($this->stream_factory->createStream(json_encode([
             'item' => [
                 'label'     => 'New item in column',
-                'kanban_id' => REST_TestDataBuilder::KANBAN_ID,
-                'column_id' => REST_TestDataBuilder::KANBAN_ONGOING_COLUMN_ID,
+                'kanban_id' => RESTTestDataBuilder::KANBAN_ID,
+                'column_id' => RESTTestDataBuilder::KANBAN_ONGOING_COLUMN_ID,
             ],
         ]))));
 
@@ -661,7 +661,7 @@ final class KanbanTest extends TestBase
 
         $item = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         $this->assertEquals('New item in column', $item['label']);
-        $this->assertEquals(REST_TestDataBuilder::KANBAN_ONGOING_COLUMN_ID, $item['in_column']);
+        $this->assertEquals(RESTTestDataBuilder::KANBAN_ONGOING_COLUMN_ID, $item['in_column']);
     }
 
     public function testGETKanbanItem(): void
@@ -675,7 +675,7 @@ final class KanbanTest extends TestBase
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('GET', 'kanban_items/' . $this->kanban_artifact_ids[1]),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertGETKanbanItems($response);
@@ -698,7 +698,7 @@ final class KanbanTest extends TestBase
         $response = $this->getResponse($this->request_factory->createRequest('POST', $url)->withBody($this->stream_factory->createStream(json_encode([
             'item' => [
                 'label'     => 'New item in column',
-                'kanban_id' => REST_TestDataBuilder::KANBAN_ID,
+                'kanban_id' => RESTTestDataBuilder::KANBAN_ID,
                 'column_id' => 99999999,
             ],
         ]))));
@@ -709,15 +709,15 @@ final class KanbanTest extends TestBase
     #[\PHPUnit\Framework\Attributes\Depends('testPOSTKanbanItemsInUnknowColmun')]
     public function testOPTIONSTrackerReports()
     {
-        $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', 'kanban/' . REST_TestDataBuilder::KANBAN_ID . '/tracker_reports'));
+        $response = $this->getResponse($this->request_factory->createRequest('OPTIONS', 'kanban/' . RESTTestDataBuilder::KANBAN_ID . '/tracker_reports'));
         $this->assertEquals(['OPTIONS', 'PUT'], explode(', ', $response->getHeaderLine('Allow')));
     }
 
     public function testOPTIONSTrackerReportsWithReadOnlyAdmin(): void
     {
         $response = $this->getResponse(
-            $this->request_factory->createRequest('OPTIONS', 'kanban/' . REST_TestDataBuilder::KANBAN_ID . '/tracker_reports'),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            $this->request_factory->createRequest('OPTIONS', 'kanban/' . RESTTestDataBuilder::KANBAN_ID . '/tracker_reports'),
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(['OPTIONS', 'PUT'], explode(', ', $response->getHeaderLine('Allow')));
@@ -725,7 +725,7 @@ final class KanbanTest extends TestBase
 
     public function testPUTTrackerReports()
     {
-        $url = 'kanban/' . REST_TestDataBuilder::KANBAN_ID . '/tracker_reports';
+        $url = 'kanban/' . RESTTestDataBuilder::KANBAN_ID . '/tracker_reports';
 
         $response = $this->getResponse($this->request_factory->createRequest('PUT', $url)->withBody($this->stream_factory->createStream(json_encode([
             'tracker_report_ids' => [$this->tracker_report_id],
@@ -736,13 +736,13 @@ final class KanbanTest extends TestBase
 
     public function testPUTTrackerReportsWithReadOnlyAdmin(): void
     {
-        $url = 'kanban/' . REST_TestDataBuilder::KANBAN_ID . '/tracker_reports';
+        $url = 'kanban/' . RESTTestDataBuilder::KANBAN_ID . '/tracker_reports';
 
         $response = $this->getResponse(
             $this->request_factory->createRequest('PUT', $url)->withBody($this->stream_factory->createStream(json_encode([
                 'tracker_report_ids' => [$this->tracker_report_id],
             ]))),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals((403), $response->getStatusCode());
@@ -750,7 +750,7 @@ final class KanbanTest extends TestBase
 
     public function testPUTTrackerReportsWithEmptyArray()
     {
-        $url = 'kanban/' . REST_TestDataBuilder::KANBAN_ID . '/tracker_reports';
+        $url = 'kanban/' . RESTTestDataBuilder::KANBAN_ID . '/tracker_reports';
 
         $response = $this->getResponse($this->request_factory->createRequest('PUT', $url)->withBody($this->stream_factory->createStream(json_encode([
             'tracker_report_ids' => [],
@@ -762,7 +762,7 @@ final class KanbanTest extends TestBase
     #[\PHPUnit\Framework\Attributes\Depends('testPUTTrackerReportsWithEmptyArray')]
     public function testPUTTrackerReportsThrowsExceptionOnReportThatDoesNotExist()
     {
-        $url = 'kanban/' . REST_TestDataBuilder::KANBAN_ID . '/tracker_reports';
+        $url = 'kanban/' . RESTTestDataBuilder::KANBAN_ID . '/tracker_reports';
 
         $response = $this->getResponse($this->request_factory->createRequest('PUT', $url)->withBody($this->stream_factory->createStream(json_encode([
             'tracker_report_ids' => [-1],
@@ -773,7 +773,7 @@ final class KanbanTest extends TestBase
     #[\PHPUnit\Framework\Attributes\Depends('testDELETEKanbanWithReadOnlyAdmin')]
     public function testDELETEKanban()
     {
-        $response = $this->getResponse($this->request_factory->createRequest('DELETE', 'kanban/' . REST_TestDataBuilder::KANBAN_ID));
+        $response = $this->getResponse($this->request_factory->createRequest('DELETE', 'kanban/' . RESTTestDataBuilder::KANBAN_ID));
 
         $this->assertEquals(200, $response->getStatusCode());
     }
@@ -782,8 +782,8 @@ final class KanbanTest extends TestBase
     public function testDELETEKanbanWithReadOnlyAdmin(): void
     {
         $response = $this->getResponse(
-            $this->request_factory->createRequest('DELETE', 'kanban/' . REST_TestDataBuilder::KANBAN_ID),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            $this->request_factory->createRequest('DELETE', 'kanban/' . RESTTestDataBuilder::KANBAN_ID),
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(403, $response->getStatusCode());
@@ -792,7 +792,7 @@ final class KanbanTest extends TestBase
     #[\PHPUnit\Framework\Attributes\Depends('testDELETEKanban')]
     public function testGETDeletedKanban()
     {
-        $response = $this->getResponse($this->request_factory->createRequest('GET', 'kanban/' . REST_TestDataBuilder::KANBAN_ID));
+        $response = $this->getResponse($this->request_factory->createRequest('GET', 'kanban/' . RESTTestDataBuilder::KANBAN_ID));
 
         $this->assertEquals(404, $response->getStatusCode());
     }
@@ -854,7 +854,7 @@ final class KanbanTest extends TestBase
 
         $response = $this->getResponse(
             $this->request_factory->createRequest('GET', $url),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertGETCumulativeFlow($response);

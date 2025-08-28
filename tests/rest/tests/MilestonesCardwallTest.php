@@ -19,6 +19,7 @@
  */
 
 use Tuleap\REST\MilestoneBase;
+use Tuleap\REST\RESTTestDataBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 #[\PHPUnit\Framework\Attributes\Group('MilestonesTest')]
@@ -34,7 +35,7 @@ class MilestonesCardwallTest extends MilestoneBase //phpcs:ignore PSR1.Classes.C
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('OPTIONS', 'milestones/' . $this->sprint_artifact_ids[1] . '/cardwall'),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(['OPTIONS', 'GET'], explode(', ', $response->getHeaderLine('Allow')));
@@ -51,7 +52,7 @@ class MilestonesCardwallTest extends MilestoneBase //phpcs:ignore PSR1.Classes.C
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('GET', 'milestones/' . $this->sprint_artifact_ids[1] . '/cardwall'),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertCardwall($response);
@@ -82,10 +83,10 @@ class MilestonesCardwallTest extends MilestoneBase //phpcs:ignore PSR1.Classes.C
         $first_swimlane = $swimlanes[0];
 
         $first_swimlane_card = $first_swimlane['cards'][0];
-        $this->assertEquals(REST_TestDataBuilder::PLANNING_ID . '_' . $this->story_artifact_ids[1], $first_swimlane_card['id']);
+        $this->assertEquals(RESTTestDataBuilder::PLANNING_ID . '_' . $this->story_artifact_ids[1], $first_swimlane_card['id']);
         $this->assertEquals('Believe', $first_swimlane_card['label']);
-        $this->assertEquals('cards/' . REST_TestDataBuilder::PLANNING_ID . '_' . $this->story_artifact_ids[1], $first_swimlane_card['uri']);
-        $this->assertEquals(REST_TestDataBuilder::PLANNING_ID, $first_swimlane_card['planning_id']);
+        $this->assertEquals('cards/' . RESTTestDataBuilder::PLANNING_ID . '_' . $this->story_artifact_ids[1], $first_swimlane_card['uri']);
+        $this->assertEquals(RESTTestDataBuilder::PLANNING_ID, $first_swimlane_card['planning_id']);
         $this->assertEquals('Open', $first_swimlane_card['status']);
         $this->assertEquals(null, $first_swimlane_card['accent_color']);
         $this->assertEquals('2', $first_swimlane_card['column_id']);

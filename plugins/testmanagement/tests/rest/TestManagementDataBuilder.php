@@ -20,9 +20,9 @@
 
 namespace Tuleap\TestManagement;
 
-use REST_TestDataBuilder;
+use Tuleap\REST\RESTTestDataBuilder;
 
-class TestManagementDataBuilder extends REST_TestDataBuilder
+class TestManagementDataBuilder extends RESTTestDataBuilder
 {
     public const PROJECT_TEST_MGMT_SHORTNAME                  = 'test-mgmt';
     public const PROJECT_TEST_MGMT_WITH_ATTACHMENTS_SHORTNAME = 'test-mgmt-exec-attach';

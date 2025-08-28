@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\REST;
 
-use REST_TestDataBuilder;
+use Tuleap\REST\RESTTestDataBuilder;
 
 require_once dirname(__FILE__) . '/../bootstrap.php';
 
@@ -46,14 +46,14 @@ class WorkflowPostActionTest extends TestBase
         ]);
 
         $response = $this->getResponseByName(
-            REST_TestDataBuilder::TEST_USER_1_NAME,
+            RESTTestDataBuilder::TEST_USER_1_NAME,
             $this->request_factory->createRequest('PUT', "tracker_workflow_transitions/$transition_id/actions")->withBody($this->stream_factory->createStream($body))
         );
 
         $this->assertEquals(200, $response->getStatusCode());
 
         $response_get = $this->getResponseByName(
-            REST_TestDataBuilder::TEST_USER_1_NAME,
+            RESTTestDataBuilder::TEST_USER_1_NAME,
             $this->request_factory->createRequest('GET', "tracker_workflow_transitions/$transition_id/actions")
         );
 
@@ -78,7 +78,7 @@ class WorkflowPostActionTest extends TestBase
         ]);
 
         $response = $this->getResponseByName(
-            REST_TestDataBuilder::TEST_USER_1_NAME,
+            RESTTestDataBuilder::TEST_USER_1_NAME,
             $this->request_factory->createRequest('PUT', "tracker_workflow_transitions/$transition_id/actions")->withBody($this->stream_factory->createStream($body))
         );
 
@@ -90,7 +90,7 @@ class WorkflowPostActionTest extends TestBase
     private function assertPostActionExists(int $transition_id): void
     {
         $response_get = $this->getResponseByName(
-            REST_TestDataBuilder::TEST_USER_1_NAME,
+            RESTTestDataBuilder::TEST_USER_1_NAME,
             $this->request_factory->createRequest('GET', "tracker_workflow_transitions/$transition_id/actions")
         );
 

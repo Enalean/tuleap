@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\REST;
 
+use Tuleap\REST\RESTTestDataBuilder;
+
 require_once dirname(__FILE__) . '/../bootstrap.php';
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -42,7 +44,7 @@ class ExplicitBacklogTest extends TestBase
         ]);
 
         $response_patch = $this->getResponseByName(
-            \REST_TestDataBuilder::TEST_USER_1_NAME,
+            RESTTestDataBuilder::TEST_USER_1_NAME,
             $this->request_factory->createRequest('PATCH', 'projects/' . urlencode((string) $this->explicit_backlog_project_id) . '/backlog')->withBody($this->stream_factory->createStream($patch_body))
         );
 

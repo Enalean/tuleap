@@ -19,6 +19,7 @@
  */
 
 use Tuleap\REST\CardsBase;
+use Tuleap\REST\RESTTestDataBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 #[\PHPUnit\Framework\Attributes\Group('CardsTests')]
@@ -32,7 +33,7 @@ class CardsTest extends CardsBase //phpcs:ignore PSR1.Classes.ClassDeclaration.M
 
     public function testPUTCardsWithId()
     {
-        $card_id        = REST_TestDataBuilder::PLANNING_ID . '_' . $this->story_artifact_ids[1];
+        $card_id        = RESTTestDataBuilder::PLANNING_ID . '_' . $this->story_artifact_ids[1];
         $test_label     = 'Ieatlaughingcow';
         $test_column_id = 2;
 
@@ -100,7 +101,7 @@ class CardsTest extends CardsBase //phpcs:ignore PSR1.Classes.ClassDeclaration.M
 
     public function testPUTCardsForReadOnlyUser(): void
     {
-        $card_id      = REST_TestDataBuilder::PLANNING_ID . '_' . $this->story_artifact_ids[1];
+        $card_id      = RESTTestDataBuilder::PLANNING_ID . '_' . $this->story_artifact_ids[1];
         $response_put = $this->getResponse(
             $this->request_factory->createRequest(
                 'PUT',
@@ -115,7 +116,7 @@ class CardsTest extends CardsBase //phpcs:ignore PSR1.Classes.ClassDeclaration.M
                 } '
                 )
             ),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
         $this->assertEquals(404, $response_put->getStatusCode());
     }

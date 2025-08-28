@@ -20,7 +20,7 @@
 
 namespace Tuleap\PullRequest;
 
-use REST_TestDataBuilder;
+use Tuleap\REST\RESTTestDataBuilder;
 use Tuleap\REST\RestBase;
 
 require_once dirname(__FILE__) . '/../bootstrap.php';
@@ -40,7 +40,7 @@ final class PullRequestsLabelsTest extends RestBase
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('OPTIONS', 'pull_requests/1/labels'),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(['OPTIONS', 'GET', 'PATCH'], explode(', ', $response->getHeaderLine('Allow')));
@@ -57,7 +57,7 @@ final class PullRequestsLabelsTest extends RestBase
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('GET', 'pull_requests/1/labels'),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertGETLabel($response);
@@ -100,7 +100,7 @@ final class PullRequestsLabelsTest extends RestBase
                     ],
                 ]
             ))),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(403, $response->getStatusCode());

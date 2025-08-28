@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Taskboard\REST;
 
-use REST_TestDataBuilder;
+use Tuleap\REST\RESTTestDataBuilder;
 use Tuleap\REST\RestBase;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -121,7 +121,7 @@ class TaskboardCardTest extends RestBase
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('GET', 'taskboard_cards/' . self::$user_story_6_id),
-            REST_TestDataBuilder::TEST_USER_1_NAME
+            RESTTestDataBuilder::TEST_USER_1_NAME
         );
         $this->assertEquals(400, $response->getStatusCode());
     }
@@ -130,7 +130,7 @@ class TaskboardCardTest extends RestBase
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('GET', 'taskboard_cards/' . self::$user_story_6_id . '?milestone_id=0'),
-            REST_TestDataBuilder::TEST_USER_1_NAME
+            RESTTestDataBuilder::TEST_USER_1_NAME
         );
         $this->assertEquals(404, $response->getStatusCode());
     }
@@ -138,8 +138,8 @@ class TaskboardCardTest extends RestBase
     public static function getUserName(): array
     {
         return [
-            [REST_TestDataBuilder::TEST_USER_1_NAME],
-            [REST_TestDataBuilder::TEST_BOT_USER_NAME],
+            [RESTTestDataBuilder::TEST_USER_1_NAME],
+            [RESTTestDataBuilder::TEST_BOT_USER_NAME],
         ];
     }
 

@@ -29,7 +29,6 @@ use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;
-use REST_TestDataBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 
 class RestBase extends TestCase
@@ -137,39 +136,39 @@ class RestBase extends TestCase
         }
 
         $this->project_private_member_id         = $this->getProjectId(
-            REST_TestDataBuilder::PROJECT_PRIVATE_MEMBER_SHORTNAME
+            RESTTestDataBuilder::PROJECT_PRIVATE_MEMBER_SHORTNAME
         );
-        $this->project_private_id                = $this->getProjectId(REST_TestDataBuilder::PROJECT_PRIVATE_SHORTNAME);
-        $this->project_public_id                 = $this->getProjectId(REST_TestDataBuilder::PROJECT_PUBLIC_SHORTNAME);
+        $this->project_private_id                = $this->getProjectId(RESTTestDataBuilder::PROJECT_PRIVATE_SHORTNAME);
+        $this->project_public_id                 = $this->getProjectId(RESTTestDataBuilder::PROJECT_PUBLIC_SHORTNAME);
         $this->project_public_member_id          = $this->getProjectId(
-            REST_TestDataBuilder::PROJECT_PUBLIC_MEMBER_SHORTNAME
+            RESTTestDataBuilder::PROJECT_PUBLIC_MEMBER_SHORTNAME
         );
-        $this->project_pbi_id                    = $this->getProjectId(REST_TestDataBuilder::PROJECT_PBI_SHORTNAME);
-        $this->project_deleted_id                = $this->getProjectId(REST_TestDataBuilder::PROJECT_DELETED_SHORTNAME);
+        $this->project_pbi_id                    = $this->getProjectId(RESTTestDataBuilder::PROJECT_PBI_SHORTNAME);
+        $this->project_deleted_id                = $this->getProjectId(RESTTestDataBuilder::PROJECT_DELETED_SHORTNAME);
         $this->project_suspended_id              = $this->getProjectId(
-            REST_TestDataBuilder::PROJECT_SUSPENDED_SHORTNAME
+            RESTTestDataBuilder::PROJECT_SUSPENDED_SHORTNAME
         );
         $this->project_public_with_membership_id = $this->getProjectId(
-            REST_TestDataBuilder::PROJECT_PUBLIC_WITH_MEMBERSHIP_SHORTNAME
+            RESTTestDataBuilder::PROJECT_PUBLIC_WITH_MEMBERSHIP_SHORTNAME
         );
-        $this->project_future_releases_id        = $this->getProjectId(REST_TestDataBuilder::PROJECT_FUTURE_RELEASES);
-        $this->project_services_id               = $this->getProjectId(REST_TestDataBuilder::PROJECT_SERVICES);
-        $this->project_public_template_id        = $this->getProjectId(REST_TestDataBuilder::PROJECT_PUBLIC_TEMPLATE);
-        $this->project_private_template_id       = $this->getProjectId(REST_TestDataBuilder::PROJECT_PRIVATE_TEMPLATE);
+        $this->project_future_releases_id        = $this->getProjectId(RESTTestDataBuilder::PROJECT_FUTURE_RELEASES);
+        $this->project_services_id               = $this->getProjectId(RESTTestDataBuilder::PROJECT_SERVICES);
+        $this->project_public_template_id        = $this->getProjectId(RESTTestDataBuilder::PROJECT_PUBLIC_TEMPLATE);
+        $this->project_private_template_id       = $this->getProjectId(RESTTestDataBuilder::PROJECT_PRIVATE_TEMPLATE);
 
         $this->getTrackerIdsForProjectPrivateMember();
     }
 
     protected function getResponse(
         RequestInterface $request,
-        string $user_name = REST_TestDataBuilder::TEST_USER_1_NAME,
+        string $user_name = RESTTestDataBuilder::TEST_USER_1_NAME,
     ): ResponseInterface {
         return $this->getResponseByName($user_name, $request);
     }
 
     protected function getResponseForReadOnlyUserAdmin(RequestInterface $request): ResponseInterface
     {
-        return $this->getResponseByName(REST_TestDataBuilder::TEST_BOT_USER_NAME, $request);
+        return $this->getResponseByName(RESTTestDataBuilder::TEST_BOT_USER_NAME, $request);
     }
 
     protected function getResponseWithoutAuth(RequestInterface $request): ResponseInterface
@@ -249,7 +248,7 @@ class RestBase extends TestCase
 
         do {
             $response = $this->getResponseByName(
-                REST_TestDataBuilder::ADMIN_USER_NAME,
+                RESTTestDataBuilder::ADMIN_USER_NAME,
                 $this->request_factory->createRequest('GET', "projects/$project_id/trackers?$query")
             );
 
@@ -290,17 +289,17 @@ class RestBase extends TestCase
 
     private function getTrackerIdsForProjectPrivateMember(): void
     {
-        $this->epic_tracker_id         = $this->tracker_ids[$this->project_private_member_id][REST_TestDataBuilder::EPICS_TRACKER_SHORTNAME];
-        $this->releases_tracker_id     = $this->tracker_ids[$this->project_private_member_id][REST_TestDataBuilder::RELEASES_TRACKER_SHORTNAME];
-        $this->sprints_tracker_id      = $this->tracker_ids[$this->project_private_member_id][REST_TestDataBuilder::SPRINTS_TRACKER_SHORTNAME];
-        $this->tasks_tracker_id        = $this->tracker_ids[$this->project_private_member_id][REST_TestDataBuilder::TASKS_TRACKER_SHORTNAME];
-        $this->user_stories_tracker_id = $this->tracker_ids[$this->project_private_member_id][REST_TestDataBuilder::USER_STORIES_TRACKER_SHORTNAME];
+        $this->epic_tracker_id         = $this->tracker_ids[$this->project_private_member_id][RESTTestDataBuilder::EPICS_TRACKER_SHORTNAME];
+        $this->releases_tracker_id     = $this->tracker_ids[$this->project_private_member_id][RESTTestDataBuilder::RELEASES_TRACKER_SHORTNAME];
+        $this->sprints_tracker_id      = $this->tracker_ids[$this->project_private_member_id][RESTTestDataBuilder::SPRINTS_TRACKER_SHORTNAME];
+        $this->tasks_tracker_id        = $this->tracker_ids[$this->project_private_member_id][RESTTestDataBuilder::TASKS_TRACKER_SHORTNAME];
+        $this->user_stories_tracker_id = $this->tracker_ids[$this->project_private_member_id][RESTTestDataBuilder::USER_STORIES_TRACKER_SHORTNAME];
         // Since the tracker is deleted it can not be retrieved through the REST route, it is however expected to be created right after
         // the user story tracker so hopefully it takes the next available ID. This is a weak assumption, a clean way to achieve the test
         // would be to introduce a DELETE trackers/:id route. See tests/rest/_fixtures/01-private-member/project.xml.
         $this->deleted_tracker_id = $this->user_stories_tracker_id + 1;
 
-        $this->kanban_tracker_id = $this->tracker_ids[$this->project_private_member_id][REST_TestDataBuilder::KANBAN_TRACKER_SHORTNAME];
+        $this->kanban_tracker_id = $this->tracker_ids[$this->project_private_member_id][RESTTestDataBuilder::KANBAN_TRACKER_SHORTNAME];
     }
 
     protected function getReleaseArtifactIds(): void
@@ -363,7 +362,7 @@ class RestBase extends TestCase
         $query     = http_build_query(['order' => 'asc']);
         $artifacts = Json\decode(
             $this->getResponseByName(
-                REST_TestDataBuilder::ADMIN_USER_NAME,
+                RESTTestDataBuilder::ADMIN_USER_NAME,
                 $this->request_factory->createRequest('GET', "trackers/$tracker_id/artifacts?$query")
             )->getBody()->getContents(),
         );
@@ -389,7 +388,7 @@ class RestBase extends TestCase
     {
         try {
             $response = $this->getResponseByName(
-                REST_TestDataBuilder::ADMIN_USER_NAME,
+                RESTTestDataBuilder::ADMIN_USER_NAME,
                 $this->request_factory->createRequest('GET', "projects/$project_id/user_groups")
             );
 
@@ -420,7 +419,7 @@ class RestBase extends TestCase
         do {
             $uri      = 'projects/?' . http_build_query($query);
             $response = $this->getResponseByName(
-                REST_TestDataBuilder::ADMIN_USER_NAME,
+                RESTTestDataBuilder::ADMIN_USER_NAME,
                 $this->request_factory->createRequest('GET', $uri)
             );
 
@@ -455,7 +454,7 @@ class RestBase extends TestCase
         $this->initUserId(BaseTestDataBuilder::TEST_USER_1_NAME);
         $this->initUserId(BaseTestDataBuilder::TEST_USER_2_NAME);
         $this->initUserId(BaseTestDataBuilder::TEST_USER_3_NAME);
-        $this->initUserId(REST_TestDataBuilder::TEST_USER_4_NAME);
+        $this->initUserId(RESTTestDataBuilder::TEST_USER_4_NAME);
         $this->initUserId(BaseTestDataBuilder::TEST_USER_5_NAME);
         $this->initUserId(BaseTestDataBuilder::TEST_USER_RESTRICTED_1_NAME);
         $this->initUserId(BaseTestDataBuilder::TEST_USER_RESTRICTED_2_NAME);

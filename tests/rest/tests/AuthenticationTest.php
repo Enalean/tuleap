@@ -19,6 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\REST\RESTTestDataBuilder;
 use Tuleap\REST\RestBase;
 
 #[\PHPUnit\Framework\Attributes\Group('TokenTests')]
@@ -45,7 +46,7 @@ class AuthenticationTest extends RestBase // phpcs:ignore
     public function testGETWithBasicAuthAndWrongCredentialsThrowsAnException()
     {
         $response = $this->getResponseByBasicAuth(
-            REST_TestDataBuilder::TEST_USER_1_NAME,
+            RESTTestDataBuilder::TEST_USER_1_NAME,
             'wrong_password',
             $this->request_factory->createRequest('GET', 'projects')
         );
@@ -57,7 +58,7 @@ class AuthenticationTest extends RestBase // phpcs:ignore
     {
         $request  = $this->request_factory->createRequest('GET', 'projects')
             ->withHeader('X-Auth-Token', 'wrong_token')
-            ->withHeader('X-Auth-UserId', $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME]);
+            ->withHeader('X-Auth-UserId', $this->user_ids[RESTTestDataBuilder::TEST_USER_1_NAME]);
         $response = $this->getResponseWithoutAuth($request);
         $this->assertEquals(401, $response->getStatusCode());
     }

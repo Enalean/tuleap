@@ -25,15 +25,15 @@ use BrokerLogger;
 use EventManager;
 use ForgeConfig;
 use Log_ConsoleLogger;
-use REST_TestDataBuilder;
 use SystemEvent;
 use SystemEventManager;
 use SystemEventProcessor_Factory;
 use TruncateLevelLogger;
 use Tuleap\AgileDashboard\FormElement\Burnup\Calculator\SystemEvent\SystemEvent_BURNUP_GENERATE;
 use Tuleap\Project\SystemEventRunner;
+use Tuleap\REST\RESTTestDataBuilder;
 
-class DataBuilder extends REST_TestDataBuilder
+class DataBuilder extends RESTTestDataBuilder
 {
     public const RELEASE_TRACKER_SHORTNAME          = 'rel';
     public const PROJECT_BURNUP_SHORTNAME           = 'burnup';

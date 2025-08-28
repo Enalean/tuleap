@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Tests\REST\Workflows;
 
+use Tuleap\REST\RESTTestDataBuilder;
 use Tuleap\Tracker\Tests\REST\TrackerBase;
 
 require_once __DIR__ . '/../bootstrap.php';
@@ -38,7 +39,7 @@ class SwitchTest extends TrackerBase
 
         $query          = '{"workflow": {"is_advanced": true}}';
         $response_patch = $this->getResponseByName(
-            \REST_TestDataBuilder::TEST_USER_1_NAME,
+            RESTTestDataBuilder::TEST_USER_1_NAME,
             $this->request_factory->createRequest('PATCH', 'trackers/' . $this->simple_mode_workflow_to_switch_tracker_id . '?query=' . urlencode($query))
         );
 
@@ -61,7 +62,7 @@ class SwitchTest extends TrackerBase
 
         $query          = '{"workflow": {"is_advanced": false}}';
         $response_patch = $this->getResponseByName(
-            \REST_TestDataBuilder::TEST_USER_1_NAME,
+            RESTTestDataBuilder::TEST_USER_1_NAME,
             $this->request_factory->createRequest('PATCH', 'trackers/' . $this->simple_mode_workflow_to_switch_tracker_id . '?query=' . urlencode($query))
         );
 

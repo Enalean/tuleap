@@ -38,7 +38,7 @@ final class TrackersTest extends TrackerBase
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('OPTIONS', 'trackers'),
-            \REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         self::assertEqualsCanonicalizing(['OPTIONS'], explode(', ', $response->getHeaderLine('Allow')));
@@ -57,7 +57,7 @@ final class TrackersTest extends TrackerBase
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('OPTIONS', $this->getReleaseTrackerUri()),
-            \REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         self::assertEqualsCanonicalizing(['OPTIONS', 'GET', 'PATCH'], explode(', ', $response->getHeaderLine('Allow')));
@@ -76,7 +76,7 @@ final class TrackersTest extends TrackerBase
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('OPTIONS', $this->getReleaseTrackerReportsUri()),
-            \REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals($response->getStatusCode(), 200);
@@ -95,7 +95,7 @@ final class TrackersTest extends TrackerBase
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('OPTIONS', $this->report_uri),
-            \REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals($response->getStatusCode(), 200);
@@ -114,7 +114,7 @@ final class TrackersTest extends TrackerBase
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('OPTIONS', $this->getReportsArtifactsUri()),
-            \REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals($response->getStatusCode(), 200);
@@ -141,7 +141,7 @@ final class TrackersTest extends TrackerBase
                 'OPTIONS',
                 'trackers/' . $this->user_stories_tracker_id . '/parent_artifacts'
             ),
-            \REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEqualsCanonicalizing(['OPTIONS', 'GET'], explode(', ', $response->getHeaderLine('Allow')));
@@ -161,7 +161,7 @@ final class TrackersTest extends TrackerBase
         $tracker_uri = $this->getReleaseTrackerUri();
         $response    = $this->getResponse(
             $this->request_factory->createRequest('GET', $tracker_uri),
-            \REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertGETTrackersId($response, $tracker_uri);
@@ -324,7 +324,7 @@ final class TrackersTest extends TrackerBase
     public function testGetTrackersIdReportsForReadOnlyUser(): void
     {
         $report_uri = $this->getReleaseTrackerReportsUri();
-        $response   = $this->getResponse($this->request_factory->createRequest('GET', $report_uri), \REST_TestDataBuilder::TEST_BOT_USER_NAME);
+        $response   = $this->getResponse($this->request_factory->createRequest('GET', $report_uri), RESTTestDataBuilder::TEST_BOT_USER_NAME);
         $this->assertGETTrackersIdReports($response);
     }
 
@@ -352,7 +352,7 @@ final class TrackersTest extends TrackerBase
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('GET', $this->report_uri),
-            \REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertGETReportsId($response);
@@ -380,7 +380,7 @@ final class TrackersTest extends TrackerBase
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('GET', $this->getReportsArtifactsUri()),
-            \REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
         $this->assertGETReportsByArtifactsId($response);
     }
@@ -407,7 +407,7 @@ final class TrackersTest extends TrackerBase
     public function testGetTrackerArtifactsWithReadOnlyAdmin(): void
     {
         $request  = $this->request_factory->createRequest('GET', $this->getReleaseTrackerUri() . '/artifacts');
-        $response = $this->getResponse($request, \REST_TestDataBuilder::TEST_BOT_USER_NAME);
+        $response = $this->getResponse($request, RESTTestDataBuilder::TEST_BOT_USER_NAME);
 
         $this->assertGETTrackerArtifacts($response);
     }
@@ -558,7 +558,7 @@ final class TrackersTest extends TrackerBase
                 'GET',
                 'trackers/' . $this->user_stories_tracker_id . '/parent_artifacts'
             ),
-            \REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertGETParentArtifacts($response);

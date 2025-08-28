@@ -20,8 +20,8 @@
 
 namespace Git;
 
-use REST_TestDataBuilder;
 use Tuleap\Git\REST\TestBase;
+use Tuleap\REST\RESTTestDataBuilder;
 
 require_once dirname(__FILE__) . '/../bootstrap.php';
 
@@ -35,7 +35,7 @@ class GerritTest extends TestBase
     {
         return $this->getResponse(
             $request,
-            REST_TestDataBuilder::TEST_USER_2_NAME
+            RESTTestDataBuilder::TEST_USER_2_NAME
         );
     }
 
@@ -49,7 +49,7 @@ class GerritTest extends TestBase
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('OPTIONS', 'gerrit'),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(['OPTIONS', 'GET'], explode(', ', $response->getHeaderLine('Allow')));
@@ -66,7 +66,7 @@ class GerritTest extends TestBase
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('GET', 'gerrit'),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertGETServers($response);
@@ -98,7 +98,7 @@ class GerritTest extends TestBase
         $url      = 'gerrit?for_project=' . $this->git_project_id;
         $response = $this->getResponse(
             $this->request_factory->createRequest('GET', $url),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertGETServersForProject($response);

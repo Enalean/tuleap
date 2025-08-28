@@ -20,7 +20,7 @@
 
 namespace Tuleap\PullRequest;
 
-use REST_TestDataBuilder;
+use Tuleap\REST\RESTTestDataBuilder;
 use Tuleap\REST\RestBase;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -29,7 +29,7 @@ final class PullRequestsCommentsTest extends RestBase
 {
     protected function getResponseForNonMember($request)
     {
-        return $this->getResponse($request, REST_TestDataBuilder::TEST_USER_2_NAME);
+        return $this->getResponse($request, RESTTestDataBuilder::TEST_USER_2_NAME);
     }
 
     public function testOptions(): void
@@ -43,7 +43,7 @@ final class PullRequestsCommentsTest extends RestBase
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('OPTIONS', 'pull_requests/1/comments'),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         self::assertEqualsCanonicalizing(['OPTIONS', 'GET', 'POST'], explode(', ', $response->getHeaderLine('Allow')));
@@ -60,7 +60,7 @@ final class PullRequestsCommentsTest extends RestBase
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('GET', 'pull_requests/1/comments'),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertGETPullRequestsComments($response);
@@ -125,7 +125,7 @@ final class PullRequestsCommentsTest extends RestBase
                 ->withBody($this->stream_factory->createStream(
                     json_encode(['content' => 'Shot down in flames'])
                 )),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         self::assertSame(403, $response->getStatusCode());

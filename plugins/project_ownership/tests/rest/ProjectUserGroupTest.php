@@ -20,24 +20,25 @@
 
 namespace Tuleap\ProjectOwnership\REST;
 
+use Tuleap\REST\RESTTestDataBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class ProjectUserGroupTest extends \Tuleap\REST\RestBase
 {
     public function testProjectOwnerCannotBeRemovedFromTheProjectAdministrators(): void
     {
-        $project_id             = $this->createProjectAs(\REST_TestDataBuilder::ADMIN_USER_NAME);
+        $project_id             = $this->createProjectAs(RESTTestDataBuilder::ADMIN_USER_NAME);
         $update_admins_response = $this->updateProjectAdmin(
             $project_id,
-            \REST_TestDataBuilder::ADMIN_USER_NAME,
-            [\REST_TestDataBuilder::ADMIN_USER_NAME, \REST_TestDataBuilder::TEST_USER_1_NAME]
+            RESTTestDataBuilder::ADMIN_USER_NAME,
+            [RESTTestDataBuilder::ADMIN_USER_NAME, RESTTestDataBuilder::TEST_USER_1_NAME]
         );
         $this->assertEquals(200, $update_admins_response->getStatusCode());
 
         $response = $this->updateProjectAdmin(
             $project_id,
-            \REST_TestDataBuilder::ADMIN_USER_NAME,
-            [\REST_TestDataBuilder::TEST_USER_1_NAME]
+            RESTTestDataBuilder::ADMIN_USER_NAME,
+            [RESTTestDataBuilder::TEST_USER_1_NAME]
         );
         $this->assertEquals(400, $response->getStatusCode());
         $this->assertStringContainsString('project owner', json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['error']['message']);
@@ -67,7 +68,7 @@ class ProjectUserGroupTest extends \Tuleap\REST\RestBase
         }
         return $this->getResponseByName(
             $sender,
-            $this->request_factory->createRequest('PUT', 'user_groups/' . $project_id . '_' . \REST_TestDataBuilder::DYNAMIC_UGROUP_PROJECT_ADMINS_ID . '/users')->withBody($this->stream_factory->createStream(json_encode([
+            $this->request_factory->createRequest('PUT', 'user_groups/' . $project_id . '_' . RESTTestDataBuilder::DYNAMIC_UGROUP_PROJECT_ADMINS_ID . '/users')->withBody($this->stream_factory->createStream(json_encode([
                 'user_references' => $user_references,
             ])))
         );

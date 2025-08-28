@@ -19,6 +19,7 @@
  */
 
 use Tuleap\REST\MilestoneBase;
+use Tuleap\REST\RESTTestDataBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 #[\PHPUnit\Framework\Attributes\Group('MilestonesTest')]
@@ -36,7 +37,7 @@ class MilestonesBurndownTest extends MilestoneBase //phpcs:ignore PSR1.Classes.C
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('OPTIONS', 'milestones/' . $this->sprint_artifact_ids[1] . '/burndown'),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         self::assertEqualsCanonicalizing(['OPTIONS', 'GET'], explode(', ', $response->getHeaderLine('Allow')));
@@ -53,7 +54,7 @@ class MilestonesBurndownTest extends MilestoneBase //phpcs:ignore PSR1.Classes.C
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('GET', 'milestones/' . $this->sprint_artifact_ids[1] . '/burndown'),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertGETBurndown($response);

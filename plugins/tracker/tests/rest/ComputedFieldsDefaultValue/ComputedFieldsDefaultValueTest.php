@@ -20,7 +20,7 @@
 
 namespace Tuleap\Tracker\Tests\REST\ComputedFieldsDefaultValue;
 
-use REST_TestDataBuilder;
+use Tuleap\REST\RESTTestDataBuilder;
 use Tuleap\Tracker\Tests\REST\TrackerBase;
 
 require_once __DIR__ . '/../TrackerBase.php';
@@ -71,7 +71,7 @@ class ComputedFieldsDefaultValueTest extends TrackerBase
 
         $response = $this->getResponse(
             $this->request_factory->createRequest('POST', 'artifacts')->withBody($this->stream_factory->createStream(json_encode($payload))),
-            REST_TestDataBuilder::TEST_USER_3_NAME
+            RESTTestDataBuilder::TEST_USER_3_NAME
         );
 
         $this->assertEquals(201, $response->getStatusCode());

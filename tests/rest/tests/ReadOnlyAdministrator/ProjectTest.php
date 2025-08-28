@@ -21,15 +21,15 @@
 namespace Tuleap\REST\ReadOnlyAdministrator;
 
 use Psr\Http\Message\ResponseInterface;
-use REST_TestDataBuilder;
 use Tuleap\REST\ProjectBase;
+use Tuleap\REST\RESTTestDataBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 #[\PHPUnit\Framework\Attributes\Group('ProjectTests')]
 class ProjectTest extends ProjectBase
 {
     #[\Override]
-    protected function getResponse($request, $user_name = REST_TestDataBuilder::TEST_BOT_USER_NAME): ResponseInterface
+    protected function getResponse($request, $user_name = RESTTestDataBuilder::TEST_BOT_USER_NAME): ResponseInterface
     {
         return parent::getResponse($request, $user_name);
     }
@@ -289,12 +289,12 @@ class ProjectTest extends ProjectBase
         $expected_result = [
             'pages' => [
                 0 => [
-                    'id'  => REST_TestDataBuilder::PHPWIKI_PAGE_ID,
+                    'id'  => RESTTestDataBuilder::PHPWIKI_PAGE_ID,
                     'uri' => 'phpwiki/6097',
                     'name' => 'WithContent',
                 ],
                 1 => [
-                    'id'  => REST_TestDataBuilder::PHPWIKI_SPACE_PAGE_ID,
+                    'id'  => RESTTestDataBuilder::PHPWIKI_SPACE_PAGE_ID,
                     'uri' => 'phpwiki/6100',
                     'name' => 'With Space',
                 ],

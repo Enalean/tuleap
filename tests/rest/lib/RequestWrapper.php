@@ -22,10 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\REST;
 
-use GuzzleHttp\Exception\GuzzleException;
-use Psl\Json;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\RequestOptions;
+use Psl\Json;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
@@ -46,7 +46,7 @@ final readonly class RequestWrapper
     {
         $token = $this->cache->getTokenForUser($name);
         if (! $token) {
-            $token = $this->getTokenForUser($name, \REST_TestDataBuilder::STANDARD_PASSWORD);
+            $token = $this->getTokenForUser($name, RESTTestDataBuilder::STANDARD_PASSWORD);
             $this->cache->setTokenForUser($name, $token);
         }
 

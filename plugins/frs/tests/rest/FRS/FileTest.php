@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\FRS\Tests\REST;
 
-use REST_TestDataBuilder;
+use Tuleap\REST\RESTTestDataBuilder;
 use Tuleap\REST\RestBase;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -43,7 +43,7 @@ class FileTest extends RestBase
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('OPTIONS', 'frs_files/1'),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(
@@ -63,7 +63,7 @@ class FileTest extends RestBase
     {
         $file = json_decode($this->getResponse(
             $this->request_factory->createRequest('GET', 'frs_files/1'),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         )->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertGETFile($file);
@@ -93,7 +93,7 @@ class FileTest extends RestBase
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('DELETE', 'frs_files/2'),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(404, $response->getStatusCode());
@@ -119,7 +119,7 @@ class FileTest extends RestBase
 
         $response = $this->getResponse(
             $this->request_factory->createRequest('POST', 'frs_files')->withBody($this->stream_factory->createStream(json_encode($query))),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(404, $response->getStatusCode());

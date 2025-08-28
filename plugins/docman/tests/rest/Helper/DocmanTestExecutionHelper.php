@@ -22,10 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\Test\rest\Helper;
 
-use REST_TestDataBuilder;
 use Tuleap\Docman\Test\rest\DocmanBase;
 use Tuleap\Docman\Test\rest\DocmanDataBuilder;
 use Tuleap\REST\BaseTestDataBuilder;
+use Tuleap\REST\RESTTestDataBuilder;
 
 class DocmanTestExecutionHelper extends DocmanBase
 {
@@ -42,7 +42,7 @@ class DocmanTestExecutionHelper extends DocmanBase
                 ]
             )
         );
-        $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_1_NAME, $this->request_factory->createRequest('GET', "users?query=$search&limit=10"));
+        $response = $this->getResponseByName(RESTTestDataBuilder::TEST_USER_1_NAME, $this->request_factory->createRequest('GET', "users?query=$search&limit=10"));
         $this->assertEquals($response->getStatusCode(), 200);
 
         $json = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
@@ -67,7 +67,7 @@ class DocmanTestExecutionHelper extends DocmanBase
     {
         $project_response = $this->getResponse(
             $this->request_factory->createRequest('GET', 'projects/' . urlencode((string) $this->project_id) . '/docman_service'),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         self::assertSame(200, $project_response->getStatusCode());

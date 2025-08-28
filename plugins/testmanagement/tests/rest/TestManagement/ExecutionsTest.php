@@ -20,7 +20,7 @@
 
 namespace Tuleap\TestManagement;
 
-use REST_TestDataBuilder;
+use Tuleap\REST\RESTTestDataBuilder;
 
 require_once dirname(__FILE__) . '/../bootstrap.php';
 
@@ -33,7 +33,7 @@ final class ExecutionsTest extends TestManagementRESTTestCase
         $initial_value = 'failed';
         $new_value     = 'blocked';
 
-        $execution = $this->getLastExecutionForValid73Campaign(REST_TestDataBuilder::TEST_BOT_USER_NAME);
+        $execution = $this->getLastExecutionForValid73Campaign(RESTTestDataBuilder::TEST_BOT_USER_NAME);
         $this->assertEquals($initial_value, $execution['status']);
 
         $response = $this->getResponse(
@@ -41,11 +41,11 @@ final class ExecutionsTest extends TestManagementRESTTestCase
                 'status' => $new_value,
                 'time'   => 0,
             ]))),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
         $this->assertEquals(404, $response->getStatusCode());
 
-        $updated_execution = $this->getLastExecutionForValid73Campaign(REST_TestDataBuilder::TEST_BOT_USER_NAME);
+        $updated_execution = $this->getLastExecutionForValid73Campaign(RESTTestDataBuilder::TEST_BOT_USER_NAME);
         $this->assertEquals($initial_value, $updated_execution['status']);
 
         $response2 = $this->getResponse(
@@ -53,7 +53,7 @@ final class ExecutionsTest extends TestManagementRESTTestCase
                 'status' => $initial_value,
                 'time'   => 0,
             ]))),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(404, $response2->getStatusCode());
@@ -202,7 +202,7 @@ final class ExecutionsTest extends TestManagementRESTTestCase
         $issue    = $this->getLastArtifactFromTracker($issue_tracker_id);
         $issue_id = $issue['id'];
 
-        $execution = $this->getLastExecutionForValid73Campaign(REST_TestDataBuilder::TEST_BOT_USER_NAME);
+        $execution = $this->getLastExecutionForValid73Campaign(RESTTestDataBuilder::TEST_BOT_USER_NAME);
         $response  = $this->getResponse(
             $this->request_factory->createRequest('PATCH', 'testmanagement_executions/' . $execution['id'] . '/issues')->withBody($this->stream_factory->createStream(json_encode([
                 'issue_id' => $issue_id,
@@ -211,7 +211,7 @@ final class ExecutionsTest extends TestManagementRESTTestCase
                     'format'   => 'html',
                 ],
             ]))),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(404, $response->getStatusCode());

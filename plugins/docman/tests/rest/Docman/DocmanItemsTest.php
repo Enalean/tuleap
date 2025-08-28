@@ -26,10 +26,10 @@ namespace Tuleap\Docman\Test\rest\Docman;
 
 require_once __DIR__ . '/../../../vendor/autoload.php';
 
-use REST_TestDataBuilder;
 use Tuleap\Docman\Test\rest\DocmanDataBuilder;
 use Tuleap\Docman\Test\rest\Helper\DocmanTestExecutionHelper;
 use Tuleap\REST\BaseTestDataBuilder;
+use Tuleap\REST\RESTTestDataBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 class DocmanItemsTest extends DocmanTestExecutionHelper
@@ -75,12 +75,12 @@ class DocmanItemsTest extends DocmanTestExecutionHelper
     #[\PHPUnit\Framework\Attributes\Depends('testGetRootIdWithUserRESTReadOnlyAdmin')]
     public function testGetDocumentItemsWithUserRESTReadOnlyAdmin(int $root_id): array
     {
-        $root_folder = $this->loadRootFolderContent($root_id, REST_TestDataBuilder::TEST_BOT_USER_NAME);
+        $root_folder = $this->loadRootFolderContent($root_id, RESTTestDataBuilder::TEST_BOT_USER_NAME);
 
-        $items_file    = $this->loadFolderContent($root_id, 'Folder', REST_TestDataBuilder::TEST_BOT_USER_NAME);
+        $items_file    = $this->loadFolderContent($root_id, 'Folder', RESTTestDataBuilder::TEST_BOT_USER_NAME);
         $folder_files  = $this->findItemByTitle($root_folder, 'Folder');
         $items_file_id = $folder_files['id'];
-        $get           = $this->loadFolderContent($items_file_id, 'GET FO', REST_TestDataBuilder::TEST_BOT_USER_NAME);
+        $get           = $this->loadFolderContent($items_file_id, 'GET FO', RESTTestDataBuilder::TEST_BOT_USER_NAME);
 
         $items_folder_1 = array_merge(
             $root_folder,
@@ -97,7 +97,7 @@ class DocmanItemsTest extends DocmanTestExecutionHelper
         $wiki     = $this->findItemByTitle($items_folder_1, 'GET W');
 
         $response       = $this->getResponseByName(
-            REST_TestDataBuilder::TEST_BOT_USER_NAME,
+            RESTTestDataBuilder::TEST_BOT_USER_NAME,
             $this->request_factory->createRequest('GET', 'docman_items/' . $folder['id'] . '/docman_items')
         );
         $items_folder_2 = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
@@ -151,14 +151,14 @@ class DocmanItemsTest extends DocmanTestExecutionHelper
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('OPTIONS', 'docman_items/' . $root_id),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(['OPTIONS', 'GET'], explode(', ', $response->getHeaderLine('Allow')));
 
         $response = $this->getResponse(
             $this->request_factory->createRequest('OPTIONS', 'docman_items/' . $root_id . '/docman_items'),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(['OPTIONS', 'GET', 'POST'], explode(', ', $response->getHeaderLine('Allow')));
@@ -184,7 +184,7 @@ class DocmanItemsTest extends DocmanTestExecutionHelper
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('GET', 'docman_items/' . $root_id),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
         $item     = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
@@ -203,7 +203,7 @@ class DocmanItemsTest extends DocmanTestExecutionHelper
         $request  = $this->request_factory->createRequest('GET', 'docman_items/' . $folder_to_download['id'] . '/?with_size=true');
         $response = $this->getResponse(
             $request,
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $folder = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
@@ -237,7 +237,7 @@ class DocmanItemsTest extends DocmanTestExecutionHelper
 
         $project_response = $this->getResponse(
             $this->request_factory->createRequest('GET', 'docman_items/' . $embedded_2['id'] . '/parents'),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $json_parents = json_decode($project_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);

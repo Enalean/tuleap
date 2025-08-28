@@ -25,8 +25,8 @@ namespace Tuleap\CrossTracker\REST\v1;
 use Psl\Json;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-use REST_TestDataBuilder;
 use Tuleap\CrossTracker\TestBase;
+use Tuleap\REST\RESTTestDataBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class CrossTrackerWidgetTest extends TestBase
@@ -52,7 +52,7 @@ final class CrossTrackerWidgetTest extends TestBase
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('GET', 'crosstracker_widget/3'),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         self::assertSame(200, $response->getStatusCode());
@@ -96,6 +96,6 @@ final class CrossTrackerWidgetTest extends TestBase
 
     private function getResponseForNonProjectMember(RequestInterface $request): ResponseInterface
     {
-        return $this->getResponse($request, REST_TestDataBuilder::TEST_USER_4_NAME);
+        return $this->getResponse($request, RESTTestDataBuilder::TEST_USER_4_NAME);
     }
 }

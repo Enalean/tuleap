@@ -25,17 +25,17 @@ namespace Tuleap\CrossTracker;
 
 use EventManager;
 use LogicException;
-use REST_TestDataBuilder;
 use Tuleap\CrossTracker\Query\CrossTrackerQueryDao;
 use Tuleap\CrossTracker\Widget\CrossTrackerWidgetDao;
 use Tuleap\Dashboard\Project\ProjectDashboardDao;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
+use Tuleap\REST\RESTTestDataBuilder;
 use Tuleap\Widget\WidgetFactory;
 use User_ForgeUserGroupPermissionsDao;
 use User_ForgeUserGroupPermissionsManager;
 use UserManager;
 
-final class CrossTrackerDataBuilder extends REST_TestDataBuilder
+final class CrossTrackerDataBuilder extends RESTTestDataBuilder
 {
     public const string REVERSE_CROSS_PROJECT_SHORTNAME = 'reverse-link';
     public const string FORWARD_CROSS_PROJECT_SHORTNAME = 'forward-link';
@@ -67,7 +67,7 @@ final class CrossTrackerDataBuilder extends REST_TestDataBuilder
             throw new LogicException('Project private member has no dashboards');
         }
 
-        $test_user_1_id = $this->user_manager->getUserByUserName(self::TEST_USER_1_NAME)->getId();
+        $test_user_1_id = $this->getUserOrThrow(self::TEST_USER_1_NAME)->getId();
 
         $user_widget_id = $widget_dao->createWidget();
         $query_dao->create('', 'Title 2', '', $user_widget_id, false);

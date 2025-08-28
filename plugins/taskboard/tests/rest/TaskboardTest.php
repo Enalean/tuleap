@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Taskboard\REST;
 
-use REST_TestDataBuilder;
+use Tuleap\REST\RESTTestDataBuilder;
 use Tuleap\REST\RestBase;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -166,8 +166,8 @@ class TaskboardTest extends RestBase
     public static function getUserName(): array
     {
         return [
-            [REST_TestDataBuilder::TEST_USER_1_NAME],
-            [REST_TestDataBuilder::TEST_BOT_USER_NAME],
+            [RESTTestDataBuilder::TEST_USER_1_NAME],
+            [RESTTestDataBuilder::TEST_BOT_USER_NAME],
         ];
     }
 }

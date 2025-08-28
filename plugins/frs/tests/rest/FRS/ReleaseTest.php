@@ -20,7 +20,7 @@
 
 namespace Tuleap\FRS\Tests\REST;
 
-use REST_TestDataBuilder;
+use Tuleap\REST\RESTTestDataBuilder;
 use Tuleap\REST\RestBase;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -32,7 +32,7 @@ final class ReleaseTest extends RestBase
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('GET', 'frs_packages/1'),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertReleaseIsInPackage($response);
@@ -60,7 +60,7 @@ final class ReleaseTest extends RestBase
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('OPTIONS', 'frs_release'),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(['OPTIONS', 'POST'], explode(', ', $response->getHeaderLine('Allow')));
@@ -76,7 +76,7 @@ final class ReleaseTest extends RestBase
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('OPTIONS', 'frs_release/1'),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
         $this->assertEquals(['OPTIONS', 'GET', 'PATCH'], explode(', ', $response->getHeaderLine('Allow')));
     }
@@ -92,7 +92,7 @@ final class ReleaseTest extends RestBase
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('GET', 'frs_release/1'),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertGETRelease($response);
@@ -113,7 +113,7 @@ final class ReleaseTest extends RestBase
 
     public function testGetReleaseWithoutFRSAdminPermissions()
     {
-        $response = $this->getResponse($this->request_factory->createRequest('GET', 'frs_release/1'), REST_TestDataBuilder::TEST_USER_5_NAME);
+        $response = $this->getResponse($this->request_factory->createRequest('GET', 'frs_release/1'), RESTTestDataBuilder::TEST_USER_5_NAME);
         $package  = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertEquals($package['id'], 1);
@@ -137,7 +137,7 @@ final class ReleaseTest extends RestBase
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('POST', 'frs_release')->withBody($this->stream_factory->createStream($this->getPostResource())),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(404, $response->getStatusCode());
@@ -172,7 +172,7 @@ final class ReleaseTest extends RestBase
     {
         $response = $this->getResponse(
             $this->request_factory->createRequest('PATCH', 'frs_release/1')->withBody($this->stream_factory->createStream($this->getPatchResource())),
-            REST_TestDataBuilder::TEST_BOT_USER_NAME
+            RESTTestDataBuilder::TEST_BOT_USER_NAME
         );
 
         $this->assertEquals(404, $response->getStatusCode());
