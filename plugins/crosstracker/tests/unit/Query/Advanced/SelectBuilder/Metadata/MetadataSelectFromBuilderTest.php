@@ -24,7 +24,7 @@ namespace Tuleap\CrossTracker\Query\Advanced\SelectBuilder\Metadata;
 
 use LogicException;
 use PHPUnit\Framework\Attributes\DataProvider;
-use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\IProvideParametrizedSelectAndFromSQLFragments;
+use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\IProvideParametrizedSelectAndFromAndWhereSQLFragments;
 use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\Metadata\Semantic\AssignedTo\AssignedToSelectFromBuilder;
 use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\Metadata\Semantic\Description\DescriptionSelectFromBuilder;
 use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\Metadata\Semantic\Status\StatusSelectFromBuilder;
@@ -39,7 +39,7 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class MetadataSelectFromBuilderTest extends TestCase
 {
-    private function getSelectFrom(Metadata $metadata): IProvideParametrizedSelectAndFromSQLFragments
+    private function getSelectFrom(Metadata $metadata): IProvideParametrizedSelectAndFromAndWhereSQLFragments
     {
         $builder = new MetadataSelectFromBuilder(
             new TitleSelectFromBuilder(),
@@ -51,7 +51,7 @@ final class MetadataSelectFromBuilderTest extends TestCase
             new ForwardLinkTypeSelectFromBuilder(),
         );
 
-        return $builder->getSelectFrom($metadata, Option::fromValue(21));
+        return $builder->getSelectFrom($metadata, Option::fromValue(21), [11, 12]);
     }
 
     public function testItThrowsIfMetadataNotRecognized(): void
@@ -78,7 +78,7 @@ final class MetadataSelectFromBuilderTest extends TestCase
     public function testItReturnsSEmptyForLinkType(): void
     {
         $result = $this->getSelectFrom(new Metadata('link_type'));
-        self::assertEmpty($result->getSelect());
+        self::assertNotEmpty($result->getSelect());
     }
 
     public static function metadataForSelectStatement(): array

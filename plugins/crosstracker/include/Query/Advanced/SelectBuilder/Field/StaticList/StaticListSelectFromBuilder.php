@@ -25,9 +25,11 @@ namespace Tuleap\CrossTracker\Query\Advanced\SelectBuilder\Field\StaticList;
 use ParagonIE\EasyDB\EasyDB;
 use ParagonIE\EasyDB\EasyStatement;
 use Tuleap\CrossTracker\Query\Advanced\DuckTypedField\Select\DuckTypedFieldSelect;
-use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\IProvideParametrizedSelectAndFromSQLFragments;
-use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\ParametrizedSelectFrom;
+use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\IProvideParametrizedSelectAndFromAndWhereSQLFragments;
+use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\ParametrizedSelectFromAndWhere;
 use Tuleap\CrossTracker\Query\Advanced\SelectResultKey;
+use Tuleap\Option\Option;
+use function Psl\Type\string;
 
 final readonly class StaticListSelectFromBuilder
 {
@@ -35,7 +37,7 @@ final readonly class StaticListSelectFromBuilder
     {
     }
 
-    public function getSelectFrom(DuckTypedFieldSelect $field): IProvideParametrizedSelectAndFromSQLFragments
+    public function getSelectFrom(DuckTypedFieldSelect $field): IProvideParametrizedSelectAndFromAndWhereSQLFragments
     {
         $suffix                                  = SelectResultKey::fromDuckTypedField($field);
         $tracker_field_alias                     = $this->easy_db->escapeIdentifier("TF_$suffix");
@@ -71,10 +73,12 @@ final readonly class StaticListSelectFromBuilder
             ON $tracker_field_list_bind_static_alias.id = $tracker_field_list_bind_decorator_alias.value_id
         EOSQL;
 
-        return new ParametrizedSelectFrom(
+        return new ParametrizedSelectFromAndWhere(
             $select,
             $from,
             $fields_id_statement->values(),
+            Option::nothing(string()),
+            []
         );
     }
 }

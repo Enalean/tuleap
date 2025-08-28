@@ -22,12 +22,14 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Query\Advanced\SelectBuilder\Metadata\Semantic\Status;
 
-use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\IProvideParametrizedSelectAndFromSQLFragments;
-use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\ParametrizedSelectFrom;
+use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\IProvideParametrizedSelectAndFromAndWhereSQLFragments;
+use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\ParametrizedSelectFromAndWhere;
+use Tuleap\Option\Option;
+use function Psl\Type\string;
 
 final class StatusSelectFromBuilder
 {
-    public function getSelectFrom(): IProvideParametrizedSelectAndFromSQLFragments
+    public function getSelectFrom(): IProvideParametrizedSelectAndFromAndWhereSQLFragments
     {
         $select = "status.label AS '@status', status_decorator.tlp_color_name AS '@status_color'";
         $from   = <<<EOSQL
@@ -40,6 +42,12 @@ final class StatusSelectFromBuilder
         LEFT JOIN tracker_field_list_bind_decorator AS status_decorator ON (status.id = status_decorator.value_id)
         EOSQL;
 
-        return new ParametrizedSelectFrom($select, $from, []);
+        return new ParametrizedSelectFromAndWhere(
+            $select,
+            $from,
+            [],
+            Option::nothing(string()),
+            []
+        );
     }
 }

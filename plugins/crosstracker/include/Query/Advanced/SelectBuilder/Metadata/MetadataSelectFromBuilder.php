@@ -24,7 +24,7 @@ namespace Tuleap\CrossTracker\Query\Advanced\SelectBuilder\Metadata;
 
 use LogicException;
 use Tuleap\CrossTracker\Query\Advanced\AllowedMetadata;
-use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\IProvideParametrizedSelectAndFromSQLFragments;
+use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\IProvideParametrizedSelectAndFromAndWhereSQLFragments;
 use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\Metadata\Semantic\AssignedTo\AssignedToSelectFromBuilder;
 use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\Metadata\Semantic\Description\DescriptionSelectFromBuilder;
 use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\Metadata\Semantic\Status\StatusSelectFromBuilder;
@@ -32,9 +32,10 @@ use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\Metadata\Semantic\Title\Tit
 use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\Metadata\Special\LinkType\BuildLinkTypeSelectFrom;
 use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\Metadata\Special\PrettyTitle\PrettyTitleSelectFromBuilder;
 use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\Metadata\Special\ProjectName\ProjectNameSelectFromBuilder;
-use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\ParametrizedSelectFrom;
+use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\ParametrizedSelectFromAndWhere;
 use Tuleap\Option\Option;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
+use function Psl\Type\string;
 
 final readonly class MetadataSelectFromBuilder
 {
@@ -52,7 +53,7 @@ final readonly class MetadataSelectFromBuilder
     /**
      * @param Option<int> $target_artifact_id_for_reverse_links
      */
-    public function getSelectFrom(Metadata $metadata, Option $target_artifact_id_for_reverse_links): IProvideParametrizedSelectAndFromSQLFragments
+    public function getSelectFrom(Metadata $metadata, Option $target_artifact_id_for_reverse_links, array $artifact_ids): IProvideParametrizedSelectAndFromAndWhereSQLFragments
     {
         return match ($metadata->getName()) {
             // Semantics
@@ -62,17 +63,29 @@ final readonly class MetadataSelectFromBuilder
             AllowedMetadata::ASSIGNED_TO      => $this->assigned_to_builder->getSelectFrom(),
 
             // Always there fields
-            AllowedMetadata::SUBMITTED_ON     => new ParametrizedSelectFrom("artifact.submitted_on AS '@submitted_on'", '', []),
-            AllowedMetadata::LAST_UPDATE_DATE => new ParametrizedSelectFrom("changeset.submitted_on AS '@last_update_date'", '', []),
-            AllowedMetadata::SUBMITTED_BY     => new ParametrizedSelectFrom("artifact.submitted_by AS '@submitted_by'", '', []),
-            AllowedMetadata::LAST_UPDATE_BY   => new ParametrizedSelectFrom("changeset.submitted_by AS '@last_update_by'", '', []),
-            AllowedMetadata::ID               => new ParametrizedSelectFrom("artifact.id AS '@id'", '', []),
+            AllowedMetadata::SUBMITTED_ON     => new ParametrizedSelectFromAndWhere("artifact.submitted_on AS '@submitted_on'", '', [],
+                Option::nothing(string()),
+                []),
+            AllowedMetadata::LAST_UPDATE_DATE => new ParametrizedSelectFromAndWhere("changeset.submitted_on AS '@last_update_date'", '', [],
+                Option::nothing(string()),
+                []),
+            AllowedMetadata::SUBMITTED_BY     => new ParametrizedSelectFromAndWhere("artifact.submitted_by AS '@submitted_by'", '', [],
+                Option::nothing(string()),
+                []),
+            AllowedMetadata::LAST_UPDATE_BY   => new ParametrizedSelectFromAndWhere("changeset.submitted_by AS '@last_update_by'", '', [],
+                Option::nothing(string()),
+                []),
+            AllowedMetadata::ID               => new ParametrizedSelectFromAndWhere("artifact.id AS '@id'", '', [],
+                Option::nothing(string()),
+                []),
 
             // Custom fields
             AllowedMetadata::PROJECT_NAME     => $this->project_name_builder->getSelectFrom(),
-            AllowedMetadata::TRACKER_NAME     => new ParametrizedSelectFrom("tracker.name AS '@tracker.name', tracker.color AS '@tracker.color'", '', []),
+            AllowedMetadata::TRACKER_NAME     => new ParametrizedSelectFromAndWhere("tracker.name AS '@tracker.name', tracker.color AS '@tracker.color'", '', [],
+                Option::nothing(string()),
+                []),
             AllowedMetadata::PRETTY_TITLE     => $this->pretty_title_builder->getSelectFrom(),
-            AllowedMetadata::LINK_TYPE        => $this->link_type_builder->getSelectFrom($target_artifact_id_for_reverse_links),
+            AllowedMetadata::LINK_TYPE        => $this->link_type_builder->getSelectFrom($target_artifact_id_for_reverse_links, $artifact_ids),
             default                           => throw new LogicException("Unknown metadata type: {$metadata->getName()}"),
         };
     }

@@ -22,18 +22,26 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Query\Advanced\SelectBuilder\Metadata\Special\ProjectName;
 
-use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\IProvideParametrizedSelectAndFromSQLFragments;
-use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\ParametrizedSelectFrom;
+use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\IProvideParametrizedSelectAndFromAndWhereSQLFragments;
+use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\ParametrizedSelectFromAndWhere;
+use Tuleap\Option\Option;
+use function Psl\Type\string;
 
 final class ProjectNameSelectFromBuilder
 {
-    public function getSelectFrom(): IProvideParametrizedSelectAndFromSQLFragments
+    public function getSelectFrom(): IProvideParametrizedSelectAndFromAndWhereSQLFragments
     {
         $select = "project.group_name AS '@project.name', project.icon_codepoint AS '@project.icon'";
         $from   = <<<EOSQL
         LEFT JOIN `groups` AS project ON (project.group_id = tracker.group_id)
         EOSQL;
 
-        return new ParametrizedSelectFrom($select, $from, []);
+        return new ParametrizedSelectFromAndWhere(
+            $select,
+            $from,
+            [],
+            Option::nothing(string()),
+            []
+        );
     }
 }

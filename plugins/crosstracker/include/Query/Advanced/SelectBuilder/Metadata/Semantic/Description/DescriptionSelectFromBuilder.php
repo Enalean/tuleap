@@ -22,12 +22,14 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Query\Advanced\SelectBuilder\Metadata\Semantic\Description;
 
-use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\IProvideParametrizedSelectAndFromSQLFragments;
-use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\ParametrizedSelectFrom;
+use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\IProvideParametrizedSelectAndFromAndWhereSQLFragments;
+use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\ParametrizedSelectFromAndWhere;
+use Tuleap\Option\Option;
+use function Psl\Type\string;
 
 final class DescriptionSelectFromBuilder
 {
-    public function getSelectFrom(): IProvideParametrizedSelectAndFromSQLFragments
+    public function getSelectFrom(): IProvideParametrizedSelectAndFromAndWhereSQLFragments
     {
         $select = "description.value AS '@description', description.body_format AS '@description_format'";
         $from   = <<<EOSQL
@@ -38,6 +40,12 @@ final class DescriptionSelectFromBuilder
         LEFT JOIN tracker_changeset_value_text AS description ON (description.changeset_value_id = description_tcv.id)
         EOSQL;
 
-        return new ParametrizedSelectFrom($select, $from, []);
+        return new ParametrizedSelectFromAndWhere(
+            $select,
+            $from,
+            [],
+            Option::nothing(string()),
+            []
+        );
     }
 }

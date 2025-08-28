@@ -31,7 +31,7 @@ use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\Field\StaticList\StaticList
 use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\Field\Text\TextSelectFromBuilder;
 use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\Field\UGroupList\UGroupListSelectFromBuilder;
 use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\Field\UserList\UserListSelectFromBuilder;
-use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\IProvideParametrizedSelectAndFromSQLFragments;
+use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\IProvideParametrizedSelectAndFromAndWhereSQLFragments;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Permission\FieldPermissionType;
@@ -72,7 +72,7 @@ final class FieldSelectFromBuilderTest extends TestCase
 
     private function getSelectFrom(
         RetrieveUsedFieldsStub $fields_retriever,
-    ): IProvideParametrizedSelectAndFromSQLFragments {
+    ): IProvideParametrizedSelectAndFromAndWhereSQLFragments {
         $tuleap_db = $this->createStub(EasyDB::class);
         $tuleap_db->method('escapeIdentifier');
         $builder = new FieldSelectFromBuilder(

@@ -37,7 +37,8 @@ use UserManager;
 
 final class CrossTrackerDataBuilder extends REST_TestDataBuilder
 {
-    public const string CROSS_PROJECT_SHORTNAME = 'cross-tracker-link';
+    public const string REVERSE_CROSS_PROJECT_SHORTNAME = 'reverse-link';
+    public const string FORWARD_CROSS_PROJECT_SHORTNAME = 'forward-link';
 
     public function setUp(): void
     {

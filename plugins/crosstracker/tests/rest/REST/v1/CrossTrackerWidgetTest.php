@@ -43,7 +43,7 @@ final class CrossTrackerWidgetTest extends TestBase
 
     public function testGetId(): void
     {
-        $response = $this->getResponse($this->request_factory->createRequest('GET', 'crosstracker_widget/2'));
+        $response = $this->getResponse($this->request_factory->createRequest('GET', 'crosstracker_widget/3'));
         self::assertSame(200, $response->getStatusCode());
         $this->assertGetIdWidget($response);
     }
@@ -51,7 +51,7 @@ final class CrossTrackerWidgetTest extends TestBase
     public function testGetIdForReadOnlyUser(): void
     {
         $response = $this->getResponse(
-            $this->request_factory->createRequest('GET', 'crosstracker_widget/2'),
+            $this->request_factory->createRequest('GET', 'crosstracker_widget/3'),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
@@ -82,7 +82,7 @@ final class CrossTrackerWidgetTest extends TestBase
 
     public function testYouCantAccessPersonalWidgetOfAnOtherUser(): void
     {
-        $response = $this->getResponseForNonProjectMember($this->request_factory->createRequest('GET', 'crosstracker_widget/3'));
+        $response = $this->getResponseForNonProjectMember($this->request_factory->createRequest('GET', 'crosstracker_widget/4'));
 
         self::assertSame(404, $response->getStatusCode());
     }

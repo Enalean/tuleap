@@ -22,14 +22,15 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Query\Advanced\SelectBuilder\Metadata\Special\LinkType;
 
-use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\IProvideParametrizedSelectAndFromSQLFragments;
-use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\ParametrizedSelectFrom;
+use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\IProvideParametrizedSelectAndFromAndWhereSQLFragments;
+use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\ParametrizedSelectFromAndWhere;
 use Tuleap\Option\Option;
+use function Psl\Type\string;
 
 final readonly class ReverseLinkTypeSelectFromBuilder implements BuildLinkTypeSelectFrom
 {
     #[\Override]
-    public function getSelectFrom(Option $target_artifact_id_for_reverse_links): IProvideParametrizedSelectAndFromSQLFragments
+    public function getSelectFrom(Option $artifact_id, array $artifact_ids): IProvideParametrizedSelectAndFromAndWhereSQLFragments
     {
         $select =  <<<EOSQL
          IFNULL(reverse_artlink.nature, '') AS '@link_type',
@@ -41,12 +42,24 @@ final readonly class ReverseLinkTypeSelectFromBuilder implements BuildLinkTypeSe
         LEFT JOIN tracker_changeset_value_artifactlink AS reverse_artlink    ON (reverse_artlink.changeset_value_id = reverse_cv.id AND reverse_artlink.artifact_id = ?)
         EOSQL;
 
-        return $target_artifact_id_for_reverse_links->match(
-            function (int $id) use ($select, $from): IProvideParametrizedSelectAndFromSQLFragments {
-                return new ParametrizedSelectFrom($select, $from, [$id]);
+        return $artifact_id->match(
+            function (int $id) use ($select, $from): IProvideParametrizedSelectAndFromAndWhereSQLFragments {
+                return new ParametrizedSelectFromAndWhere(
+                    $select,
+                    $from,
+                    [$id],
+                    Option::nothing(string()),
+                    []
+                );
             },
-            function (): IProvideParametrizedSelectAndFromSQLFragments {
-                return new ParametrizedSelectFrom('', '', []);
+            function (): IProvideParametrizedSelectAndFromAndWhereSQLFragments {
+                return new ParametrizedSelectFromAndWhere(
+                    '',
+                    '',
+                    [],
+                    Option::nothing(string()),
+                    []
+                );
             }
         );
     }
