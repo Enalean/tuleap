@@ -21,6 +21,7 @@ use Tuleap\JSONHeader;
 use Tuleap\Tracker\FormElement\Field\ArtifactId\ArtifactIdField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldAdmin;
+use Tuleap\Tracker\FormElement\Field\Burndown\BurndownField;
 use Tuleap\Tracker\FormElement\Field\Computed\ComputedField;
 use Tuleap\Tracker\FormElement\Field\CrossReferences\CrossReferencesField;
 use Tuleap\Tracker\FormElement\Field\Date\DateField;
@@ -171,7 +172,7 @@ class Tracker_FormElement_View_Admin_Visitor implements Tracker_FormElement_Visi
         $this->adminElement = new Tracker_FormElement_View_Admin_Field_CrossReferences($element, $this->allUsedElements);
     }
 
-    public function visitBurndown(Tracker_FormElement_Field_Burndown $element)
+    public function visitBurndown(BurndownField $element)
     {
         $this->element      = $element;
         $this->adminElement = new Tracker_FormElement_View_Admin_Field_Burndown($element, $this->allUsedElements);

@@ -20,6 +20,7 @@
 
 use Tuleap\Tracker\FormElement\Field\ArtifactId\ArtifactIdField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
+use Tuleap\Tracker\FormElement\Field\Burndown\BurndownField;
 use Tuleap\Tracker\FormElement\Field\Computed\ComputedField;
 use Tuleap\Tracker\FormElement\Field\CrossReferences\CrossReferencesField;
 use Tuleap\Tracker\FormElement\Field\Date\DateField;
@@ -127,7 +128,7 @@ class Tracker_XML_Updater_FieldChangeXMLUpdaterVisitor implements Tracker_FormEl
         return $this->unknown_updater;
     }
 
-    public function visitBurndown(Tracker_FormElement_Field_Burndown $field)
+    public function visitBurndown(BurndownField $field)
     {
         return $this->unknown_updater;
     }

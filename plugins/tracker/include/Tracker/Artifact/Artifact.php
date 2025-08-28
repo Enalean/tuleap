@@ -66,7 +66,6 @@ use Tracker_Dispatchable_Interface;
 use Tracker_Exception;
 use Tracker_FormElement;
 use Tracker_FormElement_Field;
-use Tracker_FormElement_Field_Burndown;
 use Tracker_FormElementFactory;
 use Tracker_HierarchyFactory;
 use Tracker_IDisplayTrackerLayout;
@@ -148,6 +147,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\Burndown\BurndownCacheGenerationChecker;
 use Tuleap\Tracker\FormElement\Field\Burndown\BurndownCacheGenerator;
 use Tuleap\Tracker\FormElement\Field\Burndown\BurndownRemainingEffortAdderForREST;
+use Tuleap\Tracker\FormElement\Field\Burndown\BurndownField;
 use Tuleap\Tracker\FormElement\Field\Computed\ComputedFieldDao;
 use Tuleap\Tracker\FormElement\Field\Files\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\Files\FilesField;
@@ -2109,7 +2109,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
     /**
      * Return the first BurndownField (if any)
      *
-     * @return Tracker_FormElement_Field_Burndown
+     * @return BurndownField
      */
     public function getABurndownField(PFUser $user)
     {
@@ -2313,7 +2313,7 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
     {
         $event_manager              = SystemEventManager::instance();
         $logger                     = \BackendLogger::getDefaultLogger(
-            Tracker_FormElement_Field_Burndown::LOG_IDENTIFIER
+            BurndownField::LOG_IDENTIFIER
         );
         $computed_dao               = new ComputedFieldDao();
         $semantic_timeframe_builder = SemanticTimeframeBuilder::build();

@@ -934,7 +934,6 @@
             <file name="plugins/tracker/tests/unit/FormElement/Tracker_FormElement_Container_ColumnTest.php"/>
             <file name="plugins/tracker/tests/unit/FormElement/Tracker_FormElement_Container_Column_GroupTest.php"/>
             <file name="plugins/tracker/tests/unit/FormElement/Tracker_FormElement_Container_FieldsetTest.php"/>
-            <file name="plugins/tracker/tests/unit/FormElement/Tracker_FormElement_Field_BurndownTest.php"/>
             <file name="plugins/tracker/tests/unit/FormElement/Tracker_FormElement_Field_CriteriaTest.php"/>
             <file name="plugins/tracker/tests/unit/FormElement/Tracker_FormElement_Field_ListTypes_GetDefaultValueTest.php"/>
             <file name="plugins/tracker/tests/unit/FormElement/Tracker_FormElement_Field_List_BindFactoryTest.php"/>

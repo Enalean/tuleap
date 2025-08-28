@@ -23,11 +23,11 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Action;
 
 use Psr\Log\NullLogger;
-use Tracker_FormElement_Field_Burndown;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\EventDispatcherStub;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\Burndown\BurndownField;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\ExternalFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\IntegerFieldBuilder;
@@ -213,7 +213,7 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
 
     public function testFieldWillBeMigratedForReadOnlyField(): void
     {
-        $source_burndown = $this->createStub(\Tracker_FormElement_Field_Burndown::class);
+        $source_burndown = $this->createStub(\Tuleap\Tracker\FormElement\Field\Burndown\BurndownField::class);
         $source_burndown->method('getLabel')->willReturn('string_field');
         $source_burndown->method('getName')->willReturn('string_field');
         $source_burndown->method('userCanUpdate')->willReturn(false);
@@ -221,7 +221,7 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
         $source_burndown->method('getTrackerId')->willReturn(self::SOURCE_TRACKER_ID);
         $this->all_fields = [
             $source_burndown,
-            new Tracker_FormElement_Field_Burndown(
+            new BurndownField(
                 102,
                 self::DESTINATION_TRACKER_ID,
                 null,

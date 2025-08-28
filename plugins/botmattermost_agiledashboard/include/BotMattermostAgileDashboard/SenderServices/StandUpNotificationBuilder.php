@@ -27,12 +27,12 @@ use Planning_Milestone;
 use Planning_MilestoneFactory;
 use PlanningFactory;
 use Project;
-use Tracker_FormElement_Field_Burndown;
 use Tuleap\BotMattermost\SenderServices\MarkdownEngine\MarkdownMustacheRenderer;
 use Tuleap\BotMattermostAgileDashboard\Presenter\StandUpSummaryPresenter;
 use Tuleap\ServerHostname;
 use Tuleap\TimezoneRetriever;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\Burndown\BurndownField;
 
 class StandUpNotificationBuilder
 {
@@ -136,7 +136,7 @@ class StandUpNotificationBuilder
             $url_query = http_build_query(
                 [
                     'formElement' => $artifact->getABurndownField($user)->getId(),
-                    'func'        => Tracker_FormElement_Field_Burndown::FUNC_SHOW_BURNDOWN,
+                    'func'        => BurndownField::FUNC_SHOW_BURNDOWN,
                     'src_aid'     => $artifact->getId(),
                 ]
             );
