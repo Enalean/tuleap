@@ -25,7 +25,7 @@ use Tuleap\Backend\FileExtensionFilterIterator;
  * Base class to work on Codendi backend
  * Change file perms, write Codendi blocks, ...
  */
-class Backend
+class Backend // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     public const LOG_INFO    = \Psr\Log\LogLevel::INFO;
     public const LOG_WARNING = \Psr\Log\LogLevel::WARNING;
@@ -79,8 +79,6 @@ class Backend
     public static function instance($type = self::BACKEND, $base = null, $setup = null)
     {
         if (! isset(self::$backend_instances[$type])) {
-            $backend = null;
-
             //determine the base class of the plugin if it is not define at the call
             if (! $base) {
                 $base = 'Backend';
@@ -89,16 +87,6 @@ class Backend
                     $base .= $type;
                 }
             }
-            $wanted_base = $base;
-
-            //Ask to the whole world if someone wants to provide its own backend
-            //for example plugin ldap will override BackendSVN
-            $params = [
-                'base'  => &$base,
-                'setup' => &$setup,
-            ];
-            $event  = Event::BACKEND_FACTORY_GET_PREFIX . strtolower($type);
-            EventManager::instance()->processEvent($event, $params);
 
             //make sure that there is no problem between the keyboard and the chair
             if (! class_exists($base)) {
@@ -106,11 +94,6 @@ class Backend
             }
             //Create a new instance of the wanted backend
             $backend = new $base();
-
-            //check that all is ok
-            if (! $backend instanceof $wanted_base) {
-                throw new Exception('Backend should inherit from ' . $wanted_base . '. Received: "' . $backend::class . '"');
-            }
 
             assert($backend instanceof Backend);
 
