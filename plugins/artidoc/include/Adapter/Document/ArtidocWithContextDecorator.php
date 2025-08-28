@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Adapter\Document;
 
+use Override;
 use Project_NotFoundException;
 use Tuleap\Artidoc\Document\DocumentServiceFromAllowedProjectRetriever;
 use Tuleap\Artidoc\Domain\Document\Artidoc;
@@ -42,6 +43,7 @@ final readonly class ArtidocWithContextDecorator implements DecorateArtidocWithC
     ) {
     }
 
+    #[Override]
     public function decorate(Artidoc $artidoc): Ok|Err
     {
         try {

@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Adapter\Document\Section\Identifier;
 
+use Override;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
 use Tuleap\DB\UUID;
 
@@ -39,11 +40,13 @@ final readonly class UUIDSectionIdentifier implements SectionIdentifier
         return new self($uuid);
     }
 
+    #[Override]
     public function getBytes(): string
     {
         return $this->uuid->getBytes();
     }
 
+    #[Override]
     public function toString(): string
     {
         return $this->uuid->toString();

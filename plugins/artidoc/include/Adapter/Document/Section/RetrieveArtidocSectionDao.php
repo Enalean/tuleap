@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Adapter\Document\Section;
 
+use Override;
 use ParagonIE\EasyDB\EasyDB;
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\Artidoc\Domain\Document\Section\Freetext\Identifier\FreetextIdentifierFactory;
@@ -47,6 +48,7 @@ final class RetrieveArtidocSectionDao extends DataAccessObject implements Search
         parent::__construct();
     }
 
+    #[Override]
     public function searchSectionById(SectionIdentifier $section_id): Ok|Err
     {
         $row = $this->getDB()->row(
@@ -99,6 +101,7 @@ final class RetrieveArtidocSectionDao extends DataAccessObject implements Search
         throw new \LogicException('Section is neither an artifact nor a freetext, this is not expected');
     }
 
+    #[Override]
     public function searchPaginatedRetrievedSections(ArtidocWithContext $artidoc, int $limit, int $offset): PaginatedRetrievedSections
     {
         return $this->getDB()->tryFlatTransaction(function (EasyDB $db) use ($artidoc, $limit, $offset) {
@@ -162,6 +165,7 @@ final class RetrieveArtidocSectionDao extends DataAccessObject implements Search
     /**
      * @return list<RetrievedSection>
      */
+    #[Override]
     public function searchAllSectionsOfDocument(ArtidocWithContext $artidoc): array
     {
         return $this->getDB()->tryFlatTransaction(function (EasyDB $db) use ($artidoc) {

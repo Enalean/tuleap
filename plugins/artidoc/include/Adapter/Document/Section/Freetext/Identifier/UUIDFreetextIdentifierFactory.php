@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Adapter\Document\Section\Freetext\Identifier;
 
+use Override;
 use Tuleap\Artidoc\Domain\Document\Section\Freetext\Identifier\FreetextIdentifier;
 use Tuleap\Artidoc\Domain\Document\Section\Freetext\Identifier\FreetextIdentifierFactory;
 use Tuleap\DB\DatabaseUUIDFactory;
@@ -32,6 +33,7 @@ final readonly class UUIDFreetextIdentifierFactory implements FreetextIdentifier
     {
     }
 
+    #[Override]
     public function buildIdentifier(): FreetextIdentifier
     {
         return UUIDFreetextIdentifier::fromUUID(
@@ -39,6 +41,7 @@ final readonly class UUIDFreetextIdentifierFactory implements FreetextIdentifier
         );
     }
 
+    #[Override]
     public function buildFromBytesData(string $bytes): FreetextIdentifier
     {
         return UUIDFreetextIdentifier::fromUUID($this->uuid_factory->buildUUIDFromBytesData($bytes));

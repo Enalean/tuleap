@@ -22,11 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Adapter\Document;
 
+use Override;
 use Tuleap\Artidoc\Document\SearchArtidocDocument;
 use Tuleap\DB\DataAccessObject;
 
 final class SearchArtidocDocumentDao extends DataAccessObject implements SearchArtidocDocument
 {
+    #[Override]
     public function searchByItemId(int $item_id): ?array
     {
         return $this->getDB()->row(

@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Document\Tracker;
 
+use Override;
 use Tuleap\Artidoc\Domain\Document\Artidoc;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Ok;
@@ -39,6 +40,7 @@ final readonly class SuitableTrackerForDocumentChecker implements CheckTrackerIs
     ) {
     }
 
+    #[Override]
     public function checkTrackerIsSuitableForDocument(\Tuleap\Tracker\Tracker $tracker, Artidoc $document, \PFUser $user): Ok|Err
     {
         if ($tracker->isDeleted()) {

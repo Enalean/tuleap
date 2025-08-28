@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Adapter\Document\Section\Artifact;
 
+use Override;
 use Tuleap\Artidoc\Document\RetrieveConfiguredTracker;
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\Artidoc\Domain\Document\Section\Artifact\ArtifactContent;
@@ -49,6 +50,7 @@ final readonly class ArtifactContentCreator implements CreateArtifactContent
     ) {
     }
 
+    #[Override]
     public function createArtifact(ArtidocWithContext $artidoc, ArtifactContent $content): Ok|Err
     {
         $tracker = $this->tracker_retriever->getTracker($artidoc->document);

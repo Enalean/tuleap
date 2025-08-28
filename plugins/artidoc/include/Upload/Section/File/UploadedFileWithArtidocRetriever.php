@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Upload\Section\File;
 
+use Override;
 use Tuleap\Artidoc\BuildArtidocWithContextRetriever;
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\NeverThrow\Err;
@@ -34,6 +35,7 @@ final class UploadedFileWithArtidocRetriever implements RetrieveUploadedFileWith
     ) {
     }
 
+    #[Override]
     public function getUploadedFileWithArtidoc(\PFUser $user, UploadFileInformation $file): Ok|Err
     {
         return $this->retrieve_artidoc_builder

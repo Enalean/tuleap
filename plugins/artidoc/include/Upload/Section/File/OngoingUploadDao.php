@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Artidoc\Upload\Section\File;
 
 use DateTimeImmutable;
+use Override;
 use Tuleap\DB\DataAccessObject;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Fault;
@@ -38,6 +39,7 @@ class OngoingUploadDao extends DataAccessObject implements SaveFileUpload, Delet
         parent::__construct();
     }
 
+    #[Override]
     public function saveFileOnGoingUpload(InsertFileToUpload $file_to_upload): FileIdentifier
     {
         $id = $this->identifier_factory->buildIdentifier();
@@ -86,6 +88,7 @@ class OngoingUploadDao extends DataAccessObject implements SaveFileUpload, Delet
         );
     }
 
+    #[Override]
     public function deleteById(FileIdentifier $id): void
     {
         $this->getDB()->delete('plugin_artidoc_section_upload', [
@@ -93,6 +96,7 @@ class OngoingUploadDao extends DataAccessObject implements SaveFileUpload, Delet
         ]);
     }
 
+    #[Override]
     public function searchExpiredUploads(\DateTimeImmutable $current_time): array
     {
         /**
@@ -114,6 +118,7 @@ class OngoingUploadDao extends DataAccessObject implements SaveFileUpload, Delet
         );
     }
 
+    #[Override]
     public function searchUpload(FileIdentifier $id): Ok|Err
     {
         $row = $this->getDB()->row(
@@ -124,6 +129,7 @@ class OngoingUploadDao extends DataAccessObject implements SaveFileUpload, Delet
         return $this->toUploadFileInformation($row);
     }
 
+    #[Override]
     public function searchNotExpiredOngoingUpload(FileIdentifier $id, int $user_id, \DateTimeImmutable $current_time): Ok|Err
     {
         $row = $this->getDB()->row(
@@ -156,6 +162,7 @@ class OngoingUploadDao extends DataAccessObject implements SaveFileUpload, Delet
         );
     }
 
+    #[Override]
     public function deleteExpiredFiles(\DateTimeImmutable $current_time): void
     {
         $this->getDB()->run(
@@ -164,6 +171,7 @@ class OngoingUploadDao extends DataAccessObject implements SaveFileUpload, Delet
         );
     }
 
+    #[Override]
     public function removeExpirationDate(FileIdentifier $id): void
     {
         $this->getDB()->run(

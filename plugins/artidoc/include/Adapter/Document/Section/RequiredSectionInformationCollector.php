@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Adapter\Document\Section;
 
+use Override;
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\Artidoc\Domain\Document\Section\CollectRequiredSectionInformation;
 use Tuleap\Artidoc\REST\v1\ArtifactSection\BuildRequiredArtifactInformation;
@@ -44,6 +45,7 @@ final class RequiredSectionInformationCollector implements CollectRequiredSectio
     ) {
     }
 
+    #[Override]
     public function collectRequiredSectionInformation(ArtidocWithContext $artidoc, int $artifact_id): Ok|Err
     {
         return $this->required_artifact_information_builder

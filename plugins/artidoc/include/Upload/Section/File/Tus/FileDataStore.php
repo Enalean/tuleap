@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Upload\Section\File\Tus;
 
+use Override;
 use Tuleap\Tus\NextGen\TusDataStore;
 use Tuleap\Tus\NextGen\TusFileInformationProvider;
 use Tuleap\Tus\NextGen\TusFinisherDataStore;
@@ -40,26 +41,31 @@ final readonly class FileDataStore implements TusDataStore
     ) {
     }
 
+    #[Override]
     public function getFileInformationProvider(): TusFileInformationProvider
     {
         return $this->file_being_uploaded_information_provider;
     }
 
+    #[Override]
     public function getWriter(): TusWriter
     {
         return $this->file_being_uploaded_writer;
     }
 
+    #[Override]
     public function getFinisher(): ?TusFinisherDataStore
     {
         return $this->file_upload_finisher;
     }
 
+    #[Override]
     public function getTerminater(): ?TusTerminaterDataStore
     {
         return $this->file_upload_canceler;
     }
 
+    #[Override]
     public function getLocker(): ?TusLocker
     {
         return $this->file_being_uploaded_locker;

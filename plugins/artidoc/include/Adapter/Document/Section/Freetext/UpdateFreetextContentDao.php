@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Adapter\Document\Section\Freetext;
 
+use Override;
 use Tuleap\Artidoc\Adapter\Document\Section\UpdateLevel;
 use Tuleap\Artidoc\Domain\Document\Section\Freetext\FreetextContent;
 use Tuleap\Artidoc\Domain\Document\Section\Freetext\Identifier\FreetextIdentifier;
@@ -36,6 +37,7 @@ final class UpdateFreetextContentDao extends DataAccessObject implements UpdateF
         parent::__construct();
     }
 
+    #[Override]
     public function updateFreetextContent(
         SectionIdentifier $section_identifier,
         FreetextIdentifier $id,

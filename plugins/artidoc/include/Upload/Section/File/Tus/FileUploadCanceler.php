@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Upload\Section\File\Tus;
 
+use Override;
 use Tuleap\Artidoc\Upload\Section\File\ArtidocUploadPathAllocator;
 use Tuleap\Artidoc\Upload\Section\File\DeleteFileUpload;
 use Tuleap\Artidoc\Upload\Section\File\SearchUpload;
@@ -37,6 +38,7 @@ final readonly class FileUploadCanceler implements TusTerminaterDataStore
     {
     }
 
+    #[Override]
     public function terminateUpload(TusFileInformation $file_information): void
     {
         $this->search

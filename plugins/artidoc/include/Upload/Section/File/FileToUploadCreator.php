@@ -23,6 +23,7 @@ namespace Tuleap\Artidoc\Upload\Section\File;
 
 use DateInterval;
 use DateTimeImmutable;
+use Override;
 use PFUser;
 use Tuleap\Artidoc\Domain\Document\Artidoc;
 use Tuleap\DB\DBTransactionExecutor;
@@ -44,6 +45,7 @@ final readonly class FileToUploadCreator implements CreateFileToUpload
     ) {
     }
 
+    #[Override]
     public function create(
         Artidoc $artidoc,
         PFUser $user,

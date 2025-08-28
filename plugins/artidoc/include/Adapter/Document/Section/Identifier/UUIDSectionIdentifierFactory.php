@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Adapter\Document\Section\Identifier;
 
+use Override;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\InvalidSectionIdentifierStringException;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifierFactory;
@@ -33,6 +34,7 @@ final readonly class UUIDSectionIdentifierFactory implements SectionIdentifierFa
     {
     }
 
+    #[Override]
     public function buildIdentifier(): SectionIdentifier
     {
         return UUIDSectionIdentifier::fromUUID(
@@ -40,6 +42,7 @@ final readonly class UUIDSectionIdentifierFactory implements SectionIdentifierFa
         );
     }
 
+    #[Override]
     public function buildFromBytesData(string $bytes): SectionIdentifier
     {
         return UUIDSectionIdentifier::fromUUID($this->uuid_factory->buildUUIDFromBytesData($bytes));
@@ -48,6 +51,7 @@ final readonly class UUIDSectionIdentifierFactory implements SectionIdentifierFa
     /**
      * @throws InvalidSectionIdentifierStringException
      */
+    #[Override]
     public function buildFromHexadecimalString(string $string): SectionIdentifier
     {
         return $this->uuid_factory->buildUUIDFromHexadecimalString($string)

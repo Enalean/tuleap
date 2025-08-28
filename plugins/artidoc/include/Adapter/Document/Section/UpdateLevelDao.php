@@ -22,12 +22,14 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Adapter\Document\Section;
 
+use Override;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
 use Tuleap\Artidoc\Domain\Document\Section\Level;
 use Tuleap\DB\DataAccessObject;
 
 final class UpdateLevelDao extends DataAccessObject implements UpdateLevel
 {
+    #[Override]
     public function updateLevel(
         SectionIdentifier $section_identifier,
         Level $level,

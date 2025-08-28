@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Upload\Section\File\Tus;
 
+use Override;
 use Psr\Http\Message\ServerRequestInterface;
 use Tuleap\Artidoc\Upload\Section\File\RemoveExpirationDate;
 use Tuleap\Tus\NextGen\TusFileInformation;
@@ -34,6 +35,7 @@ final readonly class FileUploadFinisher implements TusFinisherDataStore
     ) {
     }
 
+    #[Override]
     public function finishUpload(ServerRequestInterface $request, TusFileInformation $file_information): void
     {
         $this->expiry->removeExpirationDate($file_information->getID());
