@@ -109,6 +109,7 @@ use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
 use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValueSaver;
 use Tuleap\Tracker\Artifact\Dao\PriorityDao;
 use Tuleap\Tracker\Artifact\Exception\FieldValidationException;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\SystemTypePresenterBuilder;
 use Tuleap\Tracker\FormElement\Field\Files\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
@@ -1677,7 +1678,8 @@ final class KanbanResource extends AuthenticatedResource
                         $tracker_artifact_factory,
                         new \Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory(
                             new \Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao(),
-                            $usage_dao
+                            $usage_dao,
+                            new SystemTypePresenterBuilder($event_dispatcher),
                         ),
                         $usage_dao,
                         $event_dispatcher,

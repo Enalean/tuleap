@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\SystemTypePresenterBuilder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 
 /**
@@ -57,16 +58,18 @@ class Tracker_Artifact_Changeset_InitialChangesetFieldsValidator extends Tracker
     {
         $form_element_factory = \Tracker_FormElementFactory::instance();
         $artifact_factory     = Tracker_ArtifactFactory::instance();
+        $event_manager        = EventManager::instance();
 
         $artifact_link_usage_dao = new \Tuleap\Tracker\Admin\ArtifactLinksUsageDao();
         $artifact_link_validator = new \Tuleap\Tracker\FormElement\ArtifactLinkValidator(
             $artifact_factory,
             new TypePresenterFactory(
                 new \Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao(),
-                $artifact_link_usage_dao
+                $artifact_link_usage_dao,
+                new SystemTypePresenterBuilder($event_manager)
             ),
             $artifact_link_usage_dao,
-            EventManager::instance(),
+            $event_manager,
         );
 
         return new self($form_element_factory, $artifact_link_validator);

@@ -29,6 +29,7 @@ use Tracker_FormElement_Field;
 use Tracker_FormElementFactory;
 use TrackerManager;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\SystemTypePresenterBuilder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\Semantic\Progress\MethodBuilder;
@@ -167,7 +168,8 @@ class SemanticTooltip extends TrackerSemantic implements TooltipFields
                 $progress_dao,
                 new TypePresenterFactory(
                     new TypeDao(),
-                    new ArtifactLinksUsageDao()
+                    new ArtifactLinksUsageDao(),
+                    new SystemTypePresenterBuilder(\EventManager::instance())
                 )
             )
         );

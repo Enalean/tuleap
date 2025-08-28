@@ -53,6 +53,7 @@ use Tuleap\Tracker\Artifact\ChangesetValue\ArtifactLink\ChangesetValueArtifactLi
 use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValueSaver;
 use Tuleap\Tracker\FormElement\ArtifactLinkValidator;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\SystemTypePresenterBuilder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
@@ -116,7 +117,7 @@ class CardPatcher
                     $form_element_factory,
                     new ArtifactLinkValidator(
                         $artifact_factory,
-                        new TypePresenterFactory(new TypeDao(), $usage_dao),
+                        new TypePresenterFactory(new TypeDao(), $usage_dao, new SystemTypePresenterBuilder($event_dispatcher)),
                         $usage_dao,
                         $event_dispatcher,
                     ),

@@ -25,6 +25,7 @@ use Tuleap\DocumentGeneration\Report\ReportCriteriaJsonBuilder;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\SystemTypePresenterBuilder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\Report\Renderer\Table\GetExportOptionsMenuItemsEvent;
@@ -105,7 +106,7 @@ class document_generationPlugin extends Plugin
                             'report_url' => \Tuleap\ServerHostname::HTTPSUrl() . '/plugins/tracker/?report=' . urlencode((string) $report_id),
                             'report_criteria' => $report_criteria_json,
                             'base_url' => \Tuleap\ServerHostname::HTTPSUrl(),
-                            'artifact_links_types' => (new TypePresenterFactory(new TypeDao(), new ArtifactLinksUsageDao()))->getAllUsableTypesInProject($tracker->getProject()),
+                            'artifact_links_types' => (new TypePresenterFactory(new TypeDao(), new ArtifactLinksUsageDao(), new SystemTypePresenterBuilder(EventManager::instance())))->getAllUsableTypesInProject($tracker->getProject()),
                         ],
                         JSON_THROW_ON_ERROR
                     ),

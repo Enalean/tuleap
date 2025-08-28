@@ -44,19 +44,9 @@ class TypePresenterFactory implements AllTypesRetriever, VisibleTypesRetriever, 
      */
     public const EVENT_GET_TYPE_PRESENTER = 'event_get_type_presenter';
 
-    /**
-     * @var TypeDao
-     */
-    private $dao;
-    /**
-     * @var ArtifactLinksUsageDao
-     */
-    private $artifact_links_usage_dao;
 
-    public function __construct(TypeDao $dao, ArtifactLinksUsageDao $artifact_links_usage_dao)
+    public function __construct(private readonly TypeDao $dao, private readonly ArtifactLinksUsageDao $artifact_links_usage_dao, private readonly RetrieveSystemTypePresenter $retrieve_system_type_presenter)
     {
-        $this->dao                      = $dao;
-        $this->artifact_links_usage_dao = $artifact_links_usage_dao;
     }
 
     /** @return TypePresenter[] */
@@ -70,7 +60,7 @@ class TypePresenterFactory implements AllTypesRetriever, VisibleTypesRetriever, 
     }
 
     /** @return TypePresenter[] */
-    public function getAllTypesEditableInProject(Project $project)
+    public function getAllTypesEditableInProject(Project $project): array
     {
         $types = $this->getDefaultTypes();
         $types = array_merge($types, $this->getPluginsTypesEditableInProject($project));
@@ -106,7 +96,8 @@ class TypePresenterFactory implements AllTypesRetriever, VisibleTypesRetriever, 
         );
     }
 
-    private function getDefaultTypes()
+    /** @return TypePresenter[] */
+    private function getDefaultTypes(): array
     {
         return [new TypeIsChildPresenter()];
     }
@@ -176,17 +167,9 @@ class TypePresenterFactory implements AllTypesRetriever, VisibleTypesRetriever, 
 
     public function getFromShortname(?string $shortname): ?TypePresenter
     {
-        if ($shortname == \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::NO_TYPE) {
-            return new TypePresenter('', '', '', true);
-        }
-
-        if ($shortname == \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::TYPE_IS_CHILD) {
-            return new TypeIsChildPresenter();
-        }
-
-        $type_presenter = $this->getTypePresenterByShortname($shortname);
-        if ($type_presenter) {
-            return $type_presenter;
+        $presenter = $this->retrieve_system_type_presenter->getSystemTypeFromShortname($shortname);
+        if ($presenter) {
+            return $presenter;
         }
 
         $row = $this->dao->getFromShortname($shortname);
@@ -205,24 +188,7 @@ class TypePresenterFactory implements AllTypesRetriever, VisibleTypesRetriever, 
         return $this->getFromShortname($shortname);
     }
 
-    private function getTypePresenterByShortname($shortname)
-    {
-        $presenter = null;
-
-        $params = [
-            'presenter' => &$presenter,
-            'shortname' => $shortname,
-        ];
-
-        EventManager::instance()->processEvent(
-            self::EVENT_GET_TYPE_PRESENTER,
-            $params
-        );
-
-        return $presenter;
-    }
-
-    public function instantiateFromRow($row)
+    public function instantiateFromRow($row): TypePresenter
     {
         return new TypePresenter(
             $row['shortname'],

@@ -81,6 +81,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\XML\JiraXMLNodeBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\IssueType;
 use Tuleap\Tracker\Creation\JiraImporter\JiraClient;
 use Tuleap\Tracker\Creation\JiraImporter\JiraConnectionException;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\SystemTypePresenterBuilder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\XML\IDGenerator;
@@ -208,7 +209,8 @@ class JiraIssuesFromIssueTypeInDedicatedTrackerInXmlExporter
                             new ArtifactLinkTypeConverter(
                                 new TypePresenterFactory(
                                     new TypeDao(),
-                                    new ArtifactLinksUsageDao()
+                                    new ArtifactLinksUsageDao(),
+                                    new SystemTypePresenterBuilder(\EventManager::instance())
                                 ),
                             ),
                         ),

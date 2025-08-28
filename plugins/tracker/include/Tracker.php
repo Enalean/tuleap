@@ -183,6 +183,7 @@ use Tuleap\Tracker\Artifact\XML\Exporter\TrackerStructureXMLExporter;
 use Tuleap\Tracker\FormElement\ArtifactLinkValidator;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\SystemTypePresenterBuilder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeIsChildLinkRetriever;
 use Tuleap\Tracker\FormElement\Field\Date\CSVFormatter;
@@ -3569,15 +3570,17 @@ class Tracker implements Tracker_Dispatchable_Interface
 
     private function getArtifactLinkValidator(): ArtifactLinkValidator
     {
+        $event_manager            = EventManager::instance();
         $artifact_links_usage_dao = new ArtifactLinksUsageDao();
         return new ArtifactLinkValidator(
             \Tracker_ArtifactFactory::instance(),
             new \Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory(
                 new TypeDao(),
-                $artifact_links_usage_dao
+                $artifact_links_usage_dao,
+                new SystemTypePresenterBuilder($event_manager)
             ),
             $artifact_links_usage_dao,
-            EventManager::instance(),
+            $event_manager,
         );
     }
 

@@ -49,6 +49,7 @@ use Tuleap\Tracker\Artifact\Renderer\BuildArtifactFormActionEvent;
 use Tuleap\Tracker\Artifact\PriorityManager;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdaterDataFormater;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\SystemTypePresenterBuilder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\NewDropdown\TrackerNewDropdownLinkPresenterBuilder;
@@ -183,7 +184,7 @@ final class testplanPlugin extends Plugin
                 $tracker_factory,
                 new TestPlanTestDefinitionTrackerRetriever($testmanagement_config, $tracker_factory),
                 UserHelper::instance(),
-                (new TypePresenterFactory(new TypeDao(), new ArtifactLinksUsageDao()))
+                (new TypePresenterFactory(new TypeDao(), new ArtifactLinksUsageDao(), new SystemTypePresenterBuilder($event_manager)))
             ),
             new TestPlanHeaderOptionsProvider(
                 new HeaderOptionsProvider(

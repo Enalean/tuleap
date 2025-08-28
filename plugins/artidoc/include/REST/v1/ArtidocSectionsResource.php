@@ -130,6 +130,7 @@ use Tuleap\Tracker\Artifact\FileUploadDataProvider;
 use Tuleap\Tracker\Artifact\Link\ArtifactReverseLinksUpdater;
 use Tuleap\Tracker\FormElement\ArtifactLinkValidator;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\SystemTypePresenterBuilder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
@@ -563,7 +564,7 @@ final class ArtidocSectionsResource extends AuthenticatedResource
                     $user,
                     $title_field_retriever,
                     CachedSemanticStatusRetriever::instance(),
-                    new TypePresenterFactory(new TypeDao(), new ArtifactLinksUsageDao()),
+                    new TypePresenterFactory(new TypeDao(), new ArtifactLinksUsageDao(), new SystemTypePresenterBuilder(EventManager::instance())),
                 ),
                 new NumericFieldWithValueBuilder(new PriorityDao()),
                 new UserFieldWithValueBuilder(
@@ -634,7 +635,7 @@ final class ArtidocSectionsResource extends AuthenticatedResource
                     $form_element_factory,
                     new ArtifactLinkValidator(
                         $artifact_factory,
-                        new TypePresenterFactory(new TypeDao(), $usage_dao),
+                        new TypePresenterFactory(new TypeDao(), $usage_dao, new SystemTypePresenterBuilder($event_dispatcher)),
                         $usage_dao,
                         $event_dispatcher,
                     ),

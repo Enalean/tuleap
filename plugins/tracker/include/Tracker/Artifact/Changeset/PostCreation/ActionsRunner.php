@@ -51,6 +51,7 @@ use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
 use Tuleap\Tracker\FormElement\Container\Fieldset\HiddenFieldsetChecker;
 use Tuleap\Tracker\FormElement\Container\FieldsExtractor;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\SystemTypePresenterBuilder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\Hierarchy\HierarchyDAO;
@@ -232,7 +233,7 @@ class ActionsRunner
                                 $frozen_fields_detector,
                                 $permissions_functions_wrapper,
                             ),
-                            new TypePresenterFactory(new TypeDao(), new ArtifactLinksUsageDao()),
+                            new TypePresenterFactory(new TypeDao(), new ArtifactLinksUsageDao(), new SystemTypePresenterBuilder($event_manager)),
                         ),
                         new PermissionsRepresentationBuilder($ugroup_manager, $permissions_functions_wrapper),
                         new WorkflowRestBuilder(),

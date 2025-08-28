@@ -21,6 +21,7 @@
 
 namespace Tuleap\Tracker\Artifact\Changeset\ArtifactLink;
 
+use EventManager;
 use PFUser;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue;
@@ -30,6 +31,7 @@ use Tracker_ArtifactLinkInfo;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\SystemTypePresenterBuilder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueArtifactLinksFullRepresentation;
@@ -142,7 +144,7 @@ class ArtifactLinkChangesetValue extends Tracker_Artifact_ChangesetValue
     /** @protected for testing purpose */
     protected function getTypePresenterFactory(): TypePresenterFactory
     {
-        return new TypePresenterFactory(new TypeDao(), new ArtifactLinksUsageDao());
+        return new TypePresenterFactory(new TypeDao(), new ArtifactLinksUsageDao(), new SystemTypePresenterBuilder(EventManager::instance()));
     }
 
     /**

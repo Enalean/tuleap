@@ -30,6 +30,7 @@ use TrackerManager;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\SystemTypePresenterBuilder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\Semantic\Progress\Administration\SemanticProgressAdminPresenterBuilder;
@@ -207,7 +208,8 @@ class SemanticProgress extends \Tuleap\Tracker\Semantic\TrackerSemantic
             new SemanticProgressDao(),
             new TypePresenterFactory(
                 new TypeDao(),
-                new ArtifactLinksUsageDao()
+                new ArtifactLinksUsageDao(),
+                new SystemTypePresenterBuilder(\EventManager::instance())
             )
         );
 

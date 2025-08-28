@@ -115,6 +115,7 @@ use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Artifact\ChangesetValue\Text\TextValueInterpreter;
 use Tuleap\Tracker\Artifact\Dao\PriorityDao;
 use Tuleap\Tracker\Artifact\FileUploadDataProvider;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\SystemTypePresenterBuilder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\Semantic\Description\CachedSemanticDescriptionFieldRetriever;
@@ -600,7 +601,7 @@ final class ArtidocResource extends AuthenticatedResource
                     $user,
                     $title_field_retriever,
                     CachedSemanticStatusRetriever::instance(),
-                    new TypePresenterFactory(new TypeDao(), new ArtifactLinksUsageDao()),
+                    new TypePresenterFactory(new TypeDao(), new ArtifactLinksUsageDao(), new SystemTypePresenterBuilder(EventManager::instance())),
                 ),
                 new NumericFieldWithValueBuilder(new PriorityDao()),
                 new UserFieldWithValueBuilder(

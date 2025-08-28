@@ -42,6 +42,7 @@ use Tuleap\Tracker\Artifact\Changeset\PostCreation\ActionsQueuer;
 use Tuleap\Tracker\Artifact\ChangesetValue\ChangesetValueSaver;
 use Tuleap\Tracker\FormElement\ArtifactLinkValidator;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\SystemTypePresenterBuilder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
@@ -93,7 +94,7 @@ final readonly class NewChangesetCreatorBuilder
                     $form_element_factory,
                     new ArtifactLinkValidator(
                         $artifact_factory,
-                        new TypePresenterFactory(new TypeDao(), $artifact_links_usage_dao),
+                        new TypePresenterFactory(new TypeDao(), $artifact_links_usage_dao, new SystemTypePresenterBuilder(EventManager::instance())),
                         $artifact_links_usage_dao,
                         $event_manager,
                     ),

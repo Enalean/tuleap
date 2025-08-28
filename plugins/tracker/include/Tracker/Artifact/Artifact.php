@@ -142,6 +142,7 @@ use Tuleap\Tracker\FormElement\ChartConfigurationValueRetriever;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\LinksRetriever;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\SystemTypePresenterBuilder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeIsChildLinkRetriever;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
@@ -491,7 +492,8 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
                         $progress_dao,
                         new TypePresenterFactory(
                             new TypeDao(),
-                            new ArtifactLinksUsageDao()
+                            new ArtifactLinksUsageDao(),
+                            new SystemTypePresenterBuilder(EventManager::instance())
                         )
                     )
                 ),
@@ -2418,7 +2420,8 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
             $this->getArtifactFactory(),
             new \Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory(
                 new \Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao(),
-                $usage_dao
+                $usage_dao,
+                new SystemTypePresenterBuilder(EventManager::instance())
             ),
             $usage_dao,
             $this->getEventManager(),
