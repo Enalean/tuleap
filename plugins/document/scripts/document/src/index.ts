@@ -41,6 +41,8 @@ import type { ConfigurationState } from "./store/configuration";
 import type { SearchCriterion, SearchListOption } from "./type";
 import { getRelativeDateUserPreferenceOrThrow } from "@tuleap/tlp-relative-date";
 import {
+    EMBEDDED_ARE_ALLOWED,
+    IS_STATUS_PROPERTY_USED,
     PROJECT_ID,
     PROJECT_NAME,
     PROJECT_PUBLIC_NAME,
@@ -161,8 +163,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
     const configuration_state: ConfigurationState = {
-        embedded_are_allowed,
-        is_status_property_used,
         is_obsolescence_date_property_used,
         project_url,
         date_time_format,
@@ -211,7 +211,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         .provide(PROJECT_NAME, project_name)
         .provide(PROJECT_PUBLIC_NAME, project_public_name)
         .provide(USER_IS_ADMIN, user_is_admin)
-        .provide(USER_CAN_CREATE_WIKI, user_can_create_wiki);
+        .provide(USER_CAN_CREATE_WIKI, user_can_create_wiki)
+        .provide(EMBEDDED_ARE_ALLOWED, embedded_are_allowed)
+        .provide(IS_STATUS_PROPERTY_USED, is_status_property_used);
     app.use(VueDOMPurifyHTML);
 
     app.mount(vue_mount_point);

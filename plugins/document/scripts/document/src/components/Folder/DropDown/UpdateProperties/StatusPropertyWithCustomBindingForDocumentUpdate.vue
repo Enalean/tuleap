@@ -28,12 +28,10 @@
 
 <script setup lang="ts">
 import StatusProperty from "../PropertiesForCreateOrUpdate/StatusProperty.vue";
-import { useNamespacedState } from "vuex-composition-helpers";
-import type { ConfigurationState } from "../../../../store/configuration";
+import { IS_STATUS_PROPERTY_USED } from "../../../../configuration-keys";
+import { strictInject } from "@tuleap/vue-strict-inject";
 
 defineProps<{ status_value: string }>();
 
-const { is_status_property_used } = useNamespacedState<
-    Pick<ConfigurationState, "is_status_property_used">
->("configuration", ["is_status_property_used"]);
+const is_status_property_used = strictInject(IS_STATUS_PROPERTY_USED);
 </script>

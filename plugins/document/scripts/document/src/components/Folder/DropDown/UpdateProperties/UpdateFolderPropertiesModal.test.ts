@@ -26,6 +26,7 @@ import UpdateFolderPropertiesModal from "./UpdateFolderPropertiesModal.vue";
 import * as tlp_modal from "@tuleap/tlp-modal";
 import emitter from "../../../../helpers/emitter";
 import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
+import { IS_STATUS_PROPERTY_USED } from "../../../../configuration-keys";
 
 vi.mock("tlp", () => {
     return { datePicker: vi.fn() };
@@ -42,13 +43,6 @@ describe("UpdateFolderPropertiesModal", () => {
                 global: {
                     ...getGlobalTestOptions({
                         modules: {
-                            configuration: {
-                                state: {
-                                    is_status_property_used: true,
-                                    project_id: "102",
-                                },
-                                namespaced: true,
-                            },
                             error: {
                                 state: {
                                     has_modal_error: false,
@@ -95,6 +89,9 @@ describe("UpdateFolderPropertiesModal", () => {
                             },
                         },
                     }),
+                    provide: {
+                        [IS_STATUS_PROPERTY_USED.valueOf()]: true,
+                    },
                 },
             });
         };

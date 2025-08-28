@@ -21,9 +21,9 @@ import { describe, expect, it } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import StatusPropertyWithCustomBindingForFolderCreate from "./StatusPropertyWithCustomBindingForFolderCreate.vue";
-import type { ConfigurationState } from "../../../../../store/configuration";
 import { getGlobalTestOptions } from "../../../../../helpers/global-options-for-test";
 import type { Folder, RootState } from "../../../../../type";
+import { IS_STATUS_PROPERTY_USED } from "../../../../../configuration-keys";
 
 describe("StatusPropertyWithCustomBindingForFolderCreate", () => {
     function createWrapper(
@@ -34,20 +34,15 @@ describe("StatusPropertyWithCustomBindingForFolderCreate", () => {
             props: { status_value },
             global: {
                 ...getGlobalTestOptions({
-                    modules: {
-                        configuration: {
-                            state: {
-                                is_status_property_used,
-                            } as unknown as ConfigurationState,
-                            namespaced: true,
-                        },
-                    },
                     state: {
                         current_folder: {
                             id: 4,
                         } as Folder,
                     } as RootState,
                 }),
+                provide: {
+                    [IS_STATUS_PROPERTY_USED.valueOf()]: is_status_property_used,
+                },
             },
         });
     }

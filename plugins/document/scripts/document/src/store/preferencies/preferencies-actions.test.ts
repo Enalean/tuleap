@@ -46,13 +46,17 @@ describe("setUserPreferenciesForFolder", () => {
     it("sets the user preference for the state of a given folder if its new state is 'open' (expanded)", async () => {
         const folder_id = 30;
         const should_be_closed = false;
-        const context: ActionContext<PreferenciesState, RootState> = {
-            rootState: {
-                configuration: { user_id: 102, project_id: 110 },
-            },
-        } as unknown as ActionContext<PreferenciesState, RootState>;
+        const context: ActionContext<PreferenciesState, RootState> = {} as ActionContext<
+            PreferenciesState,
+            RootState
+        >;
 
-        const payload: UserPreferenciesFolderSetPayload = { folder_id, should_be_closed };
+        const payload: UserPreferenciesFolderSetPayload = {
+            folder_id,
+            should_be_closed,
+            user_id: 102,
+            project_id: 110,
+        };
 
         await setUserPreferenciesForFolder(context, payload);
 
@@ -63,13 +67,17 @@ describe("setUserPreferenciesForFolder", () => {
     it("deletes the user preference for the state of a given folder if its new state is 'closed' (collapsed)", async () => {
         const folder_id = 30;
         const should_be_closed = true;
-        const context: ActionContext<PreferenciesState, RootState> = {
-            rootState: {
-                configuration: { user_id: 102, project_id: 110 },
-            },
-        } as unknown as ActionContext<PreferenciesState, RootState>;
+        const context: ActionContext<PreferenciesState, RootState> = {} as ActionContext<
+            PreferenciesState,
+            RootState
+        >;
 
-        const payload: UserPreferenciesFolderSetPayload = { folder_id, should_be_closed };
+        const payload: UserPreferenciesFolderSetPayload = {
+            folder_id,
+            should_be_closed,
+            user_id: 102,
+            project_id: 110,
+        };
         await setUserPreferenciesForFolder(context, payload);
 
         expect(patchUserPreferenciesForFolderInProject).not.toHaveBeenCalled();
@@ -82,9 +90,6 @@ describe("displayEmbeddedInLargeMode", () => {
 
     beforeEach(() => {
         context = {
-            rootState: {
-                configuration: { user_id: 102, project_id: 110 },
-            },
             commit: vi.fn(),
         } as unknown as ActionContext<PreferenciesState, RootState>;
 
@@ -99,7 +104,7 @@ describe("displayEmbeddedInLargeMode", () => {
             title: "My embedded",
         } as Embedded;
 
-        await displayEmbeddedInLargeMode(context, item);
+        await displayEmbeddedInLargeMode(context, { item, user_id: 254, project_id: 101 });
 
         expect(context.commit).toHaveBeenCalledWith("shouldDisplayEmbeddedInLargeMode", true);
     });
@@ -127,7 +132,7 @@ describe("displayEmbeddedInNarrowMode", () => {
             title: "My embedded",
         } as Embedded;
 
-        await displayEmbeddedInNarrowMode(context, item);
+        await displayEmbeddedInNarrowMode(context, { item, user_id: 254, project_id: 101 });
 
         expect(context.commit).toHaveBeenCalledWith("shouldDisplayEmbeddedInLargeMode", false);
     });

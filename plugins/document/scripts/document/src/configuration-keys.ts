@@ -25,3 +25,6 @@ export const PROJECT_NAME: StrictInjectionKey<string> = Symbol("project-name");
 export const PROJECT_PUBLIC_NAME: StrictInjectionKey<string> = Symbol("project-public-name");
 export const USER_IS_ADMIN: StrictInjectionKey<boolean> = Symbol("user-is-admin");
 export const USER_CAN_CREATE_WIKI: StrictInjectionKey<boolean> = Symbol("user-can-create-wiki");
+export const EMBEDDED_ARE_ALLOWED: StrictInjectionKey<boolean> = Symbol("embedded-are-allowed");
+export const IS_STATUS_PROPERTY_USED: StrictInjectionKey<boolean> =
+    Symbol("is-status-property-used");

@@ -22,7 +22,6 @@ import type { VueWrapper } from "@vue/test-utils";
 import NewItemMenuOptions from "./NewItemMenuOptions.vue";
 import { shallowMount } from "@vue/test-utils";
 import type { Item, NewItemAlternativeArray, OtherItemTypeCollection } from "../../../../type";
-import type { ConfigurationState } from "../../../../store/configuration";
 import {
     TYPE_EMBEDDED,
     TYPE_EMPTY,
@@ -34,7 +33,7 @@ import {
 import emitter from "../../../../helpers/emitter";
 import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
 import { NEW_ITEMS_ALTERNATIVES, OTHER_ITEM_TYPES } from "../../../../injection-keys";
-import { USER_CAN_CREATE_WIKI } from "../../../../configuration-keys";
+import { EMBEDDED_ARE_ALLOWED, USER_CAN_CREATE_WIKI } from "../../../../configuration-keys";
 
 vi.mock("../../../../helpers/emitter");
 
@@ -50,9 +49,7 @@ describe("NewItemMenuOptions", function () {
 
     function getWrapper(
         user_can_create_wiki: boolean,
-        configuration: Pick<ConfigurationState, "embedded_are_allowed"> = {
-            embedded_are_allowed: false,
-        },
+        embedded_are_allowed: boolean,
         create_new_item_alternatives: NewItemAlternativeArray = [],
         other_item_types: OtherItemTypeCollection = {},
     ): VueWrapper<InstanceType<typeof NewItemMenuOptions>> {
@@ -61,27 +58,19 @@ describe("NewItemMenuOptions", function () {
                 item: CURRENT_FOLDER,
             },
             global: {
-                ...getGlobalTestOptions({
-                    modules: {
-                        configuration: {
-                            namespaced: true,
-                            state: {
-                                embedded_are_allowed: configuration.embedded_are_allowed,
-                            } as ConfigurationState,
-                        },
-                    },
-                }),
+                ...getGlobalTestOptions({}),
                 provide: {
                     [NEW_ITEMS_ALTERNATIVES.valueOf()]: create_new_item_alternatives,
                     [OTHER_ITEM_TYPES.valueOf()]: other_item_types,
                     [USER_CAN_CREATE_WIKI.valueOf()]: user_can_create_wiki,
+                    [EMBEDDED_ARE_ALLOWED.valueOf()]: embedded_are_allowed,
                 },
             },
         });
     }
 
     it("should allow to create a folder", async function () {
-        const wrapper = getWrapper(false);
+        const wrapper = getWrapper(false, false);
 
         await wrapper.find("[data-test=document-new-folder-creation-button]").trigger("click");
 
@@ -91,7 +80,7 @@ describe("NewItemMenuOptions", function () {
     });
 
     it("should allow to create a file", async function () {
-        const wrapper = getWrapper(false);
+        const wrapper = getWrapper(false, false);
 
         await wrapper.find("[data-test=document-new-file-creation-button]").trigger("click");
 
@@ -102,7 +91,7 @@ describe("NewItemMenuOptions", function () {
     });
 
     it("should allow to create a link", async function () {
-        const wrapper = getWrapper(false);
+        const wrapper = getWrapper(false, false);
 
         await wrapper.find("[data-test=document-new-link-creation-button]").trigger("click");
 
@@ -113,7 +102,7 @@ describe("NewItemMenuOptions", function () {
     });
 
     it("should allow to create an empty", async function () {
-        const wrapper = getWrapper(false);
+        const wrapper = getWrapper(false, false);
 
         await wrapper.find("[data-test=document-new-empty-creation-button]").trigger("click");
 
@@ -124,7 +113,7 @@ describe("NewItemMenuOptions", function () {
     });
 
     it("should allow to create a wiki", async function () {
-        const wrapper = getWrapper(true, { embedded_are_allowed: false });
+        const wrapper = getWrapper(true, false);
 
         await wrapper.find("[data-test=document-new-wiki-creation-button]").trigger("click");
 
@@ -135,13 +124,13 @@ describe("NewItemMenuOptions", function () {
     });
 
     it("should not allow to create wiki if user cannot", function () {
-        const wrapper = getWrapper(false, { embedded_are_allowed: false });
+        const wrapper = getWrapper(false, false);
 
         expect(wrapper.find("[data-test=document-new-wiki-creation-button]").exists()).toBe(false);
     });
 
     it("should allow to create an embedded", async function () {
-        const wrapper = getWrapper(false, { embedded_are_allowed: true });
+        const wrapper = getWrapper(false, true);
 
         await wrapper.find("[data-test=document-new-embedded-creation-button]").trigger("click");
 
@@ -152,7 +141,7 @@ describe("NewItemMenuOptions", function () {
     });
 
     it("should not allow to create embedded if user cannot", function () {
-        const wrapper = getWrapper(false, { embedded_are_allowed: false });
+        const wrapper = getWrapper(false, false);
 
         expect(wrapper.find("[data-test=document-new-embedded-creation-button]").exists()).toBe(
             false,
@@ -160,7 +149,7 @@ describe("NewItemMenuOptions", function () {
     });
 
     it("should display new item alternatives", async function () {
-        const wrapper = getWrapper(false, { embedded_are_allowed: false }, [
+        const wrapper = getWrapper(false, false, [
             {
                 title: "section",
                 alternatives: [
@@ -182,7 +171,7 @@ describe("NewItemMenuOptions", function () {
     });
 
     it("should display a new other type item", async function () {
-        const wrapper = getWrapper(false, { embedded_are_allowed: false }, [], {
+        const wrapper = getWrapper(false, false, [], {
             whatever: {
                 icon: "my-icon",
                 title: "Whatever title",

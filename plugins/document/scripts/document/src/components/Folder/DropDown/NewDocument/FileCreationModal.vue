@@ -65,8 +65,9 @@ import {
 import type { ErrorState } from "../../../../store/error/module";
 import { onBeforeUnmount, onMounted, ref } from "vue";
 import { transformStatusPropertyForItemCreation } from "../../../../helpers/properties-helpers/creation-data-transformatter-helper";
-import type { ConfigurationState } from "../../../../store/configuration";
 import { buildFakeItem } from "../../../../helpers/item-builder";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { IS_STATUS_PROPERTY_USED } from "../../../../configuration-keys";
 
 const props = defineProps<{ parent: Folder; droppedFile: File }>();
 
@@ -78,9 +79,7 @@ const { current_folder } = useState<Pick<RootState, "current_folder">>(["current
 const { has_modal_error } = useNamespacedState<Pick<ErrorState, "has_modal_error">>("error", [
     "has_modal_error",
 ]);
-const { is_status_property_used } = useNamespacedState<
-    Pick<ConfigurationState, "is_status_property_used">
->("configuration", ["is_status_property_used"]);
+const is_status_property_used = strictInject(IS_STATUS_PROPERTY_USED);
 
 const { createNewItem } = useActions(["createNewItem"]);
 const { resetModalError } = useNamespacedMutations("error", ["resetModalError"]);
@@ -102,7 +101,7 @@ onMounted((): void => {
     emitter.on("update-status-property", updateStatusValue);
     emitter.on("update-title-property", updateTitleValue);
     emitter.on("update-description-property", updateDescriptionValue);
-    transformStatusPropertyForItemCreation(item.value, props.parent, is_status_property_used.value);
+    transformStatusPropertyForItemCreation(item.value, props.parent, is_status_property_used);
 });
 
 onBeforeUnmount((): void => {

@@ -38,66 +38,94 @@ export interface PreferenciesActions extends ActionTree<PreferenciesState, RootS
 export interface UserPreferenciesFolderSetPayload {
     folder_id: number;
     should_be_closed: boolean;
+    user_id: number;
+    project_id: number;
 }
 
 export const setUserPreferenciesForFolder = async (
     context: ActionContext<PreferenciesState, RootState>,
     payload: UserPreferenciesFolderSetPayload,
 ): Promise<void> => {
-    const user_id = context.rootState.configuration.user_id;
-    const project_id = context.rootState.configuration.project_id;
-    if (user_id === 0) {
+    if (payload.user_id === 0) {
         return;
     }
 
     try {
         if (payload.should_be_closed) {
-            await deleteUserPreferenciesForFolderInProject(user_id, project_id, payload.folder_id);
+            await deleteUserPreferenciesForFolderInProject(
+                payload.user_id,
+                payload.project_id,
+                payload.folder_id,
+            );
             return;
         }
 
-        await patchUserPreferenciesForFolderInProject(user_id, project_id, payload.folder_id);
+        await patchUserPreferenciesForFolderInProject(
+            payload.user_id,
+            payload.project_id,
+            payload.folder_id,
+        );
     } catch (exception) {
         await context.dispatch("error/handleErrors", exception);
     }
 };
 
+export interface DisplayEmbeddedInNarrowModePayload {
+    item: Item;
+    user_id: number;
+    project_id: number;
+}
+
 export const displayEmbeddedInNarrowMode = async (
     context: ActionContext<PreferenciesState, RootState>,
-    item: Item,
+    payload: DisplayEmbeddedInNarrowModePayload,
 ): Promise<void> => {
     try {
-        const user_id = context.rootState.configuration.user_id;
-        const project_id = context.rootState.configuration.project_id;
-        await setNarrowModeForEmbeddedDisplay(user_id, project_id, item.id);
+        await setNarrowModeForEmbeddedDisplay(payload.user_id, payload.project_id, payload.item.id);
         context.commit("shouldDisplayEmbeddedInLargeMode", false);
     } catch (exception) {
         await context.dispatch("error/handleErrors", exception);
     }
 };
 
+export interface DisplayEmbeddedInLargeModePayload {
+    item: Item;
+    user_id: number;
+    project_id: number;
+}
+
 export const displayEmbeddedInLargeMode = async (
     context: ActionContext<PreferenciesState, RootState>,
-    item: Item,
+    payload: DisplayEmbeddedInLargeModePayload,
 ): Promise<void> => {
     try {
-        const user_id = context.rootState.configuration.user_id;
-        const project_id = context.rootState.configuration.project_id;
-        await removeUserPreferenceForEmbeddedDisplay(user_id, project_id, item.id);
+        await removeUserPreferenceForEmbeddedDisplay(
+            payload.user_id,
+            payload.project_id,
+            payload.item.id,
+        );
         context.commit("shouldDisplayEmbeddedInLargeMode", true);
     } catch (exception) {
         await context.dispatch("error/handleErrors", exception);
     }
 };
 
+export interface GetEmbeddedFileDisplayPreferencePayload {
+    item: Item;
+    user_id: number;
+    project_id: number;
+}
+
 export const getEmbeddedFileDisplayPreference = async (
     context: ActionContext<PreferenciesState, RootState>,
-    item: Item,
+    payload: GetEmbeddedFileDisplayPreferencePayload,
 ): Promise<"narrow" | false | null> => {
     try {
-        const user_id = context.rootState.configuration.user_id;
-        const project_id = context.rootState.configuration.project_id;
-        return getPreferenceForEmbeddedDisplay(user_id, project_id, item.id);
+        return getPreferenceForEmbeddedDisplay(
+            payload.user_id,
+            payload.project_id,
+            payload.item.id,
+        );
     } catch (exception) {
         await context.dispatch("error/handleErrors", exception);
         return null;

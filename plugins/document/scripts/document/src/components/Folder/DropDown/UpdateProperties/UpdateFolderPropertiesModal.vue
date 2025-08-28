@@ -74,9 +74,10 @@ import emitter from "../../../../helpers/emitter";
 import type { Folder, Property, RootState } from "../../../../type";
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import { useNamespacedState, useState, useStore } from "vuex-composition-helpers";
-import type { ConfigurationState } from "../../../../store/configuration";
 import type { ErrorState } from "../../../../store/error/module";
 import { useGettext } from "vue3-gettext";
+import { IS_STATUS_PROPERTY_USED } from "../../../../configuration-keys";
+import { strictInject } from "@tuleap/vue-strict-inject";
 
 const { $gettext } = useGettext();
 const $store = useStore();
@@ -86,15 +87,13 @@ const props = defineProps<{
 }>();
 
 const { current_folder } = useState<Pick<RootState, "current_folder">>(["current_folder"]);
-const { is_status_property_used } = useNamespacedState<
-    Pick<ConfigurationState, "is_status_property_used">
->("configuration", ["is_status_property_used"]);
+const is_status_property_used = strictInject(IS_STATUS_PROPERTY_USED);
 const { has_modal_error } = useNamespacedState<Pick<ErrorState, "has_modal_error">>("error", [
     "has_modal_error",
 ]);
 
 const item_to_update = ref<Folder>(
-    transformFolderPropertiesForRecursionAtUpdate(props.item, is_status_property_used.value),
+    transformFolderPropertiesForRecursionAtUpdate(props.item, is_status_property_used),
 );
 const is_loading = ref<boolean>(false);
 const recursion_option = ref<string>("none");
@@ -117,7 +116,7 @@ onMounted(() => {
     emitter.on("properties-recursion-list", setPropertiesListUpdate);
     emitter.on("properties-recursion-option", setRecursionOption);
     emitter.on("update-multiple-properties-list-value", updateMultiplePropertiesListValue);
-    if (is_status_property_used.value) {
+    if (is_status_property_used) {
         emitter.on("update-status-property", updateStatusValue);
         emitter.on("update-status-recursion", updateStatusRecursion);
     }
@@ -130,7 +129,7 @@ onBeforeUnmount(() => {
     emitter.off("properties-recursion-list", setPropertiesListUpdate);
     emitter.off("properties-recursion-option", setRecursionOption);
     emitter.off("update-multiple-properties-list-value", updateMultiplePropertiesListValue);
-    if (is_status_property_used.value) {
+    if (is_status_property_used) {
         emitter.off("update-status-property", updateStatusValue);
         emitter.off("update-status-recursion", updateStatusRecursion);
     }
@@ -172,7 +171,7 @@ function setPropertiesListUpdate(event: UpdatePropertyListEvent): void {
 
 function setRecursionOption(event: UpdateRecursionOptionEvent): void {
     recursion_option.value = event.recursion_option;
-    if (is_status_property_used.value) {
+    if (is_status_property_used) {
         item_to_update.value.status.recursion = event.recursion_option;
     }
 }

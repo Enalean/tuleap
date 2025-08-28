@@ -22,10 +22,9 @@ import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import FolderDefaultPropertiesForCreate from "./FolderDefaultPropertiesForCreate.vue";
 import type { Property, ListValue } from "../../../../../type";
-import type { ConfigurationState } from "../../../../../store/configuration";
 import type { PropertiesState } from "../../../../../store/properties/module";
 import { getGlobalTestOptions } from "../../../../../helpers/global-options-for-test";
-import { PROJECT_ID } from "../../../../../configuration-keys";
+import { IS_STATUS_PROPERTY_USED, PROJECT_ID } from "../../../../../configuration-keys";
 
 vi.mock("tlp", () => {
     return { datePicker: vi.fn() };
@@ -43,12 +42,6 @@ describe("FolderDefaultPropertiesForCreate", () => {
             global: {
                 ...getGlobalTestOptions({
                     modules: {
-                        configuration: {
-                            state: {
-                                is_status_property_used,
-                            } as unknown as ConfigurationState,
-                            namespaced: true,
-                        },
                         properties: {
                             state: {
                                 has_loaded_properties,
@@ -59,6 +52,7 @@ describe("FolderDefaultPropertiesForCreate", () => {
                 }),
                 provide: {
                     [PROJECT_ID.valueOf()]: 101,
+                    [IS_STATUS_PROPERTY_USED.valueOf()]: is_status_property_used,
                 },
             },
         });

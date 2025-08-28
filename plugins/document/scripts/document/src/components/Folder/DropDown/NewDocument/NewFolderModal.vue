@@ -79,9 +79,8 @@ import { useNamespacedState, useState, useStore } from "vuex-composition-helpers
 import type { Item, RootState } from "../../../../type";
 import type { ErrorState } from "../../../../store/error/module";
 import type { PermissionsState } from "../../../../store/permissions/permissions-default-state";
-import type { ConfigurationState } from "../../../../store/configuration";
 import { strictInject } from "@tuleap/vue-strict-inject";
-import { PROJECT_ID } from "../../../../configuration-keys";
+import { IS_STATUS_PROPERTY_USED, PROJECT_ID } from "../../../../configuration-keys";
 
 const $store = useStore();
 
@@ -101,9 +100,7 @@ const { project_ugroups } = useNamespacedState<Pick<PermissionsState, "project_u
     ["project_ugroups"],
 );
 const project_id = strictInject(PROJECT_ID);
-const { is_status_property_used } = useNamespacedState<
-    Pick<ConfigurationState, "is_status_property_used">
->("configuration", ["is_status_property_used"]);
+const is_status_property_used = strictInject(IS_STATUS_PROPERTY_USED);
 
 onMounted(() => {
     modal = createModal(form.value);
@@ -188,7 +185,7 @@ function addParentPropertiesToDefaultItem(): void {
         item.value.properties = formatted_properties;
     }
 
-    transformStatusPropertyForItemCreation(item.value, parent.value, is_status_property_used.value);
+    transformStatusPropertyForItemCreation(item.value, parent.value, is_status_property_used);
 }
 
 function updateMultiplePropertiesListValue(event: UpdateMultipleListValueEvent): void {
