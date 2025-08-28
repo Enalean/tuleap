@@ -34,7 +34,7 @@ class ArchivedeleteditemsPlugin extends Plugin implements PluginWithConfigKeys /
 {
     #[ConfigKey('Archive deleted items path')]
     #[ConfigKeyString('/tmp/')]
-    public const CONFIG_KEY_ARCHIVE_PATH = 'archive_deleted_items_path';
+    public const string CONFIG_KEY_ARCHIVE_PATH = 'archive_deleted_items_path';
 
     public function __construct(?int $id)
     {
@@ -48,6 +48,7 @@ class ArchivedeleteditemsPlugin extends Plugin implements PluginWithConfigKeys /
         return new ArchiveLogger();
     }
 
+    #[Override]
     public function getPluginInfo(): PluginInfo
     {
         if (! $this->pluginInfo) {
@@ -101,7 +102,7 @@ class ArchivedeleteditemsPlugin extends Plugin implements PluginWithConfigKeys /
         }
     }
 
-    private function getWellFormattedArchivePath()
+    private function getWellFormattedArchivePath(): string
     {
         $archive_path = ForgeConfig::get(self::CONFIG_KEY_ARCHIVE_PATH);
 
@@ -113,6 +114,7 @@ class ArchivedeleteditemsPlugin extends Plugin implements PluginWithConfigKeys /
         return $archive_path;
     }
 
+    #[Override]
     public function getConfigKeys(\Tuleap\Config\ConfigClassProvider $event): void
     {
         $event->addConfigClass(self::class);
