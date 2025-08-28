@@ -20,8 +20,6 @@
 
 namespace Tuleap\REST;
 
-use Test\Rest\TuleapConfig;
-
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 #[\PHPUnit\Framework\Attributes\Group('ProjectTests')]
 class ProjectTest extends ProjectBase

@@ -19,7 +19,9 @@
  *
  */
 
-namespace Test\Rest;
+declare(strict_types=1);
+
+namespace Tuleap\REST;
 
 use PDO;
 
@@ -28,27 +30,27 @@ use PDO;
  *
  * In the future, it should be replaced by a REST call to an API to do this kind of configuration
  */
-class TuleapConfig
+final class TuleapConfig
 {
-    public const FORGE_ACCESS = 'access_mode';
-    public const ANONYMOUS    = 'anonymous';
-    public const REGULAR      = 'regular';
-    public const RESTRICTED   = 'restricted';
+    public const string FORGE_ACCESS = 'access_mode';
+    public const string ANONYMOUS    = 'anonymous';
+    public const string REGULAR      = 'regular';
+    public const string RESTRICTED   = 'restricted';
 
     private PDO $dbh;
 
-    private static self $instance;
+    private static ?self $instance = null;
 
     public static function instance(): self
     {
-        if (! isset(self::$instance)) {
-            self::$instance = new TuleapConfig();
+        if (self::$instance === null) {
+            self::$instance = new self();
             self::$instance->connect();
         }
         return self::$instance;
     }
 
-    private function setConfig($name, $value)
+    private function setConfig(string $name, string $value): void
     {
         $statment = $this->dbh->prepare('REPLACE INTO forgeconfig (name, value) VALUES (:name, :value)');
         $statment->bindParam(':name', $name);
@@ -63,29 +65,29 @@ class TuleapConfig
         return $statement->fetchAll()[0]['value'];
     }
 
-    public function setForgeToRestricted()
+    public function setForgeToRestricted(): void
     {
         $this->setConfig(self::FORGE_ACCESS, self::RESTRICTED);
     }
 
-    public function setForgeToAnonymous()
+    public function setForgeToAnonymous(): void
     {
         $this->setConfig(self::FORGE_ACCESS, self::ANONYMOUS);
     }
 
-    public function setForgeToRegular()
+    public function setForgeToRegular(): void
     {
         $this->setConfig(self::FORGE_ACCESS, self::REGULAR);
     }
 
-    public function disableProjectCreation()
+    public function disableProjectCreation(): void
     {
-        $this->setConfig('sys_use_project_registration', 0);
+        $this->setConfig('sys_use_project_registration', '0');
     }
 
-    public function enableProjectCreation()
+    public function enableProjectCreation(): void
     {
-        $this->setConfig('sys_use_project_registration', 1);
+        $this->setConfig('sys_use_project_registration', '1');
     }
 
     public function enableInviteBuddies(): void
@@ -98,9 +100,11 @@ class TuleapConfig
         $this->setConfig('max_invitations_by_day', '0');
     }
 
-    private function connect()
+    private function connect(): void
     {
+        /** @psalm-suppress MissingFile */
         include_once '/etc/tuleap/conf/database.inc';
+        /** @psalm-suppress UndefinedVariable */
         $this->dbh = new PDO("mysql:host=$sys_dbhost;dbname=$sys_dbname", $sys_dbuser, $sys_dbpasswd);
     }
 }

@@ -1443,11 +1443,9 @@
             <file name="tests/rest/lib/ArtifactFileBase.php"/>
             <file name="tests/rest/lib/ArtifactsTestExecutionHelper.php"/>
             <file name="tests/rest/lib/CardsBase.php"/>
-            <file name="tests/rest/lib/ForgeAccessSandbox.php"/>
             <file name="tests/rest/lib/MilestoneBase.php"/>
             <file name="tests/rest/lib/ProjectBase.php"/>
             <file name="tests/rest/lib/TrackerBase.php"/>
-            <file name="tests/rest/lib/TuleapConfig.php"/>
             <file name="tests/rest/lib/bootstrap.php"/>
             <file name="tests/rest/tests/AccessKeyTest.php"/>
             <file name="tests/rest/tests/ArtifactFilesTest.php"/>
