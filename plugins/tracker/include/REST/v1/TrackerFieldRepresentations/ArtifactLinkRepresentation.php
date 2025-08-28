@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\Tracker\REST\v1;
+namespace Tuleap\Tracker\REST\v1\TrackerFieldRepresentations;
 
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -29,16 +29,13 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 /**
  * @psalm-immutable
  */
-class ArtifactLinkRepresentation
+final class ArtifactLinkRepresentation
 {
     /**
-     * @var array
+     * @param LinkTypeRepresentation[] $natures
      */
-    public $natures;
-
-    private function __construct(array $natures)
+    private function __construct(public readonly array $natures)
     {
-        $this->natures = $natures;
     }
 
     public static function build(Artifact $artifact): self
@@ -46,7 +43,10 @@ class ArtifactLinkRepresentation
         return new self(array_merge(self::getForwardTypes($artifact), self::getReverseTypes($artifact)));
     }
 
-    private static function getForwardTypes(Artifact $artifact)
+    /**
+     * @return LinkTypeRepresentation[]
+     */
+    private static function getForwardTypes(Artifact $artifact): array
     {
         $dao     = new TypeDao();
         $factory = self::getTypePresenterFactory();
@@ -54,14 +54,20 @@ class ArtifactLinkRepresentation
         $types = [];
 
         foreach ($dao->searchForwardTypeShortNamesForGivenArtifact($artifact->getId()) as $type_row) {
-            $type    = $factory->getFromShortname($type_row['shortname']);
+            $type = $factory->getFromShortname($type_row['shortname']);
+            if (! $type) {
+                break;
+            }
             $types[] = self::formatType($type, $artifact, TypePresenter::FORWARD_LABEL);
         }
 
         return $types;
     }
 
-    private static function getReverseTypes(Artifact $artifact)
+    /**
+     * @return LinkTypeRepresentation[]
+     */
+    private static function getReverseTypes(Artifact $artifact): array
     {
         $dao     = new TypeDao();
         $factory = self::getTypePresenterFactory();
@@ -69,17 +75,17 @@ class ArtifactLinkRepresentation
         $types = [];
 
         foreach ($dao->searchReverseTypeShortNamesForGivenArtifact($artifact->getId()) as $type_row) {
-            $type    = $factory->getFromShortname($type_row['shortname']);
+            $type = $factory->getFromShortname($type_row['shortname']);
+            if (! $type) {
+                break;
+            }
             $types[] = self::formatType($type, $artifact, TypePresenter::REVERSE_LABEL);
         }
 
         return $types;
     }
 
-    /**
-     * @return TypePresenterFactory
-     */
-    private static function getTypePresenterFactory()
+    private static function getTypePresenterFactory(): TypePresenterFactory
     {
         $type_dao                = new TypeDao();
         $artifact_link_usage_dao = new ArtifactLinksUsageDao();
@@ -87,16 +93,12 @@ class ArtifactLinkRepresentation
         return new TypePresenterFactory($type_dao, $artifact_link_usage_dao);
     }
 
-    private static function formatType(TypePresenter $type, Artifact $artifact, $direction)
+    private static function formatType(TypePresenter $type, Artifact $artifact, string $direction): LinkTypeRepresentation
     {
         $label = $direction === TypePresenter::FORWARD_LABEL ? $type->forward_label : $type->reverse_label;
+        $uri   = 'artifacts/' . $artifact->getId() . '/linked_artifacts?nature=' . urlencode($type->shortname) .
+            '&direction=' . urlencode($direction);
 
-        return [
-            'shortname'    => $type->shortname,
-            'direction'    => $direction,
-            'label'        => $label,
-            'uri'          => 'artifacts/' . $artifact->getId() . '/linked_artifacts?nature=' . urlencode($type->shortname) .
-                              '&direction=' . urlencode($direction),
-        ];
+        return new LinkTypeRepresentation($type->shortname, $direction, $label, $uri);
     }
 }
