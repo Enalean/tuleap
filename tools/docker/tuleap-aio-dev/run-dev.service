@@ -2,7 +2,7 @@
 Description=Run Tuleap dev
 After=network.target
 After=network-online.target
-After=default.target
+After=basic.target
 
 [Service]
 User=root
