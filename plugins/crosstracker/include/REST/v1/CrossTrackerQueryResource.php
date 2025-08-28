@@ -43,6 +43,7 @@ use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerQueryRepresentation;
 use Tuleap\CrossTracker\Widget\CrossTrackerWidgetDao;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
+use Tuleap\Option\Option;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
@@ -62,6 +63,7 @@ use Tuleap\Tracker\Report\Query\Advanced\SelectLimitExceededException;
 use Tuleap\User\ProvideCurrentUser;
 use URLVerification;
 use UserManager;
+use function Psl\Type\string;
 
 final class CrossTrackerQueryResource extends AuthenticatedResource
 {
@@ -139,6 +141,7 @@ final class CrossTrackerQueryResource extends AuthenticatedResource
                     $current_user,
                     $limit,
                     $offset,
+                    Option::nothing(string()),
                 )
             );
 
@@ -195,7 +198,7 @@ final class CrossTrackerQueryResource extends AuthenticatedResource
             $query        = $this->getQuery($id, $current_user);
 
             $artifacts = $this->factory_builder->getInstrumentation()->updateQueryDuration(
-                fn() => $this->factory_builder->getArtifactFactory(new WithoutLinkTypeSelectFromBuilder())->getArtifactsMatchingQuery($query, $current_user, $limit, $offset)
+                fn() => $this->factory_builder->getArtifactFactory(new WithoutLinkTypeSelectFromBuilder())->getArtifactsMatchingQuery($query, $current_user, $limit, $offset, Option::nothing(string()))
             );
 
             assert($artifacts instanceof CrossTrackerQueryContentRepresentation);

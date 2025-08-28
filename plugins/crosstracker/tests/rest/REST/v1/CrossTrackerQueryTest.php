@@ -195,7 +195,9 @@ final class CrossTrackerQueryTest extends TestBase
 
         self::assertGreaterThan(1, count($json_response['artifacts'][0]['@artifact']));
 
-        self::assertSame('_is_child', $json_response['artifacts'][0]['@link_type']['value']);
+        self::assertSame('_is_child', $json_response['artifacts'][0]['@link_type']['shortname']);
+        self::assertSame('Parent', $json_response['artifacts'][0]['@link_type']['label']);
+        self::assertSame('reverse', $json_response['artifacts'][0]['@link_type']['direction']);
     }
 
     /**
@@ -239,7 +241,7 @@ final class CrossTrackerQueryTest extends TestBase
 
         $tql_query = "SELECT @pretty_title, @link_type FROM @project = 'self' WHERE @id = $current_artifact_id ORDER BY @last_update_date DESC";
         $response  = $this->getResponse(
-            $this->request_factory->createRequest('GET', 'crosstracker_widget/' . self::REVERSE_CROSS_LINK_WIDGET_ID . '/forward_links?source_artifact_id=' . $current_artifact_id . '&tql_query=' . (urlencode($tql_query)) .  '&limit=50&offset=0'),
+            $this->request_factory->createRequest('GET', 'crosstracker_widget/' . self::FORWARD_CROSS_LINK_WIDGET_ID . '/forward_links?source_artifact_id=' . $current_artifact_id . '&tql_query=' . (urlencode($tql_query)) .  '&limit=50&offset=0'),
         );
 
         self::assertSame(200, $response->getStatusCode());
@@ -247,7 +249,9 @@ final class CrossTrackerQueryTest extends TestBase
 
         self::assertGreaterThan(1, count($json_response['artifacts'][0]['@artifact']));
 
-        self::assertSame('_is_child', $json_response['artifacts'][0]['@link_type']['value']);
+        self::assertSame('_is_child', $json_response['artifacts'][0]['@link_type']['shortname']);
+        self::assertSame('Child', $json_response['artifacts'][0]['@link_type']['label']);
+        self::assertSame('forward', $json_response['artifacts'][0]['@link_type']['direction']);
     }
 
     public function testGetQueryWithoutArtifacts(): void

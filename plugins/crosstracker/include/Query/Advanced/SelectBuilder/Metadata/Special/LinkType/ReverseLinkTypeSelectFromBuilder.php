@@ -34,12 +34,14 @@ final readonly class ReverseLinkTypeSelectFromBuilder implements BuildLinkTypeSe
     {
         $select =  <<<EOSQL
          IFNULL(reverse_artlink.nature, '') AS '@link_type',
+         IFNULL(nature.reverse_label, '') AS 'reverse',
          artifact.id AS reverse_art_id
         EOSQL;
         $from   = <<<EOSQL
         LEFT JOIN tracker_field                        AS reverse_f          ON (reverse_f.tracker_id = artifact.tracker_id AND reverse_f.formElement_type = 'art_link' AND reverse_f.use_it = 1)
         LEFT JOIN tracker_changeset_value              AS reverse_cv         ON (reverse_cv.changeset_id = artifact.last_changeset_id AND reverse_cv.field_id = reverse_f.id)
         LEFT JOIN tracker_changeset_value_artifactlink AS reverse_artlink    ON (reverse_artlink.changeset_value_id = reverse_cv.id AND reverse_artlink.artifact_id = ?)
+        LEFT JOIN plugin_tracker_artifactlink_natures AS nature ON (reverse_artlink.nature = nature.shortname)
         EOSQL;
 
         return $artifact_id->match(

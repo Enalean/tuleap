@@ -51,6 +51,7 @@ use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerSelectedRepresentatio
 use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\RetrieveArtifact;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
 use Tuleap\Tracker\Permission\ArtifactPermissionType;
 use Tuleap\Tracker\Permission\RetrieveUserPermissionOnArtifacts;
 use Tuleap\Tracker\Permission\RetrieveUserPermissionOnTrackers;
@@ -128,6 +129,7 @@ final readonly class CrossTrackerArtifactQueryFactory
         PFUser $current_user,
         int $limit,
         int $offset,
+        Option $direction,
     ): CrossTrackerQueryContentRepresentation {
         if ($query->getQuery() === '') {
             throw new ExpertQueryIsEmptyException();
@@ -153,6 +155,7 @@ final readonly class CrossTrackerArtifactQueryFactory
             $limit,
             $offset,
             Option::nothing(\Psl\Type\int()),
+            $direction,
         );
     }
 
@@ -191,7 +194,8 @@ final readonly class CrossTrackerArtifactQueryFactory
             ),
             $limit,
             $offset,
-            Option::fromValue($source_artifact_id)
+            Option::fromValue($source_artifact_id),
+            Option::fromValue(TypePresenter::FORWARD_LABEL),
         );
     }
 
@@ -230,7 +234,8 @@ final readonly class CrossTrackerArtifactQueryFactory
             ),
             $limit,
             $offset,
-            Option::fromValue($target_artifact_id)
+            Option::fromValue($target_artifact_id),
+            Option::fromValue(TypePresenter::REVERSE_LABEL),
         );
     }
 
@@ -256,6 +261,7 @@ final readonly class CrossTrackerArtifactQueryFactory
         int $limit,
         int $offset,
         Option $artifact_id_for_links,
+        Option $direction,
     ): CrossTrackerQueryContentRepresentation {
         $trackers = $this->trackers_permissions->retrieveUserPermissionOnTrackers(
             $current_user,
@@ -269,6 +275,7 @@ final readonly class CrossTrackerArtifactQueryFactory
                     [],
                     $current_user,
                     [],
+                    $direction,
                 ),
                 0
             );
@@ -280,7 +287,7 @@ final readonly class CrossTrackerArtifactQueryFactory
             $this->instrumentation->updateOrderByUsage();
         }
 
-        return $this->retrieveQueryContentRepresentation($query, $trackers, $current_user, $additional_from_where, $limit, $offset, $artifact_id_for_links);
+        return $this->retrieveQueryContentRepresentation($query, $trackers, $current_user, $additional_from_where, $limit, $offset, $artifact_id_for_links, $direction);
     }
 
     /**
@@ -295,6 +302,7 @@ final readonly class CrossTrackerArtifactQueryFactory
         int $limit,
         int $offset,
         Option $target_artifact_id_for_reverse_links,
+        Option $direction,
     ): CrossTrackerQueryContentRepresentation {
         $additional_from_order = $this->order_builder->buildFromOrder($query->parsed_query->getOrderBy(), $trackers, $current_user);
         $tracker_ids           = $this->getTrackersId($trackers);
@@ -331,7 +339,7 @@ final readonly class CrossTrackerArtifactQueryFactory
             array_values($artifact_ids),
         );
 
-        $results = $this->result_builder->buildResult([new Metadata('artifact'), ...$query->parsed_query->getSelect()], $trackers, $current_user, $select_results);
+        $results = $this->result_builder->buildResult([new Metadata('artifact'), ...$query->parsed_query->getSelect()], $trackers, $current_user, $select_results, $direction);
 
         return $this->buildQueryContentRepresentation($results, $total_size);
     }

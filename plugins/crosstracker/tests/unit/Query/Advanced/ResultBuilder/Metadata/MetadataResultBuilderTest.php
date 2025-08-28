@@ -52,14 +52,17 @@ use Tuleap\CrossTracker\Tests\Stub\Query\Advanced\ResultBuilder\Metadata\Semanti
 use Tuleap\CrossTracker\Tests\Stub\Query\Advanced\ResultBuilder\Metadata\Special\BuildResultPrettyTitleStub;
 use Tuleap\CrossTracker\Tests\Stub\Query\InstantiateRetrievedQueryTrackersStub;
 use Tuleap\ForgeConfigSandbox;
+use Tuleap\Option\Option;
 use Tuleap\Project\Icons\EmojiCodepointConverter;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\RetrieveUserByIdStub;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Test\Stub\FormElement\Field\ArtifactLink\Type\RetrieveSystemTypePresenterStub;
 use Tuleap\Tracker\Test\Stub\RetrieveArtifactStub;
 use Tuleap\Tracker\Tracker;
 
@@ -115,7 +118,7 @@ final class MetadataResultBuilderTest extends TestCase
             new ProjectNameResultBuilder(),
             new TrackerNameResultBuilder(),
             $this->result_pretty_title,
-            new LinkTypeResultBuilder(),
+            new LinkTypeResultBuilder(RetrieveSystemTypePresenterStub::build()),
             new ArtifactResultBuilder($artifact_retriever, $query_trackers_retriever),
         );
 
@@ -125,6 +128,7 @@ final class MetadataResultBuilderTest extends TestCase
             $metadata,
             $selected_result,
             UserTestBuilder::buildWithDefaults(),
+            Option::fromValue(TypePresenter::FORWARD_LABEL)
         );
     }
 
