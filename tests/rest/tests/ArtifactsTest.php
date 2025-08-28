@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-use Test\Rest\Tracker\ArtifactsTestExecutionHelper;
+use Tuleap\REST\ArtifactsTestExecutionHelper;
 use Tuleap\REST\ForgeAccessSandbox;
 use Tuleap\REST\RESTTestDataBuilder;
 

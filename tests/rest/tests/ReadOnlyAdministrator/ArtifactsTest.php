@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\REST\ReadOnlyAdministrator;
 
-use Test\Rest\Tracker\ArtifactsTestExecutionHelper;
+use Tuleap\REST\ArtifactsTestExecutionHelper;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 #[\PHPUnit\Framework\Attributes\Group('ArtifactsTest')]

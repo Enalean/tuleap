@@ -1439,9 +1439,7 @@
             <file name="plugins/tracker/tests/rest/XMLImportAndFileURLs"/>
             <file name="plugins/tracker/tests/rest/XMLImportAndFileURLs/XMLImportAndFileURLsTest.php"/>
             <file name="plugins/tracker/tests/rest/init_test_data.php"/>
-            <file name="tests/rest/lib/ArtifactBase.php"/>
             <file name="tests/rest/lib/ArtifactFileBase.php"/>
-            <file name="tests/rest/lib/ArtifactsTestExecutionHelper.php"/>
             <file name="tests/rest/lib/CardsBase.php"/>
             <file name="tests/rest/lib/MilestoneBase.php"/>
             <file name="tests/rest/lib/ProjectBase.php"/>
