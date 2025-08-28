@@ -75,6 +75,7 @@ export const TQL_cross_tracker_autocomplete_keywords = [
     "@project.name",
     "@tracker.name",
     "@pretty_title",
+    "@link_type",
 ];
 
 export const cross_tracker_allowed_keywords = [
@@ -90,4 +91,5 @@ export const cross_tracker_allowed_keywords = [
     "@project.name",
     "@tracker.name",
     "@pretty_title",
+    "@link_type",
 ];
