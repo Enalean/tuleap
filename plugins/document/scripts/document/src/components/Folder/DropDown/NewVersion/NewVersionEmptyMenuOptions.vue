@@ -116,13 +116,16 @@ import type {
     NewVersionFromEmptyInformation,
 } from "../../../../store/actions-update";
 import { isFile } from "../../../../helpers/type-check-helper";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { USER_CAN_CREATE_WIKI } from "../../../../configuration-keys";
 
 const { createNewVersionFromEmpty } = useActions<
     Pick<RootActionsUpdate, "createNewVersionFromEmpty">
 >(["createNewVersionFromEmpty"]);
-const { embedded_are_allowed, user_can_create_wiki, user_locale } = useNamespacedState<
-    Pick<ConfigurationState, "embedded_are_allowed" | "user_can_create_wiki" | "user_locale">
->("configuration", ["embedded_are_allowed", "user_can_create_wiki", "user_locale"]);
+const user_can_create_wiki = strictInject(USER_CAN_CREATE_WIKI);
+const { embedded_are_allowed, user_locale } = useNamespacedState<
+    Pick<ConfigurationState, "embedded_are_allowed" | "user_locale">
+>("configuration", ["embedded_are_allowed", "user_locale"]);
 
 const create_new_item_alternatives = inject<NewItemAlternativeArray>(
     "create_new_item_alternatives",

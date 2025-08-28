@@ -37,16 +37,13 @@ import { computed, onMounted, ref } from "vue";
 import { autocomplete_users_for_select2 } from "@tuleap/autocomplete-for-select2";
 import type { RestUser } from "../../../api/rest-querier";
 import { retrieveSelectedOwner } from "../../../helpers/owner/retrieve-selected-owner";
-import { useNamespacedState } from "vuex-composition-helpers";
-import type { ConfigurationState } from "../../../store/configuration";
 import emitter from "../../../helpers/emitter";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { PROJECT_NAME } from "../../../configuration-keys";
 
 const props = defineProps<{ criterion: SearchCriterionOwner; value: string }>();
 
-const { project_name } = useNamespacedState<Pick<ConfigurationState, "project_name">>(
-    "configuration",
-    ["project_name"],
-);
+const project_name = strictInject(PROJECT_NAME);
 
 const owner_input = ref<InstanceType<typeof HTMLElement>>();
 const select2_people_picker = ref<(Select2Plugin & { trigger(event: string): void }) | undefined>();
@@ -73,7 +70,7 @@ onMounted(async (): Promise<void> => {
         codendiUserOnly: true,
         use_tuleap_id: true,
         ajax: {
-            url: `/plugins/document/${encodeURIComponent(project_name.value)}/owners`,
+            url: `/plugins/document/${encodeURIComponent(project_name)}/owners`,
             dataType: "json",
             delay: 250,
             data: (params: Record<string, unknown>) => ({
