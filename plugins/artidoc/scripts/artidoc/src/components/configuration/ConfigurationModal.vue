@@ -24,6 +24,7 @@
         v-bind:class="{ 'artidoc-config-modal-with-fields': are_fields_enabled }"
         aria-labelledby="artidoc-configuration-modal-title"
         ref="modal_element"
+        data-test="configuration-modal"
     >
         <configuration-modal-header />
         <configuration-modal-tabs

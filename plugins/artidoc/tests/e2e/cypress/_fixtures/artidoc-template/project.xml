@@ -94,6 +94,77 @@
         <permission scope="field" REF="F57946" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
       </permissions>
     </tracker>
+    <tracker id="T240" parent_id="0" allow_copy="0" enable_move_artifacts="1" instantiate_for_new_projects="1">
+      <name><![CDATA[Tracker for readonly fields tests]]></name>
+      <item_name><![CDATA[readonly_fields]]></item_name>
+      <description><![CDATA[]]></description>
+      <color><![CDATA[graffiti-yellow]]></color>
+      <cannedResponses/>
+      <formElements>
+        <formElement type="string" ID="F5476" rank="1" id="5476" tracker_id="240" parent_id="0">
+          <name><![CDATA[title]]></name>
+          <label><![CDATA[Title]]></label>
+          <properties size="30"/>
+        </formElement>
+        <formElement type="text" ID="F5477" rank="2" id="5477" tracker_id="240" parent_id="0">
+          <name><![CDATA[description]]></name>
+          <label><![CDATA[Description]]></label>
+          <properties rows="10" cols="50"/>
+        </formElement>
+        <formElement type="luby" ID="F5478" rank="3" id="5478" tracker_id="240" parent_id="0">
+          <name><![CDATA[last_update_by]]></name>
+          <label><![CDATA[Last update by]]></label>
+        </formElement>
+        <formElement type="lud" ID="F5479" rank="4" id="5479" tracker_id="240" parent_id="0">
+          <name><![CDATA[last_update_on]]></name>
+          <label><![CDATA[Last update on]]></label>
+        </formElement>
+      </formElements>
+      <semantics>
+        <semantic type="title">
+          <shortname><![CDATA[title]]></shortname>
+          <label><![CDATA[Titre]]></label>
+          <description><![CDATA[Définir le titre d'un artifact]]></description>
+          <field REF="F5476"/>
+        </semantic>
+        <semantic type="description">
+          <shortname><![CDATA[description]]></shortname>
+          <label><![CDATA[Description]]></label>
+          <description><![CDATA[Définir la description d'un artifact]]></description>
+          <field REF="F5477"/>
+        </semantic>
+        <semantic type="tooltip"/>
+        <semantic type="plugin_cardwall_card_fields"/>
+      </semantics>
+      <rules>
+        <date_rules/>
+        <list_rules/>
+      </rules>
+      <reports>
+        <report id="REPORT_527" is_default="0">
+          <name><![CDATA[Default]]></name>
+          <description><![CDATA[The system default artifact report]]></description>
+          <criterias/>
+          <renderers>
+            <renderer ID="R900" type="table" rank="0" chunksz="15">
+              <name><![CDATA[Results]]></name>
+              <columns/>
+            </renderer>
+          </renderers>
+        </report>
+      </reports>
+      <permissions>
+        <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+        <permission scope="field" REF="F5476" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F5476" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F5476" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F5477" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F5477" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F5477" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F5478" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F5479" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+      </permissions>
+    </tracker>
     <triggers/>
   </trackers>
   <docman>

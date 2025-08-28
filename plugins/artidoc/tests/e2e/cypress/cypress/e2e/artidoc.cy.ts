@@ -85,7 +85,7 @@ describe("Artidoc", () => {
     });
 
     it("Creates an artidoc document", function () {
-        createDocument("Artidoc requirements").then((url) => {
+        createRequirementArtidoc("Artidoc requirements").then((url) => {
             cy.regularUserSession();
             cy.visit(url);
             cy.log("User with read rights should see an empty state");
@@ -223,7 +223,7 @@ describe("Artidoc", () => {
     });
 
     it("Handles many levels of section", () => {
-        createDocument("Level of sections");
+        createRequirementArtidoc("Level of sections");
 
         createStructuredSections();
 
@@ -260,7 +260,7 @@ describe("Artidoc", () => {
 
     it("Handles tricky scenarios about level for sections", () => {
         cy.intercept("POST", "/api/v1/artidoc_sections").as("addSection");
-        createDocument("Tricky scenarios about level");
+        createRequirementArtidoc("Tricky scenarios about level");
 
         cy.log("Change level of pending default section");
 
@@ -309,7 +309,7 @@ describe("Artidoc", () => {
     });
 
     it("Handles reordering of sections in blocks", () => {
-        createDocument("Structured sections");
+        createRequirementArtidoc("Structured sections");
         cy.log("Create structured sections");
         createStructuredSections();
 
@@ -392,14 +392,61 @@ describe("Artidoc", () => {
         ]);
     });
 
-    function createDocument(name: string): Cypress.Chainable<string> {
+    it("Displays readonly fields after configuration", () => {
+        cy.log("Create a new artidoc bound to the 'Tracker for readonly fields tests' tracker.");
+        createDocument("Artidoc with readonly fields", "Tracker for readonly fields tests").then(
+            (url) => {
+                cy.projectMemberSession();
+                cy.visit(url);
+            },
+        );
+
+        cy.get("[data-test=artidoc-section]:first-child").within(() => {
+            cy.log("Create a first section.");
+            createSectionWithTitleAndDescription({
+                title: "A section with readonly fields",
+                description:
+                    "After configuration, the readonly fields are expected to be displayed in the right order below the description.",
+            });
+        });
+
+        cy.log("Open configuration modal > Readonly fields tab.");
+        cy.get("[data-test=document-actions-button]").click();
+        cy.get("[data-test=document-actions-open-configuration-modal]").click();
+        cy.get("[data-test=fields-selection-tab]").click();
+
+        cy.get("[data-test=configuration-modal]").within(() => {
+            cy.log("Configure 2 readonly fields");
+            cy.searchItemInListPickerDropdown("Last update by").click();
+            cy.searchItemInListPickerDropdown("Last update on").click();
+
+            cy.get("[data-test=submit]").click();
+        });
+
+        cy.get("[data-test=artidoc-section]:first-child").within(() => {
+            cy.log("Expect 2 readonly fields to be displayed in the right order.");
+            cy.get("[data-test=readonly-field]").should("have.length", 2);
+
+            cy.get("[data-test=readonly-field]").eq(0).contains("Last update by");
+            cy.get("[data-test=readonly-field]").eq(1).contains("Last update on");
+        });
+    });
+
+    function createRequirementArtidoc(document_name: string): Cypress.Chainable<string> {
+        return createDocument(document_name, "Requirements");
+    }
+
+    function createDocument(
+        document_name: string,
+        tracker_name: string,
+    ): Cypress.Chainable<string> {
         cy.log("Create document");
         cy.projectMemberSession();
         cy.visitProjectService(project_name, "Documents");
         cy.get("[data-test=document-new-item]").click();
         cy.contains("[data-test=other_item_type]", "Artidoc").click();
         cy.intercept("*/docman_folders/*/others").as("createDocument");
-        cy.get("[data-test=document-new-item-title]").type(name + "{enter}");
+        cy.get("[data-test=document-new-item-title]").type(document_name + "{enter}");
 
         return cy
             .wait("@createDocument")
@@ -407,12 +454,12 @@ describe("Artidoc", () => {
             .then((document_id): Cypress.Chainable<string> => {
                 const url = "/artidoc/" + encodeURIComponent(document_id);
 
-                cy.contains("[data-test=document-folder-subitem-link]", name).click();
+                cy.contains("[data-test=document-folder-subitem-link]", document_name).click();
                 cy.log(
                     "Wait for section to be loaded, intercepting section load does not do the trick",
                 );
                 cy.get("[data-test=states-section]");
-                cy.get("[data-test=artidoc-configuration-tracker]").last().select("Requirements");
+                cy.get("[data-test=artidoc-configuration-tracker]").last().select(tracker_name);
                 cy.intercept("/api/artidoc/*/configuration").as("saveConfiguration");
                 cy.get("[data-test=artidoc-configuration-submit-button]").click();
                 cy.wait("@saveConfiguration");

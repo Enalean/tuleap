@@ -25,6 +25,7 @@
         role="menuitem"
         v-bind:title="button_title"
         v-on:click="openModal()"
+        data-test="document-actions-open-configuration-modal"
     >
         <i class="fa-solid fa-cog fa-fw" aria-hidden="true"></i>
         {{ $gettext("Configure document") }}
