@@ -54,19 +54,13 @@ class Rule_ProjectName extends \Rule_UserName // phpcs:ignore PSR1.Classes.Class
      */
     public function isNameAvailable($val)
     {
-        $backendSVN = $this->_getBackend('SVN');
-        if (! $backendSVN->isNameAvailable($val)) {
-            $this->error = $GLOBALS['Language']->getText('include_account', 'used_by_svn');
+        $result = \true;
+        // Add Hook for plugins to check the name validity under plugins directories
+        $error = '';
+        $this->getEventManager()->processEvent('file_exists_in_data_dir', ['new_name' => $val, 'result' => &$result, 'error' => &$error]);
+        if (! $result) {
+            $this->error = $error;
             return \false;
-        } else {
-            $result = \true;
-            // Add Hook for plugins to check the name validity under plugins directories
-            $error = '';
-            $this->getEventManager()->processEvent('file_exists_in_data_dir', ['new_name' => $val, 'result' => &$result, 'error' => &$error]);
-            if ($result == \false) {
-                $this->error = $error;
-                return \false;
-            }
         }
         return \true;
     }
@@ -127,15 +121,5 @@ class Rule_ProjectName extends \Rule_UserName // phpcs:ignore PSR1.Classes.Class
         }
 
         return $is_starting_with_alphanumeric_character;
-    }
-
-    /**
-     * Wrapper
-     *
-     * @return Backend
-     */
-    protected function _getBackend(string $type = '') // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
-    {
-        return \Backend::instance($type);
     }
 }

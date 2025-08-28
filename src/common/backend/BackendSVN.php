@@ -32,7 +32,7 @@ use Tuleap\SVNCore\Cache\ParameterDao;
 use Tuleap\SVNCore\Cache\ParameterRetriever;
 use Tuleap\URI\URIModifier;
 
-class BackendSVN extends Backend
+class BackendSVN extends Backend // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     public const PRE_COMMIT_HOOK          = 'pre-commit';
     public const POST_COMMIT_HOOK         = 'post-commit';
@@ -408,19 +408,6 @@ class BackendSVN extends Backend
     private function getSvnFilesUnixGroupName(Project $project)
     {
         return $this->getUnixGroupNameForProject($project);
-    }
-
-    /**
-     * Check if given name is not used by a repository or a file or a link
-     *
-     * @param String $name
-     *
-     * @return bool false if repository or file  or link already exists, true otherwise
-     */
-    public function isNameAvailable($name)
-    {
-        $path = ForgeConfig::get('svn_prefix') . '/' . $name;
-        return (! $this->fileExists($path));
     }
 
     private function enableCommitMessageUpdate($project_svnroot, $hooks_path)
