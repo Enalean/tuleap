@@ -54,10 +54,8 @@ class captchaPlugin extends Plugin // @codingStandardsIgnoreLine
         $this->setScope(self::SCOPE_SYSTEM);
     }
 
-    /**
-     * @return PluginInfo
-     */
-    public function getPluginInfo()
+    #[Override]
+    public function getPluginInfo(): PluginInfo
     {
         if (! $this->pluginInfo instanceof PluginInfo) {
             $this->pluginInfo = new PluginInfo($this);
@@ -139,19 +137,14 @@ class captchaPlugin extends Plugin // @codingStandardsIgnoreLine
     }
 
     /**
-     * @return Configuration
      * @throws \Tuleap\Captcha\ConfigurationNotFoundException
      */
-    private function getConfiguration()
+    private function getConfiguration(): Configuration
     {
-        $configuration_retriever = new ConfigurationRetriever(new DataAccessObject());
-        return $configuration_retriever->retrieve();
+        return new ConfigurationRetriever(new DataAccessObject())->retrieve();
     }
 
-    /**
-     * @return bool
-     */
-    private function isConfigured()
+    private function isConfigured(): bool
     {
         try {
             $this->getConfiguration();
