@@ -25,13 +25,15 @@
             id="tracker-description"
             name="tracker-description"
             v-bind:placeholder="placeholder"
+            v-bind:value="tracker_to_be_created.description"
+            v-on:keyup="setTrackerDescription($event)"
             rows="4"
         ></textarea>
     </div>
 </template>
 <script setup lang="ts">
 import { computed } from "vue";
-import { useState } from "vuex-composition-helpers";
+import { useState, useStore } from "vuex-composition-helpers";
 import { useGettext } from "vue3-gettext";
 import type { TrackerToBeCreatedMandatoryData } from "../../../../store/type";
 
@@ -47,4 +49,13 @@ const placeholder = computed(() =>
         true,
     ),
 );
+
+const $store = useStore();
+
+function setTrackerDescription(event: Event): void {
+    if (!(event.target instanceof HTMLTextAreaElement)) {
+        return;
+    }
+    $store.commit("setTrackerDescription", event.target.value);
+}
 </script>

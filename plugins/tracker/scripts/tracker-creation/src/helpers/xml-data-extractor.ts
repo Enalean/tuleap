@@ -42,6 +42,7 @@ export async function extractNameAndShortnameFromXmlFile(
     const name: Element | null = xml_file.querySelector("tracker > name");
     const shortname: Element | null = xml_file.querySelector("tracker > item_name");
     const tlp_color: Element | null = xml_file.querySelector("tracker > color");
+    const description: Element | null = xml_file.querySelector("tracker > description");
 
     if (name === null || shortname === null || !name.textContent || !shortname.textContent) {
         return Promise.reject("The provided XML file does not provide any name and/or shortname");
@@ -59,6 +60,7 @@ export async function extractNameAndShortnameFromXmlFile(
         name: name.textContent,
         shortname: shortname.textContent,
         color: tracker_color,
+        description: description?.textContent ? description.textContent : "",
     };
 }
 

@@ -341,6 +341,7 @@ describe("getters", () => {
                 name: "Epics",
                 shortname: "epic",
                 color: "peggy-pink",
+                description: "Some description",
             });
 
             expect(getters.is_name_already_used(state)).toBe(true);
@@ -352,6 +353,7 @@ describe("getters", () => {
                 name: "Requirements",
                 shortname: "requirement",
                 color: "peggy-pink",
+                description: "Some description",
             });
 
             expect(getters.is_name_already_used(state)).toBe(false);

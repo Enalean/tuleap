@@ -70,6 +70,7 @@ export interface TrackerToBeCreatedMandatoryData {
     name: string;
     shortname: string;
     color: string;
+    description: string;
 }
 
 export interface ExistingTrackersList {

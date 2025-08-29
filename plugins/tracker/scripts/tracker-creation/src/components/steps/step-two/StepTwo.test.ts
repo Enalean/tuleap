@@ -137,6 +137,7 @@ describe("StepTwo", () => {
                 tracker_to_be_created: {
                     name: "Kanban in the trees",
                     shortname: "kanban_in_the_trees",
+                    description: "Some pretty description",
                 },
                 selected_xml_file_input: file_input,
             } as State;
@@ -168,6 +169,7 @@ describe("StepTwo", () => {
                     tracker_to_be_created: {
                         name: "Kanban in the trees",
                         shortname: "kanban_in_the_trees",
+                        description: "Some pretty description",
                     },
                     selected_xml_file_input: file_input,
                 } as State,
