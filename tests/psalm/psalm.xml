@@ -129,7 +129,6 @@
             <file name="tests/unit/tuleap-cfg/Command/TestDBWrapper.php"/>
             <file name="tests/unit/www/include/ServiceCreateServiceTest.php"/>
             <file name="tests/unit/www/include/UtilsHTTPTest.php"/>
-            <file name="plugins/agiledashboard/tests/unit/AgileDashboard/AgileDashboardServiceHomepageUrlBuilderTest.php"/>
             <file name="plugins/agiledashboard/tests/unit/AgileDashboard/AgileDashboard_ConfigurationManagerTest.php"/>
             <file name="plugins/agiledashboard/tests/unit/AgileDashboard/AgileDashboard_XMLExporterTest.php"/>
             <file name="plugins/agiledashboard/tests/unit/AgileDashboard/AgileDashboard_XMLimporterTest.php"/>
