@@ -43,4 +43,5 @@ export type Service = {
     rank: number;
     is_project_scope: boolean;
     is_disabled_reason: boolean;
+    readonly is_link_customizable: boolean;
 };
