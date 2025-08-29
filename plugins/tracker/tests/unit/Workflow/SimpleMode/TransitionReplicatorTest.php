@@ -24,13 +24,13 @@ namespace Tuleap\Tracker\Workflow\SimpleMode;
 
 use EventManager;
 use PHPUnit\Framework\MockObject\MockObject;
-use Tracker_FormElement_Container_Fieldset;
 use Transition;
 use Transition_PostAction_CIBuild;
 use Transition_PostAction_Field_Date;
 use Transition_PostAction_Field_Float;
 use Transition_PostAction_Field_Int;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\FormElement\Container\Fieldset\FieldsetContainer;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFields;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsets;
 use Tuleap\Tracker\Workflow\PostAction\PostActionsRetriever;
@@ -136,8 +136,8 @@ final class TransitionReplicatorTest extends TestCase
             ->method('getFrozenFields')
             ->willReturn($frozen_fields);
 
-        $fieldset_01 = $this->createMock(Tracker_FormElement_Container_Fieldset::class);
-        $fieldset_02 = $this->createMock(Tracker_FormElement_Container_Fieldset::class);
+        $fieldset_01 = $this->createMock(FieldsetContainer::class);
+        $fieldset_02 = $this->createMock(FieldsetContainer::class);
 
         $fieldset_01->method('getID')->willReturn('648');
         $fieldset_02->method('getID')->willReturn('701');

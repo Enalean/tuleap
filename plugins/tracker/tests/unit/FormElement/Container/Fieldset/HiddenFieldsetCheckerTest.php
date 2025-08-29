@@ -24,7 +24,6 @@ namespace Tuleap\Tracker\FormElement\Container\Fieldset;
 
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use PHPUnit\Framework\MockObject\MockObject;
-use Tracker_FormElement_Container_Fieldset;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Artifact\Artifact;
@@ -42,7 +41,7 @@ final class HiddenFieldsetCheckerTest extends TestCase
     private HiddenFieldsetChecker $checker;
     private HiddenFieldsetsDetector&MockObject $detector;
     private FieldsExtractor&MockObject $fields_extractor;
-    private Tracker_FormElement_Container_Fieldset $fieldset;
+    private FieldsetContainer $fieldset;
     private Artifact $artifact;
 
     protected function setUp(): void

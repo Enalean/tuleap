@@ -43,8 +43,8 @@ final class HiddenFieldsetsValueValidatorTest extends \Tuleap\Test\PHPUnit\TestC
 
     public function testValidateDoesNotThrowWhenValid(): void
     {
-        $fieldset_01 = $this->createMock(\Tracker_FormElement_Container_Fieldset::class);
-        $fieldset_02 = $this->createMock(\Tracker_FormElement_Container_Fieldset::class);
+        $fieldset_01 = $this->createMock(\Tuleap\Tracker\FormElement\Container\Fieldset\FieldsetContainer::class);
+        $fieldset_02 = $this->createMock(\Tuleap\Tracker\FormElement\Container\Fieldset\FieldsetContainer::class);
 
         $fieldset_01->method('getID')->willReturn('648');
         $fieldset_02->method('getID')->willReturn('701');
@@ -90,8 +90,8 @@ final class HiddenFieldsetsValueValidatorTest extends \Tuleap\Test\PHPUnit\TestC
 
     public function testValidateThrowsWhenFieldIdDoesNotMatchAUsedFieldset(): void
     {
-        $fieldset_01 = $this->createMock(\Tracker_FormElement_Container_Fieldset::class);
-        $fieldset_02 = $this->createMock(\Tracker_FormElement_Container_Fieldset::class);
+        $fieldset_01 = $this->createMock(\Tuleap\Tracker\FormElement\Container\Fieldset\FieldsetContainer::class);
+        $fieldset_02 = $this->createMock(\Tuleap\Tracker\FormElement\Container\Fieldset\FieldsetContainer::class);
 
         $fieldset_01->method('getID')->willReturn('648');
         $fieldset_02->method('getID')->willReturn('701');

@@ -25,11 +25,11 @@ namespace Tuleap\Tracker\Workflow\PostAction\Update\Internal;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFields;
 use Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets\HiddenFieldsets;
 use Tuleap\Tracker\Workflow\PostAction\Update\CIBuildValue;
+use Tuleap\Tracker\Workflow\PostAction\Update\FrozenFieldsValue;
 use Tuleap\Tracker\Workflow\PostAction\Update\HiddenFieldsetsValue;
 use Tuleap\Tracker\Workflow\PostAction\Update\SetDateValue;
 use Tuleap\Tracker\Workflow\PostAction\Update\SetFloatValue;
 use Tuleap\Tracker\Workflow\PostAction\Update\SetIntValue;
-use Tuleap\Tracker\Workflow\PostAction\Update\FrozenFieldsValue;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class PostActionsMapperTest extends \Tuleap\Test\PHPUnit\TestCase
@@ -133,8 +133,8 @@ final class PostActionsMapperTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testConvertToHiddenFieldsetsValueValueWithNullId(): void
     {
-        $fieldset_01 = $this->createMock(\Tracker_FormElement_Container_Fieldset::class);
-        $fieldset_02 = $this->createMock(\Tracker_FormElement_Container_Fieldset::class);
+        $fieldset_01 = $this->createMock(\Tuleap\Tracker\FormElement\Container\Fieldset\FieldsetContainer::class);
+        $fieldset_02 = $this->createMock(\Tuleap\Tracker\FormElement\Container\Fieldset\FieldsetContainer::class);
 
         $fieldset_01->method('getID')->willReturn('648');
         $fieldset_02->method('getID')->willReturn('701');

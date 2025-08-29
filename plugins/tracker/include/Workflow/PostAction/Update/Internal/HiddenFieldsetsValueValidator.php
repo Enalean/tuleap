@@ -80,7 +80,7 @@ class HiddenFieldsetsValueValidator
         $used_fieldsets    = $this->form_element_factory->getUsedFieldsets($tracker);
         $used_fieldset_ids = [];
         foreach ($used_fieldsets as $used_fieldset) {
-            \assert($used_fieldset instanceof \Tracker_FormElement_Container_Fieldset);
+            \assert($used_fieldset instanceof \Tuleap\Tracker\FormElement\Container\Fieldset\FieldsetContainer);
             $used_fieldset_ids[] = (int) $used_fieldset->getID();
         }
 

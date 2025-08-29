@@ -23,8 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets;
 
 use PHPUnit\Framework\MockObject\MockObject;
-use Tracker_FormElement_Container_Fieldset;
 use Tracker_FormElementFactory;
+use Tuleap\Tracker\FormElement\Container\Fieldset\FieldsetContainer;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -64,8 +64,8 @@ final class HiddenFieldsetsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         );
 
-        $fieldset_01 = $this->createMock(Tracker_FormElement_Container_Fieldset::class);
-        $fieldset_02 = $this->createMock(Tracker_FormElement_Container_Fieldset::class);
+        $fieldset_01 = $this->createMock(FieldsetContainer::class);
+        $fieldset_02 = $this->createMock(FieldsetContainer::class);
 
         $this->form_element_factory->method('getFieldsetById')
             ->willReturnCallback(static fn (int $id) => match ($id) {
@@ -104,7 +104,7 @@ final class HiddenFieldsetsRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
             ]
         );
 
-        $fieldset_01 = $this->createMock(Tracker_FormElement_Container_Fieldset::class);
+        $fieldset_01 = $this->createMock(FieldsetContainer::class);
 
         $this->form_element_factory->method('getFieldsetById')->with(331)->willReturn($fieldset_01);
 
