@@ -25,6 +25,7 @@
         role="dialog"
         aria-labelledby="project-admin-services-edit-modal-title"
         data-test="service-edit-modal"
+        ref="form_element"
     >
         <div class="tlp-modal-header">
             <h1 class="tlp-modal-title" id="project-admin-services-edit-modal-title">
@@ -59,38 +60,40 @@
         </div>
     </form>
 </template>
-<script>
+<script setup lang="ts">
+import { onBeforeUnmount, onMounted, ref } from "vue";
 import { createModal } from "@tuleap/tlp-modal";
+import type { Modal } from "@tuleap/tlp-modal";
 
-export default {
-    name: "EditModal",
-    props: {
-        form_url: {
-            type: String,
-            required: true,
-        },
-    },
-    emits: ["reset-modal"],
-    data() {
-        return {
-            modal: null,
-        };
-    },
-    mounted() {
-        this.modal = createModal(this.$el);
-        this.modal.addEventListener("tlp-modal-hidden", () => {
-            this.$emit("reset-modal");
-        });
-    },
-    beforeUnmount() {
-        if (this.modal !== null) {
-            this.modal.destroy();
-        }
-    },
-    methods: {
-        show() {
-            this.modal.show();
-        },
-    },
-};
+defineProps<{
+    form_url: string;
+}>();
+
+const emit = defineEmits<{
+    (e: "reset-modal"): void;
+}>();
+
+const modal = ref<Modal | null>(null);
+const form_element = ref<HTMLElement | null>(null);
+
+onMounted(() => {
+    if (!form_element.value) {
+        return;
+    }
+
+    modal.value = createModal(form_element.value);
+    modal.value.addEventListener("tlp-modal-hidden", () => {
+        emit("reset-modal");
+    });
+});
+
+onBeforeUnmount(() => {
+    modal.value?.destroy();
+});
+
+function show() {
+    modal.value?.show();
+}
+
+defineExpose({ show });
 </script>
