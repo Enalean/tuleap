@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\REST\Regressions;
+namespace Tuleap\Tracker\REST\Tests;
 
 use Psl\Json;
 use Psr\Http\Message\RequestFactoryInterface;
@@ -33,16 +33,14 @@ final class TrackerRESTHelperFactory
 {
     /** @var array<string, array> */
     private array $project_trackers;
-    private string $user_name;
 
     public function __construct(
+        private readonly RequestWrapper $rest_request,
         private readonly RequestFactoryInterface $request_factory,
         private readonly StreamFactoryInterface $stream_factory,
-        private readonly RequestWrapper $rest_request,
         int $project_id,
-        string $default_user_name,
+        private string $rest_user_name,
     ) {
-        $this->user_name = $default_user_name;
         $this->cacheProjectTrackers($project_id);
     }
 
@@ -53,7 +51,7 @@ final class TrackerRESTHelperFactory
             $this->stream_factory,
             $this->rest_request,
             $this->project_trackers[$tracker_name],
-            $this->user_name
+            $this->rest_user_name
         );
     }
 
@@ -68,6 +66,6 @@ final class TrackerRESTHelperFactory
 
     private function getResponse(RequestInterface $request): ResponseInterface
     {
-        return $this->rest_request->getResponseByName($this->user_name, $request);
+        return $this->rest_request->getResponseByName($this->rest_user_name, $request);
     }
 }

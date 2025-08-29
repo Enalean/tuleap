@@ -238,11 +238,11 @@ class RESTTestDataBuilder extends BaseTestDataBuilder
 
         $project_edit_dao = new ProjectEditDao();
         if ($public_template) {
-            $project_edit_dao->updateProjectStatusAndType('A', TemplateSingleton::TEMPLATE, $public_template->getID());
+            $project_edit_dao->updateProjectStatusAndType(\Project::STATUS_ACTIVE, TemplateSingleton::TEMPLATE, $public_template->getID());
         }
 
         if ($private_template) {
-            $project_edit_dao->updateProjectStatusAndType('A', TemplateSingleton::TEMPLATE, $private_template->getID());
+            $project_edit_dao->updateProjectStatusAndType(\Project::STATUS_ACTIVE, TemplateSingleton::TEMPLATE, $private_template->getID());
         }
 
         return $this;

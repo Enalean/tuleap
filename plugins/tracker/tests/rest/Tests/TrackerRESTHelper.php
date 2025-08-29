@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\REST\Regressions;
+namespace Tuleap\Tracker\REST\Tests;
 
 use Psl\Json;
 use Psr\Http\Message\RequestFactoryInterface;
@@ -29,18 +29,15 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Tuleap\REST\RequestWrapper;
 
-final class TrackerRESTHelper
+final readonly class TrackerRESTHelper
 {
-    private string $user_name;
-
     public function __construct(
-        private readonly RequestFactoryInterface $request_factory,
-        private readonly StreamFactoryInterface $stream_factory,
-        private readonly RequestWrapper $rest_request,
+        private RequestFactoryInterface $request_factory,
+        private StreamFactoryInterface $stream_factory,
+        private RequestWrapper $rest_request,
         private array $tracker,
-        string $default_user_name,
+        private string $rest_user_name,
     ) {
-        $this->user_name = $default_user_name;
     }
 
     public function createArtifact(array $values): array
@@ -89,27 +86,45 @@ final class TrackerRESTHelper
     private function getListValueIdByLabel(array $field, string $field_value_label): int
     {
         foreach ($field['values'] as $value) {
-            if ($value['label'] == $field_value_label) {
+            if ($value['label'] === $field_value_label) {
                 return $value['id'];
             }
         }
-        throw new \LogicException("Could not find list value with label '$field_value_label'");
+        throw new \RuntimeException(sprintf('Could not find list value with label "%s"', $field_value_label));
     }
 
     private function getFieldByLabel(string $field_label): array
     {
         foreach ($this->tracker['fields'] as $field) {
-            if ($field['label'] == $field_label) {
+            if ($field['label'] === $field_label) {
                 return $field;
             }
         }
-        throw new \LogicException("Could not find field with label '$field_label'");
+        throw new \RuntimeException(sprintf('Could not find field with label "%s"', $field_label));
+    }
+
+    /**
+     * @return array{field_id: int, type: string, label: string, name: string}
+     */
+    public function getFieldByShortName(string $field_short_name): array
+    {
+        foreach ($this->tracker['fields'] as $field) {
+            if ($field['name'] === $field_short_name) {
+                return $field;
+            }
+        }
+        throw new \RuntimeException(sprintf('Could not find field with short name "%s"', $field_short_name));
+    }
+
+    public function getTrackerID(): int
+    {
+        return $this->tracker['id'];
     }
 
     private function getResponse(RequestInterface $request): ResponseInterface
     {
         return $this->rest_request->getResponseByName(
-            $this->user_name,
+            $this->rest_user_name,
             $request
         );
     }
