@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Roadmap\REST\v1;
 
+use EventManager;
 use Luracast\Restler\RestException;
 use Psr\Log\LoggerInterface;
 use Tuleap\REST\Header;
@@ -30,6 +31,7 @@ use Tuleap\Roadmap\NatureForRoadmapDao;
 use Tuleap\Roadmap\ReportToFilterArtifactsRetriever;
 use Tuleap\Roadmap\RoadmapWidgetDao;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\SystemTypePresenterBuilder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\Semantic\Progress\MethodBuilder;
@@ -109,7 +111,8 @@ final class RoadmapResource
                     $progress_dao,
                     new TypePresenterFactory(
                         new TypeDao(),
-                        new ArtifactLinksUsageDao()
+                        new ArtifactLinksUsageDao(),
+                        new SystemTypePresenterBuilder(EventManager::instance())
                     )
                 )
             ),

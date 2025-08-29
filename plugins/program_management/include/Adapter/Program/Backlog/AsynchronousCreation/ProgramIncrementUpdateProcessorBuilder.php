@@ -62,6 +62,7 @@ use Tuleap\Tracker\FormElement\ArtifactLinkValidator;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\LinksRetriever;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\SystemTypePresenterBuilder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
@@ -124,7 +125,8 @@ final class ProgramIncrementUpdateProcessorBuilder implements BuildProgramIncrem
                         $artifact_factory,
                         new TypePresenterFactory(
                             new TypeDao(),
-                            $artifact_links_usage_dao
+                            $artifact_links_usage_dao,
+                            new SystemTypePresenterBuilder($event_dispatcher),
                         ),
                         $artifact_links_usage_dao,
                         $event_dispatcher,

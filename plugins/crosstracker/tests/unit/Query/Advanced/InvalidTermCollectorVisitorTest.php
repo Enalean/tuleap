@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Query\Advanced;
 
+use EventManager;
 use Tuleap\CrossTracker\Query\Advanced\QueryValidation\DuckTypedField\DuckTypedFieldChecker;
 use Tuleap\CrossTracker\Query\Advanced\QueryValidation\Metadata\ArtifactIdMetadataChecker;
 use Tuleap\CrossTracker\Query\Advanced\QueryValidation\Metadata\AssignedToChecker;
@@ -36,6 +37,7 @@ use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\ProvideAndRetrieveUserStub;
 use Tuleap\Test\Stubs\ProvideCurrentUserStub;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\SystemTypePresenterBuilder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\ListFields\OpenListValueDao;
@@ -215,7 +217,8 @@ final class InvalidTermCollectorVisitorTest extends TestCase
             new ArtifactLinkTypeChecker(
                 new TypePresenterFactory(
                     $this->createStub(TypeDao::class),
-                    $this->createStub(ArtifactLinksUsageDao::class)
+                    $this->createStub(ArtifactLinksUsageDao::class),
+                    new SystemTypePresenterBuilder(EventManager::instance())
                 )
             )
         );

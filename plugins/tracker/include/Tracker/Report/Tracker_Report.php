@@ -33,6 +33,7 @@ use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateComme
 use Tuleap\Tracker\Artifact\Changeset\Comment\PrivateComment\TrackerPrivateCommentUGroupEnabledDao;
 use Tuleap\Tracker\Artifact\Changeset\NewChangesetCreatorBuilder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\SystemTypePresenterBuilder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\ListFields\OpenListValueDao;
@@ -849,7 +850,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface // phpcs:ignore P
      */
     private function getTypePresenterFactory()
     {
-        return new TypePresenterFactory(new TypeDao(), $this->getArtifactLinksUsageDao());
+        return new TypePresenterFactory(new TypeDao(), $this->getArtifactLinksUsageDao(), new SystemTypePresenterBuilder(EventManager::instance()));
     }
 
     /**
@@ -2229,6 +2230,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface // phpcs:ignore P
                     new TypePresenterFactory(
                         new TypeDao(),
                         new ArtifactLinksUsageDao(),
+                        new SystemTypePresenterBuilder(EventManager::instance())
                     ),
                 ),
                 new InvalidMetadata\EqualComparisonChecker(),

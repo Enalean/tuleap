@@ -40,6 +40,7 @@ use Tuleap\TestManagement\Administration\TrackerChecker;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageUpdater;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\SystemTypePresenterBuilder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\User\Avatar\ProvideUserAvatarUrl;
@@ -150,7 +151,7 @@ class Router
             $this->tracker_factory,
             $this->visit_recorder,
             $this->project_flags_builder,
-            (new TypePresenterFactory(new TypeDao(), new ArtifactLinksUsageDao())),
+            (new TypePresenterFactory(new TypeDao(), new ArtifactLinksUsageDao(), new SystemTypePresenterBuilder(EventManager::instance()))),
             $this->provide_user_avatar_url,
         );
         $this->renderAction($controller, 'index', $request, true, [], ['reduce-help-button']);

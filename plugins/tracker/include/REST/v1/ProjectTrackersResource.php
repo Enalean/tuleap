@@ -36,6 +36,7 @@ use Tuleap\REST\ProjectAuthorization;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\FormElement\Container\Fieldset\HiddenFieldsetChecker;
 use Tuleap\Tracker\FormElement\Container\FieldsExtractor;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\SystemTypePresenterBuilder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\Hierarchy\HierarchyDAO;
@@ -170,7 +171,7 @@ class ProjectTrackersResource extends AuthenticatedResource
                     new FieldsExtractor()
                 ),
                 new PermissionsForGroupsBuilder($ugroup_manager, $frozen_fields_detector, $tracker_permission_wrapper),
-                new TypePresenterFactory(new TypeDao(), new ArtifactLinksUsageDao())
+                new TypePresenterFactory(new TypeDao(), new ArtifactLinksUsageDao(), new SystemTypePresenterBuilder(EventManager::instance()))
             ),
             new PermissionsRepresentationBuilder($ugroup_manager, $tracker_permission_wrapper),
             new WorkflowRestBuilder(),

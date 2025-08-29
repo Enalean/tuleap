@@ -35,6 +35,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\ArtifactLinkTypeConvert
 use Tuleap\Tracker\Creation\JiraImporter\JiraProjectBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\JiraTrackerBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\UserRole\UserRolesChecker;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\SystemTypePresenterBuilder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeCreator;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
@@ -94,6 +95,7 @@ final class jira_importPlugin extends Plugin
                                 new TypePresenterFactory(
                                     $nature_dao,
                                     $artifact_link_usage_dao,
+                                    new SystemTypePresenterBuilder(EventManager::instance()),
                                 ),
                             ),
                             new TypeCreator(
@@ -134,6 +136,7 @@ final class jira_importPlugin extends Plugin
                                 new TypePresenterFactory(
                                     $nature_dao,
                                     $artifact_link_usage_dao,
+                                    new SystemTypePresenterBuilder(EventManager::instance()),
                                 ),
                             ),
                             new TypeCreator(

@@ -69,6 +69,7 @@ use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\Artifact\PriorityManager;
 use Tuleap\Tracker\FormElement\ArtifactLinkValidator;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\SystemTypePresenterBuilder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\Computed\ComputedFieldDao;
@@ -115,6 +116,7 @@ class ArchiveAndDeleteArtifactTaskBuilder
         $cross_reference_manager  = new CrossReferenceManager($cross_references_dao);
         $tracker_artifact_dao     = new Tracker_ArtifactDao();
         $db_connection            = DBFactory::getMainTuleapDBConnection();
+        $type_presenter_factory   = new TypePresenterFactory(new TypeDao(), $artifact_links_usage_dao, new SystemTypePresenterBuilder($event_manager));
         $artifact_linker          = new ArtifactLinker(
             Tracker_FormElementFactory::instance(),
             new NewChangesetCreator(
@@ -139,7 +141,7 @@ class ArchiveAndDeleteArtifactTaskBuilder
                         $formelement_factory,
                         new ArtifactLinkValidator(
                             $tracker_artifact_factory,
-                            new TypePresenterFactory(new TypeDao(), $artifact_links_usage_dao),
+                            $type_presenter_factory,
                             $artifact_links_usage_dao,
                             $event_manager,
                         ),
@@ -201,7 +203,7 @@ class ArchiveAndDeleteArtifactTaskBuilder
                     ),
                     $user_xml_exporter,
                     $event_manager,
-                    new TypePresenterFactory(new TypeDao(), $artifact_links_usage_dao),
+                    $type_presenter_factory,
                     $artifact_links_usage_dao,
                     $external_field_extractor,
                     $logger

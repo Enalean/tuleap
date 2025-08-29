@@ -27,6 +27,7 @@ use PFUser;
 use SimpleXMLElement;
 use TrackerManager;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\SystemTypePresenterBuilder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\TrackerField;
@@ -233,7 +234,8 @@ class TrackerSemanticManager
                 $semantic_progress_dao,
                 new TypePresenterFactory(
                     new TypeDao(),
-                    new ArtifactLinksUsageDao()
+                    new ArtifactLinksUsageDao(),
+                    new SystemTypePresenterBuilder(EventManager::instance())
                 )
             )
         ))->getSemantic($this->tracker);

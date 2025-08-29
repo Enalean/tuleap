@@ -41,6 +41,7 @@ use Tuleap\Tracker\PermissionsFunctionsWrapper;
 use Tuleap\Tracker\REST\FormElement\PermissionsForGroupsBuilder;
 use Tuleap\Tracker\REST\Tracker\PermissionsRepresentationBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
+use Tuleap\Tracker\Test\Stub\FormElement\Field\ArtifactLink\Type\RetrieveSystemTypePresenterStub;
 use Tuleap\Tracker\Test\Stub\Hierarchy\SearchParentTrackerStub;
 use Tuleap\Tracker\Test\Stub\Permission\RetrieveUserPermissionOnTrackersStub;
 use Tuleap\Tracker\Test\Stub\RetrieveTrackerStub;
@@ -120,6 +121,7 @@ final class TrackerRestBuilderTest extends TestCase
                 new TypePresenterFactory(
                     $this->createMock(TypeDao::class),
                     $this->createMock(ArtifactLinksUsageDao::class),
+                    RetrieveSystemTypePresenterStub::build(),
                 )
             ),
             new PermissionsRepresentationBuilder($ugroup_manager, $permissions_functions_wrapper),

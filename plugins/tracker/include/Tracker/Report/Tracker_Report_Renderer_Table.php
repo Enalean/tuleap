@@ -31,6 +31,7 @@ use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Artifact\PossibleParentsRetriever;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\DisplayArtifactLinkEvent;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\SystemTypePresenterBuilder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
@@ -2724,7 +2725,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         $type_dao                = new TypeDao();
         $artifact_link_usage_dao = new ArtifactLinksUsageDao();
 
-        return new TypePresenterFactory($type_dao, $artifact_link_usage_dao);
+        return new TypePresenterFactory($type_dao, $artifact_link_usage_dao, new SystemTypePresenterBuilder(EventManager::instance()));
     }
 
     public function getJavascriptDependencies()

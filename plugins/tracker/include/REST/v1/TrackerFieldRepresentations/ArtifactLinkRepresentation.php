@@ -22,6 +22,7 @@ namespace Tuleap\Tracker\REST\v1\TrackerFieldRepresentations;
 
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\SystemTypePresenterBuilder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
@@ -90,7 +91,7 @@ final class ArtifactLinkRepresentation
         $type_dao                = new TypeDao();
         $artifact_link_usage_dao = new ArtifactLinksUsageDao();
 
-        return new TypePresenterFactory($type_dao, $artifact_link_usage_dao);
+        return new TypePresenterFactory($type_dao, $artifact_link_usage_dao, new SystemTypePresenterBuilder(\EventManager::instance()));
     }
 
     private static function formatType(TypePresenter $type, Artifact $artifact, string $direction): LinkTypeRepresentation

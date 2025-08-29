@@ -24,6 +24,7 @@
 
 namespace Tuleap\Timetracking\REST\v1;
 
+use EventManager;
 use Luracast\Restler\RestException;
 use Project;
 use Tracker_FormElementFactory;
@@ -39,6 +40,7 @@ use Tuleap\Timetracking\Time\TimeRetriever;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\FormElement\Container\Fieldset\HiddenFieldsetChecker;
 use Tuleap\Tracker\FormElement\Container\FieldsExtractor;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\SystemTypePresenterBuilder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\Hierarchy\HierarchyDAO;
@@ -140,7 +142,7 @@ class ProjectResource
                         $frozen_fields_detector,
                         $permissions_functions_wrapper
                     ),
-                    new TypePresenterFactory(new TypeDao(), new ArtifactLinksUsageDao())
+                    new TypePresenterFactory(new TypeDao(), new ArtifactLinksUsageDao(), new SystemTypePresenterBuilder(EventManager::instance()))
                 ),
                 new PermissionsRepresentationBuilder($ugroup_manager, $permissions_functions_wrapper),
                 new WorkflowRestBuilder(),

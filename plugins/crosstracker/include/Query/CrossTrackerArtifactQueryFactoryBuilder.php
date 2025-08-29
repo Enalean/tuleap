@@ -107,6 +107,7 @@ use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\Artifact\ChangesetValue\Text\TextValueInterpreter;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\SystemTypePresenterBuilder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\ListFields\OpenListValueDao;
@@ -232,6 +233,7 @@ final class CrossTrackerArtifactQueryFactoryBuilder
                 new TypePresenterFactory(
                     new TypeDao(),
                     new ArtifactLinksUsageDao(),
+                    new SystemTypePresenterBuilder(EventManager::instance())
                 ),
             )
         );

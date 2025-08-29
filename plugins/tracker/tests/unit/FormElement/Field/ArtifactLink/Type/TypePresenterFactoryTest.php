@@ -28,6 +28,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
+use Tuleap\Tracker\Test\Stub\FormElement\Field\ArtifactLink\Type\RetrieveSystemTypePresenterStub;
 
 #[DisableReturnValueGenerationForTestDoubles]
 final class TypePresenterFactoryTest extends TestCase
@@ -41,7 +42,7 @@ final class TypePresenterFactoryTest extends TestCase
         $this->type_dao                = $this->createMock(TypeDao::class);
         $this->artifact_link_usage_dao = $this->createMock(ArtifactLinksUsageDao::class);
 
-        $this->type_presenter_factory = new TypePresenterFactory($this->type_dao, $this->artifact_link_usage_dao);
+        $this->type_presenter_factory = new TypePresenterFactory($this->type_dao, $this->artifact_link_usage_dao, RetrieveSystemTypePresenterStub::build());
     }
 
     public function testGetsAnEnabledTypeInAProjectFromItsShortname(): void

@@ -62,6 +62,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\ArtifactInTypeTablePresen
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\CustomColumn\CSVOutputStrategy;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\CustomColumn\HTMLOutputStrategy;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\CustomColumn\ValueFormatter;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\SystemTypePresenterBuilder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
@@ -1081,7 +1082,7 @@ class ArtifactLinkField extends TrackerField
             new EditorWithReverseLinksPresenterBuilder(
                 new ParentInHierarchyRetriever(new HierarchyDAO(), $this->getTrackerFactory()),
                 TrackersPermissionsRetriever::build(),
-                new TypePresenterFactory(new TypeDao(), new ArtifactLinksUsageDao()),
+                $this->getTypePresenterFactory()
             ),
         );
     }
@@ -1788,12 +1789,9 @@ class ArtifactLinkField extends TrackerField
         return $visitor->visitArtifactLink($this);
     }
 
-    /**
-     * @return TypePresenterFactory
-     */
-    protected function getTypePresenterFactory()
+    protected function getTypePresenterFactory(): TypePresenterFactory
     {
-        return new TypePresenterFactory(new TypeDao(), new ArtifactLinksUsageDao());
+        return new TypePresenterFactory(new TypeDao(), new ArtifactLinksUsageDao(), new SystemTypePresenterBuilder(EventManager::instance()));
     }
 
     private function getTemplateRenderer()

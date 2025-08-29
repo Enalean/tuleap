@@ -90,6 +90,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdaterDataFormater;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ItemListedTwiceException;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\SystemTypePresenterBuilder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
@@ -1311,7 +1312,7 @@ class MilestoneResource extends AuthenticatedResource
                             $form_element_factory,
                             new ArtifactLinkValidator(
                                 $this->tracker_artifact_factory,
-                                new TypePresenterFactory(new TypeDao(), $artifact_links_usage_dao),
+                                new TypePresenterFactory(new TypeDao(), $artifact_links_usage_dao, new SystemTypePresenterBuilder(EventManager::instance())),
                                 $artifact_links_usage_dao,
                                 $this->event_manager,
                             ),

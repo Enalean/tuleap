@@ -29,6 +29,7 @@ use Tuleap\Roadmap\RoadmapProjectWidget;
 use Tuleap\Roadmap\RoadmapWidgetDao;
 use Tuleap\Roadmap\Widget\RoadmapWidgetPresenterBuilder;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\SystemTypePresenterBuilder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\Report\Event\TrackerReportDeleted;
@@ -81,7 +82,7 @@ class RoadmapPlugin extends Plugin
                 new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
                 \TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates'),
                 new RoadmapWidgetPresenterBuilder(
-                    new TypePresenterFactory(new TypeDao(), new ArtifactLinksUsageDao()),
+                    new TypePresenterFactory(new TypeDao(), new ArtifactLinksUsageDao(), new SystemTypePresenterBuilder(EventManager::instance())),
                     TrackerFactory::instance(),
                 ),
                 TrackerFactory::instance(),

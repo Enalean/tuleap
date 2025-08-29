@@ -70,6 +70,7 @@ use Tuleap\Tracker\FormElement\ArtifactLinkValidator;
 use Tuleap\Tracker\FormElement\Container\Fieldset\HiddenFieldsetChecker;
 use Tuleap\Tracker\FormElement\Container\FieldsExtractor;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\SystemTypePresenterBuilder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
 use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
@@ -213,7 +214,7 @@ final class tracker_functionsPlugin extends Plugin
                             $frozen_fields_detector,
                             $permissions_functions_wrapper,
                         ),
-                        new TypePresenterFactory(new TypeDao(), new ArtifactLinksUsageDao()),
+                        new TypePresenterFactory(new TypeDao(), new ArtifactLinksUsageDao(), new SystemTypePresenterBuilder(EventManager::instance())),
                     ),
                     new PermissionsRepresentationBuilder($ugroup_manager, $permissions_functions_wrapper,),
                     new WorkflowRestBuilder(),
@@ -402,7 +403,7 @@ final class tracker_functionsPlugin extends Plugin
                     $formelement_factory,
                     new ArtifactLinkValidator(
                         $artifact_factory,
-                        new TypePresenterFactory(new TypeDao(), $usage_dao),
+                        new TypePresenterFactory(new TypeDao(), $usage_dao, new SystemTypePresenterBuilder($event_manager)),
                         $usage_dao,
                         $event_manager,
                     ),
