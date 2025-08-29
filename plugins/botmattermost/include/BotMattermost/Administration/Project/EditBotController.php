@@ -25,6 +25,7 @@ namespace Tuleap\BotMattermost\Administration\Project;
 use CSRFSynchronizerToken;
 use Feedback;
 use HTTPRequest;
+use Override;
 use Tuleap\BotMattermost\Bot\BotEditor;
 use Tuleap\BotMattermost\Bot\BotFactory;
 use Tuleap\BotMattermost\Exception\BotAlreadyExistException;
@@ -43,6 +44,7 @@ class EditBotController implements DispatchableWithRequest
     {
     }
 
+    #[Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         try {

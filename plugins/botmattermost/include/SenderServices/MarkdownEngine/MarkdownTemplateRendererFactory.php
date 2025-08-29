@@ -20,10 +20,12 @@
 
 namespace Tuleap\BotMattermost\SenderServices\MarkdownEngine;
 
+use Override;
 use TemplateRendererFactory;
 
 class MarkdownTemplateRendererFactory extends TemplateRendererFactory
 {
+    #[Override]
     public function getRenderer($plugin_templates_dir)
     {
         return new MarkdownMustacheRenderer($this->getTemplateCache(), $plugin_templates_dir);

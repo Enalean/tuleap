@@ -43,7 +43,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../../botmattermost/include/botmattermostPlugin.php';
 require_once __DIR__ . '/../../agiledashboard/include/agiledashboardPlugin.php';
 
-class botmattermost_agiledashboardPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
+class botmattermost_agiledashboardPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public function __construct($id)
     {
@@ -53,6 +53,7 @@ class botmattermost_agiledashboardPlugin extends \Tuleap\Plugin\PluginWithLegacy
         bindtextdomain('tuleap-botmattermost_agiledashboard', __DIR__ . '/../site-content');
     }
 
+    #[Override]
     public function getHooksAndCallbacks()
     {
         if (defined('AGILEDASHBOARD_BASE_URL')) {
@@ -64,6 +65,7 @@ class botmattermost_agiledashboardPlugin extends \Tuleap\Plugin\PluginWithLegacy
         return parent::getHooksAndCallbacks();
     }
 
+    #[Override]
     public function getDependencies()
     {
         return ['agiledashboard', 'botmattermost'];
@@ -72,6 +74,7 @@ class botmattermost_agiledashboardPlugin extends \Tuleap\Plugin\PluginWithLegacy
     /**
      * @return PluginInfo
      */
+    #[Override]
     public function getPluginInfo()
     {
         if (! $this->pluginInfo) {
@@ -80,13 +83,13 @@ class botmattermost_agiledashboardPlugin extends \Tuleap\Plugin\PluginWithLegacy
         return $this->pluginInfo;
     }
 
-    public function additional_scrum_admin_pane_content(GetAdditionalScrumAdminPaneContent $event)
+    public function additional_scrum_admin_pane_content(GetAdditionalScrumAdminPaneContent $event) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $render = $this->getRenderToString();
         $event->addContent($render);
     }
 
-    public function cron_job_every_minute(EventCronJobEveryMinute $event)
+    public function cron_job_every_minute(EventCronJobEveryMinute $event) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $artifact_factory         = Tracker_ArtifactFactory::instance();
         $milestone_status_counter = new AgileDashboard_Milestone_MilestoneStatusCounter(
@@ -130,7 +133,7 @@ class botmattermost_agiledashboardPlugin extends \Tuleap\Plugin\PluginWithLegacy
         $stand_up_notification_sender->send();
     }
 
-    public function botmattermost_bot_deleted(BotMattermostDeleted $event)
+    public function botmattermost_bot_deleted(BotMattermostDeleted $event) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $this->getController(HTTPRequest::instance())->deleteBotNotificationByBot($event->getBot());
     }
@@ -167,6 +170,7 @@ class botmattermost_agiledashboardPlugin extends \Tuleap\Plugin\PluginWithLegacy
         return HTTPRequest::instance();
     }
 
+    #[Override]
     public function process(): void
     {
         $request = $this->getRequest();

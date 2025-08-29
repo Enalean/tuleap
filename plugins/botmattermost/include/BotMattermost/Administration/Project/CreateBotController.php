@@ -25,6 +25,7 @@ namespace Tuleap\BotMattermost\Administration\Project;
 use CSRFSynchronizerToken;
 use Feedback;
 use HTTPRequest;
+use Override;
 use Tuleap\BotMattermost\Bot\BotCreator;
 use Tuleap\BotMattermost\Exception\BotAlreadyExistException;
 use Tuleap\BotMattermost\Exception\CannotCreateBotException;
@@ -39,6 +40,7 @@ class CreateBotController implements DispatchableWithRequest
     {
     }
 
+    #[Override]
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
         if (! $request->existAndNonEmpty('project_id')) {
