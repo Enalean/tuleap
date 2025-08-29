@@ -22,10 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\Domain;
 
+use Override;
+
 final class RoleBaselineReader implements Role
 {
     public const NAME = 'BASELINE_READER';
 
+    #[Override]
     public function getName(): string
     {
         return self::NAME;

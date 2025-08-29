@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Baseline\Adapter;
 
 use DateTimeInterface;
+use Override;
 use PFUser;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetFactory;
@@ -44,6 +45,7 @@ class BaselineArtifactRepositoryAdapter implements BaselineArtifactRepository
     ) {
     }
 
+    #[Override]
     public function findById(UserIdentifier $user_identifier, int $id): ?BaselineArtifact
     {
         $current_user = $this->user_manager->getUserById($user_identifier->getId());
@@ -72,6 +74,7 @@ class BaselineArtifactRepositoryAdapter implements BaselineArtifactRepository
         );
     }
 
+    #[Override]
     public function findByIdAt(UserIdentifier $user_identifier, int $id, DateTimeInterface $date): ?BaselineArtifact
     {
         $current_user = $this->user_manager->getUserById($user_identifier->getId());

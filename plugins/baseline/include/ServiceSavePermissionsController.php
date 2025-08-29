@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Baseline;
 
 use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
+use Override;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -47,6 +48,7 @@ class ServiceSavePermissionsController extends DispatchablePSR15Compatible
         parent::__construct($emitter, ...$middleware_stack);
     }
 
+    #[Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $project = $request->getAttribute(\Project::class);

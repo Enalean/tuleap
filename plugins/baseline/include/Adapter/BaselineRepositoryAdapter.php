@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Baseline\Adapter;
 
 use DateTimeInterface;
+use Override;
 use ParagonIE\EasyDB\EasyDB;
 use Tuleap\Baseline\Domain\Authorizations;
 use Tuleap\Baseline\Domain\Baseline;
@@ -68,6 +69,7 @@ class BaselineRepositoryAdapter implements BaselineRepository
     /**
      * Note: Authorizations may have been checked earlier
      */
+    #[Override]
     public function add(
         TransientBaseline $baseline,
         UserIdentifier $current_user,
@@ -92,6 +94,7 @@ class BaselineRepositoryAdapter implements BaselineRepository
         );
     }
 
+    #[Override]
     public function findById(UserIdentifier $current_user, int $id): ?Baseline
     {
         $rows = $this->db->safeQuery(
@@ -120,6 +123,7 @@ class BaselineRepositoryAdapter implements BaselineRepository
     /**
      * Note: Authorizations may have been checked earlier
      */
+    #[Override]
     public function delete(Baseline $baseline): void
     {
         $this->db->delete('plugin_baseline_baseline', ['id' => $baseline->getId()]);
@@ -129,6 +133,7 @@ class BaselineRepositoryAdapter implements BaselineRepository
      * Note: Authorizations may have been checked earlier
      * @return Baseline[]
      */
+    #[Override]
     public function findByProject(
         UserIdentifier $current_user,
         ProjectIdentifier $project,
@@ -162,6 +167,7 @@ class BaselineRepositoryAdapter implements BaselineRepository
     /**
      * Note: Authorizations may have been check earlier
      */
+    #[Override]
     public function countByProject(ProjectIdentifier $project): int
     {
         return $this->db->single(

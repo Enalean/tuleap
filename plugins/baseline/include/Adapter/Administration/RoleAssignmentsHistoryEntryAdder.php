@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\Adapter\Administration;
 
+use Override;
 use ProjectHistoryDao;
 use Tuleap\Baseline\Domain\AddRoleAssignmentsHistoryEntry;
 use Tuleap\Baseline\Domain\BaselineUserGroup;
@@ -39,6 +40,7 @@ final class RoleAssignmentsHistoryEntryAdder implements AddRoleAssignmentsHistor
     ) {
     }
 
+    #[Override]
     public function addProjectHistoryEntryForRoleAndGroups(
         ProjectIdentifier $project,
         string $history_key,
@@ -51,6 +53,7 @@ final class RoleAssignmentsHistoryEntryAdder implements AddRoleAssignmentsHistor
         );
     }
 
+    #[Override]
     public function addProjectHistoryEntryForUgroupDeletion(
         ProjectIdentifier $project,
         string $history_key,

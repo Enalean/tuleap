@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\Adapter;
 
+use Override;
 use Project_AccessException;
 use ProjectManager;
 use Tuleap\Baseline\Domain\ProjectIdentifier;
@@ -39,6 +40,7 @@ class ProjectRepositoryAdapter implements ProjectRepository
     ) {
     }
 
+    #[Override]
     public function findById(UserIdentifier $current_user, int $id): ?ProjectIdentifier
     {
         $project = $this->project_manager->getProject($id);

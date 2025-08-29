@@ -24,10 +24,12 @@ declare(strict_types=1);
 namespace Tuleap\Baseline\Adapter;
 
 use DateTimeImmutable;
+use Override;
 use Tuleap\Baseline\Domain\Clock;
 
 class ClockAdapter implements Clock
 {
+    #[Override]
     public function now(): DateTimeImmutable
     {
         return new DateTimeImmutable();

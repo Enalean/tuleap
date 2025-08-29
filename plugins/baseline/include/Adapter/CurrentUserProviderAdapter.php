@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\Adapter;
 
+use Override;
 use Tuleap\Baseline\Domain\CurrentUserProvider;
 use Tuleap\Baseline\Domain\UserIdentifier;
 use UserManager;
@@ -37,6 +38,7 @@ class CurrentUserProviderAdapter implements CurrentUserProvider
         $this->current_user_manager = $current_user_manager;
     }
 
+    #[Override]
     public function getUser(): UserIdentifier
     {
         return UserProxy::fromUser($this->current_user_manager->getCurrentUser());

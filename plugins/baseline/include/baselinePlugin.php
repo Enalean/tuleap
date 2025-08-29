@@ -64,16 +64,19 @@ class baselinePlugin extends Plugin implements PluginWithService // @codingStand
         bindtextdomain('tuleap-baseline', __DIR__ . '/../site-content');
     }
 
+    #[Override]
     public function getDependencies(): array
     {
         return ['tracker'];
     }
 
+    #[Override]
     public function getServiceShortname(): string
     {
         return self::SERVICE_SHORTNAME;
     }
 
+    #[Override]
     public function getPluginInfo(): \PluginInfo
     {
         if (! $this->pluginInfo) {
@@ -110,6 +113,7 @@ class baselinePlugin extends Plugin implements PluginWithService // @codingStand
         }
     }
 
+    #[Override]
     #[\Tuleap\Plugin\ListeningToEventClass]
     public function serviceClassnamesCollector(ServiceClassnamesCollector $event): void
     {
@@ -121,21 +125,25 @@ class baselinePlugin extends Plugin implements PluginWithService // @codingStand
      *
      * @see Event::SERVICE_IS_USED
      */
+    #[Override]
     public function serviceIsUsed(array $params): void
     {
         // nothing to do for baseline
     }
 
+    #[Override]
     public function projectServiceBeforeActivation(ProjectServiceBeforeActivation $event): void
     {
         // nothing to do for baseline
     }
 
+    #[Override]
     public function serviceDisabledCollector(ServiceDisabledCollector $event): void
     {
         // nothing to do for baseline
     }
 
+    #[Override]
     public function addMissingService(AddMissingService $event): void
     {
         // nothing to do for baseline
@@ -311,6 +319,7 @@ class baselinePlugin extends Plugin implements PluginWithService // @codingStand
         );
     }
 
+    #[Override]
     public function serviceEnableForXmlImportRetriever(\Tuleap\Project\XML\ServiceEnableForXmlImportRetriever $event): void
     {
     }
