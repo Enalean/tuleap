@@ -44,7 +44,7 @@
             <label class="tlp-label">{{ $gettext("Short name") }}</label>
             <span>{{ service.short_name }}</span>
         </div>
-        <read-only-service-rank v-if="is_summary_service" v-bind:value="service.rank" />
+        <read-only-service-rank v-if="is_summary_service" v-bind:rank="service.rank" />
         <service-rank v-else id="project-service-edit-modal-rank" v-bind:value="service.rank" />
         <service-link id="project-service-edit-modal-link" v-bind:value="service.link" />
         <service-description
