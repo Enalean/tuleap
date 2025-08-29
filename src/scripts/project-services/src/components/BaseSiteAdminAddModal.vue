@@ -36,7 +36,8 @@
                 <template v-slot:shortname v-if="is_default_template">
                     <service-shortname
                         id="project-service-add-modal-shortname"
-                        v-bind:value="service.short_name"
+                        v-bind:shortname="service.short_name"
+                        v-on:input="updateServiceShortname"
                     />
                 </template>
             </in-creation-custom-service>
@@ -108,6 +109,9 @@ export default {
                 rank: this.minimal_rank,
                 is_disabled_reason: "",
             };
+        },
+        updateServiceShortname(shortname) {
+            this.service.short_name = shortname;
         },
     },
 };
