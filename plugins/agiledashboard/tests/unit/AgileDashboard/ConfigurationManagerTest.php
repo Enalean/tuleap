@@ -20,16 +20,15 @@
 
 declare(strict_types=1);
 
-use Tuleap\AgileDashboard\ConfigurationManager;
-use Tuleap\AgileDashboard\ConfigurationDao;
+namespace Tuleap\AgileDashboard;
+
 use Tuleap\AgileDashboard\Stub\Milestone\Sidebar\DuplicateMilestonesInSidebarConfigStub;
 use Tuleap\AgileDashboard\Stub\Milestone\Sidebar\UpdateMilestonesInSidebarConfigStub;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Stubs\EventDispatcherStub;
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class AgileDashboard_ConfigurationManagerTest extends \Tuleap\Test\PHPUnit\TestCase
+final class ConfigurationManagerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testScrumCanBeInAEnabledState(): void
     {
@@ -49,15 +48,10 @@ final class AgileDashboard_ConfigurationManagerTest extends \Tuleap\Test\PHPUnit
     public function testScrumIsConsideredDisabledWhenItsAccessIsBlocked(): void
     {
         $config_dao       = $this->createMock(ConfigurationDao::class);
-        $event_dispatcher = new class implements \Psr\EventDispatcher\EventDispatcherInterface {
-            public function dispatch(object $event)
-            {
-                if ($event instanceof \Tuleap\AgileDashboard\BlockScrumAccess) {
-                    $event->disableScrumAccess();
-                }
-                return $event;
-            }
-        };
+        $event_dispatcher = EventDispatcherStub::withCallback(static function (BlockScrumAccess $event) {
+            $event->disableScrumAccess();
+            return $event;
+        });
 
         $configuration_manager = new ConfigurationManager(
             $config_dao,
