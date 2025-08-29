@@ -27,7 +27,6 @@ import {
     READONLY_FIELDS_SELECTION_TAB,
     TRACKER_SELECTION_TAB,
 } from "@/components/configuration/configuration-modal";
-import { ARE_FIELDS_ENABLED } from "@/are-fields-enabled";
 import { SECTIONS_STATES_COLLECTION } from "@/sections/states/sections-states-collection-injection-key";
 import { SectionsStatesCollectionStub } from "@/sections/stubs/SectionsStatesCollectionStub";
 import type { SectionsStatesCollection } from "@/sections/states/SectionsStatesCollection";
@@ -52,7 +51,6 @@ describe("ConfigurationModalTabs", () => {
             props: { current_tab },
             global: {
                 provide: {
-                    [ARE_FIELDS_ENABLED.valueOf()]: true,
                     [SECTIONS_STATES_COLLECTION.valueOf()]: states_collection,
                     [SELECTED_TRACKER.valueOf()]: is_tracker_configured
                         ? SelectedTrackerStub.build()

@@ -68,7 +68,6 @@ import { HEADINGS_BUTTON_STATE } from "@/headings-button-state-injection-key";
 import { getHeadingsButtonState } from "@/toolbar/HeadingsButtonState";
 import { watchUpdateSectionsLevels } from "@/sections/levels/SectionsNumbersWatcher";
 import { getSectionsNumberer } from "@/sections/levels/SectionsNumberer";
-import { ARE_FIELDS_ENABLED } from "@/are-fields-enabled";
 import type { Tracker } from "@/configuration/AllowedTrackersCollection";
 import {
     ALLOWED_TRACKERS,
@@ -151,10 +150,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         .provide(
             UPLOAD_MAX_SIZE,
             Number.parseInt(getAttributeOrThrow(vue_mount_point, "data-upload-max-size"), 10),
-        )
-        .provide(
-            ARE_FIELDS_ENABLED,
-            vue_mount_point.getAttribute("data-are-fields-enabled") === "1",
         )
         .provide(ALLOWED_TRACKERS, allowed_trackers)
         .provide(SELECTED_TRACKER, selected_tracker)

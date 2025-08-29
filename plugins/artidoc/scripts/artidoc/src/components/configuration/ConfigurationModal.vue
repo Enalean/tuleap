@@ -20,8 +20,7 @@
 
 <template>
     <div
-        class="tlp-modal"
-        v-bind:class="{ 'artidoc-config-modal-with-fields': are_fields_enabled }"
+        class="tlp-modal artidoc-config-modal-with-fields"
         aria-labelledby="artidoc-configuration-modal-title"
         ref="modal_element"
         data-test="configuration-modal"
@@ -49,7 +48,6 @@ import { createModal } from "@tuleap/tlp-modal";
 import { OPEN_CONFIGURATION_MODAL_BUS } from "@/stores/useOpenConfigurationModalBusStore";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { SELECTED_TRACKER } from "@/configuration/SelectedTracker";
-import { ARE_FIELDS_ENABLED } from "@/are-fields-enabled";
 import ConfigurationModalHeader from "@/components/configuration/ConfigurationModalHeader.vue";
 import ConfigureTracker from "@/components/configuration/ConfigureTracker.vue";
 import ConfigureReadonlyFields from "@/components/configuration/ConfigureReadonlyFields.vue";
@@ -61,7 +59,6 @@ import {
 } from "@/components/configuration/configuration-modal";
 import ConfigurationModalTabs from "@/components/configuration/ConfigurationModalTabs.vue";
 
-const are_fields_enabled = strictInject(ARE_FIELDS_ENABLED);
 const selected_tracker = strictInject(SELECTED_TRACKER);
 
 const modal_element = ref<HTMLElement | undefined>(undefined);

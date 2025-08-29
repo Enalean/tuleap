@@ -50,7 +50,6 @@ enable_plugins() {
         webauthn
 
     sudo -u codendiadm /usr/bin/tuleap -c
-    sudo -u codendiadm /usr/bin/tuleap config-set feature_flag_enable_artidoc_fields 1
 
     instantiate_licence_manager
 }

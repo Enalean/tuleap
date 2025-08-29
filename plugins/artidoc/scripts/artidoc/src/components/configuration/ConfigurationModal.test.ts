@@ -27,7 +27,6 @@ import {
     OPEN_CONFIGURATION_MODAL_BUS,
     useOpenConfigurationModalBusStore,
 } from "@/stores/useOpenConfigurationModalBusStore";
-import { ARE_FIELDS_ENABLED } from "@/are-fields-enabled";
 import { TITLE } from "@/title-injection-key";
 import { SECTIONS_STATES_COLLECTION } from "@/sections/states/sections-states-collection-injection-key";
 import { SectionsStatesCollectionStub } from "@/sections/stubs/SectionsStatesCollectionStub";
@@ -71,7 +70,6 @@ describe("ConfigurationModal", () => {
                     ]),
                     [SELECTED_TRACKER.valueOf()]: selected_tracker,
                     [OPEN_CONFIGURATION_MODAL_BUS.valueOf()]: bus,
-                    [ARE_FIELDS_ENABLED.valueOf()]: true,
                     [TITLE.valueOf()]: "My artidoc",
                     [SECTIONS_STATES_COLLECTION.valueOf()]: SectionsStatesCollectionStub.build(),
                     [DOCUMENT_ID.valueOf()]: 10,

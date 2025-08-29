@@ -51,8 +51,6 @@ use Tuleap\Artidoc\Upload\Section\File\Tus\FileDataStore;
 use Tuleap\Artidoc\Upload\Section\File\Tus\FileUploadCanceler;
 use Tuleap\Artidoc\Upload\Section\File\Tus\FileUploadFinisher;
 use Tuleap\Artidoc\Upload\Section\File\UploadedFileWithArtidocRetriever;
-use Tuleap\Config\ConfigClassProvider;
-use Tuleap\Config\PluginWithConfigKeys;
 use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
@@ -107,7 +105,7 @@ require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
 require_once __DIR__ . '/../../testmanagement/include/testmanagementPlugin.php';
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-class ArtidocPlugin extends Plugin implements PluginWithConfigKeys
+class ArtidocPlugin extends Plugin
 {
     public function __construct(?int $id)
     {
@@ -444,12 +442,6 @@ class ArtidocPlugin extends Plugin implements PluginWithConfigKeys
         if ($event->type === ArtidocDocument::TYPE) {
             $event->flagAsSupported();
         }
-    }
-
-    #[Override]
-    public function getConfigKeys(ConfigClassProvider $event): void
-    {
-        $event->addConfigClass(ArtidocController::class);
     }
 
     #[\Tuleap\Plugin\ListeningToEventClass]
