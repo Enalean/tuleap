@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Document;
 
+use Override;
 use ParagonIE\EasyDB\EasyDB;
 use Tuleap\Artidoc\Domain\Document\Section\Freetext\Identifier\FreetextIdentifierFactory;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifierFactory;
@@ -125,6 +126,7 @@ final class ArtidocDao extends DataAccessObject implements SearchConfiguredTrack
         });
     }
 
+    #[Override]
     public function getTracker(int $item_id): ?int
     {
         return $this->getDB()->cell(
@@ -135,6 +137,7 @@ final class ArtidocDao extends DataAccessObject implements SearchConfiguredTrack
         ) ?: null;
     }
 
+    #[Override]
     public function saveTracker(int $item_id, int $tracker_id): void
     {
         $this->getDB()->insertOnDuplicateKeyUpdate(
@@ -163,6 +166,7 @@ final class ArtidocDao extends DataAccessObject implements SearchConfiguredTrack
         );
     }
 
+    #[Override]
     public function deleteConfiguredTracker(int $item_id): void
     {
         $this->getDB()->delete(

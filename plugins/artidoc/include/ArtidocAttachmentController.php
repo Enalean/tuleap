@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Artidoc;
 
 use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
+use Override;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -59,6 +60,7 @@ final class ArtidocAttachmentController extends DispatchablePSR15Compatible impl
         parent::__construct($emitter, ...$middleware_stack);
     }
 
+    #[Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         ServiceInstrumentation::increment('artidoc');

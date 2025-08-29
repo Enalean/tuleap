@@ -116,6 +116,7 @@ class ArtidocPlugin extends Plugin implements PluginWithConfigKeys
         bindtextdomain('tuleap-artidoc', __DIR__ . '/../site-content');
     }
 
+    #[Override]
     public function getPluginInfo(): PluginInfo
     {
         if ($this->pluginInfo === null) {
@@ -132,6 +133,7 @@ class ArtidocPlugin extends Plugin implements PluginWithConfigKeys
         return $this->pluginInfo;
     }
 
+    #[Override]
     public function getDependencies(): array
     {
         return ['tracker', 'docman'];
@@ -444,6 +446,7 @@ class ArtidocPlugin extends Plugin implements PluginWithConfigKeys
         }
     }
 
+    #[Override]
     public function getConfigKeys(ConfigClassProvider $event): void
     {
         $event->addConfigClass(ArtidocController::class);

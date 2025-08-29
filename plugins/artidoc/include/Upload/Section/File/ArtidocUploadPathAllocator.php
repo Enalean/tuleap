@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Artidoc\Upload\Section\File;
 
 use ForgeConfig;
+use Override;
 use Tuleap\Artidoc\Domain\Document\Artidoc;
 use Tuleap\Tus\NextGen\TusFileInformation;
 use Tuleap\Upload\NextGen\PathAllocator;
@@ -49,6 +50,7 @@ final readonly class ArtidocUploadPathAllocator implements PathAllocator
         return new self($file_information->artidoc_id);
     }
 
+    #[Override]
     public function getPathForItemBeingUploaded(TusFileInformation $file_information): string
     {
         return $this->core_upload_path_allocator->getPathForItemBeingUploaded($file_information);

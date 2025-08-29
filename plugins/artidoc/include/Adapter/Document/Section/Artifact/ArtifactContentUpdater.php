@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Adapter\Document\Section\Artifact;
 
+use Override;
 use Tuleap\Artidoc\Adapter\Document\Section\UpdateLevel;
 use Tuleap\Artidoc\Domain\Document\Section\Artifact\ArtifactContent;
 use Tuleap\Artidoc\Domain\Document\Section\Artifact\UpdateArtifactContent;
@@ -50,6 +51,7 @@ final readonly class ArtifactContentUpdater implements UpdateArtifactContent
     ) {
     }
 
+    #[Override]
     public function updateArtifactContent(
         SectionIdentifier $section_identifier,
         int $artifact_id,

@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Domain\Document\Section;
 
+use Override;
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\Artidoc\Domain\Document\RetrieveArtidocWithContext;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
@@ -39,6 +40,7 @@ final class SectionRetriever implements RetrieveSection
     ) {
     }
 
+    #[Override]
     public function retrieveSectionUserCanRead(SectionIdentifier $id): Ok|Err
     {
         return $this->search_section->searchSectionById($id)
@@ -50,6 +52,7 @@ final class SectionRetriever implements RetrieveSection
             );
     }
 
+    #[Override]
     public function retrieveSectionUserCanWrite(SectionIdentifier $id): Ok|Err
     {
         return $this->search_section->searchSectionById($id)

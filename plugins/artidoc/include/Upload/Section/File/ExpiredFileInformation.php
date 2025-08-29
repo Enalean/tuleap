@@ -21,6 +21,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Upload\Section\File;
 
+use Override;
 use Tuleap\Tus\Identifier\FileIdentifier;
 use Tuleap\Tus\NextGen\TusFileInformation;
 
@@ -33,21 +34,25 @@ final readonly class ExpiredFileInformation implements TusFileInformation
         }
     }
 
+    #[Override]
     public function getID(): FileIdentifier
     {
         return $this->id;
     }
 
+    #[Override]
     public function getLength(): int
     {
         return $this->length;
     }
 
+    #[Override]
     public function getOffset(): int
     {
         return 0;
     }
 
+    #[Override]
     public function getName(): string
     {
         return $this->name;

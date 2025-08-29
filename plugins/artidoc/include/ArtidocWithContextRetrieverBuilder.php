@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc;
 
+use Override;
 use Tuleap\Artidoc\Adapter\Document\CurrentUserHasArtidocPermissionsChecker;
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContextRetriever;
 use Tuleap\Artidoc\Domain\Document\DecorateArtidocWithContext;
@@ -36,6 +37,7 @@ final readonly class ArtidocWithContextRetrieverBuilder implements BuildArtidocW
     ) {
     }
 
+    #[Override]
     public function buildForUser(\PFUser $user): RetrieveArtidocWithContext
     {
         return new ArtidocWithContextRetriever(

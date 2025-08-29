@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Adapter\Document\Section;
 
+use Override;
 use ParagonIE\EasyDB\EasyDB;
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\Artidoc\Domain\Document\Section\ContentToInsert;
@@ -46,6 +47,7 @@ final class SaveSectionDao extends DataAccessObject implements SaveOneSection
         parent::__construct();
     }
 
+    #[Override]
     public function saveSectionAtTheEnd(ArtidocWithContext $artidoc, ContentToInsert $content): Ok|Err
     {
         return $this->getDB()->tryFlatTransaction(function (EasyDB $db) use ($artidoc, $content) {
@@ -66,6 +68,7 @@ final class SaveSectionDao extends DataAccessObject implements SaveOneSection
         });
     }
 
+    #[Override]
     public function saveSectionBefore(ArtidocWithContext $artidoc, ContentToInsert $content, SectionIdentifier $sibling_section_id): Ok|Err
     {
         return $this->getDB()->tryFlatTransaction(function (EasyDB $db) use ($artidoc, $content, $sibling_section_id) {

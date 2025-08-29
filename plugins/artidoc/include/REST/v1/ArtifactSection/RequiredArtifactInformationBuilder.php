@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\REST\v1\ArtifactSection;
 
+use Override;
 use Tracker_Artifact_ChangesetValue_Text;
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\NeverThrow\Err;
@@ -41,6 +42,7 @@ final readonly class RequiredArtifactInformationBuilder implements BuildRequired
     ) {
     }
 
+    #[Override]
     public function getRequiredArtifactInformation(ArtidocWithContext $artidoc, int $artifact_id, \PFUser $user): Ok|Err
     {
         $artifact = $this->artifact_retriever->getArtifactById($artifact_id);

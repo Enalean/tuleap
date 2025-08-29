@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Document;
 
+use Override;
 use Tuleap\Artidoc\Document\Field\SaveConfiguredFields;
 use Tuleap\DB\DBTransactionExecutor;
 
@@ -34,6 +35,7 @@ final readonly class ConfigurationSaver implements SaveConfiguration
     ) {
     }
 
+    #[Override]
     public function saveConfiguration(int $item_id, int $tracker_id, array $fields): void
     {
         $this->transaction_executor->execute(function () use ($item_id, $tracker_id, $fields) {

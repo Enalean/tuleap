@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Domain\Document;
 
+use Override;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Ok;
 
@@ -37,11 +38,13 @@ final class ArtidocWithContextRetriever implements RetrieveArtidocWithContext
     ) {
     }
 
+    #[Override]
     public function retrieveArtidocUserCanRead(int $id): Ok|Err
     {
         return $this->retrieveArtidoc($id, self::USER_CAN_READ);
     }
 
+    #[Override]
     public function retrieveArtidocUserCanWrite(int $id): Ok|Err
     {
         return $this->retrieveArtidoc($id, self::USER_CAN_WRITE);

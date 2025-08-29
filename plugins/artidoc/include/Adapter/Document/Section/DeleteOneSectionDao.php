@@ -22,12 +22,14 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Adapter\Document\Section;
 
+use Override;
 use Tuleap\Artidoc\Domain\Document\Section\DeleteOneSection;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
 use Tuleap\DB\DataAccessObject;
 
 final class DeleteOneSectionDao extends DataAccessObject implements DeleteOneSection
 {
+    #[Override]
     public function deleteSectionById(SectionIdentifier $section_id): void
     {
         $this->getDB()->run(

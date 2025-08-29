@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Upload\Section\File;
 
+use Override;
 use Tuleap\NeverThrow\Err;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
@@ -30,6 +31,7 @@ use Tuleap\Upload\NextGen\PathAllocator;
 
 final readonly class EmptyFileToUploadFinisher implements FinishEmptyFileToUpload
 {
+    #[Override]
     public function createEmptyFile(FileToUpload $file_to_upload, PathAllocator $upload_path_allocator): Ok|Err
     {
         $id               = $file_to_upload->id;

@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Upload\Section\File\Tus;
 
+use Override;
 use Tuleap\Artidoc\Upload\Section\File\ArtidocUploadPathAllocator;
 use Tuleap\Artidoc\Upload\Section\File\SearchUpload;
 use Tuleap\Artidoc\Upload\Section\File\UploadFileInformation;
@@ -37,6 +38,7 @@ final class ArtidocFileBeingUploadedWriter implements TusWriter
     {
     }
 
+    #[Override]
     public function writeChunk(TusFileInformation $file_information, int $offset, $input_source): int
     {
         return $this->search

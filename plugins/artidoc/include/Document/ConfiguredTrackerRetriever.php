@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Document;
 
+use Override;
 use Psr\Log\LoggerInterface;
 use Tuleap\Artidoc\Domain\Document\Artidoc;
 use Tuleap\Tracker\RetrieveTracker;
@@ -35,6 +36,7 @@ final readonly class ConfiguredTrackerRetriever implements RetrieveConfiguredTra
     ) {
     }
 
+    #[Override]
     public function getTracker(Artidoc $document): ?\Tuleap\Tracker\Tracker
     {
         $tracker_id = $this->dao->getTracker($document->getId());

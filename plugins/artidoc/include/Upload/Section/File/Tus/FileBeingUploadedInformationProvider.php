@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Artidoc\Upload\Section\File\Tus;
 
 use DateTimeImmutable;
+use Override;
 use Psr\Http\Message\ServerRequestInterface;
 use Tuleap\Artidoc\Upload\Section\File\ArtidocUploadPathAllocator;
 use Tuleap\Artidoc\Upload\Section\File\RetrieveUploadedFileWithArtidoc;
@@ -50,6 +51,7 @@ final readonly class FileBeingUploadedInformationProvider implements TusFileInfo
     ) {
     }
 
+    #[Override]
     public function getFileInformation(ServerRequestInterface $request): ?TusFileInformation
     {
         try {

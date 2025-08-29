@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Adapter\Document\Section;
 
+use Override;
 use ParagonIE\EasyDB\EasyDB;
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\Artidoc\Domain\Document\Order\Direction;
@@ -36,6 +37,7 @@ use Tuleap\NeverThrow\Result;
 
 final class ReorderSectionsDao extends DataAccessObject implements ReorderSections
 {
+    #[Override]
     public function reorder(ArtidocWithContext $artidoc, SectionOrder $order): Ok|Err
     {
         return $this->getDB()->tryFlatTransaction(function (EasyDB $db) use ($artidoc, $order): Ok|Err {

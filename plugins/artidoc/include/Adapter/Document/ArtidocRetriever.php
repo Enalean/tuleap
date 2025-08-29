@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Adapter\Document;
 
+use Override;
 use Tuleap\Artidoc\Document\SearchArtidocDocument;
 use Tuleap\Artidoc\Domain\Document\Artidoc;
 use Tuleap\Artidoc\Domain\Document\RetrieveArtidoc;
@@ -39,6 +40,7 @@ final readonly class ArtidocRetriever implements RetrieveArtidoc
     ) {
     }
 
+    #[Override]
     public function retrieveArtidoc(int $id): Ok|Err
     {
         $row = $this->dao->searchByItemId($id);

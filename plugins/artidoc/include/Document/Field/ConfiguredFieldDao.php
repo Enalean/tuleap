@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Document\Field;
 
+use Override;
 use Tuleap\Artidoc\Domain\Document\Section\Field\ArtifactSectionField;
 use Tuleap\Artidoc\Domain\Document\Section\Field\DisplayType;
 use Tuleap\Artidoc\Domain\Document\Section\Identifier\SectionIdentifier;
@@ -29,6 +30,7 @@ use Tuleap\DB\DataAccessObject;
 
 final class ConfiguredFieldDao extends DataAccessObject implements RetrieveConfiguredField, SaveConfiguredFields, DeleteDocumentConfiguredFields
 {
+    #[Override]
     public function retrieveConfiguredFieldsFromItemId(int $item_id): array
     {
         return array_values(
@@ -47,6 +49,7 @@ final class ConfiguredFieldDao extends DataAccessObject implements RetrieveConfi
         );
     }
 
+    #[Override]
     public function retrieveConfiguredFieldsFromSectionId(SectionIdentifier $section_identifier): array
     {
         return array_values(
@@ -76,6 +79,7 @@ final class ConfiguredFieldDao extends DataAccessObject implements RetrieveConfi
         );
     }
 
+    #[Override]
     public function deleteConfiguredFieldByArtidocId(int $item_id): void
     {
         $this->getDB()->delete(
@@ -86,6 +90,7 @@ final class ConfiguredFieldDao extends DataAccessObject implements RetrieveConfi
         );
     }
 
+    #[Override]
     public function saveFields(int $item_id, array $fields): void
     {
         $this->getDB()->tryFlatTransaction(function () use ($item_id, $fields) {

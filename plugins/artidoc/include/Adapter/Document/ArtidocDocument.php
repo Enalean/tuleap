@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Adapter\Document;
 
+use Override;
 use Tuleap\Artidoc\Domain\Document\Artidoc;
 use Tuleap\Docman\Item\OtherDocument;
 
@@ -35,6 +36,7 @@ class ArtidocDocument extends OtherDocument implements Artidoc
         parent::__construct($row);
     }
 
+    #[Override]
     public function toRow(): array
     {
         $row               = parent::toRow();
@@ -43,6 +45,7 @@ class ArtidocDocument extends OtherDocument implements Artidoc
         return $row;
     }
 
+    #[Override]
     public function getId(): int
     {
         if (parent::getId() === null) {
@@ -52,11 +55,13 @@ class ArtidocDocument extends OtherDocument implements Artidoc
         return (int) parent::getId();
     }
 
+    #[Override]
     public function getTitle(bool $key = false): string
     {
         return parent::getTitle($key);
     }
 
+    #[Override]
     public function getParentId(): int
     {
         if (parent::getParentId() === null) {
@@ -66,6 +71,7 @@ class ArtidocDocument extends OtherDocument implements Artidoc
         return (int) parent::getParentId();
     }
 
+    #[Override]
     public function getProjectId(): int
     {
         return (int) $this->getGroupId();

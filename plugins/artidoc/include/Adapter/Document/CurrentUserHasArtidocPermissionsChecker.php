@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Adapter\Document;
 
+use Override;
 use Tuleap\Artidoc\Domain\Document\Artidoc;
 use Tuleap\Artidoc\Domain\Document\CheckCurrentUserHasArtidocPermissions;
 use Tuleap\Artidoc\Domain\Document\UserCannotWriteDocumentFault;
@@ -41,6 +42,7 @@ final readonly class CurrentUserHasArtidocPermissionsChecker implements CheckCur
         return new self($current_user);
     }
 
+    #[Override]
     public function checkUserCanRead(Artidoc $artidoc): Ok|Err
     {
         if (! $this->getPermissions($artidoc)->userCanRead($this->current_user, $artidoc->getId())) {
@@ -50,6 +52,7 @@ final readonly class CurrentUserHasArtidocPermissionsChecker implements CheckCur
         return Result::ok($artidoc);
     }
 
+    #[Override]
     public function checkUserCanWrite(Artidoc $artidoc): Ok|Err
     {
         if (! $this->getPermissions($artidoc)->userCanWrite($this->current_user, $artidoc->getId())) {

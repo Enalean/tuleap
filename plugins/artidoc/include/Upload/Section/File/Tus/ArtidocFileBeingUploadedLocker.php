@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\Upload\Section\File\Tus;
 
+use Override;
 use Tuleap\Artidoc\Upload\Section\File\ArtidocUploadPathAllocator;
 use Tuleap\Artidoc\Upload\Section\File\SearchUpload;
 use Tuleap\Artidoc\Upload\Section\File\UploadFileInformation;
@@ -36,6 +37,7 @@ final class ArtidocFileBeingUploadedLocker implements TusLocker
     {
     }
 
+    #[Override]
     public function lock(TusFileInformation $file_information): bool
     {
         return $this->search
@@ -50,6 +52,7 @@ final class ArtidocFileBeingUploadedLocker implements TusLocker
             );
     }
 
+    #[Override]
     public function unlock(TusFileInformation $file_information): void
     {
         $this->search

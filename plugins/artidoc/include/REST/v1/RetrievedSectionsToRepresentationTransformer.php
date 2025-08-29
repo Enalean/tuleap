@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc\REST\v1;
 
+use Override;
 use Tuleap\Artidoc\Adapter\Document\Section\RequiredSectionInformationCollector;
 use Tuleap\Artidoc\Domain\Document\Section\PaginatedRetrievedSections;
 use Tuleap\NeverThrow\Err;
@@ -37,6 +38,7 @@ final readonly class RetrievedSectionsToRepresentationTransformer implements Tra
     ) {
     }
 
+    #[Override]
     public function getRepresentation(PaginatedRetrievedSections $retrieved_sections, \PFUser $user): Ok|Err
     {
         return $this->collectRequiredSectionInformationForAllSections($retrieved_sections)
