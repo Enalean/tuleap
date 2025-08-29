@@ -20,6 +20,7 @@
 
 namespace Tuleap\AgileDashboard;
 
+use Override;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AdministrationCrumbBuilder;
@@ -40,13 +41,14 @@ final class AdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     use GlobalLanguageMock;
 
-    private const PROJECT_ID = 123;
+    private const int PROJECT_ID = 123;
     private \Codendi_Request&Stub $request;
     private ConfigurationDao&MockObject $configuration_dao;
     private \EventManager&Stub $event_manager;
     private CountElementsModeChecker&Stub $count_element_mode_checker;
     private \PFUser $user;
 
+    #[Override]
     protected function setUp(): void
     {
         $this->request                    = $this->createStub(\Codendi_Request::class);
@@ -90,11 +92,8 @@ final class AdminControllerTest extends \Tuleap\Test\PHPUnit\TestCase
             ->withoutSiteAdministrator()
             ->build();
 
-        $this->request->method('exist')->willReturnMap(['activate-ad-service' => [true]]);
-        $this->request->method('get')->willReturnMap([
-            'activate-ad-service' => [''],
-            'group_id' => [self::PROJECT_ID],
-        ]);
+        $this->request->method('exist')->willReturn(true);
+        $this->request->method('get')->willReturn(self::PROJECT_ID);
         $GLOBALS['Language']->method('getText')->willReturn('Permission denied');
 
         $this->configuration_dao->expects($this->never())->method('updateConfiguration');
