@@ -22,6 +22,7 @@ namespace Tuleap\Bugzilla\Administration;
 
 use Feedback;
 use HTTPRequest;
+use Override;
 use PFUser;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
@@ -31,17 +32,12 @@ use Tuleap\Request\DispatchableWithRequest;
 
 class Router implements DispatchableWithRequest, DispatchableWithBurningParrot
 {
-    /**
-     * @var Controller
-     */
-    private $controller;
-
-    public function __construct(Controller $controller)
+    public function __construct(private readonly Controller $controller)
     {
-        $this->controller = $controller;
     }
 
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    #[Override]
+    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $current_user = $request->getCurrentUser();
         $this->checkUserIsSiteAdmin($current_user);
@@ -66,7 +62,7 @@ class Router implements DispatchableWithRequest, DispatchableWithBurningParrot
         }
     }
 
-    private function checkUserIsSiteAdmin(PFUser $user)
+    private function checkUserIsSiteAdmin(PFUser $user): void
     {
         if (! $user->isSuperUser()) {
             $GLOBALS['Response']->addFeedback(

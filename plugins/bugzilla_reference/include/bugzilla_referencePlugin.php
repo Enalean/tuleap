@@ -65,6 +65,7 @@ class bugzilla_referencePlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassD
     /**
      * @return PluginInfo
      */
+    #[Override]
     public function getPluginInfo()
     {
         if (! $this->pluginInfo instanceof Info) {
@@ -104,14 +105,14 @@ class bugzilla_referencePlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassD
         return new Router($controller);
     }
 
-    public function collectRoutesEvent(CollectRoutesEvent $event)
+    public function collectRoutesEvent(CollectRoutesEvent $event): void
     {
         $event->getRouteCollector()->addGroup($this->getPluginPath(), function (RouteCollector $r) {
             $r->addRoute(['GET', 'POST'], '/admin/[index.php]', $this->getRouteHandler('routeAdmin'));
         });
     }
 
-    public function get_plugins_available_keywords_references(array $params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function get_plugins_available_keywords_references(array $params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         foreach ($this->getReferenceRetriever()->getAllReferences() as $reference) {
             $params['keywords'][] = $reference->getKeyword();
@@ -131,25 +132,19 @@ class bugzilla_referencePlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassD
         );
     }
 
-    /**
-     * @return ReferenceRetriever
-     */
-    private function getReferenceRetriever()
+    private function getReferenceRetriever(): ReferenceRetriever
     {
         return new ReferenceRetriever(new Dao(), $this->getEncryptionKey());
     }
 
-    /**
-     * @return \Tuleap\Cryptography\SymmetricLegacy2025\EncryptionKey
-     */
-    private function getEncryptionKey()
+    private function getEncryptionKey(): \Tuleap\Cryptography\SymmetricLegacy2025\EncryptionKey
     {
         $key_factory = new \Tuleap\Cryptography\KeyFactory();
         return $key_factory->getEncryptionKey();
     }
 
     /** @see \Event::POST_REFERENCE_EXTRACTED */
-    public function post_reference_extracted(array $params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function post_reference_extracted(array $params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $cross_reference = $params['cross_reference'];
         \assert($cross_reference instanceof CrossReference);
@@ -178,7 +173,7 @@ class bugzilla_referencePlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassD
     }
 
     /** @see \Event::REMOVE_CROSS_REFERENCE */
-    public function remove_cross_reference(array $params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function remove_cross_reference(array $params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $cross_reference = $params['cross_reference'];
         \assert($cross_reference instanceof CrossReference);
@@ -193,7 +188,7 @@ class bugzilla_referencePlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassD
     }
 
     /** @see \Event::GET_REFERENCE_ADMIN_CAPABILITIES */
-    public function get_reference_admin_capabilities(array $params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function get_reference_admin_capabilities(array $params): void // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $reference = $params['reference'];
         \assert($reference instanceof Reference);
@@ -204,10 +199,7 @@ class bugzilla_referencePlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassD
         }
     }
 
-    /**
-     * @return null|\Tuleap\Bugzilla\Reference\Reference
-     */
-    private function getBugzillaReferenceFromKeyword($keyword)
+    private function getBugzillaReferenceFromKeyword($keyword): ?\Tuleap\Bugzilla\Reference\Reference
     {
         return $this->getReferenceRetriever()->getReferenceByKeyword($keyword);
     }
