@@ -21,9 +21,8 @@
 
 use Tuleap\GlobalLanguageMock;
 
-//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class Rule_ProjectNameTest extends \Tuleap\Test\PHPUnit\TestCase
+class Rule_ProjectNameTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     use GlobalLanguageMock;
 
@@ -153,36 +152,5 @@ class Rule_ProjectNameTest extends \Tuleap\Test\PHPUnit\TestCase
         $r = new Rule_UserName();
         $this->assertTrue($r->isReservedName('forge__'));
         $this->assertFalse($r->isReservedName('forgeron'));
-    }
-
-    public function testIsNameAvailableSuccess(): void
-    {
-        $r = $this->createPartialMock(\Rule_ProjectName::class, ['_getBackend']);
-
-        $backendSVN = $this->createMock(\BackendSVN::class);
-        $backendSVN->method('isNameAvailable')->with('foobar')->willReturn(true);
-
-        $backendSystem = $this->createMock(\BackendSystem::class);
-
-        $r->method('_getBackend')->willReturnMap(
-            [
-                ['SVN', $backendSVN],
-                ['System', $backendSystem],
-            ]
-        );
-
-
-        $this->assertTrue($r->isNameAvailable('foobar'));
-    }
-
-    public function testIsNameAvailableSVNFailure(): void
-    {
-        $r = $this->createPartialMock(\Rule_ProjectName::class, ['_getBackend']);
-
-        $backendSVN = $this->createMock(\BackendSVN::class);
-        $backendSVN->method('isNameAvailable')->with('foobar')->willReturn(false);
-        $r->method('_getBackend')->with('SVN')->willReturn($backendSVN);
-
-        $this->assertFalse($r->isNameAvailable('foobar'));
     }
 }
