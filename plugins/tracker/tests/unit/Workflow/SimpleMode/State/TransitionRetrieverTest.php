@@ -25,9 +25,9 @@ namespace Tuleap\Tracker\Workflow\SimpleMode\State;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue;
-use Tracker_FormElement_Field;
 use Transition;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Workflow\Transition\NoTransitionForStateException;
 use Workflow;
 
@@ -57,7 +57,7 @@ final class TransitionRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $workflow->method('getId')->willReturn($workflow_id);
         $workflow->method('isUsed')->willReturn(true);
         $workflow->method('isAdvanced')->willReturn(false);
-        $workflow->method('getField')->willReturn($this->createMock(Tracker_FormElement_Field::class));
+        $workflow->method('getField')->willReturn($this->createMock(TrackerField::class));
         $artifact->method('getWorkflow')->willReturn($workflow);
 
         $changeset_value = $this->createMock(Tracker_Artifact_ChangesetValue::class);
@@ -138,7 +138,7 @@ final class TransitionRetrieverTest extends \Tuleap\Test\PHPUnit\TestCase
         $workflow->method('isUsed')->willReturn(true);
         $workflow->method('isAdvanced')->willReturn(false);
         $artifact->method('getWorkflow')->willReturn($workflow);
-        $workflow->method('getField')->willReturn($this->createMock(Tracker_FormElement_Field::class));
+        $workflow->method('getField')->willReturn($this->createMock(TrackerField::class));
 
         $last_changeset = $this->createMock(Tracker_Artifact_Changeset::class);
         $last_changeset->method('getValue')->willReturn(null);

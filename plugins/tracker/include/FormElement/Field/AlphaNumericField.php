@@ -24,7 +24,6 @@ use Codendi_HTMLPurifier;
 use Override;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue;
-use Tracker_FormElement_Field;
 use Tracker_Report_Criteria;
 use Tuleap\Option\Option;
 use Tuleap\Tracker\FormElement\Field\Files\CreatedFileURLMapping;
@@ -33,7 +32,7 @@ use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
 /**
  * Base class for alphanumeric fields (Int, Float, String, Text)
  */
-abstract class AlphaNumericField extends Tracker_FormElement_Field
+abstract class AlphaNumericField extends TrackerField
 {
     /**
      * @return Option<ParametrizedSQLFragment>

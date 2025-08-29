@@ -46,7 +46,7 @@ final class FromWhereSearchableVisitor implements SearchableVisitor
             ->getFromWhere($parameters->getComparison(), $formelement);
     }
 
-    private function getFormElementFromComparison(Comparison $comparison, Tracker $tracker): \Tracker_FormElement_Field
+    private function getFormElementFromComparison(Comparison $comparison, Tracker $tracker): \Tuleap\Tracker\FormElement\Field\TrackerField
     {
         $name        = $comparison->getSearchable()->getName();
         $formelement = $this->form_element_factory->getUsedFieldByName($tracker->getId(), $name);

@@ -31,12 +31,12 @@ use SimpleXMLElement;
 use TemplateRendererFactory;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue_List;
-use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_List_Value;
 use TrackerManager;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Tracker\FormElement\Field\ListField;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Semantic\Status\CachedSemanticStatusRetriever;
 use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
 use Tuleap\Tracker\Semantic\TrackerSemantic;
@@ -398,11 +398,11 @@ class SemanticDone extends TrackerSemantic
     /**
      * Is the field used in semantics?
      *
-     * @param Tracker_FormElement_Field the field to test if it is used in semantics or not
+     * @param TrackerField the field to test if it is used in semantics or not
      *
      * @return bool returns true if the field is used in semantics, false otherwise
      */
-    public function isUsedInSemantics(Tracker_FormElement_Field $field)
+    public function isUsedInSemantics(TrackerField $field)
     {
         return $this->semantic_status->isUsedInSemantics($field);
     }

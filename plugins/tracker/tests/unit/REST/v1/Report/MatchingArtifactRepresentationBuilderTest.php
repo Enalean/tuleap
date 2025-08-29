@@ -25,7 +25,6 @@ namespace Tuleap\Tracker\REST\v1\Report;
 use Luracast\Restler\RestException;
 use Project;
 use Tracker_Artifact_Changeset;
-use Tracker_FormElement_Field;
 use Tracker_Report;
 use Tracker_Report_Renderer_Table;
 use Tuleap\Color\ColorName;
@@ -34,6 +33,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\User\Avatar\ProvideUserAvatarUrlStub;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Report\Renderer\Table\TableRendererForReportRetriever;
 use Tuleap\Tracker\Report\Renderer\Table\UsedFieldsRetriever;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFullRepresentation;
@@ -115,9 +115,9 @@ final class MatchingArtifactRepresentationBuilderTest extends TestCase
             ->with($report)
             ->willReturn([$renderer_table]);
 
-        $field_01       = $this->createMock(Tracker_FormElement_Field::class);
-        $field_02       = $this->createMock(Tracker_FormElement_Field::class);
-        $field_03       = $this->createMock(Tracker_FormElement_Field::class);
+        $field_01       = $this->createMock(TrackerField::class);
+        $field_02       = $this->createMock(TrackerField::class);
+        $field_03       = $this->createMock(TrackerField::class);
         $field_art_link = $this->createMock(\Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField::class);
 
         $field_01->method('getRESTValue')->willReturn(

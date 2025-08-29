@@ -28,6 +28,7 @@ use Tuleap\Tracker\Changeset\Validation\NullChangesetValidationContext;
 use Tuleap\Tracker\FormElement\ArtifactLinkValidator;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Validation\ManualActionContext;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Workflow\WorkflowUpdateChecker;
 
@@ -44,11 +45,11 @@ final class Tracker_Artifact_Changeset_NewChangesetFieldsValidatorTest extends T
 
     private MockObject&Artifact $artifact;
 
-    private MockObject&Tracker_FormElement_Field $field1;
+    private MockObject&TrackerField $field1;
 
-    private MockObject&Tracker_FormElement_Field $field2;
+    private MockObject&TrackerField $field2;
 
-    private MockObject&Tracker_FormElement_Field $field3;
+    private MockObject&TrackerField $field3;
 
     private MockObject&Tracker_Artifact_Changeset $changeset;
 
@@ -91,9 +92,9 @@ final class Tracker_Artifact_Changeset_NewChangesetFieldsValidatorTest extends T
         $this->artifact->method('getLastChangeset')->willReturn($this->changeset);
     }
 
-    private function getFieldWithId(int $id): MockObject&Tracker_FormElement_Field
+    private function getFieldWithId(int $id): MockObject&TrackerField
     {
-        $field = $this->createMock(Tracker_FormElement_Field::class);
+        $field = $this->createMock(TrackerField::class);
         $field->method('getId')->willReturn($id);
 
         return $field;

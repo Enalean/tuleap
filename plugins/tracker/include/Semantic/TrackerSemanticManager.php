@@ -25,11 +25,11 @@ use Codendi_HTMLPurifier;
 use EventManager;
 use PFUser;
 use SimpleXMLElement;
-use Tracker_FormElement_Field;
 use TrackerManager;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Semantic\Contributor\TrackerSemanticContributor;
 use Tuleap\Tracker\Semantic\Description\RetrieveSemanticDescriptionField;
 use Tuleap\Tracker\Semantic\Description\TrackerSemanticDescription;
@@ -172,7 +172,7 @@ class TrackerSemanticManager
         die();
     }
 
-    public function getSemanticsTheFieldBelongsTo(Tracker_FormElement_Field $field): CollectionOfSemanticsUsingAParticularTrackerField
+    public function getSemanticsTheFieldBelongsTo(TrackerField $field): CollectionOfSemanticsUsingAParticularTrackerField
     {
         $semantics             = $this->getSemantics();
         $timeframe_dao         = new SemanticTimeframeDao();

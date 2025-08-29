@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\FormElement\Field\TrackerField;
+
 /**
  * Loads and saves Field post actions
  */
@@ -185,7 +187,7 @@ class Transition_PostAction_FieldFactory implements Transition_PostActionSubFact
     /**
      * @see Transition_PostActionSubFactory::isFieldUsedInPostActions()
      */
-    public function isFieldUsedInPostActions(Tracker_FormElement_Field $field)
+    public function isFieldUsedInPostActions(TrackerField $field)
     {
         foreach (array_keys($this->post_actions_classes) as $shortname) {
             if ($this->getDao($shortname)->countByFieldId($field->getId()) > 0) {
@@ -309,7 +311,7 @@ class Transition_PostAction_FieldFactory implements Transition_PostActionSubFact
      *
      * @param array $row
      *
-     * @return Tracker_FormElement_Field
+     * @return TrackerField
      */
     private function getFieldFromRow($row)
     {

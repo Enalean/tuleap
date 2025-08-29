@@ -25,13 +25,13 @@ use EventManager;
 use Jenkins_Client;
 use PHPUnit\Framework\MockObject\MockObject;
 use SimpleXMLElement;
-use Tracker_FormElement_Field;
 use Transition;
 use Transition_PostAction;
 use Transition_PostAction_CIBuild;
 use Transition_PostAction_Field_Date;
 use Transition_PostAction_Field_Float;
 use Transition_PostAction_Field_Int;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Workflow\PostAction\Visitor;
 
@@ -171,7 +171,7 @@ final class PostActionsRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Te
                 return;
             }
 
-            public function bypassPermissions(Tracker_FormElement_Field $field)
+            public function bypassPermissions(TrackerField $field)
             {
                 return false;
             }

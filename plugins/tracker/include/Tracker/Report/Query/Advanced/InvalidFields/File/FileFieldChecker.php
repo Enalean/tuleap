@@ -44,7 +44,7 @@ final class FileFieldChecker implements ValueWrapperVisitor
      * @throws FileToNowComparisonException
      * @throws FileToStatusOpenComparisonException
      */
-    public function checkFieldIsValidForComparison(Comparison $comparison, \Tracker_FormElement_Field $field): void
+    public function checkFieldIsValidForComparison(Comparison $comparison, \Tuleap\Tracker\FormElement\Field\TrackerField $field): void
     {
         match ($comparison->getType()) {
             ComparisonType::Equal,
@@ -58,7 +58,7 @@ final class FileFieldChecker implements ValueWrapperVisitor
      * @throws FileToNowComparisonException
      * @throws FileToStatusOpenComparisonException
      */
-    private function checkFileValueIsValid(Comparison $comparison, \Tracker_FormElement_Field $field): void
+    private function checkFileValueIsValid(Comparison $comparison, \Tuleap\Tracker\FormElement\Field\TrackerField $field): void
     {
         $comparison->getValueWrapper()->accept($this, new FieldValueWrapperParameters($field));
     }

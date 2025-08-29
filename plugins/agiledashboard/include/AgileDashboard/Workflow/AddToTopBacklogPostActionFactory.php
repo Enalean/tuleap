@@ -23,12 +23,12 @@ declare(strict_types=1);
 namespace Tuleap\AgileDashboard\Workflow;
 
 use Override;
-use Tracker_FormElement_Field;
 use Transition;
 use Transition_PostAction;
 use Transition_PostActionSubFactory;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\UnplannedArtifactsAdder;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Workflow;
 
 class AddToTopBacklogPostActionFactory implements Transition_PostActionSubFactory
@@ -132,7 +132,7 @@ class AddToTopBacklogPostActionFactory implements Transition_PostActionSubFactor
     }
 
     #[Override]
-    public function isFieldUsedInPostActions(Tracker_FormElement_Field $field)
+    public function isFieldUsedInPostActions(TrackerField $field)
     {
         //Does nothing
         return false;

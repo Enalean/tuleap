@@ -22,8 +22,8 @@ declare(strict_types=1);
 namespace Tuleap\CrossTracker\Query\Advanced;
 
 use PFUser;
-use Tracker_FormElement_Field;
 use Tuleap\Tracker\FormElement\Field\RetrieveUsedFields;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Permission\FieldPermissionType;
 use Tuleap\Tracker\Permission\RetrieveUserPermissionOnFields;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
@@ -38,7 +38,7 @@ final readonly class ReadableFieldRetriever
 
     /**
      * @param int[] $tracker_ids
-     * @return Tracker_FormElement_Field[]
+     * @return TrackerField[]
      */
     public function retrieveFieldsUserCanRead(Field $field, PFUser $user, array $tracker_ids): array
     {
@@ -47,7 +47,7 @@ final readonly class ReadableFieldRetriever
                 fn(int $tracker_id) => $this->retrieve_used_fields->getUsedFieldByName($tracker_id, $field->getName()),
                 $tracker_ids,
             ),
-            static fn(?Tracker_FormElement_Field $field) => $field !== null,
+            static fn(?TrackerField $field) => $field !== null,
         );
 
         return $this->permission_on_fields

@@ -21,7 +21,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Report\Renderer\Table\Sort;
 
-use Tracker_FormElement_Field;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 
 /**
  * @psalm-immutable
@@ -29,14 +29,14 @@ use Tracker_FormElement_Field;
 final class SortWithIntegrityChecked
 {
     /**
-     * @psalm-param  array{array{field: Tracker_FormElement_Field, field_id: int, is_desc: bool}} $sort
-     * @psalm-return array<array{field: Tracker_FormElement_Field, field_id: int, is_desc: bool}>
+     * @psalm-param  array{array{field: TrackerField, field_id: int, is_desc: bool}} $sort
+     * @psalm-return array<array{field: TrackerField, field_id: int, is_desc: bool}>
      */
     public static function getSortOnUsedFields(array $sort): array
     {
         $valid_sort = [];
         foreach ($sort as $s) {
-            if (isset($s['field']) && $s['field'] instanceof Tracker_FormElement_Field && $s['field']->isUsed()) {
+            if (isset($s['field']) && $s['field'] instanceof TrackerField && $s['field']->isUsed()) {
                 $valid_sort[] = $s;
             }
         }
@@ -45,14 +45,14 @@ final class SortWithIntegrityChecked
     }
 
     /**
-     * @psalm-param  array{array{field: Tracker_FormElement_Field, field_id: int, is_desc: bool}} $sort
-     * @psalm-return array<array{field: Tracker_FormElement_Field, field_id: int, is_desc: bool}>
+     * @psalm-param  array{array{field: TrackerField, field_id: int, is_desc: bool}} $sort
+     * @psalm-return array<array{field: TrackerField, field_id: int, is_desc: bool}>
      */
     public static function getSort(array $sort): array
     {
         $valid_sort = [];
         foreach ($sort as $s) {
-            if (isset($s['field']) && $s['field'] instanceof Tracker_FormElement_Field) {
+            if (isset($s['field']) && $s['field'] instanceof TrackerField) {
                 $valid_sort[] = $s;
             }
         }

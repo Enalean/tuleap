@@ -24,9 +24,9 @@ declare(strict_types=1);
 namespace Tuleap\Baseline\Adapter;
 
 use AgileDashBoard_Semantic_InitialEffort;
-use Tracker_FormElement_Field;
-use Tuleap\Tracker\FormElement\Field\Text\TextField;
 use Tuleap\Tracker\FormElement\Field\ListField;
+use Tuleap\Tracker\FormElement\Field\Text\TextField;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Semantic\Description\CachedSemanticDescriptionFieldRetriever;
 use Tuleap\Tracker\Semantic\Status\CachedSemanticStatusFieldRetriever;
 use Tuleap\Tracker\Semantic\Title\CachedSemanticTitleFieldRetriever;
@@ -47,7 +47,7 @@ class SemanticFieldRepository
         return (CachedSemanticDescriptionFieldRetriever::instance())->fromTracker($tracker);
     }
 
-    public function findInitialEffortByTracker(Tracker $tracker): ?Tracker_FormElement_Field
+    public function findInitialEffortByTracker(Tracker $tracker): ?TrackerField
     {
         return AgileDashBoard_Semantic_InitialEffort::load($tracker)->getField();
     }

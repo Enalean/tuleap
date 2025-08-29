@@ -23,9 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\Tracker;
 
 use PHPUnit\Framework\MockObject\MockObject;
-use Tracker_FormElement_Field;
-use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
 use Tuleap\Tracker\Colorpicker\ColorpickerMountPointPresenter;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\FormElement\FormElementListValueAdminViewPresenter;
 use Tuleap\Tracker\FormElement\FormElementListValueAdminViewPresenterBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
@@ -36,11 +36,11 @@ final class FormElementListValueAdminViewPresenterBuilderTest extends \Tuleap\Te
 {
     private FormElementListValueAdminViewPresenterBuilder $presenter_builder;
     private BindStaticValueDao&MockObject $value_dao;
-    private Tracker_FormElement_Field&MockObject $field;
+    private TrackerField&MockObject $field;
 
     protected function setUp(): void
     {
-        $this->field = $this->createMock(Tracker_FormElement_Field::class);
+        $this->field = $this->createMock(TrackerField::class);
         $this->field->method('getTrackerId')->willReturn(5);
 
         $this->value_dao         = $this->createMock(BindStaticValueDao::class);

@@ -60,7 +60,6 @@ use Tracker_ColorPresenterCollection;
 use Tracker_Dispatchable_Interface;
 use Tracker_Exception;
 use Tracker_FormElement;
-use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_List_BindFactory;
 use Tracker_FormElementFactory;
 use Tracker_GeneralSettings_Presenter;
@@ -186,10 +185,11 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\ParentLinkAction;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeIsChildLinkRetriever;
 use Tuleap\Tracker\FormElement\Field\Date\CSVFormatter;
+use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueDao;
 use Tuleap\Tracker\FormElement\Field\Text\TextField;
 use Tuleap\Tracker\FormElement\Field\Text\TextValueValidator;
-use Tuleap\Tracker\FormElement\Field\ListField;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\FormElement\View\Admin\DisplayAdminFormElementsWarningsEvent;
 use Tuleap\Tracker\Hierarchy\HierarchyController;
 use Tuleap\Tracker\Hierarchy\HierarchyDAO;
@@ -597,7 +597,7 @@ class Tracker implements Tracker_Dispatchable_Interface
     }
 
     /**
-     * @return Tracker_FormElement_Field[]
+     * @return TrackerField[]
      */
     public function getFormElementFields()
     {
@@ -2485,7 +2485,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                                 $html_table .= '<td style="color:gray;">' . ($line_number + 1) . '</td>';
                                 $mode        = 'creation';
                                 foreach ($data_line as $idx => $data_cell) {
-                                    if ($fields[$idx] && $fields[$idx] instanceof \Tracker_FormElement_Field) {
+                                    if ($fields[$idx] && $fields[$idx] instanceof FormElement\Field\TrackerField) {
                                         $field          = $fields[$idx];
                                         $displayed_data = $field->getFieldDataForCSVPreview($data_cell);
                                     } else {

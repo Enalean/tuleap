@@ -24,7 +24,6 @@ namespace Tuleap\ProgramManagement\Adapter\Program\Backlog\TopBacklog\Workflow;
 
 use SimpleXMLElement;
 use Tracker_Artifact_Changeset;
-use Tracker_FormElement_Field;
 use Transition;
 use Transition_PostAction;
 use Tuleap\ProgramManagement\Adapter\Permissions\WorkflowUserPermissionBypass;
@@ -33,6 +32,7 @@ use Tuleap\ProgramManagement\Adapter\Workspace\UserProxy;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogChange;
 use Tuleap\ProgramManagement\Domain\Program\Backlog\TopBacklog\TopBacklogChangeProcessor;
 use Tuleap\ProgramManagement\Domain\Program\ProgramIdentifier;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Workflow\PostAction\Visitor;
 
 final class AddToTopBacklogPostAction extends Transition_PostAction
@@ -71,7 +71,7 @@ final class AddToTopBacklogPostAction extends Transition_PostAction
         $root->addChild(self::XML_TAG_NAME);
     }
 
-    public function bypassPermissions(Tracker_FormElement_Field $field): bool
+    public function bypassPermissions(TrackerField $field): bool
     {
         return false;
     }

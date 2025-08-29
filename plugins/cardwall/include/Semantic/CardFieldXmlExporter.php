@@ -45,7 +45,7 @@ class CardFieldXmlExporter
 
     /**
      * @param                               $xml_mapping
-     * @param  \Tracker_FormElement_Field[] $fields
+     * @param  \Tuleap\Tracker\FormElement\Field\TrackerField[] $fields
      */
     private function extractCardFields(SimpleXMLElement $semantic, $xml_mapping, array $fields)
     {

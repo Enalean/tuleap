@@ -27,13 +27,13 @@ use PFUser;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use PHPUnit\Framework\MockObject\MockObject;
 use Project;
-use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_List_BindFactory;
 use Tracker_FormElementFactory;
 use Tracker_SharedFormElementFactory;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\FormElement\Field\List\SelectboxField;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
@@ -96,7 +96,7 @@ final class Tracker_SharedFormElementFactoryTest extends TestCase // phpcs:ignor
         $shared_factory->createFormElement($this->tracker, $formElement_data, $user, false, false);
     }
 
-    private function givenASelectBoxField(int $id, ?Tracker_FormElement_Field $original_field): SelectboxField
+    private function givenASelectBoxField(int $id, ?TrackerField $original_field): SelectboxField
     {
         if ($original_field !== null) {
             $field = SharedFieldBuilder::aSharedField($id, $original_field)
@@ -117,7 +117,7 @@ final class Tracker_SharedFormElementFactoryTest extends TestCase // phpcs:ignor
     }
 
     private function setFieldAndTrackerPermissions(
-        Tracker_FormElement_Field $field,
+        TrackerField $field,
         PFUser $user,
         bool $user_can_read_field,
         bool $user_can_view_tracker,
@@ -216,7 +216,7 @@ final class Tracker_SharedFormElementFactoryTest extends TestCase // phpcs:ignor
 
     private function thenTheOriginalShouldBeUsed(
         Tracker_FormElementFactory&MockObject $form_element_factory,
-        Tracker_FormElement_Field $original_field,
+        TrackerField $original_field,
         Tracker_SharedFormElementFactory $shared_form_element_factory,
         array $form_element_data,
         PFUser $user,

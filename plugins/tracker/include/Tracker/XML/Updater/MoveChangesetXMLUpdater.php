@@ -22,7 +22,7 @@ namespace Tuleap\Tracker\XML\Updater;
 
 use PFUser;
 use SimpleXMLElement;
-use Tracker_FormElement_Field;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Tracker;
 
 final class MoveChangesetXMLUpdater
@@ -84,7 +84,7 @@ final class MoveChangesetXMLUpdater
 
     public function isFieldChangeCorrespondingToField(
         SimpleXMLElement $changeset_xml,
-        Tracker_FormElement_Field $source_field,
+        TrackerField $source_field,
         $index,
     ): bool {
         $field_change = $changeset_xml->field_change[$index];
@@ -94,7 +94,7 @@ final class MoveChangesetXMLUpdater
 
     public function useTargetTrackerFieldName(
         SimpleXMLElement $changeset_xml,
-        Tracker_FormElement_Field $target_field,
+        TrackerField $target_field,
         $index,
     ): void {
         $changeset_xml->field_change[$index]['field_name'] = $target_field->getName();

@@ -20,6 +20,7 @@
  */
 
 use Tuleap\Project\Duplication\DuplicationUserGroupMapping;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Rule\TrackerRulesDateValidator;
 use Tuleap\Tracker\Rule\TrackerRulesListValidator;
 use Tuleap\Tracker\Tracker;
@@ -284,11 +285,11 @@ class WorkflowFactory implements RetrieveWorkflow // phpcs:ignore PSR1.Classes.C
     /**
      * Say if a field is used in its tracker workflow or post actions
      *
-     * @param Tracker_FormElement_Field $field The field
+     * @param TrackerField $field The field
      *
      * @return bool
      */
-    public function isFieldUsedInWorkflow(Tracker_FormElement_Field $field)
+    public function isFieldUsedInWorkflow(TrackerField $field)
     {
         return $this->isWorkflowField($field) || $this->transition_factory->isFieldUsedInTransitions($field);
     }
@@ -296,11 +297,11 @@ class WorkflowFactory implements RetrieveWorkflow // phpcs:ignore PSR1.Classes.C
     /**
      * Say if a field is used to define a workflow
      *
-     * @param Tracker_FormElement_Field $field The field
+     * @param TrackerField $field The field
      *
      * @return bool
      */
-    public function isWorkflowField(Tracker_FormElement_Field $field)
+    public function isWorkflowField(TrackerField $field)
     {
         $workflow = $this->getWorkflowByTrackerId($field->getTracker()->getId());
         if ($workflow) {

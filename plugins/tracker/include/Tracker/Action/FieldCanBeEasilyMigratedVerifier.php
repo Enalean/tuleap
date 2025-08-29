@@ -52,8 +52,8 @@ final class FieldCanBeEasilyMigratedVerifier implements VerifyFieldCanBeEasilyMi
     }
 
     public function canFieldBeEasilyMigrated(
-        \Tracker_FormElement_Field $source_field,
-        \Tracker_FormElement_Field $destination_field,
+        \Tuleap\Tracker\FormElement\Field\TrackerField $source_field,
+        \Tuleap\Tracker\FormElement\Field\TrackerField $destination_field,
     ): bool {
         $destination_field_type = $this->retrieve_source_field_type->getType($destination_field);
         $source_field_type      = $this->retrieve_destination_field_type->getType($source_field);

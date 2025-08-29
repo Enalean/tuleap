@@ -31,7 +31,7 @@ final class CollectionOfSemanticsUsingAParticularTrackerField
     private array $semantics = [];
 
     public function __construct(
-        \Tracker_FormElement_Field $field,
+        \Tuleap\Tracker\FormElement\Field\TrackerField $field,
         array $semantics,
     ) {
         $this->tracker   = $field->getTracker();

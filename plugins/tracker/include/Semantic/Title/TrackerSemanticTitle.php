@@ -27,10 +27,10 @@ use Feedback;
 use PFUser;
 use SimpleXMLElement;
 use TemplateRendererFactory;
-use Tracker_FormElement_Field;
 use Tracker_FormElementFactory;
 use TrackerManager;
 use Tuleap\Tracker\FormElement\Field\Text\TextField;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Notifications\Settings\CalendarEventConfigDao;
 use Tuleap\Tracker\Semantic\TrackerSemantic;
 use Tuleap\Tracker\Semantic\TrackerSemanticManager;
@@ -213,11 +213,11 @@ class TrackerSemanticTitle extends TrackerSemantic
     /**
      * Is the field used in semantics?
      *
-     * @param Tracker_FormElement_Field the field to test if it is used in semantics or not
+     * @param TrackerField the field to test if it is used in semantics or not
      *
      * @return bool returns true if the field is used in semantics, false otherwise
      */
-    public function isUsedInSemantics(Tracker_FormElement_Field $field)
+    public function isUsedInSemantics(TrackerField $field)
     {
         return $this->getFieldId() == $field->getId();
     }

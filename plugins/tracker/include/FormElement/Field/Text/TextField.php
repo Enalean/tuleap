@@ -49,8 +49,9 @@ use Tuleap\Tracker\Artifact\CodeBlockFeaturesOnArtifact;
 use Tuleap\Tracker\Artifact\FileUploadDataProvider;
 use Tuleap\Tracker\Artifact\RichTextareaConfiguration;
 use Tuleap\Tracker\Artifact\RichTextareaProvider;
-use Tuleap\Tracker\FormElement\Field\Files\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\AlphaNumericField;
+use Tuleap\Tracker\FormElement\Field\Files\CreatedFileURLMapping;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\FormElement\FieldContentIndexer;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\DeleteSpecificProperties;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\DuplicateSpecificProperties;
@@ -580,7 +581,7 @@ class TextField extends AlphaNumericField
     }
 
     /**
-     * @see Tracker_FormElement_Field::hasChanges()
+     * @see TrackerField::hasChanges()
      */
     public function hasChanges(Artifact $artifact, Tracker_Artifact_ChangesetValue $old_value, $new_value)
     {

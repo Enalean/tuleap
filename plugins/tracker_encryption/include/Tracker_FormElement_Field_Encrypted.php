@@ -22,13 +22,14 @@
 use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\Files\CreatedFileURLMapping;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
 use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 use Tuleap\TrackerEncryption\ChangesetValue;
 use Tuleap\TrackerEncryption\Dao\TrackerPublicKeyDao;
 use Tuleap\TrackerEncryption\Dao\ValueDao;
 
-class Tracker_FormElement_Field_Encrypted extends Tracker_FormElement_Field implements TrackerFormElementExternalField // @codingStandardsIgnoreLine
+class Tracker_FormElement_Field_Encrypted extends TrackerField implements TrackerFormElementExternalField // @codingStandardsIgnoreLine
 {
     public const TYPE = 'Encrypted';
 
@@ -322,7 +323,7 @@ class Tracker_FormElement_Field_Encrypted extends Tracker_FormElement_Field impl
         return $old_value->getValue() !== $new_value;
     }
 
-    public function getFormAdminVisitor(Tracker_FormElement_Field $element, array $used_element)
+    public function getFormAdminVisitor(TrackerField $element, array $used_element)
     {
         return new Tracker_FormElement_View_Admin_Field($element, $used_element);
     }

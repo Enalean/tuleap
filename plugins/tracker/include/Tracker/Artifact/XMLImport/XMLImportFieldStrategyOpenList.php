@@ -21,6 +21,7 @@
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\PostCreation\PostCreationContext;
 use Tuleap\Tracker\FormElement\Field\List\OpenListField;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 
 class Tracker_Artifact_XMLImport_XMLImportFieldStrategyOpenList implements Tracker_Artifact_XMLImport_XMLImportFieldStrategy // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
@@ -50,7 +51,7 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyOpenList implements Track
      * @return mixed
      */
     public function getFieldData(
-        Tracker_FormElement_Field $field,
+        TrackerField $field,
         SimpleXMLElement $field_change,
         PFUser $submitted_by,
         Artifact $artifact,
@@ -70,7 +71,7 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyOpenList implements Track
         return implode(',', $values);
     }
 
-    private function getUserValue(Tracker_FormElement_Field $field, SimpleXMLElement $value)
+    private function getUserValue(TrackerField $field, SimpleXMLElement $value)
     {
         if (isset($value['format']) && (string) $value['format'] === self::FORMAT_ID) {
             return (string) $value;
@@ -97,7 +98,7 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyOpenList implements Track
             );
     }
 
-    private function getFieldChangeId(Tracker_FormElement_Field $field, SimpleXMLElement $value)
+    private function getFieldChangeId(TrackerField $field, SimpleXMLElement $value)
     {
         if (isset($value['format']) && (string) $value['format'] === self::FORMAT_ID) {
             $value_id = $this->xml_fields_mapping->getNewOpenValueId((string) $value);

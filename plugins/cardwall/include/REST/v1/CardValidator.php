@@ -25,7 +25,7 @@ use Cardwall_FieldNotOnCardException;
 use Cardwall_SingleCard;
 use Luracast\Restler\RestException;
 use PFUser;
-use Tracker_FormElement_Field;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Semantic\Title\CachedSemanticTitleFieldRetriever;
 
 class CardValidator
@@ -83,7 +83,7 @@ class CardValidator
         return $new_values;
     }
 
-    private function getFieldValue(Cardwall_SingleCard $single_card, Tracker_FormElement_Field $field, $value)
+    private function getFieldValue(Cardwall_SingleCard $single_card, TrackerField $field, $value)
     {
         $artifact = $single_card->getArtifact();
         return $field->getFieldDataFromRESTValue($value, $artifact);

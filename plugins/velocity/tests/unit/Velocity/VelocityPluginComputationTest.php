@@ -24,8 +24,8 @@ namespace Tuleap\Velocity;
 
 use PFUser;
 use Tracker_Artifact_Changeset;
-use Tracker_FormElement_Field;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDone;
 use Tuleap\Tracker\Semantic\Status\TrackerSemanticStatus;
 use Tuleap\Tracker\Tracker;
@@ -67,7 +67,7 @@ final class VelocityPluginComputationTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->semantic_done     = $this->createMock(SemanticDone::class);
         $this->semantic_velocity = $this->createMock(SemanticVelocity::class);
 
-        $velocity_field = $this->createMock(Tracker_FormElement_Field::class);
+        $velocity_field = $this->createMock(TrackerField::class);
         $velocity_field->method('getId')->willReturn(100);
         $this->semantic_velocity->method('getFieldId')->willReturn($velocity_field);
         $velocity_field->method('userCanRead')->willReturn(false);
@@ -87,7 +87,7 @@ final class VelocityPluginComputationTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->artifact->method('getLastChangeset')->willReturn($artifact_changeset);
         $artifact_changeset->method('getId')->willReturn($changeset_id);
 
-        $velocity_field = $this->createMock(Tracker_FormElement_Field::class);
+        $velocity_field = $this->createMock(TrackerField::class);
         $velocity_field->method('userCanRead')->willReturn(false);
         $this->semantic_velocity->method('getVelocityField')->willReturn($velocity_field);
         $this->velocity_computation_checker->method('shouldComputeCapacity')->willReturn(true);

@@ -34,7 +34,6 @@ use Tracker_Artifact_Changeset_ValueDao;
 use Tracker_Artifact_ChangesetValue;
 use Tracker_Artifact_ChangesetValue_PermissionsOnArtifact;
 use Tracker_ArtifactFactory;
-use Tracker_FormElement_Field;
 use Tracker_FormElement_FieldVisitor;
 use Tracker_FormElement_InvalidFieldException;
 use Tracker_FormElement_RESTValueByField_NotImplementedException;
@@ -45,6 +44,7 @@ use Tuleap\Option\Option;
 use Tuleap\Project\REST\UserGroupRepresentation;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\Files\CreatedFileURLMapping;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\FormElement\PermissionsOnArtifactUGroupRetriever;
 use Tuleap\Tracker\FormElement\PermissionsOnArtifactUsageFormatter;
 use Tuleap\Tracker\FormElement\PermissionsOnArtifactValidator;
@@ -56,7 +56,7 @@ use Tuleap\Tracker\REST\v1\TrackerFieldsRepresentations\PermissionsOnArtifacts;
 use Tuleap\User\UserGroup\NameTranslator;
 use UGroupDao;
 
-class PermissionsOnArtifactField extends Tracker_FormElement_Field
+class PermissionsOnArtifactField extends TrackerField
 {
     public const string GRANTED_GROUPS      = 'granted_groups';
     public const string USE_IT              = 'use_artifact_permissions';
@@ -686,7 +686,7 @@ class PermissionsOnArtifactField extends Tracker_FormElement_Field
     }
 
     /**
-     * @see Tracker_FormElement_Field::hasChanges()
+     * @see TrackerField::hasChanges()
      */
     #[Override]
     public function hasChanges(Artifact $artifact, Tracker_Artifact_ChangesetValue $old_value, $new_value)

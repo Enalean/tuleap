@@ -32,7 +32,7 @@ final class PossibleFieldsPresenter
     }
 
     /**
-     * @param \Tracker_FormElement_Field[] $tracker_filed_list
+     * @param \Tuleap\Tracker\FormElement\Field\TrackerField[] $tracker_filed_list
      * @return self[]
      */
     public static function buildFromTrackerFieldList(array $tracker_filed_list, \AgileDashBoard_Semantic_InitialEffort $initial_effort): array

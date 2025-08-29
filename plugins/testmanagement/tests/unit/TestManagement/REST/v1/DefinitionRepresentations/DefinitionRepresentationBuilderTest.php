@@ -81,7 +81,7 @@ final class DefinitionRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Tes
     {
         $user       = UserTestBuilder::aUser()->build();
         $changeset  = $this->createMock(Tracker_Artifact_Changeset::class);
-        $field      = $this->createMock(\Tracker_FormElement_Field::class);
+        $field      = $this->createMock(\Tuleap\Tracker\FormElement\Field\TrackerField::class);
         $text_field = $this->createMock(Tracker_Artifact_ChangesetValue_Text::class);
 
         $tracker_id = 1450;
@@ -140,7 +140,7 @@ final class DefinitionRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Tes
     {
         $user       = UserTestBuilder::aUser()->build();
         $changeset  = $this->createMock(Tracker_Artifact_Changeset::class);
-        $field      = $this->createMock(\Tracker_FormElement_Field::class);
+        $field      = $this->createMock(\Tuleap\Tracker\FormElement\Field\TrackerField::class);
         $text_field = $this->createMock(Tracker_Artifact_ChangesetValue_Text::class);
 
         $tracker_id = 1450;
@@ -173,7 +173,7 @@ final class DefinitionRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Tes
     {
         $user       = UserTestBuilder::aUser()->build();
         $changeset  = $this->createMock(Tracker_Artifact_Changeset::class);
-        $field      = $this->createMock(\Tracker_FormElement_Field::class);
+        $field      = $this->createMock(\Tuleap\Tracker\FormElement\Field\TrackerField::class);
         $text_field = $this->createMock(Tracker_Artifact_ChangesetValue_Text::class);
 
         $tracker_id = 1450;
@@ -216,7 +216,7 @@ final class DefinitionRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Tes
     public function testItThrowsAnErrorIfTheDescriptionFormatIsInvalid(): void
     {
         $user                = $this->createMock(PFUser::class);
-        $field               = $this->createMock(\Tracker_FormElement_Field::class);
+        $field               = $this->createMock(\Tuleap\Tracker\FormElement\Field\TrackerField::class);
         $changeset           = $this->createMock(Tracker_Artifact_Changeset::class);
         $text_field          = $this->createMock(Tracker_Artifact_ChangesetValue_Text::class);
         $definition_artifact = $this->mockDefinitionArtifact($user, 111);
@@ -239,7 +239,7 @@ final class DefinitionRepresentationBuilderTest extends \Tuleap\Test\PHPUnit\Tes
         );
     }
 
-    private function assertTrackerFormElementFactory(PFUser $user, \Tracker_FormElement_Field $field): void
+    private function assertTrackerFormElementFactory(PFUser $user, \Tuleap\Tracker\FormElement\Field\TrackerField $field): void
     {
         $this->tracker_form_element_factory->method('getUsedFieldByNameForUser')
             ->willReturnCallback(

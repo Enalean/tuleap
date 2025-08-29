@@ -22,5 +22,5 @@ namespace Tuleap\Tracker\Action;
 
 interface VerifyIsExternalField
 {
-    public function isAnExternalField(\Tracker_FormElement_Field $field): bool;
+    public function isAnExternalField(\Tuleap\Tracker\FormElement\Field\TrackerField $field): bool;
 }

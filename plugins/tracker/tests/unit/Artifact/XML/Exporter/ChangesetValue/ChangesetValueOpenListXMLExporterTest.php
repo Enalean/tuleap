@@ -27,11 +27,11 @@ use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
 use SimpleXMLElement;
 use Tracker_Artifact_ChangesetValue_OpenList;
-use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_List_Bind_Static;
 use Tracker_FormElement_Field_List_Bind_Ugroups;
 use Tracker_FormElement_Field_List_Bind_Users;
 use Tuleap\Tracker\FormElement\Field\List\OpenListField;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\OpenListValueBuilder;
 use UserManager;
@@ -51,7 +51,7 @@ final class ChangesetValueOpenListXMLExporterTest extends \Tuleap\Test\PHPUnit\T
 
     private Tracker_Artifact_ChangesetValue_OpenList&MockObject $changeset_value;
 
-    private Tracker_FormElement_Field $field;
+    private TrackerField $field;
 
     protected function setUp(): void
     {

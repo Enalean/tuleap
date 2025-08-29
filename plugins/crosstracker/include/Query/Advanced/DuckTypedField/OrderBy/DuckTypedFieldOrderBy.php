@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Query\Advanced\DuckTypedField\OrderBy;
 
-use Tracker_FormElement_Field;
 use Tuleap\CrossTracker\Query\Advanced\DuckTypedField\FieldTypeRetrieverWrapper;
 use Tuleap\CrossTracker\Query\Advanced\DuckTypedField\FieldTypesAreIncompatibleFault;
 use Tuleap\NeverThrow\Err;
@@ -30,6 +29,7 @@ use Tuleap\NeverThrow\Fault;
 use Tuleap\NeverThrow\Ok;
 use Tuleap\NeverThrow\Result;
 use Tuleap\Tracker\FormElement\Field\ListField;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\FormElement\RetrieveFieldType;
 
 /**
@@ -48,7 +48,7 @@ final readonly class DuckTypedFieldOrderBy
     }
 
     /**
-     * @param Tracker_FormElement_Field[] $fields
+     * @param TrackerField[] $fields
      * @param int[] $tracker_ids
      * @return Ok<self>|Err<Fault>
      */

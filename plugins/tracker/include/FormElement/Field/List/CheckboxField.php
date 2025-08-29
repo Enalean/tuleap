@@ -29,6 +29,7 @@ use Tracker_FormElement_Field_List_Bind_StaticValue_None;
 use Tracker_FormElement_Field_List_Value;
 use Tracker_FormElement_FieldVisitor;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 
 final class CheckboxField extends MultiSelectboxField
 {
@@ -102,7 +103,7 @@ final class CheckboxField extends MultiSelectboxField
     }
 
     /**
-     * @see Tracker_FormElement_Field::hasChanges()
+     * @see TrackerField::hasChanges()
      */
     #[Override]
     public function hasChanges(Artifact $artifact, Tracker_Artifact_ChangesetValue $previous_changesetvalue, $new_value)

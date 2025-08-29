@@ -27,10 +27,10 @@ use PFUser;
 use PlanningFactory;
 use SimpleXMLElement;
 use TemplateRendererFactory;
-use Tracker_FormElement_Field;
 use Tracker_FormElementFactory;
 use Tracker_HierarchyFactory;
 use TrackerManager;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Semantic\Status\CachedSemanticStatusRetriever;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDone;
 use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneDao;
@@ -51,14 +51,14 @@ class SemanticVelocity extends TrackerSemantic
     private $semantic_done;
 
     /**
-     * @var \Tracker_FormElement_Field
+     * @var \Tuleap\Tracker\FormElement\Field\TrackerField
      */
     private $velocity_field;
 
     public function __construct(
         Tracker $tracker,
         SemanticDone $semantic_done,
-        ?Tracker_FormElement_Field $velocity_field = null,
+        ?TrackerField $velocity_field = null,
     ) {
         parent::__construct($tracker);
 
@@ -210,7 +210,7 @@ class SemanticVelocity extends TrackerSemantic
         }
     }
 
-    public function isUsedInSemantics(Tracker_FormElement_Field $field)
+    public function isUsedInSemantics(TrackerField $field)
     {
         return $this->getFieldId() == $field->getId();
     }
@@ -255,7 +255,7 @@ class SemanticVelocity extends TrackerSemantic
         return self::$instances[$tracker->getId()];
     }
 
-    private static function forceLoad(Tracker $tracker, ?Tracker_FormElement_Field $field = null)
+    private static function forceLoad(Tracker $tracker, ?TrackerField $field = null)
     {
         $semantic_done                      = SemanticDone::load($tracker);
         self::$instances[$tracker->getId()] = new SemanticVelocity($tracker, $semantic_done, $field);
@@ -284,7 +284,7 @@ class SemanticVelocity extends TrackerSemantic
     }
 
     /**
-     * @return Tracker_FormElement_Field|null
+     * @return TrackerField|null
      */
     public function getVelocityField()
     {
@@ -313,7 +313,7 @@ class SemanticVelocity extends TrackerSemantic
     }
 
     /**
-     * @return Tracker_FormElement_Field[]
+     * @return TrackerField[]
      */
     private function getPossibleFields()
     {

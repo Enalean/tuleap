@@ -23,7 +23,6 @@ namespace Tuleap\Tracker\REST\v1;
 use ForgeConfig;
 use Luracast\Restler\RestException;
 use PFUser;
-use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_List_Bind_Static;
 use Tracker_FormElementFactory;
 use Tracker_REST_FormElementRepresentation;
@@ -38,6 +37,7 @@ use Tuleap\Tracker\FormElement\Field\Files\Upload\EmptyFileToUploadFinisher;
 use Tuleap\Tracker\FormElement\Field\Files\Upload\FileOngoingUploadDao;
 use Tuleap\Tracker\FormElement\Field\Files\Upload\FileToUploadCreator;
 use Tuleap\Tracker\FormElement\Field\Files\Upload\UploadPathAllocator;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use UserManager;
 
 class TrackerFieldsResource extends AuthenticatedResource
@@ -183,7 +183,7 @@ class TrackerFieldsResource extends AuthenticatedResource
         return $file_creator->create($field, $user, $file_post_representation, new \DateTimeImmutable());
     }
 
-    private function getField(int $id, PFUser $user): Tracker_FormElement_Field
+    private function getField(int $id, PFUser $user): TrackerField
     {
         $form_element_factory = Tracker_FormElementFactory::instance();
         $field                = $form_element_factory->getFieldById($id);

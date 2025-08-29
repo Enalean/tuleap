@@ -19,12 +19,12 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields\ListFields;
 
-use Tracker_FormElement_Field;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldException;
 
 final class ListToStatusOpenComparisonException extends InvalidFieldException
 {
-    public function __construct(Tracker_FormElement_Field $field)
+    public function __construct(TrackerField $field)
     {
         $message = sprintf(
             dgettext('tuleap-tracker', "The list field '%s' cannot be compared to OPEN()."),

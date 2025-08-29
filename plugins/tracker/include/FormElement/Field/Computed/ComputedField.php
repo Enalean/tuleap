@@ -42,6 +42,7 @@ use Tuleap\Tracker\DAO\ComputedDao;
 use Tuleap\Tracker\FormElement\ComputedFieldCalculator;
 use Tuleap\Tracker\FormElement\Field\Files\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\Float\FloatField;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\FormElement\FieldCalculator;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\ComputedFieldSpecificPropertiesDAO;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\SaveSpecificFieldProperties;
@@ -1085,7 +1086,7 @@ class ComputedField extends FloatField
     }
 
     /**
-     * @see Tracker_FormElement_Field::hasChanges()
+     * @see TrackerField::hasChanges()
      */
     #[Override]
     public function hasChanges(Artifact $artifact, Tracker_Artifact_ChangesetValue $previous_changeset_value, $value)

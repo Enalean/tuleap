@@ -21,14 +21,14 @@
 namespace Tuleap\Tracker\Artifact\ChangesetValue;
 
 use PFUser;
-use Tracker_FormElement_Field;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\Files\CreatedFileURLMapping;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 
 interface SaveInitialChangesetValue
 {
     public function saveNewChangesetForField(
-        Tracker_FormElement_Field $field,
+        TrackerField $field,
         Artifact $artifact,
         array $fields_data,
         PFUser $submitter,

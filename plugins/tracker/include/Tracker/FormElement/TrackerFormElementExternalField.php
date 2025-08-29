@@ -20,9 +20,9 @@
 
 namespace Tuleap\Tracker\FormElement;
 
-use Tracker_FormElement_Field;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 
 interface TrackerFormElementExternalField
 {
-    public function getFormAdminVisitor(Tracker_FormElement_Field $element, array $used_element);
+    public function getFormAdminVisitor(TrackerField $element, array $used_element);
 }

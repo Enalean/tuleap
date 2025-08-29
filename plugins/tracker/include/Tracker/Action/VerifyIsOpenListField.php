@@ -22,5 +22,5 @@ namespace Tuleap\Tracker\Action;
 
 interface VerifyIsOpenListField
 {
-    public function isAnOpenListField(\Tracker_FormElement_Field $field): bool;
+    public function isAnOpenListField(\Tuleap\Tracker\FormElement\Field\TrackerField $field): bool;
 }

@@ -24,7 +24,7 @@ namespace Tuleap\Tracker\Test\Builders;
 
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue_Date;
-use Tracker_FormElement_Field;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 
 final class ChangesetValueDateTestBuilder
 {
@@ -33,11 +33,11 @@ final class ChangesetValueDateTestBuilder
     private function __construct(
         private readonly int $id,
         private readonly Tracker_Artifact_Changeset $changeset,
-        private readonly Tracker_FormElement_Field $field,
+        private readonly TrackerField $field,
     ) {
     }
 
-    public static function aValue(int $id, Tracker_Artifact_Changeset $changeset, Tracker_FormElement_Field $field): self
+    public static function aValue(int $id, Tracker_Artifact_Changeset $changeset, TrackerField $field): self
     {
         return new self($id, $changeset, $field);
     }

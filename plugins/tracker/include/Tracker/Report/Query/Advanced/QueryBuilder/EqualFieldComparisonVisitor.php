@@ -21,7 +21,6 @@ namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder;
 
 use BaseLanguageFactory;
 use ParagonIE\EasyDB\EasyDB;
-use Tracker_FormElement_Field;
 use Tracker_FormElement_FieldVisitor;
 use Tuleap\Tracker\FormElement\Field\ArtifactId\ArtifactIdField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
@@ -47,6 +46,7 @@ use Tuleap\Tracker\FormElement\Field\String\StringField;
 use Tuleap\Tracker\FormElement\Field\SubmittedBy\SubmittedByField;
 use Tuleap\Tracker\FormElement\Field\SubmittedOn\SubmittedOnField;
 use Tuleap\Tracker\FormElement\Field\Text\TextField;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
 use Tuleap\Tracker\Report\Query\Advanced\CollectionOfListValuesExtractor;
 use Tuleap\Tracker\Report\Query\Advanced\FieldFromWhereBuilder;
@@ -64,7 +64,7 @@ final class EqualFieldComparisonVisitor implements
     }
 
     /** @return FieldFromWhereBuilder */
-    public function getFromWhereBuilder(Tracker_FormElement_Field $field)
+    public function getFromWhereBuilder(TrackerField $field)
     {
         return $field->accept($this);
     }

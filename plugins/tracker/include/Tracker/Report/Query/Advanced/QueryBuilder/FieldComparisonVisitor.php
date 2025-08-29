@@ -19,11 +19,11 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder;
 
-use Tracker_FormElement_Field;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Report\Query\Advanced\FieldFromWhereBuilder;
 
 interface FieldComparisonVisitor
 {
     /** @return FieldFromWhereBuilder */
-    public function getFromWhereBuilder(Tracker_FormElement_Field $field);
+    public function getFromWhereBuilder(TrackerField $field);
 }

@@ -56,7 +56,7 @@ class ByGroupFieldsPermissions
         $this->ugroup_name = $ugroup_name;
     }
 
-    public function addField(\Tracker_FormElement_Field $field, array $permissions): void
+    public function addField(\Tuleap\Tracker\FormElement\Field\TrackerField $field, array $permissions): void
     {
         $this->fields[$field->getId()]             = $field;
         $this->fields_permissions[$field->getId()] = $permissions;
@@ -85,22 +85,22 @@ class ByGroupFieldsPermissions
         $this->might_not_have_access = $might_not_have_access;
     }
 
-    public function hasNoAccess(\Tracker_FormElement_Field $field): bool
+    public function hasNoAccess(\Tuleap\Tracker\FormElement\Field\TrackerField $field): bool
     {
         return ! isset($this->field_permissions[$field->getId()]['PLUGIN_TRACKER_FIELD_READ']) && ! isset($this->fields_permissions[$field->getId()]['PLUGIN_TRACKER_FIELD_UPDATE']);
     }
 
-    public function hasSubmitPermission(\Tracker_FormElement_Field $field): bool
+    public function hasSubmitPermission(\Tuleap\Tracker\FormElement\Field\TrackerField $field): bool
     {
         return isset($this->fields_permissions[$field->getId()]['PLUGIN_TRACKER_FIELD_SUBMIT']);
     }
 
-    public function hasReadOnlyPermission(\Tracker_FormElement_Field $field): bool
+    public function hasReadOnlyPermission(\Tuleap\Tracker\FormElement\Field\TrackerField $field): bool
     {
         return isset($this->fields_permissions[$field->getId()]['PLUGIN_TRACKER_FIELD_READ']) && ! isset($this->fields_permissions[$field->getId()]['PLUGIN_TRACKER_FIELD_UPDATE']);
     }
 
-    public function hasUpdatePermission(\Tracker_FormElement_Field $field): bool
+    public function hasUpdatePermission(\Tuleap\Tracker\FormElement\Field\TrackerField $field): bool
     {
         return isset($this->fields_permissions[$field->getId()]['PLUGIN_TRACKER_FIELD_UPDATE']);
     }
@@ -111,7 +111,7 @@ class ByGroupFieldsPermissions
     }
 
     /**
-     * @return \Tracker_FormElement_Field[]
+     * @return \Tuleap\Tracker\FormElement\Field\TrackerField[]
      */
     public function getFields(): array
     {
@@ -128,7 +128,7 @@ class ByGroupFieldsPermissions
         return $this->ugroup_name;
     }
 
-    public function addPermissionsForOtherGroups(\Tracker_FormElement_Field $field, int $id, string $name, array $permissions): void
+    public function addPermissionsForOtherGroups(\Tuleap\Tracker\FormElement\Field\TrackerField $field, int $id, string $name, array $permissions): void
     {
         if (count($permissions) > 0) {
             $this->permissions_for_other_groups[$field->getId()][] = new ByGroupFieldsPermissionsForOtherGroups($id, $name, $permissions);
@@ -138,7 +138,7 @@ class ByGroupFieldsPermissions
     /**
      * @return ByGroupFieldsPermissionsForOtherGroups[]
      */
-    public function getPermissionsForOtherGroups(\Tracker_FormElement_Field $field)
+    public function getPermissionsForOtherGroups(\Tuleap\Tracker\FormElement\Field\TrackerField $field)
     {
         if (! isset($this->permissions_for_other_groups[$field->getId()])) {
             return [];

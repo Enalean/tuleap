@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Workflow\Transition\Condition\Visitor;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
@@ -27,7 +28,7 @@ class Workflow_Transition_Condition_FieldNotEmpty extends Workflow_Transition_Co
     /** @var string */
     public $identifier = 'notempty';
 
-    /** @var Tracker_FormElement_Field[] */
+    /** @var TrackerField[] */
     private $fields = [];
 
     /** @var Workflow_Transition_Condition_FieldNotEmpty_Dao */
@@ -64,7 +65,7 @@ class Workflow_Transition_Condition_FieldNotEmpty extends Workflow_Transition_Co
         $this->dao->create($this->getTransition()->getId(), $this->getFieldIds());
     }
 
-    public function addField(Tracker_FormElement_Field $field)
+    public function addField(TrackerField $field)
     {
         $this->fields[] = $field;
     }
@@ -99,7 +100,7 @@ class Workflow_Transition_Condition_FieldNotEmpty extends Workflow_Transition_Co
         return $is_valid;
     }
 
-    private function getFieldValue($fields_data, Artifact $artifact, Tracker_FormElement_Field $field)
+    private function getFieldValue($fields_data, Artifact $artifact, TrackerField $field)
     {
         $field_id = $field->getId();
         if (isset($fields_data[$field_id])) {
@@ -108,7 +109,7 @@ class Workflow_Transition_Condition_FieldNotEmpty extends Workflow_Transition_Co
         return $this->getFieldValueFromLastChangeset($artifact, $field);
     }
 
-    private function getFieldValueFromLastChangeset(Artifact $artifact, Tracker_FormElement_Field $field)
+    private function getFieldValueFromLastChangeset(Artifact $artifact, TrackerField $field)
     {
         $value          = null;
         $last_changeset = $artifact->getLastChangeset();

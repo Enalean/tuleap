@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFullRepresentation;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueRepresentation;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueRepresentationData;
@@ -27,7 +28,7 @@ use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueRepresentationData;
  * Manage values in changeset for fields
  * @abstract
  */
-abstract class Tracker_Artifact_ChangesetValue
+abstract class Tracker_Artifact_ChangesetValue // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /**
      * @var int
@@ -40,7 +41,7 @@ abstract class Tracker_Artifact_ChangesetValue
     protected $changeset;
 
     /**
-     * @var Tracker_FormElement_Field
+     * @var TrackerField
      */
     protected $field;
 
@@ -51,7 +52,7 @@ abstract class Tracker_Artifact_ChangesetValue
 
     /**
      * @param int $id
-     * @param Tracker_FormElement_Field $field
+     * @param TrackerField $field
      * @param bool $has_changed
      */
     public function __construct($id, Tracker_Artifact_Changeset $changeset, $field, $has_changed)
@@ -75,7 +76,7 @@ abstract class Tracker_Artifact_ChangesetValue
     /**
      * Get the field of the value
      *
-     * @return Tracker_FormElement_Field
+     * @return TrackerField
      */
     public function getField()
     {

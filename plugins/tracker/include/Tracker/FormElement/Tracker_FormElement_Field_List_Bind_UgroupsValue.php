@@ -19,6 +19,7 @@
 
 use Tuleap\Project\REST\MinimalUserGroupRepresentation;
 use Tuleap\Project\REST\UserGroupRepresentation;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 final class Tracker_FormElement_Field_List_Bind_UgroupsValue extends Tracker_FormElement_Field_List_BindValue
@@ -82,7 +83,7 @@ final class Tracker_FormElement_Field_List_Bind_UgroupsValue extends Tracker_For
         return $this->ugroup;
     }
 
-    public function getFullRESTValue(Tracker_FormElement_Field $field)
+    public function getFullRESTValue(TrackerField $field)
     {
         $ugroup_manager = new UGroupManager();
         $project        = $field->getTracker()->getProject();

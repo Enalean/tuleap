@@ -24,8 +24,8 @@ namespace Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets;
 
 use SimpleXMLElement;
 use Tracker_FormElement_Container_Fieldset;
-use Tracker_FormElement_Field;
 use Transition_PostAction;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Workflow\PostAction\Visitor;
 
 class HiddenFieldsets extends Transition_PostAction
@@ -111,7 +111,7 @@ class HiddenFieldsets extends Transition_PostAction
      *
      * @return bool
      */
-    public function bypassPermissions(Tracker_FormElement_Field $field)
+    public function bypassPermissions(TrackerField $field)
     {
         return false;
     }

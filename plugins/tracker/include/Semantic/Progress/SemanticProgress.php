@@ -25,13 +25,13 @@ namespace Tuleap\Tracker\Semantic\Progress;
 use Codendi_Request;
 use PFUser;
 use SimpleXMLElement;
-use Tracker_FormElement_Field;
 use TrackerManager;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Semantic\Progress\Administration\SemanticProgressAdminPresenterBuilder;
 use Tuleap\Tracker\Semantic\Progress\Administration\SemanticProgressIntroductionPresenter;
 use Tuleap\Tracker\Semantic\Progress\Events\GetSemanticProgressUsageEvent;
@@ -162,7 +162,7 @@ class SemanticProgress extends \Tuleap\Tracker\Semantic\TrackerSemantic
         return $this->method->exportToREST($user);
     }
 
-    public function isUsedInSemantics(Tracker_FormElement_Field $field): bool
+    public function isUsedInSemantics(TrackerField $field): bool
     {
         return $this->method->isFieldUsedInComputation($field);
     }

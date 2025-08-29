@@ -23,6 +23,7 @@ use Http\Message\CookieJar;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Jenkins\JenkinsCSRFCrumbRetriever;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 
 // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps,PSR1.Classes.ClassDeclaration.MissingNamespace
 class Transition_PostAction_CIBuildFactory implements Transition_PostActionSubFactory
@@ -131,7 +132,7 @@ class Transition_PostAction_CIBuildFactory implements Transition_PostActionSubFa
     /**
      * @see Transition_PostActionSubFactory::isFieldUsedInPostActions()
      */
-    public function isFieldUsedInPostActions(Tracker_FormElement_Field $field)
+    public function isFieldUsedInPostActions(TrackerField $field)
     {
         return false;
     }

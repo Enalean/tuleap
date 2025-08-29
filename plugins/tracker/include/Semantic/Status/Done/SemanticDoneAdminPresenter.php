@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Semantic\Status\Done;
 
 use CSRFSynchronizerToken;
-use Tracker_FormElement_Field;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Tracker;
 
 final class SemanticDoneAdminPresenter
@@ -39,7 +39,7 @@ final class SemanticDoneAdminPresenter
         public string $form_url,
         public string $tracker_admin_semantic_url,
         public bool $has_done_values,
-        ?Tracker_FormElement_Field $semantic_status_field = null,
+        ?TrackerField $semantic_status_field = null,
     ) {
         $this->semantic_status_is_defined   = ($semantic_status_field !== null);
         $this->tracker_id                   = $tracker->getId();

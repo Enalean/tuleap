@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\CrossTracker\Query\Advanced\SelectBuilder\Field;
 
 use PFUser;
-use Tracker_FormElement_Field;
 use Tuleap\CrossTracker\Query\Advanced\DuckTypedField\Select\DuckTypedFieldSelect;
 use Tuleap\CrossTracker\Query\Advanced\DuckTypedField\Select\DuckTypedFieldTypeSelect;
 use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\Field\Date\DateSelectFromBuilder;
@@ -36,6 +35,7 @@ use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\IProvideParametrizedSelectA
 use Tuleap\CrossTracker\Query\Advanced\SelectBuilder\ParametrizedSelectFromAndWhere;
 use Tuleap\Option\Option;
 use Tuleap\Tracker\FormElement\Field\RetrieveUsedFields;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\FormElement\RetrieveFieldType;
 use Tuleap\Tracker\Permission\FieldPermissionType;
 use Tuleap\Tracker\Permission\RetrieveUserPermissionOnFields;
@@ -72,7 +72,7 @@ final readonly class FieldSelectFromBuilder
                 fn(int $tracker_id) => $this->retrieve_used_fields->getUsedFieldByName($tracker_id, $field->getName()),
                 $tracker_ids,
             ),
-            static fn(?Tracker_FormElement_Field $field) => $field !== null,
+            static fn(?TrackerField $field) => $field !== null,
         );
 
         $fields_user_can_read = $this->permission_on_fields

@@ -23,7 +23,7 @@ namespace Tuleap\Tracker\Semantic\Tooltip;
 interface TooltipFields
 {
     /**
-     * @return \Tracker_FormElement_Field[]
+     * @return \Tuleap\Tracker\FormElement\Field\TrackerField[]
      */
     public function getFields(): array;
 }

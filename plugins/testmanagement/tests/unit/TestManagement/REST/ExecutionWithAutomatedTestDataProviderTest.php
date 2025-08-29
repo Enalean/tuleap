@@ -22,12 +22,12 @@ namespace Tuleap\TestManagement\REST;
 
 use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
-use Tracker_FormElement_Field;
 use Tracker_FormElementFactory;
 use Tuleap\TestManagement\Campaign\Execution\ExecutionDao;
 use Tuleap\TestManagement\REST\v1\ExecutionWithAutomatedTestData;
 use Tuleap\TestManagement\REST\v1\ExecutionWithAutomatedTestDataProvider;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -60,7 +60,7 @@ final class ExecutionWithAutomatedTestDataProviderTest extends \Tuleap\Test\PHPU
         $definition->method('getValue')->willReturn($automated_test);
 
         $user  = $this->createMock(PFUser::class);
-        $field = $this->createMock(Tracker_FormElement_Field::class);
+        $field = $this->createMock(TrackerField::class);
 
         $this->execution_dao->method('searchDefinitionChangesetIdForExecution')->willReturn(12);
         $this->form_element_factory->method('getUsedFieldByNameForUser')->willReturn($field);
@@ -88,7 +88,7 @@ final class ExecutionWithAutomatedTestDataProviderTest extends \Tuleap\Test\PHPU
         $definition->method('getValue')->willReturn($automated_test);
 
         $user  = $this->createMock(PFUser::class);
-        $field = $this->createMock(Tracker_FormElement_Field::class);
+        $field = $this->createMock(TrackerField::class);
 
         $this->execution_dao->method('searchDefinitionChangesetIdForExecution')->willReturn(false);
         $this->form_element_factory->method('getUsedFieldByNameForUser')->willReturn($field);
@@ -139,7 +139,7 @@ final class ExecutionWithAutomatedTestDataProviderTest extends \Tuleap\Test\PHPU
         $definition->method('getValue')->willReturn($automated_test);
 
         $user  = $this->createMock(PFUser::class);
-        $field = $this->createMock(Tracker_FormElement_Field::class);
+        $field = $this->createMock(TrackerField::class);
 
         $this->execution_dao->method('searchDefinitionChangesetIdForExecution')->willReturn(12);
         $this->form_element_factory->method('getUsedFieldByNameForUser')->willReturn($field);

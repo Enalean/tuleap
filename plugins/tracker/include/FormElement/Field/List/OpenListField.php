@@ -47,13 +47,14 @@ use Tuleap\Option\Option;
 use Tuleap\Project\REST\MinimalUserGroupRepresentation;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\Files\CreatedFileURLMapping;
+use Tuleap\Tracker\FormElement\Field\ListField;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindParameters;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueUnchanged;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindVisitor;
 use Tuleap\Tracker\FormElement\Field\ListFields\OpenListChangesetValueDao;
 use Tuleap\Tracker\FormElement\Field\ListFields\OpenListFieldDao;
 use Tuleap\Tracker\FormElement\Field\ListFields\OpenListValueDao;
-use Tuleap\Tracker\FormElement\Field\ListField;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\DeleteSpecificProperties;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\OpenListSpecificPropertiesDAO;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\SaveSpecificFieldProperties;
@@ -543,7 +544,7 @@ class OpenListField extends ListField implements BindVisitor
     }
 
     /**
-     * @see Tracker_FormElement_Field::hasChanges()
+     * @see TrackerField::hasChanges()
      */
     #[Override]
     public function hasChanges(Artifact $artifact, Tracker_Artifact_ChangesetValue $old_value, $new_value)
@@ -589,7 +590,7 @@ class OpenListField extends ListField implements BindVisitor
     }
 
     /**
-     * @see Tracker_FormElement_Field::fetchCardValue()
+     * @see TrackerField::fetchCardValue()
      */
     #[Override]
     public function fetchCardValue(Artifact $artifact, ?Tracker_CardDisplayPreferences $display_preferences = null)

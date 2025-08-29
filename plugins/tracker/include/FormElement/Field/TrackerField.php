@@ -19,12 +19,44 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\Tracker\FormElement\Field;
+
+use BackendLogger;
+use Codendi_HTMLPurifier;
+use ForgeConfig;
+use Override;
+use PFUser;
+use SimpleXMLElement;
+use Tracker_Artifact_Changeset;
+use Tracker_Artifact_Changeset_ValueDao;
+use Tracker_Artifact_ChangesetValue;
+use Tracker_CardDisplayPreferences;
+use Tracker_FormElement;
+use Tracker_FormElement_Field_List_BindFactory;
+use Tracker_FormElement_Field_ReadOnly;
+use Tracker_FormElement_IAcceptFieldVisitor;
+use Tracker_FormElement_InvalidFieldValueException;
+use Tracker_FormElementFactory;
+use Tracker_Report;
+use Tracker_Report_Criteria;
+use Tracker_Report_Criteria_ValueDao;
+use Tracker_Report_Field;
+use Tracker_Report_InvalidRESTCriterionException;
+use Tracker_Report_REST;
+use Tracker_Rule_Date_Dao;
+use Tracker_Rule_Date_Factory;
+use Tracker_Rule_List_Dao;
+use Tracker_Rule_List_Factory;
+use Tracker_RuleDao;
+use Tracker_RuleFactory;
+use Tracker_RulesManager;
+use TrackerFactory;
+use TransitionFactory;
 use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 use Tuleap\Option\Option;
 use Tuleap\Search\ItemToIndexQueue;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\Files\CreatedFileURLMapping;
-use Tuleap\Tracker\FormElement\Field\XMLCriteriaValueCache;
 use Tuleap\Tracker\FormElement\FieldIsAlwaysInEditMode;
 use Tuleap\Tracker\Report\Criteria\DeleteReportCriteriaValue;
 use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
@@ -42,16 +74,17 @@ use Tuleap\Tracker\Workflow\SimpleMode\SimpleWorkflowDao;
 use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionExtractor;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
+use WorkflowFactory;
+use XML_SimpleXMLCDATAFactory;
 
 /**
  * The base class for fields in trackers. From int and string to selectboxes.
  * Composite fields are excluded.
  */
-
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
-abstract class Tracker_FormElement_Field extends Tracker_FormElement implements Tracker_Report_Field, Tracker_FormElement_IAcceptFieldVisitor, FieldIsAlwaysInEditMode
+abstract class TrackerField extends Tracker_FormElement implements Tracker_Report_Field, Tracker_FormElement_IAcceptFieldVisitor, FieldIsAlwaysInEditMode
 {
-    private const PREFIX_NAME_SQL_COLUMN = 'user_defined_';
+    private const string PREFIX_NAME_SQL_COLUMN = 'user_defined_';
 
     protected $has_errors = false;
 
@@ -72,6 +105,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         return $this->fetchChangesetValue($artifact_id, $changeset_id, $value, $report);
     }
 
+    #[Override]
     public function isCSVImportable(): bool
     {
         return true;
@@ -103,6 +137,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
     }
 
     protected $criteria_value;
+
     /**
      * Search in the db the criteria value used to search against this field.
      * @param Tracker_Report_Criteria $criteria
@@ -132,6 +167,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
     /**
      * @throws Tracker_Report_InvalidRESTCriterionException
      */
+    #[Override]
     public function setCriteriaValueFromREST(Tracker_Report_Criteria $criteria, array $rest_criteria_value)
     {
         $value    = $rest_criteria_value[Tracker_Report_REST::VALUE_PROPERTY_NAME];
@@ -256,11 +292,13 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         return "$R.value_id";
     }
 
+    #[Override]
     public function fetchCriteria(Tracker_Report_Criteria $criteria)
     {
         return $this->buildReportCriteria($criteria, $this->criteriaCanBeAdvanced());
     }
 
+    #[Override]
     public function fetchCriteriaWithoutExpandFunctionnality(Tracker_Report_Criteria $criteria)
     {
         return $this->buildReportCriteria($criteria, false);
@@ -273,22 +311,22 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         if ($advanced_criteria) {
             $html .= '<table cellpadding="0" cellspacing="0"><tbody><tr><td>';
             $html .= $GLOBALS['HTML']->getImage(
-                'ic/toggle_' . ($criteria->is_advanced ? 'minus' : 'plus' ) . '.png',
+                'ic/toggle_' . ($criteria->is_advanced ? 'minus' : 'plus') . '.png',
                 [
-                    'class' => 'tracker_report_criteria_advanced_toggle',
+                    'class'     => 'tracker_report_criteria_advanced_toggle',
                     'data-test' => 'tracker-report-criteria-advanced-toggle',
                 ]
             );
             $html .= '</td><td>';
         }
         $html .= '<label for="tracker_report_criteria_' . $purifier->purify($this->id) . '" title="#' .
-            $purifier->purify($this->id) . '">' . $purifier->purify($this->getLabel());
+                 $purifier->purify($this->id) . '">' . $purifier->purify($this->getLabel());
         $html .= '<input type="hidden" id="tracker_report_criteria_' . $purifier->purify($this->id) .
-            '_parent" value="' . $purifier->purify($this->parent_id) . '" />';
+                 '_parent" value="' . $purifier->purify($this->parent_id) . '" />';
         $html .= '</label>';
 
         if ($advanced_criteria) {
-            $html .=  '<div class="tracker_report_criteria">';
+            $html .= '<div class="tracker_report_criteria">';
         }
         $html .= $this->fetchCriteriaValue($criteria);
         if ($advanced_criteria) {
@@ -299,7 +337,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
 
     /**
      * Return the fieldset of this field
-     * @return Tracker_FormElement_Field|null
+     * @return TrackerField|null
      */
     public function getParent()
     {
@@ -420,6 +458,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      *
      * @return string html
      */
+    #[Override]
     public function fetchArtifact(
         Artifact $artifact,
         array $submitted_values,
@@ -439,11 +478,13 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         return $this->fetchArtifactReadOnly($artifact, $submitted_values);
     }
 
+    #[Override]
     public function fetchArtifactForOverlay(Artifact $artifact, array $submitted_values)
     {
         return $this->fetchArtifact($artifact, $submitted_values, ['field-in-modal']);
     }
 
+    #[Override]
     public function fetchSubmitForOverlay(array $submitted_values)
     {
         return $this->fetchSubmit($submitted_values);
@@ -455,6 +496,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      *
      * @return string html
      */
+    #[Override]
     public function fetchArtifactReadOnly(Artifact $artifact, array $submitted_values)
     {
         $last_changeset = $artifact->getLastChangeset();
@@ -470,13 +512,14 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
     /**
      * @see Tracker_FormElement::fetchArtifactCopyMode
      */
+    #[Override]
     public function fetchArtifactCopyMode(Artifact $artifact, array $submitted_values)
     {
         return $this->fetchArtifactReadOnly($artifact, $submitted_values);
     }
 
     /**
-     * @param string           $html_value in html
+     * @param string $html_value in html
      *
      * @return string html
      */
@@ -499,8 +542,8 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
                                 class="tracker_formelement_edit"
                                 data-test-edit-field
                                 data-test="edit-field-' . $this->getName() . '">' .
-                    $purifier->purify($this->getLabel()) . $required .
-                    '</button>';
+                          $purifier->purify($this->getLabel()) . $required .
+                          '</button>';
             }
 
             if (! $this->isAlwaysInEditMode()) {
@@ -517,6 +560,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      *
      * @return string
      */
+    #[Override]
     public function fetchMailArtifact($recipient, Artifact $artifact, $format = 'text', $ignore_perms = false)
     {
         if (! $ignore_perms && ! $this->userCanRead($recipient)) {
@@ -538,12 +582,12 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
                         class = "tracker_formelement_label"
                     >
                         <b>' .
-                            $hp->purify($this->getLabel(), CODENDI_PURIFIER_CONVERT_HTML) . '
+                      $hp->purify($this->getLabel(), CODENDI_PURIFIER_CONVERT_HTML) . '
                         </b>
                     </label>
                 </td>
                 <td align = "left">' .
-                    $mail_formatted_value . '
+                      $mail_formatted_value . '
                 </td>
             </tr>';
         }
@@ -555,6 +599,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      *
      * @return string html
      */
+    #[Override]
     public function fetchSubmit(array $submitted_values)
     {
         $hp   = Codendi_HTMLPurifier::instance();
@@ -606,6 +651,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      *
      * @return string html
      */
+    #[Override]
     public function fetchSubmitMasschange()
     {
         $hp   = Codendi_HTMLPurifier::instance();
@@ -613,7 +659,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         if ($this->userCanUpdate()) {
             $required = $this->required ? ' <span class="highlight">*</span>' : '';
             $html    .= '<div data-test="field-masschange" class="field-masschange ' . $this->getClassNames([], false) . '">';
-            $html    .= '<label for="tracker_artifact_' . $this->id . '" title="' . $hp->purify($this->description, CODENDI_PURIFIER_CONVERT_HTML) . '"  class="tracker_formelement_label">' .  $hp->purify($this->getLabel(), CODENDI_PURIFIER_CONVERT_HTML)  . $required . '</label>';
+            $html    .= '<label for="tracker_artifact_' . $this->id . '" title="' . $hp->purify($this->description, CODENDI_PURIFIER_CONVERT_HTML) . '"  class="tracker_formelement_label">' . $hp->purify($this->getLabel(), CODENDI_PURIFIER_CONVERT_HTML) . $required . '</label>';
 
             $html .= $this->fetchSubmitValueMasschange();
             $html .= $this->fetchSubmitAdditionnalInfo([]);
@@ -664,7 +710,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         $html = '';
         if ($this->userCanRead()) {
             $html .= '<tr><td>';
-            $html .= '<label>' .  $hp->purify($this->getLabel(), CODENDI_PURIFIER_CONVERT_HTML) . '</label>';
+            $html .= '<label>' . $hp->purify($this->getLabel(), CODENDI_PURIFIER_CONVERT_HTML) . '</label>';
             $html .= '</td><td class="crossref-tooltip-body-table-value">';
             $value = $artifact->getLastChangeset()->getValue($this);
             $html .= $this->fetchTooltipValue($artifact, $value);
@@ -685,8 +731,8 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
     /**
      * Fetch the html code to display the field value in artifact in read only
      *
-     * @param Artifact                        $artifact The artifact
-     * @param Tracker_Artifact_ChangesetValue $value    The actual value of the field
+     * @param Artifact $artifact The artifact
+     * @param Tracker_Artifact_ChangesetValue $value The actual value of the field
      *
      * @return string
      */
@@ -729,9 +775,9 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         array $submitted_values,
     ) {
         return '<div class="tracker_hidden_edition_field" data-field-id="' .
-            $this->getId() . '">' .
-            $this->fetchArtifactValue($artifact, $value, $submitted_values) .
-            '</div>';
+               $this->getId() . '">' .
+               $this->fetchArtifactValue($artifact, $value, $submitted_values) .
+               '</div>';
     }
 
     /**
@@ -802,12 +848,12 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
                     <td>' . $purifier->purify($this->getLabel()) . ':
                     </td>
                     <td class="valueOf_' . $purifier->purify($this->getName()) . '"' .
-                        $data_field_id .
-                        $data_field_type .
-                        $data_csrf_token_update .
-                        '>' .
-                        $value .
-                    '</td>
+                $data_field_id .
+                $data_field_type .
+                $data_csrf_token_update .
+                '>' .
+                $value .
+                '</td>
                 </tr>';
 
         return $html;
@@ -840,6 +886,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      */
     abstract public function fetchRawValueFromChangeset(Tracker_Artifact_Changeset $changeset): string;
 
+    #[Override]
     public function fetchAdmin($tracker): string
     {
         $hp       = Codendi_HTMLPurifier::instance();
@@ -869,7 +916,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         $html .= '</div>';
 
         $html .= '<label title="' . $hp->purify($this->description) . '" class="tracker_formelement_label" data-test="administration-field-label">' .
-            $hp->purify($this->getLabel()) . $required . '</label>';
+                 $hp->purify($this->getLabel()) . $required . '</label>';
         $html .= $this->fetchAdminFormElement();
         $html .= '</div>';
 
@@ -904,6 +951,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      *
      * @return string
      */
+    #[Override]
     public function fetchAddCriteria($used, $prefix = '')
     {
         $purifier = Codendi_HTMLPurifier::instance();
@@ -924,6 +972,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      *
      * @return string
      */
+    #[Override]
     public function fetchAddColumn($used, $prefix = '')
     {
         $purifier = Codendi_HTMLPurifier::instance();
@@ -936,6 +985,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         return $html;
     }
 
+    #[Override]
     public function fetchAddCardFields(array $used_fields, string $prefix = ''): string
     {
         $purifier = Codendi_HTMLPurifier::instance();
@@ -956,6 +1006,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      *
      * @return bool true if Tracler is ok
      */
+    #[Override]
     public function testImport()
     {
         return true;
@@ -988,7 +1039,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         return WorkflowFactory::instance();
     }
 
-     /**
+    /**
      * Is the field used in a field dependency?
      *
      * @return bool returns true if the field is used in field dependency, false otherwise
@@ -1023,6 +1074,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      *
      * @return string returns null if the field can be unused, a message otherwise
      */
+    #[Override]
     public function getCannotRemoveMessage()
     {
         $message = '';
@@ -1046,11 +1098,12 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      *
      * @return bool
      */
+    #[Override]
     public function canBeRemovedFromUsage()
     {
         $is_used = $this->isUsedInWorkflow() ||
-            $this->isUsedInFieldDependency() ||
-            $this->isUsedInTrigger();
+                   $this->isUsedInFieldDependency() ||
+                   $this->isUsedInTrigger();
 
         if ($is_used === true) {
             return false;
@@ -1070,7 +1123,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
     /**
      * Validate a field and check perms and if it has a value if it is required
      *
-     * @param mixed                           $submitted_value      The submitted value
+     * @param mixed $submitted_value The submitted value
      * @param bool $is_submission true if artifact submission, false if artifact update
      *
      * @return bool true on success or false on failure
@@ -1100,8 +1153,8 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
     /**
      * Validate a required field
      *
-     * @param Artifact $artifact        The artifact to check
-     * @param mixed    $submitted_value The submitted value
+     * @param Artifact $artifact The artifact to check
+     * @param mixed $submitted_value The submitted value
      *
      * @return bool true on success or false on failure
      */
@@ -1127,8 +1180,8 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
     /**
      * Validate a field
      *
-     * @param Artifact $artifact        The artifact to check
-     * @param mixed    $submitted_value The submitted value
+     * @param Artifact $artifact The artifact to check
+     * @param mixed $submitted_value The submitted value
      *
      * @return bool true on success or false on failure
      */
@@ -1146,7 +1199,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      * Say if the value is valid. If not valid set the internal has_error to true.
      *
      * @param Artifact $artifact The artifact
-     * @param mixed    $value    data coming from the request. May be string or array.
+     * @param mixed $value data coming from the request. May be string or array.
      *
      * @return bool true if the value is considered ok
      */
@@ -1187,7 +1240,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      * Validate a value
      *
      * @param Artifact $artifact The artifact
-     * @param mixed    $value    data coming from the request. May be string or array.
+     * @param mixed $value data coming from the request. May be string or array.
      *
      * @return bool true if the value is considered ok
      */
@@ -1196,13 +1249,13 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
     /**
      * Save the value submitted by the user in the new changeset
      *
-     * @param Artifact                   $artifact           The artifact
-     * @param Tracker_Artifact_Changeset $old_changeset      The old changeset. null if it is the first one
-     * @param int                        $new_changeset_id   The id of the new changeset
-     * @param mixed                      $submitted_value    The value submitted by the user
-     * @param PFUser                     $submitter          The user who made the modification
-     * @param bool                       $is_submission      True if artifact submission, false if artifact update
-     * @param bool                       $bypass_permissions If true, permissions to update/submit the value on field is not checked
+     * @param Artifact $artifact The artifact
+     * @param Tracker_Artifact_Changeset $old_changeset The old changeset. null if it is the first one
+     * @param int $new_changeset_id The id of the new changeset
+     * @param mixed $submitted_value The value submitted by the user
+     * @param PFUser $submitter The user who made the modification
+     * @param bool $is_submission True if artifact submission, false if artifact update
+     * @param bool $bypass_permissions If true, permissions to update/submit the value on field is not checked
      *
      * @return bool true if success
      */
@@ -1231,7 +1284,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
             //If a field is not submitable, but has a required default value, the value has to  be submitted ...
             if ($is_submission) {
                 $hasPermission = $this->userCanSubmit($submitter) ||
-                    (! $this->userCanSubmit($submitter) && $this->isrequired() && $this->getDefaultValue() != null);
+                                 (! $this->userCanSubmit($submitter) && $this->isrequired() && $this->getDefaultValue() != null);
             }
         }
 
@@ -1278,9 +1331,9 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
     /**
      * Save the value and return the id
      *
-     * @param Artifact                        $artifact                The artifact
-     * @param int                             $changeset_value_id      The id of the changeset_value
-     * @param mixed                           $value                   The value submitted by the user
+     * @param Artifact $artifact The artifact
+     * @param int $changeset_value_id The id of the changeset_value
+     * @param mixed $value The value submitted by the user
      * @param Tracker_Artifact_ChangesetValue $previous_changesetvalue The data previously stored in the db
      *
      * @return bool
@@ -1296,8 +1349,8 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
     /**
      * Keep the value
      *
-     * @param Artifact                        $artifact                The artifact
-     * @param int                             $changeset_value_id      The id of the changeset_value
+     * @param Artifact $artifact The artifact
+     * @param int $changeset_value_id The id of the changeset_value
      * @param Tracker_Artifact_ChangesetValue $previous_changesetvalue The data previously stored in the db
      *
      * @return int or array of int
@@ -1310,9 +1363,9 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
     /**
      * Check if there are changes between old and new value for this field
      *
-     * @param Artifact                        $artifact  The current artifact
+     * @param Artifact $artifact The current artifact
      * @param Tracker_Artifact_ChangesetValue $old_value The data stored in the db
-     * @param mixed                           $new_value May be string or array
+     * @param mixed $new_value May be string or array
      *
      * @return bool true if there are differences
      */
@@ -1324,8 +1377,8 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
     /**
      * Get the value of this field
      *
-     * @param Tracker_Artifact_Changeset $changeset   The changeset (needed in only few cases like 'lud' field)
-     * @param int                        $value_id    The id of the value
+     * @param Tracker_Artifact_Changeset $changeset The changeset (needed in only few cases like 'lud' field)
+     * @param int $value_id The id of the value
      * @param bool $has_changed If the changeset value has changed from the rpevious one
      *
      * @return Tracker_Artifact_ChangesetValue|null null if not found
@@ -1388,7 +1441,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
     /**
      * Transform REST representation of field into something that artifact createArtifact or updateArtifact can proceed
      *
-     * @param array    $value    PHP representation of submitted Json value
+     * @param array $value PHP representation of submitted Json value
      * @param Artifact $artifact Artifact to update if any (null during creation)
      *
      * @return mixed
@@ -1398,7 +1451,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         if (! isset($value['value'])) {
             throw new Tracker_FormElement_InvalidFieldValueException(
                 'Expected format for field ' . $this->id .
-                 ' : {"field_id" : 15458, "value" : some_value'
+                ' : {"field_id" : 15458, "value" : some_value'
             );
         }
 
@@ -1467,6 +1520,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         return $this->getProperty('default_value');
     }
 
+    #[Override]
     public function getDefaultRESTValue()
     {
         return $this->getDefaultValue();
@@ -1491,6 +1545,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      *
      * @return array
      */
+    #[Override]
     public function getPermissionsByUgroupId()
     {
         if (! $this->cache_permissions) {
@@ -1516,6 +1571,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      *
      * @param bool $tracker_is_empty
      */
+    #[Override]
     public function afterCreate(array $form_element_data, $tracker_is_empty)
     {
         if (! $tracker_is_empty) {
@@ -1583,12 +1639,12 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      * In case of a simple query that can be computed alongside others, result will be a string (the result from mysql).
      * In case of a complex query that must be run alone, result will be the DataAccessResult.
      *
-     * @see Tracker_Report_Renderer_Table::fetchAddAggregatesUsedFunctionsValue()
-     *
-     * @param string                  $function AVG, SUM, …
+     * @param string $function AVG, SUM, …
      * @param LegacyDataAccessResultInterface|string $result
      *
      * @return string
+     * @see Tracker_Report_Renderer_Table::fetchAddAggregatesUsedFunctionsValue()
+     *
      */
     public function formatAggregateResult($function, $result)
     {

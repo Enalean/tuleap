@@ -26,7 +26,7 @@ use Tuleap\TestManagement\Step\Definition\Field\StepsDefinition;
 
 final class IsAStepDefinitionFieldVerifier
 {
-    public static function isAStepDefinitionField(\Tracker_FormElement_Field $field): bool
+    public static function isAStepDefinitionField(\Tuleap\Tracker\FormElement\Field\TrackerField $field): bool
     {
         return $field instanceof StepsDefinition;
     }

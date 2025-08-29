@@ -28,7 +28,7 @@ use Tuleap\Tracker\FormElement\Field\Files\CreatedFileURLMapping;
 final class ChangesetValueSaver implements SaveChangesetValue
 {
     public function saveNewChangesetForField(
-        \Tracker_FormElement_Field $field,
+        \Tuleap\Tracker\FormElement\Field\TrackerField $field,
         Artifact $artifact,
         ?\Tracker_Artifact_Changeset $previous_changeset,
         array $fields_data,
@@ -91,7 +91,7 @@ final class ChangesetValueSaver implements SaveChangesetValue
         );
     }
 
-    private function isFieldSubmitted(\Tracker_FormElement_Field $field, array $fields_data): bool
+    private function isFieldSubmitted(\Tuleap\Tracker\FormElement\Field\TrackerField $field, array $fields_data): bool
     {
         return isset($fields_data[$field->getId()]);
     }

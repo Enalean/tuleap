@@ -135,7 +135,7 @@ final class IComputeTimeframesStub implements IComputeTimeframes
     }
 
     #[\Override]
-    public function isFieldUsed(\Tracker_FormElement_Field $field): bool
+    public function isFieldUsed(\Tuleap\Tracker\FormElement\Field\TrackerField $field): bool
     {
         return true;
     }

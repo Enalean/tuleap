@@ -174,7 +174,7 @@ class StepsResultsChangesBuilder
         return $indexed_by_id;
     }
 
-    private function getDefinitionField(Artifact $definition_artifact, PFUser $user): ?\Tracker_FormElement_Field
+    private function getDefinitionField(Artifact $definition_artifact, PFUser $user): ?\Tuleap\Tracker\FormElement\Field\TrackerField
     {
         return $this->form_element_factory->getUsedFieldByNameForUser(
             $definition_artifact->getTrackerId(),
@@ -183,7 +183,7 @@ class StepsResultsChangesBuilder
         );
     }
 
-    private function getExecutionField(Artifact $execution_artifact, PFUser $user): ?\Tracker_FormElement_Field
+    private function getExecutionField(Artifact $execution_artifact, PFUser $user): ?\Tuleap\Tracker\FormElement\Field\TrackerField
     {
         return $this->form_element_factory->getUsedFieldByNameForUser(
             $execution_artifact->getTrackerId(),
@@ -192,7 +192,7 @@ class StepsResultsChangesBuilder
         );
     }
 
-    private function getStatusField(Artifact $execution_artifact, PFUser $user): ?\Tracker_FormElement_Field
+    private function getStatusField(Artifact $execution_artifact, PFUser $user): ?\Tuleap\Tracker\FormElement\Field\TrackerField
     {
         return $this->form_element_factory->getUsedFieldByNameForUser(
             $execution_artifact->getTrackerId(),

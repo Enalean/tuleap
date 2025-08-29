@@ -442,11 +442,11 @@ final class GetInstanceFromXmlTest extends TestCase
                      </tracker>'
         );
 
-        $field_1 = $this->createMock(\Tracker_FormElement_Field::class);
+        $field_1 = $this->createMock(\Tuleap\Tracker\FormElement\Field\TrackerField::class);
         $field_1->method('getName')->willReturn('field_1');
         $field_1->method('hasCachedPermissions')->willReturn(true);
 
-        $field_2 = $this->createMock(\Tracker_FormElement_Field::class);
+        $field_2 = $this->createMock(\Tuleap\Tracker\FormElement\Field\TrackerField::class);
         $field_2->method('getName')->willReturn('field_2');
         $field_2->method('hasCachedPermissions')->willReturn(false);
 

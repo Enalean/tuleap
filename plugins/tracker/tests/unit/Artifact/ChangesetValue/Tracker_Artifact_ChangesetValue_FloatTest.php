@@ -25,9 +25,9 @@ namespace Tuleap\Tracker\Artifact\ChangesetValue;
 
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue_Float;
-use Tracker_FormElement_Field;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\FloatFieldBuilder;
 
@@ -35,7 +35,7 @@ use Tuleap\Tracker\Test\Builders\Fields\FloatFieldBuilder;
 final class Tracker_Artifact_ChangesetValue_FloatTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
     private Tracker_Artifact_Changeset $changeset;
-    private Tracker_FormElement_Field $field;
+    private TrackerField $field;
 
     protected function setUp(): void
     {

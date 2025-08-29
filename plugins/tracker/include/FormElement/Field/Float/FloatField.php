@@ -35,6 +35,7 @@ use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\FloatingPointNumber\ChangesChecker;
 use Tuleap\Tracker\FormElement\Field\FloatingPointNumber\FloatValueDao;
 use Tuleap\Tracker\FormElement\Field\NumericField;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\DeleteSpecificProperties;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\DuplicateSpecificProperties;
 use Tuleap\Tracker\FormElement\FieldSpecificProperties\FloatFieldSpecificPropertiesDAO;
@@ -267,7 +268,7 @@ class FloatField extends NumericField
     }
 
     /**
-     * @see Tracker_FormElement_Field::hasChanges()
+     * @see TrackerField::hasChanges()
      */
     #[Override]
     public function hasChanges(Artifact $artifact, Tracker_Artifact_ChangesetValue $old_value, $new_value)

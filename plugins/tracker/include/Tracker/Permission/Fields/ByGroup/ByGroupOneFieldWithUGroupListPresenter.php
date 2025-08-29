@@ -35,7 +35,7 @@ class ByGroupOneFieldWithUGroupListPresenter extends ByGroupOneFieldPresenter
      */
     public $nb_permissions;
 
-    public function __construct(\Tracker_FormElement_Field $field, ByGroupFieldsPermissions $fields_permission_for_group)
+    public function __construct(\Tuleap\Tracker\FormElement\Field\TrackerField $field, ByGroupFieldsPermissions $fields_permission_for_group)
     {
         parent::__construct($field, $fields_permission_for_group);
         $this->nb_permissions = $fields_permission_for_group->getFieldCount() + 1;

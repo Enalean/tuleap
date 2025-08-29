@@ -65,7 +65,7 @@ final class FirstValidValueAccordingToDependenciesRetrieverTest extends \Tuleap\
         $this->setUpRules($tracker);
 
         $this->form_element_factory->method('getFieldById')->willReturnCallback(
-            fn (int $artifact_id): \Tracker_FormElement_Field => match ($artifact_id) {
+            fn (int $artifact_id): \Tuleap\Tracker\FormElement\Field\TrackerField => match ($artifact_id) {
                 202 => $this->field_not_changed_1,
                 203 => $this->field_not_changed_2,
             }
@@ -75,7 +75,7 @@ final class FirstValidValueAccordingToDependenciesRetrieverTest extends \Tuleap\
         $changeset_value_field_not_changed_2 = $this->createStub(Tracker_Artifact_ChangesetValue::class);
 
         $this->artifact->method('getValue')->willReturnCallback(
-            fn (\Tracker_FormElement_Field $field): Tracker_Artifact_ChangesetValue => match ($field) {
+            fn (\Tuleap\Tracker\FormElement\Field\TrackerField $field): Tracker_Artifact_ChangesetValue => match ($field) {
                 $this->field_not_changed_1 => $changeset_value_field_not_changed_1,
                 $this->field_not_changed_2 => $changeset_value_field_not_changed_2,
             }

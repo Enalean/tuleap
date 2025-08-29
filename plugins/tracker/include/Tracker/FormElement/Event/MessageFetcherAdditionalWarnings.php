@@ -20,15 +20,15 @@
 
 namespace Tuleap\Tracker\FormElement\Event;
 
-use Tracker_FormElement_Field;
 use Tuleap\Event\Dispatchable;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 
 class MessageFetcherAdditionalWarnings implements Dispatchable
 {
     public const NAME = 'getMessageFetcherAdditionalWarnings';
 
     /**
-     * @var Tracker_FormElement_Field
+     * @var TrackerField
      */
     private $field;
 
@@ -37,13 +37,13 @@ class MessageFetcherAdditionalWarnings implements Dispatchable
      */
     private $warnings = [];
 
-    public function __construct(public readonly \PFUser $user, Tracker_FormElement_Field $field)
+    public function __construct(public readonly \PFUser $user, TrackerField $field)
     {
         $this->field = $field;
     }
 
     /**
-     * @return Tracker_FormElement_Field
+     * @return TrackerField
      */
     public function getField()
     {

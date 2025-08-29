@@ -61,7 +61,7 @@ final class DryRunDuckTypingFieldCollectorTest extends TestCase
     private \Tuleap\Tracker\Tracker $destination_tracker;
     private Artifact $artifact;
     private \PFUser $user;
-    /** @var list<\Tracker_FormElement_Field> */
+    /** @var list<\Tuleap\Tracker\FormElement\Field\TrackerField> */
     private array $all_fields;
     private \Tuleap\Tracker\FormElement\Field\List\SelectboxField|\Tuleap\Tracker\FormElement\Field\List\MultiSelectboxField $source_list_field;
     private \Tuleap\Tracker\FormElement\Field\List\SelectboxField|\Tuleap\Tracker\FormElement\Field\List\MultiSelectboxField $destination_list_field;

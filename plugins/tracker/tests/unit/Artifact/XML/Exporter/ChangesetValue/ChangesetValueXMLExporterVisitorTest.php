@@ -31,13 +31,13 @@ use Tracker_Artifact_ChangesetValue;
 use Tracker_Artifact_ChangesetValue_Float;
 use Tracker_Artifact_ChangesetValue_Integer;
 use Tracker_Artifact_ChangesetValueVisitor;
-use Tracker_FormElement_Field;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\Changeset\ArtifactLink\ArtifactLinkChangesetValue;
 use Tuleap\Tracker\Artifact\XML\Exporter\ChangesetValueXMLExporterVisitor;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\Float\FloatField;
 use Tuleap\Tracker\FormElement\Field\Integer\IntegerField;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Test\Builders\ChangesetTestBuilder;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -171,7 +171,7 @@ final class ChangesetValueXMLExporterVisitorTest extends \Tuleap\Test\PHPUnit\Te
     {
         $external_changeset_value = $this->getExternalChangeset(
             $this->changeset,
-            $this->createMock(Tracker_FormElement_Field::class)
+            $this->createMock(TrackerField::class)
         );
 
         $this->int_exporter->expects($this->never())->method('export');
@@ -194,7 +194,7 @@ final class ChangesetValueXMLExporterVisitorTest extends \Tuleap\Test\PHPUnit\Te
     {
         $external_changeset_value = $this->getExternalChangeset(
             $this->changeset,
-            $this->createMock(Tracker_FormElement_Field::class)
+            $this->createMock(TrackerField::class)
         );
 
         $this->int_exporter->expects($this->never())->method('export');

@@ -32,7 +32,6 @@ use Tracker_Artifact_ChangesetFactoryBuilder;
 use Tracker_Artifact_ChangesetValue;
 use Tracker_ArtifactFactory;
 use Tracker_FormElement_Chart_Field_Exception;
-use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_ReadOnly;
 use Tracker_FormElement_FieldVisitor;
 use Tracker_FormElementFactory;
@@ -56,6 +55,7 @@ use Tuleap\Tracker\FormElement\ChartConfigurationValueRetriever;
 use Tuleap\Tracker\FormElement\ChartFieldUsage;
 use Tuleap\Tracker\FormElement\ChartMessageFetcher;
 use Tuleap\Tracker\FormElement\Field\Files\CreatedFileURLMapping;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
 use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueFullRepresentation;
@@ -66,7 +66,7 @@ use Tuleap\Tracker\Semantic\Status\Done\SemanticDoneValueChecker;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use UserManager;
 
-class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Field_ReadOnly, TrackerFormElementExternalField
+class Burnup extends TrackerField implements Tracker_FormElement_Field_ReadOnly, TrackerFormElementExternalField
 {
     public const TYPE = 'burnup';
 
@@ -77,7 +77,7 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
     }
 
     #[Override]
-    public function getFormAdminVisitor(Tracker_FormElement_Field $element, array $used_element)
+    public function getFormAdminVisitor(TrackerField $element, array $used_element)
     {
         return new ViewAdminBurnupField($element, $used_element);
     }
@@ -377,7 +377,7 @@ class Burnup extends Tracker_FormElement_Field implements Tracker_FormElement_Fi
     }
 
     /**
-     * @see Tracker_FormElement_Field::postSaveNewChangeset()
+     * @see TrackerField::postSaveNewChangeset()
      */
     #[Override]
     public function postSaveNewChangeset(

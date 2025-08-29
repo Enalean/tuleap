@@ -52,7 +52,7 @@ final readonly class InvalidFieldChecker
      * @throws FieldIsNotSupportedForComparisonException
      * @throws InvalidFieldException
      */
-    public function checkFieldIsValidForComparison(Comparison $comparison, \Tracker_FormElement_Field $field): void
+    public function checkFieldIsValidForComparison(Comparison $comparison, \Tuleap\Tracker\FormElement\Field\TrackerField $field): void
     {
         match ($field::class) {
             \Tuleap\Tracker\FormElement\Field\Float\FloatField::class               => $this->float_field_checker->checkFieldIsValidForComparison($comparison, $field),

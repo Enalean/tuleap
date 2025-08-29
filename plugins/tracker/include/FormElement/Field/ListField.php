@@ -31,7 +31,6 @@ use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue;
 use Tracker_Artifact_ChangesetValue_List;
 use Tracker_CardDisplayPreferences;
-use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_List_Bind;
 use Tracker_FormElement_Field_List_Bind_Static;
 use Tracker_FormElement_Field_List_Bind_StaticValue;
@@ -73,7 +72,7 @@ use User;
 use UserXMLExporter;
 use Workflow;
 
-abstract class ListField extends Tracker_FormElement_Field implements Tracker_FormElement_Field_Shareable
+abstract class ListField extends TrackerField implements Tracker_FormElement_Field_Shareable
 {
     public const int NONE_VALUE = 100;
 
@@ -1174,7 +1173,7 @@ abstract class ListField extends Tracker_FormElement_Field implements Tracker_Fo
     }
 
     /**
-     * @see Tracker_FormElement_Field::fetchCardValue()
+     * @see TrackerField::fetchCardValue()
      */
     #[Override]
     public function fetchCardValue(
@@ -1398,7 +1397,7 @@ abstract class ListField extends Tracker_FormElement_Field implements Tracker_Fo
     }
 
     /**
-     * @see Tracker_FormElement_Field::hasChanges()
+     * @see TrackerField::hasChanges()
      */
     #[Override]
     public function hasChanges(Artifact $artifact, Tracker_Artifact_ChangesetValue $previous_changesetvalue, $new_value)

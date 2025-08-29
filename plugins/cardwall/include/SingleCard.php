@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 
 /**
  * This class is a wrapper on top of card in cell presenter to be used when
@@ -26,7 +27,7 @@ use Tuleap\Tracker\Artifact\Artifact;
  *
  * In other words it's what you need when you only want to have one single card
  */
-class Cardwall_SingleCard
+class Cardwall_SingleCard // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /** @var Cardwall_CardInCellPresenter */
     private $card_in_cell_presenter;
@@ -87,7 +88,7 @@ class Cardwall_SingleCard
      *
      * @param int $id
      *
-     * @return Tracker_FormElement_Field
+     * @return TrackerField
      */
     public function getFieldById($id)
     {
@@ -110,12 +111,12 @@ class Cardwall_SingleCard
         return $this->artifact;
     }
 
-    public function getFieldJsonValue(PFUser $user, Tracker_FormElement_Field $field)
+    public function getFieldJsonValue(PFUser $user, TrackerField $field)
     {
         return $field->getJsonValue($user, $this->artifact->getLastChangeset());
     }
 
-    public function getFieldHTMLValue(PFUser $user, Tracker_FormElement_Field $field)
+    public function getFieldHTMLValue(PFUser $user, TrackerField $field)
     {
         return $field->fetchCardValue($this->artifact, $this->display_preferences);
     }

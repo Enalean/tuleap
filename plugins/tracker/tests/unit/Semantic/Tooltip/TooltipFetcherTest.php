@@ -40,7 +40,7 @@ final class TooltipFetcherTest extends TestCase
         $artifact->method('userCanView')->willReturn(false);
 
         $tooltip = TooltipFieldsStub::withFields(
-            $this->createStub(\Tracker_FormElement_Field::class),
+            $this->createStub(\Tuleap\Tracker\FormElement\Field\TrackerField::class),
         );
 
         $user = UserTestBuilder::buildWithDefaults();
@@ -68,11 +68,11 @@ final class TooltipFetcherTest extends TestCase
                 ->build()
         );
 
-        $field_1 = $this->createMock(\Tracker_FormElement_Field::class);
+        $field_1 = $this->createMock(\Tuleap\Tracker\FormElement\Field\TrackerField::class);
         $field_1->method('userCanRead')->willReturn(true);
         $field_1->method('fetchTooltip')->willReturn('avada');
 
-        $field_2 = $this->createMock(\Tracker_FormElement_Field::class);
+        $field_2 = $this->createMock(\Tuleap\Tracker\FormElement\Field\TrackerField::class);
         $field_2->method('userCanRead')->willReturn(true);
         $field_2->method('fetchTooltip')->willReturn('kedavra');
 
@@ -107,11 +107,11 @@ final class TooltipFetcherTest extends TestCase
                 ->build()
         );
 
-        $field_1 = $this->createMock(\Tracker_FormElement_Field::class);
+        $field_1 = $this->createMock(\Tuleap\Tracker\FormElement\Field\TrackerField::class);
         $field_1->method('userCanRead')->willReturn(true);
         $field_1->method('fetchTooltip')->willReturn('avada');
 
-        $field_2 = $this->createMock(\Tracker_FormElement_Field::class);
+        $field_2 = $this->createMock(\Tuleap\Tracker\FormElement\Field\TrackerField::class);
         $field_2->method('userCanRead')->willReturn(true);
         $field_2->method('fetchTooltip')->willReturn('kedavra');
 
@@ -158,11 +158,11 @@ final class TooltipFetcherTest extends TestCase
         $artifact->method('getTitle')->willReturn(null);
         $artifact->method('getTracker')->willReturn(TrackerTestBuilder::aTracker()->build());
 
-        $field_1 = $this->createMock(\Tracker_FormElement_Field::class);
+        $field_1 = $this->createMock(\Tuleap\Tracker\FormElement\Field\TrackerField::class);
         $field_1->method('userCanRead')->willReturn(true);
         $field_1->method('fetchTooltip')->willReturn('avada');
 
-        $field_2 = $this->createMock(\Tracker_FormElement_Field::class);
+        $field_2 = $this->createMock(\Tuleap\Tracker\FormElement\Field\TrackerField::class);
         $field_2->method('userCanRead')->willReturn(false);
         $field_2->method('fetchTooltip')->willReturn('kedavra');
 

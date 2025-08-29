@@ -22,8 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Test\Stub;
 
-use Tracker_FormElement_Field;
 use Tuleap\Tracker\Action\VerifyIsStaticListField;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 
 final class VerifyIsStaticListFieldStub implements VerifyIsStaticListField
 {
@@ -42,7 +42,7 @@ final class VerifyIsStaticListFieldStub implements VerifyIsStaticListField
     }
 
     #[\Override]
-    public function isStaticListField(Tracker_FormElement_Field $field): bool
+    public function isStaticListField(TrackerField $field): bool
     {
         return $this->is_single_static_list_field;
     }

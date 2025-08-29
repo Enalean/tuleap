@@ -20,6 +20,7 @@
 
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\FormElement\Field\List\SelectboxField;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Tracker;
 
@@ -137,7 +138,7 @@ final class Tracker_Report_RESTTest extends \Tuleap\Test\PHPUnit\TestCase //phpc
         $this->formelement_factory->expects($this->exactly(2))->method('getFormElementById');
 
         $this->formelement_factory->method('getFormElementByName')->willReturnCallback(
-            fn (int $tracker_id, string $field_name): Tracker_FormElement_Field => match (true) {
+            fn (int $tracker_id, string $field_name): TrackerField => match (true) {
                 $this->tracker->getId() === $tracker_id && 'my_field' === $field_name => $field_1,
                 $this->tracker->getId() === $tracker_id && 'my_other_field' === $field_name => $field_2,
             }
@@ -167,7 +168,7 @@ final class Tracker_Report_RESTTest extends \Tuleap\Test\PHPUnit\TestCase //phpc
         $this->formelement_factory->expects($this->exactly(3))->method('getFormElementById');
 
         $this->formelement_factory->method('getFormElementByName')->willReturnCallback(
-            fn (int $tracker_id, string $field_name): ?Tracker_FormElement_Field => match (true) {
+            fn (int $tracker_id, string $field_name): ?TrackerField => match (true) {
                 $this->tracker->getId() === $tracker_id && 'my_field' === $field_name => null,
                 $this->tracker->getId() === $tracker_id && 'my_other_field' === $field_name => $field_1,
                 $this->tracker->getId() === $tracker_id && 'another_field' === $field_name => null,

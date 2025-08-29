@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Search;
 
-use Tracker_FormElement_Field;
 use Tuleap\Color\ColorName;
 use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Search\IndexedItemFound;
@@ -33,6 +32,7 @@ use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\EventDispatcherStub;
 use Tuleap\Tracker\Artifact\StatusBadgeBuilder;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 
@@ -98,7 +98,7 @@ final class SearchResultRetrieverTest extends TestCase
             ->inTracker($tracker)
             ->build();
         $this->artifact_factory->method('getArtifactByIdUserCanView')->willReturn($artifact);
-        $field = $this->createStub(Tracker_FormElement_Field::class);
+        $field = $this->createStub(TrackerField::class);
         $field->method('userCanRead')->willReturn(true);
         $this->form_element_factory->method('getUsedFormElementFieldById')->willReturn($field);
 
@@ -212,7 +212,7 @@ final class SearchResultRetrieverTest extends TestCase
 
         $artifact = ArtifactTestBuilder::anArtifact(147)->build();
         $this->artifact_factory->method('getArtifactByIdUserCanView')->willReturn($artifact);
-        $field = $this->createStub(Tracker_FormElement_Field::class);
+        $field = $this->createStub(TrackerField::class);
         $field->method('userCanRead')->willReturn(false);
         $this->form_element_factory->method('getUsedFormElementFieldById')->willReturn($field);
 

@@ -20,6 +20,7 @@
 
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenterFactory;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 
 /**
  * I validate fields for initial changeset
@@ -28,7 +29,7 @@ class Tracker_Artifact_Changeset_InitialChangesetFieldsValidator extends Tracker
 {
     protected function canValidateField(
         Artifact $artifact,
-        Tracker_FormElement_Field $field,
+        TrackerField $field,
         PFUser $user,
     ): bool {
         //we do not validate if the field is required and we can't submit the field
@@ -37,7 +38,7 @@ class Tracker_Artifact_Changeset_InitialChangesetFieldsValidator extends Tracker
 
     protected function validateField(
         Artifact $artifact,
-        Tracker_FormElement_Field $field,
+        TrackerField $field,
         \PFUser $user,
         $submitted_value,
     ) {

@@ -49,7 +49,7 @@ final class ArtifactCollectionFormatterTest extends TestCase
         $html_purifier = $this->createStub(\Codendi_HTMLPurifier::class);
         $html_purifier->method('purify')->willReturnCallback(fn (string $value): string => $value);
 
-        $field = $this->createStub(\Tracker_FormElement_Field::class);
+        $field = $this->createStub(\Tuleap\Tracker\FormElement\Field\TrackerField::class);
         $field->method('getId')->willReturn(1);
         $field->method('getName')->willReturn('field_name');
 

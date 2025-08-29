@@ -69,7 +69,7 @@ class MethodBasedOnLinksCount implements IComputeProgression
         return $this->artifact_link_type;
     }
 
-    public function isFieldUsedInComputation(\Tracker_FormElement_Field $field): bool
+    public function isFieldUsedInComputation(\Tuleap\Tracker\FormElement\Field\TrackerField $field): bool
     {
         return $field instanceof \Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
     }

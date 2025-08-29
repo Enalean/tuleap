@@ -22,9 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Artifact\Changeset;
 
-use Tracker_FormElement_Field;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 
 class FieldsToBeSavedInSpecificOrderRetriever
 {
@@ -40,7 +40,7 @@ class FieldsToBeSavedInSpecificOrderRetriever
 
     /**
      *
-     * @return Tracker_FormElement_Field[]
+     * @return TrackerField[]
      */
     public function getFields(Artifact $artifact): array
     {
@@ -49,7 +49,7 @@ class FieldsToBeSavedInSpecificOrderRetriever
 
     /**
      *
-     * @return Tracker_FormElement_Field[]
+     * @return TrackerField[]
      */
     private function getFileFieldsFirstThenTheOthers(Artifact $artifact): array
     {
@@ -57,7 +57,7 @@ class FieldsToBeSavedInSpecificOrderRetriever
 
         usort(
             $fields,
-            function (Tracker_FormElement_Field $a, Tracker_FormElement_Field $b) {
+            function (TrackerField $a, TrackerField $b) {
                 return $this->element_factory->isFieldAFileField($b) ? 1 : 0;
             }
         );

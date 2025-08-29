@@ -43,7 +43,7 @@ class MethodNotConfigured implements IComputeProgression
         return dgettext('tuleap-tracker', 'This semantic is not defined yet.');
     }
 
-    public function isFieldUsedInComputation(\Tracker_FormElement_Field $field): bool
+    public function isFieldUsedInComputation(\Tuleap\Tracker\FormElement\Field\TrackerField $field): bool
     {
         return false;
     }

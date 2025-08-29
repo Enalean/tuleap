@@ -98,7 +98,7 @@ final class FieldsDataBuilder
     /**
      * @throws \Tracker_FormElement_InvalidFieldException
      */
-    private function getField(array $indexed_fields, array $value): \Tracker_FormElement_Field
+    private function getField(array $indexed_fields, array $value): \Tuleap\Tracker\FormElement\Field\TrackerField
     {
         if (! isset($value['field_id']) || (isset($value['field_id']) && ! is_int($value['field_id']))) {
             throw new \Tracker_FormElement_InvalidFieldException(

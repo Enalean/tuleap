@@ -42,7 +42,7 @@ final readonly class ArtifactSubmitterChecker
      * @throws ListToStatusOpenComparisonException
      * @throws SubmittedByUserDoesntExistException
      */
-    public function checkFieldIsValidForComparison(Comparison $comparison, \Tracker_FormElement_Field $field): void
+    public function checkFieldIsValidForComparison(Comparison $comparison, \Tuleap\Tracker\FormElement\Field\TrackerField $field): void
     {
         match ($comparison->getType()) {
             ComparisonType::Equal,
@@ -62,7 +62,7 @@ final readonly class ArtifactSubmitterChecker
      */
     private function checkValueIsValid(
         ValueWrapper $value_wrapper,
-        \Tracker_FormElement_Field $field,
+        \Tuleap\Tracker\FormElement\Field\TrackerField $field,
     ): void {
         $extractor = new CollectionOfListValuesExtractor();
         $values    = $extractor->extractCollectionOfValues($value_wrapper, $field);

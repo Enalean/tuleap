@@ -26,11 +26,11 @@ namespace Tuleap\Tracker;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use SimpleXMLElement;
 use Tracker_FormElement_Container_Column;
-use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Tracker\FormElement\Field\List\SelectboxField;
 use Tuleap\Tracker\FormElement\Field\Text\TextField;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Test\Builders\Fields\ColumnContainerBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticValueBuilder;
@@ -40,7 +40,7 @@ use Tuleap\Tracker\Test\Builders\Fields\TextFieldBuilder;
 #[DisableReturnValueGenerationForTestDoubles]
 final class TrackerXMLFieldMappingFromExistingTrackerTest extends TestCase
 {
-    /** @var Tracker_FormElement_Field[] */
+    /** @var TrackerField[] */
     private array $fields = [];
     private TrackerXMLFieldMappingFromExistingTracker $xml_mapping;
     private SimpleXMLElement $xml_input;

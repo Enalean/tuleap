@@ -85,9 +85,9 @@ use Tuleap\Tracker\Test\Builders\Fields\LastUpdateDateFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListUserGroupBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\MultiSelectboxFieldBuilder;
-use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\OpenListFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\RadioButtonFieldBuilder;
+use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\SubmittedByFieldBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\SubmittedOnFieldBuilder;
@@ -606,7 +606,7 @@ final class InvalidTermCollectorVisitorTest extends \Tuleap\Test\PHPUnit\TestCas
     }
 
     #[DataProvider('generateFieldTypes')]
-    public function testItRejectsInvalidComparisonToMyself(\Tracker_FormElement_Field $field): void
+    public function testItRejectsInvalidComparisonToMyself(\Tuleap\Tracker\FormElement\Field\TrackerField $field): void
     {
         $this->formelement_factory->method('getUsedFormElementFieldByNameForUser')->willReturn($field);
 

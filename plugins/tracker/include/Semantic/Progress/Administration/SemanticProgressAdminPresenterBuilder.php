@@ -78,12 +78,12 @@ class SemanticProgressAdminPresenterBuilder
     }
 
     /**
-     * @param \Tracker_FormElement_Field[] $form_elements
+     * @param \Tuleap\Tracker\FormElement\Field\TrackerField[] $form_elements
      */
     private function buildSelectBoxEntries(array $form_elements, ?int $selected_field_id): array
     {
         return array_map(
-            function (\Tracker_FormElement_Field $field) use ($form_elements, $selected_field_id) {
+            function (\Tuleap\Tracker\FormElement\Field\TrackerField $field) use ($form_elements, $selected_field_id) {
                 return [
                     'id' => $field->getId(),
                     'label' => $field->getLabel(),

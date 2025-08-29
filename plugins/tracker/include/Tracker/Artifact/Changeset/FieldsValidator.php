@@ -21,6 +21,7 @@
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Changeset\Validation\ChangesetValidationContext;
 use Tuleap\Tracker\FormElement\ArtifactLinkValidator;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 
 /**
  * I validate fields
@@ -81,7 +82,7 @@ abstract class Tracker_Artifact_Changeset_FieldsValidator // phpcs:ignore PSR1.C
     private function validateOneField(
         Artifact $artifact,
         PFUser $user,
-        Tracker_FormElement_Field $field,
+        TrackerField $field,
         $submitted_value,
         ChangesetValidationContext $changeset_validation_context,
     ): bool {
@@ -102,7 +103,7 @@ abstract class Tracker_Artifact_Changeset_FieldsValidator // phpcs:ignore PSR1.C
 
     abstract protected function canValidateField(
         Artifact $artifact,
-        Tracker_FormElement_Field $field,
+        TrackerField $field,
         PFUser $user,
     ): bool;
 
@@ -111,12 +112,12 @@ abstract class Tracker_Artifact_Changeset_FieldsValidator // phpcs:ignore PSR1.C
      */
     abstract protected function validateField(
         Artifact $artifact,
-        Tracker_FormElement_Field $field,
+        TrackerField $field,
         \PFUser $user,
         $submitted_value,
     );
 
-    private function getSubmittedValue(Tracker_FormElement_Field $field, $fields_data)
+    private function getSubmittedValue(TrackerField $field, $fields_data)
     {
         $submitted_value = null;
         if ($this->isFieldSubmitted($field, $fields_data)) {
@@ -129,7 +130,7 @@ abstract class Tracker_Artifact_Changeset_FieldsValidator // phpcs:ignore PSR1.C
     /**
      * @return bool
      */
-    private function isFieldSubmitted(Tracker_FormElement_Field $field, array $fields_data)
+    private function isFieldSubmitted(TrackerField $field, array $fields_data)
     {
         return isset($fields_data[$field->getId()]);
     }

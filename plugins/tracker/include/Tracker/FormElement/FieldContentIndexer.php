@@ -23,9 +23,9 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\FormElement;
 
 use Psr\EventDispatcher\EventDispatcherInterface;
-use Tracker_FormElement_Field;
 use Tuleap\Search\ItemToIndexQueue;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 
 class FieldContentIndexer
 {
@@ -40,7 +40,7 @@ class FieldContentIndexer
     /**
      * @psalm-param \Tuleap\Search\ItemToIndex::CONTENT_TYPE_* $content_type
      */
-    public function indexFieldContent(Artifact $artifact, Tracker_FormElement_Field $field, string $value, string $content_type): void
+    public function indexFieldContent(Artifact $artifact, TrackerField $field, string $value, string $content_type): void
     {
         $this->index_queue->addItemToQueue(
             new \Tuleap\Search\ItemToIndex(

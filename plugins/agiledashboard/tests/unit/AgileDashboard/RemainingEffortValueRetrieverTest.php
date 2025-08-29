@@ -40,7 +40,7 @@ final class RemainingEffortValueRetrieverTest extends \Tuleap\Test\PHPUnit\TestC
     private RemainingEffortValueRetriever $remaining_effort_retriever;
     private Artifact $artifact;
     private \Tuleap\Tracker\Tracker $tracker;
-    private \Tracker_FormElement_Field $field;
+    private \Tuleap\Tracker\FormElement\Field\TrackerField $field;
 
     public function setUp(): void
     {

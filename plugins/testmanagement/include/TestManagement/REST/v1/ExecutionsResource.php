@@ -700,7 +700,7 @@ class ExecutionsResource
         $this->optionsIssues($id);
     }
 
-    private function getFieldByName(string $field_name, int $tracker_id, PFUser $user): ?\Tracker_FormElement_Field
+    private function getFieldByName(string $field_name, int $tracker_id, PFUser $user): ?\Tuleap\Tracker\FormElement\Field\TrackerField
     {
         return $this->formelement_factory->getUsedFieldByNameForUser(
             $tracker_id,

@@ -20,7 +20,7 @@
 namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder;
 
 use ParagonIE\EasyDB\EasyStatement;
-use Tracker_FormElement_Field;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
 
 final class QueryListFieldPresenter
@@ -37,7 +37,7 @@ final class QueryListFieldPresenter
     public string|EasyStatement $condition;
     public array $parameters;
 
-    public function __construct(Comparison $comparison, Tracker_FormElement_Field $field)
+    public function __construct(Comparison $comparison, TrackerField $field)
     {
         $suffix           = spl_object_hash($comparison);
         $this->field_id   = (int) $field->getId();

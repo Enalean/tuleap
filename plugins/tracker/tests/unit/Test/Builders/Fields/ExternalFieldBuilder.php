@@ -24,13 +24,13 @@ namespace Tuleap\Tracker\Test\Builders\Fields;
 
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue;
-use Tracker_FormElement_Field;
 use Tracker_FormElement_FieldVisitor;
 use Tracker_Report;
 use Tracker_Report_Criteria;
 use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\Files\CreatedFileURLMapping;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\FormElement\TrackerFormElementExternalField;
 use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -71,7 +71,7 @@ final class ExternalFieldBuilder
         return $this;
     }
 
-    public function build(): Tracker_FormElement_Field
+    public function build(): TrackerField
     {
         $field = new class (
             $this->id,
@@ -86,7 +86,7 @@ final class ExternalFieldBuilder
             false,
             10,
             null
-        ) extends Tracker_FormElement_Field implements TrackerFormElementExternalField {
+        ) extends TrackerField implements TrackerFormElementExternalField {
             /** @return void */
             #[\Override]
             public function accept(Tracker_FormElement_FieldVisitor $visitor)
@@ -124,7 +124,7 @@ final class ExternalFieldBuilder
 
             /** @return void */
             #[\Override]
-            public function getFormAdminVisitor(Tracker_FormElement_Field $element, array $used_element)
+            public function getFormAdminVisitor(TrackerField $element, array $used_element)
             {
             }
 

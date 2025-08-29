@@ -25,12 +25,12 @@ namespace Tuleap\Tracker\Semantic\Timeframe;
 use Codendi_Request;
 use PFUser;
 use SimpleXMLElement;
-use Tracker_FormElement_Field;
 use TrackerManager;
 use Tuleap\Layout\IncludeViteAssets;
 use Tuleap\Layout\JavascriptViteAsset;
 use Tuleap\Tracker\FormElement\Field\Date\DateField;
 use Tuleap\Tracker\FormElement\Field\NumericField;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Notifications\Settings\CalendarEventConfigDao;
 use Tuleap\Tracker\Semantic\Timeframe\Administration\SemanticTimeframeAdministrationPresenterBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\Administration\SemanticTimeframeCurrentConfigurationPresenterBuilder;
@@ -154,7 +154,7 @@ class SemanticTimeframe extends TrackerSemantic
         $this->timeframe->exportToXML($root, $xml_mapping);
     }
 
-    public function isUsedInSemantics(Tracker_FormElement_Field $field): bool
+    public function isUsedInSemantics(TrackerField $field): bool
     {
         return $this->timeframe->isFieldUsed($field);
     }

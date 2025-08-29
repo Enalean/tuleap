@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Workflow\PostAction\Visitor;
 
 /**
@@ -138,7 +139,7 @@ abstract class Transition_PostAction
      *
      * @return bool
      */
-    abstract public function bypassPermissions(Tracker_FormElement_Field $field);
+    abstract public function bypassPermissions(TrackerField $field);
 
     abstract public function accept(Visitor $visitor);
 }

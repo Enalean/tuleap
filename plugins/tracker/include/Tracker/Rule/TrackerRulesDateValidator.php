@@ -25,9 +25,9 @@ namespace Tuleap\Tracker\Rule;
 
 use Feedback;
 use Psr\Log\LoggerInterface;
-use Tracker_FormElement_Field;
 use Tracker_FormElementFactory;
 use Tracker_Rule_Date;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 
 class TrackerRulesDateValidator
 {
@@ -92,7 +92,7 @@ class TrackerRulesDateValidator
         return $rule->validate($source_value, $target_value);
     }
 
-    private function getFieldById($field_id): Tracker_FormElement_Field
+    private function getFieldById($field_id): TrackerField
     {
         return $this->form_element_factory->getFormElementById($field_id);
     }

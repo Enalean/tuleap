@@ -52,7 +52,7 @@ interface IComputeTimeframes
 
     public function save(\Tuleap\Tracker\Tracker $tracker, SemanticTimeframeDao $dao): bool;
 
-    public function isFieldUsed(\Tracker_FormElement_Field $field): bool;
+    public function isFieldUsed(\Tuleap\Tracker\FormElement\Field\TrackerField $field): bool;
 
     public function isDefined(): bool;
 

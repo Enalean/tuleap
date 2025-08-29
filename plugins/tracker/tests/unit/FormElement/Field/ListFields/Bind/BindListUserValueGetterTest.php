@@ -27,9 +27,9 @@ use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use PHPUnit\Framework\MockObject\MockObject;
 use ProjectUGroup;
 use TestHelper;
-use Tracker_FormElement_Field;
 use Tuleap\DB\DatabaseUUIDV7Factory;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use UserHelper;
@@ -59,7 +59,7 @@ final class BindListUserValueGetterTest extends TestCase
         $ugroups       = ['group_members'];
         $bindvalue_ids = [];
 
-        $field = $this->createMock(Tracker_FormElement_Field::class);
+        $field = $this->createMock(TrackerField::class);
         $field->method('getTracker')->willReturn(null);
 
         $this->default_dao->method('getDa')->willReturn(TestHelper::emptyDa());

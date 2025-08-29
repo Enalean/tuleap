@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Tracker\FormElement\Field\String\StringField;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Test\Builders\Fields\StringFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Tracker;
@@ -116,7 +117,7 @@ final class Tracker_XML_Updater_ChangesetXMLUpdaterTest extends \Tuleap\Test\PHP
             ->expects($this->exactly(2))
             ->method('update')
             ->willReturnCallback(
-                fn (SimpleXMLElement $field_change_xml, Tracker_FormElement_Field $field, mixed $submitted_value) => match (true) {
+                fn (SimpleXMLElement $field_change_xml, TrackerField $field, mixed $submitted_value) => match (true) {
                     $field === $this->field_summary &&
                     $submitted_value === 'Content of summary field',
                     $field === $this->field_effort &&

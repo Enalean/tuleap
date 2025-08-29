@@ -21,6 +21,7 @@
 use PHPUnit\Framework\MockObject\MockObject;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -593,9 +594,9 @@ final class PermissionSerializerTest extends \Tuleap\Test\PHPUnit\TestCase //php
             [
                 $this->summary_field_id =>
                     [
-                        Tracker_FormElement_Field::PERMISSION_READ   => [$this->support_ugroup_id],
-                        Tracker_FormElement_Field::PERMISSION_SUBMIT => [ProjectUGroup::PROJECT_ADMIN],
-                        Tracker_FormElement_Field::PERMISSION_UPDATE => [ProjectUGroup::PROJECT_MEMBERS],
+                        TrackerField::PERMISSION_READ   => [$this->support_ugroup_id],
+                        TrackerField::PERMISSION_SUBMIT => [ProjectUGroup::PROJECT_ADMIN],
+                        TrackerField::PERMISSION_UPDATE => [ProjectUGroup::PROJECT_MEMBERS],
                     ],
             ]
         );

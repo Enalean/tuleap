@@ -19,7 +19,7 @@
 
 namespace Tuleap\Tracker\Report\Query\Advanced\QueryBuilder;
 
-use Tracker_FormElement_Field;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Report\Query\Advanced\CollectionOfListValuesExtractor;
 use Tuleap\Tracker\Report\Query\Advanced\FieldFromWhereBuilder;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
@@ -34,7 +34,7 @@ final class ListReadOnlyFieldFromWhereBuilder implements FieldFromWhereBuilder
     ) {
     }
 
-    public function getFromWhere(Comparison $comparison, Tracker_FormElement_Field $field): IProvideParametrizedFromAndWhereSQLFragments
+    public function getFromWhere(Comparison $comparison, TrackerField $field): IProvideParametrizedFromAndWhereSQLFragments
     {
         $values    = $this->values_extractor->extractCollectionOfValues($comparison->getValueWrapper(), $field);
         $condition = $this->condition_builder->getCondition($values);

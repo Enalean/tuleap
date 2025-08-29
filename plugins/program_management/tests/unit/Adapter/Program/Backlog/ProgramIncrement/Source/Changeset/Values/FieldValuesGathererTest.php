@@ -108,7 +108,7 @@ final class FieldValuesGathererTest extends \Tuleap\Test\PHPUnit\TestCase
         string $method_under_test,
         string $property_to_call,
     ): void {
-        $field = $this->createStub(\Tracker_FormElement_Field::class);
+        $field = $this->createStub(\Tuleap\Tracker\FormElement\Field\TrackerField::class);
         $field->method('getId')->willReturn(404);
         $this->form_element_factory->method('getFieldById')->willReturn($field);
         $this->changeset->setNoFieldValue($field);

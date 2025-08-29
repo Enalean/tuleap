@@ -20,6 +20,7 @@
 
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\ArtifactLinkValidator;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Workflow\WorkflowUpdateChecker;
 
 /**
@@ -40,7 +41,7 @@ class Tracker_Artifact_Changeset_NewChangesetFieldsValidator extends Tracker_Art
 
     protected function canValidateField(
         Artifact $artifact,
-        Tracker_FormElement_Field $field,
+        TrackerField $field,
         PFUser $user,
     ): bool {
         $last_changeset = $artifact->getLastChangeset();
@@ -51,7 +52,7 @@ class Tracker_Artifact_Changeset_NewChangesetFieldsValidator extends Tracker_Art
 
     protected function validateField(
         Artifact $artifact,
-        Tracker_FormElement_Field $field,
+        TrackerField $field,
         \PFUser $user,
         $submitted_value,
     ) {
@@ -77,7 +78,7 @@ class Tracker_Artifact_Changeset_NewChangesetFieldsValidator extends Tracker_Art
 
     private function getLastChangesetValue(
         Artifact $artifact,
-        Tracker_FormElement_Field $field,
+        TrackerField $field,
     ) {
         $last_changeset = $artifact->getLastChangeset();
         if (! $last_changeset) {

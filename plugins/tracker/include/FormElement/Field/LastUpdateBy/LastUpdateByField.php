@@ -40,6 +40,7 @@ use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\FormElement\Field\Files\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\ListField;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Report\Query\ParametrizedFromWhere;
 use Tuleap\Tracker\Report\Query\ParametrizedSQLFragment;
 use UserManager;
@@ -351,7 +352,7 @@ final class LastUpdateByField extends ListField implements Tracker_FormElement_F
     }
 
     /**
-     * @see Tracker_FormElement_Field::fetchCardValue()
+     * @see TrackerField::fetchCardValue()
      */
     #[Override]
     public function fetchCardValue(Artifact $artifact, ?Tracker_CardDisplayPreferences $display_preferences = null)

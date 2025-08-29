@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Project\Duplication\DuplicationUserGroupMapping;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Workflow\Transition\Condition\CannotCreateTransitionException;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
@@ -64,7 +65,7 @@ class Workflow_Transition_ConditionFactory
     }
 
     /** @return bool */
-    public function isFieldUsedInConditions(Tracker_FormElement_Field $field)
+    public function isFieldUsedInConditions(TrackerField $field)
     {
         return $this->fieldnotempty_factory->isFieldUsedInConditions($field);
     }

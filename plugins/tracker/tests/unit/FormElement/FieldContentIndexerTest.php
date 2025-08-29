@@ -22,13 +22,13 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement;
 
-use Tracker_FormElement_Field;
 use Tuleap\Search\IndexedItemsToRemove;
 use Tuleap\Search\ItemToIndex;
 use Tuleap\Search\ItemToIndexQueueStub;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\EventDispatcherStub;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Tracker;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
@@ -57,7 +57,7 @@ final class FieldContentIndexerTest extends TestCase
 
         $indexer = new FieldContentIndexer(ItemToIndexQueueStub::withCallback($callback), EventDispatcherStub::withIdentityCallback());
 
-        $field = $this->createStub(Tracker_FormElement_Field::class);
+        $field = $this->createStub(TrackerField::class);
         $field->method('getId')->willReturn(1);
         $field->method('getTrackerId')->willReturn(3);
         $tracker = $this->createStub(Tracker::class);

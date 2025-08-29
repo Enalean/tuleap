@@ -26,7 +26,7 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldException;
 
 final class ArtifactSubmitterToEmptyStringException extends InvalidFieldException
 {
-    public function __construct(\Tracker_FormElement_Field $field)
+    public function __construct(\Tuleap\Tracker\FormElement\Field\TrackerField $field)
     {
         $message = dgettext(
             'tuleap-tracker',

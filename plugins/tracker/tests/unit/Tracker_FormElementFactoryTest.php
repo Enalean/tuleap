@@ -29,6 +29,7 @@ use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\Date\DateField;
 use Tuleap\Tracker\FormElement\Field\FieldDao;
 use Tuleap\Tracker\FormElement\Field\Text\TextField;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Tracker;
 
@@ -166,7 +167,7 @@ final class Tracker_FormElementFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
             }
         );
 
-        $this->assertInstanceOf(Tracker_FormElement_Field::class, $this->factory->getFieldById(123));
+        $this->assertInstanceOf(TrackerField::class, $this->factory->getFieldById(123));
         $this->assertNull($this->factory->getFieldById(456), 'A fieldset is not a Field');
         $this->assertNull($this->factory->getFieldById(789), 'Field does not exist');
     }

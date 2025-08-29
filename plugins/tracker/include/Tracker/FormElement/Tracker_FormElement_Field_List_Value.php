@@ -20,6 +20,7 @@
  */
 
 use Tuleap\Tracker\FormElement\Field\ListField;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 abstract class Tracker_FormElement_Field_List_Value implements Tracker_IProvideJsonFormatOfMyself
@@ -131,7 +132,7 @@ abstract class Tracker_FormElement_Field_List_Value implements Tracker_IProvideJ
         return $this->getId();
     }
 
-    public function getFullRESTValue(Tracker_FormElement_Field $field)
+    public function getFullRESTValue(TrackerField $field)
     {
         return [
             'label' => $this->getLabel(),

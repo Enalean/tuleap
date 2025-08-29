@@ -26,11 +26,11 @@ use Cardwall_Column;
 use Cardwall_OnTop_ColumnMappingFieldValueDao;
 use Cardwall_OnTop_Config_ValueMappingFactory;
 use TestHelper;
-use Tracker_FormElement_Field;
 use Tracker_FormElementFactory;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Test\Builders\Fields\List\ListStaticBindBuilder;
 use Tuleap\Tracker\Test\Builders\Fields\SelectboxFieldBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
@@ -43,8 +43,8 @@ final class Cardwall_OnTop_Config_ValueMappingFactoryTest extends TestCase // ph
     use GlobalLanguageMock;
 
     private Cardwall_OnTop_Config_ValueMappingFactory $factory;
-    private Tracker_FormElement_Field $field_123;
-    private Tracker_FormElement_Field $field_124;
+    private TrackerField $field_123;
+    private TrackerField $field_124;
     private Tracker $tracker;
     private Tracker $tracker_10;
     private Tracker $tracker_20;

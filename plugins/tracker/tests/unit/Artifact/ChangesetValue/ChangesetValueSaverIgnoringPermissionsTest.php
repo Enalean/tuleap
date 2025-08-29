@@ -35,14 +35,14 @@ final class ChangesetValueSaverIgnoringPermissionsTest extends \Tuleap\Test\PHPU
     private const NEW_CHANGESET_ID = 139;
     private const FIELD_VALUE      = 'trophodisc squawbush';
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject & \Tracker_FormElement_Field
+     * @var \PHPUnit\Framework\MockObject\MockObject & \Tuleap\Tracker\FormElement\Field\TrackerField
      */
     private $field;
     private array $fields_data;
 
     protected function setUp(): void
     {
-        $this->field = $this->createMock(\Tracker_FormElement_Field::class);
+        $this->field = $this->createMock(\Tuleap\Tracker\FormElement\Field\TrackerField::class);
         $this->field->method('getId')->willReturn(self::FIELD_ID);
         $this->fields_data = [];
     }

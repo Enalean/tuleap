@@ -48,7 +48,7 @@ class TimeframeNotConfigured implements IComputeTimeframes
         return null;
     }
 
-    public function isFieldUsed(\Tracker_FormElement_Field $field): bool
+    public function isFieldUsed(\Tuleap\Tracker\FormElement\Field\TrackerField $field): bool
     {
         return false;
     }

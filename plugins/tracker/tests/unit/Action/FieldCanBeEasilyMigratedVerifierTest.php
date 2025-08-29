@@ -59,8 +59,8 @@ final class FieldCanBeEasilyMigratedVerifierTest extends TestCase
         $source_type_retrieve      = RetrieveFieldTypeStub::withType($source_type);
         $destination_type_retrieve = RetrieveFieldTypeStub::withType($destination_field);
 
-        $source_field      = $this->createStub(\Tracker_FormElement_Field::class);
-        $destination_field = $this->createStub(\Tracker_FormElement_Field::class);
+        $source_field      = $this->createStub(\Tuleap\Tracker\FormElement\Field\TrackerField::class);
+        $destination_field = $this->createStub(\Tuleap\Tracker\FormElement\Field\TrackerField::class);
 
         $checker = new FieldCanBeEasilyMigratedVerifier(
             $source_type_retrieve,

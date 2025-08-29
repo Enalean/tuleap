@@ -23,6 +23,7 @@
 
 use Tuleap\AgileDashboard\Semantic\InitialEffortSemanticAdminPresenterBuilder;
 use Tuleap\AgileDashboard\Semantic\SemanticInitialEffortPossibleFieldRetriever;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Semantic\TrackerSemantic;
 use Tuleap\Tracker\Semantic\TrackerSemanticManager;
 use Tuleap\Tracker\Tracker;
@@ -32,7 +33,7 @@ class AgileDashBoard_Semantic_InitialEffort extends TrackerSemantic // phpcs:ign
     public const NAME = 'initial_effort';
 
     /**
-     * @var Tracker_FormElement_Field
+     * @var TrackerField
      */
     protected $initial_effort_field;
 
@@ -42,9 +43,9 @@ class AgileDashBoard_Semantic_InitialEffort extends TrackerSemantic // phpcs:ign
      * Constructor
      *
      * @param Tracker                   $tracker              The tracker
-     * @param Tracker_FormElement_Field $initial_effort_field The field
+     * @param TrackerField $initial_effort_field The field
      */
-    public function __construct(Tracker $tracker, ?Tracker_FormElement_Field $initial_effort_field = null)
+    public function __construct(Tracker $tracker, ?TrackerField $initial_effort_field = null)
     {
         parent::__construct($tracker);
         $this->initial_effort_field = $initial_effort_field;
@@ -100,7 +101,7 @@ class AgileDashBoard_Semantic_InitialEffort extends TrackerSemantic // phpcs:ign
     /**
      * The (numeric) field used for initial_effort semantic
      *
-     * @return Tracker_FormElement_Field The (numeric) field used for initial_effort semantic, or null if no field
+     * @return TrackerField The (numeric) field used for initial_effort semantic, or null if no field
      */
     public function getField()
     {
@@ -248,7 +249,7 @@ class AgileDashBoard_Semantic_InitialEffort extends TrackerSemantic // phpcs:ign
     }
 
     /**
-     * @return Tracker_FormElement_Field | null
+     * @return TrackerField | null
      */
     private static function getFieldFromTracker(Tracker $tracker)
     {
@@ -292,11 +293,11 @@ class AgileDashBoard_Semantic_InitialEffort extends TrackerSemantic // phpcs:ign
     /**
      * Is the field used in semantics?
      *
-     * @param Tracker_FormElement_Field the field to test if it is used in semantics or not
+     * @param TrackerField the field to test if it is used in semantics or not
      * @return bool returns true if the field is used in semantics, false otherwise
      */
     #[Override]
-    public function isUsedInSemantics(Tracker_FormElement_Field $field)
+    public function isUsedInSemantics(TrackerField $field)
     {
         return $this->getFieldId() == $field->getId();
     }

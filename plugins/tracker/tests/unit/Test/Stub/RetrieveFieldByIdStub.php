@@ -22,12 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Test\Stub;
 
-use Tracker_FormElement_Field;
 use Tuleap\Tracker\FormElement\Field\RetrieveFieldById;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 
 final class RetrieveFieldByIdStub implements RetrieveFieldById
 {
-    /** @psalm-var callable(int): ?Tracker_FormElement_Field */
+    /** @psalm-var callable(int): ?TrackerField */
     private $callback;
 
     private function __construct(callable $callback)
@@ -41,7 +41,7 @@ final class RetrieveFieldByIdStub implements RetrieveFieldById
     }
 
     #[\Override]
-    public function getFieldById($field_id): ?Tracker_FormElement_Field
+    public function getFieldById($field_id): ?TrackerField
     {
         return ($this->callback)($field_id);
     }

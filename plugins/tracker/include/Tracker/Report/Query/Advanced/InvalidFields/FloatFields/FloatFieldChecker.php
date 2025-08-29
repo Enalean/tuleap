@@ -40,7 +40,7 @@ final readonly class FloatFieldChecker
      * @throws FloatToStatusOpenComparisonException
      * @throws FloatToStringComparisonException
      */
-    public function checkFieldIsValidForComparison(Comparison $comparison, \Tracker_FormElement_Field $field): void
+    public function checkFieldIsValidForComparison(Comparison $comparison, \Tuleap\Tracker\FormElement\Field\TrackerField $field): void
     {
         match ($comparison->getType()) {
             ComparisonType::Equal,
@@ -63,7 +63,7 @@ final readonly class FloatFieldChecker
      */
     private function checkFloatValueIsValid(
         Comparison $comparison,
-        \Tracker_FormElement_Field $field,
+        \Tuleap\Tracker\FormElement\Field\TrackerField $field,
         bool $is_empty_string_a_problem,
     ): void {
         $values_extractor = new CollectionOfAlphaNumericValuesExtractor();

@@ -18,6 +18,7 @@
  */
 
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Tracker;
 
 class Tracker_DateReminder // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
@@ -38,7 +39,7 @@ class Tracker_DateReminder // phpcs:ignore PSR1.Classes.ClassDeclaration.Missing
     protected $status;
 
     /**
-     * @var Tracker_FormElement_Field
+     * @var TrackerField
      */
     protected $field = null;
 
@@ -80,11 +81,11 @@ class Tracker_DateReminder // phpcs:ignore PSR1.Classes.ClassDeclaration.Missing
     /**
      * Set field
      *
-     * @param Tracker_FormElement_Field $field Field
+     * @param TrackerField $field Field
      *
      * @return Void
      */
-    protected function setField(Tracker_FormElement_Field $field)
+    protected function setField(TrackerField $field)
     {
         $this->field   = $field;
         $this->fieldId = $field->getId();
@@ -112,7 +113,7 @@ class Tracker_DateReminder // phpcs:ignore PSR1.Classes.ClassDeclaration.Missing
     /**
      * Get the date field
      *
-     * @return Tracker_FormElement_Field
+     * @return TrackerField
      */
     public function getField()
     {

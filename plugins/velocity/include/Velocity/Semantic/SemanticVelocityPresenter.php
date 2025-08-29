@@ -20,7 +20,7 @@
 
 namespace Tuleap\Velocity\Semantic;
 
-use Tracker_FormElement_Field;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Tracker;
 
 class SemanticVelocityPresenter
@@ -30,7 +30,7 @@ class SemanticVelocityPresenter
      */
     public $semantic_done_is_defined;
     /**
-     * @var Tracker_FormElement_Field
+     * @var TrackerField
      */
     public $velocity_field;
     /**
@@ -89,7 +89,7 @@ class SemanticVelocityPresenter
         BacklogRequiredTrackerCollection $backlog_required_tracker_collection,
         ChildrenRequiredTrackerCollection $children_required_tracker_collection,
         $has_at_least_one_tracker_correctly_configured,
-        ?Tracker_FormElement_Field $velocity_field = null,
+        ?TrackerField $velocity_field = null,
     ) {
         $this->semantic_done_is_defined = $semantic_done_is_defined;
         $this->velocity_field           = $velocity_field;

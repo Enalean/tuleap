@@ -25,12 +25,12 @@ use PFUser;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_PaginatedArtifacts;
 use Tracker_ArtifactFactory;
-use Tracker_FormElement_Field;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\AlphaNumericField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypeDao;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
-use Tuleap\Tracker\FormElement\Field\AlphaNumericField;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\REST\Artifact\Changeset\ChangesetRepresentation;
 use Tuleap\Tracker\REST\Artifact\Changeset\ChangesetRepresentationBuilder;
 use Tuleap\Tracker\REST\Artifact\Changeset\ChangesetRepresentationCollection;
@@ -166,7 +166,7 @@ class ArtifactRepresentationBuilder
 
     private function getFieldsValuesFilter(PFUser $user, Tracker_Artifact_Changeset $changeset)
     {
-        return function (Tracker_FormElement_Field $field) use ($user, $changeset) {
+        return function (TrackerField $field) use ($user, $changeset) {
             if ($field->userCanRead($user)) {
                 return $field->getRESTValue($user, $changeset);
             }

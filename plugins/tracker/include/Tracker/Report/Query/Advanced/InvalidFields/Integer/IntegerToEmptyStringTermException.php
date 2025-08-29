@@ -20,11 +20,9 @@
 namespace Tuleap\Tracker\Report\Query\Advanced\InvalidFields\Integer;
 
 use RuntimeException;
-use Tracker_FormElement_Field;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\BetweenComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Comparison;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\Parenthesis;
-use Tuleap\Tracker\Report\Query\Advanced\Grammar\TermVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\EqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\GreaterThanComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\GreaterThanOrEqualComparison;
@@ -34,6 +32,8 @@ use Tuleap\Tracker\Report\Query\Advanced\Grammar\LesserThanOrEqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\NotEqualComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\NotInComparison;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\NoVisitorParameters;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\Parenthesis;
+use Tuleap\Tracker\Report\Query\Advanced\Grammar\TermVisitor;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithForwardLink;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithoutForwardLink;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\WithoutReverseLink;
@@ -45,7 +45,7 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidFields\InvalidFieldException;
  */
 final class IntegerToEmptyStringTermException extends InvalidFieldException implements TermVisitor
 {
-    public function __construct(Comparison $comparison, Tracker_FormElement_Field $field)
+    public function __construct(Comparison $comparison, TrackerField $field)
     {
         $message = sprintf(
             $comparison->acceptTermVisitor($this, new NoVisitorParameters()),

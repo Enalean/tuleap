@@ -40,7 +40,7 @@ final class WorkflowUpdateCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testCanFieldBeUpdatedReturnsTrueWhenInitialSubmission()
     {
         $artifact             = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $field                = $this->createMock(\Tracker_FormElement_Field::class);
+        $field                = $this->createMock(\Tuleap\Tracker\FormElement\Field\TrackerField::class);
         $last_changeset_value = null;
         $submitted_value      = null;
         $user                 = $this->createMock(\PFUser::class);
@@ -62,7 +62,7 @@ final class WorkflowUpdateCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testCanFieldBeUpdatedReturnsTrueWhenUserIsWorkflowUser()
     {
         $artifact             = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $field                = $this->createMock(\Tracker_FormElement_Field::class);
+        $field                = $this->createMock(\Tuleap\Tracker\FormElement\Field\TrackerField::class);
         $last_changeset_value = null;
         $submitted_value      = null;
         $is_submission        = false;
@@ -83,7 +83,7 @@ final class WorkflowUpdateCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testCanFieldBeUpdatedReturnsTrueWhenBothLastChangesetValueAndSubmittedValueAreNull()
     {
         $artifact             = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $field                = $this->createMock(\Tracker_FormElement_Field::class);
+        $field                = $this->createMock(\Tuleap\Tracker\FormElement\Field\TrackerField::class);
         $last_changeset_value = null;
         $submitted_value      = null;
         $is_submission        = false;
@@ -104,7 +104,7 @@ final class WorkflowUpdateCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testCanFieldBeUpdatedReturnsTrueWhenFieldHasNoChanges()
     {
         $artifact             = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $field                = $this->createMock(\Tracker_FormElement_Field::class);
+        $field                = $this->createMock(\Tuleap\Tracker\FormElement\Field\TrackerField::class);
         $last_changeset_value = $this->createMock(\Tracker_Artifact_ChangesetValue::class);
         $submitted_value      = 'Arguslike';
         $is_submission        = false;
@@ -129,7 +129,7 @@ final class WorkflowUpdateCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testCanFieldBeUpdatedReturnsTrueWhenGivenFieldIsReadOnly()
     {
         $artifact             = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $field                = $this->createMock(\Tracker_FormElement_Field::class);
+        $field                = $this->createMock(\Tuleap\Tracker\FormElement\Field\TrackerField::class);
         $last_changeset_value = $this->createMock(\Tracker_Artifact_ChangesetValue::class);
         $submitted_value      = 'Arguslike';
         $is_submission        = false;
@@ -156,7 +156,7 @@ final class WorkflowUpdateCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testCanFieldBeUpdatedReturnsFalseWhenFieldIsNotReadOnly()
     {
         $artifact             = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $field                = $this->createMock(\Tracker_FormElement_Field::class);
+        $field                = $this->createMock(\Tuleap\Tracker\FormElement\Field\TrackerField::class);
         $last_changeset_value = $this->createMock(\Tracker_Artifact_ChangesetValue::class);
         $submitted_value      = 'Arguslike';
         $is_submission        = false;
@@ -182,7 +182,7 @@ final class WorkflowUpdateCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testCanFieldBeUpdatedChecksFieldWhenLastChangesetWasNull()
     {
         $artifact             = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $field                = $this->createMock(\Tracker_FormElement_Field::class);
+        $field                = $this->createMock(\Tuleap\Tracker\FormElement\Field\TrackerField::class);
         $last_changeset_value = null;
         $submitted_value      = 'Arguslike';
         $is_submission        = false;
@@ -207,7 +207,7 @@ final class WorkflowUpdateCheckerTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testCanFieldBeUpdatedChecksFieldWhenSubmittedValueIsNull()
     {
         $artifact             = $this->createMock(\Tuleap\Tracker\Artifact\Artifact::class);
-        $field                = $this->createMock(\Tracker_FormElement_Field::class);
+        $field                = $this->createMock(\Tuleap\Tracker\FormElement\Field\TrackerField::class);
         $last_changeset_value = $this->createMock(\Tracker_Artifact_ChangesetValue::class);
         $submitted_value      = null;
         $is_submission        = false;

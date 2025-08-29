@@ -19,8 +19,9 @@
  */
 
 use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfig;
-use Tuleap\Tracker\Tracker;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Semantic\Description\RetrieveSemanticDescriptionField;
+use Tuleap\Tracker\Tracker;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_ArtifactByEmailStatus
@@ -111,8 +112,8 @@ class Tracker_ArtifactByEmailStatus
      */
     private function isRequiredFieldsValid(
         Tracker $tracker,
-        Tracker_FormElement_Field $title_field,
-        Tracker_FormElement_Field $description_field,
+        TrackerField $title_field,
+        TrackerField $description_field,
     ) {
         $is_required_fields_valid = true;
 

@@ -37,7 +37,7 @@ class BoundDecoratorEditor
         $this->decorator_dao = $decorator_dao;
     }
 
-    public function update(\Tracker_FormElement_Field $field, int $value_id, string $color, bool $will_be_required): void
+    public function update(\Tuleap\Tracker\FormElement\Field\TrackerField $field, int $value_id, string $color, bool $will_be_required): void
     {
         if ($value_id === \Tuleap\Tracker\FormElement\Field\ListField::NONE_VALUE) {
             $this->updateNone($field, $value_id, $color, $will_be_required);
@@ -59,7 +59,7 @@ class BoundDecoratorEditor
         $this->decorator_dao->updateColor($value_id, $r, $g, $b);
     }
 
-    private function updateNone(\Tracker_FormElement_Field $field, int $value_id, string $color, bool $will_be_required): void
+    private function updateNone(\Tuleap\Tracker\FormElement\Field\TrackerField $field, int $value_id, string $color, bool $will_be_required): void
     {
         if ($will_be_required === true) {
             $this->decorator_dao->delete((int) $field->getId(), $value_id);

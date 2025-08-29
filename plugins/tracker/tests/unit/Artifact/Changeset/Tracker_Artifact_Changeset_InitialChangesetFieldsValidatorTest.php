@@ -29,6 +29,7 @@ use Tuleap\Tracker\Changeset\Validation\NullChangesetValidationContext;
 use Tuleap\Tracker\FormElement\ArtifactLinkValidator;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Validation\ManualActionContext;
+use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Workflow\WorkflowUpdateChecker;
 
@@ -69,9 +70,9 @@ final class Tracker_Artifact_Changeset_InitialChangesetFieldsValidatorTest exten
         $this->artifact->method('getLastChangeset')->willReturn(new Tracker_Artifact_Changeset_Null());
     }
 
-    private function getFieldWithId(int $id, bool $can_submit, bool $can_update, bool $is_valid): MockObject&Tracker_FormElement_Field
+    private function getFieldWithId(int $id, bool $can_submit, bool $can_update, bool $is_valid): MockObject&TrackerField
     {
-        $field = $this->createMock(Tracker_FormElement_Field::class);
+        $field = $this->createMock(TrackerField::class);
         $field->method('getId')->willReturn($id);
         $field->method('userCanUpdate')->willReturn($can_update);
         $field->method('userCanSubmit')->willReturn($can_submit);

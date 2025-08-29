@@ -26,7 +26,7 @@ use Tuleap\TestManagement\Step\Execution\Field\StepsExecution;
 
 final class IsAStepExecutionFieldVerifier
 {
-    public static function isAStepExecutionField(\Tracker_FormElement_Field $field): bool
+    public static function isAStepExecutionField(\Tuleap\Tracker\FormElement\Field\TrackerField $field): bool
     {
         return $field instanceof StepsExecution;
     }

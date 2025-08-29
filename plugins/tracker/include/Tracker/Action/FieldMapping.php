@@ -27,11 +27,11 @@ namespace Tuleap\Tracker\Action;
  */
 final class FieldMapping
 {
-    private function __construct(public \Tracker_FormElement_Field $source, public \Tracker_FormElement_Field $destination)
+    private function __construct(public \Tuleap\Tracker\FormElement\Field\TrackerField $source, public \Tuleap\Tracker\FormElement\Field\TrackerField $destination)
     {
     }
 
-    public static function fromFields(\Tracker_FormElement_Field $source, \Tracker_FormElement_Field $destination): self
+    public static function fromFields(\Tuleap\Tracker\FormElement\Field\TrackerField $source, \Tuleap\Tracker\FormElement\Field\TrackerField $destination): self
     {
         return new self($source, $destination);
     }

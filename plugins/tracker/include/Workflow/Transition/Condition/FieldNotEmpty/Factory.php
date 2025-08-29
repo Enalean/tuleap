@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\FormElement\Field\TrackerField;
+
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Workflow_Transition_Condition_FieldNotEmpty_Factory
 {
@@ -31,7 +33,7 @@ class Workflow_Transition_Condition_FieldNotEmpty_Factory
     }
 
     /** @return bool */
-    public function isFieldUsedInConditions(Tracker_FormElement_Field $field)
+    public function isFieldUsedInConditions(TrackerField $field)
     {
         return $this->dao->isFieldUsed($field->getId());
     }
