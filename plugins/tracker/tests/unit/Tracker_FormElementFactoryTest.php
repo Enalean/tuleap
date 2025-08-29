@@ -25,6 +25,7 @@ use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\Stubs\CSRF\CSRFSessionKeyStorageStub;
 use Tuleap\Test\Stubs\CSRF\CSRFSigningKeyStorageStub;
+use Tuleap\Tracker\FormElement\Container\Fieldset\FieldsetContainer;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
 use Tuleap\Tracker\FormElement\Field\Date\DateField;
 use Tuleap\Tracker\FormElement\Field\FieldDao;
@@ -83,7 +84,7 @@ final class Tracker_FormElementFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testSaveObject(): void
     {
-        $a_formelement = $this->createMock(Tracker_FormElement_Container_Fieldset::class);
+        $a_formelement = $this->createMock(FieldsetContainer::class);
 
         $a_formelement->method('getFormElementDataForCreation');
         $a_formelement->expects($this->once())->method('afterSaveObject');
@@ -157,7 +158,7 @@ final class Tracker_FormElementFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
     public function testGetFieldById(): void
     {
         $date     = $this->createMock(\Tuleap\Tracker\FormElement\Field\Date\DateField::class);
-        $fieldset = $this->createMock(\Tracker_FormElement_Container_Fieldset::class);
+        $fieldset = $this->createMock(\Tuleap\Tracker\FormElement\Container\Fieldset\FieldsetContainer::class);
 
         $this->factory->method('getFormElementById')->willReturnCallback(
             static fn (int $id) => match ($id) {

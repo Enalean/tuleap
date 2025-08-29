@@ -21,11 +21,10 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\FormElement;
+namespace Tuleap\Tracker\FormElement\Container\Fieldset;
 
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use SimpleXMLElement;
-use Tracker_FormElement_Container_Fieldset;
 use Tracker_FormElementFactory;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
@@ -41,7 +40,7 @@ use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
 use User\XML\Import\IFindUserFromXMLReference;
 
 #[DisableReturnValueGenerationForTestDoubles]
-final class Tracker_FormElement_Container_FieldsetTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
+final class FieldsetContainerTest extends TestCase
 {
     //testing field import
     public function testImportFormElement(): void
@@ -162,7 +161,7 @@ final class Tracker_FormElement_Container_FieldsetTest extends TestCase // phpcs
         $hidden_dao = $this->createMock(HiddenFieldsetsDao::class);
         $hidden_dao->method('isFieldsetUsedInPostAction')->willReturn(false);
 
-        $container_fieldset = $this->createPartialMock(Tracker_FormElement_Container_Fieldset::class, ['getHiddenFieldsetsDao', 'getFormElements']);
+        $container_fieldset = $this->createPartialMock(FieldsetContainer::class, ['getHiddenFieldsetsDao', 'getFormElements']);
 
         $container_fieldset->method('getFormElements')->willReturn(null);
         $container_fieldset->method('getHiddenFieldsetsDao')->willReturn($hidden_dao);
@@ -172,7 +171,7 @@ final class Tracker_FormElement_Container_FieldsetTest extends TestCase // phpcs
 
     public function testItCallsExportPermissionsToXMLForEachSubfield(): void
     {
-        $container_fieldset = $this->createPartialMock(Tracker_FormElement_Container_Fieldset::class, ['getAllFormElements']);
+        $container_fieldset = $this->createPartialMock(FieldsetContainer::class, ['getAllFormElements']);
 
         $field_01 = $this->createMock(StringField::class);
         $field_02 = $this->createMock(FloatField::class);

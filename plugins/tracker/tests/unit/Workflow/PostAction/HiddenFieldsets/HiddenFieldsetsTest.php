@@ -23,16 +23,16 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets;
 
 use SimpleXMLElement;
-use Tracker_FormElement_Container_Fieldset;
 use Transition;
+use Tuleap\Tracker\FormElement\Container\Fieldset\FieldsetContainer;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class HiddenFieldsetsTest extends \Tuleap\Test\PHPUnit\TestCase
 {
     public function testExportsTheActionInXML(): void
     {
-        $fieldset_01 = $this->createMock(Tracker_FormElement_Container_Fieldset::class);
-        $fieldset_02 = $this->createMock(Tracker_FormElement_Container_Fieldset::class);
+        $fieldset_01 = $this->createMock(FieldsetContainer::class);
+        $fieldset_02 = $this->createMock(FieldsetContainer::class);
 
         $fieldset_01->method('getID')->willReturn(101);
         $fieldset_02->method('getID')->willReturn(102);

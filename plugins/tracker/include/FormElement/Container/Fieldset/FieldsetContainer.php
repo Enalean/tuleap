@@ -23,8 +23,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\Tracker\FormElement\Container\Fieldset;
+
+use Codendi_HTMLPurifier;
+use HTTPRequest;
+use Override;
+use PFUser;
+use Toggler;
+use Tracker_FormElement_Container;
+use Tracker_FormElementFactory;
+use Tracker_IDisplayTrackerLayout;
+use TransitionFactory;
 use Tuleap\Tracker\Artifact\Artifact;
-use Tuleap\Tracker\FormElement\Container\Fieldset\HiddenFieldsetChecker;
 use Tuleap\Tracker\FormElement\Container\Fieldset\XML\XMLFieldset;
 use Tuleap\Tracker\FormElement\Container\FieldsExtractor;
 use Tuleap\Tracker\FormElement\XML\XMLFormElement;
@@ -35,18 +45,20 @@ use Tuleap\Tracker\Workflow\SimpleMode\SimpleWorkflowDao;
 use Tuleap\Tracker\Workflow\SimpleMode\State\StateFactory;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionExtractor;
 use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
+use UserManager;
 
-class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Container // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class FieldsetContainer extends Tracker_FormElement_Container
 {
     /**
      * Process the request
      *
-     * @param Tracker_IDisplayTrackerLayout  $layout          Displays the page header and footer
-     * @param HTTPRequest                    $request         The data coming from the user
-     * @param PFUser                         $current_user    The user who mades the request
+     * @param Tracker_IDisplayTrackerLayout $layout Displays the page header and footer
+     * @param HTTPRequest $request The data coming from the user
+     * @param PFUser $current_user The user who mades the request
      *
      * @return void
      */
+    #[Override]
     public function process(Tracker_IDisplayTrackerLayout $layout, $request, $current_user)
     {
         switch ($request->get('func')) {
@@ -59,6 +71,7 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
         }
     }
 
+    #[Override]
     protected function fetchRecursiveArtifact(
         $method,
         Artifact $artifact,
@@ -101,6 +114,7 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
         );
     }
 
+    #[Override]
     protected function fetchArtifactPrefix($extra_class = '')
     {
         $hp                    = Codendi_HTMLPurifier::instance();
@@ -134,6 +148,7 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
         return $html;
     }
 
+    #[Override]
     protected function fetchArtifactSuffix()
     {
         $html  = '</div>';
@@ -141,6 +156,7 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
         return $html;
     }
 
+    #[Override]
     protected function fetchMailArtifactPrefix($format)
     {
         $label = $this->getLabel();
@@ -158,6 +174,7 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
         }
     }
 
+    #[Override]
     protected function fetchMailArtifactSuffix($format)
     {
         if ($format == 'text') {
@@ -167,6 +184,7 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
         }
     }
 
+    #[Override]
     public function fetchAdmin($tracker)
     {
         $html  = '';
@@ -201,6 +219,7 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
         return $html;
     }
 
+    #[Override]
     public function canBeRemovedFromUsage(): bool
     {
         return parent::canBeRemovedFromUsage() && ! $this->isFieldsetUsedInPostAction();
@@ -209,6 +228,7 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
     /**
      * @psalm-mutation-free
      */
+    #[Override]
     public function getLabel(): string
     {
         if (substr($this->label, -8) !== '_lbl_key') {
@@ -251,21 +271,25 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
         }
     }
 
+    #[Override]
     public static function getFactoryLabel()
     {
         return dgettext('tuleap-tracker', 'Fieldset');
     }
 
+    #[Override]
     public static function getFactoryDescription()
     {
         return dgettext('tuleap-tracker', 'Group fields in a set');
     }
 
+    #[Override]
     public static function getFactoryIconUseIt()
     {
         return $GLOBALS['HTML']->getImagePath('ic/application-form.png');
     }
 
+    #[Override]
     public static function getFactoryIconCreate()
     {
         return $GLOBALS['HTML']->getImagePath('ic/application-form--plus.png');
@@ -275,12 +299,14 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
      * Display the html field in the admin ui
      * @return string html
      */
+    #[Override]
     protected function fetchAdminFormElement()
     {
         $html = '';
         return $html;
     }
 
+    #[Override]
     public function isCollapsed(): bool
     {
         $current_user = UserManager::instance()->getCurrentUser();
@@ -295,6 +321,7 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
      *
      * @psalm-mutation-free
      */
+    #[Override]
     public function getID()
     {
         return $this->id;
@@ -306,6 +333,7 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
      *
      * @return string
      */
+    #[Override]
     public function getCannotRemoveMessage()
     {
         if ($this->isFieldsetUsedInPostAction() === true) {
@@ -328,6 +356,7 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
         return $this->getHiddenFieldsetsDao()->isFieldsetUsedInPostAction((int) $this->getID());
     }
 
+    #[Override]
     protected function getXMLInternalRepresentation(): XMLFormElement
     {
         return new XMLFieldset($this->getXMLId(), $this->getName());

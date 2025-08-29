@@ -23,8 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Workflow\PostAction\HiddenFieldsets;
 
 use SimpleXMLElement;
-use Tracker_FormElement_Container_Fieldset;
 use Transition_PostAction;
+use Tuleap\Tracker\FormElement\Container\Fieldset\FieldsetContainer;
 use Tuleap\Tracker\FormElement\Field\TrackerField;
 use Tuleap\Tracker\Workflow\PostAction\Visitor;
 
@@ -34,7 +34,7 @@ class HiddenFieldsets extends Transition_PostAction
     public const XML_TAG_NAME = 'postaction_hidden_fieldsets';
 
     /**
-     * @var Tracker_FormElement_Container_Fieldset[]
+     * @var FieldsetContainer[]
      */
     private $fieldsets = [];
 
@@ -46,7 +46,7 @@ class HiddenFieldsets extends Transition_PostAction
     }
 
     /**
-     * @return Tracker_FormElement_Container_Fieldset[]
+     * @return FieldsetContainer[]
      */
     public function getFieldsets(): array
     {

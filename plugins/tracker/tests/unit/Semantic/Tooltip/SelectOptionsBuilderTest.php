@@ -230,9 +230,9 @@ final class SelectOptionsBuilderTest extends TestCase
         return $sb;
     }
 
-    private function aFieldset(int $id, string $label, bool $readable, array $subelements): \Tracker_FormElement_Container_Fieldset
+    private function aFieldset(int $id, string $label, bool $readable, array $subelements): \Tuleap\Tracker\FormElement\Container\Fieldset\FieldsetContainer
     {
-        $fieldset = $this->createMock(\Tracker_FormElement_Container_Fieldset::class);
+        $fieldset = $this->createMock(\Tuleap\Tracker\FormElement\Container\Fieldset\FieldsetContainer::class);
         $fieldset->method('userCanRead')->willReturn($readable);
         $fieldset->method('getLabel')->willReturn($label);
         $fieldset->method('getId')->willReturn($id);

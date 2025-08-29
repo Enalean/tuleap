@@ -83,8 +83,8 @@ final class HiddenFieldsetsFactoryTest extends \Tuleap\Test\PHPUnit\TestCase
 XML;
         $xml         = new SimpleXMLElement($xml_content);
 
-        $fieldset_01 = $this->createMock(\Tracker_FormElement_Container_Fieldset::class);
-        $fieldset_02 = $this->createMock(\Tracker_FormElement_Container_Fieldset::class);
+        $fieldset_01 = $this->createMock(\Tuleap\Tracker\FormElement\Container\Fieldset\FieldsetContainer::class);
+        $fieldset_02 = $this->createMock(\Tuleap\Tracker\FormElement\Container\Fieldset\FieldsetContainer::class);
 
         $fieldset_01->method('getID')->willReturn(0);
         $fieldset_02->method('getID')->willReturn(0);
@@ -112,7 +112,7 @@ XML;
 XML;
         $xml         = new SimpleXMLElement($xml_content);
 
-        $fieldset_01 = $this->createMock(\Tracker_FormElement_Container_Fieldset::class);
+        $fieldset_01 = $this->createMock(\Tuleap\Tracker\FormElement\Container\Fieldset\FieldsetContainer::class);
         $fieldset_01->method('getID')->willReturn(0);
 
         $mapping = [

@@ -21,6 +21,7 @@
 
 use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 use Tuleap\Tracker\Artifact\ChangesetValue\AddDefaultValuesToFieldsData;
+use Tuleap\Tracker\FormElement\Container\Fieldset\FieldsetContainer;
 use Tuleap\Tracker\FormElement\Event\ImportExternalElement;
 use Tuleap\Tracker\FormElement\Field\ArtifactId\ArtifactIdField;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkField;
@@ -141,7 +142,7 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
         self::FIELD_RANK => PriorityField::class,
     ];
     protected $group_classnames       = [
-        self::CONTAINER_FIELDSET_TYPE => Tracker_FormElement_Container_Fieldset::class,
+        self::CONTAINER_FIELDSET_TYPE => FieldsetContainer::class,
         self::CONTAINER_COLUMN_TYPE   => Tracker_FormElement_Container_Column::class,
     ];
     protected $staticfield_classnames = [
@@ -532,7 +533,7 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
     public function getFieldsetById($id)
     {
         $fieldset = $this->getFormElementById($id);
-        if (! $fieldset instanceof Tracker_FormElement_Container_Fieldset) {
+        if (! $fieldset instanceof FieldsetContainer) {
             $fieldset = null;
         }
         return $fieldset;
@@ -724,7 +725,7 @@ class Tracker_FormElementFactory implements RetrieveUsedFields, AddDefaultValues
 
     /**
      * @param Tracker $tracker
-     * @return Tracker_FormElement_Container_Fieldset[]
+     * @return FieldsetContainer[]
      */
     public function getUsedFieldsets($tracker)
     {

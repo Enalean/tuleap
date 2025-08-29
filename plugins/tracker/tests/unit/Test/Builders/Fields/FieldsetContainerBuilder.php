@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Test\Builders\Fields;
 
 use Tracker_FormElement;
-use Tracker_FormElement_Container_Fieldset;
+use Tuleap\Tracker\FormElement\Container\Fieldset\FieldsetContainer;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Tracker;
 
@@ -84,9 +84,9 @@ final class FieldsetContainerBuilder
         return $this;
     }
 
-    public function build(): Tracker_FormElement_Container_Fieldset
+    public function build(): FieldsetContainer
     {
-        $fieldset = new Tracker_FormElement_Container_Fieldset(
+        $fieldset = new FieldsetContainer(
             $this->id,
             $this->tracker->getId(),
             0,

@@ -20,8 +20,8 @@
 
 namespace Tuleap\Tracker\REST;
 
-use Tracker_FormElement_Container_Fieldset;
 use Tracker_REST_FormElementRepresentation;
+use Tuleap\Tracker\FormElement\Container\Fieldset\FieldsetContainer;
 use Tuleap\Tracker\REST\FormElement\PermissionsForGroupsRepresentation;
 
 /**
@@ -43,7 +43,7 @@ class ContainerFieldsetInArtifactContextRepresentation extends Tracker_REST_Form
     }
 
     public static function buildContainerFieldset(
-        Tracker_FormElement_Container_Fieldset $form_element,
+        FieldsetContainer $form_element,
         string $type,
         array $permissions,
         ?PermissionsForGroupsRepresentation $permissions_for_groups,

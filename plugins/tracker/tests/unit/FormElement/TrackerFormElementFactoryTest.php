@@ -25,13 +25,13 @@ namespace Tuleap\Tracker\FormElement;
 use EventManager;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use SimpleXMLElement;
-use Tracker_FormElement_Container_Fieldset;
 use Tracker_FormElementFactory;
 use Tuleap\GlobalResponseMock;
 use Tuleap\Test\Builders\ProjectTestBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestCase;
 use Tuleap\Test\Stubs\User\XML\Import\IFindUserFromXMLReferenceStub;
+use Tuleap\Tracker\FormElement\Container\Fieldset\FieldsetContainer;
 use Tuleap\Tracker\Test\Builders\Fields\FieldsetContainerBuilder;
 use Tuleap\Tracker\Test\Builders\TrackerTestBuilder;
 use Tuleap\Tracker\Tracker;
@@ -44,7 +44,7 @@ final class TrackerFormElementFactoryTest extends TestCase
     use GlobalResponseMock;
 
     private Tracker_FormElementFactory $form_element_factory;
-    private Tracker_FormElement_Container_Fieldset $form_element;
+    private FieldsetContainer $form_element;
     private IFindUserFromXMLReference $user_finder;
     private Tracker $tracker;
     private TrackerXmlImportFeedbackCollector $feedback_collector;

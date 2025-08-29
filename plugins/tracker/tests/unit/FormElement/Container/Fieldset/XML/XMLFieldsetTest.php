@@ -70,7 +70,7 @@ final class XMLFieldsetTest extends \Tuleap\Test\PHPUnit\TestCase
 
     public function testItExportTheFieldSetLabelUnModified(): void
     {
-        $fieldset     = new \Tracker_FormElement_Container_Fieldset(
+        $fieldset     = new \Tuleap\Tracker\FormElement\Container\Fieldset\FieldsetContainer(
             100,
             100,
             0,
