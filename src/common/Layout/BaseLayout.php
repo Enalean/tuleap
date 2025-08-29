@@ -30,6 +30,7 @@ use ProjectManager;
 use Response;
 use Tuleap\BuildVersion\FlavorFinderFromFilePresence;
 use Tuleap\Config\FeatureFlagConfigKey;
+use Tuleap\ContentSecurityPolicy\CSPNonce;
 use Tuleap\Glyph\GlyphFinder;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
@@ -114,11 +115,7 @@ abstract class BaseLayout extends Response
      */
     protected array $javascript_assets = [];
 
-    /**
-     * @var string
-     * @psalm-readonly
-     */
-    private $csp_nonce = '';
+    private readonly CSPNonce $csp_nonce;
 
     public function __construct($root)
     {
@@ -135,7 +132,7 @@ abstract class BaseLayout extends Response
 
         $this->css_assets = new CssAssetCollection([]);
 
-        $this->csp_nonce = sodium_bin2base64(random_bytes(32), SODIUM_BASE64_VARIANT_URLSAFE_NO_PADDING);
+        $this->csp_nonce = CSPNonce::build();
     }
 
     abstract public function header(HeaderConfiguration|array $params): void;
@@ -458,8 +455,8 @@ abstract class BaseLayout extends Response
         );
     }
 
-    final public function getCSPNonce(): string
+    public function getCSPNonce(): string
     {
-        return $this->csp_nonce;
+        return $this->csp_nonce->value;
     }
 }
