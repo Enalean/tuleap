@@ -53,6 +53,9 @@ dependencies:
   '@tuleap/tlp':
     specifier: workspace:*
     version: link:../../../../../src/scripts/tlp
+  '@tuleap/tlp-date-picker':
+    specifier: workspace:^
+    version: link:../../../../../lib/frontend/tlp-date-picker
   '@tuleap/tlp-fetch':
     specifier: workspace:*
     version: link:../../../../../lib/frontend/tlp-fetch
