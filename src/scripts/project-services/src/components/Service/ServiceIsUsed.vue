@@ -25,24 +25,25 @@
                 type="checkbox"
                 name="is_used"
                 value="1"
-                v-bind:checked="value"
-                v-bind:disabled="value === false && disabledReason !== ''"
+                v-bind:checked="is_used"
+                v-bind:disabled="!is_used && is_disabled_reason !== ''"
                 data-test="service-is-used"
             />
             {{ $gettext("Enabled") }}
         </label>
         <div
-            v-if="value === false && disabledReason !== ''"
+            v-if="!is_used && is_disabled_reason !== ''"
             class="tlp-text-info"
             data-test="service-disabled-message"
         >
-            {{ disabledReason }}
+            {{ is_disabled_reason }}
         </div>
     </div>
 </template>
-<script>
-export default {
-    name: "ServiceIsUsed",
-    props: ["id", "value", "disabledReason"],
-};
+<script setup lang="ts">
+defineProps<{
+    id: string;
+    is_used: boolean;
+    is_disabled_reason: string;
+}>();
 </script>

@@ -31,9 +31,9 @@ describe(`ServiceIsUsed`, () => {
 
     const getWrapper = () => {
         const props = {
-            id: 138,
-            value: service_is_used,
-            disabledReason: service_activation_disabled_message,
+            id: "project-service-example",
+            is_used: service_is_used,
+            is_disabled_reason: service_activation_disabled_message,
         };
 
         return shallowMount(ServiceIsUsed, {
