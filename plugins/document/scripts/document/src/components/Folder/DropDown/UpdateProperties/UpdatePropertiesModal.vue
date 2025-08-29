@@ -72,9 +72,10 @@ import emitter from "../../../../helpers/emitter";
 import type { Item, Property, RootState } from "../../../../type";
 import { computed, onBeforeMount, onBeforeUnmount, onMounted, ref, toRaw } from "vue";
 import { useNamespacedState, useState, useStore } from "vuex-composition-helpers";
-import type { ConfigurationState } from "../../../../store/configuration";
 import type { ErrorState } from "../../../../store/error/module";
 import { useGettext } from "vue3-gettext";
+import { IS_STATUS_PROPERTY_USED } from "../../../../configuration-keys";
+import { strictInject } from "@tuleap/vue-strict-inject";
 
 const { $gettext } = useGettext();
 const $store = useStore();
@@ -94,9 +95,7 @@ const formatted_item_properties = ref<Array<Property>>([]);
 const form = ref<HTMLFormElement>();
 
 const { current_folder } = useState<Pick<RootState, "current_folder">>(["current_folder"]);
-const { is_status_property_used } = useNamespacedState<
-    Pick<ConfigurationState, "is_status_property_used">
->("configuration", ["is_status_property_used"]);
+const is_status_property_used = strictInject(IS_STATUS_PROPERTY_USED);
 const { has_modal_error, has_global_modal_error } = useNamespacedState<
     Pick<ErrorState, "has_modal_error" | "has_global_modal_error">
 >("error", ["has_modal_error", "has_global_modal_error"]);
@@ -118,7 +117,7 @@ const obsolescence_date_value = computed(() => {
 });
 
 onBeforeMount(() => {
-    transformDocumentPropertiesForUpdate(item_to_update.value, is_status_property_used.value);
+    transformDocumentPropertiesForUpdate(item_to_update.value, is_status_property_used);
 });
 
 onMounted(() => {

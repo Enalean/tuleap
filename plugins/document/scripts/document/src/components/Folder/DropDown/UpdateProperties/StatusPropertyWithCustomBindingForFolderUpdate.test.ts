@@ -21,8 +21,8 @@ import { describe, expect, it } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import StatusPropertyWithCustomBindingForFolderUpdate from "./StatusPropertyWithCustomBindingForFolderUpdate.vue";
-import type { ConfigurationState } from "../../../../store/configuration";
 import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
+import { IS_STATUS_PROPERTY_USED } from "../../../../configuration-keys";
 
 describe("StatusPropertyWithCustomBindingForFolderUpdate", () => {
     function createWrapper(
@@ -31,16 +31,10 @@ describe("StatusPropertyWithCustomBindingForFolderUpdate", () => {
         return shallowMount(StatusPropertyWithCustomBindingForFolderUpdate, {
             props: { status_value: "none" },
             global: {
-                ...getGlobalTestOptions({
-                    modules: {
-                        configuration: {
-                            state: {
-                                is_status_property_used,
-                            } as unknown as ConfigurationState,
-                            namespaced: true,
-                        },
-                    },
-                }),
+                ...getGlobalTestOptions({}),
+                provide: {
+                    [IS_STATUS_PROPERTY_USED.valueOf()]: is_status_property_used,
+                },
             },
         });
     }

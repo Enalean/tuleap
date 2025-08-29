@@ -28,6 +28,8 @@ import { getGlobalTestOptions } from "../../../../helpers/global-options-for-tes
 import type { ErrorState } from "../../../../store/error/module";
 import { TYPE_FILE } from "../../../../constants";
 import { buildFakeItem } from "../../../../helpers/item-builder";
+import { IS_STATUS_PROPERTY_USED } from "../../../../configuration-keys";
+import type { ConfigurationState } from "../../../../store/configuration";
 
 describe("FileCreationModal", () => {
     const add_event_listener = vi.fn();
@@ -59,9 +61,8 @@ describe("FileCreationModal", () => {
                         },
                         configuration: {
                             state: {
-                                is_status_property_used: false,
                                 filename_pattern: "",
-                            } as unknown as ErrorState,
+                            } as unknown as ConfigurationState,
                             namespaced: true,
                         },
                     },
@@ -72,6 +73,9 @@ describe("FileCreationModal", () => {
                         createNewItem: create_new_item,
                     },
                 }),
+                provide: {
+                    [IS_STATUS_PROPERTY_USED.valueOf()]: false,
+                },
             },
         });
     }

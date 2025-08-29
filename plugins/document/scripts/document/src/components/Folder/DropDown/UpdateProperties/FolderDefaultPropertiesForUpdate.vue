@@ -98,11 +98,10 @@ import emitter from "../../../../helpers/emitter";
 import type { Item, Property } from "../../../../type";
 import { computed, onMounted, ref } from "vue";
 import { useNamespacedActions, useNamespacedState } from "vuex-composition-helpers";
-import type { ConfigurationState } from "../../../../store/configuration";
 import type { PropertiesState } from "../../../../store/properties/module";
 import type { PropertiesActions } from "../../../../store/properties/properties-actions";
 import { strictInject } from "@tuleap/vue-strict-inject";
-import { PROJECT_ID } from "../../../../configuration-keys";
+import { IS_STATUS_PROPERTY_USED, PROJECT_ID } from "../../../../configuration-keys";
 
 const props = defineProps<{
     itemProperty: Array<Property>;
@@ -116,10 +115,7 @@ let properties_to_update = ref(list_of_properties_to_update);
 let status_input = ref<InstanceType<typeof HTMLInputElement>>();
 
 const project_id = strictInject(PROJECT_ID);
-
-const { is_status_property_used } = useNamespacedState<
-    Pick<ConfigurationState, "is_status_property_used">
->("configuration", ["is_status_property_used"]);
+const is_status_property_used = strictInject(IS_STATUS_PROPERTY_USED);
 
 const { has_loaded_properties } = useNamespacedState<
     Pick<PropertiesState, "has_loaded_properties">
@@ -130,7 +126,7 @@ const { loadProjectProperties } = useNamespacedActions<PropertiesActions>("prope
 ]);
 
 const has_recursion_property = computed((): boolean => {
-    return is_status_property_used.value || props.itemProperty.length > 0;
+    return is_status_property_used || props.itemProperty.length > 0;
 });
 
 onMounted((): void => {
@@ -146,7 +142,7 @@ function updatePropertiesWithRecursion(): void {
 }
 
 function updateStatusRecursion(): void {
-    if (!is_status_property_used.value) {
+    if (!is_status_property_used) {
         return;
     }
 
@@ -163,7 +159,7 @@ function updateRecursionOption(event: string): void {
         props.itemProperty.forEach((property) => {
             return properties_to_update.value.push(property.short_name);
         });
-        if (is_status_property_used.value && status_input.value) {
+        if (is_status_property_used && status_input.value) {
             properties_to_update.value.push("status");
             status_input.value.checked = true;
         }

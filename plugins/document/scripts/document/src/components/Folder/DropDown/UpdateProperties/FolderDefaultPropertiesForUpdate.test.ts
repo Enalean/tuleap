@@ -24,10 +24,9 @@ import { shallowMount } from "@vue/test-utils";
 import FolderDefaultPropertiesForUpdate from "./FolderDefaultPropertiesForUpdate.vue";
 import { TYPE_FOLDER } from "../../../../constants";
 import type { Folder, Property, ListValue } from "../../../../type";
-import type { ConfigurationState } from "../../../../store/configuration";
 import type { PropertiesState } from "../../../../store/properties/module";
 import emitter from "../../../../helpers/emitter";
-import { PROJECT_ID } from "../../../../configuration-keys";
+import { IS_STATUS_PROPERTY_USED, PROJECT_ID } from "../../../../configuration-keys";
 
 vi.mock("tlp", () => {
     return { datePicker: vi.fn() };
@@ -56,12 +55,6 @@ describe("FolderDefaultPropertiesForUpdate", () => {
             global: {
                 ...getGlobalTestOptions({
                     modules: {
-                        configuration: {
-                            state: {
-                                is_status_property_used,
-                            } as unknown as ConfigurationState,
-                            namespaced: true,
-                        },
                         properties: {
                             state: {
                                 has_loaded_properties,
@@ -75,6 +68,7 @@ describe("FolderDefaultPropertiesForUpdate", () => {
                 }),
                 provide: {
                     [PROJECT_ID.valueOf()]: 101,
+                    [IS_STATUS_PROPERTY_USED.valueOf()]: is_status_property_used,
                 },
             },
         });

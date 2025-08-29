@@ -51,6 +51,8 @@ import { isEmbedded } from "../../helpers/type-check-helper";
 import { getEmbeddedFileVersionContent } from "../../api/version-rest-querier";
 import type { ItemHasJustBeenUpdatedEvent } from "../../helpers/emitter";
 import emitter from "../../helpers/emitter";
+import { strictInject } from "@tuleap/vue-strict-inject";
+import { PROJECT_ID, USER_ID } from "../../configuration-keys";
 
 const props = withDefaults(defineProps<{ item_id: number; version_id?: number | null }>(), {
     version_id: null,
@@ -61,6 +63,9 @@ const embedded_content = ref("");
 const is_loading = ref(false);
 const is_loading_specific_version_in_error = ref(false);
 const specific_version_number = ref<number | null>(null);
+
+const user_id = strictInject(USER_ID);
+const project_id = strictInject(PROJECT_ID);
 
 const { does_document_have_any_error } = useNamespacedGetters<
     Pick<ErrorGetters, "does_document_have_any_error">
@@ -123,7 +128,11 @@ onBeforeMount(async () => {
     embedded_file.value = item;
 
     updateCurrentlyPreviewedItem(embedded_file.value);
-    const preference = await getEmbeddedFileDisplayPreference(embedded_file.value);
+    const preference = await getEmbeddedFileDisplayPreference({
+        item: embedded_file.value,
+        user_id,
+        project_id,
+    });
     shouldDisplayEmbeddedInLargeMode(!preference);
     loadContent();
     emitter.on("item-has-just-been-updated", updateDisplayedContent);

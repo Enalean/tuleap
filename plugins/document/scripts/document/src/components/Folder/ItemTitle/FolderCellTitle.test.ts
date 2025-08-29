@@ -26,6 +26,7 @@ import type { Folder, RootState } from "../../../type";
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 import * as router from "../../../helpers/use-router";
 import type { Router } from "vue-router";
+import { PROJECT_ID, USER_ID } from "../../../configuration-keys";
 
 vi.useFakeTimers();
 
@@ -93,6 +94,10 @@ describe("FolderCellTitle", () => {
                     },
                 }),
                 stubs: ["router-link", "router-view"],
+                provide: {
+                    [USER_ID.valueOf()]: 254,
+                    [PROJECT_ID.valueOf()]: 101,
+                },
             },
         });
     }
@@ -146,6 +151,8 @@ describe("FolderCellTitle", () => {
             expect(set_user_preferences).toHaveBeenCalledWith(expect.anything(), {
                 folder_id: item.id,
                 should_be_closed: false,
+                user_id: 254,
+                project_id: 101,
             });
         });
 
@@ -163,6 +170,8 @@ describe("FolderCellTitle", () => {
             expect(set_user_preferences).toHaveBeenCalledWith(expect.anything(), {
                 folder_id: item.id,
                 should_be_closed: true,
+                user_id: 254,
+                project_id: 101,
             });
         });
 
@@ -198,6 +207,8 @@ describe("FolderCellTitle", () => {
             expect(set_user_preferences).toHaveBeenCalledWith(expect.anything(), {
                 folder_id: item.id,
                 should_be_closed: true,
+                user_id: 254,
+                project_id: 101,
             });
         });
     });

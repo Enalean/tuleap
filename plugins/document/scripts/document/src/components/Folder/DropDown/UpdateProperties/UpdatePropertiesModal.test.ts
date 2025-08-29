@@ -27,6 +27,7 @@ import UpdatePropertiesModal from "./UpdatePropertiesModal.vue";
 import * as tlp_modal from "@tuleap/tlp-modal";
 import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
 import type { Item } from "../../../../type";
+import { IS_STATUS_PROPERTY_USED } from "../../../../configuration-keys";
 
 vi.mock("@tuleap/autocomplete-for-select2", () => {
     return { autocomplete_users_for_select2: vi.fn() };
@@ -44,8 +45,6 @@ describe("UpdatePropertiesModal", () => {
                         modules: {
                             configuration: {
                                 state: {
-                                    project_id: 102,
-                                    is_status_property_used: true,
                                     has_loaded_properties,
                                 },
                                 namespaced: true,
@@ -82,6 +81,9 @@ describe("UpdatePropertiesModal", () => {
                             },
                         },
                     }),
+                    provide: {
+                        [IS_STATUS_PROPERTY_USED.valueOf()]: true,
+                    },
                 },
             });
         };
