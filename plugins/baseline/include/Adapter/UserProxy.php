@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\Adapter;
 
+use Override;
 use Tuleap\Baseline\Domain\UserIdentifier;
 
 class UserProxy implements UserIdentifier
@@ -35,6 +36,7 @@ class UserProxy implements UserIdentifier
         return new self($user);
     }
 
+    #[Override]
     public function getId(): int
     {
         return (int) $this->user->getId();

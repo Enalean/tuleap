@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\Adapter;
 
+use Override;
 use PFUser;
 use Tuleap\Baseline\Domain\Authorizations;
 use Tuleap\Baseline\Domain\Baseline;
@@ -44,11 +45,13 @@ class AuthorizationsImpl implements Authorizations
     ) {
     }
 
+    #[Override]
     public function canCreateBaseline(UserIdentifier $current_user, TransientBaseline $baseline): bool
     {
         return $this->canUserAdministrateBaselineOnProject($current_user, $baseline->getProject());
     }
 
+    #[Override]
     public function canDeleteBaseline(UserIdentifier $current_user, Baseline $baseline): bool
     {
         return $this->canUserAdministrateBaselineOnProject($current_user, $baseline->getProject());
@@ -64,11 +67,13 @@ class AuthorizationsImpl implements Authorizations
         return $user;
     }
 
+    #[Override]
     public function canReadBaseline(UserIdentifier $current_user, Baseline $baseline): bool
     {
         return $this->canReadBaselinesOnProject($current_user, $baseline->getProject());
     }
 
+    #[Override]
     public function canReadBaselinesOnProject(UserIdentifier $current_user, ProjectIdentifier $project): bool
     {
         $user = $this->getUserFromIdentifier($current_user);
@@ -80,6 +85,7 @@ class AuthorizationsImpl implements Authorizations
             || $this->hasUserRoleOnProject($user, new RoleBaselineReader(), $project);
     }
 
+    #[Override]
     public function canUserAdministrateBaselineOnProject(UserIdentifier $current_user, ProjectIdentifier $project): bool
     {
         $user = $this->getUserFromIdentifier($current_user);
@@ -107,21 +113,25 @@ class AuthorizationsImpl implements Authorizations
         return $user->isSuperUser() || $user->isAdmin($project->getID());
     }
 
+    #[Override]
     public function canCreateComparison(UserIdentifier $current_user, TransientComparison $comparison): bool
     {
         return $this->canUserAdministrateBaselineOnProject($current_user, $comparison->getProject());
     }
 
+    #[Override]
     public function canDeleteComparison(UserIdentifier $current_user, Comparison $comparison): bool
     {
         return $this->canUserAdministrateBaselineOnProject($current_user, $comparison->getProject());
     }
 
+    #[Override]
     public function canReadComparison(UserIdentifier $current_user, Comparison $comparison): bool
     {
         return $this->canReadComparisonsOnProject($current_user, $comparison->getProject());
     }
 
+    #[Override]
     public function canReadComparisonsOnProject(UserIdentifier $current_user, ProjectIdentifier $project): bool
     {
         return $this->canReadBaselinesOnProject($current_user, $project);

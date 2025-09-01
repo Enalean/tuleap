@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\Adapter\Administration;
 
+use Override;
 use Tuleap\Baseline\Adapter\UserGroupProxy;
 use Tuleap\Baseline\Domain\RetrieveBaselineUserGroup;
 use Tuleap\Baseline\Domain\UserGroupDoesNotExistOrBelongToCurrentBaselineProjectException;
@@ -38,6 +39,7 @@ final class BaselineUserGroupRetriever implements RetrieveBaselineUserGroup
     ) {
     }
 
+    #[Override]
     public function retrieveUserGroupFromBaselineProjectAndId(ProjectIdentifier $project_identifier, int $ugroup_id): BaselineUserGroup
     {
         $user_group = $this->group_retriever->getUGroup(

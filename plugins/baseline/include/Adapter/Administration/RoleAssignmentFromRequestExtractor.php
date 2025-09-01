@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\Adapter\Administration;
 
+use Override;
 use Psr\Http\Message\ServerRequestInterface;
 use Tuleap\Baseline\Domain\RoleAssignmentsToUpdate;
 
@@ -48,6 +49,7 @@ final class RoleAssignmentFromRequestExtractor implements RoleAssignmentsToUpdat
     /**
      * @return int[]
      */
+    #[Override]
     public function getBaselineAdministratorsUserGroupsIds(): array
     {
         return $this->baseline_administrators_user_groups_ids;
@@ -56,6 +58,7 @@ final class RoleAssignmentFromRequestExtractor implements RoleAssignmentsToUpdat
     /**
      * @return int[]
      */
+    #[Override]
     public function getBaselineReadersUserGroupsIds(): array
     {
         return $this->baseline_readers_user_groups_ids;

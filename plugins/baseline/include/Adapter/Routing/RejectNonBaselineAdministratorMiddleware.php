@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\Adapter\Routing;
 
+use Override;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -44,6 +45,7 @@ class RejectNonBaselineAdministratorMiddleware implements \Psr\Http\Server\Middl
     /**
      * @throws ForbiddenException
      */
+    #[Override]
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $project = $request->getAttribute(\Project::class);

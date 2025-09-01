@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Baseline;
 
 use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
+use Override;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -52,6 +53,7 @@ class ServiceAdministrationController extends DispatchablePSR15Compatible implem
         parent::__construct($emitter, ...$middleware_stack);
     }
 
+    #[Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $project = $request->getAttribute(\Project::class);

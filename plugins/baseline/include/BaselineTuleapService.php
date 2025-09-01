@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline;
 
+use Override;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
@@ -32,16 +33,19 @@ use Tuleap\Layout\BreadCrumbDropdown\SubItemsUnlabelledSection;
 
 class BaselineTuleapService extends \Service
 {
+    #[Override]
     public function getIconName(): string
     {
         return 'fas fa-tlp-baseline';
     }
 
+    #[Override]
     public function getUrl(?string $url = null): string
     {
         return '/plugins/baseline/' . urlencode($this->project->getUnixNameLowerCase());
     }
 
+    #[Override]
     public function urlCanChange(): bool
     {
         return false;

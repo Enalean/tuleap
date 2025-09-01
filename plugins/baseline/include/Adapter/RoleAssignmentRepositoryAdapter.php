@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\Adapter;
 
+use Override;
 use ParagonIE\EasyDB\EasyDB;
 use Tuleap\Baseline\Domain\BaselineUserGroup;
 use Tuleap\Baseline\Domain\ProjectIdentifier;
@@ -41,6 +42,7 @@ class RoleAssignmentRepositoryAdapter implements RoleAssignmentRepository
     /**
      * @return RoleAssignment[]
      */
+    #[Override]
     public function findByProjectAndRole(ProjectIdentifier $project, Role $role): array
     {
         $user_groups_ids = $this->db->column(
@@ -59,6 +61,7 @@ class RoleAssignmentRepositoryAdapter implements RoleAssignmentRepository
         );
     }
 
+    #[Override]
     public function saveAssignmentsForProject(RoleAssignmentsUpdate $role_assignments_update): void
     {
         $insertions = [];
@@ -80,6 +83,7 @@ class RoleAssignmentRepositoryAdapter implements RoleAssignmentRepository
         );
     }
 
+    #[Override]
     public function deleteUgroupAssignments(
         ProjectIdentifier $project,
         BaselineUserGroup $baseline_user_group,

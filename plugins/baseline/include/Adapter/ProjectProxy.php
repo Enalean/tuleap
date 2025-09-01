@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\Adapter;
 
+use Override;
 use Tuleap\Baseline\Domain\ProjectIdentifier;
 
 /**
@@ -42,6 +43,7 @@ final class ProjectProxy implements ProjectIdentifier
         );
     }
 
+    #[Override]
     public function getID(): int
     {
         return $this->project_id;

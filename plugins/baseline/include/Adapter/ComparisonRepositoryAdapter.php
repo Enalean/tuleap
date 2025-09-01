@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\Adapter;
 
+use Override;
 use ParagonIE\EasyDB\EasyDB;
 use Tuleap\Baseline\Domain\Authorizations;
 use Tuleap\Baseline\Domain\Baseline;
@@ -68,6 +69,7 @@ class ComparisonRepositoryAdapter implements ComparisonRepository
     /**
      * Note: Authorizations may have been checked earlier
      */
+    #[Override]
     public function add(TransientComparison $comparison, UserIdentifier $current_user): Comparison
     {
         $creation_date = $this->clock->now();
@@ -95,6 +97,7 @@ class ComparisonRepositoryAdapter implements ComparisonRepository
         );
     }
 
+    #[Override]
     public function findById(UserIdentifier $current_user, int $id): ?Comparison
     {
         $rows = $this->db->safeQuery(
@@ -122,6 +125,7 @@ class ComparisonRepositoryAdapter implements ComparisonRepository
     /**
      * Note: Authorizations may have been checked earlier
      */
+    #[Override]
     public function delete(Comparison $comparison, UserIdentifier $current_user): void
     {
         $this->db->delete('plugin_baseline_comparison', ['id' => $comparison->getId()]);
@@ -131,6 +135,7 @@ class ComparisonRepositoryAdapter implements ComparisonRepository
      * Note: Authorizations may have been checked earlier
      * @return Comparison[]
      */
+    #[Override]
     public function findByProject(UserIdentifier $current_user, ProjectIdentifier $project, int $page_size, int $comparison_offset): array
     {
         $rows = $this->db->safeQuery(
@@ -169,6 +174,7 @@ class ComparisonRepositoryAdapter implements ComparisonRepository
     /**
      * Note: Authorizations may have been check earlier
      */
+    #[Override]
     public function countByProject(ProjectIdentifier $project): int
     {
         return $this->db->single(
@@ -216,6 +222,7 @@ class ComparisonRepositoryAdapter implements ComparisonRepository
         );
     }
 
+    #[Override]
     public function countByBaseline(Baseline $baseline): int
     {
         return $this->db->single(

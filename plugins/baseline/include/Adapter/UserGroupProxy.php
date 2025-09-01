@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Baseline\Adapter;
 
+use Override;
 use ProjectUGroup;
 use Tuleap\Baseline\Domain\BaselineUserGroup;
 
@@ -38,11 +39,13 @@ final class UserGroupProxy implements BaselineUserGroup
         return new self($project_ugroup->getId(), $project_ugroup->getName());
     }
 
+    #[Override]
     public function getId(): int
     {
         return $this->id;
     }
 
+    #[Override]
     public function getName(): string
     {
         return $this->name;
