@@ -37,59 +37,59 @@
         </template>
     </edit-modal>
 </template>
-<script>
+<script setup lang="ts">
+import { computed, ref } from "vue";
 import { strictInject } from "@tuleap/vue-strict-inject";
+import type { Service } from "../type";
 import { CSRF_TOKEN, MINIMAL_RANK, PROJECT_ID } from "../injection-symbols";
 import InEditionCustomService from "./Service/InEditionCustomService.vue";
 import SidebarPreviewer from "./SidebarPreviewer.vue";
 import EditModal from "./EditModal.vue";
 import ReadOnlySystemService from "./Service/ReadOnlySystemService.vue";
 
-export default {
-    name: "BaseProjectAdminEditModal",
-    components: { ReadOnlySystemService, EditModal, InEditionCustomService, SidebarPreviewer },
-    setup() {
-        const project_id = strictInject(PROJECT_ID);
-        const minimal_rank = strictInject(MINIMAL_RANK);
-        const csrf_token = strictInject(CSRF_TOKEN);
-        return { project_id, minimal_rank, csrf_token };
-    },
-    data() {
-        return {
-            is_shown: false,
-            service: this.resetService(),
-        };
-    },
-    computed: {
-        form_url() {
-            return `/project/${encodeURIComponent(this.project_id)}/admin/services/edit`;
-        },
-    },
-    methods: {
-        show(button) {
-            this.is_shown = true;
-            this.service = JSON.parse(button.dataset.serviceJson);
-            this.$refs.modal.show();
-        },
-        resetModal() {
-            this.is_shown = false;
-            this.service = this.resetService();
-        },
-        resetService() {
-            return {
-                id: null,
-                icon_name: "",
-                label: "",
-                link: "",
-                description: "",
-                is_active: true,
-                is_used: true,
-                is_in_iframe: false,
-                is_in_new_tab: false,
-                rank: this.minimal_rank,
-                is_project_scope: true,
-            };
-        },
-    },
-};
+const project_id = strictInject(PROJECT_ID);
+const minimal_rank = strictInject(MINIMAL_RANK);
+const csrf_token = strictInject(CSRF_TOKEN);
+
+const is_shown = ref(false);
+const service = ref(resetService());
+const modal = ref<typeof EditModal>();
+
+const form_url = computed(() => `/project/${encodeURIComponent(project_id)}/admin/services/edit`);
+
+function show(button: HTMLButtonElement) {
+    if (button.dataset.serviceJson === undefined) {
+        return;
+    }
+
+    is_shown.value = true;
+    service.value = JSON.parse(button.dataset.serviceJson);
+    modal.value?.show();
+}
+
+function resetModal() {
+    is_shown.value = false;
+    service.value = resetService();
+}
+
+function resetService(): Service {
+    return {
+        id: null,
+        icon_name: "",
+        label: "",
+        link: "",
+        description: "",
+        is_active: true,
+        is_used: true,
+        is_in_iframe: false,
+        is_in_new_tab: false,
+        rank: minimal_rank,
+        is_project_scope: true,
+        short_name: "",
+        is_disabled_reason: "",
+        is_link_customizable: false,
+    };
+}
+
+defineExpose({ show });
 </script>
