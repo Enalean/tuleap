@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\CrossTracker\Query\Advanced\ResultBuilder;
 
 use PFUser;
+use Tuleap\Option\Option;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\VisitorParameters;
 use Tuleap\Tracker\Tracker;
 
@@ -35,6 +36,7 @@ final readonly class ResultBuilderVisitorParameters implements VisitorParameters
         public array $trackers,
         public PFUser $user,
         public array $select_results,
+        public Option $direction,
     ) {
     }
 }

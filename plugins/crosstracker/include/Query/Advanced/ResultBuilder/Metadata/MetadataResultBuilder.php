@@ -37,6 +37,7 @@ use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Metadata\Special\ProjectNam
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Metadata\Special\TrackerName\TrackerNameResultBuilder;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Metadata\User\MetadataUserResultBuilder;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\SelectedValuesCollection;
+use Tuleap\Option\Option;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 
 final readonly class MetadataResultBuilder
@@ -61,6 +62,7 @@ final readonly class MetadataResultBuilder
         Metadata $metadata,
         array $select_results,
         PFUser $user,
+        Option $direction,
     ): SelectedValuesCollection {
         return match ($metadata->getName()) {
             // Semantics
@@ -80,7 +82,7 @@ final readonly class MetadataResultBuilder
             AllowedMetadata::PROJECT_NAME     => $this->project_name_builder->getResult($select_results),
             AllowedMetadata::TRACKER_NAME     => $this->tracker_name_builder->getResult($select_results),
             AllowedMetadata::PRETTY_TITLE     => $this->pretty_title_builder->getResult($select_results, $user),
-            AllowedMetadata::LINK_TYPE        => $this->link_type_builder->getResult($select_results),
+            AllowedMetadata::LINK_TYPE        => $this->link_type_builder->getResult($select_results, $direction),
 
             '@artifact'                       => $this->artifact_builder->getResult($select_results, $user),
             default                           => throw new LogicException("Unknown metadata type: {$metadata->getName()}"),

@@ -34,9 +34,12 @@ final readonly class ForwardLinkTypeSelectFromBuilder implements BuildLinkTypeSe
     public function getSelectFrom(Option $artifact_id, array $artifact_ids): IProvideParametrizedSelectAndFromAndWhereSQLFragments
     {
         $select =  <<<EOSQL
-        IFNULL(forward_artlink.nature, '') AS '@link_type', forward_artlink.artifact_id AS forward_art_id
+        IFNULL(forward_artlink.nature, '') AS '@link_type',
+        IFNULL(nature.forward_label, '') AS 'forward',
+        forward_artlink.artifact_id AS forward_art_id
         EOSQL;
         $from   = <<<EOSQL
+
         LEFT JOIN tracker_artifact AS source ON (source.id = ?)
         LEFT JOIN tracker_changeset AS source_changeset ON (source_changeset.id = source.last_changeset_id)
         LEFT JOIN tracker_changeset_value AS cv ON (cv.changeset_id = source_changeset.id)
@@ -44,6 +47,7 @@ final readonly class ForwardLinkTypeSelectFromBuilder implements BuildLinkTypeSe
             forward_artlink.changeset_value_id = cv.id AND
             forward_artlink.artifact_id = artifact.id
         )
+        LEFT JOIN plugin_tracker_artifactlink_natures AS nature ON (forward_artlink.nature = nature.shortname)
         EOSQL;
 
         return $artifact_id->match(

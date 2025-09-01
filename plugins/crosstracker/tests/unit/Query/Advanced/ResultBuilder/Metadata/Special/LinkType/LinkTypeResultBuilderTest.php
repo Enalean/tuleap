@@ -22,10 +22,14 @@
 namespace Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Metadata\Special\LinkType;
 
 use PHPUnit\Framework\TestCase;
-use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Representations\TextResultRepresentation;
+use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Representations\ArtifactLinkTypeRepresentation;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\SelectedValue;
+use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\Type\TypePresenter;
+use Tuleap\Tracker\REST\v1\TrackerFieldRepresentations\LinkTypeRepresentation;
 use Tuleap\Tracker\Test\Builders\ArtifactTestBuilder;
+use Tuleap\Tracker\Test\Stub\FormElement\Field\ArtifactLink\Type\RetrieveSystemTypePresenterStub;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class LinkTypeResultBuilderTest extends TestCase
@@ -38,18 +42,54 @@ final class LinkTypeResultBuilderTest extends TestCase
         $this->artifact = ArtifactTestBuilder::anArtifact(223)->withTitle('My artifact')->build();
     }
 
-    public function testItBuildALinkedTypeRepresentationBasedTextRepresentation(): void
-    {
+    #[\PHPUnit\Framework\Attributes\DataProvider('dataProviderReverseAndForwardDirection')]
+    public function testItBuildALinkedTypeRepresentationBasedArtifactLinkRepresentation(
+        string $direction,
+        string $label,
+        string $link_type,
+    ): void {
         $select_results = [
-            ['id' => $this->artifact->getId(), '@link_type' => '_is_child'],
+            ['id' => $this->artifact->getId(), '@link_type' => $link_type, $direction => $label],
         ];
 
-        $link_type_builder = new LinkTypeResultBuilder();
+        $link_type_builder = new LinkTypeResultBuilder(RetrieveSystemTypePresenterStub::build());
         $result            = $link_type_builder->getResult(
             $select_results,
+            Option::fromValue($direction)
         );
 
-        $expected = new SelectedValue('@link_type', new TextResultRepresentation('_is_child'));
+        $link_type_representation = new LinkTypeRepresentation($link_type, $direction, $label, 'artifacts/' . $this->artifact->getId() . '/linked_artifacts?nature=' . $link_type . '&direction=' . $direction);
+
+        $expected = new SelectedValue('@link_type', ArtifactLinkTypeRepresentation::build($link_type_representation));
+        self::assertEqualsCanonicalizing($expected, $result->values[$this->artifact->getId()]);
+    }
+
+    public static function dataProviderReverseAndForwardDirection(): array
+    {
+        return [
+            'forward _is_child' => [TypePresenter::FORWARD_LABEL, 'Child', '_is_child'],
+            'reverse _is_child' => [TypePresenter::REVERSE_LABEL, 'Parent', '_is_child'],
+            'forward custom' => [TypePresenter::FORWARD_LABEL, 'Is custom', 'custom'],
+            'reverse custom' => [TypePresenter::REVERSE_LABEL, 'From custom', 'custom'],
+        ];
+    }
+
+    public function testItBuildALinkedTypeRepresentationWhenLinkIsNotTyped(): void
+    {
+        $direction      = TypePresenter::REVERSE_LABEL;
+        $select_results = [
+            ['id' => $this->artifact->getId(), '@link_type' => '', $direction => ''],
+        ];
+
+        $link_type_builder = new LinkTypeResultBuilder(RetrieveSystemTypePresenterStub::build());
+        $result            = $link_type_builder->getResult(
+            $select_results,
+            Option::fromValue($direction)
+        );
+
+        $link_type_representation = new LinkTypeRepresentation('', '', '', '');
+
+        $expected = new SelectedValue('@link_type', ArtifactLinkTypeRepresentation::build($link_type_representation));
         self::assertEqualsCanonicalizing($expected, $result->values[$this->artifact->getId()]);
     }
 }

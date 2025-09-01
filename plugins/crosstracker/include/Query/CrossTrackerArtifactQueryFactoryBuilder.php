@@ -338,6 +338,7 @@ final class CrossTrackerArtifactQueryFactoryBuilder
         $user_helper               = UserHelper::instance();
         $tracker_factory           = TrackerFactory::instance();
         $semantic_title_retriever  = CachedSemanticTitleFieldRetriever::instance();
+        $event_manager             = EventManager::instance();
         $result_builder_visitor    = new ResultBuilderVisitor(
             new FieldResultBuilder(
                 $retrieve_field_type,
@@ -360,11 +361,11 @@ final class CrossTrackerArtifactQueryFactoryBuilder
                 new ProjectNameResultBuilder(),
                 new TrackerNameResultBuilder(),
                 new PrettyTitleResultBuilder($tracker_artifact_factory, $semantic_title_retriever),
-                new LinkTypeResultBuilder(),
+                new LinkTypeResultBuilder(new SystemTypePresenterBuilder($event_manager)),
                 new ArtifactResultBuilder(
                     $tracker_artifact_factory,
                     new TrackersListAllowedByPlugins(
-                        EventManager::instance(),
+                        $event_manager,
                         $tracker_factory
                     )
                 ),

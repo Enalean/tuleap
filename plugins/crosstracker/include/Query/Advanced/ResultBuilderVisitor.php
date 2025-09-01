@@ -27,6 +27,7 @@ use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Field\FieldResultBuilder;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\Metadata\MetadataResultBuilder;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\ResultBuilderVisitorParameters;
 use Tuleap\CrossTracker\Query\Advanced\ResultBuilder\SelectedValuesCollection;
+use Tuleap\Option\Option;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Field;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Selectable;
@@ -54,9 +55,10 @@ final readonly class ResultBuilderVisitor implements SelectableVisitor
         array $trackers,
         PFUser $user,
         array $select_results,
+        Option $direction,
     ): array {
         return array_map(
-            fn(Selectable $select) => $select->acceptSelectableVisitor($this, new ResultBuilderVisitorParameters($trackers, $user, $select_results)),
+            fn(Selectable $select) => $select->acceptSelectableVisitor($this, new ResultBuilderVisitorParameters($trackers, $user, $select_results, $direction)),
             array_unique($selects, SORT_REGULAR)
         );
     }
@@ -77,6 +79,7 @@ final readonly class ResultBuilderVisitor implements SelectableVisitor
             $metadata,
             $parameters->select_results,
             $parameters->user,
+            $parameters->direction,
         );
     }
 }
