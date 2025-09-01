@@ -19,7 +19,7 @@
   -->
 
 <template>
-    <a v-bind:href="task.html_url" class="roadmap-gantt-task-header-link" v-bind:class="link_class">
+    <a v-bind:href="artifact_url" class="roadmap-gantt-task-header-link" v-bind:class="link_class">
         <span class="roadmap-gantt-task-header-xref">
             <span
                 v-if="should_display_project"
@@ -43,6 +43,10 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import type { Task } from "../../../type";
+import { DASHBOARD_ID } from "../../../injection-symbols";
+import { strictInject } from "@tuleap/vue-strict-inject";
+
+const dashboard_id = strictInject(DASHBOARD_ID);
 
 const props = defineProps<{
     task: Task;
@@ -51,5 +55,9 @@ const props = defineProps<{
 
 const link_class = computed((): string => {
     return "roadmap-gantt-task-header-link-" + props.task.color_name;
+});
+
+const artifact_url = computed((): string => {
+    return `${props.task.html_url}&project-dashboard-id=${dashboard_id}`;
 });
 </script>

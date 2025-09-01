@@ -20,6 +20,7 @@
 import { shallowMount } from "@vue/test-utils";
 import type { Project, Task } from "../../../type";
 import HeaderLink from "./HeaderLink.vue";
+import { DASHBOARD_ID } from "../../../injection-symbols";
 
 describe("HeaderLink", () => {
     it("should display the project label and icon if needed", async () => {
@@ -31,6 +32,11 @@ describe("HeaderLink", () => {
                     project: { label: "ACME Corp", icon: "🐺" } as Project,
                 } as Task,
                 should_display_project: false,
+            },
+            global: {
+                provide: {
+                    [DASHBOARD_ID.valueOf()]: 22,
+                },
             },
         });
 

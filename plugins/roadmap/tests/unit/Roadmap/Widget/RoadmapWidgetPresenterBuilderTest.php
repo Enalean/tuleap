@@ -43,7 +43,7 @@ final class RoadmapWidgetPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestC
         $tracker_factory = $this->createMock(\TrackerFactory::class);
 
         $builder   = new RoadmapWidgetPresenterBuilder($nature_presenter_factory, $tracker_factory);
-        $presenter = $builder->getPresenter(123, null, null, 'month', $user);
+        $presenter = $builder->getPresenter(123, null, null, 'month', $user, 11);
         self::assertEquals(123, $presenter->roadmap_id);
         self::assertFalse($presenter->should_load_lvl1_iterations);
         self::assertFalse($presenter->should_load_lvl2_iterations);
@@ -72,7 +72,7 @@ final class RoadmapWidgetPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestC
 
 
         $builder   = new RoadmapWidgetPresenterBuilder($nature_presenter_factory, $tracker_factory);
-        $presenter = $builder->getPresenter(123, 42, null, 'month', $user);
+        $presenter = $builder->getPresenter(123, 42, null, 'month', $user, 11);
         self::assertEquals(123, $presenter->roadmap_id);
         self::assertTrue($presenter->should_load_lvl1_iterations);
         self::assertFalse($presenter->should_load_lvl2_iterations);
@@ -97,7 +97,7 @@ final class RoadmapWidgetPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestC
 
 
         $builder   = new RoadmapWidgetPresenterBuilder($nature_presenter_factory, $tracker_factory);
-        $presenter = $builder->getPresenter(123, null, 42, 'month', $user);
+        $presenter = $builder->getPresenter(123, null, 42, 'month', $user, 11);
         self::assertEquals(123, $presenter->roadmap_id);
         self::assertFalse($presenter->should_load_lvl1_iterations);
         self::assertTrue($presenter->should_load_lvl2_iterations);
@@ -122,7 +122,7 @@ final class RoadmapWidgetPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestC
 
 
         $builder   = new RoadmapWidgetPresenterBuilder($nature_presenter_factory, $tracker_factory);
-        $presenter = $builder->getPresenter(123, 42, null, 'month', $user);
+        $presenter = $builder->getPresenter(123, 42, null, 'month', $user, 11);
         self::assertEquals(123, $presenter->roadmap_id);
         self::assertFalse($presenter->should_load_lvl1_iterations);
         self::assertFalse($presenter->should_load_lvl2_iterations);
@@ -150,7 +150,7 @@ final class RoadmapWidgetPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestC
 
 
         $builder   = new RoadmapWidgetPresenterBuilder($nature_presenter_factory, $tracker_factory);
-        $presenter = $builder->getPresenter(123, 42, null, 'month', $user);
+        $presenter = $builder->getPresenter(123, 42, null, 'month', $user, 11);
         self::assertEquals(123, $presenter->roadmap_id);
         self::assertFalse($presenter->should_load_lvl1_iterations);
         self::assertFalse($presenter->should_load_lvl2_iterations);
@@ -179,7 +179,7 @@ final class RoadmapWidgetPresenterBuilderTest extends \Tuleap\Test\PHPUnit\TestC
 
 
         $builder   = new RoadmapWidgetPresenterBuilder($nature_presenter_factory, $tracker_factory);
-        $presenter = $builder->getPresenter(123, 42, null, 'month', $user);
+        $presenter = $builder->getPresenter(123, 42, null, 'month', $user, 11);
         self::assertEquals(123, $presenter->roadmap_id);
         self::assertFalse($presenter->should_load_lvl1_iterations);
         self::assertFalse($presenter->should_load_lvl2_iterations);

@@ -63,6 +63,7 @@ final class RoadmapProjectWidgetTest extends \Tuleap\Test\PHPUnit\TestCase
             $this->createStub(\TrackerFactory::class),
             new FilterReportDao(),
         );
+        $this->widget->setDashboardId(11);
     }
 
     #[\Override]
@@ -81,7 +82,7 @@ final class RoadmapProjectWidgetTest extends \Tuleap\Test\PHPUnit\TestCase
         $this->presenter_builder
             ->expects($this->once())
             ->method('getPresenter')
-            ->willReturn(new RoadmapWidgetPresenter(123, [], false, false, 'month'));
+            ->willReturn(new RoadmapWidgetPresenter(123, [], false, false, 'month', 11));
 
         $this->widget->getContent();
     }
