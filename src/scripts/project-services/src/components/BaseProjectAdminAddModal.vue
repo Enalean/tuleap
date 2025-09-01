@@ -30,60 +30,59 @@
         </template>
     </add-modal>
 </template>
-<script>
+<script setup lang="ts">
+import { computed, ref } from "vue";
+import { useGettext } from "vue3-gettext";
 import { strictInject } from "@tuleap/vue-strict-inject";
+import type { Service } from "../type";
 import { CSRF_TOKEN, MINIMAL_RANK, PROJECT_ID } from "../injection-symbols";
 import AddModal from "./AddModal.vue";
 import SidebarPreviewer from "./SidebarPreviewer.vue";
 import InCreationCustomService from "./Service/InCreationCustomService.vue";
 
-export default {
-    name: "BaseProjectAdminAddModal",
-    components: { AddModal, SidebarPreviewer, InCreationCustomService },
-    setup() {
-        const project_id = strictInject(PROJECT_ID);
-        const minimal_rank = strictInject(MINIMAL_RANK);
-        const csrf_token = strictInject(CSRF_TOKEN);
-        return { project_id, minimal_rank, csrf_token };
-    },
-    data() {
-        return {
-            is_shown: false,
-            service: this.resetService(),
-        };
-    },
-    computed: {
-        preview_label() {
-            return this.service.label === "" ? this.$gettext("Preview") : this.service.label;
-        },
-        form_url() {
-            return `/project/${encodeURIComponent(this.project_id)}/admin/services/add`;
-        },
-    },
-    methods: {
-        show() {
-            this.is_shown = true;
-            this.$refs.modal.show();
-        },
-        resetModal() {
-            this.is_shown = false;
-            this.service = this.resetService();
-        },
-        resetService() {
-            return {
-                id: null,
-                icon_name: "fa-angle-double-right",
-                label: "",
-                link: "",
-                description: "",
-                short_name: "",
-                is_active: true,
-                is_used: true,
-                is_in_new_tab: false,
-                rank: this.minimal_rank,
-                is_disabled_reason: "",
-            };
-        },
-    },
-};
+const { $gettext } = useGettext();
+
+const project_id = strictInject(PROJECT_ID);
+const minimal_rank = strictInject(MINIMAL_RANK);
+const csrf_token = strictInject(CSRF_TOKEN);
+
+const is_shown = ref(false);
+const service = ref(resetService());
+const modal = ref<typeof AddModal | null>(null);
+
+const preview_label = computed(() =>
+    service.value.label === "" ? $gettext("Preview") : service.value.label,
+);
+const form_url = computed(() => `/project/${encodeURIComponent(project_id)}/admin/services/add`);
+
+function show() {
+    is_shown.value = true;
+    modal.value?.show();
+}
+
+function resetModal() {
+    is_shown.value = false;
+    service.value = resetService();
+}
+
+function resetService(): Service {
+    return {
+        id: null,
+        icon_name: "fa-angle-double-right",
+        label: "",
+        link: "",
+        description: "",
+        short_name: "",
+        is_active: true,
+        is_used: true,
+        is_in_new_tab: false,
+        rank: minimal_rank,
+        is_disabled_reason: "",
+        is_in_iframe: false,
+        is_project_scope: false,
+        is_link_customizable: false,
+    };
+}
+
+defineExpose({ show });
 </script>
