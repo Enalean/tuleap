@@ -36,7 +36,7 @@ class RequirementRetriever
     }
 
     /**
-     * @return Artifact[]
+     * @return list<Artifact>
      */
     public function getAllRequirementsForDefinition(Artifact $definition, PFUser $user): array
     {
@@ -45,11 +45,13 @@ class RequirementRetriever
             $this->config->getTestExecutionTrackerId($definition->getTracker()->getProject())
         );
 
-        return array_filter(
-            array_map(
-                fn(int $requirement_id): ?Artifact => $this->artifact_retriever->getArtifactByIdUserCanView($user, $requirement_id),
-                $all_requirement_ids
-            )
+        return array_values(
+            array_filter(
+                array_map(
+                    fn(int $requirement_id): ?Artifact => $this->artifact_retriever->getArtifactByIdUserCanView($user, $requirement_id),
+                    $all_requirement_ids
+                ),
+            ),
         );
     }
 }
