@@ -97,12 +97,9 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer
 
     /**
      * Fetch content of the renderer
-     * @param array $matching_ids
-     * @param HTTPRequest $request
-     * @return string
      */
     #[\Override]
-    public function fetch($matching_ids, $request, $report_can_be_modified, PFUser $user)
+    public function fetch(array $matching_ids, HTTPRequest $request, bool $report_can_be_modified, PFUser $user): string
     {
         $html = '';
         $this->initiateSession();

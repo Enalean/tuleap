@@ -97,14 +97,8 @@ abstract class Tracker_Report_Renderer implements WidgetWithAssetDependencies //
 
     /**
      * Fetch content of the renderer
-     *
-     * @param array   $matching_ids
-     * @param HTTPRequest $request
-     * @param bool    $report_can_be_modified
-     *
-     * @return string
      */
-    abstract public function fetch($matching_ids, $request, $report_can_be_modified, PFUser $user);
+    abstract public function fetch(array $matching_ids, HTTPRequest $request, bool $report_can_be_modified, PFUser $user): string;
 
     /**
      * Adds assets to the current page

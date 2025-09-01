@@ -21,10 +21,13 @@
 use Tuleap\Cardwall\AccentColor\AccentColorBuilder;
 use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\Cardwall\OnTop\Config\ColumnCollection;
+use Tuleap\Dashboard\Project\ProjectDashboardController;
+use Tuleap\Dashboard\User\UserDashboardController;
 use Tuleap\Date\RelativeDatesAssetsRetriever;
 use Tuleap\Layout\CssAssetCollection;
 use Tuleap\Layout\CssViteAsset;
 use Tuleap\Layout\IncludeViteAssets;
+use Tuleap\Option\Option;
 use Tuleap\Project\MappingRegistry;
 use Tuleap\Tracker\FormElement\Field\List\SelectboxField;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
@@ -100,20 +103,17 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
     /**
      * Fetch content of the renderer
      *
-     * @param array $matching_ids
-     * @param HTTPRequest $request
      *
-     * @return string
      */
     #[\Override]
-    public function fetch($matching_ids, $request, $report_can_be_modified, PFUser $user)
+    public function fetch(array $matching_ids, HTTPRequest $request, bool $report_can_be_modified, PFUser $user): string
     {
         $used_sb = $this->getFormElementFactory()->getUsedFormElementsByType($this->report->getTracker(), ['sb']);
         $form    = new Cardwall_Form($this->report->id, $this->id, $request->get('pv'), $this->field, $used_sb);
-        return $this->fetchCards($matching_ids, $user, $form);
+        return $this->fetchCards($matching_ids, $user, Option::nothing(Widget::class), $form);
     }
 
-    private function fetchCards($matching_ids, PFUser $user, $form = null)
+    private function fetchCards(array $matching_ids, PFUser $user, \Tuleap\Option\Option $widget, ?Cardwall_Form $form = null): string
     {
         $total_rows = $matching_ids['id'] ? substr_count($matching_ids['id'], ',') + 1 : 0;
         if (! $total_rows) {
@@ -126,19 +126,16 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
         }
 
         $artifact_ids = explode(',', $matching_ids['id']);
-        $presenter    = $this->getPresenter($artifact_ids, $user, $form);
+        $presenter    = $this->getPresenter($artifact_ids, $user, $widget, $form);
 
         $renderer = TemplateRendererFactory::build()->getRenderer(dirname(__FILE__) . '/../templates');
 
         return $renderer->renderToString('renderer', $presenter);
     }
 
-    /**
-     * @return Cardwall_RendererPresenter
-     */
-    private function getPresenter(array $artifact_ids, PFUser $user, $form = null)
+    private function getPresenter(array $artifact_ids, PFUser $user, \Tuleap\Option\Option $widget, ?Cardwall_Form $form = null): Cardwall_RendererPresenter
     {
-        $redirect_parameter = 'cardwall[renderer][' . $this->report->id . ']=' . $this->id;
+        $redirect_parameter = $this->getRedirectionParameters($widget);
 
         if ($this->field === null) {
             $board = new Cardwall_Board([], new ColumnCollection(), new Cardwall_MappingCollection());
@@ -246,7 +243,7 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
 
         $use_data_from_db = true;
 
-        $html .= $this->fetchCards($this->report->getMatchingIds(null, $use_data_from_db), $user);
+        $html .= $this->fetchCards($this->report->getMatchingIds(null, $use_data_from_db), $user, Option::fromValue($widget));
         $html .= $this->fetchWidgetGoToReport();
 
         return $html;
@@ -362,5 +359,26 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
             CssViteAsset::fromFileName($tracker_assets, 'themes/FlamingParrot/style.scss'),
             CssViteAsset::fromFileName($cardwall_assets, 'themes/FlamingParrot/style.scss'),
         ]);
+    }
+
+    private function getRedirectionParameters(\Tuleap\Option\Option $widget): string
+    {
+        $redirect_parameter = 'cardwall[renderer][' . $this->report->id . ']=' . $this->id;
+
+        return $widget->mapOr(
+            fn (Widget $cardwall_widget) => $this->getDashboardsRedirectionParameters($cardwall_widget, $redirect_parameter),
+            'cardwall[renderer][' . $this->report->id . ']=' . $this->id
+        );
+    }
+
+    private function getDashboardsRedirectionParameters(Widget $cardwall_widget, string $redirect_parameter): string
+    {
+        if ($cardwall_widget->owner_type === UserDashboardController::LEGACY_DASHBOARD_TYPE || $cardwall_widget->owner_type === UserDashboardController::DASHBOARD_TYPE) {
+            return '&my-dashboard-id=' . urlencode((string) $cardwall_widget->getDashboardId());
+        }
+        if ($cardwall_widget->owner_type === ProjectDashboardController::LEGACY_DASHBOARD_TYPE || $cardwall_widget->owner_type === ProjectDashboardController::DASHBOARD_TYPE) {
+            return '&project-dashboard-id=' . urlencode((string) $cardwall_widget->getDashboardId());
+        }
+        return $redirect_parameter;
     }
 }

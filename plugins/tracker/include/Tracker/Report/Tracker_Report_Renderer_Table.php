@@ -397,10 +397,9 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
 
     /**
      * Fetch content of the renderer
-     * @return string
      */
     #[\Override]
-    public function fetch($matching_ids, $request, $report_can_be_modified, PFUser $user)
+    public function fetch(array $matching_ids, HTTPRequest $request, bool $report_can_be_modified, PFUser $user): string
     {
         $html       = '';
         $total_rows = $matching_ids['id'] ? substr_count($matching_ids['id'], ',') + 1 : 0;
