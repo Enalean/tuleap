@@ -22,9 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\Artidoc;
 
-require_once __DIR__ . '/../../../docman/vendor/autoload.php';
-
+use ProjectUGroup;
 use Psl\Json;
+use Tuleap\Artidoc\Tests\ArtidocAPIHelper;
+use Tuleap\Artidoc\Tests\DocumentPermissions;
 use Tuleap\Docman\Test\rest\DocmanDataBuilder;
 use Tuleap\Docman\Test\rest\Helper\DocmanTestExecutionHelper;
 use Tuleap\REST\BaseTestDataBuilder;
@@ -33,10 +34,8 @@ use Tuleap\REST\RESTTestDataBuilder;
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
 final class ArtidocTest extends DocmanTestExecutionHelper
 {
-    private string $now                         = '';
-    private string $registered_users_identifier = '2';
-    private string $project_members_identifier;
-    private string $project_admins_identifier;
+    private string $now = '';
+    private ArtidocAPIHelper $api_helper;
 
     #[\Override]
     public function setUp(): void
@@ -44,8 +43,7 @@ final class ArtidocTest extends DocmanTestExecutionHelper
         parent::setUp();
         $this->now = (string) microtime();
 
-        $this->project_members_identifier = $this->project_id . '_3';
-        $this->project_admins_identifier  = $this->project_id . '_4';
+        $this->api_helper = new ArtidocAPIHelper($this->rest_request, $this->request_factory, $this->stream_factory);
     }
 
     #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
@@ -95,34 +93,12 @@ final class ArtidocTest extends DocmanTestExecutionHelper
 
     private function createArtidoc(int $parent_id, string $title): array
     {
-        $post_item_response = $this->getResponseByName(
-            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
-            $this->request_factory->createRequest('POST', 'docman_folders/' . $parent_id . '/others')
-                ->withBody(
-                    $this->stream_factory->createStream(
-                        Json\encode(
-                            [
-                                'title'                  => $title,
-                                'type'                   => 'artidoc',
-                                'permissions_for_groups' => [
-                                    'can_read'   => [
-                                        ['id' => $this->registered_users_identifier],
-                                    ],
-                                    'can_write'  => [
-                                        ['id' => $this->project_members_identifier],
-                                    ],
-                                    'can_manage' => [
-                                        ['id' => $this->project_members_identifier],
-                                    ],
-                                ],
-                            ],
-                        ),
-                    ),
-                ),
+        $post_response_json = $this->api_helper->createArtidoc(
+            $parent_id,
+            $title,
+            DocumentPermissions::buildProjectMembersCanManage($this->project_id),
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
         );
-        self::assertSame(201, $post_item_response->getStatusCode());
-
-        $post_response_json = Json\decode($post_item_response->getBody()->getContents());
         self::assertNull($post_response_json['file_properties']);
 
         return $post_response_json;
@@ -563,13 +539,9 @@ final class ArtidocTest extends DocmanTestExecutionHelper
                 ->withBody(
                     $this->stream_factory->createStream(
                         Json\encode(
-                            [
-                                'can_read'   => [],
-                                'can_write'  => [],
-                                'can_manage' => [
-                                    ['id' => $this->project_admins_identifier,],
-                                ],
-                            ],
+                            DocumentPermissions::buildProjectAdminsCanManageAndNobodyCanDoAnythingElse(
+                                $this->project_id
+                            )
                         ),
                     )
                 )
@@ -589,10 +561,11 @@ final class ArtidocTest extends DocmanTestExecutionHelper
         self::assertSame(200, $get_by_admin_response->getStatusCode(), 'Admin can read the document');
 
         $permissions_for_groups_representation = Json\decode($get_by_admin_response->getBody()->getContents())['permissions_for_groups'];
-        $this->assertEmpty($permissions_for_groups_representation['can_read']);
-        $this->assertEmpty($permissions_for_groups_representation['can_write']);
-        $this->assertCount(1, $permissions_for_groups_representation['can_manage']);
-        $this->assertEquals($this->project_admins_identifier, $permissions_for_groups_representation['can_manage'][0]['id']);
+        self::assertEmpty($permissions_for_groups_representation['can_read']);
+        self::assertEmpty($permissions_for_groups_representation['can_write']);
+        self::assertCount(1, $permissions_for_groups_representation['can_manage']);
+        $project_admins_user_group_id = $this->project_id . '_' . ProjectUGroup::PROJECT_ADMIN;
+        self::assertSame($project_admins_user_group_id, $permissions_for_groups_representation['can_manage'][0]['id']);
     }
 
     #[\PHPUnit\Framework\Attributes\Depends('testGetRootId')]
