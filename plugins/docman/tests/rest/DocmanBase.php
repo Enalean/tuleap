@@ -20,6 +20,8 @@
  *
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Docman\Test\rest;
 
 use Tuleap\REST\BaseTestDataBuilder;
@@ -27,15 +29,16 @@ use Tuleap\REST\RestBase;
 
 class DocmanBase extends RestBase
 {
-    public const PROJECT_NAME                    = 'docmanproject';
-    public const DOCMAN_USER_NAME                = 'docman_regular_user';
-    private const REQUIREMENTS_TRACKER_SHORTNAME = 'requirements';
+    public const string PROJECT_NAME                    = 'docmanproject';
+    public const string DOCMAN_USER_NAME                = 'docman_regular_user';
+    private const string REQUIREMENTS_TRACKER_SHORTNAME = 'requirements';
 
     protected int $project_id;
     protected int $docman_user_id;
     protected int $test_user_1_id;
     protected int $requirements_tracker_id;
 
+    #[\Override]
     public function setUp(): void
     {
         parent::setUp();

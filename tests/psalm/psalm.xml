@@ -1322,7 +1322,6 @@
             <file name="plugins/docman/tests/rest/Docman/DocmanWikiTest.php"/>
             <file name="plugins/docman/tests/rest/Docman/ForbidWritersTest.php"/>
             <file name="plugins/docman/tests/rest/Docman/SearchTest.php"/>
-            <file name="plugins/docman/tests/rest/DocmanBase.php"/>
             <file name="plugins/docman/tests/rest/DocmanDataBuilder.php"/>
             <file name="plugins/docman/tests/rest/DocmanDatabaseInitialization.php"/>
             <file name="plugins/docman/tests/rest/DocmanForbidWritersDataBuilder.php"/>

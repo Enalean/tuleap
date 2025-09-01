@@ -33,6 +33,15 @@ class DocmanTestExecutionHelper extends DocmanBase
      * @var ?int
      */
     protected $docman_regular_user;
+    private DocmanAPIHelper $docman_api;
+
+    #[\Override]
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->docman_api = new DocmanAPIHelper($this->rest_request, $this->request_factory);
+    }
+
     protected function getDocmanRegularUser(): int
     {
         $search   = urlencode(
@@ -53,27 +62,14 @@ class DocmanTestExecutionHelper extends DocmanBase
 
     public function testGetRootId(): int
     {
-        $project_response = $this->getResponse(
-            $this->request_factory->createRequest('GET', 'projects/' . urlencode((string) $this->project_id) . '/docman_service')
-        );
-
-        self::assertSame(200, $project_response->getStatusCode());
-
-        $json_docman_service = json_decode($project_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
-        return $json_docman_service['root_item']['id'];
+        $this->expectNotToPerformAssertions();
+        return $this->docman_api->getRootFolderID($this->project_id);
     }
 
     public function testGetRootIdWithUserRESTReadOnlyAdmin(): int
     {
-        $project_response = $this->getResponse(
-            $this->request_factory->createRequest('GET', 'projects/' . urlencode((string) $this->project_id) . '/docman_service'),
-            RESTTestDataBuilder::TEST_BOT_USER_NAME
-        );
-
-        self::assertSame(200, $project_response->getStatusCode());
-
-        $json_docman_service = json_decode($project_response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
-        return $json_docman_service['root_item']['id'];
+        $this->expectNotToPerformAssertions();
+        return $this->docman_api->getRootFolderID($this->project_id, RESTTestDataBuilder::TEST_BOT_USER_NAME);
     }
 
     public function loadRootFolderContent(
