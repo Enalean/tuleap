@@ -54,28 +54,8 @@ use Tuleap\Request\ForbiddenException;
 
 class AdminController extends BaseController
 {
-    private ConfigurationManager $config_manager;
-
-    /** @var EventManager */
-    private $event_manager;
-
     /** @var Project */
     private $project;
-
-    /** @var AgileDashboardCrumbBuilder */
-    private $service_crumb_builder;
-
-    /** @var AdministrationCrumbBuilder */
-    private $admin_crumb_builder;
-
-    /**
-     * @var CountElementsModeChecker
-     */
-    private $count_elements_mode_checker;
-    /**
-     * @var ScrumPresenterBuilder
-     */
-    private $scrum_presenter_builder;
 
     /**
      * @var GetAdditionalScrumAdminSection
@@ -84,34 +64,25 @@ class AdminController extends BaseController
 
     public function __construct(
         Codendi_Request $request,
-        ConfigurationManager $config_manager,
-        EventManager $event_manager,
-        AgileDashboardCrumbBuilder $service_crumb_builder,
-        AdministrationCrumbBuilder $admin_crumb_builder,
-        CountElementsModeChecker $count_elements_mode_checker,
-        ScrumPresenterBuilder $scrum_presenter_builder,
+        private readonly ConfigurationManager $config_manager,
+        private readonly EventManager $event_manager,
+        private readonly AgileDashboardCrumbBuilder $service_crumb_builder,
+        private readonly AdministrationCrumbBuilder $admin_crumb_builder,
+        private readonly CountElementsModeChecker $count_elements_mode_checker,
+        private readonly ScrumPresenterBuilder $scrum_presenter_builder,
         private readonly BaseLayout $layout,
     ) {
         parent::__construct('agiledashboard', $request);
 
-        $this->group_id                    = (int) $this->request->get('group_id');
-        $this->project                     = $this->request->getProject();
-        $this->config_manager              = $config_manager;
-        $this->event_manager               = $event_manager;
-        $this->service_crumb_builder       = $service_crumb_builder;
-        $this->admin_crumb_builder         = $admin_crumb_builder;
-        $this->count_elements_mode_checker = $count_elements_mode_checker;
-        $this->scrum_presenter_builder     = $scrum_presenter_builder;
+        $this->group_id = (int) $this->request->get('group_id');
+        $this->project  = $this->request->getProject();
 
         $this->additional_scrum_sections = new GetAdditionalScrumAdminSection($this->project);
         $this->event_manager->dispatch($this->additional_scrum_sections);
     }
 
-    /**
-     * @return BreadCrumbCollection
-     */
     #[Override]
-    public function getBreadcrumbs()
+    public function getBreadcrumbs(): BreadCrumbCollection
     {
         $breadcrumbs = new BreadCrumbCollection();
         $breadcrumbs->addBreadCrumb(
@@ -203,8 +174,7 @@ class AdminController extends BaseController
         $token = new CSRFSynchronizerToken('/plugins/agiledashboard/?action=admin');
         $token->check();
 
-        $request_comes_from_homepage = false;
-        $project                     = $this->request->getProject();
+        $project = $this->request->getProject();
 
         $this->additional_scrum_sections->notifyAdditionalSectionsControllers(\HTTPRequest::instance());
 
