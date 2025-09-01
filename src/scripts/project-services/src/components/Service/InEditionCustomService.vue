@@ -19,7 +19,7 @@
 
 <template>
     <div class="tlp-modal-body">
-        <service-id v-bind:value="service.id" />
+        <service-id v-bind:id="service.id" />
         <service-label
             id="project-service-edit-modal-label"
             v-bind:label="service.label"
