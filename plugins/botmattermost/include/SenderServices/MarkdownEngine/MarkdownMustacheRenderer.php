@@ -21,6 +21,7 @@
 namespace Tuleap\BotMattermost\SenderServices\MarkdownEngine;
 
 use MustacheRenderer;
+use Override;
 use Tuleap\Templating\Mustache\MustacheEngine;
 use Tuleap\Templating\TemplateCacheInterface;
 
@@ -48,6 +49,7 @@ class MarkdownMustacheRenderer extends MustacheRenderer
     ];
 
 
+    #[Override]
     protected function getEngine(\Mustache_Loader $loader, TemplateCacheInterface $template_cache): MustacheEngine
     {
         $special_characters = self::$markdown_special_characters;

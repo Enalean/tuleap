@@ -70,6 +70,7 @@ class BotMattermostPlugin extends Plugin
     /**
      * @return Tuleap\BotMattermost\Plugin\PluginInfo
      */
+    #[Override]
     public function getPluginInfo()
     {
         if (! $this->pluginInfo) {

@@ -56,11 +56,13 @@ class botmattermost_gitPlugin extends PluginWithLegacyInternalRouting
         bindtextdomain('tuleap-botmattermost_git', __DIR__ . '/../site-content');
     }
 
+    #[Override]
     public function getDependencies()
     {
         return ['git', 'botmattermost', 'pullrequest'];
     }
 
+    #[Override]
     public function getHooksAndCallbacks()
     {
         $this->addHook('cssfile');
@@ -81,6 +83,7 @@ class botmattermost_gitPlugin extends PluginWithLegacyInternalRouting
     /**
      * @return PluginInfo
      */
+    #[Override]
     public function getPluginInfo()
     {
         if (! $this->pluginInfo) {
@@ -89,6 +92,7 @@ class botmattermost_gitPlugin extends PluginWithLegacyInternalRouting
         return $this->pluginInfo;
     }
 
+    #[Override]
     public function getServiceShortname(): string
     {
         return 'plugin_botmattermost_git';
@@ -182,6 +186,7 @@ class botmattermost_gitPlugin extends PluginWithLegacyInternalRouting
         $this->getController(HTTPRequest::instance())->deleteBotNotificationByBot($event->getBot());
     }
 
+    #[Override]
     public function process(): void
     {
         $request = HTTPRequest::instance();
