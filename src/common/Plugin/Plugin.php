@@ -36,7 +36,7 @@ use Tuleap\Project\XML\ServiceEnableForXmlImportRetriever;
 /**
  * Plugin
  */
-class Plugin implements PFO_Plugin, \Tuleap\Plugin\IsProjectAllowedToUsePlugin //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
+class Plugin implements \Tuleap\Plugin\IsProjectAllowedToUsePlugin //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     /** @var LoggerInterface */
     private $backend_logger;
@@ -232,7 +232,7 @@ class Plugin implements PFO_Plugin, \Tuleap\Plugin\IsProjectAllowedToUsePlugin /
      * @deprecated Use ListeningToEventClass attribute instead
      * @link file://../../../docs/decisions/0021-attributes-based-events.md ADR-0021
      */
-    public function addHook($hook, $callback = null)
+    public function addHook(string $hook, ?string $callback = null): void
     {
         $this->listenToHook($hook, $callback);
     }
@@ -248,7 +248,7 @@ class Plugin implements PFO_Plugin, \Tuleap\Plugin\IsProjectAllowedToUsePlugin /
         $this->hooks->put($hook, $value);
     }
 
-    private function deduceCallbackFromHook($hook)
+    private function deduceCallbackFromHook(string $hook): string
     {
         $hook_in_camel_case = lcfirst(
             str_replace(
