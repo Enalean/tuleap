@@ -18,7 +18,7 @@
  */
 
 import type { PredefinedTimePeriod } from "@tuleap/plugin-timetracking-predefined-time-periods";
-import type { User } from "@tuleap/core-rest-api-types";
+import type { User, ProjectReference } from "@tuleap/core-rest-api-types";
 
 export type Query = {
     start_date: string;
@@ -27,8 +27,14 @@ export type Query = {
     users_list: User[];
 };
 
-interface UserTimes {
+interface TimesSpentInProject {
+    readonly project: ProjectReference;
+    readonly minutes: number;
+}
+
+export interface UserTimes {
     readonly user: User;
+    readonly times: TimesSpentInProject[];
 }
 
 export type QueryResults = readonly UserTimes[];
