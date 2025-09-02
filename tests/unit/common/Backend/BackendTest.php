@@ -40,35 +40,6 @@ final class BackendTest extends \Tuleap\Test\PHPUnit\TestCase
         EventManager::clearInstance();
     }
 
-    public function testFactoryCore(): void
-    {
-        // Core backends
-        self::assertInstanceOf(\BackendSVN::class, Backend::instance(Backend::SVN));
-        self::assertInstanceOf(\Backend::class, Backend::instance(Backend::BACKEND));
-        self::assertInstanceOf(\BackendSystem::class, Backend::instance(Backend::SYSTEM));
-        self::assertInstanceOf(\BackendAliases::class, Backend::instance(Backend::ALIASES));
-    }
-
-    public function testFactoryPlugin(): void
-    {
-        $fake_backend = new class extends Backend
-        {
-            public function __construct()
-            {
-            }
-        };
-        //Plugin backends. Give the base classname to build the backend
-        self::assertInstanceOf($fake_backend::class, Backend::instance('plugin_fake', $fake_backend::class)); //like plugins !
-    }
-
-    public function testFactoryPluginBad(): void
-    {
-        //The base classname is mandatory for unkown (by core) backends
-        // else it search for Backend . $type
-        $this->expectException(\RuntimeException::class);
-        Backend::instance('plugin_fake');
-    }
-
     public function testRecurseDeleteInDir(): void
     {
         $test_dir = vfsStream::setup()->url();
@@ -95,5 +66,20 @@ final class BackendTest extends \Tuleap\Test\PHPUnit\TestCase
         }
         closedir($d);
         rmdir($test_dir);
+    }
+
+    public function testBackendsSingleton(): void
+    {
+        $backend_1 = Backend::instance();
+        $backend_2 = Backend::instance();
+        self::assertSame($backend_1, $backend_2);
+        self::assertInstanceOf(Backend::class, $backend_1);
+
+        $backend_alias_1 = \BackendAliases::instance();
+        $backend_alias_2 = \BackendAliases::instance();
+        self::assertSame($backend_alias_1, $backend_alias_2);
+        self::assertInstanceOf(\BackendAliases::class, $backend_alias_1);
+
+        self::assertNotSame($backend_alias_1, $backend_1);
     }
 }

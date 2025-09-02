@@ -21,11 +21,7 @@
  *
  */
 
-/**
-* System Event classes
-*
-*/
-class SystemEvent_PROJECT_DELETE extends SystemEvent
+class SystemEvent_PROJECT_DELETE extends SystemEvent // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /**
      * Verbalize the parameters so they are readable and much user friendly in
@@ -134,7 +130,7 @@ class SystemEvent_PROJECT_DELETE extends SystemEvent
     protected function cleanupProjectFRS($groupId)
     {
         $frsff = $this->getFRSFileFactory();
-        return $frsff->deleteProjectFRS($groupId, $this->getBackend('System'));
+        return $frsff->deleteProjectFRS($groupId, BackendSystem::instance());
     }
 
     /**

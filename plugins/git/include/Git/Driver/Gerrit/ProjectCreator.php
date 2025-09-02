@@ -19,7 +19,7 @@
  */
 
 
-class Git_Driver_Gerrit_ProjectCreator
+class Git_Driver_Gerrit_ProjectCreator // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public const GROUP_REPLICATION      = 'replication';
     public const GROUP_REGISTERED_USERS = 'Registered Users';
@@ -443,7 +443,7 @@ class Git_Driver_Gerrit_ProjectCreator
 
     public function removeTemporaryDirectory()
     {
-        $backend = Backend::instance('System');
+        $backend = BackendSystem::instance();
         if (is_dir($this->dir)) {
             $backend->recurseDeleteInDir($this->dir);
             rmdir($this->dir);

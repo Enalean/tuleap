@@ -67,7 +67,7 @@ class SystemEvent_PROJECT_RENAME extends SystemEvent
 
         if (($project = $this->getProject($group_id))) {
             // Rename system home/groups
-            $backendSystem = $this->getBackend('System');
+            $backendSystem = $this->getBackendSystem();
 
             // Rename system FRS
             if (! $backendSystem->renameFileReleasedDirectory($project, $new_name)) {
@@ -100,6 +100,11 @@ class SystemEvent_PROJECT_RENAME extends SystemEvent
         }
 
         return (bool) $renameState;
+    }
+
+    protected function getBackendSystem(): BackendSystem
+    {
+        return BackendSystem::instance();
     }
 
     /**

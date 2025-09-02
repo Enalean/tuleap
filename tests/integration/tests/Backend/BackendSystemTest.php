@@ -64,11 +64,6 @@ final class BackendSystemTest extends TestIntegrationTestCase
         Backend::clearInstances();
     }
 
-    public function testConstructor(): void
-    {
-        self::assertNotNull(BackendSystem::instance());
-    }
-
     public function testCleanupFrs(): void
     {
         $backend = $this->createPartialMock(BackendSystem::class, [

@@ -54,7 +54,6 @@ final class SystemEvent_UGROUP_MODIFY_Test extends \Tuleap\Test\PHPUnit\TestCase
                 'getParametersAsArray',
                 'processUgroupBinding',
                 'getProject',
-                'getBackend',
                 'done',
                 'error',
             ])
@@ -97,7 +96,6 @@ final class SystemEvent_UGROUP_MODIFY_Test extends \Tuleap\Test\PHPUnit\TestCase
                 'getParametersAsArray',
                 'processUgroupBinding',
                 'getProject',
-                'getBackend',
                 'done',
                 'error',
             ])
@@ -144,7 +142,6 @@ final class SystemEvent_UGROUP_MODIFY_Test extends \Tuleap\Test\PHPUnit\TestCase
             ->onlyMethods([
                 'getParametersAsArray',
                 'getProject',
-                'getBackend',
                 'done',
                 'error',
                 'getUgroupBinding',

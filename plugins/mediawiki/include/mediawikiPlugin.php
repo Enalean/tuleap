@@ -824,7 +824,7 @@ class MediaWikiPlugin extends Plugin implements PluginWithService //phpcs:ignore
                 $this->getCentralDatabaseNameProperty()
             ),
             ProjectManager::instance(),
-            Backend::instance('System'),
+            Backend::instance(),
             $this->getDao(),
             new MediawikiDataDir()
         );

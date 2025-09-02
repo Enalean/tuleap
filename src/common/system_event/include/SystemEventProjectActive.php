@@ -31,7 +31,7 @@ class SystemEventProjectActive extends SystemEvent
 
     public function process(): void
     {
-        $this->getBackend('SVN')->setSVNApacheConfNeedUpdate();
+        \BackendSVN::instance()->setSVNApacheConfNeedUpdate();
         $this->done();
     }
 }

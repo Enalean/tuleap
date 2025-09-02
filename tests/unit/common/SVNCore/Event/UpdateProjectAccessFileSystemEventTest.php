@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\SVNCore\Event;
 
 use Backend;
-use BackendSVN;
 use PHPUnit\Framework\MockObject\MockObject;
 use Project;
 use ProjectManager;
@@ -43,8 +42,6 @@ final class UpdateProjectAccessFileSystemEventTest extends TestCase
     #[\Override]
     protected function setUp(): void
     {
-        $backend_svn = $this->createMock(BackendSVN::class);
-        Backend::setInstance(Backend::SVN, $backend_svn);
         $this->project_manager  = $this->createMock(ProjectManager::class);
         $this->event_dispatcher = $this->createMock(EventDispatcherInterface::class);
 

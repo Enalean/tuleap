@@ -32,11 +32,6 @@ class Backend // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     public const LOG_ERROR   = \Psr\Log\LogLevel::ERROR;
     public const LOG_DEBUG   = \Psr\Log\LogLevel::DEBUG;
 
-    public const SVN     = 'SVN';
-    public const BACKEND = 'Backend';
-    public const SYSTEM  = 'System';
-    public const ALIASES = 'Aliases';
-
     public $block_marker_start = "# !!! Codendi Specific !!! DO NOT REMOVE (NEEDED CODENDI MARKER)\n";
     public $block_marker_end   = "# END OF NEEDED CODENDI BLOCK\n";
 
@@ -47,95 +42,32 @@ class Backend // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     // GID of apache user
     protected $httpUserGID;
 
-    /**
-     * Constructor
-     */
-    protected function __construct()
+    private static array $instances = [];
+
+    final private function __construct()
     {
-        /* Make sure umask is properly positioned for the
-         entire session. Root has umask 022 by default
-         causing all the mkdir xxx, 775 to actually
-         create dir with permission 755 !!
-         So set umask to 002 for the entire script session
-        */
-        // Problem: "Avoid using this function in multithreaded webservers" http://us2.php.net/manual/en/function.umask.php
-        //umask(002);
     }
 
-    private static $backend_instances = [];
-    /**
-     * Return a Backend instance
-     *
-     * Let plugins propose their own backend. If none provided, use the default one.
-     *
-     * @param string $type  SVN | System | Backend | Aliases | plugin_git | ... Default is 'Backend' (itself)
-     * @param string $base  The name of the base backend class. Useless for core backends, mandatory for plugin ones
-     * @param array  $setup The parameters to setUp the plugin, if needed. Null if no parameters
-     *
-     * @throw Exception if $setup is filled and the backend doesn't have a setUp() method
-     *
-     * @return Backend
-     */
-    public static function instance($type = self::BACKEND, $base = null, $setup = null)
+    public static function instance(): static
     {
-        if (! isset(self::$backend_instances[$type])) {
-            //determine the base class of the plugin if it is not define at the call
-            if (! $base) {
-                $base = 'Backend';
-                if ($type !== self::BACKEND) {
-                    //BackendSVN, BackendSystem, ...
-                    $base .= $type;
-                }
-            }
-
-            //make sure that there is no problem between the keyboard and the chair
-            if (! class_exists($base)) {
-                throw new RuntimeException("Class '$base' not found");
-            }
-            //Create a new instance of the wanted backend
-            $backend = new $base();
-
-            assert($backend instanceof Backend);
-
-            //SetUp if needed
-            if (is_array($setup)) {
-                if (method_exists($backend, 'setUp')) {
-                    call_user_func_array([$backend, 'setUp'], $setup);
-                } else {
-                    throw new Exception($base . ' does not have setUp.');
-                }
-            }
-
-            //cache the instance to save ticks
-            self::$backend_instances[$type] = $backend;
+        if (! isset(self::$instances[static::class])) {
+            self::$instances[static::class] = new static();
         }
-        return self::$backend_instances[$type];
-    }
-
-    /**
-     * Helper for static analysis
-     */
-    final public static function instanceSVN(): BackendSVN
-    {
-        $instance = self::instance(self::SVN);
-        assert($instance instanceof BackendSVN);
-        return $instance;
+        return self::$instances[static::class];
     }
 
     /**
      * Clear the cache of instances.
      * Main goal is for unit tests. Useless in prod.
-     *
-     * @return void
      */
-    public static function clearInstances()
+    public static function clearInstances(): void
     {
-        self::$backend_instances = [];
+        self::$instances = [];
     }
 
-    public static function setInstance($type, $instance)
+    public static function setInstance($type, $instance): void
     {
-        self::$backend_instances[$type] = $instance;
+        self::$instances[$type] = $instance;
     }
 
     /**

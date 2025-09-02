@@ -89,11 +89,6 @@ final class BackendSVNTest extends TestIntegrationTestCase
         ProjectManager::clearInstance();
     }
 
-    public function testConstructor(): void
-    {
-        self::assertNotNull(BackendSVN::instance());
-    }
-
     public function testGenerateSVNApacheConf(): void
     {
         $svn_dao = $this->createMock(SVN_DAO::class);
