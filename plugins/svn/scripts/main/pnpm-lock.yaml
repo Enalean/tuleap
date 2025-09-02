@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@tuleap/fetch-result':
+    specifier: workspace:^
+    version: link:../../../../lib/frontend/fetch-result
   '@tuleap/project-background':
     specifier: workspace:*
     version: link:../../../../lib/frontend/project-background

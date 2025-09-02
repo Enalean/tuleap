@@ -82,10 +82,6 @@ class AccessControlController
             $GLOBALS['Response']->addFeedback(\Feedback::WARN, (string) $fault);
         }
 
-        $GLOBALS['HTML']->includeJavascriptSnippet(
-            file_get_contents($GLOBALS['Language']->getContent('script_locale', null, 'svn', '.js'))
-        );
-
         $service->renderInPageRepositoryAdministration(
             $request,
             $title,
