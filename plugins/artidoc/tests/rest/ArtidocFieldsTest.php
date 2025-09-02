@@ -23,12 +23,13 @@ declare(strict_types=1);
 namespace Tuleap\Artidoc;
 
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
+use ProjectUGroup;
 use Psl\Json;
 use Tuleap\Artidoc\Domain\Document\Section\Field\DisplayType;
 use Tuleap\Artidoc\Tests\ArtidocAPIHelper;
 use Tuleap\Artidoc\Tests\DocumentPermissions;
-use Tuleap\Artidoc\Tests\SiteAdminProjectApproval;
 use Tuleap\Artidoc\Tests\Setup\ArtidocFieldsPreparator;
+use Tuleap\Artidoc\Tests\SiteAdminProjectApproval;
 use Tuleap\Disposable\Dispose;
 use Tuleap\Docman\Test\rest\Helper\DocmanAPIHelper;
 use Tuleap\REST\BaseTestDataBuilder;
@@ -82,7 +83,7 @@ final class ArtidocFieldsTest extends RestBase
         );
         $all_fields_tracker = $trackers->getTrackerRest(self::ALL_FIELDS_SHORT_NAME);
 
-        $this->configureAllFieldTypes($all_fields_tracker, $artidoc_id);
+        $this->configureAllFieldTypes($all_fields_tracker, $artidoc_id, $real_project_id);
     }
 
     private function createProject(int $template_project_id): int
@@ -98,8 +99,8 @@ final class ArtidocFieldsTest extends RestBase
                         ->withBody(
                             $this->stream_factory->createStream(Json\encode([
                                 'shortname'        => 'artidoc-fields-' . $now->getTimestamp(),
-                                'description'      => 'yolo',
                                 'label'            => 'Artidoc Fields',
+                                'description'      => '',
                                 'is_public'        => true,
                                 'allow_restricted' => true,
                                 'template_id'      => $template_project_id,
@@ -118,6 +119,7 @@ final class ArtidocFieldsTest extends RestBase
     private function configureAllFieldTypes(
         TrackerRESTHelper $all_fields_tracker,
         int $artidoc_id,
+        int $project_id,
     ): void {
         $string_field_id           = $all_fields_tracker->getFieldByShortName('string')['field_id'];
         $text_field_id             = $all_fields_tracker->getFieldByShortName('text')['field_id'];
@@ -127,6 +129,8 @@ final class ArtidocFieldsTest extends RestBase
         $date_field_id             = $all_fields_tracker->getFieldByShortName('date')['field_id'];
         $permissions_field_id      = $all_fields_tracker->getFieldByShortName('permissions')['field_id'];
         $selectbox_static_id       = $all_fields_tracker->getFieldByShortName('selectbox_static')['field_id'];
+        $radio_users_id            = $all_fields_tracker->getFieldByShortName('radio_users_registered')['field_id'];
+        $multi_user_groups_id      = $all_fields_tracker->getFieldByShortName('msb_ugroups')['field_id'];
         $submitted_by_field_id     = $all_fields_tracker->getFieldByShortName('submitted_by')['field_id'];
         $last_update_by_field_id   = $all_fields_tracker->getFieldByShortName('last_update_by')['field_id'];
         $submitted_on_field_id     = $all_fields_tracker->getFieldByShortName('submitted_on')['field_id'];
@@ -150,6 +154,8 @@ final class ArtidocFieldsTest extends RestBase
                             ['field_id' => $date_field_id, 'display_type' => DisplayType::COLUMN->value],
                             ['field_id' => $permissions_field_id, 'display_type' => DisplayType::COLUMN->value],
                             ['field_id' => $selectbox_static_id, 'display_type' => DisplayType::COLUMN->value],
+                            ['field_id' => $radio_users_id, 'display_type' => DisplayType::COLUMN->value],
+                            ['field_id' => $multi_user_groups_id, 'display_type' => DisplayType::COLUMN->value],
                             ['field_id' => $submitted_by_field_id, 'display_type' => DisplayType::COLUMN->value],
                             ['field_id' => $last_update_by_field_id, 'display_type' => DisplayType::COLUMN->value],
                             ['field_id' => $submitted_on_field_id, 'display_type' => DisplayType::COLUMN->value],
@@ -161,5 +167,56 @@ final class ArtidocFieldsTest extends RestBase
             )
         );
         self::assertSame(200, $put_configuration_response->getStatusCode());
+
+        $user_groups               = $this->projects_api->getUserGroupsOfProject($project_id);
+        $integrators_user_group_id = $user_groups->getUserGroupByShortName('Integrators')['id'];
+
+        $artifact_to_link_id = $all_fields_tracker->createArtifact([
+            $all_fields_tracker->getSubmitTextValue('title', 'Zannichellia vernant'),
+        ])['id'];
+
+        $project_members_id = $project_id . '_' . ProjectUGroup::PROJECT_MEMBERS;
+
+        $artifact = $all_fields_tracker->createArtifact(
+            [
+                $all_fields_tracker->getSubmitTextValue('title', 'All fields'),
+                $all_fields_tracker->getSubmitTextValue('description', 'legpuller hexapod'),
+                ['field_id' => $text_field_id, 'value' => 'hermoglyphic stepfatherhood'],
+                ['field_id' => $string_field_id, 'value' => 'ketole missal'],
+                ['field_id' => $int_field_id, 'value' => 223],
+                ['field_id' => $float_field_id, 'value' => 306.21],
+                ['field_id' => $computed_field_id, 'manual_value' => 456],
+                ['field_id' => $date_field_id, 'value' => '2029-03-14'],
+                $all_fields_tracker->getSubmitListValue('selectbox_static', 'Dos'),
+                [
+                    'field_id'       => $radio_users_id,
+                    'bind_value_ids' => [
+                        $this->user_ids[BaseTestDataBuilder::TEST_USER_1_NAME],
+                    ],
+                ],
+                [
+                    'field_id'       => $multi_user_groups_id,
+                    'bind_value_ids' => [$project_members_id, $integrators_user_group_id],
+                ],
+                [
+                    'field_id' => $permissions_field_id,
+                    'value'    => [
+                        'granted_groups' => [$project_members_id],
+                    ],
+                ],
+                [
+                    'field_id'  => $artifact_links_field_id,
+                    'all_links' => [
+                        ['id' => $artifact_to_link_id, 'direction' => 'forward', 'type' => ''],
+                    ],
+                ],
+            ]
+        );
+
+        $this->artidoc_api->importExistingArtifactInArtidoc(
+            $artidoc_id,
+            BaseTestDataBuilder::TEST_USER_1_NAME,
+            $artifact['id']
+        );
     }
 }
