@@ -51,7 +51,7 @@ class RequirementRetrieverTest extends TestCase
                  */
                 public function getArtifactByIdUserCanView(\PFUser $user, $id): ?Artifact
                 {
-                    if ($id === 101 || $id === 102) {
+                    if ($id === 101 || $id === 103) {
                         return ArtifactTestBuilder::anArtifact($id)->build();
                     }
 
@@ -84,6 +84,6 @@ class RequirementRetrieverTest extends TestCase
         );
         self::assertCount(2, $requirements);
         self::assertEquals(101, $requirements[0]->getId());
-        self::assertEquals(102, $requirements[1]->getId());
+        self::assertEquals(103, $requirements[1]->getId());
     }
 }

@@ -75,7 +75,7 @@ final class DefinitionCommonmarkRepresentation extends MinimalDefinitionRepresen
     public readonly ArtifactRepresentation $artifact;
 
     /**
-     * @param ArtifactRepresentation[] $all_requirements
+     * @param list<ArtifactRepresentation> $all_requirements
      * @throws StepDefinitionFormatNotFoundException
      */
     public function __construct(
