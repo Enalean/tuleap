@@ -18,8 +18,8 @@
  */
 
 import "./link-field.scss";
-import type { Meta, StoryObj } from "@storybook/web-components";
-import { fn } from "@storybook/test";
+import type { Meta, StoryObj } from "@storybook/web-components-vite";
+import { fn } from "storybook/test";
 import type { TemplateResult } from "lit";
 import { html } from "lit";
 import { mswDecorator } from "msw-storybook-addon";
