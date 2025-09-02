@@ -49,13 +49,22 @@ document.addEventListener("DOMContentLoaded", async () => {
             continue;
         }
 
-        const dashboard_id = JSON.parse(getAttributeOrThrow(vue_mount_point, "data-dashboard-id"));
-        const roadmap_id = JSON.parse(getAttributeOrThrow(vue_mount_point, "data-roadmap-id"));
-        const should_load_lvl1_iterations = JSON.parse(
-            getAttributeOrThrow(vue_mount_point, "data-should-load-lvl1-iterations"),
+        const dashboard_id = Number.parseInt(
+            getAttributeOrThrow(vue_mount_point, "data-dashboard-id"),
+            10,
         );
-        const should_load_lvl2_iterations = JSON.parse(
-            getAttributeOrThrow(vue_mount_point, "data-should-load-lvl2-iterations"),
+        const roadmap_id = Number.parseInt(
+            getAttributeOrThrow(vue_mount_point, "data-roadmap-id"),
+            10,
+        );
+
+        const should_load_lvl1_iterations = getAttributeOrThrow(
+            vue_mount_point,
+            "data-should-load-lvl1-iterations",
+        );
+        const should_load_lvl2_iterations = getAttributeOrThrow(
+            vue_mount_point,
+            "data-should-load-lvl2-iterations",
         );
 
         const gettext_plugin = await initVueGettext(
@@ -73,8 +82,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         const initial_root_state: RootState = {
             gettext_provider,
             locale_bcp47: toBCP47(document.body.dataset.userLocale || "en_US"),
-            should_load_lvl1_iterations,
-            should_load_lvl2_iterations,
+            should_load_lvl1_iterations: Boolean(should_load_lvl1_iterations),
+            should_load_lvl2_iterations: Boolean(should_load_lvl2_iterations),
         } as RootState;
 
         const default_timescale: TimeScale = ((
