@@ -34,6 +34,7 @@ use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerQueryContentRepresent
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerQueryRepresentation;
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerWidgetRepresentation;
 use Tuleap\CrossTracker\Widget\CrossTrackerWidgetDao;
+use Tuleap\CrossTracker\Widget\CrossTrackerWidgetRetriever;
 use Tuleap\Option\Option;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
@@ -275,9 +276,9 @@ final class CrossTrackerWidgetResource extends AuthenticatedResource
     private function getUserIsAllowedToSeeWidgetChecker(): UserIsAllowedToSeeWidgetChecker
     {
         return new UserIsAllowedToSeeWidgetChecker(
-            $this->getWidgetDao(),
             ProjectManager::instance(),
             new URLVerification(),
+            new CrossTrackerWidgetRetriever($this->getWidgetDao()),
         );
     }
 }

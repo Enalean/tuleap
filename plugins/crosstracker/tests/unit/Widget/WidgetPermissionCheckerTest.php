@@ -23,7 +23,7 @@ namespace Tuleap\CrossTracker\Widget;
 use PFUser;
 use PHPUnit\Framework\MockObject\MockObject;
 use ProjectManager;
-use Tuleap\CrossTracker\Tests\Stub\Widget\SearchCrossTrackerWidgetStub;
+use Tuleap\CrossTracker\Tests\Stub\Widget\RetrieveCrossTrackerWidgetStub;
 use Tuleap\Dashboard\Project\ProjectDashboardController;
 use Tuleap\Dashboard\User\UserDashboardController;
 use Tuleap\Test\Builders\ProjectTestBuilder;
@@ -45,11 +45,8 @@ final class WidgetPermissionCheckerTest extends TestCase
     {
         $user               = UserTestBuilder::aUser()->withId(101)->build();
         $permission_checker = new WidgetPermissionChecker(
-            SearchCrossTrackerWidgetStub::withExistingWidget([
-                'dashboard_type' => UserDashboardController::DASHBOARD_TYPE,
-                'user_id'        => 101,
-            ]),
             $this->project_manager,
+            RetrieveCrossTrackerWidgetStub::withWidget(UserCrossTrackerWidget::build(1, UserDashboardController::DASHBOARD_TYPE, (int) $user->getId())),
         );
         self::assertTrue($permission_checker->isUserWidgetAdmin($user, 1));
     }
@@ -57,12 +54,10 @@ final class WidgetPermissionCheckerTest extends TestCase
     public function testItReturnsFalseForUserCheckingAnOtherUserWidget(): void
     {
         $user               = UserTestBuilder::aUser()->withId(200)->build();
+        $other_user_id      = 101;
         $permission_checker = new WidgetPermissionChecker(
-            SearchCrossTrackerWidgetStub::withExistingWidget([
-                'dashboard_type' => UserDashboardController::DASHBOARD_TYPE,
-                'user_id'        => 101,
-            ]),
             $this->project_manager,
+            RetrieveCrossTrackerWidgetStub::withWidget(UserCrossTrackerWidget::build(1, UserDashboardController::DASHBOARD_TYPE, $other_user_id)),
         );
         self::assertFalse($permission_checker->isUserWidgetAdmin($user, 1));
     }
@@ -75,11 +70,8 @@ final class WidgetPermissionCheckerTest extends TestCase
         $user = $this->createMock(PFUser::class);
         $user->method('isAdmin')->willReturn(true);
         $permission_checker = new WidgetPermissionChecker(
-            SearchCrossTrackerWidgetStub::withExistingWidget([
-                'dashboard_type' => ProjectDashboardController::DASHBOARD_TYPE,
-                'project_id'     => 101,
-            ]),
             $this->project_manager,
+            RetrieveCrossTrackerWidgetStub::withWidget(ProjectCrossTrackerWidget::build(1, ProjectDashboardController::DASHBOARD_TYPE, (int) $project->getID())),
         );
         self::assertTrue($permission_checker->isUserWidgetAdmin($user, 1));
     }
@@ -92,21 +84,8 @@ final class WidgetPermissionCheckerTest extends TestCase
         $user = $this->createMock(PFUser::class);
         $user->method('isAdmin')->willReturn(false);
         $permission_checker = new WidgetPermissionChecker(
-            SearchCrossTrackerWidgetStub::withExistingWidget([
-                'dashboard_type' => ProjectDashboardController::DASHBOARD_TYPE,
-                'project_id'     => 101,
-            ]),
             $this->project_manager,
-        );
-        self::assertFalse($permission_checker->isUserWidgetAdmin($user, 1));
-    }
-
-    public function testItReturnsFalseInOtherCase(): void
-    {
-        $user               = $this->createMock(PFUser::class);
-        $permission_checker = new WidgetPermissionChecker(
-            SearchCrossTrackerWidgetStub::withExistingWidget([]),
-            $this->project_manager,
+            RetrieveCrossTrackerWidgetStub::withWidget(ProjectCrossTrackerWidget::build(1, ProjectDashboardController::DASHBOARD_TYPE, (int) $project->getID())),
         );
         self::assertFalse($permission_checker->isUserWidgetAdmin($user, 1));
     }

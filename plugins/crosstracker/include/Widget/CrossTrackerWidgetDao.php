@@ -22,11 +22,10 @@ declare(strict_types=1);
 
 namespace Tuleap\CrossTracker\Widget;
 
+use Tuleap\Dashboard\Project\ProjectDashboardController;
+use Tuleap\Dashboard\User\UserDashboardController;
 use Tuleap\DB\DataAccessObject;
 
-/**
- * @psalm-import-type CrossTrackerWidgetDashboardRow from SearchCrossTrackerWidget
- */
 final class CrossTrackerWidgetDao extends DataAccessObject implements SearchCrossTrackerWidget, CreateWidget, CloneWidget
 {
     #[\Override]
@@ -35,11 +34,7 @@ final class CrossTrackerWidgetDao extends DataAccessObject implements SearchCros
         return $this->getDB()->row('SELECT 1 FROM plugin_crosstracker_widget WHERE id = ?', $widget_id) !== null;
     }
 
-    /**
-     * @psalm-return CrossTrackerWidgetDashboardRow|null
-     */
-    #[\Override]
-    public function searchCrossTrackerWidgetDashboardById(int $content_id): ?array
+    public function searchCrossTrackerWidgetDashboardById(int $content_id): ProjectCrossTrackerWidget|UserCrossTrackerWidget|null
     {
         $sql = "SELECT dashboard_id, dashboard_type, user_id, project_dashboards.project_id
                   FROM plugin_crosstracker_widget
@@ -56,7 +51,29 @@ final class CrossTrackerWidgetDao extends DataAccessObject implements SearchCros
                 WHERE plugin_crosstracker_widget.id = ?
                   AND widget.name = 'crosstrackersearch';";
 
-        return $this->getDB()->row($sql, $content_id);
+        $row = $this->getDB()->row($sql, $content_id);
+
+        if ($row === null) {
+            return null;
+        }
+
+        if ($row['dashboard_type'] === ProjectDashboardController::DASHBOARD_TYPE) {
+            return ProjectCrossTrackerWidget::build(
+                $row['dashboard_id'],
+                $row['dashboard_type'],
+                $row['project_id']
+            );
+        }
+
+        if ($row['dashboard_type'] === UserDashboardController::DASHBOARD_TYPE) {
+            return UserCrossTrackerWidget::build(
+                $row['dashboard_id'],
+                $row['dashboard_type'],
+                $row['user_id']
+            );
+        }
+
+        return null;
     }
 
     #[\Override]

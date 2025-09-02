@@ -43,9 +43,9 @@ class CrossTrackerSearchWidget extends Widget
     public function __construct(
         private readonly WidgetInheritanceHandler $inheritance_handler,
         private readonly WidgetPermissionChecker $permission_checker,
-        private readonly SearchCrossTrackerWidget $search_cross_tracker_widget,
         private readonly WidgetCrossTrackerWidgetXMLExporter $widget_XML_exporter,
         private readonly CrossTrackerWidgetCreator $cross_tracker_widget_creator,
+        private readonly CrossTrackerWidgetRetriever $cross_tracker_widget_retriever,
     ) {
         parent::__construct(self::NAME);
     }
@@ -68,8 +68,8 @@ class CrossTrackerSearchWidget extends Widget
 
         $is_admin = $this->permission_checker->isUserWidgetAdmin($user, $this->content_id);
 
-        $row = $this->search_cross_tracker_widget->searchCrossTrackerWidgetDashboardById($this->content_id);
-        if ($row === null) {
+        $widget = $this->cross_tracker_widget_retriever->retrieveWidgetById($this->content_id);
+        if ($widget === null) {
             throw new LogicException(sprintf('Widget #%d could not be found.', $this->content_id));
         }
 
@@ -80,10 +80,10 @@ class CrossTrackerSearchWidget extends Widget
                     $this->content_id,
                     $is_admin,
                     $user,
-                    $row['dashboard_type'],
+                    $widget->getDashboardType(),
                     $this->getTitleAttributeValue(),
                     $this->getTitle(),
-                    $row['dashboard_id']
+                    $widget->getDashboardId()
                 )),
             ]
         );

@@ -24,7 +24,9 @@ namespace Tuleap\CrossTracker\Query\Advanced;
 
 use LogicException;
 use Psr\EventDispatcher\EventDispatcherInterface;
-use Tuleap\CrossTracker\Widget\SearchCrossTrackerWidget;
+use Tuleap\CrossTracker\Widget\ProjectCrossTrackerWidget;
+use Tuleap\CrossTracker\Widget\RetrieveCrossTrackerWidget;
+use Tuleap\CrossTracker\Widget\UserCrossTrackerWidget;
 use Tuleap\Option\Option;
 use Tuleap\Project\ProjectByIDFactory;
 use Tuleap\Project\Sidebar\CollectLinkedProjects;
@@ -35,15 +37,14 @@ use Tuleap\Tracker\Report\Query\Advanced\InvalidFromCollection;
 
 /**
  * @template-implements FromProjectConditionVisitor<InvalidFromProjectCollectorParameters, void>
- * @psalm-import-type CrossTrackerWidgetDashboardRow from SearchCrossTrackerWidget
  */
 final readonly class InvalidFromProjectCollectorVisitor implements FromProjectConditionVisitor
 {
     public function __construct(
         private WidgetInProjectChecker $in_project_checker,
-        private SearchCrossTrackerWidget $widget_retriever,
         private ProjectByIDFactory $project_factory,
         private EventDispatcherInterface $event_dispatcher,
+        private RetrieveCrossTrackerWidget $cross_tracker_widget_retriever,
     ) {
     }
 
@@ -168,24 +169,24 @@ final readonly class InvalidFromProjectCollectorVisitor implements FromProjectCo
         $parameters->widget_id
             ->andThen($this->getDashboardRowFromWidgetID(...))
             ->orElse(
-                /** @return Option<CrossTrackerWidgetDashboardRow> */
+                /** @return Option<ProjectCrossTrackerWidget> */
                 fn(): Option => $this->defineErrorForQueriesNotAssociatedWithADashboardUsingAggregatedFunction($parameters->collection)
             )
             ->apply(
-                fn(array $row) => $this->validateQueriesAssociatedWithAWidget($row, $parameters)
+                fn(ProjectCrossTrackerWidget|UserCrossTrackerWidget $widget) => $this->validateQueriesAssociatedWithAWidget($widget, $parameters)
             );
     }
 
     /**
-     * @return Option<CrossTrackerWidgetDashboardRow>
+     * @return Option<ProjectCrossTrackerWidget | UserCrossTrackerWidget>
      */
     private function getDashboardRowFromWidgetID(int $widget_id): Option
     {
-        return Option::fromNullable($this->widget_retriever->searchCrossTrackerWidgetDashboardById($widget_id));
+        return Option::fromNullable($this->cross_tracker_widget_retriever->retrieveWidgetById($widget_id));
     }
 
     /**
-     * @return Option<CrossTrackerWidgetDashboardRow>
+     * @return Option<ProjectCrossTrackerWidget>
      */
     private function defineErrorForQueriesNotAssociatedWithADashboardUsingAggregatedFunction(InvalidFromCollection $collection): Option
     {
@@ -193,29 +194,19 @@ final readonly class InvalidFromProjectCollectorVisitor implements FromProjectCo
             'tuleap-crosstracker',
             "You cannot use @project with 'aggregated' in a query not associated with a project dashboard widget",
         ));
-        return Option::nothing(
-            \Psl\Type\shape([
-                'dashboard_id' => \Psl\Type\int(),
-                'dashboard_type' => \Psl\Type\string(),
-                'project_id' => \Psl\Type\int(),
-                'user_id' => \Psl\Type\int(),
-            ])
-        );
+        return Option::nothing(ProjectCrossTrackerWidget::class);
     }
 
-    /**
-     * @param CrossTrackerWidgetDashboardRow $row
-     */
-    private function validateQueriesAssociatedWithAWidget(array $row, InvalidFromProjectCollectorParameters $parameters): void
+    private function validateQueriesAssociatedWithAWidget(ProjectCrossTrackerWidget|UserCrossTrackerWidget $widget, InvalidFromProjectCollectorParameters $parameters): void
     {
-        if ($row['dashboard_type'] !== 'project') {
+        if ($widget instanceof UserCrossTrackerWidget) {
             $parameters->collection->addInvalidFrom(dgettext(
                 'tuleap-crosstracker',
                 "You cannot use @project with 'aggregated' in the context of a personal dashboard",
             ));
             return;
         }
-        $project         = $this->project_factory->getValidProjectById($row['project_id']);
+        $project         = $this->project_factory->getValidProjectById($widget->getProjectId());
         $linked_projects = $this->event_dispatcher->dispatch(new CollectLinkedProjects($project, $parameters->user));
         assert($linked_projects instanceof CollectLinkedProjects);
         if (! $linked_projects->canAggregateProjects()) {
