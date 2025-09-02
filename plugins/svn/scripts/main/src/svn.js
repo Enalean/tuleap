@@ -17,59 +17,60 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import jQuery from "jquery";
-import codendi from "codendi";
+import { getJSON, uri } from "@tuleap/fetch-result";
 
-!(function ($) {
+document.addEventListener("DOMContentLoaded", () => {
+    initAccessControlsVersionDisplayer();
+    toggleSvnHelp();
+
     function initAccessControlsVersionDisplayer() {
-        var version_selected = $("#version-selected");
-        var version_displayer = $("#other-version-content");
-        var project_id = $("input[name=project_id]").val();
-        var repo_id = $("input[name=repo_id]").val();
+        const version_selected = document.getElementById("version-selected");
+        const version_displayer = document.getElementById("other-version-content");
 
-        function updateVersionDisplayer(response) {
-            $("#old-access-file-form").css("visibility", "visible");
-
-            if (response.content == "") {
-                response.content = codendi.getText("plugin_svn", "empty_version");
-                version_displayer.addClass("empty-version");
-                version_displayer.attr("disabled", "");
-            } else {
-                version_displayer.removeClass("empty-version");
-                version_displayer.removeAttr("disabled");
-            }
-
-            version_displayer.text(response.content);
+        if (version_selected === null || version_displayer === null) {
+            return;
         }
 
-        version_selected.change(function () {
-            if (this.value === "0") {
-                version_displayer.text("");
-                version_displayer.attr("disabled", "");
-                $("#old-access-file-form").css("visibility", "hidden");
+        const project_id = document.querySelector("input[name=project_id]").value;
+        const repo_id = document.querySelector("input[name=repo_id]").value;
+
+        function updateVersionDisplayer(response) {
+            let text_to_display = version_displayer.dataset.emptyVersion;
+            document.getElementById("old-access-file-form").style.visibility = "visible";
+
+            if (response.content === "") {
+                version_displayer.classList.add("empty-version");
+                version_displayer.setAttribute("disabled", "");
             } else {
-                $.ajax({
-                    url:
-                        "/plugins/svn/?action=display-archived-version&accessfile_history_id=" +
-                        this.value +
-                        "&group_id=" +
-                        project_id +
-                        "&repo_id=" +
-                        repo_id,
-                    dataType: "json",
-                }).success(updateVersionDisplayer);
+                text_to_display = response.content;
+                version_displayer.classList.remove("empty-version");
+                version_displayer.removeAttribute("disabled");
+            }
+
+            version_displayer.innerText = text_to_display;
+        }
+
+        version_selected.addEventListener("change", () => {
+            if (version_selected.value === "0") {
+                version_displayer.innerText = "";
+                version_displayer.setAttribute("disabled", "");
+                document.getElementById("old-access-file-form").visibility = "hidden";
+            } else {
+                getJSON(
+                    uri`/plugins/svn/?action=display-archived-version&accessfile_history_id=${version_selected.value}&group_id=${project_id}&repo_id=${repo_id}`,
+                ).andThen(updateVersionDisplayer);
             }
         });
     }
 
     function toggleSvnHelp() {
-        $("#toggle-svn-help").click(function () {
-            $("#svn-repository-help").toggle();
+        const help = document.getElementById("toggle-svn-help");
+        if (help === null) {
+            return;
+        }
+
+        help.addEventListener("click", () => {
+            document.getElementById("svn-repository-help").classList.toggle("hidden");
         });
     }
-
-    $(document).ready(function () {
-        initAccessControlsVersionDisplayer();
-        toggleSvnHelp();
-    });
-})(jQuery);
+});

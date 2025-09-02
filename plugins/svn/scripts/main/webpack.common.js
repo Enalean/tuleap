@@ -31,7 +31,6 @@ const config = {
     context: __dirname,
     output: webpack_configurator.configureOutput(path.resolve(__dirname, "./frontend-assets")),
     externals: {
-        codendi: "codendi",
         jquery: "jQuery",
     },
     module: {

@@ -49,6 +49,7 @@ class AccessControlPresenter extends BaseAdminPresenter
     public $csrf;
     public $sections;
     public readonly bool $has_default_permissions;
+    public readonly string $empty_version;
 
     public function __construct(
         CSRFSynchronizerToken $token,
@@ -82,6 +83,7 @@ class AccessControlPresenter extends BaseAdminPresenter
         $this->select_version           = dgettext('tuleap-svn', 'Select a version');
         $this->saved_on                 = dgettext('tuleap-svn', 'saved on');
         $this->saved_versions           = dgettext('tuleap-svn', 'Saved versions:');
+        $this->empty_version            = dgettext('tuleap-svn', 'This version is empty');
 
         $this->sections = new SectionsPresenter($repository);
 

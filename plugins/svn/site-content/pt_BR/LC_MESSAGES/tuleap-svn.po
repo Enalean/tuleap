@@ -449,6 +449,9 @@ msgstr ""
 msgid "This limit will apply on all files on all svn plugin repositories."
 msgstr ""
 
+msgid "This version is empty"
+msgstr ""
+
 msgid "Top project"
 msgstr ""
 
