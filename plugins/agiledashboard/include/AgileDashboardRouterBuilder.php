@@ -44,6 +44,7 @@ use Tuleap\AgileDashboard\Planning\RootPlanning\UpdateIsAllowedChecker;
 use Tuleap\AgileDashboard\Planning\ScrumPlanningFilter;
 use Tuleap\AgileDashboard\Scrum\ScrumPresenterBuilder;
 use Tuleap\AgileDashboard\Workflow\AddToTopBacklogPostActionDao;
+use Tuleap\AgileDashboard\XML\AgileDashboardXMLExporter;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Layout\IncludeAssets;
@@ -210,7 +211,7 @@ class AgileDashboardRouterBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.
                 new DBTransactionExecutorWithConnection($db_connection)
             ),
             new Planning_RequestValidator($planning_factory, TrackerFactory::instance(), $this->current_user_provider),
-            AgileDashboard_XMLExporter::build(),
+            AgileDashboardXMLExporter::build(),
             new UpdateIsAllowedChecker(
                 $planning_factory,
                 new BacklogTrackerRemovalChecker(new AddToTopBacklogPostActionDao()),
