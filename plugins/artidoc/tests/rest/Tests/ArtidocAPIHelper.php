@@ -25,6 +25,7 @@ namespace Tuleap\Artidoc\Tests;
 use Psl\Json;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
+use Tuleap\REST\BaseTestDataBuilder;
 use Tuleap\REST\RequestWrapper;
 
 final readonly class ArtidocAPIHelper
@@ -40,7 +41,7 @@ final readonly class ArtidocAPIHelper
         int $parent_folder_id,
         string $title,
         DocumentPermissions $permissions,
-        string $rest_user_name,
+        string $rest_user_name = BaseTestDataBuilder::TEST_USER_1_NAME,
     ): array {
         $post_item_response = $this->request_wrapper->getResponseByName(
             $rest_user_name,

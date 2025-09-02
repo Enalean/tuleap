@@ -24,8 +24,9 @@ namespace Tuleap\Tracker\REST\Regressions;
 
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use PHPUnit\Framework\Attributes\Group;
-use Tuleap\REST\RESTTestDataBuilder;
+use Tuleap\REST\BaseTestDataBuilder;
 use Tuleap\REST\RestBase;
+use Tuleap\Tracker\REST\Tests\TrackerRESTHelperFactory;
 
 #[DisableReturnValueGenerationForTestDoubles]
 #[Group('Regressions')]
@@ -39,11 +40,11 @@ final class ArtifactsCreationWithWrongWorkflowTest extends RestBase
         parent::setUp();
 
         $this->tracker_test_helper = new TrackerRESTHelperFactory(
+            $this->rest_request,
             $this->request_factory,
             $this->stream_factory,
-            $this->rest_request,
             $this->project_pbi_id,
-            RESTTestDataBuilder::TEST_USER_1_NAME
+            BaseTestDataBuilder::TEST_USER_1_NAME
         );
     }
 
