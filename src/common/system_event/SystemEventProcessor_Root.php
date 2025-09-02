@@ -22,52 +22,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\SVNCore\ApacheConfGenerator;
+use Psr\EventDispatcher\EventDispatcherInterface;
+use Tuleap\SystemEvent\RootPostEventsActionsEvent;
 
-class SystemEventProcessor_Root extends SystemEventProcessor
+class SystemEventProcessor_Root extends SystemEventProcessor // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    /**
-     * @var SiteCache
-     */
-    private $site_cache;
-
-    /**
-     * @var BackendAliases
-     */
-    private $backend_aliases;
-
-    /**
-     * @var BackendSVN
-     */
-    private $backend_svn;
-
-    /**
-     * @var BackendSystem
-     */
-    protected $backend_system;
-
-    /**
-     * @var ApacheConfGenerator
-     */
-    protected $generator;
-
     public function __construct(
         SystemEventProcess $process,
         SystemEventManager $system_event_manager,
         SystemEventDao $dao,
         \Psr\Log\LoggerInterface $logger,
-        BackendAliases $backend_aliases,
-        BackendSVN $backend_svn,
-        BackendSystem $backend_system,
-        SiteCache $site_cache,
-        ApacheConfGenerator $generator,
+        private readonly BackendAliases $backend_aliases,
+        private readonly EventDispatcherInterface $event_dispatcher,
+        private readonly SiteCache $site_cache,
     ) {
         parent::__construct($process, $system_event_manager, $dao, $logger);
-        $this->backend_aliases = $backend_aliases;
-        $this->backend_svn     = $backend_svn;
-        $this->backend_system  = $backend_system;
-        $this->site_cache      = $site_cache;
-        $this->generator       = $generator;
     }
 
     public function getOwner()
@@ -84,10 +53,7 @@ class SystemEventProcessor_Root extends SystemEventProcessor
             $this->backend_aliases->update();
         }
 
-        // Update SVN root definition for Apache once everything else is processed
-        if ($this->backend_svn->getSVNApacheConfNeedUpdate()) {
-            $this->generator->generate();
-        }
+        $this->event_dispatcher->dispatch(new RootPostEventsActionsEvent());
 
         $this->triggerApplicationOwnerEventsProcessing();
     }

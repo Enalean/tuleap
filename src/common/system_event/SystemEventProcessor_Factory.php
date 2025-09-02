@@ -22,7 +22,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\SVNCore\ApacheConfGenerator;
 use Tuleap\SystemEvent\GetSystemEventQueuesEvent;
 
 class SystemEventProcessor_Factory
@@ -90,10 +89,8 @@ class SystemEventProcessor_Factory
             new SystemEventDao(),
             $this->logger,
             BackendAliases::instance(),
-            BackendSVN::instance(),
-            BackendSystem::instance(),
+            $this->event_manager,
             new SiteCache($this->logger),
-            ApacheConfGenerator::build(),
         );
     }
 }

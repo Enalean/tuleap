@@ -144,7 +144,7 @@ use Tuleap\SVN\ViewVC\ViewVCProxy;
 use Tuleap\SVN\XMLImporter;
 use Tuleap\SVN\XMLSvnExporter;
 use Tuleap\SVNCore\AccessControl\SVNProjectAccessRouteDefinition;
-use Tuleap\SVNCore\ApacheConfGenerator;
+use Tuleap\SVN\Apache\ApacheConfGenerator;
 use Tuleap\SVNCore\Cache\ParameterDao;
 use Tuleap\SVNCore\Cache\ParameterRetriever;
 use Tuleap\SVNCore\Cache\ParameterSaver;
@@ -152,6 +152,7 @@ use Tuleap\SVNCore\Event\UpdateProjectAccessFilesEvent;
 use Tuleap\SVNCore\GetAllRepositories;
 use Tuleap\SVNCore\SVNAccessFileReader;
 use Tuleap\SVNCore\SvnCoreAccess;
+use Tuleap\SystemEvent\RootPostEventsActionsEvent;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithService
@@ -275,6 +276,10 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
                     new DuplicateSectionDetector(),
                 );
             }
+        );
+        $commands_collector->addCommand(
+            \Tuleap\SVN\Apache\RefreshApacheConfCommand::NAME,
+            static fn (): \Tuleap\SVN\Apache\RefreshApacheConfCommand => new \Tuleap\SVN\Apache\RefreshApacheConfCommand(ApacheConfGenerator::build()),
         );
     }
 
@@ -1285,6 +1290,15 @@ class SvnPlugin extends Plugin implements PluginWithConfigKeys, PluginWithServic
             $event->addError(
                 dgettext('tuleap-svn', 'Archive should not contain svn data.'),
             );
+        }
+    }
+
+    #[ListeningToEventClass]
+    public function rootPostEventsActionsEvent(RootPostEventsActionsEvent $event): void
+    {
+        // Update SVN root definition for Apache once everything else is processed
+        if (\BackendSVN::instance()->getSVNApacheConfNeedUpdate()) {
+            ApacheConfGenerator::build()->generate();
         }
     }
 }

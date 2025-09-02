@@ -23,7 +23,7 @@ namespace Tuleap\SVN\Events;
 use Project;
 use ProjectManager;
 use SystemEvent;
-use Tuleap\SVNCore\ApacheConfGenerator;
+use Tuleap\SVN\Apache\ApacheConfGenerator;
 use Tuleap\SVN\Repository\RepositoryDeleter;
 use Tuleap\SVN\Repository\RepositoryManager;
 use Tuleap\SVN\SvnAdmin;
