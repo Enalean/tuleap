@@ -27,14 +27,7 @@ const config: StorybookConfig = {
     framework: "@storybook/web-components-vite",
     stories: ["../stories/**/*.mdx", "../stories/**/*.stories.ts"],
     staticDirs: ["../public"],
-    addons: [
-        "@storybook/addon-essentials",
-        "@storybook/addon-interactions",
-        "@storybook/addon-links",
-    ],
-    features: {
-        backgroundsStoryGlobals: true,
-    },
+    addons: ["@storybook/addon-docs", "@storybook/addon-links"],
     viteFinal: (config) =>
         mergeConfig(config, {
             css: {

@@ -1,6 +1,4 @@
-import { Canvas, Meta, Controls } from '@storybook/blocks';
-import { SyntaxHighlighter } from '@storybook/components';
-
+import { Canvas, Meta } from "@storybook/addon-docs/blocks";
 import * as Story from "./svg-arrow-path.stories.ts";
 
 <Meta of={Story}/>
@@ -18,17 +16,16 @@ There are 4 methods that provide the SVG path to draw an arrow:
 
 The returned value of each method is a string like `"M17 17 L25 17 Q33 17, […] L54 82"` that can be given as `d` attribute of `path` element:
 
-<SyntaxHighlighter language="css" copyable={false}>
-  {`
-    <path
-        stroke-width="1.5px"
-        stroke-linejoin="round"
-        stroke-linecap="round"
-        fill="none"
-        stroke="#1593c4"
-        d="M17 17 L25 17 Q33 17, 33 25 L33 69 Q33 77, 41 77 L59 77 L54 72 M59 77 L54 82" />
-  `}
-</SyntaxHighlighter>
+```svg
+<path
+  stroke-width="1.5px"
+  stroke-linejoin="round"
+  stroke-linecap="round"
+  fill="none"
+  stroke="#1593c4"
+  d="M17 17 L25 17 Q33 17, 33 25 L33 69 Q33 77, 41 77 L59 77 L54 72 M59 77 L54 82"
+/>
+```
 
 This will give the following:
 

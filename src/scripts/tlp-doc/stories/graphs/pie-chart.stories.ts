@@ -17,7 +17,7 @@
  *  along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Meta, StoryObj } from "@storybook/web-components";
+import type { Meta, StoryObj } from "@storybook/web-components-vite";
 import type { DataPieChart } from "@tuleap/pie-chart";
 import { createPieChartElement } from "@tuleap/plugin-graphs";
 import "./pie-chart.scss";

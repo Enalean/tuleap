@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { Preview } from "@storybook/web-components";
+import type { Preview } from "@storybook/web-components-vite";
 import type { HTMLTemplateResult } from "lit";
 import { html } from "lit";
 import { initialize } from "msw-storybook-addon";
