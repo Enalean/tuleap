@@ -24,15 +24,23 @@ namespace Tuleap\CrossTracker\Widget;
 /**
  * psalm-immutable
  */
-final readonly class CrossTrackerWidgetRetriever implements RetrieveCrossTrackerWidget
+final class CrossTrackerWidgetRetriever implements RetrieveCrossTrackerWidget
 {
-    public function __construct(public CrossTrackerWidgetDao $dao)
+    private array $cache;
+    public function __construct(public readonly CrossTrackerWidgetDao $dao)
     {
+        $this->cache = [];
     }
 
     #[\Override]
     public function retrieveWidgetById(int $widget_id): ProjectCrossTrackerWidget|UserCrossTrackerWidget|null
     {
-        return $this->dao->searchCrossTrackerWidgetDashboardById($widget_id);
+        if (isset($this->cache[$widget_id])) {
+            return $this->cache[$widget_id];
+        }
+
+        $this->cache[$widget_id] = $this->dao->searchCrossTrackerWidgetDashboardById($widget_id);
+
+        return $this->cache[$widget_id];
     }
 }

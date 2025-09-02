@@ -48,6 +48,7 @@ use Tuleap\CrossTracker\Query\Advanced\ResultBuilderVisitor;
 use Tuleap\CrossTracker\Query\Advanced\SelectBuilderVisitor;
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerQueryContentRepresentation;
 use Tuleap\CrossTracker\REST\v1\Representation\CrossTrackerSelectedRepresentation;
+use Tuleap\CrossTracker\Widget\RetrieveCrossTrackerWidget;
 use Tuleap\Option\Option;
 use Tuleap\Tracker\Artifact\Artifact;
 use Tuleap\Tracker\Artifact\RetrieveArtifact;
@@ -125,6 +126,7 @@ final readonly class CrossTrackerArtifactQueryFactory
      * @throws SyntaxError
      */
     public function getArtifactsMatchingQuery(
+        RetrieveCrossTrackerWidget $cross_tracker_retriever,
         CrossTrackerQuery $query,
         PFUser $current_user,
         int $limit,
@@ -137,7 +139,7 @@ final readonly class CrossTrackerArtifactQueryFactory
 
         $parsed_query = ParsedCrossTrackerQuery::fromCrossTrackerQuery($query, $this->parser);
 
-        $trackers = $this->query_trackers_retriever->getQueryTrackers($parsed_query, $current_user, ForgeConfig::getInt(self::MAX_TRACKER_FROM));
+        $trackers = $this->query_trackers_retriever->getQueryTrackers($cross_tracker_retriever, $parsed_query, $current_user, ForgeConfig::getInt(self::MAX_TRACKER_FROM));
         $this->instrumentation->updateTrackerCount(count($trackers));
 
         $this->validateExpertQuery($parsed_query, $current_user, $trackers);

@@ -28,7 +28,7 @@ use Project;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\CrossTracker\Query\Advanced\AllowedFrom;
 use Tuleap\CrossTracker\Query\Advanced\InvalidFromProjectCollectorVisitor;
-use Tuleap\CrossTracker\Widget\CrossTrackerWidgetRetriever;
+use Tuleap\CrossTracker\Widget\RetrieveCrossTrackerWidget;
 use Tuleap\CrossTracker\Widget\UserCrossTrackerWidget;
 use Tuleap\Project\ProjectByIDFactory;
 use Tuleap\Project\Sidebar\CollectLinkedProjects;
@@ -47,7 +47,7 @@ final readonly class FromProjectBuilderVisitor implements FromProjectConditionVi
     public function __construct(
         private ProjectByIDFactory $project_factory,
         private EventDispatcherInterface $event_dispatcher,
-        private CrossTrackerWidgetRetriever $cross_tracker_widget_retriever,
+        private RetrieveCrossTrackerWidget $cross_tracker_widget_retriever,
     ) {
     }
 
