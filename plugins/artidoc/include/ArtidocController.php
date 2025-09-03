@@ -34,8 +34,6 @@ use Tuleap\Artidoc\Document\Tracker\DocumentTrackerRepresentation;
 use Tuleap\Artidoc\Document\Tracker\SuitableTrackersForDocumentRetriever;
 use Tuleap\Artidoc\Domain\Document\ArtidocWithContext;
 use Tuleap\Artidoc\Domain\Document\RetrieveArtidocWithContext;
-use Tuleap\Config\ConfigKeyString;
-use Tuleap\Config\FeatureFlagConfigKey;
 use Tuleap\Date\DateHelper;
 use Tuleap\Date\DefaultRelativeDatesDisplayPreferenceRetriever;
 use Tuleap\Docman\ServiceDocman;
@@ -56,15 +54,6 @@ use Tuleap\Tracker\Semantic\Title\RetrieveSemanticTitleField;
 
 final readonly class ArtidocController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {
-    #[FeatureFlagConfigKey(<<<'EOF'
-    Feature flag to allow display of fields in artidoc documents.
-    0 to deactivate (default)
-    1 to activate
-    EOF
-    )]
-    #[ConfigKeyString('0')]
-    public const string FIELDS_FEATURE_FLAG = 'enable_artidoc_fields';
-
     public function __construct(
         private RetrieveArtidocWithContext $retrieve_artidoc,
         private ConfiguredTrackerRetriever $configured_tracker_retriever,
@@ -157,7 +146,6 @@ final readonly class ArtidocController implements DispatchableWithRequest, Dispa
                     ),
                     $allowed_max_size,
                     $this->event_dispatcher->dispatch(new GetPdfTemplatesEvent($user))->getTemplates(),
-                    \ForgeConfig::getFeatureFlag(self::FIELDS_FEATURE_FLAG) === '1',
                     $date_preference !== false ? $date_preference : DefaultRelativeDatesDisplayPreferenceRetriever::retrieveDefaultValue(),
                 )
             );

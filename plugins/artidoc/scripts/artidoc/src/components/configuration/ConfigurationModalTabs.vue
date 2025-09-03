@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <nav class="tlp-tabs" v-if="are_fields_enabled">
+    <nav class="tlp-tabs">
         <button
             class="tlp-tab"
             type="button"
@@ -48,14 +48,12 @@ import { useGettext } from "vue3-gettext";
 import { strictInject } from "@tuleap/vue-strict-inject";
 import { SELECTED_TRACKER } from "@/configuration/SelectedTracker";
 import type { ConfigurationTab } from "@/components/configuration/configuration-modal";
-import { ARE_FIELDS_ENABLED } from "@/are-fields-enabled";
 import { SECTIONS_STATES_COLLECTION } from "@/sections/states/sections-states-collection-injection-key";
 import {
     READONLY_FIELDS_SELECTION_TAB,
     TRACKER_SELECTION_TAB,
 } from "@/components/configuration/configuration-modal";
 
-const are_fields_enabled = strictInject(ARE_FIELDS_ENABLED);
 const states_collection = strictInject(SECTIONS_STATES_COLLECTION);
 const selected_tracker = strictInject(SELECTED_TRACKER);
 

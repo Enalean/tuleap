@@ -47,7 +47,6 @@ final readonly class ArtidocPresenter
         array $selected_readonly_fields,
         public int $upload_max_size,
         ?array $pdf_templates,
-        public bool $are_fields_enabled,
         public string $relative_date_display,
     ) {
         $this->selected_tracker         = encode($selected_tracker);
