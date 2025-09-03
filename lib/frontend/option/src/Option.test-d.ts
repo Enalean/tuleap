@@ -32,7 +32,7 @@ describe(`Option type`, () => {
 
         expectTypeOf(
             itCouldReturnNothing().apply((received_value) => {
-                expectTypeOf(received_value).toMatchTypeOf<CustomType>();
+                expectTypeOf(received_value).toEqualTypeOf<CustomType>();
             }),
         ).toBeVoid();
     });
@@ -46,7 +46,7 @@ describe(`Option type`, () => {
                 return Option.fromValue(789);
             });
 
-            expectTypeOf(return_value).toMatchTypeOf<Option<number>>();
+            expectTypeOf(return_value).toEqualTypeOf<Option<number>>();
         });
 
         it(`can map to a different type than the Option's Initial type`, () => {
@@ -56,7 +56,7 @@ describe(`Option type`, () => {
                 Option.fromValue(CustomType("scrawk")),
             );
 
-            expectTypeOf(return_value).toMatchTypeOf<Option<CustomType>>();
+            expectTypeOf(return_value).toEqualTypeOf<Option<CustomType>>();
         });
 
         it(`can map Some to None`, () => {
@@ -64,7 +64,7 @@ describe(`Option type`, () => {
 
             const return_value = itCouldReturnNothing().andThen(() => Option.nothing<number>());
 
-            expectTypeOf(return_value).toMatchTypeOf<Option<number>>();
+            expectTypeOf(return_value).toEqualTypeOf<Option<number>>();
         });
     });
 
@@ -77,7 +77,7 @@ describe(`Option type`, () => {
                 return "mapped";
             });
 
-            expectTypeOf(return_value).toMatchTypeOf<Option<string>>();
+            expectTypeOf(return_value).toEqualTypeOf<Option<string>>();
         });
 
         it(`can map to a different type than the Option's initial type`, () => {
@@ -87,7 +87,7 @@ describe(`Option type`, () => {
                 return new Set(["one", "two", "three"]);
             });
 
-            expectTypeOf(return_value).toMatchTypeOf<Option<Set<string>>>();
+            expectTypeOf(return_value).toEqualTypeOf<Option<Set<string>>>();
         });
     });
 
@@ -109,7 +109,7 @@ describe(`Option type`, () => {
             const return_value = itCouldReturnNothing().mapOr((received_value) => {
                 return Number.parseInt(received_value, 10) + 10;
             }, "default");
-            expectTypeOf(return_value).toMatchTypeOf<number | string>();
+            expectTypeOf(return_value).toEqualTypeOf<number | string>();
         });
 
         it(`can return a different type of default value than the mapped type or the Option's initial type`, () => {
@@ -118,7 +118,7 @@ describe(`Option type`, () => {
             const return_value = itCouldReturnNothing().mapOr((received_value) => {
                 return received_value === "argue" ? 994 : 271;
             }, CustomType("default"));
-            expectTypeOf(return_value).toMatchTypeOf<number | CustomType>();
+            expectTypeOf(return_value).toEqualTypeOf<number | CustomType>();
         });
     });
 
@@ -156,7 +156,7 @@ describe(`Option type`, () => {
         it(`can return a different type of default value than the Option's initial type`, () => {
             const itCouldReturnNothing = (): Option<number> => Option.nothing();
 
-            expectTypeOf(itCouldReturnNothing().unwrapOr(CustomType("default"))).toMatchTypeOf<
+            expectTypeOf(itCouldReturnNothing().unwrapOr(CustomType("default"))).toEqualTypeOf<
                 number | CustomType
             >();
         });
@@ -169,13 +169,13 @@ describe(`Option type`, () => {
 
         it(`returns an Option with the generic type of its argument`, () => {
             const option_from_null = Option.fromNullable(getNullable("null"));
-            expectTypeOf(option_from_null).toMatchTypeOf<Option<string>>();
+            expectTypeOf(option_from_null).toEqualTypeOf<Option<string>>();
 
             const option_from_undefined = Option.fromNullable(getNullable("undefined"));
-            expectTypeOf(option_from_undefined).toMatchTypeOf<Option<string>>();
+            expectTypeOf(option_from_undefined).toEqualTypeOf<Option<string>>();
 
             const option_from_value = Option.fromNullable(getNullable("value"));
-            expectTypeOf(option_from_value).toMatchTypeOf<Option<string>>();
+            expectTypeOf(option_from_value).toEqualTypeOf<Option<string>>();
         });
     });
 });
