@@ -18,11 +18,12 @@
  */
 
 import { shallowMount } from "@vue/test-utils";
-import { CSRF_TOKEN, MINIMAL_RANK, PROJECT_ID } from "../injection-symbols";
-import BaseSiteAdminEditModal from "./BaseSiteAdminEditModal.vue";
+import type { VueWrapper } from "@vue/test-utils";
+import BaseProjectAdminEditModal from "./BaseProjectAdminEditModal.vue";
 import InEditionCustomService from "./Service/InEditionCustomService.vue";
-import EditableSystemService from "./Service/EditableSystemService.vue";
+import ReadOnlySystemService from "./Service/ReadOnlySystemService.vue";
 import { getGlobalTestOptions } from "../support/global-options-for-tests";
+import { CSRF_TOKEN, MINIMAL_RANK, PROJECT_ID } from "../injection-symbols";
 
 const service = {
     is_project_scope: true,
@@ -31,17 +32,15 @@ const service = {
     is_in_new_tab: false,
 };
 
-function createFakeButton() {
-    return {
-        dataset: {
-            serviceJson: JSON.stringify(service),
-        },
-    };
+function createFakeButton(): HTMLButtonElement {
+    const button = document.createElement("button");
+    button.dataset.serviceJson = JSON.stringify(service);
+    return button;
 }
 
-describe(`BaseSiteAdminEditModal`, () => {
-    function createWrapper() {
-        return shallowMount(BaseSiteAdminEditModal, {
+describe(`BaseProjectAdminEdit`, () => {
+    function createWrapper(): VueWrapper {
+        return shallowMount(BaseProjectAdminEditModal, {
             global: {
                 ...getGlobalTestOptions(),
                 stubs: {
@@ -64,7 +63,7 @@ describe(`BaseSiteAdminEditModal`, () => {
     it(`When the modal is not shown, it does not instantiate service components`, () => {
         const wrapper = createWrapper();
         const project_service = wrapper.findComponent(InEditionCustomService);
-        const system_service = wrapper.findComponent(EditableSystemService);
+        const system_service = wrapper.findComponent(ReadOnlySystemService);
         expect(project_service.exists()).toBe(false);
         expect(system_service.exists()).toBe(false);
     });
@@ -73,21 +72,27 @@ describe(`BaseSiteAdminEditModal`, () => {
         it(`and it's a custom service, it will instantiate the custom service component`, async () => {
             const wrapper = createWrapper();
             const fake_button = createFakeButton();
-            wrapper.vm.show(fake_button);
+            const exposed_wrapper = wrapper.vm.$.exposed as {
+                show: (button: HTMLButtonElement) => void;
+            };
+            exposed_wrapper.show(fake_button);
             await wrapper.vm.$nextTick();
 
             const project_service = wrapper.findComponent(InEditionCustomService);
             expect(project_service.exists()).toBe(true);
         });
 
-        it(`and it's a system service, it will instantiate the editable system service component`, async () => {
+        it(`and it's a system service, it will instantiate the read-only system service component`, async () => {
             const wrapper = createWrapper();
             service.is_project_scope = false;
             const fake_button = createFakeButton();
-            wrapper.vm.show(fake_button);
+            const exposed_wrapper = wrapper.vm.$.exposed as {
+                show: (button: HTMLButtonElement) => void;
+            };
+            exposed_wrapper.show(fake_button);
             await wrapper.vm.$nextTick();
 
-            const system_service = wrapper.findComponent(EditableSystemService);
+            const system_service = wrapper.findComponent(ReadOnlySystemService);
             expect(system_service.exists()).toBe(true);
         });
     });
