@@ -175,10 +175,6 @@ class ServiceFile extends Service //phpcs:ignore PSR1.Classes.ClassDeclaration.M
 
     public function displayFRSHeader(Project $project, $title)
     {
-        $GLOBALS['HTML']->includeJavascriptSnippet(
-            file_get_contents($GLOBALS['Language']->getContent('script_locale', null, 'svn', '.js'))
-        );
-
         $frs_breadcrumb = new BreadCrumb(
             new BreadCrumbLink($this->getInternationalizedName(), $this->getUrl()),
         );
