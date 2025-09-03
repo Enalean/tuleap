@@ -1,5 +1,4 @@
-<?php
-/**
+/*
  * Copyright (c) Enalean, 2023 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -18,24 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+import type { RouteParams } from "vue-router";
 
-namespace Tuleap\PullRequest\FrontendApps;
-
-enum PullRequestApp: string
-{
-    case LEGACY_ANGULAR_APP = '';
-    case OVERVIEW_APP       = 'overview';
-    case HOMEPAGE_APP       = 'homepage';
-    case COMMITS_APP        = 'commits';
-
-    public static function fromRequest(\HTTPRequest $request): self
-    {
-        return match ($request->get('tab')) {
-            'overview' => self::OVERVIEW_APP,
-            'homepage' => self::HOMEPAGE_APP,
-            'commits'  => self::COMMITS_APP,
-            default    => self::LEGACY_ANGULAR_APP,
-        };
+export const extractPullRequestIdFromRouteParams = (route_params: RouteParams): number => {
+    if (!(typeof route_params.id === "string")) {
+        return 0;
     }
-}
+
+    const parsed_pull_request_id = Number.parseInt(route_params.id, 10);
+    if (isNaN(parsed_pull_request_id)) {
+        return 0;
+    }
+
+    return parsed_pull_request_id;
+};

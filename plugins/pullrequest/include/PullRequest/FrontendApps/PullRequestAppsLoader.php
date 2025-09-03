@@ -40,6 +40,7 @@ final class PullRequestAppsLoader
             PullRequestApp::LEGACY_ANGULAR_APP => self::includeLegacyAngularAppAssets($base_layout),
             PullRequestApp::OVERVIEW_APP => self::includeOverviewAppAssets($base_layout),
             PullRequestApp::HOMEPAGE_APP => self::includeHomepageAppAssets($base_layout),
+            PullRequestApp::COMMITS_APP => self::includeCommitsAppAssets($base_layout),
         };
     }
 
@@ -80,6 +81,21 @@ final class PullRequestAppsLoader
                 new IncludeViteAssets(
                     __DIR__ . '/../../../scripts/pullrequest-homepage/frontend-assets',
                     '/assets/pullrequest/pullrequest-homepage'
+                ),
+                'src/index.ts'
+            )
+        );
+    }
+
+    private static function includeCommitsAppAssets(BaseLayout $base_layout): void
+    {
+        self::includeGeneralAssets($base_layout);
+
+        $base_layout->addJavascriptAsset(
+            new JavascriptViteAsset(
+                new IncludeViteAssets(
+                    __DIR__ . '/../../../scripts/pullrequest-commits/frontend-assets',
+                    '/assets/pullrequest/pullrequest-commits'
                 ),
                 'src/index.ts'
             )

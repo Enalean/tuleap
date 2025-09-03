@@ -1,5 +1,4 @@
-<?php
-/**
+/*
  * Copyright (c) Enalean, 2023 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -18,24 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+import type { StrictInjectionKey } from "@tuleap/vue-strict-inject";
 
-namespace Tuleap\PullRequest\FrontendApps;
-
-enum PullRequestApp: string
-{
-    case LEGACY_ANGULAR_APP = '';
-    case OVERVIEW_APP       = 'overview';
-    case HOMEPAGE_APP       = 'homepage';
-    case COMMITS_APP        = 'commits';
-
-    public static function fromRequest(\HTTPRequest $request): self
-    {
-        return match ($request->get('tab')) {
-            'overview' => self::OVERVIEW_APP,
-            'homepage' => self::HOMEPAGE_APP,
-            'commits'  => self::COMMITS_APP,
-            default    => self::LEGACY_ANGULAR_APP,
-        };
-    }
-}
+export const COMMITS_APP_BASE_URL_KEY: StrictInjectionKey<URL> = Symbol("commits_app_base_url");
+export const PULL_REQUEST_ID_KEY: StrictInjectionKey<number> = Symbol("pull_request_id");
+export const VIEW_COMMITS_NAME = "commits";
