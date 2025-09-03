@@ -922,8 +922,8 @@ class RouteCollector
             AdministrationLayoutHelper::buildSelf(),
             new ServicesPresenterBuilder(ServiceManager::instance(), EventManager::instance()),
             TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../../templates/project/admin/services/'),
-            new JavascriptViteAsset($assets, 'src/index-project-admin.js'),
-            new JavascriptViteAsset($assets, 'src/index-site-admin.js'),
+            new JavascriptViteAsset($assets, 'src/main-project-admin.ts'),
+            new JavascriptViteAsset($assets, 'src/main-site-admin.ts'),
         );
     }
 

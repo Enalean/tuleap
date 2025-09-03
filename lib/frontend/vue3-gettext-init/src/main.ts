@@ -22,7 +22,7 @@ import type { LocaleString } from "@tuleap/locale";
 import { getLocaleWithDefault, DEFAULT_LOCALE } from "@tuleap/locale";
 export { getPOFileFromLocale, getPOFileFromLocaleWithoutExtension } from "@tuleap/locale";
 
-type VueGettext = ReturnType<typeof createGettext>;
+export type VueGettext = ReturnType<typeof createGettext>;
 
 interface Vue3GettextTranslationData {
     [message_id: string]: string[];
