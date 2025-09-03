@@ -42,7 +42,7 @@
         <service-link id="project-service-edit-modal-link" v-bind:value="service.link" />
         <service-description
             id="project-service-edit-modal-description"
-            v-bind:value="service.description"
+            v-bind:description="service.description"
         />
 
         <service-open-in-new-tab
