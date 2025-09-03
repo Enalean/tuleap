@@ -328,7 +328,7 @@ class Docman_Widget_Embedded extends Widget implements \Tuleap\Docman\Item\ItemV
 
     /**
      * The category of the widget. Override this method if your widget is not in the "general" category.
-     * Here are some exemple of categories used by Codendi: forum, frs, scm, trackers + plugin's ones
+     * Here are some exemple of categories used by Codendi: frs, scm, trackers + plugin's ones
      * @return string
      */
     public function getCategory()

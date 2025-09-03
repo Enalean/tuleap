@@ -19,9 +19,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* abstract */ class Docman_View_ProjectHeader extends Docman_View_Header
+/* abstract */ class Docman_View_ProjectHeader extends Docman_View_Header //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    /* protected */ public function _scripts($params)
+    /* protected */ #[Override]
+    public function _scripts($params) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $project = ProjectManager::instance()->getProject((int) $params['group_id']);
         echo '<script type="text/javascript"> var docman = new com.xerox.codendi.Docman(' . $params['group_id'] . ', ';
@@ -39,8 +40,6 @@
                     'new_other_folders'        => dgettext('tuleap-docman', 'other folders:'),
                     'new_same_perms_as_parent' => dgettext('tuleap-docman', 'Will be created with the same permissions than its parent.'),
                     'new_view_change'          => dgettext('tuleap-docman', 'view/change'),
-                    'new_news_explaination'    => dgettext('tuleap-docman', 'You can post news about your new item if you are admin of this project.'),
-                    'new_news_displayform'     => dgettext('tuleap-docman', 'Display news form'),
                     'report_save_opt'          => dgettext('tuleap-docman', 'Save options'),
                     'report_custom_fltr'       => dgettext('tuleap-docman', 'Customize filters'),
                     'report_name_new'          => dgettext('tuleap-docman', 'Please enter a new search name:'),
@@ -74,7 +73,7 @@
         echo '); </script>';
     }
 
-    /* protected */ public function _getJSDocmanParameters($params)
+    /* protected */ public function _getJSDocmanParameters($params) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         return [];
     }

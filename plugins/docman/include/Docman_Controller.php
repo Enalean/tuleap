@@ -1364,33 +1364,6 @@ class Docman_Controller extends Controler // phpcs:ignoreFile
                                 )
                             );
                             $valid  = $this->_validateRequest($fields);
-                            if ($user->isMember($this->getGroupId(), 'A') || $user->isMember($this->getGroupId(), 'N1') || $user->isMember($this->getGroupId(), 'N2')) {
-                                $news = $this->request->get('news');
-                                if ($news) {
-                                    $is_news_details = isset($news['details']) && trim($news['details']);
-                                    $is_news_summary = isset($news['summary']) && trim($news['summary']);
-                                    if ($is_news_details && ! $is_news_summary) {
-                                        $this->feedback->log(
-                                            'error',
-                                            dgettext(
-                                                'tuleap-docman',
-                                                'Error while creating news. Check that subject field is not empty.'
-                                            )
-                                        );
-                                        $valid = false;
-                                    }
-                                    if (! $is_news_details && $is_news_summary) {
-                                        $this->feedback->log(
-                                            'error',
-                                            dgettext(
-                                                'tuleap-docman',
-                                                'Error while creating news. Check that details field is not empty.'
-                                            )
-                                        );
-                                        $valid = false;
-                                    }
-                                }
-                            }
 
                             if ($valid && $new_item !== null) {
                                 $document_retriever         = new DocumentOngoingUploadRetriever(
@@ -1418,11 +1391,9 @@ class Docman_Controller extends Controler // phpcs:ignoreFile
                                 $this->_viewParams['token'] = $this->request->get('token');
 
                                 $this->_viewParams['force_item']          = $new_item;
-                                $this->_viewParams['force_news']          = $this->request->get('news');
                                 $this->_viewParams['force_permissions']   = $this->request->get('permissions');
                                 $this->_viewParams['force_ordering']      = $this->request->get('ordering');
                                 $this->_viewParams['display_permissions'] = $this->request->exist('user_has_displayed_permissions');
-                                $this->_viewParams['display_news']        = $this->request->exist('user_has_displayed_news');
                                 $this->_viewParams['hierarchy']           = $this->getItemHierarchy($root);
                                 $this->_set_createItemView_afterCreate($view);
                             }

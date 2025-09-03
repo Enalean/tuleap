@@ -873,9 +873,6 @@ msgstr ""
 "dashboard. <br /><em>Pour le moment seuls les fichiers embarqués sont "
 "supportés</em>."
 
-msgid "Display news form"
-msgstr "Afficher le formulaire de news"
-
 msgid "Docman item"
 msgstr "Elément du docman"
 
@@ -1037,21 +1034,6 @@ msgstr "Erreur lors de la création de la version initiale."
 
 msgid "Error while creating new version."
 msgstr "Erreur lors de la création d'une nouvelle version."
-
-msgid "Error while creating news. Check that details field is not empty."
-msgstr ""
-"Erreur lors de la création de la news. Vérifiez que vous avez rempli le "
-"champ détails."
-
-msgid "Error while creating news. Check that subject field is not empty."
-msgstr ""
-"Erreur lors de la création de la news. Vérifiez que vous avez rempli le "
-"champ sujet."
-
-msgid "Error while creating news. Check that you have right permissions."
-msgstr ""
-"Erreur lors de la création de la news. Vérifiez que vous avez les bonnes "
-"permissions."
 
 msgid "Error while trying to delete the wiki page from wiki service."
 msgstr ""
@@ -1324,9 +1306,6 @@ msgstr "Date de dernière mise à jour :"
 msgid "Last update of the document content or properties."
 msgstr "Dernière mise à jour du document ou de ses propriétés."
 
-msgid "Let fields blank if you do not want news."
-msgstr "Laissez les champs vides si vous ne voulez pas envoyer de news."
-
 msgid "Link"
 msgstr "Lien"
 
@@ -1489,9 +1468,6 @@ msgstr "Une nouvelle version de la page wiki %s a été créee par %s."
 
 msgid "New version successfully created."
 msgstr "Nouvelle version créée."
-
-msgid "News successfully created."
-msgstr "News créée."
 
 #, php-format
 msgid "Next %1$s"
@@ -2693,9 +2669,6 @@ msgstr "Vous ne pouvez pas coller l'élément en lui même."
 
 msgid "You can only clone 'Project' wide reports or your 'Personal' reports."
 msgstr "Vous ne pouvez cloner que les rapports 'projet' ou personnels."
-
-msgid "You can post news about your new item if you are admin of this project."
-msgstr "En tant qu'administrateur du projet, vous pouvez publier une news."
 
 msgid "You cannot add emails"
 msgstr "Vous ne pouvez pas ajouter de mails"

@@ -18,43 +18,43 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-abstract class Docman_View_New extends Docman_View_Display /* implements Visitor */
+abstract class Docman_View_New extends Docman_View_Display /* implements Visitor */ //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public $newItem;
 
-    /* protected abstract */ public function _getEnctype()
+    /* protected abstract */ public function _getEnctype() //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
     }
 
-    /* protected abstract */ public function _getAction()
+    /* protected abstract */ public function _getAction() //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
     }
 
-    /* protected abstract */ public function _getActionText()
+    /* protected abstract */ public function _getActionText() //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
     }
 
-    /* protected abstract */ public function _getForm()
+    /* protected abstract */ public function _getForm() //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
     }
 
-    /* protected */ public function _getSpecificProperties($params)
-    {
-        return '';
-    }
-
-    /* protected */ public function _getCategories($params)
+    /* protected */ public function _getSpecificProperties($params) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         return '';
     }
 
-    /* protected */ public function _getJSDocmanParameters($params)
+    /* protected */ public function _getCategories($params) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
+    {
+        return '';
+    }
+
+    /* protected */ #[Override]
+    public function _getJSDocmanParameters($params) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $doc_params = [];
         if (isset($params['force_permissions'])) {
             $doc_params['newItem'] = [
                 'hide_permissions'           => ! $params['display_permissions'],
-                'hide_news'                  => ! $params['display_news'],
                 'update_permissions_on_init' => false,
                 'default_position'           => $params['force_ordering'],
             ];
@@ -65,7 +65,7 @@ abstract class Docman_View_New extends Docman_View_Display /* implements Visitor
         );
     }
 
-    public function _getPropertiesFieldsDisplay($fields)
+    public function _getPropertiesFieldsDisplay($fields) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $html  = '';
         $html .= '<table>';
@@ -88,7 +88,7 @@ abstract class Docman_View_New extends Docman_View_Display /* implements Visitor
         return $labels;
     }
 
-    public function _getNewItem()
+    public function _getNewItem() //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         return null;
     }
@@ -114,7 +114,7 @@ abstract class Docman_View_New extends Docman_View_Display /* implements Visitor
         $mdFactory->appendAllListOfValuesToItem($this->newItem);
     }
 
-    public function _getPropertiesFields($params)
+    public function _getPropertiesFields($params) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $get_fields = new Docman_View_GetFieldsVisitor($this->metadataToSkip());
         $fields     = $this->newItem->accept($get_fields, ['form_name'  => $params['form_name'],
@@ -123,7 +123,7 @@ abstract class Docman_View_New extends Docman_View_Display /* implements Visitor
         return $fields;
     }
 
-    public function _getGeneralProperties($params)
+    public function _getGeneralProperties($params) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $html   = '';
         $fields = $this->_getPropertiesFields($params);
@@ -132,7 +132,7 @@ abstract class Docman_View_New extends Docman_View_Display /* implements Visitor
         return $html;
     }
 
-    public function _getGeneralPropertiesFieldset($params)
+    public function _getGeneralPropertiesFieldset($params) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $html  = '';
         $html .= '<div class="properties">' . "\n";
@@ -144,12 +144,12 @@ abstract class Docman_View_New extends Docman_View_Display /* implements Visitor
         return $html;
     }
 
-    public function _getDefaultValuesFieldset($params)
+    public function _getDefaultValuesFieldset($params) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         return '';
     }
 
-    public function _getSpecificPropertiesFieldset($params)
+    public function _getSpecificPropertiesFieldset($params) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $html  = '';
         $html .= '<h3>' . dgettext('tuleap-docman', 'Document type') . '</h3>';
@@ -157,7 +157,7 @@ abstract class Docman_View_New extends Docman_View_Display /* implements Visitor
         return $html;
     }
 
-    public function _getLocationFieldset($params)
+    public function _getLocationFieldset($params) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $html        = '';
         $html       .= '<h3>' . dgettext('tuleap-docman', 'Location') . '</h3>';
@@ -172,7 +172,7 @@ abstract class Docman_View_New extends Docman_View_Display /* implements Visitor
         return $html;
     }
 
-    public function _getPermissionsFieldset($params)
+    public function _getPermissionsFieldset($params) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $html                      = '';
         $html                     .= '<h3>Permissions</h3>';
@@ -184,57 +184,8 @@ abstract class Docman_View_New extends Docman_View_Display /* implements Visitor
         return $html;
     }
 
-    public function _getNewsFieldset($params)
-    {
-        $project = ProjectManager::instance()->getProject($params['item']->getGroupId());
-        if (! $project->usesService(Service::NEWS)) {
-            return '';
-        }
-
-        $hp   = Codendi_HTMLPurifier::instance();
-        $html = '';
-        $user = $this->_controller->getUser();
-        if ($user->isMember($params['item']->getGroupId(), 'A') || $user->isMember($params['item']->getGroupId(), 'N1') || $user->isMember($params['item']->getGroupId(), 'N2')) {
-            $default_news_summary       = '';
-            $default_news_details       = '';
-            $default_news_private_check = '';
-            $default_news_public_check  = 'checked="checked"';
-            if (isset($params['force_news'])) {
-                $default_news_summary = isset($params['force_news']['summary']) ? $params['force_news']['summary'] : $default_news_summary;
-                $default_news_details = isset($params['force_news']['details']) ? $params['force_news']['details'] : $default_news_details;
-                if (isset($params['force_news']['is_private']) && $params['force_news']['is_private']) {
-                    $default_news_private_check = $default_news_public_check;
-                    $default_news_public_check  = '';
-                }
-            }
-            $html .= '<h3>News</h3>';
-            $html .= '<div id="docman_new_news_panel">';
-
-            $html .= '<p>' . dgettext('tuleap-docman', 'Let fields blank if you do not want news.') . '</p>';
-
-            $html .= '<div>';
-            $html .= '<b><label for="news_summary">' . $GLOBALS['Language']->getText('news_admin_index', 'subject') . ':</label></b><br />';
-            $html .= '<input type="text" name="news[summary]" id="news_summary" value="' .  $hp->purify($default_news_summary, CODENDI_PURIFIER_CONVERT_HTML)  . '" size="44" maxlength="60" /><br />';
-            $html .= '</div>';
-
-            $html .= '<div>';
-            $html .= '<b><label for="news_details">' . $GLOBALS['Language']->getText('news_admin_index', 'details') . ':</label></b><br />';
-            $html .= '<textarea name="news[details]" rows="8" cols="50" wrap="soft">' .  $hp->purify($default_news_details, CODENDI_PURIFIER_CONVERT_HTML)  . '</textarea><br />';
-            $html .= '</div>';
-
-            $html .= '<table><tr style="vertical-align:top"><td><b>' . $GLOBALS['Language']->getText('news_submit', 'news_privacy') . '</b></td><td>';
-            $html .= '<input type="radio" name="news[is_private]" id="news_is_private_no" value="0" ' . $default_news_public_check . ' />';
-            $html .= '<label class="docman-create-news-option" for="news_is_private_no">' . $GLOBALS['Language']->getText('news_submit', 'public_news') . '</label><br />';
-            $html .= '<input type="radio" name="news[is_private]" id="news_is_private_yes" value="1" ' . $default_news_private_check . ' />';
-            $html .= '<label class="docman-create-news-option" for="news_is_private_yes">' . $GLOBALS['Language']->getText('news_submit', 'private_news') . '</label>';
-            $html .= '</td></tr></table>';
-
-            $html .= '</div>';
-        }
-        return $html;
-    }
-
-    public function _content($params)
+    #[Override]
+    public function _content($params) //phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
         $params['form_name'] = 'new_item';
 
@@ -250,7 +201,6 @@ abstract class Docman_View_New extends Docman_View_Display /* implements Visitor
         $html .= $this->_getSpecificPropertiesFieldset($params);
         $html .= $this->_getLocationFieldset($params);
         $html .= $this->_getPermissionsFieldset($params);
-        $html .= $this->_getNewsFieldset($params);
 
         $html .= '<div class="docman_new_submit">' . "\n";
         if (isset($params['token']) && $params['token']) {
