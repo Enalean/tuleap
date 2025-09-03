@@ -33,6 +33,7 @@ use Tuleap\Disposable\Dispose;
 use Tuleap\Docman\Test\rest\Helper\DocmanAPIHelper;
 use Tuleap\REST\BaseTestDataBuilder;
 use Tuleap\REST\RestBase;
+use Tuleap\REST\Tests\API\ProjectsAPIHelper;
 use Tuleap\Tracker\REST\Tests\TrackerRESTHelper;
 use Tuleap\Tracker\REST\Tests\TrackerRESTHelperFactory;
 
@@ -40,21 +41,29 @@ use Tuleap\Tracker\REST\Tests\TrackerRESTHelperFactory;
 final class ArtidocFieldsTest extends RestBase
 {
     private const string ALL_FIELDS_SHORT_NAME = 'all_fields';
-    private ArtidocAPIHelper $artidoc_api;
+    private ProjectsAPIHelper $projects_api;
     private DocmanAPIHelper $docman_api;
+    private ArtidocAPIHelper $artidoc_api;
 
     #[\Override]
     public function setUp(): void
     {
         parent::setUp();
 
-        $this->artidoc_api = new ArtidocAPIHelper($this->rest_request, $this->request_factory, $this->stream_factory);
-        $this->docman_api  = new DocmanAPIHelper($this->rest_request, $this->request_factory);
+        $this->projects_api = new ProjectsAPIHelper($this->rest_request, $this->request_factory);
+        $this->docman_api   = new DocmanAPIHelper($this->rest_request, $this->request_factory);
+        $this->artidoc_api  = new ArtidocAPIHelper(
+            $this->rest_request,
+            $this->request_factory,
+            $this->stream_factory
+        );
     }
 
     public function testReadonlyFields(): void
     {
-        $template_project_id = $this->findTemplateProjectId();
+        $template_project_id = $this->projects_api->findProjectId(
+            ArtidocFieldsPreparator::FIELDS_TEMPLATE_SHORTNAME
+        );
         $real_project_id     = $this->createProject($template_project_id);
         $root_folder_id      = $this->docman_api->getRootFolderID($real_project_id);
         $artidoc_json        = $this->artidoc_api->createArtidoc(
@@ -74,27 +83,6 @@ final class ArtidocFieldsTest extends RestBase
         $all_fields_tracker = $trackers->getTrackerRest(self::ALL_FIELDS_SHORT_NAME);
 
         $this->configureAllFieldTypes($all_fields_tracker, $artidoc_id);
-    }
-
-    private function findTemplateProjectId(): int
-    {
-        $response = $this->getResponse(
-            $this->request_factory->createRequest(
-                'GET',
-                '/api/projects?query=' . urlencode(
-                    Json\encode(['shortname' => ArtidocFieldsPreparator::FIELDS_TEMPLATE_SHORTNAME])
-                )
-            )
-        );
-        $projects = Json\decode($response->getBody()->getContents());
-        foreach ($projects as $project) {
-            if ($project['shortname'] === ArtidocFieldsPreparator::FIELDS_TEMPLATE_SHORTNAME) {
-                return $project['id'];
-            }
-        }
-        throw new \RuntimeException(
-            sprintf('Could not find project with shortname "%s"', ArtidocFieldsPreparator::FIELDS_TEMPLATE_SHORTNAME)
-        );
     }
 
     private function createProject(int $template_project_id): int

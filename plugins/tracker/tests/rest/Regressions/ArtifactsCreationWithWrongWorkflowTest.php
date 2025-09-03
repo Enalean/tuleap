@@ -26,48 +26,54 @@ use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use PHPUnit\Framework\Attributes\Group;
 use Tuleap\REST\BaseTestDataBuilder;
 use Tuleap\REST\RestBase;
+use Tuleap\REST\Tests\API\ProjectsAPIHelper;
+use Tuleap\Tracker\REST\Tests\TrackerRESTHelper;
 use Tuleap\Tracker\REST\Tests\TrackerRESTHelperFactory;
 
 #[DisableReturnValueGenerationForTestDoubles]
 #[Group('Regressions')]
 final class ArtifactsCreationWithWrongWorkflowTest extends RestBase
 {
-    private TrackerRESTHelperFactory $tracker_test_helper;
+    private const string TRACKER_NAME = 'releases';
 
-    #[\Override]
-    public function setUp(): void
+    public function testArtifactCreationWithWorkflow(): void
     {
-        parent::setUp();
+        $projects_api   = new ProjectsAPIHelper($this->rest_request, $this->request_factory);
+        $project_pbi_id = $projects_api->findProjectId(BaseTestDataBuilder::PROJECT_PBI_SHORTNAME);
 
-        $this->tracker_test_helper = new TrackerRESTHelperFactory(
+        $tracker_factory = new TrackerRESTHelperFactory(
             $this->rest_request,
             $this->request_factory,
             $this->stream_factory,
-            $this->project_pbi_id,
+            $project_pbi_id,
             BaseTestDataBuilder::TEST_USER_1_NAME
         );
+        $tracker         = $tracker_factory->getTrackerRest(self::TRACKER_NAME);
+
+        $this->assertCreateArtifactFailsIfValueInSelectBoxIsNotValidRegardingWorkflow($tracker);
+        $this->assertCreateArtifactSuccessIfValueInSelectBoxIsValidRegardingWorkflow($tracker);
     }
 
-    public function testPostArtifactFailsIfValueInSelectBoxIsNotValidRegardingWorkflow(): void
-    {
-        $tracker  = $this->tracker_test_helper->getTrackerRest('releases');
+    private function assertCreateArtifactFailsIfValueInSelectBoxIsNotValidRegardingWorkflow(
+        TrackerRESTHelper $tracker,
+    ): void {
         $response = $tracker->createArtifact(
             [
-                $tracker->getSubmitTextValue('Version Number', '0.1'),
-                $tracker->getSubmitListValue('Progress', 'Delivered to customer'),
+                $tracker->getSubmitTextValue('version_number', '0.1'),
+                $tracker->getSubmitListValue('progress', 'Delivered to customer'),
             ]
         );
 
         self::assertSame(400, $response['error']['code']);
     }
 
-    public function testPostArtifactSuccededIfValueInSelectBoxIsValidRegardingWorkflow(): void
-    {
-        $tracker       = $this->tracker_test_helper->getTrackerRest('releases');
+    private function assertCreateArtifactSuccessIfValueInSelectBoxIsValidRegardingWorkflow(
+        TrackerRESTHelper $tracker,
+    ): void {
         $artifact_json = $tracker->createArtifact(
             [
-                $tracker->getSubmitTextValue('Version Number', '0.1'),
-                $tracker->getSubmitListValue('Progress', 'To be defined'),
+                $tracker->getSubmitTextValue('version_number', '0.1'),
+                $tracker->getSubmitListValue('progress', 'To be defined'),
             ]
         );
 

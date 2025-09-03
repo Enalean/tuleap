@@ -44,25 +44,22 @@ final readonly class TrackerRESTHelper
     {
         $post     = Json\encode([
             'tracker' => [
-                'id'  => $this->tracker['id'],
-                'uri' => 'whatever',
+                'id'  => $this->getTrackerID(),
             ],
             'values' => $values,
         ]);
         $response = $this->getResponse(
             $this->request_factory->createRequest('POST', 'artifacts')
-                ->withBody(
-                    $this->stream_factory->createStream($post)
-                )
+                ->withBody($this->stream_factory->createStream($post))
         );
 
         return Json\decode($response->getBody()->getContents());
     }
 
     /** @return array{field_id: int, value: string} */
-    public function getSubmitTextValue(string $field_label, string $field_value): array
+    public function getSubmitTextValue(string $field_short_name, string $field_value): array
     {
-        $field_def = $this->getFieldByLabel($field_label);
+        $field_def = $this->getFieldByShortName($field_short_name);
         return [
             'field_id' => $field_def['field_id'],
             'value'    => $field_value,
@@ -72,9 +69,9 @@ final readonly class TrackerRESTHelper
     /**
      * @return array{field_id: int, bind_value_ids: array{0: int} }
      */
-    public function getSubmitListValue(string $field_label, string $field_value_label): array
+    public function getSubmitListValue(string $field_short_name, string $field_value_label): array
     {
-        $field_def = $this->getFieldByLabel($field_label);
+        $field_def = $this->getFieldByShortName($field_short_name);
         return [
             'field_id'       => $field_def['field_id'],
             'bind_value_ids' => [
@@ -91,16 +88,6 @@ final readonly class TrackerRESTHelper
             }
         }
         throw new \RuntimeException(sprintf('Could not find list value with label "%s"', $field_value_label));
-    }
-
-    private function getFieldByLabel(string $field_label): array
-    {
-        foreach ($this->tracker['fields'] as $field) {
-            if ($field['label'] === $field_label) {
-                return $field;
-            }
-        }
-        throw new \RuntimeException(sprintf('Could not find field with label "%s"', $field_label));
     }
 
     /**
