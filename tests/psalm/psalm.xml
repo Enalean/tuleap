@@ -1470,7 +1470,7 @@
             <file name="tests/rest/tests/SystemEventTest.php"/>
             <file name="tests/rest/tests/TokenTest.php"/>
             <file name="tests/rest/tests/TrackersTest.php"/>
-            <file name="tests/rest/tests/UserGroupTest.php"/>
+            <file name="tests/rest/tests/UserGroups/UserGroupTest.php"/>
             <file name="tests/rest/tests/UserMembershipTest.php"/>
             <file name="tests/rest/tests/UsersTest.php"/>
             <file name="tests/rest/tests/Version/VersionTest.php"/>
