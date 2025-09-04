@@ -19,16 +19,16 @@
 
 import Gettext from "node-gettext";
 import type { GettextParserPoFile, GettextProvider } from "./types";
-import { DEFAULT_LANGUAGE } from "./constants";
+import { DEFAULT_LOCALE } from "@tuleap/locale";
 
 export function initGettextSync(
     domain: string,
     translations: GettextParserPoFile | Record<string, GettextParserPoFile>,
-    locale = DEFAULT_LANGUAGE,
+    locale = DEFAULT_LOCALE,
 ): GettextProvider {
     const gettext_provider = new Gettext();
 
-    if (locale !== DEFAULT_LANGUAGE) {
+    if (locale !== DEFAULT_LOCALE) {
         if (isGettextParserPoFile(translations)) {
             gettext_provider.addTranslations(locale, domain, translations);
         } else if (locale in translations) {

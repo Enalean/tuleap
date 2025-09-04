@@ -21,7 +21,7 @@ import { createApp } from "vue";
 import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue3-gettext-init";
 import { createGettext } from "vue3-gettext";
 import { getAttributeOrThrow } from "@tuleap/dom";
-import { getLocaleOrThrow, getTimezoneOrThrow } from "@tuleap/date-helper";
+import { getLocaleWithDefault, getTimezoneOrThrow } from "@tuleap/date-helper";
 import { getRelativeDateUserPreferenceOrThrow } from "@tuleap/tlp-relative-date";
 import { createOverviewRouter } from "./router/router";
 import { buildBaseUrl } from "./router/base-url-builders";
@@ -46,7 +46,7 @@ export async function init(mount_point: HTMLElement): Promise<void> {
 
     createApp(OverviewApp)
         .provide(OVERVIEW_APP_BASE_URL_KEY, base_url)
-        .provide(USER_LOCALE_KEY, getLocaleOrThrow(document))
+        .provide(USER_LOCALE_KEY, getLocaleWithDefault(document))
         .provide(USER_TIMEZONE_KEY, getTimezoneOrThrow(document))
         .provide(
             CURRENT_USER_ID,

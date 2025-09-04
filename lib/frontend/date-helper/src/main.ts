@@ -17,8 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export type { LocaleString } from "@tuleap/core-constants";
-export { getLocaleOrThrow, getTimezoneOrThrow } from "./dom";
+export type { LocaleString } from "@tuleap/locale";
+export { getLocaleWithDefault } from "@tuleap/locale";
+export { getTimezoneOrThrow } from "./dom";
 export { formatFromPhpToMoment } from "./for-moment";
 export { formatDateYearMonthDay } from "./date-only";
 export { IntlFormatter } from "./IntlFormatter";

@@ -17,16 +17,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { define, html, dispatch } from "hybrids";
 import type { UpdateFunction } from "hybrids";
+import { define, dispatch, html } from "hybrids";
 import type { Dropdown } from "@tuleap/tlp-dropdown";
 import { createDropdown } from "@tuleap/tlp-dropdown";
 import type { StoredArtidocSection } from "@/sections/SectionsCollection";
 import type { Level } from "@/sections/levels/SectionsNumberer";
 import { LEVEL_1, LEVEL_2, LEVEL_3 } from "@/sections/levels/SectionsNumberer";
 import type { GetText } from "@tuleap/gettext";
-import { getLocaleWithDefault, initGettext } from "@tuleap/gettext";
-import { getPOFileFromLocaleWithoutExtension } from "@tuleap/vue3-gettext-init";
+import {
+    getLocaleWithDefault,
+    getPOFileFromLocaleWithoutExtension,
+    initGettext,
+} from "@tuleap/gettext";
 
 export const TAG = "tuleap-prose-mirror-toolbar-headings-button";
 

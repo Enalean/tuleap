@@ -19,20 +19,25 @@
 
 import { describe, expect, it } from "vitest";
 import { getLocaleWithDefault } from "./dom";
-import { en_US_LOCALE } from "@tuleap/core-constants";
+import { DEFAULT_LOCALE, fr_FR_LOCALE } from "./constants";
 
 describe(`dom`, () => {
     describe(`getLocaleWithDefault()`, () => {
         it(`reads the data-user-locale attribute from the given document's body and returns it`, () => {
             const doc = document.implementation.createHTMLDocument();
-            const locale_string = "fr_FR";
-            doc.body.setAttribute("data-user-locale", locale_string);
-            expect(getLocaleWithDefault(doc)).toBe(locale_string);
+            doc.body.setAttribute("data-user-locale", fr_FR_LOCALE);
+            expect(getLocaleWithDefault(doc)).toBe(fr_FR_LOCALE);
         });
 
         it(`defaults to "en_US" when the document body has no data-user-locale attribute`, () => {
             const doc = document.implementation.createHTMLDocument();
-            expect(getLocaleWithDefault(doc)).toBe(en_US_LOCALE);
+            expect(getLocaleWithDefault(doc)).toBe(DEFAULT_LOCALE);
+        });
+
+        it(`defaults to "en_US" when the data-user-locale attribute does not look like a locale string`, () => {
+            const doc = document.implementation.createHTMLDocument();
+            doc.body.setAttribute("data-user-locale", "not_a_locale");
+            expect(getLocaleWithDefault(doc)).toBe(DEFAULT_LOCALE);
         });
     });
 });

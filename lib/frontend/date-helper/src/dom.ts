@@ -17,20 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { LocaleString } from "@tuleap/core-constants";
-
-const isLocale = (locale: string | undefined): locale is LocaleString => {
-    return locale !== undefined;
-};
-
-export const getLocaleOrThrow = (doc: Document): LocaleString => {
-    const locale = doc.body.dataset.userLocale;
-    if (!isLocale(locale)) {
-        throw Error("Could not read user locale from document body");
-    }
-    return locale;
-};
-
 export const getTimezoneOrThrow = (doc: Document): string => {
     const timezone = doc.body.dataset.userTimezone;
     if (!timezone) {

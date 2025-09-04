@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2024-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,17 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import type { DateCardField } from "./type";
-import { getLocaleWithDefault, getTimezoneOrThrow, IntlFormatter } from "@tuleap/date-helper";
+import { describe, expectTypeOf, it } from "vitest";
+import { getLocaleWithDefault } from "./dom";
+import type { LocaleString } from "./constants";
+import { fr_FR_LOCALE } from "./constants";
 
-export function getDateToDisplay(card_field: DateCardField): string {
-    const formatter = IntlFormatter(
-        getLocaleWithDefault(document),
-        getTimezoneOrThrow(document),
-        card_field.type === "lud" || card_field.type === "subon" || card_field.is_time_displayed
-            ? "date-with-time"
-            : "date",
-    );
-
-    return formatter.format(card_field.value);
-}
+describe(`dom`, () => {
+    describe(`getLocaleWithDefault()`, () => {
+        it(`should return LocaleString type`, () => {
+            const doc = document.implementation.createHTMLDocument();
+            doc.body.setAttribute("data-user-locale", fr_FR_LOCALE);
+            expectTypeOf(getLocaleWithDefault(doc)).toEqualTypeOf<LocaleString>();
+        });
+    });
+});

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2024-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,17 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, expectTypeOf, it } from "vitest";
-import { getLocaleOrThrow } from "./dom";
-import type { LocaleString } from "@tuleap/core-constants";
+import * as path from "node:path";
+import { vite, viteDtsPlugin } from "@tuleap/build-system-configurator";
 
-describe(`dom`, () => {
-    describe(`getLocaleOrThrow()`, () => {
-        it(`should return LocaleString type`, () => {
-            const doc = document.implementation.createHTMLDocument();
-            const locale_string = "fr_FR";
-            doc.body.setAttribute("data-user-locale", locale_string);
-            expectTypeOf(getLocaleOrThrow(doc)).toMatchTypeOf<LocaleString>();
-        });
-    });
+export default vite.defineLibConfig({
+    plugins: [viteDtsPlugin()],
+    build: {
+        lib: {
+            name: "TuleapLocale",
+            entry: path.resolve(__dirname, "src/main.ts"),
+        },
+    },
 });

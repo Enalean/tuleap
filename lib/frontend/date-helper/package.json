@@ -5,8 +5,7 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "type": "module",
-  "module": "./dist/date-helper.js",
-  "main": "./dist/date-helper.umd.cjs",
+  "main":  "./dist/date-helper.umd.cjs",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
@@ -16,16 +15,16 @@
     }
   },
   "dependencies": {
-    "@tuleap/core-constants": "workspace:*"
+    "@tuleap/core-constants": "workspace:*",
+    "@tuleap/locale": "workspace:^"
   },
   "devDependencies": {
-    "@tuleap/build-system-configurator": "workspace:*",
-    "typescript": "^5.3.3"
+    "@tuleap/build-system-configurator": "workspace:*"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
     "build": "vite build",
     "watch": "vite build --watch --mode development --minify false",
-    "test": "vitest --typecheck"
+    "test": "vitest"
   }
 }

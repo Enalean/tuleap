@@ -19,7 +19,7 @@
 
 import type { StrictInjectionKey } from "@tuleap/vue-strict-inject";
 import type { LocaleString } from "@tuleap/date-helper";
-import { getLocaleOrThrow, getTimezoneOrThrow } from "@tuleap/date-helper";
+import { getLocaleWithDefault, getTimezoneOrThrow } from "@tuleap/date-helper";
 import type { RelativeDatesDisplayPreference } from "@tuleap/tlp-relative-date";
 import { getRelativeDateUserPreferenceOrThrow } from "@tuleap/tlp-relative-date";
 
@@ -33,7 +33,7 @@ export const USER_PREFERENCES: StrictInjectionKey<UserPreferences> = Symbol("use
 
 export function buildUserPreferences(doc: Document, mount_point: HTMLElement): UserPreferences {
     return {
-        locale: getLocaleOrThrow(doc),
+        locale: getLocaleWithDefault(doc),
         timezone: getTimezoneOrThrow(doc),
         relative_date_display: getRelativeDateUserPreferenceOrThrow(
             mount_point,

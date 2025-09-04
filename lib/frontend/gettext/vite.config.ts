@@ -21,11 +21,14 @@ import * as path from "node:path";
 import { vite, viteDtsPlugin } from "@tuleap/build-system-configurator";
 
 export default vite.defineLibConfig({
+    plugins: [viteDtsPlugin()],
     build: {
         lib: {
-            entry: path.resolve(__dirname, "src/main.ts"),
             name: "TuleapGettext",
+            entry: path.resolve(__dirname, "src/main.ts"),
+        },
+        rollupOptions: {
+            external: ["node-gettext"],
         },
     },
-    plugins: [viteDtsPlugin()],
 });

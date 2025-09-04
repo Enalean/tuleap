@@ -18,23 +18,9 @@
  */
 
 import { describe, expect, it } from "vitest";
-import { getLocaleOrThrow, getTimezoneOrThrow } from "./dom";
+import { getTimezoneOrThrow } from "./dom";
 
 describe(`dom`, () => {
-    describe(`getLocaleOrThrow()`, () => {
-        it(`reads the data-user-locale attribute from the given document's body and returns it`, () => {
-            const doc = document.implementation.createHTMLDocument();
-            const locale_string = "fr_FR";
-            doc.body.setAttribute("data-user-locale", locale_string);
-            expect(getLocaleOrThrow(doc)).toBe(locale_string);
-        });
-
-        it(`throws an error when the document body has no data-user-locale attribute`, () => {
-            const doc = document.implementation.createHTMLDocument();
-            expect(() => getLocaleOrThrow(doc)).toThrow();
-        });
-    });
-
     describe(`getTimezoneOrThrow()`, () => {
         it(`reads the data-user-timezone attribute from the given document's body and returns it`, () => {
             const doc = document.implementation.createHTMLDocument();

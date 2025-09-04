@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2022-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,4 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export const DEFAULT_LANGUAGE = "en_US";
+export const en_US_LOCALE = "en_US";
+export const fr_FR_LOCALE = "fr_FR";
+export const pt_BR_LOCALE = "pt_BR";
+export const ko_KR_LOCALE = "ko_KR";
+export type LocaleString =
+    | typeof en_US_LOCALE
+    | typeof fr_FR_LOCALE
+    | typeof pt_BR_LOCALE
+    | typeof ko_KR_LOCALE;
+
+export const DEFAULT_LOCALE = en_US_LOCALE;

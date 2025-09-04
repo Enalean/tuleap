@@ -5,9 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
-  '@tuleap/gettext':
-    specifier: workspace:*
-    version: link:../gettext
+  '@tuleap/locale':
+    specifier: workspace:^
+    version: link:../locale
 
 devDependencies:
   '@tuleap/build-system-configurator':

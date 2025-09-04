@@ -20,7 +20,7 @@
 import { createApp, ref } from "vue";
 import { createGettext } from "vue3-gettext";
 import VueDOMPurifyHTML from "vue-dompurify-html";
-import { getLocaleOrThrow, getTimezoneOrThrow } from "@tuleap/date-helper";
+import { getLocaleWithDefault, getTimezoneOrThrow } from "@tuleap/date-helper";
 import { getAttributeOrThrow } from "@tuleap/dom";
 import { getPOFileFromLocaleWithoutExtension, initVueGettext } from "@tuleap/vue3-gettext-init";
 import { getRelativeDateUserPreferenceOrThrow } from "@tuleap/tlp-relative-date";
@@ -54,7 +54,7 @@ export const init = async (mount_point: HTMLElement): Promise<void> => {
         .provide(PROJECT_ID, project_id)
         .provide(CURRENT_USER_ID, user_id)
         .provide(BASE_URL, base_url)
-        .provide(USER_LOCALE_KEY, getLocaleOrThrow(document))
+        .provide(USER_LOCALE_KEY, getLocaleWithDefault(document))
         .provide(USER_TIMEZONE_KEY, getTimezoneOrThrow(document))
         .provide(
             USER_RELATIVE_DATE_DISPLAY_PREFERENCE_KEY,

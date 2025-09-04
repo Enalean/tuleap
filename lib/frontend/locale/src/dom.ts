@@ -17,17 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, expectTypeOf, it } from "vitest";
-import { getLocaleWithDefault } from "./dom";
-import type { LocaleString } from "@tuleap/core-constants";
+import type { LocaleString } from "./constants";
+import { DEFAULT_LOCALE } from "./constants";
 
-describe(`dom`, () => {
-    describe(`getLocaleOrThrow()`, () => {
-        it(`should return LocaleString type`, () => {
-            const doc = document.implementation.createHTMLDocument();
-            const locale_string = "fr_FR";
-            doc.body.setAttribute("data-user-locale", locale_string);
-            expectTypeOf(getLocaleWithDefault(doc)).toMatchTypeOf<LocaleString>();
-        });
-    });
-});
+const locale_regexp = /[a-z]{2,3}_[A-Z]{2,3}/;
+
+export const isLocale = (locale: string | undefined): locale is LocaleString => {
+    return locale_regexp.test(locale ?? "");
+};
+
+export const getLocaleWithDefault = (doc: Document): LocaleString => {
+    const locale = doc.body.dataset.userLocale;
+    return isLocale(locale) ? locale : DEFAULT_LOCALE;
+};
