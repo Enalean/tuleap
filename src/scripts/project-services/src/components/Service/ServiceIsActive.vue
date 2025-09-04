@@ -25,15 +25,15 @@
                 type="checkbox"
                 name="is_active"
                 value="1"
-                v-bind:checked="value"
+                v-bind:checked="is_active"
             />
             {{ $gettext("Available (also available for new projects)") }}
         </label>
     </div>
 </template>
-<script>
-export default {
-    name: "ServiceIsActive",
-    props: ["id", "value"],
-};
+<script setup lang="ts">
+defineProps<{
+    id: string;
+    is_active: boolean;
+}>();
 </script>

@@ -33,7 +33,7 @@
                 <template v-slot:is_active>
                     <service-is-active
                         id="project-service-edit-modal-active"
-                        v-bind:value="service.is_active"
+                        v-bind:is_active="service.is_active"
                     />
                 </template>
             </in-edition-custom-service>
