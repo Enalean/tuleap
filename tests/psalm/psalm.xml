@@ -129,7 +129,6 @@
             <file name="tests/unit/tuleap-cfg/Command/TestDBWrapper.php"/>
             <file name="tests/unit/www/include/ServiceCreateServiceTest.php"/>
             <file name="tests/unit/www/include/UtilsHTTPTest.php"/>
-            <file name="plugins/agiledashboard/tests/unit/AgileDashboard/XML/AgileDashboardXMLExporterTest.php"/>
             <file name="plugins/agiledashboard/tests/unit/AgileDashboard/AgileDashboard_XMLimporterTest.php"/>
             <file name="plugins/agiledashboard/tests/unit/AgileDashboard/Artifact/AdditionalArtifactActionBuilderTest.php"/>
             <file name="plugins/agiledashboard/tests/unit/AgileDashboard/Artifact/EventRedirectAfterArtifactCreationOrUpdateHandlerTest.php"/>
