@@ -20,6 +20,7 @@
 
 namespace Tuleap\AgileDashboard\XML;
 
+use Override;
 use Project;
 use SimpleXMLElement;
 use Tuleap\AgileDashboard\Stub\Milestone\Sidebar\CheckMilestonesInSidebarStub;
@@ -34,10 +35,11 @@ final class AgileDashboardXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
     private SimpleXMLElement $xml_tree;
     private Project $project;
     private AgileDashboardXMLExporter $exporter;
-    private \PHPUnit\Framework\MockObject\MockObject|XML_RNGValidator $xml_validator;
-    private \Tuleap\AgileDashboard\ExplicitBacklog\XMLExporter|\PHPUnit\Framework\MockObject\MockObject $explicit_backlog_xml_exporter;
-    private \Tuleap\AgileDashboard\Planning\XML\XMLExporter|\PHPUnit\Framework\MockObject\MockObject $planning_xml_exporter;
+    private \PHPUnit\Framework\MockObject\MockObject&XML_RNGValidator $xml_validator;
+    private \Tuleap\AgileDashboard\ExplicitBacklog\XMLExporter&\PHPUnit\Framework\MockObject\MockObject $explicit_backlog_xml_exporter;
+    private \Tuleap\AgileDashboard\Planning\XML\XMLExporter&\PHPUnit\Framework\MockObject\MockObject $planning_xml_exporter;
 
+    #[Override]
     protected function setUp(): void
     {
         $this->xml_tree = new SimpleXMLElement(
