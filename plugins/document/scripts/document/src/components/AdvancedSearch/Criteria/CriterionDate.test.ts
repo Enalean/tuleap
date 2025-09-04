@@ -25,16 +25,6 @@ import type { SearchDate } from "../../../type";
 import { getGlobalTestOptions } from "../../../helpers/global-options-for-test";
 import emitter from "../../../helpers/emitter";
 
-vi.mock("tlp", () => {
-    return {
-        datePicker: (): { setDate(): void } => ({
-            setDate: (): void => {
-                // Do nothing
-            },
-        }),
-    };
-});
-
 describe("CriterionDate", () => {
     let emitMock: Mock;
 

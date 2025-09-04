@@ -31,10 +31,6 @@ import { IS_STATUS_PROPERTY_USED, PROJECT_ID } from "../../../../configuration-k
 
 vi.useFakeTimers();
 
-vi.mock("tlp", () => {
-    return { datePicker: vi.fn() };
-});
-
 describe("NewItemModal", () => {
     let factory: () => VueWrapper<NewItemModal>;
     const load_projects_ugroups = vi.fn();

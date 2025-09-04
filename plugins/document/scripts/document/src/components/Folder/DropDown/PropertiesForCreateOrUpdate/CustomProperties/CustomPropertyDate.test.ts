@@ -28,10 +28,6 @@ import emitter from "../../../../../helpers/emitter";
 
 vi.mock("../../../../../helpers/emitter");
 
-vi.mock("tlp", () => {
-    return { datePicker: vi.fn() };
-});
-
 describe("CustomPropertyDate", () => {
     function createWrapper(
         property: Property,

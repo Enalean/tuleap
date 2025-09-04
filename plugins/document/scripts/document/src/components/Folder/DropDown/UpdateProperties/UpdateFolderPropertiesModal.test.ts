@@ -28,10 +28,6 @@ import emitter from "../../../../helpers/emitter";
 import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
 import { IS_STATUS_PROPERTY_USED } from "../../../../configuration-keys";
 
-vi.mock("tlp", () => {
-    return { datePicker: vi.fn() };
-});
-
 describe("UpdateFolderPropertiesModal", () => {
     let factory, store;
 

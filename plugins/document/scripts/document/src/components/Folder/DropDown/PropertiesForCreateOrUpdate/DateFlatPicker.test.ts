@@ -18,20 +18,10 @@
  *
  */
 
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import DateFlatPicker from "./DateFlatPicker.vue";
-
-vi.mock("tlp", () => {
-    return {
-        datePicker: (): { setDate(): void } => ({
-            setDate: (): void => {
-                // Do nothing
-            },
-        }),
-    };
-});
 
 describe("DateFlatPicker", () => {
     function createWrapper(props = {}): VueWrapper<InstanceType<typeof DateFlatPicker>> {

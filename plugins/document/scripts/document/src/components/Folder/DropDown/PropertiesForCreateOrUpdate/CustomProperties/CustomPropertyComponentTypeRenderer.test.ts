@@ -17,15 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import CustomPropertyComponentTypeRenderer from "./CustomPropertyComponentTypeRenderer.vue";
 import type { Property } from "../../../../../type";
-
-vi.mock("tlp", () => {
-    return { datePicker: vi.fn() };
-});
 
 describe("CustomPropertyComponentTypeRenderer", () => {
     function createWrapper(
