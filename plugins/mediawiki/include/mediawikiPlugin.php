@@ -44,14 +44,8 @@ use Tuleap\Project\Admin\Navigation\NavigationDropdownQuickLinksCollector;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupFormatter;
 use Tuleap\Project\Admin\ProjectUGroup\UserAndProjectUGroupRelationshipEvent;
-use Tuleap\Project\Admin\ProjectUGroup\UserBecomesForumAdmin;
-use Tuleap\Project\Admin\ProjectUGroup\UserBecomesNewsAdministrator;
-use Tuleap\Project\Admin\ProjectUGroup\UserBecomesNewsWriter;
 use Tuleap\Project\Admin\ProjectUGroup\UserBecomesProjectAdmin;
 use Tuleap\Project\Admin\ProjectUGroup\UserBecomesWikiAdmin;
-use Tuleap\Project\Admin\ProjectUGroup\UserIsNoLongerForumAdmin;
-use Tuleap\Project\Admin\ProjectUGroup\UserIsNoLongerNewsAdministrator;
-use Tuleap\Project\Admin\ProjectUGroup\UserIsNoLongerNewsWriter;
 use Tuleap\Project\Admin\ProjectUGroup\UserIsNoLongerProjectAdmin;
 use Tuleap\Project\Admin\ProjectUGroup\UserIsNoLongerWikiAdmin;
 use Tuleap\Project\DelegatedUserAccessForProject;
@@ -125,12 +119,6 @@ class MediaWikiPlugin extends Plugin implements PluginWithService //phpcs:ignore
         $this->addHook(UserIsNoLongerProjectAdmin::NAME, 'updateUserGroupMappingFromUserAndProjectUGroupRelationshipEvent');
         $this->addHook(UserBecomesWikiAdmin::NAME, 'updateUserGroupMappingFromUserAndProjectUGroupRelationshipEvent');
         $this->addHook(UserIsNoLongerWikiAdmin::NAME, 'updateUserGroupMappingFromUserAndProjectUGroupRelationshipEvent');
-        $this->addHook(UserBecomesForumAdmin::NAME, 'updateUserGroupMappingFromUserAndProjectUGroupRelationshipEvent');
-        $this->addHook(UserIsNoLongerForumAdmin::NAME, 'updateUserGroupMappingFromUserAndProjectUGroupRelationshipEvent');
-        $this->addHook(UserBecomesNewsWriter::NAME, 'updateUserGroupMappingFromUserAndProjectUGroupRelationshipEvent');
-        $this->addHook(UserIsNoLongerNewsWriter::NAME, 'updateUserGroupMappingFromUserAndProjectUGroupRelationshipEvent');
-        $this->addHook(UserBecomesNewsAdministrator::NAME, 'updateUserGroupMappingFromUserAndProjectUGroupRelationshipEvent');
-        $this->addHook(UserIsNoLongerNewsAdministrator::NAME, 'updateUserGroupMappingFromUserAndProjectUGroupRelationshipEvent');
         $this->addHook(ExportXmlProject::NAME);
 
         $this->addHook(PermissionPerGroupPaneCollector::NAME);
