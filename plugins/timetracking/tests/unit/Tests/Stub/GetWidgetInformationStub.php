@@ -20,22 +20,35 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Timetracking\REST\v1\TimetrackingManagement;
+namespace Tuleap\Timetracking\Tests\Stub;
 
-use Tuleap\Project\REST\MinimalProjectRepresentation;
-use Tuleap\Timetracking\Widget\Management\TimeSpentInProject;
+use Tuleap\Timetracking\Widget\Management\GetWidgetInformation;
 
 /**
  * @psalm-immutable
  */
-final class TimeSpentInProjectRepresentation
+final readonly class GetWidgetInformationStub implements GetWidgetInformation
 {
-    private function __construct(public MinimalProjectRepresentation $project, public int $minutes)
+    private function __construct(private ?array $information)
     {
     }
 
-    public static function fromTimeSpentInProject(TimeSpentInProject $time): self
+    public static function withWidgetBelongingToUser(\PFUser $user): self
     {
-        return new self(new MinimalProjectRepresentation($time->project), $time->minutes);
+        return new self([
+            'dashboard_id' => 123,
+            'user_id'      => $user->getId(),
+        ]);
+    }
+
+    public static function notFound(): self
+    {
+        return new self(null);
+    }
+
+    #[\Override]
+    public function getWidgetInformationFromQuery(int $query_id): ?array
+    {
+        return $this->information;
     }
 }

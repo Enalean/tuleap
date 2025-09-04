@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,12 +20,17 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Timetracking\REST\v1\TimetrackingManagement;
+namespace Tuleap\Timetracking\Widget\Management;
 
-interface SearchQueryByWidgetId
+/**
+ * @psalm-immutable
+ */
+final readonly class UserTimes
 {
     /**
-     * @return null|array{id: int, start_date: int|null, end_date: int|null, predefined_time_period: string|null}
+     * @param list<TimeSpentInProject> $times
      */
-    public function searchQueryById(int $id): ?array;
+    public function __construct(public \PFUser $user, public array $times)
+    {
+    }
 }

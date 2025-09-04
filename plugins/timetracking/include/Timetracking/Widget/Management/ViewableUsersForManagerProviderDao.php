@@ -97,9 +97,9 @@ final class ViewableUsersForManagerProviderDao extends ManagerPermissionsDao imp
             FROM user
                 INNER JOIN (
                     {$union->sql}
-                ) AS readers
+                ) AS writers
                 ON (
-                    readers.user_id = user.user_id
+                    writers.user_id = user.user_id
                     AND status IN ('A', 'R')
                     AND (($username_stmt) OR ($realname_stmt))
                 )
@@ -121,9 +121,9 @@ final class ViewableUsersForManagerProviderDao extends ManagerPermissionsDao imp
             FROM user
                 INNER JOIN (
                     {$union->sql}
-                ) AS readers
+                ) AS writers
                 ON (
-                    readers.user_id = user.user_id
+                    writers.user_id = user.user_id
                     AND status IN ('A', 'R')
                     AND (($username_stmt) OR ($realname_stmt))
                 )

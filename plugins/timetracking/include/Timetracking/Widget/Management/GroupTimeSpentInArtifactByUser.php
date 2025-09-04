@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,14 +18,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+namespace Tuleap\Timetracking\Widget\Management;
 
-namespace Tuleap\Timetracking\REST\v1\TimetrackingManagement;
-
-interface SearchQueryByWidgetId
+interface GroupTimeSpentInArtifactByUser
 {
     /**
-     * @return null|array{id: int, start_date: int|null, end_date: int|null, predefined_time_period: string|null}
+     * @param list<TimeSpentInArtifact> $times
+     * @return list<UserTimes>
      */
-    public function searchQueryById(int $id): ?array;
+    public function groupByUser(array $times): array;
 }

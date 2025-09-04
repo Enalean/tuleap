@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Timetracking\REST\v1\TimetrackingManagement;
 
+use Tuleap\Timetracking\Widget\Management\PredefinedTimePeriod;
+
 interface SaveQueryWithPredefinedTimePeriod
 {
     public function saveQueryWithPredefinedTimePeriod(

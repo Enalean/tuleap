@@ -25,7 +25,6 @@ namespace Tuleap\Timetracking\Widget\Management;
 use PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles;
 use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Test\PHPUnit\TestIntegrationTestCase;
-use Tuleap\Timetracking\REST\v1\TimetrackingManagement\PredefinedTimePeriod;
 use Tuleap\Timetracking\REST\v1\TimetrackingManagement\UserList;
 
 #[DisableReturnValueGenerationForTestDoubles]

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,14 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+namespace Tuleap\Timetracking\Permissions;
 
-namespace Tuleap\Timetracking\REST\v1\TimetrackingManagement;
+use PFUser;
+use Tuleap\Tracker\Tracker;
 
-interface SearchQueryByWidgetId
+interface VerifyUserCanSeeAllTimesInTracker
 {
-    /**
-     * @return null|array{id: int, start_date: int|null, end_date: int|null, predefined_time_period: string|null}
-     */
-    public function searchQueryById(int $id): ?array;
+    public function userCanSeeAllTimesInTracker(PFUser $user, Tracker $tracker): bool;
 }

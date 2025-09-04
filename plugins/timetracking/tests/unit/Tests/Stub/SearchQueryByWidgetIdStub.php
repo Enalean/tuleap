@@ -27,7 +27,7 @@ use Tuleap\Timetracking\REST\v1\TimetrackingManagement\SearchQueryByWidgetId;
 final class SearchQueryByWidgetIdStub implements SearchQueryByWidgetId
 {
     private function __construct(
-        private int $id,
+        private ?int $id,
         private ?int $start_date,
         private ?int $end_date,
         private ?string $predefined_time_period,
@@ -43,9 +43,18 @@ final class SearchQueryByWidgetIdStub implements SearchQueryByWidgetId
         return new self($id, $start_date, $end_date, $predefined_time_period);
     }
 
+    public static function notFound(): self
+    {
+        return new self(null, null, null, null);
+    }
+
     #[\Override]
     public function searchQueryById(int $id): ?array
     {
+        if ($this->id === null) {
+            return null;
+        }
+
         return [
             'id' => $this->id,
             'start_date' => $this->start_date,

@@ -22,6 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Timetracking\REST\v1\TimetrackingManagement;
 
+use Tuleap\Timetracking\Widget\Management\TimeSpentInProject;
+use Tuleap\Timetracking\Widget\Management\UserTimes;
+use Tuleap\User\Avatar\ProvideUserAvatarUrl;
 use Tuleap\User\REST\MinimalUserRepresentation;
 
 /**
@@ -32,7 +35,18 @@ final class UserTimesRepresentation
     /**
      * @param TimeSpentInProjectRepresentation[] $times
      */
-    public function __construct(public MinimalUserRepresentation $user, public array $times)
+    private function __construct(public MinimalUserRepresentation $user, public array $times)
     {
+    }
+
+    public static function fromUserTimes(UserTimes $user_times, ProvideUserAvatarUrl $provide_user_avatar_url): self
+    {
+        return new self(
+            MinimalUserRepresentation::build($user_times->user, $provide_user_avatar_url),
+            array_map(
+                static fn (TimeSpentInProject $time) => TimeSpentInProjectRepresentation::fromTimeSpentInProject($time),
+                $user_times->times,
+            ),
+        );
     }
 }

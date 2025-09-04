@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Timetracking\REST\v1\TimetrackingManagement;
 
 use DateTimeImmutable;
+use Tuleap\Timetracking\Widget\Management\PredefinedTimePeriod;
 
 final readonly class Period
 {

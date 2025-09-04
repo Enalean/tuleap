@@ -20,22 +20,21 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Timetracking\REST\v1\TimetrackingManagement;
+namespace Tuleap\Timetracking\Widget\Management\VerifierChain;
 
-use Tuleap\Project\REST\MinimalProjectRepresentation;
-use Tuleap\Timetracking\Widget\Management\TimeSpentInProject;
+use Tuleap\Timetracking\Permissions\VerifyUserCanSeeAllTimesInTracker;
+use Tuleap\Timetracking\Widget\Management\TimeSpentInArtifact;
 
-/**
- * @psalm-immutable
- */
-final class TimeSpentInProjectRepresentation
+final class ManagerCanSeeTimesInTrackerVerifier extends ManagerIsAllowedToSeeTimesVerifierChain
 {
-    private function __construct(public MinimalProjectRepresentation $project, public int $minutes)
+    public function __construct(private readonly VerifyUserCanSeeAllTimesInTracker $verifier)
     {
     }
 
-    public static function fromTimeSpentInProject(TimeSpentInProject $time): self
+    #[\Override]
+    public function isManagerAllowedToSeeTimes(TimeSpentInArtifact $time, \PFUser $manager): bool
     {
-        return new self(new MinimalProjectRepresentation($time->project), $time->minutes);
+        return $this->verifier->userCanSeeAllTimesInTracker($manager, $time->artifact->getTracker())
+            || parent::isManagerAllowedToSeeTimes($time, $manager);
     }
 }

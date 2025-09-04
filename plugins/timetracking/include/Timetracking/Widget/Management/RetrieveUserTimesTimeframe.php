@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2024 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2025 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,14 +18,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+namespace Tuleap\Timetracking\Widget\Management;
 
-namespace Tuleap\Timetracking\REST\v1\TimetrackingManagement;
+use Tuleap\NeverThrow\Err;
+use Tuleap\NeverThrow\Fault;
+use Tuleap\NeverThrow\Ok;
 
-interface SearchQueryByWidgetId
+interface RetrieveUserTimesTimeframe
 {
     /**
-     * @return null|array{id: int, start_date: int|null, end_date: int|null, predefined_time_period: string|null}
+     * @return Ok<UserTimesTimeframe>|Err<Fault>
      */
-    public function searchQueryById(int $id): ?array;
+    public function getTimeframe(int $query_id, \PFUser $manager): Ok|Err;
 }
