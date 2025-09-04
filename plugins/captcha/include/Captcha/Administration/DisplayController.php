@@ -23,6 +23,7 @@ namespace Tuleap\Captcha\Administration;
 use CSRFSynchronizerToken;
 use Feedback;
 use HTTPRequest;
+use Override;
 use PFUser;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Captcha\Configuration;
@@ -32,27 +33,15 @@ use Tuleap\Request\DispatchableWithRequest;
 
 class DisplayController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {
-    /**
-     * @var CSRFSynchronizerToken
-     */
-    private $csrf_token;
-    /**
-     * @var AdminPageRenderer
-     */
-    private $renderer;
-    /**
-     * @var Configuration
-     */
-    private $configuration;
+    private CSRFSynchronizerToken $csrf_token;
 
-    public function __construct(Configuration $configuration, AdminPageRenderer $renderer)
+    public function __construct(private readonly Configuration $configuration, private readonly AdminPageRenderer $renderer)
     {
-        $this->csrf_token    = new CSRFSynchronizerToken(CAPTCHA_BASE_URL . '/admin/');
-        $this->renderer      = $renderer;
-        $this->configuration = $configuration;
+        $this->csrf_token = new CSRFSynchronizerToken(CAPTCHA_BASE_URL . '/admin/');
     }
 
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    #[Override]
+    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $current_user = $request->getCurrentUser();
         $this->checkUserIsSiteAdmin($current_user, $layout);
@@ -66,7 +55,7 @@ class DisplayController implements DispatchableWithRequest, DispatchableWithBurn
         );
     }
 
-    private function checkUserIsSiteAdmin(PFUser $user, BaseLayout $layout)
+    private function checkUserIsSiteAdmin(PFUser $user, BaseLayout $layout): void
     {
         if (! $user->isSuperUser()) {
             $layout->addFeedback(

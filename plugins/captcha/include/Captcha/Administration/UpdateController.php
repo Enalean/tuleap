@@ -24,6 +24,7 @@ namespace Tuleap\Captcha\Administration;
 use CSRFSynchronizerToken;
 use Feedback;
 use HTTPRequest;
+use Override;
 use PFUser;
 use Tuleap\Captcha\ConfigurationDataAccessException;
 use Tuleap\Captcha\ConfigurationMalformedDataException;
@@ -33,22 +34,15 @@ use Tuleap\Request\DispatchableWithRequest;
 
 class UpdateController implements DispatchableWithRequest
 {
-    /**
-     * @var ConfigurationSaver
-     */
-    private $saver;
-    /**
-     * @var CSRFSynchronizerToken
-     */
-    private $csrf_token;
+    private CSRFSynchronizerToken $csrf_token;
 
-    public function __construct(ConfigurationSaver $saver)
+    public function __construct(private readonly ConfigurationSaver $saver)
     {
-        $this->saver      = $saver;
         $this->csrf_token = new CSRFSynchronizerToken(CAPTCHA_BASE_URL . '/admin/');
     }
 
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    #[Override]
+    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         $current_user = $request->getCurrentUser();
         $this->checkUserIsSiteAdmin($current_user, $layout);
@@ -76,7 +70,7 @@ class UpdateController implements DispatchableWithRequest
         $layout->redirect(CAPTCHA_BASE_URL . '/admin/');
     }
 
-    private function checkUserIsSiteAdmin(PFUser $user, BaseLayout $layout)
+    private function checkUserIsSiteAdmin(PFUser $user, BaseLayout $layout): void
     {
         if (! $user->isSuperUser()) {
             $layout->addFeedback(
