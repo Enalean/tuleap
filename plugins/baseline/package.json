@@ -10,6 +10,7 @@
     "@tuleap/date-helper": "workspace:*",
     "@tuleap/project-background": "workspace:*",
     "@tuleap/tlp": "workspace:*",
+    "@tuleap/tlp-date-picker": "workspace:^",
     "@tuleap/tlp-fetch": "workspace:*",
     "@tuleap/tlp-modal": "workspace:*",
     "@tuleap/tlp-swatch-colors": "workspace:*",
