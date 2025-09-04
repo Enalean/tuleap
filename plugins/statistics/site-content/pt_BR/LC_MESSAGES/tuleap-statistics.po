@@ -147,9 +147,6 @@ msgstr ""
 msgid "Maximum quota is %1$s GB"
 msgstr ""
 
-msgid "Messages in forums"
-msgstr ""
-
 msgid "Month"
 msgstr "Mês"
 

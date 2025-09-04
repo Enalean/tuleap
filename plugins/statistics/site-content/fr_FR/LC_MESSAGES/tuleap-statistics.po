@@ -172,9 +172,6 @@ msgstr "Projet invalide"
 msgid "Maximum quota is %1$s GB"
 msgstr "Le quota maximum est de %1$s Go"
 
-msgid "Messages in forums"
-msgstr "Messages de forums"
-
 msgid "Month"
 msgstr "Mois"
 
