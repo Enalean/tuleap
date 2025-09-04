@@ -25,6 +25,7 @@ require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
 use Tuleap\AgileDashboard\Milestone\Pane\PaneInfoCollector;
 use Tuleap\AgileDashboard\REST\v1\Milestone\MilestoneRepresentationBuilder;
 use Tuleap\AgileDashboard\REST\v1\MilestoneResource;
+use Tuleap\AgileDashboard\XML\AgileDashboardXMLExporter;
 use Tuleap\Cardwall\Agiledashboard\CardwallPaneInfo;
 use Tuleap\Cardwall\AllowedFieldRetriever;
 use Tuleap\Cardwall\Cardwall\CardwallUseStandardJavascriptEvent;
@@ -146,9 +147,9 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
         $this->getCardwallXmlExporter($project_id)->export($xml_content);
     }
 
-    private function getAgileDashboardExporter(): AgileDashboard_XMLExporter
+    private function getAgileDashboardExporter(): AgileDashboardXMLExporter
     {
-        return AgileDashboard_XMLExporter::build();
+        return AgileDashboardXMLExporter::build();
     }
 
     private function getCardwallXmlExporter($group_id): CardwallConfigXmlExport

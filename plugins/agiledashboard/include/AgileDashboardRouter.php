@@ -45,6 +45,7 @@ use Tuleap\AgileDashboard\Planning\PlanningUpdater;
 use Tuleap\AgileDashboard\Planning\RootPlanning\UpdateIsAllowedChecker;
 use Tuleap\AgileDashboard\Planning\ScrumPlanningFilter;
 use Tuleap\AgileDashboard\Scrum\ScrumPresenterBuilder;
+use Tuleap\AgileDashboard\XML\AgileDashboardXMLExporter;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
 use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
@@ -57,7 +58,7 @@ use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
  *
  * TODO: Layout management should be extracted and moved to controllers or views.
  */
-class AgileDashboardRouter
+class AgileDashboardRouter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     private const PANE_KANBAN = 'kanban';
     private const PANE_CHARTS = 'charts';
@@ -85,7 +86,7 @@ class AgileDashboardRouter
         private readonly EventManager $event_manager,
         private readonly PlanningUpdater $planning_updater,
         private readonly Planning_RequestValidator $planning_request_validator,
-        private readonly AgileDashboard_XMLExporter $agile_dashboard_exporter,
+        private readonly AgileDashboardXMLExporter $agile_dashboard_exporter,
         private readonly UpdateIsAllowedChecker $root_planning_update_checker,
         private readonly PlanningEditionPresenterBuilder $planning_edition_presenter_builder,
         private readonly UpdateRequestValidator $update_request_validator,

@@ -18,22 +18,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\AgileDashboard\XML;
+
+use Project;
+use SimpleXMLElement;
 use Tuleap\AgileDashboard\Stub\Milestone\Sidebar\CheckMilestonesInSidebarStub;
+use Tuleap\AgileDashboard\Planning\XML\XMLExporter as PlanningXMLExporter;
+use Tuleap\AgileDashboard\ExplicitBacklog\XMLExporter;
+use XML_ParseException;
+use XML_RNGValidator;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-class AgileDashboard_XMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+final class AgileDashboardXMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase
 {
-    /**
-     * @var SimpleXMLElement
-     */
-    private $xml_tree;
-
+    private SimpleXMLElement $xml_tree;
     private Project $project;
-
-    /**
-     * @var AgileDashboard_XMLExporter
-     */
-    private $exporter;
+    private AgileDashboardXMLExporter $exporter;
     private \PHPUnit\Framework\MockObject\MockObject|XML_RNGValidator $xml_validator;
     private \Tuleap\AgileDashboard\ExplicitBacklog\XMLExporter|\PHPUnit\Framework\MockObject\MockObject $explicit_backlog_xml_exporter;
     private \Tuleap\AgileDashboard\Planning\XML\XMLExporter|\PHPUnit\Framework\MockObject\MockObject $planning_xml_exporter;
@@ -48,10 +48,10 @@ class AgileDashboard_XMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase // ph
 
         $this->xml_validator = $this->createMock(XML_RNGValidator::class);
 
-        $this->explicit_backlog_xml_exporter = $this->createMock(Tuleap\AgileDashboard\ExplicitBacklog\XMLExporter::class);
-        $this->planning_xml_exporter         = $this->createMock(Tuleap\AgileDashboard\Planning\XML\XMLExporter::class);
+        $this->explicit_backlog_xml_exporter = $this->createMock(XMLExporter::class);
+        $this->planning_xml_exporter         = $this->createMock(PlanningXMLExporter::class);
 
-        $this->exporter = new AgileDashboard_XMLExporter(
+        $this->exporter = new AgileDashboardXMLExporter(
             $this->xml_validator,
             $this->planning_xml_exporter,
             $this->explicit_backlog_xml_exporter,
@@ -103,7 +103,7 @@ class AgileDashboard_XMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase // ph
 
         $this->xml_validator->method('validate');
 
-        $exporter = new AgileDashboard_XMLExporter(
+        $exporter = new AgileDashboardXMLExporter(
             $this->xml_validator,
             $this->planning_xml_exporter,
             $this->explicit_backlog_xml_exporter,
@@ -122,7 +122,7 @@ class AgileDashboard_XMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase // ph
 
         $this->xml_validator->method('validate');
 
-        $exporter = new AgileDashboard_XMLExporter(
+        $exporter = new AgileDashboardXMLExporter(
             $this->xml_validator,
             $this->planning_xml_exporter,
             $this->explicit_backlog_xml_exporter,
@@ -152,7 +152,7 @@ class AgileDashboard_XMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase // ph
             </project>
         '
         );
-        $exporter = new AgileDashboard_XMLExporter(
+        $exporter = new AgileDashboardXMLExporter(
             $this->xml_validator,
             $this->planning_xml_exporter,
             $this->explicit_backlog_xml_exporter,
@@ -182,7 +182,7 @@ class AgileDashboard_XMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase // ph
             </project>
         '
         );
-        $exporter = new AgileDashboard_XMLExporter(
+        $exporter = new AgileDashboardXMLExporter(
             $this->xml_validator,
             $this->planning_xml_exporter,
             $this->explicit_backlog_xml_exporter,
@@ -212,7 +212,7 @@ class AgileDashboard_XMLExporterTest extends \Tuleap\Test\PHPUnit\TestCase // ph
             </project>
         '
         );
-        $exporter = new AgileDashboard_XMLExporter(
+        $exporter = new AgileDashboardXMLExporter(
             $this->xml_validator,
             $this->planning_xml_exporter,
             $this->explicit_backlog_xml_exporter,

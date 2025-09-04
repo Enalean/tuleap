@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard;
 
-use AgileDashboard_XMLExporter;
 use AgileDashboard_XMLExporterUnableToGetValueException;
 use AgileDashboard_XMLImporter;
 use Codendi_Request;
@@ -40,6 +39,7 @@ use Tuleap\AgileDashboard\AgileDashboard\Milestone\Sidebar\MilestonesInSidebarXm
 use Tuleap\AgileDashboard\AgileDashboard\Planning\BypassTrackerPermissionDuringImport;
 use Tuleap\AgileDashboard\AgileDashboard\Planning\VerifyTrackerAccessDuringImportStrategy;
 use Tuleap\AgileDashboard\AgileDashboard\Planning\EnsureThatTrackerIsReadableByUser;
+use Tuleap\AgileDashboard\XML\AgileDashboardXMLExporter;
 use Tuleap\Kanban\SemanticStatusNotFoundException;
 use Tuleap\XML\SimpleXMLElementBuilder;
 use Tuleap\AgileDashboard\ExplicitBacklog\XMLImporter;
@@ -52,13 +52,13 @@ use XML_RNGValidator;
  * Handles the HTTP actions related to  the agile dashborad as a whole.
  *
  */
-final class AgileDashboard_XMLController extends MVC2_PluginController
+final class AgileDashboard_XMLController extends MVC2_PluginController //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public function __construct(
         Codendi_Request $request,
         private readonly PlanningFactory $planning_factory,
         private readonly XML_RNGValidator $xml_rng_validator,
-        private readonly AgileDashboard_XMLExporter $agiledashboard_xml_exporter,
+        private readonly AgileDashboardXMLExporter $agiledashboard_xml_exporter,
         private readonly AgileDashboard_XMLImporter $agiledashboard_xml_importer,
         private readonly Planning_RequestValidator $planning_request_validator,
         private readonly XMLImporter $explicit_backlog_xml_import,

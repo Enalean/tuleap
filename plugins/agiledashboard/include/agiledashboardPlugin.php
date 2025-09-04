@@ -83,6 +83,7 @@ use Tuleap\AgileDashboard\Workflow\PostAction\Update\Internal\AddToTopBacklogVal
 use Tuleap\AgileDashboard\Workflow\PostAction\Update\Internal\AddToTopBacklogValueUpdater;
 use Tuleap\AgileDashboard\Workflow\REST\v1\AddToTopBacklogJsonParser;
 use Tuleap\AgileDashboard\Workflow\REST\v1\AddToTopBacklogRepresentation;
+use Tuleap\AgileDashboard\XML\AgileDashboardXMLExporter;
 use Tuleap\Cardwall\Agiledashboard\CardwallPaneInfo;
 use Tuleap\Cardwall\Cardwall\CardwallUseStandardJavascriptEvent;
 use Tuleap\Config\ConfigClassProvider;
@@ -370,7 +371,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
             $project_id
         );
 
-        AgileDashboard_XMLExporter::build()->export(
+        AgileDashboardXMLExporter::build()->export(
             $event->getProject(),
             $xml_content,
             $plannings
@@ -388,7 +389,7 @@ class AgileDashboardPlugin extends Plugin implements PluginWithConfigKeys, Plugi
             $project_id
         );
 
-        AgileDashboard_XMLExporter::build()->exportFull(
+        AgileDashboardXMLExporter::build()->exportFull(
             $event->getProject(),
             $xml_content,
             $plannings

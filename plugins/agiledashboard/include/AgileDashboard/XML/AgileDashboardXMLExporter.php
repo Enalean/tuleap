@@ -1,6 +1,6 @@
 <?php
-/**
- * Copyright (c) Enalean, 2013 - Present. All rights reserved
+/*
+ * Copyright (c) Enalean, 2013 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -11,13 +11,19 @@
  *
  * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\AgileDashboard\XML;
+
+use AgileDashboard_XMLExporterUnableToGetValueException;
+use PlanningPermissionsManager;
+use Project;
+use SimpleXMLElement;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\XMLExporter as ExplicitBacklogXMLExporter;
@@ -25,8 +31,10 @@ use Tuleap\AgileDashboard\Milestone\Sidebar\CheckMilestonesInSidebar;
 use Tuleap\AgileDashboard\Milestone\Sidebar\MilestonesInSidebarDao;
 use Tuleap\Kanban\SemanticStatusNotFoundException;
 use Tuleap\AgileDashboard\Planning\XML\XMLExporter as PlanningXMLExporter;
+use XML_ParseException;
+use XML_RNGValidator;
 
-class AgileDashboard_XMLExporter
+class AgileDashboardXMLExporter
 {
     public function __construct(
         private readonly XML_RNGValidator $xml_validator,
@@ -36,11 +44,9 @@ class AgileDashboard_XMLExporter
     ) {
     }
 
-    public static function build(): AgileDashboard_XMLExporter
+    public static function build(): AgileDashboardXMLExporter
     {
-        $tracker_factory = TrackerFactory::instance();
-
-        return new AgileDashboard_XMLExporter(
+        return new AgileDashboardXMLExporter(
             new XML_RNGValidator(),
             new PlanningXMLExporter(new PlanningPermissionsManager()),
             new ExplicitBacklogXMLExporter(
@@ -71,7 +77,7 @@ class AgileDashboard_XMLExporter
      * @throws SemanticStatusNotFoundException
      * @throws XML_ParseException
      */
-    public function exportFull(Project $project, SimpleXMLElement $xml_element, array $plannings)
+    public function exportFull(Project $project, SimpleXMLElement $xml_element, array $plannings): void
     {
         $agiledashboard_node = $this->getAgiledashboardNode($project, $xml_element);
 
@@ -87,7 +93,7 @@ class AgileDashboard_XMLExporter
      */
     private function validateXML(SimpleXMLElement $agiledashboard_node): void
     {
-        $rng_path = realpath(__DIR__ . '/../../resources/xml_project_agiledashboard.rng');
+        $rng_path = __DIR__ . '/../../../resources/xml_project_agiledashboard.rng';
         $this->xml_validator->validate($agiledashboard_node, $rng_path);
     }
 
