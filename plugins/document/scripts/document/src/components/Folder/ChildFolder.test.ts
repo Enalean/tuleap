@@ -29,9 +29,6 @@ import type { Action } from "vuex";
 
 vi.useFakeTimers();
 
-vi.mock("tlp", () => {
-    return { datePicker: vi.fn() };
-});
 vi.mock("@tuleap/autocomplete-for-select2", () => {
     return { autocomplete_users_for_select2: vi.fn() };
 });

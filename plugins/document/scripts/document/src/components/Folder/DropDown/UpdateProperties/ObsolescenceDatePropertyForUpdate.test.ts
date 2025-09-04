@@ -18,7 +18,7 @@
  *
  */
 
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import ObsolescenceDatePropertyForUpdate from "./ObsolescenceDatePropertyForUpdate.vue";
@@ -27,10 +27,6 @@ import DateFlatPicker from "../PropertiesForCreateOrUpdate/DateFlatPicker.vue";
 import { getGlobalTestOptions } from "../../../../helpers/global-options-for-test";
 import type { ConfigurationState } from "../../../../store/configuration";
 import { nextTick } from "vue";
-
-vi.mock("tlp", () => {
-    return { datePicker: vi.fn() };
-});
 
 function checkSelectedDateIsCorrect(
     wrapper: VueWrapper<InstanceType<typeof ObsolescenceDatePropertyForUpdate>>,

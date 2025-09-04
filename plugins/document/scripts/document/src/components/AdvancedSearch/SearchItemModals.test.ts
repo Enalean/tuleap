@@ -39,10 +39,6 @@ vi.mock("@tuleap/tlp-modal", () => {
     };
 });
 
-vi.mock("tlp", () => {
-    return { datePicker: vi.fn() };
-});
-
 describe("SearchItemModals", () => {
     function getWrapper(): VueWrapper<InstanceType<typeof SearchItemModals>> {
         return shallowMount(SearchItemModals, {

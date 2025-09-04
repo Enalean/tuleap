@@ -31,8 +31,8 @@
     />
 </template>
 <script setup lang="ts">
-import type { DatePickerInstance } from "tlp";
-import { datePicker } from "tlp";
+import type { DatePickerInstance } from "@tuleap/tlp-date-picker";
+import { datePicker } from "@tuleap/tlp-date-picker";
 import { nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue";
 
 const props = defineProps<{

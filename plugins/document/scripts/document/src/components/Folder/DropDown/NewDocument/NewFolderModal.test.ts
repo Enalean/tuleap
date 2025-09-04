@@ -28,10 +28,6 @@ import { getGlobalTestOptions } from "../../../../helpers/global-options-for-tes
 import { nextTick } from "vue";
 import { IS_STATUS_PROPERTY_USED, PROJECT_ID } from "../../../../configuration-keys";
 
-vi.mock("tlp", () => {
-    return { datePicker: vi.fn() };
-});
-
 describe("NewFolderModal", () => {
     const load_projects_ugroups = vi.fn();
     const current_folder = {

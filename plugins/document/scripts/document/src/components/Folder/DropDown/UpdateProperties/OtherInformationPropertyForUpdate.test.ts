@@ -30,10 +30,6 @@ import { PROJECT_ID } from "../../../../configuration-keys";
 
 vi.mock("../../../../helpers/emitter");
 
-vi.mock("tlp", () => {
-    return { datePicker: vi.fn() };
-});
-
 describe("OtherInformationPropertiesForUpdate", () => {
     let load_properties: vi.Mock;
 

@@ -17,6 +17,7 @@
     "@tuleap/project-background": "workspace:^",
     "@tuleap/project-privacy-helper": "workspace:*",
     "@tuleap/tlp": "workspace:*",
+    "@tuleap/tlp-date-picker": "workspace:^",
     "@tuleap/tlp-dropdown": "workspace:*",
     "@tuleap/tlp-fetch": "workspace:*",
     "@tuleap/tlp-modal": "workspace:*",

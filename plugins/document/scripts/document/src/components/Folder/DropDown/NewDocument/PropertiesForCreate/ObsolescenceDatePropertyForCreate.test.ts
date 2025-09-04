@@ -30,10 +30,6 @@ import { nextTick } from "vue";
 
 vi.mock("../../../../../helpers/emitter");
 
-vi.mock("tlp", () => {
-    return { datePicker: vi.fn() };
-});
-
 describe("ObsolescenceDatePropertyForCreate", () => {
     function createWrapper(
         value: string,

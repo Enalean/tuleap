@@ -18,7 +18,7 @@
  *
  */
 
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 import type { VueWrapper } from "@vue/test-utils";
 import { shallowMount } from "@vue/test-utils";
 import FolderHeader from "./FolderHeader.vue";
@@ -26,22 +26,7 @@ import { TYPE_EMPTY, TYPE_LINK } from "../../constants";
 import emitter from "../../helpers/emitter";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 import { nextTick } from "vue";
-import type { Modal } from "@tuleap/tlp-modal/src";
 import type { Folder, Item, RootState } from "../../type";
-
-vi.mock("@tuleap/tlp-modal", () => {
-    return {
-        createModal: (): Modal =>
-            ({
-                addEventListener: vi.fn(),
-                show: vi.fn(),
-            }) as unknown as Modal,
-    };
-});
-
-vi.mock("tlp", () => {
-    return { datePicker: vi.fn() };
-});
 
 describe("FolderHeader", () => {
     function factory(

@@ -25,10 +25,6 @@ import RootFolder from "./RootFolder.vue";
 import { getGlobalTestOptions } from "../../helpers/global-options-for-test";
 import { PROJECT_ID } from "../../configuration-keys";
 
-vi.mock("tlp", () => {
-    return { datePicker: vi.fn() };
-});
-
 describe("RootFolder", () => {
     let load_root_folder: vi.Mock;
     let remove_quick_look: vi.Mock;

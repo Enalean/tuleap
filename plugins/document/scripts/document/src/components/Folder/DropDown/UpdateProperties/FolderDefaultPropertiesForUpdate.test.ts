@@ -28,10 +28,6 @@ import type { PropertiesState } from "../../../../store/properties/module";
 import emitter from "../../../../helpers/emitter";
 import { IS_STATUS_PROPERTY_USED, PROJECT_ID } from "../../../../configuration-keys";
 
-vi.mock("tlp", () => {
-    return { datePicker: vi.fn() };
-});
-
 describe("FolderDefaultPropertiesForUpdate", () => {
     let load_properties: vi.Mock;
 
