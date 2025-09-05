@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tuleap\AgileDashboard;
 
 use AgileDashboard_XMLExporterUnableToGetValueException;
-use AgileDashboard_XMLImporter;
 use Codendi_Request;
 use Exception;
 use MVC2_PluginController;
@@ -37,14 +36,15 @@ use SimpleXMLElement;
 use Tracker_XML_Importer_ArtifactImportedMapping;
 use Tuleap\AgileDashboard\AgileDashboard\Milestone\Sidebar\MilestonesInSidebarXmlImport;
 use Tuleap\AgileDashboard\AgileDashboard\Planning\BypassTrackerPermissionDuringImport;
-use Tuleap\AgileDashboard\AgileDashboard\Planning\VerifyTrackerAccessDuringImportStrategy;
 use Tuleap\AgileDashboard\AgileDashboard\Planning\EnsureThatTrackerIsReadableByUser;
-use Tuleap\AgileDashboard\XML\AgileDashboardXMLExporter;
-use Tuleap\Kanban\SemanticStatusNotFoundException;
-use Tuleap\XML\SimpleXMLElementBuilder;
+use Tuleap\AgileDashboard\AgileDashboard\Planning\VerifyTrackerAccessDuringImportStrategy;
+use Tuleap\AgileDashboard\XML\AgileDashboardXMLImporter;
 use Tuleap\AgileDashboard\ExplicitBacklog\XMLImporter;
 use Tuleap\AgileDashboard\Planning\PlanningAdministrationDelegation;
+use Tuleap\AgileDashboard\XML\AgileDashboardXMLExporter;
+use Tuleap\Kanban\SemanticStatusNotFoundException;
 use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
+use Tuleap\XML\SimpleXMLElementBuilder;
 use XML_ParseException;
 use XML_RNGValidator;
 
@@ -59,7 +59,7 @@ final class AgileDashboard_XMLController extends MVC2_PluginController //phpcs:i
         private readonly PlanningFactory $planning_factory,
         private readonly XML_RNGValidator $xml_rng_validator,
         private readonly AgileDashboardXMLExporter $agiledashboard_xml_exporter,
-        private readonly AgileDashboard_XMLImporter $agiledashboard_xml_importer,
+        private readonly AgileDashboardXMLImporter $agiledashboard_xml_importer,
         private readonly Planning_RequestValidator $planning_request_validator,
         private readonly XMLImporter $explicit_backlog_xml_import,
         private readonly ExternalFieldsExtractor $external_field_extractor,

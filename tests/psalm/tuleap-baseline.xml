@@ -848,6 +848,19 @@
       <code><![CDATA[accept]]></code>
     </MissingReturnType>
   </file>
+  <file src="plugins/agiledashboard/include/AgileDashboard/XML/AgileDashboardXMLImporter.php">
+    <MissingParamType>
+      <code><![CDATA[$tracker_id]]></code>
+    </MissingParamType>
+    <PossiblyNullIterator>
+      <code><![CDATA[$planning_node->permissions->children()]]></code>
+      <code><![CDATA[$planning_node->{XMLPlanning::NODE_BACKLOGS}->children()]]></code>
+      <code><![CDATA[$xml_object->$plannings_node_name->children()]]></code>
+    </PossiblyNullIterator>
+    <TypeDoesNotContainType>
+      <code><![CDATA[isset($planning_node->permissions)]]></code>
+    </TypeDoesNotContainType>
+  </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/XMLFullStructureExporter.php">
     <MissingClassConstType>
       <code><![CDATA[AGILEDASHBOARD_EXPORT_XML = 'agiledashboard_export_xml']]></code>
@@ -858,24 +871,6 @@
     <TypeDoesNotContainNull>
       <code><![CDATA[$dom === null]]></code>
     </TypeDoesNotContainNull>
-  </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/XMLImporter.php">
-    <InvalidArgument>
-      <code><![CDATA[(string) $attributes[PlanningParameters::PLANNING_TRACKER_ID]]]></code>
-      <code><![CDATA[(string) $backlog]]></code>
-    </InvalidArgument>
-    <MissingReturnType>
-      <code><![CDATA[toArrayBacklogIds]]></code>
-      <code><![CDATA[toArrayPermissions]]></code>
-    </MissingReturnType>
-    <PossiblyNullIterator>
-      <code><![CDATA[$planning_node->permissions->children()]]></code>
-      <code><![CDATA[$planning_node->{XMLPlanning::NODE_BACKLOGS}->children()]]></code>
-      <code><![CDATA[$xml_object->$plannings_node_name->children()]]></code>
-    </PossiblyNullIterator>
-    <TypeDoesNotContainType>
-      <code><![CDATA[isset($planning_node->permissions)]]></code>
-    </TypeDoesNotContainType>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboardPluginInfo.php">
     <MissingParamType>
@@ -29995,10 +29990,6 @@
       <code><![CDATA[retrieve]]></code>
       <code><![CDATA[retrieve]]></code>
       <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
-      <code><![CDATA[retrieve]]></code>
     </DeprecatedMethod>
     <MissingPropertyType>
       <code><![CDATA[$end_date]]></code>
@@ -30015,21 +30006,17 @@
       <code><![CDATA[getDescriptionOfActiveProjectsBeforeEndDate]]></code>
       <code><![CDATA[getDistinctFilesPublished]]></code>
       <code><![CDATA[getFilesPublished]]></code>
-      <code><![CDATA[getForumsActivitiesBetweenStartDateAndEndDate]]></code>
       <code><![CDATA[getGitRead]]></code>
       <code><![CDATA[getGitWrite]]></code>
       <code><![CDATA[getIdsOfActiveProjectsBeforeEndDate]]></code>
       <code><![CDATA[getInfosFromTroveGroupLink]]></code>
       <code><![CDATA[getNameOfActiveProjectsBeforeEndDate]]></code>
-      <code><![CDATA[getNumberOfActiveForums]]></code>
       <code><![CDATA[getNumberOfCIJobs]]></code>
       <code><![CDATA[getNumberOfClosedArtifactsBetweenStartDateAndEndDate]]></code>
       <code><![CDATA[getNumberOfDistinctWikiPages]]></code>
       <code><![CDATA[getNumberOfDownloadedFilesBeforeEndDate]]></code>
       <code><![CDATA[getNumberOfDownloadedFilesBetweenStartDateAndEndDate]]></code>
-      <code><![CDATA[getNumberOfInactiveForums]]></code>
       <code><![CDATA[getNumberOfModifiedWikiPagesBetweenStartDateAndEndDate]]></code>
-      <code><![CDATA[getNumberOfNewsBetweenStartDateAndEndDate]]></code>
       <code><![CDATA[getNumberOfOpenArtifactsBetweenStartDateAndEndDate]]></code>
       <code><![CDATA[getNumberOfUserAddedBetweenStartDateAndEndDate]]></code>
       <code><![CDATA[getNumberOfWikiDocuments]]></code>
@@ -66133,12 +66120,6 @@
       <code><![CDATA[postProjectCreationModeration]]></code>
       <code><![CDATA[postProjectCreationVisibility]]></code>
       <code><![CDATA[postProjectCreationWebhooks]]></code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/SVNCore/ApacheConfGenerator.php">
-    <MissingReturnType>
-      <code><![CDATA[build]]></code>
-      <code><![CDATA[generate]]></code>
     </MissingReturnType>
   </file>
   <file src="src/common/SVNCore/Cache/ParameterDao.php">

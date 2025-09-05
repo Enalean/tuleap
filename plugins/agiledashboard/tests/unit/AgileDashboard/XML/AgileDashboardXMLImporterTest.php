@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -18,27 +18,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\AgileDashboard\XML;
+
+use PlanningParameters;
+use SimpleXMLElement;
 use Tuleap\AgileDashboard\Planning\XML\XMLExporter;
 
 #[\PHPUnit\Framework\Attributes\DisableReturnValueGenerationForTestDoubles]
-final class AgileDashboard_XMLimporterTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
+final class AgileDashboardXMLImporterTest extends \Tuleap\Test\PHPUnit\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    /**
-     * @var SimpleXMLElement
-     */
-    private $xml_object;
+    private SimpleXMLElement $xml_object;
+    private AgileDashboardXMLImporter $importer;
 
-    /**
-     *
-     * @var AgileDashboard_XMLImporter
-     */
-    private $importer;
-
-    private $tracker_mappings;
+    private array $tracker_mappings;
 
     protected function setUp(): void
     {
-        $this->importer = new AgileDashboard_XMLImporter();
+        $this->importer = new AgileDashboardXMLImporter();
 
         $name                = PlanningParameters::NAME;
         $backlog_title       = PlanningParameters::BACKLOG_TITLE;
@@ -49,19 +45,19 @@ final class AgileDashboard_XMLimporterTest extends \Tuleap\Test\PHPUnit\TestCase
                  <agiledashboard>
                     <plannings>
                         <planning ' .
-                            $name . '="Sprint Planning" ' .
-                            $plan_title . '="Sprint Plan" ' .
-                            $planning_tracker_id . '="T11" ' .
-                            $backlog_title . '="Release Backlog">
+            $name . '="Sprint Planning" ' .
+            $plan_title . '="Sprint Plan" ' .
+            $planning_tracker_id . '="T11" ' .
+            $backlog_title . '="Release Backlog">
                             <backlogs>
                                 <backlog>T14</backlog>
                             </backlogs>
                         </planning>
                         <planning ' .
-                            $name . '="Sprint Planning" ' .
-                            $plan_title . '="Sprint Plan" ' .
-                            $planning_tracker_id . '="T11" ' .
-                            $backlog_title . '="Release Backlog">
+            $name . '="Sprint Planning" ' .
+            $plan_title . '="Sprint Plan" ' .
+            $planning_tracker_id . '="T11" ' .
+            $backlog_title . '="Release Backlog">
                             <backlogs>
                                 <backlog>T14</backlog>
                                 <backlog>T15</backlog>
