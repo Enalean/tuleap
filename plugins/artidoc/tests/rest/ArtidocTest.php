@@ -183,7 +183,12 @@ final class ArtidocTest extends DocmanBase
         $section_1_id = $this->createRequirementArtifact('Section 1', 'Content of section 1');
         $section_2_id = $this->createRequirementArtifact('Section 2', 'Content of section 2');
 
-        $this->importExistingArtifactInArtidoc($artidoc_id, $section_1_id, $section_2_id);
+        $this->artidoc_api->importExistingArtifactInArtidoc(
+            $artidoc_id,
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $section_1_id,
+            $section_2_id
+        );
 
         $folder_id = $this->createFolder($root_id, 'Folder to copy item F6 into. ' . $this->now)['id'];
         self::assertCount(0, $this->getFolderContent($folder_id));
@@ -212,33 +217,6 @@ final class ArtidocTest extends DocmanBase
         self::assertSame($section_2_id, $document_content[1]['artifact']['id']);
     }
 
-    private function importExistingArtifactInArtidoc(int $artidoc_id, int ...$artifact_ids): void
-    {
-        foreach ($artifact_ids as $artifact_id) {
-            $post_response = $this->getResponse(
-                $this->request_factory->createRequest('POST', 'artidoc_sections')->withBody(
-                    $this->stream_factory->createStream(
-                        Json\encode(
-                            [
-                                'artidoc_id' => $artidoc_id,
-                                'section'    => [
-                                    'import'   => [
-                                        'artifact' => ['id' => $artifact_id],
-                                        'level'    => 1,
-                                    ],
-                                    'position' => null,
-                                    'content'  => null,
-                                ],
-                            ]
-                        )
-                    )
-                ),
-                DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
-            );
-            self::assertSame(200, $post_response->getStatusCode());
-        }
-    }
-
     public function testAddNewSectionToArtidoc(): void
     {
         $root_id          = $this->docman_api->getRootFolderID($this->project_id);
@@ -246,7 +224,12 @@ final class ArtidocTest extends DocmanBase
         $section_1_art_id = $this->createRequirementArtifact('Section 1', 'Content of section 1');
         $section_2_art_id = $this->createRequirementArtifact('Section 2', 'Content of section 2');
 
-        $this->importExistingArtifactInArtidoc($artidoc_id, $section_1_art_id, $section_2_art_id);
+        $this->artidoc_api->importExistingArtifactInArtidoc(
+            $artidoc_id,
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $section_1_art_id,
+            $section_2_art_id
+        );
 
         $this->assertSectionsMatchContent(
             $artidoc_id,
@@ -371,7 +354,13 @@ final class ArtidocTest extends DocmanBase
         $section_2_art_id = $this->createRequirementArtifact('Section 2', 'Content of section 2');
         $section_3_art_id = $this->createRequirementArtifact('Section 3', 'Content of section 3');
 
-        $this->importExistingArtifactInArtidoc($artidoc_id, $section_1_art_id, $section_2_art_id, $section_3_art_id);
+        $this->artidoc_api->importExistingArtifactInArtidoc(
+            $artidoc_id,
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $section_1_art_id,
+            $section_2_art_id,
+            $section_3_art_id
+        );
 
         $this->assertSectionsMatchArtifactIdsForDocument(
             $artidoc_id,
@@ -403,7 +392,13 @@ final class ArtidocTest extends DocmanBase
         $section_2_art_id = $this->createRequirementArtifact('Section 2', 'Content of section 2');
         $section_3_art_id = $this->createRequirementArtifact('Section 3', 'Content of section 3');
 
-        $this->importExistingArtifactInArtidoc($artidoc_id, $section_1_art_id, $section_2_art_id, $section_3_art_id);
+        $this->artidoc_api->importExistingArtifactInArtidoc(
+            $artidoc_id,
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $section_1_art_id,
+            $section_2_art_id,
+            $section_3_art_id,
+        );
 
         $this->assertSectionsMatchArtifactIdsForDocument(
             $artidoc_id,
@@ -579,7 +574,12 @@ final class ArtidocTest extends DocmanBase
         $section_1_id = $this->createRequirementArtifact('Section 1', 'Content of section 1');
         $section_2_id = $this->createRequirementArtifact('Section 2', 'Content of section 2');
 
-        $this->importExistingArtifactInArtidoc($artidoc_id, $section_1_id, $section_2_id);
+        $this->artidoc_api->importExistingArtifactInArtidoc(
+            $artidoc_id,
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $section_1_id,
+            $section_2_id
+        );
 
         $document_content = $this->getArtidocSections($artidoc_id);
 
@@ -691,7 +691,11 @@ final class ArtidocTest extends DocmanBase
         $root_id    = $this->docman_api->getRootFolderID($this->project_id);
         $artidoc_id = $this->createArtidoc($root_id, 'Artidoc update requirement ' . $this->now)['id'];
         $req_id     = $this->createRequirementArtifact('Section 1', 'Content of section 1');
-        $this->importExistingArtifactInArtidoc($artidoc_id, $req_id);
+        $this->artidoc_api->importExistingArtifactInArtidoc(
+            $artidoc_id,
+            DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME,
+            $req_id
+        );
 
         $document_content = $this->getArtidocSections($artidoc_id);
 

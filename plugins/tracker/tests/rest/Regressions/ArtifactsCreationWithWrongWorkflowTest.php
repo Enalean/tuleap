@@ -57,6 +57,7 @@ final class ArtifactsCreationWithWrongWorkflowTest extends RestBase
     private function assertCreateArtifactFailsIfValueInSelectBoxIsNotValidRegardingWorkflow(
         TrackerRESTHelper $tracker,
     ): void {
+        $this->expectException(\RuntimeException::class);
         $response = $tracker->createArtifact(
             [
                 $tracker->getSubmitTextValue('version_number', '0.1'),

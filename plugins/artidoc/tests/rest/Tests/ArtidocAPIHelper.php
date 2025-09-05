@@ -63,4 +63,35 @@ final readonly class ArtidocAPIHelper
         }
         return Json\decode($post_item_response->getBody()->getContents());
     }
+
+    public function importExistingArtifactInArtidoc(int $artidoc_id, string $rest_user_name, int ...$artifact_ids): void
+    {
+        foreach ($artifact_ids as $artifact_id) {
+            $post_response = $this->request_wrapper->getResponseByName(
+                $rest_user_name,
+                $this->request_factory->createRequest('POST', 'artidoc_sections')->withBody(
+                    $this->stream_factory->createStream(
+                        Json\encode(
+                            [
+                                'artidoc_id' => $artidoc_id,
+                                'section'    => [
+                                    'import'   => [
+                                        'artifact' => ['id' => $artifact_id],
+                                        'level'    => 1,
+                                    ],
+                                    'position' => null,
+                                    'content'  => null,
+                                ],
+                            ]
+                        )
+                    )
+                ),
+            );
+            if ($post_response->getStatusCode() !== 200) {
+                throw new \RuntimeException(
+                    sprintf('Could not import artifact id #%s in artidoc id #%s', $artifact_id, $artidoc_id)
+                );
+            }
+        }
+    }
 }

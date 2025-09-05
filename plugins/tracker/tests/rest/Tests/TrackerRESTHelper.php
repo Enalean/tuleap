@@ -53,6 +53,10 @@ final readonly class TrackerRESTHelper
                 ->withBody($this->stream_factory->createStream($post))
         );
 
+        if ($response->getStatusCode() !== 201) {
+            throw new \RuntimeException(sprintf('Could not create artifact in tracker id #%s', $this->getTrackerID()));
+        }
+
         return Json\decode($response->getBody()->getContents());
     }
 
